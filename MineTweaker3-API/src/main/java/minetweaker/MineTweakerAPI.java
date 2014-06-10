@@ -1,8 +1,16 @@
 package minetweaker;
 
+import java.lang.annotation.Annotation;
+import minetweaker.runtime.IMineTweaker;
+import minetweaker.runtime.ILogger;
+import minetweaker.runtime.Tweaker;
 import minetweaker.minecraft.recipes.IRecipeManager;
 import minetweaker.minecraft.oredict.IOreDict;
 import minetweaker.minecraft.recipes.IFurnaceManager;
+import minetweaker.runtime.GlobalRegistry;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenExpansion;
+import stanhebben.zenscript.symbols.IZenSymbol;
 
 /**
  * Provides access to the MineTweaker API.
@@ -50,4 +58,53 @@ public class MineTweakerAPI {
 	 * Access point to the furnace manager.
 	 */
 	public static IFurnaceManager furnace = null;
+	
+	/**
+	 * Registers an annotated class. A class is annotated with either @ZenClass
+	 * or @ZenExpansion. Classes not annotated with either of these will be
+	 * ignored.
+	 * 
+	 * @param annotatedClass 
+	 */
+	public static void registerClass(Class annotatedClass) {
+		for (Annotation annotation : annotatedClass.getAnnotations()) {
+			if (annotation instanceof ZenExpansion) {
+				GlobalRegistry.registerExpansion(annotatedClass);
+			} else if (annotation instanceof ZenClass) {
+				GlobalRegistry.registerNativeClass(annotatedClass);
+			}
+		}
+	}
+	
+	/**
+	 * Registers a global symbol. Global symbols are immediately accessible from
+	 * anywhere in the scripts.
+	 * 
+	 * @param name
+	 * @param symbol 
+	 */
+	public static void registerGlobalSymbol(String name, IZenSymbol symbol) {
+		GlobalRegistry.registerGlobal(name, symbol);
+	}
+	
+	/**
+	 * Registers a recipe remover. Removers are called when the global
+	 * minetweaker.remove() function is called.
+	 * 
+	 * @param remover recipe remover
+	 */
+	public static void registerRemover(IRecipeRemover remover) {
+		GlobalRegistry.registerRemover(remover);
+	}
+	
+	/**
+	 * Registers a bracket handler. Is capable of converting the bracket syntax
+	 * to an actual value. This new handler will be added last - it can thus
+	 * not intercept values that are already handled by the system.
+	 * 
+	 * @param handler bracket handler to be added
+	 */
+	public static void registerBracketHandler(IBracketHandler handler) {
+		GlobalRegistry.registerBracketHandler(handler);
+	}
 }

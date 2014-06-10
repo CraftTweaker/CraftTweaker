@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 
-package minetweaker;
+package minetweaker.runtime;
 
+import java.io.Closeable;
 import java.util.List;
+import minetweaker.IUndoableAction;
 import minetweaker.minecraft.item.IIngredient;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -41,4 +43,14 @@ public interface IMineTweaker {
 	 * @return stuck action list
 	 */
 	public List<IUndoableAction> rollback();
+	
+	/**
+	 * Registers a script provider.
+	 * 
+	 * @param provider
+	 * @return 
+	 */
+	public Closeable registerScriptProvider(IScriptProvider provider);
+	
+	public void load();
 }

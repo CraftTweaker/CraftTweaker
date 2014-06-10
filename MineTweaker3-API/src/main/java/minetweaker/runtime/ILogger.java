@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package minetweaker;
+package minetweaker.runtime;
 
 import stanhebben.zenscript.annotations.ZenMethod;
 

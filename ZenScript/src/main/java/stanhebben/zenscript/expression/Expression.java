@@ -1,7 +1,7 @@
 package stanhebben.zenscript.expression;
 
 import org.objectweb.asm.Label;
-import stanhebben.zenscript.ZenParser;
+import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -12,7 +12,7 @@ import stanhebben.zenscript.type.ZenTypeBool;
 import stanhebben.zenscript.util.ZenPosition;
 
 public abstract class Expression implements IPartialExpression {	
-	public static final Expression parse(ZenParser parser, IEnvironmentMethod environment) {
+	public static final Expression parse(ZenTokener parser, IEnvironmentMethod environment) {
 		return ParsedExpression.read(parser, environment)
 				.compile(environment)
 				.eval(environment);

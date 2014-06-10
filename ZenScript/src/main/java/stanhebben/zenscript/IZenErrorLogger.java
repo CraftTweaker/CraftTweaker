@@ -1,19 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript;
 
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
- *
- * @author Stanneke
+ * Error logger. Implementations can forward errors to their own error logging
+ * system.
+ * 
+ * @author Stan Hebben
  */
 public interface IZenErrorLogger {
+	/**
+	 * Called when an error is detected during compilation.
+	 * 
+	 * @param position error position
+	 * @param message error message
+	 */
 	public void error(ZenPosition position, String message);
 	
+	/**
+	 * Called when a warning is generated during compilation.
+	 * 
+	 * @param position warning position
+	 * @param message warning message
+	 */
 	public void warning(ZenPosition position, String message);
 }

@@ -10,7 +10,13 @@ import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.parser.TokenStream;
 import stanhebben.zenscript.symbols.IZenCompileEnvironment;
 
-public class ZenParser extends TokenStream {
+/**
+ * A tokener is capable of splitting a single file into tokens. It's intended
+ * for use by LL(*) parsers.
+ * 
+ * @author Stan Hebben
+ */
+public class ZenTokener extends TokenStream {
 	private static final HashMap<String, Integer> KEYWORDS;
 	
 	public static final int T_ID = 1;
@@ -222,21 +228,44 @@ public class ZenParser extends TokenStream {
 	
 	private final IZenCompileEnvironment environment;
 	
-	public ZenParser(Reader contents, IZenCompileEnvironment environment) throws IOException {
+	/**
+	 * Constructs a tokener from the given reader.
+	 * 
+	 * @param contents file reader
+	 * @param environment compile environment
+	 * @throws IOException if the file could not be read properly
+	 */
+	public ZenTokener(Reader contents, IZenCompileEnvironment environment) throws IOException {
 		super(contents, DFA);
 		
 		this.environment = environment;
 	}
 	
-	public ZenParser(String contents, IZenCompileEnvironment environment) throws IOException {
+	/**
+	 * Constructs a tokener from the given string.
+	 * 
+	 * @param contents content string
+	 * @param environment compile environment
+	 * @throws IOException shouldn't happen
+	 */
+	public ZenTokener(String contents, IZenCompileEnvironment environment) throws IOException {
 		super(new StringReader(contents), DFA);
 		
 		this.environment = environment;
 	}
 	
+	/**
+	 * Retrieves the compile environment of this tokener.
+	 * 
+	 * @return compile environment
+	 */
 	public IZenCompileEnvironment getEnvironment() {
 		return environment;
 	}
+	
+	// ##################################
+	// ### TokenStream implementation ###
+	// ##################################
 	
 	@Override
 	public Token process(Token token) {

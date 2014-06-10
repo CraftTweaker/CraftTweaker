@@ -28,8 +28,4 @@ public class MineTweakerMod {
 		MineTweakerAPI.oreDict = new OreDict();
 		MineTweakerAPI.recipes = new MTRecipeManager();
 	}
-	
-	public void reloadScripts() {
-		// TODO: implements
-	}
 }

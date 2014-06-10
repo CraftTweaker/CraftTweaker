@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.annotations;
 
 import java.lang.annotation.ElementType;
@@ -12,11 +6,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
- * @author Stanneke
+ * Used to indicate an operator. The arguments depend on the kind of operator.
+ * 
+ * @author Stan Hebben
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ZenOperator {
+	/**
+	 * Operator type for this operator.
+	 * 
+	 * @return operator type
+	 */
 	OperatorType value();
 }

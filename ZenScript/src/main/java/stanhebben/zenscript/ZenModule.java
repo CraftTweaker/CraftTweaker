@@ -39,13 +39,26 @@ import stanhebben.zenscript.util.StringUtil;
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 
 /**
- *
- * @author Stanneke
+ * Main module class. Contains a compiled module. The static methods of this
+ * class can be used to compile a specific file or files.
+ * 
+ * Modules may contain statements in their source, or define functions. Functions
+ * in different scripts within the same module are accessible to each other, but
+ * not to other modules.
+ * 
+ * @author Stan Hebben
  */
 public class ZenModule {
-	public static void compileScripts(String mainclass, String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal) {
+	/**
+	 * Compiles a set of parsed files into a module.
+	 * 
+	 * @param mainFileName main filename (used for debug info)
+	 * @param scripts scripts to compile
+	 * @param environmentGlobal global compile environment
+	 */
+	public static void compileScripts(String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal) {
 		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-		clsMain.visitSource(mainclass, null);
+		clsMain.visitSource(mainFileName, null);
 		
 		clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[] {internal(Runnable.class)});
 		MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
@@ -159,6 +172,14 @@ public class ZenModule {
 		environmentGlobal.putClass("__ZenMain__", clsMain.toByteArray());
 	}
 	
+	/**
+	 * Compiles a single script file.
+	 * 
+	 * @param single file to be compiled
+	 * @param environment compile environment
+	 * @return compiled module
+	 * @throws IOException if the file could not be read
+	 */
 	public static ZenModule compileScriptFile(File single, IZenCompileEnvironment environment) throws IOException {
 		Map<String, byte[]> classes = new HashMap<String, byte[]>();
 		ClassNameGenerator nameGen = new ClassNameGenerator();
@@ -173,14 +194,14 @@ public class ZenModule {
 		
 		FileInputStream input = new FileInputStream(single);
 		Reader reader = new InputStreamReader(new BufferedInputStream(input));
-		ZenParser parser = new ZenParser(reader, environment);
+		ZenTokener parser = new ZenTokener(reader, environment);
 		ZenParsedFile file = new ZenParsedFile(filename, className, parser, environmentGlobal);
 		reader.close();
 		
 		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
 		files.add(file);
 		
-		compileScripts(className, filename, files, environmentGlobal);
+		compileScripts(filename, files, environmentGlobal);
 		
 		// debug: output classes
 		File outputDir = new File("generated");
@@ -196,6 +217,16 @@ public class ZenModule {
 		return new ZenModule(classes);
 	}
 	
+	/**
+	 * Compiles a zip file as module. All containing files (inside the given
+	 * subdirectory) will be compiled.
+	 * 
+	 * @param file zip file
+	 * @param subdir subdirectory (use empty string to compile all)
+	 * @param environment compile environment
+	 * @return compiled module
+	 * @throws IOException if the file could not be read properly
+	 */
 	public static ZenModule compileZip(File file, String subdir, IZenCompileEnvironment environment) throws IOException {
 		Map<String, byte[]> classes = new HashMap<String, byte[]>();
 		ClassNameGenerator nameGen = new ClassNameGenerator();
@@ -217,7 +248,7 @@ public class ZenModule {
 				String className = extractClassName(filename);
 				
 				Reader reader = new InputStreamReader(new BufferedInputStream(zipFile.getInputStream(entry)));
-				ZenParser parser = new ZenParser(reader, environment);
+				ZenTokener parser = new ZenTokener(reader, environment);
 				ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
 				files.add(pfile);
 				reader.close();
@@ -225,8 +256,7 @@ public class ZenModule {
 		}
 		
 		String filename = file.getName();
-		String className = extractClassName(filename);
-		compileScripts(className, filename, files, environmentGlobal);
+		compileScripts(filename, files, environmentGlobal);
 		
 		// debug: output classes
 		File outputDir = new File("generated");
@@ -245,11 +275,23 @@ public class ZenModule {
 	private final Map<String, byte[]> classes;
 	private final MyClassLoader classLoader;
 	
-	private ZenModule(Map<String, byte[]> classes) {
+	/**
+	 * Constructs a module for the given set of classes. Mostly intended for
+	 * internal use.
+	 * 
+	 * @param classes 
+	 */
+	public ZenModule(Map<String, byte[]> classes) {
 		this.classes = classes;
 		classLoader = new MyClassLoader();
 	}
 	
+	/**
+	 * Retrieves the main runnable. Running this runnable will execute the content
+	 * of the given module.
+	 * 
+	 * @return main runnable
+	 */
 	public Runnable getMain() {
 		try {
 			return (Runnable) classLoader.loadClass("__ZenMain__").newInstance();
@@ -262,18 +304,17 @@ public class ZenModule {
 		}
 	}
 	
-	private class MyClassLoader extends ClassLoader {
-		@Override
-		public Class<?> findClass(String name) throws ClassNotFoundException {
-			if (classes.containsKey(name)) {
-				return this.defineClass(name, classes.get(name), 0, classes.get(name).length);
-			}
-			
-			return super.findClass(name);
-		}
-	}
+	// ######################
+	// ### Static methods ###
+	// ######################
 	
-	private static String extractClassName(String filename) {
+	/**
+	 * Converts a filename into a class name.
+	 * 
+	 * @param filename filename to convert
+	 * @return class name
+	 */
+	public static String extractClassName(String filename) {
 		filename = filename.replace('\\', '/');
 		if (filename.startsWith("/")) filename = filename.substring(1);
 		
@@ -289,6 +330,24 @@ public class ZenModule {
 			return dir + '.' + name;
 		} else {
 			return filename.substring(0, 1).toUpperCase() + filename.substring(1);
+		}
+	}
+	
+	// #############################
+	// ### Private inner classes ###
+	// #############################
+	
+	/**
+	 * Custom class loader. Loads classes from this module.
+	 */
+	private class MyClassLoader extends ClassLoader {
+		@Override
+		public Class<?> findClass(String name) throws ClassNotFoundException {
+			if (classes.containsKey(name)) {
+				return this.defineClass(name, classes.get(name), 0, classes.get(name).length);
+			}
+			
+			return super.findClass(name);
 		}
 	}
 }

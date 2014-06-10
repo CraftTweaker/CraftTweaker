@@ -6,11 +6,11 @@
 
 package stanhebben.zenscript.definitions;
 
-import static stanhebben.zenscript.ZenParser.*;
+import static stanhebben.zenscript.ZenTokener.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import stanhebben.zenscript.ZenParser;
+import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.statements.Statement;
@@ -23,9 +23,9 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stanneke
  */
 public class ParsedFunction {
-	public static ParsedFunction parse(ZenParser parser, IEnvironmentGlobal environment) {
+	public static ParsedFunction parse(ZenTokener parser, IEnvironmentGlobal environment) {
 		parser.next();
-		Token tName = parser.required(ZenParser.T_ID, "identifier expected");
+		Token tName = parser.required(ZenTokener.T_ID, "identifier expected");
 
 		// function (argname [as type], argname [as type], ...) [as type] { ...contents... }
 		parser.required(T_BROPEN, "( expected");

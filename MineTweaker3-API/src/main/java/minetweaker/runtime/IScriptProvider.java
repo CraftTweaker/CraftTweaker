@@ -4,16 +4,14 @@
  * and open the template in the editor.
  */
 
-package minetweaker;
+package minetweaker.runtime;
+
+import java.util.Iterator;
 
 /**
  *
  * @author Stan
  */
-public class GlobalFunctions {
-	private GlobalFunctions() {}
-	
-	public static void print(String message) {
-		MineTweakerAPI.logger.logInfo(message);
-	}
+public interface IScriptProvider {
+	public Iterator<IScriptIterator> getScripts();
 }

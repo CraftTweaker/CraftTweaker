@@ -3,7 +3,7 @@ package stanhebben.zenscript.type;
 import java.io.IOException;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.TypeExpansion;
-import stanhebben.zenscript.ZenParser;
+import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -37,52 +37,52 @@ public abstract class ZenType {
 	
 	public static ZenType parse(String type, IEnvironmentGlobal environment) {
 		try {
-			ZenParser parser = new ZenParser(type, environment.getEnvironment());
+			ZenTokener parser = new ZenTokener(type, environment.getEnvironment());
 			return read(parser, environment);
 		} catch (IOException ex) {
 			return null;
 		}
 	}
 	
-	public static ZenType read(ZenParser parser, IEnvironmentGlobal environment) {
+	public static ZenType read(ZenTokener parser, IEnvironmentGlobal environment) {
 		ZenType base;
 		
 		Token next = parser.next();
 		switch (next.getType()) {
-			case ZenParser.T_ANY:
+			case ZenTokener.T_ANY:
 				base = ANY;
 				break;
-			case ZenParser.T_VOID:
+			case ZenTokener.T_VOID:
 				base = VOID;
 				break;
-			case ZenParser.T_BOOL:
+			case ZenTokener.T_BOOL:
 				base = BOOL;
 				break;
-			case ZenParser.T_BYTE:
+			case ZenTokener.T_BYTE:
 				base = BYTE;
 				break;
-			case ZenParser.T_SHORT:
+			case ZenTokener.T_SHORT:
 				base = SHORT;
 				break;
-			case ZenParser.T_INT:
+			case ZenTokener.T_INT:
 				base = INT;
 				break;
-			case ZenParser.T_LONG:
+			case ZenTokener.T_LONG:
 				base = LONG;
 				break;
-			case ZenParser.T_FLOAT:
+			case ZenTokener.T_FLOAT:
 				base = FLOAT;
 				break;
-			case ZenParser.T_DOUBLE:
+			case ZenTokener.T_DOUBLE:
 				base = DOUBLE;
 				break;
-			case ZenParser.T_STRING:
+			case ZenTokener.T_STRING:
 				base = STRING;
 				break;
-			case ZenParser.T_ID:
+			case ZenTokener.T_ID:
 				IPartialExpression partial = environment.getValue(next.getValue(), next.getPosition());
-				while (parser.optional(ZenParser.T_DOT) != null) {
-					Token member = parser.required(ZenParser.T_ID, "identifier expected");
+				while (parser.optional(ZenTokener.T_DOT) != null) {
+					Token member = parser.required(ZenTokener.T_ID, "identifier expected");
 					partial = partial.getMember(member.getPosition(), environment, member.getValue());
 				}
 				base = partial.toType(environment);
@@ -91,10 +91,10 @@ public abstract class ZenType {
 				throw new ParseException(next, "Unknown type: " + next.getValue());
 		}
 		
-		while (parser.optional(ZenParser.T_SQBROPEN) != null) {
-			if (parser.optional(ZenParser.T_SQBRCLOSE) == null) {
+		while (parser.optional(ZenTokener.T_SQBROPEN) != null) {
+			if (parser.optional(ZenTokener.T_SQBRCLOSE) == null) {
 				base = new ZenTypeAssociative(base, read(parser, environment));
-				parser.required(ZenParser.T_SQBRCLOSE, "] expected");
+				parser.required(ZenTokener.T_SQBRCLOSE, "] expected");
 			} else {
 				base = new ZenTypeArrayBasic(base);
 			}
@@ -213,7 +213,7 @@ public abstract class ZenType {
 			OperatorType operator) {
 		TypeExpansion expansion = environment.getExpansion(getName());
 		if (expansion != null) {
-			return expansion.trinary(position, environment, first, second, third, operator);
+			return expansion.ternary(position, environment, first, second, third, operator);
 		}
 		return null;
 	}
@@ -221,7 +221,7 @@ public abstract class ZenType {
 	protected IPartialExpression memberExpansion(ZenPosition position, IEnvironmentGlobal environment, Expression value, String member) {
 		TypeExpansion expansion = environment.getExpansion(getName());
 		if (expansion != null) {
-			return expansion.member(position, environment, value, member);
+			return expansion.instanceMember(position, environment, value, member);
 		}
 		return null;
 	}

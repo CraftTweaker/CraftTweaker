@@ -4,27 +4,35 @@
  * and open the template in the editor.
  */
 
-package minetweaker;
+package minetweaker.runtime;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import minetweaker.IBracketHandler;
+import minetweaker.IRecipeRemover;
+import minetweaker.MineTweakerAPI;
 import minetweaker.minecraft.item.IIngredient;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.ZenExpansion;
+import stanhebben.zenscript.compiler.ClassNameGenerator;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.TypeRegistry;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenCompileEnvironment;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolJavaStaticField;
 import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
 import stanhebben.zenscript.symbols.SymbolPackage;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
@@ -44,15 +52,15 @@ public class GlobalRegistry {
 	private static final Map<String, TypeExpansion> expansions = new HashMap<String, TypeExpansion>();
 	
 	static {
-		register("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
-		register("max", getStaticFunction(Math.class, "max", int.class, int.class));
-		register("min", getStaticFunction(Math.class, "min", int.class, int.class));
+		registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
+		registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
+		registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
 		
-		register("logger", getStaticField(MineTweakerAPI.class, "logger"));
-		register("minetweaker", getStaticField(MineTweakerAPI.class, "tweaker"));
-		register("recipes", getStaticField(MineTweakerAPI.class, "recipes"));
-		register("furnace", getStaticField(MineTweakerAPI.class, "furnace"));
-		register("oreDict", getStaticField(MineTweakerAPI.class, "oreDict"));
+		registerGlobal("logger", getStaticField(MineTweakerAPI.class, "logger"));
+		registerGlobal("minetweaker", getStaticField(MineTweakerAPI.class, "tweaker"));
+		registerGlobal("recipes", getStaticField(MineTweakerAPI.class, "recipes"));
+		registerGlobal("furnace", getStaticField(MineTweakerAPI.class, "furnace"));
+		registerGlobal("oreDict", getStaticField(MineTweakerAPI.class, "oreDict"));
 		
 		/*registerExpansion(ExpandAnyArray.class);
 		registerExpansion(ExpandAnyDict.class);
@@ -88,7 +96,7 @@ public class GlobalRegistry {
 	
 	private GlobalRegistry() {}
 	
-	public static void register(String name, IZenSymbol symbol) {
+	public static void registerGlobal(String name, IZenSymbol symbol) {
 		if (globals.containsKey(name)) {
 			throw new IllegalArgumentException("symbol already exists: " + name);
 		}
@@ -161,6 +169,10 @@ public class GlobalRegistry {
 		}
 	}
 	
+	public static IEnvironmentGlobal makeGlobalEnvironment(Map<String, byte[]> classes) {
+		return new MyGlobalEnvironment(classes);
+	}
+	
 	private static class MyErrorLogger implements IZenErrorLogger {
 		@Override
 		public void error(ZenPosition position, String message) {
@@ -206,6 +218,79 @@ public class GlobalRegistry {
 		@Override
 		public TypeExpansion getExpansion(String type) {
 			return expansions.get(type);
+		}
+	}
+	
+	private static class MyGlobalEnvironment implements IEnvironmentGlobal {
+		private final Map<String, byte[]> classes;
+		private final Map<String, IZenSymbol> symbols;
+		private final ClassNameGenerator generator;
+		
+		public MyGlobalEnvironment(Map<String, byte[]> classes) {
+			this.classes = classes;
+			symbols = new HashMap<String, IZenSymbol>();
+			generator = new ClassNameGenerator();
+		}
+		
+		@Override
+		public IZenCompileEnvironment getEnvironment() {
+			return environment;
+		}
+
+		@Override
+		public TypeExpansion getExpansion(String name) {
+			return expansions.get(name);
+		}
+
+		@Override
+		public String makeClassName() {
+			return generator.generate();
+		}
+
+		@Override
+		public boolean containsClass(String name) {
+			return classes.containsKey(name);
+		}
+
+		@Override
+		public void putClass(String name, byte[] data) {
+			classes.put(name, data);
+		}
+
+		@Override
+		public IPartialExpression getValue(String name, ZenPosition position) {
+			if (symbols.containsKey(name)) {
+				return symbols.get(name).instance(position);
+			} else if (globals.containsKey(name)) {
+				return globals.get(name).instance(position);
+			} else {
+				IZenSymbol pkg = root.get(name);
+				if (pkg == null) {
+					return null;
+				} else {
+					return pkg.instance(position);
+				}
+			}
+		}
+
+		@Override
+		public void putValue(String name, IZenSymbol value) {
+			symbols.put(name, value);
+		}
+
+		@Override
+		public ZenType getType(Type type) {
+			return types.getType(type);
+		}
+
+		@Override
+		public void error(ZenPosition position, String message) {
+			MineTweakerAPI.logger.logError("[" + position.getFile() + ":" + position.getLine() + "] Error: " + message);
+		}
+
+		@Override
+		public void warning(ZenPosition position, String message) {
+			MineTweakerAPI.logger.logWarning("[" + position.getFile() + ":" + position.getLine() + "] Warning: " + message);
 		}
 	}
 }

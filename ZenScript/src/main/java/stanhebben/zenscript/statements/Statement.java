@@ -3,8 +3,8 @@ package stanhebben.zenscript.statements;
 import java.util.ArrayList;
 import java.util.List;
 
-import stanhebben.zenscript.ZenParser;
-import static stanhebben.zenscript.ZenParser.*;
+import stanhebben.zenscript.ZenTokener;
+import static stanhebben.zenscript.ZenTokener.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.parser.Token;
@@ -13,7 +13,7 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 public abstract class Statement {
-	public static Statement read(ZenParser parser, IEnvironmentGlobal environment) {
+	public static Statement read(ZenTokener parser, IEnvironmentGlobal environment) {
 		Token next = parser.peek();
 		switch (next.getType()) {
 			case T_AOPEN: {

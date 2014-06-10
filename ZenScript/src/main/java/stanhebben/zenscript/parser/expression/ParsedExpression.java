@@ -8,8 +8,8 @@ package stanhebben.zenscript.parser.expression;
 
 import java.util.ArrayList;
 import java.util.List;
-import stanhebben.zenscript.ZenParser;
-import static stanhebben.zenscript.ZenParser.*;
+import stanhebben.zenscript.ZenTokener;
+import static stanhebben.zenscript.ZenTokener.*;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -36,11 +36,11 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stanneke
  */
 public abstract class ParsedExpression {
-	public static ParsedExpression read(ZenParser parser, IEnvironmentGlobal environment) {
+	public static ParsedExpression read(ZenTokener parser, IEnvironmentGlobal environment) {
 		return readAssignExpression(parser, environment);
 	}
 	
-	private static ParsedExpression readAssignExpression(ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readAssignExpression(ZenTokener parser, IEnvironmentGlobal environment) {
 		ZenPosition position = parser.peek().getPosition();
 		
 		ParsedExpression left = readConditionalExpression(position, parser, environment);
@@ -80,7 +80,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readConditionalExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readConditionalExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readOrOrExpression(position, parser, environment);
 		
 		if (parser.optional(T_QUEST) != null) {
@@ -93,7 +93,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readOrOrExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readOrOrExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readAndAndExpression(position, parser, environment);
 		
 		while (parser.optional(T_OR2) != null) {
@@ -103,7 +103,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readAndAndExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readAndAndExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readOrExpression(position, parser, environment);
 		
 		while (parser.optional(T_AND2) != null) {
@@ -113,7 +113,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readOrExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readOrExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readXorExpression(position, parser, environment);
 		
 		while (parser.optional(T_OR) != null) {
@@ -123,7 +123,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readXorExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readXorExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readAndExpression(position, parser, environment);
 		
 		while (parser.optional(T_XOR) != null) {
@@ -133,7 +133,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readAndExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readAndExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readCompareExpression(position, parser, environment);
 		
 		while (parser.optional(T_AND) != null) {
@@ -143,7 +143,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readCompareExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readCompareExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readAddExpression(position, parser, environment);
 		
 		switch (parser.peek() == null ? -1 : parser.peek().getType()) {
@@ -187,7 +187,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readAddExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readAddExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readMulExpression(position, parser, environment);
 		
 		while (true) {
@@ -207,7 +207,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readMulExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readMulExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readUnaryExpression(position, parser, environment);
 		
 		while (true) {
@@ -228,7 +228,7 @@ public abstract class ParsedExpression {
 		return left;
 	}
 	
-	private static ParsedExpression readUnaryExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readUnaryExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		switch (parser.peek().getType()) {
 			case T_NOT:
 				parser.next();
@@ -247,7 +247,7 @@ public abstract class ParsedExpression {
 		}
 	}
 	
-	private static ParsedExpression readPostfixExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readPostfixExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression base = readPrimaryExpression(position, parser, environment);
 		
 		while (true) {
@@ -293,7 +293,7 @@ public abstract class ParsedExpression {
 		return base;
 	}
 	
-	private static ParsedExpression readPrimaryExpression(ZenPosition position, ZenParser parser, IEnvironmentGlobal environment) {
+	private static ParsedExpression readPrimaryExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		switch (parser.peek().getType()) {
 			case T_INTVALUE:
 				return new ParsedExpressionValue(
@@ -361,7 +361,7 @@ public abstract class ParsedExpression {
 				Token start = parser.next();
 				List<Token> tokens = new ArrayList<Token>();
 				Token next = parser.next();
-				while (next.getType() != ZenParser.T_GT) {
+				while (next.getType() != ZenTokener.T_GT) {
 					tokens.add(next);
 					next = parser.next();
 				}

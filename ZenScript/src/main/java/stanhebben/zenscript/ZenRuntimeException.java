@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript;
 
 /**
- *
- * @author Stanneke
+ * ZenRuntimeExceptions are thrown when an internal error occurs during
+ * execution of scripts. Since ZenScript is only partially typesafe, errors
+ * may occur at runtime due to impossible operations being executed.
+ * 
+ * @author Stan Hebben
  */
 public class ZenRuntimeException extends RuntimeException {
 	public ZenRuntimeException(String message) {

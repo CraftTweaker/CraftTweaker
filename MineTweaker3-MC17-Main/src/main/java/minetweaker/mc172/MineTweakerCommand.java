@@ -2,6 +2,7 @@ package minetweaker.mc172;
 
 import java.util.Arrays;
 import java.util.List;
+import minetweaker.MineTweakerAPI;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -82,7 +83,7 @@ public class MineTweakerCommand implements ICommand {
 		}
 		
 		if (arguments[0].equals("reload")) {
-			MineTweakerMod.instance.reloadScripts();
+			MineTweakerAPI.tweaker.load();
 		}
 		
 		/*if (arguments[0].equals("name")) {
