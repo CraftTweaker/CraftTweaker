@@ -65,6 +65,36 @@ public class StringUtil {
         return result.toArray(new String[result.size()]);
     }
 	
+	/**
+	 * Processes a doc comment into paragraphs.
+	 * 
+	 * @param value input value
+	 * @return output paragraphs
+	 */
+	public static String[] splitParagraphs(String value) {
+		String[] lines = split(value, '\n');
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = lines[i].trim();
+		}
+		ArrayList<String> output = new ArrayList<String>();
+		StringBuilder current = new StringBuilder();
+		for (int i = 0; i < lines.length; i++) {
+			if (lines[i].length() == 0) {
+				if (current.length() > 0) {
+					output.add(current.toString());
+					current = new StringBuilder();
+				}
+			} else {
+				current.append(' ').append(lines[i]);
+			}
+		}
+		if (current.length() > 0) {
+			output.add(current.toString());
+		}
+		
+		return output.toArray(new String[output.size()]);
+	}
+	
 	// ########################
 	// ### String utilities ###
 	// ########################

@@ -6,9 +6,13 @@
 
 package minetweaker.mc172;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc172.data.NBTConverter;
+import minetweaker.annotations.ModOnly;
 import minetweaker.mc172.oredict.OreDict;
 import minetweaker.mc172.recipes.MTRecipeManager;
 
@@ -27,5 +31,21 @@ public class MineTweakerMod {
 	public MineTweakerMod() {
 		MineTweakerAPI.oreDict = new OreDict();
 		MineTweakerAPI.recipes = new MTRecipeManager();
+		
+		List<Class> classes = new ArrayList<Class>();
+		MineTweakerRegistry.getClasses(classes);
+		
+		outer: for (Class cls : classes) {
+			for (Annotation annotation : cls.getAnnotationsByType(ModOnly.class)) {
+				String[] value = ((ModOnly) annotation).value();
+				for (String mod : value) {
+					if (!Loader.isModLoaded(mod)) {
+						continue outer; // skip this class
+					}
+				}
+			}
+			
+			MineTweakerAPI.registerClass(cls);
+		}
 	}
 }

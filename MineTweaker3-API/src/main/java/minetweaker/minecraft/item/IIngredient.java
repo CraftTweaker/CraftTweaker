@@ -29,8 +29,10 @@ public interface IIngredient {
 	public String getMark();
 	
 	/**
-	 * Gets the amount. Should return -1 if no amount is available and 1 for
-	 * a single item. Stacks return the stack size.
+	 * Gets the amount.
+	 * 
+	 * Should return -1 if no amount is available and 1 for a single item.
+	 * Stacks return the stack size.
 	 * 
 	 * @return stack size
 	 */
@@ -38,8 +40,10 @@ public interface IIngredient {
 	public int getAmount();
 	
 	/**
-	 * Gets all possible items for this ingredient. If there is no item list
-	 * (for example, it is the &lt;*&gt; wildcard item) null should be returned.
+	 * Gets all possible items for this ingredient.
+	 * 
+	 * If there is no item list (for example, it is the &lt;*&gt; wildcard item)
+	 * null should be returned.
 	 * 
 	 * @return the items for this ingredient, or null
 	 */
@@ -112,8 +116,9 @@ public interface IIngredient {
 	public IItemStack applyTransform(IItemStack item);
 	
 	/**
-	 * Gets the internal item backing this ingredient. The value is
-	 * implementation-dependent.
+	 * Gets the internal item backing this ingredient.
+	 * 
+	 * The value is implementation-dependent.
 	 * 
 	 * @return internal item
 	 */

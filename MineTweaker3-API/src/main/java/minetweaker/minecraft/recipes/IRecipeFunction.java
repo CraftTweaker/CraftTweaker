@@ -8,11 +8,13 @@ package minetweaker.minecraft.recipes;
 
 import java.util.Map;
 import minetweaker.minecraft.item.IItemStack;
+import stanhebben.zenscript.annotations.ZenClass;
 
 /**
  *
  * @author Stan
  */
+@ZenClass("minecraft.recipes.IRecipeFunction")
 public interface IRecipeFunction {
 	public IItemStack process(IItemStack output, Map<String, IItemStack> inputs);
 }

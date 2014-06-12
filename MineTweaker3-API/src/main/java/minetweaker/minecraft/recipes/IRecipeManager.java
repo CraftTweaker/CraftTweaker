@@ -12,7 +12,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * 
  * @author Stan Hebben
  */
-@ZenClass("minetweaker.recipes.IRecipeManager")
+@ZenClass("minecraft.recipes.IRecipeManager")
 public interface IRecipeManager {
 	/**
 	 * Removes all crafting recipes crafting the specified item.

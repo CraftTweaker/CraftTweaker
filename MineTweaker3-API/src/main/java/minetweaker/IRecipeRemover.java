@@ -1,17 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker;
 
 import minetweaker.minecraft.item.IIngredient;
 
 /**
- *
- * @author Stan
+ * Used to register removable mod recipes for mod machines. Once registered,
+ * it will be called when minetweaker.remove() is called.
+ * 
+ * @author Stan Hebben
  */
 public interface IRecipeRemover {
+	/**
+	 * Removes all the items matching the given ingredient.
+	 * 
+	 * @param ingredient ingredient
+	 */
 	public void remove(IIngredient ingredient);
 }

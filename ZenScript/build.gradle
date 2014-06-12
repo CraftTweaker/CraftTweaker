@@ -1,5 +1,8 @@
 apply plugin: 'java'
 
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
 dependencies {
 	compile group: 'org.ow2.asm', name: 'asm', version:'4.2'
     compile group: 'org.ow2.asm', name: 'asm-commons', version:'4.2'

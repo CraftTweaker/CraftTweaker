@@ -9,12 +9,14 @@ package minetweaker.minecraft.recipes;
 import minetweaker.minecraft.item.IIngredient;
 import minetweaker.minecraft.item.IItemStack;
 import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  *
  * @author Stan
  */
+@ZenClass("minecraft.recipes.IFurnaceManager")
 public interface IFurnaceManager {
 	@ZenMethod
 	public void remove(IIngredient ingredient);

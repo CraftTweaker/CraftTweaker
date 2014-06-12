@@ -6,10 +6,13 @@
 
 package minetweaker.minecraft.item;
 
+import stanhebben.zenscript.annotations.ZenClass;
+
 /**
  *
  * @author Stan
  */
+@ZenClass("minecraft.item.IItemDefinition")
 public interface IItemDefinition {
 	
 }

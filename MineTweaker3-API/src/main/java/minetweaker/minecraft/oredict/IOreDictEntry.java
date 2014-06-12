@@ -15,7 +15,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  *
  * @author Stan
  */
-@ZenClass("minecraft.oreDict.IOreDictEntry")
+@ZenClass("minecraft.oredict.IOreDictEntry")
 public interface IOreDictEntry extends IIngredient {
 	@ZenMethod
 	public void add(IItemStack item);

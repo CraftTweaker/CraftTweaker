@@ -21,7 +21,7 @@ public class Transform {
 	 * @return reuse transformer
 	 */
 	@ZenMethod
-	public IItemTransformer reuse() {
+	public static IItemTransformer reuse() {
 		return new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
@@ -37,7 +37,7 @@ public class Transform {
 	 * @return damage transformer
 	 */
 	@ZenMethod
-	public IItemTransformer damage() {
+	public static IItemTransformer damage() {
 		return new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
@@ -61,7 +61,7 @@ public class Transform {
 	 * @return damage transformer
 	 */
 	@ZenMethod
-	public IItemTransformer damage(final int damage) {
+	public static IItemTransformer damage(final int damage) {
 		return new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
@@ -83,7 +83,7 @@ public class Transform {
 	 * @return replacement transformer
 	 */
 	@ZenMethod
-	public IItemTransformer replaceWith(IItemStack withItem) {
+	public static IItemTransformer replaceWith(IItemStack withItem) {
 		final IItemStack result = withItem.withAmount(withItem.getAmount() + 1);
 		
 		return new IItemTransformer() {
@@ -103,7 +103,7 @@ public class Transform {
 	 * @return consuming transformer
 	 */
 	@ZenMethod
-	public IItemTransformer consume(final int amount) {
+	public static IItemTransformer consume(final int amount) {
 		return new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {

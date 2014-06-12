@@ -1,0 +1,76 @@
+.table-classes>thead>tr>th, .table-classes>tbody>tr>th, .table-classes>tfoot>tr>th, .table-classes>thead>tr>td, .table-classes>tbody>tr>td, .table-classes>tfoot>tr>td {
+	padding: 2px;
+	padding-left: 10px;
+}
+
+.panel-memberlist .panel-body {
+	padding: 0px;
+}
+
+.package-title {
+	
+}
+
+.classes-title {
+	font-weight: bold;
+}
+
+.interfaces-title {
+	font-weight: bold;
+}
+
+.implemented-interfaces {
+	margin: 10px;
+}
+
+.property-modifiers {
+	width: 15%;
+	color: #888;
+}
+
+.property-type {
+	width: 15%;
+}
+
+.property-name {
+	
+}
+
+.property-intro {
+	
+}
+
+.table-properties {
+	margin-bottom: 0px;
+}
+
+.table-properties>tbody>tr>td {
+	border-bottom: 1px solid #dddddd;
+}
+
+.panel-info .panel-heading {
+	font-size: 20px;
+}
+
+body {
+	font-size: 16px;
+}
+
+.documentation-class {
+	padding-bottom: 10px;
+}
+
+.param-optional {
+	color: #ccc;
+}
+
+.functional-interface-signature {
+	padding-bottom: 10px;
+	padding-top: 5px;
+	font-size: 20px;
+}
+
+.class-package-name {
+	position: relative;
+	top: 15px;
+}

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.annotations;
 
 import java.lang.annotation.ElementType;
@@ -12,11 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
- * @author Stan
+ * Indicates that a certain class is only available when a specific mod is 
+ * available. Multiple mods can be specified.
+ * 
+ * @author Stan Hebben
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ModOnly {
-	public String value();
+	public String[] value();
 }

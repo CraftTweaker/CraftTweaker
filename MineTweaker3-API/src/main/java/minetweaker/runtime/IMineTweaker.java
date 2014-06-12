@@ -17,7 +17,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  *
  * @author Stan
  */
-@ZenClass("minetweaker.MineTweaker")
+@ZenClass("minetweaker.IMineTweaker")
 public interface IMineTweaker {
 	/**
 	 * Executes a specified MineTweaker action. Will print a log message and

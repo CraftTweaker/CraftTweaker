@@ -16,7 +16,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * 
  * @author Stan Hebben
  */
-@ZenClass("minetweaker.IItemTransformer")
+@ZenClass("minecraft.item.IItemTransformer")
 public interface IItemTransformer {
 	/**
 	 * Transforms the specified item. May modify this item (and return it)
