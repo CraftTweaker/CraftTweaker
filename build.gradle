@@ -1,4 +1,5 @@
 import org.gradle.api.artifacts.*
+import minetweaker.tasks.MergeJarsTask;
 
 apply plugin: 'base' // To add "clean" task to the root project.
 
@@ -21,4 +22,17 @@ task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the pro
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
     gradleVersion = '1.11'
+}
+
+subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
+
+task assembleMC17(type: Jar, dependsOn: [\
+		':ZenScript:build',
+		':MineTweaker3-API:build',
+		':MineTweaker3-MC17-Main:build',
+		':MineTweaker3-MC17-Mod-IC2:build']) {
+	from zipTree(project(":ZenScript").jar.archivePath)
+	from zipTree(project(':MineTweaker3-API').jar.archivePath)
+	from zipTree(project(':MineTweaker3-MC17-Main').jar.archivePath)
+	from zipTree(project(':MineTweaker3-MC17-Mod-IC2').jar.archivePath)
 }
