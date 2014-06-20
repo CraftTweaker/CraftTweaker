@@ -20,6 +20,12 @@ public interface ILiquidStack {
 	@ZenGetter("definition")
 	public ILiquidDefinition getDefinition();
 	
+	@ZenGetter("name")
+	public String getName();
+	
+	@ZenGetter("displayName")
+	public String getDisplayName();
+	
 	@ZenGetter("amount")
 	public int getAmount();
 	

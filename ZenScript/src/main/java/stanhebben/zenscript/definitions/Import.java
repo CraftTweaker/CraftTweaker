@@ -33,6 +33,6 @@ public class Import {
 	}
 	
 	public String getRename() {
-		return rename;
+		return rename == null ? name.get(name.size() - 1) : rename;
 	}
 }

@@ -15,8 +15,8 @@ import minetweaker.mc172.MineTweakerMod;
  *
  * @author Stanneke
  */
-@MCVersion(MineTweakerMod.MCVERSION)
-@IFMLLoadingPlugin.TransformerExclusions("minetweaker.mc172.transformer")
+//@MCVersion(MineTweakerMod.MCVERSION)
+//@IFMLLoadingPlugin.TransformerExclusions("minetweaker.mc172.transformer")
 public class MineTweakerTransformer implements IFMLLoadingPlugin {
 	
 	@Override

@@ -55,7 +55,7 @@ public class RegisterZenClassesTask extends DefaultTask {
 		}
 		
 		String fullClassName = classPackage.replace('.', '/') + '/' + className;
-		System.out.println("Full classname: " + fullClassName);
+		//System.out.println("Full classname: " + fullClassName);
 		
 		// generate class
 		ClassWriter output = new ClassWriter(ClassWriter.COMPUTE_MAXS);

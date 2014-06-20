@@ -6,7 +6,6 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeBool;
-import stanhebben.zenscript.symbols.IZenNamespace;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 

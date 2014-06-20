@@ -14,6 +14,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 public interface ILogger {
 	@ZenMethod
+	public void logCommand(String message);
+	
+	@ZenMethod
 	public void logInfo(String message);
 	
 	@ZenMethod

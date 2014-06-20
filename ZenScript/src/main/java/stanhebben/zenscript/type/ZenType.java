@@ -80,12 +80,27 @@ public abstract class ZenType {
 				base = STRING;
 				break;
 			case ZenTokener.T_ID:
+				base = ANY;
+				
+				StringBuilder typeName = new StringBuilder();
+				typeName.append(next.getValue());
 				IPartialExpression partial = environment.getValue(next.getValue(), next.getPosition());
 				while (parser.optional(ZenTokener.T_DOT) != null) {
+					typeName.append('.');
+					
 					Token member = parser.required(ZenTokener.T_ID, "identifier expected");
+					typeName.append(member.getValue());
 					partial = partial.getMember(member.getPosition(), environment, member.getValue());
+					
+					if (partial == null) {
+						environment.error(member.getPosition(), "could not find type " + typeName);
+						break;
+					}
 				}
-				base = partial.toType(environment);
+				if (partial != null) {
+					base = partial.toType(environment);
+					System.out.println("Parsed type " + base.getName());
+				}
 				break;
 			default:
 				throw new ParseException(next, "Unknown type: " + next.getValue());

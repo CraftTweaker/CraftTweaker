@@ -12,7 +12,7 @@ import java.util.Map;
 import org.objectweb.asm.ClassVisitor;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.symbols.IZenCompileEnvironment;
+import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolLocal;
 import stanhebben.zenscript.type.ZenType;

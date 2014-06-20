@@ -6,31 +6,63 @@
 
 package minetweaker.mc172;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
+import minetweaker.mc172.brackets.ItemBracketHandler;
+import minetweaker.mc172.brackets.LiquidBracketHandler;
+import minetweaker.mc172.network.MineTweakerLoadScriptsHandler;
+import minetweaker.mc172.network.MineTweakerLoadScriptsPacket;
 import minetweaker.mc172.oredict.OreDict;
 import minetweaker.mc172.recipes.MTRecipeManager;
+import minetweaker.mc172.util.MineTweakerHacks;
+import minetweaker.runtime.IScriptProvider;
+import minetweaker.runtime.providers.ScriptProviderCascade;
+import minetweaker.runtime.providers.ScriptProviderDirectory;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
- *
- * @author Stanneke
+ * Main mod class. Performs some general logic, initialization of the API and
+ * FML event handling.
+ * 
+ * @author Stan Hebben
  */
 @Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.0")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker";
 	public static final String MCVERSION = "1.7.2";
 	
+	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	
+	static {
+		NETWORK.registerMessage(MineTweakerLoadScriptsHandler.class, MineTweakerLoadScriptsPacket.class, 0, Side.CLIENT);
+	}
+	
 	@Mod.Instance(MODID)
-	public static MineTweakerMod instance;
+	public static MineTweakerMod INSTANCE;
+	
+	private final IScriptProvider scriptsGlobal;
+	
+	private boolean iAmServer = false;
 	
 	public MineTweakerMod() {
 		MineTweakerAPI.oreDict = new OreDict();
 		MineTweakerAPI.recipes = new MTRecipeManager();
+		MineTweakerAPI.logger = new MineTweakerLogger();
 		
 		List<Class> classes = new ArrayList<Class>();
 		MineTweakerRegistry.getClasses(classes);
@@ -47,5 +79,64 @@ public class MineTweakerMod {
 			
 			MineTweakerAPI.registerClass(cls);
 		}
+		
+		File globalDir = new File("scripts");
+		if (!globalDir.exists()) {
+			globalDir.mkdirs();
+		}
+		
+		scriptsGlobal = new ScriptProviderDirectory(globalDir);
+		MineTweakerAPI.tweaker.setScriptProvider(scriptsGlobal);
+	}
+	
+	public boolean iAmServer() {
+		return iAmServer;
+	}
+	
+	/**
+	 * Reloads all scripts.
+	 */
+	public void reload() {
+		MineTweakerAPI.tweaker.rollback();
+		MineTweakerAPI.tweaker.load();
+	}
+	
+	// ##########################
+	// ### FML Event Handlers ###
+	// ##########################
+	
+	@EventHandler
+	public void onLoad(FMLPreInitializationEvent ev) {
+		MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
+		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+	}
+	
+	@EventHandler
+	public void onPostInit(FMLPostInitializationEvent ev) {
+		MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
+		MineTweakerAPI.registerBracketHandler(new LiquidBracketHandler());
+	}
+	
+	@EventHandler
+	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
+		// starts before loading worlds
+		// perfect place to start MineTweaker!
+		
+		File scriptsDir = new File(MineTweakerHacks.getWorldDirectory(ev.getServer()), "scripts");
+		if (!scriptsDir.exists()) {
+			scriptsDir.mkdir();
+		}
+		
+		iAmServer = true;
+		
+		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
+		IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal, scriptsLocal);
+		MineTweakerAPI.tweaker.setScriptProvider(cascaded);
+		reload();
+	}
+	
+	@EventHandler
+	public void onServerStarting(FMLServerStartingEvent ev) {
+		ev.registerServerCommand(new MineTweakerCommand());
 	}
 }

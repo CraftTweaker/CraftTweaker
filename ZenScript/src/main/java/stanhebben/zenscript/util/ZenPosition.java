@@ -37,6 +37,6 @@ public class ZenPosition {
 	
 	@Override
 	public String toString() {
-		return Integer.toString(line) + ":" + offset;
+		return (file == null ? "?" : file.getFileName()) + " - " + Integer.toString(line) + ":" + offset;
 	}
 }

@@ -34,6 +34,16 @@ public class TweakerLiquidStack implements ILiquidStack {
 	public ILiquidDefinition getDefinition() {
 		return new TweakerLiquidDefinition(stack.getFluid());
 	}
+	
+	@Override
+	public String getName() {
+		return stack.getFluid().getName();
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return stack.getFluid().getLocalizedName();
+	}
 
 	@Override
 	public int getAmount() {

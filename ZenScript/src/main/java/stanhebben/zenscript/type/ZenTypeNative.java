@@ -412,7 +412,7 @@ public class ZenTypeNative extends ZenType {
 
 	@Override
 	public String getSignature() {
-		return cls.getName();
+		return signature(cls);
 	}
 
 	@Override
@@ -429,7 +429,9 @@ public class ZenTypeNative extends ZenType {
 	 */
 	private static boolean canCastImplicit(Class cls, ZenType type) {
 		if (isEqual(cls, type)) return true;
-		if (canCastImplicit(cls.getSuperclass(), type)) return true;
+		if (cls.getSuperclass() != null) {
+			if (canCastImplicit(cls.getSuperclass(), type)) return true;
+		}
 		for (Class iface : cls.getInterfaces()) {
 			if (canCastImplicit(iface, type)) return true;
 		}
@@ -458,7 +460,7 @@ public class ZenTypeNative extends ZenType {
 	}
 	
 	private static String getSignature(Class cls) {
-		String signature = cls.getName();
+		String signature = signature(cls);
 		if (Number.class.isAssignableFrom(cls)) {
 			if (cls == Byte.class) {
 				signature = "B";

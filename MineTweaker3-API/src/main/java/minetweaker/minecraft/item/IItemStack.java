@@ -8,9 +8,11 @@ package minetweaker.minecraft.item;
 
 import minetweaker.minecraft.data.IData;
 import minetweaker.minecraft.liquid.ILiquidStack;
+import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenOperator;
 
 /**
  *
@@ -38,6 +40,10 @@ public interface IItemStack extends IIngredient {
 	
 	@ZenGetter("liquid")
 	public ILiquidStack getLiquid();
+	
+	@ZenOperator(OperatorType.MUL)
+	@ZenMethod
+	public IItemStack amount(int amount);
 	
 	@ZenMethod
 	public IIngredient anyDamage();

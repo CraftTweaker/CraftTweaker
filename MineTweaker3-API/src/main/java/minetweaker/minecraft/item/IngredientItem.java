@@ -99,4 +99,13 @@ public class IngredientItem implements IIngredient {
 	public Object getInternal() {
 		return item.getInternal();
 	}
+	
+	// #############################
+	// ### Object implementation ###
+	// #############################
+	
+	@Override
+	public String toString() {
+		return "(Ingredient) " + item.toString();
+	}
 }

@@ -29,7 +29,6 @@ import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.statements.StatementReturn;
-import stanhebben.zenscript.symbols.IZenCompileEnvironment;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.symbols.SymbolZenStaticMethod;
@@ -79,30 +78,9 @@ public class ZenModule {
 		for (ZenParsedFile script : scripts) {
 			ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			clsScript.visitSource(script.getFileName(), null);
-			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, environmentGlobal);
+			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
 			
 			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName(), null, internal(Object.class), new String[] {internal(Runnable.class)});
-			for (Import imprt : script.getImports()) {
-				List<String> name = imprt.getName();
-				IPartialExpression value = environmentGlobal.getValue(name.get(0), imprt.getPosition());
-				for (int i = 1; i < name.size(); i++) {
-					IPartialExpression member = value.getMember(imprt.getPosition(), environmentGlobal, name.get(i));
-					if (member == null) {
-						environmentGlobal.error(imprt.getPosition(), StringUtil.join(name, ".") + " not found");
-						break;
-					}
-					value = member;
-				}
-				IZenSymbol symbol = value.toSymbol();
-				if (symbol == null) {
-					environmentGlobal.error(imprt.getPosition(), StringUtil.join(name, ".") + " is not a valid import");
-				} else {
-					environmentScript.putValue(
-							imprt.getRename() == null
-									? name.get(name.size() - 1)
-									: imprt.getRename(), value.toSymbol());
-				}
-			}
 			
 			for (Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
 				ParsedFunction fn = function.getValue();
@@ -180,7 +158,7 @@ public class ZenModule {
 	 * @return compiled module
 	 * @throws IOException if the file could not be read
 	 */
-	public static ZenModule compileScriptFile(File single, IZenCompileEnvironment environment) throws IOException {
+	public static ZenModule compileScriptFile(File single, IZenCompileEnvironment environment, ClassLoader baseClassLoader) throws IOException {
 		Map<String, byte[]> classes = new HashMap<String, byte[]>();
 		ClassNameGenerator nameGen = new ClassNameGenerator();
 		EnvironmentGlobal environmentGlobal = new EnvironmentGlobal(
@@ -214,7 +192,7 @@ public class ZenModule {
 			output.close();
 		}
 		
-		return new ZenModule(classes);
+		return new ZenModule(classes, baseClassLoader);
 	}
 	
 	/**
@@ -227,7 +205,11 @@ public class ZenModule {
 	 * @return compiled module
 	 * @throws IOException if the file could not be read properly
 	 */
-	public static ZenModule compileZip(File file, String subdir, IZenCompileEnvironment environment) throws IOException {
+	public static ZenModule compileZip(
+			File file,
+			String subdir,
+			IZenCompileEnvironment environment,
+			ClassLoader baseClassLoader) throws IOException {
 		Map<String, byte[]> classes = new HashMap<String, byte[]>();
 		ClassNameGenerator nameGen = new ClassNameGenerator();
 		EnvironmentGlobal environmentGlobal = new EnvironmentGlobal(
@@ -269,7 +251,7 @@ public class ZenModule {
 			output.close();
 		}
 		
-		return new ZenModule(classes);
+		return new ZenModule(classes, baseClassLoader);
 	}
 	
 	private final Map<String, byte[]> classes;
@@ -281,9 +263,9 @@ public class ZenModule {
 	 * 
 	 * @param classes 
 	 */
-	public ZenModule(Map<String, byte[]> classes) {
+	public ZenModule(Map<String, byte[]> classes, ClassLoader baseClassLoader) {
 		this.classes = classes;
-		classLoader = new MyClassLoader();
+		classLoader = new MyClassLoader(baseClassLoader);
 	}
 	
 	/**
@@ -341,10 +323,14 @@ public class ZenModule {
 	 * Custom class loader. Loads classes from this module.
 	 */
 	private class MyClassLoader extends ClassLoader {
+		private MyClassLoader(ClassLoader baseClassLoader) {
+			super(baseClassLoader);
+		}
+		
 		@Override
 		public Class<?> findClass(String name) throws ClassNotFoundException {
 			if (classes.containsKey(name)) {
-				return this.defineClass(name, classes.get(name), 0, classes.get(name).length);
+				return defineClass(name, classes.get(name), 0, classes.get(name).length);
 			}
 			
 			return super.findClass(name);

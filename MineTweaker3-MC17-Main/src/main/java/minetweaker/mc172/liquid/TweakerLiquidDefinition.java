@@ -23,6 +23,16 @@ public class TweakerLiquidDefinition implements ILiquidDefinition {
 	public TweakerLiquidDefinition(Fluid fluid) {
 		this.fluid = fluid;
 	}
+	
+	@Override
+	public String getName() {
+		return fluid.getName();
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return fluid.getLocalizedName();
+	}
 
 	@Override
 	public ILiquidStack asStack(int millibuckets) {

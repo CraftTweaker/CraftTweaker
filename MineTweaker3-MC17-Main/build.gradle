@@ -26,3 +26,9 @@ dependencies {
 		compile project(':MineTweaker3-API')
 	}
 }
+
+jar {
+	manifest {
+        attributes 'FMLCorePlugin': 'minetweaker.mc172.transformer.MineTweakerTransformer'
+    }
+}

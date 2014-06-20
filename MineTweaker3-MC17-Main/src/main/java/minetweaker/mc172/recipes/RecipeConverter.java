@@ -75,6 +75,7 @@ public class RecipeConverter {
 		
 		// construct recipe
 		if (type == TYPE_BASIC) {
+			System.out.println("Converted to basic recipe");
 			ItemStack[] basicIngredients = new ItemStack[recipe.getHeight() * recipe.getWidth()];
 			for (int i = 0; i < ingredients.length; i++) {
 				basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = (ItemStack) ingredients[i].getInternal();
@@ -82,6 +83,7 @@ public class RecipeConverter {
 			
 			return new ShapedRecipeBasic(basicIngredients, recipe);
 		} else if (type == TYPE_ORE) {
+			System.out.println("Converted to ore recipe");
 			Object[] converted = new Object[recipe.getHeight() * recipe.getWidth()];
 			for (int i = 0; i < ingredients.length; i++) {
 				converted[posx[i] + posy[i] * recipe.getWidth()] = ingredients[i].getInternal();
@@ -113,6 +115,7 @@ public class RecipeConverter {
 			
 			return new ShapedRecipeOre(rarguments.toArray(), recipe);
 		} else {
+			System.out.println("Converted to advanced recipe");
 			return new ShapedRecipeAdvanced(recipe);
 		}
 	}

@@ -92,7 +92,12 @@ public class NBTConverter implements IDataConverter<NBTBase> {
 		}
 	}
 
-	private NBTConverter() {}
+	public static void updateMap(NBTTagCompound nbt, IData data) {
+		NBTUpdater updater = new NBTUpdater(nbt);
+		data.convert(updater);
+	}
+	
+	public NBTConverter() {}
 	
 	@Override
 	public NBTBase fromBool(boolean value) {

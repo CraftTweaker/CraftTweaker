@@ -9,7 +9,7 @@ package stanhebben.zenscript.compiler;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.symbols.IZenCompileEnvironment;
+import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.util.ZenPosition;
 

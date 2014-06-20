@@ -21,6 +21,12 @@ public interface ILiquidDefinition {
 	@ZenOperator(OperatorType.MUL)
 	public ILiquidStack asStack(int millibuckets);
 	
+	@ZenGetter("name")
+	public String getName();
+	
+	@ZenGetter("displayName")
+	public String getDisplayName();
+	
 	@ZenGetter("luminosity")
 	public int getLuminosity();
 	

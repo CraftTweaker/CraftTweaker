@@ -1,6 +1,6 @@
 package minetweaker;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import minetweaker.runtime.IMineTweaker;
 import minetweaker.runtime.ILogger;
 import minetweaker.runtime.Tweaker;
@@ -11,6 +11,10 @@ import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.SymbolJavaStaticField;
+import stanhebben.zenscript.symbols.SymbolJavaStaticGetter;
+import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
+import stanhebben.zenscript.type.natives.JavaMethod;
 
 /**
  * Provides access to the MineTweaker API.
@@ -67,12 +71,12 @@ public class MineTweakerAPI {
 	 * @param annotatedClass 
 	 */
 	public static void registerClass(Class annotatedClass) {
-		for (Annotation annotation : annotatedClass.getAnnotations()) {
-			if (annotation instanceof ZenExpansion) {
-				GlobalRegistry.registerExpansion(annotatedClass);
-			} else if (annotation instanceof ZenClass) {
-				GlobalRegistry.registerNativeClass(annotatedClass);
-			}
+		if (annotatedClass.isAnnotationPresent(ZenExpansion.class)) {
+			GlobalRegistry.registerExpansion(annotatedClass);
+		}
+		
+		if (annotatedClass.isAnnotationPresent(ZenClass.class)) {
+			GlobalRegistry.registerNativeClass(annotatedClass);
 		}
 	}
 	
@@ -106,5 +110,64 @@ public class MineTweakerAPI {
 	 */
 	public static void registerBracketHandler(IBracketHandler handler) {
 		GlobalRegistry.registerBracketHandler(handler);
+	}
+	
+	/**
+	 * Creates a symbol that refers to a java method.
+	 * 
+	 * @param cls class that contains the method
+	 * @param name method name
+	 * @param arguments method argument types
+	 * @return corresponding symbol
+	 */
+	public static IZenSymbol getJavaStaticMethodSymbol(Class cls, String name, Class... arguments) {
+		JavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
+		return new SymbolJavaStaticMethod(method);
+	}
+	
+	/**
+	 * Creates a symbol that refers to a java getter. The getter must be a method
+	 * with no arguments. The given symbol will act as a variable of which the
+	 * value can be retrieved but not set.
+	 * 
+	 * @param cls class that contains the getter method
+	 * @param name name of the method
+	 * @return corresponding symbol
+	 */
+	public static IZenSymbol getJavaStaticGetterSymbol(Class cls, String name) {
+		JavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name);
+		return new SymbolJavaStaticGetter(method);
+	}
+	
+	/**
+	 * Creates a symbol that refers to a static field. The field must be an
+	 * existing public field in the given class. The field will act as a
+	 * variable that can be retrieved but not set.
+	 * 
+	 * @param cls class that contains the field
+	 * @param name field name (must be public)
+	 * @return corresponding symbol
+	 */
+	public static IZenSymbol getJavaStaticFieldSymbol(Class cls, String name) {
+		try {
+			Field field = cls.getField(name);
+			return new SymbolJavaStaticField(cls, field, GlobalRegistry.getTypeRegistry());
+		} catch (NoSuchFieldException ex) {
+			return null;
+		} catch (SecurityException ex) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Loads a Java method from an existing class.
+	 * 
+	 * @param cls method class
+	 * @param name method name
+	 * @param arguments argument types
+	 * @return java method
+	 */
+	public static JavaMethod getJavaMethod(Class cls, String name, Class... arguments) {
+		return JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
 	}
 }

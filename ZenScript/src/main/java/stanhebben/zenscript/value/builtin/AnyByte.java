@@ -9,6 +9,7 @@ package stanhebben.zenscript.value.builtin;
 import java.util.Iterator;
 import stanhebben.zenscript.ZenRuntimeException;
 import stanhebben.zenscript.value.IAny;
+import stanhebben.zenscript.value.IntRange;
 
 /**
  *
@@ -82,8 +83,7 @@ public class AnyByte implements IAny {
 
 	@Override
 	public IAny range(IAny value) {
-		//return new AnyIntRange(this.value, value.asInt());
-		return null; // TODO
+		return new AnyIntRange(new IntRange(this.value, value.asInt()));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class AnyByte implements IAny {
 
 	@Override
 	public IAny call(IAny... values) {
-		throw new ZenRuntimeException("cannot index a byte value");
+		throw new ZenRuntimeException("cannot call a byte value");
 	}
 
 	@Override

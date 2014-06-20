@@ -26,6 +26,9 @@ public interface ICraftingInventory {
 	@ZenGetter("height")
 	public int getHeight();
 	
+	@ZenGetter("stackCount")
+	public int getStackCount();
+	
 	@ZenMethod
 	public IItemStack getStack(int i);
 	

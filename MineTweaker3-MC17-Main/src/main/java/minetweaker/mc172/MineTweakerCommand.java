@@ -2,11 +2,20 @@ package minetweaker.mc172;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import minetweaker.MineTweakerAPI;
+import minetweaker.mc172.item.TweakerItemStack;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.util.StringUtil;
 
 /**
@@ -43,7 +52,21 @@ public class MineTweakerCommand implements ICommand {
 	public String getCommandUsage(ICommandSender icommandsender) {
 		return StringUtil.join(new String[] {
 			"",
-			"minetweaker name <id>[:<meta>]",
+			"minetweaker reload",
+			"    Reloads all scripts",
+			"minetweaker names",
+			"    Outputs a list of all item names in the game to the minetweaker log",
+			"minetweaker liquids",
+			"    Outputs a list of all liquid names in the game to the minetweaker log",
+			"minetweaker inventory",
+			"    Lists all items in your inventory",
+			"minetweaker hand",
+			"    Outputs the name of the item in your hand",
+			"minetweaker oredict",
+			"    Outputs all ore dictionary entries in the game to the minetweaker log",
+			"minetweaker oredict <name>",
+			"    Outputs all items in the given ore dictionary entry to the minetweaker log"
+/*			"minetweaker name <id>[:<meta>]",
 			"    Prints the unlocalized name of the specified item," +
 			"    can be used as item or block name",
 			"minetweaker liquid <id>[:<meta>]",
@@ -66,7 +89,7 @@ public class MineTweakerCommand implements ICommand {
 			"minetweaker logdamage=off",
 			"    Disables damage logging",
 			"minetweaker reload",
-			"    Reloads the server script"
+			"    Reloads the server script"*/
 		}, "\n");
 	}
 
@@ -84,6 +107,94 @@ public class MineTweakerCommand implements ICommand {
 		
 		if (arguments[0].equals("reload")) {
 			MineTweakerAPI.tweaker.load();
+			
+			String message = "Scripts have been reloaded";
+			MineTweakerAPI.logger.logCommand(message);
+			sendChatMessage(icommandsender, message);
+		} else if (arguments[0].equals("names")) {
+			for (Object okey : Item.itemRegistry.getKeys()) {
+				String key = (String) okey;
+				Item item = (Item) Item.itemRegistry.getObject(key);
+				
+				String message = "<" + key + "> -- " + new ItemStack(item, 1, 0).getDisplayName();
+				MineTweakerAPI.logger.logCommand(message);
+			}
+			sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");
+		} else if (arguments[0].equals("liquids")) {
+			for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
+				String message = "<liquid:" + entry.getKey() + "> -- " + entry.getValue().getLocalizedName();
+				MineTweakerAPI.logger.logCommand(message);
+				sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");
+			}
+		} else if (arguments[0].equals("inventory")) {
+			if (icommandsender instanceof EntityPlayer) {
+				InventoryPlayer inventory = ((EntityPlayer) icommandsender).inventory;
+				for(int i = 0; i < inventory.getSizeInventory(); i++) {
+					ItemStack stack = inventory.getStackInSlot(i);
+					if (stack != null) {
+						StringBuilder description = new StringBuilder();
+						description.append('<');
+						description.append(Item.itemRegistry.getNameForObject(stack.getItem()));
+						if (stack.getItemDamage() > 0) {
+							description.append(':').append(stack.getItemDamage());
+						}
+						description.append('>');
+						
+						if (stack.stackSize != 1) {
+							description.append('*').append(stack.stackSize);
+						}
+						
+						sendChatMessage(icommandsender, new TweakerItemStack(stack).toString());
+					}
+				}
+			} else {
+				sendChatMessage(icommandsender, "Inventory command can only be executed by players");
+			}
+		} else if (arguments[0].equals("hand")) {
+			if (icommandsender instanceof EntityPlayer) {
+				InventoryPlayer inventory = ((EntityPlayer) icommandsender).inventory;
+				ItemStack stack = inventory.getCurrentItem();
+				if (stack != null) {
+					StringBuilder description = new StringBuilder();
+					description.append('<');
+					description.append(Item.itemRegistry.getNameForObject(stack.getItem()));
+					if (stack.getItemDamage() > 0) {
+						description.append(':').append(stack.getItemDamage());
+					}
+					description.append('>');
+
+					if (stack.stackSize != 1) {
+						description.append('*').append(stack.stackSize);
+					}
+
+					sendChatMessage(icommandsender, new TweakerItemStack(stack).toString());
+				}
+			} else {
+				sendChatMessage(icommandsender, "Hand command can only be executed by players");
+			}
+		} else if (arguments[0].equals("oredict")) {
+			if (arguments.length > 2) {
+				String entryName = arguments[2];
+				List<ItemStack> ores = OreDictionary.getOres(entryName);
+				if (ores.isEmpty()) {
+					sendChatMessage(icommandsender, "Entry doesn't exist");
+					return;
+				} else {
+					MineTweakerAPI.logger.logCommand("Ore entries for " + entryName + ":");
+					for (ItemStack ore : ores) {
+						MineTweakerAPI.logger.logCommand("    " + new TweakerItemStack(ore).toString());
+					}
+				}
+			} else {
+				for (String entryName : OreDictionary.getOreNames()) {
+					MineTweakerAPI.logger.logCommand("Ore entries for " + entryName + ":");
+					List<ItemStack> ores = OreDictionary.getOres(entryName);
+					for (ItemStack ore : ores) {
+						MineTweakerAPI.logger.logCommand("    " + new TweakerItemStack(ore).toString());
+					}
+				}
+			}
+			sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");
 		}
 		
 		/*if (arguments[0].equals("name")) {

@@ -8,7 +8,6 @@ import stanhebben.zenscript.parser.CompiledDFA;
 import stanhebben.zenscript.parser.NFA;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.parser.TokenStream;
-import stanhebben.zenscript.symbols.IZenCompileEnvironment;
 
 /**
  * A tokener is capable of splitting a single file into tokens. It's intended
@@ -96,6 +95,7 @@ public class ZenTokener extends TokenStream {
 	private static final String[] REGEXPS = {
 		"#[^\n]*\n",
 		"//[^\n]*\n",
+		"/\\*[^\\*]*(\\*^/[^\\*]*)*\\*/",
 		"[ \t\r\n]*",
 		"[a-zA-Z_][a-zA-Z_0-9]*",
 		"\\-?(0|[1-9][0-9]*)\\.[0-9]+([eE][\\+\\-]?[0-9]+)?",
@@ -144,6 +144,7 @@ public class ZenTokener extends TokenStream {
 		"$"
 	};
 	private static final int[] FINALS = {
+		-1,
 		-1,
 		-1,
 		-1,

@@ -7,107 +7,126 @@
 package stanhebben.zenscript.value.builtin;
 
 import java.util.Iterator;
+import stanhebben.zenscript.ZenRuntimeException;
 import stanhebben.zenscript.value.IAny;
+import stanhebben.zenscript.value.IntRange;
 
 /**
  *
  * @author Stanneke
  */
 public class AnyIntRange implements IAny {
+	private IntRange value;
+	
+	public AnyIntRange(IntRange value) {
+		this.value = value;
+	}
 
 	@Override
 	public IAny not() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot invert an int range");
 	}
 
 	@Override
 	public IAny neg() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot negate an int range");
 	}
 
 	@Override
 	public IAny add(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot add int ranges");
 	}
 
 	@Override
 	public IAny sub(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot subtract int ranges");
 	}
 
 	@Override
 	public IAny cat(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot concatenate int ranges");
 	}
 
 	@Override
 	public IAny mul(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot multiply int ranges");
 	}
 
 	@Override
 	public IAny div(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot divide int ranges");
 	}
 
 	@Override
 	public IAny mod(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot perform modulo on int ranges");
 	}
 
 	@Override
 	public IAny and(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot perform and on int ranges");
 	}
 
 	@Override
 	public IAny or(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot perform or on int ranges");
 	}
 
 	@Override
 	public IAny xor(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot perform xor on int ranges");
 	}
 
 	@Override
 	public IAny range(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Already a range!");
 	}
 
 	@Override
 	public int compareTo(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot compare ranges");
 	}
 
 	@Override
 	public boolean contains(IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		int ivalue = value.asInt();
+		return ivalue >= this.value.getFrom() && ivalue < this.value.getTo();
 	}
 
 	@Override
 	public IAny member(String value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (value.equals("from")) {
+			return new AnyInt(this.value.getFrom());
+		} else if (value.equals("to")) {
+			return new AnyInt(this.value.getTo());
+		} else {
+			throw new ZenRuntimeException("No member " + value + " in int range");
+		}
 	}
 
 	@Override
 	public IAny indexGet(IAny key) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		int ivalue = key.asInt();
+		if (ivalue < value.getTo() - value.getFrom()) {
+			return new AnyInt(this.value.getFrom() + ivalue);
+		} else {
+			throw new ArrayIndexOutOfBoundsException("int range index out of bounds: " + ivalue);
+		}
 	}
 
 	@Override
 	public void indexSet(IAny key, IAny value) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot modify int ranges");
 	}
 
 	@Override
 	public IAny call(IAny... values) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot call int ranges");
 	}
 
 	@Override
 	public boolean asBool() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new ZenRuntimeException("Cannot cast int range to bool");
 	}
 
 	@Override
@@ -159,5 +178,4 @@ public class AnyIntRange implements IAny {
 	public Iterator<IAny[]> iteratorMulti(int n) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-	
 }

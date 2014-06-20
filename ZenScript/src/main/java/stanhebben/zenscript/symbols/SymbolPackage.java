@@ -22,8 +22,15 @@ import stanhebben.zenscript.util.ZenPosition;
 public class SymbolPackage implements IZenSymbol {
 	private final HashMap<String, IZenSymbol> members;
 	
-	public SymbolPackage() {
+	private final String name;
+	
+	public SymbolPackage(String name) {
+		this.name = name;
 		members = new HashMap<String, IZenSymbol>();
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public Map<String, IZenSymbol> getPackages() {
@@ -38,7 +45,14 @@ public class SymbolPackage implements IZenSymbol {
 		String[] parts = StringUtil.split(name, '.');
 		String[] pkgParts = Arrays.copyOf(parts, parts.length - 1);
 		SymbolPackage pkgCurrent = this;
+		String pkgName = null;
 		for (String part : pkgParts) {
+			if (pkgName == null) {
+				pkgName = part;
+			} else {
+				pkgName = pkgName + '.' + part;
+			}
+			
 			if (pkgCurrent.members.containsKey(part)) {
 				IZenSymbol member = pkgCurrent.members.get(part);
 				if (member instanceof SymbolPackage) {
@@ -48,12 +62,13 @@ public class SymbolPackage implements IZenSymbol {
 					return;
 				}
 			} else {
-				SymbolPackage child = new SymbolPackage();
+				SymbolPackage child = new SymbolPackage(pkgName);
 				pkgCurrent.members.put(part, child);
 				pkgCurrent = child;
 			}
 		}
 		
+		System.out.println("Adding " + parts[parts.length - 1] + " to package " + pkgCurrent.getName() + "(" + symbol + ")");
 		if (pkgCurrent.members.containsKey(parts[parts.length - 1])) {
 			errors.error(null, parts[parts.length - 1] + " is already defined in that package");
 		} else {

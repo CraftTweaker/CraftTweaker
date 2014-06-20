@@ -34,6 +34,10 @@ public class OreDictEntry implements IOreDictEntry {
 		this.id = id;
 	}
 	
+	public OreDictEntry(String id) {
+		this.id = OreDictionary.getOreID(id);
+	}
+	
 	// ####################################
 	// ### IOreDictEntry implementation ###
 	// ####################################

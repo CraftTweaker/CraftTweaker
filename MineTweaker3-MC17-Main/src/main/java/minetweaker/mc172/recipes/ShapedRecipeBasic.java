@@ -6,6 +6,7 @@
 
 package minetweaker.mc172.recipes;
 
+import minetweaker.minecraft.item.IItemStack;
 import minetweaker.minecraft.recipes.ShapedRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -32,6 +33,11 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return (ItemStack) recipe.getCraftingResult(TweakerCraftingInventory.get(inventory)).getInternal();
+		IItemStack result = recipe.getCraftingResult(TweakerCraftingInventory.get(inventory));
+		if (result == null) {
+			return null;
+		} else {
+			return ((ItemStack) result.getInternal()).copy();
+		}
 	}
 }

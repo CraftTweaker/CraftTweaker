@@ -18,6 +18,7 @@ import org.objectweb.asm.Opcodes;
  * @author Stanneke
  */
 public class MineTweakerASM implements IClassTransformer {
+	public MineTweakerASM() {}
 	
 	@Override
 	public byte[] transform(String name, String newName, byte[] bytecode) {

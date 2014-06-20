@@ -32,6 +32,6 @@ public class ShapedRecipeOre extends ShapedOreRecipe {
 	
 	@Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return (ItemStack) recipe.getCraftingResult(TweakerCraftingInventory.get(inventory)).getInternal();
+		return ((ItemStack) recipe.getCraftingResult(TweakerCraftingInventory.get(inventory)).getInternal()).copy();
 	}
 }

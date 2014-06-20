@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static stanhebben.zenscript.ZenTokener.*;
+import stanhebben.zenscript.compiler.EnvironmentScript;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.definitions.Import;
 import stanhebben.zenscript.definitions.ParsedFunction;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.statements.Statement;
+import stanhebben.zenscript.symbols.SymbolType;
+import stanhebben.zenscript.type.ZenType;
 
 /**
  * Contains a parsed file.
@@ -32,6 +36,7 @@ public class ZenParsedFile {
 	private final List<Import> imports;
 	private final Map<String, ParsedFunction> functions;
 	private final List<Statement> statements;
+	private final IEnvironmentGlobal environmentScript;
 	
 	/**
 	 * Constructs and parses a given file.
@@ -48,6 +53,7 @@ public class ZenParsedFile {
 		imports = new ArrayList<Import>();
 		functions = new HashMap<String, ParsedFunction>();
 		statements = new ArrayList<Statement>();
+		environmentScript = new EnvironmentScript(environment);
 		
 		tokener.setFile(this);
 		
@@ -74,18 +80,53 @@ public class ZenParsedFile {
 			imports.add(new Import(start.getPosition(), importName, rename));
 		}
 		
+		for (Import imprt : imports) {
+			List<String> name = imprt.getName();
+			IPartialExpression type = null;
+			
+			StringBuilder nameSoFar = new StringBuilder();
+			
+			for (String part : name) {
+				if (type == null) {
+					nameSoFar.append(part);
+					type = environment.getValue(part, imprt.getPosition());
+					if (type == null) {
+						environment.error(imprt.getPosition(), "could not find package " + type);
+						break;
+					}
+				} else {
+					nameSoFar.append('.').append(part);
+					type = type.getMember(imprt.getPosition(), environment, part);
+					if (type == null) {
+						environment.error(imprt.getPosition(), "could not find type or package " + nameSoFar);
+						break;
+					}
+				}
+			}
+			
+			if (type != null) {
+				environmentScript.putValue(imprt.getRename(), type.toSymbol());
+			} else {
+				environmentScript.putValue(imprt.getRename(), new SymbolType(ZenType.ANY));
+			}
+		}
+		
 		while (tokener.hasNext()) {
 			Token next = tokener.peek();
 			if (next.getType() == T_FUNCTION) {
-				ParsedFunction function = ParsedFunction.parse(tokener, environment);
+				ParsedFunction function = ParsedFunction.parse(tokener, environmentScript);
 				if (functions.containsKey(function.getName())) {
 					environment.error(function.getPosition(), "function " + function.getName() + " already exists");
 				}
 				functions.put(function.getName(), function);
 			} else {
-				statements.add(Statement.read(tokener, environment));
+				statements.add(Statement.read(tokener, environmentScript));
 			}
 		}
+	}
+	
+	public IEnvironmentGlobal getEnvironment() {
+		return environmentScript;
 	}
 	
 	/**

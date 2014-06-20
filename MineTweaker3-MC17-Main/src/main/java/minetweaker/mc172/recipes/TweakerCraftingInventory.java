@@ -6,10 +6,16 @@
 
 package minetweaker.mc172.recipes;
 
+import java.util.List;
 import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.mc172.util.MineTweakerHacks;
 import minetweaker.minecraft.item.IItemStack;
 import minetweaker.minecraft.recipes.ICraftingInventory;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -25,24 +31,60 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 			cache.set(result);
 			return result;
 		} else {
-			return cache.get();
+			TweakerCraftingInventory result = cache.get();
+			result.update();
+			return result;
 		}
 	}
 	
-	private final int width;
-	private final int height;
+	private int width;
+	private int height;
 	private final InventoryCrafting inventory;
-	private final IItemStack[] stacks;
+	private IItemStack[] stacks;
+	private ItemStack[] original;
+	private int stackCount;
 	
 	private TweakerCraftingInventory(InventoryCrafting inventory) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
 		stacks = new IItemStack[width * height];
+		original = new ItemStack[stacks.length];
+		stackCount = 0;
+		update();
+		
+		Container container = MineTweakerHacks.getCraftingContainer(inventory);
+		List<Slot> slots = container.inventorySlots;
+		if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
+			SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
+			EntityPlayer player = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
+			System.out.println("Crafting slot for " + player.getCommandSenderName());
+		}
+		
+		System.out.println("Container: " + MineTweakerHacks.getCraftingContainer(inventory));
+	}
+	
+	private void update() {
+		if (inventory.getSizeInventory() != original.length) {
+			width = height = (int) Math.sqrt(inventory.getSizeInventory());
+			stacks = new IItemStack[inventory.getSizeInventory()];
+			original = new ItemStack[stacks.length];
+			stackCount = 0;
+		}
+		
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
-			if (inventory.getStackInSlot(i) != null) {
-				stacks[i] = new TweakerItemStack(inventory.getStackInSlot(i));
+			if (changed(i)) {
+				System.out.println("Slot " + i + " changed");
+				original[i] = inventory.getStackInSlot(i);
+				if (inventory.getStackInSlot(i) != null) {
+					if (stacks[i] == null) stackCount++;
+					stacks[i] = new TweakerItemStack(original[i]);
+				} else {
+					if (stacks[i] != null) stackCount--;
+					stacks[i] = null;
+				}
 			}
 		}
+		//System.out.println("Num stack count: " + stackCount);
 	}
 
 	@Override
@@ -59,6 +101,11 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 	public int getHeight() {
 		return height;
 	}
+	
+	@Override
+	public int getStackCount() {
+		return stackCount;
+	}
 
 	@Override
 	public IItemStack getStack(int i) {
@@ -72,13 +119,47 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 
 	@Override
 	public void setStack(int x, int y, IItemStack stack) {
-		stacks[y * width + x] = stack;
-		inventory.setInventorySlotContents(y * width + x, (ItemStack) stack.getInternal());
+		System.out.println("SetStack(" + x + ", " + y + ") " + stack);
+		
+		int ix = y * width + x;
+		if (stack != stacks[ix]) {
+			if (stack == null) {
+				stackCount--;
+				inventory.setInventorySlotContents(ix, null);
+			} else {
+				inventory.setInventorySlotContents(ix, (ItemStack) stack.getInternal());
+				
+				if (stacks[ix] == null) {
+					stackCount++;
+				}
+			}
+			stacks[ix] = stack;
+		}
 	}
 
 	@Override
 	public void setStack(int i, IItemStack stack) {
-		stacks[i] = stack;
-		inventory.setInventorySlotContents(i, (ItemStack) stack.getInternal());
+		System.out.println("SetStack(" + i + ") " + stack);
+		
+		if (stack != stacks[i]) {
+			if (stack == null) {
+				stackCount--;
+				inventory.setInventorySlotContents(i, null);
+			} else {
+				inventory.setInventorySlotContents(i, (ItemStack) stack.getInternal());
+				
+				if (stacks[i] == null) {
+					stackCount++;
+				}
+			}
+			stacks[i] = stack;
+		}
+	}
+	
+	private boolean changed(int i) {
+		if (original[i] != inventory.getStackInSlot(i)) return true;
+		if (original[i] != null && stacks[i].getAmount() != original[i].stackSize) return true;
+		
+		return false;
 	}
 }

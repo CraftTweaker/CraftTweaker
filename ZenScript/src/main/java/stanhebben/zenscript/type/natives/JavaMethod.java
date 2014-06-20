@@ -38,7 +38,7 @@ public class JavaMethod {
 			Method method = cls.getMethod(name, parameterTypes);
 			return new JavaMethod(cls, method, types);
 		} catch (NoSuchMethodException ex) {
-			throw new RuntimeException("method not found", ex);
+			throw new RuntimeException("method " + name + " not found in class " + cls.getName(), ex);
 		} catch (SecurityException ex) {
 			throw new RuntimeException("method retrieval not permitted", ex);
 		}

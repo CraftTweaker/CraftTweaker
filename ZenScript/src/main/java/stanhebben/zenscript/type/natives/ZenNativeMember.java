@@ -15,6 +15,7 @@ import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
+import static stanhebben.zenscript.util.StringUtil.methodMatchingError;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -91,7 +92,7 @@ public class ZenNativeMember {
 		public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
 			JavaMethod method = JavaMethod.select(false, methods, environment, values);
 			if (method == null) {
-				environment.error(position, "no matching method found");
+				environment.error(position, methodMatchingError(methods, values));
 				return new ExpressionInvalid(position);
 			} else {
 				return method.callVirtual(position, environment, value.eval(environment), values);
@@ -137,7 +138,7 @@ public class ZenNativeMember {
 		public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
 			JavaMethod method = JavaMethod.select(true, methods, environment, values);
 			if (method == null) {
-				environment.error(position, "no matching method found");
+				environment.error(position, methodMatchingError(methods, values));
 				return new ExpressionInvalid(position);
 			} else {
 				return method.callStatic(position, environment, values);

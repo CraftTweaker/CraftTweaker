@@ -7,13 +7,15 @@
 package minetweaker.minecraft.item;
 
 import java.util.List;
+import minetweaker.minecraft.util.ArrayUtil;
 
 /**
  *
  * @author Stan
  */
 public class IngredientAny implements IIngredient {
-	public static IngredientAny INSTANCE = new IngredientAny();
+	public static final IngredientAny INSTANCE = new IngredientAny();
+	
 	public static Object INTERNAL_ANY = null; // platforms supporting an "any" item should fill it here
 	
 	private IngredientAny() {}
@@ -40,36 +42,36 @@ public class IngredientAny implements IIngredient {
 
 	@Override
 	public IIngredient transform(IItemTransformer transformer) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return new IngredientAnyAdvanced(null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[] { transformer });
 	}
 
 	@Override
 	public IIngredient only(IItemCondition condition) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return new IngredientAnyAdvanced(null, new IItemCondition[] { condition }, ArrayUtil.EMPTY_TRANSFORMERS);
 	}
 
 	@Override
 	public IIngredient marked(String mark) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return new IngredientAnyAdvanced(mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
 	}
 
 	@Override
 	public boolean matches(IItemStack item) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return true;
 	}
 
 	@Override
 	public boolean contains(IIngredient ingredient) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return true;
 	}
 
 	@Override
 	public IItemStack applyTransform(IItemStack item) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return item;
 	}
 
 	@Override
 	public Object getInternal() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return INTERNAL_ANY;
 	}
 }

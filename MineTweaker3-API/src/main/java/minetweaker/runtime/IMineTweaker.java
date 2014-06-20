@@ -45,12 +45,22 @@ public interface IMineTweaker {
 	public List<IUndoableAction> rollback();
 	
 	/**
-	 * Registers a script provider.
+	 * Sets the script provider.
 	 * 
 	 * @param provider
 	 * @return 
 	 */
-	public Closeable registerScriptProvider(IScriptProvider provider);
+	public void setScriptProvider(IScriptProvider provider);
 	
+	/**
+	 * Executes all scripts provided by the script provider.
+	 */
 	public void load();
+	
+	/**
+	 * Retrieves the data from the scripts that were loaded last.
+	 * 
+	 * @return scripts data
+	 */
+	public byte[] getScriptData();
 }

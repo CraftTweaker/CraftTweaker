@@ -6,17 +6,21 @@
 
 package minetweaker.mc172.util;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.SlotCrafting;import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
@@ -28,10 +32,18 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MineTweakerHacks {
 	private static final Field NBTTAGLIST_TAGLIST;
 	private static final Field OREDICTIONARY_ORESTACKS;
+	private static final Field MINECRAFTSERVER_ANVILFILE;
+	private static final Field SHAPEDORERECIPE_WIDTH;
+	private static final Field INVENTORYCRAFTING_EVENTHANDLER;
+	private static final Field SLOTCRAFTING_PLAYER;
 	
 	static {
 		NBTTAGLIST_TAGLIST = getField(NBTTagList.class, MineTweakerObfuscation.NBTTAGLIST_TAGLIST);
 		OREDICTIONARY_ORESTACKS = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_ORESTACKS);
+		MINECRAFTSERVER_ANVILFILE = getField(MinecraftServer.class, MineTweakerObfuscation.MINECRAFTSERVER_ANVILFILE);
+		SHAPEDORERECIPE_WIDTH = getField(ShapedOreRecipe.class, new String[] {"width"});
+		INVENTORYCRAFTING_EVENTHANDLER = getField(InventoryCrafting.class, MineTweakerObfuscation.INVENTORYCRAFTING_EVENTHANDLER);
+		SLOTCRAFTING_PLAYER = getField(SlotCrafting.class, MineTweakerObfuscation.SLOTCRAFTING_PLAYER);
 	}
 	
 	private MineTweakerHacks() {}
@@ -49,16 +61,6 @@ public class MineTweakerHacks {
 		}
 	}
 	
-	public static List<IRecipe> getRecipes() {
-		Field field = getField(CraftingManager.class, MineTweakerObfuscation.CRAFTINGMANAGER_RECIPES);
-		try {
-			return (List<IRecipe>) field.get(CraftingManager.getInstance());
-		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("EPIC ERROR - could not load recipe list!");
-			return null;
-		}
-	}
-	
 	public static HashMap<Integer, ArrayList<ItemStack>> getOreStacks() {
 		try {
 			return (HashMap<Integer, ArrayList<ItemStack>>) OREDICTIONARY_ORESTACKS.get(null);
@@ -68,10 +70,61 @@ public class MineTweakerHacks {
 		}
 	}
 	
+	public static File getAnvilFile(MinecraftServer server) {
+		try {
+			return (File) MINECRAFTSERVER_ANVILFILE.get(server);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logger.logError("could not load anvil file!");
+			return null;
+		}
+	}
+	
+	public static File getWorldDirectory(MinecraftServer server) {
+		if (server.isDedicatedServer()) {
+			return server.getFile("world");
+		} else {
+			File worldsDir = getAnvilFile(server);
+		    if (worldsDir == null) return null;
+		    
+		    return new File(worldsDir, server.getFolderName());
+		}
+	}
+	
+	public static int getShapedOreRecipeWidth(ShapedOreRecipe recipe) {
+		try {
+			return SHAPEDORERECIPE_WIDTH.getInt(recipe);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logger.logError("could not load anvil file!");
+			return 3;
+		}
+	}
+	
+	public static Container getCraftingContainer(InventoryCrafting inventory) {
+		try {
+			return (Container) INVENTORYCRAFTING_EVENTHANDLER.get(inventory);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logger.logError("could not get inventory eventhandler");
+			return null;
+		}
+	}
+	
+	public static EntityPlayer getCraftingSlotPlayer(SlotCrafting slot) {
+		try {
+			return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logger.logError("could not get inventory eventhandler");
+			return null;
+		}
+	}
+	
+	// #######################
+	// ### Private Methods ###
+	// #######################
+	
 	private static Field getField(Class cls, String[] names) {
 		for (String name : names) {
 			try {
-				Field field = cls.getField(name);
+				Field field = cls.getDeclaredField(name);
 				field.setAccessible(true);
 				return field;
 			} catch (NoSuchFieldException ex) {

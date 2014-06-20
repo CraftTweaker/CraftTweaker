@@ -31,33 +31,31 @@ import minetweaker.runtime.IScriptProvider;
  * @author Stan
  */
 public class ScriptProviderMemory implements IScriptProvider {
-	public static byte[] collect(Iterable<IScriptProvider> providers) {
+	public static byte[] collect(IScriptProvider provider) {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			DeflaterOutputStream deflater = new DeflaterOutputStream(output);
 			DataOutputStream deflaterData = new DataOutputStream(deflater);
 			Set<String> executed = new HashSet<String>();
 			
-			for (IScriptProvider provider : providers) {
-				Iterator<IScriptIterator> scripts = provider.getScripts();
-				while (scripts.hasNext()) {
-					IScriptIterator script = scripts.next();
-					
-					if (!executed.contains(script.getGroupName())) {
-						executed.add(script.getGroupName());
-						
-						deflaterData.writeUTF(script.getGroupName());
-						
-						while (script.next()) {
-							String name = script.getName();
-							byte[] data = FileUtil.read(script.open());
-							deflaterData.writeUTF(name);
-							deflaterData.writeInt(data.length);
-							deflaterData.write(data);
-						}
-						
-						deflaterData.writeUTF("");
+			Iterator<IScriptIterator> scripts = provider.getScripts();
+			while (scripts.hasNext()) {
+				IScriptIterator script = scripts.next();
+
+				if (!executed.contains(script.getGroupName())) {
+					executed.add(script.getGroupName());
+
+					deflaterData.writeUTF(script.getGroupName());
+
+					while (script.next()) {
+						String name = script.getName();
+						byte[] data = FileUtil.read(script.open());
+						deflaterData.writeUTF(name);
+						deflaterData.writeInt(data.length);
+						deflaterData.write(data);
 					}
+
+					deflaterData.writeUTF("");
 				}
 			}
 			

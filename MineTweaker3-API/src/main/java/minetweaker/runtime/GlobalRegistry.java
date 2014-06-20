@@ -18,7 +18,21 @@ import java.util.logging.Logger;
 import minetweaker.IBracketHandler;
 import minetweaker.IRecipeRemover;
 import minetweaker.MineTweakerAPI;
+import minetweaker.minecraft.data.IData;
+import minetweaker.minecraft.item.Condition;
 import minetweaker.minecraft.item.IIngredient;
+import minetweaker.minecraft.item.IItemCondition;
+import minetweaker.minecraft.item.IItemDefinition;
+import minetweaker.minecraft.item.IItemStack;
+import minetweaker.minecraft.item.IItemTransformer;
+import minetweaker.minecraft.item.Transform;
+import minetweaker.minecraft.liquid.ILiquidDefinition;
+import minetweaker.minecraft.liquid.ILiquidStack;
+import minetweaker.minecraft.oredict.IOreDict;
+import minetweaker.minecraft.oredict.IOreDictEntry;
+import minetweaker.minecraft.recipes.ICraftingInventory;
+import minetweaker.minecraft.recipes.IFurnaceManager;
+import minetweaker.minecraft.recipes.IRecipeFunction;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -27,11 +41,12 @@ import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
-import stanhebben.zenscript.symbols.IZenCompileEnvironment;
+import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolJavaStaticField;
 import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
 import stanhebben.zenscript.symbols.SymbolPackage;
+import stanhebben.zenscript.symbols.SymbolType;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.JavaMethod;
@@ -46,7 +61,7 @@ public class GlobalRegistry {
 	private static final List<IRecipeRemover> removers = new ArrayList<IRecipeRemover>();
 	private static final List<IBracketHandler> bracketHandlers = new ArrayList<IBracketHandler>();
 	private static final TypeRegistry types = new TypeRegistry();
-	private static final SymbolPackage root = new SymbolPackage();
+	private static final SymbolPackage root = new SymbolPackage("<root>");
 	private static final IZenErrorLogger errors = new MyErrorLogger();
 	private static final IZenCompileEnvironment environment = new MyCompileEnvironment();
 	private static final Map<String, TypeExpansion> expansions = new HashMap<String, TypeExpansion>();
@@ -73,7 +88,7 @@ public class GlobalRegistry {
 		registerExpansion(ExpandShort.class);
 		registerExpansion(ExpandString.class);*/
 		
-		/*registerNativeClass(IData.class);
+		registerNativeClass(IData.class);
 		
 		registerNativeClass(IIngredient.class);
 		registerNativeClass(IItemCondition.class);
@@ -91,7 +106,7 @@ public class GlobalRegistry {
 		
 		registerNativeClass(ICraftingInventory.class);
 		registerNativeClass(IFurnaceManager.class);
-		registerNativeClass(IRecipeFunction.class);*/
+		registerNativeClass(IRecipeFunction.class);
 	}
 	
 	private GlobalRegistry() {}
@@ -126,7 +141,7 @@ public class GlobalRegistry {
 		ZenTypeNative type = new ZenTypeNative(cls);
 		type.complete(types);
 		
-		root.put(type.getName(), root, errors);
+		root.put(type.getName(), new SymbolType(type), errors);
 	}
 	
 	public static TypeRegistry getTypeRegistry() {
@@ -285,12 +300,12 @@ public class GlobalRegistry {
 
 		@Override
 		public void error(ZenPosition position, String message) {
-			MineTweakerAPI.logger.logError("[" + position.getFile() + ":" + position.getLine() + "] Error: " + message);
+			MineTweakerAPI.logger.logError(position.toString() + " > " + message);
 		}
 
 		@Override
 		public void warning(ZenPosition position, String message) {
-			MineTweakerAPI.logger.logWarning("[" + position.getFile() + ":" + position.getLine() + "] Warning: " + message);
+			MineTweakerAPI.logger.logWarning(position.toString() + " > " + message);
 		}
 	}
 }

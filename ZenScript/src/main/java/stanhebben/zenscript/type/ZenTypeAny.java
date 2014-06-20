@@ -140,12 +140,14 @@ public class ZenTypeAny extends ZenType {
 	
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
-		return null;
+		environment.error(position, "any values not yet supported");
+		return new ExpressionInvalid(position);
 	}
 
 	@Override
 	public IPartialExpression getStaticMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
-		return null;
+		environment.error(position, "any values not yet supported");
+		return new ExpressionInvalid(position);
 	}
 
 	@Override
@@ -155,7 +157,7 @@ public class ZenTypeAny extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return true; // true or not?
+		return true;
 	}
 
 	@Override

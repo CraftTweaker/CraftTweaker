@@ -7,7 +7,6 @@
 package minetweaker.runtime;
 
 import java.io.BufferedInputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -21,13 +20,14 @@ import java.util.Set;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.minecraft.item.IIngredient;
-import minetweaker.minecraft.util.CloseablePriorityList;
+import minetweaker.runtime.providers.ScriptProviderMemory;
 import stanhebben.zenscript.ZenModule;
 import static stanhebben.zenscript.ZenModule.compileScripts;
 import static stanhebben.zenscript.ZenModule.extractClassName;
 import stanhebben.zenscript.ZenParsedFile;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.parser.ParseException;
 
 /**
  * 
@@ -35,14 +35,17 @@ import stanhebben.zenscript.compiler.IEnvironmentGlobal;
  * @author Stan Hebben
  */
 public class Tweaker implements IMineTweaker {
-	private final CloseablePriorityList<IScriptProvider> scriptProviders = new CloseablePriorityList<IScriptProvider>();
 	private final List<IUndoableAction> actions = new ArrayList<IUndoableAction>();
 	private final Set<IUndoableAction> wereStuck = new HashSet<IUndoableAction>();
+	
+	private IScriptProvider scriptProvider;
+	private byte[] scriptData;
 	
 	@Override
 	public void apply(IUndoableAction action) {
 		MineTweakerAPI.logger.logInfo(action.describe());
 		action.apply();
+		actions.add(action);
 	}
 
 	@Override
@@ -68,49 +71,65 @@ public class Tweaker implements IMineTweaker {
 	}
 
 	@Override
-	public Closeable registerScriptProvider(IScriptProvider provider) {
-		return scriptProviders.add(provider);
+	public void setScriptProvider(IScriptProvider provider) {
+		scriptProvider = provider;
 	}
 
 	@Override
 	public void load() {
+		scriptData = ScriptProviderMemory.collect(scriptProvider);
 		Set<String> executed = new HashSet<String>();
-		
-		for (IScriptProvider provider : scriptProviders) {
-			Iterator<IScriptIterator> scripts = provider.getScripts();
-			while (scripts.hasNext()) {
-				IScriptIterator script = scripts.next();
-				
-				if (!executed.contains(script.getGroupName())) {
-					executed.add(script.getGroupName());
-					
-					Map<String, byte[]> classes = new HashMap<String, byte[]>();
-					IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
-					
-					List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
-					
-					while (script.next()) {
-						try {
-							String filename = script.getName();
-							
-							String className = extractClassName(filename);
 
-							Reader reader = new InputStreamReader(new BufferedInputStream(script.open()));
-							ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
-							ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-							files.add(pfile);
-							reader.close();
-						} catch (IOException ex) {
-							MineTweakerAPI.logger.logError("Could not load script " + script.getName() + ": " + ex.getMessage());
-						}
+		Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
+		while (scripts.hasNext()) {
+			IScriptIterator script = scripts.next();
+
+			if (!executed.contains(script.getGroupName())) {
+				executed.add(script.getGroupName());
+
+				Map<String, byte[]> classes = new HashMap<String, byte[]>();
+				IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
+
+				List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
+
+				while (script.next()) {
+					Reader reader = null;
+					try {
+						reader = new InputStreamReader(new BufferedInputStream(script.open()));
+						
+						String filename = script.getName();
+						String className = extractClassName(filename);
+						
+						ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
+						ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
+						files.add(pfile);
+					} catch (IOException ex) {
+						MineTweakerAPI.logger.logError("Could not load script " + script.getName() + ": " + ex.getMessage());
+					} catch (ParseException ex) {
+						MineTweakerAPI.logger.logError("Error parsing " + ex.getFile() + ":" + ex.getLine() + " -- " + ex.getExplanation());
+					} catch (Exception ex) {
+						MineTweakerAPI.logger.logError("Error loading " + script.getName() + ": " + ex.getMessage());
+						ex.printStackTrace();
 					}
 					
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException ex) {}
+					}
+				}
+
+				try {
 					String filename = script.getGroupName();
+					System.out.println("MineTweaker: Loading " + filename);
 					compileScripts(filename, files, environmentGlobal);
-					
+
 					// execute scripts
-					ZenModule module = new ZenModule(classes);
+					ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());
 					module.getMain().run();
+				} catch (Exception ex) {
+					MineTweakerAPI.logger.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage());
+					ex.printStackTrace();
 				}
 			}
 		}
@@ -121,5 +140,10 @@ public class Tweaker implements IMineTweaker {
 				MineTweakerAPI.logger.logInfo("Stuck: " + action.describe());
 			}
 		}
+	}
+
+	@Override
+	public byte[] getScriptData() {
+		return scriptData;
 	}
 }

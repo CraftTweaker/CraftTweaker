@@ -13,16 +13,16 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /**
  *
- * @author Stan
+ * @author Stan Hebben
  */
 public class MachineAddRecipeAction extends OneWayAction {
 	private final String name;
 	private final IMachineRecipeManager machine;
-	private final ItemStack output;
+	private final ItemStack[] output;
 	private final IC2RecipeInput input;
 	private final NBTTagCompound tag;
 	
-	public MachineAddRecipeAction(String name, IMachineRecipeManager machine, ItemStack output, NBTTagCompound tag, IC2RecipeInput input) {
+	public MachineAddRecipeAction(String name, IMachineRecipeManager machine, ItemStack[] output, NBTTagCompound tag, IC2RecipeInput input) {
 		this.name = name;
 		this.machine = machine;
 		this.output = output;
@@ -37,6 +37,21 @@ public class MachineAddRecipeAction extends OneWayAction {
 
 	@Override
 	public String describe() {
-		return "Adding " + name + " recipe for " + output.getDisplayName();
+		if (output.length == 1) {
+			return "Adding " + name + " recipe for " + output[0].getDisplayName();
+		} else {
+			StringBuilder result = new StringBuilder();
+			result.append("Adding ").append(name).append(" recipe for ");
+			result.append("[");
+			for (int i = 0; i < output.length; i++) {
+				if (i == 0) {
+					result.append(", ");
+				} else {
+					result.append(output[i].getDisplayName());
+				}
+			}
+			result.append("]");
+			return result.toString();
+		}
 	}
 }

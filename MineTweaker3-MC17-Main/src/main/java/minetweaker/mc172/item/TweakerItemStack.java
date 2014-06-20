@@ -20,6 +20,7 @@ import minetweaker.minecraft.item.IItemTransformer;
 import minetweaker.minecraft.item.IngredientItem;
 import minetweaker.minecraft.liquid.ILiquidStack;
 import minetweaker.minecraft.util.ArrayUtil;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -34,13 +35,24 @@ public class TweakerItemStack implements IItemStack {
 	private final ItemStack stack;
 	private final List<IItemStack> items;
 	private IData tag = null;
+	private boolean wildcardSize;
 	
 	public TweakerItemStack(ItemStack itemStack) {
-		stack = itemStack;
+		if (itemStack == null) throw new IllegalArgumentException("stack cannot be null");
+		
+		stack = itemStack.copy();
 		items = Collections.<IItemStack>singletonList(this);
 	}
 	
+	public TweakerItemStack(ItemStack itemStack, boolean wildcardSize) {
+		this(itemStack);
+		
+		this.wildcardSize = wildcardSize;
+	}
+	
 	private TweakerItemStack(ItemStack itemStack, IData tag) {
+		if (itemStack == null) throw new IllegalArgumentException("stack cannot be null");
+		
 		stack = itemStack;
 		items = Collections.<IItemStack>singletonList(this);
 		this.tag = tag;
@@ -157,7 +169,7 @@ public class TweakerItemStack implements IItemStack {
 	}
 
 	@Override
-	public IIngredient amount(int amount) {
+	public IItemStack amount(int amount) {
 		return withAmount(amount);
 	}
 
@@ -179,8 +191,11 @@ public class TweakerItemStack implements IItemStack {
 	@Override
 	public boolean matches(IItemStack item) {
 		ItemStack internal = (ItemStack) item.getInternal();
+		if (internal == null) {
+			throw new RuntimeException("Invalid item: " + item);
+		}
 		return internal.getItem() == stack.getItem()
-				&& internal.stackSize == stack.stackSize
+				&& (wildcardSize || internal.stackSize == stack.stackSize)
 				&& (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage());
 	}
 
@@ -199,5 +214,33 @@ public class TweakerItemStack implements IItemStack {
 	@Override
 	public Object getInternal() {
 		return stack;
+	}
+	
+	// #############################
+	// ### Object implementation ###
+	// #############################
+	
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append('<');
+		result.append(Item.itemRegistry.getNameForObject(stack.getItem()));
+
+		if (stack.getItemDamage() > 0) {
+			result.append(':').append(stack.getItemDamage());
+		}
+		result.append('>');
+
+		if (stack.getTagCompound() != null) {
+			result.append(".withData(");
+			result.append(stack.stackTagCompound.toString());
+			result.append(")");
+		}
+
+		if (!wildcardSize) {
+			result.append(" * ").append(stack.stackSize);
+		}
+
+		return result.toString();
 	}
 }

@@ -26,6 +26,7 @@ public class MethodOutput {
 	private final LocalVariablesSorter visitor;
 	
 	public MethodOutput(ClassVisitor cls, int access, String name, String descriptor, String signature, String[] exceptions) {
+		System.out.println("Method output: " + name + descriptor);
 		MethodVisitor methodVisitor = cls.visitMethod(access, name, descriptor, signature, exceptions);
 		visitor = new LocalVariablesSorter(access, descriptor, methodVisitor);
 	}
