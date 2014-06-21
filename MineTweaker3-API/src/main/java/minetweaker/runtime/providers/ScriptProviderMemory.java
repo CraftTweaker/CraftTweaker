@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 import minetweaker.MineTweakerAPI;
-import minetweaker.minecraft.util.FileUtil;
+import minetweaker.util.FileUtil;
 import minetweaker.runtime.IScriptIterator;
 import minetweaker.runtime.IScriptProvider;
 

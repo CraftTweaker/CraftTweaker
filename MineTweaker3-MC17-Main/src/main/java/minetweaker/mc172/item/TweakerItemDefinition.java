@@ -6,7 +6,7 @@
 
 package minetweaker.mc172.item;
 
-import minetweaker.minecraft.item.IItemDefinition;
+import minetweaker.api.item.IItemDefinition;
 import net.minecraft.item.Item;
 
 /**

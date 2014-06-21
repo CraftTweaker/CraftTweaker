@@ -4,7 +4,7 @@ Welcome to the MineTweaker 3 source! MineTweaker 3 is the new version of MineTwe
 
 ## License and contributions
 
-The source code is freely available in here, at GitHub. You may modify and redistribute it as long as your mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name). The mod itself may be redistributed in modpacks as long as these modpacks are distributed for free. No money can be made from the distribution of the mod.
+The source code is freely available in here, at GitHub. The mod itself may be redistributed in modpacks as long as these modpacks are distributed for free. No money can be made from the distribution of the mod.
 
 Want to contribute? That's great! Contact me if you want to propose or discuss new features. Adding new mods is definitely welcome and doesn't need prior permission (just follow the existing structure, add it & make a pull request). Credit will be granted appropriately.
 
@@ -32,3 +32,7 @@ Before it can be released, you will have to modify the assembleMC17 task to incl
 ### Building a release
 
 The assembleMC17 task is the main building task for building a reobfuscated jar combining all the different mod support libraries into one. The jar will be stored in build/libs/MineTweaker3.jar .
+
+## Customized builds
+
+You may modify and redistribute your own customized version of MineTweaker as long as you mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name). Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (me) ;)

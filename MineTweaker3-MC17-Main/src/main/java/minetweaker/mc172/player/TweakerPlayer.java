@@ -7,8 +7,8 @@
 package minetweaker.mc172.player;
 
 import minetweaker.mc172.data.NBTConverter;
-import minetweaker.minecraft.data.IData;
-import minetweaker.minecraft.player.IPlayer;
+import minetweaker.api.data.IData;
+import minetweaker.api.player.IPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

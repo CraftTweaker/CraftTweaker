@@ -18,21 +18,33 @@ import java.util.logging.Logger;
 import minetweaker.IBracketHandler;
 import minetweaker.IRecipeRemover;
 import minetweaker.MineTweakerAPI;
-import minetweaker.minecraft.data.IData;
-import minetweaker.minecraft.item.Condition;
-import minetweaker.minecraft.item.IIngredient;
-import minetweaker.minecraft.item.IItemCondition;
-import minetweaker.minecraft.item.IItemDefinition;
-import minetweaker.minecraft.item.IItemStack;
-import minetweaker.minecraft.item.IItemTransformer;
-import minetweaker.minecraft.item.Transform;
-import minetweaker.minecraft.liquid.ILiquidDefinition;
-import minetweaker.minecraft.liquid.ILiquidStack;
-import minetweaker.minecraft.oredict.IOreDict;
-import minetweaker.minecraft.oredict.IOreDictEntry;
-import minetweaker.minecraft.recipes.ICraftingInventory;
-import minetweaker.minecraft.recipes.IFurnaceManager;
-import minetweaker.minecraft.recipes.IRecipeFunction;
+import minetweaker.expand.ExpandAnyArray;
+import minetweaker.expand.ExpandAnyDict;
+import minetweaker.expand.ExpandBool;
+import minetweaker.expand.ExpandByte;
+import minetweaker.expand.ExpandDouble;
+import minetweaker.expand.ExpandFloat;
+import minetweaker.expand.ExpandInt;
+import minetweaker.expand.ExpandLong;
+import minetweaker.expand.ExpandShort;
+import minetweaker.expand.ExpandString;
+import minetweaker.api.data.IData;
+import minetweaker.api.item.Condition;
+import minetweaker.api.item.IIngredient;
+import minetweaker.api.item.IItemCondition;
+import minetweaker.api.item.IItemDefinition;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.item.IItemTransformer;
+import minetweaker.api.item.Transform;
+import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.api.oredict.IOreDict;
+import minetweaker.api.oredict.IOreDictEntry;
+import minetweaker.api.player.IPlayer;
+import minetweaker.api.recipes.ICraftingInventory;
+import minetweaker.api.recipes.IFurnaceManager;
+import minetweaker.api.recipes.IRecipeFunction;
+import minetweaker.api.recipes.IRecipeManager;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -77,7 +89,7 @@ public class GlobalRegistry {
 		registerGlobal("furnace", getStaticField(MineTweakerAPI.class, "furnace"));
 		registerGlobal("oreDict", getStaticField(MineTweakerAPI.class, "oreDict"));
 		
-		/*registerExpansion(ExpandAnyArray.class);
+		registerExpansion(ExpandAnyArray.class);
 		registerExpansion(ExpandAnyDict.class);
 		registerExpansion(ExpandBool.class);
 		registerExpansion(ExpandByte.class);
@@ -86,10 +98,12 @@ public class GlobalRegistry {
 		registerExpansion(ExpandInt.class);
 		registerExpansion(ExpandLong.class);
 		registerExpansion(ExpandShort.class);
-		registerExpansion(ExpandString.class);*/
+		registerExpansion(ExpandString.class);
 		
+		// minetweaker.api.data
 		registerNativeClass(IData.class);
 		
+		// minetweaker.api.item
 		registerNativeClass(IIngredient.class);
 		registerNativeClass(IItemCondition.class);
 		registerNativeClass(IItemDefinition.class);
@@ -98,15 +112,22 @@ public class GlobalRegistry {
 		registerNativeClass(Condition.class);
 		registerNativeClass(Transform.class);
 		
+		// minetweaker.api.liquid
 		registerNativeClass(ILiquidDefinition.class);
 		registerNativeClass(ILiquidStack.class);
 		
+		// minetweaker.api.oredict
 		registerNativeClass(IOreDict.class);
 		registerNativeClass(IOreDictEntry.class);
 		
+		// minetweaker.api.player
+		registerNativeClass(IPlayer.class);
+		
+		// minetweaker.api.recipes
 		registerNativeClass(ICraftingInventory.class);
 		registerNativeClass(IFurnaceManager.class);
 		registerNativeClass(IRecipeFunction.class);
+		registerNativeClass(IRecipeManager.class);
 	}
 	
 	private GlobalRegistry() {}

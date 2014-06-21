@@ -19,6 +19,9 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
@@ -47,6 +50,11 @@ public class MineTweakerMod {
 	public static final String MCVERSION = "1.7.2";
 	
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	
+	private static final String[] REGISTRIES = {
+		"minetweaker.mods.ic2.ClassRegistry",
+		"minetweaker.mods.nei.ClassRegistry"
+	};
 	
 	static {
 		NETWORK.registerMessage(MineTweakerLoadScriptsHandler.class, MineTweakerLoadScriptsPacket.class, 0, Side.CLIENT);
@@ -115,6 +123,26 @@ public class MineTweakerMod {
 	public void onPostInit(FMLPostInitializationEvent ev) {
 		MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
 		MineTweakerAPI.registerBracketHandler(new LiquidBracketHandler());
+		
+		for (String registry : REGISTRIES) {
+			try {
+				Class cls = Class.forName(registry);
+				Method method = cls.getMethod("register");
+				if ((method.getModifiers() & Modifier.STATIC) == 0) {
+					System.out.println("ERROR: register method in " + registry + " isn't static");
+				} else {
+					method.invoke(null);
+				}
+			} catch (ClassNotFoundException ex) {
+				
+			} catch (NoSuchMethodException ex) {
+				
+			} catch (IllegalAccessException ex) {
+				
+			} catch (InvocationTargetException ex) {
+				
+			}
+		}
 	}
 	
 	@EventHandler

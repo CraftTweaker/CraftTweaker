@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataInt;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataInt;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("int")
 public class ExpandInt {
 	@ZenCaster
-	public IData toData(int value) {
+	public static IData toData(int value) {
 		return new DataInt(value);
 	}
 }

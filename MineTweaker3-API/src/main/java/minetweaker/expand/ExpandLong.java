@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataLong;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataLong;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("long")
 public class ExpandLong {
 	@ZenCaster
-	public IData asData(long value) {
+	public static IData asData(long value) {
 		return new DataLong(value);
 	}
 }

@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataByte;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataByte;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("byte")
 public class ExpandByte {
 	@ZenCaster
-	public IData asData(byte value) {
+	public static IData asData(byte value) {
 		return new DataByte(value);
 	}
 }

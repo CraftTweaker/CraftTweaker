@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataFloat;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataFloat;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("float")
 public class ExpandFloat {
 	@ZenCaster
-	public IData asData(float value) {
+	public static IData asData(float value) {
 		return new DataFloat(value);
 	}
 }

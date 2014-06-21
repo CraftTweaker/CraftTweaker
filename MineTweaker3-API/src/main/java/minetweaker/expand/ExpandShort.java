@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataShort;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataShort;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("short")
 public class ExpandShort {
 	@ZenCaster
-	public IData asNBT(short value) {
+	public static IData asNBT(short value) {
 		return new DataShort(value);
 	}
 }

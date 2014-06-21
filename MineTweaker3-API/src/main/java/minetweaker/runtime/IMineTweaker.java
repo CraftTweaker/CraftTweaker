@@ -9,7 +9,7 @@ package minetweaker.runtime;
 import java.io.Closeable;
 import java.util.List;
 import minetweaker.IUndoableAction;
-import minetweaker.minecraft.item.IIngredient;
+import minetweaker.api.item.IIngredient;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 

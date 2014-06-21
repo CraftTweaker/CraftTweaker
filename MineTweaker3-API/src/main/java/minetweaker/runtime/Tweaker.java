@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.minecraft.item.IIngredient;
+import minetweaker.api.item.IIngredient;
 import minetweaker.runtime.providers.ScriptProviderMemory;
 import stanhebben.zenscript.ZenModule;
 import static stanhebben.zenscript.ZenModule.compileScripts;
@@ -62,6 +62,7 @@ public class Tweaker implements IMineTweaker {
 				MineTweakerAPI.logger.logInfo(action.describeUndo());
 				action.undo();
 			} else {
+				MineTweakerAPI.logger.logInfo("[Stuck] " + action.describe());
 				stuck.add(0, action);
 				wereStuck.add(action);
 			}
@@ -108,7 +109,7 @@ public class Tweaker implements IMineTweaker {
 					} catch (ParseException ex) {
 						MineTweakerAPI.logger.logError("Error parsing " + ex.getFile() + ":" + ex.getLine() + " -- " + ex.getExplanation());
 					} catch (Exception ex) {
-						MineTweakerAPI.logger.logError("Error loading " + script.getName() + ": " + ex.getMessage());
+						MineTweakerAPI.logger.logError("Error loading " + script.getName() + ": " + ex.toString());
 						ex.printStackTrace();
 					}
 					

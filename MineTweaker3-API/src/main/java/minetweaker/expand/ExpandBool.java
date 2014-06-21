@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataBool;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataBool;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("bool")
 public class ExpandBool {
 	@ZenCaster
-	public IData asData(boolean value) {
+	public static IData asData(boolean value) {
 		return new DataBool(value);
 	}
 }

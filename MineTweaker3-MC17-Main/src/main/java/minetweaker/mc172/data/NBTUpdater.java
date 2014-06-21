@@ -7,8 +7,8 @@
 package minetweaker.mc172.data;
 
 import java.util.Map;
-import minetweaker.minecraft.data.IData;
-import minetweaker.minecraft.data.IDataConverter;
+import minetweaker.api.data.IData;
+import minetweaker.api.data.IDataConverter;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 

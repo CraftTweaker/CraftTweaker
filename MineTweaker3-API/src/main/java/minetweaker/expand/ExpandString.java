@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataString;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataString;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("string")
 public class ExpandString {
 	@ZenCaster
-	public IData asData(String value) {
+	public static IData asData(String value) {
 		return new DataString(value);
 	}
 }

@@ -106,10 +106,9 @@ public class MineTweakerCommand implements ICommand {
 		}
 		
 		if (arguments[0].equals("reload")) {
-			MineTweakerAPI.tweaker.load();
+			MineTweakerMod.INSTANCE.reload();
 			
 			String message = "Scripts have been reloaded";
-			MineTweakerAPI.logger.logCommand(message);
 			sendChatMessage(icommandsender, message);
 		} else if (arguments[0].equals("names")) {
 			for (Object okey : Item.itemRegistry.getKeys()) {

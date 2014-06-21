@@ -24,6 +24,7 @@ import stanhebben.zenscript.parser.ParseException;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.statements.Statement;
+import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.type.ZenTypeDouble;
@@ -365,9 +366,25 @@ public abstract class ParsedExpression {
 					tokens.add(next);
 					next = parser.next();
 				}
-				return new ParsedExpressionValue(
-						start.getPosition(),
-						parser.getEnvironment().getBracketed(tokens).instance(start.getPosition()));
+				IZenSymbol resolved = parser.getEnvironment().getBracketed(tokens);
+				if (resolved == null) {
+					StringBuilder builder = new StringBuilder();
+					builder.append('<');
+					Token last = null;
+					for (Token token : tokens) {
+						if (last != null) builder.append(' ');
+						builder.append(token.getValue());
+						last = token;
+					}
+					builder.append('>');
+					
+					parser.getEnvironment().getErrorLogger().error(start.getPosition(), "Could not resolve " + builder.toString());
+					return new ParsedExpressionInvalid(start.getPosition());
+				} else {
+					return new ParsedExpressionValue(
+							start.getPosition(),
+							parser.getEnvironment().getBracketed(tokens).instance(start.getPosition()));
+				}
 			}
 			case T_SQBROPEN: {
 				parser.next();

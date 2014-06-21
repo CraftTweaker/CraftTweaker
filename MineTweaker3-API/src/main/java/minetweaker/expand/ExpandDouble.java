@@ -6,8 +6,8 @@
 
 package minetweaker.expand;
 
-import minetweaker.minecraft.data.DataDouble;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataDouble;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("double")
 public class ExpandDouble {
 	@ZenCaster
-	public IData asData(double value) {
+	public static IData asData(double value) {
 		return new DataDouble(value);
 	}
 }

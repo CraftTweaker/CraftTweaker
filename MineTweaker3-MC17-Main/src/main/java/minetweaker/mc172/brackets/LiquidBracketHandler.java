@@ -4,7 +4,7 @@ import java.util.List;
 import minetweaker.IBracketHandler;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.mc172.liquid.TweakerLiquidStack;
-import minetweaker.minecraft.liquid.ILiquidStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.runtime.GlobalRegistry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;

@@ -6,8 +6,8 @@
 
 package minetweaker.mc172.oredict;
 
-import minetweaker.minecraft.oredict.IOreDict;
-import minetweaker.minecraft.oredict.IOreDictEntry;
+import minetweaker.api.oredict.IOreDict;
+import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**

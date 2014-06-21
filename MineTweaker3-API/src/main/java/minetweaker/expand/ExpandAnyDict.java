@@ -7,8 +7,8 @@
 package minetweaker.expand;
 
 import java.util.Map;
-import minetweaker.minecraft.data.DataMap;
-import minetweaker.minecraft.data.IData;
+import minetweaker.api.data.DataMap;
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 
@@ -19,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 @ZenExpansion("any[any]")
 public class ExpandAnyDict {
 	@ZenCaster
-	public IData asData(Map<String, IData> values) {
+	public static IData asData(Map<String, IData> values) {
 		return new DataMap(values, true);
 	}
 }

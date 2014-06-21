@@ -6,7 +6,7 @@
 
 package minetweaker.mc172.recipes;
 
-import minetweaker.minecraft.recipes.ShapelessRecipe;
+import minetweaker.api.recipes.ShapelessRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;

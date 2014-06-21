@@ -1,6 +1,6 @@
 package minetweaker;
 
-import minetweaker.minecraft.item.IIngredient;
+import minetweaker.api.item.IIngredient;
 
 /**
  * Used to register removable mod recipes for mod machines. Once registered,

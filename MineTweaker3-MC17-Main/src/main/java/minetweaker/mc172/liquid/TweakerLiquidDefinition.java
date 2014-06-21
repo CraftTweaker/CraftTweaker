@@ -8,8 +8,8 @@ package minetweaker.mc172.liquid;
 
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.minecraft.liquid.ILiquidDefinition;
-import minetweaker.minecraft.liquid.ILiquidStack;
+import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.liquid.ILiquidStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 

@@ -1,17 +1,17 @@
 package minetweaker.mc172.recipes;
 
-import minetweaker.minecraft.recipes.ShapedRecipe;
-import minetweaker.minecraft.recipes.ShapelessRecipe;
+import minetweaker.api.recipes.ShapedRecipe;
+import minetweaker.api.recipes.ShapelessRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.mc172.item.TweakerItemStack;
 import minetweaker.mc172.oredict.OreDictEntry;
-import minetweaker.mc172.util.MineTweakerHacks;import minetweaker.minecraft.item.IIngredient;
-import minetweaker.minecraft.item.IItemStack;
-import minetweaker.minecraft.recipes.IRecipeFunction;
-import minetweaker.minecraft.recipes.IRecipeManager;
+import minetweaker.mc172.util.MineTweakerHacks;import minetweaker.api.item.IIngredient;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.recipes.IRecipeFunction;
+import minetweaker.api.recipes.IRecipeManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -98,7 +98,7 @@ public class MTRecipeManager implements IRecipeManager {
 		outer: for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
 			
-			if (!output.matches(new TweakerItemStack(recipe.getRecipeOutput()))) {
+			if (recipe.getRecipeOutput() == null || !output.matches(new TweakerItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
 			
@@ -164,7 +164,7 @@ public class MTRecipeManager implements IRecipeManager {
 		outer: for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
 			
-			if (!output.matches(new TweakerItemStack(recipe.getRecipeOutput()))) {
+			if (recipe.getRecipeOutput() == null || !output.matches(new TweakerItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
 			
@@ -314,7 +314,6 @@ public class MTRecipeManager implements IRecipeManager {
 
 		@Override
 		public void apply() {
-			CraftingManager.getInstance().getRecipeList().add(recipe);
 			recipes.add(recipe);
 		}
 

@@ -6,11 +6,11 @@
 
 package minetweaker.mc172.recipes;
 
-import minetweaker.minecraft.recipes.ShapedRecipe;
-import minetweaker.minecraft.recipes.ShapelessRecipe;
+import minetweaker.api.recipes.ShapedRecipe;
+import minetweaker.api.recipes.ShapelessRecipe;
 import java.util.ArrayList;
 import java.util.Arrays;
-import minetweaker.minecraft.item.IIngredient;
+import minetweaker.api.item.IIngredient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 

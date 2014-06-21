@@ -7,9 +7,9 @@
 package minetweaker.mc172.liquid;
 
 import minetweaker.mc172.data.NBTConverter;
-import minetweaker.minecraft.data.IData;
-import minetweaker.minecraft.liquid.ILiquidDefinition;
-import minetweaker.minecraft.liquid.ILiquidStack;
+import minetweaker.api.data.IData;
+import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.liquid.ILiquidStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
