@@ -70,5 +70,10 @@ public class ScriptProviderCascade implements IScriptProvider {
 				currentValue = current.next();
 			} while (executed.contains(currentValue.getGroupName()) && hasNext());
 		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		}
 	}
 }

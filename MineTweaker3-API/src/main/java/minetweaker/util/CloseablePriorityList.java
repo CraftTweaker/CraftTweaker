@@ -55,6 +55,11 @@ public class CloseablePriorityList<T> implements Iterable<T> {
 			current = current == null ? first : current.next;
 			return current.value;
 		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		}
 	}
 	
 	private class CloseableEntry implements Closeable {

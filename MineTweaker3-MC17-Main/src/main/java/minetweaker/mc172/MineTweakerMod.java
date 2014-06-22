@@ -10,6 +10,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -77,11 +78,13 @@ public class MineTweakerMod {
 		MineTweakerRegistry.getClasses(classes);
 		
 		outer: for (Class cls : classes) {
-			for (Annotation annotation : cls.getAnnotationsByType(ModOnly.class)) {
-				String[] value = ((ModOnly) annotation).value();
-				for (String mod : value) {
-					if (!Loader.isModLoaded(mod)) {
-						continue outer; // skip this class
+			for (Annotation annotation : cls.getAnnotations()) {
+				if (annotation instanceof ModOnly) {
+					String[] value = ((ModOnly) annotation).value();
+					for (String mod : value) {
+						if (!Loader.isModLoaded(mod)) {
+							continue outer; // skip this class
+						}
 					}
 				}
 			}

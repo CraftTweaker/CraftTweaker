@@ -6,6 +6,7 @@
 
 package minetweaker.mods.ic2;
 
+import cpw.mods.fml.common.Loader;
 import minetweaker.MineTweakerAPI;
 import minetweaker.mods.ic2.expand.ItemExpansion;
 import minetweaker.mods.ic2.machines.Compressor;
@@ -19,11 +20,15 @@ import minetweaker.mods.ic2.machines.ThermalCentrifuge;
  */
 public class ClassRegistry {
 	public static void register() {
-		MineTweakerAPI.registerClass(ItemExpansion.class);
-		
-		MineTweakerAPI.registerClass(Compressor.class);
-		MineTweakerAPI.registerClass(Extractor.class);
-		MineTweakerAPI.registerClass(Macerator.class);
-		MineTweakerAPI.registerClass(ThermalCentrifuge.class);
+		if (Loader.isModLoaded("IC2")) {
+			MineTweakerAPI.logger.logInfo("Loading IC2 support");
+			
+			MineTweakerAPI.registerClass(ItemExpansion.class);
+
+			MineTweakerAPI.registerClass(Compressor.class);
+			MineTweakerAPI.registerClass(Extractor.class);
+			MineTweakerAPI.registerClass(Macerator.class);
+			MineTweakerAPI.registerClass(ThermalCentrifuge.class);
+		}
 	}
 }

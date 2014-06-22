@@ -6,6 +6,7 @@
 
 package minetweaker.mods.nei;
 
+import cpw.mods.fml.common.Loader;
 import minetweaker.MineTweakerAPI;
 
 /**
@@ -14,6 +15,10 @@ import minetweaker.MineTweakerAPI;
  */
 public class ClassRegistry {
 	public static void register() {
-		MineTweakerAPI.registerClass(NEI.class);
+		if (Loader.isModLoaded("NotEnoughItems")) {
+			MineTweakerAPI.logger.logInfo("Loading NEI support");
+			
+			MineTweakerAPI.registerClass(NEI.class);
+		}
 	}
 }

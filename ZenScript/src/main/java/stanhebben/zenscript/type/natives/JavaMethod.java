@@ -114,7 +114,7 @@ public class JavaMethod {
 		this.method = method;
 		
 		returnType = types.getType(method.getGenericReturnType());
-		parameterTypes = new ZenType[method.getParameterCount()];
+		parameterTypes = new ZenType[method.getParameterTypes().length];
 		optional = new boolean[parameterTypes.length];
 		for (int i = 0; i < parameterTypes.length; i++) {
 			parameterTypes[i] = types.getType(method.getGenericParameterTypes()[i]);
@@ -173,7 +173,7 @@ public class JavaMethod {
 		int result = PRIORITY_HIGH;
 		if (arguments.length > parameterTypes.length) {
 			if (method.isVarArgs()) {
-				ZenType arrayType = parameterTypes[method.getParameterCount() - 1];
+				ZenType arrayType = parameterTypes[method.getParameterTypes().length - 1];
 				ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
 				for (int i = parameterTypes.length - 1; i < arguments.length; i++) {
 					ZenType argType = arguments[i].getType();
@@ -205,7 +205,7 @@ public class JavaMethod {
 		
 		int checkUntil = arguments.length;
 		if (arguments.length == parameterTypes.length && method.isVarArgs()) {
-			ZenType arrayType = parameterTypes[method.getParameterCount() - 1];
+			ZenType arrayType = parameterTypes[method.getParameterTypes().length - 1];
 			ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
 			ZenType argType = arguments[arguments.length - 1].getType();
 			
@@ -265,8 +265,8 @@ public class JavaMethod {
 			return arguments;
 		}
 		
-		Expression[] result = new Expression[method.getParameterCount()];
-		for (int i = arguments.length; i < method.getParameterCount(); i++) {
+		Expression[] result = new Expression[method.getParameterTypes().length];
+		for (int i = arguments.length; i < method.getParameterTypes().length; i++) {
 			result[i] = parameterTypes[i].defaultValue(position);
 		}
 		

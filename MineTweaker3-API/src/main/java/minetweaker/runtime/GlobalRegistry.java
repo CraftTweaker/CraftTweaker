@@ -141,12 +141,14 @@ public class GlobalRegistry {
 	}
 	
 	public static void registerExpansion(Class cls) {
-		for (Annotation annotation : cls.getAnnotationsByType(ZenExpansion.class)) {
-			ZenExpansion eAnnotation = (ZenExpansion) annotation;
-			if (!expansions.containsKey(eAnnotation.value())) {
-				expansions.put(eAnnotation.value(), new TypeExpansion());
+		for (Annotation annotation : cls.getAnnotations()) {
+			if (annotation instanceof ZenExpansion) {
+				ZenExpansion eAnnotation = (ZenExpansion) annotation;
+				if (!expansions.containsKey(eAnnotation.value())) {
+					expansions.put(eAnnotation.value(), new TypeExpansion());
+				}
+				expansions.get(eAnnotation.value()).expand(cls, types);
 			}
-			expansions.get(eAnnotation.value()).expand(cls, types);
 		}
 	}
 	

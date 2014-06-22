@@ -106,7 +106,7 @@ public class ScriptProviderMemory implements IScriptProvider {
 	}
 	
 	private class ProviderIterator implements Iterator<IScriptIterator> {
-		private Iterator<MemoryModule> baseIterator = modules.values().iterator();
+		private final Iterator<MemoryModule> baseIterator = modules.values().iterator();
 		
 		@Override
 		public boolean hasNext() {
@@ -116,6 +116,11 @@ public class ScriptProviderMemory implements IScriptProvider {
 		@Override
 		public IScriptIterator next() {
 			return new ScriptIterator(baseIterator.next());
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
 	}
 	

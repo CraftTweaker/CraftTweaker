@@ -1,5 +1,7 @@
 package minetweaker.mc172;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,9 @@ public class MineTweakerCommand implements ICommand {
 			"minetweaker oredict",
 			"    Outputs all ore dictionary entries in the game to the minetweaker log",
 			"minetweaker oredict <name>",
-			"    Outputs all items in the given ore dictionary entry to the minetweaker log"
+			"    Outputs all items in the given ore dictionary entry to the minetweaker log",
+			"minetweaker mods",
+			"    Outputs all active mod IDs in the game"
 /*			"minetweaker name <id>[:<meta>]",
 			"    Prints the unlocalized name of the specified item," +
 			"    can be used as item or block name",
@@ -194,6 +198,13 @@ public class MineTweakerCommand implements ICommand {
 				}
 			}
 			sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");
+		} else if (arguments[0].equals("mods")) {
+			List<ModContainer> mods = Loader.instance().getActiveModList();
+			MineTweakerAPI.logger.logCommand("Mods list:");
+			for (ModContainer mod : mods) {
+				sendChatMessage(icommandsender, mod.getModId());
+				MineTweakerAPI.logger.logCommand("Mod: " + mod.getModId());
+			}
 		}
 		
 		/*if (arguments[0].equals("name")) {
