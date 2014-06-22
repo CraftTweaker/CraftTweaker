@@ -1,8 +1,8 @@
 package minetweaker.mods.ic2.machines;
 
+import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc172.item.TweakerItemStack;
 import minetweaker.mc172.util.MineTweakerUtil;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
@@ -41,7 +41,7 @@ public class ThermalCentrifuge {
 			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 					"compressor",
 					Recipes.compressor,
-					MineTweakerUtil.fromArray(output),
+					MineTweakerUtil.getItemStacks(output),
 					null,
 					new IC2RecipeInput(ingredient)));
 		}
@@ -70,7 +70,9 @@ public class ThermalCentrifuge {
 	 * @return recipe output
 	 */
 	@ZenMethod
-	public static IItemStack getOutput(IItemStack input) {
-		return new TweakerItemStack(Recipes.centrifuge.getOutputFor((ItemStack) input.getInternal(), false).items.get(0));
+	public static IItemStack[] getOutput(IItemStack input) {
+		RecipeOutput output = Recipes.centrifuge.getOutputFor((ItemStack) input.getInternal(), false);
+		if (output == null || output.items.isEmpty()) return null;
+		return MineTweakerUtil.getItemStacks(output.items);
 	}
 }

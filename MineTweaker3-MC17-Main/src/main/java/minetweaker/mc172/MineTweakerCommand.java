@@ -5,6 +5,7 @@ import cpw.mods.fml.common.ModContainer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import minetweaker.MineTweakerAPI;
 import minetweaker.mc172.item.TweakerItemStack;
 
@@ -115,11 +116,25 @@ public class MineTweakerCommand implements ICommand {
 			String message = "Scripts have been reloaded";
 			sendChatMessage(icommandsender, message);
 		} else if (arguments[0].equals("names")) {
-			for (Object okey : Item.itemRegistry.getKeys()) {
-				String key = (String) okey;
+			Set<String> keys = Item.itemRegistry.getKeys();
+			String[] sortedKeys = new String[keys.size()];
+			int sortedKeyIndex = 0;
+			for (String key : keys) sortedKeys[sortedKeyIndex++] = key;
+			Arrays.sort(sortedKeys);
+			
+			for (String key : sortedKeys) {
 				Item item = (Item) Item.itemRegistry.getObject(key);
 				
-				String message = "<" + key + "> -- " + new ItemStack(item, 1, 0).getDisplayName();
+				String displayName = "";
+				
+				try {
+					displayName = " -- " + new ItemStack(item, 1, 0).getDisplayName();
+				} catch (Exception ex) {
+					// some mods (such as buildcraft) may throw exceptions when calling
+					// getDisplayName on a item stack that doesn't contain valid NBT data
+				}
+				
+				String message = "<" + key + ">" + displayName;
 				MineTweakerAPI.logger.logCommand(message);
 			}
 			sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");

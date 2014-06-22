@@ -1,5 +1,6 @@
 package minetweaker;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import minetweaker.runtime.IMineTweaker;
 import minetweaker.runtime.ILogger;
@@ -71,12 +72,16 @@ public class MineTweakerAPI {
 	 * @param annotatedClass 
 	 */
 	public static void registerClass(Class annotatedClass) {
-		if (annotatedClass.isAnnotationPresent(ZenExpansion.class)) {
-			GlobalRegistry.registerExpansion(annotatedClass);
-		}
+		System.out.println("Registering " + annotatedClass.getName());
 		
-		if (annotatedClass.isAnnotationPresent(ZenClass.class)) {
-			GlobalRegistry.registerNativeClass(annotatedClass);
+		for (Annotation annotation : annotatedClass.getAnnotations()) {
+			if (annotation instanceof ZenExpansion) {
+				GlobalRegistry.registerExpansion(annotatedClass);
+			}
+			
+			if (annotation instanceof ZenClass) {
+				GlobalRegistry.registerNativeClass(annotatedClass);
+			}
 		}
 	}
 	

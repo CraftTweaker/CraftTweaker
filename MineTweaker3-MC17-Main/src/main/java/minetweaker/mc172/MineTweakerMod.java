@@ -74,7 +74,7 @@ public class MineTweakerMod {
 		MineTweakerAPI.recipes = new MTRecipeManager();
 		MineTweakerAPI.logger = new MineTweakerLogger();
 		
-		List<Class> classes = new ArrayList<Class>();
+		/*List<Class> classes = new ArrayList<Class>();
 		MineTweakerRegistry.getClasses(classes);
 		
 		outer: for (Class cls : classes) {
@@ -90,7 +90,7 @@ public class MineTweakerMod {
 			}
 			
 			MineTweakerAPI.registerClass(cls);
-		}
+		}*/
 		
 		File globalDir = new File("scripts");
 		if (!globalDir.exists()) {

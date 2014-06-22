@@ -42,9 +42,9 @@ public class IC2BracketHandler implements IBracketHandler {
 	@Override
 	public IZenSymbol resolve(List<Token> tokens) {
 		if (tokens.size() >= 5) {
-			if (tokens.get(2).getValue().equals("ic2")
-					&& tokens.get(0).getValue().equals("item")
+			if (tokens.get(0).getValue().equals("ic2")
 					&& tokens.get(1).getValue().equals("-")
+					&& tokens.get(2).getValue().equals("item")
 					&& tokens.get(3).getValue().equals(":")) {
 				String name = tokens.get(4).getValue();
 				int meta = 0;

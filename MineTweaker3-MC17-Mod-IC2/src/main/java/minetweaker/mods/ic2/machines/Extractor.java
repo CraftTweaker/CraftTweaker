@@ -6,11 +6,13 @@
 
 package minetweaker.mods.ic2.machines;
 
+import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
 import minetweaker.mc172.item.TweakerItemStack;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import minetweaker.mc172.util.MineTweakerUtil;
 import net.minecraft.item.ItemStack;
 import minetweaker.mods.ic2.IC2RecipeInput;
 import minetweaker.mods.ic2.MachineAddRecipeAction;
@@ -44,7 +46,7 @@ public class Extractor {
 			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 					"extractor",
 					Recipes.extractor,
-					new ItemStack[] {(ItemStack) output.getInternal()},
+					MineTweakerUtil.getItemStacks(output),
 					null,
 					new IC2RecipeInput(ingredient)));
 		}
@@ -60,6 +62,8 @@ public class Extractor {
 	@ZenMethod
 	public static IItemStack getOutput(
 			@NotNull IItemStack input) {
-		return new TweakerItemStack(Recipes.extractor.getOutputFor((ItemStack) input.getInternal(), false).items.get(0));
+		RecipeOutput output = Recipes.extractor.getOutputFor((ItemStack) input.getInternal(), false);
+		if (output == null || output.items.size() > 0) return null;
+		return new TweakerItemStack(output.items.get(0));
 	}
 }

@@ -12,6 +12,8 @@ import minetweaker.mods.ic2.expand.ItemExpansion;
 import minetweaker.mods.ic2.machines.Compressor;
 import minetweaker.mods.ic2.machines.Extractor;
 import minetweaker.mods.ic2.machines.Macerator;
+import minetweaker.mods.ic2.machines.MetalFormer;
+import minetweaker.mods.ic2.machines.OreWasher;
 import minetweaker.mods.ic2.machines.ThermalCentrifuge;
 
 /**
@@ -23,12 +25,14 @@ public class ClassRegistry {
 		if (Loader.isModLoaded("IC2")) {
 			MineTweakerAPI.logger.logInfo("Loading IC2 support");
 			
-			MineTweakerAPI.registerClass(ItemExpansion.class);
-
 			MineTweakerAPI.registerClass(Compressor.class);
 			MineTweakerAPI.registerClass(Extractor.class);
 			MineTweakerAPI.registerClass(Macerator.class);
+			MineTweakerAPI.registerClass(MetalFormer.class);
+			MineTweakerAPI.registerClass(OreWasher.class);
 			MineTweakerAPI.registerClass(ThermalCentrifuge.class);
+			
+			MineTweakerAPI.registerClass(ItemExpansion.class);
 		}
 	}
 }
