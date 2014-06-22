@@ -19,7 +19,10 @@ The MineTweaker 3 source is setup as a multi-project Gradle project:
 
 ### Developing and running MineTweaker from source
 
+
 In order to run the project, you have to execute the setupDecompWorkspace in the MineTweaker3-MC17-Main project. It will prepare a running environment for you. After that, you can simply run minecraft with the runClient task on MineTweaker3-MC17-Main. It will run MineTweaker. (without its mod support libraries)
+
+Additionally, you will have to copy tools.jar from your JDK to the buildSrc/libs directory (if someone knows how to make a proper reference to it, please let me know).
 
 If you want to work on a specific mod support library, perform the setupDecompWorkspace on that specific mod support and run that project with the runClient task. It will then run MineTweaker + that specific mod support library.
 
