@@ -184,4 +184,9 @@ public class DataLong implements IData {
 	public IData not() {
 		return new DataLong(~ value);
 	}
+	
+	@Override
+	public String toString() {
+		return asString() + " as long";
+	}
 }

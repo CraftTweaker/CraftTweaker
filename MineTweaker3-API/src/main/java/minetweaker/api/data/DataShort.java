@@ -184,4 +184,9 @@ public class DataShort implements IData {
 	public IData not() {
 		return new DataShort((short) (~ value));
 	}
+	
+	@Override
+	public String toString() {
+		return asString() + " as short";
+	}
 }

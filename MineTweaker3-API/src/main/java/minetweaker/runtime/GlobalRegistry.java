@@ -84,7 +84,7 @@ public class GlobalRegistry {
 		registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
 		
 		registerGlobal("logger", getStaticField(MineTweakerAPI.class, "logger"));
-		registerGlobal("minetweaker", getStaticField(MineTweakerAPI.class, "tweaker"));
+		registerGlobal("tweaker", getStaticField(MineTweakerAPI.class, "tweaker"));
 		registerGlobal("recipes", getStaticField(MineTweakerAPI.class, "recipes"));
 		registerGlobal("furnace", getStaticField(MineTweakerAPI.class, "furnace"));
 		registerGlobal("oreDict", getStaticField(MineTweakerAPI.class, "oreDict"));

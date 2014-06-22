@@ -219,4 +219,9 @@ public class DataIntArray implements IData {
 	public <T> T convert(IDataConverter<T> converter) {
 		return converter.fromIntArray(this.data);
 	}
+	
+	@Override
+	public String toString() {
+		return asString() + " as int[]";
+	}
 }

@@ -120,4 +120,7 @@ public interface IData {
 	public IData update(IData data);
 	
 	public <T> T convert(IDataConverter<T> converter);
+	
+	@Override
+	public String toString();
 }

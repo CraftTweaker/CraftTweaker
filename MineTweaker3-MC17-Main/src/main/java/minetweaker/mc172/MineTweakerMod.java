@@ -28,6 +28,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.mc172.brackets.ItemBracketHandler;
 import minetweaker.mc172.brackets.LiquidBracketHandler;
+import minetweaker.mc172.brackets.OreBracketHandler;
 import minetweaker.mc172.network.MineTweakerLoadScriptsHandler;
 import minetweaker.mc172.network.MineTweakerLoadScriptsPacket;
 import minetweaker.mc172.oredict.OreDict;
@@ -107,6 +108,9 @@ public class MineTweakerMod {
 	public void reload() {
 		MineTweakerAPI.tweaker.rollback();
 		MineTweakerAPI.tweaker.load();
+		
+		// execute script on all connected clients
+		NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()));
 	}
 	
 	// ##########################
@@ -123,6 +127,7 @@ public class MineTweakerMod {
 	public void onPostInit(FMLPostInitializationEvent ev) {
 		MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
 		MineTweakerAPI.registerBracketHandler(new LiquidBracketHandler());
+		MineTweakerAPI.registerBracketHandler(new OreBracketHandler());
 		
 		for (String registry : REGISTRIES) {
 			try {

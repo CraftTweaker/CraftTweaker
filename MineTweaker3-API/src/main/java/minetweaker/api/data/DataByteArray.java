@@ -217,4 +217,9 @@ public class DataByteArray implements IData {
 	public <T> T convert(IDataConverter<T> converter) {
 		return converter.fromByteArray(this.data);
 	}
+	
+	@Override
+	public String toString() {
+		return asString() + " as byte[]";
+	}
 }

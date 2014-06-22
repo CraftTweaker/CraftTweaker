@@ -184,4 +184,9 @@ public class DataDouble implements IData {
 	public IData not() {
 		throw new UnsupportedOperationException("Cannot perform bitwise operations on double");
 	}
+	
+	@Override
+	public String toString() {
+		return asString();
+	}
 }

@@ -84,7 +84,7 @@ public class DataList implements IData {
 			} else {
 				output.append(", ");
 			}
-			output.append(value.asString());
+			output.append(value.toString());
 		}
 		output.append(']');
 		return output.toString();
@@ -239,5 +239,10 @@ public class DataList implements IData {
 	@Override
 	public IData not() {
 		throw new UnsupportedOperationException("Lists don't support bitwise operators");
+	}
+	
+	@Override
+	public String toString() {
+		return asString();
 	}
 }

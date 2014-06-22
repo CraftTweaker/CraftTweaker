@@ -68,7 +68,7 @@ public class SymbolPackage implements IZenSymbol {
 			}
 		}
 		
-		System.out.println("Adding " + parts[parts.length - 1] + " to package " + pkgCurrent.getName() + "(" + symbol + ")");
+		//System.out.println("Adding " + parts[parts.length - 1] + " to package " + pkgCurrent.getName() + "(" + symbol + ")");
 		if (pkgCurrent.members.containsKey(parts[parts.length - 1])) {
 			errors.error(null, parts[parts.length - 1] + " is already defined in that package");
 		} else {

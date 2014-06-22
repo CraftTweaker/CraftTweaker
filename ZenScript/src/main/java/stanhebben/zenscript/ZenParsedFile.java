@@ -12,6 +12,7 @@ import stanhebben.zenscript.definitions.ParsedFunction;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.statements.Statement;
+import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolType;
 import stanhebben.zenscript.type.ZenType;
 
@@ -105,7 +106,12 @@ public class ZenParsedFile {
 			}
 			
 			if (type != null) {
-				environmentScript.putValue(imprt.getRename(), type.toSymbol());
+				IZenSymbol symbol = type.toSymbol();
+				if (symbol == null) {
+					environmentScript.error(imprt.getPosition(), "Not a valid type");
+				} else {
+					environmentScript.putValue(imprt.getRename(), type.toSymbol());
+				}
 			} else {
 				environmentScript.putValue(imprt.getRename(), new SymbolType(ZenType.ANY));
 			}

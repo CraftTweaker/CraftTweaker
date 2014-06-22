@@ -184,4 +184,9 @@ public class DataByte implements IData {
 	public IData not() {
 		return new DataByte((byte) (~ value));
 	}
+	
+	@Override
+	public String toString() {
+		return asString() + " as byte";
+	}
 }

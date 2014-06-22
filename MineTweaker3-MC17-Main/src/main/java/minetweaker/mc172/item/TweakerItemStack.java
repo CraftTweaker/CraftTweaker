@@ -135,7 +135,11 @@ public class TweakerItemStack implements IItemStack {
 	@Override
 	public IItemStack withTag(IData tag) {
 		ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
-		result.stackTagCompound = (NBTTagCompound) NBTConverter.from(tag);
+		if (tag == null) {
+			result.stackTagCompound = null;
+		} else {
+			result.stackTagCompound = (NBTTagCompound) NBTConverter.from(tag);
+		}
 		return new TweakerItemStack(result, tag);
 	}
 
@@ -226,17 +230,19 @@ public class TweakerItemStack implements IItemStack {
 		result.append('<');
 		result.append(Item.itemRegistry.getNameForObject(stack.getItem()));
 
-		if (stack.getItemDamage() > 0) {
+		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+			result.append(":*");
+		} else if (stack.getItemDamage() > 0) {
 			result.append(':').append(stack.getItemDamage());
 		}
 		result.append('>');
 
 		if (stack.getTagCompound() != null) {
-			result.append(".withData(");
-			result.append(stack.stackTagCompound.toString());
+			result.append(".withTag(");
+			result.append(NBTConverter.from(stack.getTagCompound(), wildcardSize).toString());
 			result.append(")");
 		}
-
+		
 		if (!wildcardSize) {
 			result.append(" * ").append(stack.stackSize);
 		}

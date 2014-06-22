@@ -106,6 +106,7 @@ public class RecipeConverter {
 						pattern[j] = (char) ('A' + counter);
 						rarguments.add(pattern[j]);
 						rarguments.add(converted[off]);
+						counter++;
 					}
 				}
 				parts[i] = new String(pattern);

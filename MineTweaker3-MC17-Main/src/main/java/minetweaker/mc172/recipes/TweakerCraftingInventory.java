@@ -10,7 +10,9 @@ import java.util.List;
 import minetweaker.mc172.item.TweakerItemStack;
 import minetweaker.mc172.util.MineTweakerHacks;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
+import minetweaker.mc172.player.TweakerPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -43,6 +45,7 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 	private IItemStack[] stacks;
 	private ItemStack[] original;
 	private int stackCount;
+	private TweakerPlayer player;
 	
 	private TweakerCraftingInventory(InventoryCrafting inventory) {
 		this.inventory = inventory;
@@ -56,11 +59,11 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 		List<Slot> slots = container.inventorySlots;
 		if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
 			SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
-			EntityPlayer player = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
-			System.out.println("Crafting slot for " + player.getCommandSenderName());
+			EntityPlayer playerEntity = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
+			player = new TweakerPlayer(playerEntity);
+		} else {
+			player = null;
 		}
-		
-		System.out.println("Container: " + MineTweakerHacks.getCraftingContainer(inventory));
 	}
 	
 	private void update() {
@@ -73,7 +76,7 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 		
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			if (changed(i)) {
-				System.out.println("Slot " + i + " changed");
+				//System.out.println("Slot " + i + " changed");
 				original[i] = inventory.getStackInSlot(i);
 				if (inventory.getStackInSlot(i) != null) {
 					if (stacks[i] == null) stackCount++;
@@ -85,6 +88,11 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 			}
 		}
 		//System.out.println("Num stack count: " + stackCount);
+	}
+	
+	@Override
+	public IPlayer getPlayer() {
+		return player;
 	}
 
 	@Override
@@ -119,7 +127,7 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 
 	@Override
 	public void setStack(int x, int y, IItemStack stack) {
-		System.out.println("SetStack(" + x + ", " + y + ") " + stack);
+		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
 		
 		int ix = y * width + x;
 		if (stack != stacks[ix]) {
@@ -139,7 +147,7 @@ public class TweakerCraftingInventory implements ICraftingInventory {
 
 	@Override
 	public void setStack(int i, IItemStack stack) {
-		System.out.println("SetStack(" + i + ") " + stack);
+		//System.out.println("SetStack(" + i + ") " + stack);
 		
 		if (stack != stacks[i]) {
 			if (stack == null) {

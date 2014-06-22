@@ -32,6 +32,8 @@ public class ExpressionFunction extends Expression {
 	public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, Statement[] statements) {
 		super(position);
 		
+		System.out.println("Function expression: " + arguments.size() + " arguments");
+		
 		this.arguments = arguments;
 		this.returnType = returnType;
 		this.statements = statements;

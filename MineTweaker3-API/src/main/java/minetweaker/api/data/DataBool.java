@@ -184,4 +184,9 @@ public class DataBool implements IData {
 	public IData not() {
 		return new DataBool(!value);
 	}
+	
+	@Override
+	public String toString() {
+		return asString();
+	}
 }

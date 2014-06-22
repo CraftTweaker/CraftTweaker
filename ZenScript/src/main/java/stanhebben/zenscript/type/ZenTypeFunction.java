@@ -37,7 +37,13 @@ public class ZenTypeFunction extends ZenType {
 		
 		StringBuilder nameBuilder = new StringBuilder();
 		nameBuilder.append("function(");
+		boolean first = true;
 		for (ZenType type : argumentTypes) {
+			if (first) {
+				first = false;
+			} else {
+				nameBuilder.append(',');
+			}
 			nameBuilder.append(type.getName());
 		}
 		nameBuilder.append(returnType.getName());
@@ -53,6 +59,7 @@ public class ZenTypeFunction extends ZenType {
 		for (ZenType type : argumentTypes) {
 			nameBuilder.append(type.getName());
 		}
+		nameBuilder.append(')');
 		nameBuilder.append(returnType.getName());
 		name = nameBuilder.toString();
 	}
@@ -165,6 +172,8 @@ public class ZenTypeFunction extends ZenType {
 	private boolean canCastToNative(ZenType type) {
 		if (!(type instanceof ZenTypeNative)) return false;
 		
+		//System.out.println("Check cast to native type " + type.getName());
+		
 		ZenTypeNative ntype = (ZenTypeNative) type;
 		if (ntype.getNativeClass().isInterface() && ntype.getNativeClass().getMethods().length == 1) {
 			// ta-da! we got a functional interface
@@ -173,6 +182,7 @@ public class ZenTypeFunction extends ZenType {
 			return true; // assume for now it is
 		}
 		
+		System.out.println("Cannot cast");
 		return false;
 	}
 }

@@ -7,6 +7,7 @@
 package minetweaker.api.recipes;
 
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -17,6 +18,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenClass("minetweaker.recipes.ICraftingInventory")
 public interface ICraftingInventory {
+	@ZenGetter("player")
+	public IPlayer getPlayer();
+	
 	@ZenGetter("size")
 	public int getSize();
 	

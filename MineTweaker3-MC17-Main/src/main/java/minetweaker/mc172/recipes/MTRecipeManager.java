@@ -246,6 +246,7 @@ public class MTRecipeManager implements IRecipeManager {
 				}
 			}
 		}
+		
 		InventoryCrafting inventory = new InventoryCrafting(container, width, height);
 		for (int i = 0; i < iContents.length; i++) {
 			inventory.setInventorySlotContents(i, iContents[i]);

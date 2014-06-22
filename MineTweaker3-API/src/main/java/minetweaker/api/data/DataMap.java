@@ -133,7 +133,7 @@ public class DataMap implements IData {
 	public String asString() {
 		StringBuilder result = new StringBuilder();
 		result.append('{');
-		boolean first = false;
+		boolean first = true;
 		for (Map.Entry<String, IData> entry : data.entrySet()) {
 			if (first) {
 				first = false;
@@ -142,7 +142,7 @@ public class DataMap implements IData {
 			}
 			result.append(entry.getKey());
 			result.append(": ");
-			result.append(entry.getValue().asString());
+			result.append(entry.getValue().toString());
 		}
 		result.append('}');
 		return result.toString();
@@ -207,7 +207,7 @@ public class DataMap implements IData {
 		for (Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
 			if (!this.data.containsKey(dataEntry.getKey())) {
 				return false;
-			} else if (!this.data.get(dataEntry.getKey()).contains(data)) {
+			} else if (!this.data.get(dataEntry.getKey()).contains(dataEntry.getValue())) {
 				return false;
 			}
 		}
@@ -268,5 +268,10 @@ public class DataMap implements IData {
 	@Override
 	public <T> T convert(IDataConverter<T> converter) {
 		return converter.fromMap(data);
+	}
+	
+	@Override
+	public String toString() {
+		return asString();
 	}
 }

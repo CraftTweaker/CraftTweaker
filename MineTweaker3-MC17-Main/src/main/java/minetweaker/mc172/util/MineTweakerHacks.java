@@ -9,7 +9,6 @@ package minetweaker.mc172.util;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +30,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
  */
 public class MineTweakerHacks {
 	private static final Field NBTTAGLIST_TAGLIST;
-	private static final Field OREDICTIONARY_ORESTACKS;
+	private static final Field OREDICTIONARY_IDTOSTACK;
+	private static final Field OREDICTIONARY_IDTOSTACKUN;
 	private static final Field MINECRAFTSERVER_ANVILFILE;
 	private static final Field SHAPEDORERECIPE_WIDTH;
 	private static final Field INVENTORYCRAFTING_EVENTHANDLER;
@@ -39,7 +39,8 @@ public class MineTweakerHacks {
 	
 	static {
 		NBTTAGLIST_TAGLIST = getField(NBTTagList.class, MineTweakerObfuscation.NBTTAGLIST_TAGLIST);
-		OREDICTIONARY_ORESTACKS = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_ORESTACKS);
+		OREDICTIONARY_IDTOSTACK = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_IDTOSTACK);
+		OREDICTIONARY_IDTOSTACKUN = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_IDTOSTACKUN);
 		MINECRAFTSERVER_ANVILFILE = getField(MinecraftServer.class, MineTweakerObfuscation.MINECRAFTSERVER_ANVILFILE);
 		SHAPEDORERECIPE_WIDTH = getField(ShapedOreRecipe.class, new String[] {"width"});
 		INVENTORYCRAFTING_EVENTHANDLER = getField(InventoryCrafting.class, MineTweakerObfuscation.INVENTORYCRAFTING_EVENTHANDLER);
@@ -61,9 +62,18 @@ public class MineTweakerHacks {
 		}
 	}
 	
-	public static HashMap<Integer, ArrayList<ItemStack>> getOreStacks() {
+	public static List<ArrayList<ItemStack>> getOreIdStacks() {
 		try {
-			return (HashMap<Integer, ArrayList<ItemStack>>) OREDICTIONARY_ORESTACKS.get(null);
+			return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACK.get(null);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logger.logError("ERROR - could not load ore dictionary stacks!");
+			return null;
+		}
+	}
+	
+	public static List<ArrayList<ItemStack>> getOreIdStacksUn() {
+		try {
+			return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACKUN.get(null);
 		} catch (IllegalAccessException ex) {
 			MineTweakerAPI.logger.logError("ERROR - could not load ore dictionary stacks!");
 			return null;

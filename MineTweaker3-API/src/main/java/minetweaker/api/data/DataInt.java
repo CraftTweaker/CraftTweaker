@@ -184,4 +184,9 @@ public class DataInt implements IData {
 	public IData not() {
 		return new DataInt(~ value);
 	}
+	
+	@Override
+	public String toString() {
+		return asString();
+	}
 }

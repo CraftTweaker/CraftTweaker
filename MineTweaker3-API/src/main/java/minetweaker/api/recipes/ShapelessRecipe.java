@@ -54,7 +54,7 @@ public class ShapelessRecipe {
 				}
 			}
 			
-			actualOutput = function.process(actualOutput, map);
+			actualOutput = function.process(actualOutput, map, inventory);
 		}
 		
 		if (actualOutput == null) {

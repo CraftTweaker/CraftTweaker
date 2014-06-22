@@ -379,13 +379,9 @@ public class ZenTypeAny extends ZenType {
 
 	@Override
 	public Expression call(ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
-		try {
-			return JavaMethod
-					.get(environment, IAny.class, "call", Class.forName("[" + signature(IAny.class)))
-					.callVirtual(position, environment, receiver, arguments);
-		} catch (ClassNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
+		return JavaMethod
+				.get(environment, IAny.class, "call", IAny[].class)
+				.callVirtual(position, environment, receiver, arguments);
 	}
 	
 	@Override

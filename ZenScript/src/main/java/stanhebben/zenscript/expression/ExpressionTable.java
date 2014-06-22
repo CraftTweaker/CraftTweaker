@@ -66,6 +66,8 @@ public class ExpressionTable extends Expression {
 	
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
+		System.out.println("Casting Table to " + type.getName());
+		
 		if (type instanceof ZenTypeAssociative) {
 			ZenTypeAssociative keyType = (ZenTypeAssociative) type;
 			Expression[] newKeys = new Expression[keys.length];
@@ -77,8 +79,11 @@ public class ExpressionTable extends Expression {
 			}
 			
 			return new ExpressionTable(getPosition(), newKeys, newValues, type);
+		} else if (this.type.canCastImplicit(type, environment)) {
+			return this.type.cast(position, environment, this, type);
 		} else {
-			return super.cast(position, environment, type);
+			environment.error(position, "cannot cast " + this.type + " to " + type);
+			return new ExpressionInvalid(position, type);
 		}
 	}
 }

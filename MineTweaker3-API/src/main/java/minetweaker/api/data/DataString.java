@@ -188,4 +188,9 @@ public class DataString implements IData {
 	public IData not() {
 		throw new UnsupportedOperationException("Cannot perform bitwise arithmetic on a string");
 	}
+	
+	@Override
+	public String toString() {
+		return '\"' + value.replace("\"", "\\\"") + "\"";
+	}
 }

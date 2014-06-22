@@ -57,7 +57,9 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 	@Override
 	public IPartialExpression getValue(String name, ZenPosition position) {
 		if (imports.containsKey(name)) {
-			return imports.get(name).instance(position);
+			IZenSymbol imprt = imports.get(name);
+			if (imprt == null) throw new RuntimeException("How could this happen?");
+			return imprt.instance(position);
 		} else {
 			return parent.getValue(name, position);
 		}
@@ -65,6 +67,8 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 
 	@Override
 	public void putValue(String name, IZenSymbol value) {
+		if (value == null) throw new IllegalArgumentException("value cannot be null");
+		
 		imports.put(name, value);
 	}
 

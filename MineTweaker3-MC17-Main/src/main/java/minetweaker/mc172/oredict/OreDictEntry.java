@@ -28,6 +28,9 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author Stan
  */
 public class OreDictEntry implements IOreDictEntry {
+	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = MineTweakerHacks.getOreIdStacks();
+	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
+	
 	private final Integer id;
 	
 	public OreDictEntry(Integer id) {
@@ -185,7 +188,7 @@ public class OreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			OreDictionary.getOres(id).remove(item);
+			OREDICT_CONTENTS.get(id).remove(item);
 		}
 
 		@Override
@@ -204,17 +207,20 @@ public class OreDictEntry implements IOreDictEntry {
 		private final Integer idSource;
 		
 		private final ArrayList<ItemStack> targetCopy;
+		private final ArrayList<ItemStack> targetCopyUn;
 		
 		public ActionMirror(Integer idTarget, Integer idSource) {
 			this.idTarget = idTarget;
 			this.idSource = idSource;
 			
-			targetCopy = OreDictionary.getOres(idTarget);
+			targetCopy = OREDICT_CONTENTS.get(idTarget);
+			targetCopyUn = OREDICT_CONTENTS_UN.get(idTarget);
 		}
 
 		@Override
 		public void apply() {
-			MineTweakerHacks.getOreStacks().put(idTarget, OreDictionary.getOres(idSource));
+			OREDICT_CONTENTS.set(idTarget, OREDICT_CONTENTS.get(idSource));
+			OREDICT_CONTENTS_UN.set(idTarget, OREDICT_CONTENTS_UN.get(idSource));
 		}
 
 		@Override
@@ -224,7 +230,8 @@ public class OreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			MineTweakerHacks.getOreStacks().put(idTarget, targetCopy);
+			OREDICT_CONTENTS.set(idTarget, targetCopy);
+			OREDICT_CONTENTS_UN.set(idTarget, targetCopyUn);
 		}
 
 		@Override
@@ -249,7 +256,7 @@ public class OreDictEntry implements IOreDictEntry {
 		
 		@Override
 		public void apply() {
-			OreDictionary.getOres(id).add(item);
+			OREDICT_CONTENTS.get(id).remove(item);
 		}
 
 		@Override
@@ -259,17 +266,17 @@ public class OreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			OreDictionary.getOres(id).remove(item);
+			OREDICT_CONTENTS.get(id).add(item);
 		}
 
 		@Override
 		public String describe() {
-			return "Adding " + item.getDisplayName() + " to ore dictionary entry " + OreDictionary.getOreName(id);
+			return "Removing " + item.getDisplayName() + " from ore dictionary entry " + OreDictionary.getOreName(id);
 		}
 
 		@Override
 		public String describeUndo() {
-			return "Removing " + item.getDisplayName() + " from ore dictionary entry " + OreDictionary.getOreName(id);
+			return "Restoring " + item.getDisplayName() + " to ore dictionary entry " + OreDictionary.getOreName(id);
 		}
 	}
 	

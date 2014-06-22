@@ -184,4 +184,9 @@ public class DataFloat implements IData {
 	public IData not() {
 		throw new UnsupportedOperationException("Cannot perform bitwise operations on float");
 	}
+	
+	@Override
+	public String toString() {
+		return asString() + " as float";
+	}
 }

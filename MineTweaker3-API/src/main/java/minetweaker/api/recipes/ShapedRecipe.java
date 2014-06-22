@@ -64,11 +64,11 @@ public class ShapedRecipe {
 		this.height = height1;
 		this.mirrored = mirrored;
 		
-		System.out.println("ShapedRecipe width=" + width + ", height=" + height);
+		/*System.out.println("ShapedRecipe width=" + width + ", height=" + height);
 		System.out.println("Ingredients: ");
 		for (int i = 0; i < this.ingredients.length; i++) {
 			System.out.println("(" + posx[i] + ", " + posy[i] + "): " + this.ingredients[i]);
-		}
+		}*/
 	}
 	
 	public int getWidth() {
@@ -187,7 +187,8 @@ public class ShapedRecipe {
 				}
 			}
 
-			output = function.process(output, tagged);
+			output = function.process(output, tagged, inventory);
+			System.out.println("Ouput: " + output);
 		}
 		
 		if (output == null) {
