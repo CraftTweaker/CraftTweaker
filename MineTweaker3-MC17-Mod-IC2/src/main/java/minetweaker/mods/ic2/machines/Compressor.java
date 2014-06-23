@@ -58,7 +58,10 @@ public class Compressor {
 	public static IItemStack getOutput(
 			@NotNull IItemStack input) {
 		RecipeOutput output = Recipes.compressor.getOutputFor((ItemStack) input.getInternal(), false);
-		if (output == null || output.items.size() > 0) return null;
+		if (output == null || output.items.size() > 0) {
+			System.out.println("No output");
+			return null;
+		}
 		return new TweakerItemStack(output.items.get(0));
 	}
 }

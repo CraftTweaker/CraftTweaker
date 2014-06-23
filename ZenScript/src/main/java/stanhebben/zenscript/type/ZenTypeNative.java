@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Queue;
 import org.objectweb.asm.ClassWriter;
 import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.ZenRuntimeException;
@@ -429,6 +430,7 @@ public class ZenTypeNative extends ZenType {
 	 */
 	private static boolean canCastImplicit(Class cls, ZenType type) {
 		if (isEqual(cls, type)) return true;
+		if (type == BOOL) return true;
 		if (cls.getSuperclass() != null) {
 			if (canCastImplicit(cls.getSuperclass(), type)) return true;
 		}
@@ -447,6 +449,7 @@ public class ZenTypeNative extends ZenType {
 	 */
 	private static boolean canCastImplicit(ZenType type, Class cls) {
 		if (isEqual(cls, type)) return true;
+		if (type == BOOL) return true;
 		if (type instanceof ZenTypeNative) {
 			Class clsFrom = ((ZenTypeNative) type).cls;
 			return cls.isAssignableFrom(clsFrom);
@@ -778,6 +781,14 @@ public class ZenTypeNative extends ZenType {
 		}
 		
 		MethodOutput output = environment.getOutput();
+		if (toType == BOOL) {
+			Label lbl = new Label();
+			output.iConst0();
+			output.ifNull(lbl);
+			output.iConst1();
+			output.label(lbl);
+			return;
+		}
 		for (ZenNativeCaster caster : casters) {
 			if (caster.getCasterClass() == toType.toJavaClass()) {
 				caster.compile(output);

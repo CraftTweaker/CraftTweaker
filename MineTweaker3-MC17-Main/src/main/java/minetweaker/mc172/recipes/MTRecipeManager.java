@@ -8,11 +8,11 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.mc172.item.TweakerItemStack;
 import minetweaker.mc172.oredict.OreDictEntry;
-import minetweaker.mc172.util.MineTweakerHacks;import minetweaker.api.item.IIngredient;
+import minetweaker.mc172.util.MineTweakerHacks;
+import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.recipes.IRecipeFunction;
 import minetweaker.api.recipes.IRecipeManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -251,8 +251,7 @@ public class MTRecipeManager implements IRecipeManager {
 		for (int i = 0; i < iContents.length; i++) {
 			inventory.setInventorySlotContents(i, iContents[i]);
 		}
-		
-		ItemStack result = CraftingManager.getInstance().findMatchingRecipe(inventory, Minecraft.getMinecraft().theWorld);
+		ItemStack result = CraftingManager.getInstance().findMatchingRecipe(inventory, null);
 		if (result == null) {
 			return null;
 		} else {

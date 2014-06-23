@@ -22,7 +22,7 @@ public interface IFurnaceManager {
 	public void remove(IIngredient ingredient);
 	
 	@ZenMethod
-	public void addRecipe(IIngredient output, IIngredient input, @Optional double xp);
+	public void addRecipe(IItemStack output, IIngredient input, @Optional double xp);
 	
 	@ZenMethod
 	public void setFuel(IIngredient item, int fuel);

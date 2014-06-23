@@ -66,8 +66,6 @@ public class ExpressionTable extends Expression {
 	
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-		System.out.println("Casting Table to " + type.getName());
-		
 		if (type instanceof ZenTypeAssociative) {
 			ZenTypeAssociative keyType = (ZenTypeAssociative) type;
 			Expression[] newKeys = new Expression[keys.length];

@@ -27,7 +27,18 @@ public class MineTweakerUtil {
 		return output;
 	}
 	
-	public static IItemStack[] getItemStacks(ItemStack... items) {
+	public static ItemStack[] getItemStacks(List<IItemStack> items) {
+		ItemStack[] output = new ItemStack[items.size()];
+		for (int i = 0; i < items.size(); i++) {
+			Object internal = items.get(i).getInternal();
+			if (internal != null && internal instanceof ItemStack) {
+				output[i] = (ItemStack) internal;
+			}
+		}
+		return output;
+	}
+	
+	public static IItemStack[] getIItemStacks(ItemStack... items) {
 		IItemStack[] result = new IItemStack[items.length];
 		for (int i = 0; i < items.length; i++) {
 			result[i] = new TweakerItemStack(items[i]);
@@ -35,7 +46,7 @@ public class MineTweakerUtil {
 		return result;
 	}
 	
-	public static IItemStack[] getItemStacks(List<ItemStack> items) {
+	public static IItemStack[] getIItemStacks(List<ItemStack> items) {
 		IItemStack[] result = new IItemStack[items.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = new TweakerItemStack(items.get(i));

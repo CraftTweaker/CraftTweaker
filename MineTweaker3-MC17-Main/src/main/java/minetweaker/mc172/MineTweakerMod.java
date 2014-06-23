@@ -7,10 +7,8 @@
 package minetweaker.mc172;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -19,17 +17,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 import minetweaker.MineTweakerAPI;
-import minetweaker.annotations.ModOnly;
 import minetweaker.mc172.brackets.ItemBracketHandler;
 import minetweaker.mc172.brackets.LiquidBracketHandler;
 import minetweaker.mc172.brackets.OreBracketHandler;
+import minetweaker.mc172.furnace.TweakerFurnace;
 import minetweaker.mc172.network.MineTweakerLoadScriptsHandler;
 import minetweaker.mc172.network.MineTweakerLoadScriptsPacket;
 import minetweaker.mc172.oredict.OreDict;
@@ -73,6 +68,7 @@ public class MineTweakerMod {
 		MineTweakerAPI.oreDict = new OreDict();
 		MineTweakerAPI.recipes = new MTRecipeManager();
 		MineTweakerAPI.logger = new MineTweakerLogger();
+		MineTweakerAPI.furnace = new TweakerFurnace();
 		
 		/*List<Class> classes = new ArrayList<Class>();
 		MineTweakerRegistry.getClasses(classes);

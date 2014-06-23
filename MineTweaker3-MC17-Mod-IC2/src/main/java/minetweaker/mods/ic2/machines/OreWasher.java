@@ -20,7 +20,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("mods.ic2.OreWasher")
 public class OreWasher {
 	@ZenMethod
-	public void addRecipe(IItemStack[] output, IIngredient input, int millibuckets) {
+	public static void addRecipe(IItemStack[] output, IIngredient input, int millibuckets) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("amount", millibuckets);
 		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
@@ -32,7 +32,7 @@ public class OreWasher {
 	}
 	
 	@ZenMethod
-	public IItemStack[] getOutput(IItemStack input) {
+	public static IItemStack[] getOutput(IItemStack input) {
 		RecipeOutput output = Recipes.oreWashing.getOutputFor((ItemStack) input.getInternal(), false);
 		if (output == null || output.items.isEmpty()) return null;
 		return MineTweakerUtil.getItemStacks(output.items);

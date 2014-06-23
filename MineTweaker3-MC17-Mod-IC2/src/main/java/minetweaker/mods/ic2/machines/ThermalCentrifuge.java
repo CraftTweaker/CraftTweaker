@@ -39,10 +39,10 @@ public class ThermalCentrifuge {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("minHeat", minHeat);
 			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
-					"compressor",
-					Recipes.compressor,
+					"thermal centrifuge",
+					Recipes.centrifuge,
 					MineTweakerUtil.getItemStacks(output),
-					null,
+					tag,
 					new IC2RecipeInput(ingredient)));
 		}
 	}
