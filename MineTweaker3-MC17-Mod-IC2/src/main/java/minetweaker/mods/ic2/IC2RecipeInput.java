@@ -9,7 +9,7 @@ package minetweaker.mods.ic2;
 import ic2.api.recipe.IRecipeInput;
 import java.util.ArrayList;
 import java.util.List;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
@@ -28,7 +28,7 @@ public class IC2RecipeInput implements IRecipeInput {
 
 	@Override
 	public boolean matches(ItemStack subject) {
-		return ingredient.matches(new TweakerItemStack(subject));
+		return ingredient.matches(new MCItemStack(subject));
 	}
 
 	@Override

@@ -1,15 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.mods;
 
+import stanhebben.zenscript.annotations.ZenGetter;
+
 /**
- *
- * @author Stan
+ * 
+ * 
+ * @author Stan Hebben
  */
-public class IMod {
+public interface IMod {
+	@ZenGetter("id")
+	public String getId();
 	
+	@ZenGetter("name")
+	public String getName();
+	
+	@ZenGetter("version")
+	public String getVersion();
+	
+	@ZenGetter("decription")
+	public String getDescription();
 }

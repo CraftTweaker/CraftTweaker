@@ -3,6 +3,7 @@ package minetweaker.mods.ic2.machines;
 import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
+import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.mc172.util.MineTweakerUtil;
@@ -18,6 +19,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.ic2.OreWasher")
+@ModOnly("IC2")
 public class OreWasher {
 	@ZenMethod
 	public static void addRecipe(IItemStack[] output, IIngredient input, int millibuckets) {
@@ -35,6 +37,6 @@ public class OreWasher {
 	public static IItemStack[] getOutput(IItemStack input) {
 		RecipeOutput output = Recipes.oreWashing.getOutputFor((ItemStack) input.getInternal(), false);
 		if (output == null || output.items.isEmpty()) return null;
-		return MineTweakerUtil.getItemStacks(output.items);
+		return MineTweakerUtil.getIItemStacks(output.items);
 	}
 }

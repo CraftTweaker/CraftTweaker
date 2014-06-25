@@ -3,7 +3,8 @@ package minetweaker.mods.ic2.machines;
 import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.annotations.ModOnly;
+import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.mc172.util.MineTweakerUtil;
@@ -21,6 +22,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.ic2.Compressor")
+@ModOnly("IC2")
 public class Compressor {
 	/**
 	 * Adds a new recipe to the compressor.
@@ -62,6 +64,6 @@ public class Compressor {
 			System.out.println("No output");
 			return null;
 		}
-		return new TweakerItemStack(output.items.get(0));
+		return new MCItemStack(output.items.get(0));
 	}
 }

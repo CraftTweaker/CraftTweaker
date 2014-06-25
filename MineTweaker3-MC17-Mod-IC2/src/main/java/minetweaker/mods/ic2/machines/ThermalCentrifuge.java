@@ -3,6 +3,7 @@ package minetweaker.mods.ic2.machines;
 import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
+import minetweaker.annotations.ModOnly;
 import minetweaker.mc172.util.MineTweakerUtil;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
@@ -20,6 +21,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.ic2.ThermalCentrifuge")
+@ModOnly("IC2")
 public class ThermalCentrifuge {
 	/**
 	 * Adds a new recipe to the centrifuge.
@@ -73,6 +75,6 @@ public class ThermalCentrifuge {
 	public static IItemStack[] getOutput(IItemStack input) {
 		RecipeOutput output = Recipes.centrifuge.getOutputFor((ItemStack) input.getInternal(), false);
 		if (output == null || output.items.isEmpty()) return null;
-		return MineTweakerUtil.getItemStacks(output.items);
+		return MineTweakerUtil.getIItemStacks(output.items);
 	}
 }

@@ -28,12 +28,12 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	
 	@Override
     public boolean matches(InventoryCrafting inventory, World world) {
-		return recipe.matches(TweakerCraftingInventory.get(inventory));
+		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		IItemStack result = recipe.getCraftingResult(TweakerCraftingInventory.get(inventory));
+		IItemStack result = recipe.getCraftingResult(MCCraftingInventory.get(inventory));
 		if (result == null) {
 			return null;
 		} else {

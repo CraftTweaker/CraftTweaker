@@ -10,7 +10,7 @@ import java.util.List;
 import minetweaker.IBracketHandler;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IngredientAny;
 import net.minecraft.item.Item;
@@ -36,7 +36,7 @@ public class ItemBracketHandler implements IBracketHandler {
 	public static IItemStack getItem(String name, int meta) {
 		Item item = (Item) Item.itemRegistry.getObject(name);
 		if (item != null) {
-			return new TweakerItemStack(new ItemStack(item, 1, meta), true);
+			return new MCItemStack(new ItemStack(item, 1, meta), true);
 		} else {
 			return null;
 		}

@@ -1,3 +1,5 @@
+import minetweaker.tasks.RegisterZenClassesTask;
+
 buildscript {
     repositories {
         mavenCentral()
@@ -26,3 +28,11 @@ dependencies {
 	compile project(':MineTweaker3-MC17-Main')
 	compile files('libs/industrialcraft-2-2.1.476-experimental-api.jar')
 }
+
+task makeRegistry(type: RegisterZenClassesTask) {
+	inputDir = file('build/classes/main')
+	outputDir = file('build/classes/main')
+	className = 'minetweaker.mods.ic2.ClassRegistry'
+}
+
+tasks.jar.dependsOn(makeRegistry)

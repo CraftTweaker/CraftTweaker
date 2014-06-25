@@ -2,6 +2,17 @@ package minetweaker;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import minetweaker.annotations.BracketHandler;
+import minetweaker.annotations.ModOnly;
+import minetweaker.api.event.IEventManager;
+import minetweaker.api.mods.ILoadedMods;
 import minetweaker.runtime.IMineTweaker;
 import minetweaker.runtime.ILogger;
 import minetweaker.runtime.Tweaker;
@@ -35,6 +46,22 @@ import stanhebben.zenscript.type.natives.JavaMethod;
  * @author Stan Hebben
  */
 public class MineTweakerAPI {
+	static {
+		List<Class> apiClasses = new ArrayList<Class>();
+		ClassRegistry.getClasses(apiClasses);
+		
+		for (Class cls : apiClasses) {
+			registerClass(cls);
+		}
+		
+		registerGlobalSymbol("logger", getJavaStaticFieldSymbol(MineTweakerAPI.class, "logger"));
+		registerGlobalSymbol("tweaker", getJavaStaticFieldSymbol(MineTweakerAPI.class, "tweaker"));
+		registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(MineTweakerAPI.class, "recipes"));
+		registerGlobalSymbol("furnace", getJavaStaticFieldSymbol(MineTweakerAPI.class, "furnace"));
+		registerGlobalSymbol("oreDict", getJavaStaticFieldSymbol(MineTweakerAPI.class, "oreDict"));
+		registerGlobalSymbol("events", getJavaStaticFieldSymbol(MineTweakerAPI.class, "events"));
+	}
+	
 	private MineTweakerAPI() {}
 	
 	/**
@@ -65,6 +92,58 @@ public class MineTweakerAPI {
 	public static IFurnaceManager furnace = null;
 	
 	/**
+	 * Access point to the events manager.
+	 */
+	public static IEventManager events = null;
+	
+	/**
+	 * Access point to mods list.
+	 */
+	public static ILoadedMods loadedMods = null;
+	
+	public static void registerClassRegistry(Class registryClass) {
+		try {
+			Method method = registryClass.getMethod("getClasses", List.class);
+			if ((method.getModifiers() & Modifier.STATIC) == 0) {
+				System.out.println("ERROR: getClasses method in " + registryClass.getName() + " isn't static");
+			} else {
+				List<Class> classes = new ArrayList<Class>();
+				method.invoke(null, classes);
+				
+				outer: for (Class cls : classes) {
+					for (Annotation annotation : cls.getAnnotations()) {
+						if (annotation instanceof ModOnly) {
+							String[] value = ((ModOnly) annotation).value();
+							for (String mod : value) {
+								if (!loadedMods.contains(mod)) {
+									continue outer; // skip this class
+								}
+							}
+						}
+					}
+
+					MineTweakerAPI.registerClass(cls);
+				}
+			}
+		} catch (NoSuchMethodException ex) {
+
+		} catch (IllegalAccessException ex) {
+
+		} catch (InvocationTargetException ex) {
+
+		}
+	}
+	
+	public static boolean registerClassRegistry(String className) {
+		try {
+			registerClassRegistry(Class.forName(className));
+			return true;
+		} catch (ClassNotFoundException ex) {
+			return false;
+		}
+	}
+	
+	/**
 	 * Registers an annotated class. A class is annotated with either @ZenClass
 	 * or @ZenExpansion. Classes not annotated with either of these will be
 	 * ignored.
@@ -72,7 +151,7 @@ public class MineTweakerAPI {
 	 * @param annotatedClass 
 	 */
 	public static void registerClass(Class annotatedClass) {
-		System.out.println("Registering " + annotatedClass.getName());
+		//System.out.println("Registering " + annotatedClass.getName());
 		
 		for (Annotation annotation : annotatedClass.getAnnotations()) {
 			if (annotation instanceof ZenExpansion) {
@@ -81,6 +160,17 @@ public class MineTweakerAPI {
 			
 			if (annotation instanceof ZenClass) {
 				GlobalRegistry.registerNativeClass(annotatedClass);
+			}
+			
+			if ((annotation instanceof BracketHandler) && IBracketHandler.class.isAssignableFrom(annotatedClass)) {
+				try {
+					IBracketHandler bracketHandler = (IBracketHandler) annotatedClass.newInstance();
+					registerBracketHandler(bracketHandler);
+				} catch (InstantiationException ex) {
+					Logger.getLogger(MineTweakerAPI.class.getName()).log(Level.SEVERE, null, ex);
+				} catch (IllegalAccessException ex) {
+					Logger.getLogger(MineTweakerAPI.class.getName()).log(Level.SEVERE, null, ex);
+				}
 			}
 		}
 	}

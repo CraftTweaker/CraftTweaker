@@ -18,33 +18,7 @@ import java.util.logging.Logger;
 import minetweaker.IBracketHandler;
 import minetweaker.IRecipeRemover;
 import minetweaker.MineTweakerAPI;
-import minetweaker.expand.ExpandAnyArray;
-import minetweaker.expand.ExpandAnyDict;
-import minetweaker.expand.ExpandBool;
-import minetweaker.expand.ExpandByte;
-import minetweaker.expand.ExpandDouble;
-import minetweaker.expand.ExpandFloat;
-import minetweaker.expand.ExpandInt;
-import minetweaker.expand.ExpandLong;
-import minetweaker.expand.ExpandShort;
-import minetweaker.expand.ExpandString;
-import minetweaker.api.data.IData;
-import minetweaker.api.item.Condition;
 import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemCondition;
-import minetweaker.api.item.IItemDefinition;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.item.IItemTransformer;
-import minetweaker.api.item.Transform;
-import minetweaker.api.liquid.ILiquidDefinition;
-import minetweaker.api.liquid.ILiquidStack;
-import minetweaker.api.oredict.IOreDict;
-import minetweaker.api.oredict.IOreDictEntry;
-import minetweaker.api.player.IPlayer;
-import minetweaker.api.recipes.ICraftingInventory;
-import minetweaker.api.recipes.IFurnaceManager;
-import minetweaker.api.recipes.IRecipeFunction;
-import minetweaker.api.recipes.IRecipeManager;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -82,52 +56,6 @@ public class GlobalRegistry {
 		registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
 		registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
 		registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
-		
-		registerGlobal("logger", getStaticField(MineTweakerAPI.class, "logger"));
-		registerGlobal("tweaker", getStaticField(MineTweakerAPI.class, "tweaker"));
-		registerGlobal("recipes", getStaticField(MineTweakerAPI.class, "recipes"));
-		registerGlobal("furnace", getStaticField(MineTweakerAPI.class, "furnace"));
-		registerGlobal("oreDict", getStaticField(MineTweakerAPI.class, "oreDict"));
-		
-		registerExpansion(ExpandAnyArray.class);
-		registerExpansion(ExpandAnyDict.class);
-		registerExpansion(ExpandBool.class);
-		registerExpansion(ExpandByte.class);
-		registerExpansion(ExpandDouble.class);
-		registerExpansion(ExpandFloat.class);
-		registerExpansion(ExpandInt.class);
-		registerExpansion(ExpandLong.class);
-		registerExpansion(ExpandShort.class);
-		registerExpansion(ExpandString.class);
-		
-		// minetweaker.api.data
-		registerNativeClass(IData.class);
-		
-		// minetweaker.api.item
-		registerNativeClass(IIngredient.class);
-		registerNativeClass(IItemCondition.class);
-		registerNativeClass(IItemDefinition.class);
-		registerNativeClass(IItemStack.class);
-		registerNativeClass(IItemTransformer.class);
-		registerNativeClass(Condition.class);
-		registerNativeClass(Transform.class);
-		
-		// minetweaker.api.liquid
-		registerNativeClass(ILiquidDefinition.class);
-		registerNativeClass(ILiquidStack.class);
-		
-		// minetweaker.api.oredict
-		registerNativeClass(IOreDict.class);
-		registerNativeClass(IOreDictEntry.class);
-		
-		// minetweaker.api.player
-		registerNativeClass(IPlayer.class);
-		
-		// minetweaker.api.recipes
-		registerNativeClass(ICraftingInventory.class);
-		registerNativeClass(IFurnaceManager.class);
-		registerNativeClass(IRecipeFunction.class);
-		registerNativeClass(IRecipeManager.class);
 	}
 	
 	private GlobalRegistry() {}
@@ -145,7 +73,7 @@ public class GlobalRegistry {
 			if (annotation instanceof ZenExpansion) {
 				ZenExpansion eAnnotation = (ZenExpansion) annotation;
 				if (!expansions.containsKey(eAnnotation.value())) {
-					expansions.put(eAnnotation.value(), new TypeExpansion());
+					expansions.put(eAnnotation.value(), new TypeExpansion(eAnnotation.value()));
 				}
 				expansions.get(eAnnotation.value()).expand(cls, types);
 			}

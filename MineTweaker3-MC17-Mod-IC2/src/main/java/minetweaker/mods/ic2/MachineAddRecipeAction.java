@@ -7,6 +7,7 @@
 package minetweaker.mods.ic2;
 
 import ic2.api.recipe.IMachineRecipeManager;
+import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,7 +33,11 @@ public class MachineAddRecipeAction extends OneWayAction {
 
 	@Override
 	public void apply() {
-		machine.addRecipe(input, tag, output);
+		try {
+			machine.addRecipe(input, tag, output);
+		} catch (RuntimeException ex) {
+			MineTweakerAPI.logger.logError(ex.getMessage());
+		}
 	}
 
 	@Override

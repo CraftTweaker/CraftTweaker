@@ -5,7 +5,8 @@ import java.util.List;
 import minetweaker.IBracketHandler;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.annotations.ModOnly;
+import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -26,11 +27,12 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan Hebben
  */
 @BracketHandler
+@ModOnly("IC2")
 public class IC2BracketHandler implements IBracketHandler {
 	public static IItemStack getItem(String name, int meta) {
 		ItemStack stack = IC2Items.getItem(name);
 		stack.setItemDamage(meta);
-		return new TweakerItemStack(stack);
+		return new MCItemStack(stack);
 	}
 	
 	private final JavaMethod method;

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.mc172.item.MCItemStack;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -70,7 +70,9 @@ public class MineTweakerCommand implements ICommand {
 			"minetweaker oredict <name>",
 			"    Outputs all items in the given ore dictionary entry to the minetweaker log",
 			"minetweaker mods",
-			"    Outputs all active mod IDs in the game"
+			"    Outputs all active mod IDs in the game",
+			"minetweaker name <id>",
+			"    Outputs the name for the given item ID"
 /*			"minetweaker name <id>[:<meta>]",
 			"    Prints the unlocalized name of the specified item," +
 			"    can be used as item or block name",
@@ -162,7 +164,7 @@ public class MineTweakerCommand implements ICommand {
 							description.append('*').append(stack.stackSize);
 						}
 						
-						sendChatMessage(icommandsender, new TweakerItemStack(stack).toString());
+						sendChatMessage(icommandsender, new MCItemStack(stack).toString());
 					}
 				}
 			} else {
@@ -185,7 +187,7 @@ public class MineTweakerCommand implements ICommand {
 						description.append('*').append(stack.stackSize);
 					}
 
-					sendChatMessage(icommandsender, new TweakerItemStack(stack).toString());
+					sendChatMessage(icommandsender, new MCItemStack(stack).toString());
 				}
 			} else {
 				sendChatMessage(icommandsender, "Hand command can only be executed by players");
@@ -200,7 +202,7 @@ public class MineTweakerCommand implements ICommand {
 				} else {
 					MineTweakerAPI.logger.logCommand("Ore entries for " + entryName + ":");
 					for (ItemStack ore : ores) {
-						MineTweakerAPI.logger.logCommand("    " + new TweakerItemStack(ore).toString());
+						MineTweakerAPI.logger.logCommand("    " + new MCItemStack(ore).toString());
 					}
 				}
 			} else {
@@ -208,7 +210,7 @@ public class MineTweakerCommand implements ICommand {
 					MineTweakerAPI.logger.logCommand("Ore entries for " + entryName + ":");
 					List<ItemStack> ores = OreDictionary.getOres(entryName);
 					for (ItemStack ore : ores) {
-						MineTweakerAPI.logger.logCommand("    " + new TweakerItemStack(ore).toString());
+						MineTweakerAPI.logger.logCommand("    " + new MCItemStack(ore).toString());
 					}
 				}
 			}
@@ -219,6 +221,13 @@ public class MineTweakerCommand implements ICommand {
 			for (ModContainer mod : mods) {
 				sendChatMessage(icommandsender, mod.getModId());
 				MineTweakerAPI.logger.logCommand("Mod: " + mod.getModId());
+			}
+		} else if (arguments[0].equals("name")) {
+			try {
+				int id = Integer.parseInt(arguments[1]);
+				
+			} catch (NumberFormatException e) {
+				MineTweakerAPI.logger.logCommand("ID must be an integer");
 			}
 		}
 		

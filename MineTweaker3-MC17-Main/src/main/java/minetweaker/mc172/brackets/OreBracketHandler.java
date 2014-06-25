@@ -8,7 +8,8 @@ package minetweaker.mc172.brackets;
 
 import java.util.List;
 import minetweaker.IBracketHandler;
-import minetweaker.mc172.oredict.OreDictEntry;
+import minetweaker.annotations.BracketHandler;
+import minetweaker.mc172.oredict.MCOreDictEntry;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.expression.ExpressionJavaCallStatic;
@@ -23,9 +24,10 @@ import stanhebben.zenscript.util.ZenPosition;
  *
  * @author Stan
  */
+@BracketHandler
 public class OreBracketHandler implements IBracketHandler {
 	public static IOreDictEntry getOre(String name) {
-		return new OreDictEntry(name);
+		return new MCOreDictEntry(name);
 	}
 	
 	@Override

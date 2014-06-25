@@ -26,12 +26,12 @@ public class ShapedRecipeAdvanced implements IRecipe {
 
 	@Override
 	public boolean matches(InventoryCrafting inventory, World world) {
-		return recipe.matches(TweakerCraftingInventory.get(inventory));
+		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return ((ItemStack) recipe.getCraftingResult(TweakerCraftingInventory.get(inventory)).getInternal()).copy();
+		return ((ItemStack) recipe.getCraftingResult(MCCraftingInventory.get(inventory)).getInternal()).copy();
 	}
 
 	@Override

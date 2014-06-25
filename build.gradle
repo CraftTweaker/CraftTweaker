@@ -1,5 +1,4 @@
 import org.gradle.api.artifacts.*
-import minetweaker.tasks.MergeJarsTask;
 
 apply plugin: 'base' // To add "clean" task to the root project.
 

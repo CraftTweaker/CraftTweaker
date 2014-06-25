@@ -13,22 +13,19 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc172.brackets.ItemBracketHandler;
-import minetweaker.mc172.brackets.LiquidBracketHandler;
-import minetweaker.mc172.brackets.OreBracketHandler;
-import minetweaker.mc172.furnace.TweakerFurnace;
+import minetweaker.mc172.furnace.FuelTweaker;
+import minetweaker.mc172.furnace.MCFurnaceManager;
+import minetweaker.mc172.mods.MCLoadedMods;
 import minetweaker.mc172.network.MineTweakerLoadScriptsHandler;
 import minetweaker.mc172.network.MineTweakerLoadScriptsPacket;
-import minetweaker.mc172.oredict.OreDict;
-import minetweaker.mc172.recipes.MTRecipeManager;
+import minetweaker.mc172.oredict.MCOreDict;
+import minetweaker.mc172.recipes.MCRecipeManager;
 import minetweaker.mc172.util.MineTweakerHacks;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
@@ -65,28 +62,11 @@ public class MineTweakerMod {
 	private boolean iAmServer = false;
 	
 	public MineTweakerMod() {
-		MineTweakerAPI.oreDict = new OreDict();
-		MineTweakerAPI.recipes = new MTRecipeManager();
+		MineTweakerAPI.oreDict = new MCOreDict();
+		MineTweakerAPI.recipes = new MCRecipeManager();
 		MineTweakerAPI.logger = new MineTweakerLogger();
-		MineTweakerAPI.furnace = new TweakerFurnace();
-		
-		/*List<Class> classes = new ArrayList<Class>();
-		MineTweakerRegistry.getClasses(classes);
-		
-		outer: for (Class cls : classes) {
-			for (Annotation annotation : cls.getAnnotations()) {
-				if (annotation instanceof ModOnly) {
-					String[] value = ((ModOnly) annotation).value();
-					for (String mod : value) {
-						if (!Loader.isModLoaded(mod)) {
-							continue outer; // skip this class
-						}
-					}
-				}
-			}
-			
-			MineTweakerAPI.registerClass(cls);
-		}*/
+		MineTweakerAPI.furnace = new MCFurnaceManager();
+		MineTweakerAPI.loadedMods = new MCLoadedMods();
 		
 		File globalDir = new File("scripts");
 		if (!globalDir.exists()) {
@@ -108,8 +88,10 @@ public class MineTweakerMod {
 		MineTweakerAPI.tweaker.rollback();
 		MineTweakerAPI.tweaker.load();
 		
-		// execute script on all connected clients
-		NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()));
+		if (iAmServer) {
+			// execute script on all connected clients
+			NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()));
+		}
 	}
 	
 	// ##########################
@@ -124,29 +106,13 @@ public class MineTweakerMod {
 	
 	@EventHandler
 	public void onPostInit(FMLPostInitializationEvent ev) {
-		MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
-		MineTweakerAPI.registerBracketHandler(new LiquidBracketHandler());
-		MineTweakerAPI.registerBracketHandler(new OreBracketHandler());
+		MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
 		
 		for (String registry : REGISTRIES) {
-			try {
-				Class cls = Class.forName(registry);
-				Method method = cls.getMethod("register");
-				if ((method.getModifiers() & Modifier.STATIC) == 0) {
-					System.out.println("ERROR: register method in " + registry + " isn't static");
-				} else {
-					method.invoke(null);
-				}
-			} catch (ClassNotFoundException ex) {
-				
-			} catch (NoSuchMethodException ex) {
-				
-			} catch (IllegalAccessException ex) {
-				
-			} catch (InvocationTargetException ex) {
-				
-			}
+			MineTweakerAPI.registerClassRegistry(registry);
 		}
+		
+		FuelTweaker.INSTANCE.register();
 	}
 	
 	@EventHandler
@@ -170,5 +136,10 @@ public class MineTweakerMod {
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent ev) {
 		ev.registerServerCommand(new MineTweakerCommand());
+	}
+	
+	@EventHandler
+	public void onServerStopped(FMLServerStoppedEvent ev) {
+		iAmServer = false;
 	}
 }

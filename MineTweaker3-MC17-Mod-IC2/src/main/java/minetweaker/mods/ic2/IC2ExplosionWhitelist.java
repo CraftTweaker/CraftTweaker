@@ -3,6 +3,7 @@ package minetweaker.mods.ic2;
 import ic2.api.tile.ExplosionWhitelist;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
+import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.ic2.ExplosionWhitelist")
+@ModOnly("IC2")
 public class IC2ExplosionWhitelist {
 	/**
 	 * Adds a block to the explosion whitelist.

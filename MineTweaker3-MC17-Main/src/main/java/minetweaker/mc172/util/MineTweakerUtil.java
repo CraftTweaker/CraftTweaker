@@ -8,7 +8,7 @@ package minetweaker.mc172.util;
 
 import java.util.List;
 import minetweaker.api.item.IItemStack;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.mc172.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -41,7 +41,7 @@ public class MineTweakerUtil {
 	public static IItemStack[] getIItemStacks(ItemStack... items) {
 		IItemStack[] result = new IItemStack[items.length];
 		for (int i = 0; i < items.length; i++) {
-			result[i] = new TweakerItemStack(items[i]);
+			result[i] = new MCItemStack(items[i]);
 		}
 		return result;
 	}
@@ -49,7 +49,7 @@ public class MineTweakerUtil {
 	public static IItemStack[] getIItemStacks(List<ItemStack> items) {
 		IItemStack[] result = new IItemStack[items.size()];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = new TweakerItemStack(items.get(i));
+			result[i] = new MCItemStack(items.get(i));
 		}
 		return result;
 	}

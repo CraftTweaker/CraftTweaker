@@ -17,7 +17,7 @@ import cpw.mods.fml.common.IFuelHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.mc172.item.MCItemStack;
 
 public class FuelTweaker {
 	public static final FuelTweaker INSTANCE = new FuelTweaker();
@@ -71,7 +71,7 @@ public class FuelTweaker {
 	private class OverridingFuelHandler implements IFuelHandler {
 		@Override
 		public int getBurnTime(ItemStack fuel) {
-			IItemStack stack = new TweakerItemStack(fuel);
+			IItemStack stack = new MCItemStack(fuel);
 			String name = fuel.getUnlocalizedName();
 			if (quickList.containsKey(name)) {
 				for (SetFuelPattern override : quickList.get(name)) {

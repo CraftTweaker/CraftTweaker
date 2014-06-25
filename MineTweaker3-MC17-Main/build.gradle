@@ -1,3 +1,5 @@
+import minetweaker.tasks.RegisterZenClassesTask;
+
 buildscript {
     repositories {
         mavenCentral()
@@ -27,8 +29,10 @@ dependencies {
 	}
 }
 
-jar {
-	manifest {
-        attributes 'FMLCorePlugin': 'minetweaker.mc172.transformer.MineTweakerTransformer'
-    }
+task makeRegistry(type: RegisterZenClassesTask) {
+	inputDir = file('build/classes/main')
+	outputDir = file('build/classes/main')
+	className = 'minetweaker.mc172.MineTweakerRegistry'
 }
+
+tasks.jar.dependsOn(makeRegistry)

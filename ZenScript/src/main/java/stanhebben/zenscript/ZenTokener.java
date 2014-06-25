@@ -93,8 +93,8 @@ public class ZenTokener extends TokenStream {
 	public static final int T_IMPORT = 160;
 	
 	private static final String[] REGEXPS = {
-		"#[^\n]*\n",
-		"//[^\n]*\n",
+		"#[^\n]*[\n\\e]",
+		"//[^\n]*[\n\\e]",
 		"/\\*[^\\*]*(\\*^/[^\\*]*)*\\*/",
 		"[ \t\r\n]*",
 		"[a-zA-Z_][a-zA-Z_0-9]*",

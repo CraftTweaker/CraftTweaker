@@ -2,7 +2,8 @@ package minetweaker.mods.ic2.expand;
 
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
-import minetweaker.mc172.item.TweakerItemStack;
+import minetweaker.annotations.ModOnly;
+import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenExpansion("minecraft.item.IItemStack")
+@ModOnly("IC2")
 public class ItemExpansion {
 	/**
 	 * Gets the charge level of this item.
@@ -94,7 +96,7 @@ public class ItemExpansion {
 			Item item = eItem.getChargedItem(iStack);
 			ItemStack stack2 = new ItemStack(item, 1, 0);
 			ElectricItem.manager.charge(stack2, eItem.getMaxCharge(stack2), eItem.getTier(stack2), true, false);
-			return new TweakerItemStack(stack2);
+			return new MCItemStack(stack2);
 		} else {
 			return null;
 		}
@@ -117,7 +119,7 @@ public class ItemExpansion {
 		if (iStack.getItem() instanceof IElectricItem) {
 			IElectricItem eItem = (IElectricItem) iStack.getItem();
 			Item item = eItem.getEmptyItem(iStack);
-			return new TweakerItemStack(new ItemStack(item, 1, 0));
+			return new MCItemStack(new ItemStack(item, 1, 0));
 		} else {
 			return null;
 		}
@@ -144,7 +146,7 @@ public class ItemExpansion {
 		
 		ItemStack iStack = ((ItemStack) internal).copy();
 		ElectricItem.manager.charge(iStack, amount, tier, true, false);
-		return new TweakerItemStack(iStack);
+		return new MCItemStack(iStack);
 	}
 	
 	/**
@@ -168,6 +170,6 @@ public class ItemExpansion {
 		
 		ItemStack iStack = ((ItemStack) internal).copy();
 		ElectricItem.manager.discharge(iStack, amount, tier, true, false);
-		return new TweakerItemStack(iStack);
+		return new MCItemStack(iStack);
 	}
 }

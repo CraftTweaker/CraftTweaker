@@ -296,9 +296,9 @@ public class NFA {
                 out.add(i);
             }
         } else {
-            char from = processChar(stream);
+            int from = processChar(stream);
             if (stream.optional('-')) {
-                char to = processChar(stream);
+                int to = processChar(stream);
                 for (int i = from; i <= to; i++) {
                     out.add(i);
                 }
@@ -309,8 +309,9 @@ public class NFA {
     }
 
     /* Processes a single character */
-    private char processChar(CharStream stream) {
+    private int processChar(CharStream stream) {
         if (stream.optional('\\')) {
+			if (stream.optional('e')) return -1;
             if (stream.optional('r')) return '\r';
             if (stream.optional('n')) return '\n';
             if (stream.optional('t')) return '\t';

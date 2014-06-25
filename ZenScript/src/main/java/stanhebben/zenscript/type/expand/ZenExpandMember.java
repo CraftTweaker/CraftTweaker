@@ -24,9 +24,16 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan
  */
 public class ZenExpandMember {
+	private final String type;
+	private final String name;
 	private JavaMethod getter;
 	private JavaMethod setter;
 	private final List<JavaMethod> methods = new ArrayList<JavaMethod>();
+	
+	public ZenExpandMember(String type, String name) {
+		this.type = type;
+		this.name = name;
+	}
 	
 	public IPartialExpression instance(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value) {
 		return new InstanceGetValue(position, value);
@@ -37,16 +44,16 @@ public class ZenExpandMember {
 	}
 	
 	public void setGetter(JavaMethod getter) {
-		if (getter != null) {
-			throw new RuntimeException("already have a getter");
+		if (this.getter != null) {
+			throw new RuntimeException(type + "." + name + " already has a getter");
 		} else {
 			this.getter = getter;
 		}
 	}
 	
 	public void setSetter(JavaMethod setter) {
-		if (setter != null) {
-			throw new RuntimeException("already have a setter");
+		if (this.setter != null) {
+			throw new RuntimeException(type + "." + name + " already has a setter");
 		} else {
 			this.setter = setter;
 		}

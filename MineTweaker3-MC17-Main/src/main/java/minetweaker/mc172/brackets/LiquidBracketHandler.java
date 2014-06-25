@@ -3,7 +3,7 @@ package minetweaker.mc172.brackets;
 import java.util.List;
 import minetweaker.IBracketHandler;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.mc172.liquid.TweakerLiquidStack;
+import minetweaker.mc172.liquid.MCLiquidStack;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.runtime.GlobalRegistry;
 import net.minecraftforge.fluids.Fluid;
@@ -26,7 +26,7 @@ public class LiquidBracketHandler implements IBracketHandler {
 	public static ILiquidStack getLiquid(String name) {
 		Fluid fluid = FluidRegistry.getFluid(name);
 		if (fluid != null) {
-			return new TweakerLiquidStack(new FluidStack(fluid, 1));
+			return new MCLiquidStack(new FluidStack(fluid, 1));
 		} else {
 			return null;
 		}

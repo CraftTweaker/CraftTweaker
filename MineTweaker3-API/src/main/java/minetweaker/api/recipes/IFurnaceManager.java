@@ -19,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("minetweaker.recipes.IFurnaceManager")
 public interface IFurnaceManager {
 	@ZenMethod
-	public void remove(IIngredient ingredient);
+	public void remove(IIngredient output, @Optional IIngredient input);
 	
 	@ZenMethod
 	public void addRecipe(IItemStack output, IIngredient input, @Optional double xp);

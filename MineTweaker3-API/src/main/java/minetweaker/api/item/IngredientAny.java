@@ -74,4 +74,9 @@ public class IngredientAny implements IIngredient {
 	public Object getInternal() {
 		return INTERNAL_ANY;
 	}
+	
+	@Override
+	public String toString() {
+		return "<*>";
+	}
 }

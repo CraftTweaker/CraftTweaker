@@ -3,7 +3,6 @@ package minetweaker.tasks;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,25 +36,19 @@ public class RegisterZenClassesTask extends DefaultTask {
 	public File inputDir;
 	
 	@OutputDirectory
-	public File outputDir;
+	public File outputDir = null;
 	
 	@Input
 	public String className;
 	
-	@Input
-	public String classPackage;
-	
 	@TaskAction
 	public void doTask() {
+		if (outputDir == null) outputDir = inputDir;
+		
 		List<String> classNames = new ArrayList<String>();
 		iterate(inputDir, null, classNames);
 		
-		for (String className : classNames) {
-			System.out.println("Class: " + className);
-		}
-		
-		String fullClassName = classPackage.replace('.', '/') + '/' + className;
-		//System.out.println("Full classname: " + fullClassName);
+		String fullClassName = className.replace('.', '/');
 		
 		// generate class
 		ClassWriter output = new ClassWriter(ClassWriter.COMPUTE_MAXS);
@@ -64,10 +57,12 @@ public class RegisterZenClassesTask extends DefaultTask {
 		MethodVisitor method = output.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getClasses", "(Ljava/util/List;)V", null, null);
 		method.visitCode();
 		
-		for (String className : classNames) {
-			method.visitLdcInsn(Type.getType(className));
+		for (String clsName : classNames) {
+			method.visitVarInsn(Opcodes.ALOAD, 0);
+			method.visitLdcInsn(Type.getType("L" + clsName + ";"));
 			method.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z");
 		}
+		
 		method.visitInsn(Opcodes.RETURN);
 		
 		method.visitMaxs(0, 0);
@@ -80,6 +75,9 @@ public class RegisterZenClassesTask extends DefaultTask {
 		File outputFileDir = outputFile.getParentFile();
 		if (!outputFileDir.exists()) {
 			outputFileDir.mkdirs();
+		}
+		if (outputFile.exists()) {
+			outputFile.delete();
 		}
 		
 		try {
@@ -136,6 +134,8 @@ public class RegisterZenClassesTask extends DefaultTask {
 			if (desc.equals("Lstanhebben/zenscript/annotations/ZenExpansion;")) {
 				isAnnotated = true;
 			} else if (desc.equals("Lstanhebben/zenscript/annotations/ZenClass;")) {
+				isAnnotated = true;
+			} else if (desc.equals("Lminetweaker/annotations/BracketHandler;")) {
 				isAnnotated = true;
 			}
 			

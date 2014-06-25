@@ -8,6 +8,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
+import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 
 /**
@@ -21,6 +22,7 @@ import minetweaker.api.item.IItemStack;
  * @author Stan Hebben
  */
 @ZenClass("mods.nei.NEI")
+@ModOnly("NotEnoughItems")
 public class NEI {
 	/**
 	 * Hides a specific item in NEI. Will take into account metadata values, if

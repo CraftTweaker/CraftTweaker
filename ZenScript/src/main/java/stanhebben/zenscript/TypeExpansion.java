@@ -33,6 +33,7 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan Hebben
  */
 public class TypeExpansion {
+	private final String type;
 	private final Map<String, ZenExpandMember> members;
 	private final Map<String, ZenExpandMember> staticMembers;
 	private final List<ZenExpandCaster> casters;
@@ -43,8 +44,12 @@ public class TypeExpansion {
 	/**
 	 * Creates an empty type expansion. Use the expand method to register the
 	 * actual expansions.
+	 * 
+	 * @param type type name
 	 */
-	public TypeExpansion() {
+	public TypeExpansion(String type) {
+		this.type = type;
+		
 		members = new HashMap<String, ZenExpandMember>();
 		staticMembers = new HashMap<String, ZenExpandMember>();
 		casters = new ArrayList<ZenExpandCaster>();
@@ -76,7 +81,7 @@ public class TypeExpansion {
 					String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
 					
 					if (!members.containsKey(name)) {
-						members.put(name, new ZenExpandMember());
+						members.put(name, new ZenExpandMember(type, name));
 					}
 					members.get(name).setGetter(new JavaMethod(cls, method, types));
 				} else if (annotation instanceof ZenSetter) {
@@ -85,7 +90,7 @@ public class TypeExpansion {
 					String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
 					
 					if (!members.containsKey(name)) {
-						members.put(name, new ZenExpandMember());
+						members.put(name, new ZenExpandMember(type, name));
 					}
 					members.get(name).setSetter(new JavaMethod(cls, method, types));
 				} else if (annotation instanceof ZenOperator) {
@@ -140,7 +145,7 @@ public class TypeExpansion {
 						methodName = methodAnnotation.value();
 					}
 					if (!members.containsKey(methodName)) {
-						members.put(methodName, new ZenExpandMember());
+						members.put(methodName, new ZenExpandMember(type, methodName));
 					}
 					members.get(methodName).addMethod(new JavaMethod(cls, method, types));
 				} else if (annotation instanceof ZenMethodStatic) {
@@ -150,7 +155,7 @@ public class TypeExpansion {
 						methodName = methodAnnotation.value();
 					}
 					if (!staticMembers.containsKey(methodName)) {
-						staticMembers.put(methodName, new ZenExpandMember());
+						staticMembers.put(methodName, new ZenExpandMember(type, methodName));
 					}
 					staticMembers.get(methodName).addMethod(new JavaMethod(cls, method, types));
 				}
