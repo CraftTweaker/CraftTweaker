@@ -6,6 +6,7 @@
 
 package minetweaker.api.event;
 
+import minetweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.ZenClass;
 
 /**
@@ -13,6 +14,7 @@ import stanhebben.zenscript.annotations.ZenClass;
  * @author Stan
  */
 @ZenClass("minetweaker.event.IPlayerPickupXpEventHandler")
-public interface IPlayerPickupXpEventHandler {
+public interface IPlayerPickupXpEventHandler extends IEventHandler<PlayerPickupXpEvent> {
+	@Override
 	public void handle(PlayerPickupXpEvent event);
 }

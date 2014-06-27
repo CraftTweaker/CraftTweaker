@@ -44,7 +44,7 @@ public interface IEventManager {
 	
 	public IEventHandle onPlayerPickupXp(IPlayerPickupXpEventHandler ev);
 	
-	/*public IEventHandle onPlayerSleepInBed(IPlayerSleepInBedEventHandler ev);
+	public IEventHandle onPlayerSleepInBed(IPlayerSleepInBedEventHandler ev);
 	
 	public IEventHandle onPlayerUseHoe(IPlayerUseHoeEventHandler ev);
 	
@@ -52,7 +52,7 @@ public interface IEventManager {
 	
 	public IEventHandle onPlayerUseItemTick(IPlayerUseItemTickEventHandler ev);
 	
-	public IEventHandle onPlayerUseItemStop(IPlayerUseItemStopEventHandler ev);
+	/*public IEventHandle onPlayerUseItemStop(IPlayerUseItemStopEventHandler ev);
 	
 	public IEventHandle onPlayerUseItemFinish(IPlayerUserItemFinishEventHandler ev);
 	

@@ -6,6 +6,7 @@
 
 package minetweaker.api.event;
 
+import minetweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.ZenClass;
 
 /**
@@ -13,6 +14,7 @@ import stanhebben.zenscript.annotations.ZenClass;
  * @author Stan
  */
 @ZenClass("minetweaker.event.IPlayerOpenContainerEventHandler")
-public interface IPlayerOpenContainerEventHandler {
+public interface IPlayerOpenContainerEventHandler extends IEventHandler<PlayerOpenContainerEvent> {
+	@Override
 	public void handle(PlayerOpenContainerEvent event);
 }

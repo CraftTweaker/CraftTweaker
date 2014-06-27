@@ -6,10 +6,15 @@
 
 package minetweaker.api.event;
 
+import minetweaker.util.IEventHandler;
+import stanhebben.zenscript.annotations.ZenClass;
+
 /**
  *
  * @author Stan
  */
-public interface IPlayerLoggedInEventHandler {
+@ZenClass("minetweaker.event.IPlayerLoggedInEventHandler")
+public interface IPlayerLoggedInEventHandler extends IEventHandler<PlayerLoggedInEvent> {
+	@Override
 	public void handle(PlayerLoggedInEvent event);
 }
