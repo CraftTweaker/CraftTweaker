@@ -40,7 +40,7 @@ import net.minecraftforge.common.MinecraftForge;
  */
 @Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.0")
 public class MineTweakerMod {
-	public static final String MODID = "MineTweaker";
+	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.7.2";
 	
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);

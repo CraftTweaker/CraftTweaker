@@ -37,8 +37,8 @@ import net.minecraft.network.packet.Packet250CustomPayload;
  */
 @Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.0")
 public class MineTweakerMod {
-	public static final String MODID = "MineTweaker";
-	public static final String MCVERSION = "1.7.2";
+	public static final String MODID = "MineTweaker3";
+	public static final String MCVERSION = "1.6.4";
 	
 	private static final String[] REGISTRIES = {
 		"minetweaker.mods.ic2.ClassRegistry",

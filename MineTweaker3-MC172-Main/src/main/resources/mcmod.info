@@ -2,12 +2,15 @@
 {
   "modid": "MineTweaker3",
   "name": "MineTweaker 3",
-  "version": "1.7.2-3.0.0",
-  "mcversion": "1.7.2",
-  "logoFile": "assets/minetweaker/logo.png",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "description": "Customize your minecraft experience!",
+  "credits": "Created By Stan Hebben",
+  "logoFile": "assets/minetweaker/logo.png",
   "url": "http://minetweaker3.powerofbytes.com",
-  "credits": "Stan Hebben",
-  "authors": [ "Stan Hebben" ],
+  "authorList": [ "Stan Hebben" ],
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
 }
 ]
