@@ -4,6 +4,7 @@
   "name": "MineTweaker 3",
   "version": "${version}",
   "mcversion": "${mcversion}",
+  "logoFile": "assets/minetweaker/logo.png",
   "description": "Customize your minecraft experience!",
   "url": "http://minetweaker3.powerofbytes.com/wiki/",
   "credits": "Stan Hebben",
