@@ -22,6 +22,10 @@ public class ShapedRecipeOre extends ShapedOreRecipe {
 	public ShapedRecipeOre(Object[] contents, ShapedRecipe recipe) {
 		super((ItemStack) recipe.getOutput().getInternal(), contents);
 		
+		if (recipe.isMirrored()) {
+			setMirrored(true);
+		}
+		
 		this.recipe = recipe;
 	}
 	

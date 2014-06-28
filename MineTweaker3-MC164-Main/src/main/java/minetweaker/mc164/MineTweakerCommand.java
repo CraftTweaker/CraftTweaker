@@ -115,8 +115,8 @@ public class MineTweakerCommand implements ICommand {
 			for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
 				String message = "<liquid:" + entry.getKey() + "> -- " + entry.getValue().getLocalizedName();
 				MineTweakerAPI.logger.logCommand(message);
-				sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");
 			}
+			sendChatMessage(icommandsender, "List generated; see minetweaker.log in your minecraft dir");
 		} else if (arguments[0].equals("inventory")) {
 			if (icommandsender instanceof EntityPlayer) {
 				InventoryPlayer inventory = ((EntityPlayer) icommandsender).inventory;

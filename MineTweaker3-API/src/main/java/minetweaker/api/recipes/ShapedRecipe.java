@@ -63,12 +63,6 @@ public class ShapedRecipe {
 		this.width = width1;
 		this.height = height1;
 		this.mirrored = mirrored;
-		
-		/*System.out.println("ShapedRecipe width=" + width + ", height=" + height);
-		System.out.println("Ingredients: ");
-		for (int i = 0; i < this.ingredients.length; i++) {
-			System.out.println("(" + posx[i] + ", " + posy[i] + "): " + this.ingredients[i]);
-		}*/
 	}
 	
 	public int getWidth() {
@@ -121,7 +115,7 @@ public class ShapedRecipe {
 			for (int i = 0; i <= inventory.getWidth() - width; i++) {
 				out: for (int j = 0; j <= inventory.getHeight() - height; j++) {
 					for (int k = 0; k < ingredients.length; k++) {
-						IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i), posy[k] + j);
+						IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i) - 1, posy[k] + j);
 						if (item == null) continue out;
 						
 						if (!ingredients[k].matches(item)) continue out;
@@ -156,7 +150,7 @@ public class ShapedRecipe {
 			for (int i = 0; i <= inventory.getWidth() - width; i++) {
 				out: for (int j = 0; j <= inventory.getHeight() - height; j++) {
 					for (int k = 0; k < ingredients.length; k++) {
-						IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i), posy[k] + j);
+						IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i) - 1, posy[k] + j);
 						if (item == null) continue out;
 						
 						if (!ingredients[k].matches(item)) continue out;
@@ -200,7 +194,7 @@ public class ShapedRecipe {
 			if (transformed != stacks[i]) {
 				if (mirrored) {
 					inventory.setStack(
-							inventory.getWidth() - (offx + posx[i]),
+							inventory.getWidth() - (offx + posx[i]) - 1,
 							offy + posy[i],
 							transformed);
 				} else {

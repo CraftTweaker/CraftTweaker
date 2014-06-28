@@ -55,6 +55,11 @@ public class MCRecipeManager implements IRecipeManager {
 		MineTweakerAPI.tweaker.apply(new ActionRemoveRecipes(toRemove, removeIndex));
 		return toRemove.size();
 	}
+	
+	@Override
+	public void addShaped(IItemStack output, IIngredient[][] ingredients, boolean mirrored) {
+		addShaped(output, ingredients, null, mirrored);
+	}
 
 	@Override
 	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
