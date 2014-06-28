@@ -19,6 +19,7 @@ import minetweaker.runtime.Tweaker;
 import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.recipes.IFurnaceManager;
+import minetweaker.api.resource.IResourceManager;
 import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -36,6 +37,8 @@ import stanhebben.zenscript.type.natives.JavaMethod;
  * - Set the ore dictionary
  * - Set the recipe manager
  * - Set the furnace manager
+ * - Set event manager
+ * - Set resource manager
  * 
  * - Register additional global symbols to the GlobalRegistry (recipes,
  *    minetweaker, oreDict, logger, as well as the official set of functions)
@@ -101,6 +104,19 @@ public class MineTweakerAPI {
 	 */
 	public static ILoadedMods loadedMods = null;
 	
+	/**
+	 * Access point to the global resource manager. Note that each script group also
+	 * has its own local resource manager.
+	 */
+	public static IResourceManager resources = null;
+	
+	/**
+	 * Register a class registry class. Such class must have (at least) a public
+	 * static method called "getClasses" with accepts a List of classes and which
+	 * stores its classes into that list.
+	 * 
+	 * @param registryClass 
+	 */
 	public static void registerClassRegistry(Class registryClass) {
 		try {
 			Method method = registryClass.getMethod("getClasses", List.class);

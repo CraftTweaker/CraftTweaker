@@ -19,6 +19,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientItem;
 import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.mc1710.actions.SetTranslationAction;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -71,6 +72,11 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public String getDisplayName() {
 		return stack.getDisplayName();
+	}
+	
+	@Override
+	public void setDisplayName(String name) {
+		MineTweakerAPI.tweaker.apply(new SetTranslationAction(getName() + ".name", name));
 	}
 
 	@Override

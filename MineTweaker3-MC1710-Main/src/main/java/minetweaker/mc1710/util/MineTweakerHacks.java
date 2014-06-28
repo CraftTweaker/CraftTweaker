@@ -18,6 +18,7 @@ import net.minecraft.inventory.SlotCrafting;import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringTranslate;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -123,6 +124,16 @@ public class MineTweakerHacks {
 			return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
 		} catch (IllegalAccessException ex) {
 			MineTweakerAPI.logger.logError("could not get inventory eventhandler");
+			return null;
+		}
+	}
+	
+	public static StringTranslate getStringTranslateInstance() {
+		try {
+			Field field = getField(StringTranslate.class, MineTweakerObfuscation.STRINGTRANSLATE_INSTANCE);
+			return (StringTranslate) field.get(null);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logger.logError("could not get string translator");
 			return null;
 		}
 	}
