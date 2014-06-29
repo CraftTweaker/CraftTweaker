@@ -18,6 +18,7 @@ import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientItem;
+import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.mc172.actions.SetTranslationAction;
@@ -183,6 +184,16 @@ public class MCItemStack implements IItemStack {
 	public IItemStack amount(int amount) {
 		return withAmount(amount);
 	}
+	
+	@Override
+	public WeightedItemStack percent(float chance) {
+		return new WeightedItemStack(this, chance * 0.01f);
+	}
+	
+	@Override
+	public WeightedItemStack weight(float chance) {
+		return new WeightedItemStack(this, chance);
+	}
 
 	@Override
 	public IIngredient transform(IItemTransformer transformer) {
@@ -229,6 +240,32 @@ public class MCItemStack implements IItemStack {
 	// #############################
 	// ### Object implementation ###
 	// #############################
+	
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 41 * hash + (this.stack != null ? this.stack.hashCode() : 0);
+		hash = 41 * hash + (this.wildcardSize ? 1 : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final MCItemStack other = (MCItemStack) obj;
+		if (this.stack != other.stack && (this.stack == null || !this.stack.equals(other.stack))) {
+			return false;
+		}
+		if (this.wildcardSize != other.wildcardSize) {
+			return false;
+		}
+		return true;
+	}
 	
 	@Override
 	public String toString() {

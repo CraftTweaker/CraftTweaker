@@ -32,7 +32,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = MineTweakerHacks.getOreIdStacks();
 	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
 	
-	private final Integer id;
+	private final int id;
 	
 	public MCOreDictEntry(Integer id) {
 		this.id = id;
@@ -165,6 +165,21 @@ public class MCOreDictEntry implements IOreDictEntry {
 	@Override
 	public Object getInternal() {
 		return OreDictionary.getOreName(id);
+	}
+	
+	// #############################
+	// ### Object implementation ###
+	// #############################
+	
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof MCOreDictEntry)) return false;
+		return ((MCOreDictEntry) other).id == id;
 	}
 	
 	// ######################

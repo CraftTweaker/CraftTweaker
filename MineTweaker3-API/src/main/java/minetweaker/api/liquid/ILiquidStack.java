@@ -7,9 +7,11 @@
 package minetweaker.api.liquid;
 
 import minetweaker.api.data.IData;
+import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenOperator;
 
 /**
  *
@@ -50,6 +52,7 @@ public interface ILiquidStack {
 	@ZenMethod
 	public ILiquidStack withTag(IData data);
 	
+	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
 	public ILiquidStack withAmount(int amount);
 	

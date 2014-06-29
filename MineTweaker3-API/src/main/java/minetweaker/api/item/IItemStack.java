@@ -49,6 +49,12 @@ public interface IItemStack extends IIngredient {
 	@ZenMethod
 	public IItemStack amount(int amount);
 	
+	@ZenOperator(OperatorType.MOD)
+	public WeightedItemStack percent(float p);
+	
+	@ZenMethod
+	public WeightedItemStack weight(float p);
+	
 	@ZenMethod
 	public IIngredient anyDamage();
 	

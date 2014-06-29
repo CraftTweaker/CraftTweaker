@@ -159,7 +159,7 @@ public class NEI {
 
 		@Override
 		public Object getOverrideKey() {
-			return null;
+			return item;
 		}
 	}
 }

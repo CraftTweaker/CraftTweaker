@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,8 @@ import stanhebben.zenscript.parser.ParseException;
  */
 public class Tweaker implements IMineTweaker {
 	private final List<IUndoableAction> actions = new ArrayList<IUndoableAction>();
-	private final Set<IUndoableAction> wereStuck = new HashSet<IUndoableAction>();
+	private final Set<IUndoableAction> wereStuck = new LinkedHashSet<IUndoableAction>();
+	private final Map<Object, IUndoableAction> stuckOverridable = new HashMap<Object, IUndoableAction>();
 	
 	private IScriptProvider scriptProvider;
 	private byte[] scriptData;
@@ -44,8 +46,23 @@ public class Tweaker implements IMineTweaker {
 	@Override
 	public void apply(IUndoableAction action) {
 		MineTweakerAPI.logger.logInfo(action.describe());
-		action.apply();
-		actions.add(action);
+		
+		Object overrideKey = action.getOverrideKey();
+		if (wereStuck.contains(action)) {
+			wereStuck.remove(action);
+			
+			if (overrideKey != null) {
+				stuckOverridable.remove(overrideKey);
+			}
+		} else {
+			if (overrideKey != null && stuckOverridable.containsKey(overrideKey)) {
+				wereStuck.remove(stuckOverridable.get(overrideKey));
+				stuckOverridable.remove(overrideKey);
+			}
+			
+			action.apply();
+			actions.add(action);
+		}
 	}
 
 	@Override
@@ -65,6 +82,11 @@ public class Tweaker implements IMineTweaker {
 				MineTweakerAPI.logger.logInfo("[Stuck] " + action.describe());
 				stuck.add(0, action);
 				wereStuck.add(action);
+				
+				Object overrideKey = action.getOverrideKey();
+				if (overrideKey != null) {
+					stuckOverridable.put(overrideKey, action);
+				}
 			}
 		}
 		actions.clear();
