@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc172.item.MCItemStack;
 import minetweaker.mc172.util.MineTweakerHacks;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.oredict.IngredientOreDict;
 import minetweaker.util.ArrayUtil;
@@ -44,13 +45,16 @@ public class MCOreDictEntry implements IOreDictEntry {
 	// ####################################
 	// ### IOreDictEntry implementation ###
 	// ####################################
+	
+	@Override
+	public boolean isEmpty() {
+		return OreDictionary.getOres(id).isEmpty();
+	}
 
 	@Override
 	public void add(IItemStack item) {
-		ItemStack stack = (ItemStack) item.getInternal();
-		if (stack == null) {
-			MineTweakerAPI.logger.logError("not a valid item");
-		} else {
+		ItemStack stack = getItemStack(item);
+		if (stack != null) {
 			MineTweakerAPI.tweaker.apply(new ActionAddItem(id, stack));
 		}
 	}
@@ -68,7 +72,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public void remove(IItemStack item) {
 		ItemStack result = null;
 		for (ItemStack itemStack : OreDictionary.getOres(id)) {
-			if (item.matches(new MCItemStack(itemStack))) {
+			if (item.matches(getIItemStack(itemStack))) {
 				result = itemStack;
 				break;
 			}
@@ -82,7 +86,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	@Override
 	public boolean contains(IItemStack item) {
 		for (ItemStack itemStack : OreDictionary.getOres(id)) {
-			if (item.matches(new MCItemStack(itemStack))) {
+			if (item.matches(getIItemStack(itemStack))) {
 				return true;
 			}
 		}
@@ -113,7 +117,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public List<IItemStack> getItems() {
 		List<IItemStack> result = new ArrayList<IItemStack>();
 		for (ItemStack item : OreDictionary.getOres(id)) {
-			result.add(new MCItemStack(item));
+			result.add(getIItemStack(item));
 		}
 		return result;
 	}
@@ -200,6 +204,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 		public String describeUndo() {
 			return "Removing " + item.getDisplayName() + " from ore dictionary entry " + OreDictionary.getOreName(id);
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class ActionMirror implements IUndoableAction {
@@ -243,6 +252,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 		public String describeUndo() {
 			return "Undoing mirror of " + OreDictionary.getOreName(idSource) + " to " + OreDictionary.getOreName(idTarget);
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class ActionRemoveItem implements IUndoableAction {
@@ -277,6 +291,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 		@Override
 		public String describeUndo() {
 			return "Restoring " + item.getDisplayName() + " to ore dictionary entry " + OreDictionary.getOreName(id);
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 	
@@ -318,6 +337,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 		@Override
 		public String describeUndo() {
 			return "Removing contents of ore dictionary entry " + OreDictionary.getOreName(idSource) + " from " + OreDictionary.getOreName(idTarget);
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 }

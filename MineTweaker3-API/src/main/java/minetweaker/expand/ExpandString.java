@@ -6,6 +6,8 @@
 
 package minetweaker.expand;
 
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.DataString;
 import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenCaster;
@@ -20,5 +22,10 @@ public class ExpandString {
 	@ZenCaster
 	public static IData asData(String value) {
 		return new DataString(value);
+	}
+	
+	@ZenCaster
+	public static IChatMessage asChatMessage(String value) {
+		return MineTweakerAPI.platform.getMessage(value);
 	}
 }

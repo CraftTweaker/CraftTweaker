@@ -12,7 +12,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import minetweaker.runtime.ILogger;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatMessageComponent;
 
 /**
  *
@@ -20,16 +24,41 @@ import minetweaker.runtime.ILogger;
  */
 public class MineTweakerLogger implements ILogger {
 	private Writer writer;
+	private final List<String> unreportedErrors;
+	private final List<EntityPlayer> players;
 	
 	public MineTweakerLogger() {
 		File logFile = new File("minetweaker.log");
 		if (logFile.exists()) logFile.delete();
+		
+		unreportedErrors = new ArrayList<String>();
+		players = new ArrayList<EntityPlayer>();
 		
 		try {
 			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(logFile)));
 		} catch (IOException ex) {
 			
 		}
+	}
+	
+	public void clear() {
+		unreportedErrors.clear();
+	}
+	
+	public void addPlayer(EntityPlayer player) {
+		players.add(player);
+		
+		if (!unreportedErrors.isEmpty()) {
+			for (String error : unreportedErrors) {
+				player.sendChatToPlayer(ChatMessageComponent.createFromText(error));
+			}
+			
+			unreportedErrors.clear();
+		}
+	}
+	
+	public void removePlayer(EntityPlayer player) {
+		players.remove(player);
 	}
 	
 	@Override
@@ -62,22 +91,16 @@ public class MineTweakerLogger implements ILogger {
 
 	@Override
 	public void logWarning(String message) {
-		try {
-			writer.append("WARNING: ");
-			writer.append(message);
-			writer.append('\n');
-			writer.flush();
-		} catch (IOException ex) {
-			
-		}
-		
-		System.out.println("WARNING: " + message);
+		report("WARNING: " + message);
 	}
 
 	@Override
 	public void logError(String message) {
+		report("ERROR: " + message);
+	}
+	
+	private void report(String message) {
 		try {
-			writer.append("ERROR: ");
 			writer.append(message);
 			writer.append('\n');
 			writer.flush();
@@ -85,6 +108,15 @@ public class MineTweakerLogger implements ILogger {
 			
 		}
 		
-		System.out.println("ERROR: " + message);
+		System.out.println(message);
+		
+		if (players.isEmpty()) {
+			unreportedErrors.add(message);
+		} else {
+			ChatMessageComponent text = ChatMessageComponent.createFromText(message);
+			for (EntityPlayer player : players) {
+				player.sendChatToPlayer(text);
+			}
+		}
 	}
 }

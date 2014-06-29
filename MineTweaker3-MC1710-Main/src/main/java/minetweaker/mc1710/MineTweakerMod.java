@@ -68,6 +68,8 @@ public class MineTweakerMod {
 		MineTweakerAPI.furnace = new MCFurnaceManager();
 		MineTweakerAPI.loadedMods = new MCLoadedMods();
 		
+		MineTweakerAPI.platform = MCPlatformFunctions.INSTANCE;
+		
 		File globalDir = new File("scripts");
 		if (!globalDir.exists()) {
 			globalDir.mkdirs();

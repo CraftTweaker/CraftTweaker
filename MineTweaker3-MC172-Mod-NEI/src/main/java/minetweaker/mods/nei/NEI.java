@@ -1,7 +1,6 @@
 package minetweaker.mods.nei;
 
 import codechicken.nei.api.API;
-import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.NotNull;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -10,6 +9,8 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * MineTweaker NEI support.
@@ -32,7 +33,7 @@ public class NEI {
 	 */
 	@ZenMethod
 	public static void hide(@NotNull IItemStack item) {
-		MineTweakerAPI.tweaker.apply(new NEIHideItemAction((ItemStack) item.getInternal()));
+		MineTweakerAPI.tweaker.apply(new NEIHideItemAction(getItemStack(item)));
 	}
 	
 	/**
@@ -42,7 +43,7 @@ public class NEI {
 	 */
 	@ZenMethod
 	public static void addEntry(@NotNull IItemStack stack) {
-		MineTweakerAPI.tweaker.apply(new NEIAddEntryAction((ItemStack) stack.getInternal()));
+		MineTweakerAPI.tweaker.apply(new NEIAddEntryAction(getItemStack(stack)));
 	}
 	
 	/**
@@ -54,7 +55,7 @@ public class NEI {
 	 */
 	@ZenMethod
 	public static void overrideName(@NotNull IItemStack item, @NotNull String name) {
-		MineTweakerAPI.tweaker.apply(new NEIOverrideNameAction((ItemStack) item.getInternal(), name));
+		MineTweakerAPI.tweaker.apply(new NEIOverrideNameAction(getItemStack(item), name));
 	}
 	
 	// #############################
@@ -92,6 +93,11 @@ public class NEI {
 		public String describeUndo() {
 			return "Removing " + item.getDisplayName() + " as NEI entry";
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class NEIHideItemAction implements IUndoableAction {
@@ -125,6 +131,11 @@ public class NEI {
 		public String describeUndo() {
 			return "Displaying " + stack.getUnlocalizedName() + " in NEI";
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class NEIOverrideNameAction extends OneWayAction {
@@ -144,6 +155,11 @@ public class NEI {
 		@Override
 		public String describe() {
 			return "Overriding NEI item name of " + item.getUnlocalizedName() + " to " + name;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 }

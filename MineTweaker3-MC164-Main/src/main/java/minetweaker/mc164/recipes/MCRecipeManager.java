@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc164.item.MCItemStack;
-import minetweaker.mc164.oredict.MCOreDictEntry;
 import minetweaker.mc164.util.MineTweakerHacks;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
 import minetweaker.api.recipes.IRecipeFunction;
 import minetweaker.api.recipes.IRecipeManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +46,7 @@ public class MCRecipeManager implements IRecipeManager {
 			// certain special recipes have no predefined output. ignore those
 			// since these cannot be removed with MineTweaker scripts
 			if (recipe.getRecipeOutput() != null) {
-				if (output.matches(new MCItemStack(recipe.getRecipeOutput()))) {
+				if (output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 					toRemove.add(recipe);
 					removeIndex.add(i);
 				}
@@ -63,11 +64,6 @@ public class MCRecipeManager implements IRecipeManager {
 
 	@Override
 	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
-		if (output.getInternal() == null) {
-			MineTweakerAPI.logger.logError("invalid output item");
-			return;
-		}
-		
 		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe));
@@ -75,11 +71,6 @@ public class MCRecipeManager implements IRecipeManager {
 
 	@Override
 	public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
-		if (output.getInternal() == null) {
-			MineTweakerAPI.logger.logError("invalid output item");
-			return;
-		}
-		
 		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe));
@@ -103,7 +94,7 @@ public class MCRecipeManager implements IRecipeManager {
 		outer: for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
 			
-			if (recipe.getRecipeOutput() == null || !output.matches(new MCItemStack(recipe.getRecipeOutput()))) {
+			if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
 			
@@ -169,7 +160,7 @@ public class MCRecipeManager implements IRecipeManager {
 		outer: for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
 			
-			if (recipe.getRecipeOutput() == null || !output.matches(new MCItemStack(recipe.getRecipeOutput()))) {
+			if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
 			
@@ -244,10 +235,7 @@ public class MCRecipeManager implements IRecipeManager {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < contents[i].length; j++) {
 				if (contents[i][j] != null) {
-					Object internal = contents[i][j].getInternal();
-					if (internal != null && (internal instanceof ItemStack)) {
-						iContents[i * width + j] = (ItemStack) internal;
-					}
+					iContents[i * width + j] = getItemStack(contents[j][j]);
 				}
 			}
 		}
@@ -260,7 +248,7 @@ public class MCRecipeManager implements IRecipeManager {
 		if (result == null) {
 			return null;
 		} else {
-			return new MCItemStack(result);
+			return getIItemStack(result);
 		}
 	}
 	
@@ -308,6 +296,11 @@ public class MCRecipeManager implements IRecipeManager {
 		public String describeUndo() {
 			return "Restoring " + removingIndices.size() + " recipes";
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private class ActionAddRecipe implements IUndoableAction {
@@ -341,6 +334,11 @@ public class MCRecipeManager implements IRecipeManager {
 		public String describeUndo() {
 			return "Removing recipe for " + recipe.getRecipeOutput().getDisplayName();
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static boolean matches(Object input, IIngredient ingredient) {
@@ -348,11 +346,11 @@ public class MCRecipeManager implements IRecipeManager {
 			return false;
 		} else if (ingredient != null) {
 			if (input instanceof ItemStack) {
-				if (!ingredient.matches(new MCItemStack((ItemStack) input))) {
+				if (!ingredient.matches(getIItemStack((ItemStack) input))) {
 					return false;
 				}
 			} else if (input instanceof String) {
-				if (!ingredient.contains(new MCOreDictEntry((String) input))) {
+				if (!ingredient.contains(getOreDict((String) input))) {
 					return false;
 				}
 			}

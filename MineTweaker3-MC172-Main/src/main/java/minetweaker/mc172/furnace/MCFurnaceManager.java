@@ -14,9 +14,10 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 import minetweaker.api.recipes.IFurnaceManager;
-import minetweaker.mc172.item.MCItemStack;
-import minetweaker.mc172.util.MineTweakerUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
@@ -38,8 +39,8 @@ public class MCFurnaceManager implements IFurnaceManager {
 		List<ItemStack> toRemove = new ArrayList<ItemStack>();
 		List<ItemStack> toRemoveValues = new ArrayList<ItemStack>();
 		for (Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-			if (output.matches(new MCItemStack(entry.getValue()))
-					&& (input == null || input.matches(new MCItemStack(entry.getKey())))) {
+			if (output.matches(getIItemStack(entry.getValue()))
+					&& (input == null || input.matches(getIItemStack(entry.getKey())))) {
 				toRemove.add(entry.getKey());
 				toRemoveValues.add(entry.getValue());
 			}
@@ -59,8 +60,8 @@ public class MCFurnaceManager implements IFurnaceManager {
 			MineTweakerAPI.logger.logError("Cannot turn " + input.toString() + " into a furnace recipe");
 		}
 		
-		ItemStack[] items2 = MineTweakerUtil.getItemStacks(items);
-		ItemStack output2 = (ItemStack) output.getInternal();
+		ItemStack[] items2 = getItemStacks(items);
+		ItemStack output2 = getItemStack(output);
 		MineTweakerAPI.tweaker.apply(new AddRecipeAction(input, items2, output2, xp));
 	}
 
@@ -71,7 +72,7 @@ public class MCFurnaceManager implements IFurnaceManager {
 
 	@Override
 	public int getFuel(IItemStack item) {
-		return GameRegistry.getFuelValue((ItemStack) item.getInternal());
+		return GameRegistry.getFuelValue(getItemStack(item));
 	}
 	
 	// ######################
@@ -114,6 +115,11 @@ public class MCFurnaceManager implements IFurnaceManager {
 		@Override
 		public String describeUndo() {
 			return "Restoring " + items.size() + " furnace recipes";
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 	
@@ -158,6 +164,11 @@ public class MCFurnaceManager implements IFurnaceManager {
 		public String describeUndo() {
 			return "Removing furnace recipe for " + ingredient;
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class SetFuelAction implements IUndoableAction {
@@ -190,6 +201,11 @@ public class MCFurnaceManager implements IFurnaceManager {
 		@Override
 		public String describeUndo() {
 			return "Removing fuel for " + pattern.getPattern();
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 }

@@ -6,9 +6,9 @@
 
 package minetweaker.mc172.oredict;
 
+import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
 import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.oredict.IOreDictEntry;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  *
@@ -17,6 +17,6 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MCOreDict implements IOreDict {
 	@Override
 	public IOreDictEntry get(String name) {
-		return new MCOreDictEntry(OreDictionary.getOreID(name));
+		return getOreDict(name);
 	}
 }

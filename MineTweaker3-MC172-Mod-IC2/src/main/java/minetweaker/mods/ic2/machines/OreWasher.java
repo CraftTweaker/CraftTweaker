@@ -6,10 +6,11 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
-import minetweaker.mc172.util.MineTweakerUtil;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStacks;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 import minetweaker.mods.ic2.IC2RecipeInput;
 import minetweaker.mods.ic2.MachineAddRecipeAction;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -28,15 +29,15 @@ public class OreWasher {
 		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 				"ore washer",
 				Recipes.oreWashing,
-				MineTweakerUtil.getItemStacks(output),
+				getItemStacks(output),
 				nbt,
 				new IC2RecipeInput(input)));
 	}
 	
 	@ZenMethod
 	public static IItemStack[] getOutput(IItemStack input) {
-		RecipeOutput output = Recipes.oreWashing.getOutputFor((ItemStack) input.getInternal(), false);
+		RecipeOutput output = Recipes.oreWashing.getOutputFor(getItemStack(input), false);
 		if (output == null || output.items.isEmpty()) return null;
-		return MineTweakerUtil.getIItemStacks(output.items);
+		return getIItemStacks(output.items);
 	}
 }

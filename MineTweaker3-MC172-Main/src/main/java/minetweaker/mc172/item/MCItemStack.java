@@ -19,6 +19,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientItem;
 import minetweaker.api.liquid.ILiquidStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.mc172.actions.SetTranslationAction;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.item.Item;
@@ -200,11 +201,7 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public boolean matches(IItemStack item) {
-		ItemStack internal = (ItemStack) item.getInternal();
-		if (internal == null) {
-			throw new RuntimeException("Invalid item: " + item);
-		}
-		
+		ItemStack internal = getItemStack(item);
 		return internal.getItem() == stack.getItem()
 				&& (wildcardSize || internal.stackSize == stack.stackSize)
 				&& (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE

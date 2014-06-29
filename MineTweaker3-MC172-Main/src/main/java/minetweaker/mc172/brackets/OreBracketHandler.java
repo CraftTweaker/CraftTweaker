@@ -8,10 +8,10 @@ package minetweaker.mc172.brackets;
 
 import java.util.List;
 import minetweaker.IBracketHandler;
+import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.mc172.oredict.MCOreDictEntry;
+import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
 import minetweaker.api.oredict.IOreDictEntry;
-import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.expression.ExpressionJavaCallStatic;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -27,7 +27,7 @@ import stanhebben.zenscript.util.ZenPosition;
 @BracketHandler
 public class OreBracketHandler implements IBracketHandler {
 	public static IOreDictEntry getOre(String name) {
-		return new MCOreDictEntry(name);
+		return getOreDict(name);
 	}
 	
 	@Override
@@ -60,8 +60,7 @@ public class OreBracketHandler implements IBracketHandler {
 		
 		@Override
 		public IPartialExpression instance(ZenPosition position) {
-			JavaMethod method = JavaMethod.get(
-					GlobalRegistry.getTypeRegistry(),
+			JavaMethod method = MineTweakerAPI.getJavaMethod(
 					OreBracketHandler.class,
 					"getOre",
 					String.class);

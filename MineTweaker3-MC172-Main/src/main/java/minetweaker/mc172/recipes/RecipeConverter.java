@@ -11,6 +11,7 @@ import minetweaker.api.recipes.ShapelessRecipe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import minetweaker.api.item.IIngredient;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 
@@ -51,7 +52,7 @@ public class RecipeConverter {
 		if (type == TYPE_BASIC) {
 			ItemStack[] items = new ItemStack[ingredients.length];
 			for (int i = 0; i < ingredients.length; i++) {
-				items[i] = (ItemStack) ingredients[i].getInternal();
+				items[i] = getItemStack(ingredients[i]);
 			}
 			return new ShapelessRecipeBasic(items, recipe);
 		} else if (type == TYPE_ORE) {
@@ -77,7 +78,7 @@ public class RecipeConverter {
 		if (type == TYPE_BASIC && !recipe.isMirrored()) {
 			ItemStack[] basicIngredients = new ItemStack[recipe.getHeight() * recipe.getWidth()];
 			for (int i = 0; i < ingredients.length; i++) {
-				basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = (ItemStack) ingredients[i].getInternal();
+				basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = getItemStack(ingredients[i]);
 			}
 			
 			return new ShapedRecipeBasic(basicIngredients, recipe);

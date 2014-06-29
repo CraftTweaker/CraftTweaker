@@ -7,12 +7,13 @@
 package minetweaker.mc172.recipes;
 
 import java.util.List;
-import minetweaker.mc172.item.MCItemStack;
 import minetweaker.mc172.util.MineTweakerHacks;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIPlayer;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
-import minetweaker.mc172.player.MCPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -45,7 +46,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 	private IItemStack[] stacks;
 	private ItemStack[] original;
 	private int stackCount;
-	private MCPlayer player;
+	private IPlayer player;
 	
 	private MCCraftingInventory(InventoryCrafting inventory) {
 		this.inventory = inventory;
@@ -60,7 +61,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 		if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
 			SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
 			EntityPlayer playerEntity = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
-			player = new MCPlayer(playerEntity);
+			player = getIPlayer(playerEntity);
 		} else {
 			player = null;
 		}
@@ -80,7 +81,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				original[i] = inventory.getStackInSlot(i);
 				if (inventory.getStackInSlot(i) != null) {
 					if (stacks[i] == null) stackCount++;
-					stacks[i] = new MCItemStack(original[i]);
+					stacks[i] = getIItemStack(original[i]);
 				} else {
 					if (stacks[i] != null) stackCount--;
 					stacks[i] = null;
@@ -135,7 +136,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				stackCount--;
 				inventory.setInventorySlotContents(ix, null);
 			} else {
-				inventory.setInventorySlotContents(ix, (ItemStack) stack.getInternal());
+				inventory.setInventorySlotContents(ix, getItemStack(stack));
 				
 				if (stacks[ix] == null) {
 					stackCount++;
@@ -154,7 +155,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				stackCount--;
 				inventory.setInventorySlotContents(i, null);
 			} else {
-				inventory.setInventorySlotContents(i, (ItemStack) stack.getInternal());
+				inventory.setInventorySlotContents(i, getItemStack(stack));
 				
 				if (stacks[i] == null) {
 					stackCount++;

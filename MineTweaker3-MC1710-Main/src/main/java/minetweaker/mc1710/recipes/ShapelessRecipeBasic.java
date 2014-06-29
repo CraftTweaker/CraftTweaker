@@ -8,6 +8,7 @@ package minetweaker.mc1710.recipes;
 
 import minetweaker.api.recipes.ShapelessRecipe;
 import java.util.Arrays;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
@@ -21,7 +22,7 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessRecipe recipe;
 	
 	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessRecipe recipe) {
-		super((ItemStack) recipe.getOutput().getInternal(), Arrays.asList(ingredients));
+		super(getItemStack(recipe.getOutput()), Arrays.asList(ingredients));
 		
 		this.recipe = recipe;
 	}
@@ -33,6 +34,6 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return ((ItemStack) recipe.getCraftingResult(MCCraftingInventory.get(inventory)).getInternal()).copy();
+		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
 	}
 }

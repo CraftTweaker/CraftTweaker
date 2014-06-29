@@ -10,11 +10,11 @@ import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
-import minetweaker.mc172.util.MineTweakerUtil;
-import net.minecraft.item.ItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 import minetweaker.mods.ic2.IC2RecipeInput;
 import minetweaker.mods.ic2.MachineAddRecipeAction;
 import stanhebben.zenscript.annotations.NotNull;
@@ -48,7 +48,7 @@ public class Extractor {
 			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 					"extractor",
 					Recipes.extractor,
-					MineTweakerUtil.getItemStacks(output),
+					getItemStacks(output),
 					null,
 					new IC2RecipeInput(ingredient)));
 		}
@@ -64,8 +64,8 @@ public class Extractor {
 	@ZenMethod
 	public static IItemStack getOutput(
 			@NotNull IItemStack input) {
-		RecipeOutput output = Recipes.extractor.getOutputFor((ItemStack) input.getInternal(), false);
+		RecipeOutput output = Recipes.extractor.getOutputFor(getItemStack(input), false);
 		if (output == null || output.items.size() > 0) return null;
-		return new MCItemStack(output.items.get(0));
+		return getIItemStack(output.items.get(0));
 	}
 }

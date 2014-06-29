@@ -7,9 +7,10 @@
 package minetweaker.mc164.recipes;
 
 import java.util.List;
-import minetweaker.mc164.item.MCItemStack;
 import minetweaker.mc164.util.MineTweakerHacks;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
 import minetweaker.mc164.player.MCPlayer;
@@ -80,7 +81,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				original[i] = inventory.getStackInSlot(i);
 				if (inventory.getStackInSlot(i) != null) {
 					if (stacks[i] == null) stackCount++;
-					stacks[i] = new MCItemStack(original[i]);
+					stacks[i] = getIItemStack(original[i]);
 				} else {
 					if (stacks[i] != null) stackCount--;
 					stacks[i] = null;
@@ -135,7 +136,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				stackCount--;
 				inventory.setInventorySlotContents(ix, null);
 			} else {
-				inventory.setInventorySlotContents(ix, (ItemStack) stack.getInternal());
+				inventory.setInventorySlotContents(ix, getItemStack(stack));
 				
 				if (stacks[ix] == null) {
 					stackCount++;
@@ -154,7 +155,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				stackCount--;
 				inventory.setInventorySlotContents(i, null);
 			} else {
-				inventory.setInventorySlotContents(i, (ItemStack) stack.getInternal());
+				inventory.setInventorySlotContents(i, getItemStack(stack));
 				
 				if (stacks[i] == null) {
 					stackCount++;

@@ -11,6 +11,7 @@ import minetweaker.mc1710.oredict.MCOreDictEntry;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.recipes.IRecipeFunction;
 import minetweaker.api.recipes.IRecipeManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,11 +64,6 @@ public class MCRecipeManager implements IRecipeManager {
 
 	@Override
 	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
-		if (output.getInternal() == null) {
-			MineTweakerAPI.logger.logError("invalid output item");
-			return;
-		}
-		
 		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe));
@@ -75,11 +71,6 @@ public class MCRecipeManager implements IRecipeManager {
 	
 	@Override
 	public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
-		if (output.getInternal() == null) {
-			MineTweakerAPI.logger.logError("invalid output item");
-			return;
-		}
-		
 		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe));
@@ -244,10 +235,7 @@ public class MCRecipeManager implements IRecipeManager {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < contents[i].length; j++) {
 				if (contents[i][j] != null) {
-					Object internal = contents[i][j].getInternal();
-					if (internal != null && (internal instanceof ItemStack)) {
-						iContents[i * width + j] = (ItemStack) internal;
-					}
+					iContents[i * width + j] = getItemStack(contents[i][j]);
 				}
 			}
 		}
@@ -308,6 +296,11 @@ public class MCRecipeManager implements IRecipeManager {
 		public String describeUndo() {
 			return "Restoring " + removingIndices.size() + " recipes";
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private class ActionAddRecipe implements IUndoableAction {
@@ -340,6 +333,11 @@ public class MCRecipeManager implements IRecipeManager {
 		@Override
 		public String describeUndo() {
 			return "Removing recipe for " + recipe.getRecipeOutput().getDisplayName();
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 	

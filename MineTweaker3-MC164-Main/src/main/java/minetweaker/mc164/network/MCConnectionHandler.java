@@ -15,33 +15,18 @@ import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
 import minetweaker.MineTweakerAPI;
+import minetweaker.mc164.MineTweakerMod;
 
 public class MCConnectionHandler implements IConnectionHandler {
 	@Override
 	public void playerLoggedIn(Player player, NetHandler netHandler,
 			INetworkManager manager) {
-		/*String[] admins = MineTweaker.instance.getAdmins();
-		boolean canSendErrors = false;
-		if (admins.length == 0) {
-			canSendErrors = true;
-		} else {
-			for (String s : admins) {
-				if (s.equals(netHandler.getPlayer().getEntityName())) canSendErrors = true;
-			}
-		}
-		if (canSendErrors) {
-			for (String s : MineTweaker.instance.getErrorMessages()) {
-				//#ifdef MC152
-				//+netHandler.getPlayer().sendChatToPlayer(s);
-				//#else
-				netHandler.getPlayer().sendChatToPlayer(ChatMessageComponent.createFromText(s));
-				//#endif
-			}
-			MineTweaker.instance.onAdminLogin(manager, netHandler);
-		}*/
+		System.out.println("Player logged in: " + netHandler.getPlayer().username);
+		
 		manager.addToSendQueue(new Packet250CustomPayload(
 				MCPacketHandler.CHANNEL_SERVERSCRIPT,
 				MineTweakerAPI.tweaker.getScriptData()));
+		MineTweakerMod.INSTANCE.onPlayerLoggedIn(manager, netHandler.getPlayer());
 	}
 
 	@Override
@@ -62,7 +47,7 @@ public class MCConnectionHandler implements IConnectionHandler {
 
 	@Override
 	public void connectionClosed(INetworkManager manager) {
-		//MineTweaker.instance.onLogout(manager);
+		MineTweakerMod.INSTANCE.onPlayerLoggedOut(manager);
 	}
 
 	@Override

@@ -12,11 +12,11 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
-import minetweaker.mc172.item.MCItemStack;
-import minetweaker.mc172.util.MineTweakerUtil;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 import minetweaker.mods.ic2.IC2RecipeInput;
 import minetweaker.mods.ic2.MachineAddRecipeAction;
-import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -38,7 +38,7 @@ public class MetalFormer {
 		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 				"metal former - extruding",
 				Recipes.metalformerExtruding,
-				MineTweakerUtil.getItemStacks(output),
+				getItemStacks(output),
 				null,
 				new IC2RecipeInput(input)));
 	}
@@ -51,9 +51,9 @@ public class MetalFormer {
 	 */
 	@ZenMethod
 	public static IItemStack getExtrudingOutput(IItemStack input) {
-		RecipeOutput output = Recipes.metalformerExtruding.getOutputFor((ItemStack) input.getInternal(), false);
+		RecipeOutput output = Recipes.metalformerExtruding.getOutputFor(getItemStack(input), false);
 		if (output == null || output.items.size() > 0) return null;
-		return new MCItemStack(output.items.get(0));
+		return getIItemStack(output.items.get(0));
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class MetalFormer {
 		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 				"metal former - rolling",
 				Recipes.metalformerRolling,
-				new ItemStack[] { (ItemStack) output.getInternal() },
+				getItemStacks(output),
 				null,
 				new IC2RecipeInput(input)));
 	}
@@ -80,9 +80,9 @@ public class MetalFormer {
 	 */
 	@ZenMethod
 	public static IItemStack getRollingOutput(IItemStack input) {
-		RecipeOutput output = Recipes.metalformerRolling.getOutputFor((ItemStack) input.getInternal(), false);
+		RecipeOutput output = Recipes.metalformerRolling.getOutputFor(getItemStack(input), false);
 		if (output == null || output.items.size() > 0) return null;
-		return new MCItemStack(output.items.get(0));
+		return getIItemStack(output.items.get(0));
 	}
 	/**
 	 * Adds a extruding recipe to the metal former.
@@ -95,7 +95,7 @@ public class MetalFormer {
 		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 				"metal former - cutting",
 				Recipes.metalformerCutting,
-				new ItemStack[] { (ItemStack) output.getInternal() },
+				getItemStacks(output),
 				null,
 				new IC2RecipeInput(input)));
 	}
@@ -108,8 +108,8 @@ public class MetalFormer {
 	 */
 	@ZenMethod
 	public static IItemStack getCuttingOutput(IItemStack input) {
-		RecipeOutput output = Recipes.metalformerCutting.getOutputFor((ItemStack) input.getInternal(), false);
+		RecipeOutput output = Recipes.metalformerCutting.getOutputFor(getItemStack(input), false);
 		if (output == null || output.items.size() > 0) return null;
-		return new MCItemStack(output.items.get(0));
+		return getIItemStack(output.items.get(0));
 	}
 }

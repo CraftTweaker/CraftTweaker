@@ -10,6 +10,7 @@ import java.util.List;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
 import minetweaker.mc1710.player.MCPlayer;
@@ -135,7 +136,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				stackCount--;
 				inventory.setInventorySlotContents(ix, null);
 			} else {
-				inventory.setInventorySlotContents(ix, (ItemStack) stack.getInternal());
+				inventory.setInventorySlotContents(ix, getItemStack(stack));
 				
 				if (stacks[ix] == null) {
 					stackCount++;
@@ -154,7 +155,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				stackCount--;
 				inventory.setInventorySlotContents(i, null);
 			} else {
-				inventory.setInventorySlotContents(i, (ItemStack) stack.getInternal());
+				inventory.setInventorySlotContents(i, getItemStack(stack));
 				
 				if (stacks[i] == null) {
 					stackCount++;

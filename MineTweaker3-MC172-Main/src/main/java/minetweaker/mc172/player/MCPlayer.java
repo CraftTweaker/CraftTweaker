@@ -6,10 +6,13 @@
 
 package minetweaker.mc172.player;
 
-import minetweaker.mc172.data.NBTConverter;
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.IData;
 import minetweaker.api.player.IPlayer;
+import minetweaker.mc172.data.NBTConverter;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IChatComponent;
 
 /**
  *
@@ -20,6 +23,10 @@ public class MCPlayer implements IPlayer {
 	
 	public MCPlayer(EntityPlayer player) {
 		this.player = player;
+	}
+	
+	public EntityPlayer getInternal() {
+		return player;
 	}
 
 	@Override
@@ -35,5 +42,15 @@ public class MCPlayer implements IPlayer {
 	@Override
 	public void update(IData data) {
 		NBTConverter.updateMap(player.getEntityData(), data);
+	}
+
+	@Override
+	public void sendChat(IChatMessage message) {
+		Object internal = message.getInternal();
+		if (!(internal instanceof IChatComponent)) {
+			MineTweakerAPI.logger.logError("not a valid chat message");
+			return;
+		}
+		player.addChatMessage((IChatComponent) internal);
 	}
 }

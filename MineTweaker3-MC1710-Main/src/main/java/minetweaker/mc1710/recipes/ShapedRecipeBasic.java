@@ -7,6 +7,7 @@
 package minetweaker.mc1710.recipes;
 
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.recipes.ShapedRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedRecipe recipe;
 	
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, (ItemStack) recipe.getOutput().getInternal());
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, getItemStack(recipe.getOutput()));
 		
 		this.recipe = recipe;
 	}
@@ -37,7 +38,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 		if (result == null) {
 			return null;
 		} else {
-			return ((ItemStack) result.getInternal()).copy();
+			return getItemStack(result).copy();
 		}
 	}
 }

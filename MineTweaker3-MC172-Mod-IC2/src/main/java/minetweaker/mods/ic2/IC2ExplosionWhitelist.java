@@ -5,6 +5,7 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -31,12 +32,7 @@ public class IC2ExplosionWhitelist {
 	 */
 	@ZenMethod
 	public static void add(IItemStack item) {
-		Object internal = item.getInternal();
-		if (internal == null) {
-			return;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		if (block == null) {
 			MineTweakerAPI.logger.logError("This item is not a block");
@@ -52,12 +48,7 @@ public class IC2ExplosionWhitelist {
 	 */
 	@ZenMethod
 	public static void remove(IItemStack item) {
-		Object internal = item.getInternal();
-		if (internal == null) {
-			return;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		if (block == null) {
 			MineTweakerAPI.logger.logError("This item is not a block");
@@ -78,12 +69,7 @@ public class IC2ExplosionWhitelist {
 	 */
 	@ZenMethod
 	public static boolean isWhitelisted(IItemStack item) {
-		Object internal = item.getInternal();
-		if (internal == null) {
-			return false;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		if (block == null) {
 			MineTweakerAPI.logger.logWarning("This item is not a block");
@@ -128,6 +114,11 @@ public class IC2ExplosionWhitelist {
 		public String describeUndo() {
 			return "Removing block from IC2 explosion whitelist: " + block.getLocalizedName();
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class RemoveAction implements IUndoableAction {
@@ -160,6 +151,11 @@ public class IC2ExplosionWhitelist {
 		@Override
 		public String describeUndo() {
 			return "Adding block to IC2 explosion whitelist: " + block.getLocalizedName();
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 }

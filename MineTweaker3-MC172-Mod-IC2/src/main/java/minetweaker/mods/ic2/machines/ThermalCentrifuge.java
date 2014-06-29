@@ -4,10 +4,11 @@ import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mc172.util.MineTweakerUtil;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
-import net.minecraft.item.ItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStacks;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import minetweaker.mods.ic2.IC2RecipeInput;
 import minetweaker.mods.ic2.MachineAddRecipeAction;
@@ -43,7 +44,7 @@ public class ThermalCentrifuge {
 			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 					"thermal centrifuge",
 					Recipes.centrifuge,
-					MineTweakerUtil.getItemStacks(output),
+					getItemStacks(output),
 					tag,
 					new IC2RecipeInput(ingredient)));
 		}
@@ -73,8 +74,8 @@ public class ThermalCentrifuge {
 	 */
 	@ZenMethod
 	public static IItemStack[] getOutput(IItemStack input) {
-		RecipeOutput output = Recipes.centrifuge.getOutputFor((ItemStack) input.getInternal(), false);
+		RecipeOutput output = Recipes.centrifuge.getOutputFor(getItemStack(input), false);
 		if (output == null || output.items.isEmpty()) return null;
-		return MineTweakerUtil.getIItemStacks(output.items);
+		return getIItemStacks(output.items);
 	}
 }

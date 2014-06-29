@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.ic2;
 
 import ic2.api.recipe.IMachineRecipeManager;
+import java.util.Arrays;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import net.minecraft.item.ItemStack;
@@ -58,5 +53,48 @@ public class MachineAddRecipeAction extends OneWayAction {
 			result.append("]");
 			return result.toString();
 		}
+	}
+
+	@Override
+	public Object getOverrideKey() {
+		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 47 * hash + (this.name != null ? this.name.hashCode() : 0);
+		hash = 47 * hash + (this.machine != null ? this.machine.hashCode() : 0);
+		hash = 47 * hash + Arrays.deepHashCode(this.output);
+		hash = 47 * hash + (this.input != null ? this.input.hashCode() : 0);
+		hash = 47 * hash + (this.tag != null ? this.tag.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final MachineAddRecipeAction other = (MachineAddRecipeAction) obj;
+		if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+			return false;
+		}
+		if (this.machine != other.machine && (this.machine == null || !this.machine.equals(other.machine))) {
+			return false;
+		}
+		if (!Arrays.deepEquals(this.output, other.output)) {
+			return false;
+		}
+		if (this.input != other.input && (this.input == null || !this.input.equals(other.input))) {
+			return false;
+		}
+		if (this.tag != other.tag && (this.tag == null || !this.tag.equals(other.tag))) {
+			return false;
+		}
+		return true;
 	}
 }

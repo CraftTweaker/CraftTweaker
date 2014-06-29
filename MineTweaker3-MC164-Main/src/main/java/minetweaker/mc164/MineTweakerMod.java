@@ -13,12 +13,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import minetweaker.MineTweakerAPI;
 import minetweaker.mc164.furnace.FuelTweaker;
 import minetweaker.mc164.furnace.MCFurnaceManager;
 import minetweaker.mc164.mods.MCLoadedMods;
+import minetweaker.mc164.network.MCConnectionHandler;
 import minetweaker.mc164.network.MCPacketHandler;
 import minetweaker.mc164.oredict.MCOreDict;
 import minetweaker.mc164.recipes.MCRecipeManager;
@@ -26,8 +30,11 @@ import minetweaker.mc164.util.MineTweakerHacks;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.server.MinecraftServer;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -48,16 +55,20 @@ public class MineTweakerMod {
 	@Mod.Instance(MODID)
 	public static MineTweakerMod INSTANCE;
 	
+	private final MineTweakerLogger logger;
 	private final IScriptProvider scriptsGlobal;
+	private final Map<INetworkManager, EntityPlayer> onlinePlayers;
 	
 	private boolean iAmServer = false;
 	
 	public MineTweakerMod() {
 		MineTweakerAPI.oreDict = new MCOreDict();
 		MineTweakerAPI.recipes = new MCRecipeManager();
-		MineTweakerAPI.logger = new MineTweakerLogger();
+		MineTweakerAPI.logger = logger = new MineTweakerLogger();
 		MineTweakerAPI.furnace = new MCFurnaceManager();
 		MineTweakerAPI.loadedMods = new MCLoadedMods();
+		
+		MineTweakerAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");
 		if (!globalDir.exists()) {
@@ -66,6 +77,8 @@ public class MineTweakerMod {
 		
 		scriptsGlobal = new ScriptProviderDirectory(globalDir);
 		MineTweakerAPI.tweaker.setScriptProvider(scriptsGlobal);
+		
+		onlinePlayers = new HashMap<INetworkManager, EntityPlayer>();
 	}
 	
 	public boolean iAmServer() {
@@ -88,6 +101,20 @@ public class MineTweakerMod {
 		}
 	}
 	
+	public void onPlayerLoggedIn(INetworkManager networkManager, EntityPlayer player) {
+		onlinePlayers.put(networkManager, player);
+		if (iAmServer || MinecraftServer.getServer().getConfigurationManager().getOps().contains(player.getCommandSenderName())) {
+			System.out.println("Op logged in");
+			
+			logger.addPlayer(player);
+		}
+	}
+	
+	public void onPlayerLoggedOut(INetworkManager networkManager) {
+		logger.removePlayer(onlinePlayers.get(networkManager));
+		onlinePlayers.remove(networkManager);
+	}
+	
 	// ##########################
 	// ### FML Event Handlers ###
 	// ##########################
@@ -106,6 +133,7 @@ public class MineTweakerMod {
 		}
 		
 		FuelTweaker.INSTANCE.register();
+		NetworkRegistry.instance().registerConnectionHandler(new MCConnectionHandler());
 	}
 	
 	@EventHandler

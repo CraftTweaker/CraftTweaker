@@ -111,6 +111,11 @@ public class MineTweakerAPI {
 	public static IResourceManager resources = null;
 	
 	/**
+	 * Access point to general platform functions.
+	 */
+	public static IPlatformFunctions platform = null;
+	
+	/**
 	 * Register a class registry class. Such class must have (at least) a public
 	 * static method called "getClasses" with accepts a List of classes and which
 	 * stores its classes into that list.

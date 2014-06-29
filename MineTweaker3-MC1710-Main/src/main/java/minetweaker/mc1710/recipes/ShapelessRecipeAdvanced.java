@@ -6,6 +6,7 @@
 
 package minetweaker.mc1710.recipes;
 
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.recipes.ShapelessRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,7 @@ public class ShapelessRecipeAdvanced implements IRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return ((ItemStack) recipe.getCraftingResult(MCCraftingInventory.get(inventory)).getInternal()).copy();
+		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
 	}
 
 	@Override
@@ -40,6 +41,6 @@ public class ShapelessRecipeAdvanced implements IRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return (ItemStack) recipe.getOutput().getInternal();
+		return getItemStack(recipe.getOutput());
 	}
 }

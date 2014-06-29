@@ -6,6 +6,7 @@
 
 package minetweaker.api.player;
 
+import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -25,4 +26,7 @@ public interface IPlayer {
 	
 	@ZenMethod
 	public void update(IData data);
+	
+	@ZenMethod
+	public void sendChat(IChatMessage message);
 }

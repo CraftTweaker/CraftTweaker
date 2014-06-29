@@ -3,7 +3,8 @@ package minetweaker.mods.ic2.expand;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mc172.item.MCItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,12 +28,7 @@ public class ItemExpansion {
 	 */
 	@ZenGetter("ic2getCharge")
 	public static int getIC2Charge(IItemStack stack) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return 0;
-		}
-		
-		return ElectricItem.manager.getCharge((ItemStack) internal);
+		return ElectricItem.manager.getCharge(getItemStack(stack));
 	}
 	
 	/**
@@ -43,12 +39,7 @@ public class ItemExpansion {
 	 */
 	@ZenGetter("ic2tier")
 	public static int getIC2Tier(IItemStack stack) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return 0;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(stack);
 		if (iStack.getItem() instanceof IElectricItem) {
 			return ((IElectricItem) iStack.getItem()).getTier(iStack);
 		} else {
@@ -64,12 +55,7 @@ public class ItemExpansion {
 	 */
 	@ZenGetter("ic2transferLimit")
 	public static int getIC2TransferLimit(IItemStack stack) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return 0;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(stack);
 		if (iStack.getItem() instanceof IElectricItem) {
 			return ((IElectricItem) iStack.getItem()).getTransferLimit(iStack);
 		} else {
@@ -85,18 +71,13 @@ public class ItemExpansion {
 	 */
 	@ZenGetter("ic2charged")
 	public static IItemStack getIC2Charged(IItemStack stack) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return null;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(stack);
 		if (iStack.getItem() instanceof IElectricItem) {
 			IElectricItem eItem = (IElectricItem) iStack.getItem();
 			Item item = eItem.getChargedItem(iStack);
 			ItemStack stack2 = new ItemStack(item, 1, 0);
 			ElectricItem.manager.charge(stack2, eItem.getMaxCharge(stack2), eItem.getTier(stack2), true, false);
-			return new MCItemStack(stack2);
+			return getIItemStack(stack2);
 		} else {
 			return null;
 		}
@@ -110,16 +91,11 @@ public class ItemExpansion {
 	 */
 	@ZenGetter("ic2discharged")
 	public static IItemStack getIC2Discharged(IItemStack stack) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return null;
-		}
-		
-		ItemStack iStack = (ItemStack) internal;
+		ItemStack iStack = getItemStack(stack);
 		if (iStack.getItem() instanceof IElectricItem) {
 			IElectricItem eItem = (IElectricItem) iStack.getItem();
 			Item item = eItem.getEmptyItem(iStack);
-			return new MCItemStack(new ItemStack(item, 1, 0));
+			return getItemStack(item, 1, 0);
 		} else {
 			return null;
 		}
@@ -135,18 +111,13 @@ public class ItemExpansion {
 	 */
 	@ZenMethod("ic2charge")
 	public static IItemStack ic2Charge(IItemStack stack, int amount, @Optional int tier) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return stack;
-		}
-		
 		if (tier == 0) {
 			tier = getIC2Tier(stack);
 		}
 		
-		ItemStack iStack = ((ItemStack) internal).copy();
+		ItemStack iStack = getItemStack(stack).copy();
 		ElectricItem.manager.charge(iStack, amount, tier, true, false);
-		return new MCItemStack(iStack);
+		return getIItemStack(iStack);
 	}
 	
 	/**
@@ -159,17 +130,12 @@ public class ItemExpansion {
 	 */
 	@ZenMethod("ic2discharge")
 	public static IItemStack ic2Discharge(IItemStack stack, int amount, @Optional int tier) {
-		Object internal = stack.getInternal();
-		if (internal == null || !(internal instanceof ItemStack)) {
-			return stack;
-		}
-		
 		if (tier == 0) {
 			tier = getIC2Tier(stack);
 		}
 		
-		ItemStack iStack = ((ItemStack) internal).copy();
+		ItemStack iStack = getItemStack(stack).copy();
 		ElectricItem.manager.discharge(iStack, amount, tier, true, false);
-		return new MCItemStack(iStack);
+		return getIItemStack(iStack);
 	}
 }

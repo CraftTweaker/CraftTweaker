@@ -118,7 +118,9 @@ public interface IIngredient {
 	/**
 	 * Gets the internal item backing this ingredient.
 	 * 
-	 * The value is implementation-dependent.
+	 * The value is implementation-dependent and should only be handled by
+	 * the internal code. Don't use this value - instead, use the version-specific
+	 * helper methods.
 	 * 
 	 * @return internal item
 	 */

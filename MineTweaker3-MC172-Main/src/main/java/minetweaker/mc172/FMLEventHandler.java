@@ -18,6 +18,12 @@ public class FMLEventHandler {
 			MineTweakerMod.NETWORK.sendTo(
 					new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()),
 					player);
+			MineTweakerMod.INSTANCE.onPlayerLoggedIn(player);
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent ev) {
+		MineTweakerMod.INSTANCE.onPlayerLoggedOut(ev.player);
 	}
 }

@@ -6,8 +6,8 @@ import minetweaker.IBracketHandler;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mc172.item.MCItemStack;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.ZenTokener;
@@ -32,7 +32,7 @@ public class IC2BracketHandler implements IBracketHandler {
 	public static IItemStack getItem(String name, int meta) {
 		ItemStack stack = IC2Items.getItem(name);
 		stack.setItemDamage(meta);
-		return new MCItemStack(stack);
+		return getIItemStack(stack);
 	}
 	
 	private final JavaMethod method;

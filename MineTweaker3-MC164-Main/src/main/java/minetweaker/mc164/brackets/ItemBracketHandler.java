@@ -12,11 +12,10 @@ import java.util.Map;
 import minetweaker.IBracketHandler;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.mc164.item.MCItemStack;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IngredientAny;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.expression.ExpressionInt;
@@ -49,7 +48,7 @@ public class ItemBracketHandler implements IBracketHandler {
 	public static IItemStack getItem(String name, int meta) {
 		Item item = itemNames.get(name);
 		if (item != null) {
-			return new MCItemStack(new ItemStack(item, 1, meta), true);
+			return getIItemStackWildcardSize(item, meta);
 		} else {
 			return null;
 		}
@@ -58,7 +57,7 @@ public class ItemBracketHandler implements IBracketHandler {
 	public static IItemStack getItem(int id, int meta) {
 		Item item = Item.itemsList[id];
 		if (item != null) {
-			return new MCItemStack(new ItemStack(item, 1, meta), true);
+			return getIItemStackWildcardSize(item, meta);
 		} else {
 			return null;
 		}
@@ -69,7 +68,9 @@ public class ItemBracketHandler implements IBracketHandler {
 	private final JavaMethod method2;
 	
 	public ItemBracketHandler() {
-		symbolAny = MineTweakerAPI.getJavaStaticFieldSymbol(IngredientAny.class, "INSTANCE");
+		symbolAny = MineTweakerAPI.getJavaStaticFieldSymbol(
+				IngredientAny.class,
+				"INSTANCE");
 		method = MineTweakerAPI.getJavaMethod(
 				ItemBracketHandler.class,
 				"getItem",

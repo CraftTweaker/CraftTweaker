@@ -9,7 +9,8 @@ package minetweaker.mods.ic2;
 import ic2.api.recipe.IRecipeInput;
 import java.util.ArrayList;
 import java.util.List;
-import minetweaker.mc172.item.MCItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
@@ -28,7 +29,7 @@ public class IC2RecipeInput implements IRecipeInput {
 
 	@Override
 	public boolean matches(ItemStack subject) {
-		return ingredient.matches(new MCItemStack(subject));
+		return ingredient.matches(getIItemStack(subject));
 	}
 
 	@Override
@@ -40,8 +41,30 @@ public class IC2RecipeInput implements IRecipeInput {
 	public List<ItemStack> getInputs() {
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		for (IItemStack item : ingredient.getItems()) {
-			items.add((ItemStack) item.getInternal());
+			items.add(getItemStack(item));
 		}
 		return items;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 89 * hash + (this.ingredient != null ? this.ingredient.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final IC2RecipeInput other = (IC2RecipeInput) obj;
+		if (this.ingredient != other.ingredient && (this.ingredient == null || !this.ingredient.equals(other.ingredient))) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -6,7 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc164.item.MCItemStack;
+import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
+import minetweaker.api.oredict.IOreDictEntry;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -135,7 +138,7 @@ public class MineTweakerCommand implements ICommand {
 							description.append('*').append(stack.stackSize);
 						}
 						
-						sendChatMessage(icommandsender, new MCItemStack(stack).toString());
+						sendChatMessage(icommandsender, getIItemStack(stack).toString());
 					}
 				}
 			} else {
@@ -158,7 +161,7 @@ public class MineTweakerCommand implements ICommand {
 						description.append('*').append(stack.stackSize);
 					}
 
-					sendChatMessage(icommandsender, new MCItemStack(stack).toString());
+					sendChatMessage(icommandsender, getIItemStack(stack).toString());
 				}
 			} else {
 				sendChatMessage(icommandsender, "Hand command can only be executed by players");
@@ -166,22 +169,24 @@ public class MineTweakerCommand implements ICommand {
 		} else if (arguments[0].equals("oredict")) {
 			if (arguments.length > 2) {
 				String entryName = arguments[2];
-				List<ItemStack> ores = OreDictionary.getOres(entryName);
-				if (ores.isEmpty()) {
+				IOreDictEntry entry = getOreDict(entryName);
+				if (entry.isEmpty()) {
 					sendChatMessage(icommandsender, "Entry doesn't exist");
 					return;
 				} else {
 					MineTweakerAPI.logger.logCommand("Ore entries for " + entryName + ":");
-					for (ItemStack ore : ores) {
-						MineTweakerAPI.logger.logCommand("    " + new MCItemStack(ore).toString());
+					for (IItemStack ore : entry.getItems()) {
+						MineTweakerAPI.logger.logCommand("    " + ore);
 					}
 				}
 			} else {
 				for (String entryName : OreDictionary.getOreNames()) {
 					MineTweakerAPI.logger.logCommand("Ore entries for " + entryName + ":");
-					List<ItemStack> ores = OreDictionary.getOres(entryName);
-					for (ItemStack ore : ores) {
-						MineTweakerAPI.logger.logCommand("    " + new MCItemStack(ore).toString());
+					IOreDictEntry entry = getOreDict(entryName);
+					if (!entry.isEmpty()) {
+						for (IItemStack ore : entry.getItems()) {
+							MineTweakerAPI.logger.logCommand("    " + ore);
+						}
 					}
 				}
 			}

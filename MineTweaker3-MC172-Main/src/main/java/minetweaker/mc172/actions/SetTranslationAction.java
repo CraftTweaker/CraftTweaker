@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import minetweaker.IUndoableAction;
 import minetweaker.mc172.util.MineTweakerHacks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.StringTranslate;
 
 /**
@@ -58,5 +57,10 @@ public class SetTranslationAction implements IUndoableAction {
 	
 	private static void set(String key, String value) {
 		StringTranslate.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
+	}
+
+	@Override
+	public Object getOverrideKey() {
+		return null;
 	}
 }

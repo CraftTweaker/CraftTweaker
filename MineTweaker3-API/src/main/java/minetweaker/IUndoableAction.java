@@ -11,6 +11,14 @@ package minetweaker;
  * canUndo(), the action is undoable, otherwise it is permanent. Permanent
  * actions cannot be used in server scripts.
  * 
+ * There also exist semi-permanent actions. Those actions can return an override
+ * key; if a newer action has the same override key as an old action, the new
+ * action is considered to override the old one.
+ * 
+ * Likewise, actions can implement hashCode and equals methods to indicate that
+ * they are equal. If an action is equal to a non-undoable stuck action, it will
+ * be omitted from execution.
+ * 
  * @author Stan Hebben
  */
 public interface IUndoableAction {
@@ -60,4 +68,16 @@ public interface IUndoableAction {
 	 * @return the description of this action, when undone
 	 */
 	public String describeUndo();
+	
+	/**
+	 * Returns the override key. Two actions are considered to override each
+	 * other if their override key is equal. You can return null to indicate
+	 * that an action can never be overridden.
+	 * 
+	 * This value only makes sense for recipes that are not undoable. For
+	 * undoable recipes, you should return null.
+	 * 
+	 * @return override key (null for actions that are undoable or which can never be overridden by another action)
+	 */
+	public Object getOverrideKey();
 }

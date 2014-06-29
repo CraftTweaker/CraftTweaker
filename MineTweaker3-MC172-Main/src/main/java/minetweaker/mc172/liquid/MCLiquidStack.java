@@ -6,11 +6,11 @@
 
 package minetweaker.mc172.liquid;
 
-import minetweaker.mc172.data.NBTConverter;
 import minetweaker.api.data.IData;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.liquid.ILiquidStack;
-import net.minecraft.nbt.NBTTagCompound;
+import static minetweaker.api.minecraft.MineTweakerMC.getIData;
+import static minetweaker.api.minecraft.MineTweakerMC.getNBTCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
@@ -57,7 +57,7 @@ public class MCLiquidStack implements ILiquidStack {
 				return null;
 			}
 			
-			tag = NBTConverter.from(stack.tag, true);
+			tag = getIData(stack.tag);
 		}
 		
 		return tag;
@@ -66,7 +66,7 @@ public class MCLiquidStack implements ILiquidStack {
 	@Override
 	public ILiquidStack withTag(IData data) {
 		FluidStack result = new FluidStack(stack.fluidID, stack.amount);
-		result.tag = (NBTTagCompound) NBTConverter.from(data);
+		result.tag = getNBTCompound(data);
 		return new MCLiquidStack(result, data.immutable());
 	}
 

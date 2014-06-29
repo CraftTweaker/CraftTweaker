@@ -30,6 +30,8 @@ import minetweaker.mc172.util.MineTweakerHacks;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -57,6 +59,7 @@ public class MineTweakerMod {
 	@Mod.Instance(MODID)
 	public static MineTweakerMod INSTANCE;
 	
+	public final MineTweakerLogger logger;
 	private final IScriptProvider scriptsGlobal;
 	
 	private boolean iAmServer = false;
@@ -64,9 +67,11 @@ public class MineTweakerMod {
 	public MineTweakerMod() {
 		MineTweakerAPI.oreDict = new MCOreDict();
 		MineTweakerAPI.recipes = new MCRecipeManager();
-		MineTweakerAPI.logger = new MineTweakerLogger();
+		MineTweakerAPI.logger = logger = new MineTweakerLogger();
 		MineTweakerAPI.furnace = new MCFurnaceManager();
 		MineTweakerAPI.loadedMods = new MCLoadedMods();
+		
+		MineTweakerAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");
 		if (!globalDir.exists()) {
@@ -85,12 +90,25 @@ public class MineTweakerMod {
 	 * Reloads all scripts.
 	 */
 	public void reload() {
+		logger.clear();
 		MineTweakerAPI.tweaker.rollback();
 		MineTweakerAPI.tweaker.load();
 		
 		if (iAmServer) {
 			// execute script on all connected clients
 			NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()));
+		}
+	}
+	
+	public void onPlayerLoggedIn(EntityPlayer player) {
+		if (iAmServer || MinecraftServer.getServer().getConfigurationManager().getOps().contains(player.getCommandSenderName())) {
+			logger.addPlayer(player);
+		}
+	}
+	
+	public void onPlayerLoggedOut(EntityPlayer player) {
+		if (iAmServer || MinecraftServer.getServer().getConfigurationManager().getOps().contains(player.getCommandSenderName())) {
+			logger.removePlayer(player);
 		}
 	}
 	

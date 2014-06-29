@@ -126,6 +126,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 		public String describeUndo() {
 			return "Restoring " + fluid.getName() + " luminosity to " + oldValue;
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private class ActionSetDensity implements IUndoableAction {
@@ -160,6 +165,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 		@Override
 		public String describeUndo() {
 			return "Restoring " + fluid.getName() + " density to " + oldValue;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 	
@@ -196,6 +206,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 		public String describeUndo() {
 			return "Restoring " + fluid.getName() + " temperature to " + oldValue;
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private class ActionSetViscosity implements IUndoableAction {
@@ -231,6 +246,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 		public String describeUndo() {
 			return "Restoring " + fluid.getName() + " viscosity to " + oldValue;
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private class ActionSetGaseous implements IUndoableAction {
@@ -265,6 +285,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 		@Override
 		public String describeUndo() {
 			return "Restoring " + fluid.getName() + " gaseous to " + oldValue;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 }

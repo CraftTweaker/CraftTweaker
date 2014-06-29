@@ -9,7 +9,7 @@ package minetweaker.mc164.brackets;
 import java.util.List;
 import minetweaker.IBracketHandler;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.mc164.oredict.MCOreDictEntry;
+import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.expression.ExpressionJavaCallStatic;
@@ -27,7 +27,7 @@ import stanhebben.zenscript.util.ZenPosition;
 @BracketHandler
 public class OreBracketHandler implements IBracketHandler {
 	public static IOreDictEntry getOre(String name) {
-		return new MCOreDictEntry(name);
+		return getOreDict(name);
 	}
 	
 	@Override

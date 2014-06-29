@@ -58,4 +58,9 @@ public class SetTranslationAction implements IUndoableAction {
 	private static void set(String key, String value) {
 		StringTranslate.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
 	}
+
+	@Override
+	public Object getOverrideKey() {
+		return null;
+	}
 }

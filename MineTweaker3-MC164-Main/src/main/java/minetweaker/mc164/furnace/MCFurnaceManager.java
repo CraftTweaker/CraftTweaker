@@ -14,9 +14,10 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 import minetweaker.api.recipes.IFurnaceManager;
-import minetweaker.mc164.item.MCItemStack;
-import minetweaker.mc164.util.MineTweakerUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
@@ -43,16 +44,16 @@ public class MCFurnaceManager implements IFurnaceManager {
 		List<ItemStack> toRemoveMetaValues = new ArrayList<ItemStack>();
 		
 		for (Map.Entry<Integer, ItemStack> entry : smeltingList.entrySet()) {
-			if (output.matches(new MCItemStack(entry.getValue()))
-					&& (input == null || input.matches(new MCItemStack(new ItemStack(entry.getKey(), 1, 0))))) {
+			if (output.matches(getIItemStack(entry.getValue()))
+					&& (input == null || input.matches(getIItemStack(new ItemStack(entry.getKey(), 1, 0))))) {
 				toRemove.add(entry.getKey());
 				toRemoveValues.add(entry.getValue());
 			}
 		}
 		
 		for (Map.Entry<List<Integer>, ItemStack> entry : metaSmeltingList.entrySet()) {
-			if (output.matches(new MCItemStack(entry.getValue()))
-					&& (input == null || input.matches(new MCItemStack(new ItemStack(entry.getKey().get(0), 1, entry.getKey().get(1)))))) {
+			if (output.matches(getIItemStack(entry.getValue()))
+					&& (input == null || input.matches(getIItemStack(new ItemStack(entry.getKey().get(0), 1, entry.getKey().get(1)))))) {
 				toRemoveMeta.add(entry.getKey());
 				toRemoveMetaValues.add(entry.getValue());
 			}
@@ -72,8 +73,8 @@ public class MCFurnaceManager implements IFurnaceManager {
 			MineTweakerAPI.logger.logError("Cannot turn " + input.toString() + " into a furnace recipe");
 		}
 		
-		ItemStack[] items2 = MineTweakerUtil.getItemStacks(items);
-		ItemStack output2 = (ItemStack) output.getInternal();
+		ItemStack[] items2 = getItemStacks(items);
+		ItemStack output2 = getItemStack(output);
 		MineTweakerAPI.tweaker.apply(new AddRecipeAction(input, items2, output2, xp));
 	}
 
@@ -84,7 +85,7 @@ public class MCFurnaceManager implements IFurnaceManager {
 
 	@Override
 	public int getFuel(IItemStack item) {
-		return GameRegistry.getFuelValue((ItemStack) item.getInternal());
+		return GameRegistry.getFuelValue(getItemStack(item));
 	}
 	
 	// ######################
@@ -138,6 +139,11 @@ public class MCFurnaceManager implements IFurnaceManager {
 		public String describeUndo() {
 			return "Restoring " + items.size() + " furnace recipes";
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class AddRecipeAction implements IUndoableAction {
@@ -185,6 +191,11 @@ public class MCFurnaceManager implements IFurnaceManager {
 		public String describeUndo() {
 			return "Removing furnace recipe for " + ingredient;
 		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
 	}
 	
 	private static class SetFuelAction implements IUndoableAction {
@@ -217,6 +228,11 @@ public class MCFurnaceManager implements IFurnaceManager {
 		@Override
 		public String describeUndo() {
 			return "Removing fuel for " + pattern.getPattern();
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
 		}
 	}
 }
