@@ -76,6 +76,14 @@ public class TokenStream implements Iterator<Token> {
 	public ZenParsedFile getFile() {
 		return file;
 	}
+	
+	public int getLine() {
+		return line;
+	}
+	
+	public int getLineOffset() {
+		return lineOffset;
+	}
     
     public Token peek() {
         if (tokenMemoryCurrent < tokenMemoryOffset + tokenMemory.size()) {
@@ -102,7 +110,7 @@ public class TokenStream implements Iterator<Token> {
         if (t != null && t.getType() == type) {
             return next();
         } else {
-            throw new ParseException(t, error);
+            throw new ParseException(file, line, lineOffset, error);
         }
     }
 

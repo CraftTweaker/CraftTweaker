@@ -67,7 +67,7 @@ public class IngredientItem implements IIngredient {
 
 	@Override
 	public boolean matches(IItemStack item) {
-		if (!item.matches(item)) return false;
+		if (!this.item.matches(item)) return false;
 		
 		for (IItemCondition condition : conditions) {
 			if (!condition.matches(item)) return false;
@@ -93,6 +93,11 @@ public class IngredientItem implements IIngredient {
 		}
 		
 		return item;
+	}
+
+	@Override
+	public boolean hasTransformers() {
+		return transformers.length > 0;
 	}
 
 	@Override

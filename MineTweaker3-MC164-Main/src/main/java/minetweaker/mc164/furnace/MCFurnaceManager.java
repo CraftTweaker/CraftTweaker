@@ -60,7 +60,7 @@ public class MCFurnaceManager implements IFurnaceManager {
 		}
 		
 		if (toRemove.isEmpty() && toRemoveMeta.isEmpty()) {
-			MineTweakerAPI.logger.logWarning("No furnace recipes for " + output.toString());
+			MineTweakerAPI.getLogger().logWarning("No furnace recipes for " + output.toString());
 		} else {
 			MineTweakerAPI.tweaker.apply(new RemoveAction(toRemove, toRemoveValues, toRemoveMeta, toRemoveMetaValues));
 		}
@@ -70,7 +70,7 @@ public class MCFurnaceManager implements IFurnaceManager {
 	public void addRecipe(IItemStack output, IIngredient input, double xp) {
 		List<IItemStack> items = input.getItems();
 		if (items == null) {
-			MineTweakerAPI.logger.logError("Cannot turn " + input.toString() + " into a furnace recipe");
+			MineTweakerAPI.getLogger().logError("Cannot turn " + input.toString() + " into a furnace recipe");
 		}
 		
 		ItemStack[] items2 = getItemStacks(items);

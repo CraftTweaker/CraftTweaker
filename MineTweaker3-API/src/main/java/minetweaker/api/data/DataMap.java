@@ -203,6 +203,10 @@ public class DataMap implements IData {
 
 	@Override
 	public boolean contains(IData data) {
+		if (data instanceof DataString) {
+			return this.data.containsKey(data.asString());
+		}
+		
 		Map<String, IData> dataMap = data.asMap();
 		for (Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
 			if (!this.data.containsKey(dataEntry.getKey())) {

@@ -10,11 +10,20 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import minetweaker.MineTweakerAPI;
 import minetweaker.runtime.providers.ScriptProviderMemory;
 
 public class MCPacketHandler implements IPacketHandler {
+	public static final Charset UTF8 = Charset.forName("utf-8");
+	
 	public static final String CHANNEL_SERVERSCRIPT = "MTServerScript";
+	public static final String CHANNEL_OPENBROWSER = "MTOpenBrowser";
 	
 	@Override
 	public void onPacketData(INetworkManager manager,
@@ -23,9 +32,21 @@ public class MCPacketHandler implements IPacketHandler {
 		if (packet == null || packet.channel == null || packet.data == null) return;
 		
 		if (packet.channel.equals(CHANNEL_SERVERSCRIPT)) {
+			System.out.println("Received script data: " + packet.data.length + " bytes");
+			
 			MineTweakerAPI.tweaker.setScriptProvider(new ScriptProviderMemory(packet.data));
 			MineTweakerAPI.tweaker.rollback();
 			MineTweakerAPI.tweaker.load();
+		} else if (packet.channel.equals(CHANNEL_OPENBROWSER)) {
+			String url = UTF8.decode(ByteBuffer.wrap(packet.data)).toString().trim();
+			if(Desktop.isDesktopSupported()){
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(new URI(url));
+				} catch (IOException e) {
+				} catch (URISyntaxException e) {
+				}
+			}
 		}
 	}
 }

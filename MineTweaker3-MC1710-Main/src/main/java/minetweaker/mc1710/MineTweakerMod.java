@@ -19,13 +19,19 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import java.io.File;
 import minetweaker.MineTweakerAPI;
+import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.api.logger.FileLogger;
 import minetweaker.mc1710.furnace.FuelTweaker;
 import minetweaker.mc1710.furnace.MCFurnaceManager;
+import minetweaker.mc1710.game.MCGame;
 import minetweaker.mc1710.mods.MCLoadedMods;
 import minetweaker.mc1710.network.MineTweakerLoadScriptsHandler;
 import minetweaker.mc1710.network.MineTweakerLoadScriptsPacket;
+import minetweaker.mc1710.network.MineTweakerOpenBrowserHandler;
+import minetweaker.mc1710.network.MineTweakerOpenBrowserPacket;
 import minetweaker.mc1710.oredict.MCOreDict;
 import minetweaker.mc1710.recipes.MCRecipeManager;
+import minetweaker.mc1710.server.MCServer;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
@@ -52,23 +58,24 @@ public class MineTweakerMod {
 	
 	static {
 		NETWORK.registerMessage(MineTweakerLoadScriptsHandler.class, MineTweakerLoadScriptsPacket.class, 0, Side.CLIENT);
+		NETWORK.registerMessage(MineTweakerOpenBrowserHandler.class, MineTweakerOpenBrowserPacket.class, 1, Side.CLIENT);
 	}
 	
 	@Mod.Instance(MODID)
 	public static MineTweakerMod INSTANCE;
 	
+	public final MCRecipeManager recipes;
 	private final IScriptProvider scriptsGlobal;
-	
-	private boolean iAmServer = false;
 	
 	public MineTweakerMod() {
 		MineTweakerAPI.oreDict = new MCOreDict();
-		MineTweakerAPI.recipes = new MCRecipeManager();
-		MineTweakerAPI.logger = new MineTweakerLogger();
+		MineTweakerAPI.recipes = recipes = new MCRecipeManager();
+		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
+		MineTweakerAPI.game = MCGame.INSTANCE;
 		MineTweakerAPI.furnace = new MCFurnaceManager();
 		MineTweakerAPI.loadedMods = new MCLoadedMods();
 		
-		MineTweakerAPI.platform = MCPlatformFunctions.INSTANCE;
+		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");
 		if (!globalDir.exists()) {
@@ -77,23 +84,6 @@ public class MineTweakerMod {
 		
 		scriptsGlobal = new ScriptProviderDirectory(globalDir);
 		MineTweakerAPI.tweaker.setScriptProvider(scriptsGlobal);
-	}
-	
-	public boolean iAmServer() {
-		return iAmServer;
-	}
-	
-	/**
-	 * Reloads all scripts.
-	 */
-	public void reload() {
-		MineTweakerAPI.tweaker.rollback();
-		MineTweakerAPI.tweaker.load();
-		
-		if (iAmServer) {
-			// execute script on all connected clients
-			NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()));
-		}
 	}
 	
 	// ##########################
@@ -121,27 +111,32 @@ public class MineTweakerMod {
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
+		System.out.println("[MineTweaker] Server about to start");
 		
 		File scriptsDir = new File(MineTweakerHacks.getWorldDirectory(ev.getServer()), "scripts");
 		if (!scriptsDir.exists()) {
 			scriptsDir.mkdir();
 		}
 		
-		iAmServer = true;
+		MineTweakerAPI.server = new MCServer(ev.getServer());
 		
 		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
 		IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal, scriptsLocal);
 		MineTweakerAPI.tweaker.setScriptProvider(cascaded);
-		reload();
+		
+		MineTweakerImplementationAPI.onServerStart();
 	}
 	
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent ev) {
-		ev.registerServerCommand(new MineTweakerCommand());
+		
 	}
 	
 	@EventHandler
 	public void onServerStopped(FMLServerStoppedEvent ev) {
-		iAmServer = false;
+		System.out.println("[MineTweaker] Server stopped");
+		
+		MineTweakerAPI.server = null;
+		MineTweakerImplementationAPI.onServerStop();
 	}
 }

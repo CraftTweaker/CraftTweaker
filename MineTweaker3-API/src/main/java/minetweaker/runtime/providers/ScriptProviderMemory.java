@@ -63,7 +63,7 @@ public class ScriptProviderMemory implements IScriptProvider {
 			
 			deflater.close();
 		} catch (IOException ex) {
-			MineTweakerAPI.logger.logError("Could not collect scripts: " + ex.getMessage());
+			MineTweakerAPI.getLogger().logError("Could not collect scripts: " + ex.getMessage());
 		}
 		return output.toByteArray();
 	}
@@ -96,7 +96,7 @@ public class ScriptProviderMemory implements IScriptProvider {
 			
 			inflaterData.close();
 		} catch (IOException ex) {
-			MineTweakerAPI.logger.logError("Could not load transmitted scripts: " + ex.getMessage());
+			MineTweakerAPI.getLogger().logError("Could not load transmitted scripts: " + ex.getMessage());
 		}
 	}
 

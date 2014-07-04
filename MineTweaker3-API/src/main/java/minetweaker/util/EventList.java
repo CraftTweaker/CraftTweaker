@@ -16,6 +16,10 @@ public class EventList<T> {
 	private EventNode first = null;
 	private EventNode last = null;
 	
+	public void clear() {
+		first = last = null;
+	}
+	
 	public IEventHandle add(IEventHandler<T> handler) {
 		EventNode node = new EventNode(handler, last, null);
 		

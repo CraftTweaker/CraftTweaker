@@ -16,6 +16,6 @@ public class GlobalFunctions {
 	private GlobalFunctions() {}
 	
 	public static void print(String message) {
-		MineTweakerAPI.logger.logInfo(message);
+		MineTweakerAPI.getLogger().logInfo(message);
 	}
 }

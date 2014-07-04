@@ -7,16 +7,36 @@
 package minetweaker.mc172.item;
 
 import minetweaker.api.item.IItemDefinition;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  *
  * @author Stan
  */
 public class MCItemDefinition implements IItemDefinition {
+	private final String id;
 	private final Item item;
 	
-	public MCItemDefinition(Item item) {
+	public MCItemDefinition(String id, Item item) {
+		this.id = id;
 		this.item = item;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public String getName() {
+		return item.getUnlocalizedName();
+	}
+
+	@Override
+	public IItemStack makeStack(int meta) {
+		return MineTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
 	}
 }

@@ -16,5 +16,5 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.recipes.IRecipeFunction")
 public interface IRecipeFunction {
-	public IItemStack process(IItemStack output, Map<String, IItemStack> inputs, ICraftingInventory inventory);
+	public IItemStack process(IItemStack output, Map<String, IItemStack> inputs, ICraftingInfo craftingInfo);
 }

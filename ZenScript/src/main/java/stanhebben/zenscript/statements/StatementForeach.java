@@ -41,8 +41,9 @@ public class StatementForeach extends Statement {
 		IEnvironmentMethod local = new EnvironmentScope(environment);
 		int[] localVariables = new int[varnames.length];
 		for (int i = 0; i < localVariables.length; i++) {
-			localVariables[i] = methodOutput.local(iterator.getType(i).toASMType());
-			local.putValue(varnames[i], new SymbolLocal(iterator.getType(i), true));
+			SymbolLocal localVar = new SymbolLocal(iterator.getType(i), true);
+			local.putValue(varnames[i], localVar);
+			localVariables[i] = local.getLocal(localVar);
 		}
 		
 		cList.compile(true, environment);

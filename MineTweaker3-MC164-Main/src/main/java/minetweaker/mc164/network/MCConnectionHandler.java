@@ -23,10 +23,14 @@ public class MCConnectionHandler implements IConnectionHandler {
 			INetworkManager manager) {
 		System.out.println("Player logged in: " + netHandler.getPlayer().username);
 		
+		byte[] scriptData = MineTweakerAPI.tweaker.getScriptData();
+		System.out.println("Sending script data: " + scriptData.length + " bytes");
+		
 		manager.addToSendQueue(new Packet250CustomPayload(
 				MCPacketHandler.CHANNEL_SERVERSCRIPT,
 				MineTweakerAPI.tweaker.getScriptData()));
-		MineTweakerMod.INSTANCE.onPlayerLoggedIn(manager, netHandler.getPlayer());
+		
+		MineTweakerMod.INSTANCE.onPlayerLogin(player, netHandler, manager);
 	}
 
 	@Override
@@ -47,7 +51,7 @@ public class MCConnectionHandler implements IConnectionHandler {
 
 	@Override
 	public void connectionClosed(INetworkManager manager) {
-		MineTweakerMod.INSTANCE.onPlayerLoggedOut(manager);
+		MineTweakerMod.INSTANCE.onPlayerLogout(manager);
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public class MineTweakerHacks {
 		try {
 			return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACK.get(null);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("ERROR - could not load ore dictionary stacks!");
+			MineTweakerAPI.getLogger().logError("ERROR - could not load ore dictionary stacks!");
 			return null;
 		}
 	}
@@ -76,7 +76,7 @@ public class MineTweakerHacks {
 		try {
 			return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACKUN.get(null);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("ERROR - could not load ore dictionary stacks!");
+			MineTweakerAPI.getLogger().logError("ERROR - could not load ore dictionary stacks!");
 			return null;
 		}
 	}
@@ -85,7 +85,7 @@ public class MineTweakerHacks {
 		try {
 			return (File) MINECRAFTSERVER_ANVILFILE.get(server);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("could not load anvil file!");
+			MineTweakerAPI.getLogger().logError("could not load anvil file!");
 			return null;
 		}
 	}
@@ -105,7 +105,7 @@ public class MineTweakerHacks {
 		try {
 			return SHAPEDORERECIPE_WIDTH.getInt(recipe);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("could not load anvil file!");
+			MineTweakerAPI.getLogger().logError("could not load anvil file!");
 			return 3;
 		}
 	}
@@ -114,7 +114,7 @@ public class MineTweakerHacks {
 		try {
 			return (Container) INVENTORYCRAFTING_EVENTHANDLER.get(inventory);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("could not get inventory eventhandler");
+			MineTweakerAPI.getLogger().logError("could not get inventory eventhandler");
 			return null;
 		}
 	}
@@ -123,7 +123,7 @@ public class MineTweakerHacks {
 		try {
 			return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("could not get inventory eventhandler");
+			MineTweakerAPI.getLogger().logError("could not get inventory eventhandler");
 			return null;
 		}
 	}
@@ -133,7 +133,7 @@ public class MineTweakerHacks {
 			Field field = getField(StringTranslate.class, MineTweakerObfuscation.STRINGTRANSLATE_INSTANCE);
 			return (StringTranslate) field.get(null);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.logger.logError("could not get string translator");
+			MineTweakerAPI.getLogger().logError("could not get string translator");
 			return null;
 		}
 	}

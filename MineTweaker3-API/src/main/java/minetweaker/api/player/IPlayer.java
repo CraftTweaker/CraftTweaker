@@ -6,8 +6,10 @@
 
 package minetweaker.api.player;
 
+import java.util.List;
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.IData;
+import minetweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -18,6 +20,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenClass("minetweaker.player.IPlayer")
 public interface IPlayer {
+	@ZenGetter("id")
+	public String getId();
+	
 	@ZenGetter("name")
 	public String getName();
 	
@@ -29,4 +34,21 @@ public interface IPlayer {
 	
 	@ZenMethod
 	public void sendChat(IChatMessage message);
+	
+	@ZenGetter("hotbarSize")
+	public int getHotbarSize();
+	
+	@ZenMethod
+	public IItemStack getHotbarStack(int i);
+	
+	@ZenGetter("inventorySize")
+	public int getInventorySize();
+	
+	@ZenMethod
+	public IItemStack getInventoryStack(int i);
+	
+	@ZenGetter("currentItem")
+	public IItemStack getCurrentItem();
+	
+	public void openBrowser(String url);
 }

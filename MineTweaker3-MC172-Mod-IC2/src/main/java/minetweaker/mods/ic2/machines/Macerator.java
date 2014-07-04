@@ -38,7 +38,7 @@ public class Macerator {
 			@NotNull IItemStack output,
 			@NotNull IIngredient ingredient) {
 		if (ingredient.getAmount() < 0) {
-			MineTweakerAPI.logger.logWarning("invalid ingredient: " + ingredient + " - stack size not known");
+			MineTweakerAPI.getLogger().logWarning("invalid ingredient: " + ingredient + " - stack size not known");
 		} else {
 			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
 					"macerator",

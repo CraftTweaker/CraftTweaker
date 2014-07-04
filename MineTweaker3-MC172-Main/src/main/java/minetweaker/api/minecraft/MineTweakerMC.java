@@ -35,7 +35,7 @@ public class MineTweakerMC {
 	public static ItemStack getItemStack(IItemStack item) {
 		Object internal = item.getInternal();
 		if (internal == null || !(internal instanceof ItemStack)) {
-			MineTweakerAPI.logger.logError("Not a valid item stack: " + item);
+			MineTweakerAPI.getLogger().logError("Not a valid item stack: " + item);
 		}
 		return (ItemStack) internal;
 	}
@@ -50,19 +50,31 @@ public class MineTweakerMC {
 	public static ItemStack getItemStack(IIngredient ingredient) {
 		List<IItemStack> items = ingredient.getItems();
 		if (items.size() != 1) {
-			MineTweakerAPI.logger.logError("Not an ingredient with a single item: " + ingredient);
+			MineTweakerAPI.getLogger().logError("Not an ingredient with a single item: " + ingredient);
 		}
 		return getItemStack(items.get(0));
 	}
 	
 	/**
-	 * Returns the MineTweaker item stack for this item.
+	 * Returns the MineTweaker item stack for this item. Passing null returns
+	 * null.
 	 * 
 	 * @param item minecraft item stack
-	 * @return  minetweaker item stack
+	 * @return minetweaker item stack, or null
 	 */
 	public static IItemStack getIItemStack(ItemStack item) {
+		if (item == null) return null;
 		return new MCItemStack(item);
+	}
+	
+	/**
+	 * Constructs an item stack with wildcard size.
+	 * 
+	 * @param item minecraft item stack
+	 * @return minetweaker stack
+	 */
+	public static IItemStack getIItemStackWildcardSize(ItemStack item) {
+		return new MCItemStack(item, true);
 	}
 	
 	/**
@@ -131,7 +143,7 @@ public class MineTweakerMC {
 			if (internal != null && internal instanceof ItemStack) {
 				output[i] = (ItemStack) internal;
 			} else {
-				MineTweakerAPI.logger.logError("Invalid item stack: " + items.get(i));
+				MineTweakerAPI.getLogger().logError("Invalid item stack: " + items.get(i));
 			}
 		}
 		return output;
@@ -196,7 +208,7 @@ public class MineTweakerMC {
 	 */
 	public static EntityPlayer getPlayer(IPlayer player) {
 		if (!(player instanceof MCPlayer)) {
-			MineTweakerAPI.logger.logError("Invalid player: " + player);
+			MineTweakerAPI.getLogger().logError("Invalid player: " + player);
 		}
 		
 		return ((MCPlayer) player).getInternal();

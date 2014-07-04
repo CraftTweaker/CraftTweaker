@@ -115,8 +115,21 @@ public class ItemBracketHandler implements IBracketHandler {
 	}
 	
 	private IZenSymbol find(List<Token> tokens, int startIndex, int endIndex, int meta) {
-		if (tokens.size() == 1 && tokens.get(0).getType() == ZenTokener.T_INTVALUE) {
-			int id = Integer.parseInt(tokens.get(0).getValue());
+		/*StringBuilder test = new StringBuilder();
+		for (int i = startIndex; i < endIndex; i++) {
+			Token token = tokens.get(i);
+			if (i > startIndex) {
+				test.append(' ');
+			}
+			test.append(token.getValue());
+			test.append(" (");
+			test.append(token.getType());
+			test.append(")");
+		}
+		System.out.println("Find " + test);*/
+		
+		if (endIndex == startIndex + 1 && tokens.get(startIndex).getType() == ZenTokener.T_INTVALUE) {
+			int id = Integer.parseInt(tokens.get(startIndex).getValue());
 			if (id < 0 || id > Item.itemsList.length || Item.itemsList[id] == null) {
 				return null;
 			}

@@ -63,7 +63,9 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public IItemDefinition getDefinition() {
-		return new MCItemDefinition(stack.getItem());
+		return new MCItemDefinition(
+				Item.itemRegistry.getNameForObject(stack.getItem()),
+				stack.getItem());
 	}
 
 	@Override
@@ -112,7 +114,7 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public IIngredient anyDamage() {
 		if (stack.getItem().getHasSubtypes()) {
-			MineTweakerAPI.logger.logWarning("subitems don't have damaged states");
+			MineTweakerAPI.getLogger().logWarning("subitems don't have damaged states");
 			return this;
 		} else {
 			ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, OreDictionary.WILDCARD_VALUE);
@@ -124,7 +126,7 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public IItemStack withDamage(int damage) {
 		if (stack.getItem().getHasSubtypes()) {
-			MineTweakerAPI.logger.logWarning("subitems don't have damaged states");
+			MineTweakerAPI.getLogger().logWarning("subitems don't have damaged states");
 			return this;
 		} else {
 			ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, damage);
@@ -230,6 +232,11 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public IItemStack applyTransform(IItemStack item) {
 		return item;
+	}
+
+	@Override
+	public boolean hasTransformers() {
+		return false;
 	}
 
 	@Override

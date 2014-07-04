@@ -90,6 +90,11 @@ public class IngredientAnyAdvanced implements IIngredient {
 	}
 
 	@Override
+	public boolean hasTransformers() {
+		return transformers.length > 0;
+	}
+
+	@Override
 	public Object getInternal() {
 		return IngredientAny.INTERNAL_ANY;
 	}

@@ -71,6 +71,11 @@ public class IngredientAny implements IIngredient {
 	}
 
 	@Override
+	public boolean hasTransformers() {
+		return false;
+	}
+
+	@Override
 	public Object getInternal() {
 		return INTERNAL_ANY;
 	}

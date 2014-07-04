@@ -10,8 +10,12 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.mc164.data.NBTConverter;
 import minetweaker.api.data.IData;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
+import minetweaker.mc164.MineTweakerMod;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatMessageComponent;
 
 /**
@@ -27,6 +31,11 @@ public class MCPlayer implements IPlayer {
 	
 	public EntityPlayer getInternal() {
 		return player;
+	}
+	
+	@Override
+	public String getId() {
+		return null;
 	}
 
 	@Override
@@ -46,11 +55,44 @@ public class MCPlayer implements IPlayer {
 
 	@Override
 	public void sendChat(IChatMessage message) {
-		Object internal = message;
+		Object internal = message.getInternal();
 		if (!(internal instanceof ChatMessageComponent)) {
-			MineTweakerAPI.logger.logError("not a valid chat message");
+			//throw new RuntimeException("Not a valid chat message: " + internal);
+			MineTweakerAPI.getLogger().logError("not a valid chat message");
 			return;
 		}
 		player.sendChatToPlayer((ChatMessageComponent) internal);
+	}
+
+	@Override
+	public int getHotbarSize() {
+		return 9;
+	}
+
+	@Override
+	public IItemStack getHotbarStack(int i) {
+		return i < 0 || i >= 9 ? null : MineTweakerMC.getIItemStack(player.inventory.getStackInSlot(i));
+	}
+
+	@Override
+	public int getInventorySize() {
+		return player.inventory.getSizeInventory();
+	}
+
+	@Override
+	public IItemStack getInventoryStack(int i) {
+		return MineTweakerMC.getIItemStack(player.inventory.getStackInSlot(i));
+	}
+
+	@Override
+	public IItemStack getCurrentItem() {
+		return MineTweakerMC.getIItemStack(player.getCurrentEquippedItem());
+	}
+
+	@Override
+	public void openBrowser(String url) {
+		if (player instanceof EntityPlayerMP) {
+			MineTweakerMod.INSTANCE.openBrowser(player.username, url);
+		}
 	}
 }

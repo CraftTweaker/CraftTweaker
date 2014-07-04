@@ -7,6 +7,7 @@
 package minetweaker;
 
 import minetweaker.api.chat.IChatMessage;
+import minetweaker.api.item.IItemDefinition;
 
 /**
  *
@@ -14,4 +15,8 @@ import minetweaker.api.chat.IChatMessage;
  */
 public interface IPlatformFunctions {
 	public IChatMessage getMessage(String message);
+	
+	public void distributeScripts(byte[] data);
+	
+	public IItemDefinition getItemDefinition(int id);
 }

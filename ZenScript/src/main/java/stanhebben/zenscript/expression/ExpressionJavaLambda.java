@@ -63,7 +63,7 @@ public class ExpressionJavaLambda extends Expression {
 		// generate class
 		String clsName = environment.makeClassName();
 		
-		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, clsName, null, "java/lang/Object", new String[] { internal(interfaceClass) });
 		
 		MethodOutput constructor = new MethodOutput(cw, Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);

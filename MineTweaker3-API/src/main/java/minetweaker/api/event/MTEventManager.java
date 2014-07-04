@@ -12,7 +12,30 @@ import minetweaker.util.EventList;
  *
  * @author Stan
  */
-public class AbstractEventManager implements IEventManager {
+public class MTEventManager implements IEventManager {
+	public void clear() {
+		elPlayerCrafted.clear();
+		elPlayerSmelted.clear();
+		elPlayerChangedDimension.clear();
+		elPlayerLoggedIn.clear();
+		elPlayerLoggedOut.clear();
+		elPlayerRespawn.clear();
+		elPlayerAttackEntity.clear();
+		elPlayerBonemeal.clear();
+		elPlayerInteractEntity.clear();
+		elPlayerPickup.clear();
+		elPlayerPickupItem.clear();
+		elPlayerFillBucket.clear();
+		elPlayerDeathDrops.clear();
+		elPlayerInteract.clear();
+		elPlayerOpenContainer.clear();
+		elPlayerPickupXp.clear();
+		elPlayerSleepInBed.clear();
+		elPlayerUseHoe.clear();
+		elPlayerUseItemStart.clear();
+		elPlayerUseItemTick.clear();
+	}
+	
 	// ##########################
 	// ### PlayerCraftedEvent ###
 	// ##########################

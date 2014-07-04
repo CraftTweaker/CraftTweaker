@@ -11,15 +11,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.annotations.ModOnly;
+import minetweaker.api.client.IClient;
 import minetweaker.api.event.IEventManager;
+import minetweaker.api.game.IGame;
 import minetweaker.api.mods.ILoadedMods;
-import minetweaker.runtime.IMineTweaker;
+import minetweaker.runtime.ITweaker;
 import minetweaker.runtime.ILogger;
-import minetweaker.runtime.Tweaker;
+import minetweaker.runtime.MTTweaker;
 import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.recipes.IFurnaceManager;
 import minetweaker.api.resource.IResourceManager;
+import minetweaker.api.server.IServer;
 import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -57,12 +60,13 @@ public class MineTweakerAPI {
 			registerClass(cls);
 		}
 		
-		registerGlobalSymbol("logger", getJavaStaticFieldSymbol(MineTweakerAPI.class, "logger"));
+		registerGlobalSymbol("logger", getJavaStaticGetterSymbol(MineTweakerAPI.class, "getLogger"));
 		registerGlobalSymbol("tweaker", getJavaStaticFieldSymbol(MineTweakerAPI.class, "tweaker"));
 		registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(MineTweakerAPI.class, "recipes"));
 		registerGlobalSymbol("furnace", getJavaStaticFieldSymbol(MineTweakerAPI.class, "furnace"));
 		registerGlobalSymbol("oreDict", getJavaStaticFieldSymbol(MineTweakerAPI.class, "oreDict"));
 		registerGlobalSymbol("events", getJavaStaticFieldSymbol(MineTweakerAPI.class, "events"));
+		registerGlobalSymbol("server", getJavaStaticFieldSymbol(MineTweakerAPI.class, "server"));
 	}
 	
 	private MineTweakerAPI() {}
@@ -71,13 +75,17 @@ public class MineTweakerAPI {
 	 * The Tweaker is where you apply undoable actions. Any kind of action that
 	 * reloads with the scripts should always be submitted to the tweaker.
 	 */
-	public static final IMineTweaker tweaker = new Tweaker();
+	public static final ITweaker tweaker = new MTTweaker();
 	
 	/**
 	 * The logger can be used to write logging messages to the client. Error and
 	 * warning messages should be relayed to admins for further handling.
+	 * 
+	 * @return 
 	 */
-	public static ILogger logger = null;
+	public static final ILogger getLogger() {
+		return MineTweakerImplementationAPI.logger;
+	}
 	
 	/**
 	 * Access point to the ore dictionary.
@@ -97,7 +105,22 @@ public class MineTweakerAPI {
 	/**
 	 * Access point to the events manager.
 	 */
-	public static IEventManager events = null;
+	public static final IEventManager events = MineTweakerImplementationAPI.events;
+	
+	/**
+	 * Access point to the server, if any.
+	 */
+	public static IServer server = null;
+	
+	/**
+	 * Access point to the client, if any.
+	 */
+	public static IClient client = null;
+	
+	/**
+	 * Access point to general game data, such as items.
+	 */
+	public static IGame game = null;
 	
 	/**
 	 * Access point to mods list.
@@ -109,11 +132,6 @@ public class MineTweakerAPI {
 	 * has its own local resource manager.
 	 */
 	public static IResourceManager resources = null;
-	
-	/**
-	 * Access point to general platform functions.
-	 */
-	public static IPlatformFunctions platform = null;
 	
 	/**
 	 * Register a class registry class. Such class must have (at least) a public

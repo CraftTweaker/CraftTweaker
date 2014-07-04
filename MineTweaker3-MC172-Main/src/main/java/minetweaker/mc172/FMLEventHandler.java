@@ -3,7 +3,13 @@ package minetweaker.mc172;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import minetweaker.MineTweakerAPI;
+import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.api.event.PlayerCraftedEvent;
+import minetweaker.api.event.PlayerLoggedInEvent;
+import minetweaker.api.event.PlayerLoggedOutEvent;
+import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.mc172.network.MineTweakerLoadScriptsPacket;
+import minetweaker.mc172.recipes.MCCraftingInventory;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
@@ -18,12 +24,27 @@ public class FMLEventHandler {
 			MineTweakerMod.NETWORK.sendTo(
 					new MineTweakerLoadScriptsPacket(MineTweakerAPI.tweaker.getScriptData()),
 					player);
-			MineTweakerMod.INSTANCE.onPlayerLoggedIn(player);
+		}
+		
+		MineTweakerImplementationAPI.events.publishPlayerLoggedIn(new PlayerLoggedInEvent(MineTweakerMC.getIPlayer(ev.player)));
+	}
+	
+	@SubscribeEvent
+	public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
+		if (MineTweakerMod.INSTANCE.recipes.hasTransformerRecipes()) {
+			MineTweakerMod.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(ev.craftMatrix, ev.player));
+		}
+		
+		if (MineTweakerImplementationAPI.events.hasPlayerCrafted()) {
+			MineTweakerImplementationAPI.events.publishPlayerCrafted(new PlayerCraftedEvent(
+					MineTweakerMC.getIPlayer(ev.player),
+					MineTweakerMC.getIItemStack(ev.crafting),
+					MCCraftingInventory.get(ev.craftMatrix, ev.player)));
 		}
 	}
 	
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent ev) {
-		MineTweakerMod.INSTANCE.onPlayerLoggedOut(ev.player);
+		MineTweakerImplementationAPI.events.publishPlayerLoggedOut(new PlayerLoggedOutEvent(MineTweakerMC.getIPlayer(ev.player)));
 	}
 }

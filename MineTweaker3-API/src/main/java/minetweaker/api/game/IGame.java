@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 
-package minetweaker.api.world;
+package minetweaker.api.game;
 
 import java.util.List;
+import minetweaker.api.item.IItemDefinition;
+import minetweaker.api.liquid.ILiquidDefinition;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
@@ -14,8 +16,11 @@ import stanhebben.zenscript.annotations.ZenGetter;
  *
  * @author Stan
  */
-@ZenClass("minetweaker.world.IGame")
+@ZenClass("minetweaker.game.IGame")
 public interface IGame {
-	@ZenGetter("dimensions")
-	public List<IDimension> getDimensions();
+	@ZenGetter("items")
+	public List<IItemDefinition> getItems();
+	
+	@ZenGetter("liquids")
+	public List<ILiquidDefinition> getLiquids();
 }

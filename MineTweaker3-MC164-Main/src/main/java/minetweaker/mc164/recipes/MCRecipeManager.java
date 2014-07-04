@@ -12,6 +12,8 @@ import minetweaker.api.item.IItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
+import minetweaker.api.recipes.ICraftingInventory;
+import minetweaker.api.recipes.ICraftingRecipe;
 import minetweaker.api.recipes.IRecipeFunction;
 import minetweaker.api.recipes.IRecipeManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,9 +33,24 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
  */
 public class MCRecipeManager implements IRecipeManager {
 	private final List<IRecipe> recipes;
+	private final List<ICraftingRecipe> transformerRecipes;
 	
 	public MCRecipeManager() {
 		recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
+		transformerRecipes = new ArrayList<ICraftingRecipe>();
+	}
+	
+	public boolean hasTransformerRecipes() {
+		return transformerRecipes.size() > 0;
+	}
+	
+	public void applyTransformations(ICraftingInventory inventory) {
+		for (ICraftingRecipe recipe : transformerRecipes) {
+			if (recipe.matches(inventory)) {
+				recipe.applyTransformers(inventory);
+				return;
+			}
+		}
 	}
 	
 	@Override
@@ -66,14 +83,14 @@ public class MCRecipeManager implements IRecipeManager {
 	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
 		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
-		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe));
+		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe, recipe));
 	}
 
 	@Override
 	public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
 		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
-		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe));
+		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe, recipe));
 	}
 
 	@Override
@@ -305,14 +322,19 @@ public class MCRecipeManager implements IRecipeManager {
 	
 	private class ActionAddRecipe implements IUndoableAction {
 		private final IRecipe recipe;
+		private final ICraftingRecipe craftingRecipe;
 		
-		public ActionAddRecipe(IRecipe recipe) {
+		public ActionAddRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
 			this.recipe = recipe;
+			this.craftingRecipe = craftingRecipe;
 		}
 
 		@Override
 		public void apply() {
 			recipes.add(recipe);
+			if (craftingRecipe.hasTransformers()) {
+				transformerRecipes.add(craftingRecipe);
+			}
 		}
 
 		@Override
@@ -323,6 +345,9 @@ public class MCRecipeManager implements IRecipeManager {
 		@Override
 		public void undo() {
 			recipes.remove(recipe);
+			if (craftingRecipe.hasTransformers()) {
+				transformerRecipes.remove(craftingRecipe);
+			}
 		}
 
 		@Override

@@ -15,7 +15,7 @@ import minetweaker.api.item.IItemStack;
  *
  * @author Stan
  */
-public class ShapedRecipe {
+public class ShapedRecipe implements ICraftingRecipe {
 	private final int width;
 	private final int height;
 	private final byte[] posx;
@@ -93,6 +93,7 @@ public class ShapedRecipe {
 		return output;
 	}
 	
+	@Override
 	public boolean matches(ICraftingInventory inventory) {
 		if (inventory.getStackCount() != ingredients.length) {
 			return false;
@@ -129,6 +130,7 @@ public class ShapedRecipe {
 		return false;
 	}
 	
+	@Override
 	public IItemStack getCraftingResult(ICraftingInventory inventory) {
 		IItemStack[] stacks = new IItemStack[ingredients.length];
 		
@@ -165,6 +167,54 @@ public class ShapedRecipe {
 		return null;
 	}
 	
+	@Override
+	public boolean hasTransformers() {
+		for (IIngredient ingredient : ingredients) {
+			if (ingredient.hasTransformers()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public void applyTransformers(ICraftingInventory inventory) {
+		IItemStack[] stacks = new IItemStack[ingredients.length];
+		
+		for (int i = 0; i <= inventory.getWidth() - width; i++) {
+			out: for (int j = 0; j <= inventory.getHeight() - height; j++) {
+				for (int k = 0; k < ingredients.length; k++) {
+					IItemStack item = inventory.getStack(posx[k] + i, posy[k] + j);
+					if (item == null) continue out;
+					
+					if (!ingredients[k].matches(item)) continue out;
+					stacks[k] = item;
+				}
+				
+				doRecipeTransformers(inventory, stacks, i, j, false);
+				return;
+			}
+		}
+		
+		if (mirrored) {
+			for (int i = 0; i <= inventory.getWidth() - width; i++) {
+				out: for (int j = 0; j <= inventory.getHeight() - height; j++) {
+					for (int k = 0; k < ingredients.length; k++) {
+						IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i) - 1, posy[k] + j);
+						if (item == null) continue out;
+						
+						if (!ingredients[k].matches(item)) continue out;
+						stacks[k] = item;
+					}
+
+					doRecipeTransformers(inventory, stacks, i, j, true);
+					return;
+				}
+			}
+		}
+	}
+	
 	private IItemStack doRecipe(
 			ICraftingInventory inventory,
 			IItemStack[] stacks,
@@ -181,7 +231,8 @@ public class ShapedRecipe {
 				}
 			}
 
-			output = function.process(output, tagged, inventory);
+			// TODO: supply dimension
+			output = function.process(output, tagged, new CraftingInfo(inventory, null));
 			System.out.println("Ouput: " + output);
 		}
 		
@@ -189,6 +240,31 @@ public class ShapedRecipe {
 			return null;
 		}
 		
+		/*for (int i = 0; i < ingredients.length; i++) {
+			IItemStack transformed = ingredients[i].applyTransform(stacks[i]);
+			if (transformed != stacks[i]) {
+				if (mirrored) {
+					inventory.setStack(
+							inventory.getWidth() - (offx + posx[i]) - 1,
+							offy + posy[i],
+							transformed);
+				} else {
+					inventory.setStack(
+							offx + posx[i],
+							offy + posy[i],
+							transformed);
+				}
+			}
+		}*/
+		
+		return output;
+	}
+
+	private void doRecipeTransformers(
+			ICraftingInventory inventory,
+			IItemStack[] stacks,
+			int offx, int offy,
+			boolean mirrored) {
 		for (int i = 0; i < ingredients.length; i++) {
 			IItemStack transformed = ingredients[i].applyTransform(stacks[i]);
 			if (transformed != stacks[i]) {
@@ -205,7 +281,5 @@ public class ShapedRecipe {
 				}
 			}
 		}
-		
-		return output;
 	}
 }

@@ -142,12 +142,20 @@ public class GlobalRegistry {
 	private static class MyErrorLogger implements IZenErrorLogger {
 		@Override
 		public void error(ZenPosition position, String message) {
-			MineTweakerAPI.logger.logError(position.toString() + ": " + message);
+			if (position == null) {
+				MineTweakerAPI.getLogger().logError("system: " + message);
+			} else {
+				MineTweakerAPI.getLogger().logError(position + ": " + message);
+			}
 		}
 
 		@Override
 		public void warning(ZenPosition position, String message) {
-			MineTweakerAPI.logger.logWarning(position.toString() + ": " + message);
+			if (position == null) {
+				MineTweakerAPI.getLogger().logWarning("system: " + message);
+			} else {
+				MineTweakerAPI.getLogger().logWarning(position + ": " + message);
+			}
 		}
 	}
 	
@@ -251,12 +259,12 @@ public class GlobalRegistry {
 
 		@Override
 		public void error(ZenPosition position, String message) {
-			MineTweakerAPI.logger.logError(position.toString() + " > " + message);
+			MineTweakerAPI.getLogger().logError(position.toString() + " > " + message);
 		}
 
 		@Override
 		public void warning(ZenPosition position, String message) {
-			MineTweakerAPI.logger.logWarning(position.toString() + " > " + message);
+			MineTweakerAPI.getLogger().logWarning(position.toString() + " > " + message);
 		}
 	}
 }

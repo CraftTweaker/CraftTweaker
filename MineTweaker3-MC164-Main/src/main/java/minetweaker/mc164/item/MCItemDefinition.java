@@ -7,7 +7,10 @@
 package minetweaker.mc164.item;
 
 import minetweaker.api.item.IItemDefinition;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  *
@@ -18,5 +21,20 @@ public class MCItemDefinition implements IItemDefinition {
 	
 	public MCItemDefinition(Item item) {
 		this.item = item;
+	}
+
+	@Override
+	public String getId() {
+		return item.getUnlocalizedName();
+	}
+
+	@Override
+	public String getName() {
+		return item.getUnlocalizedName();
+	}
+
+	@Override
+	public IItemStack makeStack(int meta) {
+		return MineTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
 	}
 }

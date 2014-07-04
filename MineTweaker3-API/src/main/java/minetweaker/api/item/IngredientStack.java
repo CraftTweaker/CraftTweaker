@@ -75,4 +75,9 @@ public class IngredientStack implements IIngredient {
 	public Object getInternal() {
 		return null;
 	}
+
+	@Override
+	public boolean hasTransformers() {
+		return ingredient.hasTransformers();
+	}
 }

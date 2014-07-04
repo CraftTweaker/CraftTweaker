@@ -25,7 +25,7 @@ public class StringUtil {
 			if (first) {
 				first = false;
 			} else {
-				result.append('.');
+				result.append(separator);
 			}
 			result.append(value);
 		}
@@ -189,7 +189,8 @@ public class StringUtil {
 	 * @return 
 	 */
 	public static String unescapeString(String oldstr) {
-		if (oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"') {
+		if ((oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"')
+				&& (oldstr.charAt(0) != '\'' || oldstr.charAt(oldstr.length() - 1) != '\'')) {
 			// TODO: error
 			//throw new TweakerExecuteException("Not a valid string constant: "
 			//		+ oldstr);

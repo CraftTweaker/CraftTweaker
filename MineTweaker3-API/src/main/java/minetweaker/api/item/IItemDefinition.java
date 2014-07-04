@@ -6,7 +6,11 @@
 
 package minetweaker.api.item;
 
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
 
 /**
  *
@@ -14,5 +18,12 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.item.IItemDefinition")
 public interface IItemDefinition {
+	@ZenGetter("id")
+	public String getId();
 	
+	@ZenGetter("name")
+	public String getName();
+	
+	@ZenMethod
+	public IItemStack makeStack(@Optional int meta);
 }

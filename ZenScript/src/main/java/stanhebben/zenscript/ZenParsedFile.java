@@ -179,4 +179,9 @@ public class ZenParsedFile {
 	public Map<String, ParsedFunction> getFunctions() {
 		return functions;
 	}
+	
+	@Override
+	public String toString() {
+		return filename;
+	}
 }

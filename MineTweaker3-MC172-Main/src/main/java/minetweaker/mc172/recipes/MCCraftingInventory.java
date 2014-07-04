@@ -14,8 +14,10 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIPlayer;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
+import minetweaker.mc172.player.MCPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
@@ -27,6 +29,7 @@ import net.minecraft.item.ItemStack;
  */
 public class MCCraftingInventory implements ICraftingInventory {
 	private static final ThreadLocal<MCCraftingInventory> cache = new ThreadLocal<MCCraftingInventory>();
+	private static final ThreadLocal<MCCraftingInventory> cache2 = new ThreadLocal<MCCraftingInventory>();
 	
 	public static MCCraftingInventory get(InventoryCrafting inventory) {
 		if (cache.get() == null || cache.get().inventory != inventory) {
@@ -40,13 +43,26 @@ public class MCCraftingInventory implements ICraftingInventory {
 		}
 	}
 	
+	public static MCCraftingInventory get(IInventory inventory, EntityPlayer player) {
+		if (cache2.get() == null || cache2.get().inventory != inventory || cache2.get().player != player) {
+			MCCraftingInventory result = new MCCraftingInventory(inventory, player);
+			cache2.set(result);
+			return result;
+		} else {
+			MCCraftingInventory result = cache2.get();
+			result.update();
+			return result;
+		}
+	}
+	
 	private int width;
 	private int height;
-	private final InventoryCrafting inventory;
+	private final IInventory inventory;
 	private IItemStack[] stacks;
 	private ItemStack[] original;
 	private int stackCount;
-	private IPlayer player;
+	private final IPlayer player;
+	private final EntityPlayer playerOrig;
 	
 	private MCCraftingInventory(InventoryCrafting inventory) {
 		this.inventory = inventory;
@@ -60,11 +76,24 @@ public class MCCraftingInventory implements ICraftingInventory {
 		List<Slot> slots = container.inventorySlots;
 		if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
 			SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
-			EntityPlayer playerEntity = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
-			player = getIPlayer(playerEntity);
+			playerOrig = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
+			player = getIPlayer(playerOrig);
 		} else {
+			playerOrig = null;
 			player = null;
 		}
+	}
+	
+	public MCCraftingInventory(IInventory inventory, EntityPlayer player) {
+		this.inventory = inventory;
+		width = height = (int) Math.sqrt(inventory.getSizeInventory());
+		stacks = new IItemStack[width * height];
+		original = new ItemStack[stacks.length];
+		stackCount = 0;
+		update();
+		
+		playerOrig = player;
+		this.player = player == null ? null : new MCPlayer(player);
 	}
 	
 	private void update() {

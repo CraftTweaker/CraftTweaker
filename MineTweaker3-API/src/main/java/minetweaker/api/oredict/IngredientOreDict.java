@@ -96,6 +96,11 @@ public class IngredientOreDict implements IIngredient {
 	}
 
 	@Override
+	public boolean hasTransformers() {
+		return transformers.length > 0;
+	}
+
+	@Override
 	public Object getInternal() {
 		return entry.getInternal();
 	}

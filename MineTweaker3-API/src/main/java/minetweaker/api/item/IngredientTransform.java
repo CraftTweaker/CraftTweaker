@@ -6,49 +6,51 @@
 
 package minetweaker.api.item;
 
-import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  *
  * @author Stan
  */
-@ZenClass("minetweaker.item.Transform")
-public class Transform {
+@ZenExpansion("minetweaker.item.IIngredient")
+public class IngredientTransform {
 	/**
 	 * Makes the item reusable. Prevents consumption of the item upon crafting.
 	 * 
+	 * @param ingredient target value
 	 * @return reuse transformer
 	 */
 	@ZenMethod
-	public static IItemTransformer reuse() {
-		return new IItemTransformer() {
+	public static IIngredient reuse(IIngredient ingredient) {
+		return ingredient.transform(new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
 				return item.withAmount(item.getAmount() + 1);
 			}
-		};
+		});
 	}
 	
 	/**
 	 * Damages the item. Also makes the item reusable. Will damage the item
 	 * for 1 point upon crafting and consume it when broken.
 	 * 
+	 * @param ingredient target value
 	 * @return damage transformer
 	 */
 	@ZenMethod
-	public static IItemTransformer damage() {
-		return new IItemTransformer() {
+	public static IIngredient transformDamage(IIngredient ingredient) {
+		return ingredient.transform(new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
 				int newDamage = item.getDamage() + 1;
 				if (newDamage >= item.getMaxDamage()) {
-					return item.withAmount(item.getAmount() - 1).withDamage(0);
+					return item.withAmount(item.getAmount()).withDamage(0);
 				} else {
-					return item.withDamage(newDamage);
+					return item.withAmount(item.getAmount() + 1).withDamage(newDamage);
 				}
 			}
-		};
+		});
 	}
 	
 	/**
@@ -57,12 +59,13 @@ public class Transform {
 	 * set the proper condition such that an almost-broken item becomes
 	 * invalid for crafting.
 	 * 
+	 * @param ingredient target value
 	 * @param damage damage to be applied
 	 * @return damage transformer
 	 */
 	@ZenMethod
-	public static IItemTransformer damage(final int damage) {
-		return new IItemTransformer() {
+	public static IIngredient transformDamage(IIngredient ingredient, final int damage) {
+		return ingredient.transform(new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
 				int newDamage = item.getDamage() + damage;
@@ -72,26 +75,25 @@ public class Transform {
 					return item.withDamage(newDamage);
 				}
 			}
-		};
+		});
 	}
 	
 	/**
 	 * Causes the item to be replaced upon crafting. Can be used, for instance,
 	 * to return empty bottles or buckets.
 	 * 
+	 * @param ingredient target value
 	 * @param withItem replacement item
 	 * @return replacement transformer
 	 */
 	@ZenMethod
-	public static IItemTransformer replaceWith(IItemStack withItem) {
-		final IItemStack result = withItem.withAmount(withItem.getAmount() + 1);
-		
-		return new IItemTransformer() {
+	public static IIngredient transformReplace(IIngredient ingredient, final IItemStack withItem) {
+		return ingredient.transform(new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
-				return result;
+				return withItem.withAmount(withItem.getAmount() + 1);
 			}
-		};
+		});
 	}
 	
 	/**
@@ -99,16 +101,17 @@ public class Transform {
 	 * a minimum stack size too, as otherwise smaller stacks would still be
 	 * accepted for input.
 	 * 
+	 * @param ingredient target value
 	 * @param amount consumption amount
 	 * @return consuming transformer
 	 */
 	@ZenMethod
-	public static IItemTransformer consume(final int amount) {
-		return new IItemTransformer() {
+	public static IIngredient transformConsume(IIngredient ingredient, final int amount) {
+		return ingredient.transform(new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item) {
 				return item.withAmount(Math.max(item.getAmount() - amount, 0) + 1);
 			}
-		};
+		});
 	}
 }

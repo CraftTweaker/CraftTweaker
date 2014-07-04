@@ -66,7 +66,7 @@ public abstract class Statement {
 					names.add(parser.required(T_ID, "identifier expected").getValue());
 				}
 				
-				parser.required(T_COLON, ": expected");
+				parser.required(T_IN, "in expected");
 				ParsedExpression source = ParsedExpression.read(parser, environment);
 				Statement content = read(parser, environment);
 				return new StatementForeach(

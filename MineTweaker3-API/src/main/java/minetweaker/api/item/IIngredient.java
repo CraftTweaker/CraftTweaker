@@ -115,6 +115,9 @@ public interface IIngredient {
 	@ZenMethod
 	public IItemStack applyTransform(IItemStack item);
 	
+	@ZenGetter("hasTransformations")
+	public boolean hasTransformers();
+	
 	/**
 	 * Gets the internal item backing this ingredient.
 	 * 

@@ -182,6 +182,10 @@ public class MethodOutput {
 		visitor.visitTypeInsn(CHECKCAST, signature(newClass));
 	}
 	
+	public void checkCast(String newClass) {
+		visitor.visitTypeInsn(CHECKCAST, newClass.substring(1, newClass.length() - 1));
+	}
+	
 	public void iNeg() {
 		visitor.visitInsn(INEG);
 	}

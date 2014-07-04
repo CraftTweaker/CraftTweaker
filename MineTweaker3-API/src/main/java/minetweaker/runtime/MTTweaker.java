@@ -35,7 +35,7 @@ import stanhebben.zenscript.parser.ParseException;
  * 
  * @author Stan Hebben
  */
-public class Tweaker implements IMineTweaker {
+public class MTTweaker implements ITweaker {
 	private final List<IUndoableAction> actions = new ArrayList<IUndoableAction>();
 	private final Set<IUndoableAction> wereStuck = new LinkedHashSet<IUndoableAction>();
 	private final Map<Object, IUndoableAction> stuckOverridable = new HashMap<Object, IUndoableAction>();
@@ -45,7 +45,7 @@ public class Tweaker implements IMineTweaker {
 	
 	@Override
 	public void apply(IUndoableAction action) {
-		MineTweakerAPI.logger.logInfo(action.describe());
+		MineTweakerAPI.getLogger().logInfo(action.describe());
 		
 		Object overrideKey = action.getOverrideKey();
 		if (wereStuck.contains(action)) {
@@ -76,10 +76,10 @@ public class Tweaker implements IMineTweaker {
 		for (int i = actions.size() - 1; i >= 0; i--) {
 			IUndoableAction action = actions.get(i);
 			if (action.canUndo()) {
-				MineTweakerAPI.logger.logInfo(action.describeUndo());
+				MineTweakerAPI.getLogger().logInfo(action.describeUndo());
 				action.undo();
 			} else {
-				MineTweakerAPI.logger.logInfo("[Stuck] " + action.describe());
+				MineTweakerAPI.getLogger().logInfo("[Stuck] " + action.describe());
 				stuck.add(0, action);
 				wereStuck.add(action);
 				
@@ -100,6 +100,8 @@ public class Tweaker implements IMineTweaker {
 
 	@Override
 	public void load() {
+		System.out.println("Loading scripts");
+		
 		scriptData = ScriptProviderMemory.collect(scriptProvider);
 		Set<String> executed = new HashSet<String>();
 
@@ -127,11 +129,12 @@ public class Tweaker implements IMineTweaker {
 						ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
 						files.add(pfile);
 					} catch (IOException ex) {
-						MineTweakerAPI.logger.logError("Could not load script " + script.getName() + ": " + ex.getMessage());
+						MineTweakerAPI.getLogger().logError("Could not load script " + script.getName() + ": " + ex.getMessage());
 					} catch (ParseException ex) {
-						MineTweakerAPI.logger.logError("Error parsing " + ex.getFile() + ":" + ex.getLine() + " -- " + ex.getExplanation());
+						//ex.printStackTrace();
+						MineTweakerAPI.getLogger().logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
 					} catch (Exception ex) {
-						MineTweakerAPI.logger.logError("Error loading " + script.getName() + ": " + ex.toString());
+						MineTweakerAPI.getLogger().logError("Error loading " + script.getName() + ": " + ex.toString());
 						ex.printStackTrace();
 					}
 					
@@ -151,16 +154,16 @@ public class Tweaker implements IMineTweaker {
 					ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());
 					module.getMain().run();
 				} catch (Exception ex) {
-					MineTweakerAPI.logger.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage());
+					MineTweakerAPI.getLogger().logError("Error executing " + script.getGroupName() + ": " + ex.getMessage());
 					ex.printStackTrace();
 				}
 			}
 		}
 		
 		if (wereStuck.size() > 0) {
-			MineTweakerAPI.logger.logWarning(Integer.toString(wereStuck.size()) + " modifications were stuck");
+			MineTweakerAPI.getLogger().logWarning(Integer.toString(wereStuck.size()) + " modifications were stuck");
 			for (IUndoableAction action : wereStuck) {
-				MineTweakerAPI.logger.logInfo("Stuck: " + action.describe());
+				MineTweakerAPI.getLogger().logInfo("Stuck: " + action.describe());
 			}
 		}
 	}

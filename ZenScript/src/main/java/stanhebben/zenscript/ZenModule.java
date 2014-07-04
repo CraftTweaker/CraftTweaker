@@ -56,7 +56,7 @@ public class ZenModule {
 	 * @param environmentGlobal global compile environment
 	 */
 	public static void compileScripts(String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal) {
-		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		clsMain.visitSource(mainFileName, null);
 		
 		clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[] {internal(Runnable.class)});
@@ -76,7 +76,7 @@ public class ZenModule {
 		}
 		
 		for (ZenParsedFile script : scripts) {
-			ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 			clsScript.visitSource(script.getFileName(), null);
 			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
 			
@@ -155,6 +155,7 @@ public class ZenModule {
 	 * 
 	 * @param single file to be compiled
 	 * @param environment compile environment
+	 * @param baseClassLoader
 	 * @return compiled module
 	 * @throws IOException if the file could not be read
 	 */

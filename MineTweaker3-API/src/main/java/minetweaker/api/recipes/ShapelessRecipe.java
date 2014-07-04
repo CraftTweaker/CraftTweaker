@@ -15,7 +15,7 @@ import minetweaker.api.item.IItemStack;
  *
  * @author Stan
  */
-public class ShapelessRecipe {
+public class ShapelessRecipe implements ICraftingRecipe {
 	private final IItemStack output;
 	private final IRecipeFunction function;
 	private final IIngredient[] ingredients;
@@ -38,10 +38,12 @@ public class ShapelessRecipe {
 		return output;
 	}
 	
+	@Override
 	public boolean matches(ICraftingInventory inventory) {
 		return matchShapeless(ingredients, inventory) != null;
 	}
 	
+	@Override
 	public IItemStack getCraftingResult(ICraftingInventory inventory) {
 		RecipeMatching matching = matchShapeless(ingredients, inventory);
 		
@@ -54,12 +56,19 @@ public class ShapelessRecipe {
 				}
 			}
 			
-			actualOutput = function.process(actualOutput, map, inventory);
+			actualOutput = function.process(actualOutput, map, new CraftingInfo(inventory, null));
 		}
 		
 		if (actualOutput == null) {
 			return null;
 		}
+		
+		return actualOutput;
+	}
+	
+	@Override
+	public void applyTransformers(ICraftingInventory inventory) {
+		RecipeMatching matching = matchShapeless(ingredients, inventory);
 		
 		for (int i = 0; i < ingredients.length; i++) {
 			IIngredient ingredient = ingredients[i];
@@ -68,8 +77,6 @@ public class ShapelessRecipe {
 				inventory.setStack(matching.indices[i], transformed);
 			}
 		}
-		
-		return actualOutput;
 	}
 	
 	/**
@@ -114,6 +121,17 @@ public class ShapelessRecipe {
 		}
 		
 		return new RecipeMatching(matched, indices);
+	}
+	
+	@Override
+	public boolean hasTransformers() {
+		for (IIngredient ingredient : ingredients) {
+			if (ingredient.hasTransformers()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	private static class RecipeMatching {

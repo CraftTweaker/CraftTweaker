@@ -18,6 +18,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenClass("minetweaker.oredict.IOreDictEntry")
 public interface IOreDictEntry extends IIngredient {
+	@ZenGetter("name")
+	public String getName();
+	
 	@ZenGetter("empty")
 	public boolean isEmpty();
 	

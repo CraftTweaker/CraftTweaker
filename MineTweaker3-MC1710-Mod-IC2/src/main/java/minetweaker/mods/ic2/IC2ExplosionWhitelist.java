@@ -35,7 +35,7 @@ public class IC2ExplosionWhitelist {
 		ItemStack iStack = getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		if (block == null) {
-			MineTweakerAPI.logger.logError("This item is not a block");
+			MineTweakerAPI.getLogger().logError("This item is not a block");
 		} else {
 			MineTweakerAPI.tweaker.apply(new AddAction(block));
 		}
@@ -51,10 +51,10 @@ public class IC2ExplosionWhitelist {
 		ItemStack iStack = getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		if (block == null) {
-			MineTweakerAPI.logger.logError("This item is not a block");
+			MineTweakerAPI.getLogger().logError("This item is not a block");
 		} else {
 			if (ExplosionWhitelist.isBlockWhitelisted(block)) {
-				MineTweakerAPI.logger.logWarning("This block is not in the whitelist");
+				MineTweakerAPI.getLogger().logWarning("This block is not in the whitelist");
 			} else {
 				MineTweakerAPI.tweaker.apply(new RemoveAction(block));
 			}
@@ -72,7 +72,7 @@ public class IC2ExplosionWhitelist {
 		ItemStack iStack = getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		if (block == null) {
-			MineTweakerAPI.logger.logWarning("This item is not a block");
+			MineTweakerAPI.getLogger().logWarning("This item is not a block");
 			return false;
 		} else {
 			return ExplosionWhitelist.isBlockWhitelisted(block);

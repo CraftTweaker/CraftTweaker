@@ -6,7 +6,6 @@
 
 package minetweaker.runtime;
 
-import java.io.Closeable;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.api.item.IIngredient;
@@ -18,7 +17,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenClass("minetweaker.IMineTweaker")
-public interface IMineTweaker {
+public interface ITweaker {
 	/**
 	 * Executes a specified MineTweaker action. Will print a log message and
 	 * adds the action to the undo list.
