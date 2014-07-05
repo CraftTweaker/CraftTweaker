@@ -143,18 +143,18 @@ public class GlobalRegistry {
 		@Override
 		public void error(ZenPosition position, String message) {
 			if (position == null) {
-				MineTweakerAPI.getLogger().logError("system: " + message);
+				MineTweakerAPI.logError("system: " + message);
 			} else {
-				MineTweakerAPI.getLogger().logError(position + ": " + message);
+				MineTweakerAPI.logError(position + ": " + message);
 			}
 		}
 
 		@Override
 		public void warning(ZenPosition position, String message) {
 			if (position == null) {
-				MineTweakerAPI.getLogger().logWarning("system: " + message);
+				MineTweakerAPI.logWarning("system: " + message);
 			} else {
-				MineTweakerAPI.getLogger().logWarning(position + ": " + message);
+				MineTweakerAPI.logWarning(position + ": " + message);
 			}
 		}
 	}
@@ -259,12 +259,12 @@ public class GlobalRegistry {
 
 		@Override
 		public void error(ZenPosition position, String message) {
-			MineTweakerAPI.getLogger().logError(position.toString() + " > " + message);
+			MineTweakerAPI.logError(position.toString() + " > " + message);
 		}
 
 		@Override
 		public void warning(ZenPosition position, String message) {
-			MineTweakerAPI.getLogger().logWarning(position.toString() + " > " + message);
+			MineTweakerAPI.logWarning(position.toString() + " > " + message);
 		}
 	}
 }

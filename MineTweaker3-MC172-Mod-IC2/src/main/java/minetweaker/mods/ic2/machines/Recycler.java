@@ -26,7 +26,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class Recycler {
 	@ZenMethod
 	public static void addBlacklist(IIngredient ingredient) {
-		MineTweakerAPI.tweaker.apply(new AddBlacklistAction(ingredient));
+		MineTweakerAPI.apply(new AddBlacklistAction(ingredient));
 	}
 	
 	@ZenMethod

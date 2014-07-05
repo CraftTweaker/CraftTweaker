@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.data;
 
 import java.util.Collections;
@@ -12,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
- * @author Stan
+ * Contains a map, mapping strings to data elements.
+ * 
+ * @author Stan Hebben
  */
 public class DataMap implements IData {
+	public static final DataMap EMPTY = new DataMap(new HashMap<String, IData>(), true);
+	
 	private final Map<String, IData> data;
 	private final boolean immutable;
 	

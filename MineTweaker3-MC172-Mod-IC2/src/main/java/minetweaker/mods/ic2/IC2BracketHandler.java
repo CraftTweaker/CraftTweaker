@@ -56,12 +56,12 @@ public class IC2BracketHandler implements IBracketHandler {
 					} else if (tokens.get(6).getValue().equals("*")) {
 						meta = OreDictionary.WILDCARD_VALUE;
 					} else {
-						MineTweakerAPI.getLogger().logError("Not a valid meta value: " + tokens.get(6).getValue());
+						MineTweakerAPI.logError("Not a valid meta value: " + tokens.get(6).getValue());
 					}
 				}
 				ItemStack item = IC2Items.getItem(name);
 				if (item == null) {
-					MineTweakerAPI.getLogger().logError("Not a valid IC2 item: " + name);
+					MineTweakerAPI.logError("Not a valid IC2 item: " + name);
 					return null;
 				} else {
 					return new ItemReferenceSymbol(name, meta);

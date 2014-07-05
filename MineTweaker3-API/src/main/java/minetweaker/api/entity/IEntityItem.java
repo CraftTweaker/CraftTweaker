@@ -1,19 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.entity;
 
 import minetweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
- *
- * @author Stan
+ * Represents an item entity. Item entities are entities representing an item
+ * stack on the ground (or flying through the air).
+ * 
+ * @author Stan Hebben
  */
 public interface IEntityItem extends IEntity {
+	/**
+	 * Gets the entity item.
+	 * 
+	 * @return entity item
+	 */
 	@ZenGetter("item")
 	public IItemStack getItem();
 }

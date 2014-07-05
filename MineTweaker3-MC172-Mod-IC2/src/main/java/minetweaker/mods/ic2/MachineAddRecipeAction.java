@@ -31,7 +31,7 @@ public class MachineAddRecipeAction extends OneWayAction {
 		try {
 			machine.addRecipe(input, tag, output);
 		} catch (RuntimeException ex) {
-			MineTweakerAPI.getLogger().logError(ex.getMessage());
+			MineTweakerAPI.logError(ex.getMessage());
 		}
 	}
 

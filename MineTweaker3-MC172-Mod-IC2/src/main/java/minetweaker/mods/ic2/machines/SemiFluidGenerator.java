@@ -24,7 +24,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class SemiFluidGenerator {
 	@ZenMethod
 	public static void addFluid(ILiquidStack liquidPerTick, int energyPerTick) {
-		MineTweakerAPI.tweaker.apply(new AddFluidAction(liquidPerTick.getName(), liquidPerTick.getAmount(), energyPerTick));
+		MineTweakerAPI.apply(new AddFluidAction(liquidPerTick.getName(), liquidPerTick.getAmount(), energyPerTick));
 	}
 	
 	@ZenMethod

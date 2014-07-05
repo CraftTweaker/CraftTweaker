@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.item;
 
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Transformations can be used to modify an ingredient after it is used in a
+ * crafting recipe. It could reuse the item, damage it or consume multiple items.
+ * 
+ * @author Stan Hebben
  */
 @ZenExpansion("minetweaker.item.IIngredient")
 public class IngredientTransform {
@@ -70,9 +66,9 @@ public class IngredientTransform {
 			public IItemStack transform(IItemStack item) {
 				int newDamage = item.getDamage() + damage;
 				if (newDamage >= item.getMaxDamage()) {
-					return item.withAmount(item.getAmount() - 1).withDamage(newDamage - item.getMaxDamage());
+					return item.withAmount(item.getAmount()).withDamage(0);
 				} else {
-					return item.withDamage(newDamage);
+					return item.withAmount(item.getAmount() + 1).withDamage(newDamage);
 				}
 			}
 		});

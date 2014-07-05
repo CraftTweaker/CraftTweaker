@@ -33,7 +33,7 @@ public class NEI {
 	 */
 	@ZenMethod
 	public static void hide(@NotNull IItemStack item) {
-		MineTweakerAPI.tweaker.apply(new NEIHideItemAction(getItemStack(item)));
+		MineTweakerAPI.apply(new NEIHideItemAction(getItemStack(item)));
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class NEI {
 	 */
 	@ZenMethod
 	public static void addEntry(@NotNull IItemStack stack) {
-		MineTweakerAPI.tweaker.apply(new NEIAddEntryAction(getItemStack(stack)));
+		MineTweakerAPI.apply(new NEIAddEntryAction(getItemStack(stack)));
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public class NEI {
 	 */
 	@ZenMethod
 	public static void overrideName(@NotNull IItemStack item, @NotNull String name) {
-		MineTweakerAPI.tweaker.apply(new NEIOverrideNameAction(getItemStack(item), name));
+		MineTweakerAPI.apply(new NEIOverrideNameAction(getItemStack(item), name));
 	}
 	
 	// #############################

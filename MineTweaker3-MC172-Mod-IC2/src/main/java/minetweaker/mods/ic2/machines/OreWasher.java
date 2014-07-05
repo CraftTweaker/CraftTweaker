@@ -26,7 +26,7 @@ public class OreWasher {
 	public static void addRecipe(IItemStack[] output, IIngredient input, int millibuckets) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("amount", millibuckets);
-		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
+		MineTweakerAPI.apply(new MachineAddRecipeAction(
 				"ore washer",
 				Recipes.oreWashing,
 				getItemStacks(output),

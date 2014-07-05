@@ -99,7 +99,6 @@ public class MTEventManager implements IEventManager {
 
 	private final EventList<PlayerLoggedInEvent> elPlayerLoggedIn = new EventList<PlayerLoggedInEvent>();
 	
-	@Override
 	public IEventHandle onPlayerLoggedIn(IPlayerLoggedInEventHandler ev) {
 		return elPlayerLoggedIn.add(ev);
 	}
@@ -118,7 +117,6 @@ public class MTEventManager implements IEventManager {
 	
 	private final EventList<PlayerLoggedOutEvent> elPlayerLoggedOut = new EventList<PlayerLoggedOutEvent>();
 	
-	@Override
 	public IEventHandle onPlayerLoggedOut(IPlayerLoggedOutEventHandler ev) {
 		return elPlayerLoggedOut.add(ev);
 	}

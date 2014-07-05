@@ -9,6 +9,7 @@ package minetweaker.mc1710.item;
 import java.util.Collections;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.data.DataMap;
 import minetweaker.mc1710.data.NBTConverter;
 import minetweaker.mc1710.liquid.MCLiquidStack;
 import minetweaker.api.data.IData;
@@ -80,7 +81,7 @@ public class MCItemStack implements IItemStack {
 	
 	@Override
 	public void setDisplayName(String name) {
-		MineTweakerAPI.tweaker.apply(new SetTranslationAction(getName() + ".name", name));
+		MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class MCItemStack implements IItemStack {
 	public IData getTag() {
 		if (tag == null) {
 			if (stack.stackTagCompound == null) {
-				return null;
+				return DataMap.EMPTY;
 			}
 			
 			tag = NBTConverter.from(stack.stackTagCompound, true);
@@ -114,7 +115,7 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public IIngredient anyDamage() {
 		if (stack.getItem().getHasSubtypes()) {
-			MineTweakerAPI.getLogger().logWarning("subitems don't have damaged states");
+			MineTweakerAPI.logWarning("subitems don't have damaged states");
 			return this;
 		} else {
 			ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, OreDictionary.WILDCARD_VALUE);
@@ -126,7 +127,7 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public IItemStack withDamage(int damage) {
 		if (stack.getItem().getHasSubtypes()) {
-			MineTweakerAPI.getLogger().logWarning("subitems don't have damaged states");
+			MineTweakerAPI.logWarning("subitems don't have damaged states");
 			return this;
 		} else {
 			ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, damage);

@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.item;
 
 import java.util.List;
 
 /**
- *
- * @author Stan
+ * Contains an ingredient stack. Is an ingredient with a specific stack size
+ * assigned to it.
+ * 
+ * @author Stan Hebben
  */
 public class IngredientStack implements IIngredient {
 	private final IIngredient ingredient;

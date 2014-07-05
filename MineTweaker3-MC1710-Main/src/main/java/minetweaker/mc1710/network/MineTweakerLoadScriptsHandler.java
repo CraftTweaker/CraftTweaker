@@ -21,7 +21,7 @@ public class MineTweakerLoadScriptsHandler implements IMessageHandler<MineTweake
 	@Override
 	public IMessage onMessage(MineTweakerLoadScriptsPacket message, MessageContext ctx) {
 		if (MineTweakerAPI.server == null) {
-			MineTweakerAPI.tweaker.setScriptProvider(new ScriptProviderMemory(message.getData()));
+			MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(message.getData()));
 			MineTweakerImplementationAPI.reload();
 		}
 		

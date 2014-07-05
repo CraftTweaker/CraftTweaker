@@ -1,17 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.data;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- *
- * @author Stan
+ * Contains a boolean value (true or false).
+ * 
+ * @author Stan Hebben
  */
 public class DataBool implements IData {
 	private final boolean value;

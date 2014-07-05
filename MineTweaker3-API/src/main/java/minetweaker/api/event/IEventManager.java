@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.event;
 
 /**
@@ -17,10 +11,6 @@ public interface IEventManager {
 	public IEventHandle onPlayerSmelted(IPlayerSmeltedEventHandler ev);
 	
 	public IEventHandle onPlayerChangedDimension(IPlayerChangedDimensionEventHandler ev);
-	
-	public IEventHandle onPlayerLoggedIn(IPlayerLoggedInEventHandler ev);
-	
-	public IEventHandle onPlayerLoggedOut(IPlayerLoggedOutEventHandler ev);
 	
 	public IEventHandle onPlayerRespawn(IPlayerRespawnEventHandler ev);
 	

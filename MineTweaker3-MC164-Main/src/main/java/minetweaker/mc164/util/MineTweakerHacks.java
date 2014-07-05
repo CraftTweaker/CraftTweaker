@@ -10,6 +10,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -19,6 +20,8 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringTranslate;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -64,7 +67,7 @@ public class MineTweakerHacks {
 		try {
 			return (Map<Integer, List<ItemStack>>) OREDICTIONARY_ORESTACKS.get(null);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.getLogger().logError("ERROR - could not load ore dictionary stacks!");
+			MineTweakerAPI.logError("ERROR - could not load ore dictionary stacks!");
 			return null;
 		}
 	}
@@ -73,7 +76,7 @@ public class MineTweakerHacks {
 		try {
 			return (File) MINECRAFTSERVER_ANVILFILE.get(server);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.getLogger().logError("could not load anvil file!");
+			MineTweakerAPI.logError("could not load anvil file!");
 			return null;
 		}
 	}
@@ -93,7 +96,7 @@ public class MineTweakerHacks {
 		try {
 			return SHAPEDORERECIPE_WIDTH.getInt(recipe);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.getLogger().logError("could not load anvil file!");
+			MineTweakerAPI.logError("could not load anvil file!");
 			return 3;
 		}
 	}
@@ -102,7 +105,7 @@ public class MineTweakerHacks {
 		try {
 			return (Container) INVENTORYCRAFTING_EVENTHANDLER.get(inventory);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.getLogger().logError("could not get inventory eventhandler");
+			MineTweakerAPI.logError("could not get inventory eventhandler");
 			return null;
 		}
 	}
@@ -111,7 +114,7 @@ public class MineTweakerHacks {
 		try {
 			return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.getLogger().logError("could not get inventory eventhandler");
+			MineTweakerAPI.logError("could not get inventory eventhandler");
 			return null;
 		}
 	}
@@ -121,7 +124,37 @@ public class MineTweakerHacks {
 			Field field = getField(StringTranslate.class, MineTweakerObfuscation.STRINGTRANSLATE_INSTANCE);
 			return (StringTranslate) field.get(null);
 		} catch (IllegalAccessException ex) {
-			MineTweakerAPI.getLogger().logError("could not get string translator");
+			MineTweakerAPI.logError("could not get string translator");
+			return null;
+		}
+	}
+	
+	public static Map<List, FluidContainerData> getFluidContainerMap() {
+		try {
+			Field field = getField(FluidContainerRegistry.class, new String[] {"containerFluidMap"});
+			return (Map<List, FluidContainerData>) field.get(null);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logError("could not get fluid container registry");
+			return null;
+		}
+	}
+	
+	public static Map<List, FluidContainerData> getFilledContainerMap() {
+		try {
+			Field field = getField(FluidContainerRegistry.class, new String[] {"filledContainerMap"});
+			return (Map<List, FluidContainerData>) field.get(null);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logError("could not get filled container map");
+			return null;
+		}
+	}
+	
+	public static Set<List> getEmptyContainers() {
+		try {
+			Field field = getField(FluidContainerRegistry.class, new String[] {"emptyContainers"});
+			return (Set<List>) field.get(null);
+		} catch (IllegalAccessException ex) {
+			MineTweakerAPI.logError("could not get filled container map");
 			return null;
 		}
 	}

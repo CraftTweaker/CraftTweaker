@@ -70,7 +70,7 @@ public class MCRecipeManager implements IRecipeManager {
 			}
 		}
 		
-		MineTweakerAPI.tweaker.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
 		return toRemove.size();
 	}
 	
@@ -83,14 +83,14 @@ public class MCRecipeManager implements IRecipeManager {
 	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
 		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
-		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe, recipe));
+		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
 	}
 
 	@Override
 	public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
 		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
-		MineTweakerAPI.tweaker.apply(new ActionAddRecipe(irecipe, recipe));
+		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class MCRecipeManager implements IRecipeManager {
 			removeIndex.add(i);
 		}
 
-		MineTweakerAPI.tweaker.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
 		return toRemove.size();
 	}
 
@@ -234,7 +234,7 @@ public class MCRecipeManager implements IRecipeManager {
 			removeIndex.add(i);
 		}
 
-		MineTweakerAPI.tweaker.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
 		return toRemove.size();
 	}
 

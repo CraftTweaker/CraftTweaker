@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.item;
 
 import java.util.List;
 import minetweaker.util.ArrayUtil;
 
 /**
- *
- * @author Stan
+ * Represents the wildcard ingredient, with conditions and/or transformers
+ * applied to it.
+ * 
+ * @author Stan Hebben
  */
 public class IngredientAnyAdvanced implements IIngredient {
 	private final String mark;

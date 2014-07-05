@@ -37,11 +37,11 @@ public class ThermalCentrifuge {
 	@ZenMethod
 	public static void addRecipe(IItemStack[] output, IIngredient ingredient, int minHeat) {
 		if (ingredient.getAmount() < 0) {
-			MineTweakerAPI.getLogger().logWarning("invalid ingredient: " + ingredient + " - stack size not known");
+			MineTweakerAPI.logWarning("invalid ingredient: " + ingredient + " - stack size not known");
 		} else {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("minHeat", minHeat);
-			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
+			MineTweakerAPI.apply(new MachineAddRecipeAction(
 					"thermal centrifuge",
 					Recipes.centrifuge,
 					getItemStacks(output),

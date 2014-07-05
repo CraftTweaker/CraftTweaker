@@ -60,16 +60,16 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public void add(IItemStack item) {
 		ItemStack stack = getItemStack(item);
 		if (stack != null) {
-			MineTweakerAPI.tweaker.apply(new ActionAddItem(id, stack));
+			MineTweakerAPI.apply(new ActionAddItem(id, stack));
 		}
 	}
 
 	@Override
 	public void addAll(IOreDictEntry entry) {
 		if (entry instanceof MCOreDictEntry) {
-			MineTweakerAPI.tweaker.apply(new ActionAddAll(id, ((MCOreDictEntry) entry).id));
+			MineTweakerAPI.apply(new ActionAddAll(id, ((MCOreDictEntry) entry).id));
 		} else {
-			MineTweakerAPI.getLogger().logError("not a valid entry");
+			MineTweakerAPI.logError("not a valid entry");
 		}
 	}
 
@@ -84,7 +84,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 		}
 		
 		if (result != null) {
-			MineTweakerAPI.tweaker.apply(new ActionRemoveItem(id, result));
+			MineTweakerAPI.apply(new ActionRemoveItem(id, result));
 		}
 	}
 
@@ -102,9 +102,9 @@ public class MCOreDictEntry implements IOreDictEntry {
 	@Override
 	public void mirror(IOreDictEntry other) {
 		if (other instanceof MCOreDictEntry) {
-			MineTweakerAPI.tweaker.apply(new ActionMirror(id, ((MCOreDictEntry) other).id));
+			MineTweakerAPI.apply(new ActionMirror(id, ((MCOreDictEntry) other).id));
 		} else {
-			MineTweakerAPI.getLogger().logError("not a valid oredict entry");
+			MineTweakerAPI.logError("not a valid oredict entry");
 		}
 	}
 

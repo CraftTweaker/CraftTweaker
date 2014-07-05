@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.game;
 
 import java.util.List;
@@ -13,14 +7,25 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
- *
- * @author Stan
+ * Game interface. Used to obtain general game information.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("minetweaker.game.IGame")
 public interface IGame {
+	/**
+	 * Retrieves the items in this game.
+	 * 
+	 * @return game items
+	 */
 	@ZenGetter("items")
 	public List<IItemDefinition> getItems();
 	
+	/**
+	 * Retrieves the liquids in this game.
+	 * 
+	 * @return game liquids
+	 */
 	@ZenGetter("liquids")
 	public List<ILiquidDefinition> getLiquids();
 }

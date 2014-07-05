@@ -30,6 +30,6 @@ public class MatterAmplifier {
 	public static void setAmplifier(IIngredient item, int amplifier) {
 		NBTTagCompound data = new NBTTagCompound();
 		data.setInteger("amplification", amplifier);
-		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction("matter amplifier", Recipes.matterAmplifier, new ItemStack[0], data, new IC2RecipeInput(item)));
+		MineTweakerAPI.apply(new MachineAddRecipeAction("matter amplifier", Recipes.matterAmplifier, new ItemStack[0], data, new IC2RecipeInput(item)));
 	}
 }

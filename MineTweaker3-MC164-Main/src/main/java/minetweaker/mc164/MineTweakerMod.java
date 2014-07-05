@@ -69,13 +69,14 @@ public class MineTweakerMod {
 	private final Map<INetworkManager, NetHandler> userByNetwork = new HashMap<INetworkManager, NetHandler>();
 	
 	public MineTweakerMod() {
-		MineTweakerAPI.oreDict = new MCOreDict();
-		MineTweakerAPI.recipes = recipes = new MCRecipeManager();
-		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
-		MineTweakerAPI.game = MCGame.INSTANCE;
-		MineTweakerAPI.furnace = new MCFurnaceManager();
-		MineTweakerAPI.loadedMods = new MCLoadedMods();
+		MineTweakerImplementationAPI.init(
+				new MCOreDict(),
+				recipes = new MCRecipeManager(),
+				new MCFurnaceManager(),
+				MCGame.INSTANCE,
+				new MCLoadedMods());
 		
+		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");
@@ -84,14 +85,15 @@ public class MineTweakerMod {
 		}
 		
 		scriptsGlobal = new ScriptProviderDirectory(globalDir);
-		MineTweakerAPI.tweaker.setScriptProvider(scriptsGlobal);
+		MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
 	}
 	
 	public void onPlayerLogin(Player player, NetHandler netHandler, INetworkManager manager) {
 		networkByUser.put(netHandler.getPlayer().username, manager);
 		userByNetwork.put(manager, netHandler);
 		
-		MineTweakerImplementationAPI.events.publishPlayerLoggedIn(new PlayerLoggedInEvent(MineTweakerMC.getIPlayer(netHandler.getPlayer())));
+		MineTweakerImplementationAPI.events.publishPlayerLoggedIn(
+				new PlayerLoggedInEvent(MineTweakerMC.getIPlayer(netHandler.getPlayer())));
 	}
 	
 	public void onPlayerLogout(INetworkManager manager) {
@@ -101,7 +103,9 @@ public class MineTweakerMod {
 			String name = netHandler.getPlayer().username;
 			networkByUser.remove(name);
 			userByNetwork.remove(manager);
-			MineTweakerImplementationAPI.events.publishPlayerLoggedOut(new PlayerLoggedOutEvent(MineTweakerMC.getIPlayer(netHandler.getPlayer())));
+			
+			MineTweakerImplementationAPI.events.publishPlayerLoggedOut(
+					new PlayerLoggedOutEvent(MineTweakerMC.getIPlayer(netHandler.getPlayer())));
 		}
 	}
 	
@@ -145,13 +149,11 @@ public class MineTweakerMod {
 			scriptsDir.mkdir();
 		}
 		
-		MineTweakerAPI.server = new MCServer(ev.getServer());
-		
 		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
 		IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal, scriptsLocal);
-		MineTweakerAPI.tweaker.setScriptProvider(cascaded);
 		
-		MineTweakerImplementationAPI.onServerStart();
+		MineTweakerImplementationAPI.setScriptProvider(cascaded);
+		MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
 	}
 	
 	@EventHandler
@@ -163,7 +165,7 @@ public class MineTweakerMod {
 	public void onServerStopped(FMLServerStoppedEvent ev) {
 		System.out.println("[MineTweaker] Server stopped");
 		
-		MineTweakerAPI.server = null;
 		MineTweakerImplementationAPI.onServerStop();
+		MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
 	}
 }

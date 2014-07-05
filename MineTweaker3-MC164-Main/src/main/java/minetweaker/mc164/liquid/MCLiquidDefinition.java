@@ -6,11 +6,22 @@
 
 package minetweaker.mc164.liquid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.mc164.util.MineTweakerHacks;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
@@ -18,6 +29,10 @@ import net.minecraftforge.fluids.FluidStack;
  * @author Stan
  */
 public class MCLiquidDefinition implements ILiquidDefinition {
+	private static final Map<List, FluidContainerData> containerFluidMap = MineTweakerHacks.getFluidContainerMap();
+	private static final Map<List, FluidContainerData> filledContainerMap = MineTweakerHacks.getFilledContainerMap();
+	private static final Set<List> emptyContainers = MineTweakerHacks.getEmptyContainers();
+	
 	private final Fluid fluid;
 	
 	public MCLiquidDefinition(Fluid fluid) {
@@ -46,7 +61,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public void setLuminosity(int value) {
-		MineTweakerAPI.tweaker.apply(new ActionSetLuminosity(value));
+		MineTweakerAPI.apply(new ActionSetLuminosity(value));
 	}
 
 	@Override
@@ -56,7 +71,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public void setDensity(int density) {
-		MineTweakerAPI.tweaker.apply(new ActionSetDensity(density));
+		MineTweakerAPI.apply(new ActionSetDensity(density));
 	}
 
 	@Override
@@ -66,7 +81,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public void setTemperature(int temperature) {
-		MineTweakerAPI.tweaker.apply(new ActionSetTemperature(temperature));
+		MineTweakerAPI.apply(new ActionSetTemperature(temperature));
 	}
 
 	@Override
@@ -76,7 +91,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public void setViscosity(int viscosity) {
-		MineTweakerAPI.tweaker.apply(new ActionSetViscosity(viscosity));
+		MineTweakerAPI.apply(new ActionSetViscosity(viscosity));
 	}
 
 	@Override
@@ -86,12 +101,143 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public void setGaseous(boolean gaseous) {
-		MineTweakerAPI.tweaker.apply(new ActionSetGaseous(gaseous));
+		MineTweakerAPI.apply(new ActionSetGaseous(gaseous));
+	}
+
+	@Override
+	public List<IItemStack> getContainers() {
+		List<IItemStack> result = new ArrayList<IItemStack>();
+		for (FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()) {
+			if (data.fluid.getFluid() == fluid) {
+				result.add(MineTweakerMC.getIItemStack(data.filledContainer));
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public void addContainer(IItemStack filled, IItemStack empty, int amount) {
+		MineTweakerAPI.apply(new AddContainerAction(filled, empty, amount));
+	}
+
+	@Override
+	public void removeContainer(IItemStack filled) {
+		MineTweakerAPI.apply(new RemoveContainerAction(filled));
+	}
+	
+	// #######################
+	// ### Private methods ###
+	// #######################
+	
+	private void removeContainerInner(IItemStack filled) {
+		ItemStack filledItem = MineTweakerMC.getItemStack(filled);
+		FluidContainerData data = filledContainerMap.get(Arrays.asList(filledItem.itemID, filledItem.getItemDamage()));
+		if (data != null) {
+			filledContainerMap.remove(Arrays.asList(filledItem.itemID, filledItem.getItemDamage()));
+			containerFluidMap.remove(Arrays.asList(data.emptyContainer.itemID, data.emptyContainer.getItemDamage()));
+			
+			// rebuild empty containers set
+			emptyContainers.clear();
+			for (FluidContainerData fdata : filledContainerMap.values()) {
+				emptyContainers.add(Arrays.asList(fdata.emptyContainer.itemID, fdata.emptyContainer.getItemDamage()));
+			}
+		}
+	}
+	
+	private FluidContainerData getData(IItemStack filled) {
+		ItemStack filledStack = MineTweakerMC.getItemStack(filled);
+		return filledContainerMap.get(Arrays.asList(filledStack.itemID, filledStack.getItemDamage()));
 	}
 	
 	// ######################
 	// ### Action classes ###
 	// ######################
+	
+	private class AddContainerAction implements IUndoableAction {
+		private final IItemStack filled;
+		private final IItemStack empty;
+		private final int amount;
+		
+		public AddContainerAction(IItemStack filled, IItemStack empty, int amount) {
+			this.filled = filled;
+			this.empty = empty;
+			this.amount = amount;
+		}
+
+		@Override
+		public void apply() {
+			FluidContainerRegistry.registerFluidContainer(new FluidStack(fluid, amount), MineTweakerMC.getItemStack(filled), MineTweakerMC.getItemStack(empty));
+		}
+
+		@Override
+		public boolean canUndo() {
+			return true;
+		}
+
+		@Override
+		public void undo() {
+			removeContainerInner(filled);
+		}
+
+		@Override
+		public String describe() {
+			return "Adding " + filled.getDisplayName() + " as liquid container for " + fluid.getLocalizedName();
+		}
+
+		@Override
+		public String describeUndo() {
+			return "Removing liquid container " + filled;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+	}
+	
+	private class RemoveContainerAction implements IUndoableAction {
+		private final IItemStack filled;
+		private final IItemStack empty;
+		private final FluidStack amount;
+		
+		public RemoveContainerAction(IItemStack filled) {
+			this.filled = filled;
+			
+			FluidContainerData data = getData(filled);
+			empty = MineTweakerMC.getIItemStack(data.emptyContainer);
+			amount = data.fluid;
+		}
+
+		@Override
+		public void apply() {
+			removeContainerInner(filled);
+		}
+
+		@Override
+		public boolean canUndo() {
+			return true;
+		}
+
+		@Override
+		public void undo() {
+			FluidContainerRegistry.registerFluidContainer(amount, MineTweakerMC.getItemStack(filled), MineTweakerMC.getItemStack(empty));
+		}
+
+		@Override
+		public String describe() {
+			return "Removing liquid container " + filled;
+		}
+
+		@Override
+		public String describeUndo() {
+			return "Restoring liquid container " + filled;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+	}
 	
 	private class ActionSetLuminosity implements IUndoableAction {
 		private final int oldValue;

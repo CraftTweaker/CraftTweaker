@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker;
 
 import minetweaker.api.logger.MTLogger;
@@ -13,25 +7,33 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import static minetweaker.MineTweakerAPI.server;
 import minetweaker.api.event.IPlayerLoggedInEventHandler;
 import minetweaker.api.event.IPlayerLoggedOutEventHandler;
 import minetweaker.api.event.MTEventManager;
 import minetweaker.api.event.PlayerLoggedInEvent;
 import minetweaker.api.event.PlayerLoggedOutEvent;
+import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.mods.ILoadedMods;
 import minetweaker.api.mods.IMod;
+import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
+import minetweaker.api.recipes.IFurnaceManager;
+import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandValidator;
+import minetweaker.api.server.IServer;
+import minetweaker.runtime.IScriptProvider;
 
 /**
- *
- * @author Stan
+ * The implementation API is used by API implementations for internal communication
+ * and initialization.
+ * 
+ * @author Stan Hebben
  */
 public class MineTweakerImplementationAPI {
 	private static final Map<String, MineTweakerCommand> minetweakerCommands;
@@ -76,7 +78,7 @@ public class MineTweakerImplementationAPI {
 						// getDisplayName on an item stack that doesn't contain valid NBT data
 					}
 
-					MineTweakerAPI.getLogger().logCommand("<" + item.getId() + ">" + displayName);
+					MineTweakerAPI.logCommand("<" + item.getId() + ">" + displayName);
 				}
 				
 				if (player != null) {
@@ -98,7 +100,7 @@ public class MineTweakerImplementationAPI {
 				Collections.sort(liquids, LIQUID_COMPARATOR);
 				for (ILiquidDefinition liquid : liquids) {
 					System.out.println("Liquid " + liquid.getName());
-					MineTweakerAPI.getLogger().logCommand("<" + liquid.getName() + "> -- " + liquid.getDisplayName());
+					MineTweakerAPI.logCommand("<" + liquid.getName() + "> -- " + liquid.getDisplayName());
 				}
 				
 				if (player != null) {
@@ -156,17 +158,17 @@ public class MineTweakerImplementationAPI {
 						player.sendChat(platform.getMessage("Entry doesn't exist"));
 						return;
 					} else {
-						MineTweakerAPI.getLogger().logCommand("Ore entries for " + entryName + ":");
+						MineTweakerAPI.logCommand("Ore entries for " + entryName + ":");
 						for (IItemStack ore : entry.getItems()) {
-							MineTweakerAPI.getLogger().logCommand("    " + ore);
+							MineTweakerAPI.logCommand("    " + ore);
 						}
 					}
 				} else {
 					for (IOreDictEntry entry : MineTweakerAPI.oreDict.getEntries()) {
 						if (!entry.isEmpty()) {
-							MineTweakerAPI.getLogger().logCommand("Ore entries for <ore:" + entry.getName() + "> :");
+							MineTweakerAPI.logCommand("Ore entries for <ore:" + entry.getName() + "> :");
 							for (IItemStack ore : entry.getItems()) {
-								MineTweakerAPI.getLogger().logCommand("    " + ore);
+								MineTweakerAPI.logCommand("    " + ore);
 							}
 						}
 					}
@@ -183,11 +185,11 @@ public class MineTweakerImplementationAPI {
 				}, new ICommandFunction() {
 			@Override
 			public void execute(String[] arguments, IPlayer player) {
-				MineTweakerAPI.getLogger().logCommand("Mods list:");
+				MineTweakerAPI.logCommand("Mods list:");
 				for (IMod mod : MineTweakerAPI.loadedMods) {
 					String message = mod.getId() + " - " + mod.getName() + " - " + mod.getVersion();
 					player.sendChat(platform.getMessage(message));
-					MineTweakerAPI.getLogger().logCommand("Mod: " + message);
+					MineTweakerAPI.logCommand("Mod: " + message);
 				}
 			}
 		}));
@@ -217,7 +219,7 @@ public class MineTweakerImplementationAPI {
 							player.sendChat(platform.getMessage(description.toString()));
 						}
 					} catch (NumberFormatException e) {
-						MineTweakerAPI.getLogger().logCommand("ID must be an integer");
+						MineTweakerAPI.logCommand("ID must be an integer");
 					}
 				}
 			}
@@ -266,6 +268,9 @@ public class MineTweakerImplementationAPI {
 	 */
 	public static final MTEventManager events = new MTEventManager();
 	
+	/**
+	 * Access point to the internal logger instance.
+	 */
 	public static final MTLogger logger = new MTLogger();
 	
 	/**
@@ -273,14 +278,58 @@ public class MineTweakerImplementationAPI {
 	 */
 	public static IPlatformFunctions platform = null;
 	
-	public static void onServerStart() {
+	/**
+	 * Initializes the MineTweaker API.
+	 * 
+	 * @param oreDict ore dictionary interface
+	 * @param recipes recipe manager interface
+	 * @param furnace furnace manager interface
+	 * @param game game interface
+	 * @param mods mods interface
+	 */
+	public static void init(
+			IOreDict oreDict,
+			IRecipeManager recipes,
+			IFurnaceManager furnace,
+			IGame game,
+			ILoadedMods mods) {
+		MineTweakerAPI.oreDict = oreDict;
+		MineTweakerAPI.recipes = recipes;
+		MineTweakerAPI.furnace = furnace;
+		MineTweakerAPI.game = game;
+		MineTweakerAPI.loadedMods = mods;
+	}
+	
+	/**
+	 * Must be called upon server start.
+	 * 
+	 * @param server server interface
+	 */
+	public static void onServerStart(IServer server) {
+		MineTweakerAPI.server = server;
 		reload();
 	}
 	
+	/**
+	 * Must be called upon server stop.
+	 */
 	public static void onServerStop() {
-		
+		MineTweakerAPI.server = null;
 	}
 	
+	/**
+	 * Sets the script provider.
+	 * 
+	 * @param provider script provider
+	 */
+	public static void setScriptProvider(IScriptProvider provider) {
+		MineTweakerAPI.tweaker.setScriptProvider(provider);
+	}
+	
+	/**
+	 * Called to reload scripts. Must be called after setting a new script
+	 * provider in order to reload scripts.
+	 */
 	public static void reload() {
 		logger.clear();
 		events.clear();
@@ -330,25 +379,20 @@ public class MineTweakerImplementationAPI {
 		}
 	}
 	
+	/**
+	 * Adds a new minetweaker command. Can be called with /mt &lt;command&;gt; &lt;arguments&gt;.
+	 * 
+	 * @param name command name
+	 * @param description description strings
+	 * @param function command implementation
+	 */
 	public static void addMineTweakerCommand(String name, String[] description, ICommandFunction function) {
-		MineTweakerAPI.tweaker.apply(new AddMineTweakerCommandAction(new MineTweakerCommand(name, description, function)));
+		MineTweakerAPI.apply(new AddMineTweakerCommandAction(new MineTweakerCommand(name, description, function)));
 	}
 	
-	public static void callMineTweakerCommand(String[] arguments, IPlayer player) {
-		if (minetweakerCommands.containsKey(arguments[0])) {
-			minetweakerCommands.get(arguments[0]).function.execute(
-					Arrays.copyOfRange(arguments, 1, arguments.length),
-					player);
-		}
-	}
-	
-	public static Set<String> getMineTweakerCommands() {
-		return minetweakerCommands.keySet();
-	}
-	
-	public static String[] getMineTweakerCommandDescription(String command) {
-		return minetweakerCommands.get(command).description;
-	}
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddMineTweakerCommandAction implements IUndoableAction {
 		private final MineTweakerCommand command;
@@ -387,6 +431,10 @@ public class MineTweakerImplementationAPI {
 			return null;
 		}
 	}
+	
+	// #############################
+	// ### Private inner classes ###
+	// #############################
 	
 	private static class MineTweakerCommand {
 		private final String name;

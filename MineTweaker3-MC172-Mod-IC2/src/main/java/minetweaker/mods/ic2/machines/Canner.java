@@ -29,22 +29,22 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class Canner {
 	@ZenMethod
 	public static void addBottleRecipe(IIngredient container, IIngredient fill, IItemStack output) {
-		MineTweakerAPI.tweaker.apply(new AddBottleIngredientAction(container, fill, output));
+		MineTweakerAPI.apply(new AddBottleIngredientAction(container, fill, output));
 	}
 	
 	@ZenMethod
 	public static void addBottleRecipe(IIngredient container, ILiquidStack liquid, IItemStack output) {
-		MineTweakerAPI.tweaker.apply(new AddBottleLiquidAction(container, liquid, output));
+		MineTweakerAPI.apply(new AddBottleLiquidAction(container, liquid, output));
 	}
 	
 	@ZenMethod
 	public static void addEnrichRecipe(ILiquidStack input, IIngredient additive, ILiquidStack output) {
-		MineTweakerAPI.tweaker.apply(new AddEnrichIngredientAction(input, additive, output));
+		MineTweakerAPI.apply(new AddEnrichIngredientAction(input, additive, output));
 	}
 	
 	@ZenMethod
 	public static void addEnrichRecipe(ILiquidStack input, ILiquidStack additive, ILiquidStack output) {
-		MineTweakerAPI.tweaker.apply(new AddEnrichLiquidAction(input, additive, output));
+		MineTweakerAPI.apply(new AddEnrichLiquidAction(input, additive, output));
 	}
 	
 	private static class AddBottleIngredientAction extends OneWayAction {

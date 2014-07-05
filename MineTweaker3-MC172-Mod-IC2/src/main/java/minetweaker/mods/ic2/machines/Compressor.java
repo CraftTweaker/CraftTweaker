@@ -38,9 +38,9 @@ public class Compressor {
 			@NotNull IItemStack output,
 			@NotNull IIngredient ingredient) {
 		if (ingredient.getAmount() < 0) {
-			MineTweakerAPI.getLogger().logWarning("invalid ingredient: " + ingredient + " - stack size not known");
+			MineTweakerAPI.logWarning("invalid ingredient: " + ingredient + " - stack size not known");
 		} else {
-			MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
+			MineTweakerAPI.apply(new MachineAddRecipeAction(
 					"compressor",
 					Recipes.compressor,
 					getItemStacks(output),

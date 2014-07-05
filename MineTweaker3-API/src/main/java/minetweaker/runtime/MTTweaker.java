@@ -45,7 +45,7 @@ public class MTTweaker implements ITweaker {
 	
 	@Override
 	public void apply(IUndoableAction action) {
-		MineTweakerAPI.getLogger().logInfo(action.describe());
+		MineTweakerAPI.logInfo(action.describe());
 		
 		Object overrideKey = action.getOverrideKey();
 		if (wereStuck.contains(action)) {
@@ -76,10 +76,10 @@ public class MTTweaker implements ITweaker {
 		for (int i = actions.size() - 1; i >= 0; i--) {
 			IUndoableAction action = actions.get(i);
 			if (action.canUndo()) {
-				MineTweakerAPI.getLogger().logInfo(action.describeUndo());
+				MineTweakerAPI.logInfo(action.describeUndo());
 				action.undo();
 			} else {
-				MineTweakerAPI.getLogger().logInfo("[Stuck] " + action.describe());
+				MineTweakerAPI.logInfo("[Stuck] " + action.describe());
 				stuck.add(0, action);
 				wereStuck.add(action);
 				
@@ -129,12 +129,12 @@ public class MTTweaker implements ITweaker {
 						ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
 						files.add(pfile);
 					} catch (IOException ex) {
-						MineTweakerAPI.getLogger().logError("Could not load script " + script.getName() + ": " + ex.getMessage());
+						MineTweakerAPI.logError("Could not load script " + script.getName() + ": " + ex.getMessage());
 					} catch (ParseException ex) {
 						//ex.printStackTrace();
-						MineTweakerAPI.getLogger().logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
+						MineTweakerAPI.logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
 					} catch (Exception ex) {
-						MineTweakerAPI.getLogger().logError("Error loading " + script.getName() + ": " + ex.toString());
+						MineTweakerAPI.logError("Error loading " + script.getName() + ": " + ex.toString());
 						ex.printStackTrace();
 					}
 					
@@ -154,16 +154,16 @@ public class MTTweaker implements ITweaker {
 					ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());
 					module.getMain().run();
 				} catch (Exception ex) {
-					MineTweakerAPI.getLogger().logError("Error executing " + script.getGroupName() + ": " + ex.getMessage());
+					MineTweakerAPI.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage());
 					ex.printStackTrace();
 				}
 			}
 		}
 		
 		if (wereStuck.size() > 0) {
-			MineTweakerAPI.getLogger().logWarning(Integer.toString(wereStuck.size()) + " modifications were stuck");
+			MineTweakerAPI.logWarning(Integer.toString(wereStuck.size()) + " modifications were stuck");
 			for (IUndoableAction action : wereStuck) {
-				MineTweakerAPI.getLogger().logInfo("Stuck: " + action.describe());
+				MineTweakerAPI.logInfo("Stuck: " + action.describe());
 			}
 		}
 	}

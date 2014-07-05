@@ -68,13 +68,14 @@ public class MineTweakerMod {
 	private final IScriptProvider scriptsGlobal;
 	
 	public MineTweakerMod() {
-		MineTweakerAPI.oreDict = new MCOreDict();
-		MineTweakerAPI.recipes = recipes = new MCRecipeManager();
-		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
-		MineTweakerAPI.game = MCGame.INSTANCE;
-		MineTweakerAPI.furnace = new MCFurnaceManager();
-		MineTweakerAPI.loadedMods = new MCLoadedMods();
+		MineTweakerImplementationAPI.init(
+				new MCOreDict(),
+				recipes = new MCRecipeManager(),
+				new MCFurnaceManager(),
+				MCGame.INSTANCE,
+				new MCLoadedMods());
 		
+		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");
@@ -83,7 +84,7 @@ public class MineTweakerMod {
 		}
 		
 		scriptsGlobal = new ScriptProviderDirectory(globalDir);
-		MineTweakerAPI.tweaker.setScriptProvider(scriptsGlobal);
+		MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
 	}
 	
 	// ##########################
@@ -111,20 +112,16 @@ public class MineTweakerMod {
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-		System.out.println("[MineTweaker] Server about to start");
 		
 		File scriptsDir = new File(MineTweakerHacks.getWorldDirectory(ev.getServer()), "scripts");
 		if (!scriptsDir.exists()) {
 			scriptsDir.mkdir();
 		}
 		
-		MineTweakerAPI.server = new MCServer(ev.getServer());
-		
 		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
 		IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal, scriptsLocal);
-		MineTweakerAPI.tweaker.setScriptProvider(cascaded);
-		
-		MineTweakerImplementationAPI.onServerStart();
+		MineTweakerImplementationAPI.setScriptProvider(cascaded);
+		MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
 	}
 	
 	@EventHandler
@@ -134,9 +131,7 @@ public class MineTweakerMod {
 	
 	@EventHandler
 	public void onServerStopped(FMLServerStoppedEvent ev) {
-		System.out.println("[MineTweaker] Server stopped");
-		
-		MineTweakerAPI.server = null;
 		MineTweakerImplementationAPI.onServerStop();
+		MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
 	}
 }

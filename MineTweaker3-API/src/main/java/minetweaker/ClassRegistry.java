@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker;
 
 import java.util.List;
 
 /**
- *
- * @author Stan
+ * The class registry provides the list of annotated classes to the scripting
+ * system.
+ * 
+ * @author Stan Hebben
  */
 public class ClassRegistry {
 	public static void getClasses(List<Class> output) {

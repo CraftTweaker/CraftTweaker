@@ -47,9 +47,9 @@ public class MCFurnaceManager implements IFurnaceManager {
 		}
 		
 		if (toRemove.isEmpty()) {
-			MineTweakerAPI.getLogger().logWarning("No furnace recipes for " + output.toString());
+			MineTweakerAPI.logWarning("No furnace recipes for " + output.toString());
 		} else {
-			MineTweakerAPI.tweaker.apply(new RemoveAction(toRemove, toRemoveValues));
+			MineTweakerAPI.apply(new RemoveAction(toRemove, toRemoveValues));
 		}
 	}
 
@@ -57,17 +57,17 @@ public class MCFurnaceManager implements IFurnaceManager {
 	public void addRecipe(IItemStack output, IIngredient input, double xp) {
 		List<IItemStack> items = input.getItems();
 		if (items == null) {
-			MineTweakerAPI.getLogger().logError("Cannot turn " + input.toString() + " into a furnace recipe");
+			MineTweakerAPI.logError("Cannot turn " + input.toString() + " into a furnace recipe");
 		}
 		
 		ItemStack[] items2 = getItemStacks(items);
 		ItemStack output2 = getItemStack(output);
-		MineTweakerAPI.tweaker.apply(new AddRecipeAction(input, items2, output2, xp));
+		MineTweakerAPI.apply(new AddRecipeAction(input, items2, output2, xp));
 	}
 
 	@Override
 	public void setFuel(IIngredient item, int fuel) {
-		MineTweakerAPI.tweaker.apply(new SetFuelAction(new SetFuelPattern(item, fuel)));
+		MineTweakerAPI.apply(new SetFuelAction(new SetFuelPattern(item, fuel)));
 	}
 
 	@Override

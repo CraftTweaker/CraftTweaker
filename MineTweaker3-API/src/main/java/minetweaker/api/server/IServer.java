@@ -6,6 +6,9 @@
 
 package minetweaker.api.server;
 
+import minetweaker.api.event.IEventHandle;
+import minetweaker.api.event.IPlayerLoggedInEventHandler;
+import minetweaker.api.event.IPlayerLoggedOutEventHandler;
 import minetweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -34,4 +37,10 @@ public interface IServer {
 	
 	@ZenMethod
 	public boolean isOp(IPlayer player);
+	
+	@ZenMethod
+	public IEventHandle onPlayerLoggedIn(IPlayerLoggedInEventHandler ev);
+	
+	@ZenMethod
+	public IEventHandle onPlayerLoggedOut(IPlayerLoggedOutEventHandler ev);
 }

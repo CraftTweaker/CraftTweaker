@@ -1,17 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.data;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- *
- * @author Stan
+ * Contains a 64-bit long value.
+ * 
+ * @author Stan Hebben
  */
 public class DataLong implements IData {
 	private final long value;

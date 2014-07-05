@@ -58,7 +58,7 @@ public class MCPlayer implements IPlayer {
 		Object internal = message.getInternal();
 		if (!(internal instanceof ChatMessageComponent)) {
 			//throw new RuntimeException("Not a valid chat message: " + internal);
-			MineTweakerAPI.getLogger().logError("not a valid chat message");
+			MineTweakerAPI.logError("not a valid chat message");
 			return;
 		}
 		player.sendChatToPlayer((ChatMessageComponent) internal);

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.item;
 
 import java.util.Collections;
@@ -11,8 +5,9 @@ import java.util.List;
 import minetweaker.util.ArrayUtil;
 
 /**
- *
- * @author Stan
+ * Contains an item stack with modifiers applied to it.
+ * 
+ * @author Stan Hebben
  */
 public class IngredientItem implements IIngredient {
 	private final IItemStack item;

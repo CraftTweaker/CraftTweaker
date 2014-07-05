@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.data;
 
 import java.util.List;
@@ -18,8 +12,11 @@ import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Generic data interface. A data element may contain any kind of basic data
+ * element (bool, byte, short, int, long, float, double, string, list, map,
+ * int array or byte array). Used to store data with stacks, blocks, world, ...
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("minetweaker.data.IData")
 public interface IData {

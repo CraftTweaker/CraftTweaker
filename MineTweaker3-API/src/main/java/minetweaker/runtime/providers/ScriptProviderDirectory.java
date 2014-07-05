@@ -41,7 +41,7 @@ public class ScriptProviderDirectory implements IScriptProvider {
 					try {
 						scripts.add(new ScriptIteratorZip(file));
 					} catch (IOException ex) {
-						MineTweakerAPI.getLogger().logError("Could not load " + file.getName() + ": " + ex.getMessage());
+						MineTweakerAPI.logError("Could not load " + file.getName() + ": " + ex.getMessage());
 					}
 				}
 			}

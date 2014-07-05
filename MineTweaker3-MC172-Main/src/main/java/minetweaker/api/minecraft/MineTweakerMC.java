@@ -35,7 +35,7 @@ public class MineTweakerMC {
 	public static ItemStack getItemStack(IItemStack item) {
 		Object internal = item.getInternal();
 		if (internal == null || !(internal instanceof ItemStack)) {
-			MineTweakerAPI.getLogger().logError("Not a valid item stack: " + item);
+			MineTweakerAPI.logError("Not a valid item stack: " + item);
 		}
 		return (ItemStack) internal;
 	}
@@ -50,7 +50,7 @@ public class MineTweakerMC {
 	public static ItemStack getItemStack(IIngredient ingredient) {
 		List<IItemStack> items = ingredient.getItems();
 		if (items.size() != 1) {
-			MineTweakerAPI.getLogger().logError("Not an ingredient with a single item: " + ingredient);
+			MineTweakerAPI.logError("Not an ingredient with a single item: " + ingredient);
 		}
 		return getItemStack(items.get(0));
 	}
@@ -143,7 +143,7 @@ public class MineTweakerMC {
 			if (internal != null && internal instanceof ItemStack) {
 				output[i] = (ItemStack) internal;
 			} else {
-				MineTweakerAPI.getLogger().logError("Invalid item stack: " + items.get(i));
+				MineTweakerAPI.logError("Invalid item stack: " + items.get(i));
 			}
 		}
 		return output;
@@ -208,7 +208,7 @@ public class MineTweakerMC {
 	 */
 	public static EntityPlayer getPlayer(IPlayer player) {
 		if (!(player instanceof MCPlayer)) {
-			MineTweakerAPI.getLogger().logError("Invalid player: " + player);
+			MineTweakerAPI.logError("Invalid player: " + player);
 		}
 		
 		return ((MCPlayer) player).getInternal();

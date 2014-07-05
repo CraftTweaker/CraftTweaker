@@ -35,7 +35,7 @@ public class MetalFormer {
 	 */
 	@ZenMethod
 	public static void addExtrudingRecipe(IItemStack output, IIngredient input) {
-		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
+		MineTweakerAPI.apply(new MachineAddRecipeAction(
 				"metal former - extruding",
 				Recipes.metalformerExtruding,
 				getItemStacks(output),
@@ -64,7 +64,7 @@ public class MetalFormer {
 	 */
 	@ZenMethod
 	public static void addRollingRecipe(IItemStack output, IIngredient input) {
-		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
+		MineTweakerAPI.apply(new MachineAddRecipeAction(
 				"metal former - rolling",
 				Recipes.metalformerRolling,
 				getItemStacks(output),
@@ -92,7 +92,7 @@ public class MetalFormer {
 	 */
 	@ZenMethod
 	public static void addCuttingRecipe(IItemStack output, IIngredient input) {
-		MineTweakerAPI.tweaker.apply(new MachineAddRecipeAction(
+		MineTweakerAPI.apply(new MachineAddRecipeAction(
 				"metal former - cutting",
 				Recipes.metalformerCutting,
 				getItemStacks(output),

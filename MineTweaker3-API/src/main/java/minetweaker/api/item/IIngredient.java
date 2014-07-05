@@ -115,6 +115,11 @@ public interface IIngredient {
 	@ZenMethod
 	public IItemStack applyTransform(IItemStack item);
 	
+	/**
+	 * Checks if this ingredient has (or could have) any transformatiosns.
+	 * 
+	 * @return true if there are (or could be) any transformations false otherwise.
+	 */
 	@ZenGetter("hasTransformations")
 	public boolean hasTransformers();
 	

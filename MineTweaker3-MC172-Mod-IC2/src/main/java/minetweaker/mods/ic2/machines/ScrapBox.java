@@ -40,7 +40,7 @@ public class ScrapBox {
 	 */
 	@ZenMethod
 	public static void addDrop(WeightedItemStack stack) {
-		MineTweakerAPI.tweaker.apply(new AddDropAction(stack));
+		MineTweakerAPI.apply(new AddDropAction(stack));
 	}
 	
 	private static class AddDropAction extends OneWayAction {

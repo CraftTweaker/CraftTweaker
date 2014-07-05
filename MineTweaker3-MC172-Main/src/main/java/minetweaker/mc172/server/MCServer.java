@@ -13,10 +13,10 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
+import minetweaker.api.server.AbstractServer;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandTabCompletion;
 import minetweaker.api.server.ICommandValidator;
-import minetweaker.api.server.IServer;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -27,7 +27,7 @@ import net.minecraft.server.MinecraftServer;
  *
  * @author Stan
  */
-public class MCServer implements IServer {
+public class MCServer extends AbstractServer {
 	private final MinecraftServer server;
 	
 	public MCServer(MinecraftServer server) {
@@ -37,24 +37,19 @@ public class MCServer implements IServer {
 	@Override
 	public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion) {
 		ICommand command = new MCCommand(name, usage, aliases, function, validator, completion);
-		MineTweakerAPI.tweaker.apply(new AddCommandAction(command));
+		MineTweakerAPI.apply(new AddCommandAction(command));
 	}
 	
 	@Override
 	public void removeCommand(String name) {
 		ICommand command = (ICommand)((CommandHandler) server.getCommandManager()).getCommands().get(name);
 		if (command == null) {
-			MineTweakerAPI.getLogger().logWarning("No such command: " + name);
+			MineTweakerAPI.logWarning("No such command: " + name);
 		} else {
-			MineTweakerAPI.tweaker.apply(new RemoveCommandAction(command));
+			MineTweakerAPI.apply(new RemoveCommandAction(command));
 		}
 	}
 
-	@Override
-	public void addMineTweakerCommand(String name, String[] usage, ICommandFunction function) {
-		MineTweakerImplementationAPI.addMineTweakerCommand(name, usage, function);
-	}
-	
 	@Override
 	public boolean isOp(IPlayer player) {
 		return MinecraftServer.getServer().getConfigurationManager().getOps().isEmpty()

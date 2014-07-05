@@ -21,7 +21,6 @@ import minetweaker.runtime.MTTweaker;
 import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.recipes.IFurnaceManager;
-import minetweaker.api.resource.IResourceManager;
 import minetweaker.api.server.IServer;
 import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -61,12 +60,14 @@ public class MineTweakerAPI {
 		}
 		
 		registerGlobalSymbol("logger", getJavaStaticGetterSymbol(MineTweakerAPI.class, "getLogger"));
-		registerGlobalSymbol("tweaker", getJavaStaticFieldSymbol(MineTweakerAPI.class, "tweaker"));
 		registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(MineTweakerAPI.class, "recipes"));
 		registerGlobalSymbol("furnace", getJavaStaticFieldSymbol(MineTweakerAPI.class, "furnace"));
 		registerGlobalSymbol("oreDict", getJavaStaticFieldSymbol(MineTweakerAPI.class, "oreDict"));
 		registerGlobalSymbol("events", getJavaStaticFieldSymbol(MineTweakerAPI.class, "events"));
 		registerGlobalSymbol("server", getJavaStaticFieldSymbol(MineTweakerAPI.class, "server"));
+		registerGlobalSymbol("client", getJavaStaticFieldSymbol(MineTweakerAPI.class, "client"));
+		registerGlobalSymbol("game", getJavaStaticFieldSymbol(MineTweakerAPI.class, "game"));
+		registerGlobalSymbol("loadedMods", getJavaStaticFieldSymbol(MineTweakerAPI.class, "loadedMods"));
 	}
 	
 	private MineTweakerAPI() {}
@@ -128,10 +129,61 @@ public class MineTweakerAPI {
 	public static ILoadedMods loadedMods = null;
 	
 	/**
-	 * Access point to the global resource manager. Note that each script group also
-	 * has its own local resource manager.
+	 * Applies this given action.
+	 * 
+	 * @param action action object
 	 */
-	public static IResourceManager resources = null;
+	public static void apply(IUndoableAction action) {
+		tweaker.apply(action);
+	}
+	
+	/**
+	 * Logs a command message. Commands messages are those generated as output
+	 * in response to a command.
+	 * 
+	 * @param message command message
+	 */
+	public static void logCommand(String message) {
+		getLogger().logCommand(message);
+	}
+	
+	/**
+	 * Logs an info message. Info messages have low priority and will only be
+	 * displayed in the log files, but not directly to players in-game.
+	 * 
+	 * @param message info message
+	 */
+	public static void logInfo(String message) {
+		getLogger().logInfo(message);
+	}
+	
+	/**
+	 * Logs a warning message. Warning messages are displayed to admins and
+	 * indicate that there is an issue. However, the issue is not a large
+	 * problem, and everything should run fine - besides perhaps a few things
+	 * not entirely working as expected.
+	 * 
+	 * @param message warning message
+	 */
+	public static void logWarning(String message) {
+		getLogger().logWarning(message);
+	}
+	
+	/**
+	 * Logs an error message. Error messages indicate a real problem and
+	 * indicate that things won't run properly. The scripting system will
+	 * still make a best-effort attempt at executing the rest of the scripts,
+	 * but that might cause additional errors and issues.
+	 * 
+	 * @param message error message
+	 */
+	public static void logError(String message) {
+		getLogger().logError(message);
+	}
+	
+	// ###################################
+	// ### Plugin registration methods ###
+	// ###################################
 	
 	/**
 	 * Register a class registry class. Such class must have (at least) a public
@@ -173,6 +225,13 @@ public class MineTweakerAPI {
 		}
 	}
 	
+	/**
+	 * Registers a class registry. Will attempt to resolve the given class
+	 * name. Does nothing if the class could not be loaded.
+	 * 
+	 * @param className class name to be loaded
+	 * @return true if registration was successful
+	 */
 	public static boolean registerClassRegistry(String className) {
 		try {
 			registerClassRegistry(Class.forName(className));
@@ -218,8 +277,8 @@ public class MineTweakerAPI {
 	 * Registers a global symbol. Global symbols are immediately accessible from
 	 * anywhere in the scripts.
 	 * 
-	 * @param name
-	 * @param symbol 
+	 * @param name symbol name
+	 * @param symbol symbol
 	 */
 	public static void registerGlobalSymbol(String name, IZenSymbol symbol) {
 		GlobalRegistry.registerGlobal(name, symbol);

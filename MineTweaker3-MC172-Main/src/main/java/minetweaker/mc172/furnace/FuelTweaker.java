@@ -47,7 +47,7 @@ public class FuelTweaker {
 	public void addFuelPattern(SetFuelPattern pattern) {
 		List<IItemStack> items = pattern.getPattern().getItems();
 		if (items == null) {
-			MineTweakerAPI.getLogger().logError("Cannot set fuel for <*>");
+			MineTweakerAPI.logError("Cannot set fuel for <*>");
 			return;
 		}
 		
