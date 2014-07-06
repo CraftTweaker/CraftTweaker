@@ -28,22 +28,22 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ModOnly("IC2")
 public class Canner {
 	@ZenMethod
-	public static void addBottleRecipe(IIngredient container, IIngredient fill, IItemStack output) {
+	public static void addBottleRecipe(IItemStack output, IIngredient container, IIngredient fill) {
 		MineTweakerAPI.apply(new AddBottleIngredientAction(container, fill, output));
 	}
 	
 	@ZenMethod
-	public static void addBottleRecipe(IIngredient container, ILiquidStack liquid, IItemStack output) {
+	public static void addBottleRecipe(IItemStack output, IIngredient container, ILiquidStack liquid) {
 		MineTweakerAPI.apply(new AddBottleLiquidAction(container, liquid, output));
 	}
 	
 	@ZenMethod
-	public static void addEnrichRecipe(ILiquidStack input, IIngredient additive, ILiquidStack output) {
+	public static void addEnrichRecipe(ILiquidStack output, ILiquidStack input, IIngredient additive) {
 		MineTweakerAPI.apply(new AddEnrichIngredientAction(input, additive, output));
 	}
 	
 	@ZenMethod
-	public static void addEnrichRecipe(ILiquidStack input, ILiquidStack additive, ILiquidStack output) {
+	public static void addEnrichRecipe(ILiquidStack output, ILiquidStack input, ILiquidStack additive) {
 		MineTweakerAPI.apply(new AddEnrichLiquidAction(input, additive, output));
 	}
 	

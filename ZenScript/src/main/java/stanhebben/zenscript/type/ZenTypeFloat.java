@@ -29,7 +29,7 @@ public class ZenTypeFloat extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return (type.getNumberType() != 0 && type.getNumberType() <= NUM_FLOAT)
+		return (type.getNumberType() != 0 && type.getNumberType() >= NUM_FLOAT)
 				|| type == ZenTypeString.INSTANCE
 				|| canCastExpansion(environment, type);
 	}

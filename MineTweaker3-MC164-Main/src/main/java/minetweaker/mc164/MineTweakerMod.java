@@ -49,7 +49,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.0")
+@Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.3")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = {MCPacketHandler.CHANNEL_SERVERSCRIPT, MCPacketHandler.CHANNEL_OPENBROWSER}, packetHandler = MCPacketHandler.class)
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";

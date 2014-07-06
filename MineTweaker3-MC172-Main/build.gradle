@@ -19,7 +19,7 @@ buildscript {
 
 apply plugin: 'forge'
 minecraft{version = "1.7.2-10.12.2.1121"}
-version = "1.7.2-3.0.0"
+version = "1.7.2-3.0.3"
 archivesBaseName = project.projectDir.name
 
 dependencies {

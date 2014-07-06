@@ -27,23 +27,23 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ModOnly("IC2")
 public class Canner {
 	@ZenMethod
-	public static void addBottleRecipe(IIngredient container, IIngredient fill, IItemStack output) {
+	public static void addBottleRecipe(IItemStack output, IIngredient container, IIngredient fill) {
 		MineTweakerAPI.apply(new AddBottleIngredientAction(container, fill, output));
 	}
 	
 	@ZenMethod
-	public static void addBottleRecipe(IIngredient container, ILiquidStack liquid, IItemStack output) {
-		MineTweakerAPI.logError("Not supported in this mod support version");
+	public static void addBottleRecipe(IItemStack output, IIngredient container, ILiquidStack liquid) {
+		MineTweakerAPI.logWarning("Cannot use liquid inputs in 1.6.4");
 	}
 	
 	@ZenMethod
-	public static void addEnrichRecipe(ILiquidStack input, IIngredient additive, ILiquidStack output) {
+	public static void addEnrichRecipe(ILiquidStack output, ILiquidStack input, IIngredient additive) {
 		MineTweakerAPI.apply(new AddEnrichIngredientAction(input, additive, output));
 	}
 	
 	@ZenMethod
-	public static void addEnrichRecipe(ILiquidStack input, ILiquidStack additive, ILiquidStack output) {
-		MineTweakerAPI.logError("Not supported in this mod support version");
+	public static void addEnrichRecipe(ILiquidStack output, ILiquidStack input, ILiquidStack additive) {
+		MineTweakerAPI.logWarning("Cannot use liquid inputs in 1.6.4");
 	}
 	
 	private static class AddBottleIngredientAction extends OneWayAction {

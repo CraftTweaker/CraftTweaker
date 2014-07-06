@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.server.AbstractServer;
@@ -54,7 +53,11 @@ public class MCServer extends AbstractServer {
 	@Override
 	public boolean isOp(IPlayer player) {
 		UserListOps ops = MinecraftServer.getServer().getConfigurationManager().func_152603_m();
-		return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null;
+		if (server.isDedicatedServer()) {
+			return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null;
+		} else {
+			return true;
+		}
 	}
 	
 	private static IPlayer getPlayer(ICommandSender commandSender) {

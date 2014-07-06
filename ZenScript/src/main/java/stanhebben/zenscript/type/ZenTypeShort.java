@@ -28,7 +28,7 @@ public class ZenTypeShort extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return (type.getNumberType() != 0 && type.getNumberType() <= NUM_SHORT)
+		return (type.getNumberType() != 0 && type.getNumberType() >= NUM_SHORT)
 				 || type == ZenTypeString.INSTANCE
 				 || canCastExpansion(environment, type);
 	}

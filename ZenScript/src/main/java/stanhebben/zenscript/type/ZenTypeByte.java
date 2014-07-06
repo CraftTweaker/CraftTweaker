@@ -31,7 +31,7 @@ public class ZenTypeByte extends ZenType {
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		int itype = type.getNumberType();
-		return itype == NUM_BYTE
+		return itype != 0
 				|| type == STRING
 				|| canCastExpansion(environment, type);
 	}

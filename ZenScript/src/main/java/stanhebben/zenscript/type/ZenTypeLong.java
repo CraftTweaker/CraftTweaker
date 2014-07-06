@@ -29,7 +29,7 @@ public class ZenTypeLong extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return (type.getNumberType() != 0 && type.getNumberType() <= NUM_LONG)
+		return (type.getNumberType() != 0 && type.getNumberType() >= NUM_LONG)
 				|| type == ZenTypeString.INSTANCE
 				|| canCastExpansion(environment, type);
 	}

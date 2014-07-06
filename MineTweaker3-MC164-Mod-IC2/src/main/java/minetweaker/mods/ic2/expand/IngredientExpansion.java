@@ -6,7 +6,7 @@
 
 package minetweaker.mods.ic2.expand;
 
-import minetweaker.MineTweakerAPI;
+import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
 import minetweaker.api.item.IItemStack;
@@ -19,6 +19,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenExpansion("minetweaker.item.IIngredient")
+@ModOnly("IC2")
 public class IngredientExpansion {
 	@ZenMethod
 	public static IIngredient onlyIC2ChargeAtLeast(IIngredient ingredient, final int charge) {

@@ -14,7 +14,6 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
-import minetweaker.mods.ic2.IC2RecipeInput;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
