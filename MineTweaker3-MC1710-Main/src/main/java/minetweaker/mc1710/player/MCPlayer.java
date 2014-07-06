@@ -56,7 +56,7 @@ public class MCPlayer implements IPlayer {
 
 	@Override
 	public void sendChat(IChatMessage message) {
-		Object internal = message;
+		Object internal = message.getInternal();
 		if (!(internal instanceof IChatComponent)) {
 			MineTweakerAPI.logError("not a valid chat message");
 			return;

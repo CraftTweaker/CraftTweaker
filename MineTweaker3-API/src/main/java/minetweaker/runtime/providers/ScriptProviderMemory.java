@@ -50,6 +50,8 @@ public class ScriptProviderMemory implements IScriptProvider {
 					while (script.next()) {
 						String name = script.getName();
 						byte[] data = FileUtil.read(script.open());
+						if (data.length == 0) continue; // skip empty files
+						
 						deflaterData.writeUTF(name);
 						deflaterData.writeInt(data.length);
 						deflaterData.write(data);

@@ -35,8 +35,10 @@ public class MCPacketHandler implements IPacketHandler {
 		if (packet.channel.equals(CHANNEL_SERVERSCRIPT)) {
 			System.out.println("Received script data: " + packet.data.length + " bytes");
 			
-			MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(packet.data));
-			MineTweakerImplementationAPI.reload();
+			if (MineTweakerAPI.server == null) {
+				MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(packet.data));
+				MineTweakerImplementationAPI.reload();
+			}
 		} else if (packet.channel.equals(CHANNEL_OPENBROWSER)) {
 			String url = UTF8.decode(ByteBuffer.wrap(packet.data)).toString().trim();
 			if(Desktop.isDesktopSupported()){

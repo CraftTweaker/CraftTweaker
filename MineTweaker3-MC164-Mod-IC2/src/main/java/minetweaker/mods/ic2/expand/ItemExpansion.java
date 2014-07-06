@@ -2,6 +2,7 @@ package minetweaker.mods.ic2.expand;
 
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
