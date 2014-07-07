@@ -29,7 +29,7 @@ public class ZenTypeDouble extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return (type.getNumberType() != 0 && type.getNumberType() == NUM_DOUBLE)
+		return (type.getNumberType() != 0 && type.getNumberType() >= NUM_FLOAT)
 				|| type == STRING
 				|| canCastExpansion(environment, type);
 	}

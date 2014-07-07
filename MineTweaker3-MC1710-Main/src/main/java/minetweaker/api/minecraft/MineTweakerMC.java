@@ -33,6 +33,8 @@ public class MineTweakerMC {
 	 * @return minecraft item stack
 	 */
 	public static ItemStack getItemStack(IItemStack item) {
+		if (item == null) return null;
+		
 		Object internal = item.getInternal();
 		if (internal == null || !(internal instanceof ItemStack)) {
 			MineTweakerAPI.logError("Not a valid item stack: " + item);
@@ -48,6 +50,8 @@ public class MineTweakerMC {
 	 * @return minecraft item stack
 	 */
 	public static ItemStack getItemStack(IIngredient ingredient) {
+		if (ingredient == null) return null;
+		
 		List<IItemStack> items = ingredient.getItems();
 		if (items.size() != 1) {
 			MineTweakerAPI.logError("Not an ingredient with a single item: " + ingredient);
@@ -63,6 +67,7 @@ public class MineTweakerMC {
 	 */
 	public static IItemStack getIItemStack(ItemStack item) {
 		if (item == null) return null;
+		
 		return new MCItemStack(item);
 	}
 	
@@ -73,6 +78,8 @@ public class MineTweakerMC {
 	 * @return minetweaker stack
 	 */
 	public static IItemStack getIItemStackWildcardSize(ItemStack item) {
+		if (item == null) return null;
+		
 		return new MCItemStack(item, true);
 	}
 	
@@ -84,6 +91,8 @@ public class MineTweakerMC {
 	 * @return minetweaker stack
 	 */
 	public static IItemStack getIItemStackWildcardSize(Item item, int meta) {
+		if (item == null) return null;
+		
 		return new MCItemStack(new ItemStack(item, 1, meta), true);
 	}
 	
@@ -95,6 +104,8 @@ public class MineTweakerMC {
 	 * @return minetweaker item stack
 	 */
 	public static IItemStack getIItemStackWildcard(Item item, int amount) {
+		if (item == null) return null;
+		
 		return new MCItemStack(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
 	}
 	
@@ -107,6 +118,8 @@ public class MineTweakerMC {
 	 * @return minetweaker item stack
 	 */
 	public static IItemStack getItemStack(Item item, int amount, int damage) {
+		if (item == null) return null;
+		
 		return new MCItemStack(new ItemStack(item, amount, damage));
 	}
 	
@@ -118,6 +131,8 @@ public class MineTweakerMC {
 	 * @return minecraft item stacks
 	 */
 	public static ItemStack[] getItemStacks(IItemStack... items) {
+		if (items == null) return null;
+		
 		ItemStack[] output = new ItemStack[items.length];
 		for (int i = 0; i < items.length; i++) {
 			Object internal = items[i].getInternal();
@@ -136,6 +151,8 @@ public class MineTweakerMC {
 	 * @return minecraft items
 	 */
 	public static ItemStack[] getItemStacks(List<IItemStack> items) {
+		if (items == null) return null;
+		
 		ItemStack[] output = new ItemStack[items.size()];
 		for (int i = 0; i < items.size(); i++) {
 			Object internal = items.get(i).getInternal();
@@ -156,6 +173,8 @@ public class MineTweakerMC {
 	 * @return minetweaker item stacks
 	 */
 	public static IItemStack[] getIItemStacks(ItemStack... items) {
+		if (items == null) return null;
+		
 		IItemStack[] result = new IItemStack[items.length];
 		for (int i = 0; i < items.length; i++) {
 			result[i] = new MCItemStack(items[i]);
@@ -171,6 +190,8 @@ public class MineTweakerMC {
 	 * @return minetweaker item stacks
 	 */
 	public static IItemStack[] getIItemStacks(List<ItemStack> items) {
+		if (items == null) return null;
+		
 		IItemStack[] result = new IItemStack[items.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = new MCItemStack(items.get(i));
@@ -196,6 +217,8 @@ public class MineTweakerMC {
 	 * @return minetweaker player
 	 */
 	public static IPlayer getIPlayer(EntityPlayer player) {
+		if (player == null) return null;
+		
 		return new MCPlayer(player);
 	}
 	
@@ -206,6 +229,8 @@ public class MineTweakerMC {
 	 * @return minecraft player
 	 */
 	public static EntityPlayer getPlayer(IPlayer player) {
+		if (player == null) return null;
+		
 		if (!(player instanceof MCPlayer)) {
 			MineTweakerAPI.logError("Invalid player: " + player);
 		}
@@ -221,6 +246,8 @@ public class MineTweakerMC {
 	 * @return IData value
 	 */
 	public static IData getIData(NBTBase nbt) {
+		if (nbt == null) return null;
+		
 		return NBTConverter.from(nbt, true);
 	}
 	
@@ -231,6 +258,8 @@ public class MineTweakerMC {
 	 * @return mutable IData value
 	 */
 	public static IData getIDataModifyable(NBTBase nbt) {
+		if (nbt == null) return null;
+		
 		return NBTConverter.from(nbt, false);
 	}
 	
@@ -241,6 +270,8 @@ public class MineTweakerMC {
 	 * @return nbt data
 	 */
 	public static NBTBase getNBT(IData data) {
+		if (data == null) return null;
+		
 		return NBTConverter.from(data);
 	}
 	
@@ -251,6 +282,8 @@ public class MineTweakerMC {
 	 * @return nbt compound data
 	 */
 	public static NBTTagCompound getNBTCompound(IData data) {
+		if (data == null) return null;
+		
 		return (NBTTagCompound) NBTConverter.from(data);
 	}
 }

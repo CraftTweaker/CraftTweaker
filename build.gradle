@@ -56,10 +56,12 @@ task assembleMC164(type: Jar, dependsOn: [\
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC164-Main:build',
 		':MineTweaker3-MC164-Mod-IC2:build',
-		':MineTweaker3-MC164-Mod-NEI:build']) {
+		':MineTweaker3-MC164-Mod-NEI:build',
+		':MineTweaker3-MC164-Mod-GregTech:build']) {
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Main').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Mod-IC2').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Mod-NEI').jar.archivePath)
+	from zipTree(project(':MineTweaker3-MC164-Mod-GregTech').jar.archivePath)
 }

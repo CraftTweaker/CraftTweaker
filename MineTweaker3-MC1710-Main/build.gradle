@@ -32,7 +32,7 @@ dependencies {
 task makeRegistry(type: RegisterZenClassesTask) {
 	inputDir = file('build/classes/main')
 	outputDir = file('build/classes/main')
-	className = 'minetweaker.mc172.MineTweakerRegistry'
+	className = 'minetweaker.mc1710.MineTweakerRegistry'
 }
 
 tasks.jar.dependsOn(makeRegistry)

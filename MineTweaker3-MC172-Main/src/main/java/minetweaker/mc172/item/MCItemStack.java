@@ -252,7 +252,10 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 41 * hash + (this.stack != null ? this.stack.hashCode() : 0);
+		hash = 41 * hash + stack.getItem().hashCode();
+		hash = 41 * hash + stack.getItemDamage();
+		hash = 41 * hash + stack.stackSize;
+		hash = 41 * hash + (stack.stackTagCompound == null ? 0 : stack.stackTagCompound.hashCode());
 		hash = 41 * hash + (this.wildcardSize ? 1 : 0);
 		return hash;
 	}
@@ -266,12 +269,11 @@ public class MCItemStack implements IItemStack {
 			return false;
 		}
 		final MCItemStack other = (MCItemStack) obj;
-		if (this.stack != other.stack && (this.stack == null || !this.stack.equals(other.stack))) {
-			return false;
-		}
-		if (this.wildcardSize != other.wildcardSize) {
-			return false;
-		}
+		if (this.stack.getItem() != other.stack.getItem()) return false;
+		if (this.stack.getItemDamage() != other.stack.getItemDamage()) return false;
+		if (this.stack.stackSize != other.stack.stackSize) return false;
+		if (this.stack.stackTagCompound != other.stack.stackTagCompound && (this.stack == null || this.stack.equals(other.stack))) return false;
+		if (this.wildcardSize != other.wildcardSize) return false;
 		return true;
 	}
 	
