@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -19,23 +13,42 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the Grinder recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Grinder")
 @ModOnly("gregtech_addon")
 public class Grinder {
+	/**
+	 * Adds a recipe with a single output.
+	 * 
+	 * @param output grinder output
+	 * @param input1 grinder primary input
+	 * @param input2 grinder liquid input (optional, will use 1 water cell if set to null)
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack output, IItemStack input1, @Optional IItemStack input2) {
 		if (input2 == null) input2 = MineTweakerMC.getIItemStack(GT_ModHandler.getWaterCell(1));
 		MineTweakerAPI.apply(new AddRecipeAction(new IItemStack[] { output }, input1, input2));
 	}
 	
+	/**
+	 * Adds a recipe with multiple outputs.
+	 * 
+	 * @param outputs array with 1-4 outputs
+	 * @param input1 grinder primary input
+	 * @param input2 grinder liquid input (optional, will use 1 water cell if set to null)
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack[] outputs, IItemStack input1, @Optional IItemStack input2) {
 		if (input2 == null) input2 = MineTweakerMC.getIItemStack(GT_ModHandler.getWaterCell(1));
 		MineTweakerAPI.apply(new AddRecipeAction(outputs, input1, input2));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack[] outputs;

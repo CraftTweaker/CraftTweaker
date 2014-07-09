@@ -52,7 +52,7 @@ public class MetalFormer {
 	@ZenMethod
 	public static IItemStack getExtrudingOutput(IItemStack input) {
 		RecipeOutput output = Recipes.metalformerExtruding.getOutputFor(getItemStack(input), false);
-		if (output == null || output.items.size() > 0) return null;
+		if (output == null || output.items.isEmpty()) return null;
 		return getIItemStack(output.items.get(0));
 	}
 	
@@ -81,7 +81,7 @@ public class MetalFormer {
 	@ZenMethod
 	public static IItemStack getRollingOutput(IItemStack input) {
 		RecipeOutput output = Recipes.metalformerRolling.getOutputFor(getItemStack(input), false);
-		if (output == null || output.items.size() > 0) return null;
+		if (output == null || output.items.isEmpty()) return null;
 		return getIItemStack(output.items.get(0));
 	}
 	/**
@@ -109,7 +109,7 @@ public class MetalFormer {
 	@ZenMethod
 	public static IItemStack getCuttingOutput(IItemStack input) {
 		RecipeOutput output = Recipes.metalformerCutting.getOutputFor(getItemStack(input), false);
-		if (output == null || output.items.size() > 0) return null;
+		if (output == null || output.items.isEmpty()) return null;
 		return getIItemStack(output.items.get(0));
 	}
 }

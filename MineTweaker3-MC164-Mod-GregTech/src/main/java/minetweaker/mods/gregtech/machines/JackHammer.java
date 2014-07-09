@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -18,12 +12,18 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Access point to jack hammer whitelist.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.JackHammer")
 @ModOnly("gregtech_addon")
 public class JackHammer {
+	/**
+	 * Adds a block to be minable. The given item must be a block.
+	 * 
+	 * @param item block
+	 */
 	@ZenMethod
 	public static void addMinableBlock(IItemStack item) {
 		Block block = getBlock(item);
@@ -34,6 +34,12 @@ public class JackHammer {
 		}
 	}
 	
+	/**
+	 * Adds a block to be minable, but only with the diamond tools. The given
+	 * item must be a block.
+	 * 
+	 * @param item block
+	 */
 	@ZenMethod
 	public static void addDiamondMinableBlock(IItemStack item) {
 		Block block = getBlock(item);
@@ -44,10 +50,18 @@ public class JackHammer {
 		}
 	}
 	
+	// #######################
+	// ### Private Methods ###
+	// #######################
+	
 	private static Block getBlock(IItemStack item) {
 		ItemStack itemStack = MineTweakerMC.getItemStack(item);
 		return itemStack.itemID > Block.blocksList.length ? null : Block.blocksList[itemStack.itemID];
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddBlockAction extends OneWayAction {
 		private final Block block;

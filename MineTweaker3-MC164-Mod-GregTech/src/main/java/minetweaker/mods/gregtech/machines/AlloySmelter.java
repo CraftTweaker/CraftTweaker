@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,16 +10,30 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provider access to the Alloy Smelter recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.AlloySmelter")
 @ModOnly("gregtech_addon")
 public class AlloySmelter {
+	/**
+	 * Adds an alloy smelter recipe.
+	 * 
+	 * @param output alloy smelter output
+	 * @param input1 primary input
+	 * @param input2 secondary input
+	 * @param durationTicks smelting time, in ticks
+	 * @param euPerTick eu consumption per tick
+	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int duration, int euPerTick) {
-		MineTweakerAPI.apply(new AddRecipeAction(output, input1, input2, duration, euPerTick));
+	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int durationTicks, int euPerTick) {
+		MineTweakerAPI.apply(new AddRecipeAction(output, input1, input2, durationTicks, euPerTick));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack output;

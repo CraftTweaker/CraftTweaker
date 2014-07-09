@@ -60,7 +60,7 @@ public class Compressor {
 	public static IItemStack getOutput(
 			@NotNull IItemStack input) {
 		RecipeOutput output = Recipes.compressor.getOutputFor(getItemStack(input), false);
-		if (output == null || output.items.size() > 0) {
+		if (output == null || output.items.isEmpty()) {
 			System.out.println("No output");
 			return null;
 		}

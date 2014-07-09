@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,25 +10,50 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the Blast Furnace recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.BlastFurnace")
 @ModOnly("gregtech_addon")
 public class BlastFurnace {
+	/**
+	 * Adds a recipe with a single output.
+	 * 
+	 * @param output recipe output
+	 * @param input1 primary input
+	 * @param input2 secondary input (optional, can be null)
+	 * @param durationTicks crafting duration, in ticks
+	 * @param euPerTick eu consumption per tick
+	 * @param heat required heat capacity
+	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int duration, int euPerTick, int heat) {
-		MineTweakerAPI.apply(new AddRecipeAction(input1, input2, output, null, duration, euPerTick, heat));
+	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int durationTicks, int euPerTick, int heat) {
+		MineTweakerAPI.apply(new AddRecipeAction(input1, input2, output, null, durationTicks, euPerTick, heat));
 	}
 	
+	/**
+	 * Adds a recipe with multiple outputs.
+	 * 
+	 * @param output array with 1 or 2 outputs
+	 * @param input1 primary input
+	 * @param input2 secondary input (optional, can be null)
+	 * @param durationTicks crafting duration, in ticks
+	 * @param euPerTick eu consumption per tick
+	 * @param heat required heat capacity
+	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack[] output, IItemStack input1, IItemStack input2, int duration, int euPerTick, int heat) {
+	public static void addRecipe(IItemStack[] output, IItemStack input1, IItemStack input2, int durationTicks, int euPerTick, int heat) {
 		if (output.length == 0) {
 			MineTweakerAPI.logError("Blast furnace recipe requires at least 1 input");
 		} else {
-			MineTweakerAPI.apply(new AddRecipeAction(input1, input2, output[0], output.length > 1 ? output[1] : null, duration, euPerTick, heat));
+			MineTweakerAPI.apply(new AddRecipeAction(input1, input2, output[0], output.length > 1 ? output[1] : null, durationTicks, euPerTick, heat));
 		}
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack input1;

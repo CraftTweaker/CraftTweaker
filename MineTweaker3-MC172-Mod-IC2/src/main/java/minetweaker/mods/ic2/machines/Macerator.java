@@ -60,7 +60,7 @@ public class Macerator {
 	public static IItemStack getOutput(
 			@NotNull IItemStack input) {
 		RecipeOutput output = Recipes.macerator.getOutputFor(getItemStack(input), false);
-		if (output == null || output.items.size() > 0) return null;
+		if (output == null || output.items.isEmpty()) return null;
 		return getIItemStack(output.items.get(0));
 	}
 }

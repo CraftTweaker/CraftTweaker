@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,17 +10,32 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the Implosion Compressor recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.ImplosionCompressor")
 @ModOnly("gregtech_addon")
 public class ImplosionCompressor {
+	/**
+	 * Adds an implosion compressor recipe with a single output.
+	 * 
+	 * @param output recipe output
+	 * @param input primary input
+	 * @param tnt amount of TNT needed
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack output, IItemStack input, int tnt) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, null, input, tnt));
 	}
 	
+	/**
+	 * Adds an implosion compressor recipe with one or two outputs.
+	 * 
+	 * @param output array with 1-2 outputs
+	 * @param input primary input
+	 * @param tnt amount of TNT needed
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack[] output, IItemStack input, int tnt) {
 		if (output.length == 0) {
@@ -35,6 +44,10 @@ public class ImplosionCompressor {
 			MineTweakerAPI.apply(new AddRecipeAction(output[0], output.length > 1 ? output[1] : null, input, tnt));
 		}
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack output1;

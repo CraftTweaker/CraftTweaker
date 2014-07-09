@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,16 +10,27 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the sonictron.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Sonictron")
 @ModOnly("gregtech_addon")
 public class Sonictron {
+	/**
+	 * Adds a sonictron sound.
+	 * 
+	 * @param itemStack item you want to display for this sound
+	 * @param soundName name of the Sound in the resources/newsound-folder like Vanillasounds
+	 */
 	@ZenMethod
 	public static void addSound(IItemStack itemStack, String soundName) {
 		MineTweakerAPI.apply(new AddSoundAction(itemStack, soundName));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddSoundAction extends OneWayAction {
 		private final IItemStack itemStack;

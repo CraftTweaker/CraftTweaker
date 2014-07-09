@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,16 +10,30 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the extruder recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Extruder")
 @ModOnly("gregtech_addon")
 public class Extruder {
+	/**
+	 * Adds an extruder recipe.
+	 * 
+	 * @param output recipe output
+	 * @param input recipe input
+	 * @param shape shape (set stack size to 0 to prevent the shape from being consumed)
+	 * @param durationTicks extruding time, in ticks
+	 * @param euPerTick eu consumption per tick
+	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack output, IItemStack input, IItemStack shape, int duration, int euPerTick) {
-		MineTweakerAPI.apply(new AddRecipeAction(output, input, shape, duration, euPerTick));
+	public static void addRecipe(IItemStack output, IItemStack input, IItemStack shape, int durationTicks, int euPerTick) {
+		MineTweakerAPI.apply(new AddRecipeAction(output, input, shape, durationTicks, euPerTick));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack output;

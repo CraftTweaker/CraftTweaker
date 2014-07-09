@@ -53,7 +53,8 @@ public class MineTweakerMod {
 	
 	private static final String[] REGISTRIES = {
 		"minetweaker.mods.ic2.ClassRegistry",
-		"minetweaker.mods.nei.ClassRegistry"
+		"minetweaker.mods.nei.ClassRegistry",
+		"minetweaker.mods.gregtech.ClassRegistry"
 	};
 	
 	static {

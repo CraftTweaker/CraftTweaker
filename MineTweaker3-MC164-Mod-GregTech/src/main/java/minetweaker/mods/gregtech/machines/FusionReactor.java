@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,16 +10,31 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the fusion reactor recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.FusionReactor")
 @ModOnly("gregtech_addon")
 public class FusionReactor {
+	/**
+	 * Adds a Fusion Reactor recipe.
+	 * 
+	 * @param output reactor output
+	 * @param input1 primary input
+	 * @param input2 secondary input
+	 * @param durationTicks fusion duration, in ticks
+	 * @param energyPerTick eu consumption per tick
+	 * @param startEnergy starting energy
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int durationTicks, int energyPerTick, int startEnergy) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input1, input2, durationTicks, energyPerTick, startEnergy));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack output;

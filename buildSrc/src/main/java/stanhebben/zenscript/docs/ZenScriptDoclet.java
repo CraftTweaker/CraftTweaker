@@ -6,8 +6,6 @@ package stanhebben.zenscript.docs;
  * and open the template in the editor.
  */
 
-
-
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
@@ -306,7 +304,11 @@ public class ZenScriptDoclet extends Standard {
 								}
 							} else if (fullName.equals("stanhebben.zenscript.annotations.ZenOperator")) {
 								String operator = annotation.elementValues()[0].value().value().toString();
-								operators.add(new ZenOperatorDoc(operator, method));
+								Type[] parameterTypes = new Type[method.parameters().length];
+								for (int i = 0; i < method.parameters().length; i++) {
+									parameterTypes[i] = method.parameters()[i].type();
+								}
+								operators.add(new ZenOperatorDoc(operator, method, parameterTypes));
 							} else if (fullName.equals("stanhebben.zenscript.annotations.ZenCaster")) {
 								casters.add(new ZenCasterDoc(method));
 							}
@@ -408,7 +410,11 @@ public class ZenScriptDoclet extends Standard {
 									}
 								} else if (fullName.equals("stanhebben.zenscript.annotations.ZenOperator")) {
 									String operator = annotation.elementValues()[0].value().value().toString();
-									operators.add(new ZenOperatorDoc(operator, method));
+									Type[] parameterTypes = new Type[method.parameters().length - 1];
+									for (int i = 1; i < method.parameters().length; i++) {
+										parameterTypes[i - 1] = method.parameters()[i].type();
+									}
+									operators.add(new ZenOperatorDoc(operator, method, parameterTypes));
 								} else if (fullName.equals("stanhebben.zenscript.annotations.ZenCaster")) {
 									casters.add(new ZenCasterDoc(method));
 								}
@@ -578,7 +584,7 @@ public class ZenScriptDoclet extends Standard {
 
 					if (!operators.isEmpty()) {
 						writer.append("<div class=\"panel panel-info panel-memberlist\">");
-						writer.append("<div class=\"panel-heading\">Casters</div>");
+						writer.append("<div class=\"panel-heading\">Operators</div>");
 						writer.append("<div class=\"panel-body\">");
 						writer.append("<table class=\"table table-properties table-bordered\"><tbody>");
 						
@@ -589,8 +595,12 @@ public class ZenScriptDoclet extends Standard {
 							/*writer.append("as <a href=\"#property-staticvalue\">");
 							outputTypeRaw(writer, caster.getMethod().returnType(), classesByJavaName);
 							writer.append("</a></div>");*/
-
-							writer.append(operator.getOperator());
+							
+							String[] types = new String[operator.getTypes().length];
+							for (int i = 0; i < types.length; i++) {
+								types[i] = outputTypeString(operator.getTypes()[i], classesByJavaName, baseUrl);
+							}
+							writer.append(operator.getOperatorType().fill(types));
 
 							String[] comment = StringUtil.splitParagraphs(operator.getMethod().commentText());
 							if (comment.length > 0) {
@@ -786,6 +796,36 @@ public class ZenScriptDoclet extends Standard {
 		}
 		
 		output.append(type.dimension());
+	}
+	
+	private static String outputTypeString(Type type, Map<String, ZenClassDoc> javaClasses, String baseUrl) throws IOException {
+		StringBuilder result = new StringBuilder();
+		if (javaClasses.containsKey(type.qualifiedTypeName())) {
+			ZenClassDoc doc = javaClasses.get(type.qualifiedTypeName());
+			result.append("<a href=\"");
+			result.append(makeLink(doc.getName(), baseUrl));
+			result.append("\">");
+			result.append(doc.getName().substring(doc.getName().lastIndexOf('.') + 1));
+			result.append("</a>");
+		} else if (type.qualifiedTypeName().equals("java.util.List")) {
+			Type base = type.asParameterizedType().typeArguments()[0];
+			result.append(outputTypeString(base, javaClasses, baseUrl));
+			result.append("[]");
+		} else if (type.qualifiedTypeName().equals("java.util.Map")) {
+			Type key = type.asParameterizedType().typeArguments()[0];
+			Type value = type.asParameterizedType().typeArguments()[1];
+			result.append(outputTypeString(value, javaClasses, baseUrl));
+			result.append('[');
+			result.append(outputTypeString(key, javaClasses, baseUrl));
+			result.append(']');
+		} else if (type.qualifiedTypeName().equals("java.lang.String")) {
+			result.append("string");
+		} else {
+			result.append(type.qualifiedTypeName());
+		}
+		
+		result.append(type.dimension());
+		return result.toString();
 	}
 	
 	private static void outputTypeRaw(Writer output, Type type, Map<String, ZenClassDoc> javaClasses) throws IOException {

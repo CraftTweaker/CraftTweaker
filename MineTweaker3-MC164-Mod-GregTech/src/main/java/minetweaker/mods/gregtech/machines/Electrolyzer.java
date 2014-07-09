@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -17,20 +11,34 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the Electrolyzer recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Electrolyzer")
 @ModOnly("gregtech_addon")
 public class Electrolyzer {
+	/**
+	 * Adds an electrolyzer recipe.
+	 * 
+	 * @param outputs array with 1-4 outputs
+	 * @param input recipe input
+	 * @param cells number of cells required (can be 0)
+	 * @param durationTicks electrolyzing duration, in ticks
+	 * @param euPerTick eu consumption per tick
+	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack[] outputs, IItemStack input, int cells, int duration, int euPerTick) {
+	public static void addRecipe(IItemStack[] outputs, IItemStack input, int cells, int durationTicks, int euPerTick) {
 		if (outputs.length < 1) {
 			MineTweakerAPI.logError("Electrolyzer recipe requires at least 1 output");
 		} else {
-			MineTweakerAPI.apply(new AddRecipeAction(outputs, input, cells, duration, euPerTick));
+			MineTweakerAPI.apply(new AddRecipeAction(outputs, input, cells, durationTicks, euPerTick));
 		}
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack[] output;

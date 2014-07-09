@@ -13,6 +13,15 @@ import stanhebben.zenscript.annotations.ZenSetter;
  * Contains an item stack. An item stack consists of an item definition, 
  * a meta or damage value and NBT data.
  * 
+ * Item stacks can be retrieved using its name (or ID, in 1.6.4) with the bracket
+ * syntax. When using the bracket syntax, by default, the item stack will match
+ * any size when used as ingredient. Item stacks can be multiplied with an integer
+ * to create a stack of different size.
+ * 
+ * Item stacks are immutable. You can, however, easily create modified stacks using
+ * the helper methods. Adding conditions and transformations will turn the item
+ * stack into an ingredients.
+ * 
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.item.IItemStack")

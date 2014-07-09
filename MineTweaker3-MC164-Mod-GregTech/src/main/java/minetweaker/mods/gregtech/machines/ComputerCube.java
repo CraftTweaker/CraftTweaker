@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -17,16 +11,27 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the computer cube descriptions.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.ComputerCube")
 @ModOnly("gregtech_addon")
 public class ComputerCube {
+	/**
+	 * Adds a description entry to the computer cube.
+	 * 
+	 * @param items items to be displayed
+	 * @param text text to be displayed
+	 */
 	@ZenMethod
 	public static void addDescriptionSet(IItemStack[] items, String[] text) {
 		MineTweakerAPI.apply(new AddDescriptionAction(items, text));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddDescriptionAction extends OneWayAction {
 		private final IItemStack[] items;

@@ -22,12 +22,3 @@ dependencies {
         compile project(':ZenScript')
     }
 }
-
-/*task zendoc(type: Javadoc) {
-	source = sourceSets.main.allJava
-	destinationDir = reporting.file("zendocs")
-	// classpath = files(project.sourceSets*.main*.compileClasspath)
-	//options.docletpath = configurations.main.files.asType(List)
-	options.doclet = 'stanhebben.zenscript.docs.ZenScriptDoclet'
-	options.classpath sourceSets.main.classes
-}*/

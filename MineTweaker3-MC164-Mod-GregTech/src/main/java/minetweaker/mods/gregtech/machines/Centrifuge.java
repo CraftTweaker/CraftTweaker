@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -23,15 +17,30 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("mods.gregtech.Centrifuge")
 @ModOnly("gregtech_addon")
 public class Centrifuge {
+	/**
+	 * Adds a centrifuge recipe.
+	 * 
+	 * @param outputs array with 1-4 outputs
+	 * @param input recipe input
+	 * @param cells number of cells required, can be 0
+	 * @param durationTicks centrifuging time, in ticks
+	 */
 	@ZenMethod
-	public static void addRecipe(IItemStack[] outputs, IItemStack input, int cells, int duration) {
+	public static void addRecipe(IItemStack[] outputs, IItemStack input, int cells, int durationTicks) {
 		if (outputs.length < 1) {
 			MineTweakerAPI.logError("centrifuge must have at least 1 output");
 		} else {
-			MineTweakerAPI.apply(new AddRecipeAction(outputs, input, cells, duration));
+			MineTweakerAPI.apply(new AddRecipeAction(outputs, input, cells, durationTicks));
 		}
 	}
 	
+	/**
+	 * Adds a centrifuge recipe taking a fuel can as container.
+	 * 
+	 * @param outputs array with 1-4 outputs
+	 * @param input recipe input
+	 * @param duration centrifuging time, in ticks
+	 */
 	@ZenMethod
 	public static void addRecipeFuelCan(IItemStack[] outputs, IItemStack input, int duration) {
 		if (outputs.length < 1) {
@@ -40,6 +49,10 @@ public class Centrifuge {
 			MineTweakerAPI.apply(new AddRecipeAction(outputs, input, -1, duration));
 		}
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack[] output;

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -16,41 +10,94 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the fuels used by the various generators.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Fuels")
 @ModOnly("gregtech_addon")
 public class Fuels {
+	/**
+	 * Adds a Diesel Engine fuel. If the given item does not contain any liquid,
+	 * it will generate the equivalent of 1000 millibuckets.
+	 * 
+	 * @param output output item (optional, can be null)
+	 * @param input input item
+	 * @param euPerMillibucket eu production per millibucket
+	 */
 	@ZenMethod
 	public static void addDieselFuel(IItemStack output, IItemStack input, int euPerMillibucket) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, euPerMillibucket, 0));
 	}
 	
+	/**
+	 * Adds a Gas Turbine fuel. If the given item does not contain any liquid,
+	 * it will generate the equivalent of 1000 millibuckets.
+	 * 
+	 * @param output output item (optional, can be null)
+	 * @param input input item
+	 * @param euPerMillibucket eu production per millibucket
+	 */
 	@ZenMethod
 	public static void addGasTurbineFuel(IItemStack output, IItemStack input, int euPerMillibucket) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, euPerMillibucket, 1));
 	}
 	
+	/**
+	 * Adds a Thermal Generator fuel. If the given item does not contain any
+	 * liquid, it will generate the equivalent of 1000 millibuckets.
+	 * 
+	 * @param output output item (optional, can be null)
+	 * @param input input item
+	 * @param euPerMillibucket eu production per millibucket
+	 */
 	@ZenMethod
 	public static void addThermalGeneratorFuel(IItemStack output, IItemStack input, int euPerMillibucket) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, euPerMillibucket, 2));
 	}
 	
+	/**
+	 * Adds a Dense Fluid Generator fuel. If the given item does not contain any
+	 * liquid, it will generate the equivalent of 1000 millibuckets.
+	 * 
+	 * @param output output item (optional, can be null)
+	 * @param input input item
+	 * @param euPerMillibucket eu production per millibucket
+	 */
 	@ZenMethod
 	public static void addDenseFluidFuel(IItemStack output, IItemStack input, int euPerMillibucket) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, euPerMillibucket, 3));
 	}
 	
+	/**
+	 * Adds a Plasma Generator fuel. If the given item does not contain any
+	 * liquid, it will generate the equivalent of 1000 millibuckets.
+	 * 
+	 * @param output output item (optional, can be null)
+	 * @param input input item
+	 * @param euPerMillibucket eu production per millibucket
+	 */
 	@ZenMethod
 	public static void addPlasmaGeneratorFuel(IItemStack output, IItemStack input, int euPerMillibucket) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, euPerMillibucket, 4));
 	}
 	
+	/**
+	 * Adds a Magic Generator fuel. If the given item does not contain any liquid,
+	 * it will generate the equivalent of 1000 millibuckets.
+	 * 
+	 * @param output output item (optional, can be null)
+	 * @param input input item
+	 * @param euPerMillibucket eu production per millibucket
+	 */
 	@ZenMethod
 	public static void addMagicGeneratorFuel(IItemStack output, IItemStack input, int euPerMillibucket) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, euPerMillibucket, 5));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private static final String[] GENERATORS = {

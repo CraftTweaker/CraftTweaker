@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.gregtech.machines;
 
 import gregtechmod.api.GregTech_API;
@@ -18,18 +12,33 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
- * @author Stan
+ * Provides access to the Sawmill recipes.
+ * 
+ * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Sawmill")
 @ModOnly("gregtech_addon")
 public class Sawmill {
+	/**
+	 * Adds a new sawmill recipe.
+	 * 
+	 * @param output recipe output
+	 * @param input1 primary input
+	 * @param input2 secondary input (optional, if set to null will use a water cell)
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack output, IItemStack input1, @Optional IItemStack input2) {
 		if (input2 == null) input2 = MineTweakerMC.getIItemStack(GT_ModHandler.getWaterCell(1));
 		MineTweakerAPI.apply(new AddRecipeAction(output, null, null, input1, input2));
 	}
 	
+	/**
+	 * Adds a new sawmill recipe with 1-3 outputs.
+	 * 
+	 * @param outputs array with 1-3 outputs
+	 * @param input1 primary input
+	 * @param input2 secondary input (optional, if set to null will use a water cell)
+	 */
 	@ZenMethod
 	public static void addRecipe(IItemStack[] outputs, IItemStack input1, @Optional IItemStack input2) {
 		if (input2 == null) input2 = MineTweakerMC.getIItemStack(GT_ModHandler.getWaterCell(1));
@@ -40,6 +49,10 @@ public class Sawmill {
 				input1,
 				input2));
 	}
+	
+	// ######################
+	// ### Action classes ###
+	// ######################
 	
 	private static class AddRecipeAction extends OneWayAction {
 		private final IItemStack output1;
