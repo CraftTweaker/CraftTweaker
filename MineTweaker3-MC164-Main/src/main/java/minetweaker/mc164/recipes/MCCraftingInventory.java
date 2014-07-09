@@ -72,11 +72,16 @@ public class MCCraftingInventory implements ICraftingInventory {
 		update();
 		
 		Container container = MineTweakerHacks.getCraftingContainer(inventory);
-		List<Slot> slots = container.inventorySlots;
-		if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
-			SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
-			playerOrig = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
-			player = new MCPlayer(playerOrig);
+		if (container != null) {
+			List<Slot> slots = container.inventorySlots;
+			if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
+				SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
+				playerOrig = MineTweakerHacks.getCraftingSlotPlayer(slotCrafting);
+				player = new MCPlayer(playerOrig);
+			} else {
+				playerOrig = null;
+				player = null;
+			}
 		} else {
 			playerOrig = null;
 			player = null;

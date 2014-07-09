@@ -14,6 +14,7 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  *
@@ -22,6 +23,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenClass("mods.gregtech.Centrifuge")
 @ModOnly("gregtech_addon")
 public class Centrifuge {
+	@ZenMethod
 	public static void addRecipe(IItemStack[] outputs, IItemStack input, int cells, int duration) {
 		if (outputs.length < 1) {
 			MineTweakerAPI.logError("centrifuge must have at least 1 output");
@@ -30,6 +32,7 @@ public class Centrifuge {
 		}
 	}
 	
+	@ZenMethod
 	public static void addRecipeFuelCan(IItemStack[] outputs, IItemStack input, int duration) {
 		if (outputs.length < 1) {
 			MineTweakerAPI.logError("centrifuge must have at least 1 output");

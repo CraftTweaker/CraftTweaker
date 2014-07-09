@@ -292,12 +292,17 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 			if (member2 == null) {
-				return binary(
-						position,
-						environment,
-						value.eval(environment),
-						new ExpressionString(position, name),
-						OperatorType.MEMBERGETTER);
+				if (hasBinary(STRING, OperatorType.MEMBERGETTER)) {
+					return binary(
+							position,
+							environment,
+							value.eval(environment),
+							new ExpressionString(position, name),
+							OperatorType.MEMBERGETTER);
+				} else {
+					environment.error(position, "No such member in " + getName() + ": " + name);
+					return new ExpressionInvalid(position);
+				}
 			} else {
 				return member2;
 			}
@@ -874,6 +879,16 @@ public class ZenTypeNative extends ZenType {
 	public Expression call(
 			ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
+	private boolean hasBinary(ZenType type, OperatorType operator) {
+		for (ZenNativeOperator binaryOperator : binaryOperators) {
+			if (binaryOperator.getOperator() == operator) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	private void compileAnyUnary(String anySignature, OperatorType operator, IEnvironmentMethod environment) {

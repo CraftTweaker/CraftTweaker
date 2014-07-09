@@ -13,6 +13,7 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  *
@@ -21,6 +22,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenClass("mods.gregtech.Extruder")
 @ModOnly("gregtech_addon")
 public class Extruder {
+	@ZenMethod
 	public static void addRecipe(IItemStack output, IItemStack input, IItemStack shape, int duration, int euPerTick) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input, shape, duration, euPerTick));
 	}

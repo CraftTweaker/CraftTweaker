@@ -65,3 +65,48 @@ task assembleMC164(type: Jar, dependsOn: [\
 	from zipTree(project(':MineTweaker3-MC164-Mod-NEI').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Mod-GregTech').jar.archivePath)
 }
+
+task zendoc164(type: Javadoc) {
+	source = files(\
+		'MineTweaker3-API/src/main/java',
+		'MineTweaker3-MC164-Main/src/main/java',
+		'MineTweaker3-MC164-Mod-IC2/src/main/java',
+		'MineTweaker3-MC164-Mod-NEI/src/main/java',
+		'MineTweaker3-MC164-Mod-GregTech/src/main/java')
+	destinationDir = file("build/zendoc164")
+	options.docletpath = [file('buildSrc/build/libs/buildSrc.jar')].asList()
+	options.doclet = 'stanhebben.zenscript.docs.ZenScriptDoclet'
+	
+	def classpathList = [
+		project(":ZenScript").jar.archivePath,
+		project(':MineTweaker3-MC164-Main').jar.archivePath
+	]
+	
+	for (file in project(':MineTweaker3-MC164-Main').configurations.compile) {
+		classpathList += file
+	}
+	for (file in project(':MineTweaker3-MC164-Mod-IC2').configurations.compile) {
+		classpathList += file
+	}
+	for (file in project(':MineTweaker3-MC164-Mod-GregTech').configurations.compile) {
+		classpathList += file
+	}
+	for (file in project(':MineTweaker3-MC164-Mod-NEI').configurations.compile) {
+		classpathList += file
+	}
+	
+	options.classpath = classpathList.asList()
+	//options.baseurl = '/doc/mc164'
+	options.addStringOption("baseurl", "/doc/mc164/")
+}
+
+task experiment << {
+	def files = [project(":ZenScript").jar.archivePath]
+	for (file in project(':MineTweaker3-MC164-Main').configurations.compile) { 
+		files += file
+    }
+	
+	for (file in files) {
+		print file.toString() + '\n'
+	}
+}

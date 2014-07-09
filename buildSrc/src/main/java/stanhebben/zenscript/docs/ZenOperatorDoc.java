@@ -7,12 +7,32 @@
 package stanhebben.zenscript.docs;
 
 import com.sun.javadoc.MethodDoc;
+import java.util.HashMap;
+import java.util.Map;
+import static stanhebben.zenscript.docs.ZenOperatorDocType.*;
 
 /**
  *
  * @author Stan
  */
 public class ZenOperatorDoc {
+	private static Map<String, ZenOperatorDocType> TYPES;
+	
+	static {
+		TYPES = new HashMap<String, ZenOperatorDocType>();
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+		TYPES.put("stanhebben.zenscript.annotations.OperatorType.MUL", MUL);
+	}
+	
 	private final String operator;
 	private final MethodDoc method;
 	

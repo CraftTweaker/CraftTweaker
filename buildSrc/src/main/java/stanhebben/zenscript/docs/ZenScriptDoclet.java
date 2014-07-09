@@ -10,11 +10,13 @@ package stanhebben.zenscript.docs;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.RootDoc;
 import com.sun.javadoc.Type;
+import com.sun.tools.doclets.standard.Standard;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,8 +39,31 @@ import stanhebben.zenscript.util.StringUtil;
  * 
  * @author Stan Hebben
  */
-public class ZenScriptDoclet {
+public class ZenScriptDoclet extends Standard {
+	public static boolean validOptions(String[][] strings, DocErrorReporter der) {
+		return true;
+	}
+
+    public static int optionLength(String option) {
+        if(option.equals("-baseurl")) {
+            return 2;
+        }
+		
+        return Standard.optionLength(option);
+    }
+	
     public static boolean start(RootDoc root) {
+		File output = new File("zendoc");
+		String baseUrl = "/doc/";
+		for (String[] options : root.options()) {
+			//System.out.println(Arrays.toString(options));
+			if (options[0].equals("-d")) {
+				output = new File(options[1]);
+			} else if (options[0].equals("-baseurl")) {
+				baseUrl = options[1];
+			}
+		}
+		
         ClassDoc[] classes = root.classes();
 		List<ZenClassDoc> documentedClasses = new ArrayList<ZenClassDoc>();
 		List<ZenExpansionDoc> expansionClasses = new ArrayList<ZenExpansionDoc>();
@@ -78,10 +103,10 @@ public class ZenScriptDoclet {
 		}
 		
 		System.out.println("Number of classes to document: " + classesByName.size());
-		File output = new File("../../../build/zendoc");
+		System.out.println("Output directory: " + output);
 		if (!output.exists()) output.mkdirs();
 		
-		String packageList = buildPackageList(documentedClasses);
+		String packageList = buildPackageList(documentedClasses, baseUrl);
 		
 		for (ZenClassDoc doc : classesByName.values()) {
 			try {
@@ -128,7 +153,7 @@ public class ZenScriptDoclet {
 							writer.append(", ");
 						}
 						
-						outputType(writer, itype, classesByJavaName);
+						outputType(writer, itype, classesByJavaName, baseUrl);
 					}
 					writer.append("</div>");
 				}
@@ -163,10 +188,10 @@ public class ZenScriptDoclet {
 						ZenParameterDoc paramdoc = new ZenParameterDoc(parameter);
 						writer.append(paramdoc.getName());
 						writer.append(" as ");
-						outputType(writer, paramdoc.getType(), classesByJavaName);
+						outputType(writer, paramdoc.getType(), classesByJavaName, baseUrl);
 					}
 					writer.append(") as ");
-					outputType(writer, method.returnType(), classesByJavaName);
+					outputType(writer, method.returnType(), classesByJavaName, baseUrl);
 					writer.append("</div>");
 					
 					String[] comment = StringUtil.splitParagraphs(method.commentText());
@@ -289,7 +314,106 @@ public class ZenScriptDoclet {
 					}
 
 					for (ZenExpansionDoc expansion : doc.getExpansions()) {
-						// TODO
+						for (MethodDoc method : expansion.getDoc().methods()) {
+							for (AnnotationDesc annotation : method.annotations()) {
+								String fullName = annotation.annotationType().qualifiedName();
+
+								if (fullName.equals("stanhebben.zenscript.annotations.ZenMethod")
+										|| fullName.equals("stanhebben.zenscript.annotations.ZenMethodStatic")) {
+									String name = annotation.elementValues().length > 0
+											? (String) (annotation.elementValues()[0].value().value())
+											: "";
+
+									if (name.length() == 0) {
+										name = method.name();
+									}
+
+									List<ZenParameterDoc> parameters = new ArrayList<ZenParameterDoc>();
+									for (Parameter parameter : method.parameters()) {
+										parameters.add(new ZenParameterDoc(parameter));
+									}
+
+									if (fullName.equals("stanhebben.zenscript.annotations.ZenMethodStatic")) {
+										staticMethods.add(new ZenMethodDoc(name, method, parameters));
+									} else {
+										instanceMethods.add(new ZenMethodDoc(name, method, parameters.subList(1, parameters.size())));
+									}
+								} else if (fullName.equals("stanhebben.zenscript.annotations.ZenGetter")) {
+									String name = annotation.elementValues().length > 0
+											? (String) (annotation.elementValues()[0].value().value())
+											: "";
+
+									if (name.length() == 0) {
+										name = method.name();
+									}
+
+									Type type = method.returnType();
+									String[] comment = StringUtil.splitParagraphs(method.commentText());
+
+									if (!method.isStatic()) {
+										if (instanceProperties.containsKey(name)) {
+											ZenPropertyDoc property = instanceProperties.get(name);
+											property.setCanGet(true);
+											property.setComment(comment);
+										} else {
+											ZenPropertyDoc property = new ZenPropertyDoc(name, type);
+											property.setCanGet(true);
+											property.setComment(comment);
+											instanceProperties.put(name, property);
+										}
+									} else {
+										if (staticProperties.containsKey(name)) {
+											ZenPropertyDoc property = staticProperties.get(name);
+											property.setCanGet(true);
+											property.setComment(comment);
+										} else {
+											ZenPropertyDoc property = new ZenPropertyDoc(name, type);
+											property.setCanGet(true);
+											property.setComment(comment);
+											staticProperties.put(name, property);
+										}
+									}
+								} else if (fullName.equals("stanhebben.zenscript.annotations.ZenSetter")) {
+									String name = annotation.elementValues().length > 0
+											? (String) (annotation.elementValues()[0].value().value())
+											: "";
+
+									if (name.length() == 0) {
+										name = method.name();
+									}
+
+									Type type = method.parameters()[1].type();
+									String[] comment = StringUtil.splitParagraphs(method.commentText());
+
+									if (!method.isStatic()) {
+										if (instanceProperties.containsKey(name)) {
+											ZenPropertyDoc property = instanceProperties.get(name);
+											property.setCanSet(true);
+										} else {
+											ZenPropertyDoc property = new ZenPropertyDoc(name, type);
+											property.setCanGet(true);
+											property.setComment(comment);
+											instanceProperties.put(name, property);
+										}
+									} else {
+										if (staticProperties.containsKey(name)) {
+											ZenPropertyDoc property = staticProperties.get(name);
+											property.setCanSet(true);
+										} else {
+											ZenPropertyDoc property = new ZenPropertyDoc(name, type);
+											property.setCanGet(true);
+											property.setComment(comment);
+											staticProperties.put(name, property);
+										}
+									}
+								} else if (fullName.equals("stanhebben.zenscript.annotations.ZenOperator")) {
+									String operator = annotation.elementValues()[0].value().value().toString();
+									operators.add(new ZenOperatorDoc(operator, method));
+								} else if (fullName.equals("stanhebben.zenscript.annotations.ZenCaster")) {
+									casters.add(new ZenCasterDoc(method));
+								}
+							}
+						}
 					}
 
 					if (!staticProperties.isEmpty()) {
@@ -310,7 +434,7 @@ public class ZenScriptDoclet {
 
 							writer.append("<tr>");
 							writer.append("<td class=\"property-type\">");
-							outputType(writer, property.getType(), classesByJavaName);
+							outputType(writer, property.getType(), classesByJavaName, baseUrl);
 							writer.append("</td>");
 							writer.append("<td>");
 							writer.append("<div class=\"property-name\">");
@@ -347,7 +471,7 @@ public class ZenScriptDoclet {
 
 							writer.append("<tr>");
 							writer.append("<td class=\"property-type\">");
-							outputType(writer, property.getType(), classesByJavaName);
+							outputType(writer, property.getType(), classesByJavaName, baseUrl);
 							writer.append("</td>");
 							writer.append("<td>");
 							writer.append("<div class=\"property-name\">");
@@ -375,7 +499,7 @@ public class ZenScriptDoclet {
 						for (ZenMethodDoc method : staticMethods) {
 							writer.append("<tr>");
 							writer.append("<td class=\"property-type\">");
-							outputType(writer, method.getDoc().returnType(), classesByJavaName);
+							outputType(writer, method.getDoc().returnType(), classesByJavaName, baseUrl);
 							writer.append("</td>");
 							writer.append("<td>");
 							writer.append("<div class=\"property-name\">");
@@ -393,7 +517,7 @@ public class ZenScriptDoclet {
 								}
 								writer.append(param.getName());
 								writer.append(" as ");
-								outputType(writer, param.getType(), classesByJavaName);
+								outputType(writer, param.getType(), classesByJavaName, baseUrl);
 							}
 							writer.append(")</div>");
 
@@ -418,7 +542,7 @@ public class ZenScriptDoclet {
 						for (ZenMethodDoc method : instanceMethods) {
 							writer.append("<tr>");
 							writer.append("<td class=\"property-type\">");
-							outputType(writer, method.getDoc().returnType(), classesByJavaName);
+							outputType(writer, method.getDoc().returnType(), classesByJavaName, baseUrl);
 							writer.append("</td>");
 							writer.append("<td>");
 							writer.append("<div class=\"property-name\">");
@@ -436,7 +560,7 @@ public class ZenScriptDoclet {
 								}
 								writer.append(param.getName());
 								writer.append(" as ");
-								outputType(writer, param.getType(), classesByJavaName);
+								outputType(writer, param.getType(), classesByJavaName, baseUrl);
 							}
 							writer.append(")</div>");
 
@@ -453,7 +577,31 @@ public class ZenScriptDoclet {
 					}
 
 					if (!operators.isEmpty()) {
-						// TODO
+						writer.append("<div class=\"panel panel-info panel-memberlist\">");
+						writer.append("<div class=\"panel-heading\">Casters</div>");
+						writer.append("<div class=\"panel-body\">");
+						writer.append("<table class=\"table table-properties table-bordered\"><tbody>");
+						
+						for (ZenOperatorDoc operator : operators) {
+							writer.append("<tr>");
+							writer.append("<td>");
+							writer.append("<div class=\"property-name\">");
+							/*writer.append("as <a href=\"#property-staticvalue\">");
+							outputTypeRaw(writer, caster.getMethod().returnType(), classesByJavaName);
+							writer.append("</a></div>");*/
+
+							writer.append(operator.getOperator());
+
+							String[] comment = StringUtil.splitParagraphs(operator.getMethod().commentText());
+							if (comment.length > 0) {
+								writer.append("<div class=\"property-intro\">")
+										.append(comment[0])
+										.append("</div>");
+							}
+							writer.append("</td></tr>");
+						}
+
+						writer.append("</tbody></table></div></div>");
 					}
 
 					if (!casters.isEmpty()) {
@@ -510,7 +658,7 @@ public class ZenScriptDoclet {
       return LanguageVersion.JAVA_1_5;
    }
 	
-	private static String buildPackageList(List<ZenClassDoc> classes) {
+	private static String buildPackageList(List<ZenClassDoc> classes, String baseurl) {
 		// collect package list
 		Map<String, List<ZenClassDoc>> packages = new HashMap<String, List<ZenClassDoc>>();
 		for (ZenClassDoc cls : classes) {
@@ -540,7 +688,7 @@ public class ZenScriptDoclet {
 		
 		for (int i = 0; i < packageSorted.length; i++) {
 			String pkgId = extractId(packageSorted[i]);
-			String pkgDir = "/doc/" + packageSorted[i].replace('.', '/');
+			String pkgDir = baseurl + packageSorted[i].replace('.', '/');
 			
 			output.append("<div class=\"panel panel-default\">");
 			output.append("<div class=\"panel-heading\"><h4 class=\"panel-title package-title\">");
@@ -612,30 +760,32 @@ public class ZenScriptDoclet {
 		return pkg.replace('.', '-');
 	}
 	
-	private static void outputType(Writer output, Type type, Map<String, ZenClassDoc> javaClasses) throws IOException {
+	private static void outputType(Writer output, Type type, Map<String, ZenClassDoc> javaClasses, String baseUrl) throws IOException {
 		if (javaClasses.containsKey(type.qualifiedTypeName())) {
 			ZenClassDoc doc = javaClasses.get(type.qualifiedTypeName());
 			output.append("<a href=\"");
-			output.append(makeLink(doc.getName()));
+			output.append(makeLink(doc.getName(), baseUrl));
 			output.append("\">");
 			output.append(doc.getName().substring(doc.getName().lastIndexOf('.') + 1));
 			output.append("</a>");
 		} else if (type.qualifiedTypeName().equals("java.util.List")) {
 			Type base = type.asParameterizedType().typeArguments()[0];
-			outputType(output, base, javaClasses);
+			outputType(output, base, javaClasses, baseUrl);
 			output.append("[]");
 		} else if (type.qualifiedTypeName().equals("java.util.Map")) {
 			Type key = type.asParameterizedType().typeArguments()[0];
 			Type value = type.asParameterizedType().typeArguments()[1];
-			outputType(output, value, javaClasses);
+			outputType(output, value, javaClasses, baseUrl);
 			output.append('[');
-			outputType(output, key, javaClasses);
+			outputType(output, key, javaClasses, baseUrl);
 			output.append(']');
 		} else if (type.qualifiedTypeName().equals("java.lang.String")) {
 			output.append("string");
 		} else {
 			output.append(type.qualifiedTypeName());
 		}
+		
+		output.append(type.dimension());
 	}
 	
 	private static void outputTypeRaw(Writer output, Type type, Map<String, ZenClassDoc> javaClasses) throws IOException {
@@ -660,7 +810,7 @@ public class ZenScriptDoclet {
 		}
 	}
 	
-	private static String makeLink(String className) {
-		return "/doc/" + className.replace('.', '/') + ".html";
+	private static String makeLink(String className, String baseUrl) {
+		return baseUrl + className.replace('.', '/') + ".html";
 	}
 }

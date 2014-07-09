@@ -13,6 +13,7 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  *
@@ -21,10 +22,12 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenClass("mods.gregtech.Canner")
 @ModOnly("gregtech_addon")
 public class Canner {
+	@ZenMethod
 	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int duration, int euPerTick) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, null, input1, input2, duration, euPerTick));
 	}
 	
+	@ZenMethod
 	public static void addRecipe(IItemStack[] output, IItemStack input1, IItemStack input2, int duration, int euPerTick) {
 		if (output.length == 0) {
 			MineTweakerAPI.logError("canner requires at least 1 output");
