@@ -21,6 +21,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.UserListOps;
 
 /**
@@ -52,6 +53,9 @@ public class MCServer extends AbstractServer {
 
 	@Override
 	public boolean isOp(IPlayer player) {
+		if (player == ServerPlayer.INSTANCE)
+			return true;
+		
 		UserListOps ops = MinecraftServer.getServer().getConfigurationManager().func_152603_m();
 		if (server.isDedicatedServer()) {
 			return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null;
@@ -63,7 +67,11 @@ public class MCServer extends AbstractServer {
 	private static IPlayer getPlayer(ICommandSender commandSender) {
 		if (commandSender instanceof EntityPlayer) {
 			return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
+		} else if (commandSender instanceof DedicatedServer) {
+			return ServerPlayer.INSTANCE;
 		} else {
+			System.out.println("Unsupported command sender: " + commandSender);
+			System.out.println("player name: " + commandSender.getCommandSenderName());
 			return null;
 		}
 	}

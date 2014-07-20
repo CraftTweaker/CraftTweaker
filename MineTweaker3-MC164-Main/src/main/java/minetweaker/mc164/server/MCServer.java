@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.server.AbstractServer;
@@ -22,6 +21,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 
 /**
  *
@@ -53,14 +53,18 @@ public class MCServer extends AbstractServer {
 	@Override
 	public boolean isOp(IPlayer player) {
 		return MinecraftServer.getServer().getConfigurationManager().getOps().isEmpty()
-				|| MinecraftServer.getServer().getConfigurationManager().getOps().contains(player.getName());
+				|| MinecraftServer.getServer().getConfigurationManager().getOps().contains(player.getName())
+				|| player == ServerPlayer.INSTANCE;
 	}
 	
 	private static IPlayer getPlayer(ICommandSender commandSender) {
 		if (commandSender instanceof EntityPlayer) {
 			return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
+		} else if (commandSender instanceof DedicatedServer) {
+			return ServerPlayer.INSTANCE;
 		} else {
-			System.out.println("No such player: " + commandSender);
+			System.out.println("Unsupported command sender: " + commandSender);
+			System.out.println("player name: " + commandSender.getCommandSenderName());
 			return null;
 		}
 	}

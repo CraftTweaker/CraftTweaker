@@ -257,7 +257,7 @@ public class MineTweakerImplementationAPI {
 				}, new ICommandFunction() {
 			@Override
 			public void execute(String[] arguments, IPlayer player) {
-				player.openBrowser("http://www.minecraftforum.net/topic/1886008-164-17x-minetweaker-3-customize-your-minecraft-experience");
+				player.openBrowser("http://minetweaker3.powerofbytes.com/forum");
 			}
 		}));
 		
