@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.server.AbstractServer;

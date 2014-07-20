@@ -6,6 +6,7 @@
 
 package stanhebben.zenscript.type;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
@@ -17,8 +18,10 @@ import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenType.BOOL;
 import static stanhebben.zenscript.type.ZenType.STRING;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
+import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -31,7 +34,7 @@ public class ZenTypeBoolObject extends ZenType {
 
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
-		return BOOL.unary(position, environment, value.cast(position, environment, ZenTypeBool.INSTANCE), operator);
+		return BOOL.unary(position, environment, value.cast(position, environment, ZenType.BOOL), operator);
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class ZenTypeBoolObject extends ZenType {
 
 	@Override
 	public Expression compare(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
-		return BOOL.compare(position, environment, left.cast(position, environment, ZenTypeBool.INSTANCE), right, type);
+		return BOOL.compare(position, environment, left.cast(position, environment, BOOL), right, type);
 	}
 
 	@Override
@@ -112,6 +115,22 @@ public class ZenTypeBoolObject extends ZenType {
 			environment.getOutput().invokeVirtual(Boolean.class, "booleanValue", boolean.class);
 		} else if (type == STRING) {
 			environment.getOutput().invokeVirtual(Boolean.class, "toString", String.class);
+		} else if (type == ANY) {
+			MethodOutput output = environment.getOutput();
+			
+			Label lblNotNull = new Label();
+			Label lblAfter = new Label();
+			
+			output.dup();
+			output.ifNonNull(lblNotNull);
+			output.aConstNull();
+			output.goTo(lblAfter);
+			
+			output.label(lblNotNull);
+			output.invokeVirtual(Boolean.class, "booleanValue", boolean.class);
+			output.invokeStatic(BOOL.getAnyClassName(environment), "valueOf", "(Z)" + signature(IAny.class));
+			
+			output.label(lblAfter);
 		} else {
 			environment.getOutput().invokeVirtual(Boolean.class, "booleanValue", boolean.class);
 			BOOL.compileCast(position, environment, type);
@@ -121,6 +140,11 @@ public class ZenTypeBoolObject extends ZenType {
 	@Override
 	public String getName() {
 		return "bool";
+	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		return BOOL.getAnyClassName(environment);
 	}
 
 	@Override

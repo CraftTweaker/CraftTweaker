@@ -220,15 +220,18 @@ public class TokenStream implements Iterator<Token> {
                 lineOffset = reader.lineOffset;
                 nextChar = reader.read();
             }
+			
+			if (line < 0) throw new IllegalStateException("Line cannot be negative");
+			
             if (dfa.finals[state] != CompiledDFA.NOFINAL) {
-                if (state == 0) throw new TokenException(line, lineOffset, (char)nextChar);
+                if (state == 0) throw new TokenException(file, line, lineOffset, (char)nextChar);
                 next = process(new Token(value.toString(), dfa.finals[state], new ZenPosition(file, tLine, tLineOffset)));
             } else {
 				if (nextChar < 0 && value.length() == 0) {
 					return; // happens on comments at the end of files
 				}
-				System.out.println("Value: " + value.length() + " characters: " + value);
-                throw new TokenException(line, lineOffset, (char)nextChar);
+				//System.out.println("Value: " + value.length() + " characters: " + value);
+                throw new TokenException(file, line, lineOffset, (char)nextChar);
             }
         } catch (IOException ex) {
             ex.printStackTrace();

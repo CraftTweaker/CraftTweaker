@@ -28,7 +28,7 @@ public class StatementIf extends Statement {
 		
 		Expression cCondition = condition.compile(environment).eval(environment);
 		ZenType expressionType = cCondition.getType();
-		if (expressionType.canCastImplicit(ZenTypeBool.INSTANCE, environment)) {
+		if (expressionType.canCastImplicit(ZenType.BOOL, environment)) {
 			Label labelEnd = new Label();
 			Label labelElse = onElse == null ? labelEnd : new Label();
 			

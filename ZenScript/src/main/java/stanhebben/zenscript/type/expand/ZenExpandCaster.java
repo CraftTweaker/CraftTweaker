@@ -7,10 +7,10 @@
 package stanhebben.zenscript.type.expand;
 
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.natives.JavaMethod;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -32,7 +32,7 @@ public class ZenExpandCaster {
 		return method.callStatic(position, environment, expression);
 	}
 	
-	public void compile(IEnvironmentMethod environment) {
-		environment.getOutput().invokeStatic(method);
+	public void compile(MethodOutput output) {
+		output.invokeStatic(method);
 	}
 }

@@ -42,6 +42,11 @@ public class ZenTypeIntRange extends ZenType {
 	}
 	
 	@Override
+	public String getAnyClassName(IEnvironmentGlobal global) {
+		throw new UnsupportedOperationException("range values cannot yet be used as any value");
+	}
+	
+	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		environment.error(position, "cannot apply unary operators on int ranges");
 		return new ExpressionInvalid(position);

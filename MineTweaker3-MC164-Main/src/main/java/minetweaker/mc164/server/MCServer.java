@@ -60,6 +60,7 @@ public class MCServer extends AbstractServer {
 		if (commandSender instanceof EntityPlayer) {
 			return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
 		} else {
+			System.out.println("No such player: " + commandSender);
 			return null;
 		}
 	}

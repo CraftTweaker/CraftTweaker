@@ -2,7 +2,11 @@ package stanhebben.zenscript.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -11,16 +15,32 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionCompareGeneric;
 import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.expression.ExpressionJavaCallVirtual;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.ExpressionStringConcat;
+import stanhebben.zenscript.expression.ExpressionStringContains;
+import stanhebben.zenscript.expression.ExpressionStringIndex;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import static stanhebben.zenscript.type.ZenType.BYTE;
+import stanhebben.zenscript.util.AnyClassWriter;
+import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASINT;
+import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSTRING;
+import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
+import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
+import stanhebben.zenscript.util.IAnyDefinition;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import static stanhebben.zenscript.util.ZenTypeUtil.internal;
+import static stanhebben.zenscript.util.ZenTypeUtil.signature;
+import stanhebben.zenscript.value.IAny;
 
 public class ZenTypeString extends ZenType {
 	public static final ZenTypeString INSTANCE = new ZenTypeString();
 	
-	private final Type type = Type.getType("java.lang.String");
+	private static final String ANY_NAME = "any/AnyString";
+	private static final String ANY_NAME_2 = "any.AnyString";
+	
+	private final Type type = Type.getType(String.class);
 	
 	private ZenTypeString() {}
 
@@ -31,7 +51,7 @@ public class ZenTypeString extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this || type == BOOL || type.getNumberType() > 0 || canCastExpansion(environment, type);
+		return type == this || canCastExpansion(environment, type);
 	}
 
 	@Override
@@ -43,7 +63,7 @@ public class ZenTypeString extends ZenType {
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
 		if (type == this) {
 			return value;
-		} else if (type == BOOL || type.getNumberType() > 0) {
+		} else if (type == BOOL || type.getNumberType() > 0 || type == ANY) {
 			return new ExpressionAs(position, value, type);
 		} else if (canCastExpansion(environment, type)) {
 			return castExpansion(position, environment, value, type);
@@ -99,7 +119,9 @@ public class ZenTypeString extends ZenType {
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		MethodOutput output = environment.getOutput();
 		
-		if (type == BOOL) {
+		if (type == STRING) {
+			// do nothing
+		} else if (type == BOOL) {
 			output.invokeStatic(Boolean.class, "parseBoolean", boolean.class, String.class);
 		} else if (type == ZenTypeBoolObject.INSTANCE) {
 			output.invokeStatic(Boolean.class, "valueOf", Boolean.class, String.class);
@@ -157,6 +179,10 @@ public class ZenTypeString extends ZenType {
 				values.add(right.cast(position, environment, this));
 				return new ExpressionStringConcat(position, values);
 			}
+		} else if (operator == OperatorType.INDEXGET) {
+			return new ExpressionStringIndex(position, left, right.cast(position, environment, INT));
+		} else if (operator == OperatorType.CONTAINS) {
+			return new ExpressionStringContains(position, left, right.cast(position, environment, STRING));
 		} else {
 			Expression result = binaryExpansion(position, environment, left, right, operator);
 			if (result == null) {
@@ -183,6 +209,10 @@ public class ZenTypeString extends ZenType {
 	@Override
 	public Expression compare(
 			ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
+		if (right.getType().canCastImplicit(STRING, environment)) {
+			return new ExpressionCompareGeneric(position, new ExpressionJavaCallVirtual(position, METHOD_ASINT, left, right), type);
+		}
+		
 		Expression result = binaryExpansion(position, environment, left, right, OperatorType.COMPARE);
 		if (result == null) {
 			environment.error(position, "cannot compare strings");
@@ -208,9 +238,324 @@ public class ZenTypeString extends ZenType {
 	public String getName() {
 		return "string";
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		if (!environment.containsClass(ANY_NAME_2)) {
+			environment.putClass(ANY_NAME_2, new byte[0]);
+			environment.putClass(ANY_NAME_2, AnyClassWriter.construct(new AnyDefinitionString(environment), ANY_NAME, type));
+		}
+		
+		return ANY_NAME;
+	}
 
 	@Override
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionNull(position);
+	}
+	
+	private class AnyDefinitionString implements IAnyDefinition {
+		private final IEnvironmentGlobal environment;
+		
+		private AnyDefinitionString(IEnvironmentGlobal environment) {
+			this.environment = environment;
+		}
+
+		@Override
+		public void defineMembers(ClassVisitor output) {
+			output.visitField(Opcodes.ACC_PRIVATE, "value", "Ljava/lang/String;", null, null);
+			
+			MethodOutput valueOf = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "valueOf", "(Ljava/lang/String;)" + signature(IAny.class), null, null);
+			valueOf.start();
+			valueOf.newObject(ANY_NAME);
+			valueOf.dup();
+			valueOf.loadObject(0);
+			valueOf.construct(ANY_NAME, "Ljava/lang/String;");
+			valueOf.returnObject();
+			valueOf.end();
+			
+			MethodOutput constructor = new MethodOutput(output, Opcodes.ACC_PUBLIC, "<init>", "(Ljava/lang/String;)V", null, null);
+			constructor.start();
+			constructor.loadObject(0);
+			constructor.invokeSpecial(internal(Object.class), "<init>", "()V");
+			constructor.loadObject(0);
+			constructor.load(type, 1);
+			constructor.putField(ANY_NAME, "value", "Ljava/lang/String;");
+			constructor.returnType(Type.VOID_TYPE);
+			constructor.end();
+		}
+
+		@Override
+		public void defineStaticCanCastImplicit(MethodOutput output) {
+			Label lblOthers = new Label();
+			
+			output.constant(type);
+			output.loadObject(0);
+			output.ifACmpNe(lblOthers);
+			output.iConst1();
+			output.returnInt();
+			
+			output.label(lblOthers);
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCanCastImplicit(STRING, output, environment, 0);
+			}
+			
+			output.iConst0();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineStaticAs(MethodOutput output) {
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCast(STRING, output, environment, 0, 1);
+			}
+			
+			throwCastException(output, "string", 1);
+		}
+
+		@Override
+		public void defineNot(MethodOutput output) {
+			throwUnsupportedException(output, "string", "not");
+		}
+
+		@Override
+		public void defineNeg(MethodOutput output) {
+			throwUnsupportedException(output, "string", "negate");
+		}
+
+		@Override
+		public void defineAdd(MethodOutput output) {
+			defineCat(output);
+		}
+
+		@Override
+		public void defineSub(MethodOutput output) {
+			throwUnsupportedException(output, "string", "-");
+		}
+
+		@Override
+		public void defineCat(MethodOutput output) {
+			output.newObject(StringBuilder.class);
+			output.dup();
+			output.invokeSpecial(internal(StringBuilder.class), "<init>", "()V");
+			getValue(output);
+			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSTRING);
+			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
+			output.invokeVirtual(StringBuilder.class, "toString", String.class);
+			output.invokeStatic(ANY_NAME, "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
+			output.returnObject();
+		}
+
+		@Override
+		public void defineMul(MethodOutput output) {
+			throwUnsupportedException(output, "string", "*");
+		}
+
+		@Override
+		public void defineDiv(MethodOutput output) {
+			throwUnsupportedException(output, "string", "/");
+		}
+
+		@Override
+		public void defineMod(MethodOutput output) {
+			throwUnsupportedException(output, "string", "*");
+		}
+
+		@Override
+		public void defineAnd(MethodOutput output) {
+			throwUnsupportedException(output, "string", "&");
+		}
+
+		@Override
+		public void defineOr(MethodOutput output) {
+			throwUnsupportedException(output, "string", "|");
+		}
+
+		@Override
+		public void defineXor(MethodOutput output) {
+			throwUnsupportedException(output, "string", "^");
+		}
+
+		@Override
+		public void defineRange(MethodOutput output) {
+			throwUnsupportedException(output, "string", "..");
+		}
+
+		@Override
+		public void defineCompareTo(MethodOutput output) {
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSTRING);
+			output.invokeVirtual(String.class, "compareTo", int.class, String.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineContains(MethodOutput output) {
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSTRING);
+			output.invokeVirtual(String.class, "contains", boolean.class, CharSequence.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineMemberGet(MethodOutput output) {
+			// TODO
+			output.aConstNull();
+			output.returnObject();
+		}
+
+		@Override
+		public void defineMemberSet(MethodOutput output) {
+			// TODO
+			output.returnType(Type.VOID_TYPE);
+		}
+
+		@Override
+		public void defineMemberCall(MethodOutput output) {
+			// TODO
+			output.aConstNull();
+			output.returnObject();
+		}
+
+		@Override
+		public void defineIndexGet(MethodOutput output) {
+			// return new AnyString(String.substring(other.asInt(), other.asInt() + 1))
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASINT);
+			output.dup();
+			output.iConst1();
+			output.iAdd();
+			output.invokeVirtual(String.class, "substring", String.class, int.class, int.class);
+			output.invokeStatic(ANY_NAME, "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
+			output.returnObject();
+		}
+
+		@Override
+		public void defineIndexSet(MethodOutput output) {
+			throwUnsupportedException(output, "string", "[]=");
+		}
+
+		@Override
+		public void defineCall(MethodOutput output) {
+			throwUnsupportedException(output, "string", "call");
+		}
+
+		@Override
+		public void defineAsBool(MethodOutput output) {
+			// return Boolean.parseBoolean(value);
+			getValue(output);
+			output.invokeStatic(Boolean.class, "parseBoolean", boolean.class, String.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineAsByte(MethodOutput output) {
+			// return Byte.parseByte(value);
+			getValue(output);
+			output.invokeStatic(Byte.class, "parseByte", byte.class, String.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineAsShort(MethodOutput output) {
+			// return Short.parseShort(value);
+			getValue(output);
+			output.invokeStatic(Short.class, "parseShort", short.class, String.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineAsInt(MethodOutput output) {
+			// return Integer.parseInt(value);
+			getValue(output);
+			output.invokeStatic(Integer.class, "parseInt", int.class, String.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineAsLong(MethodOutput output) {
+			// return Integer.parseLong(value);
+			getValue(output);
+			output.invokeStatic(Long.class, "parseLong", long.class, String.class);
+			output.returnType(Type.LONG_TYPE);
+		}
+
+		@Override
+		public void defineAsFloat(MethodOutput output) {
+			// return Float.parseFloat(value);
+			getValue(output);
+			output.invokeStatic(Float.class, "parseFloat", float.class, String.class);
+			output.returnType(Type.FLOAT_TYPE);
+		}
+
+		@Override
+		public void defineAsDouble(MethodOutput output) {
+			// return Double.parseDouble(value);
+			getValue(output);
+			output.invokeStatic(Double.class, "parseDouble", double.class, String.class);
+			output.returnType(Type.DOUBLE_TYPE);
+		}
+
+		@Override
+		public void defineAsString(MethodOutput output) {
+			getValue(output);
+			output.returnObject();
+		}
+
+		@Override
+		public void defineAs(MethodOutput output) {
+			int localValue = output.local(type);
+			
+			getValue(output);
+			output.store(type, localValue);
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCast(STRING, output, environment, localValue, 1);
+			}
+			
+			throwCastException(output, "string", 1);
+		}
+
+		@Override
+		public void defineIs(MethodOutput output) {
+			Label lblEq = new Label();
+			
+			output.loadObject(1);
+			output.constant(type);
+			output.ifACmpEq(lblEq);
+			output.iConst0();
+			output.returnInt();
+			output.label(lblEq);
+			output.iConst1();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineGetNumberType(MethodOutput output) {
+			output.iConst0();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineIteratorSingle(MethodOutput output) {
+			throwUnsupportedException(output, "string", "iterator");
+		}
+
+		@Override
+		public void defineIteratorMulti(MethodOutput output) {
+			throwUnsupportedException(output, "string", "iterator");
+		}
+		
+		private void getValue(MethodOutput output) {
+			output.loadObject(0);
+			output.getField(ANY_NAME, "value", "Ljava/lang/String;");
+		}
 	}
 }

@@ -18,10 +18,7 @@ public class ExpressionAs extends Expression {
 
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-		if (!this.type.canCastExplicit(type, environment)) {
-			environment.error(position, "cannot cast " + this.type + " to " + type);
-		}
-		return new ExpressionAs(getPosition(), this, type);
+		return this.type.cast(position, environment, this, type);
 	}
 
 	@Override

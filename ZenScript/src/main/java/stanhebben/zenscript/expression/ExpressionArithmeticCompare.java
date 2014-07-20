@@ -29,7 +29,7 @@ public class ExpressionArithmeticCompare extends Expression {
 
 	@Override
 	public ZenType getType() {
-		return ZenTypeBool.INSTANCE;
+		return ZenType.BOOL;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ExpressionArithmeticCompare extends Expression {
 		
 		if (result) {
 			MethodOutput output = environment.getOutput();
-			if (a.getType() == ZenTypeBool.INSTANCE) {
+			if (a.getType() == ZenType.BOOL) {
 				if (type == CompareType.EQ) {
 					Label onThen = new Label();
 					Label onEnd = new Label();

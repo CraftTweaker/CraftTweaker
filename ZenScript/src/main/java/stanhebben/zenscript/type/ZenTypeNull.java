@@ -126,6 +126,11 @@ public class ZenTypeNull extends ZenType {
 	public String getName() {
 		return "null";
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		throw new UnsupportedOperationException("The null type does not have an any type");
+	}
 
 	@Override
 	public Expression defaultValue(ZenPosition position) {

@@ -10,9 +10,16 @@ import java.util.Iterator;
 
 /**
  *
- * @author Stanneke
+ * @author Stan Hebben
  */
 public interface IAny {
+	public static final int NUM_BYTE = 1;
+	public static final int NUM_SHORT = 2;
+	public static final int NUM_INT = 3;
+	public static final int NUM_LONG = 4;
+	public static final int NUM_FLOAT = 5;
+	public static final int NUM_DOUBLE = 6;
+	
 	public IAny not();
 	
 	public IAny neg();
@@ -41,7 +48,11 @@ public interface IAny {
 	
 	public boolean contains(IAny value);
 	
-	public IAny member(String value);
+	public IAny memberGet(String member);
+	
+	public void memberSet(String member, IAny value);
+	
+	public IAny memberCall(String member, IAny... values);
 	
 	public IAny indexGet(IAny key);
 	
@@ -66,6 +77,12 @@ public interface IAny {
 	public String asString();
 	
 	public <T> T as(Class<T> cls);
+	
+	public boolean is(Class<?> cls);
+	
+	public boolean canCastImplicit(Class<?> cls);
+	
+	public int getNumberType();
 	
 	public Iterator<IAny> iteratorSingle();
 	

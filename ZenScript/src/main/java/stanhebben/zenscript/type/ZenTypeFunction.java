@@ -63,6 +63,11 @@ public class ZenTypeFunction extends ZenType {
 		nameBuilder.append(returnType.getName());
 		name = nameBuilder.toString();
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal global) {
+		throw new UnsupportedOperationException("functions cannot yet be used as any value");
+	}
 
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {

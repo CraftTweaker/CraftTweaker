@@ -1,6 +1,10 @@
 package stanhebben.zenscript.type;
 
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -13,11 +17,27 @@ import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionInt;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import static stanhebben.zenscript.type.ZenType.BYTE;
+import static stanhebben.zenscript.type.ZenType.STRING;
+import stanhebben.zenscript.util.AnyClassWriter;
+import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASBYTE;
+import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSHORT;
+import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSTRING;
+import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
+import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
+import stanhebben.zenscript.util.IAnyDefinition;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import static stanhebben.zenscript.util.ZenTypeUtil.internal;
+import static stanhebben.zenscript.util.ZenTypeUtil.signature;
+import stanhebben.zenscript.value.IAny;
 
 public class ZenTypeShort extends ZenType {
 	public static final ZenTypeShort INSTANCE = new ZenTypeShort();
+	
+	//private static final JavaMethod SHORT_TOSTRING = JavaMethod.get(EMPTY_REGISTRY, Short.class, "toString", short.class);
+	private static final String ANY_NAME = "any/AnyShort";
+	private static final String ANY_NAME_2 = "any.AnyShort";
 	
 	private ZenTypeShort() {}
 
@@ -30,6 +50,7 @@ public class ZenTypeShort extends ZenType {
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return (type.getNumberType() != 0 && type.getNumberType() >= NUM_SHORT)
 				 || type == ZenTypeString.INSTANCE
+				 || type == ANY
 				 || canCastExpansion(environment, type);
 	}
 
@@ -37,6 +58,7 @@ public class ZenTypeShort extends ZenType {
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type.getNumberType() != 0
 				|| type == ZenTypeString.INSTANCE
+				|| type == ANY
 				|| canCastExpansion(environment, type);
 	}
 	
@@ -128,6 +150,8 @@ public class ZenTypeShort extends ZenType {
 			output.invokeStatic(Double.class, "valueOf", Double.class, double.class);
 		} else if (type == STRING) {
 			output.invokeStatic(Short.class, "toString", String.class, short.class);
+		} else if (type == ANY) {
+			output.invokeStatic(getAnyClassName(environment), "valueOf", "(S)" + signature(IAny.class));
 		} else if (!compileCastExpansion(position, environment, type)) {
 			environment.error(position, "cannot cast " + this + " to " + type);
 		}
@@ -170,9 +194,394 @@ public class ZenTypeShort extends ZenType {
 	public String getName() {
 		return "short";
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		if (!environment.containsClass(ANY_NAME_2)) {
+			environment.putClass(ANY_NAME_2, new byte[0]);
+			environment.putClass(ANY_NAME_2, AnyClassWriter.construct(new AnyDefinitionShort(environment), ANY_NAME, Type.SHORT_TYPE));
+		}
+		
+		return ANY_NAME;
+	}
 
 	@Override
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionInt(position, 0, SHORT);
+	}
+	
+	private class AnyDefinitionShort implements IAnyDefinition {
+		private final IEnvironmentGlobal environment;
+		
+		public AnyDefinitionShort(IEnvironmentGlobal environment) {
+			this.environment = environment;
+		}
+
+		@Override
+		public void defineMembers(ClassVisitor output) {
+			output.visitField(Opcodes.ACC_PRIVATE, "value", "S", null, null);
+			
+			MethodOutput valueOf = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "valueOf", "(S)" + signature(IAny.class), null, null);
+			valueOf.start();
+			valueOf.newObject(ANY_NAME);
+			valueOf.dup();
+			valueOf.load(Type.SHORT_TYPE, 0);
+			valueOf.construct(ANY_NAME, "S");
+			valueOf.returnObject();
+			valueOf.end();
+			
+			MethodOutput constructor = new MethodOutput(output, Opcodes.ACC_PUBLIC, "<init>", "(S)V", null, null);
+			constructor.start();
+			constructor.loadObject(0);
+			constructor.invokeSpecial(internal(Object.class), "<init>", "()V");
+			constructor.loadObject(0);
+			constructor.load(Type.SHORT_TYPE, 1);
+			constructor.putField(ANY_NAME, "value", "S");
+			constructor.returnType(Type.VOID_TYPE);
+			constructor.end();
+		}
+		
+		@Override
+		public void defineStaticCanCastImplicit(MethodOutput output) {
+			Label lblCan = new Label();
+			
+			output.constant(Type.BYTE_TYPE);
+			output.loadObject(0);
+			output.ifACmpEq(lblCan);
+			
+			output.constant(Type.SHORT_TYPE);
+			output.loadObject(0);
+			output.ifACmpEq(lblCan);
+			
+			output.constant(Type.INT_TYPE);
+			output.loadObject(0);
+			output.ifACmpEq(lblCan);
+			
+			output.constant(Type.LONG_TYPE);
+			output.loadObject(0);
+			output.ifACmpEq(lblCan);
+			
+			output.constant(Type.FLOAT_TYPE);
+			output.loadObject(0);
+			output.ifACmpEq(lblCan);
+			
+			output.constant(Type.DOUBLE_TYPE);
+			output.loadObject(0);
+			output.ifACmpEq(lblCan);
+			
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCanCastImplicit(SHORT, output, environment, 0);
+			}
+			
+			output.iConst0();
+			output.returnInt();
+			
+			output.label(lblCan);
+			output.iConst1();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineStaticAs(MethodOutput output) {
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCast(SHORT, output, environment, 0, 1);
+			}
+			
+			throwCastException(output, "short", 1);
+		}
+
+		@Override
+		public void defineNot(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.iNot();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineNeg(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.iNeg();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineAdd(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iAdd();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineSub(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iSub();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineCat(MethodOutput output) {
+			// StringBuilder builder = new StringBuilder();
+			// builder.append(value);
+			// builder.append(other.asString());
+			// return new AnyString(builder.toString());
+			output.newObject(StringBuilder.class);
+			output.dup();
+			output.invokeSpecial(internal(StringBuilder.class), "<init>", "()V");
+			getValue(output);
+			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, int.class);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSTRING);
+			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
+			output.invokeVirtual(StringBuilder.class, "toString", String.class);
+			output.invokeStatic(STRING.getAnyClassName(environment), "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
+			output.returnObject();
+		}
+
+		@Override
+		public void defineMul(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iMul();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineDiv(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iDiv();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineMod(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iRem();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineAnd(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iAnd();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineOr(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iOr();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineXor(MethodOutput output) {
+			output.newObject(ANY_NAME);
+			output.dup();
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSHORT);
+			output.iXor();
+			output.invokeSpecial(ANY_NAME, "<init>", "(S)V");
+			output.returnObject();
+		}
+
+		@Override
+		public void defineRange(MethodOutput output) {
+			// TODO
+			output.aConstNull();
+			output.returnObject();
+		}
+
+		@Override
+		public void defineCompareTo(MethodOutput output) {
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASBYTE);
+			output.iSub();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineContains(MethodOutput output) {
+			throwUnsupportedException(output, "short", "in");
+		}
+
+		@Override
+		public void defineMemberGet(MethodOutput output) {
+			// TODO
+			output.aConstNull();
+			output.returnObject();
+		}
+
+		@Override
+		public void defineMemberSet(MethodOutput output) {
+			// TODO
+			output.returnType(Type.VOID_TYPE);
+		}
+
+		@Override
+		public void defineMemberCall(MethodOutput output) {
+			// TODO
+			output.aConstNull();
+			output.returnObject();
+		}
+
+		@Override
+		public void defineIndexGet(MethodOutput output) {
+			throwUnsupportedException(output, "short", "get []");
+		}
+
+		@Override
+		public void defineIndexSet(MethodOutput output) {
+			throwUnsupportedException(output, "short", "set []");
+		}
+
+		@Override
+		public void defineCall(MethodOutput output) {
+			throwUnsupportedException(output, "short", "call");
+		}
+
+		@Override
+		public void defineAsBool(MethodOutput output) {
+			throwCastException(output, ANY_NAME, "bool");
+		}
+
+		@Override
+		public void defineAsByte(MethodOutput output) {
+			getValue(output);
+			output.i2b();
+			output.returnType(Type.BYTE_TYPE);
+		}
+
+		@Override
+		public void defineAsShort(MethodOutput output) {
+			getValue(output);
+			output.returnType(Type.SHORT_TYPE);
+		}
+
+		@Override
+		public void defineAsInt(MethodOutput output) {
+			getValue(output);
+			output.returnType(Type.INT_TYPE);
+		}
+
+		@Override
+		public void defineAsLong(MethodOutput output) {
+			getValue(output);
+			output.i2l();
+			output.returnType(Type.LONG_TYPE);
+		}
+
+		@Override
+		public void defineAsFloat(MethodOutput output) {
+			getValue(output);
+			output.i2f();
+			output.returnType(Type.FLOAT_TYPE);
+		}
+
+		@Override
+		public void defineAsDouble(MethodOutput output) {
+			getValue(output);
+			output.i2d();
+			output.returnType(Type.DOUBLE_TYPE);
+		}
+
+		@Override
+		public void defineAsString(MethodOutput output) {
+			getValue(output);
+			output.invokeStatic(Short.class, "toString", String.class, short.class);
+			output.returnObject();
+		}
+
+		@Override
+		public void defineAs(MethodOutput output) {
+			int localValue = output.local(Type.SHORT_TYPE);
+			
+			getValue(output);
+			output.store(Type.SHORT_TYPE, localValue);
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCast(SHORT, output, environment, localValue, 1);
+			}
+			
+			throwCastException(output, "short", 1);
+		}
+
+		@Override
+		public void defineIs(MethodOutput output) {
+			Label lblEq = new Label();
+			
+			output.loadObject(1);
+			output.constant(Type.SHORT_TYPE);
+			output.ifACmpEq(lblEq);
+			output.iConst0();
+			output.returnInt();
+			output.label(lblEq);
+			output.iConst1();
+			output.returnInt();
+		}
+		
+		@Override
+		public void defineGetNumberType(MethodOutput output) {
+			output.constant(IAny.NUM_SHORT);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineIteratorSingle(MethodOutput output) {
+			throwUnsupportedException(output, "short", "iterator");
+		}
+
+		@Override
+		public void defineIteratorMulti(MethodOutput output) {
+			throwUnsupportedException(output, "short", "iterator");
+		}
+		
+		private void getValue(MethodOutput output) {
+			output.loadObject(0);
+			output.getField(ANY_NAME, "value", "S");
+		}
 	}
 }

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -23,6 +25,7 @@ import stanhebben.zenscript.type.expand.ZenExpandCaster;
 import stanhebben.zenscript.type.expand.ZenExpandMember;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.type.natives.ZenNativeOperator;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -179,6 +182,7 @@ public class TypeExpansion {
 				return caster;
 			}
 		}
+		
 		for (ZenExpandCaster caster : casters) {
 			if (caster.getTarget().canCastImplicit(type, environment)) {
 				return caster;
@@ -303,6 +307,71 @@ public class TypeExpansion {
 		}
 		
 		return null;
+	}
+	
+	public void compileAnyCast(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localValue, int localClass) {
+		if (type == null)
+			throw new IllegalArgumentException("type cannot be null");
+		Type asmType = type.toASMType();
+		if (asmType == null) {
+			throw new RuntimeException("type has no asm type");
+		}
+		
+		for (ZenExpandCaster caster : casters) {
+			Label skip = new Label();
+			output.loadObject(localClass);
+			output.constant(caster.getTarget().toASMType());
+			output.ifACmpNe(skip);
+			output.load(asmType, localValue);
+			caster.compile(output);
+			output.returnType(caster.getTarget().toASMType());
+			output.label(skip);
+		}
+		
+		for (ZenExpandCaster caster : casters) {
+			String casterAny = caster.getTarget().getAnyClassName(environment);
+			if (casterAny == null)
+				// TODO: make sure this isn't necessary
+				continue;
+			
+			Label skip = new Label();
+			output.loadObject(localClass);
+			output.invokeStatic(casterAny, "rtCanCastImplicit", "(Ljava/lang/Class;)Z");
+			output.ifEQ(skip);
+			output.load(type.toASMType(), localValue);
+			caster.compile(output);
+			output.invokeStatic(casterAny, "rtAs", "(Ljava/lang/Class;)Z");
+			output.returnType(caster.getTarget().toASMType());
+			output.label(skip);
+		}
+	}
+	
+	public void compileAnyCanCastImplicit(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localClass) {
+		for (ZenExpandCaster caster : casters) {
+			Label skip = new Label();
+			output.loadObject(localClass);
+			output.constant(caster.getTarget().toASMType());
+			output.ifACmpNe(skip);
+			output.iConst1();
+			output.returnInt();
+			output.label(skip);
+		}
+		
+		for (ZenExpandCaster caster : casters) {
+			String casterAny = caster.getTarget().getAnyClassName(environment);
+			if (casterAny == null) {
+				// TODO: make sure no type ever does this
+				continue;
+			}
+			
+			Label skip = new Label();
+			output.loadObject(localClass);
+			output.invokeStatic(casterAny, "rtCanCastImplicit", "(Ljava/lang/Class;)Z");
+			output.ifEQ(skip);
+			output.iConst1();
+			output.returnInt();
+			output.label(skip);
+		}
 	}
 	
 	// #######################

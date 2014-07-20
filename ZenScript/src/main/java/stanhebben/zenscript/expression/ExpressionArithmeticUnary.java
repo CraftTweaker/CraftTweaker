@@ -36,7 +36,7 @@ public class ExpressionArithmeticUnary extends Expression {
 		MethodOutput output = environment.getOutput();
 		if (result) {
 			ZenType type = base.getType();
-			if (type == ZenTypeBool.INSTANCE) {
+			if (type == ZenType.BOOL) {
 				if (operator == OperatorType.NOT) {
 					output.iNot();
 					return;

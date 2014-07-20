@@ -11,7 +11,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.type.ZenTypeArrayBasic;
@@ -34,6 +33,7 @@ import stanhebben.zenscript.type.ZenTypeShort;
 import stanhebben.zenscript.type.ZenTypeShortObject;
 import stanhebben.zenscript.type.ZenTypeString;
 import stanhebben.zenscript.type.ZenTypeVoid;
+import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -45,7 +45,7 @@ public class TypeRegistry implements ITypeRegistry {
 	public TypeRegistry() {
 		types = new HashMap<Class, ZenType>();
 		
-		types.put(boolean.class, ZenTypeBool.INSTANCE);
+		types.put(boolean.class, ZenType.BOOL);
 		types.put(byte.class, ZenTypeByte.INSTANCE);
 		types.put(short.class, ZenTypeShort.INSTANCE);
 		types.put(int.class, ZenTypeInt.INSTANCE);
@@ -61,6 +61,8 @@ public class TypeRegistry implements ITypeRegistry {
 		types.put(Long.class, ZenTypeLongObject.INSTANCE);
 		types.put(Float.class, ZenTypeFloatObject.INSTANCE);
 		types.put(Double.class, ZenTypeDoubleObject.INSTANCE);
+		
+		types.put(IAny.class, ZenTypeAny.INSTANCE);
 		
 		types.put(String.class, ZenTypeString.INSTANCE);
 		types.put(List.class, new ZenTypeArrayBasic(ZenTypeAny.INSTANCE));

@@ -23,18 +23,14 @@ import stanhebben.zenscript.compiler.EnvironmentGlobal;
 import stanhebben.zenscript.compiler.EnvironmentMethod;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.definitions.Import;
 import stanhebben.zenscript.definitions.ParsedFunction;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.statements.StatementReturn;
-import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.symbols.SymbolZenStaticMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.MethodOutput;
-import stanhebben.zenscript.util.StringUtil;
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 
 /**
@@ -187,7 +183,10 @@ public class ZenModule {
 		outputDir.mkdir();
 		
 		for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
-			File outputFile = new File(outputDir, entry.getKey() + ".class");
+			File outputFile = new File(outputDir, entry.getKey().replace('.', '/') + ".class");
+			if (!outputFile.getParentFile().exists()) {
+				outputFile.getParentFile().mkdirs();
+			}
 			FileOutputStream output = new FileOutputStream(outputFile);
 			output.write(entry.getValue());
 			output.close();
@@ -246,7 +245,7 @@ public class ZenModule {
 		outputDir.mkdir();
 		
 		for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
-			File outputFile = new File(outputDir, entry.getKey() + ".class");
+			File outputFile = new File(outputDir, entry.getKey().replace('.', '/') + ".class");
 			FileOutputStream output = new FileOutputStream(outputFile);
 			output.write(entry.getValue());
 			output.close();

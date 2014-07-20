@@ -51,6 +51,11 @@ public class ZenTypeAssociative extends ZenType {
 	public ZenType getKeyType() {
 		return key;
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal global) {
+		return null;
+	}
 
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {

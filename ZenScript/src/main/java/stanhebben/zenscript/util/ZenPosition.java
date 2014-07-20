@@ -18,6 +18,8 @@ public class ZenPosition {
 	private final int offset;
 	
 	public ZenPosition(ZenParsedFile file, int line, int offset) {
+		if (file != null && line <= 0) throw new IllegalArgumentException("Line must be positive");
+		
 		this.file = file;
 		this.line = line;
 		this.offset = offset;

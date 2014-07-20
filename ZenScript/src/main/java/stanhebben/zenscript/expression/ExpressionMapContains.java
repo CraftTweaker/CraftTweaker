@@ -30,7 +30,7 @@ public class ExpressionMapContains extends Expression {
 
 	@Override
 	public ZenType getType() {
-		return ZenTypeBool.INSTANCE;
+		return ZenType.BOOL;
 	}
 
 	@Override

@@ -393,6 +393,13 @@ public class MethodOutput {
 	}
 	
 	public void invokeStatic(String owner, String name, String descriptor) {
+		if (owner == null)
+			throw new IllegalArgumentException("owner cannot be null");
+		if (name == null)
+			throw new IllegalArgumentException("name cannot be null");
+		if (descriptor == null)
+			throw new IllegalArgumentException("descriptor cannot be null");
+		
 		visitor.visitMethodInsn(INVOKESTATIC, owner, name, descriptor);
 	}
 	
@@ -561,6 +568,14 @@ public class MethodOutput {
 		visitor.visitJumpInsn(IF_ICMPLT, lbl);
 	}
 	
+	public void ifACmpEq(Label lbl) {
+		visitor.visitJumpInsn(IF_ACMPEQ, lbl);
+	}
+	
+	public void ifACmpNe(Label lbl) {
+		visitor.visitJumpInsn(IF_ACMPNE, lbl);
+	}
+	
 	public void ifNull(Label lbl) {
 		visitor.visitJumpInsn(IFNULL, lbl);
 	}
@@ -601,8 +616,16 @@ public class MethodOutput {
 		visitor.visitFieldInsn(PUTFIELD, internal(owner), name, signature(descriptor));
 	}
 	
+	public void getStaticField(String owner, String name, String descriptor) {
+		visitor.visitFieldInsn(GETSTATIC, owner, name, descriptor);
+	}
+	
 	public void getStaticField(Class owner, Field field) {
 		visitor.visitFieldInsn(GETSTATIC, internal(owner), field.getName(), signature(field.getType()));
+	}
+	
+	public void putStaticField(String owner, String name, String descriptor) {
+		visitor.visitFieldInsn(PUTSTATIC, owner, name, descriptor);
 	}
 	
 	public void putStaticField(Class owner, Field field) {

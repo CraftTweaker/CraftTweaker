@@ -36,6 +36,9 @@ public class JavaMethod {
 	public static JavaMethod get(ITypeRegistry types, Class cls, String name, Class... parameterTypes) {
 		try {
 			Method method = cls.getMethod(name, parameterTypes);
+			if (method == null) {
+				throw new RuntimeException("method " + name + " not found in class " + cls.getName());
+			}
 			return new JavaMethod(cls, method, types);
 		} catch (NoSuchMethodException ex) {
 			throw new RuntimeException("method " + name + " not found in class " + cls.getName(), ex);

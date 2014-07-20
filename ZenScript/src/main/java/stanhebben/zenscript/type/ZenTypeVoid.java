@@ -140,6 +140,11 @@ public class ZenTypeVoid extends ZenType {
 	public String getName() {
 		return "void";
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		throw new UnsupportedOperationException("Cannot convert void to anything, not even any");
+	}
 
 	@Override
 	public Expression defaultValue(ZenPosition position) {

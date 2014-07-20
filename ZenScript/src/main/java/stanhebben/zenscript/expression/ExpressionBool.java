@@ -7,12 +7,9 @@
 package stanhebben.zenscript.expression;
 
 import org.objectweb.asm.Label;
-import stanhebben.zenscript.compiler.EnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.compiler.EnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeBool;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -30,25 +27,22 @@ public class ExpressionBool extends Expression {
 	
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-		if (type == ZenTypeBool.INSTANCE) {
+		if (type == ZenType.BOOL) {
 			return this;
-		} else if (type.canCastExplicit(type, environment)) {
-			return new ExpressionAs(position, this, type);
 		} else {
-			environment.error(position, "Cannot cast a bool constant to " + type.toString());
-			return new ExpressionInvalid(position, type);
+			return ZenType.BOOL.cast(position, environment, this, type);
 		}
 	}
 
 	@Override
 	public Expression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
 		environment.error(position, "Bool constants do not have members");
-		return new ExpressionInvalid(position, ZenTypeBool.INSTANCE);
+		return new ExpressionInvalid(position, ZenType.BOOL);
 	}
 
 	@Override
 	public ZenType getType() {
-		return ZenTypeBool.INSTANCE;
+		return ZenType.BOOL;
 	}
 
 	@Override

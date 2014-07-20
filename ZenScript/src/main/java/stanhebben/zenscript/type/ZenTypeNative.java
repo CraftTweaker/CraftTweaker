@@ -270,6 +270,11 @@ public class ZenTypeNative extends ZenType {
 			iteratorValueType = ZenType.parse(annotation.value(), environment);
 		}
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal global) {
+		return null;
+	}
 
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {

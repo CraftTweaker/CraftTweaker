@@ -33,18 +33,15 @@ public abstract class Expression implements IPartialExpression {
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
 		if (getType() == type) {
 			return this;
-		} else if (getType().canCastImplicit(type, environment)) {
-			return new ExpressionAs(position, this, type);
 		} else {
-			environment.error(position, "Cannot cast " + getType() + " to " + type);
-			return new ExpressionInvalid(position, type);
+			return getType().cast(position, environment, this, type);
 		}
 	}
 	
 	public abstract void compile(boolean result, IEnvironmentMethod environment);
 	
 	public void compileIf(Label onElse, IEnvironmentMethod environment) {
-		if (getType() == ZenTypeBool.INSTANCE) {
+		if (getType() == ZenType.BOOL) {
 			compile(true, environment);
 			environment.getOutput().ifEQ(onElse);
 		} else if (getType().isPointer()) {

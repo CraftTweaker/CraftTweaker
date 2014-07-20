@@ -41,7 +41,7 @@ public class ExpressionFloat extends Expression {
 		} else if (type == ZenTypeDouble.INSTANCE) {
 			environment.getOutput().constant(value);
 		} else {
-			// TODO: internal error
+			throw new RuntimeException("Internal compiler error: source type is not a floating point type");
 		}
 	}
 }

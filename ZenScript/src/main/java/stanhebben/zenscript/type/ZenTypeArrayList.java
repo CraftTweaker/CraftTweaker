@@ -59,6 +59,11 @@ public class ZenTypeArrayList extends ZenTypeArray {
 	public Class toJavaClass() {
 		return List.class;
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal global) {
+		return null;
+	}
 
 	@Override
 	public Type toASMType() {

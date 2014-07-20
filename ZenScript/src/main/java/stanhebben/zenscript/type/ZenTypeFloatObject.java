@@ -6,6 +6,7 @@
 
 package stanhebben.zenscript.type;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
@@ -15,9 +16,13 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import static stanhebben.zenscript.type.ZenType.ANY;
+import static stanhebben.zenscript.type.ZenType.BOOL;
 import static stanhebben.zenscript.type.ZenType.STRING;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
+import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -122,6 +127,22 @@ public class ZenTypeFloatObject extends ZenType {
 			environment.getOutput().invokeVirtual(Float.class, "floatValue", float.class);
 		} else if (type == STRING) {
 			environment.getOutput().invokeVirtual(Float.class, "toString", String.class);
+		} else if (type == ANY) {
+			MethodOutput output = environment.getOutput();
+			
+			Label lblNotNull = new Label();
+			Label lblAfter = new Label();
+			
+			output.dup();
+			output.ifNonNull(lblNotNull);
+			output.aConstNull();
+			output.goTo(lblAfter);
+			
+			output.label(lblNotNull);
+			output.invokeVirtual(Float.class, "floatValue", float.class);
+			output.invokeStatic(FLOAT.getAnyClassName(environment), "valueOf", "(F)" + signature(IAny.class));
+			
+			output.label(lblAfter);
 		} else {
 			environment.getOutput().invokeVirtual(Float.class, "floatValue", float.class);
 			FLOAT.compileCast(position, environment, type);
@@ -131,6 +152,11 @@ public class ZenTypeFloatObject extends ZenType {
 	@Override
 	public String getName() {
 		return "float";
+	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		return FLOAT.getAnyClassName(environment);
 	}
 
 	@Override

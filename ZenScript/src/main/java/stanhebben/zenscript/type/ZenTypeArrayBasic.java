@@ -57,6 +57,11 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			return null;
 		}
 	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal global) {
+		return null;
+	}
 
 	@Override
 	public Type toASMType() {

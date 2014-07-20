@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.type;
 
 import java.util.HashMap;
@@ -17,9 +11,11 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionCompareGeneric;
 import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.expression.ExpressionJavaCallVirtual;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.natives.JavaMethod;
+import static stanhebben.zenscript.util.AnyClassWriter.*;
 import stanhebben.zenscript.util.MethodCompiler;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
@@ -77,6 +73,12 @@ public class ZenTypeAny extends ZenType {
 			@Override
 			public void compile(MethodOutput output) {
 				output.invokeInterface(IAny.class, "asDouble", double.class);
+			}
+		});
+		CASTERS.put("string", new MethodCompiler() {
+			@Override
+			public void compile(MethodOutput output) {
+				output.invokeInterface(IAny.class, "asString", String.class);
 			}
 		});
 		CASTERS.put(Boolean.class.getName(), new MethodCompiler() {
@@ -152,7 +154,7 @@ public class ZenTypeAny extends ZenType {
 
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
-		return null; // TODO: how to handle iteration on any-values
+		return null; // TODO: handle iteration on any-values
 	}
 
 	@Override
@@ -204,165 +206,62 @@ public class ZenTypeAny extends ZenType {
 	
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
-		//try {
-			switch (operator) {
-				/*case NEG:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("neg"),
-							ZenTypeAny.INSTANCE,
-							value);
-				case NOT:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("not"),
-							ZenTypeAny.INSTANCE,
-							value);*/
-				default:
-					return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
-			}
-		/*} catch (NoSuchMethodException ex) {
-			throw new RuntimeException("could not find method", ex);
-		}*/
+		switch (operator) {
+			case NEG:
+				return new ExpressionJavaCallVirtual(position, METHOD_NEG, value);
+			case NOT:
+				return new ExpressionJavaCallVirtual(position, METHOD_NOT, value);
+			default:
+				return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
+		}
 	}
 
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
-		//try {
-			switch (operator) {
-				/*case ADD:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("add", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case CAT:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("cat", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case SUB:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("sub", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case MUL:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("mul", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case DIV:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("div", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case MOD:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("mod", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case AND:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("and", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case OR:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("or", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case XOR:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("xor", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case CONTAINS:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("contains", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case INDEXGET:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("indexGet", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case RANGE:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("range", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));
-				case COMPARE:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("compareTo", IAny.class),
-							ZenTypeAny.INSTANCE,
-							left,
-							right.cast(position, environment, ANY));*/
-				default:
-					return new ExpressionInvalid(position, ANY);
-			}
-		/*} catch (NoSuchMethodException ex) {
-			throw new RuntimeException("method not found", ex);
-		}*/
+		switch (operator) {
+			case ADD:
+				return new ExpressionJavaCallVirtual(position, METHOD_ADD, left, right.cast(position, environment, ANY));
+			case CAT:
+				return new ExpressionJavaCallVirtual(position, METHOD_CAT, left, right.cast(position, environment, ANY));
+			case SUB:
+				return new ExpressionJavaCallVirtual(position, METHOD_SUB, left, right.cast(position, environment, ANY));
+			case MUL:
+				return new ExpressionJavaCallVirtual(position, METHOD_MUL, left, right.cast(position, environment, ANY));
+			case DIV:
+				return new ExpressionJavaCallVirtual(position, METHOD_DIV, left, right.cast(position, environment, ANY));
+			case MOD:
+				return new ExpressionJavaCallVirtual(position, METHOD_MOD, left, right.cast(position, environment, ANY));
+			case AND:
+				return new ExpressionJavaCallVirtual(position, METHOD_AND, left, right.cast(position, environment, ANY));
+			case OR:
+				return new ExpressionJavaCallVirtual(position, METHOD_OR, left, right.cast(position, environment, ANY));
+			case XOR:
+				return new ExpressionJavaCallVirtual(position, METHOD_XOR, left, right.cast(position, environment, ANY));
+			case CONTAINS:
+				return new ExpressionJavaCallVirtual(position, METHOD_CONTAINS, left, right.cast(position, environment, ANY));
+			case INDEXGET:
+				return new ExpressionJavaCallVirtual(position, METHOD_INDEXGET, left, right.cast(position, environment, ANY));
+			case RANGE:
+				return new ExpressionJavaCallVirtual(position, METHOD_RANGE, left, right.cast(position, environment, ANY));
+			case COMPARE:
+				return new ExpressionJavaCallVirtual(position, METHOD_COMPARETO, left, right.cast(position, environment, ANY));
+			case MEMBERGETTER:
+				return new ExpressionJavaCallVirtual(position, METHOD_MEMBERGET, left, right.cast(position, environment, STRING));
+			default:
+				return new ExpressionInvalid(position, ANY);
+		}
 	}
 
 	@Override
 	public Expression trinary(ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
-		//try {
-			switch (operator) {
-				/*case INDEXSET:
-					return new ExpressionJavaCallVirtual(
-							position,
-							IAny.class, 
-							IAny.class.getMethod("indexSet", IAny.class, IAny.class),
-							ZenTypeAny.INSTANCE,
-							first,
-							second.cast(position, environment, ANY),
-							third.cast(position, environment, ANY));*/
-				default:
-					return new ExpressionInvalid(position, ANY);
-			}
-		/*} catch (NoSuchMethodException ex) {
-			throw new RuntimeException("method not found", ex);
-		}*/
+		switch (operator) {
+			case INDEXSET:
+				return new ExpressionJavaCallVirtual(position, METHOD_INDEXSET, first, second.cast(position, environment, ANY), third.cast(position, environment, ANY));
+			case MEMBERSETTER:
+				return new ExpressionJavaCallVirtual(position, METHOD_MEMBERSET, first, second.cast(position, environment, STRING), third.cast(position, environment, ANY));
+			default:
+				return new ExpressionInvalid(position, ANY);
+		}
 	}
 
 	@Override
@@ -398,6 +297,11 @@ public class ZenTypeAny extends ZenType {
 	@Override
 	public String getName() {
 		return "any";
+	}
+	
+	@Override
+	public String getAnyClassName(IEnvironmentGlobal environment) {
+		throw new UnsupportedOperationException("Cannot get any class name from the any type. That's like trying to stuff a freezer into a freezer.");
 	}
 
 	@Override

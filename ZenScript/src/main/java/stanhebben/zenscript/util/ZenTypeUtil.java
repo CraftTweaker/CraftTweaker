@@ -9,12 +9,16 @@ package stanhebben.zenscript.util;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import stanhebben.zenscript.compiler.ITypeRegistry;
+import stanhebben.zenscript.compiler.TypeRegistry;
 
 /**
  *
  * @author Stanneke
  */
 public class ZenTypeUtil {
+	public static final ITypeRegistry EMPTY_REGISTRY = new TypeRegistry();
+	
 	private static final Map<String, String> SIGNATURE_MAP;
 	
 	static {

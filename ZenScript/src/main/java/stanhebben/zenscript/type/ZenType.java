@@ -17,7 +17,7 @@ import stanhebben.zenscript.util.ZenPosition;
 
 public abstract class ZenType {
 	public static final ZenTypeAny ANY = ZenTypeAny.INSTANCE;
-	public static final ZenTypeBool BOOL = ZenTypeBool.INSTANCE;
+	public static final ZenTypeBool BOOL = new ZenTypeBool();
 	public static final ZenTypeByte BYTE = ZenTypeByte.INSTANCE;
 	public static final ZenTypeShort SHORT = ZenTypeShort.INSTANCE;
 	public static final ZenTypeInt INT = ZenTypeInt.INSTANCE;
@@ -185,6 +185,8 @@ public abstract class ZenType {
 	
 	public abstract void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type);
 	
+	public abstract String getAnyClassName(IEnvironmentGlobal environment);
+	
 	public abstract String getName();
 	
 	public abstract Expression defaultValue(ZenPosition position);
@@ -282,7 +284,7 @@ public abstract class ZenType {
 		if (expansion != null) {
 			ZenExpandCaster caster = expansion.getCaster(toType, environment);
 			if (caster != null) {
-				caster.compile(environment);
+				caster.compile(environment.getOutput());
 				return true;
 			}
 		}

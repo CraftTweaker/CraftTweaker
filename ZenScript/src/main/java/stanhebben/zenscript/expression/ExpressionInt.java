@@ -68,7 +68,7 @@ public class ExpressionInt extends Expression {
 		} else if (type == ZenTypeLong.INSTANCE) {
 			output.constant(value);
 		} else {
-			// TODO: internal error
+			throw new RuntimeException("Internal compiler error: int constant type is not an int");
 		}
 	}
 }

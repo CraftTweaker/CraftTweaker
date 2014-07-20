@@ -18,6 +18,13 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("mods.gregtech.Amplifabricator")
 @ModOnly(MOD_ID)
 public class Amplifabricator {
+	/**
+	 * Adds an amplifier.
+	 * 
+	 * @param item amplifier item
+	 * @param durationTicks duration in ticks
+	 * @param amount amplification amount
+	 */
 	@ZenMethod
 	public static void addAmplifier(IItemStack item, int durationTicks, int amount) {
 		MineTweakerAPI.apply(new AddAmplifierAction(item, durationTicks, amount));

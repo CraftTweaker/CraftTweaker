@@ -8,9 +8,11 @@ package minetweaker.api.oredict;
 
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenOperator;
 
 /**
  *
@@ -33,7 +35,7 @@ public interface IOreDictEntry extends IIngredient {
 	@ZenMethod
 	public void remove(IItemStack item);
 	
-	@ZenMethod
+	@ZenOperator(OperatorType.CONTAINS)
 	public boolean contains(IItemStack item);
 	
 	@ZenMethod
