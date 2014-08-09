@@ -4,12 +4,11 @@
  * and open the template in the editor.
  */
 
-package minetweaker.mc1710;
+package minetweaker.mc164;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.minecraft.MineTweakerMC;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 /**
@@ -17,11 +16,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
  * @author Stan
  */
 public class ForgeEventHandler {
-	@SubscribeEvent
+	@ForgeSubscribe
 	public void onPlayerInteract(PlayerInteractEvent ev) {
+		System.out.println("Player interact");
+		
 		minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(
 				MineTweakerMC.getIPlayer(ev.entityPlayer),
-				MineTweakerMC.getDimension(ev.world),
+				MineTweakerMC.getDimension(ev.entityPlayer.getEntityWorld()),
 				ev.x, ev.y, ev.z
 		);
 		

@@ -134,12 +134,19 @@ public class Planter {
 
 		@Override
 		public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack seed) {
+			if (!world.isAirBlock(x, y, z))
+				return false;
+			
 			for (TweakerPlantable plantable : plantables) {
-				if (!plantable.seed.matches(MineTweakerMC.getIItemStack(seed)))
+				if (!plantable.seed.matches(MineTweakerMC.getIItemStack(seed))) {
+					//System.out.println("Cannot plant (seed doesn't match)");
 					return false;
+				}
 
-				if (!plantable.canPlantOn.matches(MineTweakerMC.getBlock(world, x,  y - 1, x)))
+				if (!plantable.canPlantOn.matches(MineTweakerMC.getBlock(world, x,  y - 1, z))) {
+					//System.out.println("Cannot plant (not on the right block");
 					return false;
+				}
 			}
 			
 			return true;

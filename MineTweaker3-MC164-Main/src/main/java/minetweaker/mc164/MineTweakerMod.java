@@ -42,6 +42,8 @@ import minetweaker.runtime.providers.ScriptProviderDirectory;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.EventBus;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -139,6 +141,8 @@ public class MineTweakerMod {
 		FuelTweaker.INSTANCE.register();
 		NetworkRegistry.instance().registerConnectionHandler(new MCConnectionHandler());
 		GameRegistry.registerCraftingHandler(new MTCraftingHandler());
+		
+		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 	}
 	
 	@EventHandler

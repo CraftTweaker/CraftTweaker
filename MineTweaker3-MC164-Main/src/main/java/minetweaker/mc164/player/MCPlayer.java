@@ -65,6 +65,11 @@ public class MCPlayer implements IPlayer {
 	}
 
 	@Override
+	public void sendChat(String message) {
+		player.sendChatToPlayer(ChatMessageComponent.createFromText(message));
+	}
+
+	@Override
 	public int getHotbarSize() {
 		return 9;
 	}

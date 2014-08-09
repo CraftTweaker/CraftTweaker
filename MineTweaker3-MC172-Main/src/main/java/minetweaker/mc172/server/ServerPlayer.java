@@ -16,6 +16,7 @@ import minetweaker.api.data.IData;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.player.IPlayer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 /**
@@ -53,6 +54,11 @@ public class ServerPlayer implements IPlayer {
 	@Override
 	public void sendChat(IChatMessage message) {
 		DedicatedServer.getServer().addChatMessage((IChatComponent) message.getInternal());
+	}
+
+	@Override
+	public void sendChat(String message) {
+		DedicatedServer.getServer().addChatMessage(new ChatComponentText(message));
 	}
 
 	@Override

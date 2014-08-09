@@ -35,6 +35,9 @@ public interface IPlayer {
 	@ZenMethod
 	public void sendChat(IChatMessage message);
 	
+	@ZenMethod
+	public void sendChat(String message);
+	
 	@ZenGetter("hotbarSize")
 	public int getHotbarSize();
 	

@@ -17,6 +17,7 @@ import minetweaker.mc1710.data.NBTConverter;
 import minetweaker.mc1710.network.MineTweakerOpenBrowserPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 /**
@@ -62,6 +63,11 @@ public class MCPlayer implements IPlayer {
 			return;
 		}
 		player.addChatMessage((IChatComponent) internal);
+	}
+
+	@Override
+	public void sendChat(String message) {
+		player.addChatMessage(new ChatComponentText(message));
 	}
 
 	@Override

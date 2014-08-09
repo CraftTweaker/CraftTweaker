@@ -8,7 +8,6 @@ package minetweaker.api.logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.player.IPlayer;
 import minetweaker.runtime.ILogger;
 
@@ -34,7 +33,7 @@ public class MTLogger implements ILogger {
 		
 		if (!unprocessed.isEmpty()) {
 			for (String message : unprocessed) {
-				player.sendChat(MineTweakerImplementationAPI.platform.getMessage(message));
+				player.sendChat(message);
 			}
 		}
 	}
@@ -73,7 +72,7 @@ public class MTLogger implements ILogger {
 			unprocessed.add(message2);
 		} else {
 			for (IPlayer player : players) {
-				player.sendChat(MineTweakerImplementationAPI.platform.getMessage(message2));
+				player.sendChat(message2);
 			}
 		}
 	}
@@ -90,7 +89,7 @@ public class MTLogger implements ILogger {
 			unprocessed.add(message2);
 		} else {
 			for (IPlayer player : players) {
-				player.sendChat(MineTweakerImplementationAPI.platform.getMessage(message2));
+				player.sendChat(message2);
 			}
 		}
 	}

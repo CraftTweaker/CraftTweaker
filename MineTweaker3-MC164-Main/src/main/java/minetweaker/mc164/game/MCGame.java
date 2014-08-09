@@ -12,6 +12,8 @@ import java.util.Map;
 import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.api.world.IBiome;
 import minetweaker.mc164.item.MCItemDefinition;
 import minetweaker.mc164.liquid.MCLiquidDefinition;
 import net.minecraft.item.Item;
@@ -42,6 +44,17 @@ public class MCGame implements IGame {
 		List<ILiquidDefinition> result = new ArrayList<ILiquidDefinition>();
 		for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
 			result.add(new MCLiquidDefinition(entry.getValue()));
+		}
+		return result;
+	}
+
+	@Override
+	public List<IBiome> getBiomes() {
+		List<IBiome> result = new ArrayList<IBiome>();
+		for (IBiome biome : MineTweakerMC.biomes) {
+			if (biome != null) {
+				result.add(biome);
+			}
 		}
 		return result;
 	}

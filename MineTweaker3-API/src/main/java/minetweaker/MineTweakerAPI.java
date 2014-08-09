@@ -51,6 +51,25 @@ import stanhebben.zenscript.type.natives.JavaMethod;
  * @author Stan Hebben
  */
 public class MineTweakerAPI {
+	public static final String[] COLOR_NAMES = {
+		"White",
+		"Orange",
+		"Magenta",
+		"Light Blue",
+		"Yellow",
+		"Lime",
+		"Pink",
+		"Gray",
+		"Light Gray",
+		"Cyan",
+		"Purple",
+		"Blue",
+		"Brown",
+		"Green",
+		"Red",
+		"Black"
+	};
+	
 	static {
 		List<Class> apiClasses = new ArrayList<Class>();
 		ClassRegistry.getClasses(apiClasses);

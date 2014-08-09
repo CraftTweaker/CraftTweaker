@@ -3,6 +3,7 @@ package minetweaker.api.game;
 import java.util.List;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.world.IBiome;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
@@ -28,4 +29,12 @@ public interface IGame {
 	 */
 	@ZenGetter("liquids")
 	public List<ILiquidDefinition> getLiquids();
+	
+	/**
+	 * Retrieves the biomes in this game.
+	 * 
+	 * @return game biomes
+	 */
+	@ZenGetter("Biomes")
+	public List<IBiome> getBiomes();
 }

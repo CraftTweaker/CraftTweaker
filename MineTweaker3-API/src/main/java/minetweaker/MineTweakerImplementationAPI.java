@@ -34,7 +34,10 @@ import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandValidator;
 import minetweaker.api.server.IServer;
+import minetweaker.api.world.IBiome;
 import minetweaker.runtime.IScriptProvider;
+import minetweaker.util.EventList;
+import minetweaker.util.IEventHandler;
 
 /**
  * The implementation API is used by API implementations for internal communication
@@ -53,6 +56,7 @@ public class MineTweakerImplementationAPI {
 	private static final ListenPlayerLoggedIn LISTEN_LOGIN = new ListenPlayerLoggedIn();
 	private static final ListenPlayerLoggedOut LISTEN_LOGOUT = new ListenPlayerLoggedOut();
 	private static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
+	private static final EventList<ReloadEvent> ONRELOAD = new EventList<ReloadEvent>();
 	
 	static {
 		minetweakerCommands = new HashMap<String, MineTweakerCommand>();
@@ -66,7 +70,7 @@ public class MineTweakerImplementationAPI {
 			@Override
 			public void execute(String[] arguments, IPlayer player) {
 				reload();
-				player.sendChat(platform.getMessage("Scripts reloaded"));
+				player.sendChat("Scripts reloaded");
 			}
 		}));
 		
@@ -94,7 +98,7 @@ public class MineTweakerImplementationAPI {
 				}
 				
 				if (player != null) {
-					player.sendChat(platform.getMessage("List generated; see minetweaker.log in your minecraft dir"));
+					player.sendChat("List generated; see minetweaker.log in your minecraft dir");
 				}
 			}
 		}));
@@ -116,7 +120,7 @@ public class MineTweakerImplementationAPI {
 				}
 				
 				if (player != null) {
-					player.sendChat(platform.getMessage("List generated; see minetweaker.log in your minecraft dir"));
+					player.sendChat("List generated; see minetweaker.log in your minecraft dir");
 				}
 			}
 		}));
@@ -132,7 +136,7 @@ public class MineTweakerImplementationAPI {
 				for (int i = 0; i < player.getInventorySize(); i++) {
 					IItemStack stack = player.getInventoryStack(i);
 					if (stack != null) {
-						player.sendChat(platform.getMessage(stack.toString()));
+						player.sendChat(stack.toString());
 					}
 				}
 			}
@@ -148,7 +152,7 @@ public class MineTweakerImplementationAPI {
 			public void execute(String[] arguments, IPlayer player) {
 				IItemStack hand = player.getCurrentItem();
 				if (hand != null) {
-					player.sendChat(platform.getMessage(hand.toString()));
+					player.sendChat(hand.toString());
 				}
 			}
 		}));
@@ -167,7 +171,7 @@ public class MineTweakerImplementationAPI {
 					String entryName = arguments[0];
 					IOreDictEntry entry = MineTweakerAPI.oreDict.get(entryName);
 					if (entry.isEmpty()) {
-						player.sendChat(platform.getMessage("Entry doesn't exist"));
+						player.sendChat("Entry doesn't exist");
 						return;
 					} else {
 						MineTweakerAPI.logCommand("Ore entries for " + entryName + ":");
@@ -185,7 +189,7 @@ public class MineTweakerImplementationAPI {
 						}
 					}
 				}
-				player.sendChat(platform.getMessage("List generated; see minetweaker.log in your minecraft dir"));
+				player.sendChat("List generated; see minetweaker.log in your minecraft dir");
 			}
 		}));
 		
@@ -200,7 +204,7 @@ public class MineTweakerImplementationAPI {
 				MineTweakerAPI.logCommand("Mods list:");
 				for (IMod mod : MineTweakerAPI.loadedMods) {
 					String message = mod.getId() + " - " + mod.getName() + " - " + mod.getVersion();
-					player.sendChat(platform.getMessage(message));
+					player.sendChat(message);
 					MineTweakerAPI.logCommand("Mod: " + message);
 				}
 			}
@@ -216,19 +220,19 @@ public class MineTweakerImplementationAPI {
 			@Override
 			public void execute(String[] arguments, IPlayer player) {
 				if (arguments.length < 1) {
-					player.sendChat(platform.getMessage("missing id parameter"));
+					player.sendChat("missing id parameter");
 				} else {
 					try {
 						int id = Integer.parseInt(arguments[0]);
 						IItemDefinition definition = platform.getItemDefinition(id);
 						if (definition == null) {
-							player.sendChat(platform.getMessage("no such item"));
+							player.sendChat("no such item");
 						} else {
 							StringBuilder description = new StringBuilder();
 							description.append('<');
 							description.append(definition.getId());
 							description.append('>');
-							player.sendChat(platform.getMessage(description.toString()));
+							player.sendChat(description.toString());
 						}
 					} catch (NumberFormatException e) {
 						MineTweakerAPI.logCommand("ID must be an integer");
@@ -273,6 +277,24 @@ public class MineTweakerImplementationAPI {
 			}
 		}));
 		
+		minetweakerCommands.put("biomes", new MineTweakerCommand(
+				"biomes",
+				new String[] {
+					"/minetweaker biomes",
+					"    Lists all the biomes in the game"
+				}, new ICommandFunction() {
+			@Override
+			public void execute(String[] arguments, IPlayer player) {
+				MineTweakerAPI.logCommand("Biomes:");
+				
+				for (IBiome biome : MineTweakerAPI.game.getBiomes()) {
+					MineTweakerAPI.logCommand("    " + biome.getName());
+				}
+				
+				player.sendChat("Biome list generated; see minetweaker.log in your minecraft dir");
+			}
+		}));
+		
 		minetweakerCommands.put("blockinfo", new MineTweakerCommand(
 				"blockinfo",
 				new String[] {
@@ -288,10 +310,10 @@ public class MineTweakerImplementationAPI {
 				
 				if (blockInfoPlayers.contains(player)) {
 					blockInfoPlayers.remove(player);
-					player.sendChat(platform.getMessage("Block info mode deactivated."));
+					player.sendChat("Block info mode deactivated.");
 				} else {
 					blockInfoPlayers.add(player);
-					player.sendChat(platform.getMessage("Block info mode activated. Right-click a block to see its data."));
+					player.sendChat("Block info mode activated. Right-click a block to see its data.");
 				}
 				
 				if (blockInfoPlayers.isEmpty()) {
@@ -336,6 +358,16 @@ public class MineTweakerImplementationAPI {
 		MineTweakerAPI.furnace = furnace;
 		MineTweakerAPI.game = game;
 		MineTweakerAPI.loadedMods = mods;
+	}
+	
+	/**
+	 * Register an event handler to be fired upon reload.
+	 * 
+	 * @param handler
+	 * @return 
+	 */
+	public static IEventHandle onReloadEvent(IEventHandler<ReloadEvent> handler) {
+		return ONRELOAD.add(handler);
 	}
 	
 	/**
@@ -386,19 +418,19 @@ public class MineTweakerImplementationAPI {
 				@Override
 				public void execute(String[] arguments, IPlayer player) {
 					if (arguments.length == 0) {
-						player.sendChat(platform.getMessage("Please provide a command. Use /mt help for more info."));
+						player.sendChat("Please provide a command. Use /mt help for more info.");
 					} else if (arguments[0].equals("help")) {
 						String[] keys = minetweakerCommands.keySet().toArray(new String[minetweakerCommands.size()]);
 						Arrays.sort(keys);
 						for (String key : keys) {
 							for (String helpMessage : minetweakerCommands.get(key).description) {
-								player.sendChat(platform.getMessage(helpMessage));
+								player.sendChat(helpMessage);
 							}
 						}
 					} else {
 						MineTweakerCommand command = minetweakerCommands.get(arguments[0]);
 						if (command == null) {
-							player.sendChat(platform.getMessage("No such minetweaker command available"));
+							player.sendChat("No such minetweaker command available");
 						} else {
 							command.function.execute(Arrays.copyOfRange(arguments, 1, arguments.length), player);
 						}
@@ -411,6 +443,8 @@ public class MineTweakerImplementationAPI {
 				}
 			}, null);
 		}
+		
+		ONRELOAD.publish(new ReloadEvent());
 		
 		MineTweakerAPI.tweaker.load();
 		
@@ -428,6 +462,14 @@ public class MineTweakerImplementationAPI {
 	 */
 	public static void addMineTweakerCommand(String name, String[] description, ICommandFunction function) {
 		MineTweakerAPI.apply(new AddMineTweakerCommandAction(new MineTweakerCommand(name, description, function)));
+	}
+	
+	// ############################
+	// ### Public inner classes ###
+	// ############################
+	
+	public static class ReloadEvent {
+		
 	}
 	
 	// ######################
@@ -523,11 +565,11 @@ public class MineTweakerImplementationAPI {
 		public void handle(PlayerInteractEvent event) {
 			if (blockInfoPlayers.contains(event.getPlayer())) {
 				IBlock block = event.getBlock();
-				event.getPlayer().sendChat(platform.getMessage("Block ID: " + block.getDefinition().getId()));
-				event.getPlayer().sendChat(platform.getMessage("Meta value: " + block.getMeta()));
+				event.getPlayer().sendChat("Block ID: " + block.getDefinition().getId());
+				event.getPlayer().sendChat("Meta value: " + block.getMeta());
 				IData data = block.getTileData();
 				if (data != null) {
-					event.getPlayer().sendChat(platform.getMessage("Tile entity data: " + data.asString()));
+					event.getPlayer().sendChat("Tile entity data: " + data.asString());
 				}
 			}
 		}

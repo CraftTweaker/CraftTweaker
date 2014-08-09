@@ -12,6 +12,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
+import minetweaker.api.world.IBiome;
 import minetweaker.api.world.IDimension;
 import minetweaker.mc172.block.MCBlockDefinition;
 import minetweaker.mc172.block.MCSpecificBlock;
@@ -20,6 +21,7 @@ import minetweaker.mc172.data.NBTConverter;
 import minetweaker.mc172.item.MCItemStack;
 import minetweaker.mc172.oredict.MCOreDictEntry;
 import minetweaker.mc172.player.MCPlayer;
+import minetweaker.mc172.world.MCBiome;
 import minetweaker.mc172.world.MCDimension;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -39,6 +42,15 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public class MineTweakerMC {
 	private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<Block, MCBlockDefinition>();
+	public static final IBiome[] biomes;
+	
+	static {
+		biomes = new IBiome[BiomeGenBase.getBiomeGenArray().length];
+		for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++) {
+			if (BiomeGenBase.getBiomeGenArray()[i] != null)
+				biomes[i] = new MCBiome(BiomeGenBase.getBiomeGenArray()[i]);
+		}
+	}
 	
 	private MineTweakerMC() {}
 	

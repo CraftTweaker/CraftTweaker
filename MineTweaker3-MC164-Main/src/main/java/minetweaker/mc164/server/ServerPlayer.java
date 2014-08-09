@@ -56,6 +56,11 @@ public class ServerPlayer implements IPlayer {
 	}
 
 	@Override
+	public void sendChat(String message) {
+		DedicatedServer.getServer().sendChatToPlayer(ChatMessageComponent.createFromText(message));
+	}
+
+	@Override
 	public int getHotbarSize() {
 		return 0;
 	}

@@ -18,9 +18,12 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.block.IBlockPattern;
+import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.mc164.block.MCBlockDefinition;
 import minetweaker.mods.mfr.MFRHacks;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
@@ -38,6 +41,16 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("mods.mfr.Harvester")
 @ModOnly("MineFactoryReloaded")
 public class Harvester {
+	@ZenMethod
+	public static void addHarvestable(IItemStack item) {
+		addHarvestable(item.asBlock(), (WeightedItemStack[]) null, null);
+	}
+	
+	@ZenMethod
+	public static void addHarvestable(IItemStack item, String type) {
+		addHarvestable(item.asBlock(), (WeightedItemStack[]) null, type);
+	}
+	
 	@ZenMethod
 	public static void addHarvestable(IBlockPattern block, WeightedItemStack drop, @Optional String type) {
 		addHarvestable(block, new WeightedItemStack[] { drop }, type);
@@ -72,7 +85,7 @@ public class Harvester {
 			this.possibleDrops = possibleDrops;
 			
 			HarvestType type = HarvestType.Normal;
-			if (stringType.equals("normal")) {
+			if (stringType == null || stringType.equals("normal")) {
 				type = HarvestType.Normal;
 			} else if (stringType.equals("column")) {
 				type = HarvestType.Column;
@@ -119,21 +132,27 @@ public class Harvester {
 
 		@Override
 		public boolean canBeHarvested(World world, Map<String, Boolean> map, int x, int y, int z) {
-			for (TweakerHarvestable fruit : harvestables) {
-				if (fruit.block.matches(MineTweakerMC.getBlock(world, x, y, z)))
+			for (TweakerHarvestable harvestable : harvestables) {
+				if (harvestable.block.matches(MineTweakerMC.getBlock(world, x, y, z)))
 					return true;
 			}
 			
+			System.out.println("No blocks match");
 			return false;
 		}
 
 		@Override
 		public List<ItemStack> getDrops(World world, Random random, Map<String, Boolean> map, int x, int y, int z) {
 			IBlock block = MineTweakerMC.getBlock(world, x, y, z);
-			
 			for (TweakerHarvestable harvestable : harvestables) {
-				if (harvestable.block.matches(block))
-					return Arrays.asList(MineTweakerMC.getItemStacks(WeightedItemStack.pickRandomDrops(random, harvestable.possibleDrops)));
+				if (harvestable.block.matches(block)) {
+					if (harvestable.possibleDrops == null) {
+						Block mcBlock = ((MCBlockDefinition) block.getDefinition()).getInternalBlock();
+						return mcBlock.getBlockDropped(world, x, y, z, block.getMeta(), 0);
+					} else {
+						return Arrays.asList(MineTweakerMC.getItemStacks(WeightedItemStack.pickRandomDrops(random, harvestable.possibleDrops)));
+					}
+				}
 			}
 			
 			return Collections.EMPTY_LIST;
