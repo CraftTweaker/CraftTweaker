@@ -15,6 +15,7 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
+import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.IngredientStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
@@ -145,6 +146,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 	@Override
 	public IIngredient marked(String mark) {
 		return new IngredientOreDict(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
+	}
+	
+	@Override
+	public IIngredient or(IIngredient ingredient) {
+		return new IngredientOr(this, ingredient);
 	}
 
 	@Override

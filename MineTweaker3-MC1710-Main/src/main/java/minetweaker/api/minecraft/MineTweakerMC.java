@@ -1,21 +1,35 @@
 package minetweaker.api.minecraft;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.block.IBlock;
+import minetweaker.api.block.IBlockDefinition;
 import minetweaker.api.data.IData;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
+import minetweaker.api.world.IDimension;
+import minetweaker.mc1710.block.MCBlockDefinition;
+import minetweaker.mc1710.block.MCSpecificBlock;
 import minetweaker.mc1710.data.NBTConverter;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import minetweaker.mc1710.player.MCPlayer;
+import minetweaker.mc1710.world.MCDimension;
+import minetweaker.mc1710.block.MCWorldBlock;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -24,6 +38,8 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author Stan Hebben
  */
 public class MineTweakerMC {
+	private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<Block, MCBlockDefinition>();
+	
 	private MineTweakerMC() {}
 	
 	/**
@@ -285,5 +301,74 @@ public class MineTweakerMC {
 		if (data == null) return null;
 		
 		return (NBTTagCompound) NBTConverter.from(data);
+	}
+	
+	/**
+	 * Retrieves the block at the given position.
+	 * 
+	 * @param blocks block access
+	 * @param x block x position
+	 * @param y block y position
+	 * @param z block z position
+	 * @return block instance
+	 */
+	public static IBlock getBlock(IBlockAccess blocks, int x, int y, int z) {
+		return new MCWorldBlock(blocks, x, y, z);
+	}
+	
+	/**
+	 * Retrieves the block definition for the given block.
+	 * 
+	 * @param block block object
+	 * @return block definition
+	 */
+	public static IBlockDefinition getBlockDefinition(Block block) {
+		if (!blockDefinitions.containsKey(block)) {
+			blockDefinitions.put(block, new MCBlockDefinition(block));
+		}
+		return blockDefinitions.get(block);
+	}
+	
+	/**
+	 * Retrieves the dimension instance for a given world.
+	 * 
+	 * @param world world
+	 * @return dimension
+	 */
+	public static IDimension getDimension(World world) {
+		if (world == null) return null;
+		
+		return new MCDimension(world);
+	}
+	
+	/**
+	 * Returns an instance of the given block.
+	 * 
+	 * @param block MC block definition
+	 * @return MT block instance
+	 */
+	public static IBlock getBlockAnyMeta(Block block) {
+		return new MCSpecificBlock(block, OreDictionary.WILDCARD_VALUE);
+	}
+	
+	/**
+	 * Returns an instance of the given block.
+	 * 
+	 * @param block MC block definition
+	 * @param meta block meta value
+	 * @return MT block instance
+	 */
+	public static IBlock getBlock(Block block, int meta) {
+		return new MCSpecificBlock(block, meta);
+	}
+	
+	/**
+	 * Retrieves the internal fluid stack of the given stack.
+	 * 
+	 * @param stack MT liquid stack
+	 * @return MCF fluid stack
+	 */
+	public static FluidStack getLiquidStack(ILiquidStack stack) {
+		return (FluidStack) stack.getInternal();
 	}
 }

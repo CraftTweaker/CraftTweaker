@@ -1,8 +1,10 @@
 package minetweaker.api.item;
 
+import minetweaker.api.block.IBlock;
 import minetweaker.api.data.IData;
 import minetweaker.api.liquid.ILiquidStack;
 import stanhebben.zenscript.annotations.OperatorType;
+import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -170,4 +172,12 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenMethod
 	public IItemStack updateTag(IData tagUpdate);
+	
+	/**
+	 * Converts this item stack into a block.
+	 * 
+	 * @return block, or null if this item is not a block
+	 */
+	@ZenCaster
+	public IBlock asBlock();
 }

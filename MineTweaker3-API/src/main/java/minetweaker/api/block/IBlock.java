@@ -1,5 +1,6 @@
 package minetweaker.api.block;
 
+import minetweaker.api.data.IData;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
@@ -9,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.block.IBlock")
-public interface IBlock {
+public interface IBlock extends IBlockPattern {
 	/**
 	 * Gets the block definition.
 	 * 
@@ -17,4 +18,10 @@ public interface IBlock {
 	 */
 	@ZenGetter("definition")
 	public IBlockDefinition getDefinition();
+	
+	@ZenGetter("meta")
+	public int getMeta();
+	
+	@ZenGetter("data")
+	public IData getTileData();
 }

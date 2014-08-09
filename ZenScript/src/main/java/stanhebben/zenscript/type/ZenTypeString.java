@@ -51,12 +51,12 @@ public class ZenTypeString extends ZenType {
 
 	@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this || canCastExpansion(environment, type);
+		return type == this || type == ANY || canCastExpansion(environment, type);
 	}
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this || type == BOOL || type.getNumberType() > 0 || canCastExpansion(environment, type);
+		return type == this || type == ANY || type == BOOL || type.getNumberType() > 0 || canCastExpansion(environment, type);
 	}
 	
 	@Override
@@ -149,6 +149,8 @@ public class ZenTypeString extends ZenType {
 			output.invokeStatic(Double.class, "parseDouble", double.class, String.class);
 		} else if (type == ZenTypeDoubleObject.INSTANCE) {
 			output.invokeStatic(Double.class, "valueOf", Double.class, String.class);
+		} else if (type == ANY) {
+			output.invokeStatic(getAnyClassName(environment), "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
 		} else if (!compileCastExpansion(position, environment, type)) {
 			environment.error(position, "cannot cast " + this + " to " + type);
 		}
@@ -556,6 +558,22 @@ public class ZenTypeString extends ZenType {
 		private void getValue(MethodOutput output) {
 			output.loadObject(0);
 			output.getField(ANY_NAME, "value", "Ljava/lang/String;");
+		}
+
+		@Override
+		public void defineEquals(MethodOutput output) {
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASSTRING);
+			output.invokeVirtual(String.class, "equals", boolean.class, Object.class);
+			output.returnInt();
+		}
+
+		@Override
+		public void defineHashCode(MethodOutput output) {
+			getValue(output);
+			output.invokeVirtual(String.class, "hashCode", int.class);
+			output.returnInt();
 		}
 	}
 }

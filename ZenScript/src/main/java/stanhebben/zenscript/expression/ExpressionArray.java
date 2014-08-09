@@ -52,17 +52,18 @@ public class ExpressionArray extends Expression {
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		Type baseType = type.getBaseType().toASMType();
+		ZenType baseType = type.getBaseType();
+		Type asmBaseType = type.getBaseType().toASMType();
 		
 		MethodOutput output = environment.getOutput();
 		output.constant(contents.length);
-		output.newArray(baseType);
+		output.newArray(asmBaseType);
 		
 		for (int i = 0; i < contents.length; i++) {
 			output.dup();
 			output.constant(i);
-			contents[i].compile(result, environment);
-			output.arrayStore(baseType);
+			contents[i].cast(this.getPosition(), environment, baseType).compile(result, environment);
+			output.arrayStore(asmBaseType);
 		}
 	}
 }

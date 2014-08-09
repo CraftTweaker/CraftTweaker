@@ -2,6 +2,7 @@ package stanhebben.zenscript.type;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
@@ -78,62 +79,152 @@ public class ZenTypeAny extends ZenType {
 		CASTERS.put("string", new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asString", String.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(Boolean.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asBool", boolean.class);
 				output.invokeStatic(Boolean.class, "valueOf", Boolean.class, boolean.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(Byte.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asByte", boolean.class);
 				output.invokeStatic(Byte.class, "valueOf", Byte.class, byte.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(Short.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asShort", short.class);
 				output.invokeStatic(Short.class, "valueOf", Short.class, short.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(Integer.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asInt", int.class);
 				output.invokeStatic(Integer.class, "valueOf", Integer.class, int.class);
-			}
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
+		}
 		});
 		CASTERS.put(Long.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asLong", long.class);
 				output.invokeStatic(Long.class, "valueOf", Long.class, long.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(Float.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asFloat", float.class);
 				output.invokeStatic(Float.class, "valueOf", Float.class, float.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(Double.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asDouble", double.class);
 				output.invokeStatic(Double.class, "valueOf", Double.class, double.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 		CASTERS.put(String.class.getName(), new MethodCompiler() {
 			@Override
 			public void compile(MethodOutput output) {
+				Label lblNull = new Label();
+				Label lblAfter = new Label();
+				output.dup();
+				output.ifNull(lblNull);
 				output.invokeInterface(IAny.class, "asString", String.class);
+				output.goTo(lblAfter);
+				
+				output.label(lblNull);
+				output.pop();
+				output.aConstNull();
+				output.label(lblAfter);
 			}
 		});
 	}

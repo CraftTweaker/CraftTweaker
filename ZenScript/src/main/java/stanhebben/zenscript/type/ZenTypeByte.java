@@ -159,6 +159,14 @@ public class ZenTypeByte extends ZenType {
 
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
+		if (operator == OperatorType.CAT) {
+			return STRING.binary(
+					position,
+					environment,
+					left.cast(position, environment, STRING),
+					right.cast(position, environment, STRING), OperatorType.CAT);
+		}
+		
 		return new ExpressionArithmeticBinary(position, operator, left, right.cast(position, environment, this));
 	}
 	
@@ -566,6 +574,33 @@ public class ZenTypeByte extends ZenType {
 		@Override
 		public void defineIteratorMulti(MethodOutput output) {
 			throwUnsupportedException(output, "byte", "iterator");
+		}
+
+		@Override
+		public void defineEquals(MethodOutput output) {
+			Label lblNope = new Label();
+			
+			output.loadObject(1);
+			output.instanceOf(IAny.NAME);
+			output.ifEQ(lblNope);
+			
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASBYTE);
+			output.ifICmpNE(lblNope);
+			
+			output.iConst1();
+			output.returnInt();
+			
+			output.label(lblNope);
+			output.iConst0();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineHashCode(MethodOutput output) {
+			getValue(output);
+			output.returnInt();
 		}
 		
 		private void getValue(MethodOutput output) {

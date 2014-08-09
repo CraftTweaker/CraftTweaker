@@ -11,6 +11,7 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
+import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.IngredientStack;
 import minetweaker.util.ArrayUtil;
 
@@ -68,6 +69,11 @@ public class IngredientOreDict implements IIngredient {
 	@Override
 	public IIngredient marked(String mark) {
 		return new IngredientOreDict(entry, mark, conditions, transformers);
+	}
+
+	@Override
+	public IIngredient or(IIngredient ingredient) {
+		return new IngredientOr(this, ingredient);
 	}
 
 	@Override

@@ -61,6 +61,11 @@ public class IngredientItem implements IIngredient {
 	}
 
 	@Override
+	public IIngredient or(IIngredient ingredient) {
+		return new IngredientOr(this, ingredient);
+	}
+
+	@Override
 	public boolean matches(IItemStack item) {
 		if (!this.item.matches(item)) return false;
 		

@@ -119,7 +119,7 @@ public class ZenTypeAssociative extends ZenType {
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
 		if (name.equals("length")) {
 			return new ExpressionMapSize(position, value.eval(environment));
-		} else if (ZenTypeString.INSTANCE.canCastImplicit(key, environment)) {
+		} else if (STRING.canCastImplicit(key, environment)) {
 			return new ExpressionMapIndexGet(
 					position,
 					value.eval(environment),

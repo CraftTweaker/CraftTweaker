@@ -26,7 +26,7 @@ public class MCGame implements IGame {
 	public static final MCGame INSTANCE = new MCGame();
 	
 	private MCGame() {}
-
+	
 	@Override
 	public List<IItemDefinition> getItems() {
 		List<IItemDefinition> result = new ArrayList<IItemDefinition>();

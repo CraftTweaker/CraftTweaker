@@ -46,6 +46,7 @@ public class ExpressionMapIndexGet extends Expression {
 					internal(Map.class),
 					"get",
 					"(Ljava/lang/Object;)Ljava/lang/Object;");
+			environment.getOutput().checkCast(type.toASMType().getInternalName());
 		}
 	}
 }

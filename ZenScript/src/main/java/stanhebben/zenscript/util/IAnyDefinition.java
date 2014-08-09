@@ -84,4 +84,8 @@ public interface IAnyDefinition {
 	public void defineIteratorSingle(MethodOutput output);
 	
 	public void defineIteratorMulti(MethodOutput output);
+	
+	public void defineEquals(MethodOutput output);
+	
+	public void defineHashCode(MethodOutput output);
 }

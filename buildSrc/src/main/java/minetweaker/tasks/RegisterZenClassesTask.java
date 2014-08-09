@@ -46,7 +46,8 @@ public class RegisterZenClassesTask extends DefaultTask {
 		if (outputDir == null) outputDir = inputDir;
 		
 		List<String> classNames = new ArrayList<String>();
-		iterate(inputDir, null, classNames);
+		List<OnRegisterMethod> onRegisterMethods = new ArrayList<OnRegisterMethod>();
+		iterate(inputDir, null, classNames, onRegisterMethods);
 		
 		String fullClassName = className.replace('.', '/');
 		
@@ -61,6 +62,10 @@ public class RegisterZenClassesTask extends DefaultTask {
 			method.visitVarInsn(Opcodes.ALOAD, 0);
 			method.visitLdcInsn(Type.getType("L" + clsName + ";"));
 			method.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z");
+		}
+		
+		for (OnRegisterMethod onRegisterMethod : onRegisterMethods) {
+			method.visitMethodInsn(Opcodes.INVOKESTATIC, onRegisterMethod.className, onRegisterMethod.methodName, "()V");
 		}
 		
 		method.visitInsn(Opcodes.RETURN);
@@ -89,23 +94,23 @@ public class RegisterZenClassesTask extends DefaultTask {
 		}
 	}
 	
-	private void iterate(File dir, String pkg, List<String> classNames) {
+	private void iterate(File dir, String pkg, List<String> classNames, List<OnRegisterMethod> onRegisterMethods) {
 		for (File f : dir.listFiles()) {
 			if (f.isDirectory()) {
 				if (pkg == null) {
-					iterate(f, f.getName(), classNames);
+					iterate(f, f.getName(), classNames, onRegisterMethods);
 				} else {
-					iterate(f, pkg + "/" + f.getName(), classNames);
+					iterate(f, pkg + "/" + f.getName(), classNames, onRegisterMethods);
 				}
 			} else if (f.isFile()) {
 				if (f.getName().endsWith(".class")) {
-					processJavaClass(f, pkg, classNames);
+					processJavaClass(f, pkg, classNames, onRegisterMethods);
 				}
 			}
 		}
 	}
 	
-	private void processJavaClass(File cls, String pkg, List<String> classNames) {
+	private void processJavaClass(File cls, String pkg, List<String> classNames, List<OnRegisterMethod> onRegisterMethods) {
 		try {
 			InputStream input = new BufferedInputStream(new FileInputStream(cls));
 			ClassReader reader = new ClassReader(input);
@@ -117,6 +122,11 @@ public class RegisterZenClassesTask extends DefaultTask {
 			if (detector.isAnnotated) {
 				classNames.add(pkg + "/" + cls.getName().substring(0, cls.getName().length() - 6));
 			}
+			for (MethodAnnotationDetector onRegisterMethod : detector.onRegister) {
+				onRegisterMethods.add(new OnRegisterMethod(
+						pkg + "/" + cls.getName().substring(0, cls.getName().length() - 6),
+						onRegisterMethod.name));
+			}
 		} catch (IOException ex) {
 			
 		}
@@ -124,6 +134,7 @@ public class RegisterZenClassesTask extends DefaultTask {
 	
 	private static class AnnotationDetector extends ClassVisitor {
 		private boolean isAnnotated = false;
+		private List<MethodAnnotationDetector> onRegister = new ArrayList<MethodAnnotationDetector>();
 		
 		public AnnotationDetector() {
 			super(Opcodes.ASM4);
@@ -140,6 +151,48 @@ public class RegisterZenClassesTask extends DefaultTask {
 			}
 			
 			return super.visitAnnotation(desc, visible);
+		}
+		
+		@Override
+		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+			return new MethodAnnotationDetector(this, name, desc);
+		}
+	}
+	
+	private static class MethodAnnotationDetector extends MethodVisitor {
+		private final AnnotationDetector detector;
+		private final String name;
+		private final String desc;
+		
+		public MethodAnnotationDetector(AnnotationDetector detector, String name, String desc) {
+			super(Opcodes.ASM4);
+			
+			this.detector = detector;
+			this.name = name;
+			this.desc = desc;
+		}
+		
+		@Override
+		public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+			if (desc.equals("Lminetweaker/annotations/OnRegister;")) {
+				if (this.desc.equals("()V")) {
+					detector.onRegister.add(this);
+				} else {
+					throw new RuntimeException("OnRegister annotation must be used on a static method without arguments or return value");
+				}
+			}
+			
+			return super.visitAnnotation(desc, visible);
+		}
+	}
+	
+	private static class OnRegisterMethod {
+		private final String className;
+		private final String methodName;
+		
+		public OnRegisterMethod(String className, String methodName) {
+			this.className = className;
+			this.methodName = methodName;
 		}
 	}
 }

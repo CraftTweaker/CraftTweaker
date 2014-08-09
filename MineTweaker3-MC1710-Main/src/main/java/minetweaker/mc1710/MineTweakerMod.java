@@ -92,7 +92,7 @@ public class MineTweakerMod {
 	
 	@EventHandler
 	public void onLoad(FMLPreInitializationEvent ev) {
-		MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
+		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 	}
 	

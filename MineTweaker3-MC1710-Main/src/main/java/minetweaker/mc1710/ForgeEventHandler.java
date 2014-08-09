@@ -8,12 +8,28 @@ package minetweaker.mc1710;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.api.minecraft.MineTweakerMC;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 /**
  *
  * @author Stan
  */
 public class ForgeEventHandler {
+	@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent ev) {
+		System.out.println("Player interact");
+		
+		minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(
+				MineTweakerMC.getIPlayer(ev.entityPlayer),
+				MineTweakerMC.getDimension(ev.world),
+				ev.x, ev.y, ev.z
+		);
+		
+		MineTweakerImplementationAPI.events.publishPlayerInteract(event);
+	}
+	
 	@SubscribeEvent
 	public void onCrafted(PlayerEvent.ItemCraftedEvent ev) {
 		

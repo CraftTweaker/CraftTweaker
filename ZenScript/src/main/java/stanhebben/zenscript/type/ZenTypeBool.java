@@ -88,6 +88,14 @@ public class ZenTypeBool extends ZenType {
 	
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
+		if (operator == OperatorType.CAT) {
+			return STRING.binary(
+					position,
+					environment,
+					left.cast(position, environment, STRING),
+					right.cast(position, environment, STRING), OperatorType.CAT);
+		}
+		
 		if (right.getType().canCastImplicit(BOOL, environment)) {
 			switch (operator) {
 				case AND:
@@ -509,6 +517,27 @@ public class ZenTypeBool extends ZenType {
 		@Override
 		public void defineIteratorMulti(MethodOutput output) {
 			throwUnsupportedException(output, "bool", "iterator");
+		}
+
+		@Override
+		public void defineEquals(MethodOutput output) {
+			Label lblEqual = new Label();
+			output.loadObject(0);
+			output.loadObject(1);
+			
+			output.ifACmpEq(lblEqual);
+			
+			output.iConst0();
+			output.returnInt();
+			
+			output.label(lblEqual);
+			output.iConst1();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineHashCode(MethodOutput output) {
+			output.invokeSpecial("java/lang/Object", "hashCode", "()I");
 		}
 		
 		private void getValue(MethodOutput output) {

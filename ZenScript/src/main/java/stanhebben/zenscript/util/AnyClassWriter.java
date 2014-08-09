@@ -382,6 +382,28 @@ public class AnyClassWriter {
 		definition.defineIteratorMulti(outputIteratorMulti);
 		outputIteratorMulti.end();
 		
+		MethodOutput outputHashCode = new MethodOutput(
+				writer,
+				Opcodes.ACC_PUBLIC,
+				"hashCode",
+				"()I",
+				null,
+				null);
+		outputHashCode.start();
+		definition.defineHashCode(outputHashCode);
+		outputHashCode.end();
+		
+		MethodOutput outputEquals = new MethodOutput(
+				writer,
+				Opcodes.ACC_PUBLIC,
+				"equals",
+				"(Ljava/lang/Object;)Z",
+				null,
+				null);
+		outputEquals.start();
+		definition.defineEquals(outputEquals);
+		outputEquals.end();
+		
 		writer.visitEnd();
 		return writer.toByteArray();
 	}

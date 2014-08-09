@@ -167,6 +167,14 @@ public class ZenTypeDouble extends ZenType {
 
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
+		if (operator == OperatorType.CAT) {
+			return STRING.binary(
+					position,
+					environment,
+					left.cast(position, environment, STRING),
+					right.cast(position, environment, STRING), OperatorType.CAT);
+		}
+		
 		return new ExpressionArithmeticBinary(position, operator, left, right.cast(position, environment, this));
 	}
 	
@@ -561,6 +569,47 @@ public class ZenTypeDouble extends ZenType {
 		private void getValue(MethodOutput output) {
 			output.loadObject(0);
 			output.getField(ANY_NAME, "value", "D");
+		}
+
+		@Override
+		public void defineEquals(MethodOutput output) {
+			Label lblNope = new Label();
+			
+			output.loadObject(1);
+			output.instanceOf(IAny.NAME);
+			output.ifEQ(lblNope);
+			
+			getValue(output);
+			output.loadObject(1);
+			output.invoke(METHOD_ASDOUBLE);
+			output.dCmp();
+			output.ifNE(lblNope);
+			
+			output.iConst1();
+			output.returnInt();
+			
+			output.label(lblNope);
+			output.iConst0();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineHashCode(MethodOutput output) {
+			// long bits = Double.doubleToLongBits(value);
+			// return (int) (bits ^ bits >> 32)
+			int bits = output.local(Type.LONG_TYPE);
+			output.invokeStatic(Double.class, "doubleToLongBits", double.class, long.class);
+			output.store(Type.LONG_TYPE, bits);
+			
+			output.load(Type.LONG_TYPE, bits);
+			output.l2i();
+			output.load(Type.LONG_TYPE, bits);
+			output.constant(32);
+			output.lShr();
+			output.l2i();
+			output.iXor();
+			
+			output.returnInt();
 		}
 	}
 }

@@ -185,7 +185,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			methodOutput.dup();
 			methodOutput.arrayLength();
 			methodOutput.loadInt(index);
-			methodOutput.ifICmpGE(exit);
+			methodOutput.ifICmpLE(exit);
 			
 			methodOutput.dup();
 			methodOutput.loadInt(index);
@@ -229,7 +229,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			methodOutput.dup();
 			methodOutput.arrayLength();
 			methodOutput.loadInt(locals[0]);
-			methodOutput.ifICmpGE(exit);
+			methodOutput.ifICmpLE(exit);
 			
 			methodOutput.dup();
 			methodOutput.loadInt(locals[0]);
@@ -251,7 +251,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 
 		@Override
 		public ZenType getType(int i) {
-			return getBaseType();
+			return i == 0 ? INT : getBaseType();
 		}
 	}
 }

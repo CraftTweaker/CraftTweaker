@@ -9,6 +9,7 @@ package minetweaker.mc164.item;
 import java.util.Collections;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.block.IBlock;
 import minetweaker.api.data.DataMap;
 import minetweaker.mc164.data.NBTConverter;
 import minetweaker.mc164.liquid.MCLiquidStack;
@@ -19,11 +20,14 @@ import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientItem;
+import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.mc164.actions.SetTranslationAction;
+import minetweaker.mc164.block.MCItemBlock;
 import minetweaker.util.ArrayUtil;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -209,6 +213,11 @@ public class MCItemStack implements IItemStack {
 	public IIngredient marked(String mark) {
 		return new IngredientItem(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
 	}
+	
+	@Override
+	public IIngredient or(IIngredient ingredient) {
+		return new IngredientOr(this, ingredient);
+	}
 
 	@Override
 	public boolean matches(IItemStack item) {
@@ -218,7 +227,7 @@ public class MCItemStack implements IItemStack {
 		}
 		
 		return internal.getItem() == stack.getItem()
-				&& (wildcardSize || internal.stackSize == stack.stackSize)
+				&& (wildcardSize || internal.stackSize >= stack.stackSize)
 				&& (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE
 					|| stack.getItemDamage() == internal.getItemDamage()
 					|| (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
@@ -239,6 +248,15 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public boolean hasTransformers() {
 		return false;
+	}
+
+	@Override
+	public IBlock asBlock() {
+		if (stack.itemID >= Block.blocksList.length || Block.blocksList[stack.itemID] == null) {
+			throw new ClassCastException("This item is not a block");
+		} else {
+			return new MCItemBlock(stack);
+		}
 	}
 
 	@Override

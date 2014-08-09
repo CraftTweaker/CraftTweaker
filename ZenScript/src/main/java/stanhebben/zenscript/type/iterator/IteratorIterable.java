@@ -45,7 +45,7 @@ public class IteratorIterable implements IZenIterator {
 
 		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(Iterator.class, "next", Object.class);
-		methodOutput.checkCast(iteratorType.getSignature());
+		methodOutput.checkCast(iteratorType.toASMType().getInternalName());
 		methodOutput.store(iteratorType.toASMType(), locals[0]);
 	}
 

@@ -14,7 +14,7 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 public class ExpressionTable extends Expression {
 	private final Expression[] keys;
 	private final Expression[] values;
-	private final ZenType type;
+	private final ZenTypeAssociative type;
 	
 	public ExpressionTable(ZenPosition position, Expression[] keys, Expression[] values) {
 		super(position);
@@ -25,7 +25,7 @@ public class ExpressionTable extends Expression {
 		type = new ZenTypeAssociative(ZenTypeAny.INSTANCE, ZenTypeAny.INSTANCE);
 	}
 	
-	public ExpressionTable(ZenPosition position, Expression[] keys, Expression[] values, ZenType type) {
+	public ExpressionTable(ZenPosition position, Expression[] keys, Expression[] values, ZenTypeAssociative type) {
 		super(position);
 		
 		this.keys = keys;
@@ -42,6 +42,9 @@ public class ExpressionTable extends Expression {
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		if (result) {
+			ZenType keyType = type.getKeyType();
+			ZenType valueType = type.getValueType();
+			
 			MethodOutput output = environment.getOutput();
 			output.newObject(HashMap.class);
 			output.dup();
@@ -49,8 +52,8 @@ public class ExpressionTable extends Expression {
 			
 			for (int i = 0; i < keys.length; i++) {
 				output.dup();
-				keys[i].compile(true, environment);
-				values[i].compile(true, environment);
+				keys[i].cast(getPosition(), environment, keyType).compile(true, environment);
+				values[i].cast(getPosition(), environment, valueType).compile(true, environment);
 				output.invokeInterface(internal(Map.class), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 				output.pop();
 			}
@@ -76,7 +79,7 @@ public class ExpressionTable extends Expression {
 				newValues[i] = values[i].cast(position, environment, keyType.getValueType());
 			}
 			
-			return new ExpressionTable(getPosition(), newKeys, newValues, type);
+			return new ExpressionTable(getPosition(), newKeys, newValues, keyType);
 		} else if (this.type.canCastImplicit(type, environment)) {
 			return this.type.cast(position, environment, this, type);
 		} else {

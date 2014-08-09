@@ -32,7 +32,7 @@ public class IteratorMapKeys implements IZenIterator {
 
 	@Override
 	public void compileStart(int[] locals) {
-		methodOutput.invokeInterface(Map.class, "entrySet", Set.class);
+		methodOutput.invokeInterface(Map.class, "keySet", Set.class);
 
 		iterator = methodOutput.local(Type.getType(Iterator.class));
 		methodOutput.invokeInterface(Set.class, "iterator", Iterator.class);
@@ -41,16 +41,15 @@ public class IteratorMapKeys implements IZenIterator {
 
 	@Override
 	public void compilePreIterate(int[] locals, Label exit) {
-		methodOutput.dup();
+		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(
 				Iterator.class,
 				"hasNext",
 				boolean.class);
 		methodOutput.ifEQ(exit);
-
+		
+		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(Iterator.class, "next", Object.class);
-
-		methodOutput.invokeInterface(Map.Entry.class, "getKey", Object.class);
 		methodOutput.store(type.getKeyType().toASMType(), locals[0]);
 	}
 
@@ -61,7 +60,7 @@ public class IteratorMapKeys implements IZenIterator {
 
 	@Override
 	public void compileEnd() {
-		methodOutput.pop();
+		
 	}
 
 	@Override

@@ -53,6 +53,11 @@ public class IngredientStack implements IIngredient {
 	}
 
 	@Override
+	public IIngredient or(IIngredient ingredient) {
+		return new IngredientOr(this, ingredient);
+	}
+
+	@Override
 	public boolean matches(IItemStack item) {
 		return item.getAmount() == amount && ingredient.matches(item);
 	}

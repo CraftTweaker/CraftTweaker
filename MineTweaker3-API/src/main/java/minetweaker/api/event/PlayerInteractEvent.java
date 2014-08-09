@@ -7,7 +7,6 @@
 package minetweaker.api.event;
 
 import minetweaker.api.block.IBlock;
-import minetweaker.api.entity.IEntity;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.world.IBlockGroup;
 import minetweaker.api.world.IDimension;
@@ -22,7 +21,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("minetweaker.event.PlayerInteractEvent")
 public class PlayerInteractEvent {
 	private final IPlayer player;
-	private final IEntity entity;
 	private final IBlockGroup blocks;
 	private final int x;
 	private final int y;
@@ -32,9 +30,8 @@ public class PlayerInteractEvent {
 	private boolean useBlock;
 	private boolean useItem;
 	
-	public PlayerInteractEvent(IPlayer player, IEntity entity, IBlockGroup blocks, int x, int y, int z) {
+	public PlayerInteractEvent(IPlayer player, IBlockGroup blocks, int x, int y, int z) {
 		this.player = player;
-		this.entity = entity;
 		this.blocks = blocks;
 		this.x = x;
 		this.y = y;

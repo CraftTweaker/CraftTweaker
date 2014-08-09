@@ -137,7 +137,13 @@ public class DataMap implements IData {
 			} else {
 				result.append(", ");
 			}
-			result.append(entry.getKey());
+			
+			if (isValidIdentifier(entry.getKey())) {
+				result.append(entry.getKey());
+			} else {
+				result.append("\"").append(entry.getKey()).append("\"");
+			}
+			
 			result.append(": ");
 			result.append(entry.getValue().toString());
 		}
@@ -274,5 +280,17 @@ public class DataMap implements IData {
 	@Override
 	public String toString() {
 		return asString();
+	}
+	
+	private boolean isValidIdentifier(String str) {
+		if (!Character.isJavaIdentifierStart(str.charAt(0)))
+			return false;
+		
+		for (int i = 1; i < str.length(); i++) {
+			if (!Character.isJavaIdentifierPart(str.charAt(i)))
+				return false;
+		}
+		
+		return true;
 	}
 }

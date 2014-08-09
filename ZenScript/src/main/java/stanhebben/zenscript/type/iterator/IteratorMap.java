@@ -41,13 +41,14 @@ public class IteratorMap implements IZenIterator {
 
 	@Override
 	public void compilePreIterate(int[] locals, Label exit) {
-		methodOutput.dup();
+		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(
 				Iterator.class,
 				"hasNext",
 				boolean.class);
 		methodOutput.ifEQ(exit);
 
+		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(Iterator.class, "next", Object.class);
 		methodOutput.dup();
 
@@ -65,7 +66,7 @@ public class IteratorMap implements IZenIterator {
 
 	@Override
 	public void compileEnd() {
-		methodOutput.pop();
+		
 	}
 
 	@Override

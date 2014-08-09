@@ -7,6 +7,8 @@
 package minetweaker.util;
 
 import java.util.Arrays;
+import minetweaker.api.block.IBlockPattern;
+import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
 import minetweaker.api.item.IItemTransformer;
 
@@ -26,6 +28,18 @@ public class ArrayUtil {
 	
 	public static IItemTransformer[] append(IItemTransformer[] values, IItemTransformer value) {
 		IItemTransformer[] result = Arrays.copyOf(values, values.length + 1);
+		result[values.length] = value;
+		return result;
+	}
+	
+	public static IIngredient[] append(IIngredient[] values, IIngredient value) {
+		IIngredient[] result = Arrays.copyOf(values, values.length + 1);
+		result[values.length] = value;
+		return result;
+	}
+	
+	public static IBlockPattern[] append(IBlockPattern[] values, IBlockPattern value) {
+		IBlockPattern[] result = Arrays.copyOf(values, values.length + 1);
 		result[values.length] = value;
 		return result;
 	}

@@ -61,6 +61,17 @@ public interface IIngredient {
 	public IIngredient amount(int amount);
 	
 	/**
+	 * Combines multiple ingredients into a single one. Note that ore dictionary
+	 * entries are preferred to or statements.
+	 * 
+	 * @param ingredient ingredient to combine with
+	 * @return or-ed ingredient
+	 */
+	@ZenOperator(OperatorType.OR)
+	@ZenMethod
+	public IIngredient or(IIngredient ingredient);
+	
+	/**
 	 * Returns a new ingredient with the given transform added to it.
 	 * 
 	 * @param transformer transformer to add

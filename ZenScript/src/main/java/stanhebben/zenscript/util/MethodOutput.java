@@ -183,7 +183,7 @@ public class MethodOutput {
 	}
 	
 	public void checkCast(String newClass) {
-		visitor.visitTypeInsn(CHECKCAST, newClass.substring(1, newClass.length() - 1));
+		visitor.visitTypeInsn(CHECKCAST, newClass);
 	}
 	
 	public void iNeg() {
@@ -227,6 +227,14 @@ public class MethodOutput {
 		visitor.visitInsn(IXOR);
 	}
 	
+	public void iShr() {
+		visitor.visitInsn(ISHR);
+	}
+	
+	public void iShl() {
+		visitor.visitInsn(ISHL);
+	}
+	
 	public void lNeg() {
 		visitor.visitInsn(LNEG);
 	}
@@ -266,6 +274,14 @@ public class MethodOutput {
 	public void lNot() {
 		constant((long) -1);
 		lXor();
+	}
+	
+	public void lShr() {
+		visitor.visitInsn(LSHR);
+	}
+	
+	public void lShl() {
+		visitor.visitInsn(LSHL);
 	}
 	
 	public void fNeg() {
@@ -390,6 +406,10 @@ public class MethodOutput {
 	
 	public void dCmp() {
 		visitor.visitInsn(DCMPL);
+	}
+	
+	public void instanceOf(String clsName) {
+		visitor.visitTypeInsn(INSTANCEOF, clsName);
 	}
 	
 	public void invokeStatic(String owner, String name, String descriptor) {

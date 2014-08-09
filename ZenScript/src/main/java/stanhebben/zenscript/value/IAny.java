@@ -13,6 +13,8 @@ import java.util.Iterator;
  * @author Stan Hebben
  */
 public interface IAny {
+	public static final String NAME = "stanhebben/zenscript/value/IAny";
+	
 	public static final int NUM_BYTE = 1;
 	public static final int NUM_SHORT = 2;
 	public static final int NUM_INT = 3;

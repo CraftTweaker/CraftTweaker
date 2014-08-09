@@ -5,12 +5,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import static minetweaker.MineTweakerAPI.server;
+import minetweaker.api.block.IBlock;
+import minetweaker.api.data.IData;
+import minetweaker.api.event.IEventHandle;
+import minetweaker.api.event.IPlayerInteractEventHandler;
 import minetweaker.api.event.IPlayerLoggedInEventHandler;
 import minetweaker.api.event.IPlayerLoggedOutEventHandler;
 import minetweaker.api.event.MTEventManager;
+import minetweaker.api.event.PlayerInteractEvent;
 import minetweaker.api.event.PlayerLoggedInEvent;
 import minetweaker.api.event.PlayerLoggedOutEvent;
 import minetweaker.api.game.IGame;
@@ -36,11 +43,16 @@ import minetweaker.runtime.IScriptProvider;
  * @author Stan Hebben
  */
 public class MineTweakerImplementationAPI {
+	private static Set<IPlayer> blockInfoPlayers = new HashSet<IPlayer>();
+	private static IEventHandle blockEventHandler = null;
+	
 	private static final Map<String, MineTweakerCommand> minetweakerCommands;
+	
 	private static final Comparator<IItemDefinition> ITEM_COMPARATOR = new ItemComparator();
 	private static final Comparator<ILiquidDefinition> LIQUID_COMPARATOR = new LiquidComparator();
 	private static final ListenPlayerLoggedIn LISTEN_LOGIN = new ListenPlayerLoggedIn();
 	private static final ListenPlayerLoggedOut LISTEN_LOGOUT = new ListenPlayerLoggedOut();
+	private static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
 	
 	static {
 		minetweakerCommands = new HashMap<String, MineTweakerCommand>();
@@ -261,6 +273,32 @@ public class MineTweakerImplementationAPI {
 			}
 		}));
 		
+		minetweakerCommands.put("blockinfo", new MineTweakerCommand(
+				"blockinfo",
+				new String[] {
+					"/minetweaker blockinfo",
+					"   Activates or deactivates block reader. In block info mode,",
+					"   right-click a block to see ID, meta and tile entity data"
+				}, new ICommandFunction() {
+			@Override
+			public void execute(String[] arguments, IPlayer player) {
+				if (blockInfoPlayers.isEmpty()) {
+					blockEventHandler = events.onPlayerInteract(LISTEN_BLOCK_INFO);
+				}
+				
+				if (blockInfoPlayers.contains(player)) {
+					blockInfoPlayers.remove(player);
+					player.sendChat(platform.getMessage("Block info mode deactivated."));
+				} else {
+					blockInfoPlayers.add(player);
+					player.sendChat(platform.getMessage("Block info mode activated. Right-click a block to see its data."));
+				}
+				
+				if (blockInfoPlayers.isEmpty()) {
+					blockEventHandler.close();
+				}
+			}
+				}));
 	}
 	
 	/**
@@ -331,6 +369,8 @@ public class MineTweakerImplementationAPI {
 	 * provider in order to reload scripts.
 	 */
 	public static void reload() {
+		blockInfoPlayers.clear();
+		
 		logger.clear();
 		events.clear();
 		
@@ -475,6 +515,21 @@ public class MineTweakerImplementationAPI {
 		@Override
 		public void handle(PlayerLoggedOutEvent event) {
 			logger.removePlayer(event.getPlayer());
+		}
+	}
+	
+	private static class ListenBlockInfo implements IPlayerInteractEventHandler {
+		@Override
+		public void handle(PlayerInteractEvent event) {
+			if (blockInfoPlayers.contains(event.getPlayer())) {
+				IBlock block = event.getBlock();
+				event.getPlayer().sendChat(platform.getMessage("Block ID: " + block.getDefinition().getId()));
+				event.getPlayer().sendChat(platform.getMessage("Meta value: " + block.getMeta()));
+				IData data = block.getTileData();
+				if (data != null) {
+					event.getPlayer().sendChat(platform.getMessage("Tile entity data: " + data.asString()));
+				}
+			}
 		}
 	}
 }
