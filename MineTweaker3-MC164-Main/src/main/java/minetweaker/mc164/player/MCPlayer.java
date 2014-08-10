@@ -100,4 +100,26 @@ public class MCPlayer implements IPlayer {
 			MineTweakerMod.INSTANCE.openBrowser(player.username, url);
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 59 * hash + (this.player != null ? this.player.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final MCPlayer other = (MCPlayer) obj;
+		if (this.player != other.player && (this.player == null || !this.player.equals(other.player))) {
+			return false;
+		}
+		return true;
+	}
 }

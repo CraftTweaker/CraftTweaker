@@ -18,8 +18,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 public class ForgeEventHandler {
 	@ForgeSubscribe
 	public void onPlayerInteract(PlayerInteractEvent ev) {
-		System.out.println("Player interact");
-		
 		minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(
 				MineTweakerMC.getIPlayer(ev.entityPlayer),
 				MineTweakerMC.getDimension(ev.entityPlayer.getEntityWorld()),

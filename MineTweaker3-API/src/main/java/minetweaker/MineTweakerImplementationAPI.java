@@ -89,11 +89,13 @@ public class MineTweakerImplementationAPI {
 
 					try {
 						displayName = " -- " + item.makeStack(0).getDisplayName();
-					} catch (Exception ex) {
+					} catch (Throwable ex) {
 						// some mods (such as buildcraft) may throw exceptions when calling
 						// getDisplayName on an item stack that doesn't contain valid NBT data
+						// also seems to cause errors in some other cases too
+						displayName = " -- Name could not be retrieved due to an error: " + ex;
 					}
-
+					
 					MineTweakerAPI.logCommand("<" + item.getId() + ">" + displayName);
 				}
 				

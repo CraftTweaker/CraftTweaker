@@ -104,4 +104,19 @@ public class MCPlayer implements IPlayer {
 					(EntityPlayerMP) player);
 		}
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other.getClass() != this.getClass())
+			return false;
+		
+		return ((MCPlayer) other).player == player;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 23 * hash + (this.player != null ? this.player.hashCode() : 0);
+		return hash;
+	}
 }

@@ -17,6 +17,9 @@ public class MCBlockDefinition implements IBlockDefinition {
 	private final Block block;
 	
 	public MCBlockDefinition(Block block) {
+		if (block == null)
+			throw new IllegalArgumentException("block cannot be null");
+		
 		this.block = block;
 	}
 	

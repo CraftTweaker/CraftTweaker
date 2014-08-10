@@ -41,7 +41,7 @@ public class ItemBracketHandler implements IBracketHandler {
 		for (Item item : Item.itemsList) {
 			if (item == null) continue;
 			
-			itemNames.put(item.getUnlocalizedName(), item);
+			itemNames.put(item.getUnlocalizedName().replace(" ", ""), item);
 		}
 	}
 	

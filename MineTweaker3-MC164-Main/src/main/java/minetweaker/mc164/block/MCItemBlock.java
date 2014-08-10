@@ -59,9 +59,26 @@ public class MCItemBlock implements IBlock {
 
 	@Override
 	public boolean matches(IBlock block) {
-		return getDefinition() == block.getDefinition()
+		if (getDefinition() != block.getDefinition()) {
+			System.out.println("Different block");
+			return false;
+		}
+		
+		if (getMeta() != OreDictionary.WILDCARD_VALUE && getMeta() != block.getMeta()) {
+			System.out.println("Different meta");
+			return false;
+		}
+		
+		if (getTileData() != null && (block.getTileData() == null || !block.getTileData().contains(getTileData()))) {
+			System.out.println("Different tile data");
+			return false;
+		}
+		
+		return true;
+		
+/*		return getDefinition() == block.getDefinition()
 				&& (getMeta() == OreDictionary.WILDCARD_VALUE || getMeta() == block.getMeta())
-				&& (getTileData() == null || (block.getTileData() != null && block.getTileData().contains(getTileData())));
+				&& (getTileData() == null || (block.getTileData() != null && block.getTileData().contains(getTileData())));*/
 	}
 
 	@Override

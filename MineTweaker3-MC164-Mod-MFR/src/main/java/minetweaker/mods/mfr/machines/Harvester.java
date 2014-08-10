@@ -122,7 +122,8 @@ public class Harvester {
 		@Override
 		public HarvestType getHarvestType() {
 			// WARNING: first type will be used
-			return harvestables.get(0).type;
+			// Also, take into account the possibility of having no harvestable yet
+			return harvestables.isEmpty() ? HarvestType.Normal : harvestables.get(0).type;
 		}
 
 		@Override
@@ -132,29 +133,39 @@ public class Harvester {
 
 		@Override
 		public boolean canBeHarvested(World world, Map<String, Boolean> map, int x, int y, int z) {
+			System.out.println("canBeHarvested start");
+			
 			for (TweakerHarvestable harvestable : harvestables) {
 				if (harvestable.block.matches(MineTweakerMC.getBlock(world, x, y, z)))
 					return true;
 			}
 			
-			System.out.println("No blocks match");
+			System.out.println("canBeHarvested end");
+			
 			return false;
 		}
 
 		@Override
 		public List<ItemStack> getDrops(World world, Random random, Map<String, Boolean> map, int x, int y, int z) {
+			System.out.println("getDrops start");
+			
 			IBlock block = MineTweakerMC.getBlock(world, x, y, z);
 			for (TweakerHarvestable harvestable : harvestables) {
 				if (harvestable.block.matches(block)) {
 					if (harvestable.possibleDrops == null) {
 						Block mcBlock = ((MCBlockDefinition) block.getDefinition()).getInternalBlock();
-						return mcBlock.getBlockDropped(world, x, y, z, block.getMeta(), 0);
+						List<ItemStack> result = mcBlock.getBlockDropped(world, x, y, z, block.getMeta(), 0);
+						//return Collections.EMPTY_LIST;
+						System.out.println("getDrops end");
+						return result;
 					} else {
-						return Arrays.asList(MineTweakerMC.getItemStacks(WeightedItemStack.pickRandomDrops(random, harvestable.possibleDrops)));
+						List<ItemStack> result = Arrays.asList(MineTweakerMC.getItemStacks(WeightedItemStack.pickRandomDrops(random, harvestable.possibleDrops)));
+						System.out.println("getDrops end");
+						return result;
 					}
 				}
 			}
-			
+			System.out.println("getDrops end");
 			return Collections.EMPTY_LIST;
 		}
 
@@ -197,6 +208,7 @@ public class Harvester {
 					}
 				} else {
 					TweakerHarvestablePartial factoryFruit = new TweakerHarvestablePartial(blockId);
+					factoryFruit.harvestables.add(harvestable);
 					FactoryRegistry.registerHarvestable(factoryFruit);
 				}
 			}
@@ -259,7 +271,7 @@ public class Harvester {
 				fruits.remove(key);
 			}
 		}
-
+		
 		@Override
 		public boolean canUndo() {
 			return true;

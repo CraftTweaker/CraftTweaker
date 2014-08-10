@@ -6,7 +6,10 @@
 
 package minetweaker.mc172.brackets;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import minetweaker.IBracketHandler;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
@@ -32,8 +35,18 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 @BracketHandler(priority=100)
 public class ItemBracketHandler implements IBracketHandler {
+	private static final Map<String, Item> itemNames;
+	
+	static {
+		itemNames = new HashMap<String, Item>();
+		for (String itemName : (Set<String>) Item.itemRegistry.getKeys()) {
+			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
+		}
+	}
+	
 	public static IItemStack getItem(String name, int meta) {
-		Item item = (Item) Item.itemRegistry.getObject(name);
+		//Item item = (Item) Item.itemRegistry.getObject(name);
+		Item item = itemNames.get(name);
 		if (item != null) {
 			return getIItemStackWildcardSize(item, meta);
 		} else {
@@ -92,9 +105,9 @@ public class ItemBracketHandler implements IBracketHandler {
 			valueBuilder.append(token.getValue());
 		}
 		
-		Item item = (Item) Item.itemRegistry.getObject(valueBuilder.toString());
-		if (item != null) {
-			return new ItemReferenceSymbol(valueBuilder.toString(), meta);
+		String itemName = valueBuilder.toString();
+		if (itemNames.containsKey(itemName)) {
+			return new ItemReferenceSymbol(itemName, meta);
 		}
 		
 		return null;
