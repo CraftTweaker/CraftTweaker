@@ -9,6 +9,7 @@ package stanhebben.zenscript.compiler;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -102,5 +103,15 @@ public class EnvironmentGlobal implements IEnvironmentGlobal {
 		} else {
 			local.put(name, value);
 		}
+	}
+
+	@Override
+	public Set<String> getClassNames() {
+		return classes.keySet();
+	}
+
+	@Override
+	public byte[] getClass(String name) {
+		return classes.get(name);
 	}
 }

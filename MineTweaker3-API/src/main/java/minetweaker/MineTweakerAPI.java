@@ -29,6 +29,7 @@ import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolJavaStaticField;
 import stanhebben.zenscript.symbols.SymbolJavaStaticGetter;
 import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 
 /**
@@ -333,7 +334,7 @@ public class MineTweakerAPI {
 	 * @return corresponding symbol
 	 */
 	public static IZenSymbol getJavaStaticMethodSymbol(Class cls, String name, Class... arguments) {
-		JavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
+		IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
 		return new SymbolJavaStaticMethod(method);
 	}
 	
@@ -347,7 +348,7 @@ public class MineTweakerAPI {
 	 * @return corresponding symbol
 	 */
 	public static IZenSymbol getJavaStaticGetterSymbol(Class cls, String name) {
-		JavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name);
+		IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name);
 		return new SymbolJavaStaticGetter(method);
 	}
 	
@@ -379,7 +380,7 @@ public class MineTweakerAPI {
 	 * @param arguments argument types
 	 * @return java method
 	 */
-	public static JavaMethod getJavaMethod(Class cls, String name, Class... arguments) {
+	public static IJavaMethod getJavaMethod(Class cls, String name, Class... arguments) {
 		return JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
 	}
 }

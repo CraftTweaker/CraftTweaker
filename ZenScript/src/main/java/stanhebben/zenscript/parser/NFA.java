@@ -65,13 +65,10 @@ public class NFA {
 
         Partial[] partials = new Partial[regexp.length];
         for (int i = 0; i < regexp.length; i++) {
-            //System.out.println("Processing regexp " + i + ": " + regexp[i]);
             partials[i] = processRegExp(new CharStream(regexp[i]));
             partials[i].head.setFinal(finals[i]);
             initial.addTransition(partials[i].tailLabel, partials[i].tail);
         }
-
-        //System.out.println("NFA generated");
     }
 
     /**

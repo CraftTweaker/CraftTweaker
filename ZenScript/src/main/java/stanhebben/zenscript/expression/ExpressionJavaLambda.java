@@ -30,7 +30,7 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 public class ExpressionJavaLambda extends Expression {
 	private final Class interfaceClass;
 	private final List<ParsedFunctionArgument> arguments;
-	private final Statement[] statements;
+	private final List<Statement> statements;
 	
 	private final ZenType type;
 	
@@ -38,7 +38,7 @@ public class ExpressionJavaLambda extends Expression {
 			ZenPosition position,
 			Class interfaceClass,
 			List<ParsedFunctionArgument> arguments,
-			Statement[] statements,
+			List<Statement> statements,
 			ZenType type) {
 		super(position);
 		

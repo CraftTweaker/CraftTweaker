@@ -13,11 +13,17 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionArithmeticBinary;
 import stanhebben.zenscript.expression.ExpressionArithmeticCompare;
 import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
-import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionInt;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenTypeAny.*;
+import stanhebben.zenscript.type.casting.CastingRuleI2D;
+import stanhebben.zenscript.type.casting.CastingRuleI2F;
+import stanhebben.zenscript.type.casting.CastingRuleI2L;
+import stanhebben.zenscript.type.casting.CastingRuleNone;
+import stanhebben.zenscript.type.casting.CastingRuleStaticMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.AnyClassWriter;
 import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASBYTE;
 import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSTRING;
@@ -44,6 +50,28 @@ public class ZenTypeByte extends ZenType {
 	}
 
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		rules.registerCastingRule(BYTEOBJECT, new CastingRuleStaticMethod(BYTE_VALUEOF));
+		rules.registerCastingRule(SHORT, new CastingRuleNone(BYTE, SHORT));
+		rules.registerCastingRule(SHORTOBJECT, new CastingRuleStaticMethod(SHORT_VALUEOF));
+		rules.registerCastingRule(INT, new CastingRuleNone(BYTE, INT));
+		rules.registerCastingRule(INTOBJECT, new CastingRuleStaticMethod(INT_VALUEOF));
+		rules.registerCastingRule(LONG, new CastingRuleI2L(null));
+		rules.registerCastingRule(LONGOBJECT, new CastingRuleStaticMethod(LONG_VALUEOF, new CastingRuleI2L(null)));
+		rules.registerCastingRule(FLOAT, new CastingRuleI2F(null));
+		rules.registerCastingRule(FLOATOBJECT, new CastingRuleStaticMethod(FLOAT_VALUEOF, new CastingRuleI2F(null)));
+		rules.registerCastingRule(DOUBLE, new CastingRuleI2D(null));
+		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleStaticMethod(DOUBLE_VALUEOF, new CastingRuleI2D(null)));
+		
+		rules.registerCastingRule(STRING, new CastingRuleStaticMethod(BYTE_TOSTRING_STATIC));
+		rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, BYTE)));
+		
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
+	}
+	
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		int itype = type.getNumberType();
 		return itype != 0
@@ -69,7 +97,7 @@ public class ZenTypeByte extends ZenType {
 		} else {
 			return new ExpressionAs(position, value, type);
 		}
-	}
+	}*/
 	
 	@Override
 	public Class toJavaClass() {
@@ -112,7 +140,7 @@ public class ZenTypeByte extends ZenType {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		MethodOutput output = environment.getOutput();
 		
@@ -150,7 +178,7 @@ public class ZenTypeByte extends ZenType {
 		} else if (!compileCastExpansion(position, environment, type)) {
 			environment.error(position, "cannot cast " + this + " to " + type);
 		}
-	}
+	}*/
 	
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
@@ -316,7 +344,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iAdd();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -328,7 +356,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iSub();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -346,7 +374,7 @@ public class ZenTypeByte extends ZenType {
 			getValue(output);
 			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, int.class);
 			output.loadObject(1);
-			output.invoke(METHOD_ASSTRING);
+			METHOD_ASSTRING.invokeVirtual(output);
 			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
 			output.invokeVirtual(StringBuilder.class, "toString", String.class);
 			output.invokeStatic(STRING.getAnyClassName(environment), "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
@@ -359,7 +387,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iMul();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -371,7 +399,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iDiv();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -383,7 +411,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iRem();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -395,7 +423,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iAnd();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -407,7 +435,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iOr();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -419,7 +447,7 @@ public class ZenTypeByte extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iXor();
 			output.invokeSpecial(ANY_NAME, "<init>", "(B)V");
 			output.returnObject();
@@ -436,7 +464,7 @@ public class ZenTypeByte extends ZenType {
 		public void defineCompareTo(MethodOutput output) {
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iSub();
 			output.returnInt();
 		}
@@ -586,7 +614,7 @@ public class ZenTypeByte extends ZenType {
 			
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.ifICmpNE(lblNope);
 			
 			output.iConst1();

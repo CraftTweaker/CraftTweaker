@@ -30,7 +30,7 @@ public class ExpressionBool extends Expression {
 		if (type == ZenType.BOOL) {
 			return this;
 		} else {
-			return ZenType.BOOL.cast(position, environment, this, type);
+			return super.cast(position, environment, type);
 		}
 	}
 

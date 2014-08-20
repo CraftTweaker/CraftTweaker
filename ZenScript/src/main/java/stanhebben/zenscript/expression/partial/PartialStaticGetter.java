@@ -9,11 +9,12 @@ package stanhebben.zenscript.expression.partial;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolJavaStaticGetter;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.natives.JavaMethod;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -22,16 +23,16 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class PartialStaticGetter implements IPartialExpression {
 	private final ZenPosition position;
-	private final JavaMethod method;
+	private final IJavaMethod method;
 	
-	public PartialStaticGetter(ZenPosition position, JavaMethod method) {
+	public PartialStaticGetter(ZenPosition position, IJavaMethod method) {
 		this.position = position;
 		this.method = method;
 	}
 
 	@Override
 	public Expression eval(IEnvironmentGlobal environment) {
-		return method.callStatic(position, environment);
+		return new ExpressionCallStatic(position, environment, method);
 	}
 
 	@Override
@@ -52,8 +53,18 @@ public class PartialStaticGetter implements IPartialExpression {
 	}
 
 	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return new ZenType[numArguments];
+	}
+
+	@Override
 	public IZenSymbol toSymbol() {
 		return new SymbolJavaStaticGetter(method);
+	}
+
+	@Override
+	public ZenType getType() {
+		return method.getReturnType();
 	}
 
 	@Override

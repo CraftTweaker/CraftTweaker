@@ -6,6 +6,7 @@
 
 package stanhebben.zenscript.compiler;
 
+import java.util.Set;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -25,6 +26,10 @@ public interface IEnvironmentGlobal extends ITypeRegistry, IZenErrorLogger {
 	public String makeClassName();
 	
 	public boolean containsClass(String name);
+	
+	public Set<String> getClassNames();
+	
+	public byte[] getClass(String name);
 	
 	public void putClass(String name, byte[] data);
 	

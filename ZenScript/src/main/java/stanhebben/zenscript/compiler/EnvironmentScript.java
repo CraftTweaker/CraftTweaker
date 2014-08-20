@@ -9,6 +9,7 @@ package stanhebben.zenscript.compiler;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -85,5 +86,15 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 	@Override
 	public void warning(ZenPosition position, String message) {
 		parent.warning(position, message);
+	}
+
+	@Override
+	public Set<String> getClassNames() {
+		return parent.getClassNames();
+	}
+
+	@Override
+	public byte[] getClass(String name) {
+		return parent.getClass(name);
 	}
 }

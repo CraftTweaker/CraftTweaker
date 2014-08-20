@@ -39,7 +39,7 @@ public class StatementVar extends Statement {
 		
 		Expression cInitializer = initializer == null
 				? null
-				: initializer.compile(environment).eval(environment);
+				: initializer.compile(environment, type).eval(environment);
 		ZenType cType = type == null ? (cInitializer == null ? ZenTypeAny.INSTANCE : cInitializer.getType()) : type;
 		SymbolLocal symbol = new SymbolLocal(cType, isFinal);
 		

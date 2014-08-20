@@ -8,13 +8,13 @@ import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeBool;
+import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
 public abstract class Expression implements IPartialExpression {	
-	public static final Expression parse(ZenTokener parser, IEnvironmentMethod environment) {
+	public static final Expression parse(ZenTokener parser, IEnvironmentMethod environment, ZenType predictedType) {
 		return ParsedExpression.read(parser, environment)
-				.compile(environment)
+				.compile(environment, predictedType)
 				.eval(environment);
 	}
 	
@@ -28,13 +28,17 @@ public abstract class Expression implements IPartialExpression {
 		return position;
 	}
 	
-	public abstract ZenType getType();
-	
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
 		if (getType() == type) {
 			return this;
 		} else {
-			return getType().cast(position, environment, this, type);
+			ICastingRule castingRule = getType().getCastingRule(type, environment);
+			if (castingRule == null) {
+				environment.error(position, "Cannot cast " + this.getType() + " to " + type);
+				return new ExpressionInvalid(position, type);
+			} else {
+				return new ExpressionAs(position, this, castingRule);
+			}
 		}
 	}
 	
@@ -75,6 +79,11 @@ public abstract class Expression implements IPartialExpression {
 	@Override
 	public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
 		return getType().call(position, environment, this, values);
+	}
+	
+	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return getType().predictCallTypes(numArguments);
 	}
 	
 	@Override

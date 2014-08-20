@@ -55,6 +55,16 @@ public class PartialType implements IPartialExpression {
 	public IZenSymbol toSymbol() {
 		return new SymbolType(type);
 	}
+	
+	@Override
+	public ZenType getType() {
+		return null; // not an expression
+	}
+
+	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return new ZenType[numArguments];
+	}
 
 	@Override
 	public ZenType toType(IEnvironmentGlobal environment) {

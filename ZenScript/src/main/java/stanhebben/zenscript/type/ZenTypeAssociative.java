@@ -22,6 +22,9 @@ import stanhebben.zenscript.expression.ExpressionMapSize;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingRuleMap;
+import stanhebben.zenscript.type.casting.ICastingRule;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.type.iterator.IteratorMap;
 import stanhebben.zenscript.type.iterator.IteratorMapKeys;
 import stanhebben.zenscript.util.ZenPosition;
@@ -32,24 +35,39 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
  * @author Stanneke
  */
 public class ZenTypeAssociative extends ZenType {
-	private final ZenType base;
-	private final ZenType key;
+	private final ZenType valueType;
+	private final ZenType keyType;
 	
 	private final String name;
 	
-	public ZenTypeAssociative(ZenType base, ZenType key) {
-		this.base = base;
-		this.key = key;
+	public ZenTypeAssociative(ZenType valueType, ZenType keyType) {
+		this.valueType = valueType;
+		this.keyType = keyType;
 		
-		name = base.getName() + "[" + key.getName() + "]";
+		name = valueType.getName() + "[" + keyType.getName() + "]";
 	}
 	
 	public ZenType getValueType() {
-		return base;
+		return valueType;
 	}
 	
 	public ZenType getKeyType() {
-		return key;
+		return keyType;
+	}
+	
+	@Override
+	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
+		ICastingRule base = super.getCastingRule(type, environment);
+		if (base == null && type instanceof ZenTypeAssociative && keyType == ANY && valueType == ANY) {
+			ZenTypeAssociative aType = (ZenTypeAssociative) type;
+			return new CastingRuleMap(
+					ANY.getCastingRule(aType.keyType, environment),
+					ANY.getCastingRule(aType.valueType, environment),
+					this,
+					aType);
+		} else {
+			return base;
+		}
 	}
 	
 	@Override
@@ -71,9 +89,9 @@ public class ZenTypeAssociative extends ZenType {
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
 		if (operator == OperatorType.CONTAINS) {
-			return new ExpressionMapContains(position, left, right.cast(position, environment, key));
+			return new ExpressionMapContains(position, left, right.cast(position, environment, keyType));
 		} else if (operator == OperatorType.INDEXGET) {
-			return new ExpressionMapIndexGet(position, left, right.cast(position, environment, key));
+			return new ExpressionMapIndexGet(position, left, right.cast(position, environment, keyType));
 		} else {
 			Expression result = binaryExpansion(position, environment, left, right, operator);
 			if (result == null) {
@@ -91,8 +109,8 @@ public class ZenTypeAssociative extends ZenType {
 			return new ExpressionMapIndexSet(
 					position,
 					first,
-					second.cast(position, environment, key),
-					third.cast(position, environment, base));
+					second.cast(position, environment, keyType),
+					third.cast(position, environment, valueType));
 		} else {
 			Expression result = trinaryExpansion(position, environment, first, second, third, operator);
 			if (result == null) {
@@ -119,16 +137,16 @@ public class ZenTypeAssociative extends ZenType {
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
 		if (name.equals("length")) {
 			return new ExpressionMapSize(position, value.eval(environment));
-		} else if (STRING.canCastImplicit(key, environment)) {
+		} else if (STRING.canCastImplicit(keyType, environment)) {
 			return new ExpressionMapIndexGet(
 					position,
 					value.eval(environment),
-					new ExpressionString(position, name).cast(position, environment, key));
+					new ExpressionString(position, name).cast(position, environment, keyType));
 		} else {
 			IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
 			if (result == null) {
 				environment.error(position, "this array is not indexable with strings");
-				return new ExpressionInvalid(position, base);
+				return new ExpressionInvalid(position, valueType);
 			} else {
 				return result;
 			}
@@ -153,14 +171,12 @@ public class ZenTypeAssociative extends ZenType {
 	}
 	
 	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type == this) {
-			return value;
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
 		}
-		
-		return castExpansion(position, environment, value, type);
 	}
-
+	
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		if (numValues == 1) {
@@ -170,11 +186,6 @@ public class ZenTypeAssociative extends ZenType {
 		} else {
 			return null;
 		}
-	}
-
-	@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this || canCastAssociative(type, environment) || canCastExpansion(environment, type);
 	}
 
 	@Override
@@ -205,15 +216,6 @@ public class ZenTypeAssociative extends ZenType {
 	@Override
 	public boolean isPointer() {
 		return true;
-	}
-
-	@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		if (equals(type)) {
-			// nothing to do
-		} else if (!compileCastExpansion(position, environment, type)) {
-			environment.error(position, "cannot cast " + this + " to " + type);
-		}
 	}
 
 	@Override

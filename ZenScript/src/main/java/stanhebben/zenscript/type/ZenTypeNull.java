@@ -15,6 +15,9 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingRuleNone;
+import stanhebben.zenscript.type.casting.ICastingRule;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -26,6 +29,20 @@ public class ZenTypeNull extends ZenType {
 	private static final Type TYPE = Type.getType(Object.class);
 	
 	private ZenTypeNull() {
+		
+	}
+	
+	@Override
+	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
+		if (type.isPointer()) {
+			return new CastingRuleNone(this, type);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		
 	}
 	
@@ -77,20 +94,20 @@ public class ZenTypeNull extends ZenType {
 		return null;
 	}
 
-	@Override
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type.isPointer();
-	}
+	}*/
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type.isPointer();
 	}
 	
-	@Override
+	/*@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
 		return value;
-	}
+	}*/
 
 	@Override
 	public Class toJavaClass() {
@@ -117,10 +134,10 @@ public class ZenTypeNull extends ZenType {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		// nothing to do
-	}
+	}*/
 
 	@Override
 	public String getName() {

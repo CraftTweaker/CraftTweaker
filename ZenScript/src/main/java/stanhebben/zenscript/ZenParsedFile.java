@@ -126,7 +126,7 @@ public class ZenParsedFile {
 				}
 				functions.put(function.getName(), function);
 			} else {
-				statements.add(Statement.read(tokener, environmentScript));
+				statements.add(Statement.read(tokener, environmentScript, null));
 			}
 		}
 	}

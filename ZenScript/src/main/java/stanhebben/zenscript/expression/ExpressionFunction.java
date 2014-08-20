@@ -25,11 +25,11 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionFunction extends Expression {
 	private final List<ParsedFunctionArgument> arguments;
 	private final ZenType returnType;
-	private final Statement[] statements;
+	private final List<Statement> statements;
 	
 	private final ZenTypeFunction functionType;
 	
-	public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, Statement[] statements) {
+	public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements) {
 		super(position);
 		
 		System.out.println("Function expression: " + arguments.size() + " arguments");
@@ -95,6 +95,7 @@ public class ExpressionFunction extends Expression {
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		// TODO: implement
+		// TODO: make sure the function is compiled properly
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 }

@@ -13,13 +13,23 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionArithmeticBinary;
 import stanhebben.zenscript.expression.ExpressionArithmeticCompare;
 import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
-import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionFloat;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenType.ANY;
+import static stanhebben.zenscript.type.ZenType.BYTE;
+import static stanhebben.zenscript.type.ZenType.BYTEOBJECT;
+import static stanhebben.zenscript.type.ZenType.BYTE_VALUEOF;
 import static stanhebben.zenscript.type.ZenType.LONG;
 import static stanhebben.zenscript.type.ZenType.STRING;
+import stanhebben.zenscript.type.casting.CastingRuleF2D;
+import stanhebben.zenscript.type.casting.CastingRuleF2I;
+import stanhebben.zenscript.type.casting.CastingRuleF2L;
+import stanhebben.zenscript.type.casting.CastingRuleI2B;
+import stanhebben.zenscript.type.casting.CastingRuleI2S;
+import stanhebben.zenscript.type.casting.CastingRuleStaticMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.AnyClassWriter;
 import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASFLOAT;
 import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSTRING;
@@ -47,6 +57,28 @@ public class ZenTypeFloat extends ZenType {
 	}
 
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		rules.registerCastingRule(BYTE, new CastingRuleI2B(new CastingRuleF2I(null)));
+		rules.registerCastingRule(BYTEOBJECT, new CastingRuleStaticMethod(BYTE_VALUEOF, new CastingRuleI2B(new CastingRuleF2I(null))));
+		rules.registerCastingRule(SHORT, new CastingRuleI2S(new CastingRuleF2I(null)));
+		rules.registerCastingRule(SHORTOBJECT, new CastingRuleStaticMethod(SHORT_VALUEOF, new CastingRuleI2S(new CastingRuleF2I(null))));
+		rules.registerCastingRule(INT, new CastingRuleF2I(null));
+		rules.registerCastingRule(INTOBJECT, new CastingRuleStaticMethod(INT_VALUEOF, new CastingRuleF2I(null)));
+		rules.registerCastingRule(LONG, new CastingRuleF2L(null));
+		rules.registerCastingRule(LONGOBJECT, new CastingRuleStaticMethod(LONG_VALUEOF, new CastingRuleF2L(null)));
+		rules.registerCastingRule(FLOATOBJECT, new CastingRuleStaticMethod(FLOAT_VALUEOF));
+		rules.registerCastingRule(DOUBLE, new CastingRuleF2D(null));
+		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleStaticMethod(DOUBLE_VALUEOF, new CastingRuleF2D(null)));
+		
+		rules.registerCastingRule(STRING, new CastingRuleStaticMethod(FLOAT_TOSTRING_STATIC));
+		rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, FLOAT)));
+		
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
+	}
+
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return (type.getNumberType() != 0)
 				|| type == ZenTypeString.INSTANCE
@@ -71,7 +103,7 @@ public class ZenTypeFloat extends ZenType {
 		} else {
 			return new ExpressionAs(position, value, type);
 		}
-	}
+	}*/
 
 	@Override
 	public Type toASMType() {
@@ -109,7 +141,7 @@ public class ZenTypeFloat extends ZenType {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		MethodOutput output = environment.getOutput();
 		
@@ -153,7 +185,7 @@ public class ZenTypeFloat extends ZenType {
 		} else if (!compileCastExpansion(position, environment, type)) {
 			environment.error(position, "cannot cast " + this + " to " + type);
 		}
-	}
+	}*/
 	
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
@@ -319,7 +351,7 @@ public class ZenTypeFloat extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.fAdd();
 			output.invokeSpecial(ANY_NAME, "<init>", "(F)V");
 			output.returnObject();
@@ -331,7 +363,7 @@ public class ZenTypeFloat extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.fSub();
 			output.invokeSpecial(ANY_NAME, "<init>", "(F)V");
 			output.returnObject();
@@ -349,7 +381,7 @@ public class ZenTypeFloat extends ZenType {
 			getValue(output);
 			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, float.class);
 			output.loadObject(1);
-			output.invoke(METHOD_ASSTRING);
+			METHOD_ASSTRING.invokeVirtual(output);
 			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
 			output.invokeVirtual(StringBuilder.class, "toString", String.class);
 			output.invokeStatic(STRING.getAnyClassName(environment), "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
@@ -362,7 +394,7 @@ public class ZenTypeFloat extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.fMul();
 			output.invokeSpecial(ANY_NAME, "<init>", "(F)V");
 			output.returnObject();
@@ -374,7 +406,7 @@ public class ZenTypeFloat extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.fDiv();
 			output.invokeSpecial(ANY_NAME, "<init>", "(F)V");
 			output.returnObject();
@@ -386,7 +418,7 @@ public class ZenTypeFloat extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.fRem();
 			output.invokeSpecial(ANY_NAME, "<init>", "(F)V");
 			output.returnObject();
@@ -417,7 +449,7 @@ public class ZenTypeFloat extends ZenType {
 			// return Float.compare(x, y)
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.invokeStatic(Float.class, "compare", int.class, float.class, float.class);
 			output.returnInt();
 		}
@@ -576,7 +608,7 @@ public class ZenTypeFloat extends ZenType {
 			
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASFLOAT);
+			METHOD_ASFLOAT.invokeVirtual(output);
 			output.fCmp();
 			output.ifICmpNE(lblNope);
 			

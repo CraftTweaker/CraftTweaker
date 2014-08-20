@@ -58,7 +58,17 @@ public class PartialJavaClass implements IPartialExpression {
 	}
 
 	@Override
+	public ZenType getType() {
+		return null;
+	}
+
+	@Override
 	public ZenType toType(IEnvironmentGlobal environment) {
 		return environment.getType(cls);
+	}
+
+	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return new ZenType[numArguments];
 	}
 }

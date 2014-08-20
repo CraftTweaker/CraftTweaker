@@ -14,9 +14,9 @@ import stanhebben.zenscript.annotations.OperatorType;
  */
 public class ZenNativeOperator {
 	private final OperatorType operator;
-	private final JavaMethod method;
+	private final IJavaMethod method;
 	
-	public ZenNativeOperator(OperatorType operator, JavaMethod method) {
+	public ZenNativeOperator(OperatorType operator, IJavaMethod method) {
 		this.operator = operator;
 		this.method = method;
 	}
@@ -25,7 +25,7 @@ public class ZenNativeOperator {
 		return operator;
 	}
 	
-	public JavaMethod getMethod() {
+	public IJavaMethod getMethod() {
 		return method;
 	}
 }

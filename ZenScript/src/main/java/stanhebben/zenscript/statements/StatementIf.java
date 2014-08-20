@@ -5,7 +5,6 @@ import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeBool;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -26,7 +25,7 @@ public class StatementIf extends Statement {
 	public void compile(IEnvironmentMethod environment) {
 		environment.getOutput().position(getPosition());
 		
-		Expression cCondition = condition.compile(environment).eval(environment);
+		Expression cCondition = condition.compile(environment, ZenType.BOOL).eval(environment);
 		ZenType expressionType = cCondition.getType();
 		if (expressionType.canCastImplicit(ZenType.BOOL, environment)) {
 			Label labelEnd = new Label();

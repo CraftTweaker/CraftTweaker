@@ -9,7 +9,7 @@ package stanhebben.zenscript.util;
 import java.util.ArrayList;
 import java.util.List;
 import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.type.natives.JavaMethod;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 
 /**
  *
@@ -54,7 +54,7 @@ public class StringUtil {
 	 * @param arguments calling arguments
 	 * @return return value
 	 */
-	public static String methodMatchingError(List<JavaMethod> methods, Expression... arguments) {
+	public static String methodMatchingError(List<IJavaMethod> methods, Expression... arguments) {
 		if (methods.isEmpty()) {
 			return "no method with that name available";
 		} else {

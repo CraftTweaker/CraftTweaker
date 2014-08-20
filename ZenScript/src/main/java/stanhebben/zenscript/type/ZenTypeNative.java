@@ -15,12 +15,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import org.objectweb.asm.ClassWriter;
-import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import stanhebben.zenscript.ZenRuntimeException;
+import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -36,16 +35,18 @@ import stanhebben.zenscript.annotations.ZenSetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.compiler.EnvironmentMethod;
 import stanhebben.zenscript.compiler.ITypeRegistry;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
-import stanhebben.zenscript.expression.ExpressionAs;
+import stanhebben.zenscript.expression.ExpressionCallVirtual;
 import stanhebben.zenscript.expression.ExpressionCompareGeneric;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingRuleNone;
+import stanhebben.zenscript.type.casting.CastingRuleNullableStaticMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.type.iterator.IteratorIterable;
 import stanhebben.zenscript.type.iterator.IteratorList;
 import stanhebben.zenscript.type.iterator.IteratorMap;
@@ -54,8 +55,13 @@ import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.type.natives.ZenNativeCaster;
 import stanhebben.zenscript.type.natives.ZenNativeMember;
 import stanhebben.zenscript.type.natives.ZenNativeOperator;
+import stanhebben.zenscript.util.AnyClassWriter;
+import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
+import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
+import stanhebben.zenscript.util.IAnyDefinition;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 import stanhebben.zenscript.value.IAny;
 
@@ -70,6 +76,8 @@ public class ZenTypeNative extends ZenType {
 	private static final int ITERATOR_MAP = 3;
 	
 	private final Class cls;
+	private final String anyName;
+	private final String anyName2;
 	private final List<ZenTypeNative> implementing;
 	private final Map<String, ZenNativeMember> members;
 	private final Map<String, ZenNativeMember> staticMembers;
@@ -94,6 +102,9 @@ public class ZenTypeNative extends ZenType {
 		binaryOperators = new ArrayList<ZenNativeOperator>();
 		unaryOperators = new ArrayList<ZenNativeOperator>();
 		implementing = new ArrayList<ZenTypeNative>();
+		
+		anyName2 = cls.getName() + "Any";
+		anyName = anyName2.replace('.', '/');
 	}
 	
 	public void complete(ITypeRegistry types) {
@@ -149,8 +160,7 @@ public class ZenTypeNative extends ZenType {
 			
 			for (Annotation annotation : method.getAnnotations()) {
 				if (annotation instanceof ZenCaster) {
-					Class output = method.getReturnType();
-					casters.add(new ZenNativeCaster(cls, output, method.getName()));
+					casters.add(new ZenNativeCaster(JavaMethod.get(types, method)));
 					isMethod = false;
 				} else if (annotation instanceof ZenGetter) {
 					ZenGetter getterAnnotation = (ZenGetter) annotation;
@@ -159,7 +169,7 @@ public class ZenTypeNative extends ZenType {
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenNativeMember());
 					}
-					members.get(name).setGetter(new JavaMethod(cls, method, types));
+					members.get(name).setGetter(new JavaMethod(method, types));
 					isMethod = false;
 				} else if (annotation instanceof ZenSetter) {
 					ZenSetter setterAnnotation = (ZenSetter) annotation;
@@ -168,12 +178,12 @@ public class ZenTypeNative extends ZenType {
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenNativeMember());
 					}
-					members.get(name).setSetter(new JavaMethod(cls, method, types));
+					members.get(name).setSetter(new JavaMethod(method, types));
 					isMethod = false;
 				} else if (annotation instanceof ZenMemberGetter) {
-					binaryOperators.add(new ZenNativeOperator(OperatorType.MEMBERGETTER, new JavaMethod(cls, method, types)));
+					binaryOperators.add(new ZenNativeOperator(OperatorType.MEMBERGETTER, new JavaMethod(method, types)));
 				} else if (annotation instanceof ZenMemberSetter) {
-					trinaryOperators.add(new ZenNativeOperator(OperatorType.MEMBERSETTER, new JavaMethod(cls, method, types)));
+					trinaryOperators.add(new ZenNativeOperator(OperatorType.MEMBERSETTER, new JavaMethod(method, types)));
 				} else if (annotation instanceof ZenOperator) {
 					ZenOperator operatorAnnotation = (ZenOperator) annotation;
 					switch (operatorAnnotation.value()) {
@@ -184,7 +194,7 @@ public class ZenTypeNative extends ZenType {
 							} else {
 								unaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
-										new JavaMethod(cls, method, types)));
+										new JavaMethod(method, types)));
 							}
 							break;
 						case ADD:
@@ -205,7 +215,7 @@ public class ZenTypeNative extends ZenType {
 							} else {
 								binaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
-										new JavaMethod(cls, method, types)));
+										new JavaMethod(method, types)));
 							}
 							break;
 						case INDEXSET:
@@ -214,7 +224,7 @@ public class ZenTypeNative extends ZenType {
 							} else {
 								trinaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
-										new JavaMethod(cls, method, types)));
+										new JavaMethod(method, types)));
 							}
 							break;
 					}
@@ -234,12 +244,12 @@ public class ZenTypeNative extends ZenType {
 					if (!staticMembers.containsKey(methodName)) {
 						staticMembers.put(methodName, new ZenNativeMember());
 					}
-					staticMembers.get(methodName).addMethod(new JavaMethod(cls, method, types));
+					staticMembers.get(methodName).addMethod(new JavaMethod(method, types));
 				} else {
 					if (!members.containsKey(methodName)) {
 						members.put(methodName, new ZenNativeMember());
 					}
-					members.get(methodName).addMethod(new JavaMethod(cls, method, types));
+					members.get(methodName).addMethod(new JavaMethod(method, types));
 				}
 			}
 		}
@@ -273,7 +283,12 @@ public class ZenTypeNative extends ZenType {
 	
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal global) {
-		return null;
+		if (!global.containsClass(anyName2)) {
+			global.putClass(anyName2, new byte[0]);
+			//global.putClass(anyName2, AnyClassWriter.construct(new AnyNativeDefinition(global), anyName2, toASMType()));
+		}
+		
+		return anyName;
 	}
 
 	@Override
@@ -287,6 +302,7 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 		}
+		
 		if (member == null) {
 			Expression evalue = value.eval(environment);
 			IPartialExpression member2 = memberExpansion(position, environment, evalue, name);
@@ -376,34 +392,48 @@ public class ZenTypeNative extends ZenType {
 		}
 		return null;
 	}
-
+	
 	@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this
-				|| canCastImplicit(cls, type)
-				|| canCastExpansion(environment, type);
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		if (cls.getSuperclass() != null) {
+			ZenType superType = environment.getType(cls.getSuperclass());
+			
+			rules.registerCastingRule(superType, new CastingRuleNone(this, superType));
+			
+			superType.constructCastingRules(environment, rules, followCasters);
+		}
+		
+		for (Class iface : cls.getInterfaces()) {
+			ZenType ifaceType = environment.getType(iface);
+			
+			rules.registerCastingRule(ifaceType, new CastingRuleNone(this, ifaceType));
+			
+			ifaceType.constructCastingRules(environment, rules, followCasters);
+		}
+		
+		if (followCasters) {
+			for (ZenNativeCaster caster : casters) {
+				// TODO: implement
+			}
+			
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.constructCastingRules(environment, rules);
+			}
+		}
+		
+		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(JavaMethod.getStatic(
+				getAnyClassName(environment),
+				"valueOf",
+				ANY,
+				this)));
 	}
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type == this
-				|| canCastImplicit(cls, type)
-				|| canCastImplicit(type, cls)
-				|| canCastExpansion(environment, type);
-	}
-	
-	
-	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type == this || canCastImplicit(cls, type)) {
-			return value;
-		}
-		
-		if (canCastExpansion(environment, type)) {
-			return castExpansion(position, environment, value, type);
-		} else {
-			return new ExpressionAs(position, value, type);
-		}
+				|| canCastImplicit(type, environment)
+				|| type.canCastExplicit(this, environment);
 	}
 	
 	@Override
@@ -431,400 +461,11 @@ public class ZenTypeNative extends ZenType {
 		return true;
 	}
 	
-	/**
-	 * Can we cast the given class to the given type implicitly?
-	 * 
-	 * @param cls class to be casted
-	 * @param type type to cast to
-	 * @return true if casting is possible
-	 */
-	private static boolean canCastImplicit(Class cls, ZenType type) {
-		if (isEqual(cls, type)) return true;
-		if (type == BOOL) return true;
-		if (cls.getSuperclass() != null) {
-			if (canCastImplicit(cls.getSuperclass(), type)) return true;
-		}
-		for (Class iface : cls.getInterfaces()) {
-			if (canCastImplicit(iface, type)) return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Can we cast the given type to the given class implicitly?
-	 * 
-	 * @param type type to be casted
-	 * @param cls type to cast to
-	 * @return true if casting is possible
-	 */
-	private static boolean canCastImplicit(ZenType type, Class cls) {
-		if (isEqual(cls, type)) return true;
-		if (type == BOOL) return true;
-		if (type instanceof ZenTypeNative) {
-			Class clsFrom = ((ZenTypeNative) type).cls;
-			return cls.isAssignableFrom(clsFrom);
-		}
-		return false;
-	}
-	
-	private static boolean isEqual(Class cls, ZenType type) {
-		String signature = getSignature(cls);
-		return type.getSignature().equals(signature);
-	}
-	
-	private static String getSignature(Class cls) {
-		String signature = signature(cls);
-		if (Number.class.isAssignableFrom(cls)) {
-			if (cls == Byte.class) {
-				signature = "B";
-			} else if (cls == Short.class) {
-				signature = "S";
-			} else if (cls == Integer.class) {
-				signature = "I";
-			} else if (cls == Long.class) {
-				signature = "J";
-			} else if (cls == Float.class) {
-				signature = "F";
-			} else if (cls == Double.class) {
-				signature = "D";
-			}
-		}
-		return signature;
-	}
-
-	@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType toType) {
-		if (toType == ZenTypeAny.INSTANCE) {
-			String anyClassName = this.cls.getName() + "__Any";
-			String anySignature = signature(IAny.class);
-			String toSignature = "L" + anyClassName + "";
-			
-			if (!environment.containsClass(anyClassName)) {
-				environment.putClass(anyClassName, new byte[0]); // prevent recursive issues
-				
-				ClassWriter newClass = new ClassWriter(COMPUTE_FRAMES);
-				newClass.visit(
-						Opcodes.V1_6,
-						Opcodes.ACC_PUBLIC,
-						anyClassName,
-						"L" + anyClassName + ";",
-						signature(Object.class),
-						new String[] { anySignature });
-				
-				newClass.visitField(Opcodes.ACC_PRIVATE, "value", null, className, null);
-				
-				// static valueOf method
-				MethodOutput valueOfMethod = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
-						"valueOf",
-						"(" + getSignature() + ")L" + anyClassName + ";",
-						null,
-						null);
-				valueOfMethod.start();
-				valueOfMethod.newObject(anyClassName);
-				valueOfMethod.loadObject(0);
-				valueOfMethod.construct(anyClassName, getSignature());
-				valueOfMethod.returnObject();
-				valueOfMethod.end();
-				
-				// single constructor
-				MethodOutput constructorMethod = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"<init>",
-						"(" + getSignature() + ")V",
-						null,
-						null);
-				constructorMethod.start();
-				constructorMethod.loadObject(1);
-				constructorMethod.loadObject(0);
-				constructorMethod.putField(toSignature, "value", null);
-				constructorMethod.end();
-				
-				// implementation for each of the interface methods
-				MethodOutput methodNot = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"not",
-						"()" + anySignature,
-						null,
-						null);
-				methodNot.start();
-				compileAnyUnary(
-						anySignature,
-						OperatorType.NOT,
-						new EnvironmentMethod(methodNot, environment));
-				methodNot.end();
-				
-				MethodOutput methodNeg = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"neg",
-						"()" + anySignature,
-						null,
-						null);
-				methodNeg.start();
-				compileAnyUnary(
-						anySignature,
-						OperatorType.NEG,
-						new EnvironmentMethod(methodNeg, environment));
-				methodNeg.end();
-				
-				MethodOutput methodAdd = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"add",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodAdd.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.ADD,
-						new EnvironmentMethod(methodAdd, environment));
-				methodAdd.end();
-				
-				MethodOutput methodSub = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"sub",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodSub.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.SUB,
-						new EnvironmentMethod(methodSub, environment));
-				methodSub.end();
-				
-				MethodOutput methodCat = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"cat",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodCat.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.CAT,
-						new EnvironmentMethod(methodCat, environment));
-				methodCat.end();
-				
-				MethodOutput methodMul = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"mul",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodMul.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.ADD,
-						new EnvironmentMethod(methodMul, environment));
-				methodMul.end();
-				
-				MethodOutput methodDiv = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"div",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodDiv.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.DIV,
-						new EnvironmentMethod(methodDiv, environment));
-				methodDiv.end();
-				
-				MethodOutput methodMod = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"mod",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodMod.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.MOD,
-						new EnvironmentMethod(methodMod, environment));
-				methodMod.end();
-				
-				MethodOutput methodAnd = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"and",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodAnd.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.AND,
-						new EnvironmentMethod(methodAnd, environment));
-				methodAnd.end();
-				
-				MethodOutput methodOr = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"or",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodOr.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.OR,
-						new EnvironmentMethod(methodOr, environment));
-				methodOr.end();
-				
-				MethodOutput methodXor = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"xor",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodXor.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.XOR,
-						new EnvironmentMethod(methodXor, environment));
-				methodXor.end();
-				
-				MethodOutput methodRange = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"range",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodRange.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.RANGE,
-						new EnvironmentMethod(methodRange, environment));
-				methodRange.end();
-				
-				MethodOutput methodContains = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"contains",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodContains.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.CONTAINS,
-						new EnvironmentMethod(methodContains, environment));
-				methodContains.end();
-				
-				MethodOutput methodIndexSet = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"indexSet",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodIndexSet.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.INDEXSET,
-						new EnvironmentMethod(methodIndexSet, environment));
-				methodIndexSet.end();
-				
-				MethodOutput methodCompare = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"compareTo",
-						"(" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodCompare.start();
-				compileAnyBinary(
-						anySignature,
-						OperatorType.COMPARE,
-						new EnvironmentMethod(methodCompare, environment));
-				methodCompare.end();
-				
-				MethodOutput methodMember = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"method",
-						"(" + signature(String.class) + ")" + anySignature,
-						null,
-						null);
-				methodMember.start();
-				compileAnyMember(anySignature, new EnvironmentMethod(methodMember, environment));
-				methodMember.end();
-				
-				MethodOutput methodCall = new MethodOutput(
-						newClass,
-						Opcodes.ACC_PUBLIC,
-						"call",
-						"([" + signature(IAny.class) + ")" + anySignature,
-						null,
-						null);
-				methodCall.start();
-				// TODO: complete
-				methodCall.aConstNull();
-				methodCall.returnObject();
-				methodCall.end();
-				
-				// TODO: asXXX, iterators
-				
-				environment.putClass(anyClassName, newClass.toByteArray());
-			}
-			return;
-		} else if (toType instanceof ZenTypeNative) {
-			Class toCls = toType.toJavaClass();
-			if (toCls.isAssignableFrom(cls)) {
-				// nothing to do
-				return;
-			}
-		}
-		
-		MethodOutput output = environment.getOutput();
-		if (toType == BOOL) {
-			Label lbl = new Label();
-			output.iConst0();
-			output.ifNull(lbl);
-			output.iConst1();
-			output.label(lbl);
-			return;
-		}
-		for (ZenNativeCaster caster : casters) {
-			if (caster.getCasterClass() == toType.toJavaClass()) {
-				caster.compile(output);
-				return;
-			}
-		}
-		for (ZenNativeCaster caster : casters) {
-			if (toType.toJavaClass().isAssignableFrom(caster.getCasterClass())) {
-				caster.compile(output);
-				return;
-			}
-		}
-		if (compileCastExpansion(position, environment, toType)) {
-			return;
-		}
-		
-		output.checkCast(toType.toJavaClass());
-	}
-	
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		for (ZenNativeOperator unaryOperator : unaryOperators) {
 			if (unaryOperator.getOperator() == operator) {
-				return unaryOperator
-						.getMethod()
-						.callVirtual(position, environment, value);
+				return new ExpressionCallVirtual(position, environment, unaryOperator.getMethod(), value);
 			}
 		}
 		
@@ -836,9 +477,7 @@ public class ZenTypeNative extends ZenType {
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
 		for (ZenNativeOperator binaryOperator : binaryOperators) {
 			if (binaryOperator.getOperator() == operator) {
-				return binaryOperator
-						.getMethod()
-						.callVirtual(position, environment, left, right);
+				return new ExpressionCallVirtual(position, environment, binaryOperator.getMethod(), left, right);
 			}
 		}
 		
@@ -850,9 +489,7 @@ public class ZenTypeNative extends ZenType {
 	public Expression trinary(ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
 		for (ZenNativeOperator trinaryOperator : trinaryOperators) {
 			if (trinaryOperator.getOperator() == operator) {
-				return trinaryOperator
-						.getMethod()
-						.callVirtual(position, environment, first, second, third);
+				return new ExpressionCallVirtual(position, environment, trinaryOperator.getMethod(), first, second, third);
 			}
 		}
 		
@@ -865,9 +502,7 @@ public class ZenTypeNative extends ZenType {
 		if (type == CompareType.EQ || type == CompareType.NE) {
 			for (ZenNativeOperator binaryOperator : binaryOperators) {
 				if (binaryOperator.getOperator() == OperatorType.EQUALS) {
-					Expression result = binaryOperator
-							.getMethod()
-							.callVirtual(position, environment, left, right);
+					Expression result = new ExpressionCallVirtual(position, environment, binaryOperator.getMethod(), left, right);
 					if (type == CompareType.EQ) {
 						return result;
 					} else {
@@ -883,7 +518,14 @@ public class ZenTypeNative extends ZenType {
 	@Override
 	public Expression call(
 			ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
+		// TODO: support functional interfaces
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
+	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		// TODO: support functional interface
+		return new ZenType[numArguments];
 	}
 	
 	private boolean hasBinary(ZenType type, OperatorType operator) {
@@ -896,7 +538,7 @@ public class ZenTypeNative extends ZenType {
 		return false;
 	}
 	
-	private void compileAnyUnary(String anySignature, OperatorType operator, IEnvironmentMethod environment) {
+	/*private void compileAnyUnary(String anySignature, OperatorType operator, IEnvironmentMethod environment) {
 		List<ZenNativeOperator> operators = new ArrayList<ZenNativeOperator>();
 		for (ZenNativeOperator unary : this.unaryOperators) {
 			if (unary.getOperator() == operator) {
@@ -961,7 +603,7 @@ public class ZenTypeNative extends ZenType {
 		MethodOutput output = environment.getOutput();
 		output.aConstNull();
 		output.returnObject();
-	}
+	}*/
 
 	@Override
 	public String getName() {
@@ -990,6 +632,315 @@ public class ZenTypeNative extends ZenType {
 					implementing.add((ZenTypeNative) type);
 				}
 			}
+		}
+	}
+	
+	private class AnyNativeDefinition implements IAnyDefinition {
+		private final IEnvironmentGlobal environment;
+		
+		public AnyNativeDefinition(IEnvironmentGlobal environment) {
+			this.environment = environment;
+		}
+
+		@Override
+		public void defineMembers(ClassVisitor output) {
+			output.visitField(Opcodes.ACC_PRIVATE, "value", "F", null, null);
+			
+			MethodOutput valueOf = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "valueOf", "(F)" + signature(IAny.class), null, null);
+			valueOf.start();
+			valueOf.newObject(anyName2);
+			valueOf.dup();
+			valueOf.load(toASMType(), 0);
+			valueOf.construct(anyName2, "L" + cls.getName() + ";");
+			valueOf.returnObject();
+			valueOf.end();
+			
+			MethodOutput constructor = new MethodOutput(output, Opcodes.ACC_PUBLIC, "<init>", "(L" + cls.getName() + ";)V", null, null);
+			constructor.start();
+			constructor.loadObject(0);
+			constructor.invokeSpecial(internal(Object.class), "<init>", "()V");
+			constructor.loadObject(0);
+			constructor.load(Type.FLOAT_TYPE, 1);
+			constructor.putField(anyName2, "value", "L" + cls.getName() + ";");
+			constructor.returnType(Type.VOID_TYPE);
+			constructor.end();
+		}
+
+		@Override
+		public void defineStaticCanCastImplicit(MethodOutput output) {
+			// Class
+			// if (cls.isAssignableFrom(param)) return true;
+			output.constant(Type.getType(cls));
+			output.loadObject(1);
+			output.invokeVirtual(Class.class, "isAssignableFrom", boolean.class, Class.class);
+			
+			Label lblNotAssignable = new Label();
+			output.ifEQ(lblNotAssignable);
+			
+			output.iConst1();
+			output.returnInt();
+			
+			output.label(lblNotAssignable);
+			
+			for (ZenNativeCaster caster : casters) {
+				caster.compileAnyCanCastImplicit(ZenTypeNative.this, output, environment, 0);
+			}
+			
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCanCastImplicit(ZenTypeNative.this, output, environment, 0);
+			}
+			
+			output.iConst0();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineStaticAs(MethodOutput output) {
+			output.constant(Type.getType(cls));
+			output.loadObject(1);
+			output.invokeVirtual(Class.class, "isAssignableFrom", boolean.class, Class.class);
+			
+			Label lblNotAssignable = new Label();
+			output.ifEQ(lblNotAssignable);
+			
+			output.loadObject(0);
+			output.returnObject();
+			
+			output.label(lblNotAssignable);
+			
+			for (ZenNativeCaster caster : casters) {
+				caster.compileAnyCast(ZenTypeNative.this, output, environment, 0, 1);
+			}
+			
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				expansion.compileAnyCast(ZenTypeNative.this, output, environment, 0, 1);
+			}
+			
+			throwCastException(output, "float", 1);
+		}
+
+		@Override
+		public void defineNot(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "not");
+			/*for (ZenNativeOperator unaryOperator : unaryOperators) {
+				if (unaryOperator.getOperator() == OperatorType.NOT) {
+					
+				}
+			}
+			
+			TypeExpansion expansion = environment.getExpansion(getName());
+			if (expansion != null) {
+				if (expansion.compileAnyUnary(output, OperatorType.NOT)) {
+					
+				}
+			}*/
+		}
+
+		@Override
+		public void defineNeg(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "negate");
+		}
+
+		@Override
+		public void defineAdd(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "+");
+		}
+
+		@Override
+		public void defineSub(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "-");
+		}
+
+		@Override
+		public void defineCat(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "~");
+		}
+
+		@Override
+		public void defineMul(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "*");
+		}
+
+		@Override
+		public void defineDiv(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "/");
+		}
+
+		@Override
+		public void defineMod(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "%");
+		}
+
+		@Override
+		public void defineAnd(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "&");
+		}
+
+		@Override
+		public void defineOr(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "|");
+		}
+
+		@Override
+		public void defineXor(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "^");
+		}
+
+		@Override
+		public void defineRange(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "..");
+		}
+
+		@Override
+		public void defineCompareTo(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "compare");
+		}
+
+		@Override
+		public void defineContains(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "in");
+		}
+
+		@Override
+		public void defineMemberGet(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "member get");
+		}
+
+		@Override
+		public void defineMemberSet(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "member set");
+		}
+
+		@Override
+		public void defineMemberCall(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "member call");
+		}
+
+		@Override
+		public void defineIndexGet(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "index get");
+		}
+
+		@Override
+		public void defineIndexSet(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "index set");
+		}
+
+		@Override
+		public void defineCall(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "call");
+		}
+
+		@Override
+		public void defineAsBool(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asBool");
+		}
+
+		@Override
+		public void defineAsByte(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asByte");
+		}
+
+		@Override
+		public void defineAsShort(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asShort");
+		}
+
+		@Override
+		public void defineAsInt(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asInt");
+		}
+
+		@Override
+		public void defineAsLong(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asLong");
+		}
+
+		@Override
+		public void defineAsFloat(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asFloat");
+		}
+
+		@Override
+		public void defineAsDouble(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asDouble");
+		}
+
+		@Override
+		public void defineAsString(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "asString");
+		}
+
+		@Override
+		public void defineAs(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "as");
+		}
+
+		@Override
+		public void defineIs(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "is");
+		}
+
+		@Override
+		public void defineGetNumberType(MethodOutput output) {
+			output.iConst0();
+			output.returnInt();
+		}
+
+		@Override
+		public void defineIteratorSingle(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "iterator");
+		}
+
+		@Override
+		public void defineIteratorMulti(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "iterator");
+		}
+
+		@Override
+		public void defineEquals(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "equals");
+		}
+
+		@Override
+		public void defineHashCode(MethodOutput output) {
+			// TODO: implement
+			throwUnsupportedException(output, getName(), "hashCode");
 		}
 	}
 }

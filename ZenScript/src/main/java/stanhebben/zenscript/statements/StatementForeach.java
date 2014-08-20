@@ -26,7 +26,7 @@ public class StatementForeach extends Statement {
 
 	@Override
 	public void compile(IEnvironmentMethod environment) {
-		Expression cList = list.compile(environment).eval(environment);
+		Expression cList = list.compile(environment, ZenType.ANYARRAY).eval(environment);
 		ZenType listType = cList.getType();
 		
 		IZenIterator iterator = listType.makeIterator(varnames.length, environment);

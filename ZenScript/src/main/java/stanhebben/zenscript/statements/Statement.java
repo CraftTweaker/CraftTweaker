@@ -13,14 +13,14 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 public abstract class Statement {
-	public static Statement read(ZenTokener parser, IEnvironmentGlobal environment) {
+	public static Statement read(ZenTokener parser, IEnvironmentGlobal environment, ZenType returnType) {
 		Token next = parser.peek();
 		switch (next.getType()) {
 			case T_AOPEN: {
 				Token t = parser.next();
 				ArrayList<Statement> statements = new ArrayList<Statement>();
 				while (parser.optional(T_ACLOSE) == null) {
-					statements.add(read(parser, environment));
+					statements.add(read(parser, environment, returnType));
 				}
 				return new StatementBlock(t.getPosition(), statements);
 			}
@@ -28,7 +28,7 @@ public abstract class Statement {
 				parser.next();
 				ParsedExpression expression = ParsedExpression.read(parser, environment);
 				parser.required(T_SEMICOLON, "; expected");
-				return new StatementReturn(next.getPosition(), expression);
+				return new StatementReturn(next.getPosition(), returnType, expression);
 			}
 			case T_VAR:
 			case T_VAL: {
@@ -49,10 +49,10 @@ public abstract class Statement {
 			case T_IF: {
 				Token t = parser.next();
 				ParsedExpression expression = ParsedExpression.read(parser, environment);
-				Statement onIf = read(parser, environment);
+				Statement onIf = read(parser, environment, returnType);
 				Statement onElse = null;
 				if (parser.optional(T_ELSE) != null) {
-					onElse = read(parser, environment);
+					onElse = read(parser, environment, returnType);
 				}
 				return new StatementIf(t.getPosition(), expression, onIf, onElse);
 			}
@@ -68,7 +68,7 @@ public abstract class Statement {
 				
 				parser.required(T_IN, "in expected");
 				ParsedExpression source = ParsedExpression.read(parser, environment);
-				Statement content = read(parser, environment);
+				Statement content = read(parser, environment, null);
 				return new StatementForeach(
 						t.getPosition(),
 						names.toArray(new String[names.size()]),

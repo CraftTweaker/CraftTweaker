@@ -5,8 +5,8 @@ import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.type.ZenTypeArrayBasic;
+import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -14,21 +14,19 @@ public class ExpressionArray extends Expression {
 	private final Expression[] contents;
 	private final ZenTypeArrayBasic type;
 	
-	public ExpressionArray(ZenPosition position, Expression... contents) {
+	public ExpressionArray(ZenPosition position, ZenTypeArrayBasic type, Expression... contents) {
 		super(position);
 		
-		this.contents = contents;
-		type = new ZenTypeArrayBasic(ZenTypeAny.INSTANCE);
-	}
-	
-	public ExpressionArray(ZenPosition position, Expression[] contents, ZenTypeArrayBasic type) {
-		super(position);
 		this.contents = contents;
 		this.type = type;
 	}
 
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
+		if (this.type.equals(type)) {
+			return this;
+		}
+		
 		if (type instanceof ZenTypeArrayBasic) {
 			ZenTypeArrayBasic arrayType = (ZenTypeArrayBasic) type;
 			Expression[] newContents = new Expression[contents.length];
@@ -36,12 +34,15 @@ public class ExpressionArray extends Expression {
 				newContents[i] = contents[i].cast(position, environment, arrayType.getBaseType());
 			}
 			
-			return new ExpressionArray(getPosition(), newContents, arrayType);
-		} else if (this.type.canCastImplicit(type, environment)) {
-			return this.type.cast(position, environment, this, type);
+			return new ExpressionArray(getPosition(), arrayType, newContents);
 		} else {
-			environment.error(position, "cannot cast " + this.type + " to " + type);
-			return new ExpressionInvalid(position, type);
+			ICastingRule castingRule = this.type.getCastingRule(type, environment);
+			if (castingRule == null) {
+				environment.error(position, "cannot cast " + this.type + " to " + type);
+				return new ExpressionInvalid(position, type);
+			} else {
+				return new ExpressionAs(position, this, castingRule);
+			}
 		}
 	}
 

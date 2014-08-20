@@ -17,16 +17,21 @@ import stanhebben.zenscript.annotations.ZenMethodStatic;
 import stanhebben.zenscript.annotations.ZenOperator;
 import stanhebben.zenscript.annotations.ZenSetter;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.compiler.ITypeRegistry;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.type.expand.ZenExpandCaster;
 import stanhebben.zenscript.type.expand.ZenExpandMember;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.type.natives.ZenNativeOperator;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import static stanhebben.zenscript.util.ZenTypeUtil.signature;
+import stanhebben.zenscript.value.IAny;
 
 /**
  * Type expansions provide additional members for existing types. They can
@@ -77,7 +82,7 @@ public class TypeExpansion {
 			for (Annotation annotation : method.getAnnotations()) {
 				if (annotation instanceof ZenCaster) {
 					checkStatic(method);
-					casters.add(new ZenExpandCaster(new JavaMethod(cls, method, types)));
+					casters.add(new ZenExpandCaster(new JavaMethod(method, types)));
 				} else if (annotation instanceof ZenGetter) {
 					checkStatic(method);
 					ZenGetter getterAnnotation = (ZenGetter) annotation;
@@ -86,7 +91,7 @@ public class TypeExpansion {
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenExpandMember(type, name));
 					}
-					members.get(name).setGetter(new JavaMethod(cls, method, types));
+					members.get(name).setGetter(new JavaMethod(method, types));
 				} else if (annotation instanceof ZenSetter) {
 					checkStatic(method);
 					ZenSetter setterAnnotation = (ZenSetter) annotation;
@@ -95,7 +100,7 @@ public class TypeExpansion {
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenExpandMember(type, name));
 					}
-					members.get(name).setSetter(new JavaMethod(cls, method, types));
+					members.get(name).setSetter(new JavaMethod(method, types));
 				} else if (annotation instanceof ZenOperator) {
 					checkStatic(method);
 					ZenOperator operatorAnnotation = (ZenOperator) annotation;
@@ -107,7 +112,7 @@ public class TypeExpansion {
 							} else {
 								unaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
-										new JavaMethod(cls, method, types)));
+										new JavaMethod(method, types)));
 							}
 							break;
 						case ADD:
@@ -128,7 +133,7 @@ public class TypeExpansion {
 							} else {
 								binaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
-										new JavaMethod(cls, method, types)));
+										new JavaMethod(method, types)));
 							}
 							break;
 						case INDEXSET:
@@ -137,7 +142,7 @@ public class TypeExpansion {
 							} else {
 								trinaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
-										new JavaMethod(cls, method, types)));
+										new JavaMethod(method, types)));
 							}
 							break;
 					}
@@ -150,7 +155,7 @@ public class TypeExpansion {
 					if (!members.containsKey(methodName)) {
 						members.put(methodName, new ZenExpandMember(type, methodName));
 					}
-					members.get(methodName).addMethod(new JavaMethod(cls, method, types));
+					members.get(methodName).addMethod(new JavaMethod(method, types));
 				} else if (annotation instanceof ZenMethodStatic) {
 					checkStatic(method);
 					ZenMethodStatic methodAnnotation = (ZenMethodStatic) annotation;
@@ -160,9 +165,21 @@ public class TypeExpansion {
 					if (!staticMembers.containsKey(methodName)) {
 						staticMembers.put(methodName, new ZenExpandMember(type, methodName));
 					}
-					staticMembers.get(methodName).addMethod(new JavaMethod(cls, method, types));
+					staticMembers.get(methodName).addMethod(new JavaMethod(method, types));
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Registers all casting rules to the given delegate.
+	 * 
+	 * @param environment compilation environment
+	 * @param rules target delegate
+	 */
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules) {
+		for (ZenExpandCaster caster : casters) {
+			caster.constructCastingRules(environment, rules);
 		}
 	}
 	
@@ -209,7 +226,7 @@ public class TypeExpansion {
 			OperatorType operator) {
 		for (ZenNativeOperator op : unaryOperators) {
 			if (op.getOperator() == operator) {
-				return op.getMethod().callStatic(position, environment, value);
+				return new ExpressionCallStatic(position, environment, op.getMethod(), value);
 			}
 		}
 		
@@ -235,7 +252,7 @@ public class TypeExpansion {
 			OperatorType operator) {
 		for (ZenNativeOperator op : binaryOperators) {
 			if (op.getOperator() == operator) {
-				return op.getMethod().callStatic(position, environment, left, right);
+				return new ExpressionCallStatic(position, environment, op.getMethod(), left, right);
 			}
 		}
 		
@@ -263,7 +280,7 @@ public class TypeExpansion {
 			OperatorType operator) {
 		for (ZenNativeOperator op : trinaryOperators) {
 			if (op.getOperator() == operator) {
-				return op.getMethod().callStatic(position, environment, first, second, third);
+				return new ExpressionCallStatic(position, environment, op.getMethod(), first, second, third);
 			}
 		}
 		
@@ -312,6 +329,7 @@ public class TypeExpansion {
 	public void compileAnyCast(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localValue, int localClass) {
 		if (type == null)
 			throw new IllegalArgumentException("type cannot be null");
+		
 		Type asmType = type.toASMType();
 		if (asmType == null) {
 			throw new RuntimeException("type has no asm type");
@@ -340,7 +358,8 @@ public class TypeExpansion {
 			output.ifEQ(skip);
 			output.load(type.toASMType(), localValue);
 			caster.compile(output);
-			output.invokeStatic(casterAny, "rtAs", "(Ljava/lang/Class;)Z");
+			output.loadObject(localClass);
+			output.invokeStatic(casterAny, "rtAs", "(" + caster.getTarget().getSignature() + "Ljava/lang/Class;)Ljava/lang/Object;");
 			output.returnType(caster.getTarget().toASMType());
 			output.label(skip);
 		}
@@ -372,6 +391,25 @@ public class TypeExpansion {
 			output.returnInt();
 			output.label(skip);
 		}
+	}
+	
+	public boolean compileAnyUnary(MethodOutput output, OperatorType type, IEnvironmentMethod environment) {
+		for (ZenNativeOperator operator : unaryOperators) {
+			if (operator.getOperator() == type) {
+				ZenType returnType = operator.getMethod().getReturnType();
+				
+				output.loadObject(0);
+				operator.getMethod().invokeStatic(output);
+				output.invokeStatic(
+						returnType.getAnyClassName(environment),
+						"valueOf",
+						"(" + returnType.getSignature() + ")" + ZenType.ANY.getSignature());
+				output.returnObject();
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	// #######################

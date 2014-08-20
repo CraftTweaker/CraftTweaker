@@ -10,6 +10,7 @@ import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -30,12 +31,13 @@ public class ParsedExpressionOpAssign extends ParsedExpression {
 	}
 	
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
-		Expression cLeft = left.compile(environment).eval(environment);
-		Expression cRight = right.compile(environment).eval(environment);
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
+		// TODO: validate if the prediction rules are sound
+		Expression cLeft = left.compile(environment, predictedType).eval(environment);
+		Expression cRight = right.compile(environment, cLeft.getType()).eval(environment);
 		
 		Expression value = cLeft.getType().binary(getPosition(), environment, cLeft, cRight, operator);
 		
-		return left.compile(environment).assign(getPosition(), environment, value);
+		return left.compile(environment, predictedType).assign(getPosition(), environment, value);
 	}
 }

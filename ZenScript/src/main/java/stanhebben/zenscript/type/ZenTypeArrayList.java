@@ -7,15 +7,15 @@
 package stanhebben.zenscript.type;
 
 import java.util.List;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingRuleDelegateList;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.type.iterator.IteratorIterable;
 import stanhebben.zenscript.type.iterator.IteratorList;
-import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 
@@ -38,12 +38,15 @@ public class ZenTypeArrayList extends ZenTypeArray {
 	}
 	
 	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (equals(type)) return value;
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		ICastingRuleDelegate arrayRules = new CastingRuleDelegateList(rules, this);
+		getBaseType().constructCastingRules(environment, arrayRules, followCasters);
 		
-		return castExpansion(position, environment, value, type);
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
 	}
-
+	
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		if (numValues == 1) {
@@ -74,74 +77,16 @@ public class ZenTypeArrayList extends ZenTypeArray {
 	public String getSignature() {
 		return signature(List.class);
 	}
-
-	@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		MethodOutput output = environment.getOutput();
-		
-		if (equals(type)) {
-			return;
-		}
-		
-		if (compileCastExpansion(position, environment, type)) {
-			// OK
-		} else if (type instanceof ZenTypeArrayList) {
-			// TODO: implement
-		} else if (type instanceof ZenTypeArrayBasic) {
-			// convert elements
-			ZenType component = ((ZenTypeArrayBasic) type).getBaseType();
-			Type componentType = component.toASMType();
-			Type baseType = getBaseType().toASMType();
-
-			int result = output.local(componentType);
-
-			output.dup();
-			output.arrayLength();
-			output.newArray(baseType);
-			output.storeObject(result);
-
-			output.iConst0();
-
-			Label lbl = new Label();
-			output.label(lbl);
-
-			// stack: original index
-			output.dupX1();
-			output.dupX1();
-			output.arrayLoad(componentType);
-
-			// stack: original index value
-			getBaseType().compileCast(position, environment, type);
-
-			output.loadObject(result);
-			output.dupX2();
-			output.dupX2();
-			output.arrayStore(baseType);
-			output.pop();
-
-			// stack: original index
-			output.iConst1();
-			output.iAdd();
-			output.dupX1();
-			output.arrayLength();
-			output.ifICmpGE(lbl);
-
-			output.pop();
-			output.pop();
-
-			output.loadObject(result);
-		} else {
-			// TODO: error
-		}
-	}
-
+	
 	@Override
 	public Expression indexGet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index) {
+		// TODO: implement
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 	@Override
 	public Expression indexSet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index, Expression value) {
+		// TODO: implement
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	

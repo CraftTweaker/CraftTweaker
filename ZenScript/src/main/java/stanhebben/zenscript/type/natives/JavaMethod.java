@@ -15,31 +15,29 @@ import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.ITypeRegistry;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionArray;
-import stanhebben.zenscript.expression.ExpressionInvalid;
-import stanhebben.zenscript.expression.ExpressionJavaCallStatic;
-import stanhebben.zenscript.expression.ExpressionJavaCallVirtual;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeArray;
 import stanhebben.zenscript.type.ZenTypeArrayBasic;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
  *
  * @author Stan
  */
-public class JavaMethod {
+public class JavaMethod implements IJavaMethod {
 	public static final int PRIORITY_INVALID = -1;
 	public static final int PRIORITY_LOW = 1;
 	public static final int PRIORITY_MEDIUM = 2;
 	public static final int PRIORITY_HIGH = 3;
 	
-	public static JavaMethod get(ITypeRegistry types, Class cls, String name, Class... parameterTypes) {
+	public static IJavaMethod get(ITypeRegistry types, Class cls, String name, Class... parameterTypes) {
 		try {
 			Method method = cls.getMethod(name, parameterTypes);
 			if (method == null) {
 				throw new RuntimeException("method " + name + " not found in class " + cls.getName());
 			}
-			return new JavaMethod(cls, method, types);
+			return new JavaMethod(method, types);
 		} catch (NoSuchMethodException ex) {
 			throw new RuntimeException("method " + name + " not found in class " + cls.getName(), ex);
 		} catch (SecurityException ex) {
@@ -47,12 +45,20 @@ public class JavaMethod {
 		}
 	}
 	
-	public static JavaMethod select(boolean doStatic, List<JavaMethod> methods, IEnvironmentGlobal environment, Expression... arguments) {
+	public static IJavaMethod getStatic(String owner, String name, ZenType returnType, ZenType... arguments) {
+		return new JavaMethodGenerated(true, false, false, name, owner, returnType, arguments, new boolean[arguments.length]);
+	}
+	
+	public static IJavaMethod get(ITypeRegistry types, Method method) {
+		return new JavaMethod(method, types);
+	}
+	
+	public static IJavaMethod select(boolean doStatic, List<IJavaMethod> methods, IEnvironmentGlobal environment, Expression... arguments) {
 		int bestPriority = PRIORITY_INVALID;
-		JavaMethod bestMethod = null;
+		IJavaMethod bestMethod = null;
 		boolean isValid = false;
 		
-		for (JavaMethod method : methods) {
+		for (IJavaMethod method : methods) {
 			if (method.isStatic() != doStatic) continue;
 			
 			int priority = method.getPriority(environment, arguments);
@@ -68,29 +74,30 @@ public class JavaMethod {
 		return isValid ? bestMethod : null;
 	}
 	
-	public static ZenType[] predict(List<JavaMethod> methods, int numArguments, IEnvironmentGlobal environment) {
+	public static ZenType[] predict(List<IJavaMethod> methods, int numArguments) {
 		ZenType[] results = new ZenType[numArguments];
 		boolean[] ambiguous = new boolean[numArguments];
 		
-		for (JavaMethod method : methods) {
+		for (IJavaMethod method : methods) {
 			if (method.accepts(numArguments)) {
+				ZenType[] parameterTypes = method.getParameterTypes();
 				for (int i = 0; i < numArguments; i++) {
-					if (i >= method.parameterTypes.length - 1 && method.method.isVarArgs()) {
-						if (numArguments == method.parameterTypes.length) {
+					if (i >= parameterTypes.length - 1 && method.isVarargs()) {
+						if (numArguments == parameterTypes.length) {
 							ambiguous[i] = true;
-						} else if (numArguments > method.parameterTypes.length) {
+						} else if (numArguments > parameterTypes.length) {
 							if (results[i] != null) {
 								ambiguous[i] = true;
 							} else {
-								results[i] = ((ZenTypeArray) method.parameterTypes[method.parameterTypes.length - 1]).getBaseType();
+								results[i] = ((ZenTypeArray) parameterTypes[parameterTypes.length - 1]).getBaseType();
 							}
 						}
-					}
-					
-					if (results[i] != null) {
-						ambiguous[i] = true;
 					} else {
-						results[i] = method.parameterTypes[i];
+						if (results[i] != null) {
+							ambiguous[i] = true;
+						} else {
+							results[i] = parameterTypes[i];
+						}
 					}
 				}
 			}
@@ -105,17 +112,68 @@ public class JavaMethod {
 		return results;
 	}
 	
-	private final Class owner;
+	public static Expression[] rematch(ZenPosition position, IJavaMethod method, IEnvironmentGlobal environment, Expression... arguments) {
+		ZenType[] parameterTypes = method.getParameterTypes();
+		
+		// small optimization - don't run through this all if not necessary
+		if (arguments.length == 0 && parameterTypes.length == 0) {
+			return arguments;
+		}
+		
+		Expression[] result = new Expression[method.getParameterTypes().length];
+		for (int i = arguments.length; i < method.getParameterTypes().length; i++) {
+			result[i] = parameterTypes[i].defaultValue(position);
+		}
+		
+		int doUntil = parameterTypes.length;
+		if (method.isVarargs()) {
+			doUntil = arguments.length - 1;
+			ZenType paramType = parameterTypes[parameterTypes.length - 1];
+			ZenType baseType = ((ZenTypeArray) paramType).getBaseType();
+			
+			if (arguments.length == parameterTypes.length) {
+				ZenType argType = arguments[arguments.length - 1].getType();
+				
+				if (argType.equals(paramType)) {
+					result[arguments.length - 1] = arguments[arguments.length - 1];
+				} else if (argType.equals(baseType)) {
+					result[arguments.length - 1] = new ExpressionArray(position, (ZenTypeArrayBasic) paramType, arguments[arguments.length - 1]);
+				} else if (argType.canCastImplicit(paramType, environment)) {
+					result[arguments.length - 1] = arguments[arguments.length - 1].cast(position, environment, paramType);
+				} else {
+					result[arguments.length - 1] = new ExpressionArray(position, (ZenTypeArrayBasic) paramType, arguments[arguments.length - 1]).cast(position, environment, paramType);
+				}
+			} else if (arguments.length > parameterTypes.length) {
+				int offset = parameterTypes.length - 1;
+				Expression[] values = new Expression[arguments.length - offset];
+				for (int i = 0; i < values.length; i++) {
+					values[i] = arguments[offset + i].cast(position, environment, baseType);
+				}
+				result[arguments.length - 1] = new ExpressionArray(position, (ZenTypeArrayBasic) paramType, values);
+			}
+		}
+		
+		for (int i = arguments.length; i < doUntil; i++) {
+			result[i] = parameterTypes[i].defaultValue(position);
+		}
+		for (int i = 0; i < Math.min(arguments.length, doUntil); i++) {
+			result[i] = arguments[i].cast(position, environment, parameterTypes[i]);
+		}
+		
+		return result;
+	}
+	
 	private final Method method;
 	
+	private final ZenType ownerType;
 	private final ZenType[] parameterTypes;
 	private final boolean[] optional;
 	private final ZenType returnType;
 	
-	public JavaMethod(Class owner, Method method, ITypeRegistry types) {
-		this.owner = owner;
+	public JavaMethod(Method method, ITypeRegistry types) {
 		this.method = method;
 		
+		ownerType = types.getType(method.getDeclaringClass());
 		returnType = types.getType(method.getGenericReturnType());
 		parameterTypes = new ZenType[method.getParameterTypes().length];
 		optional = new boolean[parameterTypes.length];
@@ -135,30 +193,40 @@ public class JavaMethod {
 		}
 	}
 	
+	@Override
 	public boolean isStatic() {
 		return (method.getModifiers() & Modifier.STATIC) > 0;
 	}
 	
+	@Override
+	public boolean isVarargs() {
+		return method.isVarArgs();
+	}
+	
+	@Override
 	public ZenType getReturnType() {
 		return returnType;
 	}
 	
+	@Override
 	public ZenType[] getParameterTypes() {
 		return parameterTypes;
 	}
 	
 	public Class getOwner() {
-		return owner;
+		return method.getDeclaringClass();
 	}
 	
 	public Method getMethod() {
 		return method;
 	}
 	
+	@Override
 	public boolean accepts(IEnvironmentGlobal environment, Expression... arguments) {
 		return getPriority(environment, arguments) > 0;
 	}
 	
+	@Override
 	public boolean accepts(int numArguments) {
 		if (numArguments > parameterTypes.length) {
 			return method.isVarArgs();
@@ -172,6 +240,7 @@ public class JavaMethod {
 		}
 	}
 	
+	@Override
 	public int getPriority(IEnvironmentGlobal environment, Expression... arguments) {
 		int result = PRIORITY_HIGH;
 		if (arguments.length > parameterTypes.length) {
@@ -241,73 +310,38 @@ public class JavaMethod {
 		
 		return result;
 	}
-	
-	public Expression callVirtual(ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
+
+	@Override
+	public void invokeVirtual(MethodOutput output) {
 		if (isStatic()) {
-			environment.error(position, "trying to call a static method dynamically");
-			return new ExpressionInvalid(position, environment.getType(method.getReturnType()));
+			throw new UnsupportedOperationException("Method is static");
 		} else {
-			Expression[] actual = rematch(position, environment, arguments);
-			return new ExpressionJavaCallVirtual(position, this, receiver, actual);
-		}
-	}
-	
-	public Expression callStatic(ZenPosition position, IEnvironmentGlobal environment, Expression... arguments) {
-		if (isStatic()) {
-			Expression[] actual = rematch(position, environment, arguments);
-			return new ExpressionJavaCallStatic(position, this, actual);
-		} else {
-			environment.error(position, "trying to call a non-static method statically");
-			return new ExpressionInvalid(position, environment.getType(method.getReturnType()));
-		}
-	}
-	
-	private Expression[] rematch(ZenPosition position, IEnvironmentGlobal environment, Expression... arguments) {
-		// small optimization - don't run through this all if not necessary
-		if (arguments.length == 0 && parameterTypes.length == 0) {
-			return arguments;
-		}
-		
-		Expression[] result = new Expression[method.getParameterTypes().length];
-		for (int i = arguments.length; i < method.getParameterTypes().length; i++) {
-			result[i] = parameterTypes[i].defaultValue(position);
-		}
-		
-		int doUntil = parameterTypes.length;
-		if (method.isVarArgs()) {
-			doUntil = arguments.length - 1;
-			ZenType paramType = parameterTypes[parameterTypes.length - 1];
-			ZenType baseType = ((ZenTypeArray) paramType).getBaseType();
-			
-			if (arguments.length == parameterTypes.length) {
-				ZenType argType = arguments[arguments.length - 1].getType();
-				
-				if (argType.equals(paramType)) {
-					result[arguments.length - 1] = arguments[arguments.length - 1];
-				} else if (argType.equals(baseType)) {
-					result[arguments.length - 1] = new ExpressionArray(position, arguments[arguments.length - 1]);
-				} else if (argType.canCastImplicit(paramType, environment)) {
-					result[arguments.length - 1] = arguments[arguments.length - 1].cast(position, environment, paramType);
-				} else {
-					result[arguments.length - 1] = new ExpressionArray(position, arguments[arguments.length - 1]).cast(position, environment, paramType);
-				}
-			} else if (arguments.length > parameterTypes.length) {
-				int offset = parameterTypes.length - 1;
-				Expression[] values = new Expression[arguments.length - offset];
-				for (int i = 0; i < values.length; i++) {
-					values[i] = arguments[offset + i].cast(position, environment, baseType);
-				}
-				result[arguments.length - 1] = new ExpressionArray(position, values, (ZenTypeArrayBasic) paramType);
+			if (method.getDeclaringClass().isInterface()) {
+				output.invokeInterface(
+						method.getDeclaringClass(), 
+						method.getName(),
+						method.getReturnType(),
+						method.getParameterTypes());
+			} else {
+				output.invokeVirtual(
+						method.getDeclaringClass(),
+						method.getName(),
+						method.getReturnType(),
+						method.getParameterTypes());
 			}
 		}
-		
-		for (int i = arguments.length; i < doUntil; i++) {
-			result[i] = parameterTypes[i].defaultValue(position);
+	}
+
+	@Override
+	public void invokeStatic(MethodOutput output) {
+		if (!isStatic()) {
+			throw new UnsupportedOperationException("Method is not static");
+		} else {
+			output.invokeStatic(
+					method.getDeclaringClass(),
+					method.getName(),
+					method.getReturnType(),
+					method.getParameterTypes());
 		}
-		for (int i = 0; i < Math.min(arguments.length, doUntil); i++) {
-			result[i] = arguments[i].cast(position, environment, parameterTypes[i]);
-		}
-		
-		return result;
 	}
 }

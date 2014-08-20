@@ -97,6 +97,16 @@ public class MCPlayer implements IPlayer {
 	}
 
 	@Override
+	public boolean isCreative() {
+		return player.capabilities.isCreativeMode;
+	}
+
+	@Override
+	public boolean isAdventure() {
+		return !player.capabilities.allowEdit;
+	}
+
+	@Override
 	public void openBrowser(String url) {
 		if (player instanceof EntityPlayerMP) {
 			MineTweakerMod.NETWORK.sendTo(

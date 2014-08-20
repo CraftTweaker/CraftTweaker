@@ -58,8 +58,18 @@ public class PartialPackage implements IPartialExpression {
 	}
 
 	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return new ZenType[numArguments];
+	}
+
+	@Override
 	public IZenSymbol toSymbol() {
 		return null; // not supposed to be used as symbol
+	}
+
+	@Override
+	public ZenType getType() {
+		return null;
 	}
 
 	@Override

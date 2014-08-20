@@ -16,7 +16,7 @@ public class StatementExpression extends Statement {
 	@Override
 	public void compile(IEnvironmentMethod environment) {
 		environment.getOutput().position(getPosition());
-		expression.compile(environment)
+		expression.compile(environment, null)
 				.eval(environment)
 				.compile(false, environment);
 	}

@@ -1,6 +1,7 @@
 package minetweaker;
 
 import java.util.List;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
 
@@ -23,8 +24,9 @@ public interface IBracketHandler {
 	 * 
 	 * If the series of tokens is unrecognized, this method should return null.
 	 * 
+	 * @param environment global compilation environment
 	 * @param tokens token stream to be detected
 	 * @return the resolved symbol, or null
 	 */
-	public IZenSymbol resolve(List<Token> tokens);
+	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens);
 }

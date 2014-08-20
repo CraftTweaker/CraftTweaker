@@ -36,6 +36,8 @@ import stanhebben.zenscript.parser.ParseException;
  * @author Stan Hebben
  */
 public class MTTweaker implements ITweaker {
+	private static final boolean DEBUG = true;
+	
 	private final List<IUndoableAction> actions = new ArrayList<IUndoableAction>();
 	private final Set<IUndoableAction> wereStuck = new LinkedHashSet<IUndoableAction>();
 	private final Map<Object, IUndoableAction> stuckOverridable = new HashMap<Object, IUndoableAction>();
@@ -61,8 +63,9 @@ public class MTTweaker implements ITweaker {
 			}
 			
 			action.apply();
-			actions.add(action);
 		}
+		
+		actions.add(action);
 	}
 
 	@Override
@@ -148,7 +151,7 @@ public class MTTweaker implements ITweaker {
 				try {
 					String filename = script.getGroupName();
 					System.out.println("MineTweaker: Loading " + filename);
-					compileScripts(filename, files, environmentGlobal);
+					compileScripts(filename, files, environmentGlobal, DEBUG);
 
 					// execute scripts
 					ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());

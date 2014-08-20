@@ -10,6 +10,7 @@ import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -28,8 +29,9 @@ public class ParsedExpressionUnary extends ParsedExpression {
 	}
 
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
-		Expression cValue = value.compile(environment).eval(environment);
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
+		// TODO: improve type predictions?
+		Expression cValue = value.compile(environment, predictedType).eval(environment);
 		return cValue.getType().unary(getPosition(), environment, cValue, operator);
 	}
 }

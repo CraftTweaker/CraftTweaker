@@ -45,19 +45,6 @@ public abstract class ZenTypeArray extends ZenType {
 	}
 
 	@Override
-	public final boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		if (equals(type) || canCastExpansion(environment, type)) {
-			return true;
-		}
-		
-		if (type instanceof ZenTypeArray) {
-			return base.canCastImplicit(((ZenTypeArray) type).base, environment);
-		}
-		
-		return false;
-	}
-
-	@Override
 	public final boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return equals(type) || canCastExpansion(environment, type);
 	}

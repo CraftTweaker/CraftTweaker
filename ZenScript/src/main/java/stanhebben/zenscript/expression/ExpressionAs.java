@@ -3,34 +3,46 @@ package stanhebben.zenscript.expression;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
 public class ExpressionAs extends Expression {
 	private final Expression value;
-	private final ZenType type;
+	private final ICastingRule castingRule;
 	
-	public ExpressionAs(ZenPosition position, Expression value, ZenType type) {
+	public ExpressionAs(ZenPosition position, Expression value, ICastingRule castingRule) {
 		super(position);
 		
 		this.value = value;
-		this.type = type;
+		this.castingRule = castingRule;
 	}
 
-	@Override
+	/*@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-		return this.type.cast(position, environment, this, type);
-	}
+		if (castingRule.getResultingType().equals(type)) {
+			return this;
+		}
+		
+		ICastingRule newCastingRule = type.getCastingRule(type, environment);
+		if (newCastingRule == null) {
+			environment.error(position, "Cannot cast " + getType() + " to " + type);
+			return new ExpressionInvalid(position, type);
+		} else {
+			return new ExpressionAs(position, this, newCastingRule);
+		}
+	}*/
 
 	@Override
 	public ZenType getType() {
-		return type;
+		return castingRule.getResultingType();
 	}
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		value.compile(result, environment);
+		
 		if (result) {
-			value.getType().compileCast(getPosition(), environment, type);
+			castingRule.compile(environment);
 		}
 	}
 }

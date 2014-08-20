@@ -14,6 +14,7 @@ import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -50,6 +51,11 @@ public class ZenTypeVoid extends ZenType {
 	}
 
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		
+	}
+
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type == this || canCastExpansion(environment, type);
 	}
@@ -63,7 +69,7 @@ public class ZenTypeVoid extends ZenType {
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
 		environment.error(position, "cannot cast void to other type");
 		return new ExpressionInvalid(position, type);
-	}
+	}*/
 
 	@Override
 	public Type toASMType() {
@@ -85,7 +91,7 @@ public class ZenTypeVoid extends ZenType {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		if (type == this) {
 			// nothing to do
@@ -94,7 +100,7 @@ public class ZenTypeVoid extends ZenType {
 				environment.error(position, "cannot cast " + this + " to " + type);
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public Expression unary(

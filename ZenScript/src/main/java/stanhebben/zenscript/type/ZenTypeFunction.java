@@ -6,7 +6,11 @@
 
 package stanhebben.zenscript.type;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
@@ -17,6 +21,9 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingRuleMatchedFunction;
+import stanhebben.zenscript.type.casting.ICastingRule;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -27,6 +34,7 @@ public class ZenTypeFunction extends ZenType {
 	private final ZenType returnType;
 	private final ZenType[] argumentTypes;
 	private final String name;
+	private final Map<ZenType, CastingRuleMatchedFunction> implementedInterfaces = new HashMap<ZenType, CastingRuleMatchedFunction>();
 	
 	public ZenTypeFunction(ZenType returnType, List<ParsedFunctionArgument> arguments) {
 		this.returnType = returnType;
@@ -85,20 +93,64 @@ public class ZenTypeFunction extends ZenType {
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		return null;
 	}
-
+	
 	@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return equals(type) || canCastToNative(type) || canCastExpansion(environment, type); // TODO: LATER: expand
-	}
-
-	@Override
-	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return equals(type) || canCastToNative(type) || canCastExpansion(environment, type); // TODO: LATER: expand
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
 	}
 	
 	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		throw new UnsupportedOperationException("not supported yet");
+	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
+		if (implementedInterfaces.containsKey(type)) {
+			return implementedInterfaces.get(type);
+		}
+		
+		Class cls = type.toJavaClass();
+		
+		System.out.println("Can cast this function to " + cls.getName() + "?");
+		
+		if (cls.isInterface() && cls.getMethods().length == 1) {
+			// this is a functional interface
+			// do the method signatures match?
+			Method method = cls.getMethods()[0];
+			ZenType methodReturnType = environment.getType(method.getGenericReturnType());
+			ICastingRule returnCastingRule = null;
+			if (!returnType.equals(methodReturnType)) {
+				returnCastingRule = returnType.getCastingRule(environment.getType(method.getGenericReturnType()), environment);
+				if (returnCastingRule == null) {
+					System.out.println("Return types don't match");
+					return null;
+				}
+			}
+			
+			java.lang.reflect.Type[] methodParameters = method.getGenericParameterTypes();
+			if (methodParameters.length < argumentTypes.length) {
+				System.out.println("Argument count doesn't match");
+				return null;
+			}
+			
+			ICastingRule[] argumentCastingRules = new ICastingRule[argumentTypes.length];
+			for (int i = 0; i < argumentCastingRules.length; i++) {
+				ZenType argumentType = environment.getType(methodParameters[i]);
+				if (!argumentType.equals(argumentTypes[i])) {
+					argumentCastingRules[i] = argumentType.getCastingRule(argumentTypes[i], environment);
+					if (argumentCastingRules[i] == null) {
+						System.out.println("Argument " + i + " doesn't match");
+						System.out.println("Cannot cast " + argumentType.getName() + " to " + argumentTypes[i].getName());
+						return null;
+					}
+				}
+			}
+			
+			CastingRuleMatchedFunction castingRule = new CastingRuleMatchedFunction(this, type, returnCastingRule, argumentCastingRules);
+			implementedInterfaces.put(type, castingRule);
+			System.out.println("Can cast this function");
+			return castingRule;
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -150,18 +202,16 @@ public class ZenTypeFunction extends ZenType {
 			ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
 		return null; // TODO: complete
 	}
+	
+	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return Arrays.copyOf(argumentTypes, numArguments);
+	}
 
 	@Override
 	public Class toJavaClass() {
 		// TODO: complete
 		return null;
-	}
-
-	@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		if (!compileCastExpansion(position, environment, type)) {
-			environment.error(position, "cannot cast " + this + " to " + type);
-		}
 	}
 
 	@Override
@@ -172,22 +222,5 @@ public class ZenTypeFunction extends ZenType {
 	@Override
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionNull(position);
-	}
-	
-	private boolean canCastToNative(ZenType type) {
-		if (!(type instanceof ZenTypeNative)) return false;
-		
-		//System.out.println("Check cast to native type " + type.getName());
-		
-		ZenTypeNative ntype = (ZenTypeNative) type;
-		if (ntype.getNativeClass().isInterface() && ntype.getNativeClass().getMethods().length == 1) {
-			// ta-da! we got a functional interface
-			// does it match?
-			// TODO: expand
-			return true; // assume for now it is
-		}
-		
-		System.out.println("Cannot cast");
-		return false;
 	}
 }

@@ -9,11 +9,13 @@ import minetweaker.runtime.GlobalRegistry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import stanhebben.zenscript.expression.ExpressionJavaCallStatic;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -33,17 +35,17 @@ public class LiquidBracketHandler implements IBracketHandler {
 	}
 
 	@Override
-	public IZenSymbol resolve(List<Token> tokens) {
+	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
 		if (tokens.size() > 2) {
 			if (tokens.get(0).getValue().equals("liquid") && tokens.get(1).getValue().equals(":")) {
-				return find(tokens, 2, tokens.size());
+				return find(environment, tokens, 2, tokens.size());
 			}
 		}
 		
 		return null;
 	}
 	
-	private IZenSymbol find(List<Token> tokens, int startIndex, int endIndex) {
+	private IZenSymbol find(IEnvironmentGlobal environment, List<Token> tokens, int startIndex, int endIndex) {
 		StringBuilder valueBuilder = new StringBuilder();
 		for (int i = startIndex; i < endIndex; i++) {
 			Token token = tokens.get(i);
@@ -52,29 +54,32 @@ public class LiquidBracketHandler implements IBracketHandler {
 		
 		Fluid fluid = FluidRegistry.getFluid(valueBuilder.toString());
 		if (fluid != null) {
-			return new LiquidReferenceSymbol(valueBuilder.toString());
+			return new LiquidReferenceSymbol(environment, valueBuilder.toString());
 		}
 		
 		return null;
 	}
 	
 	private class LiquidReferenceSymbol implements IZenSymbol {
+		private final IEnvironmentGlobal environment;
 		private final String name;
 		
-		public LiquidReferenceSymbol(String name) {
+		public LiquidReferenceSymbol(IEnvironmentGlobal environment, String name) {
+			this.environment = environment;
 			this.name = name;
 		}
 		
 		@Override
 		public IPartialExpression instance(ZenPosition position) {
-			JavaMethod method = JavaMethod.get(
+			IJavaMethod method = JavaMethod.get(
 					GlobalRegistry.getTypeRegistry(),
 					LiquidBracketHandler.class,
 					"getLiquid",
 					String.class);
 			
-			return new ExpressionJavaCallStatic(
+			return new ExpressionCallStatic(
 					position,
+					environment,
 					method,
 					new ExpressionString(position, name));
 		}

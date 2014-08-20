@@ -9,6 +9,7 @@ package stanhebben.zenscript.compiler;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.objectweb.asm.ClassVisitor;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -106,5 +107,15 @@ public class EnvironmentMethod implements IEnvironmentMethod {
 	@Override
 	public void putValue(String name, IZenSymbol value) {
 		local.put(name, value);
+	}
+
+	@Override
+	public Set<String> getClassNames() {
+		return environment.getClassNames();
+	}
+
+	@Override
+	public byte[] getClass(String name) {
+		return environment.getClass(name);
 	}
 }

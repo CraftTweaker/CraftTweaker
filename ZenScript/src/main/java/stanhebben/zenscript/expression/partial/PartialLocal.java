@@ -56,8 +56,18 @@ public class PartialLocal implements IPartialExpression {
 	}
 
 	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return variable.getType().predictCallTypes(numArguments);
+	}
+
+	@Override
 	public IZenSymbol toSymbol() {
 		return variable;
+	}
+
+	@Override
+	public ZenType getType() {
+		return variable.getType();
 	}
 
 	@Override

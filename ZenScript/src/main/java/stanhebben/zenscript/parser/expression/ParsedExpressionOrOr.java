@@ -7,8 +7,10 @@
 package stanhebben.zenscript.parser.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionOrOr;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -27,10 +29,23 @@ public class ParsedExpressionOrOr extends ParsedExpression {
 	}
 
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
+		Expression cLeft = left.compile(environment, predictedType).eval(environment);
+		Expression cRight = right.compile(environment, predictedType).eval(environment);
+		
+		ZenType type;
+		if (cRight.getType().canCastImplicit(cLeft.getType(), environment)) {
+			type = cLeft.getType();
+		} else if (cLeft.getType().canCastImplicit(cRight.getType(), environment)) {
+			type = cRight.getType();
+		} else {
+			environment.error(getPosition(), "These types could not be unified: " + cLeft.getType() + " and " + cRight.getType());
+			type = ZenType.ANY;
+		}
+		
 		return new ExpressionOrOr(
 				getPosition(),
-				left.compile(environment).eval(environment),
-				right.compile(environment).eval(environment));
+				cLeft.cast(getPosition(), environment, type),
+				cRight.cast(getPosition(), environment, type));
 	}
 }

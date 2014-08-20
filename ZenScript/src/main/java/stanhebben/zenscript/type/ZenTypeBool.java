@@ -13,12 +13,14 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionArithmeticBinary;
 import stanhebben.zenscript.expression.ExpressionArithmeticCompare;
 import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
-import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionBool;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenType.BYTE;
 import static stanhebben.zenscript.type.ZenType.STRING;
+import stanhebben.zenscript.type.casting.CastingRuleStaticMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.AnyClassWriter;
 import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASBOOL;
 import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASBYTE;
@@ -33,7 +35,6 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 import stanhebben.zenscript.value.IAny;
 
 public class ZenTypeBool extends ZenType {
-	//private static final JavaMethod BOOL_TOSTRING = JavaMethod.get(EMPTY_REGISTRY, Boolean.class, "toString", boolean.class);
 	private static final String ANY_NAME = "any/AnyBool";
 	private static final String ANY_NAME_2 = "any.AnyBool";
 	private static final String ANY_NAME_DESC = "Lany/AnyBool;";
@@ -44,18 +45,31 @@ public class ZenTypeBool extends ZenType {
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		return null;
 	}
-
+	
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		rules.registerCastingRule(STRING, new CastingRuleStaticMethod(BOOL_TOSTRING_STATIC));
+		rules.registerCastingRule(BOOLOBJECT, new CastingRuleStaticMethod(BOOL_VALUEOF));
+		rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(
+				getAnyClassName(environment), "valueOf", ANY, BOOL
+		)));
+		
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
+	}
+	
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type == BOOL || type == ANY || type == ZenTypeString.INSTANCE || canCastExpansion(environment, type);
-	}
+	}*/
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == BOOL || type == ANY || type == ZenTypeString.INSTANCE || canCastExpansion(environment, type);
+		return canCastImplicit(type, environment);
 	}
 	
-	@Override
+	/*@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
 		if (type == BOOL || type == ZenTypeBoolObject.INSTANCE || type == STRING || type == ANY) {
 			return new ExpressionAs(position, value, type);
@@ -64,7 +78,7 @@ public class ZenTypeBool extends ZenType {
 		} else {
 			return new ExpressionAs(position, value, type);
 		}
-	}
+	}*/
 	
 	@Override
 	public Class toJavaClass() {
@@ -140,7 +154,7 @@ public class ZenTypeBool extends ZenType {
 		environment.error(position, "cannot call a boolean value");
 		return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
 	}
-
+	
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
 		IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
@@ -168,7 +182,7 @@ public class ZenTypeBool extends ZenType {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		if (type == this) {
 			// nothing to do
@@ -181,7 +195,7 @@ public class ZenTypeBool extends ZenType {
 		} else if (!compileCastExpansion(position, environment, type)) {
 			environment.error(position, "Cannot compile bool to " + type);
 		}
-	}
+	}*/
 
 	@Override
 	public String getName() {
@@ -321,7 +335,7 @@ public class ZenTypeBool extends ZenType {
 			getValue(output);
 			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, boolean.class);
 			output.loadObject(1);
-			output.invoke(METHOD_ASSTRING);
+			METHOD_ASSTRING.invokeVirtual(output);
 			output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
 			output.invokeVirtual(StringBuilder.class, "toString", String.class);
 			output.invokeStatic(STRING.getAnyClassName(environment), "valueOf", "(Ljava/lang/String;)" + signature(IAny.class));
@@ -349,7 +363,7 @@ public class ZenTypeBool extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBOOL);
+			METHOD_ASBOOL.invokeVirtual(output);
 			output.iAnd();
 			valueOf(output);
 			output.returnObject();
@@ -361,7 +375,7 @@ public class ZenTypeBool extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBOOL);
+			METHOD_ASBOOL.invokeVirtual(output);
 			output.iOr();
 			valueOf(output);
 			output.returnObject();
@@ -373,7 +387,7 @@ public class ZenTypeBool extends ZenType {
 			output.dup();
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBYTE);
+			METHOD_ASBYTE.invokeVirtual(output);
 			output.iXor();
 			valueOf(output);
 			output.returnObject();
@@ -388,7 +402,7 @@ public class ZenTypeBool extends ZenType {
 		public void defineCompareTo(MethodOutput output) {
 			getValue(output);
 			output.loadObject(1);
-			output.invoke(METHOD_ASBOOL);
+			METHOD_ASBOOL.invokeVirtual(output);
 			output.iSub();
 			output.returnInt();
 		}

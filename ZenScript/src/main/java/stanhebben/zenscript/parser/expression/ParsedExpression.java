@@ -17,7 +17,6 @@ import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionFloat;
-import stanhebben.zenscript.expression.ExpressionFunction;
 import stanhebben.zenscript.expression.ExpressionInt;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.parser.ParseException;
@@ -331,7 +330,6 @@ public abstract class ParsedExpression {
 			}*/
 			case T_ID:
 				return new ParsedExpressionVariable(position, parser.next().getValue());
-				// TODO: implement function values
 			case T_FUNCTION:
 				// function (argname, argname, ...) { ...contents... }
 				parser.next();
@@ -360,18 +358,14 @@ public abstract class ParsedExpression {
 				
 				parser.required(T_AOPEN, "{ expected");
 				
-				Statement[] statements;
-				if (parser.optional(T_ACLOSE) != null) {
-					statements = new Statement[0];
-				} else {
-					ArrayList<Statement> statementsAL = new ArrayList<Statement>();
-					
+				List<Statement> statements = new ArrayList<Statement>();
+				if (parser.optional(T_ACLOSE) == null) {
 					while (parser.optional(T_ACLOSE) == null) {
-						statementsAL.add(Statement.read(parser, environment));
+						statements.add(Statement.read(parser, environment, returnType));
 					}
-					statements = statementsAL.toArray(new Statement[statementsAL.size()]);
 				}
-				return new ParsedExpressionValue(position, new ExpressionFunction(position, arguments, returnType, statements));
+				
+				return new ParsedExpressionFunction(position, returnType, arguments, statements);
 			case T_LT: {
 				Token start = parser.next();
 				List<Token> tokens = new ArrayList<Token>();
@@ -380,7 +374,7 @@ public abstract class ParsedExpression {
 					tokens.add(next);
 					next = parser.next();
 				}
-				IZenSymbol resolved = parser.getEnvironment().getBracketed(tokens);
+				IZenSymbol resolved = parser.getEnvironment().getBracketed(environment, tokens);
 				if (resolved == null) {
 					StringBuilder builder = new StringBuilder();
 					builder.append('<');
@@ -397,7 +391,7 @@ public abstract class ParsedExpression {
 				} else {
 					return new ParsedExpressionValue(
 							start.getPosition(),
-							parser.getEnvironment().getBracketed(tokens).instance(start.getPosition()));
+							parser.getEnvironment().getBracketed(environment, tokens).instance(start.getPosition()));
 				}
 			}
 			case T_SQBROPEN: {
@@ -431,7 +425,7 @@ public abstract class ParsedExpression {
 						}
 					}
 					
-					return new ParsedExpressionTable(position, keys, values);
+					return new ParsedExpressionMap(position, keys, values);
 				}
 			}
 			case T_TRUE:
@@ -463,9 +457,9 @@ public abstract class ParsedExpression {
 		return position;
 	}
 	
-	public abstract IPartialExpression compile(IEnvironmentMethod environment);
+	public abstract IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType);
 	
-	public Expression compileKey(IEnvironmentMethod environment) {
-		return compile(environment).eval(environment);
+	public Expression compileKey(IEnvironmentMethod environment, ZenType predictedType) {
+		return compile(environment, predictedType).eval(environment);
 	}
 }

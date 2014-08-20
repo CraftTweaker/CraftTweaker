@@ -6,28 +6,35 @@
 
 package stanhebben.zenscript.expression;
 
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
-import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
  *
  * @author Stanneke
  */
-public class ExpressionJavaCallStatic extends Expression {
-	private final JavaMethod method;
+public class ExpressionCallVirtual extends Expression {
+	private final IJavaMethod method;
+	
+	private final Expression receiver;
 	private final Expression[] arguments;
 	
-	public ExpressionJavaCallStatic(
+	public ExpressionCallVirtual(
 			ZenPosition position,
-			JavaMethod method,
+			IEnvironmentGlobal environment,
+			IJavaMethod method,
+			Expression receiver,
 			Expression... arguments) {
 		super(position);
 		
 		this.method = method;
-		this.arguments = arguments;
+		
+		this.receiver = receiver;
+		this.arguments = JavaMethod.rematch(position, method, environment, arguments);
 	}
 
 	@Override
@@ -37,16 +44,15 @@ public class ExpressionJavaCallStatic extends Expression {
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		MethodOutput output = environment.getOutput(); 
+		receiver.compile(true, environment);
 		
 		for (Expression argument : arguments) {
 			argument.compile(true, environment);
 		}
 		
-		output.invokeStatic(method);
-		
+		method.invokeVirtual(environment.getOutput());
 		if (method.getReturnType() != ZenType.VOID && !result) {
-			output.pop(method.getReturnType().isLarge());
+			environment.getOutput().pop(method.getReturnType().isLarge());
 		}
 	}
 }

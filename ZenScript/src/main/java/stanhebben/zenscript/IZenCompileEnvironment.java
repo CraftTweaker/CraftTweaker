@@ -7,8 +7,7 @@
 package stanhebben.zenscript;
 
 import java.util.List;
-import stanhebben.zenscript.IZenErrorLogger;
-import stanhebben.zenscript.TypeExpansion;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
@@ -24,7 +23,7 @@ public interface IZenCompileEnvironment {
 	
 	public IZenSymbol getDollar(String name);
 	
-	public IZenSymbol getBracketed(List<Token> tokens);
+	public IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens);
 	
 	public TypeRegistry getTypeRegistry();
 	

@@ -6,14 +6,16 @@
 
 package stanhebben.zenscript.expression.partial;
 
+import java.util.Arrays;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.natives.JavaMethod;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -22,9 +24,9 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class PartialStaticMethod implements IPartialExpression {
 	private final ZenPosition position;
-	private final JavaMethod method;
+	private final IJavaMethod method;
 	
-	public PartialStaticMethod(ZenPosition position, JavaMethod method) {
+	public PartialStaticMethod(ZenPosition position, IJavaMethod method) {
 		this.position = position;
 		this.method = method;
 	}
@@ -50,7 +52,7 @@ public class PartialStaticMethod implements IPartialExpression {
 	@Override
 	public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
 		if (method.accepts(environment, values)) {
-			return method.callStatic(position, environment, values);
+			return new ExpressionCallStatic(position, environment, method, values);
 		} else {
 			environment.error(position, "parameter count mismatch");
 			return new ExpressionInvalid(position, method.getReturnType());
@@ -58,8 +60,18 @@ public class PartialStaticMethod implements IPartialExpression {
 	}
 
 	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return Arrays.copyOf(method.getParameterTypes(), numArguments);
+	}
+
+	@Override
 	public IZenSymbol toSymbol() {
 		return new SymbolJavaStaticMethod(method);
+	}
+
+	@Override
+	public ZenType getType() {
+		return method.getReturnType();
 	}
 
 	@Override

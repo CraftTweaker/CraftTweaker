@@ -27,9 +27,9 @@ public class ParsedExpressionCast extends ParsedExpression {
 	}
 
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
 		return value
-				.compile(environment)
+				.compile(environment, type)
 				.eval(environment)
 				.cast(getPosition(), environment, type);
 	}

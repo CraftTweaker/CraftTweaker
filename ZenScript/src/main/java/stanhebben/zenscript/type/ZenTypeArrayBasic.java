@@ -1,7 +1,5 @@
 package stanhebben.zenscript.type;
 
-import java.util.Arrays;
-import java.util.List;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -11,6 +9,11 @@ import stanhebben.zenscript.expression.ExpressionArrayGet;
 import stanhebben.zenscript.expression.ExpressionArrayLength;
 import stanhebben.zenscript.expression.ExpressionArraySet;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingRuleArrayArray;
+import stanhebben.zenscript.type.casting.CastingRuleArrayList;
+import stanhebben.zenscript.type.casting.CastingRuleDelegateArray;
+import stanhebben.zenscript.type.casting.ICastingRule;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -41,12 +44,32 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 	}
 	
 	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (equals(type)) return value;
-		
-		return castExpansion(position, environment, value, type);
+	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
+		ICastingRule base = super.getCastingRule(type, environment);
+		if (base == null && getBaseType() == ANY && type instanceof ZenTypeArray) {
+			ZenType toBaseType = ((ZenTypeArray)type).getBaseType();
+			if (type instanceof ZenTypeArrayBasic) {
+				return new CastingRuleArrayArray(ANY.getCastingRule(toBaseType, environment), this, (ZenTypeArrayBasic) type);
+			} else if (type instanceof ZenTypeArrayList) {
+				return new CastingRuleArrayList(ANY.getCastingRule(toBaseType, environment), this, (ZenTypeArrayList) type);
+			} else {
+				throw new RuntimeException("Invalid array type: " + type);
+			}
+		} else {
+			return base;
+		}
 	}
-
+	
+	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		ICastingRuleDelegate arrayRules = new CastingRuleDelegateArray(rules, this);
+		getBaseType().constructCastingRules(environment, arrayRules, followCasters);
+		
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
+	}
+	
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		if (numValues == 1) {
@@ -71,7 +94,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 	@Override
 	public Class toJavaClass() {
 		try {
-			return Class.forName("[" + getBaseType().toJavaClass().getName());
+			return Class.forName("[L" + getBaseType().toJavaClass().getName() + ";");
 		} catch (ClassNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -81,68 +104,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 	public String getSignature() {
 		return "[" + getBaseType().getSignature();
 	}
-
-	@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType toClass) {
-		MethodOutput output = environment.getOutput();
-		
-		if (compileCastExpansion(position, environment, toClass)) {
-			// OK
-		} else if (toClass instanceof ZenTypeArrayList) {
-			// convert array to list
-			// Arrays.asList(value);
-			output.invokeStatic(Arrays.class, "asList", List.class, Object[].class);
-		} else if (toClass instanceof ZenTypeArrayBasic) {
-			// convert elements
-			if (toClass.equals(this)) {
-				// do nothing
-			} else {
-				ZenType component = ((ZenTypeArrayBasic) toClass).getBaseType();
-				Type componentType = component.toASMType();
-				
-				int result = output.local(componentType);
-				
-				output.dup();
-				output.arrayLength();
-				output.newArray(componentType);
-				output.storeObject(result);
-				
-				output.iConst0();
-				
-				Label lbl = new Label();
-				output.label(lbl);
-				
-				// stack: original index
-				output.dupX1();
-				output.dupX1();
-				output.arrayLoad(componentType);
-				
-				// stack: original index value
-				getBaseType().compileCast(position, environment, toClass);
-				
-				output.loadObject(result);
-				output.dupX2();
-				output.dupX2();
-				output.arrayStore(componentType);
-				output.pop();
-				
-				// stack: original index
-				output.iConst1();
-				output.iAdd();
-				output.dupX1();
-				output.arrayLength();
-				output.ifICmpGE(lbl);
-				
-				output.pop();
-				output.pop();
-				
-				output.loadObject(result);
-			}
-		} else {
-			// TODO: error
-		}
-	}
-
+	
 	@Override
 	public IPartialExpression getMemberLength(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value) {
 		return new ExpressionArrayLength(position, value.eval(environment));

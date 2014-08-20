@@ -6,8 +6,11 @@
 
 package stanhebben.zenscript.expression;
 
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.natives.IJavaMethod;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -15,45 +18,38 @@ import stanhebben.zenscript.util.ZenPosition;
  *
  * @author Stanneke
  */
-public class ExpressionJavaCallStaticGenerated extends Expression {
-	private final String target;
-	private final String name;
-	private final String descriptor;
-	
-	private final ZenType returnZType;
+public class ExpressionCallStatic extends Expression {
+	private final IJavaMethod method;
 	private final Expression[] arguments;
 	
-	public ExpressionJavaCallStaticGenerated(
+	public ExpressionCallStatic(
 			ZenPosition position,
-			String target, String name, String descriptor,
-			ZenType returnZType,
+			IEnvironmentGlobal environment,
+			IJavaMethod method,
 			Expression... arguments) {
 		super(position);
 		
-		this.target = target;
-		this.name = name;
-		this.descriptor = descriptor;
-		
-		this.returnZType = returnZType;
-		this.arguments = arguments;
+		this.method = method;
+		this.arguments = JavaMethod.rematch(position, method, environment, arguments);
 	}
 
 	@Override
 	public ZenType getType() {
-		return returnZType;
+		return method.getReturnType();
 	}
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		MethodOutput output = environment.getOutput();
+		MethodOutput output = environment.getOutput(); 
 		
 		for (Expression argument : arguments) {
 			argument.compile(true, environment);
 		}
 		
-		output.invokeStatic(target, name, descriptor);
-		if (!descriptor.endsWith("V") && !result) {
-			output.pop();
+		method.invokeStatic(output);
+		
+		if (method.getReturnType() != ZenType.VOID && !result) {
+			output.pop(method.getReturnType().isLarge());
 		}
 	}
 }

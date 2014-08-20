@@ -26,7 +26,11 @@ public interface IPartialExpression {
 	
 	public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values);
 	
+	public ZenType[] predictCallTypes(int numArguments);
+	
 	public IZenSymbol toSymbol();
+	
+	public ZenType getType();
 	
 	public ZenType toType(IEnvironmentGlobal environment);
 }

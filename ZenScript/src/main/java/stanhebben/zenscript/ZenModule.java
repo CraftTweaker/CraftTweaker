@@ -50,8 +50,9 @@ public class ZenModule {
 	 * @param mainFileName main filename (used for debug info)
 	 * @param scripts scripts to compile
 	 * @param environmentGlobal global compile environment
+	 * @param debug enable debug mode (outputs classes to generated directory)
 	 */
-	public static void compileScripts(String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal) {
+	public static void compileScripts(String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal, boolean debug) {
 		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		clsMain.visitSource(mainFileName, null);
 		
@@ -117,6 +118,7 @@ public class ZenModule {
 			if (script.getStatements().size() > 0) {
 				MethodOutput scriptOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "__script__", "()V", null, null);
 				IEnvironmentMethod functionMethod = new EnvironmentMethod(scriptOutput, environmentScript);
+				//scriptOutput.enableDebug();
 				scriptOutput.start();
 				for (Statement statement : script.getStatements()) {
 					statement.compile(functionMethod);
@@ -142,6 +144,28 @@ public class ZenModule {
 		constructor.visitInsn(Opcodes.RETURN);
 		constructor.visitMaxs(0, 0);
 		constructor.visitEnd();
+		
+		// debug: output classes
+		if (debug) {
+			try {
+				File outputDir = new File("generated");
+				outputDir.mkdir();
+
+				for (String className : environmentGlobal.getClassNames()) {
+					File outputFile = new File(outputDir, className.replace('.', '/') + ".class");
+					
+					if (!outputFile.getParentFile().exists()) {
+						outputFile.getParentFile().mkdirs();
+					}
+					
+					FileOutputStream output = new FileOutputStream(outputFile);
+					output.write(environmentGlobal.getClass(className));
+					output.close();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
 		
 		environmentGlobal.putClass("__ZenMain__", clsMain.toByteArray());
 	}
@@ -176,7 +200,7 @@ public class ZenModule {
 		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
 		files.add(file);
 		
-		compileScripts(filename, files, environmentGlobal);
+		compileScripts(filename, files, environmentGlobal, false);
 		
 		// debug: output classes
 		File outputDir = new File("generated");
@@ -238,18 +262,7 @@ public class ZenModule {
 		}
 		
 		String filename = file.getName();
-		compileScripts(filename, files, environmentGlobal);
-		
-		// debug: output classes
-		File outputDir = new File("generated");
-		outputDir.mkdir();
-		
-		for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
-			File outputFile = new File(outputDir, entry.getKey().replace('.', '/') + ".class");
-			FileOutputStream output = new FileOutputStream(outputFile);
-			output.write(entry.getValue());
-			output.close();
-		}
+		compileScripts(filename, files, environmentGlobal, true);
 		
 		return new ZenModule(classes, baseClassLoader);
 	}

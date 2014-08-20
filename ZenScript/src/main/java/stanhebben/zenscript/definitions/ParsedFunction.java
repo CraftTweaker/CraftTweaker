@@ -67,7 +67,7 @@ public class ParsedFunction {
 			ArrayList<Statement> statementsAL = new ArrayList<Statement>();
 
 			while (parser.optional(T_ACLOSE) == null) {
-				statementsAL.add(Statement.read(parser, environment));
+				statementsAL.add(Statement.read(parser, environment, type));
 			}
 			statements = statementsAL.toArray(new Statement[statementsAL.size()]);
 		}

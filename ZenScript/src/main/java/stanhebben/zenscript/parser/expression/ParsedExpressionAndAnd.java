@@ -7,8 +7,9 @@
 package stanhebben.zenscript.parser.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.expression.ExpressionOrOr;
+import stanhebben.zenscript.expression.ExpressionAndAnd;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -27,10 +28,10 @@ public class ParsedExpressionAndAnd extends ParsedExpression {
 	}
 
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
-		return new ExpressionOrOr(
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
+		return new ExpressionAndAnd(
 				getPosition(),
-				left.compile(environment).eval(environment),
-				right.compile(environment).eval(environment));
+				left.compile(environment, predictedType).eval(environment),
+				right.compile(environment, predictedType).eval(environment));
 	}
 }

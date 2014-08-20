@@ -6,7 +6,6 @@
 
 package minetweaker.api.player;
 
-import java.util.List;
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.IData;
 import minetweaker.api.item.IItemStack;
@@ -53,5 +52,12 @@ public interface IPlayer {
 	@ZenGetter("currentItem")
 	public IItemStack getCurrentItem();
 	
+	@ZenGetter("creative")
+	public boolean isCreative();
+	
+	@ZenGetter("adventure")
+	public boolean isAdventure();
+	
+	// not an exposed method. risks abuse
 	public void openBrowser(String url);
 }

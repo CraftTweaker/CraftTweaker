@@ -11,6 +11,8 @@ import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
+import stanhebben.zenscript.expression.ExpressionCallVirtual;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
@@ -23,19 +25,19 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan
  */
 public class ZenNativeMember {
-	private JavaMethod getter;
-	private JavaMethod setter;
-	private final List<JavaMethod> methods = new ArrayList<JavaMethod>();
+	private IJavaMethod getter;
+	private IJavaMethod setter;
+	private final List<IJavaMethod> methods = new ArrayList<IJavaMethod>();
 	
-	public JavaMethod getGetter() {
+	public IJavaMethod getGetter() {
 		return getter;
 	}
 	
-	public JavaMethod getSetter() {
+	public IJavaMethod getSetter() {
 		return setter;
 	}
 	
-	public void setGetter(JavaMethod getter) {
+	public void setGetter(IJavaMethod getter) {
 		if (this.getter == null) {
 			this.getter = getter;
 		} else {
@@ -43,7 +45,7 @@ public class ZenNativeMember {
 		}
 	}
 	
-	public void setSetter(JavaMethod setter) {
+	public void setSetter(IJavaMethod setter) {
 		if (this.setter == null) {
 			this.setter = setter;
 		} else {
@@ -74,34 +76,43 @@ public class ZenNativeMember {
 		
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
-			return getter.callVirtual(position, environment, value.eval(environment));
+			return new ExpressionCallVirtual(position, environment, getter, value.eval(environment));
 		}
 
 		@Override
 		public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
-			return setter.callVirtual(position, environment, value.eval(environment), other);
+			return new ExpressionCallVirtual(position, environment, setter, value.eval(environment), other);
 		}
 
 		@Override
 		public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
-			ZenType type = environment.getType(getter.getMethod().getGenericReturnType());
-			return type.getMember(position, environment, this, name);
+			return getter.getReturnType().getMember(position, environment, this, name);
 		}
 
 		@Override
 		public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
-			JavaMethod method = JavaMethod.select(false, methods, environment, values);
+			IJavaMethod method = JavaMethod.select(false, methods, environment, values);
 			if (method == null) {
 				environment.error(position, methodMatchingError(methods, values));
 				return new ExpressionInvalid(position);
 			} else {
-				return method.callVirtual(position, environment, value.eval(environment), values);
+				return new ExpressionCallVirtual(position, environment, method, value.eval(environment), values);
 			}
 		}
-
+		
+		@Override
+		public ZenType[] predictCallTypes(int numArguments) {
+			return JavaMethod.predict(methods, numArguments);
+		}
+		
 		@Override
 		public IZenSymbol toSymbol() {
 			return null;
+		}
+		
+		@Override
+		public ZenType getType() {
+			return getter.getReturnType();
 		}
 
 		@Override
@@ -120,34 +131,43 @@ public class ZenNativeMember {
 		
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
-			return setter.callStatic(position, environment);
+			return new ExpressionCallStatic(position, environment, setter);
 		}
 
 		@Override
 		public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
-			return setter.callStatic(position, environment, other);
+			return new ExpressionCallStatic(position, environment, setter);
 		}
 
 		@Override
 		public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
-			ZenType type = environment.getType(getter.getMethod().getGenericReturnType());
-			return type.getMember(position, environment, this, name);
+			return getter.getReturnType().getMember(position, environment, this, name);
 		}
 
 		@Override
 		public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
-			JavaMethod method = JavaMethod.select(true, methods, environment, values);
+			IJavaMethod method = JavaMethod.select(true, methods, environment, values);
 			if (method == null) {
 				environment.error(position, methodMatchingError(methods, values));
 				return new ExpressionInvalid(position);
 			} else {
-				return method.callStatic(position, environment, values);
+				return new ExpressionCallStatic(position, environment, method, values);
 			}
+		}
+		
+		@Override
+		public ZenType[] predictCallTypes(int numArguments) {
+			return JavaMethod.predict(methods, numArguments);
 		}
 
 		@Override
 		public IZenSymbol toSymbol() {
 			return new StaticSymbol();
+		}
+		
+		@Override
+		public ZenType getType() {
+			return getter.getReturnType();
 		}
 
 		@Override

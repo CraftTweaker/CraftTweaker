@@ -17,7 +17,7 @@ public class ExpressionOrOr extends Expression {
 
 	@Override
 	public ZenType getType() {
-		return a.getType(); // TODO: combine both types
+		return a.getType();
 	}
 
 	@Override

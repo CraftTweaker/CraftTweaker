@@ -7,10 +7,8 @@
 package stanhebben.zenscript.expression;
 
 import org.objectweb.asm.Label;
-import stanhebben.zenscript.compiler.EnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.compiler.EnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.ZenPosition;
@@ -32,6 +30,8 @@ public class ExpressionInvalid extends Expression {
 		super(position);
 		
 		this.type = type;
+		
+		//throw new RuntimeException("Constructing invalid expression");
 	}
 	
 	@Override

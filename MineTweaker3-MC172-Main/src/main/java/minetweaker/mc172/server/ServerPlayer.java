@@ -87,6 +87,16 @@ public class ServerPlayer implements IPlayer {
 	}
 
 	@Override
+	public boolean isCreative() {
+		return true;
+	}
+
+	@Override
+	public boolean isAdventure() {
+		return false;
+	}
+
+	@Override
 	public void openBrowser(String url) {
 		if (Desktop.isDesktopSupported()) {
 			try {

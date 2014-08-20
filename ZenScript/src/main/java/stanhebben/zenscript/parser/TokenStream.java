@@ -230,7 +230,6 @@ public class TokenStream implements Iterator<Token> {
 				if (nextChar < 0 && value.length() == 0) {
 					return; // happens on comments at the end of files
 				}
-				//System.out.println("Value: " + value.length() + " characters: " + value);
                 throw new TokenException(file, line, lineOffset, (char)nextChar);
             }
         } catch (IOException ex) {

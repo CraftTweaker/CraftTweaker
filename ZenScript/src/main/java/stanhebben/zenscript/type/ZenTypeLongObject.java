@@ -6,23 +6,25 @@
 
 package stanhebben.zenscript.type;
 
-import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenType.ANY;
-import static stanhebben.zenscript.type.ZenType.BOOL;
+import static stanhebben.zenscript.type.ZenType.BYTE;
+import static stanhebben.zenscript.type.ZenType.BYTE_VALUE;
 import static stanhebben.zenscript.type.ZenType.STRING;
-import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.type.casting.CastingRuleNullableStaticMethod;
+import stanhebben.zenscript.type.casting.CastingRuleNullableVirtualMethod;
+import stanhebben.zenscript.type.casting.CastingRuleVirtualMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
-import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -74,6 +76,43 @@ public class ZenTypeLongObject extends ZenType {
 	}
 
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		rules.registerCastingRule(BYTE, new CastingRuleVirtualMethod(BYTE_VALUE));
+		rules.registerCastingRule(BYTEOBJECT, new CastingRuleNullableStaticMethod(
+				BYTE_VALUEOF,
+				new CastingRuleVirtualMethod(BYTE_VALUE)));
+		rules.registerCastingRule(SHORT, new CastingRuleVirtualMethod(SHORT_VALUE));
+		rules.registerCastingRule(SHORTOBJECT, new CastingRuleNullableStaticMethod(
+				SHORT_VALUEOF,
+				new CastingRuleVirtualMethod(SHORT_VALUE)));
+		rules.registerCastingRule(INT, new CastingRuleVirtualMethod(INT_VALUE));
+		rules.registerCastingRule(INTOBJECT, new CastingRuleNullableStaticMethod(
+				INT_VALUEOF,
+				new CastingRuleVirtualMethod(INT_VALUE)));
+		rules.registerCastingRule(LONG, new CastingRuleVirtualMethod(LONG_VALUE));
+		rules.registerCastingRule(LONGOBJECT, new CastingRuleNullableStaticMethod(
+				LONG_VALUEOF,
+				new CastingRuleVirtualMethod(LONG_VALUE)));
+		rules.registerCastingRule(FLOAT, new CastingRuleVirtualMethod(FLOAT_VALUE));
+		rules.registerCastingRule(FLOATOBJECT, new CastingRuleNullableStaticMethod(
+				FLOAT_VALUEOF,
+				new CastingRuleVirtualMethod(FLOAT_VALUE)));
+		rules.registerCastingRule(DOUBLE, new CastingRuleVirtualMethod(DOUBLE_VALUE));
+		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleNullableStaticMethod(
+				DOUBLE_VALUEOF,
+				new CastingRuleVirtualMethod(DOUBLE_VALUE)));
+		
+		rules.registerCastingRule(STRING, new CastingRuleNullableVirtualMethod(LONGOBJECT, LONG_TOSTRING));
+		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(
+				JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, LONG),
+				new CastingRuleVirtualMethod(LONG_VALUE)));
+		
+		if (followCasters) {
+			constructExpansionCastingRules(environment, rules);
+		}
+	}
+
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return LONG.canCastImplicit(type, environment);
 	}
@@ -92,7 +131,7 @@ public class ZenTypeLongObject extends ZenType {
 		} else {
 			return new ExpressionAs(position, value, type);
 		}
-	}
+	}*/
 
 	@Override
 	public Class toJavaClass() {
@@ -119,7 +158,7 @@ public class ZenTypeLongObject extends ZenType {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		if (type == this) {
 			// nothing to do
@@ -147,7 +186,7 @@ public class ZenTypeLongObject extends ZenType {
 			environment.getOutput().invokeVirtual(Long.class, "longValue", long.class);
 			LONG.compileCast(position, environment, type);
 		}
-	}
+	}*/
 
 	@Override
 	public String getName() {

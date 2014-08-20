@@ -9,6 +9,7 @@ package stanhebben.zenscript.parser.expression;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.ExpressionBool;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -25,7 +26,7 @@ public class ParsedExpressionBool extends ParsedExpression {
 	}
 
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
 		return new ExpressionBool(getPosition(), value);
 	}
 }

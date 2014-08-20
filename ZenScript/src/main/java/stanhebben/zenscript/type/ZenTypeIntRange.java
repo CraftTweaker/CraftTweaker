@@ -16,9 +16,11 @@ import stanhebben.zenscript.compiler.ITypeRegistry;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionInvalid;
-import stanhebben.zenscript.expression.ExpressionJavaCallVirtual;
+import stanhebben.zenscript.expression.ExpressionCallVirtual;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
@@ -32,8 +34,8 @@ import stanhebben.zenscript.value.IntRange;
 public class ZenTypeIntRange extends ZenType {
 	public static final ZenTypeIntRange INSTANCE = new ZenTypeIntRange();
 	
-	private final JavaMethod methodFrom;
-	private final JavaMethod methodTo;
+	private final IJavaMethod methodFrom;
+	private final IJavaMethod methodTo;
 	
 	private ZenTypeIntRange() {
 		ITypeRegistry dummy = new TypeRegistry();
@@ -73,9 +75,9 @@ public class ZenTypeIntRange extends ZenType {
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
 		if (name.equals("from")) {
-			return new ExpressionJavaCallVirtual(position, methodFrom, value.eval(environment));
+			return new ExpressionCallVirtual(position, environment, methodFrom, value.eval(environment));
 		} else if (name.equals("to")) {
-			return new ExpressionJavaCallVirtual(position, methodTo, value.eval(environment));
+			return new ExpressionCallVirtual(position, environment, methodTo, value.eval(environment));
 		} else {
 			environment.error(position, "no such member " + name + " in int range");
 			return new ExpressionInvalid(position);
@@ -93,8 +95,13 @@ public class ZenTypeIntRange extends ZenType {
 		environment.error(position, "int ranges cannot be called");
 		return new ExpressionInvalid(position);
 	}
-
+	
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		
+	}
+
+	/*@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
 		if (type == this) {
 			return value;
@@ -102,7 +109,7 @@ public class ZenTypeIntRange extends ZenType {
 		
 		environment.error(position, "cannot cast int ranges to any other type");
 		return new ExpressionInvalid(position);
-	}
+	}*/
 
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
@@ -113,7 +120,7 @@ public class ZenTypeIntRange extends ZenType {
 		}
 	}
 
-	@Override
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type == this;
 	}
@@ -121,7 +128,7 @@ public class ZenTypeIntRange extends ZenType {
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type == this;
-	}
+	}*/
 
 	@Override
 	public Class toJavaClass() {
@@ -148,10 +155,10 @@ public class ZenTypeIntRange extends ZenType {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
+	}*/
 
 	@Override
 	public String getName() {
@@ -175,7 +182,7 @@ public class ZenTypeIntRange extends ZenType {
 			MethodOutput output = method.getOutput();
 			
 			output.dup(); // copy IntRange reference
-			output.invoke(methodFrom);
+			methodFrom.invokeVirtual(output);
 			output.storeInt(locals[0]);
 		}
 
@@ -189,7 +196,7 @@ public class ZenTypeIntRange extends ZenType {
 			MethodOutput output = method.getOutput();
 			
 			output.dup(); // copy IntRange reference
-			output.invoke(methodTo);
+			methodTo.invokeVirtual(output);
 			
 			output.loadInt(locals[0]);
 			output.iinc(locals[0]);

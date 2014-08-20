@@ -6,14 +6,16 @@
 
 package stanhebben.zenscript.expression.partial;
 
+import java.util.Arrays;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.ExpressionInvalid;
-import stanhebben.zenscript.expression.ExpressionJavaCallStaticGenerated;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolZenStaticMethod;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -67,12 +69,22 @@ public class PartialStaticGenerated implements IPartialExpression {
 			arguments[i] = values[i].cast(position, environment, argumentTypes[i]);
 		}
 		
-		return new ExpressionJavaCallStaticGenerated(position, owner, method, signature, returnType, arguments);
+		return new ExpressionCallStatic(position, environment, JavaMethod.getStatic(owner, method, returnType, argumentTypes), arguments);
+	}
+
+	@Override
+	public ZenType[] predictCallTypes(int numArguments) {
+		return Arrays.copyOf(argumentTypes, numArguments);
 	}
 
 	@Override
 	public IZenSymbol toSymbol() {
 		return new SymbolZenStaticMethod(owner, method, signature, argumentTypes, returnType);
+	}
+
+	@Override
+	public ZenType getType() {
+		return returnType;
 	}
 
 	@Override

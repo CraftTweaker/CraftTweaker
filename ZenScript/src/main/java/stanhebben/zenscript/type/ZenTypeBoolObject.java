@@ -6,22 +6,22 @@
 
 package stanhebben.zenscript.type;
 
-import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionAs;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenType.BOOL;
-import static stanhebben.zenscript.type.ZenType.STRING;
-import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.type.casting.CastingRuleNullableStaticMethod;
+import stanhebben.zenscript.type.casting.CastingRuleNullableVirtualMethod;
+import stanhebben.zenscript.type.casting.CastingRuleVirtualMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
-import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -66,20 +66,32 @@ public class ZenTypeBoolObject extends ZenType {
 	public Expression call(ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
 		return BOOL.call(position, environment, receiver.cast(position, environment, BOOL), arguments);
 	}
-
+	
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		return BOOL.makeIterator(numValues, methodOutput);
 	}
 	
 	@Override
+	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+		rules.registerCastingRule(BOOL, new CastingRuleVirtualMethod(BOOL_VALUE));
+		rules.registerCastingRule(STRING, new CastingRuleNullableVirtualMethod(BOOL, BOOL_TOSTRING));
+		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(JavaMethod.getStatic(
+				BOOL.getAnyClassName(environment),
+				"valueOf",
+				ANY,
+				BOOL
+		), new CastingRuleVirtualMethod(BOOL_VALUE)));
+	}
+	
+	/*@Override
 	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
 		return BOOL.canCastImplicit(type, environment);
-	}
+	}*/
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return BOOL.canCastExplicit(type, environment);
+		return canCastImplicit(type, environment);
 	}
 
 	@Override
@@ -107,7 +119,7 @@ public class ZenTypeBoolObject extends ZenType {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
 		if (type == this) {
 			// nothing to do
@@ -135,7 +147,7 @@ public class ZenTypeBoolObject extends ZenType {
 			environment.getOutput().invokeVirtual(Boolean.class, "booleanValue", boolean.class);
 			BOOL.compileCast(position, environment, type);
 		}
-	}
+	}*/
 
 	@Override
 	public String getName() {
@@ -147,7 +159,7 @@ public class ZenTypeBoolObject extends ZenType {
 		return BOOL.getAnyClassName(environment);
 	}
 
-	@Override
+	/*@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
 		if (type == BOOL || type == ZenTypeBoolObject.INSTANCE || type == STRING) {
 			return new ExpressionAs(position, value, type);
@@ -156,7 +168,7 @@ public class ZenTypeBoolObject extends ZenType {
 		} else {
 			return new ExpressionAs(position, value, type);
 		}
-	}
+	}*/
 
 	@Override
 	public Expression defaultValue(ZenPosition position) {

@@ -9,6 +9,7 @@ package stanhebben.zenscript.parser.expression;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.ExpressionConditional;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -29,11 +30,11 @@ public class ParsedExpressionConditional extends ParsedExpression {
 	}
 
 	@Override
-	public IPartialExpression compile(IEnvironmentMethod environment) {
+	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
 		return new ExpressionConditional(
 				getPosition(),
-				condition.compile(environment).eval(environment),
-				ifThen.compile(environment).eval(environment),
-				ifElse.compile(environment).eval(environment));
+				condition.compile(environment, ZenType.BOOL).eval(environment),
+				ifThen.compile(environment, predictedType).eval(environment),
+				ifElse.compile(environment, predictedType).eval(environment));
 	}
 }

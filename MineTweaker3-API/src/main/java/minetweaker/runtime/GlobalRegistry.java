@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import minetweaker.IBracketHandler;
@@ -35,6 +36,7 @@ import stanhebben.zenscript.symbols.SymbolPackage;
 import stanhebben.zenscript.symbols.SymbolType;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeNative;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -105,9 +107,9 @@ public class GlobalRegistry {
 		}
 	}
 	
-	public static IZenSymbol resolveBracket(List<Token> tokens) {
+	public static IZenSymbol resolveBracket(IEnvironmentGlobal environment, List<Token> tokens) {
 		for (IBracketHandler handler : bracketHandlers) {
-			IZenSymbol symbol = handler.resolve(tokens);
+			IZenSymbol symbol = handler.resolve(environment, tokens);
 			if (symbol != null) {
 				return symbol;
 			}
@@ -117,7 +119,7 @@ public class GlobalRegistry {
 	}
 	
 	public static IZenSymbol getStaticFunction(Class cls, String name, Class... arguments) {
-		JavaMethod method = JavaMethod.get(types, cls, name, arguments);
+		IJavaMethod method = JavaMethod.get(types, cls, name, arguments);
 		if (method == null) return null;
 		return new SymbolJavaStaticMethod(method);
 	}
@@ -180,8 +182,8 @@ public class GlobalRegistry {
 		}
 
 		@Override
-		public IZenSymbol getBracketed(List<Token> tokens) {
-			return resolveBracket(tokens);
+		public IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens) {
+			return resolveBracket(environment, tokens);
 		}
 
 		@Override
@@ -265,6 +267,16 @@ public class GlobalRegistry {
 		@Override
 		public void warning(ZenPosition position, String message) {
 			MineTweakerAPI.logWarning(position.toString() + " > " + message);
+		}
+
+		@Override
+		public Set<String> getClassNames() {
+			return classes.keySet();
+		}
+
+		@Override
+		public byte[] getClass(String name) {
+			return classes.get(name);
 		}
 	}
 }

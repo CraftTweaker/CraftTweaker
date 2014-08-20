@@ -59,7 +59,7 @@ public class MCItemBlock implements IBlock {
 
 	@Override
 	public boolean matches(IBlock block) {
-		if (getDefinition() != block.getDefinition()) {
+		/*if (getDefinition() != block.getDefinition()) {
 			System.out.println("Different block");
 			return false;
 		}
@@ -74,11 +74,11 @@ public class MCItemBlock implements IBlock {
 			return false;
 		}
 		
-		return true;
+		return true;*/
 		
-/*		return getDefinition() == block.getDefinition()
+		return getDefinition() == block.getDefinition()
 				&& (getMeta() == OreDictionary.WILDCARD_VALUE || getMeta() == block.getMeta())
-				&& (getTileData() == null || (block.getTileData() != null && block.getTileData().contains(getTileData())));*/
+				&& (getTileData() == null || (block.getTileData() != null && block.getTileData().contains(getTileData())));
 	}
 
 	@Override

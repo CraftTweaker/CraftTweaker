@@ -28,28 +28,26 @@ public interface IRecipeManager {
 	 * 
 	 * @param output recipe output
 	 * @param ingredients recipe ingredients
-	 * @param mirrored indicates if the mirrored recipe should be valid too (optional)
+	 * @param function recipe function (optional)
 	 */
 	@ZenMethod
 	public void addShaped(
 			IItemStack output,
 			IIngredient[][] ingredients,
-			@Optional boolean mirrored);
+			@Optional IRecipeFunction function);
 	
 	/**
-	 * Adds a shaped recipe.
+	 * Adds a mirrored shaped recipe.
 	 * 
 	 * @param output recipe output
 	 * @param ingredients recipe ingredients
 	 * @param function recipe function (optional)
-	 * @param mirrored indicates if the mirrored recipe should be valid too (optional)
 	 */
 	@ZenMethod
-	public void addShaped(
+	public void addShapedMirrored(
 			IItemStack output,
 			IIngredient[][] ingredients,
-			IRecipeFunction function,
-			@Optional boolean mirrored);
+			@Optional IRecipeFunction function);
 	
 	/**
 	 * Adds a shapeless recipe.

@@ -133,39 +133,30 @@ public class Harvester {
 
 		@Override
 		public boolean canBeHarvested(World world, Map<String, Boolean> map, int x, int y, int z) {
-			System.out.println("canBeHarvested start");
-			
 			for (TweakerHarvestable harvestable : harvestables) {
 				if (harvestable.block.matches(MineTweakerMC.getBlock(world, x, y, z)))
 					return true;
 			}
-			
-			System.out.println("canBeHarvested end");
 			
 			return false;
 		}
 
 		@Override
 		public List<ItemStack> getDrops(World world, Random random, Map<String, Boolean> map, int x, int y, int z) {
-			System.out.println("getDrops start");
-			
 			IBlock block = MineTweakerMC.getBlock(world, x, y, z);
 			for (TweakerHarvestable harvestable : harvestables) {
 				if (harvestable.block.matches(block)) {
 					if (harvestable.possibleDrops == null) {
 						Block mcBlock = ((MCBlockDefinition) block.getDefinition()).getInternalBlock();
 						List<ItemStack> result = mcBlock.getBlockDropped(world, x, y, z, block.getMeta(), 0);
-						//return Collections.EMPTY_LIST;
-						System.out.println("getDrops end");
 						return result;
 					} else {
 						List<ItemStack> result = Arrays.asList(MineTweakerMC.getItemStacks(WeightedItemStack.pickRandomDrops(random, harvestable.possibleDrops)));
-						System.out.println("getDrops end");
 						return result;
 					}
 				}
 			}
-			System.out.println("getDrops end");
+			
 			return Collections.EMPTY_LIST;
 		}
 
