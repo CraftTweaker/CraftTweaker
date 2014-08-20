@@ -11,8 +11,8 @@ import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.nbt.NBTTagCompound;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -32,13 +32,8 @@ public class RedNet {
 	
 	@ZenMethod
 	public static void removeCircuit(String name) {
-		if (MFRHacks.redNetCircuits == null) {
-			MineTweakerAPI.logWarning("Cannot remove rednet circuits");
-			return;
-		}
-		
 		List<IRedNetLogicCircuit> toRemove = new ArrayList<IRedNetLogicCircuit>();
-		for (IRedNetLogicCircuit circuit : MFRHacks.redNetCircuits) {
+		for (IRedNetLogicCircuit circuit : MFRRegistry.getRedNetLogicCircuits()) {
 			if (circuit.getUnlocalizedName().equals(name)) {
 				toRemove.add(circuit);
 			}
@@ -127,12 +122,12 @@ public class RedNet {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.redNetCircuits != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.redNetCircuits.remove(circuit);
+			MFRRegistry.getRedNetLogicCircuits().remove(circuit);
 		}
 
 		@Override
@@ -160,7 +155,7 @@ public class RedNet {
 
 		@Override
 		public void apply() {
-			MFRHacks.redNetCircuits.remove(circuit);
+			MFRRegistry.getRedNetLogicCircuits().remove(circuit);
 		}
 
 		@Override
@@ -170,7 +165,7 @@ public class RedNet {
 
 		@Override
 		public void undo() {
-			MFRHacks.redNetCircuits.add(circuit);
+			MFRRegistry.getRedNetLogicCircuits().add(circuit);
 		}
 
 		@Override

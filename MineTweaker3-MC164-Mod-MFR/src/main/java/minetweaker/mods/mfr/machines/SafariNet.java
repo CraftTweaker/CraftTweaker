@@ -10,7 +10,7 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import static minetweaker.mc164.util.MineTweakerPlatformUtils.getLivingEntityClass;
-import minetweaker.mods.mfr.MFRHacks;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -31,9 +31,7 @@ public class SafariNet {
 	@ZenMethod
 	public static void removeBlacklist(String entityClassName) {
 		Class<?> entityClass = getLivingEntityClass(entityClassName);
-		if (MFRHacks.safariNetBlacklist == null) {
-			MineTweakerAPI.logWarning("Cannot remove safari net blacklist entries");
-		} else if (!MFRHacks.safariNetBlacklist.contains(entityClass)) {
+		if (!MFRRegistry.getSafariNetBlacklist().contains(entityClass)) {
 			MineTweakerAPI.logWarning(entityClassName + " is not in the safari net blacklist");
 		} else {
 			MineTweakerAPI.apply(new RemoveBlacklistAction(entityClass));
@@ -58,12 +56,12 @@ public class SafariNet {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.safariNetBlacklist != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.safariNetBlacklist.remove(entityClass);
+			MFRRegistry.getSafariNetBlacklist().remove(entityClass);
 		}
 
 		@Override
@@ -91,7 +89,7 @@ public class SafariNet {
 
 		@Override
 		public void apply() {
-			MFRHacks.safariNetBlacklist.remove(entityClass);
+			MFRRegistry.getSafariNetBlacklist().remove(entityClass);
 		}
 
 		@Override
@@ -101,7 +99,7 @@ public class SafariNet {
 
 		@Override
 		public void undo() {
-			MFRHacks.safariNetBlacklist.add(entityClass);
+			MFRRegistry.getSafariNetBlacklist().add(entityClass);
 		}
 
 		@Override

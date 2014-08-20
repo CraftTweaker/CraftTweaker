@@ -14,9 +14,9 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.mods.mfr.MFRHacks;
+import net.minecraft.util.WeightedRandomItem;
 import powercrystals.core.random.WeightedRandomItemStack;
-import powercrystals.minefactoryreloaded.api.FactoryRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -34,7 +34,7 @@ public class SludgeBoiler {
 	
 	@ZenMethod
 	public static void removeDrop(IIngredient item) {
-		if (MFRHacks.sludgeDrops == null) {
+		if (MFRRegistry.getSludgeDrops() == null) {
 			MineTweakerAPI.logWarning("Cannot remove drops from the sludge boiler");
 		} else {
 			MineTweakerAPI.apply(new RemoveDropAction(item));
@@ -54,21 +54,17 @@ public class SludgeBoiler {
 
 		@Override
 		public void apply() {
-			if (MFRHacks.sludgeDrops == null) {
-				FactoryRegistry.registerSludgeDrop(item.itemWeight, item.getStack());
-			} else {
-				MFRHacks.sludgeDrops.add(item);
-			}
+			MFRRegistry.getSludgeDrops().add(item);
 		}
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.sludgeDrops != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.sludgeDrops.remove(item);
+			MFRRegistry.getSludgeDrops().remove(item);
 		}
 
 		@Override
@@ -95,9 +91,12 @@ public class SludgeBoiler {
 			this.item = item;
 			
 			toRemove = new ArrayList<WeightedRandomItemStack>();
-			for (WeightedRandomItemStack itemStack : MFRHacks.sludgeDrops) {
-				if (item.matches(MineTweakerMC.getIItemStack(itemStack.getStack()))) {
-					toRemove.add(itemStack);
+			for (WeightedRandomItem iStack : MFRRegistry.getSludgeDrops()) {
+				if (iStack instanceof WeightedRandomItemStack) {
+					WeightedRandomItemStack itemStack = (WeightedRandomItemStack) iStack;
+					if (item.matches(MineTweakerMC.getIItemStack(itemStack.getStack()))) {
+						toRemove.add(itemStack);
+					}
 				}
 			}
 		}
@@ -105,7 +104,7 @@ public class SludgeBoiler {
 		@Override
 		public void apply() {
 			for (WeightedRandomItemStack itemStack : toRemove) {
-				MFRHacks.sludgeDrops.remove(itemStack);
+				MFRRegistry.getSludgeDrops().remove(itemStack);
 			}
 		}
 
@@ -117,7 +116,7 @@ public class SludgeBoiler {
 		@Override
 		public void undo() {
 			for (WeightedRandomItemStack item : toRemove) {
-				MFRHacks.sludgeDrops.add(item);
+				MFRRegistry.getSludgeDrops().add(item);
 			}
 		}
 

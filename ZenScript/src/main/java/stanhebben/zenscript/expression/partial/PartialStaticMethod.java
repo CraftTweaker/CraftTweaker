@@ -54,7 +54,7 @@ public class PartialStaticMethod implements IPartialExpression {
 		if (method.accepts(environment, values)) {
 			return new ExpressionCallStatic(position, environment, method, values);
 		} else {
-			environment.error(position, "parameter count mismatch");
+			environment.error(position, "parameter count mismatch: got " + values.length + " arguments");
 			return new ExpressionInvalid(position, method.getReturnType());
 		}
 	}

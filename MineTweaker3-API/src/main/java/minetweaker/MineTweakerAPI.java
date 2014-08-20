@@ -213,6 +213,18 @@ public class MineTweakerAPI {
 	 * @param registryClass 
 	 */
 	public static void registerClassRegistry(Class registryClass) {
+		registerClassRegistry(registryClass, null);
+	}
+	
+	/**
+	 * Register a class registry class. Such class must have (at least) a public
+	 * static method called "getClasses" with accepts a List of classes and which
+	 * stores its classes into that list.
+	 * 
+	 * @param registryClass 
+	 * @param description 
+	 */
+	public static void registerClassRegistry(Class registryClass, String description) {
 		try {
 			Method method = registryClass.getMethod("getClasses", List.class);
 			if ((method.getModifiers() & Modifier.STATIC) == 0) {
@@ -235,6 +247,9 @@ public class MineTweakerAPI {
 
 					MineTweakerAPI.registerClass(cls);
 				}
+				
+				if (description != null)
+					System.out.println("Loaded class registry: " + description);
 			}
 		} catch (NoSuchMethodException ex) {
 
@@ -253,8 +268,20 @@ public class MineTweakerAPI {
 	 * @return true if registration was successful
 	 */
 	public static boolean registerClassRegistry(String className) {
+		return registerClassRegistry(className, null);
+	}
+	
+	/**
+	 * Registers a class registry. Will attempt to resolve the given class
+	 * name. Does nothing if the class could not be loaded.
+	 * 
+	 * @param className class name to be loaded
+	 * @param description
+	 * @return true if registration was successful
+	 */
+	public static boolean registerClassRegistry(String className, String description) {
 		try {
-			registerClassRegistry(Class.forName(className));
+			registerClassRegistry(Class.forName(className), description);
 			return true;
 		} catch (ClassNotFoundException ex) {
 			return false;

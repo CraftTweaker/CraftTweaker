@@ -53,7 +53,15 @@ public class MineTweakerMod {
 	
 	private static final String[] REGISTRIES = {
 		"minetweaker.mods.ic2.ClassRegistry",
-		"minetweaker.mods.nei.ClassRegistry"
+		"minetweaker.mods.nei.ClassRegistry",
+		"minetweaker.mods.mfr.ClassRegistry",
+		"minetweaker.mods.gregtech.ClassRegistry"
+	};
+	private static final String[] REGISTRY_DESCRIPTIONS = {
+		"IC2 mod support",
+		"NEI mod support",
+		"MFR mod support",
+		"GregTech mod support"
 	};
 	
 	static {
@@ -100,8 +108,8 @@ public class MineTweakerMod {
 	public void onPostInit(FMLPostInitializationEvent ev) {
 		MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
 		
-		for (String registry : REGISTRIES) {
-			MineTweakerAPI.registerClassRegistry(registry);
+		for (int i = 0; i < REGISTRIES.length; i++) {
+			MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
 		}
 		
 		FuelTweaker.INSTANCE.register();

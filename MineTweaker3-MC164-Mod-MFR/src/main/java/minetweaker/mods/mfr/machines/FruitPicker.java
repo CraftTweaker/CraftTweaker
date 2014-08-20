@@ -20,9 +20,9 @@ import minetweaker.api.block.IBlock;
 import minetweaker.api.block.IBlockPattern;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -48,11 +48,7 @@ public class FruitPicker {
 	
 	@ZenMethod
 	public static void removeFruit(IBlockPattern block) {
-		if (MFRHacks.fruitBlocks == null) {
-			MineTweakerAPI.logWarning("Could not remove MFR Fruit Picker fruits");
-		} else {
-			MineTweakerAPI.apply(new RemoveFruitAction(block));
-		}
+		MineTweakerAPI.apply(new RemoveFruitAction(block));
 	}
 	
 	@ZenMethod
@@ -62,7 +58,7 @@ public class FruitPicker {
 	
 	@ZenMethod
 	public static void removeLog(IBlockPattern block) {
-		if (MFRHacks.fruitLogBlocks == null) {
+		if (MFRRegistry.getFruitLogBlockIds() == null) {
 			MineTweakerAPI.logWarning("Cannot remove MFR Fruit Picker Logs");
 		} else {
 			MineTweakerAPI.apply(new RemoveLogAction(block));
@@ -150,7 +146,7 @@ public class FruitPicker {
 		
 		@Override
 		public void apply() {
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
+			Map<Integer, IFactoryFruit> fruits = MFRRegistry.getFruits();
 			for (IBlock partial : fruit.block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
 				if (fruits != null && fruits.containsKey(blockId)) {
@@ -172,12 +168,12 @@ public class FruitPicker {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.fruitBlocks != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
+			Map<Integer, IFactoryFruit> fruits = MFRRegistry.getFruits();
 			for (IBlock partial : fruit.block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
 				IFactoryFruit factoryFruit = fruits.get(blockId);
@@ -210,7 +206,7 @@ public class FruitPicker {
 		public RemoveFruitAction(IBlockPattern block) {
 			this.block = block;
 			
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
+			Map<Integer, IFactoryFruit> fruits = MFRRegistry.getFruits();
 			removed = new HashMap<Integer, IFactoryFruit>();
 			for (IBlock partial : block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
@@ -222,7 +218,7 @@ public class FruitPicker {
 		
 		@Override
 		public void apply() {
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
+			Map<Integer, IFactoryFruit> fruits = MFRRegistry.getFruits();
 			for (Integer key : removed.keySet()) {
 				fruits.remove(key);
 			}
@@ -235,7 +231,7 @@ public class FruitPicker {
 
 		@Override
 		public void undo() {
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
+			Map<Integer, IFactoryFruit> fruits = MFRRegistry.getFruits();
 			for (Map.Entry<Integer, IFactoryFruit> restore : removed.entrySet()) {
 				fruits.put(restore.getKey(), restore.getValue());
 			}
@@ -266,7 +262,7 @@ public class FruitPicker {
 			
 			for (IBlock partial : block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
-				if (MFRHacks.fruitLogBlocks == null || !MFRHacks.fruitLogBlocks.contains(blockId)) {
+				if (!MFRRegistry.getFruitLogBlockIds().contains(blockId)) {
 					if (!addedLogs.contains(blockId))
 						addedLogs.add(blockId);
 				}
@@ -282,13 +278,13 @@ public class FruitPicker {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.fruitLogBlocks != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
 			for (int log : addedLogs) {
-				MFRHacks.fruitLogBlocks.remove(log);
+				MFRRegistry.getFruitLogBlockIds().remove(log);
 			}
 		}
 
@@ -317,7 +313,7 @@ public class FruitPicker {
 			
 			for (IBlock partial : block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
-				if (MFRHacks.fruitLogBlocks.contains(blockId)) {
+				if (MFRRegistry.getFruitLogBlockIds().contains(blockId)) {
 					if (!removedLogs.contains(blockId))
 						removedLogs.add(blockId);
 				}
@@ -327,7 +323,7 @@ public class FruitPicker {
 		@Override
 		public void apply() {
 			for (int log : removedLogs) {
-				MFRHacks.fruitLogBlocks.remove(log);
+				MFRRegistry.getFruitLogBlockIds().remove(log);
 			}
 		}
 

@@ -3,10 +3,8 @@ package minetweaker.mods.mfr.machines;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mods.mfr.MFRHacks;
 import static minetweaker.mc164.util.MineTweakerPlatformUtils.getLivingEntityClass;
-import net.minecraft.entity.EntityList;
-import powercrystals.minefactoryreloaded.api.FactoryRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -37,24 +35,24 @@ public class AutoSpawner {
 
 		public AutoSpawnerAddBlacklistAction(Class<?> entityClass) {
 			this.entityClass = entityClass;
-			existed = MFRHacks.autoSpawnerBlacklist == null ? false : MFRHacks.autoSpawnerBlacklist.contains(entityClass);
+			existed = MFRRegistry.getAutoSpawnerClassBlacklist().contains(entityClass);
 		}
 
 		@Override
 		public void apply() {
 			if (!existed)
-				FactoryRegistry.registerAutoSpawnerBlacklist((String) EntityList.classToStringMapping.get(entityClass));
+				MFRRegistry.registerAutoSpawnerBlacklistClass(entityClass);
 		}
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.autoSpawnerBlacklist != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
 			if (!existed)
-				MFRHacks.autoSpawnerBlacklist.remove(entityClass);
+				MFRRegistry.getAutoSpawnerClassBlacklist().remove(entityClass);
 		}
 
 		@Override
@@ -79,13 +77,13 @@ public class AutoSpawner {
 
 		public AutoSpawnerRemoveBlacklistAction(Class<?> entityClass) {
 			this.entityClass = entityClass;
-			existed = MFRHacks.autoSpawnerBlacklist.contains(entityClass);
+			existed = MFRRegistry.getAutoSpawnerClassBlacklist().contains(entityClass);
 		}
 
 		@Override
 		public void apply() {
 			if (existed)
-				MFRHacks.autoSpawnerBlacklist.remove(entityClass);
+				MFRRegistry.getAutoSpawnerClassBlacklist().remove(entityClass);
 		}
 
 		@Override
@@ -95,7 +93,8 @@ public class AutoSpawner {
 
 		@Override
 		public void undo() {
-			if (existed) MFRHacks.autoSpawnerBlacklist.add(entityClass);
+			if (existed)
+				MFRRegistry.getAutoSpawnerClassBlacklist().add(entityClass);
 		}
 
 		@Override

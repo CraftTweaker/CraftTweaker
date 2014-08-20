@@ -14,9 +14,9 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.mods.mfr.MFRHacks;
 import static minetweaker.mc164.util.MineTweakerPlatformUtils.getLivingEntityClass;
 import net.minecraft.item.ItemStack;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -38,20 +38,16 @@ public class Breeder {
 	public static void removeFood(String entityClassName, IIngredient item) {
 		Class<?> entityClass = getLivingEntityClass(entityClassName);
 		
-		if (MFRHacks.breederFoods == null) {
-			MineTweakerAPI.logWarning("Breeder.removeFood is unavailable");
-		} else {
-			List<Integer> toRemove = new ArrayList<Integer>();
-			List<ItemStack> foods = MFRHacks.breederFoods.get(entityClass);
+		List<Integer> toRemove = new ArrayList<Integer>();
+		List<ItemStack> foods = MFRRegistry.getBreederFoods().get(entityClass);
 
-			for (int i = foods.size() - 1; i >= 0; i--) {
-				if (item.matches(MineTweakerMC.getIItemStack(foods.get(i)))) {
-					toRemove.add(i);
-				}
+		for (int i = foods.size() - 1; i >= 0; i--) {
+			if (item.matches(MineTweakerMC.getIItemStack(foods.get(i)))) {
+				toRemove.add(i);
 			}
-			for (int i : toRemove) {
-				MineTweakerAPI.apply(new BreederRemoveFoodAction(entityClass, i));
-			}
+		}
+		for (int i : toRemove) {
+			MineTweakerAPI.apply(new BreederRemoveFoodAction(entityClass, i));
 		}
 	}
 	
@@ -75,12 +71,12 @@ public class Breeder {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.breederFoods != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			List<ItemStack> list = MFRHacks.breederFoods.get(entityClass);
+			List<ItemStack> list = MFRRegistry.getBreederFoods().get(entityClass);
 			list.remove(list.size() - 1);
 		}
 
@@ -108,12 +104,12 @@ public class Breeder {
 		public BreederRemoveFoodAction(Class<?> entityClass, int index) {
 			this.entityClass = entityClass;
 			this.index = index;
-			item = MFRHacks.breederFoods.get(entityClass).get(index);
+			item = MFRRegistry.getBreederFoods().get(entityClass).get(index);
 		}
 
 		@Override
 		public void apply() {
-			MFRHacks.breederFoods.get(entityClass).remove(index);
+			MFRRegistry.getBreederFoods().get(entityClass).remove(index);
 		}
 
 		@Override
@@ -123,7 +119,7 @@ public class Breeder {
 
 		@Override
 		public void undo() {
-			MFRHacks.breederFoods.get(entityClass).add(index, item);
+			MFRRegistry.getBreederFoods().get(entityClass).add(index, item);
 		}
 
 		@Override

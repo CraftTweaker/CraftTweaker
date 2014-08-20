@@ -18,10 +18,10 @@ import minetweaker.api.block.IBlockPattern;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
 import stanhebben.zenscript.annotations.Optional;
@@ -67,11 +67,7 @@ public class Planter {
 	
 	@ZenMethod
 	public static void removePlantable(IIngredient seed) {
-		if (MFRHacks.plantables == null) {
-			MineTweakerAPI.logWarning("Could not remove MFR Planter plantable");
-		} else {
-			MineTweakerAPI.apply(new RemovePlantableAction(seed));
-		}
+		MineTweakerAPI.apply(new RemovePlantableAction(seed));
 	}
 	
 	// #####################
@@ -178,33 +174,29 @@ public class Planter {
 		public void apply() {
 			for (IItemStack item : plantable.seed.getItems()) {
 				int itemId = MineTweakerMC.getItemStack(item).itemID;
-				if (MFRHacks.plantables == null) {
-					FactoryRegistry.registerPlantable(new TweakerPlantablePartial(itemId, plantable));
-				} else {
-					if (MFRHacks.plantables.containsKey(itemId)) {
-						IFactoryPlantable existing = MFRHacks.plantables.get(itemId);
-						if (existing instanceof TweakerPlantablePartial) {
-							((TweakerPlantablePartial) existing).plantables.add(plantable);
-						} else {
-							MineTweakerAPI.logError("Existing non-MineTweaker plantable already exists for seed ID " + itemId);
-						}
+				if (MFRRegistry.getPlantables().containsKey(itemId)) {
+					IFactoryPlantable existing = MFRRegistry.getPlantables().get(itemId);
+					if (existing instanceof TweakerPlantablePartial) {
+						((TweakerPlantablePartial) existing).plantables.add(plantable);
 					} else {
-						FactoryRegistry.registerPlantable(new TweakerPlantablePartial(itemId, plantable));
+						MineTweakerAPI.logError("Existing non-MineTweaker plantable already exists for seed ID " + itemId);
 					}
+				} else {
+					FactoryRegistry.registerPlantable(new TweakerPlantablePartial(itemId, plantable));
 				}
 			}
 		}
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.plantables != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
 			for (IItemStack item : plantable.seed.getItems()) {
 				int itemId = MineTweakerMC.getItemStack(item).itemID;
-				IFactoryPlantable existing = MFRHacks.plantables.get(itemId);
+				IFactoryPlantable existing = MFRRegistry.getPlantables().get(itemId);
 				if (existing instanceof TweakerPlantablePartial) {
 					((TweakerPlantablePartial) existing).plantables.remove(plantable);
 				}
@@ -238,8 +230,8 @@ public class Planter {
 			for (IItemStack item : seed.getItems()) {
 				int itemId = MineTweakerMC.getItemStack(item).itemID;
 				if (!removed.containsKey(itemId)) {
-					if (MFRHacks.plantables.containsKey(itemId)) {
-						removed.put(itemId, MFRHacks.plantables.get(itemId));
+					if (MFRRegistry.getPlantables().containsKey(itemId)) {
+						removed.put(itemId, MFRRegistry.getPlantables().get(itemId));
 					}
 				}
 			}
@@ -248,7 +240,7 @@ public class Planter {
 		@Override
 		public void apply() {
 			for (Integer seedId : removed.keySet()) {
-				MFRHacks.plantables.remove(seedId);
+				MFRRegistry.getPlantables().remove(seedId);
 			}
 		}
 
@@ -260,7 +252,7 @@ public class Planter {
 		@Override
 		public void undo() {
 			for (Map.Entry<Integer, IFactoryPlantable> removedEntry : removed.entrySet()) {
-				MFRHacks.plantables.put(removedEntry.getKey(), removedEntry.getValue());
+				MFRRegistry.getPlantables().put(removedEntry.getKey(), removedEntry.getValue());
 			}
 		}
 

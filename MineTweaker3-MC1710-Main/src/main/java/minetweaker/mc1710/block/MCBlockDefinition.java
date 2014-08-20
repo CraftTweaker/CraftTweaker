@@ -19,6 +19,10 @@ public class MCBlockDefinition implements IBlockDefinition {
 	public MCBlockDefinition(Block block) {
 		this.block = block;
 	}
+	
+	public Block getInternalBlock() {
+		return block;
+	}
 
 	@Override
 	public String getId() {

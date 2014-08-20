@@ -11,14 +11,15 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.ZenTokener;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.ExpressionInt;
-import stanhebben.zenscript.expression.ExpressionJavaCallStatic;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.natives.JavaMethod;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -35,14 +36,14 @@ public class IC2BracketHandler implements IBracketHandler {
 		return getIItemStack(stack);
 	}
 	
-	private final JavaMethod method;
+	private final IJavaMethod method;
 	
 	public IC2BracketHandler() {
 		method = MineTweakerAPI.getJavaMethod(IC2BracketHandler.class, "getItem", String.class, int.class);
 	}
 	
 	@Override
-	public IZenSymbol resolve(List<Token> tokens) {
+	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
 		if (tokens.size() >= 5) {
 			if (tokens.get(0).getValue().equals("ic2")
 					&& tokens.get(1).getValue().equals("-")
@@ -64,7 +65,7 @@ public class IC2BracketHandler implements IBracketHandler {
 					MineTweakerAPI.logError("Not a valid IC2 item: " + name);
 					return null;
 				} else {
-					return new ItemReferenceSymbol(name, meta);
+					return new ItemReferenceSymbol(environment, name, meta);
 				}
 			} else {
 				return null;
@@ -79,18 +80,21 @@ public class IC2BracketHandler implements IBracketHandler {
 	// #############################
 	
 	private class ItemReferenceSymbol implements IZenSymbol {
+		private final IEnvironmentGlobal environment;
 		private final String name;
 		private final int meta;
 		
-		public ItemReferenceSymbol(String name, int meta) {
+		public ItemReferenceSymbol(IEnvironmentGlobal environment, String name, int meta) {
+			this.environment = environment;
 			this.name = name;
 			this.meta = meta;
 		}
 		
 		@Override
 		public IPartialExpression instance(ZenPosition position) {
-			return new ExpressionJavaCallStatic(
+			return new ExpressionCallStatic(
 					position,
+					environment,
 					method,
 					new ExpressionString(position, name),
 					new ExpressionInt(position, meta, ZenType.INT));

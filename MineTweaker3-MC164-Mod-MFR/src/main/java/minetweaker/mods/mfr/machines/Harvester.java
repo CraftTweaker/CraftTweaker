@@ -22,13 +22,12 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.mc164.block.MCBlockDefinition;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -64,11 +63,7 @@ public class Harvester {
 	
 	@ZenMethod
 	public static void removeHarvestable(IBlockPattern block) {
-		if (MFRHacks.harvestables == null) {
-			MineTweakerAPI.logWarning("Could not remove MFR Harvester harvestable");
-		} else {
-			MineTweakerAPI.apply(new RemoveHarvestableAction(block));
-		}
+		MineTweakerAPI.apply(new RemoveHarvestableAction(block));
 	}
 	
 	// #####################
@@ -184,7 +179,7 @@ public class Harvester {
 		
 		@Override
 		public void apply() {
-			Map<Integer, IFactoryHarvestable> harvestables = MFRHacks.harvestables;
+			Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 			for (IBlock partial : harvestable.block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
 				if (harvestable != null && harvestables.containsKey(blockId)) {
@@ -207,12 +202,12 @@ public class Harvester {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.fruitBlocks != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			Map<Integer, IFactoryHarvestable> harvestables = MFRHacks.harvestables;
+			Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 			for (IBlock partial : harvestable.block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
 				IFactoryHarvestable factoryHarvestable = harvestables.get(blockId);
@@ -240,26 +235,26 @@ public class Harvester {
 	
 	private static class RemoveHarvestableAction implements IUndoableAction {
 		private final IBlockPattern block;
-		private final Map<Integer, IFactoryFruit> removed;
+		private final Map<Integer, IFactoryHarvestable> removed;
 		
 		public RemoveHarvestableAction(IBlockPattern block) {
 			this.block = block;
 			
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
-			removed = new HashMap<Integer, IFactoryFruit>();
+			Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+			removed = new HashMap<Integer, IFactoryHarvestable>();
 			for (IBlock partial : block.getBlocks()) {
 				int blockId = MineTweakerMC.getBlockId(partial.getDefinition());
-				if (fruits.containsKey(blockId)) {
-					removed.put(blockId, fruits.get(blockId));
+				if (harvestables.containsKey(blockId)) {
+					removed.put(blockId, harvestables.get(blockId));
 				}
 			}
 		}
 		
 		@Override
 		public void apply() {
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
+			Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 			for (Integer key : removed.keySet()) {
-				fruits.remove(key);
+				harvestables.remove(key);
 			}
 		}
 		
@@ -270,9 +265,9 @@ public class Harvester {
 
 		@Override
 		public void undo() {
-			Map<Integer, IFactoryFruit> fruits = MFRHacks.fruitBlocks;
-			for (Map.Entry<Integer, IFactoryFruit> restore : removed.entrySet()) {
-				fruits.put(restore.getKey(), restore.getValue());
+			Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+			for (Map.Entry<Integer, IFactoryHarvestable> restore : removed.entrySet()) {
+				harvestables.put(restore.getKey(), restore.getValue());
 			}
 		}
 

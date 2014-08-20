@@ -138,6 +138,23 @@ public class MineTweakerHacks {
 		}
 	}
 	
+	public static <T> T getPrivateStaticObject(Class<?> cls, String name) {
+		try {
+			Field field = cls.getDeclaredField(name);
+			field.setAccessible(true);
+			return (T) field.get(null);
+		} catch (NoSuchFieldException ex) {
+			
+		} catch (SecurityException ex) {
+			
+		} catch (IllegalAccessException ex) {
+			
+		}
+		
+		return null;
+	}
+	
+	
 	// #######################
 	// ### Private Methods ###
 	// #######################

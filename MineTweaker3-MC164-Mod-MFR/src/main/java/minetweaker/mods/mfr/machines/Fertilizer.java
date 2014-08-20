@@ -12,11 +12,11 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
@@ -107,7 +107,7 @@ public class Fertilizer {
 			this.type = type;
 			this.method = method;
 			
-			old = MFRHacks.fertilizables == null ? null : MFRHacks.fertilizables.get(MineTweakerMC.getItemStack(block).itemID);
+			old = MFRRegistry.getFertilizables().get(MineTweakerMC.getItemStack(block).itemID);
 		}
 
 		@Override
@@ -117,13 +117,13 @@ public class Fertilizer {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.fertilizables != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
 			if (old == null) {
-				MFRHacks.fertilizables.remove(MineTweakerMC.getItemStack(block).itemID);
+				MFRRegistry.getFertilizables().remove(MineTweakerMC.getItemStack(block).itemID);
 			} else {
 				FactoryRegistry.registerFertilizable(old);
 			}
@@ -159,7 +159,7 @@ public class Fertilizer {
 			this.item = item;
 			this.type = type;
 
-			old = MFRHacks.fertilizers == null ? null : MFRHacks.fertilizers.get(MineTweakerMC.getItemStack(item).itemID);
+			old = MFRRegistry.getFertilizers().get(MineTweakerMC.getItemStack(item).itemID);
 		}
 
 		@Override
@@ -169,13 +169,13 @@ public class Fertilizer {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.fertilizers != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
 			if (old == null) {
-				MFRHacks.fertilizers.remove(MineTweakerMC.getItemStack(item).itemID);
+				MFRRegistry.getFertilizers().remove(MineTweakerMC.getItemStack(item).itemID);
 			} else {
 				FactoryRegistry.registerFertilizer(old);
 			}
@@ -207,12 +207,12 @@ public class Fertilizer {
 
 		public FertilizerRemoveFertilizableAction(IItemStack item) {
 			this.item = item;
-			old = MFRHacks.fertilizables.get(MineTweakerMC.getItemStack(item).itemID);
+			old = MFRRegistry.getFertilizables().get(MineTweakerMC.getItemStack(item).itemID);
 		}
 
 		@Override
 		public void apply() {
-			MFRHacks.fertilizables.remove(MineTweakerMC.getItemStack(item).itemID);
+			MFRRegistry.getFertilizables().remove(MineTweakerMC.getItemStack(item).itemID);
 		}
 
 		@Override
@@ -247,12 +247,12 @@ public class Fertilizer {
 
 		public FertilizerRemoveFertilizerAction(IItemStack item) {
 			this.item = item;
-			this.old = MFRHacks.fertilizers.get(MineTweakerMC.getItemStack(item).itemID);
+			this.old = MFRRegistry.getFertilizers().get(MineTweakerMC.getItemStack(item).itemID);
 		}
 
 		@Override
 		public void apply() {
-			MFRHacks.fertilizers.remove(MineTweakerMC.getItemStack(item).itemID);
+			MFRRegistry.getFertilizers().remove(MineTweakerMC.getItemStack(item).itemID);
 		}
 
 		@Override

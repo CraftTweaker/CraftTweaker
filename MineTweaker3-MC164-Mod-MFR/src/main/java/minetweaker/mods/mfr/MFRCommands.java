@@ -19,7 +19,9 @@ import minetweaker.util.IEventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomItem;
 import powercrystals.core.random.WeightedRandomItemStack;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizer;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 
@@ -54,87 +56,69 @@ public class MFRCommands {
 							player.sendChat("Please specify a mfr command");
 						} else {
 							if (arguments[0].equals("fertilizers")) {
-								if (MFRHacks.fertilizers == null) {
-									player.sendChat("Could not load the fertilizer list");
-								} else {
-									MineTweakerAPI.logCommand("Fertilizers:");
+								MineTweakerAPI.logCommand("Fertilizers:");
 
-									for (Map.Entry<Integer, IFactoryFertilizer> fertilizer : MFRHacks.fertilizers.entrySet()) {
-										IItemStack item = MineTweakerMC.getItemStack(Item.itemsList[fertilizer.getKey()], 1, 0);
-										String message = "- " + item + " (" + item.getDisplayName() + ")";
-										MineTweakerAPI.logCommand(message);
-									}
-
-									player.sendChat("Fertilizer list generated; see minetweaker.log");
+								for (Map.Entry<Integer, IFactoryFertilizer> fertilizer : MFRRegistry.getFertilizers().entrySet()) {
+									IItemStack item = MineTweakerMC.getItemStack(Item.itemsList[fertilizer.getKey()], 1, 0);
+									String message = "- " + item + " (" + item.getDisplayName() + ")";
+									MineTweakerAPI.logCommand(message);
 								}
+
+								player.sendChat("Fertilizer list generated; see minetweaker.log");
 							} else if (arguments[0].equals("fruits")) {
-								if (MFRHacks.fruitBlocks == null) {
-									player.sendChat("Could not load the fruit blocks list");
-								} else {
-									MineTweakerAPI.logCommand("Fruit Blocks:");
+								MineTweakerAPI.logCommand("Fruit Blocks:");
 
-									for (Map.Entry<Integer, IFactoryFruit> fruitBlock : MFRHacks.fruitBlocks.entrySet()) {
-										Block block = Block.blocksList[fruitBlock.getKey()];
-										String message = "- " + block.getUnlocalizedName() + " (" + block.getLocalizedName() + ")";
-										MineTweakerAPI.logCommand(message);
-									}
-
-									player.sendChat("Fluit blocks list generated; see minetweaker.log");
+								for (Map.Entry<Integer, IFactoryFruit> fruitBlock : MFRRegistry.getFruits().entrySet()) {
+									Block block = Block.blocksList[fruitBlock.getKey()];
+									String message = "- " + block.getUnlocalizedName() + " (" + block.getLocalizedName() + ")";
+									MineTweakerAPI.logCommand(message);
 								}
+
+								player.sendChat("Fluit blocks list generated; see minetweaker.log");
 							} else if (arguments[0].equals("laserores")) {
-								if (MFRHacks.laserOres == null) {
-									player.sendChat("Could not load the laser ores list");
-								} else {
-									MineTweakerAPI.logCommand("Laser ores:");
+								MineTweakerAPI.logCommand("Laser ores:");
 
-									for (WeightedRandomItemStack randomItem : MFRHacks.laserOres) {
-										IItemStack item = MineTweakerMC.getIItemStack(randomItem.getStack());
-										MineTweakerAPI.logCommand("    (" + randomItem.itemWeight + "): " + item + " (" + item.getDisplayName() + ")");
+								for (WeightedRandomItem randomItem : MFRRegistry.getLaserOres()) {
+									if (randomItem instanceof WeightedRandomItemStack) {
+										WeightedRandomItemStack randomItemStack = (WeightedRandomItemStack) randomItem;
+										IItemStack item = MineTweakerMC.getIItemStack(randomItemStack.getStack());
+										MineTweakerAPI.logCommand("    (" + randomItemStack.itemWeight + "): " + item + " (" + item.getDisplayName() + ")");
 									}
-
-									player.sendChat("Laser ore list generated; see minetweaker.log");
 								}
 
-								if (MFRHacks.laserPreferredOres == null) {
-									player.sendChat("Could not load the laser preferred ores list");
-								} else {
-									for (int i = 0; i < MineTweakerAPI.COLOR_NAMES.length; i++) {
-										if (MFRHacks.laserPreferredOres.containsKey(i) && !MFRHacks.laserPreferredOres.get(i).isEmpty()) {
-											MineTweakerAPI.logCommand("Laser affinity " + i + " (" + MineTweakerAPI.COLOR_NAMES[i] + "):");
+								player.sendChat("Laser ore list generated; see minetweaker.log");
 
-											for (ItemStack item : MFRHacks.laserPreferredOres.get(i)) {
-												IItemStack iitem = MineTweakerMC.getIItemStack(item);
-												MineTweakerAPI.logCommand("    " + iitem + " (" + iitem.getDisplayName() + ")");
-											}
+								for (int i = 0; i < MineTweakerAPI.COLOR_NAMES.length; i++) {
+									if (MFRRegistry.getLaserPreferredOres(i) != null && !MFRRegistry.getLaserPreferredOres(i).isEmpty()) {
+										MineTweakerAPI.logCommand("Laser affinity " + i + " (" + MineTweakerAPI.COLOR_NAMES[i] + "):");
+
+										for (ItemStack item : MFRRegistry.getLaserPreferredOres(i)) {
+											IItemStack iitem = MineTweakerMC.getIItemStack(item);
+											MineTweakerAPI.logCommand("    " + iitem + " (" + iitem.getDisplayName() + ")");
 										}
 									}
-
-									player.sendChat("Laser preferred ore list generated; see minetweaker.log");
 								}
+
+								player.sendChat("Laser preferred ore list generated; see minetweaker.log");
 							} else if (arguments[0].equals("rubbertreebiomes")) {
-								if (MFRHacks.rubberTreeBiomes == null) {
-									player.sendChat("Could not load the rubber tree biomes");
-								} else {
-									MineTweakerAPI.logCommand("Rubber tree biomes:");
-									for (String biome : MFRHacks.rubberTreeBiomes) {
-										MineTweakerAPI.logCommand("    " + biome);
-									}
-
-									player.sendChat("Rubber tree biome list generated; see minetweaker.log");
+								MineTweakerAPI.logCommand("Rubber tree biomes:");
+								for (String biome : MFRRegistry.getRubberTreeBiomes()) {
+									MineTweakerAPI.logCommand("    " + biome);
 								}
-							} else if (arguments[0].equals("sludgedrops")) {
-								if (MFRHacks.sludgeDrops == null) {
-									player.sendChat("Could not load sludge drops");
-								} else {
-									MineTweakerAPI.logCommand("Sludge drops:");
 
-									for (WeightedRandomItemStack randomItem : MFRHacks.sludgeDrops) {
+								player.sendChat("Rubber tree biome list generated; see minetweaker.log");
+							} else if (arguments[0].equals("sludgedrops")) {
+								MineTweakerAPI.logCommand("Sludge drops:");
+
+								for (WeightedRandomItem randItem : MFRRegistry.getSludgeDrops()) {
+									if (randItem instanceof WeightedRandomItemStack) {
+										WeightedRandomItemStack randomItem = (WeightedRandomItemStack) randItem;
 										IItemStack item = MineTweakerMC.getIItemStack(randomItem.getStack());
 										MineTweakerAPI.logCommand("    (" + randomItem.itemWeight + "): " + item + " (" + item.getDisplayName() + ")");
 									}
-
-									player.sendChat("Sludge drop list generated; see minetweaker.log");
 								}
+
+								player.sendChat("Sludge drop list generated; see minetweaker.log");
 							} else {
 								player.sendChat("Unknown mfr command: " + arguments[1]);
 							}

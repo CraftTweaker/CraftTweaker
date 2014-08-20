@@ -376,6 +376,16 @@ public class MineTweakerMC {
 	}
 	
 	/**
+	 * Retrieves the block from an item stack.
+	 * 
+	 * @param itemStack
+	 * @return 
+	 */
+	public static Block getBlock(IItemStack itemStack) {
+		return ((MCBlockDefinition) itemStack.asBlock().getDefinition()).getInternalBlock();
+	}
+	
+	/**
 	 * Retrieves the internal fluid stack of the given stack.
 	 * 
 	 * @param stack MT liquid stack

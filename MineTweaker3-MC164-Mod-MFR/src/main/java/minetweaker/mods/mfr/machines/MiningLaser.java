@@ -15,9 +15,10 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomItem;
 import powercrystals.core.random.WeightedRandomItemStack;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -62,21 +63,17 @@ public class MiningLaser {
 
 		@Override
 		public void apply() {
-			if (MFRHacks.laserOres == null) {
-				FactoryRegistry.registerLaserOre(item.itemWeight, item.getStack());
-			} else {
-				MFRHacks.laserOres.add(item);
-			}
+			MFRRegistry.getLaserOres().add(item);
 		}
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.laserOres != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.laserOres.remove(item);
+			MFRRegistry.getLaserOres().remove(item);
 		}
 
 		@Override
@@ -103,16 +100,19 @@ public class MiningLaser {
 			this.ingredient = ingredient;
 			removed = new ArrayList<WeightedRandomItemStack>();
 			
-			for (WeightedRandomItemStack stack : MFRHacks.laserOres) {
-				if (ingredient.matches(MineTweakerMC.getIItemStack(stack.getStack()))) {
-					removed.add(stack);
+			for (WeightedRandomItem iStack : MFRRegistry.getLaserOres()) {
+				if (iStack instanceof WeightedRandomItemStack) {
+					WeightedRandomItemStack stack = (WeightedRandomItemStack) iStack;
+					if (ingredient.matches(MineTweakerMC.getIItemStack(stack.getStack()))) {
+						removed.add(stack);
+					}
 				}
 			}
 		}
 
 		@Override
 		public void apply() {
-			MFRHacks.laserOres.removeAll(removed);
+			MFRRegistry.getLaserOres().removeAll(removed);
 		}
 
 		@Override
@@ -122,7 +122,7 @@ public class MiningLaser {
 
 		@Override
 		public void undo() {
-			MFRHacks.laserOres.addAll(removed);
+			MFRRegistry.getLaserOres().addAll(removed);
 		}
 
 		@Override
@@ -159,14 +159,14 @@ public class MiningLaser {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.laserPreferredOres != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
 			for (IItemStack item : ore.getItems()) {
 				ItemStack stack = MineTweakerMC.getItemStack(item);
-				MFRHacks.laserPreferredOres.get(stack.itemID).remove(stack);
+				MFRRegistry.getLaserPreferredOres(color).remove(stack);
 			}
 		}
 
@@ -196,7 +196,7 @@ public class MiningLaser {
 			this.ore = ore;
 			
 			toRemove = new ArrayList<ItemStack>();
-			for (ItemStack item : MFRHacks.laserPreferredOres.get(color)) {
+			for (ItemStack item : MFRRegistry.getLaserPreferredOres(color)) {
 				if (ore.matches(MineTweakerMC.getIItemStack(item))) {
 					toRemove.add(item);
 				}
@@ -205,7 +205,7 @@ public class MiningLaser {
 		
 		@Override
 		public void apply() {
-			MFRHacks.laserPreferredOres.get(color).removeAll(toRemove);
+			MFRRegistry.getLaserPreferredOres(color).removeAll(toRemove);
 		}
 
 		@Override
@@ -215,7 +215,7 @@ public class MiningLaser {
 
 		@Override
 		public void undo() {
-			MFRHacks.laserPreferredOres.get(color).addAll(toRemove);
+			MFRRegistry.getLaserPreferredOres(color).addAll(toRemove);
 		}
 
 		@Override

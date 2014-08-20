@@ -9,7 +9,7 @@ package minetweaker.mods.mfr.machines;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
-import minetweaker.mods.mfr.MFRHacks;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -28,11 +28,7 @@ public class RubberTree {
 	
 	@ZenMethod
 	public static void removeBiome(String biome) {
-		if (MFRHacks.rubberTreeBiomes == null) {
-			MineTweakerAPI.logWarning("Cannot remove rubber tree biomes");
-		} else {
-			MineTweakerAPI.apply(new RemoveBiomeAction(biome));
-		}
+		MineTweakerAPI.apply(new RemoveBiomeAction(biome));
 	}
 	
 	// ######################
@@ -53,12 +49,12 @@ public class RubberTree {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.rubberTreeBiomes != null;
+			return MFRRegistry.getRubberTreeBiomes() != null;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.rubberTreeBiomes.remove(biome);
+			MFRRegistry.getRubberTreeBiomes().remove(biome);
 		}
 
 		@Override
@@ -86,7 +82,7 @@ public class RubberTree {
 
 		@Override
 		public void apply() {
-			MFRHacks.rubberTreeBiomes.remove(biome);
+			MFRRegistry.getRubberTreeBiomes().remove(biome);
 		}
 
 		@Override
@@ -96,7 +92,7 @@ public class RubberTree {
 
 		@Override
 		public void undo() {
-			MFRHacks.rubberTreeBiomes.add(biome);
+			MFRRegistry.getRubberTreeBiomes().add(biome);
 		}
 
 		@Override

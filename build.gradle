@@ -30,12 +30,16 @@ task assembleMC1710(type: Jar, dependsOn: [\
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1710-Main:build',
 		':MineTweaker3-MC1710-Mod-IC2:build',
-		':MineTweaker3-MC1710-Mod-NEI:build']) {
+		':MineTweaker3-MC1710-Mod-NEI:build',
+		':MineTweaker3-MC1710-Mod-MFR:build',
+		':MineTweaker3-MC1710-Mod-GregTech:build']) {
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC1710-Main').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC1710-Mod-IC2').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC1710-Mod-NEI').jar.archivePath)
+	from zipTree(project(':MineTweaker3-MC1710-Mod-MFR').jar.archivePath)
+	from zipTree(project(':MineTweaker3-MC1710-Mod-GregTech').jar.archivePath)
 }
 
 task assembleMC172(type: Jar, dependsOn: [\

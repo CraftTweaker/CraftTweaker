@@ -18,12 +18,12 @@ import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.liquid.WeightedLiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import static minetweaker.mc164.util.MineTweakerPlatformUtils.getLivingEntityClass;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
@@ -52,12 +52,10 @@ public class Rancher {
 	@ZenMethod
 	public static void removeRanchable(String entityClassName) {
 		Class<?> entityClass = getLivingEntityClass(entityClassName);
-		if (MFRHacks.ranchables == null) {
-			MineTweakerAPI.logWarning("Cannot remove MFR Ranchables");
-		} else if (!MFRHacks.ranchables.containsKey(entityClass)) {
+		if (!MFRRegistry.getRanchables().containsKey(entityClass)) {
 			MineTweakerAPI.logWarning("No such ranchable: " + entityClassName);
 		} else {
-			MineTweakerAPI.apply(new RemoveRanchableAction(MFRHacks.ranchables.get(entityClass)));
+			MineTweakerAPI.apply(new RemoveRanchableAction(MFRRegistry.getRanchables().get(entityClass)));
 		}
 	}
 	
@@ -125,12 +123,12 @@ public class Rancher {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.ranchables != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.ranchables.remove(ranchable.entityClass);
+			MFRRegistry.getRanchables().remove(ranchable.entityClass);
 		}
 
 		@Override
@@ -158,7 +156,7 @@ public class Rancher {
 
 		@Override
 		public void apply() {
-			MFRHacks.ranchables.remove(ranchable.getRanchableEntity());
+			MFRRegistry.getRanchables().remove(ranchable.getRanchableEntity());
 		}
 
 		@Override
@@ -168,7 +166,7 @@ public class Rancher {
 
 		@Override
 		public void undo() {
-			MFRHacks.ranchables.put(ranchable.getRanchableEntity(), ranchable);
+			MFRRegistry.getRanchables().put(ranchable.getRanchableEntity(), ranchable);
 		}
 
 		@Override

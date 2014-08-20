@@ -16,10 +16,10 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import static minetweaker.mc164.util.MineTweakerPlatformUtils.getLivingEntityClass;
-import minetweaker.mods.mfr.MFRHacks;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
@@ -39,9 +39,7 @@ public class Grinder {
 	
 	public static void removeBlacklist(String entityClassName) {
 		Class<?> entityClass = getLivingEntityClass(entityClassName);
-		if (MFRHacks.grindableBlacklist == null) {
-			MineTweakerAPI.logWarning("Cannot remove MFR Grinder blacklist entries");
-		} else if (!MFRHacks.grindableBlacklist.contains(entityClass)) {
+		if (!MFRRegistry.getGrinderBlacklist().contains(entityClass)) {
 			MineTweakerAPI.logWarning(entityClassName + " is not blacklisted in the MFR Grinder");
 		} else {
 			MineTweakerAPI.apply(new RemoveBlacklistAction(entityClass));
@@ -63,9 +61,7 @@ public class Grinder {
 	
 	public static void removeGrindable(String entityClassName) {
 		Class<?> entityClass = getLivingEntityClass(entityClassName);
-		if (MFRHacks.grindables == null) {
-			MineTweakerAPI.logWarning("Cannot remove MFR grindables");
-		} else if (!MFRHacks.grindables.containsKey(entityClass)) {
+		if (!MFRRegistry.getGrindables().containsKey(entityClass)) {
 			MineTweakerAPI.logError("No such grindable entity: " + entityClassName);
 		} else {
 			MineTweakerAPI.apply(new RemoveGrindableAction(entityClass));
@@ -124,12 +120,12 @@ public class Grinder {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.grindableBlacklist != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.grindableBlacklist.remove(entityClass);
+			MFRRegistry.getGrinderBlacklist().remove(entityClass);
 		}
 
 		@Override
@@ -157,7 +153,7 @@ public class Grinder {
 
 		@Override
 		public void apply() {
-			MFRHacks.grindableBlacklist.remove(entityClass);
+			MFRRegistry.getGrinderBlacklist().remove(entityClass);
 		}
 
 		@Override
@@ -200,12 +196,12 @@ public class Grinder {
 
 		@Override
 		public boolean canUndo() {
-			return MFRHacks.grindables != null;
+			return true;
 		}
 
 		@Override
 		public void undo() {
-			MFRHacks.grindables.remove(grindable.entityClass);
+			MFRRegistry.getGrindables().remove(grindable.entityClass);
 		}
 
 		@Override
@@ -230,12 +226,12 @@ public class Grinder {
 		
 		public RemoveGrindableAction(Class<?> entityClass) {
 			this.entityClass = entityClass;
-			grindable = MFRHacks.grindables.get(entityClass);
+			grindable = MFRRegistry.getGrindables().get(entityClass);
 		}
 		
 		@Override
 		public void apply() {
-			MFRHacks.grindables.remove(entityClass);
+			MFRRegistry.getGrindables().remove(entityClass);
 		}
 
 		@Override
