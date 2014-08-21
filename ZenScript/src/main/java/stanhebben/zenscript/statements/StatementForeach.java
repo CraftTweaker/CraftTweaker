@@ -42,7 +42,7 @@ public class StatementForeach extends Statement {
 		int[] localVariables = new int[varnames.length];
 		for (int i = 0; i < localVariables.length; i++) {
 			SymbolLocal localVar = new SymbolLocal(iterator.getType(i), true);
-			local.putValue(varnames[i], localVar);
+			local.putValue(varnames[i], localVar, getPosition());
 			localVariables[i] = local.getLocal(localVar);
 		}
 		

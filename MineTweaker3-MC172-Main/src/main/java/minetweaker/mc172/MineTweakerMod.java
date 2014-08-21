@@ -44,7 +44,7 @@ import net.minecraftforge.common.MinecraftForge;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.3")
+@Mod(modid = MineTweakerMod.MODID, version = "${version}")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.7.2";

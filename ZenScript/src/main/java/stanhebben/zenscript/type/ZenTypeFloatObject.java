@@ -190,7 +190,7 @@ public class ZenTypeFloatObject extends ZenType {
 
 	@Override
 	public String getName() {
-		return "float";
+		return "float?";
 	}
 	
 	@Override

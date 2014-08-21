@@ -151,7 +151,7 @@ public class ZenTypeBoolObject extends ZenType {
 
 	@Override
 	public String getName() {
-		return "bool";
+		return "bool?";
 	}
 	
 	@Override

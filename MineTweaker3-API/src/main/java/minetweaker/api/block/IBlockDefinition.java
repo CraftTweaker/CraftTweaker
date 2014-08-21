@@ -12,4 +12,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 public interface IBlockDefinition {
 	@ZenGetter("id")
 	public String getId();
+	
+	@ZenGetter("displayName")
+	public String getDisplayName();
 }

@@ -44,6 +44,7 @@ import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.type.casting.CastingNotNull;
 import stanhebben.zenscript.type.casting.CastingRuleNone;
 import stanhebben.zenscript.type.casting.CastingRuleNullableStaticMethod;
 import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
@@ -55,7 +56,6 @@ import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.type.natives.ZenNativeCaster;
 import stanhebben.zenscript.type.natives.ZenNativeMember;
 import stanhebben.zenscript.type.natives.ZenNativeOperator;
-import stanhebben.zenscript.util.AnyClassWriter;
 import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
 import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
 import stanhebben.zenscript.util.IAnyDefinition;
@@ -422,6 +422,7 @@ public class ZenTypeNative extends ZenType {
 			}
 		}
 		
+		rules.registerCastingRule(BOOL, new CastingNotNull(this));
 		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(JavaMethod.getStatic(
 				getAnyClassName(environment),
 				"valueOf",

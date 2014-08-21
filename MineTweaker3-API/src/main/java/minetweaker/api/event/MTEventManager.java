@@ -7,6 +7,7 @@
 package minetweaker.api.event;
 
 import minetweaker.util.EventList;
+import minetweaker.util.IEventHandler;
 
 /**
  *
@@ -43,7 +44,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerCraftedEvent> elPlayerCrafted = new EventList<PlayerCraftedEvent>();
 	
 	@Override
-	public IEventHandle onPlayerCrafted(IPlayerCraftedEventHandler ev) {
+	public IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev) {
 		return elPlayerCrafted.add(ev);
 	}
 	
@@ -62,7 +63,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerSmeltedEvent> elPlayerSmelted = new EventList<PlayerSmeltedEvent>();
 	
 	@Override
-	public IEventHandle onPlayerSmelted(IPlayerSmeltedEventHandler ev) {
+	public IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev) {
 		return elPlayerSmelted.add(ev);
 	}
 	
@@ -81,7 +82,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerChangedDimensionEvent> elPlayerChangedDimension = new EventList<PlayerChangedDimensionEvent>();
 	
 	@Override
-	public IEventHandle onPlayerChangedDimension(IPlayerChangedDimensionEventHandler ev) {
+	public IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev) {
 		return elPlayerChangedDimension.add(ev);
 	}
 	
@@ -99,7 +100,7 @@ public class MTEventManager implements IEventManager {
 
 	private final EventList<PlayerLoggedInEvent> elPlayerLoggedIn = new EventList<PlayerLoggedInEvent>();
 	
-	public IEventHandle onPlayerLoggedIn(IPlayerLoggedInEventHandler ev) {
+	public IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev) {
 		return elPlayerLoggedIn.add(ev);
 	}
 	
@@ -117,7 +118,7 @@ public class MTEventManager implements IEventManager {
 	
 	private final EventList<PlayerLoggedOutEvent> elPlayerLoggedOut = new EventList<PlayerLoggedOutEvent>();
 	
-	public IEventHandle onPlayerLoggedOut(IPlayerLoggedOutEventHandler ev) {
+	public IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev) {
 		return elPlayerLoggedOut.add(ev);
 	}
 	
@@ -136,7 +137,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerRespawnEvent> elPlayerRespawn = new EventList<PlayerRespawnEvent>();
 	
 	@Override
-	public IEventHandle onPlayerRespawn(IPlayerRespawnEventHandler ev) {
+	public IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev) {
 		return elPlayerRespawn.add(ev);
 	}
 	
@@ -155,7 +156,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerAttackEntityEvent> elPlayerAttackEntity = new EventList<PlayerAttackEntityEvent>();
 	
 	@Override
-	public IEventHandle onPlayerAttackEntity(IPlayerAttackEntityEventHandler ev) {
+	public IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev) {
 		return elPlayerAttackEntity.add(ev);
 	}
 	
@@ -174,7 +175,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerBonemealEvent> elPlayerBonemeal = new EventList<PlayerBonemealEvent>();
 	
 	@Override
-	public IEventHandle onPlayerBonemeal(IPlayerBonemealEventHandler ev) {
+	public IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev) {
 		return elPlayerBonemeal.add(ev);
 	}
 	
@@ -193,7 +194,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerInteractEntityEvent> elPlayerInteractEntity = new EventList<PlayerInteractEntityEvent>();
 	
 	@Override
-	public IEventHandle onPlayerInteractEntity(IPlayerInteractEntityEventHandler ev) {
+	public IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev) {
 		return elPlayerInteractEntity.add(ev);
 	}
 	
@@ -212,7 +213,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerPickupEvent> elPlayerPickup = new EventList<PlayerPickupEvent>();
 	
 	@Override
-	public IEventHandle onPlayerPickup(IPlayerPickupEventHandler ev) {
+	public IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev) {
 		return elPlayerPickup.add(ev);
 	}
 	
@@ -231,7 +232,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerPickupItemEvent> elPlayerPickupItem = new EventList<PlayerPickupItemEvent>();
 	
 	@Override
-	public IEventHandle onPlayerPickupItem(IPlayerPickupItemEventHandler ev) {
+	public IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev) {
 		return elPlayerPickupItem.add(ev);
 	}
 	
@@ -250,7 +251,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerFillBucketEvent> elPlayerFillBucket = new EventList<PlayerFillBucketEvent>();
 	
 	@Override
-	public IEventHandle onPlayerFillBucket(IPlayerFillBucketEventHandler ev) {
+	public IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev) {
 		return elPlayerFillBucket.add(ev);
 	}
 	
@@ -269,7 +270,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerDeathDropsEvent> elPlayerDeathDrops = new EventList<PlayerDeathDropsEvent>();
 	
 	@Override
-	public IEventHandle onPlayerDeathDrops(IPlayerDeathDropsEventHandler ev) {
+	public IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev) {
 		return elPlayerDeathDrops.add(ev);
 	}
 	
@@ -288,7 +289,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerInteractEvent> elPlayerInteract = new EventList<PlayerInteractEvent>();
 	
 	@Override
-	public IEventHandle onPlayerInteract(IPlayerInteractEventHandler ev) {
+	public IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev) {
 		return elPlayerInteract.add(ev);
 	}
 	
@@ -307,7 +308,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerOpenContainerEvent> elPlayerOpenContainer = new EventList<PlayerOpenContainerEvent>();
 	
 	@Override
-	public IEventHandle onPlayerOpenContainer(IPlayerOpenContainerEventHandler ev) {
+	public IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev) {
 		return elPlayerOpenContainer.add(ev);
 	}
 	
@@ -326,7 +327,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerPickupXpEvent> elPlayerPickupXp = new EventList<PlayerPickupXpEvent>();
 	
 	@Override
-	public IEventHandle onPlayerPickupXp(IPlayerPickupXpEventHandler ev) {
+	public IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev) {
 		return elPlayerPickupXp.add(ev);
 	}
 	
@@ -345,7 +346,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerSleepInBedEvent> elPlayerSleepInBed = new EventList<PlayerSleepInBedEvent>();
 	
 	@Override
-	public IEventHandle onPlayerSleepInBed(IPlayerSleepInBedEventHandler ev) {
+	public IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev) {
 		return elPlayerSleepInBed.add(ev);
 	}
 	
@@ -364,7 +365,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerUseHoeEvent> elPlayerUseHoe = new EventList<PlayerUseHoeEvent>();
 
 	@Override
-	public IEventHandle onPlayerUseHoe(IPlayerUseHoeEventHandler ev) {
+	public IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev) {
 		return elPlayerUseHoe.add(ev);
 	}
 	
@@ -383,7 +384,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerUseItemStartEvent> elPlayerUseItemStart = new EventList<PlayerUseItemStartEvent>();
 	
 	@Override
-	public IEventHandle onPlayerUseItemStart(IPlayerUseItemStartEventHandler ev) {
+	public IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev) {
 		return elPlayerUseItemStart.add(ev);
 	}
 	
@@ -402,7 +403,7 @@ public class MTEventManager implements IEventManager {
 	private final EventList<PlayerUseItemTickEvent> elPlayerUseItemTick = new EventList<PlayerUseItemTickEvent>();
 	
 	@Override
-	public IEventHandle onPlayerUseItemTick(IPlayerUseItemTickEventHandler ev) {
+	public IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev) {
 		return elPlayerUseItemTick.add(ev);
 	}
 	

@@ -11,11 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import static minetweaker.MineTweakerAPI.server;
 import minetweaker.api.block.IBlock;
+import minetweaker.api.block.IBlockDefinition;
 import minetweaker.api.data.IData;
+import minetweaker.api.entity.IEntityDefinition;
 import minetweaker.api.event.IEventHandle;
-import minetweaker.api.event.IPlayerInteractEventHandler;
-import minetweaker.api.event.IPlayerLoggedInEventHandler;
-import minetweaker.api.event.IPlayerLoggedOutEventHandler;
 import minetweaker.api.event.MTEventManager;
 import minetweaker.api.event.PlayerInteractEvent;
 import minetweaker.api.event.PlayerLoggedInEvent;
@@ -53,6 +52,9 @@ public class MineTweakerImplementationAPI {
 	
 	private static final Comparator<IItemDefinition> ITEM_COMPARATOR = new ItemComparator();
 	private static final Comparator<ILiquidDefinition> LIQUID_COMPARATOR = new LiquidComparator();
+	private static final Comparator<IBlockDefinition> BLOCK_COMPARATOR = new BlockComparator();
+	private static final Comparator<IEntityDefinition> ENTITY_COMPARATOR = new EntityComparator();
+	
 	private static final ListenPlayerLoggedIn LISTEN_LOGIN = new ListenPlayerLoggedIn();
 	private static final ListenPlayerLoggedOut LISTEN_LOGOUT = new ListenPlayerLoggedOut();
 	private static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
@@ -85,7 +87,7 @@ public class MineTweakerImplementationAPI {
 				List<IItemDefinition> items = MineTweakerAPI.game.getItems();
 				Collections.sort(items, ITEM_COMPARATOR);
 				for (IItemDefinition item : items) {
-					String displayName = "";
+					String displayName;
 
 					try {
 						displayName = " -- " + item.makeStack(0).getDisplayName();
@@ -114,11 +116,55 @@ public class MineTweakerImplementationAPI {
 			@Override
 			public void execute(String[] arguments, IPlayer player) {
 				List<ILiquidDefinition> liquids = MineTweakerAPI.game.getLiquids();
-				System.out.println("Liquids: " + liquids.size());
 				Collections.sort(liquids, LIQUID_COMPARATOR);
+				
+				MineTweakerAPI.logCommand("Liquids:");
 				for (ILiquidDefinition liquid : liquids) {
-					System.out.println("Liquid " + liquid.getName());
 					MineTweakerAPI.logCommand("<" + liquid.getName() + "> -- " + liquid.getDisplayName());
+				}
+				
+				if (player != null) {
+					player.sendChat("List generated; see minetweaker.log in your minecraft dir");
+				}
+			}
+		}));
+		
+		minetweakerCommands.put("blocks", new MineTweakerCommand(
+				"blocks",
+				new String[] {
+					"/minetweaker blocks",
+					"    Outputs a list of all blocks in the game to the minetweaker log"
+				}, new ICommandFunction() {
+			@Override
+			public void execute(String[] arguments, IPlayer player) {
+				List<IBlockDefinition> blocks = MineTweakerAPI.game.getBlocks();
+				Collections.sort(blocks, BLOCK_COMPARATOR);
+				
+				MineTweakerAPI.logCommand("Blocks:");
+				for (IBlockDefinition block : blocks) {
+					MineTweakerAPI.logCommand("<block:" + block.getId() + "> -- " + block.getDisplayName());
+				}
+				
+				if (player != null) {
+					player.sendChat("List generated; see minetweaker.log in your minecraft dir");
+				}
+			}
+		}));
+		
+		minetweakerCommands.put("entities", new MineTweakerCommand(
+				"entities",
+				new String[] {
+					"/minetweaker entities",
+					"    Outputs a list of all entity definitions in the game to the minetweaker log"
+				}, new ICommandFunction() {
+			@Override
+			public void execute(String[] arguments, IPlayer player) {
+				List<IEntityDefinition> entities = MineTweakerAPI.game.getEntities();
+				Collections.sort(entities, ENTITY_COMPARATOR);
+				
+				MineTweakerAPI.logCommand("Entities:");
+				for (IEntityDefinition entity : entities) {
+					MineTweakerAPI.logCommand(entity.getId() + " -- " + entity.getName());
 				}
 				
 				if (player != null) {
@@ -546,7 +592,21 @@ public class MineTweakerImplementationAPI {
 		}
 	}
 	
-	private static class ListenPlayerLoggedIn implements IPlayerLoggedInEventHandler {
+	private static class BlockComparator implements Comparator<IBlockDefinition> {
+		@Override
+		public int compare(IBlockDefinition o1, IBlockDefinition o2) {
+			return o1.getId().compareTo(o2.getId());
+		}
+	}
+	
+	private static class EntityComparator implements Comparator<IEntityDefinition> {
+		@Override
+		public int compare(IEntityDefinition o1, IEntityDefinition o2) {
+			return o1.getId().compareTo(o2.getId());
+		}
+	}
+	
+	private static class ListenPlayerLoggedIn implements IEventHandler<PlayerLoggedInEvent> {
 		@Override
 		public void handle(PlayerLoggedInEvent event) {
 			if (MineTweakerAPI.server != null && MineTweakerAPI.server.isOp(event.getPlayer())) {
@@ -555,14 +615,14 @@ public class MineTweakerImplementationAPI {
 		}
 	}
 	
-	private static class ListenPlayerLoggedOut implements IPlayerLoggedOutEventHandler {
+	private static class ListenPlayerLoggedOut implements IEventHandler<PlayerLoggedOutEvent> {
 		@Override
 		public void handle(PlayerLoggedOutEvent event) {
 			logger.removePlayer(event.getPlayer());
 		}
 	}
 	
-	private static class ListenBlockInfo implements IPlayerInteractEventHandler {
+	private static class ListenBlockInfo implements IEventHandler<PlayerInteractEvent> {
 		@Override
 		public void handle(PlayerInteractEvent event) {
 			if (blockInfoPlayers.contains(event.getPlayer())) {

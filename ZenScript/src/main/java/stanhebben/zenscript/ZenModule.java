@@ -68,7 +68,7 @@ public class ZenModule {
 						fn.getName(),
 						fn.getSignature(),
 						fn.getArgumentTypes(),
-						fn.getReturnType()));
+						fn.getReturnType()), fn.getPosition());
 			}
 		}
 		
@@ -89,7 +89,7 @@ public class ZenModule {
 				List<ParsedFunctionArgument> arguments = function.getValue().getArguments();
 				for (int i = 0; i < arguments.size(); i++) {
 					ParsedFunctionArgument argument = arguments.get(i);
-					methodEnvironment.putValue(argument.getName(), new SymbolArgument(i, argument.getType()));
+					methodEnvironment.putValue(argument.getName(), new SymbolArgument(i, argument.getType()), fn.getPosition());
 				}
 
 				methodOutput.start();

@@ -97,9 +97,9 @@ public class EnvironmentGlobal implements IEnvironmentGlobal {
 	}
 
 	@Override
-	public void putValue(String name, IZenSymbol value) {
+	public void putValue(String name, IZenSymbol value, ZenPosition position) {
 		if (local.containsKey(name)) {
-			throw new RuntimeException("already exists");
+			error(position, "Value already defined in this scope: " + name);
 		} else {
 			local.put(name, value);
 		}

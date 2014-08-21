@@ -1,5 +1,9 @@
 rootProject.name = 'MineTweaker3'
 
+// --------------
+// building stuff
+// --------------
+
 // Find the directories containing a "build.gradle" file in the root directory
 // of the project. That is, every directory containing a "build.gradle" will
 // be automatically the subproject of this project.

@@ -110,10 +110,10 @@ public class ZenParsedFile {
 				if (symbol == null) {
 					environmentScript.error(imprt.getPosition(), "Not a valid type");
 				} else {
-					environmentScript.putValue(imprt.getRename(), type.toSymbol());
+					environmentScript.putValue(imprt.getRename(), type.toSymbol(), imprt.getPosition());
 				}
 			} else {
-				environmentScript.putValue(imprt.getRename(), new SymbolType(ZenType.ANY));
+				environmentScript.putValue(imprt.getRename(), new SymbolType(ZenType.ANY), imprt.getPosition());
 			}
 		}
 		

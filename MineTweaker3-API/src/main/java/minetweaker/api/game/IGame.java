@@ -1,6 +1,8 @@
 package minetweaker.api.game;
 
 import java.util.List;
+import minetweaker.api.block.IBlockDefinition;
+import minetweaker.api.entity.IEntityDefinition;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.world.IBiome;
@@ -15,12 +17,20 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("minetweaker.game.IGame")
 public interface IGame {
 	/**
-	 * Retrieves the items in this game.
+	 * Retrieves the item definitions in this game.
 	 * 
 	 * @return game items
 	 */
 	@ZenGetter("items")
 	public List<IItemDefinition> getItems();
+	
+	/**
+	 * Retrieves the block definitions in this game.
+	 * 
+	 * @return block definitions
+	 */
+	@ZenGetter("blocks")
+	public List<IBlockDefinition> getBlocks();
 	
 	/**
 	 * Retrieves the liquids in this game.
@@ -35,6 +45,14 @@ public interface IGame {
 	 * 
 	 * @return game biomes
 	 */
-	@ZenGetter("Biomes")
+	@ZenGetter("biomes")
 	public List<IBiome> getBiomes();
+	
+	/**
+	 * Retrieves the entities in this game.
+	 * 
+	 * @return game entities
+	 */
+	@ZenGetter("entities")
+	public List<IEntityDefinition> getEntities();
 }

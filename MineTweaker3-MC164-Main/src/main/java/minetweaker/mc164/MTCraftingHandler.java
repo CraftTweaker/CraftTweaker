@@ -9,6 +9,7 @@ package minetweaker.mc164;
 import cpw.mods.fml.common.ICraftingHandler;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.event.PlayerCraftedEvent;
+import minetweaker.api.event.PlayerSmeltedEvent;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.mc164.recipes.MCCraftingInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,6 +37,10 @@ public class MTCraftingHandler implements ICraftingHandler {
 
 	@Override
 	public void onSmelting(EntityPlayer ep, ItemStack is) {
-		
+		if (MineTweakerImplementationAPI.events.hasPlayerSmelted()) {
+			MineTweakerImplementationAPI.events.publishPlayerSmelted(new PlayerSmeltedEvent(
+					MineTweakerMC.getIPlayer(ep),
+					MineTweakerMC.getIItemStack(is)));
+		}
 	}
 }

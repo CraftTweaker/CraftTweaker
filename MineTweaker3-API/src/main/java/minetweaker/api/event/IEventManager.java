@@ -1,48 +1,54 @@
 package minetweaker.api.event;
 
+import minetweaker.util.IEventHandler;
+
 /**
  * 37 kinds of event handlers!
+ * 
+ * NOTE: not all of these are implemented yet, but will be later on.
  * 
  * @author Stan
  */
 public interface IEventManager {
-	public IEventHandle onPlayerCrafted(IPlayerCraftedEventHandler ev);
+	// implemented
+	public IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
 	
-	public IEventHandle onPlayerSmelted(IPlayerSmeltedEventHandler ev);
+	// implemented
+	public IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev);
 	
-	public IEventHandle onPlayerChangedDimension(IPlayerChangedDimensionEventHandler ev);
+	public IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev);
 	
-	public IEventHandle onPlayerRespawn(IPlayerRespawnEventHandler ev);
+	public IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev);
 	
-	public IEventHandle onPlayerAttackEntity(IPlayerAttackEntityEventHandler ev);
+	public IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
 	
-	public IEventHandle onPlayerBonemeal(IPlayerBonemealEventHandler ev);
+	public IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
 	
-	public IEventHandle onPlayerInteractEntity(IPlayerInteractEntityEventHandler ev);
+	public IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev);
 	
-	public IEventHandle onPlayerPickup(IPlayerPickupEventHandler ev);
+	public IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev);
 	
-	public IEventHandle onPlayerPickupItem(IPlayerPickupItemEventHandler ev);
+	public IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
 	
-	public IEventHandle onPlayerFillBucket(IPlayerFillBucketEventHandler ev);
+	public IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev);
 	
-	public IEventHandle onPlayerDeathDrops(IPlayerDeathDropsEventHandler ev);
+	public IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev);
 	
-	public IEventHandle onPlayerInteract(IPlayerInteractEventHandler ev);
+	public IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev);
 	
-	public IEventHandle onPlayerOpenContainer(IPlayerOpenContainerEventHandler ev);
+	public IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);
 	
-	public IEventHandle onPlayerPickupXp(IPlayerPickupXpEventHandler ev);
+	public IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev);
 	
-	public IEventHandle onPlayerSleepInBed(IPlayerSleepInBedEventHandler ev);
+	public IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
 	
-	public IEventHandle onPlayerUseHoe(IPlayerUseHoeEventHandler ev);
+	public IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
 	
-	public IEventHandle onPlayerUseItemStart(IPlayerUseItemStartEventHandler ev);
+	public IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev);
 	
-	public IEventHandle onPlayerUseItemTick(IPlayerUseItemTickEventHandler ev);
+	public IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev);
 	
-	/*public IEventHandle onPlayerUseItemStop(IPlayerUseItemStopEventHandler ev);
+	/*public IEventHandle onPlayerUseItemStop(IEventHandler<PlayerUseItemStopEvent> ev);
 	
 	public IEventHandle onPlayerUseItemFinish(IPlayerUserItemFinishEventHandler ev);
 	

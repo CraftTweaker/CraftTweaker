@@ -190,7 +190,7 @@ public class ZenTypeDoubleObject extends ZenType {
 
 	@Override
 	public String getName() {
-		return "double";
+		return "double?";
 	}
 	
 	@Override

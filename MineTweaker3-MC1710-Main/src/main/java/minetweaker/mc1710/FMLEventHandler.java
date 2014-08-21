@@ -7,6 +7,7 @@ import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.event.PlayerCraftedEvent;
 import minetweaker.api.event.PlayerLoggedInEvent;
 import minetweaker.api.event.PlayerLoggedOutEvent;
+import minetweaker.api.event.PlayerSmeltedEvent;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.mc1710.network.MineTweakerLoadScriptsPacket;
 import minetweaker.mc1710.recipes.MCCraftingInventory;
@@ -40,6 +41,15 @@ public class FMLEventHandler {
 					MineTweakerMC.getIPlayer(ev.player),
 					MineTweakerMC.getIItemStack(ev.crafting),
 					MCCraftingInventory.get(ev.craftMatrix, ev.player)));
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerItemSmelted(PlayerEvent.ItemSmeltedEvent ev) {
+		if (MineTweakerImplementationAPI.events.hasPlayerSmelted()) {
+			MineTweakerImplementationAPI.events.publishPlayerSmelted(new PlayerSmeltedEvent(
+					MineTweakerMC.getIPlayer(ev.player),
+					MineTweakerMC.getIItemStack(ev.smelting)));
 		}
 	}
 	

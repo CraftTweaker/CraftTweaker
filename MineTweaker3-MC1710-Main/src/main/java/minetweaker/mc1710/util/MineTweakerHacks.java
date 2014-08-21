@@ -6,11 +6,14 @@
 
 package minetweaker.mc1710.util;
 
+import com.google.common.collect.BiMap;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import minetweaker.MineTweakerAPI;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -38,6 +41,8 @@ public class MineTweakerHacks {
 	private static final Field INVENTORYCRAFTING_EVENTHANDLER;
 	private static final Field SLOTCRAFTING_PLAYER;
 	
+	private static final Field ENTITYREGISTRY_CLASSREGISTRATIONS;
+	
 	static {
 		NBTTAGLIST_TAGLIST = getField(NBTTagList.class, MineTweakerObfuscation.NBTTAGLIST_TAGLIST);
 		OREDICTIONARY_IDTOSTACK = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_IDTOSTACK);
@@ -46,9 +51,21 @@ public class MineTweakerHacks {
 		SHAPEDORERECIPE_WIDTH = getField(ShapedOreRecipe.class, new String[] {"width"});
 		INVENTORYCRAFTING_EVENTHANDLER = getField(InventoryCrafting.class, MineTweakerObfuscation.INVENTORYCRAFTING_EVENTHANDLER);
 		SLOTCRAFTING_PLAYER = getField(SlotCrafting.class, MineTweakerObfuscation.SLOTCRAFTING_PLAYER);
+		
+		ENTITYREGISTRY_CLASSREGISTRATIONS = getField(EntityRegistry.class, new String[] {"entityClassRegistrations"});
 	}
 	
 	private MineTweakerHacks() {}
+	
+	public static BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration> getEntityClassRegistrations() {
+		try {
+			return (BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration>) ENTITYREGISTRY_CLASSREGISTRATIONS.get(EntityRegistry.instance());
+		} catch (IllegalArgumentException ex) {
+			return null;
+		} catch (IllegalAccessException ex) {
+			return null;
+		}
+	}
 	
 	public static List<NBTBase> getTagList(NBTTagList list) {
 		if (NBTTAGLIST_TAGLIST == null) {

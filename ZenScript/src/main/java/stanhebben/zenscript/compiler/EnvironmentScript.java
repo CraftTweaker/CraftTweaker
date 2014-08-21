@@ -67,10 +67,14 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 	}
 
 	@Override
-	public void putValue(String name, IZenSymbol value) {
+	public void putValue(String name, IZenSymbol value, ZenPosition position) {
 		if (value == null) throw new IllegalArgumentException("value cannot be null");
 		
-		imports.put(name, value);
+		if (imports.containsKey(name)) {
+			error(position, "Value already defined in this scope: " + name);
+		} else {
+			imports.put(name, value);
+		}
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class JavaMethod implements IJavaMethod {
 	}
 	
 	public static IJavaMethod getStatic(String owner, String name, ZenType returnType, ZenType... arguments) {
-		return new JavaMethodGenerated(true, false, false, name, owner, returnType, arguments, new boolean[arguments.length]);
+		return new JavaMethodGenerated(true, false, false, owner, name, returnType, arguments, new boolean[arguments.length]);
 	}
 	
 	public static IJavaMethod get(ITypeRegistry types, Method method) {

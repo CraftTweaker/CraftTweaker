@@ -184,7 +184,7 @@ public class ZenTypeByteObject extends ZenType {
 
 	@Override
 	public String getName() {
-		return "byte";
+		return "byte?";
 	}
 	
 	@Override

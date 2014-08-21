@@ -31,6 +31,7 @@ public class ExpressionInvalid extends Expression {
 		
 		this.type = type;
 		
+		// XXX: remove before release
 		//throw new RuntimeException("Constructing invalid expression");
 	}
 	

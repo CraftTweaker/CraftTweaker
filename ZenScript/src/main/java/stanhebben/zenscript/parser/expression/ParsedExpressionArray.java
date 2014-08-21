@@ -6,6 +6,7 @@
 
 package stanhebben.zenscript.parser.expression;
 
+import java.util.Collections;
 import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
@@ -59,6 +60,9 @@ public class ParsedExpressionArray extends ParsedExpression {
 				}
 			}
 		}
+		
+		System.out.println("Predicted array base type " + (predictedBaseType == null ? "none" : predictedBaseType.getName()));
+		System.out.println("Contents are: " + contents);
 		
 		Expression[] cContents = new Expression[contents.size()];
 		for (int i = 0; i < contents.size(); i++) {

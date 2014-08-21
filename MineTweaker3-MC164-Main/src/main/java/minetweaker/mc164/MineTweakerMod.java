@@ -43,7 +43,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventBus;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -51,7 +50,7 @@ import net.minecraftforge.event.EventBus;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = MineTweakerMod.MCVERSION + "-3.0.3")
+@Mod(modid = MineTweakerMod.MODID, version = "${version}")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = {MCPacketHandler.CHANNEL_SERVERSCRIPT, MCPacketHandler.CHANNEL_OPENBROWSER}, packetHandler = MCPacketHandler.class)
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";

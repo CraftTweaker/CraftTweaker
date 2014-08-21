@@ -190,7 +190,7 @@ public class ZenTypeIntObject extends ZenType {
 
 	@Override
 	public String getName() {
-		return "int";
+		return "int?";
 	}
 	
 	@Override

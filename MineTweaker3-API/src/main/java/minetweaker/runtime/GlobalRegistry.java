@@ -250,8 +250,12 @@ public class GlobalRegistry {
 		}
 
 		@Override
-		public void putValue(String name, IZenSymbol value) {
-			symbols.put(name, value);
+		public void putValue(String name, IZenSymbol value, ZenPosition position) {
+			if (symbols.containsKey(name)) {
+				error(position, "Value already defined in this scope: " + name);
+			} else {
+				symbols.put(name, value);
+			}
 		}
 
 		@Override

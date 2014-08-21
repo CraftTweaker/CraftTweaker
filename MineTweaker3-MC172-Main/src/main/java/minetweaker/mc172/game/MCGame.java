@@ -6,17 +6,23 @@
 
 package minetweaker.mc172.game;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import minetweaker.api.block.IBlockDefinition;
+import minetweaker.api.entity.IEntityDefinition;
 import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.world.IBiome;
+import minetweaker.mc172.entity.MCEntityDefinition;
 import minetweaker.mc172.item.MCItemDefinition;
 import minetweaker.mc172.liquid.MCLiquidDefinition;
+import minetweaker.mc172.util.MineTweakerHacks;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -38,6 +44,16 @@ public class MCGame implements IGame {
 		}
 		return result;
 	}
+	
+	@Override
+	public List<IBlockDefinition> getBlocks() {
+		List<IBlockDefinition> result = new ArrayList<IBlockDefinition>();
+		for (String block : (Set<String>)Block.blockRegistry.getKeys()) {
+			result.add(MineTweakerMC.getBlockDefinition((Block) Block.blockRegistry.getObject(block)));
+		}
+		
+		return result;
+	}
 
 	@Override
 	public List<ILiquidDefinition> getLiquids() {
@@ -56,6 +72,17 @@ public class MCGame implements IGame {
 				result.add(biome);
 			}
 		}
+		return result;
+	}
+	
+	@Override
+	public List<IEntityDefinition> getEntities() {
+		List<IEntityDefinition> result = new ArrayList<IEntityDefinition>();
+		
+		for (EntityRegistry.EntityRegistration entityRegistration : MineTweakerHacks.getEntityClassRegistrations().values()) {
+			result.add(new MCEntityDefinition(entityRegistration));
+		}
+		
 		return result;
 	}
 }

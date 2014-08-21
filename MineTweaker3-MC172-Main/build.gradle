@@ -19,7 +19,7 @@ buildscript {
 
 apply plugin: 'forge'
 minecraft{version = "1.7.2-10.12.2.1121"}
-version = "1.7.2-3.0.6"
+version = "1.7.2-" + ext.mineTweakerVersion
 archivesBaseName = project.projectDir.name
 
 dependencies {
@@ -47,7 +47,13 @@ processResources
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
     
-    // copy everything else, thats not the mcmod.info
+	from(sourceSets.main.java.srcDirs) {
+		include 'minetweaker/mc172/MineTweakerMod.java'
+		
+		expand 'version':project.version
+	}
+    
+	// copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }

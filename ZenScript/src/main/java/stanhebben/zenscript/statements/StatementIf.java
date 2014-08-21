@@ -25,7 +25,10 @@ public class StatementIf extends Statement {
 	public void compile(IEnvironmentMethod environment) {
 		environment.getOutput().position(getPosition());
 		
-		Expression cCondition = condition.compile(environment, ZenType.BOOL).eval(environment);
+		Expression cCondition = condition.compile(environment, ZenType.BOOL)
+				.eval(environment)
+				.cast(getPosition(), environment, ZenType.BOOL);
+		
 		ZenType expressionType = cCondition.getType();
 		if (expressionType.canCastImplicit(ZenType.BOOL, environment)) {
 			Label labelEnd = new Label();

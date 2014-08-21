@@ -36,7 +36,7 @@ import stanhebben.zenscript.parser.ParseException;
  * @author Stan Hebben
  */
 public class MTTweaker implements ITweaker {
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	private final List<IUndoableAction> actions = new ArrayList<IUndoableAction>();
 	private final Set<IUndoableAction> wereStuck = new LinkedHashSet<IUndoableAction>();

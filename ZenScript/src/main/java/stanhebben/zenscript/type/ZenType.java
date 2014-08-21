@@ -243,7 +243,7 @@ public abstract class ZenType {
 	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
 		if (castingRules == null) {
 			castingRules = new HashMap<ZenType, ICastingRule>();
-			constructCastingRules(environment, new CastingRuleDelegateMap(castingRules), true);
+			constructCastingRules(environment, new CastingRuleDelegateMap(this, castingRules), true);
 		}
 		
 		return castingRules.get(type);
@@ -394,5 +394,19 @@ public abstract class ZenType {
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof ZenType) {
+			return getName().equals(((ZenType) other).getName());
+		} else {
+			return false;
+		}
 	}
 }

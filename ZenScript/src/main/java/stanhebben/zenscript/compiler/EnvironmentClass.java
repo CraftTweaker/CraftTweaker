@@ -78,8 +78,12 @@ public class EnvironmentClass implements IEnvironmentClass {
 	}
 
 	@Override
-	public void putValue(String name, IZenSymbol value) {
-		local.put(name, value);
+	public void putValue(String name, IZenSymbol value, ZenPosition position) {
+		if (local.containsKey(name)) {
+			error(position, "Value already defined in this scope: " + name);
+		} else {
+			local.put(name, value);
+		}
 	}
 
 	@Override

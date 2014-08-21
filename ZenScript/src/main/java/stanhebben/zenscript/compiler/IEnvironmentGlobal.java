@@ -35,5 +35,5 @@ public interface IEnvironmentGlobal extends ITypeRegistry, IZenErrorLogger {
 	
 	public IPartialExpression getValue(String name, ZenPosition position);
 	
-	public void putValue(String name, IZenSymbol value);
+	public void putValue(String name, IZenSymbol value, ZenPosition position);
 }

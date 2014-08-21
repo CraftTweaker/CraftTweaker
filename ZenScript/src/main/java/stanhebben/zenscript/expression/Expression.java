@@ -29,7 +29,7 @@ public abstract class Expression implements IPartialExpression {
 	}
 	
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-		if (getType() == type) {
+		if (getType().equals(type)) {
 			return this;
 		} else {
 			ICastingRule castingRule = getType().getCastingRule(type, environment);
