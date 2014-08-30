@@ -21,6 +21,7 @@ import java.io.File;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
+import minetweaker.mc1710.formatting.MCFormatter;
 import minetweaker.mc1710.furnace.FuelTweaker;
 import minetweaker.mc1710.furnace.MCFurnaceManager;
 import minetweaker.mc1710.game.MCGame;
@@ -76,13 +77,15 @@ public class MineTweakerMod {
 	private final IScriptProvider scriptsGlobal;
 	
 	public MineTweakerMod() {
-		MineTweakerAPI.oreDict = new MCOreDict();
-		MineTweakerAPI.recipes = recipes = new MCRecipeManager();
-		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
-		MineTweakerAPI.game = MCGame.INSTANCE;
-		MineTweakerAPI.furnace = new MCFurnaceManager();
-		MineTweakerAPI.loadedMods = new MCLoadedMods();
+		MineTweakerImplementationAPI.init(
+				new MCOreDict(),
+				recipes = new MCRecipeManager(),
+				new MCFurnaceManager(),
+				MCGame.INSTANCE,
+				new MCLoadedMods(),
+				new MCFormatter());
 		
+		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");

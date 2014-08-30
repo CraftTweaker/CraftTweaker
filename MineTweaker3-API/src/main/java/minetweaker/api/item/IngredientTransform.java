@@ -135,6 +135,13 @@ public class IngredientTransform {
 		});
 	}
 	
+	/**
+	 * Gives an item back to the player. Also clears the inventory slot at that position.
+	 * 
+	 * @param ingredient
+	 * @param givenItem
+	 * @return 
+	 */
 	@ZenMethod
 	public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {
 		return ingredient.transform(new IItemTransformer() {

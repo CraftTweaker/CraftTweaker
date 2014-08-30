@@ -37,4 +37,30 @@ public class MCItemDefinition implements IItemDefinition {
 	public IItemStack makeStack(int meta) {
 		return MineTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
 	}
+	
+	// #############################
+	// ### Object implementation ###
+	// #############################
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 37 * hash + (this.item != null ? this.item.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final MCItemDefinition other = (MCItemDefinition) obj;
+		if (this.item != other.item && (this.item == null || !this.item.equals(other.item))) {
+			return false;
+		}
+		return true;
+	}
 }

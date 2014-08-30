@@ -21,6 +21,7 @@ import java.io.File;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
+import minetweaker.mc172.formatting.MCFormatter;
 import minetweaker.mc172.furnace.FuelTweaker;
 import minetweaker.mc172.furnace.MCFurnaceManager;
 import minetweaker.mc172.game.MCGame;
@@ -79,7 +80,8 @@ public class MineTweakerMod {
 				recipes = new MCRecipeManager(),
 				new MCFurnaceManager(),
 				MCGame.INSTANCE,
-				new MCLoadedMods());
+				new MCLoadedMods(),
+				new MCFormatter());
 		
 		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;

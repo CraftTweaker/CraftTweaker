@@ -13,6 +13,7 @@ import minetweaker.annotations.BracketHandler;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.client.IClient;
 import minetweaker.api.event.IEventManager;
+import minetweaker.api.formatting.IFormatter;
 import minetweaker.api.game.IGame;
 import minetweaker.api.mods.ILoadedMods;
 import minetweaker.runtime.ITweaker;
@@ -88,6 +89,7 @@ public class MineTweakerAPI {
 		registerGlobalSymbol("client", getJavaStaticFieldSymbol(MineTweakerAPI.class, "client"));
 		registerGlobalSymbol("game", getJavaStaticFieldSymbol(MineTweakerAPI.class, "game"));
 		registerGlobalSymbol("loadedMods", getJavaStaticFieldSymbol(MineTweakerAPI.class, "loadedMods"));
+		registerGlobalSymbol("format", getJavaStaticFieldSymbol(MineTweakerAPI.class, "format"));
 	}
 	
 	private MineTweakerAPI() {}
@@ -96,6 +98,7 @@ public class MineTweakerAPI {
 	 * The Tweaker is where you apply undoable actions. Any kind of action that
 	 * reloads with the scripts should always be submitted to the tweaker.
 	 */
+	@Deprecated
 	public static final ITweaker tweaker = new MTTweaker();
 	
 	/**
@@ -147,6 +150,11 @@ public class MineTweakerAPI {
 	 * Access point to mods list.
 	 */
 	public static ILoadedMods loadedMods = null;
+	
+	/**
+	 * Access point to the text formatter.
+	 */
+	public static IFormatter format = null;
 	
 	/**
 	 * Applies this given action.

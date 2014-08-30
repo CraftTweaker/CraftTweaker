@@ -19,6 +19,7 @@ import minetweaker.api.event.MTEventManager;
 import minetweaker.api.event.PlayerInteractEvent;
 import minetweaker.api.event.PlayerLoggedInEvent;
 import minetweaker.api.event.PlayerLoggedOutEvent;
+import minetweaker.api.formatting.IFormatter;
 import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
@@ -394,18 +395,21 @@ public class MineTweakerImplementationAPI {
 	 * @param furnace furnace manager interface
 	 * @param game game interface
 	 * @param mods mods interface
+	 * @param formatter formatter interface
 	 */
 	public static void init(
 			IOreDict oreDict,
 			IRecipeManager recipes,
 			IFurnaceManager furnace,
 			IGame game,
-			ILoadedMods mods) {
+			ILoadedMods mods,
+			IFormatter formatter) {
 		MineTweakerAPI.oreDict = oreDict;
 		MineTweakerAPI.recipes = recipes;
 		MineTweakerAPI.furnace = furnace;
 		MineTweakerAPI.game = game;
 		MineTweakerAPI.loadedMods = mods;
+		MineTweakerAPI.format = formatter;
 	}
 	
 	/**

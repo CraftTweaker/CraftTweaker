@@ -26,6 +26,7 @@ import minetweaker.api.event.PlayerLoggedInEvent;
 import minetweaker.api.event.PlayerLoggedOutEvent;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.mc164.formatting.MCFormatter;
 import minetweaker.mc164.furnace.FuelTweaker;
 import minetweaker.mc164.furnace.MCFurnaceManager;
 import minetweaker.mc164.game.MCGame;
@@ -83,7 +84,8 @@ public class MineTweakerMod {
 				recipes = new MCRecipeManager(),
 				new MCFurnaceManager(),
 				MCGame.INSTANCE,
-				new MCLoadedMods());
+				new MCLoadedMods(),
+				new MCFormatter());
 		
 		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
