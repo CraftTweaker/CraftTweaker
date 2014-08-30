@@ -13,6 +13,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.IngredientStack;
+import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 
 /**
@@ -93,9 +94,9 @@ public class IngredientOreDict implements IIngredient {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
 		for (IItemTransformer transformer : transformers) {
-			item = transformer.transform(item);
+			item = transformer.transform(item, byPlayer);
 		}
 		
 		return item;

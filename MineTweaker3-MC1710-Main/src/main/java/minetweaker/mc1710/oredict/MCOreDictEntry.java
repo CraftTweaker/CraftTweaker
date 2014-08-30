@@ -21,6 +21,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.oredict.IngredientOreDict;
+import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -169,7 +170,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
 		return item;
 	}
 
@@ -341,9 +342,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void apply() {
-			List<ItemStack> ores = OreDictionary.getOres(idTarget);
 			for (ItemStack stack : OreDictionary.getOres(idSource)) {
-				ores.add(stack);
+				OreDictionary.registerOre(idTarget, stack);
 			}
 		}
 
@@ -354,9 +354,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			List<ItemStack> ores = OreDictionary.getOres(idTarget);
 			for (ItemStack stack : OreDictionary.getOres(idSource)) {
-				ores.remove(stack);
+				OREDICT_CONTENTS.get(idTarget).remove(stack);
 			}
 		}
 

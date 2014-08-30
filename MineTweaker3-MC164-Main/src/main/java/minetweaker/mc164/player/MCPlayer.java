@@ -110,6 +110,11 @@ public class MCPlayer implements IPlayer {
 			MineTweakerMod.INSTANCE.openBrowser(player.username, url);
 		}
 	}
+	
+	@Override
+	public void give(IItemStack stack) {
+		player.inventory.addItemStackToInventory(MineTweakerMC.getItemStack(stack).copy());
+	}
 
 	@Override
 	public int hashCode() {

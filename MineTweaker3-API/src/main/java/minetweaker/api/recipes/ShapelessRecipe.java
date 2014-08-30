@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.player.IPlayer;
 
 /**
  *
@@ -67,12 +68,12 @@ public class ShapelessRecipe implements ICraftingRecipe {
 	}
 	
 	@Override
-	public void applyTransformers(ICraftingInventory inventory) {
+	public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
 		RecipeMatching matching = matchShapeless(ingredients, inventory);
 		
 		for (int i = 0; i < ingredients.length; i++) {
 			IIngredient ingredient = ingredients[i];
-			IItemStack transformed = ingredient.applyTransform(matching.inputs[i]);
+			IItemStack transformed = ingredient.applyTransform(matching.inputs[i], byPlayer);
 			if (transformed != matching.inputs[i]) {
 				inventory.setStack(matching.indices[i], transformed);
 			}

@@ -1,6 +1,7 @@
 package minetweaker.api.item;
 
 import java.util.List;
+import minetweaker.api.player.IPlayer;
 
 /**
  * Contains an ingredient stack. Is an ingredient with a specific stack size
@@ -68,8 +69,8 @@ public class IngredientStack implements IIngredient {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
-		return ingredient.applyTransform(item);
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
+		return ingredient.applyTransform(item, byPlayer);
 	}
 
 	@Override

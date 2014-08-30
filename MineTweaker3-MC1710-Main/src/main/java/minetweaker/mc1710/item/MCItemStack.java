@@ -24,6 +24,7 @@ import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import minetweaker.api.player.IPlayer;
 import minetweaker.mc1710.actions.SetTranslationAction;
 import minetweaker.mc1710.block.MCItemBlock;
 import minetweaker.util.ArrayUtil;
@@ -240,7 +241,7 @@ public class MCItemStack implements IItemStack {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
 		return item;
 	}
 

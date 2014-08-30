@@ -11,6 +11,7 @@ import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.event.PlayerCraftedEvent;
 import minetweaker.api.event.PlayerSmeltedEvent;
 import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.api.player.IPlayer;
 import minetweaker.mc164.recipes.MCCraftingInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -23,13 +24,15 @@ import net.minecraft.item.ItemStack;
 public class MTCraftingHandler implements ICraftingHandler {
 	@Override
 	public void onCrafting(EntityPlayer player, ItemStack crafting, IInventory craftMatrix) {
+		IPlayer iplayer = MineTweakerMC.getIPlayer(player);
+		
 		if (MineTweakerMod.INSTANCE.recipes.hasTransformerRecipes()) {
-			MineTweakerMod.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(craftMatrix, player));
+			MineTweakerMod.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(craftMatrix, player), iplayer);
 		}
 		
 		if (MineTweakerImplementationAPI.events.hasPlayerCrafted()) {
 			MineTweakerImplementationAPI.events.publishPlayerCrafted(new PlayerCraftedEvent(
-					MineTweakerMC.getIPlayer(player),
+					iplayer,
 					MineTweakerMC.getIItemStack(crafting),
 					MCCraftingInventory.get(craftMatrix, player)));
 		}

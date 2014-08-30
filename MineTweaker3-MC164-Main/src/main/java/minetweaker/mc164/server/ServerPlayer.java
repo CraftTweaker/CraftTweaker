@@ -105,4 +105,9 @@ public class ServerPlayer implements IPlayer {
 			}
 		}
 	}
+
+	@Override
+	public void give(IItemStack stack) {
+		
+	}
 }

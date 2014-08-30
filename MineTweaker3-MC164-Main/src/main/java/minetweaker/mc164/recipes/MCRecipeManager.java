@@ -12,6 +12,7 @@ import minetweaker.api.item.IItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
+import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
 import minetweaker.api.recipes.ICraftingRecipe;
 import minetweaker.api.recipes.IRecipeFunction;
@@ -44,10 +45,10 @@ public class MCRecipeManager implements IRecipeManager {
 		return transformerRecipes.size() > 0;
 	}
 	
-	public void applyTransformations(ICraftingInventory inventory) {
+	public void applyTransformations(ICraftingInventory inventory, IPlayer player) {
 		for (ICraftingRecipe recipe : transformerRecipes) {
 			if (recipe.matches(inventory)) {
-				recipe.applyTransformers(inventory);
+				recipe.applyTransformers(inventory, player);
 				return;
 			}
 		}
@@ -151,7 +152,7 @@ public class MCRecipeManager implements IRecipeManager {
 					}
 				}
 			} else {
-				if (recipe instanceof ShapedRecipe) {
+				if (recipe instanceof ShapedRecipes) {
 					
 				} else if (recipe instanceof ShapedOreRecipe) {
 					

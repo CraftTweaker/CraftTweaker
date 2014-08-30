@@ -1,6 +1,7 @@
 package minetweaker.api.item;
 
 import java.util.List;
+import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 
 /**
@@ -66,7 +67,7 @@ public class IngredientAny implements IIngredient {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
 		return item;
 	}
 

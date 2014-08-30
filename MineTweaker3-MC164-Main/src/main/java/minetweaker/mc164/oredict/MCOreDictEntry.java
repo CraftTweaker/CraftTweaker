@@ -21,6 +21,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.oredict.IngredientOreDict;
+import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -168,7 +169,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
 		return item;
 	}
 

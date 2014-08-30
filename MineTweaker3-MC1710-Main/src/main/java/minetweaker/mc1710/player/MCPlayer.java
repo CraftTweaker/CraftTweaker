@@ -128,4 +128,9 @@ public class MCPlayer implements IPlayer {
 		hash = 23 * hash + (this.player != null ? this.player.hashCode() : 0);
 		return hash;
 	}
+
+	@Override
+	public void give(IItemStack stack) {
+		player.inventory.addItemStackToInventory(MineTweakerMC.getItemStack(stack).copy());
+	}
 }

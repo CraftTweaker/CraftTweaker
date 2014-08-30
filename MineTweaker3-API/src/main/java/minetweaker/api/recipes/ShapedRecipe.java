@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.player.IPlayer;
 
 /**
  *
@@ -179,7 +180,7 @@ public class ShapedRecipe implements ICraftingRecipe {
 	}
 	
 	@Override
-	public void applyTransformers(ICraftingInventory inventory) {
+	public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
 		IItemStack[] stacks = new IItemStack[ingredients.length];
 		
 		for (int i = 0; i <= inventory.getWidth() - width; i++) {
@@ -188,11 +189,12 @@ public class ShapedRecipe implements ICraftingRecipe {
 					IItemStack item = inventory.getStack(posx[k] + i, posy[k] + j);
 					if (item == null) continue out;
 					
-					if (!ingredients[k].matches(item)) continue out;
+					if (!ingredients[k].matches(item))
+						continue out;
 					stacks[k] = item;
 				}
 				
-				doRecipeTransformers(inventory, stacks, i, j, false);
+				doRecipeTransformers(inventory, stacks, i, j, false, byPlayer);
 				return;
 			}
 		}
@@ -208,7 +210,7 @@ public class ShapedRecipe implements ICraftingRecipe {
 						stacks[k] = item;
 					}
 
-					doRecipeTransformers(inventory, stacks, i, j, true);
+					doRecipeTransformers(inventory, stacks, i, j, true, byPlayer);
 					return;
 				}
 			}
@@ -264,9 +266,10 @@ public class ShapedRecipe implements ICraftingRecipe {
 			ICraftingInventory inventory,
 			IItemStack[] stacks,
 			int offx, int offy,
-			boolean mirrored) {
+			boolean mirrored,
+			IPlayer byPlayer) {
 		for (int i = 0; i < ingredients.length; i++) {
-			IItemStack transformed = ingredients[i].applyTransform(stacks[i]);
+			IItemStack transformed = ingredients[i].applyTransform(stacks[i], byPlayer);
 			if (transformed != stacks[i]) {
 				if (mirrored) {
 					inventory.setStack(

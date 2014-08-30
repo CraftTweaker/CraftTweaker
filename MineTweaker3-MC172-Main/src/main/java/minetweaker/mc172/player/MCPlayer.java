@@ -114,6 +114,11 @@ public class MCPlayer implements IPlayer {
 					(EntityPlayerMP) player);
 		}
 	}
+
+	@Override
+	public void give(IItemStack stack) {
+		player.inventory.addItemStackToInventory(MineTweakerMC.getItemStack(stack).copy());
+	}
 	
 	@Override
 	public boolean equals(Object other) {

@@ -11,6 +11,7 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
+import minetweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -45,7 +46,7 @@ public class IngredientExpansion {
 	public static IIngredient transformIC2Discharge(IIngredient ingredient, final int amount) {
 		return ingredient.transform(new IItemTransformer() {
 			@Override
-			public IItemStack transform(IItemStack item) {
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
 				return ItemExpansion.ic2Discharge(item, amount, 0).withAmount(item.getAmount() + 1);
 			}
 		});

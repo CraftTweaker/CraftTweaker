@@ -8,6 +8,7 @@ package minetweaker.api.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 
 /**
@@ -108,9 +109,9 @@ public class IngredientOr implements IIngredient {
 	}
 
 	@Override
-	public IItemStack applyTransform(IItemStack item) {
+	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
 		for (IItemTransformer transformer : transformers) {
-			item = transformer.transform(item);
+			item = transformer.transform(item, byPlayer);
 		}
 		
 		return item;

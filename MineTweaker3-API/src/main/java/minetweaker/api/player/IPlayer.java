@@ -58,6 +58,9 @@ public interface IPlayer {
 	@ZenGetter("adventure")
 	public boolean isAdventure();
 	
+	@ZenMethod
+	public void give(IItemStack stack);
+	
 	// not an exposed method. risks abuse
 	public void openBrowser(String url);
 }

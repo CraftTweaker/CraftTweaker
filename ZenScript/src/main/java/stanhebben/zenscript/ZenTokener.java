@@ -95,7 +95,7 @@ public class ZenTokener extends TokenStream {
 	private static final String[] REGEXPS = {
 		"#[^\n]*[\n\\e]",
 		"//[^\n]*[\n\\e]",
-		"/\\*[^\\*]*(\\*^/[^\\*]*)*\\*/",
+		"/\\*[^\\*]*(\\*[^/]*)*\\*/",
 		"[ \t\r\n]*",
 		"[a-zA-Z_][a-zA-Z_0-9]*",
 		"\\-?(0|[1-9][0-9]*)\\.[0-9]+([eE][\\+\\-]?[0-9]+)?",
