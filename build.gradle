@@ -18,6 +18,10 @@ task setupDecompWorkspaceAll(dependsOn:
 	+ projects172.collect { ':' + it + ":setupDecompWorkspace" }
 	+ projects1710.collect { ':' + it + ":setupDecompWorkspace" }) {}
 
+task setupDecompWorkspace17X(dependsOn:
+	  projects172.collect { ':' + it + ":setupDecompWorkspace" }
+	+ projects1710.collect { ':' + it + ":setupDecompWorkspace" }) {}
+
 task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']

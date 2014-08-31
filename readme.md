@@ -19,26 +19,27 @@ The MineTweaker 3 source is setup as a multi-project Gradle project:
 
 ### Developing and running MineTweaker from source
 
-Configuration settings are stored in configuration.gradle .
+Configuration settings are stored in configuration.gradle . *Make sure to configure the tools.jar directory in that file! Nothing will compile without it.*
 
-#### Make sure to configure your tools.jar directory! Nothing will compile without it.
+In order to use the project, you have to execute the setupDecompWorkspaceAll (or use setupDecomWorkspace17X if you have errors on the 1.6.4 forge patches). It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in MineTweaker3-XYZ-Main project, which will run MineTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run MineTweaker with only the mod support for that specific mod.
 
-In order to run the project, you have to execute the setupDecompWorkspace in the MineTweaker3-MCXYZ-Main project. It will prepare a running environment for you. After that, you can simply run minecraft with the runClient task on MineTweaker3-MC17-Main. It will run MineTweaker. (without its mod support libraries)
+The following global tasks are available:
 
-Additionally, you will have to copy tools.jar from your JDK to the buildSrc/libs directory (if someone knows how to make a proper reference to it, please let me know).
-
-If you want to work on a specific mod support library, perform the setupDecompWorkspace on that specific mod support and run that project with the runClient task. It will then run MineTweaker + that specific mod support library.
+- setupDecompWorkspaceAll: sets up all workspaces in all subprojects
+- setupDecompWorkspace17X: sets up all workspaces for anything that's not 1.6.4
+- assembleMC164: builds MineTweaker for Minecraft 1.6.4
+- assembleMC172: builds MineTweaker for Minecraft 1.7.2
+- assembleMC1710: builds MineTweaker for Minecraft 1.7.10
+- assembleAll: builds all versions of MineTweaker
 
 ### Adding mod support
 
-When starting a new mod support library, it is best to start from an existing one. For instance, copy the NEI support library, and remove the source files inside the src/java/main directory. Then you can work with it like any other support library.
-
-Before it can be released, you will have to modify the assembleMC17 task to include the new mod support.
+When starting a new mod support library, it is best to start from an existing one. For instance, copy the NEI support library, and remove the source files inside the src/java/main directory. Then you can work with it like any other support library. Make sure to update gradle.properties to add the projects in there.
 
 ### Building a release
 
-The assembleMC17 task is the main building task for building a reobfuscated jar combining all the different mod support libraries into one. The jar will be stored in build/libs/MineTweaker3.jar .
+Use the assembleAll task to build all versions, or assembleMCxxx tasks to build a specific version. The files will be output in /build/libs .
 
 ## Customized builds
 
-You may modify and redistribute your own customized version of MineTweaker as long as you mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name). Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (me) ;)
+You may modify and redistribute your own customized version of MineTweaker as long as you mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name) and as long as you make the modified source code publicly available. Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (me) ;)
