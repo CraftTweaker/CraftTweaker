@@ -11,6 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.mc1710.client.MCClient;
 import minetweaker.runtime.providers.ScriptProviderMemory;
 
 /**
@@ -21,6 +22,8 @@ public class MineTweakerLoadScriptsHandler implements IMessageHandler<MineTweake
 	@Override
 	public IMessage onMessage(MineTweakerLoadScriptsPacket message, MessageContext ctx) {
 		if (MineTweakerAPI.server == null) {
+			MineTweakerAPI.client = new MCClient();
+		
 			MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(message.getData()));
 			MineTweakerImplementationAPI.reload();
 		}

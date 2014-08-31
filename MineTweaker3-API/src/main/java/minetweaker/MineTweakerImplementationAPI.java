@@ -1,6 +1,5 @@
 package minetweaker;
 
-import minetweaker.api.logger.MTLogger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,7 +22,9 @@ import minetweaker.api.formatting.IFormatter;
 import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.liquid.ILiquidDefinition;
+import minetweaker.api.logger.MTLogger;
 import minetweaker.api.mods.ILoadedMods;
 import minetweaker.api.mods.IMod;
 import minetweaker.api.oredict.IOreDict;
@@ -34,6 +35,8 @@ import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandValidator;
 import minetweaker.api.server.IServer;
+import minetweaker.api.vanilla.IVanilla;
+import minetweaker.api.vanilla.LootEntry;
 import minetweaker.api.world.IBiome;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.util.EventList;
@@ -290,6 +293,60 @@ public class MineTweakerImplementationAPI {
 			}
 		}));
 		
+		minetweakerCommands.put("seeds", new MineTweakerCommand(
+				"seeds",
+				new String[] {
+					"/minetweaker seeds",
+					"    Prints all seeds registered",
+					"    for tall grass"
+				}, new ICommandFunction() {
+			@Override
+			public void execute(String[] arguments, IPlayer player) {
+				MineTweakerAPI.logCommand("Seeds:");
+				for (WeightedItemStack seed : MineTweakerAPI.vanilla.getSeeds().getSeeds()) {
+					String message = seed.getStack() + " - " + (int) seed.getChance();
+					player.sendChat(message);
+					MineTweakerAPI.logCommand("Seed: " + message);
+				}
+			}
+				}));
+		
+		minetweakerCommands.put("loot", new MineTweakerCommand(
+				"seeds",
+				new String[] {
+					"/minetweaker seeds",
+					"    Prints all seeds registered",
+					"    for tall grass"
+				}, new ICommandFunction() {
+			@Override
+			public void execute(String[] arguments, IPlayer player) {
+				if (arguments.length == 0) {
+					MineTweakerAPI.logCommand("Loot chest contents:");
+					List<String> types = MineTweakerAPI.vanilla.getLoot().getLootTypes();
+					Collections.sort(types);
+					for (String lootType : types) {
+						MineTweakerAPI.logCommand("Loot type: " + lootType);
+						
+						List<LootEntry> entries = MineTweakerAPI.vanilla.getLoot().getLoot(lootType);
+						for (LootEntry entry : entries) {
+							MineTweakerAPI.logCommand("    " + entry.toString());
+						}
+					}
+					
+					player.sendChat("List generated; see minetweaker.log in your minecraft dir");
+				} else {
+					MineTweakerAPI.logCommand("Loot for type: " + arguments[0]);
+
+					List<LootEntry> entries = MineTweakerAPI.vanilla.getLoot().getLoot(arguments[0]);
+					for (LootEntry entry : entries) {
+						MineTweakerAPI.logCommand("    " + entry.toString());
+					}
+
+					player.sendChat("List generated; see minetweaker.log in your minecraft dir");
+				}
+			}
+				}));
+		
 		minetweakerCommands.put("wiki", new MineTweakerCommand(
 				"wiki",
 				new String[] {
@@ -396,6 +453,7 @@ public class MineTweakerImplementationAPI {
 	 * @param game game interface
 	 * @param mods mods interface
 	 * @param formatter formatter interface
+	 * @param vanilla vanilla interface
 	 */
 	public static void init(
 			IOreDict oreDict,
@@ -403,13 +461,15 @@ public class MineTweakerImplementationAPI {
 			IFurnaceManager furnace,
 			IGame game,
 			ILoadedMods mods,
-			IFormatter formatter) {
+			IFormatter formatter,
+			IVanilla vanilla) {
 		MineTweakerAPI.oreDict = oreDict;
 		MineTweakerAPI.recipes = recipes;
 		MineTweakerAPI.furnace = furnace;
 		MineTweakerAPI.game = game;
 		MineTweakerAPI.loadedMods = mods;
 		MineTweakerAPI.format = formatter;
+		MineTweakerAPI.vanilla = vanilla;
 	}
 	
 	/**
@@ -530,6 +590,7 @@ public class MineTweakerImplementationAPI {
 	
 	private static class AddMineTweakerCommandAction implements IUndoableAction {
 		private final MineTweakerCommand command;
+		private boolean added;
 		
 		public AddMineTweakerCommandAction(MineTweakerCommand command) {
 			this.command = command;
@@ -537,7 +598,12 @@ public class MineTweakerImplementationAPI {
 
 		@Override
 		public void apply() {
-			minetweakerCommands.put(command.name, command);
+			if (!minetweakerCommands.containsKey(command.name)) {
+				minetweakerCommands.put(command.name, command);
+				added = true;
+			} else {
+				added = false;
+			}
 		}
 
 		@Override
@@ -547,7 +613,9 @@ public class MineTweakerImplementationAPI {
 
 		@Override
 		public void undo() {
-			minetweakerCommands.remove(command.name);
+			if (added) {
+				minetweakerCommands.remove(command.name);
+			}
 		}
 
 		@Override

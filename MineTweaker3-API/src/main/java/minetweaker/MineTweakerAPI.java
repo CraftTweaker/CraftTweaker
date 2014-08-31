@@ -23,6 +23,7 @@ import minetweaker.api.recipes.IRecipeManager;
 import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.recipes.IFurnaceManager;
 import minetweaker.api.server.IServer;
+import minetweaker.api.vanilla.IVanilla;
 import minetweaker.runtime.GlobalRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -90,6 +91,7 @@ public class MineTweakerAPI {
 		registerGlobalSymbol("game", getJavaStaticFieldSymbol(MineTweakerAPI.class, "game"));
 		registerGlobalSymbol("loadedMods", getJavaStaticFieldSymbol(MineTweakerAPI.class, "loadedMods"));
 		registerGlobalSymbol("format", getJavaStaticFieldSymbol(MineTweakerAPI.class, "format"));
+		registerGlobalSymbol("vanilla", getJavaStaticFieldSymbol(MineTweakerAPI.class, "vanilla"));
 	}
 	
 	private MineTweakerAPI() {}
@@ -155,6 +157,11 @@ public class MineTweakerAPI {
 	 * Access point to the text formatter.
 	 */
 	public static IFormatter format = null;
+	
+	/**
+	 * Access point to the vanilla functions and data.
+	 */
+	public static IVanilla vanilla = null;
 	
 	/**
 	 * Applies this given action.

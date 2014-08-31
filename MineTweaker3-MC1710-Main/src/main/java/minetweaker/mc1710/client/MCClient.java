@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package minetweaker.mc172.client;
+package minetweaker.mc1710.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import minetweaker.api.client.IClient;
@@ -17,15 +17,9 @@ import net.minecraft.client.Minecraft;
  * @author Stan
  */
 public class MCClient implements IClient {
-	private final IPlayer player;
-	
-	public MCClient() {
-		player = MineTweakerMC.getIPlayer(Minecraft.getMinecraft().thePlayer);
-	}
-
 	@Override
 	public IPlayer getPlayer() {
-		return player;
+		return MineTweakerMC.getIPlayer(Minecraft.getMinecraft().thePlayer);
 	}
 
 	@Override

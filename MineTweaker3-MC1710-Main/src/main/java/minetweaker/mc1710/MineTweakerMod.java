@@ -22,6 +22,7 @@ import java.io.File;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
+import minetweaker.mc1710.client.MCClient;
 import minetweaker.mc1710.formatting.MCFormatter;
 import minetweaker.mc1710.furnace.FuelTweaker;
 import minetweaker.mc1710.furnace.MCFurnaceManager;
@@ -35,6 +36,8 @@ import minetweaker.mc1710.oredict.MCOreDict;
 import minetweaker.mc1710.recipes.MCRecipeManager;
 import minetweaker.mc1710.server.MCServer;
 import minetweaker.mc1710.util.MineTweakerHacks;
+import minetweaker.mc1710.util.MineTweakerPlatformUtils;
+import minetweaker.mc1710.vanilla.MCVanilla;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
@@ -87,7 +90,8 @@ public class MineTweakerMod {
 				new MCFurnaceManager(),
 				MCGame.INSTANCE,
 				new MCLoadedMods(),
-				new MCFormatter());
+				new MCFormatter(),
+				new MCVanilla());
 		
 		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
@@ -148,6 +152,10 @@ public class MineTweakerMod {
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
+		
+		if (MineTweakerPlatformUtils.isClient()) {
+			MineTweakerAPI.client = new MCClient();
+		}
 		
 		File scriptsDir = new File(MineTweakerHacks.getWorldDirectory(ev.getServer()), "scripts");
 		if (!scriptsDir.exists()) {

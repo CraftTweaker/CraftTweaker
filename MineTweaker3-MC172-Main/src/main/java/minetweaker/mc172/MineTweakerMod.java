@@ -35,6 +35,7 @@ import minetweaker.mc172.oredict.MCOreDict;
 import minetweaker.mc172.recipes.MCRecipeManager;
 import minetweaker.mc172.server.MCServer;
 import minetweaker.mc172.util.MineTweakerHacks;
+import minetweaker.mc172.vanilla.MCVanilla;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
@@ -85,7 +86,8 @@ public class MineTweakerMod {
 				new MCFurnaceManager(),
 				MCGame.INSTANCE,
 				new MCLoadedMods(),
-				new MCFormatter());
+				new MCFormatter(),
+				new MCVanilla());
 		
 		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;

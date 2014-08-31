@@ -8,6 +8,7 @@ import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.world.IBiome;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * Game interface. Used to obtain general game information.
@@ -55,4 +56,42 @@ public interface IGame {
 	 */
 	@ZenGetter("entities")
 	public List<IEntityDefinition> getEntities();
+	
+	/**
+	 * Sets a localization value.
+	 * 
+	 * @param key localization key
+	 * @param value localization value
+	 */
+	@ZenMethod
+	public void setLocalization(String key, String value);
+	
+	/**
+	 * Sets a localization value.
+	 * 
+	 * @param lang language
+	 * @param key localization key
+	 * @param value  localization value
+	 */
+	@ZenMethod
+	public void setLocalization(String lang, String key, String value);
+	
+	/**
+	 * Gets a localized string.
+	 * 
+	 * @param key localization key
+	 * @return localized value
+	 */
+	@ZenMethod
+	public String localize(String key);
+	
+	/**
+	 * Gets a localized string.
+	 * 
+	 * @param key localization key
+	 * @param lang language
+	 * @return localized value
+	 */
+	@ZenMethod
+	public String localize(String key, String lang);
 }

@@ -51,12 +51,6 @@ processResources
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 	
-	from(sourceSets.main.java.srcDirs) {
-		include 'minetweaker/mc1710/MineTweakerMod.java'
-		
-		expand 'version':project.version
-	}
-    
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'

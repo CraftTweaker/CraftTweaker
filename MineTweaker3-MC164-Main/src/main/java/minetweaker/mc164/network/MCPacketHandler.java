@@ -18,6 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.mc164.client.MCClient;
 import minetweaker.runtime.providers.ScriptProviderMemory;
 
 public class MCPacketHandler implements IPacketHandler {
@@ -36,6 +37,8 @@ public class MCPacketHandler implements IPacketHandler {
 			System.out.println("Received script data: " + packet.data.length + " bytes");
 			
 			if (MineTweakerAPI.server == null) {
+				MineTweakerAPI.client = new MCClient();
+				
 				MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(packet.data));
 				MineTweakerImplementationAPI.reload();
 			}

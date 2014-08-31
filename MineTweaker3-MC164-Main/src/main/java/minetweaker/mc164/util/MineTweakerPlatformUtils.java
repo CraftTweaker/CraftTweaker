@@ -6,6 +6,9 @@
 
 package minetweaker.mc164.util;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
@@ -25,5 +28,18 @@ public class MineTweakerPlatformUtils {
 		} catch (ClassNotFoundException ex) {
 			throw new RuntimeException("entity class not found: " + entityClassName);
 		}
+	}
+	
+	public static String getLanguage() {
+		return FMLCommonHandler.instance().getSide() == Side.SERVER ? null : FMLClientHandler.instance().getCurrentLanguage();
+	}
+	
+	public static boolean isLanguageActive(String lang) {
+		String current = getLanguage();
+		return current != null && current.equals(lang);
+	}
+	
+	public static boolean isClient() {
+		return FMLCommonHandler.instance().getSide() == Side.CLIENT;
 	}
 }

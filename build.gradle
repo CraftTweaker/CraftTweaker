@@ -64,10 +64,91 @@ task assembleMC164(type: Jar, dependsOn: [\
 	}
 }
 
+task assembleDevBase1710(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build',
+		':MineTweaker3-MC1710-Main:build']) {
+	archiveName="MineTweaker3-Dev-1.7.10-${mineTweakerVersion}.jar"
+	
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	from project(':MineTweaker3-MC1710-Main').sourceSets.main.output
+}
+
+task assembleDevBase172(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build',
+		':MineTweaker3-MC172-Main:build']) {
+	archiveName="MineTweaker3-Dev-1.7.2-${mineTweakerVersion}.jar"
+	
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	from project(':MineTweaker3-MC172-Main').sourceSets.main.output
+}
+
+task assembleDevBase164(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build',
+		':MineTweaker3-MC164-Main:build']) {
+	archiveName="MineTweaker3-Dev-1.6.4-${mineTweakerVersion}.jar"
+	
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	from project(':MineTweaker3-MC164-Main').sourceSets.main.output
+}
+
+task assembleDevFull1710(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build']
+		+ projects1710.collect { ':' + it + ":build" }) {
+	archiveName="MineTweaker3-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
+	
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	
+	for (p in projects1710) {
+		from project(p).sourceSets.main.output
+	}
+}
+
+task assembleDevFull172(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build']
+		+ projects172.collect { ':' + it + ":build" }) {
+	archiveName="MineTweaker3-Dev-Full-1.7.2-${mineTweakerVersion}.jar"
+	
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	
+	for (p in projects172) {
+		from project(p).sourceSets.main.output
+	}
+}
+
+task assembleDevFull164(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build']
+		+ projects164.collect { ':' + it + ":build" }) {
+	archiveName="MineTweaker3-Dev-Full-1.6.4-${mineTweakerVersion}.jar"
+	
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	
+	for (p in projects164) {
+		from project(p).sourceSets.main.output
+	}
+}
+
 task assembleAll(dependsOn: [
 	assembleMC164,
 	assembleMC172,
-	assembleMC1710]) {
+	assembleMC1710,
+	assembleDevBase164,
+	assembleDevBase172,
+	assembleDevBase1710,
+	assembleDevFull164,
+	assembleDevFull172,
+	assembleDevFull1710]) {
 }
 
 task zendoc164(type: Javadoc) {
