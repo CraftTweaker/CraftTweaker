@@ -25,7 +25,7 @@ archivesBaseName = project.projectDir.name
 dependencies {
 	compile project(':ZenScript')
 	compile project(':MineTweaker3-API')
-	compile project(':MineTweaker3-MC172-Main')
+	compile project(':MineTweaker3-MC1710-Main')
 	compile files('libs/NotEnoughItems-1.7.10-1.0.2.15-dev.jar')
 }
 

@@ -1,10 +1,12 @@
 import org.gradle.api.artifacts.*
 
 apply plugin: 'base' // To add "clean" task to the root project.
+apply from: 'configuration.gradle'
 
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
+
 
 task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
     title = 'All modules'
@@ -33,6 +35,7 @@ task assembleMC1710(type: Jar, dependsOn: [\
 		':MineTweaker3-MC1710-Mod-NEI:build',
 		':MineTweaker3-MC1710-Mod-MFR:build',
 		':MineTweaker3-MC1710-Mod-GregTech:build']) {
+	archiveName="MineTweaker3-1.7.10-${mineTweakerVersion}.jar"
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC1710-Main').jar.archivePath)
@@ -49,6 +52,7 @@ task assembleMC172(type: Jar, dependsOn: [\
 		':MineTweaker3-MC172-Mod-IC2:build',
 		':MineTweaker3-MC172-Mod-NEI:build',
 		':MineTweaker3-MC172-Mod-GregTech:build']) {
+	archiveName="MineTweaker3-1.7.2-${mineTweakerVersion}.jar"
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC172-Main').jar.archivePath)
@@ -65,6 +69,7 @@ task assembleMC164(type: Jar, dependsOn: [\
 		':MineTweaker3-MC164-Mod-NEI:build',
 		':MineTweaker3-MC164-Mod-GregTech:build',
 		':MineTweaker3-MC164-Mod-MFR:build']) {
+	archiveName="MineTweaker3-1.6.4-${mineTweakerVersion}.jar"
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Main').jar.archivePath)
@@ -72,6 +77,12 @@ task assembleMC164(type: Jar, dependsOn: [\
 	from zipTree(project(':MineTweaker3-MC164-Mod-NEI').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Mod-GregTech').jar.archivePath)
 	from zipTree(project(':MineTweaker3-MC164-Mod-MFR').jar.archivePath)
+}
+
+task assembleAll(dependsOn: [
+	assembleMC164,
+	assembleMC172,
+	assembleMC1710]) {
 }
 
 task zendoc164(type: Javadoc) {

@@ -1,4 +1,7 @@
+import java.io.File
+
 apply plugin: 'java'
+apply from: new File('../configuration.gradle')
 
 repositories {
 	mavenCentral();
@@ -7,5 +10,5 @@ repositories {
 dependencies {
 	compile gradleApi()
 	compile 'org.ow2.asm:asm-debug-all:4.1'
-	compile files("libs/tools.jar")
+	compile files(javaToolsJar)
 }

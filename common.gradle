@@ -2,8 +2,7 @@
 // configurable properties
 // -----------------------
 
-ext.mineTweakerVersion="3.0.7"
-ext.mineTweakerDebug="true"
+apply from: rootProject.file('configuration.gradle')
 
 // -- end of configurable properties
 

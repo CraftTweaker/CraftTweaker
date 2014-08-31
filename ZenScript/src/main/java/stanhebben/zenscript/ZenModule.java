@@ -77,7 +77,7 @@ public class ZenModule {
 			clsScript.visitSource(script.getFileName(), null);
 			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
 			
-			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName(), null, internal(Object.class), new String[] {internal(Runnable.class)});
+			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[] {internal(Runnable.class)});
 			
 			for (Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
 				ParsedFunction fn = function.getValue();
@@ -126,7 +126,7 @@ public class ZenModule {
 				scriptOutput.ret();
 				scriptOutput.end();
 				
-				mainRun.invokeStatic(script.getClassName(), "__script__", "()V");
+				mainRun.invokeStatic(script.getClassName().replace('.', '/'), "__script__", "()V");
 			}
 			
 			clsScript.visitEnd();

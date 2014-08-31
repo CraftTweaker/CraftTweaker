@@ -9,6 +9,7 @@ package minetweaker.mc1710;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -36,7 +37,9 @@ import minetweaker.mc1710.server.MCServer;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
+import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -75,6 +78,7 @@ public class MineTweakerMod {
 	
 	public final MCRecipeManager recipes;
 	private final IScriptProvider scriptsGlobal;
+	private final ScriptProviderCustom scriptsIMC;
 	
 	public MineTweakerMod() {
 		MineTweakerImplementationAPI.init(
@@ -93,6 +97,14 @@ public class MineTweakerMod {
 			globalDir.mkdirs();
 		}
 		
+		/*try {
+			String data = Resources.toString(Resources.getResource(MineTweakerMod.class, "/minetweaker/myscript.zs"), Charsets.UTF_8);
+			
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}*/
+		
+		scriptsIMC = new ScriptProviderCustom("intermod");
 		scriptsGlobal = new ScriptProviderDirectory(globalDir);
 		MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
 	}
@@ -100,6 +112,20 @@ public class MineTweakerMod {
 	// ##########################
 	// ### FML Event Handlers ###
 	// ##########################
+	
+	@EventHandler
+    public void onIMCEvent(FMLInterModComms.IMCEvent event) {
+        for (final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
+            if (imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
+				if (imcMessage.isStringMessage()) {
+					scriptsIMC.add("imc", imcMessage.getStringValue());
+				} else if (imcMessage.isNBTMessage()) {
+					NBTTagCompound message = imcMessage.getNBTValue();
+					scriptsIMC.add(message.getString("name"), message.getString("content"));
+				}
+            }
+        }
+    }
 	
 	@EventHandler
 	public void onLoad(FMLPreInitializationEvent ev) {
@@ -129,7 +155,7 @@ public class MineTweakerMod {
 		}
 		
 		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
-		IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal, scriptsLocal);
+		IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal, scriptsLocal);
 		
 		MineTweakerImplementationAPI.setScriptProvider(cascaded);
 		MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
