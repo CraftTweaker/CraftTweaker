@@ -12,13 +12,18 @@ buildscript {
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
+	
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
     }
 }
 
 apply plugin: 'forge'
-minecraft{version = "1.6.4-9.11.1.964"}
+
+minecraft {
+	version = forgeVersion164
+}
+
 version = "1.0"
 archivesBaseName = project.projectDir.name
 

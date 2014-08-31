@@ -15,6 +15,11 @@ buildscript {
 
 apply plugin: 'forge'
 
+minecraft {
+	version = forgeVersion164
+}
+
+
 version = "1.6.4-" + ext.mineTweakerVersion
 //group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = project.projectDir.name
@@ -34,10 +39,6 @@ task makeRegistry(type: RegisterZenClassesTask) {
 
 tasks.jar.dependsOn(makeRegistry)
 
-minecraft {
-	version = "1.6.4-9.11.1.964"
-}
-
 processResources
 {
     // replace stuff in mcmod.info, nothing else
@@ -48,12 +49,6 @@ processResources
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 	
-	from(sourceSets.main.java.srcDirs) {
-		include 'minetweaker/mc164/MineTweakerMod.java'
-		
-		expand 'version':project.version
-	}
-    
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'

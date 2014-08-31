@@ -14,13 +14,16 @@ The MineTweaker 3 source is setup as a multi-project Gradle project:
 
 - ZenScript is the custom scripting engine
 - MineTweaker3-API is the shared API for all MineTweaker versions
-- MineTweaker3-MC17-Main is the main MineTweaker implementation for Minecraft 1.7
-- MineTweaker3-MC17-Mod-XXX are the mod support projects. They are compiled and obfuscated independently and then assembled later
+- MineTweaker3-MCXYZ-Main are the main MineTweaker implementations for Minecraft X.Y.Z
+- MineTweaker3-MCXYZ-Mod-XXX are the mod support projects. They are compiled and obfuscated independently and then assembled later
 
 ### Developing and running MineTweaker from source
 
+Configuration settings are stored in configuration.gradle .
 
-In order to run the project, you have to execute the setupDecompWorkspace in the MineTweaker3-MC17-Main project. It will prepare a running environment for you. After that, you can simply run minecraft with the runClient task on MineTweaker3-MC17-Main. It will run MineTweaker. (without its mod support libraries)
+#### Make sure to configure your tools.jar directory! Nothing will compile without it.
+
+In order to run the project, you have to execute the setupDecompWorkspace in the MineTweaker3-MCXYZ-Main project. It will prepare a running environment for you. After that, you can simply run minecraft with the runClient task on MineTweaker3-MC17-Main. It will run MineTweaker. (without its mod support libraries)
 
 Additionally, you will have to copy tools.jar from your JDK to the buildSrc/libs directory (if someone knows how to make a proper reference to it, please let me know).
 

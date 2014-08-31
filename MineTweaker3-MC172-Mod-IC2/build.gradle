@@ -18,7 +18,11 @@ buildscript {
 }
 
 apply plugin: 'forge'
-minecraft{version = "1.7.2-10.12.2.1121"}
+
+minecraft {
+	version = forgeVersion172
+}
+
 version = "1.0"
 archivesBaseName = project.projectDir.name
 

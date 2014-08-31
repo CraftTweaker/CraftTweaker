@@ -1,4 +1,45 @@
+// #######################
+// ### Global settings ###
+// #######################
 
-ext.mineTweakerVersion="3.0.8"
-ext.mineTweakerDebug="false"
-ext.javaToolsJar=new File("C:/Program Files/Java/jdk1.8.0_05/lib/tools.jar")
+ext.mineTweakerVersion = "3.0.8"
+ext.mineTweakerDebug = "false"
+ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_05/lib/tools.jar")
+
+// ######################
+// ### 1.6.4 settings ###
+// ######################
+
+ext.forgeVersion164 = "1.6.4-9.11.1.964"
+ext.projects164 = [
+	'MineTweaker3-MC164-Main',
+	'MineTweaker3-MC164-Mod-IC2',
+	'MineTweaker3-MC164-Mod-NEI',
+	'MineTweaker3-MC164-Mod-MFR',
+	'MineTweaker3-MC164-Mod-GregTech'
+]
+
+// ######################
+// ### 1.7.2 settings ###
+// ######################
+
+ext.forgeVersion172 = "1.7.2-10.12.2.1121"
+ext.projects172 = [
+	'MineTweaker3-MC172-Main',
+	'MineTweaker3-MC172-Mod-IC2',
+	'MineTweaker3-MC172-Mod-NEI',
+	'MineTweaker3-MC172-Mod-GregTech'
+]
+
+// #######################
+// ### 1.7.10 settings ###
+// #######################
+
+ext.forgeVersion1710 = "1.7.10-10.13.0.1180"
+ext.projects1710 = [
+	'MineTweaker3-MC1710-Main',
+	'MineTweaker3-MC1710-Mod-IC2',
+	'MineTweaker3-MC1710-Mod-NEI',
+	'MineTweaker3-MC1710-Mod-MFR',
+	'MineTweaker3-MC1710-Mod-GregTech'
+]

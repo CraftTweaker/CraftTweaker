@@ -7,76 +7,57 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-
-task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
-    title = 'All modules'
-    destinationDir = new File(project.buildDir, 'merged-javadoc')
-
-    // Note: The closures below are executed lazily.
-    source {
-       subprojects*.sourceSets*.main*.allSource
-    }
-    classpath.from {
-        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
-    }
-}
-
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
     gradleVersion = '1.11'
 }
 
 subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
 
+task setupDecompWorkspaceAll(dependsOn:
+	  projects164.collect { ':' + it + ":setupDecompWorkspace" }
+	+ projects172.collect { ':' + it + ":setupDecompWorkspace" }
+	+ projects1710.collect { ':' + it + ":setupDecompWorkspace" }) {}
+
 task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
-		':MineTweaker3-API:build',
-		':MineTweaker3-MC1710-Main:build',
-		':MineTweaker3-MC1710-Mod-IC2:build',
-		':MineTweaker3-MC1710-Mod-NEI:build',
-		':MineTweaker3-MC1710-Mod-MFR:build',
-		':MineTweaker3-MC1710-Mod-GregTech:build']) {
+		':MineTweaker3-API:build']
+		+ projects1710.collect { ':' + it + ":build" }) {
 	archiveName="MineTweaker3-1.7.10-${mineTweakerVersion}.jar"
+	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC1710-Main').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC1710-Mod-IC2').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC1710-Mod-NEI').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC1710-Mod-MFR').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC1710-Mod-GregTech').jar.archivePath)
+	
+	for (p in projects1710) {
+		from zipTree(project(p).jar.archivePath)
+	}
 }
 
 task assembleMC172(type: Jar, dependsOn: [\
 		':ZenScript:build',
-		':MineTweaker3-API:build',
-		':MineTweaker3-MC172-Main:build',
-		':MineTweaker3-MC172-Mod-IC2:build',
-		':MineTweaker3-MC172-Mod-NEI:build',
-		':MineTweaker3-MC172-Mod-GregTech:build']) {
+		':MineTweaker3-API:build']
+		+ projects172.collect { ':' + it + ":build" }) {
 	archiveName="MineTweaker3-1.7.2-${mineTweakerVersion}.jar"
+	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC172-Main').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC172-Mod-IC2').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC172-Mod-NEI').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC172-Mod-GregTech').jar.archivePath)
+	
+	for (p in projects172) {
+		from zipTree(project(p).jar.archivePath)
+	}
 }
 
 task assembleMC164(type: Jar, dependsOn: [\
 		':ZenScript:build',
-		':MineTweaker3-API:build',
-		':MineTweaker3-MC164-Main:build',
-		':MineTweaker3-MC164-Mod-IC2:build',
-		':MineTweaker3-MC164-Mod-NEI:build',
-		':MineTweaker3-MC164-Mod-GregTech:build',
-		':MineTweaker3-MC164-Mod-MFR:build']) {
+		':MineTweaker3-API:build']
+		+ projects164.collect { ':' + it + ":build" }) {
 	archiveName="MineTweaker3-1.6.4-${mineTweakerVersion}.jar"
+	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC164-Main').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC164-Mod-IC2').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC164-Mod-NEI').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC164-Mod-GregTech').jar.archivePath)
-	from zipTree(project(':MineTweaker3-MC164-Mod-MFR').jar.archivePath)
+	
+	for (p in projects164) {
+		from zipTree(project(p).jar.archivePath)
+	}
 }
 
 task assembleAll(dependsOn: [
@@ -86,13 +67,11 @@ task assembleAll(dependsOn: [
 }
 
 task zendoc164(type: Javadoc) {
-	source = files(\
+	source = files([
 		'MineTweaker3-API/src/main/java',
-		'MineTweaker3-MC164-Main/src/main/java',
-		'MineTweaker3-MC164-Mod-IC2/src/main/java',
-		'MineTweaker3-MC164-Mod-NEI/src/main/java',
-		'MineTweaker3-MC164-Mod-GregTech/src/main/java',
-		'MineTweaker3-MC164-Mod-MFR/src/main/java')
+		'MineTweaker3-MC164-Main/src/main/java']
+		+ projects164.collect { it + '/src/main/java' })
+	
 	destinationDir = file("build/zendoc164")
 	options.docletpath = [file('buildSrc/build/libs/buildSrc.jar')].asList()
 	options.doclet = 'stanhebben.zenscript.docs.ZenScriptDoclet'
@@ -102,34 +81,12 @@ task zendoc164(type: Javadoc) {
 		project(':MineTweaker3-MC164-Main').jar.archivePath
 	]
 	
-	for (file in project(':MineTweaker3-MC164-Main').configurations.compile) {
-		classpathList += file
-	}
-	for (file in project(':MineTweaker3-MC164-Mod-IC2').configurations.compile) {
-		classpathList += file
-	}
-	for (file in project(':MineTweaker3-MC164-Mod-GregTech').configurations.compile) {
-		classpathList += file
-	}
-	for (file in project(':MineTweaker3-MC164-Mod-MFR').configurations.compile) {
-		classpathList += file
-	}
-	for (file in project(':MineTweaker3-MC164-Mod-NEI').configurations.compile) {
-		classpathList += file
+	for (p in projects164) {
+		for (file in project(':' + p).configurations.compile) {
+			classpathList += file
+		}
 	}
 	
 	options.classpath = classpathList.asList()
-	//options.baseurl = '/doc/mc164'
 	options.addStringOption("baseurl", "/doc/mc164/")
-}
-
-task experiment << {
-	def files = [project(":ZenScript").jar.archivePath]
-	for (file in project(':MineTweaker3-MC164-Main').configurations.compile) { 
-		files += file
-    }
-	
-	for (file in files) {
-		print file.toString() + '\n'
-	}
 }
