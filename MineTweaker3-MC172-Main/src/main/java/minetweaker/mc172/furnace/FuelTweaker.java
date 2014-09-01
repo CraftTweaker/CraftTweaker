@@ -17,13 +17,14 @@ import cpw.mods.fml.common.IFuelHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
-import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
+import net.minecraft.item.Item;
 
 public class FuelTweaker {
 	public static final FuelTweaker INSTANCE = new FuelTweaker();
 	
 	private List<IFuelHandler> original;
-	private final HashMap<String, List<SetFuelPattern>> quickList = new HashMap<String, List<SetFuelPattern>>();
+	private final HashMap<Item, List<SetFuelPattern>> quickList = new HashMap<Item, List<SetFuelPattern>>();
 	
 	private FuelTweaker() {}
 
@@ -52,29 +53,32 @@ public class FuelTweaker {
 		}
 		
 		for (IItemStack item : pattern.getPattern().getItems()) {
-			if (!quickList.containsKey(item.getName())) {
-				quickList.put(item.getName(), new ArrayList<SetFuelPattern>());
+			ItemStack itemStack = MineTweakerMC.getItemStack(item);
+			Item mcItem = itemStack.getItem();
+			if (!quickList.containsKey(mcItem)) {
+				quickList.put(mcItem, new ArrayList<SetFuelPattern>());
 			}
-			quickList.get(item.getName()).add(pattern);
+			quickList.get(mcItem).add(pattern);
 		}
 	}
 	
 	public void removeFuelPattern(SetFuelPattern pattern) {
 		for (IItemStack item : pattern.getPattern().getItems()) {
-			if (!quickList.containsKey(item.getName())) {
-				quickList.put(item.getName(), new ArrayList<SetFuelPattern>());
+			ItemStack itemStack = MineTweakerMC.getItemStack(item);
+			Item mcItem = itemStack.getItem();
+			if (quickList.containsKey(mcItem)) {
+				quickList.get(mcItem).remove(pattern);
 			}
-			quickList.get(item.getName()).add(pattern);
 		}
 	}
 	
 	private class OverridingFuelHandler implements IFuelHandler {
 		@Override
 		public int getBurnTime(ItemStack fuel) {
-			IItemStack stack = getIItemStack(fuel);
-			String name = fuel.getUnlocalizedName();
-			if (quickList.containsKey(name)) {
-				for (SetFuelPattern override : quickList.get(name)) {
+			if (quickList.containsKey(fuel.getItem())) {
+				IItemStack stack = MineTweakerMC.getIItemStack(fuel);
+				
+				for (SetFuelPattern override : quickList.get(fuel.getItem())) {
 					if (override.getPattern().matches(stack)) {
 						return override.getValue();
 					}
