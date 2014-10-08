@@ -67,6 +67,13 @@ public class MCItemStack implements IItemStack {
 		items = Collections.<IItemStack>singletonList(this);
 		this.tag = tag;
 	}
+	
+	private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
+		stack = itemStack;
+		items = Collections.<IItemStack>singletonList(this);
+		this.tag = tag;
+		this.wildcardSize = wildcardSize;
+	}
 
 	@Override
 	public IItemDefinition getDefinition() {
@@ -146,6 +153,13 @@ public class MCItemStack implements IItemStack {
 		result.stackTagCompound = stack.stackTagCompound;
 		return new MCItemStack(result, tag);
 	}
+	
+	@Override
+	public IItemStack anyAmount() {
+		ItemStack result = new ItemStack(stack.getItem(), 1, stack.getItemDamage());
+		result.stackTagCompound = stack.stackTagCompound;
+		return new MCItemStack(result, tag, true);
+	}
 
 	@Override
 	public IItemStack withTag(IData tag) {
@@ -224,6 +238,9 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public boolean matches(IItemStack item) {
+		if (item == null)
+			return false;
+		
 		ItemStack internal = getItemStack(item);
 		if (internal == null) {
 			throw new RuntimeException("Invalid item: " + item);
@@ -238,6 +255,9 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public boolean contains(IIngredient ingredient) {
+		if (ingredient == null)
+			return false;
+		
 		List<IItemStack> iitems = ingredient.getItems();
 		if (iitems == null || iitems.size() != 1) return false;
 		return matches(iitems.get(0));

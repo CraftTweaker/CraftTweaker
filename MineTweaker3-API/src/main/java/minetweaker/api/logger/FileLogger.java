@@ -38,7 +38,7 @@ public class FileLogger implements ILogger {
 	@Override
 	public void logCommand(String message) {
 		try {
-			writer.write("COMMAND: " + message + "\n");
+			writer.write(message + "\n");
 			writer.flush();
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);

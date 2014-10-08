@@ -1,5 +1,6 @@
 package minetweaker.api.minecraft;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -415,6 +416,20 @@ public class MineTweakerMC {
 		return result;
 	}
 	
+	
+	private static final HashMap<List, IOreDictEntry> oreDictArrays = new HashMap<List, IOreDictEntry>();
+	public static IOreDictEntry getOreDictEntryFromArray(List array) {
+		if (!oreDictArrays.containsKey(array)) {
+			for (String ore : OreDictionary.getOreNames()) {
+				if (OreDictionary.getOres(ore) == array) {
+					oreDictArrays.put(array, MineTweakerAPI.oreDict.get(ore));
+				}
+			}
+		}
+		
+		return oreDictArrays.get(array);
+	}
+	
 	/**
 	 * Converts a Minecraft ingredient to a MineTweaker ingredient.
 	 * 
@@ -422,12 +437,22 @@ public class MineTweakerMC {
 	 * @return minetweaker ingredient
 	 */
 	public static IIngredient getIIngredient(Object ingredient) {
-		if (ingredient instanceof String) {
+		if (ingredient == null) {
+			return null;
+		} else if (ingredient instanceof String) {
 			return MineTweakerAPI.oreDict.get((String) ingredient);
 		} else if (ingredient instanceof Item) {
 			return getIItemStack(new ItemStack((Item) ingredient, 1, 0));
 		} else if (ingredient instanceof ItemStack) {
 			return getIItemStack((ItemStack) ingredient);
+		} else if (ingredient instanceof List) {
+			IOreDictEntry entry = getOreDictEntryFromArray((List) ingredient);
+			
+			if (entry == null) {
+				throw new IllegalArgumentException("No matching oredict entry: " + ingredient);
+			}
+			
+			return entry;
 		} else {
 			throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
 		}

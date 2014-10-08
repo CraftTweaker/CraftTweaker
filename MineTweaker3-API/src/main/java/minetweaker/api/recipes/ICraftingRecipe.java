@@ -23,4 +23,6 @@ public interface ICraftingRecipe {
 	public boolean hasTransformers();
 	
 	public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
+	
+	public String toCommandString();
 }

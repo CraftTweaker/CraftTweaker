@@ -68,6 +68,13 @@ public class MCItemStack implements IItemStack {
 		items = Collections.<IItemStack>singletonList(this);
 		this.tag = tag;
 	}
+	
+	private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
+		stack = itemStack;
+		items = Collections.<IItemStack>singletonList(this);
+		this.tag = tag;
+		this.wildcardSize = wildcardSize;
+	}
 
 	@Override
 	public IItemDefinition getDefinition() {
@@ -148,6 +155,13 @@ public class MCItemStack implements IItemStack {
 		ItemStack result = new ItemStack(stack.getItem(), amount, stack.getItemDamage());
 		result.stackTagCompound = stack.stackTagCompound;
 		return new MCItemStack(result, tag);
+	}
+	
+	@Override
+	public IItemStack anyAmount() {
+		ItemStack result = new ItemStack(stack.getItem(), 1, stack.getItemDamage());
+		result.stackTagCompound = stack.stackTagCompound;
+		return new MCItemStack(result, tag, true);
 	}
 
 	@Override

@@ -11,9 +11,17 @@ import minetweaker.api.recipes.ShapelessRecipe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import minetweaker.api.item.IIngredient;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import minetweaker.api.recipes.ICraftingRecipe;
+import minetweaker.api.recipes.UnknownRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 /**
  *
@@ -116,6 +124,57 @@ public class RecipeConverter {
 			return new ShapedRecipeOre(rarguments.toArray(), recipe);
 		} else {
 			return new ShapedRecipeAdvanced(recipe);
+		}
+	}
+	
+	public static ICraftingRecipe toCraftingRecipe(IRecipe recipe) {
+		IItemStack output = MineTweakerMC.getIItemStack(recipe.getRecipeOutput());
+		
+		if (recipe instanceof ShapelessRecipes) {
+			ShapelessRecipes shapeless = (ShapelessRecipes) recipe;
+			
+			IIngredient[] ingredients = new IIngredient[shapeless.recipeItems.size()];
+			for (int i = 0; i < ingredients.length; i++) {
+				ingredients[i] = MineTweakerMC.getIIngredient(shapeless.recipeItems.get(i));
+			}
+			
+			return new ShapelessRecipe(output, ingredients, null);
+		} else if (recipe instanceof ShapedRecipes) {
+			ShapedRecipes shaped = (ShapedRecipes) recipe;
+			
+			IIngredient[][] ingredients = new IIngredient[shaped.recipeHeight][shaped.recipeWidth];
+			for (int i = 0; i < shaped.recipeHeight; i++) {
+				for (int j = 0; j < shaped.recipeWidth; j++) {
+					ingredients[i][j] = MineTweakerMC.getIItemStack(shaped.recipeItems[i * shaped.recipeWidth + j]);
+				}
+			}
+			
+			return new ShapedRecipe(output, ingredients, null, false);
+		} else if (recipe instanceof ShapedOreRecipe) {
+			ShapedOreRecipe shaped = (ShapedOreRecipe) recipe;
+			
+			int width = (int) Math.sqrt(recipe.getRecipeSize());
+			int height = recipe.getRecipeSize() / width;
+			
+			IIngredient[][] recipeIngredients = new IIngredient[height][width];
+			for (int i = 0; i < height; i++) {
+				for (int j = 0; j < width; j++) {
+					recipeIngredients[i][j] = MineTweakerMC.getIIngredient(shaped.getInput()[i * width + j]);
+				}
+			}
+			
+			return new ShapedRecipe(output, recipeIngredients, null, false);
+		} else if (recipe instanceof ShapelessOreRecipe) {
+			ShapelessOreRecipe shapeless = (ShapelessOreRecipe) recipe;
+			
+			IIngredient[] ingredients = new IIngredient[shapeless.getRecipeSize()];
+			for (int i = 0; i < ingredients.length; i++) {
+				ingredients[i] = MineTweakerMC.getIIngredient(shapeless.getInput().get(i));
+			}
+			
+			return new ShapelessRecipe(output, ingredients, null);
+		} else {
+			return new UnknownRecipe(output);
 		}
 	}
 }

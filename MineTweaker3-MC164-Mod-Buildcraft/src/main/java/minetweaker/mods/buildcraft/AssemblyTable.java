@@ -65,8 +65,6 @@ public class AssemblyTable {
 		if (ingredients == null)
 			return true;
 		
-		System.out.println("Assembly Table Recipe " + Arrays.deepToString(recipe.input));
-		
 		int matchedIngredients = 0;
 		boolean[] matched = new boolean[ingredients.length];
 		checkIngredient: for (int i = 0; i < recipe.input.length; i++) {

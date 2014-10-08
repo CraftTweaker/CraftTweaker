@@ -80,6 +80,26 @@ public class ShapelessRecipe implements ICraftingRecipe {
 		}
 	}
 	
+	@Override
+	public String toCommandString() {
+		StringBuilder result = new StringBuilder();
+		
+		result.append("recipes.addShapeless(");
+		result.append(output);
+		result.append(", [");
+		
+		for (int i = 0; i < ingredients.length; i++) {
+			if (i > 0)
+				result.append(", ");
+			
+			result.append(ingredients[i]);
+		}
+		
+		result.append("]);");
+		
+		return result.toString();
+	}
+	
 	/**
 	 * Reorders ingredients to match the given shapeless recipe.
 	 * 

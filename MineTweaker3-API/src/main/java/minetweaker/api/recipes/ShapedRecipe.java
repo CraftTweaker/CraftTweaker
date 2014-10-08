@@ -217,6 +217,39 @@ public class ShapedRecipe implements ICraftingRecipe {
 		}
 	}
 	
+	@Override
+	public String toCommandString() {
+		StringBuilder result = new StringBuilder();
+		result.append("recipes.addShaped(");
+		result.append(output);
+		result.append(", [");
+		
+		IIngredient[][] ingredientsArray = new IIngredient[height][width];
+		for (int i = 0; i < ingredients.length; i++) {
+			ingredientsArray[posy[i]][posx[i]] = ingredients[i];
+		}
+		
+		for (int i = 0; i < ingredientsArray.length; i++) {
+			if (i > 0) {
+				result.append(", ");
+			}
+			
+			result.append("[");
+			
+			for (int j = 0; j < ingredientsArray[i].length; j++) {
+				if (j > 0)
+					result.append(", ");
+				
+				result.append(ingredientsArray[i][j]);
+			}
+			
+			result.append("]");
+		}
+		
+		result.append("]);");
+		return result.toString();
+	}
+	
 	private IItemStack doRecipe(
 			ICraftingInventory inventory,
 			IItemStack[] stacks,

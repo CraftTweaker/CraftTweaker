@@ -158,6 +158,14 @@ public interface IItemStack extends IIngredient {
 	public IItemStack withAmount(int amount);
 	
 	/**
+	 * Creates an item stack with wildcard stack size.
+	 * 
+	 * @return new, modified item stack
+	 */
+	@ZenMethod
+	public IItemStack anyAmount();
+	
+	/**
 	 * Creates an item stack with the given nbt tag. Ignores existing tags.
 	 * 
 	 * @param tag item tag to be assigned

@@ -189,6 +189,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 	// #############################
 	
 	@Override
+	public String toString() {
+		return "<ore:" + OreDictionary.getOreName(id) + ">";
+	}
+	
+	@Override
 	public int hashCode() {
 		return id;
 	}

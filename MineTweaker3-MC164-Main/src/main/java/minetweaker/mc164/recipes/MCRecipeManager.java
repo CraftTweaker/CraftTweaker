@@ -9,6 +9,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.mc164.util.MineTweakerHacks;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
@@ -52,6 +53,32 @@ public class MCRecipeManager implements IRecipeManager {
 				return;
 			}
 		}
+	}
+	
+	@Override
+	public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
+		List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
+		
+		for (IRecipe recipe : recipes) {
+			if (ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))) {
+				ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
+				results.add(converted);
+			}
+		}
+		
+		return results;
+	}
+	
+	@Override
+	public List<ICraftingRecipe> getAll() {
+		List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
+		
+		for (IRecipe recipe : recipes) {
+			ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
+			results.add(converted);
+		}
+		
+		return results;
 	}
 	
 	@Override
