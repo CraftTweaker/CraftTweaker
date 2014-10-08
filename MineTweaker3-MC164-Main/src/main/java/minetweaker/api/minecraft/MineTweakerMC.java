@@ -414,4 +414,22 @@ public class MineTweakerMC {
 		}
 		return result;
 	}
+	
+	/**
+	 * Converts a Minecraft ingredient to a MineTweaker ingredient.
+	 * 
+	 * @param ingredient minecraft ingredient
+	 * @return minetweaker ingredient
+	 */
+	public static IIngredient getIIngredient(Object ingredient) {
+		if (ingredient instanceof String) {
+			return MineTweakerAPI.oreDict.get((String) ingredient);
+		} else if (ingredient instanceof Item) {
+			return getIItemStack(new ItemStack((Item) ingredient, 1, 0));
+		} else if (ingredient instanceof ItemStack) {
+			return getIItemStack((ItemStack) ingredient);
+		} else {
+			throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
+		}
+	}
 }

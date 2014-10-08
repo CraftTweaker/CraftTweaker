@@ -14,10 +14,12 @@ import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.DataString;
 import minetweaker.api.data.IData;
 import minetweaker.api.formatting.IFormattedText;
+import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenOperator;
 
 /**
  *
@@ -25,6 +27,16 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenExpansion("string")
 public class ExpandString {
+	@ZenOperator(OperatorType.ADD)
+	public static IFormattedText add(String str, IFormattedText formattedText) {
+		return MineTweakerAPI.format.string(str).add(formattedText);
+	}
+	
+	@ZenOperator(OperatorType.CAT)
+	public static IFormattedText cat(String str, IFormattedText formattedText) {
+		return add(str, formattedText);
+	}
+	
 	@ZenCaster
 	public static IData asData(String value) {
 		return new DataString(value);

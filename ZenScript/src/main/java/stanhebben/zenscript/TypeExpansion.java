@@ -107,7 +107,7 @@ public class TypeExpansion {
 					switch (operatorAnnotation.value()) {
 						case NEG:
 						case NOT:
-							if (method.getParameterTypes().length != 0) {
+							if (method.getParameterTypes().length != 1) {
 								// TODO: error
 							} else {
 								unaryOperators.add(new ZenNativeOperator(
@@ -128,8 +128,12 @@ public class TypeExpansion {
 						case RANGE:
 						case CONTAINS:
 						case COMPARE:
-							if (method.getParameterTypes().length != 1) {
-								// TODO: error
+							if (method.getParameterTypes().length != 2) {
+								throw new RuntimeException(
+										"Binary operator expansion needs a static method with 2 arguments - "
+												+ cls.getName()
+												+ "."
+												+ method.getName());
 							} else {
 								binaryOperators.add(new ZenNativeOperator(
 										operatorAnnotation.value(),
@@ -137,7 +141,7 @@ public class TypeExpansion {
 							}
 							break;
 						case INDEXSET:
-							if (method.getParameterTypes().length != 2) {
+							if (method.getParameterTypes().length != 3) {
 								// TODO: error
 							} else {
 								trinaryOperators.add(new ZenNativeOperator(

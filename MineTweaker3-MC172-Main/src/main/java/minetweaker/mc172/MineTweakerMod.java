@@ -49,7 +49,7 @@ import net.minecraftforge.common.MinecraftForge;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "${version}")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.9")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.7.2";
@@ -59,12 +59,14 @@ public class MineTweakerMod {
 	private static final String[] REGISTRIES = {
 		"minetweaker.mods.ic2.ClassRegistry",
 		"minetweaker.mods.nei.ClassRegistry",
-		"minetweaker.mods.gregtech.ClassRegistry"
+		"minetweaker.mods.gregtech.ClassRegistry",
+		"minetweaker.mods.buildcraft.ClassRegistry"
 	};
 	private static final String[] REGISTRY_DESCRIPTIONS = {
 		"IC2 mod support",
 		"NEI mod support",
-		"GregTech mod support"
+		"GregTech mod support",
+		"Buildcraft mod support"
 	};
 	
 	static {

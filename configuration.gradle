@@ -16,7 +16,8 @@ ext.projects164 = [
 	'MineTweaker3-MC164-Mod-IC2',
 	'MineTweaker3-MC164-Mod-NEI',
 	'MineTweaker3-MC164-Mod-MFR',
-	'MineTweaker3-MC164-Mod-GregTech'
+	'MineTweaker3-MC164-Mod-GregTech',
+	'MineTweaker3-MC164-Mod-Buildcraft'
 ]
 
 // ######################
@@ -28,7 +29,8 @@ ext.projects172 = [
 	'MineTweaker3-MC172-Main',
 	'MineTweaker3-MC172-Mod-IC2',
 	'MineTweaker3-MC172-Mod-NEI',
-	'MineTweaker3-MC172-Mod-GregTech'
+	'MineTweaker3-MC172-Mod-GregTech',
+	'MineTweaker3-MC172-Mod-Buildcraft'
 ]
 
 // #######################

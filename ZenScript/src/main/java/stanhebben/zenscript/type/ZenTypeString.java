@@ -207,10 +207,20 @@ public class ZenTypeString extends ZenType {
 				((ExpressionStringConcat) left).add(right.cast(position, environment, this));
 				return left;
 			} else {
-				List<Expression> values = new ArrayList<Expression>();
-				values.add(left);
-				values.add(right.cast(position, environment, this));
-				return new ExpressionStringConcat(position, values);
+				if (right.getType().canCastImplicit(STRING, environment)) {
+					List<Expression> values = new ArrayList<Expression>();
+					values.add(left);
+					values.add(right.cast(position, environment, this));
+					return new ExpressionStringConcat(position, values);
+				} else {
+					Expression expanded = this.binaryExpansion(position, environment, left, right, operator);
+					if (expanded == null) {
+						environment.error(position, "cannot add " + right.getType().getName() + " to a string");
+						return new ExpressionInvalid(position, this);
+					} else {
+						return expanded;
+					}
+				}
 			}
 		} else if (operator == OperatorType.INDEXGET) {
 			return new ExpressionStringIndex(position, left, right.cast(position, environment, INT));
