@@ -111,10 +111,10 @@ public class MineTweakerMod {
         for (final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
             if (imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
 				if (imcMessage.isStringMessage()) {
-					scriptsIMC.add("imc", imcMessage.getStringValue());
+					scriptsIMC.add(imcMessage.getSender() + "::imc", imcMessage.getStringValue());
 				} else if (imcMessage.isNBTMessage()) {
 					NBTTagCompound message = imcMessage.getNBTValue();
-					scriptsIMC.add(message.getString("name"), message.getString("content"));
+					scriptsIMC.add(imcMessage.getSender() + "::" + message.getString("name"), message.getString("content"));
 				}
             }
         }

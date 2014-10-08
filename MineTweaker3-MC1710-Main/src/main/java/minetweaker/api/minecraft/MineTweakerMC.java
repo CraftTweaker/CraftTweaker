@@ -138,6 +138,33 @@ public class MineTweakerMC {
 	}
 	
 	/**
+	 * Converts a Minecraft ingredient to a MineTweaker ingredient.
+	 * 
+	 * @param ingredient minecraft ingredient
+	 * @return minetweaker ingredient
+	 */
+	public static IIngredient getIIngredient(Object ingredient) {
+		if (ingredient instanceof String) {
+			return MineTweakerAPI.oreDict.get((String) ingredient);
+		} else if (ingredient instanceof Item) {
+			return getIItemStack(new ItemStack((Item) ingredient, 1, 0));
+		} else if (ingredient instanceof ItemStack) {
+			return getIItemStack((ItemStack) ingredient);
+		} else {
+			throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
+		}
+	}
+	
+	public static ItemStack[] getExamples(IIngredient ingredient) {
+		List<IItemStack> examples = ingredient.getItems();
+		ItemStack[] result = new ItemStack[examples.size()];
+		for (int i = 0; i < examples.size(); i++) {
+			result[i] = MineTweakerMC.getItemStack(examples.get(i));
+		}
+		return result;
+	}
+	
+	/**
 	 * Constructs an item stack with given item, damage and amount.
 	 * 
 	 * @param item stack item
@@ -395,6 +422,9 @@ public class MineTweakerMC {
 	 * @return MCF fluid stack
 	 */
 	public static FluidStack getLiquidStack(ILiquidStack stack) {
+		if (stack == null)
+			return null;
+		
 		return (FluidStack) stack.getInternal();
 	}
 }

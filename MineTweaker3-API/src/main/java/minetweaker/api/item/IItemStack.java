@@ -1,8 +1,10 @@
 package minetweaker.api.item;
 
+import java.util.List;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.data.IData;
 import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.api.oredict.IOreDictEntry;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -180,4 +182,13 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenCaster
 	public IBlock asBlock();
+	
+	/**
+	 * Retrieves all the ores referring to this item. Includes wildcard ore
+	 * entries.
+	 * 
+	 * @return ore entries containing this item stack
+	 */
+	@ZenGetter("ores")
+	public List<IOreDictEntry> getOres();
 }

@@ -76,11 +76,16 @@ public class MTLogger implements ILogger {
 			}
 		}
 	}
-
+	
 	@Override
 	public void logError(String message) {
+		logError(message, null);
+	}
+
+	@Override
+	public void logError(String message, Throwable exception) {
 		for (ILogger logger : loggers) {
-			logger.logError(message);
+			logger.logError(message, exception);
 		}
 		
 		String message2 = "ERROR: " + message;

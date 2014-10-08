@@ -6,11 +6,16 @@
 
 package minetweaker.mc172.item;
 
+import java.util.ArrayList;
+import java.util.List;
+import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
+import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  *
@@ -38,6 +43,22 @@ public class MCItemDefinition implements IItemDefinition {
 	@Override
 	public IItemStack makeStack(int meta) {
 		return MineTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
+	}
+	
+	@Override
+	public List<IOreDictEntry> getOres() {
+		List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
+		
+		for (String key : OreDictionary.getOreNames()) {
+			for (ItemStack is : OreDictionary.getOres(key)) {
+				if (is.getItem() == item) {
+					result.add(MineTweakerAPI.oreDict.get(key));
+					break;
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	// #############################

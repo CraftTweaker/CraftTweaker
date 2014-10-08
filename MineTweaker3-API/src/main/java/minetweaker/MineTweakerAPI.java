@@ -216,6 +216,19 @@ public class MineTweakerAPI {
 		getLogger().logError(message);
 	}
 	
+	/**
+	 * Logs an error message. Error messages indicate a real problem and
+	 * indicate that things won't run properly. The scripting system will
+	 * still make a best-effort attempt at executing the rest of the scripts,
+	 * but that might cause additional errors and issues.
+	 * 
+	 * @param message error message
+	 * @param exception exception that was caught related to the error
+	 */
+	public static void logError(String message, Throwable exception) {
+		getLogger().logError(message, exception);
+	}
+	
 	// ###################################
 	// ### Plugin registration methods ###
 	// ###################################

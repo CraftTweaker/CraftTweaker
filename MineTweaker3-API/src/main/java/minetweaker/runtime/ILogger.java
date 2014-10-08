@@ -24,4 +24,7 @@ public interface ILogger {
 	
 	@ZenMethod
 	public void logError(String message);
+	
+	@ZenMethod
+	public void logError(String message, Throwable exception);
 }

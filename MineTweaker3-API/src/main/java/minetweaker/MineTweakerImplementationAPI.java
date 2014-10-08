@@ -1,5 +1,8 @@
 package minetweaker;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -124,7 +127,7 @@ public class MineTweakerImplementationAPI {
 				
 				MineTweakerAPI.logCommand("Liquids:");
 				for (ILiquidDefinition liquid : liquids) {
-					MineTweakerAPI.logCommand("<" + liquid.getName() + "> -- " + liquid.getDisplayName());
+					MineTweakerAPI.logCommand("<liquid:" + liquid.getName() + "> -- " + liquid.getDisplayName());
 				}
 				
 				if (player != null) {
@@ -204,7 +207,14 @@ public class MineTweakerImplementationAPI {
 			public void execute(String[] arguments, IPlayer player) {
 				IItemStack hand = player.getCurrentItem();
 				if (hand != null) {
-					player.sendChat(hand.toString());
+					String value = hand.toString();
+					player.sendChat(value);
+					copyToClipboard(value);
+					
+					List<IOreDictEntry> entries = hand.getOres();
+					for (IOreDictEntry entry : entries) {
+						player.sendChat("Is in <ore:" + entry.getName() + ">");
+					}
 				}
 			}
 		}));
@@ -574,6 +584,16 @@ public class MineTweakerImplementationAPI {
 	 */
 	public static void addMineTweakerCommand(String name, String[] description, ICommandFunction function) {
 		MineTweakerAPI.apply(new AddMineTweakerCommandAction(new MineTweakerCommand(name, description, function)));
+	}
+	
+	// ##############################
+	// ### Private static methods ###
+	// ##############################
+	
+	private static void copyToClipboard(String value) {
+		StringSelection stringSelection = new StringSelection(value);
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(stringSelection, null);
 	}
 	
 	// ############################

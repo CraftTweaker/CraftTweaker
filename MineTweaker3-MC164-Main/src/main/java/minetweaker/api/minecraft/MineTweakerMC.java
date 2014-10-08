@@ -391,6 +391,9 @@ public class MineTweakerMC {
 	 * @return MCF fluid stack
 	 */
 	public static FluidStack getLiquidStack(ILiquidStack stack) {
+		if (stack == null)
+			return null;
+		
 		return (FluidStack) stack.getInternal();
 	}
 	

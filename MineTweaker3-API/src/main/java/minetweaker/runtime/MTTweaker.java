@@ -137,8 +137,7 @@ public class MTTweaker implements ITweaker {
 						//ex.printStackTrace();
 						MineTweakerAPI.logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
 					} catch (Exception ex) {
-						MineTweakerAPI.logError("Error loading " + script.getName() + ": " + ex.toString());
-						ex.printStackTrace();
+						MineTweakerAPI.logError("Error loading " + script.getName() + ": " + ex.toString(), ex);
 					}
 					
 					if (reader != null) {
@@ -156,9 +155,8 @@ public class MTTweaker implements ITweaker {
 					// execute scripts
 					ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());
 					module.getMain().run();
-				} catch (Exception ex) {
-					MineTweakerAPI.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage());
-					ex.printStackTrace();
+				} catch (Throwable ex) {
+					MineTweakerAPI.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage(), ex);
 				}
 			}
 		}

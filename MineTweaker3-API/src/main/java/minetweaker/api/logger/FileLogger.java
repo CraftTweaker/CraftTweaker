@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import minetweaker.runtime.ILogger;
@@ -21,14 +22,16 @@ import minetweaker.runtime.ILogger;
  */
 public class FileLogger implements ILogger {
 	private final Writer writer;
+	private final PrintWriter printWriter;
 	
 	public FileLogger(File output) {
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
+			printWriter = new PrintWriter(writer);
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException("What the heck?");
 		} catch (FileNotFoundException ex) {
-			throw new RuntimeException("File not found");
+			throw new RuntimeException("Could not open log file " + output);
 		}
 	}
 
@@ -64,8 +67,16 @@ public class FileLogger implements ILogger {
 
 	@Override
 	public void logError(String message) {
+		logError(message, null);
+	}
+	
+	@Override
+	public void logError(String message, Throwable exception) {
 		try {
 			writer.write("ERROR: " + message + "\n");
+			if (exception != null) {
+				exception.printStackTrace(printWriter);
+			}
 			writer.flush();
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);

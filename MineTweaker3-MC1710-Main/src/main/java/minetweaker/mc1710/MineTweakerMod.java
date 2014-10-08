@@ -51,7 +51,7 @@ import net.minecraftforge.common.MinecraftForge;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "${version}")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.9")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.7.10";
@@ -62,13 +62,15 @@ public class MineTweakerMod {
 		"minetweaker.mods.ic2.ClassRegistry",
 		"minetweaker.mods.nei.ClassRegistry",
 		"minetweaker.mods.mfr.ClassRegistry",
-		"minetweaker.mods.gregtech.ClassRegistry"
+		"minetweaker.mods.gregtech.ClassRegistry",
+		"minetweaker.mods.buildcraft.ClassRegistry"
 	};
 	private static final String[] REGISTRY_DESCRIPTIONS = {
 		"IC2 mod support",
 		"NEI mod support",
 		"MFR mod support",
-		"GregTech mod support"
+		"GregTech mod support",
+		"Buildcraft mod support"
 	};
 	
 	static {
@@ -122,10 +124,10 @@ public class MineTweakerMod {
         for (final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
             if (imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
 				if (imcMessage.isStringMessage()) {
-					scriptsIMC.add("imc", imcMessage.getStringValue());
+					scriptsIMC.add(imcMessage.getSender() + "::imc", imcMessage.getStringValue());
 				} else if (imcMessage.isNBTMessage()) {
 					NBTTagCompound message = imcMessage.getNBTValue();
-					scriptsIMC.add(message.getString("name"), message.getString("content"));
+					scriptsIMC.add(imcMessage.getSender() + "::" + message.getString("name"), message.getString("content"));
 				}
             }
         }
