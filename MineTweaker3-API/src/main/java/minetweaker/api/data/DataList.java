@@ -65,7 +65,7 @@ public class DataList implements IData {
 	
 	@Override
 	public Map<String, IData> asMap() {
-		throw new RuntimeException("Cannot convert a list to a map");
+		return null;
 	}
 
 	@Override
@@ -87,20 +87,28 @@ public class DataList implements IData {
 
 	@Override
 	public byte[] asByteArray() {
-		byte[] result = new byte[values.size()];
-		for (int i = 0; i < values.size(); i++) {
-			result[i] = values.get(i).asByte();
+		try {
+			byte[] result = new byte[values.size()];
+			for (int i = 0; i < values.size(); i++) {
+				result[i] = values.get(i).asByte();
+			}
+			return result;
+		} catch (IllegalDataException ex) {
+			return null;
 		}
-		return result;
 	}
 
 	@Override
 	public int[] asIntArray() {
-		int[] result = new int[values.size()];
-		for (int i = 0; i < values.size(); i++) {
-			result[i] = values.get(i).asInt();
+		try {
+			int[] result = new int[values.size()];
+			for (int i = 0; i < values.size(); i++) {
+				result[i] = values.get(i).asInt();
+			}
+			return result;
+		} catch (IllegalDataException ex) {
+			return null;
 		}
-		return result;
 	}
 
 	@Override
@@ -134,11 +142,29 @@ public class DataList implements IData {
 
 	@Override
 	public boolean contains(IData data) {
+		List<IData> dataValues = data.asList();
+		if (dataValues != null && containsList(dataValues))
+			return true;
+		
 		for (IData value : values) {
-			if (value.equals(data)) return true;
+			if (value.contains(data))
+				return true;
 		}
 		
 		return false;
+	}
+	
+	private boolean containsList(List<IData> dataValues) {
+		outer: for (IData dataValue : dataValues) {
+			for (IData value : values) {
+				if (value.contains(dataValue))
+					continue outer;
+			}
+
+			return false;
+		}
+		
+		return true;
 	}
 	
 	@Override

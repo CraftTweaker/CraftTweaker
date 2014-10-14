@@ -57,22 +57,22 @@ public class DataFloat implements IData {
 	
 	@Override
 	public List<IData> asList() {
-		throw new UnsupportedOperationException("Cannot cast a float to a list");
+		return null;
 	}
 	
 	@Override
 	public Map<String, IData> asMap() {
-		throw new UnsupportedOperationException("Cannot cast a float to a map");
+		return null;
 	}
 
 	@Override
 	public byte[] asByteArray() {
-		throw new RuntimeException("Cannot cast a float to a byte array");
+		return null;
 	}
 
 	@Override
 	public int[] asIntArray() {
-		throw new RuntimeException("Cannot cast a float to an int array");
+		return null;
 	}
 
 	@Override

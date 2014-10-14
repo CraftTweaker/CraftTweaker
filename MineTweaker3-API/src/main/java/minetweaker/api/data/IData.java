@@ -74,15 +74,39 @@ public interface IData {
     @ZenCaster
     public String asString();
     
+	/**
+	 * Attempts to convert this value to a List. Returns null if this value
+	 * cannot be converted to a list.
+	 * 
+	 * @return list data of this value, if any
+	 */
 	@ZenCaster
 	public List<IData> asList();
 	
+	/**
+	 * Attempts to convert this value to a Map. Returns null if this value
+	 * cannot be converted to a map.
+	 * 
+	 * @return map data of this value, if any
+	 */
 	@ZenCaster
 	public Map<String, IData> asMap();
 	
+	/**
+	 * Attempts to convert this value to a byte array. Returns null if this
+	 * value cannot be converted to a byte array.
+	 * 
+	 * @return byte array data of this value, if any
+	 */
     @ZenCaster
     public byte[] asByteArray();
     
+	/**
+	 * Attempts to convert this value to an int array. Returns null if this
+	 * value cannot be converted to an int array.
+	 * 
+	 * @return int array data of this value, if any
+	 */
     @ZenCaster
     public int[] asIntArray();
     

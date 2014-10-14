@@ -57,22 +57,22 @@ public class DataBool implements IData {
 	
 	@Override
 	public List<IData> asList() {
-		throw new UnsupportedOperationException("Cannot cast a bool to a list");
+		return null;
 	}
 	
 	@Override
 	public Map<String, IData> asMap() {
-		throw new UnsupportedOperationException("Cannot cast a bool to a map");
+		return null;
 	}
 
 	@Override
 	public byte[] asByteArray() {
-		throw new RuntimeException("cannot cast a bool to a byte array");
+		return null;
 	}
 
 	@Override
 	public int[] asIntArray() {
-		throw new RuntimeException("cannot cast a bool to an int array");
+		return null;
 	}
 
 	@Override

@@ -153,7 +153,7 @@ public class DataMap implements IData {
 
 	@Override
 	public List<IData> asList() {
-		throw new UnsupportedOperationException("Cannot cast map to list");
+		return null;
 	}
 
 	@Override
@@ -167,12 +167,12 @@ public class DataMap implements IData {
 
 	@Override
 	public byte[] asByteArray() {
-		throw new UnsupportedOperationException("Cannot cast map to byte[]");
+		return null;
 	}
 
 	@Override
 	public int[] asIntArray() {
-		throw new UnsupportedOperationException("Cannot cast map to int[]");
+		return null;
 	}
 
 	@Override
@@ -211,6 +211,9 @@ public class DataMap implements IData {
 		}
 		
 		Map<String, IData> dataMap = data.asMap();
+		if (dataMap == null)
+			return false;
+		
 		for (Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
 			if (!this.data.containsKey(dataEntry.getKey())) {
 				return false;

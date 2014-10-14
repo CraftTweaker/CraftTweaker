@@ -133,7 +133,7 @@ public class DataByteArray implements IData {
 
 	@Override
 	public Map<String, IData> asMap() {
-		throw new UnsupportedOperationException("Cannot convert list to map");
+		return null;
 	}
 
 	@Override
