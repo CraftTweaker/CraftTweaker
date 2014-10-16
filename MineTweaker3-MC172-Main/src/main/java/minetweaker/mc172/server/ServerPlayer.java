@@ -7,6 +7,9 @@
 package minetweaker.mc172.server;
 
 import java.awt.Desktop;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
@@ -104,6 +107,15 @@ public class ServerPlayer implements IPlayer {
 			} catch (IOException ex) {
 				Logger.getLogger(ServerPlayer.class.getName()).log(Level.SEVERE, null, ex);
 			}
+		}
+	}
+	
+	@Override
+	public void copyToClipboard(String value) {
+		if (Desktop.isDesktopSupported()) {
+			StringSelection stringSelection = new StringSelection(value);
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			clipboard.setContents(stringSelection, null);
 		}
 	}
 

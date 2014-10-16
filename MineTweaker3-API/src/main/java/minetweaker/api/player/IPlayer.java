@@ -63,4 +63,7 @@ public interface IPlayer {
 	
 	// not an exposed method. risks abuse
 	public void openBrowser(String url);
+	
+	// not an exposed method, so far. would it be useful?
+	public void copyToClipboard(String value);
 }

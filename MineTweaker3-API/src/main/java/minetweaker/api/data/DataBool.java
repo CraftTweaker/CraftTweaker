@@ -77,22 +77,22 @@ public class DataBool implements IData {
 
 	@Override
 	public IData getAt(int i) {
-		throw new RuntimeException("a bool is not indexable");
+		throw new UnsupportedOperationException("a bool is not indexable");
 	}
 
 	@Override
 	public void setAt(int i, IData value) {
-		throw new RuntimeException("a bool is not indexable");
+		throw new UnsupportedOperationException("a bool is not indexable");
 	}
 
 	@Override
 	public IData memberGet(String name) {
-		throw new RuntimeException("a bool is not indexable");
+		throw new UnsupportedOperationException("a bool is not indexable");
 	}
 
 	@Override
 	public void memberSet(String name, IData data) {
-		throw new RuntimeException("a bool is not indexable");
+		throw new UnsupportedOperationException("a bool is not indexable");
 	}
 
 	@Override

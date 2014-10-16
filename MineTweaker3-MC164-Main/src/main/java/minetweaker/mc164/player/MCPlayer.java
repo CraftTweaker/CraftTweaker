@@ -112,6 +112,13 @@ public class MCPlayer implements IPlayer {
 	}
 	
 	@Override
+	public void copyToClipboard(String value) {
+		if (player instanceof EntityPlayerMP) {
+			MineTweakerMod.INSTANCE.copyToClipboard(player.username, value);
+		}
+	}
+	
+	@Override
 	public void give(IItemStack stack) {
 		player.inventory.addItemStackToInventory(MineTweakerMC.getItemStack(stack).copy());
 	}

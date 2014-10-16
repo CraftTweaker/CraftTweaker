@@ -17,7 +17,7 @@ public class DataLong implements IData {
 
 	@Override
 	public boolean asBool() {
-		throw new RuntimeException("Cannot cast a long to a bool");
+		throw new IllegalDataException("Cannot cast a long to a bool");
 	}
 
 	@Override
@@ -57,42 +57,42 @@ public class DataLong implements IData {
 	
 	@Override
 	public List<IData> asList() {
-		throw new UnsupportedOperationException("Cannot cast a long to a list");
+		return null;
 	}
 	
 	@Override
 	public Map<String, IData> asMap() {
-		throw new UnsupportedOperationException("Cannot cast a long to a map");
+		return null;
 	}
 
 	@Override
 	public byte[] asByteArray() {
-		throw new RuntimeException("Cannot cast a long to a byte array");
+		return null;
 	}
 
 	@Override
 	public int[] asIntArray() {
-		throw new RuntimeException("Cannot cast a long to an int array");
+		return null;
 	}
 
 	@Override
 	public IData getAt(int i) {
-		throw new RuntimeException("A long is not indexable");
+		throw new UnsupportedOperationException("A long is not indexable");
 	}
 
 	@Override
 	public void setAt(int i, IData value) {
-		throw new RuntimeException("A long is not indexable");
+		throw new UnsupportedOperationException("A long is not indexable");
 	}
 
 	@Override
 	public IData memberGet(String name) {
-		throw new RuntimeException("A long is not indexable");
+		throw new UnsupportedOperationException("A long is not indexable");
 	}
 
 	@Override
 	public void memberSet(String name, IData data) {
-		throw new RuntimeException("A long is not indexable");
+		throw new UnsupportedOperationException("A long is not indexable");
 	}
 
 	@Override

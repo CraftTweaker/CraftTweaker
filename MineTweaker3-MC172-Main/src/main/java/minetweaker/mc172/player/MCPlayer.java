@@ -14,6 +14,7 @@ import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
 import minetweaker.mc172.MineTweakerMod;
 import minetweaker.mc172.data.NBTConverter;
+import minetweaker.mc172.network.MineTweakerCopyClipboardPacket;
 import minetweaker.mc172.network.MineTweakerOpenBrowserPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -111,6 +112,15 @@ public class MCPlayer implements IPlayer {
 		if (player instanceof EntityPlayerMP) {
 			MineTweakerMod.NETWORK.sendTo(
 					new MineTweakerOpenBrowserPacket(url),
+					(EntityPlayerMP) player);
+		}
+	}
+	
+	@Override
+	public void copyToClipboard(String value) {
+		if (player instanceof EntityPlayerMP) {
+			MineTweakerMod.NETWORK.sendTo(
+					new MineTweakerCopyClipboardPacket(value),
 					(EntityPlayerMP) player);
 		}
 	}

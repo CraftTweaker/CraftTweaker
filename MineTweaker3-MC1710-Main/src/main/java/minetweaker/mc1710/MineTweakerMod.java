@@ -28,6 +28,8 @@ import minetweaker.mc1710.furnace.FuelTweaker;
 import minetweaker.mc1710.furnace.MCFurnaceManager;
 import minetweaker.mc1710.game.MCGame;
 import minetweaker.mc1710.mods.MCLoadedMods;
+import minetweaker.mc1710.network.MineTweakerCopyClipboardHandler;
+import minetweaker.mc1710.network.MineTweakerCopyClipboardPacket;
 import minetweaker.mc1710.network.MineTweakerLoadScriptsHandler;
 import minetweaker.mc1710.network.MineTweakerLoadScriptsPacket;
 import minetweaker.mc1710.network.MineTweakerOpenBrowserHandler;
@@ -76,6 +78,7 @@ public class MineTweakerMod {
 	static {
 		NETWORK.registerMessage(MineTweakerLoadScriptsHandler.class, MineTweakerLoadScriptsPacket.class, 0, Side.CLIENT);
 		NETWORK.registerMessage(MineTweakerOpenBrowserHandler.class, MineTweakerOpenBrowserPacket.class, 1, Side.CLIENT);
+		NETWORK.registerMessage(MineTweakerCopyClipboardHandler.class, MineTweakerCopyClipboardPacket.class, 2, Side.CLIENT);
 	}
 	
 	@Mod.Instance(MODID)
@@ -99,16 +102,8 @@ public class MineTweakerMod {
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 		
 		File globalDir = new File("scripts");
-		if (!globalDir.exists()) {
+		if (!globalDir.exists())
 			globalDir.mkdirs();
-		}
-		
-		/*try {
-			String data = Resources.toString(Resources.getResource(MineTweakerMod.class, "/minetweaker/myscript.zs"), Charsets.UTF_8);
-			
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}*/
 		
 		scriptsIMC = new ScriptProviderCustom("intermod");
 		scriptsGlobal = new ScriptProviderDirectory(globalDir);

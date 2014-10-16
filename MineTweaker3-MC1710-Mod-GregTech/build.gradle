@@ -30,7 +30,7 @@ dependencies {
 	compile project(':ZenScript')
 	compile project(':MineTweaker3-API')
 	compile project(':MineTweaker3-MC1710-Main')
-	compile files('libs/gregtech-1.7.10-dev.jar')
+	compile files('libs/gregtech_1.7.10-5.05.11-dev.jar')
 }
 
 task makeRegistry(type: RegisterZenClassesTask) {

@@ -74,51 +74,53 @@ public class DataByteArray implements IData {
 
 	@Override
 	public boolean asBool() {
-		throw new UnsupportedOperationException("Cannot cast an array to bool");
+		throw new IllegalDataException("Cannot cast an array to bool");
 	}
 
 	@Override
 	public byte asByte() {
-		throw new UnsupportedOperationException("Cannot cast an array to byte");
+		throw new IllegalDataException("Cannot cast an array to byte");
 	}
 
 	@Override
 	public short asShort() {
-		throw new UnsupportedOperationException("Cannot cast an array to short");
+		throw new IllegalDataException("Cannot cast an array to short");
 	}
 
 	@Override
 	public int asInt() {
-		throw new UnsupportedOperationException("Cannot cast an array to int");
+		throw new IllegalDataException("Cannot cast an array to int");
 	}
 
 	@Override
 	public long asLong() {
-		throw new UnsupportedOperationException("Cannot cast an array to long");
+		throw new IllegalDataException("Cannot cast an array to long");
 	}
 
 	@Override
 	public float asFloat() {
-		throw new UnsupportedOperationException("Cannot cast an array to float");
+		throw new IllegalDataException("Cannot cast an array to float");
 	}
 
 	@Override
 	public double asDouble() {
-		throw new UnsupportedOperationException("Cannot cast an array to double");
+		throw new IllegalDataException("Cannot cast an array to double");
 	}
 
 	@Override
 	public String asString() {
 		StringBuilder result = new StringBuilder();
-		result.append("X\"");
+		result.append("[");
+		boolean first = true;
 		for (byte value : data) {
-			String str = Integer.toHexString(value);
-			if (str.length() == 1) {
-				result.append('0');
-			}
-			result.append(str);
+			if (first)
+				first = false;
+			else
+				result.append(", ");
+			
+			result.append(value);
 		}
-		result.append('"');
+		result.append("] as byte[]");
 		return result.toString();
 	}
 

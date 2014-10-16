@@ -140,6 +140,14 @@ public class MineTweakerMod {
 		}
 	}
 	
+	public void copyToClipboard(String user, String data) {
+		if (networkByUser.containsKey(user)) {
+			networkByUser.get(user).addToSendQueue(new Packet250CustomPayload(
+					MCPacketHandler.CHANNEL_OPENBROWSER,
+					MCPacketHandler.UTF8.encode(data).array()));
+		}
+	}
+	
 	// ##########################
 	// ### FML Event Handlers ###
 	// ##########################

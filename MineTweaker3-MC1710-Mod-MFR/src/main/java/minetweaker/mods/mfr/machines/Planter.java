@@ -135,18 +135,16 @@ public class Planter {
 				return false;
 			
 			for (TweakerPlantable plantable : plantables) {
-				if (!plantable.seed.matches(MineTweakerMC.getIItemStack(seed))) {
-					//System.out.println("Cannot plant (seed doesn't match)");
-					return false;
-				}
+				if (!plantable.seed.matches(MineTweakerMC.getIItemStack(seed)))
+					continue;
 
-				if (!plantable.canPlantOn.matches(MineTweakerMC.getBlock(world, x,  y - 1, z))) {
-					//System.out.println("Cannot plant (not on the right block");
-					return false;
-				}
+				if (!plantable.canPlantOn.matches(MineTweakerMC.getBlock(world, x,  y - 1, z)))
+					continue;
+				
+				return true;
 			}
 			
-			return true;
+			return false;
 		}
 
 		@Override

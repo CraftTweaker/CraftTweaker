@@ -9,6 +9,7 @@ import minetweaker.api.block.IBlockDefinition;
 import minetweaker.api.data.IData;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.item.IngredientUnknown;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
@@ -442,7 +443,7 @@ public class MineTweakerMC {
 			IOreDictEntry entry = getOreDictEntryFromArray((List) ingredient);
 			
 			if (entry == null) {
-				throw new IllegalArgumentException("No matching oredict entry: " + ingredient);
+				return IngredientUnknown.INSTANCE;
 			}
 			
 			return entry;

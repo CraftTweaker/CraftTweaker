@@ -17,7 +17,7 @@ public class DataByte implements IData {
 
 	@Override
 	public boolean asBool() {
-		throw new RuntimeException("Cannot cast a byte to a bool");
+		throw new IllegalDataException("Cannot cast a byte to a bool");
 	}
 
 	@Override
@@ -77,22 +77,22 @@ public class DataByte implements IData {
 
 	@Override
 	public IData getAt(int i) {
-		throw new RuntimeException("A byte is not indexable");
+		throw new UnsupportedOperationException("A byte is not indexable");
 	}
 
 	@Override
 	public void setAt(int i, IData value) {
-		throw new RuntimeException("A byte is not indexable");
+		throw new UnsupportedOperationException("A byte is not indexable");
 	}
 
 	@Override
 	public IData memberGet(String name) {
-		throw new RuntimeException("A byte is not indexable");
+		throw new UnsupportedOperationException("A byte is not indexable");
 	}
 
 	@Override
 	public void memberSet(String name, IData data) {
-		throw new RuntimeException("A byte is not indexable");
+		throw new UnsupportedOperationException("A byte is not indexable");
 	}
 
 	@Override

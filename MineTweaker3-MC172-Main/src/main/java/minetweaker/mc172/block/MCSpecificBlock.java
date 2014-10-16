@@ -65,4 +65,14 @@ public class MCSpecificBlock implements IBlock {
 	public String getDisplayName() {
 		return block.getLocalizedName();
 	}
+	
+	@Override
+	public String toString() {
+		return "<block:" + getBlockId(block) + ":" + (meta == OreDictionary.WILDCARD_VALUE ? '*' : meta) + ">";
+	}
+	
+	private static String getBlockId(Block block)
+	{
+		return Block.blockRegistry.getNameForObject(block);
+	}
 }

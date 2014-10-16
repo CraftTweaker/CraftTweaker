@@ -74,37 +74,37 @@ public class DataIntArray implements IData {
 
 	@Override
 	public boolean asBool() {
-		throw new UnsupportedOperationException("Cannot cast an array to bool");
+		throw new IllegalDataException("Cannot cast an array to bool");
 	}
 
 	@Override
 	public byte asByte() {
-		throw new UnsupportedOperationException("Cannot cast an array to byte");
+		throw new IllegalDataException("Cannot cast an array to byte");
 	}
 
 	@Override
 	public short asShort() {
-		throw new UnsupportedOperationException("Cannot cast an array to short");
+		throw new IllegalDataException("Cannot cast an array to short");
 	}
 
 	@Override
 	public int asInt() {
-		throw new UnsupportedOperationException("Cannot cast an array to int");
+		throw new IllegalDataException("Cannot cast an array to int");
 	}
 
 	@Override
 	public long asLong() {
-		throw new UnsupportedOperationException("Cannot cast an array to long");
+		throw new IllegalDataException("Cannot cast an array to long");
 	}
 
 	@Override
 	public float asFloat() {
-		throw new UnsupportedOperationException("Cannot cast an array to float");
+		throw new IllegalDataException("Cannot cast an array to float");
 	}
 
 	@Override
 	public double asDouble() {
-		throw new UnsupportedOperationException("Cannot cast an array to double");
+		throw new IllegalDataException("Cannot cast an array to double");
 	}
 
 	@Override

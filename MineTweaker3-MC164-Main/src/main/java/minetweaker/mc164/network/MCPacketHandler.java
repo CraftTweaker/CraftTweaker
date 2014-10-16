@@ -11,6 +11,9 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import java.awt.Desktop;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,6 +29,7 @@ public class MCPacketHandler implements IPacketHandler {
 	
 	public static final String CHANNEL_SERVERSCRIPT = "MTServerScript";
 	public static final String CHANNEL_OPENBROWSER = "MTOpenBrowser";
+	public static final String CHANNEL_COPYTOCLIPBOARD = "MTCopyToClipboard";
 	
 	@Override
 	public void onPacketData(INetworkManager manager,
@@ -44,13 +48,22 @@ public class MCPacketHandler implements IPacketHandler {
 			}
 		} else if (packet.channel.equals(CHANNEL_OPENBROWSER)) {
 			String url = UTF8.decode(ByteBuffer.wrap(packet.data)).toString().trim();
-			if(Desktop.isDesktopSupported()){
+			
+			if (Desktop.isDesktopSupported()){
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					desktop.browse(new URI(url));
 				} catch (IOException e) {
 				} catch (URISyntaxException e) {
 				}
+			}
+		} else if (packet.channel.equals(CHANNEL_COPYTOCLIPBOARD)) {
+			String message = UTF8.decode(ByteBuffer.wrap(packet.data)).toString().trim();
+			
+			if (Desktop.isDesktopSupported()) {
+				StringSelection stringSelection = new StringSelection(message);
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(stringSelection, null);
 			}
 		}
 	}
