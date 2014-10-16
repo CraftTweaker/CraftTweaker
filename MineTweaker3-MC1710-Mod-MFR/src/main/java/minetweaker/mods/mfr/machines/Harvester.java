@@ -50,6 +50,16 @@ public class Harvester {
 	}
 	
 	@ZenMethod
+	public static void addHarvestable(IItemStack item, WeightedItemStack drop, @Optional String type) {
+		addHarvestable(item.asBlock(), drop, type);
+	}
+	
+	@ZenMethod
+	public static void addHarvestable(IItemStack item, WeightedItemStack[] drops, @Optional String type) {
+		addHarvestable(item.asBlock(), drops, type);
+	}
+	
+	@ZenMethod
 	public static void addHarvestable(IBlockPattern block, WeightedItemStack drop, @Optional String type) {
 		addHarvestable(block, new WeightedItemStack[] { drop }, type);
 	}
