@@ -57,7 +57,7 @@ import net.minecraftforge.common.MinecraftForge;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.9")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.9B")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = {MCPacketHandler.CHANNEL_SERVERSCRIPT, MCPacketHandler.CHANNEL_OPENBROWSER}, packetHandler = MCPacketHandler.class)
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
