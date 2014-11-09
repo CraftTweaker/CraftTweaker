@@ -7,6 +7,7 @@
 package minetweaker.api.liquid;
 
 import minetweaker.api.data.IData;
+import minetweaker.api.item.IIngredient;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -18,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenOperator;
  * @author Stanneke
  */
 @ZenClass("minetweaker.liquid.ILiquidStack")
-public interface ILiquidStack {
+public interface ILiquidStack extends IIngredient {
 	@ZenGetter("definition")
 	public ILiquidDefinition getDefinition();
 	

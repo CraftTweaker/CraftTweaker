@@ -7,6 +7,7 @@
 package minetweaker.mc1710.oredict;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
@@ -17,6 +18,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.IngredientStack;
+import minetweaker.api.liquid.ILiquidStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
@@ -128,6 +130,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 		}
 		return result;
 	}
+	
+	@Override
+	public List<ILiquidStack> getLiquids() {
+		return Collections.emptyList();
+	}
 
 	@Override
 	public IIngredient amount(int amount) {
@@ -157,6 +164,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 	@Override
 	public boolean matches(IItemStack item) {
 		return contains(item);
+	}
+	
+	@Override
+	public boolean matches(ILiquidStack liquid) {
+		return false;
 	}
 
 	@Override

@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package minetweaker.mods.buildcraft;
+package minetweaker.mods.buildcraft61;
 
-import buildcraft.api.recipes.BuildcraftRecipes;
-import buildcraft.api.recipes.IIntegrationRecipeManager.IIntegrationRecipe;
-import java.util.ArrayList;
-import java.util.List;
+import buildcraft.api.recipes.BuildcraftRecipeRegistry;
+import buildcraft.api.recipes.CraftingResult;
+import buildcraft.api.recipes.IFlexibleCrafter;
+import buildcraft.api.recipes.IIntegrationRecipe;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
@@ -26,51 +26,36 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenClass("mods.buildcraft.IntegrationTable")
-@ModOnly(value="BuildCraft|Core", version="6.0")
+@ModOnly(value="BuildCraft|Core", version="6.1")
 public class IntegrationTable {
 	@ZenMethod
 	public static void addRecipe(IItemStack output, double energy, IIngredient inputA, IIngredient inputB, @Optional IIntegrationRecipeFunction function) {
 		MineTweakerAPI.apply(new AddRecipeAction(output, energy, inputA, inputB, function));
 	}
 	
-	@ZenMethod
+	/*@ZenMethod
 	public static void remove(IIngredient output) {
 		removeRecipe(output, null, null);
-	}
+	}*/
 	
-	@ZenMethod
+	/*@ZenMethod
 	public static void removeRecipe(IIngredient output, @Optional IIngredient inputA, @Optional IIngredient inputB) {
-		List<IIntegrationRecipe> toRemove = new ArrayList<IIntegrationRecipe>();
-		
-		outer: for (IIntegrationRecipe recipe : BuildcraftRecipes.integrationTable.getRecipes()) {
-			for (ItemStack component : recipe.getComponents()) {
-				if (!output.matches(MineTweakerMC.getIItemStack(component)))
-					continue outer;
-				
-				if (inputA != null) {
-					for (ItemStack example1 : recipe.getExampleInputsA()) {
-						if (!inputA.matches(MineTweakerMC.getIItemStack(example1))) {
-							continue outer;
-						}
-					}
-				}
-				
-				if (inputB != null) {
-					for (ItemStack example2 : recipe.getExampleInputsB()) {
-						if (!inputB.matches(MineTweakerMC.getIItemStack(example2))) {
-							continue outer;
-						}
-					}
-				}
-				
-				toRemove.add(recipe);
-			}
+		IIngredient[] ingredients = null;
+		if (inputA != null && inputB != null) {
+			ingredients = new IIngredient[] { inputA, inputB };
+		} else if (inputA != null) {
+			ingredients = new IIngredient[] { inputA };
+		} else if (inputB != null) {
+			ingredients = new IIngredient[] { inputB };
 		}
 		
-		for (IIntegrationRecipe recipe : toRemove) {
+		List<? extends IIntegrationRecipe> recipes = BuildcraftRecipeRegistry.integrationTable.getRecipes();
+		List<IFlexibleRecipe<ItemStack>> toRemove = BuildcraftRecipes.removeRecipes(output, ingredients, recipes);
+		
+		for (IFlexibleRecipe<ItemStack> recipe : toRemove) {
 			MineTweakerAPI.apply(new RemoveRecipeAction(recipe));
 		}
-	}
+	}*/
 	
 	// ######################
 	// ### Action Classes ###
@@ -85,7 +70,7 @@ public class IntegrationTable {
 
 		@Override
 		public void apply() {
-			BuildcraftRecipes.integrationTable.addRecipe(recipe);
+			BuildcraftRecipeRegistry.integrationTable.addRecipe(recipe);
 		}
 
 		@Override
@@ -95,7 +80,7 @@ public class IntegrationTable {
 
 		@Override
 		public void undo() {
-			BuildcraftRecipes.integrationTable.getRecipes().remove(recipe);
+			BuildcraftRecipeRegistry.integrationTable.getRecipes().remove(recipe);
 		}
 
 		@Override
@@ -113,17 +98,17 @@ public class IntegrationTable {
 			return null;
 		}
 	}
-	
+	/*
 	private static class RemoveRecipeAction implements IUndoableAction {
-		private final IIntegrationRecipe recipe;
+		private final IFlexibleRecipe<ItemStack> recipe;
 		
-		public RemoveRecipeAction(IIntegrationRecipe recipe) {
+		public RemoveRecipeAction(IFlexibleRecipe<ItemStack> recipe) {
 			this.recipe = recipe;
 		}
 		
 		@Override
 		public void apply() {
-			BuildcraftRecipes.integrationTable.getRecipes().remove(recipe);
+			BuildcraftRecipeRegistry.integrationTable.getRecipes().remove(recipe);
 		}
 
 		@Override
@@ -133,7 +118,7 @@ public class IntegrationTable {
 
 		@Override
 		public void undo() {
-			BuildcraftRecipes.integrationTable.addRecipe(recipe);
+			BuildcraftRecipeRegistry.integrationTable.getRecipes().add((IIntegrationRecipe) recipe);
 		}
 
 		@Override
@@ -150,9 +135,12 @@ public class IntegrationTable {
 		public Object getOverrideKey() {
 			return null;
 		}
-	}
+	}*/
 	
 	private static class MTIntegrationRecipe implements IIntegrationRecipe {
+		private static int idCounter = 0;
+		
+		private final String id;
 		private final IItemStack output;
 		private final ItemStack[] components;
 		private final double energy;
@@ -163,6 +151,7 @@ public class IntegrationTable {
 		private final IIntegrationRecipeFunction function;
 		
 		private MTIntegrationRecipe(IItemStack output, double energy, IIngredient inputA, IIngredient inputB, IIntegrationRecipeFunction function) {
+			this.id = "mtIntegration" + (idCounter++);
 			this.output = output;
 			this.components = new ItemStack[] { MineTweakerMC.getItemStack(output) };
 			this.energy = energy;
@@ -172,10 +161,10 @@ public class IntegrationTable {
 			this.inputBExamples = MineTweakerMC.getExamples(inputB);
 			this.function = function;
 		}
-
+		
 		@Override
-		public double getEnergyCost() {
-			return energy;
+		public String getId() {
+			return id;
 		}
 
 		@Override
@@ -188,7 +177,7 @@ public class IntegrationTable {
 			return inputB.matches(MineTweakerMC.getIItemStack(is));
 		}
 
-		@Override
+		/*@Override
 		public ItemStack getOutputForInputs(ItemStack is, ItemStack is1, ItemStack[] iss) {
 			if (function != null) {
 				IItemStack actualInputA = MineTweakerMC.getIItemStack(is);
@@ -197,21 +186,52 @@ public class IntegrationTable {
 			} else {
 				return MineTweakerMC.getItemStack(output);
 			}
+		}*/
+
+		@Override
+		public boolean canBeCrafted(IFlexibleCrafter ifc)
+		{
+			return inputA.matches(MineTweakerMC.getIItemStack(ifc.getCraftingItemStack(0)))
+					&& (inputB == null || inputB.matches(MineTweakerMC.getIItemStack(ifc.getCraftingItemStack(1))));
 		}
 
 		@Override
-		public ItemStack[] getComponents() {
-			return components;
+		public CraftingResult<ItemStack> craft(IFlexibleCrafter ifc, boolean bln)
+		{
+			if (!canBeCrafted(ifc))
+				return null;
+			
+			CraftingResult<ItemStack> result = new CraftingResult<ItemStack>();
+			result.crafted = MineTweakerMC.getItemStack(output);
+			
+			ItemStack consumedA = new ItemStack(ifc.getCraftingItemStack(0).getItem(), inputA.getAmount(), ifc.getCraftingItemStack(0).getItemDamage());
+			consumedA.setTagCompound(ifc.getCraftingItemStack(0).stackTagCompound);
+			result.usedItems.add(consumedA);
+			
+			if (inputB != null) {
+				ItemStack consumedB = new ItemStack(ifc.getCraftingItemStack(1).getItem(), inputB.getAmount(), ifc.getCraftingItemStack(0).getItemDamage());
+				consumedB.setTagCompound(ifc.getCraftingItemStack(1).stackTagCompound);
+				result.usedItems.add(consumedB);
+			}
+			
+			return result;
 		}
 
 		@Override
-		public ItemStack[] getExampleInputsA() {
-			return inputAExamples;
-		}
-
-		@Override
-		public ItemStack[] getExampleInputsB() {
-			return inputBExamples;
+		public CraftingResult<ItemStack> canCraft(ItemStack is)
+		{
+			if (inputB != null)
+				return null;
+			
+			if (!inputA.matches(MineTweakerMC.getIItemStack(is)))
+				return null;
+			
+			CraftingResult<ItemStack> result = new CraftingResult<ItemStack>();
+			result.crafted = MineTweakerMC.getItemStack(output);
+			ItemStack consumed = new ItemStack(is.getItem(), inputA.getAmount(), is.getItemDamage());
+			consumed.setTagCompound(is.stackTagCompound);
+			result.usedItems.add(consumed);
+			return result;
 		}
 	}
 }

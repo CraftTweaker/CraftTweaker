@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -265,14 +266,18 @@ public class MineTweakerAPI {
 					for (Annotation annotation : cls.getAnnotations()) {
 						if (annotation instanceof ModOnly) {
 							String[] value = ((ModOnly) annotation).value();
+							String version = ((ModOnly) annotation).version();
+							
 							for (String mod : value) {
-								if (!loadedMods.contains(mod)) {
-									continue outer; // skip this class
-								}
+								if (!loadedMods.contains(mod))
+									continue outer;
+								
+								if (!loadedMods.get(mod).getVersion().startsWith(version))
+									continue outer;
 							}
 						}
 					}
-
+					
 					MineTweakerAPI.registerClass(cls);
 				}
 				

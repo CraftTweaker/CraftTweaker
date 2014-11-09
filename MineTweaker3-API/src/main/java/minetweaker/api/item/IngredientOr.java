@@ -8,6 +8,7 @@ package minetweaker.api.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 
@@ -57,6 +58,15 @@ public class IngredientOr implements IIngredient {
 		}
 		return result;
 	}
+	
+	@Override
+	public List<ILiquidStack> getLiquids() {
+		List<ILiquidStack> result = new ArrayList<ILiquidStack>();
+		for (IIngredient element : elements) {
+			result.addAll(element.getLiquids());
+		}
+		return result;
+	}
 
 	@Override
 	public IIngredient amount(int amount) {
@@ -89,8 +99,18 @@ public class IngredientOr implements IIngredient {
 
 	@Override
 	public boolean matches(IItemStack item) {
-		for (IIngredient ingredient : item.getItems()) {
+		for (IIngredient ingredient : elements) {
 			if (ingredient.matches(item))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean matches(ILiquidStack liquid) {
+		for (IIngredient ingredient : elements) {
+			if (ingredient.matches(liquid))
 				return true;
 		}
 		

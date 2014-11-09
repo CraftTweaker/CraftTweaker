@@ -2,7 +2,7 @@
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.9B"
+ext.mineTweakerVersion = "3.0.9C"
 ext.mineTweakerDebug = "false"
 ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_05/lib/tools.jar")
 
@@ -45,4 +45,5 @@ ext.projects1710 = [
 	'MineTweaker3-MC1710-Mod-MFR',
 	'MineTweaker3-MC1710-Mod-GregTech',
 	'MineTweaker3-MC1710-Mod-Buildcraft'
+	//'MineTweaker3-MC1710-Mod-Buildcraft61'
 ]

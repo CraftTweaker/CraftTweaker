@@ -326,7 +326,8 @@ public class MCRecipeManager implements IRecipeManager {
 		@Override
 		public void undo() {
 			for (int i = 0; i < removingIndices.size(); i++) {
-				recipes.add(removingIndices.get(i), removingRecipes.get(i));
+				int index = Math.min(recipes.size(), removingIndices.get(i));
+				recipes.add(index, removingRecipes.get(i));
 			}
 		}
 

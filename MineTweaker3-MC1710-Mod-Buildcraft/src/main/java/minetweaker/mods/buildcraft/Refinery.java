@@ -33,7 +33,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenClass("mods.buildcraft.Refinery")
-@ModOnly("BuildCraft|Core")
+@ModOnly(value="BuildCraft|Core", version="6.0")
 public class Refinery {
 	private static final Constructor CONSTRUCT_REFINERYRECIPE;
 	private static final Field REFINERYRECIPEMANAGER_RECIPES;

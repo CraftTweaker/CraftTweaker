@@ -1,6 +1,7 @@
 package minetweaker.api.item;
 
 import java.util.List;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 
@@ -28,6 +29,11 @@ public class IngredientAny implements IIngredient {
 
 	@Override
 	public List<IItemStack> getItems() {
+		return null;
+	}
+	
+	@Override
+	public List<ILiquidStack> getLiquids() {
 		return null;
 	}
 
@@ -58,6 +64,11 @@ public class IngredientAny implements IIngredient {
 
 	@Override
 	public boolean matches(IItemStack item) {
+		return true;
+	}
+	
+	@Override
+	public boolean matches(ILiquidStack liquid) {
 		return true;
 	}
 

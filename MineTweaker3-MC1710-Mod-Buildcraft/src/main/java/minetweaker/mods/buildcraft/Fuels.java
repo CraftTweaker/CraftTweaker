@@ -30,7 +30,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenClass("mods.buildcraft.Fuels")
-@ModOnly("BuildCraft|Core")
+@ModOnly(value="BuildCraft|Core", version="6.0")
 public class Fuels {
 	private static final Constructor CONSTRUCT_FUEL;
 	

@@ -6,6 +6,7 @@
 
 package minetweaker.api.oredict;
 
+import java.util.Collections;
 import java.util.List;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
@@ -13,6 +14,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IItemTransformer;
 import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.IngredientStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
 
@@ -51,6 +53,11 @@ public class IngredientOreDict implements IIngredient {
 	public List<IItemStack> getItems() {
 		return entry.getItems();
 	}
+	
+	@Override
+	public List<ILiquidStack> getLiquids() {
+		return Collections.emptyList();
+	}
 
 	@Override
 	public IIngredient amount(int amount) {
@@ -86,6 +93,11 @@ public class IngredientOreDict implements IIngredient {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public boolean matches(ILiquidStack liquid) {
+		return false;
 	}
 
 	@Override

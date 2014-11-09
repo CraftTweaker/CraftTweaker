@@ -1,6 +1,7 @@
 package minetweaker.api.item;
 
 import java.util.List;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -52,6 +53,17 @@ public interface IIngredient {
 	public List<IItemStack> getItems();
 	
 	/**
+	 * Gets all possible liquids for this ingredient.
+	 * 
+	 * If there is no liquid list (for example, it is the &lt;*&ft; wildcard item)
+	 * null should be returned.
+	 * 
+	 * @return the liquids for this ingredient, or null
+	 */
+	@ZenGetter("liquids")
+	public List<ILiquidStack> getLiquids();
+	
+	/**
 	 * Returns a new ingredient with the given stack size.
 	 * 
 	 * @param amount new stack size
@@ -100,13 +112,23 @@ public interface IIngredient {
 	public IIngredient marked(String mark);
 	
 	/**
-	 * Checks if this ingredient matches the given item.
+	 * Checks if this ingredient matches the given item. For liquids, will
+	 * match the item if it is a valid container.
 	 * 
 	 * @param item item to check
 	 * @return true if the item matches
 	 */
 	@ZenMethod
 	public boolean matches(IItemStack item);
+	
+	/**
+	 * Checks if this ingredient matches the given liquid.
+	 * 
+	 * @param liquid
+	 * @return 
+	 */
+	@ZenMethod
+	public boolean matches(ILiquidStack liquid);
 	
 	/**
 	 * Check if this ingredient contains all possible values for the given

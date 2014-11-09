@@ -23,6 +23,7 @@ import minetweaker.mc1710.oredict.MCOreDictEntry;
 import minetweaker.mc1710.player.MCPlayer;
 import minetweaker.mc1710.world.MCDimension;
 import minetweaker.mc1710.block.MCWorldBlock;
+import minetweaker.mc1710.liquid.MCLiquidStack;
 import minetweaker.mc1710.world.MCBiome;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -447,6 +448,8 @@ public class MineTweakerMC {
 			}
 			
 			return entry;
+		} else if (ingredient instanceof FluidStack) {
+			return new MCLiquidStack((FluidStack) ingredient);
 		} else {
 			throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
 		}

@@ -200,6 +200,11 @@ public class MCItemStack implements IItemStack {
 	public List<IItemStack> getItems() {
 		return items;
 	}
+	
+	@Override
+	public List<ILiquidStack> getLiquids() {
+		return Collections.emptyList();
+	}
 
 	@Override
 	public IItemStack amount(int amount) {
@@ -251,6 +256,11 @@ public class MCItemStack implements IItemStack {
 				&& (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE
 					|| stack.getItemDamage() == internal.getItemDamage()
 					|| (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+	}
+	
+	@Override
+	public boolean matches(ILiquidStack liquid) {
+		return false;
 	}
 
 	@Override

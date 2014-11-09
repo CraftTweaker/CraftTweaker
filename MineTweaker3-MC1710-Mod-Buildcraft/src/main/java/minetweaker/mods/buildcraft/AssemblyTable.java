@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -27,7 +28,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 @ZenClass("mods.buildcraft.AssemblyTable")
-@ModOnly("BuildCraft|Core")
+@ModOnly(value="BuildCraft|Core", version="6.0")
 public class AssemblyTable {
 	@ZenMethod
 	public static void addRecipe(IItemStack output, double energy, IIngredient[] ingredients) {

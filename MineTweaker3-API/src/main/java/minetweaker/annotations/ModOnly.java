@@ -15,4 +15,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ModOnly {
 	public String[] value();
+	public String version() default "";
 }
