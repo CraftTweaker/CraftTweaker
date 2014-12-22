@@ -70,15 +70,19 @@ public class GlobalRegistry {
 		globals.put(name, symbol);
 	}
 	
-	public static void registerExpansion(Class cls) {
-		for (Annotation annotation : cls.getAnnotations()) {
-			if (annotation instanceof ZenExpansion) {
-				ZenExpansion eAnnotation = (ZenExpansion) annotation;
-				if (!expansions.containsKey(eAnnotation.value())) {
-					expansions.put(eAnnotation.value(), new TypeExpansion(eAnnotation.value()));
+	public static void registerExpansion(Class<?> cls) {
+		try {
+			for (Annotation annotation : cls.getAnnotations()) {
+				if (annotation instanceof ZenExpansion) {
+					ZenExpansion eAnnotation = (ZenExpansion) annotation;
+					if (!expansions.containsKey(eAnnotation.value())) {
+						expansions.put(eAnnotation.value(), new TypeExpansion(eAnnotation.value()));
+					}
+					expansions.get(eAnnotation.value()).expand(cls, types);
 				}
-				expansions.get(eAnnotation.value()).expand(cls, types);
 			}
+		} catch (Throwable ex) {
+			ex.printStackTrace();
 		}
 	}
 	
@@ -90,11 +94,15 @@ public class GlobalRegistry {
 		bracketHandlers.add(handler);
 	}
 	
-	public static void registerNativeClass(Class cls) {
-		ZenTypeNative type = new ZenTypeNative(cls);
-		type.complete(types);
-		
-		root.put(type.getName(), new SymbolType(type), errors);
+	public static void registerNativeClass(Class<?> cls) {
+		try {
+			ZenTypeNative type = new ZenTypeNative(cls);
+			type.complete(types);
+
+			root.put(type.getName(), new SymbolType(type), errors);
+		} catch (Throwable ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	public static TypeRegistry getTypeRegistry() {
