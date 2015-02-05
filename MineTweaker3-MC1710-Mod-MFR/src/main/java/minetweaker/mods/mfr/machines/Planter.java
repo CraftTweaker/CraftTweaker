@@ -54,6 +54,15 @@ public class Planter {
 	}
 	
 	@ZenMethod
+	public static void addPlantable(IItemStack seed, IItemStack itemblock, @Optional IBlockPattern canPlantOn) {
+		IBlock block = itemblock.asBlock();
+		if (block == null) {
+			MineTweakerAPI.logError("The given itemblock has no block equivalant");
+		}
+		addPlantable(seed, block, canPlantOn);
+	}
+	
+	@ZenMethod
 	public static void addPlantable(IIngredient seed, IBlock block, @Optional IBlockPattern canPlantOn) {
 		if (canPlantOn == null) {
 			canPlantOn = GRASS_OR_DIRT;
