@@ -21,12 +21,14 @@ import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.world.IBiome;
+import minetweaker.mc1710.GuiCannotRemodify;
 import minetweaker.mc1710.entity.MCEntityDefinition;
 import minetweaker.mc1710.item.MCItemDefinition;
 import minetweaker.mc1710.liquid.MCLiquidDefinition;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.mc1710.util.MineTweakerPlatformUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -39,6 +41,8 @@ public class MCGame implements IGame {
 	private static final Map<String, String> TRANSLATIONS = MineTweakerHacks.getTranslations();
 	
 	public static final MCGame INSTANCE = new MCGame();
+	
+	private boolean locked = false;
 	
 	private MCGame() {}
 
@@ -110,6 +114,32 @@ public class MCGame implements IGame {
 	@Override
 	public String localize(String key, String lang) {
 		return LanguageRegistry.instance().getStringLocalization(key, lang);
+	}
+
+	@Override
+	public void lock()
+	{
+		locked = true;
+	}
+
+	@Override
+	public boolean isLocked()
+	{
+		return locked;
+	}
+
+	@Override
+	public void signalLockError()
+	{
+		MineTweakerAPI.getLogger().logError("Reload of scripts blocked (script lock)");
+		
+		if (Minecraft.isGuiEnabled()) {
+			Minecraft.getMinecraft().displayGuiScreen(
+					new GuiCannotRemodify(
+							"Minecraft has been tweaked for another server",
+							"with modifications that cannot be rolled back.",
+							"Please restart your game."));
+		}
 	}
 	
 	// ######################

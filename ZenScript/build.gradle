@@ -4,8 +4,7 @@ sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
 dependencies {
-	compile group: 'org.ow2.asm', name: 'asm', version:'4.2'
-    compile group: 'org.ow2.asm', name: 'asm-commons', version:'4.2'
+	compile 'org.ow2.asm:asm-debug-all:5.0.3'
 	//compile files("${System.properties['java.home']}/../lib/tools.jar")
 	//compile files("libs/tools.jar")
 }

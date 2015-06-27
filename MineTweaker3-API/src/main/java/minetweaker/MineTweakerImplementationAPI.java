@@ -586,6 +586,29 @@ public class MineTweakerImplementationAPI {
 			events.onPlayerLoggedOut(LISTEN_LOGOUT);
 		}
 		
+		
+		byte[] currentScript = MineTweakerAPI.tweaker.getScriptData();
+		if (currentScript != null) {
+			System.out.println("Already loaded a script before");
+			
+			// alread loaded a script
+			byte[] stagedScript = MineTweakerAPI.tweaker.getStagedScriptData();
+			
+			if (Arrays.equals(currentScript, stagedScript)) {
+				System.out.println("No reload needed");
+				return; // no reload necessary
+			}
+			
+			if (MineTweakerAPI.game.isLocked()) {
+				System.out.println("Reload blocked");
+				MineTweakerAPI.game.signalLockError();
+				return;
+			}
+		} else {
+			System.out.println("First time loading a script, go ahead");
+		}
+		
+		
 		MineTweakerAPI.tweaker.rollback();
 		
 		if (MineTweakerAPI.server != null) {

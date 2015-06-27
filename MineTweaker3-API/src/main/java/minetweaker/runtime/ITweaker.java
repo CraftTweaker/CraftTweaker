@@ -19,6 +19,13 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("minetweaker.IMineTweaker")
 public interface ITweaker {
 	/**
+	 * Retrieves the script data to be loaded.
+	 * 
+	 * @return 
+	 */
+	public byte[] getStagedScriptData();
+	
+	/**
 	 * Executes a specified MineTweaker action. Will print a log message and
 	 * adds the action to the undo list.
 	 * 

@@ -73,14 +73,14 @@ public class MCLiquidStack implements ILiquidStack {
 
 	@Override
 	public ILiquidStack withTag(IData data) {
-		FluidStack result = new FluidStack(stack.fluidID, stack.amount);
+		FluidStack result = new FluidStack(stack.getFluid(), stack.amount);
 		result.tag = (NBTTagCompound) NBTConverter.from(data);
 		return new MCLiquidStack(result, data.immutable());
 	}
 
 	@Override
 	public ILiquidStack withAmount(int amount) {
-		FluidStack result = new FluidStack(stack.fluidID, amount);
+		FluidStack result = new FluidStack(stack.getFluid(), amount);
 		result.tag = stack.tag;
 		return new MCLiquidStack(result, tag);
 	}

@@ -46,6 +46,11 @@ public class MTTweaker implements ITweaker {
 	private byte[] scriptData;
 	
 	@Override
+	public byte[] getStagedScriptData() {
+		return ScriptProviderMemory.collect(scriptProvider);
+	}
+	
+	@Override
 	public void apply(IUndoableAction action) {
 		MineTweakerAPI.logInfo(action.describe());
 		

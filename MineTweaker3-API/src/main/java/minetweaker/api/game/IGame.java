@@ -94,4 +94,26 @@ public interface IGame {
 	 */
 	@ZenMethod
 	public String localize(String key, String lang);
+	
+	/**
+	 * Lock the game and disable reload. Recommended for distributed versions.
+	 * 
+	 * Once locked, reload cannot be unlocked - a game restart is required to
+	 * alter the scripts.
+	 */
+	@ZenMethod
+	public void lock();
+	
+	/**
+	 * Returns the lock state. True if locked.
+	 * 
+	 * @return lock state
+	 */
+	@ZenGetter("locked")
+	public boolean isLocked();
+	
+	/**
+	 * Signals a modified script while in locked mode.
+	 */
+	public void signalLockError();
 }
