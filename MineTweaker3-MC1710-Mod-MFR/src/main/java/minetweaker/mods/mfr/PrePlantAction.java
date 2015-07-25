@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package stanhebben.minetweaker.mods.mfr;
+package minetweaker.mods.mfr;
 
 /**
  *
