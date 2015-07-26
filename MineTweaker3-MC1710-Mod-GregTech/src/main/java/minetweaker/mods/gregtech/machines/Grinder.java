@@ -1,7 +1,6 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
 import gregtech.api.util.GT_ModHandler;
 import java.util.Arrays;
 import minetweaker.MineTweakerAPI;
@@ -19,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Grinder")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class Grinder {
 	/**
 	 * Adds a recipe with a single output.

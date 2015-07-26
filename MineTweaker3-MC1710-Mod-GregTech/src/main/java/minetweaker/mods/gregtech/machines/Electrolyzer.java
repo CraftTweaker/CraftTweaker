@@ -1,7 +1,6 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
 import java.util.Arrays;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
@@ -17,7 +16,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Electrolyzer")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class Electrolyzer {
 	/**
 	 * Adds an electrolyzer recipe.

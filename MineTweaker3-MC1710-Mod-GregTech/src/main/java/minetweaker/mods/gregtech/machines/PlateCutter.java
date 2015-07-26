@@ -1,7 +1,6 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
@@ -17,7 +16,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.PlateCutter")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class PlateCutter {
 	/**
 	 * Adds a plate cutter recipe.
