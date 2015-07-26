@@ -30,7 +30,7 @@ dependencies {
 	compile project(':ZenScript')
 	compile project(':MineTweaker3-API')
 	compile project(':MineTweaker3-MC1710-Main')
-	compile files('libs/MineFactoryReloaded-[1.7.10]2.8.0RC2-557.jar', 'libs/ThermalFoundation-[1.7.10]1.0.0B1-6.jar', 'libs/CoFHCore-[1.7.10]3.0.0B3-26.jar')
+	compile files('libs/MineFactoryReloaded-[1.7.10]2.8.0-104.jar', 'libs/ThermalFoundation-[1.7.10]1.2.0-102.jar', 'libs/CoFHCore-[1.7.10]3.0.3-303.jar')
 }
 
 task makeRegistry(type: RegisterZenClassesTask) {
