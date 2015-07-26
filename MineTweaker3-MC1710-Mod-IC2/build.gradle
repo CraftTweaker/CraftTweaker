@@ -30,7 +30,7 @@ dependencies {
 	compile project(':ZenScript')
 	compile project(':MineTweaker3-API')
 	compile project(':MineTweaker3-MC1710-Main')
-	compile files('libs/industrialcraft-2-2.2.491-experimental-api.jar')
+	compile files('libs/industrialcraft-2-2.2.756-experimental-api.jar')
 }
 
 task makeRegistry(type: RegisterZenClassesTask) {
