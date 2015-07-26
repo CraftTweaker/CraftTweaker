@@ -1,5 +1,9 @@
 package minetweaker.mods.ic2.crops;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import ic2.api.crops.CropCard;
 import ic2.api.crops.Crops;
 import minetweaker.MineTweakerAPI;
@@ -10,7 +14,7 @@ import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraftforge.common.BiomeDictionary;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenClass;
-
+import stanhebben.zenscript.annotations.ZenGetter;
 /**
  * Provides access to IC2 crop system in general
  * @author ben
@@ -217,5 +221,42 @@ public class CropsConfig {
 	public static void registerBaseSeed(IItemStack seed, CropCard c, int sz,
 			int growth, int gain, int resist) {
 		MineTweakerAPI.apply(new RegisterBaseSeedAction(seed, c, sz, growth, gain, resist));
+	}
+
+	/**
+	 * Get a crop by its name and owning mod
+	 * @param owner The mod that owns the crop
+	 * @param name The name of the crop
+	 * @return A crop with the given name, owned by the given mod
+	 */
+	@ZenMethod
+	public static Crop getCrop(String owner, String name) {
+		return new Crop(Crops.instance.getCropCard(owner, name));
+	}
+	
+	/**
+	 * Get a crop by the seed that plants it
+	 * @param seed The seed that plants the crop
+	 * @return The crop planted by the seed
+	 */
+	@ZenMethod
+	public static Crop getCrop(IItemStack seed) {
+		return new Crop(Crops.instance.getCropCard(MineTweakerMC.getItemStack(seed)));
+	}
+
+	/**
+	 * Get all of the currently registered crops
+	 * @return All of the currently registered crops
+	 */
+	@ZenGetter("crops")
+	public static List<Crop> getAllCrops() {
+		Collection<CropCard> ccList = Crops.instance.getCrops();
+		
+		List<Crop> cList = new ArrayList<Crop>(ccList.size());
+		for (CropCard cropCard : ccList) {
+			cList.add(new Crop(cropCard));
+		}
+		
+		return cList;
 	}
 }
