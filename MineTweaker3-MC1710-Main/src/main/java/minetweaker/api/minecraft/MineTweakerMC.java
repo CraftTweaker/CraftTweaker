@@ -412,6 +412,24 @@ public class MineTweakerMC {
 		return (FluidStack) stack.getInternal();
 	}
 	
+	/**
+	 * Converts an array of MT liquid stacks into an array of MCF fluid stacks
+	 * 
+	 */
+	public static FluidStack[] getLiquidStacks(ILiquidStack[] stacks) {
+		if(stacks == null) {
+			return null;
+		}
+		
+		FluidStack[] res = new FluidStack[stacks.length];
+		
+		for (int i = 0; i < stacks.length; i++) {
+			ILiquidStack liquidStack = stacks[i];
+			res[i] = getLiquidStack(liquidStack);
+		}
+		return res;
+	}
+	
 	private static final HashMap<List, IOreDictEntry> oreDictArrays = new HashMap<List, IOreDictEntry>();
 	public static IOreDictEntry getOreDictEntryFromArray(List array) {
 		if (!oreDictArrays.containsKey(array)) {
