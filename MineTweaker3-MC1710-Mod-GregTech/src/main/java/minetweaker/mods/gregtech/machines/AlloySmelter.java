@@ -1,6 +1,7 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
@@ -52,7 +53,7 @@ public class AlloySmelter {
 
 		@Override
 		public void apply() {
-			GregTech_API.sRecipeAdder.addAlloySmelterRecipe(
+			GT_Values.RA.addAlloySmelterRecipe(
 					MineTweakerMC.getItemStack(input1),
 					MineTweakerMC.getItemStack(input2),
 					MineTweakerMC.getItemStack(output),

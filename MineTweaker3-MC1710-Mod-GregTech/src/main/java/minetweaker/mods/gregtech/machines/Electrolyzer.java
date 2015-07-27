@@ -1,11 +1,15 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
+
+import static gregtech.api.enums.GT_Values.RA;
+
 import java.util.Arrays;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -36,6 +40,14 @@ public class Electrolyzer {
 		}
 	}
 	
+	@ZenMethod
+	public static void addRecipe(IItemStack[] outputs, ILiquidStack lOutput, IItemStack input1, IItemStack input2, ILiquidStack lInput, int[] chances, int durationTicks, int euPt) {
+		if (outputs.length < 1) {
+			MineTweakerAPI.logError("Electrolyzer must have at least 1 output");
+		} else {
+			MineTweakerAPI.apply(new AddFluidRecipeAction(outputs, lOutput, input1, input2, lInput, chances, durationTicks, euPt));
+		}
+	}
 	// ######################
 	// ### Action classes ###
 	// ######################
@@ -57,7 +69,7 @@ public class Electrolyzer {
 
 		@Override
 		public void apply() {
-			GregTech_API.sRecipeAdder.addElectrolyzerRecipe(
+			RA.addElectrolyzerRecipe(
 					MineTweakerMC.getItemStack(input),
 					cells,
 					MineTweakerMC.getItemStack(output[0]),
@@ -118,4 +130,59 @@ public class Electrolyzer {
 			return true;
 		}
 	}
+	
+	private static class AddFluidRecipeAction extends OneWayAction {
+
+		private IItemStack[] output;
+		private ILiquidStack lOutput;
+		private IItemStack input;
+		private ILiquidStack lInput;
+		private int durationTicks;
+		private int euPt;
+		private IItemStack input2;
+		private int[] chances;
+
+		public AddFluidRecipeAction(IItemStack[] outputs, ILiquidStack lOutput, IItemStack input1, IItemStack input2,
+				ILiquidStack lInput, int[] chances, int durationTicks, int euPt) {
+					this.output = outputs;
+					this.lOutput = lOutput;
+					this.input = input1;
+					this.input2 = input2;
+					
+					this.lInput = lInput;
+					this.chances = chances;
+					this.durationTicks = durationTicks;
+					this.euPt = euPt;
+		}
+
+		@Override
+		public void apply() {
+			RA.addElectrolyzerRecipe(
+					MineTweakerMC.getItemStack(input),
+					MineTweakerMC.getItemStack(input2),
+					MineTweakerMC.getLiquidStack(lInput),
+					MineTweakerMC.getLiquidStack(lOutput),
+					MineTweakerMC.getItemStack(output[0]),
+					output.length > 1 ? MineTweakerMC.getItemStack(output[1]) : null,
+					output.length > 2 ? MineTweakerMC.getItemStack(output[2]) : null,
+					output.length > 3 ? MineTweakerMC.getItemStack(output[3]) : null,
+					output.length > 4 ? MineTweakerMC.getItemStack(output[4]) : null,
+					output.length > 5 ? MineTweakerMC.getItemStack(output[5]) : null,
+					chances,
+					durationTicks,
+					euPt);
+		}
+
+		@Override
+		public String describe() {
+			return "Adding electrolyzer recipe w/ fluids";
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+		
+	}
+
 }
