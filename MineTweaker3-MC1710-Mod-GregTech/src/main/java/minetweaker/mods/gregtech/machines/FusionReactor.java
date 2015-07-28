@@ -1,11 +1,11 @@
 package minetweaker.mods.gregtech.machines;
 
-import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
+import static gregtech.api.enums.GT_Values.RA;
+
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
-import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -13,67 +13,33 @@ import stanhebben.zenscript.annotations.ZenMethod;
 /**
  * Provides access to the fusion reactor recipes.
  * 
- * @author Stan Hebben
+ * @author Stan Hebben (rewritten by Ben)
  */
 @ZenClass("mods.gregtech.FusionReactor")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class FusionReactor {
 	/**
-	 * Adds a Fusion Reactor recipe.
-	 * 
-	 * @param output reactor output
-	 * @param input1 primary input
-	 * @param input2 secondary input
-	 * @param durationTicks fusion duration, in ticks
-	 * @param energyPerTick eu consumption per tick
-	 * @param startEnergy starting energy
+	 * Action to add a recipe to the fusion reactor
+	 * @author ben
+	 *
 	 */
-	@ZenMethod
-	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, int durationTicks, int energyPerTick, int startEnergy) {
-		MineTweakerAPI.apply(new AddRecipeAction(output, input1, input2, durationTicks, energyPerTick, startEnergy));
-	}
-	
-	// ######################
-	// ### Action classes ###
-	// ######################
-	
-	private static class AddRecipeAction extends OneWayAction {
-		private final IItemStack output;
-		private final IItemStack input1;
-		private final IItemStack input2;
-		private final int durationTicks;
-		private final int energyPerTick;
-		private final int startEnergy;
-		
-		public AddRecipeAction(
-				IItemStack output,
-				IItemStack input1,
-				IItemStack input2,
-				int durationTicks,
-				int energyPerTick,
-				int startEnergy) {
-			this.output = output;
-			this.input1 = input1;
-			this.input2 = input2;
-			this.durationTicks = durationTicks;
-			this.energyPerTick = energyPerTick;
-			this.startEnergy = startEnergy;
-		}
+	private static final class AddFusionReactionAction extends OneWayAction {
+		private ILiquidStack output;
+		private ILiquidStack input1;
+		private ILiquidStack input2;
+		private int durationTicks;
+		private int energyPerTick;
+		private int startEnergy;
 
-		@Override
-		public void apply() {
-			GregTech_API.sRecipeAdder.addFusionReactorRecipe(
-					MineTweakerMC.getItemStack(input1),
-					MineTweakerMC.getItemStack(input2),
-					MineTweakerMC.getItemStack(output),
-					durationTicks,
-					energyPerTick,
-					startEnergy);
-		}
-
-		@Override
-		public String describe() {
-			return "Adding fusion reactor recipe for " + output;
+		public AddFusionReactionAction(ILiquidStack output, ILiquidStack input1, ILiquidStack input2, int durationTicks,
+				int energyPerTick, int startEnergy) {
+					this.output = output;
+			// TODO Auto-generated constructor stub
+					this.input1 = input1;
+					this.input2 = input2;
+					this.durationTicks = durationTicks;
+					this.energyPerTick = energyPerTick;
+					this.startEnergy = startEnergy;
 		}
 
 		@Override
@@ -82,45 +48,31 @@ public class FusionReactor {
 		}
 
 		@Override
-		public int hashCode() {
-			int hash = 5;
-			hash = 97 * hash + (this.output != null ? this.output.hashCode() : 0);
-			hash = 97 * hash + (this.input1 != null ? this.input1.hashCode() : 0);
-			hash = 97 * hash + (this.input2 != null ? this.input2.hashCode() : 0);
-			hash = 97 * hash + this.durationTicks;
-			hash = 97 * hash + this.energyPerTick;
-			hash = 97 * hash + this.startEnergy;
-			return hash;
+		public String describe() {
+			return "Adding fusion recipe for " + output.getName();
 		}
 
 		@Override
-		public boolean equals(Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			final AddRecipeAction other = (AddRecipeAction) obj;
-			if (this.output != other.output && (this.output == null || !this.output.equals(other.output))) {
-				return false;
-			}
-			if (this.input1 != other.input1 && (this.input1 == null || !this.input1.equals(other.input1))) {
-				return false;
-			}
-			if (this.input2 != other.input2 && (this.input2 == null || !this.input2.equals(other.input2))) {
-				return false;
-			}
-			if (this.durationTicks != other.durationTicks) {
-				return false;
-			}
-			if (this.energyPerTick != other.energyPerTick) {
-				return false;
-			}
-			if (this.startEnergy != other.startEnergy) {
-				return false;
-			}
-			return true;
+		public void apply() {
+			RA.addFusionReactorRecipe(MineTweakerMC.getLiquidStack(input1), MineTweakerMC.getLiquidStack(input2), MineTweakerMC.getLiquidStack(output)
+					, durationTicks, energyPerTick, startEnergy);
 		}
 	}
+
+	/**
+	 * Adds a Fusion Reactor recipe.
+	 * 
+	 * @param input1 = first Input (not null, and respects StackSize)
+	 * @param input2= second Input (not null, and respects StackSize)
+	 * @param output = Output of the Fusion (can be null, and respects StackSize)
+	 * @param durationInTicks = How many ticks the Fusion lasts (must be > 0)
+	 * @param energyPerTick = The EU generated per Tick (can even be negative!)
+	 * @param startEnergy = EU needed for heating the Reactor up (must be >= 0)
+	 */
+	@ZenMethod
+	public static void addRecipe(ILiquidStack output, ILiquidStack input1, ILiquidStack input2, int durationTicks, int energyPerTick, int startEnergy) {
+		MineTweakerAPI.apply(new AddFusionReactionAction(output, input1, input2, durationTicks, energyPerTick, startEnergy));
+	}
+	
+	
 }

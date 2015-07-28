@@ -1,12 +1,15 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
+
+import static gregtech.api.enums.GT_Values.RA;
+
 import java.util.Arrays;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -17,7 +20,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.DistillationTower")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class DistillationTower {
 	/**
 	 * Adds a distillation tower recipe with a single output.
@@ -51,6 +54,47 @@ public class DistillationTower {
 		}
 	}
 	
+	@ZenMethod
+	public static void addRecipe(ILiquidStack input, ILiquidStack[] outputs, IItemStack iOutput, int dur, int euT) {
+		MineTweakerAPI.apply(new AddFluidDistillationAction(input, outputs, iOutput, dur, euT));
+	}
+	
+	private static final class AddFluidDistillationAction extends OneWayAction {
+		private ILiquidStack input;
+		private ILiquidStack[] outputs;
+		private IItemStack iOutput;
+		private int dur;
+		private int euT;
+
+		public AddFluidDistillationAction(ILiquidStack input, ILiquidStack[] outputs, IItemStack iOutput, int dur,
+				int euT) {
+					this.input = input;
+			// TODO Auto-generated constructor stub
+					this.outputs = outputs;
+					this.iOutput = iOutput;
+					this.dur = dur;
+					this.euT = euT;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+
+		@Override
+		public String describe() {
+			return "Adding fluid distillation of " + input.getDisplayName();
+		}
+
+		@Override
+		public void apply() {
+			RA.addDistillationTowerRecipe(MineTweakerMC.getLiquidStack(input)
+					, MineTweakerMC.getLiquidStacks(outputs)
+					, MineTweakerMC.getItemStack(iOutput)
+					, dur, euT);
+		}
+	}
+
 	// ######################
 	// ### Action classes ###
 	// ######################

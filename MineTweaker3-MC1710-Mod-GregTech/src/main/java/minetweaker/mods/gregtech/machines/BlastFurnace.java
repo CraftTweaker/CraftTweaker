@@ -1,11 +1,13 @@
 package minetweaker.mods.gregtech.machines;
 
+import static gregtech.api.enums.GT_Values.RA;
+
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -16,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.BlastFurnace")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class BlastFurnace {
 	/**
 	 * Adds a recipe with a single output.
@@ -52,6 +54,56 @@ public class BlastFurnace {
 		}
 	}
 	
+	public static void addRecipe(IItemStack output1, IItemStack output2, ILiquidStack lOutput, ILiquidStack lInput, IItemStack input1, IItemStack input2, int dur, int euT, int level) {
+		MineTweakerAPI.apply(new AddFluidRecipeAction(output1, output2, lOutput, lInput, input1, input2, dur, euT, level));
+	}
+	
+	private static final class AddFluidRecipeAction extends OneWayAction {
+		private IItemStack output1;
+		private IItemStack output2;
+		private ILiquidStack lOutput;
+		private IItemStack input1;
+		private IItemStack input2;
+		private int dur;
+		private int euT;
+		private int level;
+		private ILiquidStack lInput;
+
+		public AddFluidRecipeAction(IItemStack output1, IItemStack output2, ILiquidStack lOutput, ILiquidStack lInput,
+				IItemStack input1, IItemStack input2, int dur, int euT, int level) {
+					this.output1 = output1;
+					this.output2 = output2;
+					this.lOutput = lOutput;
+					this.lInput = lInput;
+					this.input1 = input1;
+					this.input2 = input2;
+					this.dur = dur;
+					this.euT = euT;
+					this.level = level;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+
+		@Override
+		public String describe() {
+			return "Added blast furnace recipe w/ liquids";
+		}
+
+		@Override
+		public void apply() {
+			RA.addBlastRecipe(MineTweakerMC.getItemStack(input1)
+					, MineTweakerMC.getItemStack(input2)
+					, MineTweakerMC.getLiquidStack(lInput)
+					, MineTweakerMC.getLiquidStack(lOutput)
+					, MineTweakerMC.getItemStack(output1)
+					, MineTweakerMC.getItemStack(output2)
+					, dur, euT, level);
+		}
+	}
+
 	// ######################
 	// ### Action classes ###
 	// ######################
@@ -77,7 +129,7 @@ public class BlastFurnace {
 
 		@Override
 		public void apply() {
-			GregTech_API.sRecipeAdder.addBlastRecipe(
+			RA.addBlastRecipe(
 					MineTweakerMC.getItemStack(input1),
 					MineTweakerMC.getItemStack(input2),
 					MineTweakerMC.getItemStack(output1),

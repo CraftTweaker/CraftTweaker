@@ -21,7 +21,8 @@ import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.world.IBiome;
-import minetweaker.mc1710.GuiCannotRemodify;
+// TODO Find this
+// import minetweaker.mc1710.GuiCannotRemodify;
 import minetweaker.mc1710.entity.MCEntityDefinition;
 import minetweaker.mc1710.item.MCItemDefinition;
 import minetweaker.mc1710.liquid.MCLiquidDefinition;
@@ -134,11 +135,13 @@ public class MCGame implements IGame {
 		MineTweakerAPI.getLogger().logError("Reload of scripts blocked (script lock)");
 		
 		if (Minecraft.isGuiEnabled()) {
-			Minecraft.getMinecraft().displayGuiScreen(
+			// Commented out due to unresolved import
+			/** Minecraft.getMinecraft().displayGuiScreen(
 					new GuiCannotRemodify(
 							"Minecraft has been tweaked for another server",
 							"with modifications that cannot be rolled back.",
 							"Please restart your game."));
+			**/
 		}
 	}
 	

@@ -1,7 +1,7 @@
 package minetweaker.mods.gregtech.machines;
 
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
+import gregtech.api.enums.GT_Values;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
@@ -16,7 +16,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.AlloySmelter")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class AlloySmelter {
 	/**
 	 * Adds an alloy smelter recipe.
@@ -53,7 +53,7 @@ public class AlloySmelter {
 
 		@Override
 		public void apply() {
-			GregTech_API.sRecipeAdder.addAlloySmelterRecipe(
+			GT_Values.RA.addAlloySmelterRecipe(
 					MineTweakerMC.getItemStack(input1),
 					MineTweakerMC.getItemStack(input2),
 					MineTweakerMC.getItemStack(output),

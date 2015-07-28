@@ -1,11 +1,13 @@
 package minetweaker.mods.gregtech.machines;
 
+import static gregtech.api.enums.GT_Values.RA;
+
 import gregtech.api.GregTech_API;
-import static gregtech.api.GregTech_API.MOD_ID;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -16,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan Hebben
  */
 @ZenClass("mods.gregtech.Assembler")
-@ModOnly(MOD_ID)
+@ModOnly("gregtech")
 public class Assembler {
 	/**
 	 * Adds an assemble recipe.
@@ -32,6 +34,47 @@ public class Assembler {
 		MineTweakerAPI.apply(new AddRecipeAction(output, input1, input2, durationTicks, euPerTick));
 	}
 	
+	@ZenMethod
+	public static void addRecipe(IItemStack output, IItemStack input1, IItemStack input2, ILiquidStack lInput, int dur, int euT) {
+		MineTweakerAPI.apply(new AddFluidRecipeAction(output, input1, input2, lInput, dur, euT));
+	}
+	private static final class AddFluidRecipeAction extends OneWayAction {
+		private IItemStack output;
+		private IItemStack input1;
+		private IItemStack input2;
+		private ILiquidStack lInput;
+		private int dur;
+		private int euT;
+
+		public AddFluidRecipeAction(IItemStack output, IItemStack input1, IItemStack input2, ILiquidStack lInput,
+				int dur, int euT) {
+					this.output = output;
+					this.input1 = input1;
+					this.input2 = input2;
+					this.lInput = lInput;
+					this.dur = dur;
+					this.euT = euT;
+		}
+
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+
+		@Override
+		public String describe() {
+			return "Adding circuit assembler recipe w/ fluids";
+		}
+
+		@Override
+		public void apply() {
+			RA.addAssemblerRecipe(MineTweakerMC.getItemStack(input1)
+					, MineTweakerMC.getItemStack(input2)
+					, MineTweakerMC.getLiquidStack(lInput)
+					, MineTweakerMC.getItemStack(output)
+					, dur, euT);
+		}
+	}
 	// ######################
 	// ### Action classes ###
 	// ######################

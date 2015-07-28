@@ -16,7 +16,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
+ * Add a fluid to the semi-fluid generator
  * @author Stan
  */
 @ZenClass("mods.ic2.SemiFluidGenerator")
