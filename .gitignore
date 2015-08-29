@@ -6,3 +6,27 @@ run
 /MineTweaker3-Web/doc
 /MineTweaker3-MC164-Main/eclipse
 /ZenScript-Test
+*.class
+
+# Package Files #
+*.war
+*.ear
+/build
+*/eclipse
+/bin
+/out
+
+*.mtl
+*.classpath
+*.project
+/.settings
+/.idea
+/.gradle
+*/.settings/
+
+*.iml
+*.ipr
+*.iws
+/.metadata/*
+*.eml
+usernamecache.json
