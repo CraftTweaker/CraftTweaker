@@ -358,10 +358,6 @@ public class MCItemStack implements IItemStack {
 			result.append(")");
 		}
 		
-		if (!wildcardSize) {
-			result.append(" * ").append(stack.stackSize);
-		}
-
 		return result.toString();
 	}
 }
