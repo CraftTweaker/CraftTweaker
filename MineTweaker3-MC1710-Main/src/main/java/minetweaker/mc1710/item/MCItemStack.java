@@ -56,7 +56,7 @@ public class MCItemStack implements IItemStack {
 			throw new IllegalArgumentException("stack cannot be null");
 
 		stack = itemStack.copy();
-		items = Collections.<IItemStack> singletonList(this);
+		items = Collections.<IItemStack>singletonList(this);
 	}
 
 	public MCItemStack(ItemStack itemStack, boolean wildcardSize) {
@@ -70,13 +70,13 @@ public class MCItemStack implements IItemStack {
 			throw new IllegalArgumentException("stack cannot be null");
 
 		stack = itemStack;
-		items = Collections.<IItemStack> singletonList(this);
+		items = Collections.<IItemStack>singletonList(this);
 		this.tag = tag;
 	}
 
 	private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
 		stack = itemStack;
-		items = Collections.<IItemStack> singletonList(this);
+		items = Collections.<IItemStack>singletonList(this);
 		this.tag = tag;
 		this.wildcardSize = wildcardSize;
 	}
@@ -108,7 +108,6 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public void setMaxStackSize(int size) {
-		System.out.println("changing stack size");
 		MineTweakerAPI.apply(new SetStackSizeAction((ItemStack) getInternal(), size));
 	}
 

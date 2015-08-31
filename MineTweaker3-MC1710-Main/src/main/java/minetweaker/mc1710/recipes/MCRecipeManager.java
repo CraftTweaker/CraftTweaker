@@ -36,16 +36,16 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 public class MCRecipeManager implements IRecipeManager {
 	private final List<IRecipe> recipes;
 	private final List<ICraftingRecipe> transformerRecipes;
-	
+
 	public MCRecipeManager() {
 		recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
 		transformerRecipes = new ArrayList<ICraftingRecipe>();
 	}
-	
+
 	public boolean hasTransformerRecipes() {
 		return transformerRecipes.size() > 0;
 	}
-	
+
 	public void applyTransformations(ICraftingInventory inventory, IPlayer byPlayer) {
 		for (ICraftingRecipe recipe : transformerRecipes) {
 			if (recipe.matches(inventory)) {
@@ -54,40 +54,40 @@ public class MCRecipeManager implements IRecipeManager {
 			}
 		}
 	}
-	
+
 	@Override
 	public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
 		List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
-		
+
 		for (IRecipe recipe : recipes) {
 			if (ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))) {
 				ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
 				results.add(converted);
 			}
 		}
-		
+
 		return results;
 	}
-	
+
 	@Override
 	public List<ICraftingRecipe> getAll() {
 		List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
-		
+
 		for (IRecipe recipe : recipes) {
 			ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
 			results.add(converted);
 		}
-		
+
 		return results;
 	}
-	
+
 	@Override
 	public int remove(IIngredient output) {
 		List<IRecipe> toRemove = new ArrayList<IRecipe>();
 		List<Integer> removeIndex = new ArrayList<Integer>();
 		for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
-			
+
 			// certain special recipes have no predefined output. ignore those
 			// since these cannot be removed with MineTweaker scripts
 			if (recipe.getRecipeOutput() != null) {
@@ -97,11 +97,11 @@ public class MCRecipeManager implements IRecipeManager {
 				}
 			}
 		}
-		
+
 		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
 		return toRemove.size();
 	}
-	
+
 	@Override
 	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
 		addShaped(output, ingredients, function, false);
@@ -123,24 +123,24 @@ public class MCRecipeManager implements IRecipeManager {
 	public int removeShaped(IIngredient output, IIngredient[][] ingredients) {
 		int ingredientsWidth = 0;
 		int ingredientsHeight = 0;
-		
+
 		if (ingredients != null) {
 			ingredientsHeight = ingredients.length;
-			
+
 			for (int i = 0; i < ingredients.length; i++) {
 				ingredientsWidth = Math.max(ingredientsWidth, ingredients[i].length);
 			}
 		}
-		
+
 		List<IRecipe> toRemove = new ArrayList<IRecipe>();
 		List<Integer> removeIndex = new ArrayList<Integer>();
 		outer: for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
-			
+
 			if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
-			
+
 			if (ingredients != null) {
 				if (recipe instanceof ShapedRecipes) {
 					ShapedRecipes srecipe = (ShapedRecipes) recipe;
@@ -153,7 +153,7 @@ public class MCRecipeManager implements IRecipeManager {
 						for (int k = 0; k < ingredientsWidth; k++) {
 							IIngredient ingredient = k > row.length ? null : row[k];
 							ItemStack recipeIngredient = srecipe.recipeItems[j * srecipe.recipeWidth + k];
-							
+
 							if (!matches(recipeIngredient, ingredient)) {
 								continue outer;
 							}
@@ -166,7 +166,7 @@ public class MCRecipeManager implements IRecipeManager {
 					if (ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
 						continue;
 					}
-					
+
 					for (int j = 0; j < ingredientsHeight; j++) {
 						IIngredient[] row = ingredients[j];
 						for (int k = 0; k < ingredientsWidth; k++) {
@@ -180,14 +180,14 @@ public class MCRecipeManager implements IRecipeManager {
 				}
 			} else {
 				if (recipe instanceof ShapedRecipes) {
-					
+
 				} else if (recipe instanceof ShapedOreRecipe) {
-					
+
 				} else {
 					continue;
 				}
 			}
-			
+
 			toRemove.add(recipe);
 			removeIndex.add(i);
 		}
@@ -202,60 +202,61 @@ public class MCRecipeManager implements IRecipeManager {
 		List<Integer> removeIndex = new ArrayList<Integer>();
 		outer: for (int i = 0; i < recipes.size(); i++) {
 			IRecipe recipe = recipes.get(i);
-			
+
 			if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
-			
+
 			if (ingredients != null) {
 				if (recipe instanceof ShapelessRecipes) {
 					ShapelessRecipes srecipe = (ShapelessRecipes) recipe;
-					
+
 					if (ingredients.length > srecipe.getRecipeSize()) {
 						continue;
 					} else if (!wildcard && ingredients.length < srecipe.getRecipeSize()) {
 						continue;
 					}
-					
+
 					checkIngredient: for (int j = 0; j < ingredients.length; j++) {
 						for (int k = 0; k < srecipe.getRecipeSize(); k++) {
 							if (matches(srecipe.recipeItems.get(k), ingredients[j])) {
 								continue checkIngredient;
 							}
 						}
-						
+
 						continue outer;
 					}
 				} else if (recipe instanceof ShapelessOreRecipe) {
 					ShapelessOreRecipe srecipe = (ShapelessOreRecipe) recipe;
 					ArrayList<Object> inputs = srecipe.getInput();
-					
+
 					if (inputs.size() < ingredients.length) {
 						continue;
-					} if (!wildcard && inputs.size() > ingredients.length) {
+					}
+					if (!wildcard && inputs.size() > ingredients.length) {
 						continue;
 					}
-					
+
 					checkIngredient: for (int j = 0; j < ingredients.length; j++) {
 						for (int k = 0; k < srecipe.getRecipeSize(); k++) {
 							if (matches(inputs.get(k), ingredients[j])) {
 								continue checkIngredient;
 							}
 						}
-						
+
 						continue outer;
 					}
 				}
 			} else {
 				if (recipe instanceof ShapelessRecipes) {
-					
+
 				} else if (recipe instanceof ShapelessOreRecipe) {
-					
+
 				} else {
 					continue;
 				}
 			}
-			
+
 			toRemove.add(recipe);
 			removeIndex.add(i);
 		}
@@ -267,13 +268,13 @@ public class MCRecipeManager implements IRecipeManager {
 	@Override
 	public IItemStack craft(IItemStack[][] contents) {
 		Container container = new ContainerVirtual();
-		
+
 		int width = 0;
 		int height = contents.length;
 		for (IItemStack[] row : contents) {
 			width = Math.max(width, row.length);
 		}
-		
+
 		ItemStack[] iContents = new ItemStack[width * height];
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < contents[i].length; j++) {
@@ -282,7 +283,7 @@ public class MCRecipeManager implements IRecipeManager {
 				}
 			}
 		}
-		
+
 		InventoryCrafting inventory = new InventoryCrafting(container, width, height);
 		for (int i = 0; i < iContents.length; i++) {
 			inventory.setInventorySlotContents(i, iContents[i]);
@@ -294,18 +295,18 @@ public class MCRecipeManager implements IRecipeManager {
 			return getIItemStack(result);
 		}
 	}
-	
+
 	private class ContainerVirtual extends Container {
 		@Override
 		public boolean canInteractWith(EntityPlayer var1) {
 			return false;
 		}
 	}
-	
+
 	private class ActionRemoveRecipes implements IUndoableAction {
 		private final List<Integer> removingIndices;
 		private final List<IRecipe> removingRecipes;
-		
+
 		public ActionRemoveRecipes(List<IRecipe> recipes, List<Integer> indices) {
 			this.removingIndices = indices;
 			this.removingRecipes = recipes;
@@ -346,11 +347,11 @@ public class MCRecipeManager implements IRecipeManager {
 			return null;
 		}
 	}
-	
+
 	private class ActionAddRecipe implements IUndoableAction {
 		private final IRecipe recipe;
 		private final ICraftingRecipe craftingRecipe;
-		
+
 		public ActionAddRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
 			this.recipe = recipe;
 			this.craftingRecipe = craftingRecipe;
@@ -398,7 +399,7 @@ public class MCRecipeManager implements IRecipeManager {
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
 	}
-	
+
 	private static boolean matches(Object input, IIngredient ingredient) {
 		if ((input == null) != (ingredient == null)) {
 			return false;
@@ -413,7 +414,7 @@ public class MCRecipeManager implements IRecipeManager {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 }

@@ -17,20 +17,20 @@ import stanhebben.zenscript.util.MethodOutput;
  */
 public interface IJavaMethod {
 	public boolean isStatic();
-	
+
 	public boolean accepts(int numArguments);
-	
+
 	public boolean accepts(IEnvironmentGlobal environment, Expression... arguments);
-	
+
 	public int getPriority(IEnvironmentGlobal environment, Expression... arguments);
-	
+
 	public void invokeVirtual(MethodOutput output);
-	
+
 	public void invokeStatic(MethodOutput output);
-	
+
 	public ZenType[] getParameterTypes();
-	
+
 	public ZenType getReturnType();
-	
+
 	public boolean isVarargs();
 }

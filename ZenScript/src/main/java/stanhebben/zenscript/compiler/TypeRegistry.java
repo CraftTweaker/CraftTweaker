@@ -41,10 +41,10 @@ import stanhebben.zenscript.value.IAny;
  */
 public class TypeRegistry implements ITypeRegistry {
 	private final Map<Class, ZenType> types;
-	
+
 	public TypeRegistry() {
 		types = new HashMap<Class, ZenType>();
-		
+
 		types.put(boolean.class, ZenType.BOOL);
 		types.put(byte.class, ZenTypeByte.INSTANCE);
 		types.put(short.class, ZenTypeShort.INSTANCE);
@@ -53,7 +53,7 @@ public class TypeRegistry implements ITypeRegistry {
 		types.put(float.class, ZenTypeFloat.INSTANCE);
 		types.put(double.class, ZenTypeDouble.INSTANCE);
 		types.put(void.class, ZenTypeVoid.INSTANCE);
-		
+
 		types.put(Boolean.class, ZenTypeBoolObject.INSTANCE);
 		types.put(Byte.class, ZenTypeByteObject.INSTANCE);
 		types.put(Short.class, ZenTypeShortObject.INSTANCE);
@@ -61,13 +61,13 @@ public class TypeRegistry implements ITypeRegistry {
 		types.put(Long.class, ZenTypeLongObject.INSTANCE);
 		types.put(Float.class, ZenTypeFloatObject.INSTANCE);
 		types.put(Double.class, ZenTypeDoubleObject.INSTANCE);
-		
+
 		types.put(IAny.class, ZenTypeAny.INSTANCE);
-		
+
 		types.put(String.class, ZenTypeString.INSTANCE);
 		types.put(List.class, new ZenTypeArrayBasic(ZenTypeAny.INSTANCE));
 	}
-	
+
 	public ZenType getClassType(Class cls) {
 		if (types.containsKey(cls)) {
 			return types.get(cls);
@@ -82,7 +82,7 @@ public class TypeRegistry implements ITypeRegistry {
 			return result;
 		}
 	}
-	
+
 	@Override
 	public ZenType getType(Type type) {
 		if (type instanceof ParameterizedType) {
@@ -107,22 +107,22 @@ public class TypeRegistry implements ITypeRegistry {
 			return null;
 		}
 	}
-	
+
 	private ZenType getListType(ParameterizedType type) {
 		if (type.getRawType() == List.class) {
 			return new ZenTypeArrayList(getType(type.getActualTypeArguments()[0]));
 		}
-		
+
 		return null;
 	}
-	
+
 	private ZenType getMapType(ParameterizedType type) {
 		if (type.getRawType() == Map.class) {
 			return new ZenTypeAssociative(
 					getType(type.getActualTypeArguments()[1]),
 					getType(type.getActualTypeArguments()[0]));
 		}
-		
+
 		return null;
 	}
 }
