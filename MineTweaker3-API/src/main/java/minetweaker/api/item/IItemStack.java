@@ -65,6 +65,22 @@ public interface IItemStack extends IIngredient {
 	@ZenSetter("displayName")
 	public void setDisplayName(String name);
 	
+	
+	/**
+	 * Gets the max stack size for an item
+	 * 
+	 * @return int max stack size
+	 */
+	@ZenGetter
+	public int getMaxStackSize();
+	/**
+	 * Sets the ItemStack max stack size.
+	 * 
+	 * @param size the new max size
+	 */
+	@ZenSetter("maxStackSize")
+	public void setMaxStackSize(int size);
+	
 	/**
 	 * Gets the item damage. Returns 0 if the item cannot be damaged.
 	 * 
