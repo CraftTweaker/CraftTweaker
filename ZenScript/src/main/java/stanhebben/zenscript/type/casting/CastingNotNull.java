@@ -17,7 +17,7 @@ import stanhebben.zenscript.util.MethodOutput;
  */
 public class CastingNotNull implements ICastingRule {
 	public ZenType fromType;
-	
+
 	public CastingNotNull(ZenType fromType) {
 		this.fromType = fromType;
 	}
@@ -27,7 +27,7 @@ public class CastingNotNull implements ICastingRule {
 		MethodOutput output = method.getOutput();
 		Label labelElse = new Label();
 		Label labelAfter = new Label();
-		
+
 		output.ifNull(labelElse);
 		output.iConst1();
 		output.goTo(labelAfter);

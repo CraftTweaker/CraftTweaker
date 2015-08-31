@@ -7,9 +7,9 @@ import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenSetter;
 
 /**
- * Entity interface. Used to obtain information about entities, and modify
- * their data. Entities are any item that is freely movable in the world,
- * such as players, monsters, items on the ground, ...
+ * Entity interface. Used to obtain information about entities, and modify their
+ * data. Entities are any item that is freely movable in the world, such as
+ * players, monsters, items on the ground, ...
  * 
  * @author Stan Hebben
  */
@@ -22,7 +22,7 @@ public interface IEntity {
 	 */
 	@ZenGetter("dimension")
 	public IDimension getDimension();
-	
+
 	/**
 	 * Retrieves the x position of this entity.
 	 * 
@@ -30,7 +30,7 @@ public interface IEntity {
 	 */
 	@ZenGetter("x")
 	public float getX();
-	
+
 	/**
 	 * Retrieves the y position of this entity.
 	 * 
@@ -38,7 +38,7 @@ public interface IEntity {
 	 */
 	@ZenGetter("y")
 	public float getY();
-	
+
 	/**
 	 * Retrieves the z position of this entity.
 	 * 
@@ -46,7 +46,7 @@ public interface IEntity {
 	 */
 	@ZenGetter("z")
 	public float getZ();
-	
+
 	/**
 	 * Retrieves the position of this entity.
 	 * 
@@ -54,7 +54,7 @@ public interface IEntity {
 	 */
 	@ZenGetter("position")
 	public Position3f getPosition();
-	
+
 	/**
 	 * Sets the position of this entity. Instantly moves (teleports) the entity
 	 * to that position.

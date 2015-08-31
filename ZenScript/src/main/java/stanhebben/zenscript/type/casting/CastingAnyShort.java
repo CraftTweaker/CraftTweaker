@@ -16,9 +16,10 @@ import stanhebben.zenscript.value.IAny;
  */
 public class CastingAnyShort implements ICastingRule {
 	public static final CastingAnyShort INSTANCE = new CastingAnyShort();
-	
-	private CastingAnyShort() {}
-	
+
+	private CastingAnyShort() {
+	}
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		method.getOutput().invokeInterface(IAny.class, "asShort", short.class);

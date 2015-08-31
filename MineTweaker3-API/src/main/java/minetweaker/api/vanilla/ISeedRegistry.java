@@ -21,10 +21,10 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface ISeedRegistry {
 	@ZenMethod
 	public void addSeed(WeightedItemStack item);
-	
+
 	@ZenMethod
 	public void removeSeed(IIngredient item);
-	
+
 	@ZenGetter("seeds")
 	public List<WeightedItemStack> getSeeds();
 }

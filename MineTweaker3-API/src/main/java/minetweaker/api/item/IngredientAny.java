@@ -12,10 +12,12 @@ import minetweaker.util.ArrayUtil;
  */
 public class IngredientAny implements IIngredient {
 	public static final IngredientAny INSTANCE = new IngredientAny();
-	
-	public static Object INTERNAL_ANY = null; // platforms supporting an "any" item should fill it here
-	
-	private IngredientAny() {}
+
+	public static Object INTERNAL_ANY = null; // platforms supporting an "any"
+												// item should fill it here
+
+	private IngredientAny() {
+	}
 
 	@Override
 	public String getMark() {
@@ -31,7 +33,7 @@ public class IngredientAny implements IIngredient {
 	public List<IItemStack> getItems() {
 		return null;
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return null;
@@ -66,7 +68,7 @@ public class IngredientAny implements IIngredient {
 	public boolean matches(IItemStack item) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		return true;
@@ -91,7 +93,7 @@ public class IngredientAny implements IIngredient {
 	public Object getInternal() {
 		return INTERNAL_ANY;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "<*>";

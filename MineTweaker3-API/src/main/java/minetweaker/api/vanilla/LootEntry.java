@@ -19,7 +19,7 @@ public class LootEntry {
 	private final WeightedItemStack item;
 	private final int minAmount;
 	private final int maxAmount;
-	
+
 	public LootEntry(WeightedItemStack item, int minAmount, int maxAmount) {
 		this.item = item;
 		this.minAmount = minAmount;
@@ -35,12 +35,12 @@ public class LootEntry {
 	public int getMinAmount() {
 		return minAmount;
 	}
-	
+
 	@ZenGetter("maxAmount")
 	public int getMaxAmount() {
 		return maxAmount;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder message = new StringBuilder();
@@ -54,7 +54,7 @@ public class LootEntry {
 			message.append(getMaxAmount());
 		}
 		message.append(")");
-		
+
 		return message.toString();
 	}
 }

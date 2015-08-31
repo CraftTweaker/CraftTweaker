@@ -19,18 +19,18 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
  */
 public class ShapelessRecipeOre extends ShapelessOreRecipe {
 	private final ShapelessRecipe recipe;
-	
+
 	public ShapelessRecipeOre(Object[] ingredients, ShapelessRecipe recipe) {
 		super(getItemStack(recipe.getOutput()), ingredients);
-		
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
 	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
-	
+
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();

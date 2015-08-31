@@ -27,7 +27,8 @@ public class ParsedFunction {
 		parser.next();
 		Token tName = parser.required(ZenTokener.T_ID, "identifier expected");
 
-		// function (argname [as type], argname [as type], ...) [as type] { ...contents... }
+		// function (argname [as type], argname [as type], ...) [as type] {
+		// ...contents... }
 		parser.required(T_BROPEN, "( expected");
 
 		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
@@ -37,7 +38,7 @@ public class ParsedFunction {
 			if (parser.optional(T_AS) != null) {
 				type = ZenType.read(parser, environment);
 			}
-			
+
 			arguments.add(new ParsedFunctionArgument(argName.getValue(), type));
 
 			while (parser.optional(T_COMMA) != null) {
@@ -46,20 +47,20 @@ public class ParsedFunction {
 				if (parser.optional(T_AS) != null) {
 					type2 = ZenType.read(parser, environment);
 				}
-				
+
 				arguments.add(new ParsedFunctionArgument(argName2.getValue(), type2));
 			}
-			
+
 			parser.required(T_BRCLOSE, ") expected");
 		}
-		
+
 		ZenType type = ZenTypeAny.INSTANCE;
 		if (parser.optional(T_AS) != null) {
 			type = ZenType.read(parser, environment);
 		}
-		
+
 		parser.required(T_AOPEN, "{ expected");
-		
+
 		Statement[] statements;
 		if (parser.optional(T_ACLOSE) != null) {
 			statements = new Statement[0];
@@ -71,25 +72,25 @@ public class ParsedFunction {
 			}
 			statements = statementsAL.toArray(new Statement[statementsAL.size()]);
 		}
-		
+
 		return new ParsedFunction(tName.getPosition(), tName.getValue(), arguments, type, statements);
 	}
-	
+
 	private final ZenPosition position;
 	private final String name;
 	private final List<ParsedFunctionArgument> arguments;
 	private final ZenType returnType;
 	private final Statement[] statements;
-	
+
 	private final String signature;
-	
+
 	private ParsedFunction(ZenPosition position, String name, List<ParsedFunctionArgument> arguments, ZenType returnType, Statement[] statements) {
 		this.position = position;
 		this.name = name;
 		this.arguments = arguments;
 		this.returnType = returnType;
 		this.statements = statements;
-		
+
 		StringBuilder sig = new StringBuilder();
 		sig.append("(");
 		for (ParsedFunctionArgument argument : arguments) {
@@ -99,27 +100,27 @@ public class ParsedFunction {
 		sig.append(returnType.getSignature());
 		signature = sig.toString();
 	}
-	
+
 	public ZenPosition getPosition() {
 		return position;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getSignature() {
 		return signature;
 	}
-	
+
 	public ZenType getReturnType() {
 		return returnType;
 	}
-	
+
 	public List<ParsedFunctionArgument> getArguments() {
 		return arguments;
 	}
-	
+
 	public ZenType[] getArgumentTypes() {
 		ZenType[] result = new ZenType[arguments.size()];
 		for (int i = 0; i < arguments.size(); i++) {
@@ -127,7 +128,7 @@ public class ParsedFunction {
 		}
 		return result;
 	}
-	
+
 	public Statement[] getStatements() {
 		return statements;
 	}

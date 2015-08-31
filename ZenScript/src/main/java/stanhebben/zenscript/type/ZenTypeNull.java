@@ -27,11 +27,11 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ZenTypeNull extends ZenType {
 	public static final ZenTypeNull INSTANCE = new ZenTypeNull();
 	private static final Type TYPE = Type.getType(Object.class);
-	
+
 	private ZenTypeNull() {
-		
+
 	}
-	
+
 	@Override
 	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
 		if (type.isPointer()) {
@@ -43,27 +43,27 @@ public class ZenTypeNull extends ZenType {
 
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
-		
+
 	}
-	
+
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		environment.error(position, "null has not operators");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
 		environment.error(position, "null has not operators");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression trinary(ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
 		environment.error(position, "null has not operators");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression compare(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
 		environment.error(position, "null has not operators");
@@ -94,20 +94,20 @@ public class ZenTypeNull extends ZenType {
 		return null;
 	}
 
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type.isPointer();
-	}*/
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type.isPointer(); }
+	 */
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return type.isPointer();
 	}
-	
-	/*@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		return value;
-	}*/
+
+	/*
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) { return value; }
+	 */
 
 	@Override
 	public Class toJavaClass() {
@@ -134,16 +134,16 @@ public class ZenTypeNull extends ZenType {
 		return true;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		// nothing to do
-	}*/
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { // nothing to do }
+	 */
 
 	@Override
 	public String getName() {
 		return "null";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		throw new UnsupportedOperationException("The null type does not have an any type");

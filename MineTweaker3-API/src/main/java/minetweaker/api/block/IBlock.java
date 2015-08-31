@@ -18,10 +18,10 @@ public interface IBlock extends IBlockPattern {
 	 */
 	@ZenGetter("definition")
 	public IBlockDefinition getDefinition();
-	
+
 	@ZenGetter("meta")
 	public int getMeta();
-	
+
 	@ZenGetter("data")
 	public IData getTileData();
 }

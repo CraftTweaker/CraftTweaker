@@ -20,13 +20,13 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface IFurnaceManager {
 	@ZenMethod
 	public void remove(IIngredient output, @Optional IIngredient input);
-	
+
 	@ZenMethod
 	public void addRecipe(IItemStack output, IIngredient input, @Optional double xp);
-	
+
 	@ZenMethod
 	public void setFuel(IIngredient item, int fuel);
-	
+
 	@ZenMethod
 	public int getFuel(IItemStack item);
 }

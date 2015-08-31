@@ -12,10 +12,10 @@ public class StatementIf extends Statement {
 	private final ParsedExpression condition;
 	private final Statement onThen;
 	private final Statement onElse;
-	
+
 	public StatementIf(ZenPosition position, ParsedExpression condition, Statement onThen, Statement onElse) {
 		super(position);
-		
+
 		this.condition = condition;
 		this.onThen = onThen;
 		this.onElse = onElse;
@@ -24,26 +24,26 @@ public class StatementIf extends Statement {
 	@Override
 	public void compile(IEnvironmentMethod environment) {
 		environment.getOutput().position(getPosition());
-		
+
 		Expression cCondition = condition.compile(environment, ZenType.BOOL)
-				.eval(environment)
-				.cast(getPosition(), environment, ZenType.BOOL);
-		
+			.eval(environment)
+			.cast(getPosition(), environment, ZenType.BOOL);
+
 		ZenType expressionType = cCondition.getType();
 		if (expressionType.canCastImplicit(ZenType.BOOL, environment)) {
 			Label labelEnd = new Label();
 			Label labelElse = onElse == null ? labelEnd : new Label();
-			
+
 			cCondition.compileIf(labelElse, environment);
 			onThen.compile(environment);
-			
+
 			MethodOutput methodOutput = environment.getOutput();
 			if (onElse != null) {
 				methodOutput.goTo(labelEnd);
 				methodOutput.label(labelElse);
 				onElse.compile(environment);
 			}
-			
+
 			methodOutput.label(labelEnd);
 		} else {
 			environment.error(getPosition(), "condition is not a boolean");

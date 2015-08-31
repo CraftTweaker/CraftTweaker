@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataString implements IData {
 	private final String value;
-	
+
 	public DataString(String value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataString implements IData {
 	public String asString() {
 		return value;
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -108,12 +108,12 @@ public class DataString implements IData {
 	public boolean contains(IData data) {
 		return data.asString().equals(value);
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		return value.equals(data.asString());
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		return value.compareTo(data.asString());
@@ -183,7 +183,7 @@ public class DataString implements IData {
 	public IData not() {
 		throw new UnsupportedOperationException("Cannot perform bitwise arithmetic on a string");
 	}
-	
+
 	@Override
 	public String toString() {
 		return '\"' + value.replace("\"", "\\\"") + "\"";

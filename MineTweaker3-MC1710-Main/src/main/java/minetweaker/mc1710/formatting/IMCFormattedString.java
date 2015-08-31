@@ -14,6 +14,6 @@ import minetweaker.api.formatting.IFormattedText;
  */
 public interface IMCFormattedString extends IFormattedText {
 	public String getTooltipString();
-	
+
 	public String getTooltipString(String context);
 }

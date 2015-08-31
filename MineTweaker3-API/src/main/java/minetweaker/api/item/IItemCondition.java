@@ -6,7 +6,8 @@ import stanhebben.zenscript.annotations.ZenClass;
  * Item conditions apply additional conditions on item stacks.
  * 
  * They may, for instance, require specific damage ranges or NBT tags. Custom
- * implementations of this functional interface may contain any kind of condition.
+ * implementations of this functional interface may contain any kind of
+ * condition.
  * 
  * @author Stan Hebben
  */

@@ -45,7 +45,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MineTweakerMC {
 	private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<Block, MCBlockDefinition>();
 	public static final IBiome[] biomes;
-	
+
 	static {
 		biomes = new IBiome[BiomeGenBase.getBiomeGenArray().length];
 		for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++) {
@@ -53,9 +53,10 @@ public class MineTweakerMC {
 				biomes[i] = new MCBiome(BiomeGenBase.getBiomeGenArray()[i]);
 		}
 	}
-	
-	private MineTweakerMC() {}
-	
+
+	private MineTweakerMC() {
+	}
+
 	/**
 	 * Returns the Minecraft item for this MineTweaker item.
 	 * 
@@ -63,15 +64,16 @@ public class MineTweakerMC {
 	 * @return minecraft item stack
 	 */
 	public static ItemStack getItemStack(IItemStack item) {
-		if (item == null) return null;
-		
+		if (item == null)
+			return null;
+
 		Object internal = item.getInternal();
 		if (internal == null || !(internal instanceof ItemStack)) {
 			MineTweakerAPI.logError("Not a valid item stack: " + item);
 		}
 		return (ItemStack) internal;
 	}
-	
+
 	/**
 	 * Returns the Minecraft ingredient for this ingredient. This method is only
 	 * useful for ingredients that represent a single item stack.
@@ -80,27 +82,29 @@ public class MineTweakerMC {
 	 * @return minecraft item stack
 	 */
 	public static ItemStack getItemStack(IIngredient ingredient) {
-		if (ingredient == null) return null;
-		
+		if (ingredient == null)
+			return null;
+
 		List<IItemStack> items = ingredient.getItems();
 		if (items.size() != 1) {
 			MineTweakerAPI.logError("Not an ingredient with a single item: " + ingredient);
 		}
 		return getItemStack(items.get(0));
 	}
-	
+
 	/**
 	 * Returns the MineTweaker item stack for this item.
 	 * 
 	 * @param item minecraft item stack
-	 * @return  minetweaker item stack
+	 * @return minetweaker item stack
 	 */
 	public static IItemStack getIItemStack(ItemStack item) {
-		if (item == null) return null;
-		
+		if (item == null)
+			return null;
+
 		return new MCItemStack(item);
 	}
-	
+
 	/**
 	 * Constructs an item stack with wildcard size.
 	 * 
@@ -108,11 +112,12 @@ public class MineTweakerMC {
 	 * @return minetweaker stack
 	 */
 	public static IItemStack getIItemStackWildcardSize(ItemStack item) {
-		if (item == null) return null;
-		
+		if (item == null)
+			return null;
+
 		return new MCItemStack(item, true);
 	}
-	
+
 	/**
 	 * Constructs an item stack with wildcard size.
 	 * 
@@ -121,11 +126,12 @@ public class MineTweakerMC {
 	 * @return minetweaker stack
 	 */
 	public static IItemStack getIItemStackWildcardSize(Item item, int meta) {
-		if (item == null) return null;
-		
+		if (item == null)
+			return null;
+
 		return new MCItemStack(new ItemStack(item, 1, meta), true);
 	}
-	
+
 	/**
 	 * Constructs an item stack with wildcard damage.
 	 * 
@@ -134,11 +140,12 @@ public class MineTweakerMC {
 	 * @return minetweaker item stack
 	 */
 	public static IItemStack getIItemStackWildcard(Item item, int amount) {
-		if (item == null) return null;
-		
+		if (item == null)
+			return null;
+
 		return new MCItemStack(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
 	}
-	
+
 	public static ItemStack[] getExamples(IIngredient ingredient) {
 		List<IItemStack> examples = ingredient.getItems();
 		ItemStack[] result = new ItemStack[examples.size()];
@@ -147,7 +154,7 @@ public class MineTweakerMC {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Constructs an item stack with given item, damage and amount.
 	 * 
@@ -157,11 +164,12 @@ public class MineTweakerMC {
 	 * @return minetweaker item stack
 	 */
 	public static IItemStack getItemStack(Item item, int amount, int damage) {
-		if (item == null) return null;
-		
+		if (item == null)
+			return null;
+
 		return new MCItemStack(new ItemStack(item, amount, damage));
 	}
-	
+
 	/**
 	 * Converts an array of minetweaker item stacks into an array of minecraft
 	 * item stacks.
@@ -170,8 +178,9 @@ public class MineTweakerMC {
 	 * @return minecraft item stacks
 	 */
 	public static ItemStack[] getItemStacks(IItemStack... items) {
-		if (items == null) return null;
-		
+		if (items == null)
+			return null;
+
 		ItemStack[] output = new ItemStack[items.length];
 		for (int i = 0; i < items.length; i++) {
 			Object internal = items[i].getInternal();
@@ -181,7 +190,7 @@ public class MineTweakerMC {
 		}
 		return output;
 	}
-	
+
 	/**
 	 * Converts a list of minetweaker item stacks into an array of minecraft
 	 * item stacks.
@@ -190,8 +199,9 @@ public class MineTweakerMC {
 	 * @return minecraft items
 	 */
 	public static ItemStack[] getItemStacks(List<IItemStack> items) {
-		if (items == null) return null;
-		
+		if (items == null)
+			return null;
+
 		ItemStack[] output = new ItemStack[items.size()];
 		for (int i = 0; i < items.size(); i++) {
 			Object internal = items.get(i).getInternal();
@@ -203,7 +213,7 @@ public class MineTweakerMC {
 		}
 		return output;
 	}
-	
+
 	/**
 	 * Converts an array of minecraft item stacks into an array of minetweaker
 	 * item stacks.
@@ -212,15 +222,16 @@ public class MineTweakerMC {
 	 * @return minetweaker item stacks
 	 */
 	public static IItemStack[] getIItemStacks(ItemStack... items) {
-		if (items == null) return null;
-		
+		if (items == null)
+			return null;
+
 		IItemStack[] result = new IItemStack[items.length];
 		for (int i = 0; i < items.length; i++) {
 			result[i] = new MCItemStack(items[i]);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Converts a list of minecraft item stacks into an array of minetweaker
 	 * item stacks.
@@ -229,15 +240,16 @@ public class MineTweakerMC {
 	 * @return minetweaker item stacks
 	 */
 	public static IItemStack[] getIItemStacks(List<ItemStack> items) {
-		if (items == null) return null;
-		
+		if (items == null)
+			return null;
+
 		IItemStack[] result = new IItemStack[items.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = new MCItemStack(items.get(i));
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Gets the ore dictionary entry with the given name. If the entry didn't
 	 * exist yet, it will create it and return an empty entry.
@@ -248,7 +260,7 @@ public class MineTweakerMC {
 	public static IOreDictEntry getOreDict(String name) {
 		return new MCOreDictEntry(name);
 	}
-	
+
 	/**
 	 * Converts a Minecraft player into a MineTweaker player.
 	 * 
@@ -256,11 +268,12 @@ public class MineTweakerMC {
 	 * @return minetweaker player
 	 */
 	public static IPlayer getIPlayer(EntityPlayer player) {
-		if (player == null) return null;
-		
+		if (player == null)
+			return null;
+
 		return new MCPlayer(player);
 	}
-	
+
 	/**
 	 * Converts a MineTweaker player into a Minecraft player.
 	 * 
@@ -268,15 +281,16 @@ public class MineTweakerMC {
 	 * @return minecraft player
 	 */
 	public static EntityPlayer getPlayer(IPlayer player) {
-		if (player == null) return null;
-		
+		if (player == null)
+			return null;
+
 		if (!(player instanceof MCPlayer)) {
 			MineTweakerAPI.logError("Invalid player: " + player);
 		}
-		
+
 		return ((MCPlayer) player).getInternal();
 	}
-	
+
 	/**
 	 * Converts a Minecraft NBT to an IData instance. The IData instance is
 	 * immutable (not modifyiable).
@@ -285,11 +299,12 @@ public class MineTweakerMC {
 	 * @return IData value
 	 */
 	public static IData getIData(NBTBase nbt) {
-		if (nbt == null) return null;
-		
+		if (nbt == null)
+			return null;
+
 		return NBTConverter.from(nbt, true);
 	}
-	
+
 	/**
 	 * Converts a Minecraft NBT to a modifyable IData instance.
 	 * 
@@ -297,11 +312,12 @@ public class MineTweakerMC {
 	 * @return mutable IData value
 	 */
 	public static IData getIDataModifyable(NBTBase nbt) {
-		if (nbt == null) return null;
-		
+		if (nbt == null)
+			return null;
+
 		return NBTConverter.from(nbt, false);
 	}
-	
+
 	/**
 	 * Converts an IData instance to an NBT value.
 	 * 
@@ -309,11 +325,12 @@ public class MineTweakerMC {
 	 * @return nbt data
 	 */
 	public static NBTBase getNBT(IData data) {
-		if (data == null) return null;
-		
+		if (data == null)
+			return null;
+
 		return NBTConverter.from(data);
 	}
-	
+
 	/**
 	 * Converts an IData instance to an NBT Tag compound.
 	 * 
@@ -321,11 +338,12 @@ public class MineTweakerMC {
 	 * @return nbt compound data
 	 */
 	public static NBTTagCompound getNBTCompound(IData data) {
-		if (data == null) return null;
-		
+		if (data == null)
+			return null;
+
 		return (NBTTagCompound) NBTConverter.from(data);
 	}
-	
+
 	/**
 	 * Retrieves the block at the given position.
 	 * 
@@ -338,7 +356,7 @@ public class MineTweakerMC {
 	public static IBlock getBlock(IBlockAccess blocks, int x, int y, int z) {
 		return new MCWorldBlock(blocks, x, y, z);
 	}
-	
+
 	/**
 	 * Retrieves the block definition for the given block.
 	 * 
@@ -351,7 +369,7 @@ public class MineTweakerMC {
 		}
 		return blockDefinitions.get(block);
 	}
-	
+
 	/**
 	 * Retrieves the dimension instance for a given world.
 	 * 
@@ -359,11 +377,12 @@ public class MineTweakerMC {
 	 * @return dimension
 	 */
 	public static IDimension getDimension(World world) {
-		if (world == null) return null;
-		
+		if (world == null)
+			return null;
+
 		return new MCDimension(world);
 	}
-	
+
 	/**
 	 * Returns an instance of the given block.
 	 * 
@@ -373,7 +392,7 @@ public class MineTweakerMC {
 	public static IBlock getBlockAnyMeta(Block block) {
 		return new MCSpecificBlock(block, OreDictionary.WILDCARD_VALUE);
 	}
-	
+
 	/**
 	 * Returns an instance of the given block.
 	 * 
@@ -384,21 +403,21 @@ public class MineTweakerMC {
 	public static IBlock getBlock(Block block, int meta) {
 		return new MCSpecificBlock(block, meta);
 	}
-	
+
 	/**
 	 * Retrieves the block from an item stack.
 	 * 
 	 * @param itemStack
-	 * @return 
+	 * @return
 	 */
 	public static Block getBlock(IItemStack itemStack) {
 		return ((MCBlockDefinition) itemStack.asBlock().getDefinition()).getInternalBlock();
 	}
-	
+
 	public static Block getBlock(IBlock block) {
 		return ((MCBlockDefinition) block.getDefinition()).getInternalBlock();
 	}
-	
+
 	/**
 	 * Retrieves the internal fluid stack of the given stack.
 	 * 
@@ -408,29 +427,30 @@ public class MineTweakerMC {
 	public static FluidStack getLiquidStack(ILiquidStack stack) {
 		if (stack == null)
 			return null;
-		
+
 		return (FluidStack) stack.getInternal();
 	}
-	
+
 	/**
 	 * Converts an array of MT liquid stacks into an array of MCF fluid stacks
 	 * 
 	 */
 	public static FluidStack[] getLiquidStacks(ILiquidStack[] stacks) {
-		if(stacks == null) {
+		if (stacks == null) {
 			return null;
 		}
-		
+
 		FluidStack[] res = new FluidStack[stacks.length];
-		
+
 		for (int i = 0; i < stacks.length; i++) {
 			ILiquidStack liquidStack = stacks[i];
 			res[i] = getLiquidStack(liquidStack);
 		}
 		return res;
 	}
-	
+
 	private static final HashMap<List, IOreDictEntry> oreDictArrays = new HashMap<List, IOreDictEntry>();
+
 	public static IOreDictEntry getOreDictEntryFromArray(List array) {
 		if (!oreDictArrays.containsKey(array)) {
 			for (String ore : OreDictionary.getOreNames()) {
@@ -439,10 +459,10 @@ public class MineTweakerMC {
 				}
 			}
 		}
-		
+
 		return oreDictArrays.get(array);
 	}
-	
+
 	/**
 	 * Converts a Minecraft ingredient to a MineTweaker ingredient.
 	 * 
@@ -460,11 +480,11 @@ public class MineTweakerMC {
 			return getIItemStack((ItemStack) ingredient);
 		} else if (ingredient instanceof List) {
 			IOreDictEntry entry = getOreDictEntryFromArray((List) ingredient);
-			
+
 			if (entry == null) {
 				return IngredientUnknown.INSTANCE;
 			}
-			
+
 			return entry;
 		} else if (ingredient instanceof FluidStack) {
 			return new MCLiquidStack((FluidStack) ingredient);

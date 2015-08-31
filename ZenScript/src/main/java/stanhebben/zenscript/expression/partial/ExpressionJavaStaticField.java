@@ -21,10 +21,10 @@ public class ExpressionJavaStaticField extends Expression {
 	private final Class cls;
 	private final Field field;
 	private final ITypeRegistry types;
-	
+
 	public ExpressionJavaStaticField(ZenPosition position, Class cls, Field field, ITypeRegistry types) {
 		super(position);
-		
+
 		this.cls = cls;
 		this.field = field;
 		this.types = types;

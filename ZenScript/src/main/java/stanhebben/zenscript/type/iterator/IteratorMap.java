@@ -24,7 +24,7 @@ public class IteratorMap implements IZenIterator {
 	private final MethodOutput methodOutput;
 	private final ZenTypeAssociative type;
 	private int iterator;
-	
+
 	public IteratorMap(MethodOutput methodOutput, ZenTypeAssociative type) {
 		this.methodOutput = methodOutput;
 		this.type = type;
@@ -66,7 +66,7 @@ public class IteratorMap implements IZenIterator {
 
 	@Override
 	public void compileEnd() {
-		
+
 	}
 
 	@Override

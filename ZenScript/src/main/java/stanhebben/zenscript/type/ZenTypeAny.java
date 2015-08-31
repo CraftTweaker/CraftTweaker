@@ -35,9 +35,10 @@ import stanhebben.zenscript.value.IAny;
  */
 public class ZenTypeAny extends ZenType {
 	public static final ZenTypeAny INSTANCE = new ZenTypeAny();
-	
-	private ZenTypeAny() {}
-	
+
+	private ZenTypeAny() {
+	}
+
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
 		environment.error(position, "any values not yet supported");
@@ -54,7 +55,7 @@ public class ZenTypeAny extends ZenType {
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		return null; // TODO: handle iteration on any-values
 	}
-	
+
 	@Override
 	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
 		ICastingRule base = super.getCastingRule(type, environment);
@@ -64,7 +65,7 @@ public class ZenTypeAny extends ZenType {
 			return base;
 		}
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		rules.registerCastingRule(BOOL, CastingAnyBool.INSTANCE);
@@ -82,17 +83,17 @@ public class ZenTypeAny extends ZenType {
 		rules.registerCastingRule(DOUBLE, CastingAnyDouble.INSTANCE);
 		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleNullableStaticMethod(DOUBLE_VALUEOF, CastingAnyDouble.INSTANCE));
 		rules.registerCastingRule(STRING, CastingAnyString.INSTANCE);
-		
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-	
+
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return true;
 	}
-	
+
 	@Override
 	public Class toJavaClass() {
 		return IAny.class;
@@ -117,7 +118,7 @@ public class ZenTypeAny extends ZenType {
 	public boolean isPointer() {
 		return true;
 	}
-	
+
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		switch (operator) {
@@ -186,7 +187,7 @@ public class ZenTypeAny extends ZenType {
 				JavaMethod.get(environment, IAny.class, "compareTo", IAny.class),
 				left,
 				right);
-		
+
 		return new ExpressionCompareGeneric(
 				position,
 				comparator,
@@ -202,7 +203,7 @@ public class ZenTypeAny extends ZenType {
 				receiver,
 				arguments);
 	}
-	
+
 	@Override
 	public ZenType[] predictCallTypes(int numArguments) {
 		ZenType[] result = new ZenType[numArguments];
@@ -216,7 +217,7 @@ public class ZenTypeAny extends ZenType {
 	public String getName() {
 		return "any";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		throw new UnsupportedOperationException("Cannot get any class name from the any type. That's like trying to stuff a freezer into a freezer.");

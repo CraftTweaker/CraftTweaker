@@ -15,7 +15,7 @@ import minetweaker.api.player.IPlayer;
  */
 public class UnknownRecipe implements ICraftingRecipe {
 	private final IItemStack output;
-	
+
 	public UnknownRecipe(IItemStack output) {
 		this.output = output;
 	}
@@ -37,7 +37,7 @@ public class UnknownRecipe implements ICraftingRecipe {
 
 	@Override
 	public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
-		
+
 	}
 
 	@Override

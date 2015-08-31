@@ -21,16 +21,16 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface ILootRegistry {
 	@ZenMethod
 	public void addChestLoot(String name, WeightedItemStack item);
-	
+
 	@ZenMethod
 	public void addChestLoot(String name, WeightedItemStack item, int min, int max);
-	
+
 	@ZenMethod
 	public void removeChestLoot(String name, IIngredient ingredient);
-	
+
 	@ZenMethod
 	public List<LootEntry> getLoot(String name);
-	
+
 	@ZenGetter("lootTypes")
 	public List<String> getLootTypes();
 }

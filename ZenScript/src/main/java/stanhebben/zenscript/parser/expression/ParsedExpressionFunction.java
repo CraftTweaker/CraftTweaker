@@ -28,10 +28,10 @@ public class ParsedExpressionFunction extends ParsedExpression {
 	private final ZenType returnType;
 	private final List<ParsedFunctionArgument> arguments;
 	private final List<Statement> statements;
-	
+
 	public ParsedExpressionFunction(ZenPosition position, ZenType returnType, List<ParsedFunctionArgument> arguments, List<Statement> statements) {
 		super(position);
-		
+
 		this.returnType = returnType;
 		this.arguments = arguments;
 		this.statements = statements;
@@ -41,7 +41,7 @@ public class ParsedExpressionFunction extends ParsedExpression {
 	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
 		if (predictedType != null && predictedType instanceof ZenTypeNative) {
 			System.out.println("Known predicted function type: " + predictedType);
-			
+
 			ZenTypeNative nativeType = (ZenTypeNative) predictedType;
 			Class nativeClass = nativeType.getNativeClass();
 			if (nativeClass.isInterface() && nativeClass.getMethods().length == 1) {
@@ -64,7 +64,7 @@ public class ParsedExpressionFunction extends ParsedExpression {
 						return new ExpressionInvalid(getPosition());
 					}
 				}
-				
+
 				return new ExpressionJavaLambda(
 						getPosition(),
 						nativeClass,

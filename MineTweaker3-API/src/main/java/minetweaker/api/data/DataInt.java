@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataInt implements IData {
 	private final int value;
-	
+
 	public DataInt(int value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataInt implements IData {
 	public String asString() {
 		return Integer.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataInt implements IData {
 	public boolean contains(IData data) {
 		return data.asInt() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		return value == data.asInt();
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		return Integer.compare(value, data.asInt());
@@ -172,14 +172,14 @@ public class DataInt implements IData {
 
 	@Override
 	public IData neg() {
-		return new DataInt(- value);
+		return new DataInt(-value);
 	}
 
 	@Override
 	public IData not() {
-		return new DataInt(~ value);
+		return new DataInt(~value);
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString();

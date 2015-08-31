@@ -17,7 +17,7 @@ import net.minecraft.world.World;
  */
 public class MCDimension implements IDimension {
 	private final World world;
-	
+
 	public MCDimension(World world) {
 		this.world = world;
 	}

@@ -19,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface IBlockGroup {
 	@ZenGetter("dimension")
 	public IDimension getDimension();
-	
+
 	@ZenMethod
 	public IBlock getBlock(int x, int y, int z);
 }

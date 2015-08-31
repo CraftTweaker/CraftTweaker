@@ -15,8 +15,8 @@ import stanhebben.zenscript.type.ZenType;
  */
 public interface ICastingRule {
 	public void compile(IEnvironmentMethod method);
-	
+
 	public ZenType getInputType();
-	
+
 	public ZenType getResultingType();
 }

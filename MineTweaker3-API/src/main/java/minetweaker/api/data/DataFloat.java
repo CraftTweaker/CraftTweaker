@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataFloat implements IData {
 	private final float value;
-	
+
 	public DataFloat(float value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataFloat implements IData {
 	public String asString() {
 		return Float.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataFloat implements IData {
 	public boolean contains(IData data) {
 		return data.asFloat() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		return value == data.asFloat();
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		return Float.compare(value, data.asFloat());
@@ -172,14 +172,14 @@ public class DataFloat implements IData {
 
 	@Override
 	public IData neg() {
-		return new DataFloat(- value);
+		return new DataFloat(-value);
 	}
 
 	@Override
 	public IData not() {
 		throw new UnsupportedOperationException("Cannot perform bitwise operations on float");
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString() + " as float";

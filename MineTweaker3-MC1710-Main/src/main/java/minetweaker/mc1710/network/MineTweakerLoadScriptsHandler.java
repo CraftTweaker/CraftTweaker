@@ -23,11 +23,11 @@ public class MineTweakerLoadScriptsHandler implements IMessageHandler<MineTweake
 	public IMessage onMessage(MineTweakerLoadScriptsPacket message, MessageContext ctx) {
 		if (MineTweakerAPI.server == null) {
 			MineTweakerAPI.client = new MCClient();
-		
+
 			MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(message.getData()));
 			MineTweakerImplementationAPI.reload();
 		}
-		
+
 		return null;
 	}
 }

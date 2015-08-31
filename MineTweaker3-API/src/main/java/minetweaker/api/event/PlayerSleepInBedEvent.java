@@ -20,29 +20,29 @@ public class PlayerSleepInBedEvent {
 	private final int x;
 	private final int y;
 	private final int z;
-	
+
 	public PlayerSleepInBedEvent(IPlayer player, int x, int y, int z) {
 		this.player = player;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	@ZenGetter("player")
 	public IPlayer getPlayer() {
 		return player;
 	}
-	
+
 	@ZenGetter("x")
 	public int getX() {
 		return x;
 	}
-	
+
 	@ZenGetter("y")
 	public int getY() {
 		return y;
 	}
-	
+
 	@ZenGetter("z")
 	public int getZ() {
 		return z;

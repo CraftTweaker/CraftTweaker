@@ -19,10 +19,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ExpressionCallVirtual extends Expression {
 	private final IJavaMethod method;
-	
+
 	private final Expression receiver;
 	private final Expression[] arguments;
-	
+
 	public ExpressionCallVirtual(
 			ZenPosition position,
 			IEnvironmentGlobal environment,
@@ -30,9 +30,9 @@ public class ExpressionCallVirtual extends Expression {
 			Expression receiver,
 			Expression... arguments) {
 		super(position);
-		
+
 		this.method = method;
-		
+
 		this.receiver = receiver;
 		this.arguments = JavaMethod.rematch(position, method, environment, arguments);
 	}
@@ -45,11 +45,11 @@ public class ExpressionCallVirtual extends Expression {
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		receiver.compile(true, environment);
-		
+
 		for (Expression argument : arguments) {
 			argument.compile(true, environment);
 		}
-		
+
 		method.invokeVirtual(environment.getOutput());
 		if (method.getReturnType() != ZenType.VOID && !result) {
 			environment.getOutput().pop(method.getReturnType().isLarge());

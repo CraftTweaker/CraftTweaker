@@ -34,8 +34,8 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 import stanhebben.zenscript.value.IAny;
 
 /**
- * Type expansions provide additional members for existing types. They can
- * add members, casters or operators and these will be available to all compiling
+ * Type expansions provide additional members for existing types. They can add
+ * members, casters or operators and these will be available to all compiling
  * scripts.
  * 
  * @author Stan Hebben
@@ -48,7 +48,7 @@ public class TypeExpansion {
 	private final List<ZenNativeOperator> trinaryOperators;
 	private final List<ZenNativeOperator> binaryOperators;
 	private final List<ZenNativeOperator> unaryOperators;
-	
+
 	/**
 	 * Creates an empty type expansion. Use the expand method to register the
 	 * actual expansions.
@@ -57,7 +57,7 @@ public class TypeExpansion {
 	 */
 	public TypeExpansion(String type) {
 		this.type = type;
-		
+
 		members = new HashMap<String, ZenExpandMember>();
 		staticMembers = new HashMap<String, ZenExpandMember>();
 		casters = new ArrayList<ZenExpandCaster>();
@@ -65,7 +65,7 @@ public class TypeExpansion {
 		binaryOperators = new ArrayList<ZenNativeOperator>();
 		unaryOperators = new ArrayList<ZenNativeOperator>();
 	}
-	
+
 	/**
 	 * Added a native type expansion. The provided class must contain the proper
 	 * annotations for the required expansions, else nothing will happen. Each
@@ -78,7 +78,7 @@ public class TypeExpansion {
 	public void expand(Class cls, ITypeRegistry types) {
 		for (Method method : cls.getMethods()) {
 			String methodName = method.getName();
-			
+
 			for (Annotation annotation : method.getAnnotations()) {
 				if (annotation instanceof ZenCaster) {
 					checkStatic(method);
@@ -87,7 +87,7 @@ public class TypeExpansion {
 					checkStatic(method);
 					ZenGetter getterAnnotation = (ZenGetter) annotation;
 					String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
-					
+
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenExpandMember(type, name));
 					}
@@ -96,7 +96,7 @@ public class TypeExpansion {
 					checkStatic(method);
 					ZenSetter setterAnnotation = (ZenSetter) annotation;
 					String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
-					
+
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenExpandMember(type, name));
 					}
@@ -174,7 +174,7 @@ public class TypeExpansion {
 			}
 		}
 	}
-	
+
 	/**
 	 * Registers all casting rules to the given delegate.
 	 * 
@@ -186,7 +186,7 @@ public class TypeExpansion {
 			caster.constructCastingRules(environment, rules);
 		}
 	}
-	
+
 	/**
 	 * Retrieves a caster from this expansion. May return null if no suitable
 	 * caster was available.
@@ -203,18 +203,18 @@ public class TypeExpansion {
 				return caster;
 			}
 		}
-		
+
 		for (ZenExpandCaster caster : casters) {
 			if (caster.getTarget().canCastImplicit(type, environment)) {
 				return caster;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Retrieves a unary operator from this expansion. May return null if no 
+	 * Retrieves a unary operator from this expansion. May return null if no
 	 * suitable operator was available.
 	 * 
 	 * @param position calling position
@@ -233,10 +233,10 @@ public class TypeExpansion {
 				return new ExpressionCallStatic(position, environment, op.getMethod(), value);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Retrieves a binary operator from this expansion. May return null if no
 	 * suitable operator was available.
@@ -259,10 +259,10 @@ public class TypeExpansion {
 				return new ExpressionCallStatic(position, environment, op.getMethod(), left, right);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Retrieves a ternary operator from this expansion. May return null if no
 	 * suitable operator was available.
@@ -287,10 +287,10 @@ public class TypeExpansion {
 				return new ExpressionCallStatic(position, environment, op.getMethod(), first, second, third);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Retrieves an instance member from this expansion. May return null if no
 	 * suitable member was available.
@@ -299,7 +299,8 @@ public class TypeExpansion {
 	 * @param environment compile environment
 	 * @param value instance value
 	 * @param member member name
-	 * @return resulting member expression, or null if no such member was available
+	 * @return resulting member expression, or null if no such member was
+	 *         available
 	 */
 	public IPartialExpression instanceMember(
 			ZenPosition position,
@@ -309,10 +310,10 @@ public class TypeExpansion {
 		if (members.containsKey(member)) {
 			return members.get(member).instance(position, environment, value);
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Retrieves a static member from this expansion. May return null if no
 	 * suitable member was available.
@@ -320,25 +321,26 @@ public class TypeExpansion {
 	 * @param position calling position
 	 * @param environment compile environment
 	 * @param member member name
-	 * @return resulting static member expression, or null if no such member was available
+	 * @return resulting static member expression, or null if no such member was
+	 *         available
 	 */
 	public IPartialExpression staticMember(ZenPosition position, IEnvironmentGlobal environment, String member) {
 		if (staticMembers.containsKey(member)) {
 			return staticMembers.get(member).instance(position, environment);
 		}
-		
+
 		return null;
 	}
-	
+
 	public void compileAnyCast(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localValue, int localClass) {
 		if (type == null)
 			throw new IllegalArgumentException("type cannot be null");
-		
+
 		Type asmType = type.toASMType();
 		if (asmType == null) {
 			throw new RuntimeException("type has no asm type");
 		}
-		
+
 		for (ZenExpandCaster caster : casters) {
 			Label skip = new Label();
 			output.loadObject(localClass);
@@ -349,13 +351,13 @@ public class TypeExpansion {
 			output.returnType(caster.getTarget().toASMType());
 			output.label(skip);
 		}
-		
+
 		for (ZenExpandCaster caster : casters) {
 			String casterAny = caster.getTarget().getAnyClassName(environment);
 			if (casterAny == null)
 				// TODO: make sure this isn't necessary
 				continue;
-			
+
 			Label skip = new Label();
 			output.loadObject(localClass);
 			output.invokeStatic(casterAny, "rtCanCastImplicit", "(Ljava/lang/Class;)Z");
@@ -368,7 +370,7 @@ public class TypeExpansion {
 			output.label(skip);
 		}
 	}
-	
+
 	public void compileAnyCanCastImplicit(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localClass) {
 		for (ZenExpandCaster caster : casters) {
 			Label skip = new Label();
@@ -379,14 +381,14 @@ public class TypeExpansion {
 			output.returnInt();
 			output.label(skip);
 		}
-		
+
 		for (ZenExpandCaster caster : casters) {
 			String casterAny = caster.getTarget().getAnyClassName(environment);
 			if (casterAny == null) {
 				// TODO: make sure no type ever does this
 				continue;
 			}
-			
+
 			Label skip = new Label();
 			output.loadObject(localClass);
 			output.invokeStatic(casterAny, "rtCanCastImplicit", "(Ljava/lang/Class;)Z");
@@ -396,12 +398,12 @@ public class TypeExpansion {
 			output.label(skip);
 		}
 	}
-	
+
 	public boolean compileAnyUnary(MethodOutput output, OperatorType type, IEnvironmentMethod environment) {
 		for (ZenNativeOperator operator : unaryOperators) {
 			if (operator.getOperator() == type) {
 				ZenType returnType = operator.getMethod().getReturnType();
-				
+
 				output.loadObject(0);
 				operator.getMethod().invokeStatic(output);
 				output.invokeStatic(
@@ -412,14 +414,14 @@ public class TypeExpansion {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	// #######################
 	// ### Private methods ###
 	// #######################
-	
+
 	/**
 	 * Checks if the given method is static. Throws an exception if not.
 	 * 

@@ -12,8 +12,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to indicate static methods for expansions. For native classes, use ZenMethod
- * instead on a static method.
+ * Used to indicate static methods for expansions. For native classes, use
+ * ZenMethod instead on a static method.
  * 
  * @author Stan Hebben
  */

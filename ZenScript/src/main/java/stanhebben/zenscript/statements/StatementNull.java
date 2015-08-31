@@ -20,6 +20,6 @@ public class StatementNull extends Statement {
 
 	@Override
 	public void compile(IEnvironmentMethod environment) {
-		
+
 	}
 }

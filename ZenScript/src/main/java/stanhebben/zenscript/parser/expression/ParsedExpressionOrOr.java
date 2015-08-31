@@ -20,10 +20,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionOrOr extends ParsedExpression {
 	private final ParsedExpression left;
 	private final ParsedExpression right;
-	
+
 	public ParsedExpressionOrOr(ZenPosition position, ParsedExpression left, ParsedExpression right) {
 		super(position);
-		
+
 		this.left = left;
 		this.right = right;
 	}
@@ -32,7 +32,7 @@ public class ParsedExpressionOrOr extends ParsedExpression {
 	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
 		Expression cLeft = left.compile(environment, predictedType).eval(environment);
 		Expression cRight = right.compile(environment, predictedType).eval(environment);
-		
+
 		ZenType type;
 		if (cRight.getType().canCastImplicit(cLeft.getType(), environment)) {
 			type = cLeft.getType();
@@ -42,7 +42,7 @@ public class ParsedExpressionOrOr extends ParsedExpression {
 			environment.error(getPosition(), "These types could not be unified: " + cLeft.getType() + " and " + cRight.getType());
 			type = ZenType.ANY;
 		}
-		
+
 		return new ExpressionOrOr(
 				getPosition(),
 				cLeft.cast(getPosition(), environment, type),

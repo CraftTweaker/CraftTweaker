@@ -15,7 +15,7 @@ import minetweaker.api.entity.IEntityDefinition;
  */
 public class MCEntityDefinition implements IEntityDefinition {
 	private final EntityRegistry.EntityRegistration registration;
-	
+
 	public MCEntityDefinition(EntityRegistry.EntityRegistration registration) {
 		this.registration = registration;
 	}

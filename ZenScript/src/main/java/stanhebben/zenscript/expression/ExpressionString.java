@@ -17,10 +17,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ExpressionString extends Expression {
 	private final String value;
-	
+
 	public ExpressionString(ZenPosition position, String value) {
 		super(position);
-		
+
 		this.value = value;
 	}
 

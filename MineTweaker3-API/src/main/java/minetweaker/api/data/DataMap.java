@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public class DataMap implements IData {
 	public static final DataMap EMPTY = new DataMap(new HashMap<String, IData>(), true);
-	
+
 	private final Map<String, IData> data;
 	private final boolean immutable;
-	
+
 	public DataMap(Map<String, IData> data, boolean immutable) {
 		this.data = data;
 		this.immutable = immutable;
@@ -25,14 +25,14 @@ public class DataMap implements IData {
 	public IData add(IData other) {
 		Map<String, IData> result = new HashMap<String, IData>();
 		Map<String, IData> otherMap = other.asMap();
-		
+
 		for (Map.Entry<String, IData> entry : data.entrySet()) {
 			result.put(entry.getKey(), entry.getValue());
 		}
 		for (Map.Entry<String, IData> entry : otherMap.entrySet()) {
 			result.put(entry.getKey(), entry.getValue());
 		}
-		
+
 		return new DataMap(result, immutable);
 	}
 
@@ -40,14 +40,14 @@ public class DataMap implements IData {
 	public IData sub(IData other) {
 		Map<String, IData> result = new HashMap<String, IData>();
 		Map<String, IData> otherMap = other.asMap();
-		
+
 		for (Map.Entry<String, IData> entry : data.entrySet()) {
 			result.put(entry.getKey(), entry.getValue());
 		}
 		for (String key : otherMap.keySet()) {
 			result.remove(key);
 		}
-		
+
 		return new DataMap(result, immutable);
 	}
 
@@ -137,13 +137,13 @@ public class DataMap implements IData {
 			} else {
 				result.append(", ");
 			}
-			
+
 			if (isValidIdentifier(entry.getKey())) {
 				result.append(entry.getKey());
 			} else {
 				result.append("\"").append(entry.getKey()).append("\"");
 			}
-			
+
 			result.append(": ");
 			result.append(entry.getValue().toString());
 		}
@@ -209,11 +209,11 @@ public class DataMap implements IData {
 		if (data instanceof DataString) {
 			return this.data.containsKey(data.asString());
 		}
-		
+
 		Map<String, IData> dataMap = data.asMap();
 		if (dataMap == null)
 			return false;
-		
+
 		for (Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
 			if (!this.data.containsKey(dataEntry.getKey())) {
 				return false;
@@ -221,7 +221,7 @@ public class DataMap implements IData {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -232,11 +232,13 @@ public class DataMap implements IData {
 
 	@Override
 	public boolean equals(IData data) {
-		if (this == data) return true;
-		
+		if (this == data)
+			return true;
+
 		Map<String, IData> dataMap = data.asMap();
-		if (dataMap.size() != this.data.size()) return false;
-		
+		if (dataMap.size() != this.data.size())
+			return false;
+
 		for (Map.Entry<String, IData> dataEntry : this.data.entrySet()) {
 			if (!dataMap.containsKey(dataEntry.getKey())) {
 				return false;
@@ -244,7 +246,7 @@ public class DataMap implements IData {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -263,8 +265,9 @@ public class DataMap implements IData {
 
 	@Override
 	public IData update(IData data) {
-		if (immutable) data = data.immutable();
-		
+		if (immutable)
+			data = data.immutable();
+
 		Map<String, IData> result = new HashMap<String, IData>();
 		for (Map.Entry<String, IData> entry : this.data.entrySet()) {
 			result.put(entry.getKey(), entry.getValue());
@@ -279,21 +282,21 @@ public class DataMap implements IData {
 	public <T> T convert(IDataConverter<T> converter) {
 		return converter.fromMap(data);
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString();
 	}
-	
+
 	private boolean isValidIdentifier(String str) {
 		if (!Character.isJavaIdentifierStart(str.charAt(0)))
 			return false;
-		
+
 		for (int i = 1; i < str.length(); i++) {
 			if (!Character.isJavaIdentifierPart(str.charAt(i)))
 				return false;
 		}
-		
+
 		return true;
 	}
 }

@@ -47,7 +47,7 @@ public class IteratorMapKeys implements IZenIterator {
 				"hasNext",
 				boolean.class);
 		methodOutput.ifEQ(exit);
-		
+
 		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(Iterator.class, "next", Object.class);
 		methodOutput.store(type.getKeyType().toASMType(), locals[0]);
@@ -60,7 +60,7 @@ public class IteratorMapKeys implements IZenIterator {
 
 	@Override
 	public void compileEnd() {
-		
+
 	}
 
 	@Override

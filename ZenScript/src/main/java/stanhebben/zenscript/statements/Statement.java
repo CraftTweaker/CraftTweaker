@@ -34,7 +34,7 @@ public abstract class Statement {
 			case T_VAL: {
 				Token start = parser.next();
 				String name = parser.required(T_ID, "identifier expected").getValue();
-				
+
 				ZenType type = null;
 				ParsedExpression initializer = null;
 				if (parser.optional(T_AS) != null) {
@@ -61,11 +61,11 @@ public abstract class Statement {
 				String name = parser.required(T_ID, "identifier expected").getValue();
 				List<String> names = new ArrayList<String>();
 				names.add(name);
-				
+
 				while (parser.optional(T_COMMA) != null) {
 					names.add(parser.required(T_ID, "identifier expected").getValue());
 				}
-				
+
 				parser.required(T_IN, "in expected");
 				ParsedExpression source = ParsedExpression.read(parser, environment);
 				Statement content = read(parser, environment, null);
@@ -78,33 +78,33 @@ public abstract class Statement {
 			case T_VERSION: {
 				Token t = parser.next();
 				parser.required(T_INTVALUE, "integer expected");
-				
-				//MineTweaker.logWarning("The version statement is no longer necessary");
-				
+
+				// MineTweaker.logWarning("The version statement is no longer necessary");
+
 				parser.required(T_SEMICOLON, "; expected");
 				return new StatementNull(t.getPosition());
 			}
 		}
-		
+
 		ZenPosition position = parser.peek().getPosition();
 		StatementExpression result = new StatementExpression(position, ParsedExpression.read(parser, environment));
 		parser.required(T_SEMICOLON, "; expected");
 		return result;
 	}
-	
+
 	private final ZenPosition position;
-	
+
 	public Statement(ZenPosition position) {
 		this.position = position;
 	}
-	
+
 	public ZenPosition getPosition() {
 		return position;
 	}
-	
+
 	public boolean isReturn() {
 		return false;
 	}
-	
+
 	public abstract void compile(IEnvironmentMethod environment);
 }

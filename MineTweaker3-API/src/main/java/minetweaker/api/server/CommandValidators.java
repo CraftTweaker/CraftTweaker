@@ -23,7 +23,7 @@ public class CommandValidators {
 			return MineTweakerAPI.server.isOp(player);
 		}
 	};
-	
+
 	@ZenGetter
 	public static ICommandValidator isOp() {
 		return ISOP;

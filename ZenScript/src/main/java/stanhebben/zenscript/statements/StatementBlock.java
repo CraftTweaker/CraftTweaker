@@ -7,10 +7,10 @@ import stanhebben.zenscript.util.ZenPosition;
 
 public class StatementBlock extends Statement {
 	private final List<Statement> statements;
-	
+
 	public StatementBlock(ZenPosition position, List<Statement> statements) {
 		super(position);
-		
+
 		this.statements = statements;
 	}
 

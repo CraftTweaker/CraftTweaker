@@ -53,23 +53,24 @@ public class GlobalRegistry {
 	private static final IZenErrorLogger errors = new MyErrorLogger();
 	private static final IZenCompileEnvironment environment = new MyCompileEnvironment();
 	private static final Map<String, TypeExpansion> expansions = new HashMap<String, TypeExpansion>();
-	
+
 	static {
 		registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
 		registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
 		registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
 	}
-	
-	private GlobalRegistry() {}
-	
+
+	private GlobalRegistry() {
+	}
+
 	public static void registerGlobal(String name, IZenSymbol symbol) {
 		if (globals.containsKey(name)) {
 			throw new IllegalArgumentException("symbol already exists: " + name);
 		}
-		
+
 		globals.put(name, symbol);
 	}
-	
+
 	public static void registerExpansion(Class<?> cls) {
 		try {
 			for (Annotation annotation : cls.getAnnotations()) {
@@ -85,15 +86,15 @@ public class GlobalRegistry {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public static void registerRemover(IRecipeRemover remover) {
 		removers.add(remover);
 	}
-	
+
 	public static void registerBracketHandler(IBracketHandler handler) {
 		bracketHandlers.add(handler);
 	}
-	
+
 	public static void registerNativeClass(Class<?> cls) {
 		try {
 			ZenTypeNative type = new ZenTypeNative(cls);
@@ -104,17 +105,17 @@ public class GlobalRegistry {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public static TypeRegistry getTypeRegistry() {
 		return types;
 	}
-	
+
 	public static void remove(IIngredient ingredient) {
 		for (IRecipeRemover remover : removers) {
 			remover.remove(ingredient);
 		}
 	}
-	
+
 	public static IZenSymbol resolveBracket(IEnvironmentGlobal environment, List<Token> tokens) {
 		for (IBracketHandler handler : bracketHandlers) {
 			IZenSymbol symbol = handler.resolve(environment, tokens);
@@ -122,16 +123,17 @@ public class GlobalRegistry {
 				return symbol;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public static IZenSymbol getStaticFunction(Class cls, String name, Class... arguments) {
 		IJavaMethod method = JavaMethod.get(types, cls, name, arguments);
-		if (method == null) return null;
+		if (method == null)
+			return null;
 		return new SymbolJavaStaticMethod(method);
 	}
-	
+
 	public static IZenSymbol getStaticField(Class cls, String name) {
 		try {
 			Field field = cls.getDeclaredField(name);
@@ -144,11 +146,11 @@ public class GlobalRegistry {
 			return null;
 		}
 	}
-	
+
 	public static IEnvironmentGlobal makeGlobalEnvironment(Map<String, byte[]> classes) {
 		return new MyGlobalEnvironment(classes);
 	}
-	
+
 	private static class MyErrorLogger implements IZenErrorLogger {
 		@Override
 		public void error(ZenPosition position, String message) {
@@ -168,7 +170,7 @@ public class GlobalRegistry {
 			}
 		}
 	}
-	
+
 	private static class MyCompileEnvironment implements IZenCompileEnvironment {
 		@Override
 		public IZenErrorLogger getErrorLogger() {
@@ -204,18 +206,18 @@ public class GlobalRegistry {
 			return expansions.get(type);
 		}
 	}
-	
+
 	private static class MyGlobalEnvironment implements IEnvironmentGlobal {
 		private final Map<String, byte[]> classes;
 		private final Map<String, IZenSymbol> symbols;
 		private final ClassNameGenerator generator;
-		
+
 		public MyGlobalEnvironment(Map<String, byte[]> classes) {
 			this.classes = classes;
 			symbols = new HashMap<String, IZenSymbol>();
 			generator = new ClassNameGenerator();
 		}
-		
+
 		@Override
 		public IZenCompileEnvironment getEnvironment() {
 			return environment;

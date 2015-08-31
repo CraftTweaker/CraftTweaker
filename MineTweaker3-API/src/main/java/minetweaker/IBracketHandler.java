@@ -8,9 +8,9 @@ import stanhebben.zenscript.symbols.IZenSymbol;
 /**
  * Bracket handlers enable processing of the bracket syntax.
  * 
- * Inside brackets, any kind of token is acceptable except the closing bracket. (&gt;)
- * Bracket handlers (multiple handlers can be registered) will resolve these
- * tokens into actual values. Values have to be ZenScript symbols and will
+ * Inside brackets, any kind of token is acceptable except the closing bracket.
+ * (&gt;) Bracket handlers (multiple handlers can be registered) will resolve
+ * these tokens into actual values. Values have to be ZenScript symbols and will
  * resolve at compile-time.
  * 
  * These may of course return an expression that are executed on run-time, but

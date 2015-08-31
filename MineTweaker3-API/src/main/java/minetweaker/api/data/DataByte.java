@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataByte implements IData {
 	private final byte value;
-	
+
 	public DataByte(byte value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataByte implements IData {
 	public String asString() {
 		return Byte.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataByte implements IData {
 	public boolean contains(IData data) {
 		return data.asByte() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		return value == data.asByte();
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		return Byte.compare(value, data.asByte());
@@ -172,14 +172,14 @@ public class DataByte implements IData {
 
 	@Override
 	public IData neg() {
-		return new DataByte((byte) (- value));
+		return new DataByte((byte) (-value));
 	}
 
 	@Override
 	public IData not() {
-		return new DataByte((byte) (~ value));
+		return new DataByte((byte) (~value));
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString() + " as byte";

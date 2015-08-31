@@ -24,13 +24,13 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionMap extends ParsedExpression {
 	private final List<ParsedExpression> keys;
 	private final List<ParsedExpression> values;
-	
+
 	public ParsedExpressionMap(
 			ZenPosition position,
 			List<ParsedExpression> keys,
 			List<ParsedExpression> values) {
 		super(position);
-		
+
 		this.keys = keys;
 		this.values = values;
 	}
@@ -41,7 +41,7 @@ public class ParsedExpressionMap extends ParsedExpression {
 		ZenType predictedValueType = null;
 		ICastingRule castingRule = null;
 		ZenTypeAssociative mapType = ZenType.ANYMAP;
-		
+
 		if (predictedType instanceof ZenTypeAssociative) {
 			ZenTypeAssociative inputType = (ZenTypeAssociative) predictedType;
 			predictedKeyType = inputType.getKeyType();
@@ -60,15 +60,15 @@ public class ParsedExpressionMap extends ParsedExpression {
 				}
 			}
 		}
-		
+
 		Expression[] cKeys = new Expression[keys.size()];
 		Expression[] cValues = new Expression[values.size()];
-		
+
 		for (int i = 0; i < keys.size(); i++) {
 			cKeys[i] = keys.get(i).compileKey(environment, predictedKeyType);
 			cValues[i] = values.get(i).compile(environment, predictedValueType).eval(environment);
 		}
-		
+
 		Expression result = new ExpressionMap(getPosition(), cKeys, cValues, mapType);
 		if (castingRule != null) {
 			return new ExpressionAs(getPosition(), result, castingRule);

@@ -14,46 +14,46 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class Token {
 	private final ZenPosition position;
-    private final String value;
-    private final int type;
+	private final String value;
+	private final int type;
 
-    /**
-     * Constructs a new token.
-     *
-     * @param value token string value
-     * @param type token type
+	/**
+	 * Constructs a new token.
+	 *
+	 * @param value token string value
+	 * @param type token type
 	 * @param position token position
-     */
-    public Token(String value, int type, ZenPosition position) {
-        this.value = value;
-        this.type = type;
+	 */
+	public Token(String value, int type, ZenPosition position) {
+		this.value = value;
+		this.type = type;
 		this.position = position;
-    }
-    
-    public ZenPosition getPosition() {
-    	return position;
-    }
+	}
 
-    /**
-     * Returns the string value of this token.
-     *
-     * @return token value
-     */
-    public String getValue() {
-        return value;
-    }
+	public ZenPosition getPosition() {
+		return position;
+	}
 
-    /**
-     * Returns the token type of this token.
-     *
-     * @return token type
-     */
-    public int getType() {
-        return type;
-    }
+	/**
+	 * Returns the string value of this token.
+	 *
+	 * @return token value
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    @Override
-    public String toString() {
-        return position.getLine() + ":" + position.getLineOffset() + " (" + type + ") " + value;
-    }
+	/**
+	 * Returns the token type of this token.
+	 *
+	 * @return token type
+	 */
+	public int getType() {
+		return type;
+	}
+
+	@Override
+	public String toString() {
+		return position.getLine() + ":" + position.getLineOffset() + " (" + type + ") " + value;
+	}
 }

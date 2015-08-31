@@ -16,7 +16,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class FormattedMarkupString implements IMCFormattedString {
 	private final EnumChatFormatting markup;
 	private final IMCFormattedString contents;
-	
+
 	public FormattedMarkupString(EnumChatFormatting markup, IMCFormattedString contents) {
 		this.markup = markup;
 		this.contents = contents;

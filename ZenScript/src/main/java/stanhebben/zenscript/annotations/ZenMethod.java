@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 /**
  * Used to indicate an exposed method.
  * 
- * If this method is part of a native class, it will simply accept the parameters
- * as provided. If it is part of an expansion method, it will also accept the
- * instance value as first parameter.
+ * If this method is part of a native class, it will simply accept the
+ * parameters as provided. If it is part of an expansion method, it will also
+ * accept the instance value as first parameter.
  * 
  * @author Stan Hebben
  */

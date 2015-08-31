@@ -15,15 +15,15 @@ import io.netty.buffer.ByteBuf;
  */
 public class MineTweakerLoadScriptsPacket implements IMessage {
 	private byte[] data;
-	
+
 	public MineTweakerLoadScriptsPacket() {
 		// used for deserialization
 	}
-	
+
 	public MineTweakerLoadScriptsPacket(byte[] data) {
 		this.data = data;
 	}
-	
+
 	public byte[] getData() {
 		return data;
 	}

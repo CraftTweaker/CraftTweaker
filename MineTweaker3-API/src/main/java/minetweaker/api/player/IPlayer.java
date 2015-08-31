@@ -21,49 +21,49 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface IPlayer {
 	@ZenGetter("id")
 	public String getId();
-	
+
 	@ZenGetter("name")
 	public String getName();
-	
+
 	@ZenGetter("data")
 	public IData getData();
-	
+
 	@ZenMethod
 	public void update(IData data);
-	
+
 	@ZenMethod
 	public void sendChat(IChatMessage message);
-	
+
 	@ZenMethod
 	public void sendChat(String message);
-	
+
 	@ZenGetter("hotbarSize")
 	public int getHotbarSize();
-	
+
 	@ZenMethod
 	public IItemStack getHotbarStack(int i);
-	
+
 	@ZenGetter("inventorySize")
 	public int getInventorySize();
-	
+
 	@ZenMethod
 	public IItemStack getInventoryStack(int i);
-	
+
 	@ZenGetter("currentItem")
 	public IItemStack getCurrentItem();
-	
+
 	@ZenGetter("creative")
 	public boolean isCreative();
-	
+
 	@ZenGetter("adventure")
 	public boolean isAdventure();
-	
+
 	@ZenMethod
 	public void give(IItemStack stack);
-	
+
 	// not an exposed method. risks abuse
 	public void openBrowser(String url);
-	
+
 	// not an exposed method, so far. would it be useful?
 	public void copyToClipboard(String value);
 }

@@ -25,10 +25,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ParsedExpressionArray extends ParsedExpression {
 	private final List<ParsedExpression> contents;
-	
+
 	public ParsedExpressionArray(ZenPosition position, List<ParsedExpression> contents) {
 		super(position);
-		
+
 		this.contents = contents;
 	}
 
@@ -37,7 +37,7 @@ public class ParsedExpressionArray extends ParsedExpression {
 		ZenType predictedBaseType = null;
 		ZenTypeArrayBasic arrayType = ZenType.ANYARRAY;
 		ICastingRule castingRule = null;
-		
+
 		if (predictedType instanceof ZenTypeArray) {
 			predictedBaseType = ((ZenTypeArray) predictedType).getBaseType();
 			if (predictedType instanceof ZenTypeArrayBasic) {
@@ -60,7 +60,7 @@ public class ParsedExpressionArray extends ParsedExpression {
 				}
 			}
 		}
-		
+
 		Expression[] cContents = new Expression[contents.size()];
 		for (int i = 0; i < contents.size(); i++) {
 			cContents[i] = contents.get(i).compile(environment, predictedBaseType).eval(environment);
@@ -72,7 +72,7 @@ public class ParsedExpressionArray extends ParsedExpression {
 			return result;
 		}
 	}
-	
+
 	@Override
 	public Expression compileKey(IEnvironmentMethod environment, ZenType predictedType) {
 		if (contents.size() == 1 && contents.get(0) instanceof ParsedExpressionVariable) {

@@ -56,7 +56,7 @@ public class AnyClassWriter {
 	public static final IJavaMethod METHOD_GETNUMBERTYPE = JavaMethod.get(EMPTY_REGISTRY, IAny.class, "getNumberType");
 	public static final IJavaMethod METHOD_ITERATORSINGLE = JavaMethod.get(EMPTY_REGISTRY, IAny.class, "iteratorSingle");
 	public static final IJavaMethod METHOD_ITERATORMULTI = JavaMethod.get(EMPTY_REGISTRY, IAny.class, "iteratorMulti", int.class);
-	
+
 	private static final String SIG_ANY = "()" + signature(IAny.class);
 	private static final String SIG_ANY_ANY = "(" + signature(IAny.class) + ")" + signature(IAny.class);
 	private static final String SIG_ANY_INT = "(" + signature(IAny.class) + ")I";
@@ -66,9 +66,10 @@ public class AnyClassWriter {
 	private static final String SIG_STRING_ANYARRAY_ANY = "(" + signature(String.class) + signature(IAny[].class) + ")" + signature(IAny.class);
 	private static final String SIG_ANY_ANY_VOID = "(" + signature(IAny.class) + signature(IAny.class) + ")V";
 	private static final String SIG_ANYARRAY_ANY = "(" + signature(IAny[].class) + ")" + signature(IAny.class);
-	
-	private AnyClassWriter() {}
-	
+
+	private AnyClassWriter() {
+	}
+
 	public static byte[] construct(IAnyDefinition definition, String name, Type asmType) {
 		try {
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -366,7 +367,7 @@ public class AnyClassWriter {
 					writer,
 					Opcodes.ACC_PUBLIC,
 					"iteratorSingle",
-					"()" + signature(Iterator.class), 
+					"()" + signature(Iterator.class),
 					"()Ljava/util/Iterator<Lstanhebben/zenscript/value/IAny;>;",
 					null);
 			outputIteratorSingle.start();
@@ -395,17 +396,12 @@ public class AnyClassWriter {
 			definition.defineHashCode(outputHashCode);
 			outputHashCode.end();
 
-			/*MethodOutput outputEquals = new MethodOutput(
-					writer,
-					Opcodes.ACC_PUBLIC,
-					"equals",
-					"(Ljava/lang/Object;)Z",
-					null,
-					null);
-			outputEquals.enableDebug();
-			outputEquals.start();
-			definition.defineEquals(outputEquals);
-			outputEquals.end();*/
+			/*
+			 * MethodOutput outputEquals = new MethodOutput( writer,
+			 * Opcodes.ACC_PUBLIC, "equals", "(Ljava/lang/Object;)Z", null,
+			 * null); outputEquals.enableDebug(); outputEquals.start();
+			 * definition.defineEquals(outputEquals); outputEquals.end();
+			 */
 
 			writer.visitEnd();
 			return writer.toByteArray();
@@ -413,30 +409,33 @@ public class AnyClassWriter {
 			throw new RuntimeException("Could not construct any class for " + name, ex);
 		}
 	}
-	
+
 	public static void throwUnsupportedException(MethodOutput output, String fromType, String operation) {
-		// throw new UnsupportedOperationException(fromType + " does not support the " + operation + " operator");
+		// throw new UnsupportedOperationException(fromType +
+		// " does not support the " + operation + " operator");
 		output.newObject(UnsupportedOperationException.class);
 		output.dup();
 		output.constant(fromType + " does not support the " + operation + " operator");
 		output.construct(UnsupportedOperationException.class, String.class);
 		output.aThrow();
 	}
-	
+
 	public static void throwCastException(MethodOutput output, String fromType, String toType) {
-		// throw new ClassCastException("Cannot cast " + fromType + " to " + [local:Class].getName())
+		// throw new ClassCastException("Cannot cast " + fromType + " to " +
+		// [local:Class].getName())
 		output.newObject(ClassCastException.class);
 		output.dup();
 		output.constant("Cannot cast " + fromType + " to " + toType);
 		output.construct(ClassCastException.class, String.class);
 		output.aThrow();
 	}
-	
+
 	public static void throwCastException(MethodOutput output, String fromType, int local) {
-		// throw new ClassCastException("Cannot cast " + fromType + " to " + [local:Class].getName())
+		// throw new ClassCastException("Cannot cast " + fromType + " to " +
+		// [local:Class].getName())
 		output.newObject(ClassCastException.class);
 		output.dup();
-		
+
 		output.newObject(StringBuilder.class);
 		output.dup();
 		output.construct(StringBuilder.class);
@@ -446,7 +445,7 @@ public class AnyClassWriter {
 		output.invokeVirtual(Class.class, "getName", String.class);
 		output.invokeVirtual(StringBuilder.class, "append", StringBuilder.class, String.class);
 		output.invokeVirtual(StringBuilder.class, "toString", String.class);
-		
+
 		output.construct(ClassCastException.class, String.class);
 		output.aThrow();
 	}

@@ -19,7 +19,7 @@ import stanhebben.zenscript.util.MethodOutput;
 public class CastingRuleNullableVirtualMethod implements ICastingRule {
 	private final ZenType type;
 	private final IJavaMethod method;
-	
+
 	public CastingRuleNullableVirtualMethod(ZenType type, IJavaMethod method) {
 		this.type = type;
 		this.method = method;

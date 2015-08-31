@@ -74,7 +74,7 @@ public class ZenTypeNative extends ZenType {
 	private static final int ITERATOR_ITERABLE = 1;
 	private static final int ITERATOR_LIST = 2;
 	private static final int ITERATOR_MAP = 3;
-	
+
 	private final Class cls;
 	private final String anyName;
 	private final String anyName2;
@@ -85,14 +85,14 @@ public class ZenTypeNative extends ZenType {
 	private final List<ZenNativeOperator> trinaryOperators;
 	private final List<ZenNativeOperator> binaryOperators;
 	private final List<ZenNativeOperator> unaryOperators;
-	
+
 	private int iteratorType;
 	private String classPkg;
 	private String className;
 	private Annotation iteratorAnnotation;
 	private ZenType iteratorKeyType;
 	private ZenType iteratorValueType;
-	
+
 	public ZenTypeNative(Class cls) {
 		this.cls = cls;
 		members = new HashMap<String, ZenNativeMember>();
@@ -102,22 +102,22 @@ public class ZenTypeNative extends ZenType {
 		binaryOperators = new ArrayList<ZenNativeOperator>();
 		unaryOperators = new ArrayList<ZenNativeOperator>();
 		implementing = new ArrayList<ZenTypeNative>();
-		
+
 		anyName2 = cls.getName() + "Any";
 		anyName = anyName2.replace('.', '/');
 	}
-	
+
 	public void complete(ITypeRegistry types) {
 		int iterator = ITERATOR_NONE;
 		Annotation _iteratorAnnotation = null;
 		String _classPkg = cls.getPackage().getName().replace('/', '.');
 		String _className = cls.getSimpleName();
 		boolean fully = false;
-		
+
 		Queue<ZenTypeNative> todo = new LinkedList<ZenTypeNative>();
 		todo.add(this);
 		addSubtypes(todo, types);
-		
+
 		Annotation[] clsAnnotations = cls.getAnnotations();
 		for (Annotation annotation : clsAnnotations) {
 			if (annotation instanceof ZenClass) {
@@ -153,11 +153,11 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 		}
-		
+
 		for (Method method : cls.getMethods()) {
 			boolean isMethod = fully;
 			String methodName = method.getName();
-			
+
 			for (Annotation annotation : method.getAnnotations()) {
 				if (annotation instanceof ZenCaster) {
 					casters.add(new ZenNativeCaster(JavaMethod.get(types, method)));
@@ -165,7 +165,7 @@ public class ZenTypeNative extends ZenType {
 				} else if (annotation instanceof ZenGetter) {
 					ZenGetter getterAnnotation = (ZenGetter) annotation;
 					String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
-					
+
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenNativeMember());
 					}
@@ -174,7 +174,7 @@ public class ZenTypeNative extends ZenType {
 				} else if (annotation instanceof ZenSetter) {
 					ZenSetter setterAnnotation = (ZenSetter) annotation;
 					String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
-					
+
 					if (!members.containsKey(name)) {
 						members.put(name, new ZenNativeMember());
 					}
@@ -231,14 +231,14 @@ public class ZenTypeNative extends ZenType {
 					isMethod = false;
 				} else if (annotation instanceof ZenMethod) {
 					isMethod = true;
-					
+
 					ZenMethod methodAnnotation = (ZenMethod) annotation;
 					if (methodAnnotation.value().length() > 0) {
 						methodName = methodAnnotation.value();
 					}
 				}
 			}
-			
+
 			if (isMethod) {
 				if ((method.getModifiers() & Modifier.STATIC) > 0) {
 					if (!staticMembers.containsKey(methodName)) {
@@ -253,17 +253,17 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 		}
-		
+
 		this.iteratorType = iterator;
 		this.iteratorAnnotation = _iteratorAnnotation;
 		this.classPkg = _classPkg;
 		this.className = _className;
 	}
-	
+
 	public Class getNativeClass() {
 		return cls;
 	}
-	
+
 	public void complete(IEnvironmentGlobal environment) {
 		if (iteratorAnnotation instanceof IterableSimple) {
 			IterableSimple annotation = (IterableSimple) iteratorAnnotation;
@@ -280,14 +280,15 @@ public class ZenTypeNative extends ZenType {
 			iteratorValueType = ZenType.parse(annotation.value(), environment);
 		}
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal global) {
 		if (!global.containsClass(anyName2)) {
 			global.putClass(anyName2, new byte[0]);
-			//global.putClass(anyName2, AnyClassWriter.construct(new AnyNativeDefinition(global), anyName2, toASMType()));
+			// global.putClass(anyName2, AnyClassWriter.construct(new
+			// AnyNativeDefinition(global), anyName2, toASMType()));
 		}
-		
+
 		return anyName;
 	}
 
@@ -302,14 +303,15 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 		}
-		
+
 		if (member == null) {
 			Expression evalue = value.eval(environment);
 			IPartialExpression member2 = memberExpansion(position, environment, evalue, name);
 			if (member2 == null) {
 				for (ZenTypeNative type : implementing) {
 					member2 = type.memberExpansion(position, environment, evalue, name);
-					if (member2 != null) break;
+					if (member2 != null)
+						break;
 				}
 			}
 			if (member2 == null) {
@@ -348,7 +350,8 @@ public class ZenTypeNative extends ZenType {
 			if (member2 == null) {
 				for (ZenTypeNative type : implementing) {
 					member2 = type.staticMemberExpansion(position, environment, name);
-					if (member2 != null) break;
+					if (member2 != null)
+						break;
 				}
 			}
 			if (member2 == null) {
@@ -392,36 +395,36 @@ public class ZenTypeNative extends ZenType {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		if (cls.getSuperclass() != null) {
 			ZenType superType = environment.getType(cls.getSuperclass());
-			
+
 			rules.registerCastingRule(superType, new CastingRuleNone(this, superType));
-			
+
 			superType.constructCastingRules(environment, rules, followCasters);
 		}
-		
+
 		for (Class iface : cls.getInterfaces()) {
 			ZenType ifaceType = environment.getType(iface);
-			
+
 			rules.registerCastingRule(ifaceType, new CastingRuleNone(this, ifaceType));
-			
+
 			ifaceType.constructCastingRules(environment, rules, followCasters);
 		}
-		
+
 		if (followCasters) {
 			for (ZenNativeCaster caster : casters) {
 				// TODO: implement
 			}
-			
+
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.constructCastingRules(environment, rules);
 			}
 		}
-		
+
 		rules.registerCastingRule(BOOL, new CastingNotNull(this));
 		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(JavaMethod.getStatic(
 				getAnyClassName(environment),
@@ -436,7 +439,7 @@ public class ZenTypeNative extends ZenType {
 				|| canCastImplicit(type, environment)
 				|| type.canCastExplicit(this, environment);
 	}
-	
+
 	@Override
 	public Class toJavaClass() {
 		return cls;
@@ -461,7 +464,7 @@ public class ZenTypeNative extends ZenType {
 	public boolean isPointer() {
 		return true;
 	}
-	
+
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		for (ZenNativeOperator unaryOperator : unaryOperators) {
@@ -469,7 +472,7 @@ public class ZenTypeNative extends ZenType {
 				return new ExpressionCallVirtual(position, environment, unaryOperator.getMethod(), value);
 			}
 		}
-		
+
 		environment.error(position, "operator not supported");
 		return new ExpressionInvalid(position);
 	}
@@ -481,11 +484,11 @@ public class ZenTypeNative extends ZenType {
 				return new ExpressionCallVirtual(position, environment, binaryOperator.getMethod(), left, right);
 			}
 		}
-		
+
 		environment.error(position, "operator not supported");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression trinary(ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
 		for (ZenNativeOperator trinaryOperator : trinaryOperators) {
@@ -493,11 +496,11 @@ public class ZenTypeNative extends ZenType {
 				return new ExpressionCallVirtual(position, environment, trinaryOperator.getMethod(), first, second, third);
 			}
 		}
-		
+
 		environment.error(position, "operator not supported");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression compare(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
 		if (type == CompareType.EQ || type == CompareType.NE) {
@@ -512,7 +515,7 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 		}
-		
+
 		return new ExpressionCompareGeneric(position, binary(position, environment, left, right, OperatorType.COMPARE), type);
 	}
 
@@ -520,91 +523,82 @@ public class ZenTypeNative extends ZenType {
 	public Expression call(
 			ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
 		// TODO: support functional interfaces
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
 	}
-	
+
 	@Override
 	public ZenType[] predictCallTypes(int numArguments) {
 		// TODO: support functional interface
 		return new ZenType[numArguments];
 	}
-	
+
 	private boolean hasBinary(ZenType type, OperatorType operator) {
 		for (ZenNativeOperator binaryOperator : binaryOperators) {
 			if (binaryOperator.getOperator() == operator) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	/*private void compileAnyUnary(String anySignature, OperatorType operator, IEnvironmentMethod environment) {
-		List<ZenNativeOperator> operators = new ArrayList<ZenNativeOperator>();
-		for (ZenNativeOperator unary : this.unaryOperators) {
-			if (unary.getOperator() == operator) {
-				operators.add(unary);
-			}
-		}
-		
-		MethodOutput output = environment.getOutput();
-		if (operators.isEmpty()) {
-			output.newObject(ZenRuntimeException.class);
-			output.dup();
-			output.constant("Cannot " + operator + " " + classPkg + '.' + className);
-			output.construct(ZenRuntimeException.class, String.class);
-			output.aThrow();
-		} else {
-			if (operators.size() > 1) {
-				environment.error(null, "Multiple " + operator + " operators for " + cls);
-			}
-			
-			ZenNativeOperator unary = operators.get(0);
-			
-			output.loadObject(0);
-			output.getField(anySignature, "value", signature(cls));
-			
-			output.invoke(unary.getMethod());
-			environment.getType(unary.getClass()).compileCast(null, environment, ANY);
-			output.returnObject();
-		}
-	}
-	
-	private void compileAnyBinary(String anySignature, OperatorType operator, IEnvironmentMethod environment) {
-		List<ZenNativeOperator> operators = new ArrayList<ZenNativeOperator>();
-		for (ZenNativeOperator binary : binaryOperators) {
-			if (binary.getOperator() == operator) {
-				operators.add(binary);
-			}
-		}
-		
-		MethodOutput output = environment.getOutput();
-		if (operators.isEmpty()) {
-			output.newObject(ZenRuntimeException.class);
-			output.dup();
-			output.constant("Cannot " + operator + " on " + classPkg + '.' + className);
-			output.construct(ZenRuntimeException.class, String.class);
-			output.aThrow();
-		} else if (operators.size() == 1) {
-			ZenNativeOperator binary = operators.get(0);
-			
-			output.loadObject(0);
-			output.getField(anySignature, "value", signature(cls));
-			output.loadObject(1);
-			output.invoke(binary.getMethod());
-			environment.getType(binary.getClass()).compileCast(null, environment, ANY);
-			output.returnObject();
-		} else {
-			environment.error(null, "Multiple " + operator + " operators for " + cls + " (which is not yet supported)");
-		}
-	}
-	
-	public void compileAnyMember(String anySignature, EnvironmentMethod environment) {
-		// TODO: complete
-		MethodOutput output = environment.getOutput();
-		output.aConstNull();
-		output.returnObject();
-	}*/
+
+	/*
+	 * private void compileAnyUnary(String anySignature, OperatorType operator,
+	 * IEnvironmentMethod environment) { List<ZenNativeOperator> operators = new
+	 * ArrayList<ZenNativeOperator>(); for (ZenNativeOperator unary :
+	 * this.unaryOperators) { if (unary.getOperator() == operator) {
+	 * operators.add(unary); } }
+	 * 
+	 * MethodOutput output = environment.getOutput(); if (operators.isEmpty()) {
+	 * output.newObject(ZenRuntimeException.class); output.dup();
+	 * output.constant("Cannot " + operator + " " + classPkg + '.' + className);
+	 * output.construct(ZenRuntimeException.class, String.class);
+	 * output.aThrow(); } else { if (operators.size() > 1) {
+	 * environment.error(null, "Multiple " + operator + " operators for " +
+	 * cls); }
+	 * 
+	 * ZenNativeOperator unary = operators.get(0);
+	 * 
+	 * output.loadObject(0); output.getField(anySignature, "value",
+	 * signature(cls));
+	 * 
+	 * output.invoke(unary.getMethod());
+	 * environment.getType(unary.getClass()).compileCast(null, environment,
+	 * ANY); output.returnObject(); } }
+	 * 
+	 * private void compileAnyBinary(String anySignature, OperatorType operator,
+	 * IEnvironmentMethod environment) { List<ZenNativeOperator> operators = new
+	 * ArrayList<ZenNativeOperator>(); for (ZenNativeOperator binary :
+	 * binaryOperators) { if (binary.getOperator() == operator) {
+	 * operators.add(binary); } }
+	 * 
+	 * MethodOutput output = environment.getOutput(); if (operators.isEmpty()) {
+	 * output.newObject(ZenRuntimeException.class); output.dup();
+	 * output.constant("Cannot " + operator + " on " + classPkg + '.' +
+	 * className); output.construct(ZenRuntimeException.class, String.class);
+	 * output.aThrow(); } else if (operators.size() == 1) { ZenNativeOperator
+	 * binary = operators.get(0);
+	 * 
+	 * output.loadObject(0); output.getField(anySignature, "value",
+	 * signature(cls)); output.loadObject(1); output.invoke(binary.getMethod());
+	 * environment.getType(binary.getClass()).compileCast(null, environment,
+	 * ANY); output.returnObject(); } else { environment.error(null, "Multiple "
+	 * + operator + " operators for " + cls + " (which is not yet supported)");
+	 * } }
+	 * 
+	 * public void compileAnyMember(String anySignature, EnvironmentMethod
+	 * environment) { // TODO: complete MethodOutput output =
+	 * environment.getOutput(); output.aConstNull(); output.returnObject(); }
+	 */
 
 	@Override
 	public String getName() {
@@ -615,7 +609,7 @@ public class ZenTypeNative extends ZenType {
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionNull(position);
 	}
-	
+
 	private void addSubtypes(Queue<ZenTypeNative> todo, ITypeRegistry types) {
 		while (!todo.isEmpty()) {
 			ZenTypeNative current = todo.poll();
@@ -635,10 +629,10 @@ public class ZenTypeNative extends ZenType {
 			}
 		}
 	}
-	
+
 	private class AnyNativeDefinition implements IAnyDefinition {
 		private final IEnvironmentGlobal environment;
-		
+
 		public AnyNativeDefinition(IEnvironmentGlobal environment) {
 			this.environment = environment;
 		}
@@ -646,7 +640,7 @@ public class ZenTypeNative extends ZenType {
 		@Override
 		public void defineMembers(ClassVisitor output) {
 			output.visitField(Opcodes.ACC_PRIVATE, "value", "F", null, null);
-			
+
 			MethodOutput valueOf = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "valueOf", "(F)" + signature(IAny.class), null, null);
 			valueOf.start();
 			valueOf.newObject(anyName2);
@@ -655,7 +649,7 @@ public class ZenTypeNative extends ZenType {
 			valueOf.construct(anyName2, "L" + cls.getName() + ";");
 			valueOf.returnObject();
 			valueOf.end();
-			
+
 			MethodOutput constructor = new MethodOutput(output, Opcodes.ACC_PUBLIC, "<init>", "(L" + cls.getName() + ";)V", null, null);
 			constructor.start();
 			constructor.loadObject(0);
@@ -674,24 +668,24 @@ public class ZenTypeNative extends ZenType {
 			output.constant(Type.getType(cls));
 			output.loadObject(1);
 			output.invokeVirtual(Class.class, "isAssignableFrom", boolean.class, Class.class);
-			
+
 			Label lblNotAssignable = new Label();
 			output.ifEQ(lblNotAssignable);
-			
+
 			output.iConst1();
 			output.returnInt();
-			
+
 			output.label(lblNotAssignable);
-			
+
 			for (ZenNativeCaster caster : casters) {
 				caster.compileAnyCanCastImplicit(ZenTypeNative.this, output, environment, 0);
 			}
-			
+
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.compileAnyCanCastImplicit(ZenTypeNative.this, output, environment, 0);
 			}
-			
+
 			output.iConst0();
 			output.returnInt();
 		}
@@ -701,24 +695,24 @@ public class ZenTypeNative extends ZenType {
 			output.constant(Type.getType(cls));
 			output.loadObject(1);
 			output.invokeVirtual(Class.class, "isAssignableFrom", boolean.class, Class.class);
-			
+
 			Label lblNotAssignable = new Label();
 			output.ifEQ(lblNotAssignable);
-			
+
 			output.loadObject(0);
 			output.returnObject();
-			
+
 			output.label(lblNotAssignable);
-			
+
 			for (ZenNativeCaster caster : casters) {
 				caster.compileAnyCast(ZenTypeNative.this, output, environment, 0, 1);
 			}
-			
+
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.compileAnyCast(ZenTypeNative.this, output, environment, 0, 1);
 			}
-			
+
 			throwCastException(output, "float", 1);
 		}
 
@@ -726,18 +720,18 @@ public class ZenTypeNative extends ZenType {
 		public void defineNot(MethodOutput output) {
 			// TODO: implement
 			throwUnsupportedException(output, getName(), "not");
-			/*for (ZenNativeOperator unaryOperator : unaryOperators) {
-				if (unaryOperator.getOperator() == OperatorType.NOT) {
-					
-				}
-			}
-			
-			TypeExpansion expansion = environment.getExpansion(getName());
-			if (expansion != null) {
-				if (expansion.compileAnyUnary(output, OperatorType.NOT)) {
-					
-				}
-			}*/
+			/*
+			 * for (ZenNativeOperator unaryOperator : unaryOperators) { if
+			 * (unaryOperator.getOperator() == OperatorType.NOT) {
+			 * 
+			 * } }
+			 * 
+			 * TypeExpansion expansion = environment.getExpansion(getName()); if
+			 * (expansion != null) { if (expansion.compileAnyUnary(output,
+			 * OperatorType.NOT)) {
+			 * 
+			 * } }
+			 */
 		}
 
 		@Override

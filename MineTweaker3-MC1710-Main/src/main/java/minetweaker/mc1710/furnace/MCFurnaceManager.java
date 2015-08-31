@@ -27,15 +27,16 @@ import net.minecraft.item.crafting.FurnaceRecipes;
  */
 public class MCFurnaceManager implements IFurnaceManager {
 	public MCFurnaceManager() {
-		
+
 	}
-	
+
 	@Override
 	public void remove(IIngredient output, IIngredient input) {
-		if (output == null) throw new IllegalArgumentException("output cannot be null");
-		
+		if (output == null)
+			throw new IllegalArgumentException("output cannot be null");
+
 		Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.smelting().getSmeltingList();
-		
+
 		List<ItemStack> toRemove = new ArrayList<ItemStack>();
 		List<ItemStack> toRemoveValues = new ArrayList<ItemStack>();
 		for (Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
@@ -45,7 +46,7 @@ public class MCFurnaceManager implements IFurnaceManager {
 				toRemoveValues.add(entry.getValue());
 			}
 		}
-		
+
 		if (toRemove.isEmpty()) {
 			MineTweakerAPI.logWarning("No furnace recipes for " + output.toString());
 		} else {
@@ -59,7 +60,7 @@ public class MCFurnaceManager implements IFurnaceManager {
 		if (items == null) {
 			MineTweakerAPI.logError("Cannot turn " + input.toString() + " into a furnace recipe");
 		}
-		
+
 		ItemStack[] items2 = getItemStacks(items);
 		ItemStack output2 = getItemStack(output);
 		MineTweakerAPI.apply(new AddRecipeAction(input, items2, output2, xp));
@@ -74,20 +75,20 @@ public class MCFurnaceManager implements IFurnaceManager {
 	public int getFuel(IItemStack item) {
 		return GameRegistry.getFuelValue(getItemStack(item));
 	}
-	
+
 	// ######################
 	// ### Action classes ###
 	// ######################
-	
+
 	private static class RemoveAction implements IUndoableAction {
 		private final List<ItemStack> items;
 		private final List<ItemStack> values;
-		
+
 		public RemoveAction(List<ItemStack> items, List<ItemStack> values) {
 			this.items = items;
 			this.values = values;
 		}
-		
+
 		@Override
 		public void apply() {
 			for (ItemStack item : items) {
@@ -122,13 +123,13 @@ public class MCFurnaceManager implements IFurnaceManager {
 			return null;
 		}
 	}
-	
+
 	private static class AddRecipeAction implements IUndoableAction {
 		private final IIngredient ingredient;
 		private final ItemStack[] input;
 		private final ItemStack output;
 		private final double xp;
-		
+
 		public AddRecipeAction(IIngredient ingredient, ItemStack[] input, ItemStack output, double xp) {
 			this.ingredient = ingredient;
 			this.input = input;
@@ -170,14 +171,14 @@ public class MCFurnaceManager implements IFurnaceManager {
 			return null;
 		}
 	}
-	
+
 	private static class SetFuelAction implements IUndoableAction {
 		private final SetFuelPattern pattern;
-		
+
 		public SetFuelAction(SetFuelPattern pattern) {
 			this.pattern = pattern;
 		}
-		
+
 		@Override
 		public void apply() {
 			FuelTweaker.INSTANCE.addFuelPattern(pattern);

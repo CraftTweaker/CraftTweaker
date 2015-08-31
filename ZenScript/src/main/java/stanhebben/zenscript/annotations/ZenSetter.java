@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate setters. Will make the given method accessible as setter, that is,
- * it's called when value.name is being assinged a value.
+ * Used to annotate setters. Will make the given method accessible as setter,
+ * that is, it's called when value.name is being assinged a value.
  * 
  * For a native class, a single argument with the assinged value is provided.
  * For an expansion, the target object and assigned value are provided.

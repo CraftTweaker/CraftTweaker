@@ -23,17 +23,17 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionJavaMethodStatic extends Expression {
 	private final JavaMethod method;
 	private final ZenType type;
-	
+
 	public ExpressionJavaMethodStatic(ZenPosition position, JavaMethod method, IEnvironmentGlobal environment) {
 		super(position);
-		
+
 		this.method = method;
-		
+
 		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
 			arguments.add(new ParsedFunctionArgument("p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
 		}
-		
+
 		this.type = new ZenTypeFunction(environment.getType(method.getMethod().getGenericReturnType()), arguments);
 	}
 

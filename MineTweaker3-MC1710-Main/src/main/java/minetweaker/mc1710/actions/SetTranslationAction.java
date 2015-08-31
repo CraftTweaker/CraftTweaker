@@ -19,11 +19,11 @@ import net.minecraft.util.StringTranslate;
 public class SetTranslationAction implements IUndoableAction {
 	private static final StringTranslate INSTANCE = MineTweakerHacks.getStringTranslateInstance();
 	private static final Charset UTF8 = Charset.forName("utf-8");
-	
+
 	private final String key;
 	private final String newValue;
 	private final String oldValue;
-	
+
 	public SetTranslationAction(String key, String value) {
 		this.key = key;
 		newValue = value;
@@ -54,7 +54,7 @@ public class SetTranslationAction implements IUndoableAction {
 	public String describeUndo() {
 		return "Reverting " + key + " to " + oldValue;
 	}
-	
+
 	private static void set(String key, String value) {
 		StringTranslate.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
 	}

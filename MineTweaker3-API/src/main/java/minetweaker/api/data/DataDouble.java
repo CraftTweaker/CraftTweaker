@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataDouble implements IData {
 	private final double value;
-	
+
 	public DataDouble(double value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataDouble implements IData {
 	public String asString() {
 		return Double.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataDouble implements IData {
 	public boolean contains(IData data) {
 		return data.asDouble() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData other) {
 		return value == other.asDouble();
 	}
-	
+
 	@Override
 	public int compareTo(IData other) {
 		return Double.compare(value, other.asDouble());
@@ -172,14 +172,14 @@ public class DataDouble implements IData {
 
 	@Override
 	public IData neg() {
-		return new DataDouble(- value);
+		return new DataDouble(-value);
 	}
 
 	@Override
 	public IData not() {
 		throw new UnsupportedOperationException("Cannot perform bitwise operations on double");
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString();

@@ -24,7 +24,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MCItemDefinition implements IItemDefinition {
 	private final String id;
 	private final Item item;
-	
+
 	public MCItemDefinition(String id, Item item) {
 		this.id = id;
 		this.item = item;
@@ -48,7 +48,7 @@ public class MCItemDefinition implements IItemDefinition {
 	@Override
 	public List<IOreDictEntry> getOres() {
 		List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
-		
+
 		for (String key : OreDictionary.getOreNames()) {
 			for (ItemStack is : OreDictionary.getOres(key)) {
 				if (is.getItem() == item) {
@@ -57,10 +57,10 @@ public class MCItemDefinition implements IItemDefinition {
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	// #############################
 	// ### Object implementation ###
 	// #############################

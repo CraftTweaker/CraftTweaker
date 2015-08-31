@@ -18,16 +18,16 @@ import stanhebben.zenscript.util.ZenPosition;
 public class SymbolLocal implements IZenSymbol {
 	private final ZenType type;
 	private final boolean isFinal;
-	
+
 	public SymbolLocal(ZenType type, boolean isFinal) {
 		this.type = type;
 		this.isFinal = isFinal;
 	}
-	
+
 	public ZenType getType() {
 		return type;
 	}
-	
+
 	public boolean isFinal() {
 		return isFinal;
 	}

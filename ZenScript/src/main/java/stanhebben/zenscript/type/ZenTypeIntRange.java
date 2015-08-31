@@ -33,21 +33,21 @@ import stanhebben.zenscript.value.IntRange;
  */
 public class ZenTypeIntRange extends ZenType {
 	public static final ZenTypeIntRange INSTANCE = new ZenTypeIntRange();
-	
+
 	private final IJavaMethod methodFrom;
 	private final IJavaMethod methodTo;
-	
+
 	private ZenTypeIntRange() {
 		ITypeRegistry dummy = new TypeRegistry();
 		methodFrom = JavaMethod.get(dummy, IntRange.class, "getFrom");
 		methodTo = JavaMethod.get(dummy, IntRange.class, "getTo");
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal global) {
 		throw new UnsupportedOperationException("range values cannot yet be used as any value");
 	}
-	
+
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		environment.error(position, "cannot apply unary operators on int ranges");
@@ -95,21 +95,20 @@ public class ZenTypeIntRange extends ZenType {
 		environment.error(position, "int ranges cannot be called");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
-		
+
 	}
 
-	/*@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type == this) {
-			return value;
-		}
-		
-		environment.error(position, "cannot cast int ranges to any other type");
-		return new ExpressionInvalid(position);
-	}*/
+	/*
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) { if (type == this) { return
+	 * value; }
+	 * 
+	 * environment.error(position, "cannot cast int ranges to any other type");
+	 * return new ExpressionInvalid(position); }
+	 */
 
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
@@ -120,15 +119,13 @@ public class ZenTypeIntRange extends ZenType {
 		}
 	}
 
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this;
-	}
-
-	@Override
-	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this;
-	}*/
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type == this; }
+	 * 
+	 * @Override public boolean canCastExplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type == this; }
+	 */
 
 	@Override
 	public Class toJavaClass() {
@@ -155,10 +152,12 @@ public class ZenTypeIntRange extends ZenType {
 		return true;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}*/
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { throw new
+	 * UnsupportedOperationException("Not supported yet."); //To change body of
+	 * generated methods, choose Tools | Templates. }
+	 */
 
 	@Override
 	public String getName() {
@@ -169,10 +168,10 @@ public class ZenTypeIntRange extends ZenType {
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionNull(position);
 	}
-	
+
 	private class IntRangeIterator implements IZenIterator {
 		private final IEnvironmentMethod method;
-		
+
 		public IntRangeIterator(IEnvironmentMethod methodOutput) {
 			this.method = methodOutput;
 		}
@@ -180,7 +179,7 @@ public class ZenTypeIntRange extends ZenType {
 		@Override
 		public void compileStart(int[] locals) {
 			MethodOutput output = method.getOutput();
-			
+
 			output.dup(); // copy IntRange reference
 			methodFrom.invokeVirtual(output);
 			output.storeInt(locals[0]);
@@ -188,21 +187,21 @@ public class ZenTypeIntRange extends ZenType {
 
 		@Override
 		public void compilePreIterate(int[] locals, Label exit) {
-			
+
 		}
 
 		@Override
 		public void compilePostIterate(int[] locals, Label exit, Label repeat) {
 			MethodOutput output = method.getOutput();
-			
+
 			output.dup(); // copy IntRange reference
 			methodTo.invokeVirtual(output);
-			
+
 			output.loadInt(locals[0]);
 			output.iinc(locals[0]);
 			output.dup();
 			output.storeInt(locals[0]);
-			
+
 			output.ifICmpGT(repeat);
 			output.goTo(exit);
 		}

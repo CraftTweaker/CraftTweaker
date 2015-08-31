@@ -16,7 +16,7 @@ import minetweaker.api.world.IDimension;
 public class CraftingInfo implements ICraftingInfo {
 	private final ICraftingInventory inventory;
 	private final IDimension dimension;
-	
+
 	public CraftingInfo(ICraftingInventory inventory, IDimension dimension) {
 		this.inventory = inventory;
 		this.dimension = dimension;

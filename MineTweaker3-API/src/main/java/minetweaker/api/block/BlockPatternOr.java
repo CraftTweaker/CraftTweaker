@@ -16,13 +16,13 @@ import minetweaker.util.ArrayUtil;
  */
 public class BlockPatternOr implements IBlockPattern {
 	private final IBlockPattern[] elements;
-	
+
 	public BlockPatternOr(IBlockPattern[] elements) {
 		this.elements = elements;
 	}
-	
+
 	public BlockPatternOr(IBlockPattern a, IBlockPattern b) {
-		this.elements = new IBlockPattern[] {a, b};
+		this.elements = new IBlockPattern[] { a, b };
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class BlockPatternOr implements IBlockPattern {
 			if (pattern.matches(block))
 				return true;
 		}
-		
+
 		return false;
 	}
 
@@ -54,10 +54,10 @@ public class BlockPatternOr implements IBlockPattern {
 			} else {
 				result.append(" | ");
 			}
-			
+
 			result.append(pattern.getDisplayName());
 		}
-		
+
 		return result.toString();
 	}
 

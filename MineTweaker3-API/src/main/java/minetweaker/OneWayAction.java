@@ -12,7 +12,8 @@ public abstract class OneWayAction implements IUndoableAction {
 	}
 
 	@Override
-	public void undo() {}
+	public void undo() {
+	}
 
 	@Override
 	public String describeUndo() {

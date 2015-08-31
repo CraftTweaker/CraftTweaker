@@ -21,16 +21,16 @@ public class ExpressionMapIndexSet extends Expression {
 	private final Expression map;
 	private final Expression index;
 	private final Expression value;
-	
+
 	private final ZenType type;
-	
+
 	public ExpressionMapIndexSet(ZenPosition position, Expression map, Expression index, Expression value) {
 		super(position);
-		
+
 		this.map = map;
 		this.index = index;
 		this.value = value;
-		
+
 		type = ZenTypeVoid.INSTANCE;
 	}
 

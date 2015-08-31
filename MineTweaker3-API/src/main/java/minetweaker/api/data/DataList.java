@@ -13,7 +13,7 @@ import java.util.Map;
 public class DataList implements IData {
 	private final List<IData> values;
 	private final boolean immutable;
-	
+
 	public DataList(List<IData> values, boolean immutable) {
 		this.values = values;
 		this.immutable = immutable;
@@ -53,7 +53,7 @@ public class DataList implements IData {
 	public double asDouble() {
 		throw new IllegalDataException("Cannot convert a list to a double");
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		if (immutable) {
@@ -62,7 +62,7 @@ public class DataList implements IData {
 			return values;
 		}
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -145,15 +145,15 @@ public class DataList implements IData {
 		List<IData> dataValues = data.asList();
 		if (dataValues != null && containsList(dataValues))
 			return true;
-		
+
 		for (IData value : values) {
 			if (value.contains(data))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean containsList(List<IData> dataValues) {
 		outer: for (IData dataValue : dataValues) {
 			for (IData value : values) {
@@ -163,22 +163,24 @@ public class DataList implements IData {
 
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		List<IData> otherValues = data.asList();
-		if (otherValues.size() != values.size()) return false;
-		
+		if (otherValues.size() != values.size())
+			return false;
+
 		for (int i = 0; i < values.size(); i++) {
-			if (!values.get(i).equals(otherValues.get(i))) return false;
+			if (!values.get(i).equals(otherValues.get(i)))
+				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		throw new UnsupportedOperationException("Cannot compare with a list");
@@ -199,8 +201,9 @@ public class DataList implements IData {
 
 	@Override
 	public IData update(IData data) {
-		if (immutable) data = data.immutable();
-		
+		if (immutable)
+			data = data.immutable();
+
 		List<IData> result = new ArrayList<IData>();
 		result.addAll(values);
 		result.addAll(data.asList());
@@ -261,7 +264,7 @@ public class DataList implements IData {
 	public IData not() {
 		throw new UnsupportedOperationException("Lists don't support bitwise operators");
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString();

@@ -21,17 +21,17 @@ public class CastingRuleArrayArray implements ICastingRule {
 	private final ICastingRule base;
 	private final ZenTypeArrayBasic from;
 	private final ZenTypeArrayBasic to;
-	
+
 	public CastingRuleArrayArray(ICastingRule base, ZenTypeArrayBasic from, ZenTypeArrayBasic to) {
 		this.base = base;
 		this.from = from;
 		this.to = to;
 	}
-	
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		MethodOutput output = method.getOutput();
-		
+
 		Type fromType = from.getBaseType().toASMType();
 		Type toType = to.getBaseType().toASMType();
 
@@ -55,13 +55,13 @@ public class CastingRuleArrayArray implements ICastingRule {
 		// stack: original index value
 		if (base != null)
 			base.compile(method);
-		
+
 		output.loadObject(result);
 		output.dupX2();
 		output.dupX2();
 		output.arrayStore(toType);
 		output.pop();
-		
+
 		// stack: original index
 		output.iConst1();
 		output.iAdd();

@@ -18,14 +18,14 @@ import stanhebben.zenscript.symbols.IZenSymbol;
  */
 public interface IZenCompileEnvironment {
 	public IZenErrorLogger getErrorLogger();
-	
+
 	public IZenSymbol getGlobal(String name);
-	
+
 	public IZenSymbol getDollar(String name);
-	
+
 	public IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens);
-	
+
 	public TypeRegistry getTypeRegistry();
-	
+
 	public TypeExpansion getExpansion(String type);
 }

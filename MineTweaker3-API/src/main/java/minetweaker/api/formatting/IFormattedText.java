@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenOperator;
 public interface IFormattedText {
 	@ZenOperator(OperatorType.ADD)
 	public IFormattedText add(IFormattedText other);
-	
+
 	@ZenOperator(OperatorType.CAT)
 	public IFormattedText cat(IFormattedText other);
 }

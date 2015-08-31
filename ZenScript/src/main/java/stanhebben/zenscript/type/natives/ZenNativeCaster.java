@@ -17,15 +17,15 @@ import stanhebben.zenscript.util.MethodOutput;
  */
 public class ZenNativeCaster {
 	private final IJavaMethod method;
-	
+
 	public ZenNativeCaster(IJavaMethod method) {
 		this.method = method;
 	}
-	
+
 	public ZenType getReturnType() {
 		return method.getReturnType();
 	}
-	
+
 	public void compile(MethodOutput output) {
 		if (method.isStatic()) {
 			method.invokeStatic(output);
@@ -33,7 +33,7 @@ public class ZenNativeCaster {
 			method.invokeVirtual(output);
 		}
 	}
-	
+
 	public void compileAnyCanCastImplicit(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localClass) {
 		String casterAny = method.getReturnType().getAnyClassName(environment);
 		if (casterAny == null) {
@@ -49,19 +49,19 @@ public class ZenNativeCaster {
 		output.returnInt();
 		output.label(skip);
 	}
-	
+
 	public void compileAnyCast(ZenType type, MethodOutput output, IEnvironmentGlobal environment, int localValue, int localClass) {
 		Label skip = new Label();
 		output.loadObject(localClass);
 		output.constant(method.getReturnType().toASMType());
 		output.ifACmpNe(skip);
 		output.load(type.toASMType(), localValue);
-		
+
 		compile(output);
-		
+
 		output.returnType(method.getReturnType().toASMType());
 		output.label(skip);
-		
+
 		String casterAny = method.getReturnType().getAnyClassName(environment);
 		if (casterAny == null)
 			// TODO: make sure this isn't necessary
@@ -72,9 +72,9 @@ public class ZenNativeCaster {
 		output.invokeStatic(casterAny, "rtCanCastImplicit", "(Ljava/lang/Class;)Z");
 		output.ifEQ(skip2);
 		output.load(type.toASMType(), localValue);
-		
+
 		compile(output);
-		
+
 		output.returnType(method.getReturnType().toASMType());
 		output.label(skip2);
 	}

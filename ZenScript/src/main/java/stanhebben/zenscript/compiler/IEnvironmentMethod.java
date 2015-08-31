@@ -15,6 +15,6 @@ import stanhebben.zenscript.util.MethodOutput;
  */
 public interface IEnvironmentMethod extends IEnvironmentClass {
 	public MethodOutput getOutput();
-	
+
 	public int getLocal(SymbolLocal variable);
 }

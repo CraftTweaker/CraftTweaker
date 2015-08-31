@@ -20,18 +20,18 @@ import net.minecraft.world.World;
  */
 public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessRecipe recipe;
-	
+
 	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessRecipe recipe) {
 		super(getItemStack(recipe.getOutput()), Arrays.asList(ingredients));
-		
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
 	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
-	
+
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();

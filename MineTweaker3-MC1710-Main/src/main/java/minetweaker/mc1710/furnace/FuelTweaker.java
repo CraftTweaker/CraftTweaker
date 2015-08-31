@@ -20,11 +20,12 @@ import net.minecraft.item.ItemStack;
 
 public class FuelTweaker {
 	public static final FuelTweaker INSTANCE = new FuelTweaker();
-	
+
 	private List<IFuelHandler> original;
 	private final HashMap<Item, List<SetFuelPattern>> quickList = new HashMap<Item, List<SetFuelPattern>>();
-	
-	private FuelTweaker() {}
+
+	private FuelTweaker() {
+	}
 
 	public void register() {
 		try {
@@ -42,14 +43,14 @@ public class FuelTweaker {
 			System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
 		}
 	}
-	
+
 	public void addFuelPattern(SetFuelPattern pattern) {
 		List<IItemStack> items = pattern.getPattern().getItems();
 		if (items == null) {
 			MineTweakerAPI.logError("Cannot set fuel for <*>");
 			return;
 		}
-		
+
 		for (IItemStack item : pattern.getPattern().getItems()) {
 			ItemStack itemStack = MineTweakerMC.getItemStack(item);
 			Item mcItem = itemStack.getItem();
@@ -59,7 +60,7 @@ public class FuelTweaker {
 			quickList.get(mcItem).add(pattern);
 		}
 	}
-	
+
 	public void removeFuelPattern(SetFuelPattern pattern) {
 		for (IItemStack item : pattern.getPattern().getItems()) {
 			ItemStack itemStack = MineTweakerMC.getItemStack(item);
@@ -69,20 +70,20 @@ public class FuelTweaker {
 			}
 		}
 	}
-	
+
 	private class OverridingFuelHandler implements IFuelHandler {
 		@Override
 		public int getBurnTime(ItemStack fuel) {
 			if (quickList.containsKey(fuel.getItem())) {
 				IItemStack stack = MineTweakerMC.getIItemStack(fuel);
-				
+
 				for (SetFuelPattern override : quickList.get(fuel.getItem())) {
 					if (override.getPattern().matches(stack)) {
 						return override.getValue();
 					}
 				}
 			}
-			
+
 			int max = 0;
 			for (IFuelHandler handler : original) {
 				max = Math.max(max, handler.getBurnTime(fuel));

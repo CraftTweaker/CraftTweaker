@@ -15,10 +15,10 @@ import java.io.InputStream;
  */
 public interface IScriptIterator {
 	public String getGroupName();
-	
+
 	public boolean next();
-	
+
 	public String getName();
-	
+
 	public InputStream open() throws IOException;
 }

@@ -25,7 +25,7 @@ public interface IItemDefinition {
 	 */
 	@ZenGetter("id")
 	public String getId();
-	
+
 	/**
 	 * Gets the unlocalized item name.
 	 * 
@@ -33,7 +33,7 @@ public interface IItemDefinition {
 	 */
 	@ZenGetter("name")
 	public String getName();
-	
+
 	/**
 	 * Makes an item stack from this definition.
 	 * 
@@ -42,12 +42,12 @@ public interface IItemDefinition {
 	 */
 	@ZenMethod
 	public IItemStack makeStack(@Optional int meta);
-	
+
 	/**
 	 * Returns all ore entries containing this item. Also contains ore entries
 	 * that refer to a specific sub-item.
 	 * 
-	 * @return 
+	 * @return
 	 */
 	@ZenGetter("ores")
 	public List<IOreDictEntry> getOres();

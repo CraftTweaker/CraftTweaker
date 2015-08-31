@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Makes a class implementing Map expose itself as iterable over keys and values.
+ * Makes a class implementing Map expose itself as iterable over keys and
+ * values.
  * 
  * @author Stan Hebben
  */
@@ -14,5 +15,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface IterableMap {
 	String key();
+
 	String value();
 }

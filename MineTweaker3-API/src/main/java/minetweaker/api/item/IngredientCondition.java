@@ -28,7 +28,7 @@ public class IngredientCondition {
 			}
 		});
 	}
-	
+
 	/**
 	 * Requires the item to be damaged with at least a specified amount.
 	 * 
@@ -45,7 +45,7 @@ public class IngredientCondition {
 			}
 		});
 	}
-	
+
 	/**
 	 * Requires the item to be damaged with at most a specified amount. An
 	 * undamaged item is accepted.
@@ -63,7 +63,7 @@ public class IngredientCondition {
 			}
 		});
 	}
-	
+
 	/**
 	 * Requires the item damage value to be between two values.
 	 * 
@@ -81,7 +81,7 @@ public class IngredientCondition {
 			}
 		});
 	}
-	
+
 	/**
 	 * Requires the item to contain at least the given tags. It is OK for the
 	 * item to contain more data, as remaining data is ignored.
@@ -99,7 +99,7 @@ public class IngredientCondition {
 			}
 		});
 	}
-	
+
 	/**
 	 * Requires the input stack to contain at least the given number of items.
 	 * Used in combination with stack consuming recipes.

@@ -17,11 +17,11 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("minetweaker.event.PlayerRespawnEvent")
 public class PlayerRespawnEvent {
 	private final IPlayer player;
-	
+
 	public PlayerRespawnEvent(IPlayer player) {
 		this.player = player;
 	}
-	
+
 	@ZenGetter("player")
 	public IPlayer getPlayer() {
 		return player;

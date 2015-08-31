@@ -21,14 +21,14 @@ public class ParsedExpressionCompare extends ParsedExpression {
 	private final ParsedExpression left;
 	private final ParsedExpression right;
 	private final CompareType type;
-	
+
 	public ParsedExpressionCompare(
 			ZenPosition position,
 			ParsedExpression left,
 			ParsedExpression right,
 			CompareType type) {
 		super(position);
-		
+
 		this.left = left;
 		this.right = right;
 		this.type = type;

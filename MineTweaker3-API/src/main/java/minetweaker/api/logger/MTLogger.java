@@ -19,29 +19,29 @@ public class MTLogger implements ILogger {
 	private final List<ILogger> loggers = new ArrayList<ILogger>();
 	private final List<IPlayer> players = new ArrayList<IPlayer>();
 	private final List<String> unprocessed = new ArrayList<String>();
-	
+
 	public void addLogger(ILogger logger) {
 		loggers.add(logger);
 	}
-	
+
 	public void removeLogger(ILogger logger) {
 		loggers.remove(logger);
 	}
-	
+
 	public void addPlayer(IPlayer player) {
 		players.add(player);
-		
+
 		if (!unprocessed.isEmpty()) {
 			for (String message : unprocessed) {
 				player.sendChat(message);
 			}
 		}
 	}
-	
+
 	public void removePlayer(IPlayer player) {
 		players.remove(player);
 	}
-	
+
 	public void clear() {
 		unprocessed.clear();
 	}
@@ -65,9 +65,9 @@ public class MTLogger implements ILogger {
 		for (ILogger logger : loggers) {
 			logger.logWarning(message);
 		}
-		
+
 		String message2 = "WARNING: " + message;
-		
+
 		if (players.isEmpty()) {
 			unprocessed.add(message2);
 		} else {
@@ -76,7 +76,7 @@ public class MTLogger implements ILogger {
 			}
 		}
 	}
-	
+
 	@Override
 	public void logError(String message) {
 		logError(message, null);
@@ -87,9 +87,9 @@ public class MTLogger implements ILogger {
 		for (ILogger logger : loggers) {
 			logger.logError(message, exception);
 		}
-		
+
 		String message2 = "ERROR: " + message;
-		
+
 		if (players.isEmpty()) {
 			unprocessed.add(message2);
 		} else {

@@ -16,9 +16,10 @@ import stanhebben.zenscript.value.IAny;
  */
 public class CastingAnyDouble implements ICastingRule {
 	public static final CastingAnyDouble INSTANCE = new CastingAnyDouble();
-	
-	private CastingAnyDouble() {}
-	
+
+	private CastingAnyDouble() {
+	}
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		method.getOutput().invokeInterface(IAny.class, "asDouble", double.class);

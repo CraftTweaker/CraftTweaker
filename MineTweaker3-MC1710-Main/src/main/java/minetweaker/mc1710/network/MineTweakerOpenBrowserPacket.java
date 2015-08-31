@@ -17,17 +17,17 @@ import java.nio.charset.Charset;
  */
 public class MineTweakerOpenBrowserPacket implements IMessage {
 	private static final Charset UTF8 = Charset.forName("utf-8");
-	
+
 	private String url;
-	
+
 	public MineTweakerOpenBrowserPacket() {
-		
+
 	}
-	
+
 	public MineTweakerOpenBrowserPacket(String url) {
 		this.url = url;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}

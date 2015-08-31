@@ -21,10 +21,10 @@ public class ParsedExpressionBinary extends ParsedExpression {
 	private final ParsedExpression left;
 	private final ParsedExpression right;
 	private final OperatorType operator;
-	
+
 	public ParsedExpressionBinary(ZenPosition position, ParsedExpression left, ParsedExpression right, OperatorType operator) {
 		super(position);
-		
+
 		this.left = left;
 		this.right = right;
 		this.operator = operator;

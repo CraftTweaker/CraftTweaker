@@ -26,7 +26,7 @@ public class MineTweakerCopyClipboardHandler implements IMessageHandler<MineTwea
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			clipboard.setContents(stringSelection, null);
 		}
-		
+
 		return null;
 	}
 }

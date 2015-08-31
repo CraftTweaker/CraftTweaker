@@ -24,16 +24,16 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public class MCLiquidDefinition implements ILiquidDefinition {
 	private final Fluid fluid;
-	
+
 	public MCLiquidDefinition(Fluid fluid) {
 		this.fluid = fluid;
 	}
-	
+
 	@Override
 	public String getName() {
 		return fluid.getName();
 	}
-	
+
 	@Override
 	public String getDisplayName() {
 		return fluid.getLocalizedName();
@@ -112,44 +112,50 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public void removeContainer(IItemStack filled) {
-		//MineTweakerAPI.apply(new RemoveContainerAction(filled));
+		// MineTweakerAPI.apply(new RemoveContainerAction(filled));
 		MineTweakerAPI.logError("Cannot remove container items in MineCraft 1.7.X");
 	}
-	
+
 	// #######################
 	// ### Private methods ###
 	// #######################
-	
-	/*private void removeContainerInner(IItemStack filled) {
-		ItemStack filledItem = MineTweakerMC.getItemStack(filled);
-		FluidContainerRegistry.FluidContainerData data = filledContainerMap.get(Arrays.asList(filledItem.itemID, filledItem.getItemDamage()));
-		if (data != null) {
-			filledContainerMap.remove(Arrays.asList(filledItem.itemID, filledItem.getItemDamage()));
-			containerFluidMap.remove(Arrays.asList(data.emptyContainer.itemID, data.emptyContainer.getItemDamage()));
-			
-			// rebuild empty containers set
-			emptyContainers.clear();
-			for (FluidContainerRegistry.FluidContainerData fdata : filledContainerMap.values()) {
-				emptyContainers.add(Arrays.asList(fdata.emptyContainer.itemID, fdata.emptyContainer.getItemDamage()));
-			}
-		}
-		MineTweakerAPI.logError("Removal of containers is not possible in 1.7.X");
-	}*/
-	
-	/*private FluidContainerRegistry.FluidContainerData getData(IItemStack filled) {
-		ItemStack filledStack = MineTweakerMC.getItemStack(filled);
-		return filledContainerMap.get(Arrays.asList(filledStack.itemID, filledStack.getItemDamage()));
-	}*/
-	
+
+	/*
+	 * private void removeContainerInner(IItemStack filled) { ItemStack
+	 * filledItem = MineTweakerMC.getItemStack(filled);
+	 * FluidContainerRegistry.FluidContainerData data =
+	 * filledContainerMap.get(Arrays.asList(filledItem.itemID,
+	 * filledItem.getItemDamage())); if (data != null) {
+	 * filledContainerMap.remove(Arrays.asList(filledItem.itemID,
+	 * filledItem.getItemDamage()));
+	 * containerFluidMap.remove(Arrays.asList(data.emptyContainer.itemID,
+	 * data.emptyContainer.getItemDamage()));
+	 * 
+	 * // rebuild empty containers set emptyContainers.clear(); for
+	 * (FluidContainerRegistry.FluidContainerData fdata :
+	 * filledContainerMap.values()) {
+	 * emptyContainers.add(Arrays.asList(fdata.emptyContainer.itemID,
+	 * fdata.emptyContainer.getItemDamage())); } }
+	 * MineTweakerAPI.logError("Removal of containers is not possible in 1.7.X"
+	 * ); }
+	 */
+
+	/*
+	 * private FluidContainerRegistry.FluidContainerData getData(IItemStack
+	 * filled) { ItemStack filledStack = MineTweakerMC.getItemStack(filled);
+	 * return filledContainerMap.get(Arrays.asList(filledStack.itemID,
+	 * filledStack.getItemDamage())); }
+	 */
+
 	// ######################
 	// ### Action classes ###
 	// ######################
-	
+
 	private class AddContainerAction implements IUndoableAction {
 		private final IItemStack filled;
 		private final IItemStack empty;
 		private final int amount;
-		
+
 		public AddContainerAction(IItemStack filled, IItemStack empty, int amount) {
 			this.filled = filled;
 			this.empty = empty;
@@ -164,12 +170,12 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 		@Override
 		public boolean canUndo() {
 			return false;
-			//return true;
+			// return true;
 		}
 
 		@Override
 		public void undo() {
-			//removeContainerInner(filled);
+			// removeContainerInner(filled);
 		}
 
 		@Override
@@ -187,60 +193,43 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 			return null;
 		}
 	}
-	
-	/*private class RemoveContainerAction implements IUndoableAction {
-		private final IItemStack filled;
-		private final IItemStack empty;
-		private final FluidStack amount;
-		
-		public RemoveContainerAction(IItemStack filled) {
-			this.filled = filled;
-			
-			FluidContainerRegistry.FluidContainerData data = getData(filled);
-			empty = MineTweakerMC.getIItemStack(data.emptyContainer);
-			amount = data.fluid;
-		}
 
-		@Override
-		public void apply() {
-			removeContainerInner(filled);
-		}
+	/*
+	 * private class RemoveContainerAction implements IUndoableAction { private
+	 * final IItemStack filled; private final IItemStack empty; private final
+	 * FluidStack amount;
+	 * 
+	 * public RemoveContainerAction(IItemStack filled) { this.filled = filled;
+	 * 
+	 * FluidContainerRegistry.FluidContainerData data = getData(filled); empty =
+	 * MineTweakerMC.getIItemStack(data.emptyContainer); amount = data.fluid; }
+	 * 
+	 * @Override public void apply() { removeContainerInner(filled); }
+	 * 
+	 * @Override public boolean canUndo() { return true; }
+	 * 
+	 * @Override public void undo() {
+	 * FluidContainerRegistry.registerFluidContainer(amount,
+	 * MineTweakerMC.getItemStack(filled), MineTweakerMC.getItemStack(empty)); }
+	 * 
+	 * @Override public String describe() { return "Removing liquid container "
+	 * + filled; }
+	 * 
+	 * @Override public String describeUndo() { return
+	 * "Restoring liquid container " + filled; }
+	 * 
+	 * @Override public Object getOverrideKey() { return null; } }
+	 */
 
-		@Override
-		public boolean canUndo() {
-			return true;
-		}
-
-		@Override
-		public void undo() {
-			FluidContainerRegistry.registerFluidContainer(amount, MineTweakerMC.getItemStack(filled), MineTweakerMC.getItemStack(empty));
-		}
-
-		@Override
-		public String describe() {
-			return "Removing liquid container " + filled;
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Restoring liquid container " + filled;
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
-		}
-	}*/
-	
 	private class ActionSetLuminosity implements IUndoableAction {
 		private final int oldValue;
 		private final int newValue;
-		
+
 		public ActionSetLuminosity(int newValue) {
 			oldValue = getLuminosity();
 			this.newValue = newValue;
 		}
-		
+
 		@Override
 		public void apply() {
 			fluid.setLuminosity(newValue);
@@ -271,16 +260,16 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 			return null;
 		}
 	}
-	
+
 	private class ActionSetDensity implements IUndoableAction {
 		private final int oldValue;
 		private final int newValue;
-		
+
 		public ActionSetDensity(int newValue) {
 			oldValue = getDensity();
 			this.newValue = newValue;
 		}
-		
+
 		@Override
 		public void apply() {
 			fluid.setDensity(newValue);
@@ -311,16 +300,16 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 			return null;
 		}
 	}
-	
+
 	private class ActionSetTemperature implements IUndoableAction {
 		private final int oldValue;
 		private final int newValue;
-		
+
 		public ActionSetTemperature(int newValue) {
 			oldValue = getTemperature();
 			this.newValue = newValue;
 		}
-		
+
 		@Override
 		public void apply() {
 			fluid.setTemperature(newValue);
@@ -351,16 +340,16 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 			return null;
 		}
 	}
-	
+
 	private class ActionSetViscosity implements IUndoableAction {
 		private final int oldValue;
 		private final int newValue;
-		
+
 		public ActionSetViscosity(int newValue) {
 			oldValue = getViscosity();
 			this.newValue = newValue;
 		}
-		
+
 		@Override
 		public void apply() {
 			fluid.setViscosity(newValue);
@@ -391,16 +380,16 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 			return null;
 		}
 	}
-	
+
 	private class ActionSetGaseous implements IUndoableAction {
 		private final boolean oldValue;
 		private final boolean newValue;
-		
+
 		public ActionSetGaseous(boolean newValue) {
 			oldValue = isGaseous();
 			this.newValue = newValue;
 		}
-		
+
 		@Override
 		public void apply() {
 			fluid.setGaseous(newValue);

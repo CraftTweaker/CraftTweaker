@@ -20,10 +20,10 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 public class ExpressionMapContains extends Expression {
 	private final Expression map;
 	private final Expression key;
-	
+
 	public ExpressionMapContains(ZenPosition position, Expression map, Expression key) {
 		super(position);
-		
+
 		this.map = map;
 		this.key = key;
 	}
@@ -38,7 +38,7 @@ public class ExpressionMapContains extends Expression {
 		if (result) {
 			map.compile(result, environment);
 			key.compile(result, environment);
-			
+
 			environment.getOutput().invokeInterface(internal(Map.class), "containsKey", "()Ljava/lang/Object;");
 		}
 	}

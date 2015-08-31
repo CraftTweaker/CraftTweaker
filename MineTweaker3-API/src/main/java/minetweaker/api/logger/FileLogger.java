@@ -23,7 +23,7 @@ import minetweaker.runtime.ILogger;
 public class FileLogger implements ILogger {
 	private final Writer writer;
 	private final PrintWriter printWriter;
-	
+
 	public FileLogger(File output) {
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
@@ -69,7 +69,7 @@ public class FileLogger implements ILogger {
 	public void logError(String message) {
 		logError(message, null);
 	}
-	
+
 	@Override
 	public void logError(String message, Throwable exception) {
 		try {

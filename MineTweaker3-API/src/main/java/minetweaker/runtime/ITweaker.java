@@ -21,10 +21,10 @@ public interface ITweaker {
 	/**
 	 * Retrieves the script data to be loaded.
 	 * 
-	 * @return 
+	 * @return
 	 */
 	public byte[] getStagedScriptData();
-	
+
 	/**
 	 * Executes a specified MineTweaker action. Will print a log message and
 	 * adds the action to the undo list.
@@ -32,7 +32,7 @@ public interface ITweaker {
 	 * @param action action to execute
 	 */
 	public void apply(IUndoableAction action);
-	
+
 	/**
 	 * Removes a specific item from all known recipes handlers.
 	 * 
@@ -40,7 +40,7 @@ public interface ITweaker {
 	 */
 	@ZenMethod
 	public void remove(IIngredient items);
-	
+
 	/**
 	 * Rolls back all actions performed by MineTweaker. Returns the list of
 	 * actions that could not be rolled back (the "stuck" ones that are not
@@ -49,20 +49,20 @@ public interface ITweaker {
 	 * @return stuck action list
 	 */
 	public List<IUndoableAction> rollback();
-	
+
 	/**
 	 * Sets the script provider.
 	 * 
 	 * @param provider
-	 * @return 
+	 * @return
 	 */
 	public void setScriptProvider(IScriptProvider provider);
-	
+
 	/**
 	 * Executes all scripts provided by the script provider.
 	 */
 	public void load();
-	
+
 	/**
 	 * Retrieves the data from the scripts that were loaded last.
 	 * 

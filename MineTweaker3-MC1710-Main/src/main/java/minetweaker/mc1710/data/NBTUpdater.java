@@ -18,11 +18,11 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> {
 	private final NBTTagCompound nbt;
-	
+
 	public NBTUpdater(NBTTagCompound compound) {
 		this.nbt = compound;
 	}
-	
+
 	@Override
 	public NBTBase fromMap(Map<String, IData> map) {
 		for (Map.Entry<String, IData> entry : map.entrySet()) {
@@ -41,7 +41,7 @@ public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> 
 				nbt.setTag(entry.getKey(), from(entry.getValue()));
 			}
 		}
-		
+
 		return nbt;
 	}
 }

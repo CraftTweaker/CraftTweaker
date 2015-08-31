@@ -19,7 +19,7 @@ public class CastingRuleMatchedFunction implements ICastingRule {
 	private final ZenType toType;
 	private final ICastingRule returnCastingRule;
 	private final ICastingRule[] argumentCastingRules;
-	
+
 	public CastingRuleMatchedFunction(ZenTypeFunction fromType, ZenType toType, ICastingRule returnCastingRule, ICastingRule[] argumentCastingRules) {
 		this.fromType = fromType;
 		this.toType = toType;

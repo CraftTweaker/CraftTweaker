@@ -18,10 +18,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ParsedExpressionBool extends ParsedExpression {
 	private final boolean value;
-	
+
 	public ParsedExpressionBool(ZenPosition position, boolean value) {
 		super(position);
-		
+
 		this.value = value;
 	}
 

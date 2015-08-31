@@ -18,14 +18,14 @@ import java.nio.ByteBuffer;
 public class MineTweakerCopyClipboardPacket implements IMessage
 {
 	private String data;
-	
+
 	public MineTweakerCopyClipboardPacket() {
 	}
-	
+
 	public MineTweakerCopyClipboardPacket(String data) {
 		this.data = data;
 	}
-	
+
 	public String getData() {
 		return data;
 	}

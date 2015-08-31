@@ -22,7 +22,7 @@ import stanhebben.zenscript.util.ZenPosition;
 public class PartialType implements IPartialExpression {
 	private final ZenPosition position;
 	private final ZenType type;
-	
+
 	public PartialType(ZenPosition position, ZenType type) {
 		this.position = position;
 		this.type = type;
@@ -55,7 +55,7 @@ public class PartialType implements IPartialExpression {
 	public IZenSymbol toSymbol() {
 		return new SymbolType(type);
 	}
-	
+
 	@Override
 	public ZenType getType() {
 		return null; // not an expression

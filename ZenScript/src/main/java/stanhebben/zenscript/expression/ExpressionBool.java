@@ -18,13 +18,13 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ExpressionBool extends Expression {
 	private final boolean value;
-	
+
 	public ExpressionBool(ZenPosition position, boolean value) {
 		super(position);
-		
+
 		this.value = value;
 	}
-	
+
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
 		if (type == ZenType.BOOL) {

@@ -17,10 +17,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionArgument extends Expression {
 	private final int id;
 	private final ZenType type;
-	
+
 	public ExpressionArgument(ZenPosition position, int id, ZenType type) {
 		super(position);
-		
+
 		this.id = id;
 		this.type = type;
 	}

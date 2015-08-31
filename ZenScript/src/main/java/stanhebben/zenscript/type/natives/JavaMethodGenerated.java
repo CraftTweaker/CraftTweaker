@@ -26,11 +26,11 @@ public class JavaMethodGenerated implements IJavaMethod {
 	private final boolean isVarargs;
 	private final String owner;
 	private final String name;
-	
+
 	private final ZenType[] parameterTypes;
 	private final boolean[] optional;
 	private final ZenType returnType;
-	
+
 	private final String descriptor;
 
 	public JavaMethodGenerated(
@@ -47,11 +47,11 @@ public class JavaMethodGenerated implements IJavaMethod {
 		this.isVarargs = isVarargs;
 		this.owner = owner;
 		this.name = name;
-		
+
 		this.returnType = returnType;
 		this.parameterTypes = arguments;
 		this.optional = optional;
-		
+
 		StringBuilder descriptorString = new StringBuilder();
 		descriptorString.append('(');
 		for (ZenType argument : arguments) {
@@ -61,31 +61,33 @@ public class JavaMethodGenerated implements IJavaMethod {
 		descriptorString.append(returnType.getSignature());
 		descriptor = descriptorString.toString();
 	}
-	
+
 	@Override
 	public boolean isStatic() {
 		return isStatic;
 	}
-	
+
 	@Override
 	public boolean isVarargs() {
 		return isVarargs;
 	}
-	
+
 	@Override
 	public boolean accepts(int numArguments) {
 		if (numArguments > parameterTypes.length) {
 			return isVarargs;
-		} if (numArguments == parameterTypes.length) {
+		}
+		if (numArguments == parameterTypes.length) {
 			return true;
 		} else {
 			for (int i = numArguments; i < parameterTypes.length; i++) {
-				if (!optional[i]) return false;
+				if (!optional[i])
+					return false;
 			}
 			return true;
 		}
 	}
-	
+
 	@Override
 	public boolean accepts(IEnvironmentGlobal environment, Expression... arguments) {
 		return getPriority(environment, arguments) > 0;
@@ -113,25 +115,25 @@ public class JavaMethodGenerated implements IJavaMethod {
 			}
 		} else if (arguments.length < parameterTypes.length) {
 			result = PRIORITY_MEDIUM;
-			
+
 			int checkUntil = parameterTypes.length;
 			if (isVarargs) {
 				checkUntil--;
 			}
-			
+
 			checkOptional: for (int i = arguments.length; i < checkUntil; i++) {
 				if (!optional[i]) {
 					return PRIORITY_INVALID;
 				}
 			}
 		}
-		
+
 		int checkUntil = arguments.length;
 		if (arguments.length == parameterTypes.length && isVarargs) {
 			ZenType arrayType = parameterTypes[parameterTypes.length - 1];
 			ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
 			ZenType argType = arguments[arguments.length - 1].getType();
-			
+
 			if (argType.equals(arrayType)) {
 				// OK
 			} else if (argType.equals(baseType)) {
@@ -143,10 +145,10 @@ public class JavaMethodGenerated implements IJavaMethod {
 			} else {
 				return PRIORITY_INVALID;
 			}
-			
+
 			checkUntil = arguments.length - 1;
 		}
-		
+
 		for (int i = 0; i < checkUntil; i++) {
 			ZenType argType = arguments[i].getType();
 			ZenType paramType = parameterTypes[i];
@@ -158,7 +160,7 @@ public class JavaMethodGenerated implements IJavaMethod {
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -178,7 +180,16 @@ public class JavaMethodGenerated implements IJavaMethod {
 	@Override
 	public void invokeStatic(MethodOutput output) {
 		if (!isStatic) {
-			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+			throw new UnsupportedOperationException("Not supported yet."); // To
+																			// change
+																			// body
+																			// of
+																			// generated
+																			// methods,
+																			// choose
+																			// Tools
+																			// |
+																			// Templates.
 		} else {
 			output.invokeStatic(owner, name, descriptor);
 		}
@@ -188,7 +199,7 @@ public class JavaMethodGenerated implements IJavaMethod {
 	public ZenType getReturnType() {
 		return returnType;
 	}
-	
+
 	@Override
 	public ZenType[] getParameterTypes() {
 		return parameterTypes;

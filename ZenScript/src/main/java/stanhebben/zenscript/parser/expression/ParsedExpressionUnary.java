@@ -20,10 +20,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionUnary extends ParsedExpression {
 	private final ParsedExpression value;
 	private final OperatorType operator;
-	
+
 	public ParsedExpressionUnary(ZenPosition position, ParsedExpression value, OperatorType operator) {
 		super(position);
-		
+
 		this.value = value;
 		this.operator = operator;
 	}

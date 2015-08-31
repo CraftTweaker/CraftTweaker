@@ -19,20 +19,20 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
  */
 public class ShapedRecipeOre extends ShapedOreRecipe {
 	private final ShapedRecipe recipe;
-	
+
 	public ShapedRecipeOre(Object[] contents, ShapedRecipe recipe) {
 		super(getItemStack(recipe.getOutput()), contents);
-		
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
-    public boolean matches(InventoryCrafting inventory, World world) {
+	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
-	
+
 	@Override
-    public ItemStack getCraftingResult(InventoryCrafting inventory) {
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
 	}
 }

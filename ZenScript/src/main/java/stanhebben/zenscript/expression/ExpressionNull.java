@@ -21,7 +21,7 @@ public class ExpressionNull extends Expression {
 	public ExpressionNull(ZenPosition position) {
 		super(position);
 	}
-	
+
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
 		if (type.isPointer()) {

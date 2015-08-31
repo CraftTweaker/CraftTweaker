@@ -13,8 +13,9 @@ import minetweaker.MineTweakerAPI;
  * @author Stan
  */
 public class GlobalFunctions {
-	private GlobalFunctions() {}
-	
+	private GlobalFunctions() {
+	}
+
 	public static void print(String message) {
 		MineTweakerAPI.logInfo(message);
 	}

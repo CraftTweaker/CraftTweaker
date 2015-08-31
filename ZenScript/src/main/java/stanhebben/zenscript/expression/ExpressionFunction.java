@@ -26,18 +26,18 @@ public class ExpressionFunction extends Expression {
 	private final List<ParsedFunctionArgument> arguments;
 	private final ZenType returnType;
 	private final List<Statement> statements;
-	
+
 	private final ZenTypeFunction functionType;
-	
+
 	public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements) {
 		super(position);
-		
+
 		System.out.println("Function expression: " + arguments.size() + " arguments");
-		
+
 		this.arguments = arguments;
 		this.returnType = returnType;
 		this.statements = statements;
-		
+
 		ZenType[] argumentTypes = new ZenType[arguments.size()];
 		for (int i = 0; i < arguments.size(); i++) {
 			argumentTypes[i] = arguments.get(i).getType();
@@ -70,7 +70,7 @@ public class ExpressionFunction extends Expression {
 						return new ExpressionInvalid(position);
 					}
 				}
-				
+
 				return new ExpressionJavaLambda(
 						position,
 						nativeClass,

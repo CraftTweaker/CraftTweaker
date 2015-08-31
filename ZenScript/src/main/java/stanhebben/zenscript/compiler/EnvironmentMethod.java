@@ -29,24 +29,24 @@ public class EnvironmentMethod implements IEnvironmentMethod {
 	private final HashMap<SymbolLocal, Integer> locals;
 	private final IEnvironmentClass environment;
 	private final Map<String, IZenSymbol> local;
-	
+
 	public EnvironmentMethod(MethodOutput output, IEnvironmentClass environment) {
 		this.output = output;
 		this.locals = new HashMap<SymbolLocal, Integer>();
 		this.environment = environment;
 		this.local = new HashMap<String, IZenSymbol>();
 	}
-	
+
 	@Override
 	public MethodOutput getOutput() {
 		return output;
 	}
-	
+
 	@Override
 	public ClassVisitor getClassOutput() {
 		return environment.getClassOutput();
 	}
-	
+
 	@Override
 	public int getLocal(SymbolLocal variable) {
 		if (!locals.containsKey(variable)) {
@@ -54,7 +54,7 @@ public class EnvironmentMethod implements IEnvironmentMethod {
 		}
 		return locals.get(variable);
 	}
-	
+
 	@Override
 	public ZenType getType(Type type) {
 		return environment.getType(type);
@@ -79,7 +79,7 @@ public class EnvironmentMethod implements IEnvironmentMethod {
 	public TypeExpansion getExpansion(String name) {
 		return environment.getExpansion(name);
 	}
-	
+
 	@Override
 	public String makeClassName() {
 		return environment.makeClassName();

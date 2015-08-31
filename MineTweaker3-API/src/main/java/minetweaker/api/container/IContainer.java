@@ -19,7 +19,7 @@ public interface IContainer extends Iterable<IItemStack> {
 	 */
 	@ZenGetter("containerSize")
 	public int getContainerSize();
-	
+
 	/**
 	 * Gets the item stack at the given position. Returns null if there is no
 	 * stack at that position.
@@ -29,7 +29,7 @@ public interface IContainer extends Iterable<IItemStack> {
 	 */
 	@ZenMethod
 	public IItemStack getStack(int i);
-	
+
 	/**
 	 * Sets the item stack at the given position.
 	 * 

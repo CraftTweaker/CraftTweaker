@@ -17,7 +17,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 public interface IEntityDefinition {
 	@ZenGetter("id")
 	public String getId();
-	
+
 	@ZenGetter("name")
 	public String getName();
 }

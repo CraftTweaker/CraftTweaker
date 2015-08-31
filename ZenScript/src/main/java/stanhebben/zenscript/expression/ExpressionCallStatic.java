@@ -21,14 +21,14 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionCallStatic extends Expression {
 	private final IJavaMethod method;
 	private final Expression[] arguments;
-	
+
 	public ExpressionCallStatic(
 			ZenPosition position,
 			IEnvironmentGlobal environment,
 			IJavaMethod method,
 			Expression... arguments) {
 		super(position);
-		
+
 		this.method = method;
 		this.arguments = JavaMethod.rematch(position, method, environment, arguments);
 	}
@@ -40,14 +40,14 @@ public class ExpressionCallStatic extends Expression {
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		MethodOutput output = environment.getOutput(); 
-		
+		MethodOutput output = environment.getOutput();
+
 		for (Expression argument : arguments) {
 			argument.compile(true, environment);
 		}
-		
+
 		method.invokeStatic(output);
-		
+
 		if (method.getReturnType() != ZenType.VOID && !result) {
 			output.pop(method.getReturnType().isLarge());
 		}

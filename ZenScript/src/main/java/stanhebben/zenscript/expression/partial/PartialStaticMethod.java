@@ -25,7 +25,7 @@ import stanhebben.zenscript.util.ZenPosition;
 public class PartialStaticMethod implements IPartialExpression {
 	private final ZenPosition position;
 	private final IJavaMethod method;
-	
+
 	public PartialStaticMethod(ZenPosition position, IJavaMethod method) {
 		this.position = position;
 		this.method = method;

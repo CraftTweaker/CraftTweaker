@@ -20,10 +20,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionIndex extends ParsedExpression {
 	private final ParsedExpression value;
 	private final ParsedExpression index;
-	
+
 	public ParsedExpressionIndex(ZenPosition position, ParsedExpression value, ParsedExpression index) {
 		super(position);
-		
+
 		this.value = value;
 		this.index = index;
 	}

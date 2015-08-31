@@ -18,9 +18,9 @@ import stanhebben.zenscript.compiler.TypeRegistry;
  */
 public class ZenTypeUtil {
 	public static final ITypeRegistry EMPTY_REGISTRY = new TypeRegistry();
-	
+
 	private static final Map<String, String> SIGNATURE_MAP;
-	
+
 	static {
 		SIGNATURE_MAP = new HashMap<String, String>();
 		SIGNATURE_MAP.put(boolean.class.getName(), "Z");
@@ -33,7 +33,7 @@ public class ZenTypeUtil {
 		SIGNATURE_MAP.put(char.class.getName(), "C");
 		SIGNATURE_MAP.put(void.class.getName(), "V");
 	}
-	
+
 	public static String signature(Class<?> cls) {
 		if (SIGNATURE_MAP.containsKey(cls.getName())) {
 			return SIGNATURE_MAP.get(cls.getName());
@@ -45,11 +45,11 @@ public class ZenTypeUtil {
 			return signature;
 		}
 	}
-	
+
 	public static String internal(Class<?> cls) {
 		return cls.getName().replace('.', '/');
 	}
-	
+
 	public static String descriptor(Method method) {
 		StringBuilder output = new StringBuilder();
 		output.append('(');

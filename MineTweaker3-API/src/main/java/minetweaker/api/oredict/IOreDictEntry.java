@@ -22,22 +22,22 @@ import stanhebben.zenscript.annotations.ZenOperator;
 public interface IOreDictEntry extends IIngredient {
 	@ZenGetter("name")
 	public String getName();
-	
+
 	@ZenGetter("empty")
 	public boolean isEmpty();
-	
+
 	@ZenMethod
 	public void add(IItemStack item);
-	
+
 	@ZenMethod
 	public void addAll(IOreDictEntry entry);
-	
+
 	@ZenMethod
 	public void remove(IItemStack item);
-	
+
 	@ZenOperator(OperatorType.CONTAINS)
 	public boolean contains(IItemStack item);
-	
+
 	@ZenMethod
 	public void mirror(IOreDictEntry other);
 }

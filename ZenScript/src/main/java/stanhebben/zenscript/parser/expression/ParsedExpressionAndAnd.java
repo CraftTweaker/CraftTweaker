@@ -19,10 +19,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionAndAnd extends ParsedExpression {
 	private final ParsedExpression left;
 	private final ParsedExpression right;
-	
+
 	public ParsedExpressionAndAnd(ZenPosition position, ParsedExpression left, ParsedExpression right) {
 		super(position);
-		
+
 		this.left = left;
 		this.right = right;
 	}

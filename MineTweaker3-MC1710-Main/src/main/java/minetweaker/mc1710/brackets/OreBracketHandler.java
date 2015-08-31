@@ -31,7 +31,7 @@ public class OreBracketHandler implements IBracketHandler {
 	public static IOreDictEntry getOre(String name) {
 		return new MCOreDictEntry(name);
 	}
-	
+
 	@Override
 	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
 		if (tokens.size() > 2) {
@@ -39,29 +39,29 @@ public class OreBracketHandler implements IBracketHandler {
 				return find(environment, tokens, 2, tokens.size());
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private IZenSymbol find(IEnvironmentGlobal environment, List<Token> tokens, int startIndex, int endIndex) {
 		StringBuilder valueBuilder = new StringBuilder();
 		for (int i = startIndex; i < endIndex; i++) {
 			Token token = tokens.get(i);
 			valueBuilder.append(token.getValue());
 		}
-		
+
 		return new OreReferenceSymbol(environment, valueBuilder.toString());
 	}
-	
+
 	private class OreReferenceSymbol implements IZenSymbol {
 		private final IEnvironmentGlobal environment;
 		private final String name;
-		
+
 		public OreReferenceSymbol(IEnvironmentGlobal environment, String name) {
 			this.environment = environment;
 			this.name = name;
 		}
-		
+
 		@Override
 		public IPartialExpression instance(ZenPosition position) {
 			IJavaMethod method = JavaMethod.get(
@@ -69,7 +69,7 @@ public class OreBracketHandler implements IBracketHandler {
 					OreBracketHandler.class,
 					"getOre",
 					String.class);
-			
+
 			return new ExpressionCallStatic(
 					position,
 					environment,

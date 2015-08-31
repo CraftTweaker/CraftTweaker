@@ -26,7 +26,7 @@ public class EnvironmentClass implements IEnvironmentClass {
 	private final ClassVisitor output;
 	private final IEnvironmentGlobal global;
 	private final Map<String, IZenSymbol> local;
-	
+
 	public EnvironmentClass(ClassVisitor output, IEnvironmentGlobal global) {
 		this.output = output;
 		this.global = global;

@@ -20,7 +20,7 @@ import net.minecraft.world.World;
  */
 public class ShapedRecipeAdvanced implements IRecipe {
 	private final ShapedRecipe recipe;
-	
+
 	public ShapedRecipeAdvanced(ShapedRecipe recipe) {
 		this.recipe = recipe;
 	}

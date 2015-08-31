@@ -16,43 +16,43 @@ import stanhebben.zenscript.annotations.ZenGetter;
 public final class WeightedItemStack {
 	public static List<IItemStack> pickRandomDrops(Random random, WeightedItemStack[] items) {
 		ArrayList<IItemStack> result = new ArrayList<IItemStack>();
-		
+
 		for (WeightedItemStack item : items) {
 			if (random.nextFloat() <= item.getChance()) {
 				result.add(item.getStack());
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	private final IItemStack stack;
 	private final float p;
-	
+
 	public WeightedItemStack(IItemStack stack, float p) {
 		this.stack = stack;
 		this.p = p;
 	}
-	
+
 	@ZenGetter("stack")
 	public IItemStack getStack() {
 		return stack;
 	}
-	
+
 	@ZenGetter("chance")
 	public float getChance() {
 		return p;
 	}
-	
+
 	@ZenGetter("percent")
 	public float getPercent() {
 		return p * 100;
 	}
-	
+
 	// #############################
 	// ### Object implementation ###
 	// #############################
-	
+
 	@Override
 	public int hashCode() {
 		int hash = 7;

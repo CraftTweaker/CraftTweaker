@@ -12,13 +12,13 @@ import java.lang.annotation.Target;
  * @author Stan Hebben
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface ZenClass {
 	/**
 	 * Contains the class' package and name. If omitted, the java package and
 	 * name will be used.
 	 * 
-	 * @return 
+	 * @return
 	 */
 	String value() default "";
 }

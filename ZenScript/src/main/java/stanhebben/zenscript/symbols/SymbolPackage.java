@@ -21,26 +21,26 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class SymbolPackage implements IZenSymbol {
 	private final HashMap<String, IZenSymbol> members;
-	
+
 	private final String name;
-	
+
 	public SymbolPackage(String name) {
 		this.name = name;
 		members = new HashMap<String, IZenSymbol>();
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public Map<String, IZenSymbol> getPackages() {
 		return members;
 	}
-	
+
 	public IZenSymbol get(String name) {
 		return members.get(name);
 	}
-	
+
 	public void put(String name, IZenSymbol symbol, IZenErrorLogger errors) {
 		String[] parts = StringUtil.split(name, '.');
 		String[] pkgParts = Arrays.copyOf(parts, parts.length - 1);
@@ -52,7 +52,7 @@ public class SymbolPackage implements IZenSymbol {
 			} else {
 				pkgName = pkgName + '.' + part;
 			}
-			
+
 			if (pkgCurrent.members.containsKey(part)) {
 				IZenSymbol member = pkgCurrent.members.get(part);
 				if (member instanceof SymbolPackage) {
@@ -67,15 +67,16 @@ public class SymbolPackage implements IZenSymbol {
 				pkgCurrent = child;
 			}
 		}
-		
-		//System.out.println("Adding " + parts[parts.length - 1] + " to package " + pkgCurrent.getName() + "(" + symbol + ")");
+
+		// System.out.println("Adding " + parts[parts.length - 1] +
+		// " to package " + pkgCurrent.getName() + "(" + symbol + ")");
 		if (pkgCurrent.members.containsKey(parts[parts.length - 1])) {
 			errors.error(null, parts[parts.length - 1] + " is already defined in that package");
 		} else {
 			pkgCurrent.members.put(parts[parts.length - 1], symbol);
 		}
 	}
-	
+
 	@Override
 	public IPartialExpression instance(ZenPosition position) {
 		return new PartialPackage(position, this);

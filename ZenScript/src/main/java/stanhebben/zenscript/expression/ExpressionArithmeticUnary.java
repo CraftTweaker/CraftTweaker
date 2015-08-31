@@ -16,10 +16,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionArithmeticUnary extends Expression {
 	private final Expression base;
 	private final OperatorType operator;
-	
+
 	public ExpressionArithmeticUnary(ZenPosition position, OperatorType operator, Expression base) {
 		super(position);
-		
+
 		this.base = base;
 		this.operator = operator;
 	}
@@ -32,7 +32,7 @@ public class ExpressionArithmeticUnary extends Expression {
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		base.compile(result, environment);
-		
+
 		MethodOutput output = environment.getOutput();
 		if (result) {
 			ZenType type = base.getType();
@@ -69,7 +69,7 @@ public class ExpressionArithmeticUnary extends Expression {
 				}
 			}
 		}
-		
+
 		environment.error(getPosition(), "Invalid operation");
 	}
 }

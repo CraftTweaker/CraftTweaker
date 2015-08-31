@@ -13,10 +13,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionArray extends Expression {
 	private final Expression[] contents;
 	private final ZenTypeArrayBasic type;
-	
+
 	public ExpressionArray(ZenPosition position, ZenTypeArrayBasic type, Expression... contents) {
 		super(position);
-		
+
 		this.contents = contents;
 		this.type = type;
 	}
@@ -26,14 +26,14 @@ public class ExpressionArray extends Expression {
 		if (this.type.equals(type)) {
 			return this;
 		}
-		
+
 		if (type instanceof ZenTypeArrayBasic) {
 			ZenTypeArrayBasic arrayType = (ZenTypeArrayBasic) type;
 			Expression[] newContents = new Expression[contents.length];
 			for (int i = 0; i < contents.length; i++) {
 				newContents[i] = contents[i].cast(position, environment, arrayType.getBaseType());
 			}
-			
+
 			return new ExpressionArray(getPosition(), arrayType, newContents);
 		} else {
 			ICastingRule castingRule = this.type.getCastingRule(type, environment);
@@ -55,11 +55,11 @@ public class ExpressionArray extends Expression {
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		ZenType baseType = type.getBaseType();
 		Type asmBaseType = type.getBaseType().toASMType();
-		
+
 		MethodOutput output = environment.getOutput();
 		output.constant(contents.length);
 		output.newArray(asmBaseType);
-		
+
 		for (int i = 0; i < contents.length; i++) {
 			output.dup();
 			output.constant(i);

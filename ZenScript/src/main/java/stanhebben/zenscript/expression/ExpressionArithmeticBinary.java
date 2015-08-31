@@ -27,10 +27,10 @@ public class ExpressionArithmeticBinary extends Expression {
 	private final OperatorType operator;
 	private final Expression a;
 	private final Expression b;
-	
+
 	public ExpressionArithmeticBinary(ZenPosition position, OperatorType operator, Expression a, Expression b) {
 		super(position);
-		
+
 		this.operator = operator;
 		this.a = a;
 		this.b = b;
@@ -46,10 +46,10 @@ public class ExpressionArithmeticBinary extends Expression {
 		if (result) {
 			a.compile(result, environment);
 			b.compile(result, environment);
-			
+
 			ZenType type = a.getType();
 			MethodOutput output = environment.getOutput();
-			
+
 			if (type == ZenType.BOOL) {
 				switch (operator) {
 					case AND:

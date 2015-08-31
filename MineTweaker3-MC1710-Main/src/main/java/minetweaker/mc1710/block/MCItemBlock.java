@@ -24,7 +24,7 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public class MCItemBlock implements IBlock {
 	private final ItemStack item;
-	
+
 	public MCItemBlock(ItemStack item) {
 		this.item = item;
 	}
@@ -43,7 +43,7 @@ public class MCItemBlock implements IBlock {
 	public IData getTileData() {
 		if (item.stackTagCompound == null)
 			return null;
-		
+
 		return MineTweakerMC.getIData(item.stackTagCompound);
 	}
 

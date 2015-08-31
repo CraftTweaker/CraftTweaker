@@ -28,11 +28,11 @@ import net.minecraftforge.fluids.FluidStack;
 public class MCLiquidStack implements ILiquidStack {
 	private final FluidStack stack;
 	private IData tag = null;
-	
+
 	public MCLiquidStack(FluidStack stack) {
 		this.stack = stack;
 	}
-	
+
 	private MCLiquidStack(FluidStack stack, IData tag) {
 		this.stack = stack;
 		this.tag = tag;
@@ -42,12 +42,12 @@ public class MCLiquidStack implements ILiquidStack {
 	public ILiquidDefinition getDefinition() {
 		return new MCLiquidDefinition(stack.getFluid());
 	}
-	
+
 	@Override
 	public String getName() {
 		return stack.getFluid().getName();
 	}
-	
+
 	@Override
 	public String getDisplayName() {
 		return stack.getFluid().getLocalizedName();
@@ -64,10 +64,10 @@ public class MCLiquidStack implements ILiquidStack {
 			if (stack.tag == null) {
 				return null;
 			}
-			
+
 			tag = NBTConverter.from(stack.tag, true);
 		}
-		
+
 		return tag;
 	}
 
@@ -114,11 +114,11 @@ public class MCLiquidStack implements ILiquidStack {
 	public Object getInternal() {
 		return stack;
 	}
-	
+
 	// ##################################
 	// ### IIngredient implementation ###
 	// ##################################
-	
+
 	@Override
 	public String getMark()
 	{
@@ -130,7 +130,7 @@ public class MCLiquidStack implements ILiquidStack {
 	{
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids()
 	{
@@ -185,13 +185,13 @@ public class MCLiquidStack implements ILiquidStack {
 	{
 		if (!ingredient.getItems().isEmpty())
 			return false;
-		
+
 		for (ILiquidStack liquid : ingredient.getLiquids())
 		{
 			if (!matches(liquid))
 				return false;
 		}
-		
+
 		return false;
 	}
 
