@@ -27,7 +27,7 @@ import net.minecraftforge.common.ChestGenHooks;
  */
 public class MCLootRegistry implements ILootRegistry {
 	private static final Map<String, ChestGenHooks> LOOT = MineTweakerHacks.getChestLoot();
-	
+
 	@Override
 	public void addChestLoot(String type, WeightedItemStack item) {
 		WeightedRandomChestContent content = new WeightedRandomChestContent(
@@ -52,23 +52,23 @@ public class MCLootRegistry implements ILootRegistry {
 	public void removeChestLoot(String type, IIngredient pattern) {
 		MineTweakerAPI.apply(new RemoveLootAction(type, pattern));
 	}
-	
+
 	@Override
 	public List<LootEntry> getLoot(String type) {
 		ChestGenHooks recipe = LOOT.get(type);
 		List<WeightedRandomChestContent> contents = MineTweakerHacks.getPrivateObject(recipe, "contents");
-		
+
 		List<LootEntry> results = new ArrayList<LootEntry>();
 		for (WeightedRandomChestContent content : contents) {
 			results.add(new LootEntry(new WeightedItemStack(
 					MineTweakerMC.getIItemStack(content.theItemId),
 					content.itemWeight),
-				content.theMinimumChanceToGenerateItem,
-				content.theMaximumChanceToGenerateItem));
+					content.theMinimumChanceToGenerateItem,
+					content.theMaximumChanceToGenerateItem));
 		}
 		return results;
 	}
-	
+
 	@Override
 	public List<String> getLootTypes() {
 		Set<String> keys = LOOT.keySet();
@@ -76,49 +76,49 @@ public class MCLootRegistry implements ILootRegistry {
 		keyList.addAll(keys);
 		return keyList;
 	}
-	
+
 	// ######################
 	// ### Action Classes ###
 	// ######################
-	
+
 	/**
 	 * Ported from ModTweaker.
 	 * 
 	 * @author JoshieJack
 	 */
-    private static class AddLootAction implements IUndoableAction {
+	private static class AddLootAction implements IUndoableAction {
 		private final String chest;
-        private final WeightedRandomChestContent content;
+		private final WeightedRandomChestContent content;
 
-        public AddLootAction(String chest, WeightedRandomChestContent content) {
+		public AddLootAction(String chest, WeightedRandomChestContent content) {
 			this.chest = chest;
-            this.content = content;
-        }
+			this.content = content;
+		}
 
-        @Override
-        public void apply() {
-            ChestGenHooks recipe = LOOT.get(chest);
+		@Override
+		public void apply() {
+			ChestGenHooks recipe = LOOT.get(chest);
 			List<WeightedRandomChestContent> contents = MineTweakerHacks.getPrivateObject(recipe, "contents");
-			
+
 			contents.add(content);
-        }
+		}
 
-        @Override
-        public boolean canUndo() {
-            return true;
-        }
+		@Override
+		public boolean canUndo() {
+			return true;
+		}
 
-        @Override
-        public void undo() {
-            ChestGenHooks recipe = LOOT.get(chest);
+		@Override
+		public void undo() {
+			ChestGenHooks recipe = LOOT.get(chest);
 			List<WeightedRandomChestContent> contents = MineTweakerHacks.getPrivateObject(recipe, "contents");
-			
-			contents.remove(content);
-        }
 
-        public String getRecipeInfo() {
-            return content.theItemId.getDisplayName();
-        }
+			contents.remove(content);
+		}
+
+		public String getRecipeInfo() {
+			return content.theItemId.getDisplayName();
+		}
 
 		@Override
 		public String describe() {
@@ -134,29 +134,29 @@ public class MCLootRegistry implements ILootRegistry {
 		public Object getOverrideKey() {
 			return null;
 		}
-    }
-	
+	}
+
 	/**
 	 * Ported from ModTweaker.
 	 * 
 	 * @author JoshieJack
 	 */
-    private static class RemoveLootAction implements IUndoableAction {
+	private static class RemoveLootAction implements IUndoableAction {
 		private final String chest;
 		private final IIngredient pattern;
-        private final List<WeightedRandomChestContent> removed;
+		private final List<WeightedRandomChestContent> removed;
 
-        public RemoveLootAction(String chest, IIngredient pattern) {
+		public RemoveLootAction(String chest, IIngredient pattern) {
 			this.chest = chest;
 			this.pattern = pattern;
 			removed = new ArrayList<WeightedRandomChestContent>();
-        }
+		}
 
-        @Override
-        public void apply() {
+		@Override
+		public void apply() {
 			removed.clear();
-			
-            ChestGenHooks recipe = LOOT.get(chest);
+
+			ChestGenHooks recipe = LOOT.get(chest);
 			List<WeightedRandomChestContent> contents = MineTweakerHacks.getPrivateObject(recipe, "contents");
 
 			for (WeightedRandomChestContent r : contents) {
@@ -164,26 +164,26 @@ public class MCLootRegistry implements ILootRegistry {
 					removed.add(r);
 				}
 			}
-			
+
 			for (WeightedRandomChestContent r : removed) {
 				contents.remove(r);
 			}
-        }
+		}
 
-        @Override
-        public boolean canUndo() {
+		@Override
+		public boolean canUndo() {
 			return true;
-        }
+		}
 
-        @Override
-        public void undo() {
-            ChestGenHooks recipe = LOOT.get(chest);
+		@Override
+		public void undo() {
+			ChestGenHooks recipe = LOOT.get(chest);
 			List<WeightedRandomChestContent> contents = MineTweakerHacks.getPrivateObject(recipe, "contents");
-			
+
 			for (WeightedRandomChestContent entry : removed) {
 				contents.add(entry);
 			}
-        }
+		}
 
 		@Override
 		public String describe() {
@@ -199,5 +199,5 @@ public class MCLootRegistry implements ILootRegistry {
 		public Object getOverrideKey() {
 			return null;
 		}
-    }
+	}
 }

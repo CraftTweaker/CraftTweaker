@@ -29,28 +29,28 @@ public class PlayerFillBucketEvent {
 	private final int z;
 	private boolean canceled;
 	private IItemStack result;
-	
+
 	public PlayerFillBucketEvent(IPlayer player, IBlockGroup blocks, int x, int y, int z) {
 		this.player = player;
 		this.blocks = blocks;
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		
+
 		canceled = false;
 		result = null;
 	}
-	
+
 	@ZenMethod
 	public void cancel() {
 		canceled = true;
 	}
-	
+
 	@ZenGetter("canceled")
 	public boolean isCanceled() {
 		return canceled;
 	}
-	
+
 	/**
 	 * Sets the resulting item. Automatically processes the event, too.
 	 * 
@@ -60,42 +60,42 @@ public class PlayerFillBucketEvent {
 	public void setResult(IItemStack result) {
 		this.result = result;
 	}
-	
+
 	@ZenGetter("result")
 	public IItemStack getResult() {
 		return result;
 	}
-	
+
 	@ZenGetter("player")
 	public IPlayer getPlayer() {
 		return player;
 	}
-	
+
 	@ZenGetter("blocks")
 	public IBlockGroup getBlocks() {
 		return blocks;
 	}
-	
+
 	@ZenGetter("x")
 	public int getX() {
 		return x;
 	}
-	
+
 	@ZenGetter("y")
 	public int getY() {
 		return y;
 	}
-	
+
 	@ZenGetter("z")
 	public int getZ() {
 		return z;
 	}
-	
+
 	@ZenGetter("block")
 	public IBlock getBlock() {
 		return blocks.getBlock(x, y, z);
 	}
-	
+
 	@ZenGetter("dimension")
 	public IDimension getDimension() {
 		return blocks.getDimension();

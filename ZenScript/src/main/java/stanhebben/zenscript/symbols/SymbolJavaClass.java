@@ -17,7 +17,7 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class SymbolJavaClass implements IZenSymbol {
 	private final Type cls;
-	
+
 	public SymbolJavaClass(Type cls) {
 		this.cls = cls;
 	}

@@ -20,10 +20,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ParsedExpressionVariable extends ParsedExpression {
 	private final String name;
-	
+
 	public ParsedExpressionVariable(ZenPosition position, String name) {
 		super(position);
-		
+
 		this.name = name;
 	}
 
@@ -35,8 +35,9 @@ public class ParsedExpressionVariable extends ParsedExpression {
 				environment.error(getPosition(), "could not find " + name);
 				return new ExpressionInvalid(getPosition());
 			}
-			
-			// enable usage of static members of the same type as the predicted type (eg. enum values)
+
+			// enable usage of static members of the same type as the predicted
+			// type (eg. enum values)
 			IPartialExpression member = predictedType.getStaticMember(getPosition(), environment, name);
 			if (member == null || member.getType().getCastingRule(predictedType, environment) == null) {
 				environment.error(getPosition(), "could not find " + name);
@@ -48,7 +49,7 @@ public class ParsedExpressionVariable extends ParsedExpression {
 			return result;
 		}
 	}
-	
+
 	@Override
 	public Expression compileKey(IEnvironmentMethod environment, ZenType predictedType) {
 		return new ExpressionString(getPosition(), name);

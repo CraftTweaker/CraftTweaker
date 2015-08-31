@@ -22,7 +22,7 @@ import stanhebben.zenscript.util.ZenPosition;
 public class PartialPackage implements IPartialExpression {
 	private final ZenPosition position;
 	private final SymbolPackage contents;
-	
+
 	public PartialPackage(ZenPosition position, SymbolPackage contents) {
 		this.position = position;
 		this.contents = contents;

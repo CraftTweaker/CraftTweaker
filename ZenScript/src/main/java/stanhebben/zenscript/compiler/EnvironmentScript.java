@@ -24,7 +24,7 @@ import stanhebben.zenscript.util.ZenPosition;
 public class EnvironmentScript implements IEnvironmentGlobal {
 	private final IEnvironmentGlobal parent;
 	private final Map<String, IZenSymbol> imports;
-	
+
 	public EnvironmentScript(IEnvironmentGlobal parent) {
 		this.parent = parent;
 		imports = new HashMap<String, IZenSymbol>();
@@ -59,7 +59,8 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 	public IPartialExpression getValue(String name, ZenPosition position) {
 		if (imports.containsKey(name)) {
 			IZenSymbol imprt = imports.get(name);
-			if (imprt == null) throw new RuntimeException("How could this happen?");
+			if (imprt == null)
+				throw new RuntimeException("How could this happen?");
 			return imprt.instance(position);
 		} else {
 			return parent.getValue(name, position);
@@ -68,8 +69,9 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 
 	@Override
 	public void putValue(String name, IZenSymbol value, ZenPosition position) {
-		if (value == null) throw new IllegalArgumentException("value cannot be null");
-		
+		if (value == null)
+			throw new IllegalArgumentException("value cannot be null");
+
 		if (imports.containsKey(name)) {
 			error(position, "Value already defined in this scope: " + name);
 		} else {

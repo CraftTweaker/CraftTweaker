@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 public class MineTweakerOpenBrowserHandler implements IMessageHandler<MineTweakerOpenBrowserPacket, IMessage> {
 	@Override
 	public IMessage onMessage(MineTweakerOpenBrowserPacket message, MessageContext ctx) {
-		if(Desktop.isDesktopSupported()){
+		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
 			try {
 				desktop.browse(new URI(message.getUrl()));
@@ -31,7 +31,7 @@ public class MineTweakerOpenBrowserHandler implements IMessageHandler<MineTweake
 		} else {
 			System.out.println("Desktop not supported");
 		}
-		
+
 		return null;
 	}
 }

@@ -18,7 +18,6 @@ import stanhebben.zenscript.util.MethodOutput;
  * @author Stan
  */
 
-	
 public class IteratorList implements IZenIterator {
 	private final MethodOutput methodOutput;
 	private final ZenType iteratorType;

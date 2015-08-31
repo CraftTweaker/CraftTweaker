@@ -26,10 +26,10 @@ public class ScriptIteratorZip implements IScriptIterator {
 	private final ZipFile zipFile;
 	private final Iterator<ZipEntry> entries;
 	private ZipEntry current;
-	
+
 	public ScriptIteratorZip(File file) throws IOException {
 		this.file = file;
-		
+
 		zipFile = new ZipFile(file);
 		List<ZipEntry> entriesList = new ArrayList<ZipEntry>();
 		Enumeration<? extends ZipEntry> original = zipFile.entries();
@@ -39,7 +39,7 @@ public class ScriptIteratorZip implements IScriptIterator {
 				entriesList.add(entry);
 			}
 		}
-		
+
 		entries = entriesList.iterator();
 	}
 

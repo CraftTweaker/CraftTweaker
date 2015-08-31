@@ -37,9 +37,9 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
  * Main module class. Contains a compiled module. The static methods of this
  * class can be used to compile a specific file or files.
  * 
- * Modules may contain statements in their source, or define functions. Functions
- * in different scripts within the same module are accessible to each other, but
- * not to other modules.
+ * Modules may contain statements in their source, or define functions.
+ * Functions in different scripts within the same module are accessible to each
+ * other, but not to other modules.
  * 
  * @author Stan Hebben
  */
@@ -55,11 +55,11 @@ public class ZenModule {
 	public static void compileScripts(String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal, boolean debug) {
 		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		clsMain.visitSource(mainFileName, null);
-		
-		clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[] {internal(Runnable.class)});
+
+		clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[] { internal(Runnable.class) });
 		MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
 		mainRun.start();
-		
+
 		for (ZenParsedFile script : scripts) {
 			for (Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
 				ParsedFunction fn = function.getValue();
@@ -71,17 +71,17 @@ public class ZenModule {
 						fn.getReturnType()), fn.getPosition());
 			}
 		}
-		
+
 		for (ZenParsedFile script : scripts) {
 			ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 			clsScript.visitSource(script.getFileName(), null);
 			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
-			
-			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[] {internal(Runnable.class)});
-			
+
+			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[] { internal(Runnable.class) });
+
 			for (Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
 				ParsedFunction fn = function.getValue();
-				
+
 				String signature = fn.getSignature();
 				MethodOutput methodOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, function.getKey(), signature, null, null);
 				EnvironmentMethod methodEnvironment = new EnvironmentMethod(methodOutput, environmentScript);
@@ -101,14 +101,14 @@ public class ZenModule {
 					if (statements[statements.length - 1] instanceof StatementReturn) {
 						if (((StatementReturn) statements[statements.length - 1]).getExpression() != null) {
 							fn.getReturnType()
-									.defaultValue(fn.getPosition())
-									.compile(true, methodEnvironment);
+								.defaultValue(fn.getPosition())
+								.compile(true, methodEnvironment);
 							methodOutput.returnType(fn.getReturnType().toASMType());
 						}
 					} else {
 						fn.getReturnType()
-								.defaultValue(fn.getPosition())
-								.compile(true, methodEnvironment);
+							.defaultValue(fn.getPosition())
+							.compile(true, methodEnvironment);
 						methodOutput.returnType(fn.getReturnType().toASMType());
 					}
 				}
@@ -118,25 +118,25 @@ public class ZenModule {
 			if (script.getStatements().size() > 0) {
 				MethodOutput scriptOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "__script__", "()V", null, null);
 				IEnvironmentMethod functionMethod = new EnvironmentMethod(scriptOutput, environmentScript);
-				//scriptOutput.enableDebug();
+				// scriptOutput.enableDebug();
 				scriptOutput.start();
 				for (Statement statement : script.getStatements()) {
 					statement.compile(functionMethod);
 				}
 				scriptOutput.ret();
 				scriptOutput.end();
-				
+
 				mainRun.invokeStatic(script.getClassName().replace('.', '/'), "__script__", "()V");
 			}
-			
+
 			clsScript.visitEnd();
 			environmentGlobal.putClass(script.getClassName(), clsScript.toByteArray());
 		}
-		
+
 		mainRun.ret();
 		mainRun.end();
 		clsMain.visitEnd();
-		
+
 		MethodVisitor constructor = clsMain.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
 		constructor.visitCode();
 		constructor.visitVarInsn(Opcodes.ALOAD, 0);
@@ -144,7 +144,7 @@ public class ZenModule {
 		constructor.visitInsn(Opcodes.RETURN);
 		constructor.visitMaxs(0, 0);
 		constructor.visitEnd();
-		
+
 		// debug: output classes
 		if (debug) {
 			try {
@@ -153,11 +153,11 @@ public class ZenModule {
 
 				for (String className : environmentGlobal.getClassNames()) {
 					File outputFile = new File(outputDir, className.replace('.', '/') + ".class");
-					
+
 					if (!outputFile.getParentFile().exists()) {
 						outputFile.getParentFile().mkdirs();
 					}
-					
+
 					FileOutputStream output = new FileOutputStream(outputFile);
 					output.write(environmentGlobal.getClass(className));
 					output.close();
@@ -166,10 +166,10 @@ public class ZenModule {
 				ex.printStackTrace();
 			}
 		}
-		
+
 		environmentGlobal.putClass("__ZenMain__", clsMain.toByteArray());
 	}
-	
+
 	/**
 	 * Compiles a single script file.
 	 * 
@@ -186,26 +186,26 @@ public class ZenModule {
 				environment,
 				classes,
 				nameGen
-		);
-		
+				);
+
 		String filename = single.getName();
 		String className = extractClassName(filename);
-		
+
 		FileInputStream input = new FileInputStream(single);
 		Reader reader = new InputStreamReader(new BufferedInputStream(input));
 		ZenTokener parser = new ZenTokener(reader, environment);
 		ZenParsedFile file = new ZenParsedFile(filename, className, parser, environmentGlobal);
 		reader.close();
-		
+
 		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
 		files.add(file);
-		
+
 		compileScripts(filename, files, environmentGlobal, false);
-		
+
 		// debug: output classes
 		File outputDir = new File("generated");
 		outputDir.mkdir();
-		
+
 		for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
 			File outputFile = new File(outputDir, entry.getKey().replace('.', '/') + ".class");
 			if (!outputFile.getParentFile().exists()) {
@@ -215,10 +215,10 @@ public class ZenModule {
 			output.write(entry.getValue());
 			output.close();
 		}
-		
+
 		return new ZenModule(classes, baseClassLoader);
 	}
-	
+
 	/**
 	 * Compiles a zip file as module. All containing files (inside the given
 	 * subdirectory) will be compiled.
@@ -240,19 +240,19 @@ public class ZenModule {
 				environment,
 				classes,
 				nameGen
-		);
-		
+				);
+
 		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
-		
+
 		ZipFile zipFile = new ZipFile(file);
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = entries.nextElement();
-			
+
 			if (entry.getName().startsWith(subdir) && !entry.getName().equals(subdir)) {
 				String filename = entry.getName().substring(subdir.length());
 				String className = extractClassName(filename);
-				
+
 				Reader reader = new InputStreamReader(new BufferedInputStream(zipFile.getInputStream(entry)));
 				ZenTokener parser = new ZenTokener(reader, environment);
 				ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
@@ -260,30 +260,30 @@ public class ZenModule {
 				reader.close();
 			}
 		}
-		
+
 		String filename = file.getName();
 		compileScripts(filename, files, environmentGlobal, true);
-		
+
 		return new ZenModule(classes, baseClassLoader);
 	}
-	
+
 	private final Map<String, byte[]> classes;
 	private final MyClassLoader classLoader;
-	
+
 	/**
 	 * Constructs a module for the given set of classes. Mostly intended for
 	 * internal use.
 	 * 
-	 * @param classes 
+	 * @param classes
 	 */
 	public ZenModule(Map<String, byte[]> classes, ClassLoader baseClassLoader) {
 		this.classes = classes;
 		classLoader = new MyClassLoader(baseClassLoader);
 	}
-	
+
 	/**
-	 * Retrieves the main runnable. Running this runnable will execute the content
-	 * of the given module.
+	 * Retrieves the main runnable. Running this runnable will execute the
+	 * content of the given module.
 	 * 
 	 * @return main runnable
 	 */
@@ -298,11 +298,11 @@ public class ZenModule {
 			return null;
 		}
 	}
-	
+
 	// ######################
 	// ### Static methods ###
 	// ######################
-	
+
 	/**
 	 * Converts a filename into a class name.
 	 * 
@@ -311,11 +311,12 @@ public class ZenModule {
 	 */
 	public static String extractClassName(String filename) {
 		filename = filename.replace('\\', '/');
-		if (filename.startsWith("/")) filename = filename.substring(1);
-		
+		if (filename.startsWith("/"))
+			filename = filename.substring(1);
+
 		int lastSlash = filename.lastIndexOf('/');
 		int lastDot = filename.lastIndexOf('.');
-		
+
 		if (lastDot > lastSlash) {
 			filename = filename.substring(0, lastDot);
 		}
@@ -327,11 +328,11 @@ public class ZenModule {
 			return filename.substring(0, 1).toUpperCase() + filename.substring(1);
 		}
 	}
-	
+
 	// #############################
 	// ### Private inner classes ###
 	// #############################
-	
+
 	/**
 	 * Custom class loader. Loads classes from this module.
 	 */
@@ -339,13 +340,13 @@ public class ZenModule {
 		private MyClassLoader(ClassLoader baseClassLoader) {
 			super(baseClassLoader);
 		}
-		
+
 		@Override
 		public Class<?> findClass(String name) throws ClassNotFoundException {
 			if (classes.containsKey(name)) {
 				return defineClass(name, classes.get(name), 0, classes.get(name).length);
 			}
-			
+
 			return super.findClass(name);
 		}
 	}

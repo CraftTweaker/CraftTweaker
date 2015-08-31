@@ -19,12 +19,12 @@ import stanhebben.zenscript.util.MethodOutput;
 public class CastingRuleNullableStaticMethod implements ICastingRule {
 	private final IJavaMethod method;
 	private final ICastingRule base;
-	
+
 	public CastingRuleNullableStaticMethod(IJavaMethod method) {
 		this.method = method;
 		base = null;
 	}
-	
+
 	public CastingRuleNullableStaticMethod(IJavaMethod method, ICastingRule base) {
 		this.method = method;
 		this.base = base;
@@ -33,7 +33,7 @@ public class CastingRuleNullableStaticMethod implements ICastingRule {
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		MethodOutput output = method.getOutput();
-		
+
 		Label lblNotNull = new Label();
 		Label lblAfter = new Label();
 
@@ -44,7 +44,7 @@ public class CastingRuleNullableStaticMethod implements ICastingRule {
 		output.goTo(lblAfter);
 
 		output.label(lblNotNull);
-		
+
 		if (base != null) {
 			base.compile(method);
 		}

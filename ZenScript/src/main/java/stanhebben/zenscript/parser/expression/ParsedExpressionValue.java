@@ -17,12 +17,13 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ParsedExpressionValue extends ParsedExpression {
 	private final IPartialExpression value;
-	
+
 	public ParsedExpressionValue(ZenPosition position, IPartialExpression value) {
 		super(position);
-		
-		if (value == null) throw new IllegalArgumentException("value cannot be null");
-		
+
+		if (value == null)
+			throw new IllegalArgumentException("value cannot be null");
+
 		this.value = value;
 	}
 

@@ -18,24 +18,25 @@ import stanhebben.zenscript.value.IAny;
  */
 public class CastingAnyString implements ICastingRule {
 	public static final CastingAnyString INSTANCE = new CastingAnyString();
-	
-	private CastingAnyString() {}
-	
+
+	private CastingAnyString() {
+	}
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		MethodOutput output = method.getOutput();
 		Label lblNonNull = new Label();
 		Label lblAfter = new Label();
-		
+
 		output.dup();
 		output.ifNonNull(lblNonNull);
 		output.pop();
 		output.aConstNull();
 		output.goTo(lblAfter);
-		
+
 		output.label(lblNonNull);
 		output.invokeInterface(IAny.class, "asString", String.class);
-		
+
 		output.label(lblAfter);
 	}
 

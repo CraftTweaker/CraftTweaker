@@ -20,20 +20,20 @@ import net.minecraft.world.World;
  */
 public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedRecipe recipe;
-	
+
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedRecipe recipe) {
 		super(recipe.getWidth(), recipe.getHeight(), basicInputs, getItemStack(recipe.getOutput()));
-		
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
-    public boolean matches(InventoryCrafting inventory, World world) {
+	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
 
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting inventory) {
+	@Override
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		IItemStack result = recipe.getCraftingResult(MCCraftingInventory.get(inventory));
 		if (result == null) {
 			return null;

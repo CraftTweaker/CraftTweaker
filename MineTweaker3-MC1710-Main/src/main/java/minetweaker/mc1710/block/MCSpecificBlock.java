@@ -24,12 +24,12 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MCSpecificBlock implements IBlock {
 	private final Block block;
 	private final int meta;
-	
+
 	public MCSpecificBlock(Block block, int meta) {
 		this.block = block;
 		this.meta = meta;
 	}
-	
+
 	@Override
 	public IBlockDefinition getDefinition() {
 		return MineTweakerMC.getBlockDefinition(block);
@@ -65,12 +65,12 @@ public class MCSpecificBlock implements IBlock {
 	public String getDisplayName() {
 		return block.getLocalizedName();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "<block:" + getBlockId(block) + ":" + (meta == OreDictionary.WILDCARD_VALUE ? '*' : meta) + ">";
 	}
-	
+
 	private static String getBlockId(Block block)
 	{
 		return Block.blockRegistry.getNameForObject(block);

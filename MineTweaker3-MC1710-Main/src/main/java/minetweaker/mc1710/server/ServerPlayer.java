@@ -28,9 +28,9 @@ import net.minecraft.util.IChatComponent;
  */
 public class ServerPlayer implements IPlayer {
 	public static final ServerPlayer INSTANCE = new ServerPlayer();
-	
+
 	private ServerPlayer() {
-		
+
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class ServerPlayer implements IPlayer {
 			}
 		}
 	}
-	
+
 	@Override
 	public void copyToClipboard(String value) {
 		if (Desktop.isDesktopSupported()) {
@@ -121,6 +121,6 @@ public class ServerPlayer implements IPlayer {
 
 	@Override
 	public void give(IItemStack stack) {
-		
+
 	}
 }

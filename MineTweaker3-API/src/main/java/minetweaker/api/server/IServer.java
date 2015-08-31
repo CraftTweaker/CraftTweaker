@@ -29,19 +29,19 @@ public interface IServer {
 			ICommandFunction function,
 			@Optional ICommandValidator validator,
 			@Optional ICommandTabCompletion completion);
-	
+
 	@ZenMethod
 	public void removeCommand(String name);
-	
+
 	@ZenMethod
 	public void addMineTweakerCommand(String name, String[] usage, ICommandFunction function);
-	
+
 	@ZenMethod
 	public boolean isOp(IPlayer player);
-	
+
 	@ZenMethod
 	public IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
-	
+
 	@ZenMethod
 	public IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
 }

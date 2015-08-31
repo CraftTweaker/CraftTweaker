@@ -7,7 +7,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * Transformations can be used to modify an ingredient after it is used in a
- * crafting recipe. It could reuse the item, damage it or consume multiple items.
+ * crafting recipe. It could reuse the item, damage it or consume multiple
+ * items.
  * 
  * @author Stan Hebben
  */
@@ -28,10 +29,10 @@ public class IngredientTransform {
 			}
 		});
 	}
-	
+
 	/**
-	 * Damages the item. Also makes the item reusable. Will damage the item
-	 * for 1 point upon crafting and consume it when broken.
+	 * Damages the item. Also makes the item reusable. Will damage the item for
+	 * 1 point upon crafting and consume it when broken.
 	 * 
 	 * @param ingredient target value
 	 * @return damage transformer
@@ -50,12 +51,12 @@ public class IngredientTransform {
 			}
 		});
 	}
-	
+
 	/**
 	 * Damages the item for a specific amount. Also makes the item reusable.
-	 * Upon reaching maximum damage, the item will be consumed. Take care to
-	 * set the proper condition such that an almost-broken item becomes
-	 * invalid for crafting.
+	 * Upon reaching maximum damage, the item will be consumed. Take care to set
+	 * the proper condition such that an almost-broken item becomes invalid for
+	 * crafting.
 	 * 
 	 * @param ingredient target value
 	 * @param damage damage to be applied
@@ -76,7 +77,7 @@ public class IngredientTransform {
 			}
 		});
 	}
-	
+
 	/**
 	 * Causes the item to be replaced upon crafting. Can be used, for instance,
 	 * to return empty bottles or buckets.
@@ -99,10 +100,10 @@ public class IngredientTransform {
 			}
 		});
 	}
-	
+
 	/**
-	 * Causes multiple items to be consumed. Take care to set a condition for
-	 * a minimum stack size too, as otherwise smaller stacks would still be
+	 * Causes multiple items to be consumed. Take care to set a condition for a
+	 * minimum stack size too, as otherwise smaller stacks would still be
 	 * accepted for input.
 	 * 
 	 * @param ingredient target value
@@ -118,12 +119,12 @@ public class IngredientTransform {
 			}
 		});
 	}
-	
+
 	/**
 	 * Makes sure there is no return value.
 	 * 
 	 * @param ingredient
-	 * @return 
+	 * @return
 	 */
 	@ZenMethod
 	public static IIngredient noReturn(IIngredient ingredient) {
@@ -134,13 +135,14 @@ public class IngredientTransform {
 			}
 		});
 	}
-	
+
 	/**
-	 * Gives an item back to the player. Also clears the inventory slot at that position.
+	 * Gives an item back to the player. Also clears the inventory slot at that
+	 * position.
 	 * 
 	 * @param ingredient
 	 * @param givenItem
-	 * @return 
+	 * @return
 	 */
 	@ZenMethod
 	public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {

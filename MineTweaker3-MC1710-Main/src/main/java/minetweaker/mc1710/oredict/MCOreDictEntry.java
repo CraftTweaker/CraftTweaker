@@ -35,26 +35,26 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MCOreDictEntry implements IOreDictEntry {
 	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = MineTweakerHacks.getOreIdStacks();
 	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
-	
+
 	private final int id;
-	
+
 	public MCOreDictEntry(Integer id) {
 		this.id = id;
 	}
-	
+
 	public MCOreDictEntry(String id) {
 		this.id = OreDictionary.getOreID(id);
 	}
-	
+
 	// ####################################
 	// ### IOreDictEntry implementation ###
 	// ####################################
-	
+
 	@Override
 	public String getName() {
 		return OreDictionary.getOreName(id);
 	}
-	
+
 	@Override
 	public boolean isEmpty() {
 		return OreDictionary.getOres(id).isEmpty();
@@ -86,7 +86,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 				break;
 			}
 		}
-		
+
 		if (result != null) {
 			MineTweakerAPI.apply(new ActionRemoveItem(id, result));
 		}
@@ -99,7 +99,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -130,7 +130,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return Collections.emptyList();
@@ -155,7 +155,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public IIngredient marked(String mark) {
 		return new IngredientOreDict(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
 	}
-	
+
 	@Override
 	public IIngredient or(IIngredient ingredient) {
 		return new IngredientOr(this, ingredient);
@@ -165,7 +165,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public boolean matches(IItemStack item) {
 		return contains(item);
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		return false;
@@ -175,9 +175,10 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public boolean contains(IIngredient ingredient) {
 		List<IItemStack> items = ingredient.getItems();
 		for (IItemStack item : items) {
-			if (!matches(item)) return false;
+			if (!matches(item))
+				return false;
 		}
-		
+
 		return true;
 	}
 
@@ -195,40 +196,41 @@ public class MCOreDictEntry implements IOreDictEntry {
 	public Object getInternal() {
 		return OreDictionary.getOreName(id);
 	}
-	
+
 	// #############################
 	// ### Object implementation ###
 	// #############################
-	
+
 	@Override
 	public String toString() {
 		return "<ore:" + OreDictionary.getOreName(id) + ">";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return id;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
-		if (!(other instanceof MCOreDictEntry)) return false;
+		if (!(other instanceof MCOreDictEntry))
+			return false;
 		return ((MCOreDictEntry) other).id == id;
 	}
-	
+
 	// ######################
 	// ### Action classes ###
 	// ######################
-	
+
 	private static class ActionAddItem implements IUndoableAction {
 		private final Integer id;
 		private final ItemStack item;
-		
+
 		public ActionAddItem(Integer id, ItemStack item) {
 			this.id = id;
 			this.item = item;
 		}
-		
+
 		@Override
 		public void apply() {
 			OreDictionary.registerOre(id, item);
@@ -259,18 +261,18 @@ public class MCOreDictEntry implements IOreDictEntry {
 			return null;
 		}
 	}
-	
+
 	private static class ActionMirror implements IUndoableAction {
 		private final Integer idTarget;
 		private final Integer idSource;
-		
+
 		private final ArrayList<ItemStack> targetCopy;
 		private final ArrayList<ItemStack> targetCopyUn;
-		
+
 		public ActionMirror(Integer idTarget, Integer idSource) {
 			this.idTarget = idTarget;
 			this.idSource = idSource;
-			
+
 			targetCopy = OREDICT_CONTENTS.get(idTarget);
 			targetCopyUn = OREDICT_CONTENTS_UN.get(idTarget);
 		}
@@ -307,16 +309,16 @@ public class MCOreDictEntry implements IOreDictEntry {
 			return null;
 		}
 	}
-	
+
 	private static class ActionRemoveItem implements IUndoableAction {
 		private final Integer id;
 		private final ItemStack item;
-		
+
 		public ActionRemoveItem(Integer id, ItemStack item) {
 			this.id = id;
 			this.item = item;
 		}
-		
+
 		@Override
 		public void apply() {
 			OREDICT_CONTENTS.get(id).remove(item);
@@ -347,11 +349,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 			return null;
 		}
 	}
-	
+
 	private static class ActionAddAll implements IUndoableAction {
 		private final Integer idTarget;
 		private final Integer idSource;
-		
+
 		public ActionAddAll(Integer idTarget, Integer idSource) {
 			this.idTarget = idTarget;
 			this.idSource = idSource;

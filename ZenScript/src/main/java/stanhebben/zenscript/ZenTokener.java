@@ -17,7 +17,7 @@ import stanhebben.zenscript.parser.TokenStream;
  */
 public class ZenTokener extends TokenStream {
 	private static final HashMap<String, Integer> KEYWORDS;
-	
+
 	public static final int T_ID = 1;
 	public static final int T_INTVALUE = 2;
 	public static final int T_FLOATVALUE = 3;
@@ -63,7 +63,7 @@ public class ZenTokener extends TokenStream {
 	public static final int T_NOTEQ = 42;
 	public static final int T_NOT = 43;
 	public static final int T_DOLLAR = 44;
-	
+
 	public static final int T_ANY = 99;
 	public static final int T_BOOL = 100;
 	public static final int T_BYTE = 101;
@@ -76,7 +76,7 @@ public class ZenTokener extends TokenStream {
 	public static final int T_FUNCTION = 108;
 	public static final int T_IN = 109;
 	public static final int T_VOID = 110;
-	
+
 	public static final int T_AS = 120;
 	public static final int T_VERSION = 121;
 	public static final int T_IF = 122;
@@ -85,119 +85,119 @@ public class ZenTokener extends TokenStream {
 	public static final int T_RETURN = 125;
 	public static final int T_VAR = 126;
 	public static final int T_VAL = 127;
-	
+
 	public static final int T_NULL = 140;
 	public static final int T_TRUE = 141;
 	public static final int T_FALSE = 142;
-	
+
 	public static final int T_IMPORT = 160;
-	
+
 	private static final String[] REGEXPS = {
-		"#[^\n]*[\n\\e]",
-		"//[^\n]*[\n\\e]",
-		"/\\*[^\\*]*(\\*[^/]*)*\\*/",
-		"[ \t\r\n]*",
-		"[a-zA-Z_][a-zA-Z_0-9]*",
-		"\\-?(0|[1-9][0-9]*)\\.[0-9]+([eE][\\+\\-]?[0-9]+)?",
-        "\\-?(0|[1-9][0-9]*)",
-		"\"([^\"\\\\]|\\\\([\'\"\\\\/bfnrt]|u[0-9a-fA-F]{4}))*\"",
-		"\'([^\'\\\\]|\\\\([\'\"\\\\/bfnrt]|u[0-9a-fA-F]{4}))*\'",
-        "\\{",
-        "\\}",
-        "\\[",
-        "\\]",
-        "\\.\\.",
-        "\\.",
-        ",",
-        "\\+=",
-        "\\+",
-        "\\-=",
-        "\\-",
-        "\\*=",
-        "\\*",
-        "/=",
-        "/",
-        "%=",
-        "%",
-        "\\|=",
-        "\\|\\|",
-        "\\|",
-        "&=",
-        "&&",
-        "&",
-        "\\^=",
-        "\\^",
-        "\\?",
-        ":",
-        "\\(",
-        "\\)",
-		"~=",
-        "~",
-        ";",
-        "<=",
-        "<",
-        ">=",
-        ">",
-        "==",
-        "=",
-        "!=",
-        "!",
-		"$"
+			"#[^\n]*[\n\\e]",
+			"//[^\n]*[\n\\e]",
+			"/\\*[^\\*]*(\\*[^/]*)*\\*/",
+			"[ \t\r\n]*",
+			"[a-zA-Z_][a-zA-Z_0-9]*",
+			"\\-?(0|[1-9][0-9]*)\\.[0-9]+([eE][\\+\\-]?[0-9]+)?",
+			"\\-?(0|[1-9][0-9]*)",
+			"\"([^\"\\\\]|\\\\([\'\"\\\\/bfnrt]|u[0-9a-fA-F]{4}))*\"",
+			"\'([^\'\\\\]|\\\\([\'\"\\\\/bfnrt]|u[0-9a-fA-F]{4}))*\'",
+			"\\{",
+			"\\}",
+			"\\[",
+			"\\]",
+			"\\.\\.",
+			"\\.",
+			",",
+			"\\+=",
+			"\\+",
+			"\\-=",
+			"\\-",
+			"\\*=",
+			"\\*",
+			"/=",
+			"/",
+			"%=",
+			"%",
+			"\\|=",
+			"\\|\\|",
+			"\\|",
+			"&=",
+			"&&",
+			"&",
+			"\\^=",
+			"\\^",
+			"\\?",
+			":",
+			"\\(",
+			"\\)",
+			"~=",
+			"~",
+			";",
+			"<=",
+			"<",
+			">=",
+			">",
+			"==",
+			"=",
+			"!=",
+			"!",
+			"$"
 	};
 	private static final int[] FINALS = {
-		-1,
-		-1,
-		-1,
-		-1,
-		T_ID,
-		T_FLOATVALUE,
-		T_INTVALUE,
-		T_STRINGVALUE,
-		T_STRINGVALUE,
-		T_AOPEN,
-		T_ACLOSE,
-		T_SQBROPEN,
-		T_SQBRCLOSE,
-		T_DOT2,
-		T_DOT,
-		T_COMMA,
-		T_PLUSASSIGN,
-		T_PLUS,
-		T_MINUSASSIGN,
-		T_MINUS,
-		T_MULASSIGN,
-		T_MUL,
-		T_DIVASSIGN,
-		T_DIV,
-		T_MODASSIGN,
-		T_MOD,
-		T_ORASSIGN,
-		T_OR2,
-		T_OR,
-		T_ANDASSIGN,
-		T_AND2,
-		T_AND,
-		T_XORASSIGN,
-		T_XOR,
-		T_QUEST,
-		T_COLON,
-		T_BROPEN,
-		T_BRCLOSE,
-		T_TILDEASSIGN,
-		T_TILDE,
-		T_SEMICOLON,
-		T_LTEQ,
-		T_LT,
-		T_GTEQ,
-		T_GT,
-		T_EQ,
-		T_ASSIGN,
-		T_NOTEQ,
-		T_NOT,
-		T_DOLLAR
+			-1,
+			-1,
+			-1,
+			-1,
+			T_ID,
+			T_FLOATVALUE,
+			T_INTVALUE,
+			T_STRINGVALUE,
+			T_STRINGVALUE,
+			T_AOPEN,
+			T_ACLOSE,
+			T_SQBROPEN,
+			T_SQBRCLOSE,
+			T_DOT2,
+			T_DOT,
+			T_COMMA,
+			T_PLUSASSIGN,
+			T_PLUS,
+			T_MINUSASSIGN,
+			T_MINUS,
+			T_MULASSIGN,
+			T_MUL,
+			T_DIVASSIGN,
+			T_DIV,
+			T_MODASSIGN,
+			T_MOD,
+			T_ORASSIGN,
+			T_OR2,
+			T_OR,
+			T_ANDASSIGN,
+			T_AND2,
+			T_AND,
+			T_XORASSIGN,
+			T_XOR,
+			T_QUEST,
+			T_COLON,
+			T_BROPEN,
+			T_BRCLOSE,
+			T_TILDEASSIGN,
+			T_TILDE,
+			T_SEMICOLON,
+			T_LTEQ,
+			T_LT,
+			T_GTEQ,
+			T_GT,
+			T_EQ,
+			T_ASSIGN,
+			T_NOTEQ,
+			T_NOT,
+			T_DOLLAR
 	};
 	private static final CompiledDFA DFA = new NFA(REGEXPS, FINALS).toDFA().optimize().compile();
-	
+
 	static {
 		KEYWORDS = new HashMap<String, Integer>();
 		KEYWORDS.put("any", T_ANY);
@@ -212,7 +212,7 @@ public class ZenTokener extends TokenStream {
 		KEYWORDS.put("function", T_FUNCTION);
 		KEYWORDS.put("in", T_IN);
 		KEYWORDS.put("void", T_VOID);
-		
+
 		KEYWORDS.put("as", T_AS);
 		KEYWORDS.put("version", T_VERSION);
 		KEYWORDS.put("if", T_IF);
@@ -221,16 +221,16 @@ public class ZenTokener extends TokenStream {
 		KEYWORDS.put("return", T_RETURN);
 		KEYWORDS.put("var", T_VAR);
 		KEYWORDS.put("val", T_VAL);
-		
+
 		KEYWORDS.put("null", T_NULL);
 		KEYWORDS.put("true", T_TRUE);
 		KEYWORDS.put("false", T_FALSE);
-		
+
 		KEYWORDS.put("import", T_IMPORT);
 	}
-	
+
 	private final IZenCompileEnvironment environment;
-	
+
 	/**
 	 * Constructs a tokener from the given reader.
 	 * 
@@ -240,10 +240,10 @@ public class ZenTokener extends TokenStream {
 	 */
 	public ZenTokener(Reader contents, IZenCompileEnvironment environment) throws IOException {
 		super(contents, DFA);
-		
+
 		this.environment = environment;
 	}
-	
+
 	/**
 	 * Constructs a tokener from the given string.
 	 * 
@@ -253,10 +253,10 @@ public class ZenTokener extends TokenStream {
 	 */
 	public ZenTokener(String contents, IZenCompileEnvironment environment) throws IOException {
 		super(new StringReader(contents), DFA);
-		
+
 		this.environment = environment;
 	}
-	
+
 	/**
 	 * Retrieves the compile environment of this tokener.
 	 * 
@@ -265,11 +265,11 @@ public class ZenTokener extends TokenStream {
 	public IZenCompileEnvironment getEnvironment() {
 		return environment;
 	}
-	
+
 	// ##################################
 	// ### TokenStream implementation ###
 	// ##################################
-	
+
 	@Override
 	public Token process(Token token) {
 		if (token.getType() == T_ID) {

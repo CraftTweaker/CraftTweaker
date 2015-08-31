@@ -13,7 +13,7 @@ import java.util.Map;
 public class DataByteArray implements IData {
 	private final byte[] data;
 	private final boolean immutable;
-	
+
 	public DataByteArray(byte[] data, boolean immutable) {
 		this.data = data;
 		this.immutable = immutable;
@@ -117,7 +117,7 @@ public class DataByteArray implements IData {
 				first = false;
 			else
 				result.append(", ");
-			
+
 			result.append(value);
 		}
 		result.append("] as byte[]");
@@ -214,7 +214,7 @@ public class DataByteArray implements IData {
 	public <T> T convert(IDataConverter<T> converter) {
 		return converter.fromByteArray(this.data);
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString() + " as byte[]";

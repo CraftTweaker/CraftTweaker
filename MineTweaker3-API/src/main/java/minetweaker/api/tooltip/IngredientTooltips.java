@@ -25,36 +25,36 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class IngredientTooltips {
 	private static final IngredientMap<IFormattedText> TOOLTIPS = new IngredientMap<IFormattedText>();
 	private static final IngredientMap<IFormattedText> SHIFT_TOOLTIPS = new IngredientMap<IFormattedText>();
-	
+
 	@ZenMethod
 	public static void addTooltip(IIngredient ingredient, IFormattedText tooltip) {
 		MineTweakerAPI.apply(new AddTooltipAction(ingredient, tooltip, false));
 	}
-	
+
 	@ZenMethod
 	public static void addShiftTooltip(IIngredient ingredient, IFormattedText tooltip) {
 		MineTweakerAPI.apply(new AddTooltipAction(ingredient, tooltip, true));
 	}
-	
+
 	public static List<IFormattedText> getTooltips(IItemStack item) {
 		return TOOLTIPS.getEntries(item);
 	}
-	
+
 	public static List<IFormattedText> getShiftTooltips(IItemStack item) {
 		return SHIFT_TOOLTIPS.getEntries(item);
 	}
-	
+
 	// ######################
 	// ### Action classes ###
 	// ######################
-	
+
 	private static class AddTooltipAction implements IUndoableAction {
 		private final IIngredient ingredient;
 		private final IFormattedText tooltip;
 		private final boolean shift;
-		
+
 		private IngredientMapEntry<IFormattedText> entry;
-		
+
 		public AddTooltipAction(IIngredient ingredient, IFormattedText tooltip, boolean shift) {
 			this.ingredient = ingredient;
 			this.tooltip = tooltip;

@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Makes a class implementing List expose itself as iterable over keys and values.
+ * Makes a class implementing List expose itself as iterable over keys and
+ * values.
  * 
  * @author Stan Hebben
  */

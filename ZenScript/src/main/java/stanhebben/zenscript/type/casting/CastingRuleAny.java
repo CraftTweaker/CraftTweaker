@@ -16,11 +16,11 @@ import stanhebben.zenscript.value.IAny;
  */
 public class CastingRuleAny implements ICastingRule {
 	private final ZenType toType;
-	
+
 	public CastingRuleAny(ZenType toType) {
 		this.toType = toType;
 	}
-	
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		method.getOutput().constant(toType);

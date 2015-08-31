@@ -6,10 +6,10 @@ import stanhebben.zenscript.util.ZenPosition;
 
 public class StatementExpression extends Statement {
 	private final ParsedExpression expression;
-	
+
 	public StatementExpression(ZenPosition position, ParsedExpression expression) {
 		super(position);
-		
+
 		this.expression = expression;
 	}
 
@@ -17,7 +17,7 @@ public class StatementExpression extends Statement {
 	public void compile(IEnvironmentMethod environment) {
 		environment.getOutput().position(getPosition());
 		expression.compile(environment, null)
-				.eval(environment)
-				.compile(false, environment);
+			.eval(environment)
+			.compile(false, environment);
 	}
 }

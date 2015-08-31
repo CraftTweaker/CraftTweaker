@@ -21,7 +21,7 @@ public class SymbolZenStaticMethod implements IZenSymbol {
 	private final String signature;
 	private final ZenType[] argumentTypes;
 	private final ZenType returnType;
-	
+
 	public SymbolZenStaticMethod(String className, String methodName, String signature, ZenType[] argumentTypes, ZenType returnType) {
 		this.className = className;
 		this.methodName = methodName;

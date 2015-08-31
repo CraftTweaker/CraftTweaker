@@ -14,7 +14,7 @@ import minetweaker.api.player.IPlayer;
 public class IngredientStack implements IIngredient {
 	private final IIngredient ingredient;
 	private final int amount;
-	
+
 	public IngredientStack(IIngredient ingredient, int amount) {
 		this.ingredient = ingredient;
 		this.amount = amount;
@@ -34,7 +34,7 @@ public class IngredientStack implements IIngredient {
 	public List<IItemStack> getItems() {
 		return ingredient.getItems();
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return Collections.emptyList();
@@ -69,7 +69,7 @@ public class IngredientStack implements IIngredient {
 	public boolean matches(IItemStack item) {
 		return item.getAmount() == amount && ingredient.matches(item);
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		return false;

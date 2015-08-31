@@ -37,24 +37,24 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 public class ZenTypeAssociative extends ZenType {
 	private final ZenType valueType;
 	private final ZenType keyType;
-	
+
 	private final String name;
-	
+
 	public ZenTypeAssociative(ZenType valueType, ZenType keyType) {
 		this.valueType = valueType;
 		this.keyType = keyType;
-		
+
 		name = valueType.getName() + "[" + keyType.getName() + "]";
 	}
-	
+
 	public ZenType getValueType() {
 		return valueType;
 	}
-	
+
 	public ZenType getKeyType() {
 		return keyType;
 	}
-	
+
 	@Override
 	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
 		ICastingRule base = super.getCastingRule(type, environment);
@@ -69,7 +69,7 @@ public class ZenTypeAssociative extends ZenType {
 			return base;
 		}
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal global) {
 		return null;
@@ -169,14 +169,14 @@ public class ZenTypeAssociative extends ZenType {
 		environment.error(position, "cannot call associative arrays");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-	
+
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		if (numValues == 1) {
@@ -227,12 +227,12 @@ public class ZenTypeAssociative extends ZenType {
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionNull(position);
 	}
-	
+
 	private boolean canCastAssociative(ZenType type, IEnvironmentGlobal global) {
 		if (!(type instanceof ZenTypeAssociative)) {
 			return false;
 		}
-		
+
 		ZenTypeAssociative atype = (ZenTypeAssociative) type;
 		return getKeyType().canCastImplicit(atype.getKeyType(), global)
 				&& getValueType().canCastImplicit(atype.getValueType(), global);

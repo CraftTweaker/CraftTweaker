@@ -24,22 +24,22 @@ public class ExpressionJavaMethodCurled extends Expression {
 	private final JavaMethod method;
 	private final ZenType type;
 	private final Expression receiver;
-	
+
 	public ExpressionJavaMethodCurled(
 			ZenPosition position,
 			JavaMethod method,
 			IEnvironmentGlobal environment,
 			Expression receiver) {
 		super(position);
-		
+
 		this.method = method;
 		this.receiver = receiver;
-		
+
 		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
 		for (int i = 0; i < method.getMethod().getParameterTypes().length; i++) {
 			arguments.add(new ParsedFunctionArgument("p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
 		}
-		
+
 		this.type = new ZenTypeFunction(environment.getType(method.getMethod().getGenericReturnType()), arguments);
 	}
 

@@ -23,7 +23,7 @@ import stanhebben.zenscript.util.ZenPosition;
 public class PartialJavaClass implements IPartialExpression {
 	private final ZenPosition position;
 	private final Type cls;
-	
+
 	public PartialJavaClass(ZenPosition position, Type cls) {
 		this.position = position;
 		this.cls = cls;

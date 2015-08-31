@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataLong implements IData {
 	private final long value;
-	
+
 	public DataLong(long value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataLong implements IData {
 	public String asString() {
 		return Long.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataLong implements IData {
 	public boolean contains(IData data) {
 		return data.asLong() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		return value == data.asLong();
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		return Long.compare(value, data.asLong());
@@ -172,14 +172,14 @@ public class DataLong implements IData {
 
 	@Override
 	public IData neg() {
-		return new DataLong(- value);
+		return new DataLong(-value);
 	}
 
 	@Override
 	public IData not() {
-		return new DataLong(~ value);
+		return new DataLong(~value);
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString() + " as long";

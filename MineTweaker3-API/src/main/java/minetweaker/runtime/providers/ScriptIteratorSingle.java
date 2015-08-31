@@ -20,7 +20,7 @@ import minetweaker.runtime.IScriptIterator;
 public class ScriptIteratorSingle implements IScriptIterator {
 	private final File file;
 	private boolean first = true;
-	
+
 	public ScriptIteratorSingle(File file) {
 		this.file = file;
 	}

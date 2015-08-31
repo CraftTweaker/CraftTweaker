@@ -20,7 +20,7 @@ import stanhebben.zenscript.annotations.ZenOperator;
 public interface ILoadedMods extends Iterable<IMod> {
 	@ZenOperator(OperatorType.CONTAINS)
 	public boolean contains(String name);
-	
+
 	@ZenOperator(OperatorType.INDEXGET)
 	public IMod get(String name);
 }

@@ -38,11 +38,12 @@ import stanhebben.zenscript.value.IAny;
 
 public class ZenTypeByte extends ZenType {
 	public static final ZenTypeByte INSTANCE = new ZenTypeByte();
-	
+
 	private static final String ANY_NAME = "any/AnyByte";
 	private static final String ANY_NAME_2 = "any.AnyByte";
-	
-	private ZenTypeByte() {}
+
+	private ZenTypeByte() {
+	}
 
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
@@ -62,43 +63,32 @@ public class ZenTypeByte extends ZenType {
 		rules.registerCastingRule(FLOATOBJECT, new CastingRuleStaticMethod(FLOAT_VALUEOF, new CastingRuleI2F(null)));
 		rules.registerCastingRule(DOUBLE, new CastingRuleI2D(null));
 		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleStaticMethod(DOUBLE_VALUEOF, new CastingRuleI2D(null)));
-		
+
 		rules.registerCastingRule(STRING, new CastingRuleStaticMethod(BYTE_TOSTRING_STATIC));
 		rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, BYTE)));
-		
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-	
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		int itype = type.getNumberType();
-		return itype != 0
-				|| type == STRING
-				|| type == ANY
-				|| canCastExpansion(environment, type);
-	}
 
-	@Override
-	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type.getNumberType() != 0
-				|| type == STRING
-				|| type == ANY
-				|| canCastExpansion(environment, type);
-	}
-	
-	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type.getNumberType() > 0 || type == STRING || type == ANY) {
-			return new ExpressionAs(position, value, type);
-		} else if (canCastExpansion(environment, type)) {
-			return castExpansion(position, environment, value, type);
-		} else {
-			return new ExpressionAs(position, value, type);
-		}
-	}*/
-	
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { int itype = type.getNumberType(); return itype != 0 ||
+	 * type == STRING || type == ANY || canCastExpansion(environment, type); }
+	 * 
+	 * @Override public boolean canCastExplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type.getNumberType() != 0 || type == STRING || type
+	 * == ANY || canCastExpansion(environment, type); }
+	 * 
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) { if (type.getNumberType() >
+	 * 0 || type == STRING || type == ANY) { return new ExpressionAs(position,
+	 * value, type); } else if (canCastExpansion(environment, type)) { return
+	 * castExpansion(position, environment, value, type); } else { return new
+	 * ExpressionAs(position, value, type); } }
+	 */
+
 	@Override
 	public Class toJavaClass() {
 		return byte.class;
@@ -140,46 +130,35 @@ public class ZenTypeByte extends ZenType {
 		return false;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		MethodOutput output = environment.getOutput();
-		
-		if (type == BYTE) {
-			// nothing to do
-		} else if (type == ZenTypeByteObject.INSTANCE) {
-			output.invokeStatic(Byte.class, "valueOf", Byte.class, byte.class);
-		} else if (type == SHORT) {
-			// nothing to do
-		} else if (type == ZenTypeShortObject.INSTANCE) {
-			output.invokeStatic(Short.class, "valueOf", Short.class, short.class);
-		} else if (type == INT) {
-			// nothing to do
-		} else if (type == ZenTypeIntObject.INSTANCE) {
-			output.invokeStatic(Integer.class, "valueOf", Integer.class, int.class);
-		} else if (type == LONG) {
-			output.i2l();
-		} else if (type == ZenTypeLongObject.INSTANCE) {
-			output.i2l();
-			output.invokeStatic(Long.class, "valueOf", Long.class, long.class);
-		} else if (type == FLOAT) {
-			output.i2f();
-		} else if (type == ZenTypeFloatObject.INSTANCE) {
-			output.i2f();
-			output.invokeStatic(Float.class, "valueOf", Float.class, float.class);
-		} else if (type == DOUBLE) {
-			output.i2d();
-		} else if (type == ZenTypeDoubleObject.INSTANCE) {
-			output.i2d();
-			output.invokeStatic(Double.class, "valueOf", Double.class, double.class);
-		} else if (type == STRING) {
-			output.invokeStatic(Byte.class, "toString", String.class, byte.class);
-		} else if (type == ANY) {
-			output.invokeStatic(getAnyClassName(environment), "valueOf", "(B)" + signature(IAny.class));
-		} else if (!compileCastExpansion(position, environment, type)) {
-			environment.error(position, "cannot cast " + this + " to " + type);
-		}
-	}*/
-	
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { MethodOutput output =
+	 * environment.getOutput();
+	 * 
+	 * if (type == BYTE) { // nothing to do } else if (type ==
+	 * ZenTypeByteObject.INSTANCE) { output.invokeStatic(Byte.class, "valueOf",
+	 * Byte.class, byte.class); } else if (type == SHORT) { // nothing to do }
+	 * else if (type == ZenTypeShortObject.INSTANCE) {
+	 * output.invokeStatic(Short.class, "valueOf", Short.class, short.class); }
+	 * else if (type == INT) { // nothing to do } else if (type ==
+	 * ZenTypeIntObject.INSTANCE) { output.invokeStatic(Integer.class,
+	 * "valueOf", Integer.class, int.class); } else if (type == LONG) {
+	 * output.i2l(); } else if (type == ZenTypeLongObject.INSTANCE) {
+	 * output.i2l(); output.invokeStatic(Long.class, "valueOf", Long.class,
+	 * long.class); } else if (type == FLOAT) { output.i2f(); } else if (type ==
+	 * ZenTypeFloatObject.INSTANCE) { output.i2f();
+	 * output.invokeStatic(Float.class, "valueOf", Float.class, float.class); }
+	 * else if (type == DOUBLE) { output.i2d(); } else if (type ==
+	 * ZenTypeDoubleObject.INSTANCE) { output.i2d();
+	 * output.invokeStatic(Double.class, "valueOf", Double.class, double.class);
+	 * } else if (type == STRING) { output.invokeStatic(Byte.class, "toString",
+	 * String.class, byte.class); } else if (type == ANY) {
+	 * output.invokeStatic(getAnyClassName(environment), "valueOf", "(B)" +
+	 * signature(IAny.class)); } else if (!compileCastExpansion(position,
+	 * environment, type)) { environment.error(position, "cannot cast " + this +
+	 * " to " + type); } }
+	 */
+
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		return new ExpressionArithmeticUnary(position, operator, value);
@@ -194,16 +173,16 @@ public class ZenTypeByte extends ZenType {
 					left.cast(position, environment, STRING),
 					right.cast(position, environment, STRING), OperatorType.CAT);
 		}
-		
+
 		return new ExpressionArithmeticBinary(position, operator, left, right.cast(position, environment, this));
 	}
-	
+
 	@Override
 	public Expression trinary(ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
 		environment.error(position, "byte doesn't support this operation");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression compare(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
 		return new ExpressionArithmeticCompare(position, type, left, right.cast(position, environment, this));
@@ -220,14 +199,14 @@ public class ZenTypeByte extends ZenType {
 	public String getName() {
 		return "byte";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		if (!environment.containsClass(ANY_NAME_2)) {
 			environment.putClass(ANY_NAME_2, new byte[0]);
 			environment.putClass(ANY_NAME_2, AnyClassWriter.construct(new AnyDefinitionByte(environment), ANY_NAME, Type.BYTE_TYPE));
 		}
-		
+
 		return ANY_NAME;
 	}
 
@@ -235,10 +214,10 @@ public class ZenTypeByte extends ZenType {
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionInt(position, 0, ZenType.BYTE);
 	}
-	
+
 	private class AnyDefinitionByte implements IAnyDefinition {
 		private final IEnvironmentGlobal environment;
-		
+
 		public AnyDefinitionByte(IEnvironmentGlobal environment) {
 			this.environment = environment;
 		}
@@ -246,7 +225,7 @@ public class ZenTypeByte extends ZenType {
 		@Override
 		public void defineMembers(ClassVisitor output) {
 			output.visitField(Opcodes.ACC_PRIVATE, "value", "B", null, null);
-			
+
 			MethodOutput valueOf = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "valueOf", "(B)" + signature(IAny.class), null, null);
 			valueOf.start();
 			valueOf.newObject(ANY_NAME);
@@ -255,7 +234,7 @@ public class ZenTypeByte extends ZenType {
 			valueOf.construct(ANY_NAME, "B");
 			valueOf.returnObject();
 			valueOf.end();
-			
+
 			MethodOutput constructor = new MethodOutput(output, Opcodes.ACC_PUBLIC, "<init>", "(B)V", null, null);
 			constructor.start();
 			constructor.loadObject(0);
@@ -266,43 +245,43 @@ public class ZenTypeByte extends ZenType {
 			constructor.returnType(Type.VOID_TYPE);
 			constructor.end();
 		}
-		
+
 		@Override
 		public void defineStaticCanCastImplicit(MethodOutput output) {
 			Label lblCan = new Label();
-			
+
 			output.constant(Type.BYTE_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			output.constant(Type.SHORT_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			output.constant(Type.INT_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			output.constant(Type.LONG_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			output.constant(Type.FLOAT_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			output.constant(Type.DOUBLE_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.compileAnyCanCastImplicit(BYTE, output, environment, 0);
 			}
-			
+
 			output.iConst0();
 			output.returnInt();
-			
+
 			output.label(lblCan);
 			output.iConst1();
 			output.returnInt();
@@ -314,7 +293,7 @@ public class ZenTypeByte extends ZenType {
 			if (expansion != null) {
 				expansion.compileAnyCast(BYTE, output, environment, 0, 1);
 			}
-			
+
 			throwCastException(output, "byte", 1);
 		}
 
@@ -563,21 +542,21 @@ public class ZenTypeByte extends ZenType {
 		@Override
 		public void defineAs(MethodOutput output) {
 			int localValue = output.local(Type.BYTE_TYPE);
-			
+
 			getValue(output);
 			output.store(Type.BYTE_TYPE, localValue);
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.compileAnyCast(BYTE, output, environment, localValue, 1);
 			}
-			
+
 			throwCastException(output, "byte", 1);
 		}
 
 		@Override
 		public void defineIs(MethodOutput output) {
 			Label lblEq = new Label();
-			
+
 			output.loadObject(1);
 			output.constant(Type.BYTE_TYPE);
 			output.ifACmpEq(lblEq);
@@ -587,7 +566,7 @@ public class ZenTypeByte extends ZenType {
 			output.iConst1();
 			output.returnInt();
 		}
-		
+
 		@Override
 		public void defineGetNumberType(MethodOutput output) {
 			output.constant(IAny.NUM_BYTE);
@@ -607,19 +586,19 @@ public class ZenTypeByte extends ZenType {
 		@Override
 		public void defineEquals(MethodOutput output) {
 			Label lblNope = new Label();
-			
+
 			output.loadObject(1);
 			output.instanceOf(IAny.NAME);
 			output.ifEQ(lblNope);
-			
+
 			getValue(output);
 			output.loadObject(1);
 			METHOD_ASBYTE.invokeVirtual(output);
 			output.ifICmpNE(lblNope);
-			
+
 			output.iConst1();
 			output.returnInt();
-			
+
 			output.label(lblNope);
 			output.iConst0();
 			output.returnInt();
@@ -630,7 +609,7 @@ public class ZenTypeByte extends ZenType {
 			getValue(output);
 			output.returnInt();
 		}
-		
+
 		private void getValue(MethodOutput output) {
 			output.loadObject(0);
 			output.getField(ANY_NAME, "value", "B");

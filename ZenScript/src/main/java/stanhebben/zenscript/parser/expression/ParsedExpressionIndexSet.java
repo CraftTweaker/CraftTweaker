@@ -21,10 +21,10 @@ public class ParsedExpressionIndexSet extends ParsedExpression {
 	private final ParsedExpression value;
 	private final ParsedExpression index;
 	private final ParsedExpression setValue;
-	
+
 	public ParsedExpressionIndexSet(ZenPosition position, ParsedExpression value, ParsedExpression index, ParsedExpression setValue) {
 		super(position);
-		
+
 		this.value = value;
 		this.index = index;
 		this.setValue = setValue;
@@ -36,6 +36,6 @@ public class ParsedExpressionIndexSet extends ParsedExpression {
 		Expression cValue = value.compile(environment, null).eval(environment);
 		Expression cIndex = index.compile(environment, null).eval(environment);
 		Expression cSetValue = setValue.compile(environment, null).eval(environment);
-		return cValue.getType().trinary(getPosition(), environment, cValue, cIndex, cSetValue,OperatorType.INDEXSET);
-	} 
+		return cValue.getType().trinary(getPosition(), environment, cValue, cIndex, cSetValue, OperatorType.INDEXSET);
+	}
 }

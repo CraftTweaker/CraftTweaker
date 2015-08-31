@@ -18,7 +18,7 @@ public class ExpressionIntegerRange extends Expression {
 
 	public ExpressionIntegerRange(ZenPosition position, Expression from, Expression to) {
 		super(position);
-		
+
 		this.from = from;
 		this.to = to;
 	}

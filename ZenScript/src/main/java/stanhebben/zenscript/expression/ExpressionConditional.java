@@ -9,10 +9,10 @@ public class ExpressionConditional extends Expression {
 	private final Expression condition;
 	private final Expression onIf;
 	private final Expression onElse;
-	
+
 	public ExpressionConditional(ZenPosition position, Expression condition, Expression onIf, Expression onElse) {
 		super(position);
-		
+
 		this.condition = condition;
 		this.onIf = onIf;
 		this.onElse = onElse;
@@ -27,7 +27,7 @@ public class ExpressionConditional extends Expression {
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		Label lblElse = new Label();
 		Label lblExit = new Label();
-		
+
 		condition.compileIf(lblElse, environment);
 		onIf.compile(result, environment);
 		environment.getOutput().goTo(lblExit);

@@ -32,20 +32,20 @@ public class ZenExpandMember {
 	private IJavaMethod getter;
 	private IJavaMethod setter;
 	private final List<IJavaMethod> methods = new ArrayList<IJavaMethod>();
-	
+
 	public ZenExpandMember(String type, String name) {
 		this.type = type;
 		this.name = name;
 	}
-	
+
 	public IPartialExpression instance(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value) {
 		return new InstanceGetValue(position, value);
 	}
-	
+
 	public IPartialExpression instance(ZenPosition position, IEnvironmentGlobal environment) {
 		return new StaticGetValue(position);
 	}
-	
+
 	public void setGetter(IJavaMethod getter) {
 		if (this.getter != null) {
 			throw new RuntimeException(type + "." + name + " already has a getter");
@@ -53,7 +53,7 @@ public class ZenExpandMember {
 			this.getter = getter;
 		}
 	}
-	
+
 	public void setSetter(IJavaMethod setter) {
 		if (this.setter != null) {
 			throw new RuntimeException(type + "." + name + " already has a setter");
@@ -61,20 +61,20 @@ public class ZenExpandMember {
 			this.setter = setter;
 		}
 	}
-	
+
 	public void addMethod(IJavaMethod method) {
 		methods.add(method);
 	}
-	
+
 	private class InstanceGetValue implements IPartialExpression {
 		private final ZenPosition position;
 		private final IPartialExpression value;
-		
+
 		public InstanceGetValue(ZenPosition position, IPartialExpression value) {
 			this.position = position;
 			this.value = value;
 		}
-		
+
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
 			return new ExpressionCallVirtual(position, environment, getter, value.eval(environment));
@@ -108,7 +108,7 @@ public class ZenExpandMember {
 		public IZenSymbol toSymbol() {
 			return null;
 		}
-		
+
 		@Override
 		public ZenType getType() {
 			return getter.getReturnType();
@@ -127,18 +127,18 @@ public class ZenExpandMember {
 			for (int i = 0; i < result.length; i++) {
 				result[i] = base[i + 1];
 			}
-			
+
 			return result;
 		}
 	}
-	
+
 	private class StaticGetValue implements IPartialExpression {
 		private final ZenPosition position;
-		
+
 		public StaticGetValue(ZenPosition position) {
 			this.position = position;
 		}
-		
+
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
 			return new ExpressionCallStatic(position, environment, getter);
@@ -169,7 +169,7 @@ public class ZenExpandMember {
 		public IZenSymbol toSymbol() {
 			return new StaticSymbol();
 		}
-		
+
 		@Override
 		public ZenType getType() {
 			return getter.getReturnType();
@@ -186,7 +186,7 @@ public class ZenExpandMember {
 			return JavaMethod.predict(methods, numArguments);
 		}
 	}
-	
+
 	private class StaticSymbol implements IZenSymbol {
 		@Override
 		public IPartialExpression instance(ZenPosition position) {

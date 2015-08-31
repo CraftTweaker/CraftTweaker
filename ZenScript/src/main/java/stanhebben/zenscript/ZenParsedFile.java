@@ -26,8 +26,8 @@ import stanhebben.zenscript.type.ZenType;
  * <li>A set of statuments</li>
  * </ul>
  * 
- * This parsed file cannot be executed by itself, but it can be compiled into
- * a module, possibly together with other files.
+ * This parsed file cannot be executed by itself, but it can be compiled into a
+ * module, possibly together with other files.
  * 
  * @author Stan Hebben
  */
@@ -38,7 +38,7 @@ public class ZenParsedFile {
 	private final Map<String, ParsedFunction> functions;
 	private final List<Statement> statements;
 	private final IEnvironmentGlobal environmentScript;
-	
+
 	/**
 	 * Constructs and parses a given file.
 	 * 
@@ -50,43 +50,43 @@ public class ZenParsedFile {
 	public ZenParsedFile(String filename, String classname, ZenTokener tokener, IEnvironmentGlobal environment) {
 		this.filename = filename;
 		this.classname = classname;
-		
+
 		imports = new ArrayList<Import>();
 		functions = new HashMap<String, ParsedFunction>();
 		statements = new ArrayList<Statement>();
 		environmentScript = new EnvironmentScript(environment);
-		
+
 		tokener.setFile(this);
-		
+
 		while (tokener.peek() != null && tokener.peek().getType() == T_IMPORT) {
 			Token start = tokener.next();
-			
+
 			List<String> importName = new ArrayList<String>();
 			Token tName = tokener.required(T_ID, "identifier expected");
 			importName.add(tName.getValue());
-			
+
 			while (tokener.optional(T_DOT) != null) {
 				Token tNamePart = tokener.required(T_ID, "identifier expected");
 				importName.add(tNamePart.getValue());
 			}
-			
+
 			String rename = null;
 			if (tokener.optional(T_AS) != null) {
 				Token tRename = tokener.required(T_ID, "identifier expected");
 				rename = tRename.getValue();
 			}
-			
+
 			tokener.required(T_SEMICOLON, "; expected");
-			
+
 			imports.add(new Import(start.getPosition(), importName, rename));
 		}
-		
+
 		for (Import imprt : imports) {
 			List<String> name = imprt.getName();
 			IPartialExpression type = null;
-			
+
 			StringBuilder nameSoFar = new StringBuilder();
-			
+
 			for (String part : name) {
 				if (type == null) {
 					nameSoFar.append(part);
@@ -104,7 +104,7 @@ public class ZenParsedFile {
 					}
 				}
 			}
-			
+
 			if (type != null) {
 				IZenSymbol symbol = type.toSymbol();
 				if (symbol == null) {
@@ -116,7 +116,7 @@ public class ZenParsedFile {
 				environmentScript.putValue(imprt.getRename(), new SymbolType(ZenType.ANY), imprt.getPosition());
 			}
 		}
-		
+
 		while (tokener.hasNext()) {
 			Token next = tokener.peek();
 			if (next.getType() == T_FUNCTION) {
@@ -130,11 +130,11 @@ public class ZenParsedFile {
 			}
 		}
 	}
-	
+
 	public IEnvironmentGlobal getEnvironment() {
 		return environmentScript;
 	}
-	
+
 	/**
 	 * Gets the output classname for this file.
 	 * 
@@ -143,7 +143,7 @@ public class ZenParsedFile {
 	public String getClassName() {
 		return classname;
 	}
-	
+
 	/**
 	 * Gets the input filename for this file.
 	 * 
@@ -152,7 +152,7 @@ public class ZenParsedFile {
 	public String getFileName() {
 		return filename;
 	}
-	
+
 	/**
 	 * Gets the imports list.
 	 * 
@@ -161,7 +161,7 @@ public class ZenParsedFile {
 	public List<Import> getImports() {
 		return imports;
 	}
-	
+
 	/**
 	 * Gets this file's script statements.
 	 * 
@@ -170,7 +170,7 @@ public class ZenParsedFile {
 	public List<Statement> getStatements() {
 		return statements;
 	}
-	
+
 	/**
 	 * Gets the functions defined inside this file.
 	 * 
@@ -179,7 +179,7 @@ public class ZenParsedFile {
 	public Map<String, ParsedFunction> getFunctions() {
 		return functions;
 	}
-	
+
 	@Override
 	public String toString() {
 		return filename;

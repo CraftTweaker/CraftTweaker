@@ -16,11 +16,11 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class FormattedStringJoin implements IMCFormattedString {
 	private final IMCFormattedString[] values;
-	
+
 	public FormattedStringJoin(IMCFormattedString first, IMCFormattedString second) {
 		values = new IMCFormattedString[] { first, second };
 	}
-	
+
 	public FormattedStringJoin(IMCFormattedString[] values) {
 		this.values = values;
 	}
@@ -37,7 +37,7 @@ public class FormattedStringJoin implements IMCFormattedString {
 	@Override
 	public String getTooltipString(String context) {
 		boolean first = true;
-		
+
 		StringBuilder result = new StringBuilder();
 		for (IMCFormattedString value : values) {
 			if (first) {
@@ -45,11 +45,11 @@ public class FormattedStringJoin implements IMCFormattedString {
 			} else {
 				result.append(context);
 			}
-			
+
 			result.append(value.getTooltipString());
 			result.append(EnumChatFormatting.RESET);
 		}
-		
+
 		return result.toString();
 	}
 

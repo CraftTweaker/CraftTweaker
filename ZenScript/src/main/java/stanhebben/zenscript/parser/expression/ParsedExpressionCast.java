@@ -18,10 +18,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionCast extends ParsedExpression {
 	private final ParsedExpression value;
 	private final ZenType type;
-	
+
 	public ParsedExpressionCast(ZenPosition position, ParsedExpression value, ZenType type) {
 		super(position);
-		
+
 		this.value = value;
 		this.type = type;
 	}
@@ -29,8 +29,8 @@ public class ParsedExpressionCast extends ParsedExpression {
 	@Override
 	public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
 		return value
-				.compile(environment, type)
-				.eval(environment)
-				.cast(getPosition(), environment, type);
+			.compile(environment, type)
+			.eval(environment)
+			.cast(getPosition(), environment, type);
 	}
 }

@@ -19,10 +19,10 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
  */
 public class ExpressionMapSize extends Expression {
 	private final Expression map;
-	
+
 	public ExpressionMapSize(ZenPosition position, Expression map) {
 		super(position);
-		
+
 		this.map = map;
 	}
 

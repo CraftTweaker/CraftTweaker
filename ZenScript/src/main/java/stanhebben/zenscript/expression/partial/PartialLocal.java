@@ -24,7 +24,7 @@ import stanhebben.zenscript.util.ZenPosition;
 public class PartialLocal implements IPartialExpression {
 	private final ZenPosition position;
 	private final SymbolLocal variable;
-	
+
 	public PartialLocal(ZenPosition position, SymbolLocal variable) {
 		this.position = position;
 		this.variable = variable;

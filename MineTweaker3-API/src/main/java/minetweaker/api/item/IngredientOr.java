@@ -21,18 +21,18 @@ public class IngredientOr implements IIngredient {
 	private final String mark;
 	private final IItemCondition[] conditions;
 	private final IItemTransformer[] transformers;
-	
+
 	public IngredientOr(IIngredient[] elements) {
 		this.elements = elements;
 		mark = null;
 		conditions = ArrayUtil.EMPTY_CONDITIONS;
 		transformers = ArrayUtil.EMPTY_TRANSFORMERS;
 	}
-	
+
 	public IngredientOr(IIngredient a, IIngredient b) {
-		this(new IIngredient[] {a, b});
+		this(new IIngredient[] { a, b });
 	}
-	
+
 	private IngredientOr(IIngredient[] elements, String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
 		this.elements = elements;
 		this.mark = mark;
@@ -58,7 +58,7 @@ public class IngredientOr implements IIngredient {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		List<ILiquidStack> result = new ArrayList<ILiquidStack>();
@@ -103,17 +103,17 @@ public class IngredientOr implements IIngredient {
 			if (ingredient.matches(item))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		for (IIngredient ingredient : elements) {
 			if (ingredient.matches(liquid))
 				return true;
 		}
-		
+
 		return false;
 	}
 
@@ -124,7 +124,7 @@ public class IngredientOr implements IIngredient {
 			if (!matches(item))
 				return false;
 		}
-		
+
 		return true;
 	}
 
@@ -133,7 +133,7 @@ public class IngredientOr implements IIngredient {
 		for (IItemTransformer transformer : transformers) {
 			item = transformer.transform(item, byPlayer);
 		}
-		
+
 		return item;
 	}
 

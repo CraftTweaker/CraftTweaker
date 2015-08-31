@@ -19,46 +19,45 @@ public class CastingRuleListList implements ICastingRule {
 	private final ICastingRule base;
 	private final ZenTypeArrayList from;
 	private final ZenTypeArrayList to;
-	
+
 	public CastingRuleListList(ICastingRule base, ZenTypeArrayList from, ZenTypeArrayList to) {
 		this.base = base;
 		this.from = from;
 		this.to = to;
 	}
-	
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		MethodOutput output = method.getOutput();
-		
+
 		// TODO: implement this
 		throw new UnsupportedOperationException("Not yet implemented");
-		
-/*		Type fromType = componentFrom.toASMType();
-		Type toType = componentTo.toASMType();
 
-		int result = output.local(List.class);
-		int iterator = output.local(Iterator.class);
-		
-		// construct new list
-		output.dup();
-		
-		
-		output.invoke(List.class, "iterator", void.class);
-		output.storeObject(iterator);
-		
-		Label loop = new Label();
-		output.label(loop);
-		output.loadObject(iterator);
-		
-		
-		if (base != null)
-			base.compile(method);
-		
-		
-		
-		output.pop();
-
-		output.loadObject(result);*/
+		/*
+		 * Type fromType = componentFrom.toASMType(); Type toType =
+		 * componentTo.toASMType();
+		 * 
+		 * int result = output.local(List.class); int iterator =
+		 * output.local(Iterator.class);
+		 * 
+		 * // construct new list output.dup();
+		 * 
+		 * 
+		 * output.invoke(List.class, "iterator", void.class);
+		 * output.storeObject(iterator);
+		 * 
+		 * Label loop = new Label(); output.label(loop);
+		 * output.loadObject(iterator);
+		 * 
+		 * 
+		 * if (base != null) base.compile(method);
+		 * 
+		 * 
+		 * 
+		 * output.pop();
+		 * 
+		 * output.loadObject(result);
+		 */
 	}
 
 	@Override

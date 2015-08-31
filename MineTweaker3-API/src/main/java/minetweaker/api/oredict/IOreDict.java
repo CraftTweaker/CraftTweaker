@@ -19,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenMemberGetter;
 public interface IOreDict {
 	@ZenMemberGetter
 	public IOreDictEntry get(String name);
-	
+
 	@ZenGetter("entries")
 	public List<IOreDictEntry> getEntries();
 }

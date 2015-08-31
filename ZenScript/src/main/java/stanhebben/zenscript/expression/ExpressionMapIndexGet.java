@@ -20,15 +20,15 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 public class ExpressionMapIndexGet extends Expression {
 	private final Expression map;
 	private final Expression index;
-	
+
 	private final ZenType type;
-	
+
 	public ExpressionMapIndexGet(ZenPosition position, Expression map, Expression index) {
 		super(position);
-		
+
 		this.map = map;
 		this.index = index;
-		
+
 		type = ((ZenTypeAssociative) map.getType()).getValueType();
 	}
 

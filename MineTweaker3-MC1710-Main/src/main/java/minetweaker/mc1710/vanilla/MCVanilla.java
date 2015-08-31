@@ -17,7 +17,7 @@ import minetweaker.api.vanilla.IVanilla;
 public class MCVanilla implements IVanilla {
 	private final MCLootRegistry lootRegistry = new MCLootRegistry();
 	private final MCSeedRegistry seedRegistry = new MCSeedRegistry();
-	
+
 	@Override
 	public ILootRegistry getLoot() {
 		return lootRegistry;

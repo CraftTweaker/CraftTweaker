@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataBool implements IData {
 	private final boolean value;
-	
+
 	public DataBool(boolean value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataBool implements IData {
 	public String asString() {
 		return Boolean.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataBool implements IData {
 	public boolean contains(IData data) {
 		return data.asBool() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData other) {
 		return value == other.asBool();
 	}
-	
+
 	@Override
 	public int compareTo(IData other) {
 		throw new UnsupportedOperationException("Cannot compare bool values");
@@ -179,7 +179,7 @@ public class DataBool implements IData {
 	public IData not() {
 		return new DataBool(!value);
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString();

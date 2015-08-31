@@ -29,7 +29,7 @@ public class EnvironmentGlobal implements IEnvironmentGlobal {
 	private final Map<String, IZenSymbol> local;
 	private final ClassNameGenerator nameGen;
 	private final TypeRegistry types;
-	
+
 	public EnvironmentGlobal(
 			IZenCompileEnvironment environment,
 			Map<String, byte[]> classes,
@@ -41,31 +41,31 @@ public class EnvironmentGlobal implements IEnvironmentGlobal {
 		this.types = environment.getTypeRegistry();
 		this.local = new HashMap<String, IZenSymbol>();
 	}
-	
+
 	public IZenCompileEnvironment getCompileEnvironment() {
 		return environment;
 	}
-	
+
 	@Override
 	public ZenType getType(Type type) {
 		return types.getType(type);
 	}
-	
+
 	@Override
 	public boolean containsClass(String name) {
 		return classes.containsKey(name);
 	}
-	
+
 	@Override
 	public void putClass(String name, byte[] data) {
 		classes.put(name, data);
 	}
-	
+
 	@Override
 	public String makeClassName() {
 		return nameGen.generate();
 	}
-	
+
 	@Override
 	public TypeExpansion getExpansion(String type) {
 		return environment.getExpansion(type);

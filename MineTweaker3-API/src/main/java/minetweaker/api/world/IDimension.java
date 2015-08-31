@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface IDimension extends IBlockGroup {
 	@ZenGetter
 	public boolean isDay();
-	
+
 	@ZenMethod
 	public int getBrightness(int x, int y, int z);
 }

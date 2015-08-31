@@ -17,13 +17,13 @@ public class IngredientItem implements IIngredient {
 	private final IItemCondition[] conditions;
 	private final IItemTransformer[] transformers;
 	private final List<IItemStack> items;
-	
+
 	public IngredientItem(IItemStack item, String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
 		this.item = item;
 		this.mark = mark;
 		this.conditions = conditions;
 		this.transformers = transformers;
-		
+
 		items = Collections.singletonList(item);
 	}
 
@@ -41,7 +41,7 @@ public class IngredientItem implements IIngredient {
 	public List<IItemStack> getItems() {
 		return items;
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return Collections.emptyList();
@@ -74,15 +74,17 @@ public class IngredientItem implements IIngredient {
 
 	@Override
 	public boolean matches(IItemStack item) {
-		if (!this.item.matches(item)) return false;
-		
+		if (!this.item.matches(item))
+			return false;
+
 		for (IItemCondition condition : conditions) {
-			if (!condition.matches(item)) return false;
+			if (!condition.matches(item))
+				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		return false;
@@ -92,9 +94,10 @@ public class IngredientItem implements IIngredient {
 	public boolean contains(IIngredient ingredient) {
 		List<IItemStack> iitems = ingredient.getItems();
 		for (IItemStack iitem : iitems) {
-			if (!matches(iitem)) return false;
+			if (!matches(iitem))
+				return false;
 		}
-		
+
 		return true;
 	}
 
@@ -103,7 +106,7 @@ public class IngredientItem implements IIngredient {
 		for (IItemTransformer transform : transformers) {
 			item = transform.transform(item, byPlayer);
 		}
-		
+
 		return item;
 	}
 
@@ -116,11 +119,11 @@ public class IngredientItem implements IIngredient {
 	public Object getInternal() {
 		return item.getInternal();
 	}
-	
+
 	// #############################
 	// ### Object implementation ###
 	// #############################
-	
+
 	@Override
 	public String toString() {
 		return "(Ingredient) " + item.toString();

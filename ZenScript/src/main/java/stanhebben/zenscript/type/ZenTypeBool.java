@@ -38,48 +38,49 @@ public class ZenTypeBool extends ZenType {
 	private static final String ANY_NAME = "any/AnyBool";
 	private static final String ANY_NAME_2 = "any.AnyBool";
 	private static final String ANY_NAME_DESC = "Lany/AnyBool;";
-	
-	public ZenTypeBool() {}
+
+	public ZenTypeBool() {
+	}
 
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		return null;
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		rules.registerCastingRule(STRING, new CastingRuleStaticMethod(BOOL_TOSTRING_STATIC));
 		rules.registerCastingRule(BOOLOBJECT, new CastingRuleStaticMethod(BOOL_VALUEOF));
 		rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(
 				getAnyClassName(environment), "valueOf", ANY, BOOL
-		)));
-		
+			)));
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-	
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == BOOL || type == ANY || type == ZenTypeString.INSTANCE || canCastExpansion(environment, type);
-	}*/
+
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type == BOOL || type == ANY || type ==
+	 * ZenTypeString.INSTANCE || canCastExpansion(environment, type); }
+	 */
 
 	@Override
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return canCastImplicit(type, environment);
 	}
-	
-	/*@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type == BOOL || type == ZenTypeBoolObject.INSTANCE || type == STRING || type == ANY) {
-			return new ExpressionAs(position, value, type);
-		} else if (canCastExpansion(environment, type)) {
-			return castExpansion(position, environment, value, type);
-		} else {
-			return new ExpressionAs(position, value, type);
-		}
-	}*/
-	
+
+	/*
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) { if (type == BOOL || type
+	 * == ZenTypeBoolObject.INSTANCE || type == STRING || type == ANY) { return
+	 * new ExpressionAs(position, value, type); } else if
+	 * (canCastExpansion(environment, type)) { return castExpansion(position,
+	 * environment, value, type); } else { return new ExpressionAs(position,
+	 * value, type); } }
+	 */
+
 	@Override
 	public Class toJavaClass() {
 		return boolean.class;
@@ -94,12 +95,12 @@ public class ZenTypeBool extends ZenType {
 	public int getNumberType() {
 		return 0;
 	}
-	
+
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
 		return new ExpressionArithmeticUnary(position, operator, value);
 	}
-	
+
 	@Override
 	public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
 		if (operator == OperatorType.CAT) {
@@ -109,7 +110,7 @@ public class ZenTypeBool extends ZenType {
 					left.cast(position, environment, STRING),
 					right.cast(position, environment, STRING), OperatorType.CAT);
 		}
-		
+
 		if (right.getType().canCastImplicit(BOOL, environment)) {
 			switch (operator) {
 				case AND:
@@ -118,7 +119,7 @@ public class ZenTypeBool extends ZenType {
 					if (right.getType() != BOOL) {
 						right = right.cast(position, environment, BOOL);
 					}
-					
+
 					return new ExpressionArithmeticBinary(position, operator, left, right);
 				default:
 					environment.error(position, "unsupported bool operator: " + operator);
@@ -129,14 +130,14 @@ public class ZenTypeBool extends ZenType {
 			return new ExpressionInvalid(position, BOOL);
 		}
 	}
-	
+
 	@Override
 	public Expression trinary(
 			ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
 		environment.error(position, "operation not supported on a bool value");
 		return new ExpressionInvalid(position, BOOL);
 	}
-	
+
 	@Override
 	public Expression compare(
 			ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
@@ -147,14 +148,14 @@ public class ZenTypeBool extends ZenType {
 			return new ExpressionInvalid(position, BOOL);
 		}
 	}
-	
+
 	@Override
 	public Expression call(
 			ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
 		environment.error(position, "cannot call a boolean value");
 		return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
 	}
-	
+
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
 		IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
@@ -182,33 +183,32 @@ public class ZenTypeBool extends ZenType {
 		return false;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		if (type == this) {
-			// nothing to do
-		} else if (type == ZenTypeBoolObject.INSTANCE) {
-			environment.getOutput().invokeStatic(Boolean.class, "valueOf", Boolean.class, boolean.class);
-		} else if (type == STRING) {
-			environment.getOutput().invokeStatic(Boolean.TYPE, "toString", String.class, boolean.class);
-		} else if (type == ANY) {
-			environment.getOutput().invokeStatic(getAnyClassName(environment), "valueOf", "(Z)" + signature(IAny.class));
-		} else if (!compileCastExpansion(position, environment, type)) {
-			environment.error(position, "Cannot compile bool to " + type);
-		}
-	}*/
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { if (type == this) { //
+	 * nothing to do } else if (type == ZenTypeBoolObject.INSTANCE) {
+	 * environment.getOutput().invokeStatic(Boolean.class, "valueOf",
+	 * Boolean.class, boolean.class); } else if (type == STRING) {
+	 * environment.getOutput().invokeStatic(Boolean.TYPE, "toString",
+	 * String.class, boolean.class); } else if (type == ANY) {
+	 * environment.getOutput().invokeStatic(getAnyClassName(environment),
+	 * "valueOf", "(Z)" + signature(IAny.class)); } else if
+	 * (!compileCastExpansion(position, environment, type)) {
+	 * environment.error(position, "Cannot compile bool to " + type); } }
+	 */
 
 	@Override
 	public String getName() {
 		return "bool";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		if (!environment.containsClass(ANY_NAME_2)) {
 			environment.putClass(ANY_NAME_2, new byte[0]);
 			environment.putClass(ANY_NAME_2, AnyClassWriter.construct(new AnyDefinitionBool(environment), ANY_NAME, Type.BOOLEAN_TYPE));
 		}
-		
+
 		return ANY_NAME;
 	}
 
@@ -216,10 +216,10 @@ public class ZenTypeBool extends ZenType {
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionBool(position, false);
 	}
-	
+
 	private class AnyDefinitionBool implements IAnyDefinition {
 		private final IEnvironmentGlobal environment;
-		
+
 		public AnyDefinitionBool(IEnvironmentGlobal environment) {
 			this.environment = environment;
 		}
@@ -228,9 +228,9 @@ public class ZenTypeBool extends ZenType {
 		public void defineMembers(ClassVisitor output) {
 			output.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL, "TRUE", ANY_NAME_DESC, null, null);
 			output.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL, "FALSE", ANY_NAME_DESC, null, null);
-			
+
 			output.visitField(Opcodes.ACC_PRIVATE, "value", "Z", null, null);
-			
+
 			MethodOutput clinit = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
 			clinit.start();
 			clinit.newObject(ANY_NAME);
@@ -245,7 +245,7 @@ public class ZenTypeBool extends ZenType {
 			clinit.putStaticField(ANY_NAME, "TRUE", ANY_NAME_DESC);
 			clinit.returnType(Type.VOID_TYPE);
 			clinit.end();
-			
+
 			MethodOutput valueOf = new MethodOutput(output, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "valueOf", "(Z)" + signature(IAny.class), null, null);
 			Label lblFalse = new Label();
 			valueOf.start();
@@ -257,7 +257,7 @@ public class ZenTypeBool extends ZenType {
 			valueOf.getStaticField(ANY_NAME, "FALSE", ANY_NAME_DESC);
 			valueOf.returnObject();
 			valueOf.end();
-			
+
 			MethodOutput constructor = new MethodOutput(output, Opcodes.ACC_PUBLIC, "<init>", "(Z)V", null, null);
 			constructor.start();
 			constructor.loadObject(0);
@@ -268,23 +268,23 @@ public class ZenTypeBool extends ZenType {
 			constructor.returnType(Type.VOID_TYPE);
 			constructor.end();
 		}
-		
+
 		@Override
 		public void defineStaticCanCastImplicit(MethodOutput output) {
 			Label lblCan = new Label();
-			
+
 			output.constant(Type.BOOLEAN_TYPE);
 			output.loadObject(0);
 			output.ifACmpEq(lblCan);
-			
+
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.compileAnyCanCastImplicit(BOOL, output, environment, 0);
 			}
-			
+
 			output.iConst0();
 			output.returnInt();
-			
+
 			output.label(lblCan);
 			output.iConst1();
 			output.returnInt();
@@ -296,7 +296,7 @@ public class ZenTypeBool extends ZenType {
 			if (expansion != null) {
 				expansion.compileAnyCast(BOOL, output, environment, 0, 1);
 			}
-			
+
 			throwCastException(output, "bool", 1);
 		}
 
@@ -492,21 +492,21 @@ public class ZenTypeBool extends ZenType {
 		@Override
 		public void defineAs(MethodOutput output) {
 			int localValue = output.local(Type.BYTE_TYPE);
-			
+
 			getValue(output);
 			output.store(Type.BYTE_TYPE, localValue);
 			TypeExpansion expansion = environment.getExpansion(getName());
 			if (expansion != null) {
 				expansion.compileAnyCast(BYTE, output, environment, localValue, 1);
 			}
-			
+
 			throwCastException(output, "bool", 1);
 		}
 
 		@Override
 		public void defineIs(MethodOutput output) {
 			Label lblEq = new Label();
-			
+
 			output.loadObject(1);
 			output.constant(Type.BOOLEAN_TYPE);
 			output.ifACmpEq(lblEq);
@@ -516,7 +516,7 @@ public class ZenTypeBool extends ZenType {
 			output.iConst1();
 			output.returnInt();
 		}
-		
+
 		@Override
 		public void defineGetNumberType(MethodOutput output) {
 			output.iConst0();
@@ -538,12 +538,12 @@ public class ZenTypeBool extends ZenType {
 			Label lblEqual = new Label();
 			output.loadObject(0);
 			output.loadObject(1);
-			
+
 			output.ifACmpEq(lblEqual);
-			
+
 			output.iConst0();
 			output.returnInt();
-			
+
 			output.label(lblEqual);
 			output.iConst1();
 			output.returnInt();
@@ -553,12 +553,12 @@ public class ZenTypeBool extends ZenType {
 		public void defineHashCode(MethodOutput output) {
 			output.invokeSpecial("java/lang/Object", "hashCode", "()I");
 		}
-		
+
 		private void getValue(MethodOutput output) {
 			output.loadObject(0);
 			output.getField(ANY_NAME, "value", "Z");
 		}
-		
+
 		private void valueOf(MethodOutput output) {
 			output.invokeStatic(ANY_NAME, "valueOf", "(Z)" + signature(IAny.class));
 		}

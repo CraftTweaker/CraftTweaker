@@ -28,15 +28,15 @@ public class ZenNativeMember {
 	private IJavaMethod getter;
 	private IJavaMethod setter;
 	private final List<IJavaMethod> methods = new ArrayList<IJavaMethod>();
-	
+
 	public IJavaMethod getGetter() {
 		return getter;
 	}
-	
+
 	public IJavaMethod getSetter() {
 		return setter;
 	}
-	
+
 	public void setGetter(IJavaMethod getter) {
 		if (this.getter == null) {
 			this.getter = getter;
@@ -44,7 +44,7 @@ public class ZenNativeMember {
 			throw new RuntimeException("already has a getter");
 		}
 	}
-	
+
 	public void setSetter(IJavaMethod setter) {
 		if (this.setter == null) {
 			this.setter = setter;
@@ -60,20 +60,20 @@ public class ZenNativeMember {
 	public IPartialExpression instance(ZenPosition position, IEnvironmentGlobal environment) {
 		return new StaticGetValue(position);
 	}
-	
+
 	public void addMethod(JavaMethod method) {
 		methods.add(method);
 	}
-	
+
 	private class InstanceGetValue implements IPartialExpression {
 		private final ZenPosition position;
 		private final IPartialExpression value;
-		
+
 		public InstanceGetValue(ZenPosition position, IPartialExpression value) {
 			this.position = position;
 			this.value = value;
 		}
-		
+
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
 			return new ExpressionCallVirtual(position, environment, getter, value.eval(environment));
@@ -99,17 +99,17 @@ public class ZenNativeMember {
 				return new ExpressionCallVirtual(position, environment, method, value.eval(environment), values);
 			}
 		}
-		
+
 		@Override
 		public ZenType[] predictCallTypes(int numArguments) {
 			return JavaMethod.predict(methods, numArguments);
 		}
-		
+
 		@Override
 		public IZenSymbol toSymbol() {
 			return null;
 		}
-		
+
 		@Override
 		public ZenType getType() {
 			return getter.getReturnType();
@@ -121,14 +121,14 @@ public class ZenNativeMember {
 			return ZenType.ANY;
 		}
 	}
-	
+
 	private class StaticGetValue implements IPartialExpression {
 		private final ZenPosition position;
-		
+
 		public StaticGetValue(ZenPosition position) {
 			this.position = position;
 		}
-		
+
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
 			return new ExpressionCallStatic(position, environment, setter);
@@ -154,7 +154,7 @@ public class ZenNativeMember {
 				return new ExpressionCallStatic(position, environment, method, values);
 			}
 		}
-		
+
 		@Override
 		public ZenType[] predictCallTypes(int numArguments) {
 			return JavaMethod.predict(methods, numArguments);
@@ -164,7 +164,7 @@ public class ZenNativeMember {
 		public IZenSymbol toSymbol() {
 			return new StaticSymbol();
 		}
-		
+
 		@Override
 		public ZenType getType() {
 			return getter.getReturnType();
@@ -176,7 +176,7 @@ public class ZenNativeMember {
 			return ZenType.ANY;
 		}
 	}
-	
+
 	private class StaticSymbol implements IZenSymbol {
 		@Override
 		public IPartialExpression instance(ZenPosition position) {

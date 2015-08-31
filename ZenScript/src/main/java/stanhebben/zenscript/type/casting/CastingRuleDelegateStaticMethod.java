@@ -16,7 +16,7 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
 public class CastingRuleDelegateStaticMethod implements ICastingRuleDelegate {
 	private final ICastingRuleDelegate target;
 	private final IJavaMethod method;
-	
+
 	public CastingRuleDelegateStaticMethod(ICastingRuleDelegate target, IJavaMethod method) {
 		this.target = target;
 		this.method = method;

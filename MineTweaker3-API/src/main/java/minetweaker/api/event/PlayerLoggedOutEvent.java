@@ -17,11 +17,11 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("minetweaker.event.PlayerLoggedOutEvent")
 public class PlayerLoggedOutEvent {
 	private final IPlayer player;
-	
+
 	public PlayerLoggedOutEvent(IPlayer player) {
 		this.player = player;
 	}
-	
+
 	@ZenGetter("player")
 	public IPlayer getPlayer() {
 		return player;

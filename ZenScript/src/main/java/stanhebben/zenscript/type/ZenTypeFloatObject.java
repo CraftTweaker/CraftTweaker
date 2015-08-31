@@ -32,8 +32,9 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
  */
 public class ZenTypeFloatObject extends ZenType {
 	public static final ZenTypeFloatObject INSTANCE = new ZenTypeFloatObject();
-	
-	private ZenTypeFloatObject() {}
+
+	private ZenTypeFloatObject() {
+	}
 
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
@@ -101,37 +102,31 @@ public class ZenTypeFloatObject extends ZenType {
 		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleNullableStaticMethod(
 				DOUBLE_VALUEOF,
 				new CastingRuleVirtualMethod(DOUBLE_VALUE)));
-		
+
 		rules.registerCastingRule(STRING, new CastingRuleNullableVirtualMethod(FLOATOBJECT, FLOAT_TOSTRING));
 		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(
 				JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, FLOAT),
 				new CastingRuleVirtualMethod(FLOAT_VALUE)));
-		
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
 
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return FLOAT.canCastImplicit(type, environment);
-	}
-
-	@Override
-	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return FLOAT.canCastExplicit(type, environment);
-	}
-	
-	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type.getNumberType() > 0 || type == STRING) {
-			return new ExpressionAs(position, value, type);
-		} else if (canCastExpansion(environment, type)) {
-			return castExpansion(position, environment, value, type);
-		} else {
-			return new ExpressionAs(position, value, type);
-		}
-	}*/
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return FLOAT.canCastImplicit(type, environment); }
+	 * 
+	 * @Override public boolean canCastExplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return FLOAT.canCastExplicit(type, environment); }
+	 * 
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) { if (type.getNumberType() >
+	 * 0 || type == STRING) { return new ExpressionAs(position, value, type); }
+	 * else if (canCastExpansion(environment, type)) { return
+	 * castExpansion(position, environment, value, type); } else { return new
+	 * ExpressionAs(position, value, type); } }
+	 */
 
 	@Override
 	public Class toJavaClass() {
@@ -158,41 +153,35 @@ public class ZenTypeFloatObject extends ZenType {
 		return true;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		if (type == this) {
-			// nothing to do
-		} else if (type == FLOAT) {
-			environment.getOutput().invokeVirtual(Float.class, "floatValue", float.class);
-		} else if (type == STRING) {
-			environment.getOutput().invokeVirtual(Float.class, "toString", String.class);
-		} else if (type == ANY) {
-			MethodOutput output = environment.getOutput();
-			
-			Label lblNotNull = new Label();
-			Label lblAfter = new Label();
-			
-			output.dup();
-			output.ifNonNull(lblNotNull);
-			output.aConstNull();
-			output.goTo(lblAfter);
-			
-			output.label(lblNotNull);
-			output.invokeVirtual(Float.class, "floatValue", float.class);
-			output.invokeStatic(FLOAT.getAnyClassName(environment), "valueOf", "(F)" + signature(IAny.class));
-			
-			output.label(lblAfter);
-		} else {
-			environment.getOutput().invokeVirtual(Float.class, "floatValue", float.class);
-			FLOAT.compileCast(position, environment, type);
-		}
-	}*/
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { if (type == this) { //
+	 * nothing to do } else if (type == FLOAT) {
+	 * environment.getOutput().invokeVirtual(Float.class, "floatValue",
+	 * float.class); } else if (type == STRING) {
+	 * environment.getOutput().invokeVirtual(Float.class, "toString",
+	 * String.class); } else if (type == ANY) { MethodOutput output =
+	 * environment.getOutput();
+	 * 
+	 * Label lblNotNull = new Label(); Label lblAfter = new Label();
+	 * 
+	 * output.dup(); output.ifNonNull(lblNotNull); output.aConstNull();
+	 * output.goTo(lblAfter);
+	 * 
+	 * output.label(lblNotNull); output.invokeVirtual(Float.class, "floatValue",
+	 * float.class); output.invokeStatic(FLOAT.getAnyClassName(environment),
+	 * "valueOf", "(F)" + signature(IAny.class));
+	 * 
+	 * output.label(lblAfter); } else {
+	 * environment.getOutput().invokeVirtual(Float.class, "floatValue",
+	 * float.class); FLOAT.compileCast(position, environment, type); } }
+	 */
 
 	@Override
 	public String getName() {
 		return "float?";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		return FLOAT.getAnyClassName(environment);

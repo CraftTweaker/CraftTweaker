@@ -17,7 +17,7 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class SymbolJavaStaticMethod implements IZenSymbol {
 	private final IJavaMethod method;
-	
+
 	public SymbolJavaStaticMethod(IJavaMethod method) {
 		this.method = method;
 	}

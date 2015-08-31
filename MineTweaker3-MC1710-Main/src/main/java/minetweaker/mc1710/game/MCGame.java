@@ -40,17 +40,18 @@ import net.minecraftforge.fluids.FluidRegistry;
  */
 public class MCGame implements IGame {
 	private static final Map<String, String> TRANSLATIONS = MineTweakerHacks.getTranslations();
-	
+
 	public static final MCGame INSTANCE = new MCGame();
-	
+
 	private boolean locked = false;
-	
-	private MCGame() {}
+
+	private MCGame() {
+	}
 
 	@Override
 	public List<IItemDefinition> getItems() {
 		List<IItemDefinition> result = new ArrayList<IItemDefinition>();
-		for (String item : (Set<String>)Item.itemRegistry.getKeys()) {
+		for (String item : (Set<String>) Item.itemRegistry.getKeys()) {
 			result.add(new MCItemDefinition(item, (Item) Item.itemRegistry.getObject(item)));
 		}
 		return result;
@@ -59,10 +60,10 @@ public class MCGame implements IGame {
 	@Override
 	public List<IBlockDefinition> getBlocks() {
 		List<IBlockDefinition> result = new ArrayList<IBlockDefinition>();
-		for (String block : (Set<String>)Block.blockRegistry.getKeys()) {
+		for (String block : (Set<String>) Block.blockRegistry.getKeys()) {
 			result.add(MineTweakerMC.getBlockDefinition((Block) Block.blockRegistry.getObject(block)));
 		}
-		
+
 		return result;
 	}
 
@@ -85,15 +86,15 @@ public class MCGame implements IGame {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public List<IEntityDefinition> getEntities() {
 		List<IEntityDefinition> result = new ArrayList<IEntityDefinition>();
-		
+
 		for (EntityRegistry.EntityRegistration entityRegistration : MineTweakerHacks.getEntityClassRegistrations().values()) {
 			result.add(new MCEntityDefinition(entityRegistration));
 		}
-		
+
 		return result;
 	}
 
@@ -133,18 +134,18 @@ public class MCGame implements IGame {
 	public void signalLockError()
 	{
 		MineTweakerAPI.getLogger().logError("Reload of scripts blocked (script lock)");
-		
+
 		if (Minecraft.isGuiEnabled()) {
 			// Commented out due to unresolved import
-			/** Minecraft.getMinecraft().displayGuiScreen(
-					new GuiCannotRemodify(
-							"Minecraft has been tweaked for another server",
-							"with modifications that cannot be rolled back.",
-							"Please restart your game."));
-			**/
+			/**
+			 * Minecraft.getMinecraft().displayGuiScreen( new GuiCannotRemodify(
+			 * "Minecraft has been tweaked for another server",
+			 * "with modifications that cannot be rolled back.",
+			 * "Please restart your game."));
+			 **/
 		}
 	}
-	
+
 	// ######################
 	// ### Action classes ###
 	// ######################
@@ -154,37 +155,37 @@ public class MCGame implements IGame {
 	 * 
 	 * @author Joshiejack
 	 */
-    private static class SetTranslation implements IUndoableAction {
-        private String original;
-        private final String lang;
-        private final String key;
-        private final String text;
+	private static class SetTranslation implements IUndoableAction {
+		private String original;
+		private final String lang;
+		private final String key;
+		private final String text;
 		private boolean added;
 
-        public SetTranslation(String lang, String key, String text) {
-            this.lang = lang;
-            this.key = key;
-            this.text = text;
-        }
+		public SetTranslation(String lang, String key, String text) {
+			this.lang = lang;
+			this.key = key;
+			this.text = text;
+		}
 
-        @Override
-        public void apply() {
-            if (lang == null || MineTweakerPlatformUtils.isLanguageActive(lang)) {
-                original = TRANSLATIONS.get(key);
-                TRANSLATIONS.put(key, text);
+		@Override
+		public void apply() {
+			if (lang == null || MineTweakerPlatformUtils.isLanguageActive(lang)) {
+				original = TRANSLATIONS.get(key);
+				TRANSLATIONS.put(key, text);
 				added = true;
-            } else {
+			} else {
 				added = false;
 			}
-        }
+		}
 
-        @Override
-        public boolean canUndo() {
-            return TRANSLATIONS != null;
-        }
+		@Override
+		public boolean canUndo() {
+			return TRANSLATIONS != null;
+		}
 
-        @Override
-        public void undo() {
+		@Override
+		public void undo() {
 			if (added) {
 				if (original == null) {
 					TRANSLATIONS.remove(key);
@@ -192,21 +193,21 @@ public class MCGame implements IGame {
 					TRANSLATIONS.put(key, original);
 				}
 			}
-        }
+		}
 
-        @Override
-        public String describe() {
-            return "Setting localization for the key: " + key + " to " + text;
-        }
+		@Override
+		public String describe() {
+			return "Setting localization for the key: " + key + " to " + text;
+		}
 
-        @Override
-        public String describeUndo() {
-            return "Setting localization for the key: " + key + " to " + original;
-        }
+		@Override
+		public String describeUndo() {
+			return "Setting localization for the key: " + key + " to " + original;
+		}
 
-        @Override
-        public Object getOverrideKey() {
-            return null;
-        }
-    }
+		@Override
+		public Object getOverrideKey() {
+			return null;
+		}
+	}
 }

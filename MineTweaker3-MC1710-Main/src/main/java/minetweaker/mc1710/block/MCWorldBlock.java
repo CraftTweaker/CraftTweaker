@@ -31,7 +31,7 @@ public class MCWorldBlock implements IBlock {
 	private final int x;
 	private final int y;
 	private final int z;
-	
+
 	public MCWorldBlock(IBlockAccess blocks, int x, int y, int z) {
 		this.blocks = blocks;
 		this.x = x;
@@ -52,10 +52,10 @@ public class MCWorldBlock implements IBlock {
 	@Override
 	public IData getTileData() {
 		TileEntity tileEntity = blocks.getTileEntity(x, y, z);
-		
+
 		if (tileEntity == null)
 			return null;
-		
+
 		NBTTagCompound nbt = new NBTTagCompound();
 		tileEntity.writeToNBT(nbt);
 		return MineTweakerMC.getIData(nbt);

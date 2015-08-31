@@ -16,9 +16,10 @@ import stanhebben.zenscript.value.IAny;
  */
 public class CastingAnyInt implements ICastingRule {
 	public static final CastingAnyInt INSTANCE = new CastingAnyInt();
-	
-	private CastingAnyInt() {}
-	
+
+	private CastingAnyInt() {
+	}
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		method.getOutput().invokeInterface(IAny.class, "asInt", int.class);

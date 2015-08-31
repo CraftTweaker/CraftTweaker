@@ -16,11 +16,11 @@ import net.minecraft.util.IChatComponent;
  */
 public class MCChatMessage implements IChatMessage {
 	private final IChatComponent data;
-	
+
 	public MCChatMessage(String message) {
 		data = new ChatComponentText(message);
 	}
-	
+
 	public MCChatMessage(IChatComponent data) {
 		this.data = data;
 	}

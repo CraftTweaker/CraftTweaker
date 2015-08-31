@@ -15,7 +15,7 @@ import minetweaker.api.mods.IMod;
  */
 public class MCMod implements IMod {
 	private final ModContainer mod;
-	
+
 	public MCMod(ModContainer mod) {
 		this.mod = mod;
 	}
@@ -29,7 +29,7 @@ public class MCMod implements IMod {
 	public String getName() {
 		return mod.getName();
 	}
-	
+
 	@Override
 	public String getVersion() {
 		return mod.getVersion();

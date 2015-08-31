@@ -16,7 +16,7 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
  */
 public class CastingRuleVirtualMethod implements ICastingRule {
 	private final IJavaMethod method;
-	
+
 	public CastingRuleVirtualMethod(IJavaMethod method) {
 		this.method = method;
 	}

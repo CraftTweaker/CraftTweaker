@@ -22,40 +22,40 @@ import stanhebben.zenscript.annotations.ZenOperator;
 public interface ILiquidStack extends IIngredient {
 	@ZenGetter("definition")
 	public ILiquidDefinition getDefinition();
-	
+
 	@ZenGetter("name")
 	public String getName();
-	
+
 	@ZenGetter("displayName")
 	public String getDisplayName();
-	
+
 	@ZenGetter("amount")
 	public int getAmount();
-	
+
 	@ZenGetter("luminosity")
 	public int getLuminosity();
-	
+
 	@ZenGetter("density")
 	public int getDensity();
-	
+
 	@ZenGetter("temperature")
 	public int getTemperature();
-	
+
 	@ZenGetter("viscosity")
 	public int getViscosity();
-	
+
 	@ZenGetter("gaseous")
 	public boolean isGaseous();
-	
+
 	@ZenGetter("tag")
 	public IData getTag();
-	
+
 	@ZenMethod
 	public ILiquidStack withTag(IData data);
-	
+
 	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
 	public ILiquidStack withAmount(int amount);
-	
+
 	public Object getInternal();
 }

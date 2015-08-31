@@ -21,10 +21,11 @@ import minetweaker.runtime.IScriptProvider;
  */
 public class ScriptProviderDirectory implements IScriptProvider {
 	private final File directory;
-	
+
 	public ScriptProviderDirectory(File directory) {
-		if (directory == null) throw new IllegalArgumentException("directory cannot be null");
-		
+		if (directory == null)
+			throw new IllegalArgumentException("directory cannot be null");
+
 		this.directory = directory;
 	}
 

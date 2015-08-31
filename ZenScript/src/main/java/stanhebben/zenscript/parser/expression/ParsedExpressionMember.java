@@ -18,10 +18,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ParsedExpressionMember extends ParsedExpression {
 	private final ParsedExpression value;
 	private final String member;
-	
+
 	public ParsedExpressionMember(ZenPosition position, ParsedExpression value, String member) {
 		super(position);
-		
+
 		this.value = value;
 		this.member = member;
 	}

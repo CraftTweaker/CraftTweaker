@@ -29,7 +29,7 @@ public class PartialStaticGenerated implements IPartialExpression {
 	private final String signature;
 	private final ZenType[] argumentTypes;
 	private final ZenType returnType;
-	
+
 	public PartialStaticGenerated(ZenPosition position, String owner, String method, String signature, ZenType[] argumentTypes, ZenType returnType) {
 		this.position = position;
 		this.owner = owner;
@@ -38,7 +38,7 @@ public class PartialStaticGenerated implements IPartialExpression {
 		this.argumentTypes = argumentTypes;
 		this.returnType = returnType;
 	}
-	
+
 	@Override
 	public Expression eval(IEnvironmentGlobal environment) {
 		environment.error(position, "cannot use a function as value");
@@ -63,12 +63,12 @@ public class PartialStaticGenerated implements IPartialExpression {
 			environment.error(position, "invalid number of arguments");
 			return new ExpressionInvalid(position);
 		}
-		
+
 		Expression[] arguments = new Expression[argumentTypes.length];
 		for (int i = 0; i < arguments.length; i++) {
 			arguments[i] = values[i].cast(position, environment, argumentTypes[i]);
 		}
-		
+
 		return new ExpressionCallStatic(position, environment, JavaMethod.getStatic(owner, method, returnType, argumentTypes), arguments);
 	}
 

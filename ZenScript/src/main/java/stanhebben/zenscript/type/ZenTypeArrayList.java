@@ -25,10 +25,10 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
  */
 public class ZenTypeArrayList extends ZenTypeArray {
 	private final Type type;
-	
+
 	public ZenTypeArrayList(ZenType baseType) {
 		super(baseType);
-		
+
 		type = Type.getType(List.class);
 	}
 
@@ -36,17 +36,17 @@ public class ZenTypeArrayList extends ZenTypeArray {
 	public IPartialExpression getMemberLength(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value) {
 		return new ExpressionListLength(position, value.eval(environment));
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		ICastingRuleDelegate arrayRules = new CastingRuleDelegateList(rules, this);
 		getBaseType().constructCastingRules(environment, arrayRules, followCasters);
-		
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-	
+
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		if (numValues == 1) {
@@ -62,7 +62,7 @@ public class ZenTypeArrayList extends ZenTypeArray {
 	public Class toJavaClass() {
 		return List.class;
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal global) {
 		return null;
@@ -77,25 +77,43 @@ public class ZenTypeArrayList extends ZenTypeArray {
 	public String getSignature() {
 		return signature(List.class);
 	}
-	
+
 	@Override
 	public Expression indexGet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index) {
 		// TODO: implement
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
 	}
 
 	@Override
 	public Expression indexSet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index, Expression value) {
 		// TODO: implement
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
 	}
-	
+
 	private class ExpressionListLength extends Expression {
 		private final Expression value;
-		
+
 		public ExpressionListLength(ZenPosition position, Expression value) {
 			super(position);
-			
+
 			this.value = value;
 		}
 
@@ -107,7 +125,7 @@ public class ZenTypeArrayList extends ZenTypeArray {
 		@Override
 		public void compile(boolean result, IEnvironmentMethod environment) {
 			value.compile(result, environment);
-			
+
 			if (result) {
 				environment.getOutput().invokeInterface(List.class, "size", int.class);
 			}

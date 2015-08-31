@@ -21,14 +21,14 @@ import stanhebben.zenscript.annotations.ZenOperator;
 public interface IBlockPattern {
 	@ZenMethod("blocks")
 	public List<IBlock> getBlocks();
-	
+
 	@ZenOperator(OperatorType.CONTAINS)
 	public boolean matches(IBlock block);
-	
+
 	@ZenOperator(OperatorType.OR)
 	public IBlockPattern or(IBlockPattern pattern);
-	
+
 	@ZenGetter("displayName")
 	public String getDisplayName();
-	
+
 }

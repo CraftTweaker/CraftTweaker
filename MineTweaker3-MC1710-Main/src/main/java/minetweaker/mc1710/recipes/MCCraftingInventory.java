@@ -31,7 +31,7 @@ import net.minecraft.item.ItemStack;
 public class MCCraftingInventory implements ICraftingInventory {
 	private static final ThreadLocal<MCCraftingInventory> cache = new ThreadLocal<MCCraftingInventory>();
 	private static final ThreadLocal<MCCraftingInventory> cache2 = new ThreadLocal<MCCraftingInventory>();
-	
+
 	public static MCCraftingInventory get(InventoryCrafting inventory) {
 		if (cache.get() == null || cache.get().inventory != inventory) {
 			MCCraftingInventory result = new MCCraftingInventory(inventory);
@@ -43,7 +43,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 			return result;
 		}
 	}
-	
+
 	public static MCCraftingInventory get(IInventory inventory, EntityPlayer player) {
 		if (cache2.get() == null || cache2.get().inventory != inventory || cache2.get().player != player) {
 			MCCraftingInventory result = new MCCraftingInventory(inventory, player);
@@ -55,7 +55,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 			return result;
 		}
 	}
-	
+
 	private int width;
 	private int height;
 	private final IInventory inventory;
@@ -64,7 +64,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 	private int stackCount;
 	private final IPlayer player;
 	private final EntityPlayer playerOrig;
-	
+
 	private MCCraftingInventory(InventoryCrafting inventory) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
@@ -72,7 +72,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 		original = new ItemStack[stacks.length];
 		stackCount = 0;
 		update();
-		
+
 		Container container = MineTweakerHacks.getCraftingContainer(inventory);
 		if (container != null) {
 			List<Slot> slots = container.inventorySlots;
@@ -89,7 +89,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 			player = null;
 		}
 	}
-	
+
 	public MCCraftingInventory(IInventory inventory, EntityPlayer player) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
@@ -97,11 +97,11 @@ public class MCCraftingInventory implements ICraftingInventory {
 		original = new ItemStack[stacks.length];
 		stackCount = 0;
 		update();
-		
+
 		playerOrig = player;
 		this.player = player == null ? null : new MCPlayer(player);
 	}
-	
+
 	private void update() {
 		if (inventory.getSizeInventory() != original.length) {
 			width = height = (int) Math.sqrt(inventory.getSizeInventory());
@@ -109,23 +109,25 @@ public class MCCraftingInventory implements ICraftingInventory {
 			original = new ItemStack[stacks.length];
 			stackCount = 0;
 		}
-		
+
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			if (changed(i)) {
-				//System.out.println("Slot " + i + " changed");
+				// System.out.println("Slot " + i + " changed");
 				original[i] = inventory.getStackInSlot(i);
 				if (inventory.getStackInSlot(i) != null) {
-					if (stacks[i] == null) stackCount++;
+					if (stacks[i] == null)
+						stackCount++;
 					stacks[i] = getIItemStack(original[i]);
 				} else {
-					if (stacks[i] != null) stackCount--;
+					if (stacks[i] != null)
+						stackCount--;
 					stacks[i] = null;
 				}
 			}
 		}
-		//System.out.println("Num stack count: " + stackCount);
+		// System.out.println("Num stack count: " + stackCount);
 	}
-	
+
 	@Override
 	public IPlayer getPlayer() {
 		return player;
@@ -145,7 +147,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 	public int getHeight() {
 		return height;
 	}
-	
+
 	@Override
 	public int getStackCount() {
 		return stackCount;
@@ -163,8 +165,8 @@ public class MCCraftingInventory implements ICraftingInventory {
 
 	@Override
 	public void setStack(int x, int y, IItemStack stack) {
-		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
-		
+		// System.out.println("SetStack(" + x + ", " + y + ") " + stack);
+
 		int ix = y * width + x;
 		if (stack != stacks[ix]) {
 			if (stack == null) {
@@ -172,7 +174,7 @@ public class MCCraftingInventory implements ICraftingInventory {
 				inventory.setInventorySlotContents(ix, null);
 			} else {
 				inventory.setInventorySlotContents(ix, getItemStack(stack));
-				
+
 				if (stacks[ix] == null) {
 					stackCount++;
 				}
@@ -183,15 +185,15 @@ public class MCCraftingInventory implements ICraftingInventory {
 
 	@Override
 	public void setStack(int i, IItemStack stack) {
-		//System.out.println("SetStack(" + i + ") " + stack);
-		
+		// System.out.println("SetStack(" + i + ") " + stack);
+
 		if (stack != stacks[i]) {
 			if (stack == null) {
 				stackCount--;
 				inventory.setInventorySlotContents(i, null);
 			} else {
 				inventory.setInventorySlotContents(i, getItemStack(stack));
-				
+
 				if (stacks[i] == null) {
 					stackCount++;
 				}
@@ -199,11 +201,13 @@ public class MCCraftingInventory implements ICraftingInventory {
 			stacks[i] = stack;
 		}
 	}
-	
+
 	private boolean changed(int i) {
-		if (original[i] != inventory.getStackInSlot(i)) return true;
-		if (original[i] != null && stacks[i].getAmount() != original[i].stackSize) return true;
-		
+		if (original[i] != inventory.getStackInSlot(i))
+			return true;
+		if (original[i] != null && stacks[i].getAmount() != original[i].stackSize)
+			return true;
+
 		return false;
 	}
 }

@@ -44,14 +44,15 @@ import net.minecraft.nbt.NBTTagString;
  */
 public class NBTConverter implements IDataConverter<NBTBase> {
 	private static final NBTConverter INSTANCE = new NBTConverter();
-	
+
 	public static NBTBase from(IData data) {
 		return data.convert(INSTANCE);
 	}
-	
+
 	public static IData from(NBTBase nbt, boolean immutable) {
-		if (nbt == null) return null;
-		
+		if (nbt == null)
+			return null;
+
 		switch (nbt.getId()) {
 			case 1: // byte
 				return new DataByte(((NBTBase.NBTPrimitive) nbt).func_150290_f());
@@ -80,7 +81,7 @@ public class NBTConverter implements IDataConverter<NBTBase> {
 			case 10: { // compound
 				Map<String, IData> values = new HashMap<String, IData>();
 				NBTTagCompound original = (NBTTagCompound) nbt;
-				for (String key : (Set<String>)original.func_150296_c()) {
+				for (String key : (Set<String>) original.func_150296_c()) {
 					values.put(key, from(original.getTag(key), immutable));
 				}
 				return new DataMap(values, immutable);
@@ -96,9 +97,10 @@ public class NBTConverter implements IDataConverter<NBTBase> {
 		NBTUpdater updater = new NBTUpdater(nbt);
 		data.convert(updater);
 	}
-	
-	public NBTConverter() {}
-	
+
+	public NBTConverter() {
+	}
+
 	@Override
 	public NBTBase fromBool(boolean value) {
 		return new NBTTagInt(value ? 1 : 0);

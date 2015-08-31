@@ -16,7 +16,7 @@ public interface IResourceManager {
 	 * 
 	 * @param module
 	 * @param name
-	 * @return 
+	 * @return
 	 */
 	public IResourceFile getResource(String module, String name);
 }

@@ -37,7 +37,7 @@ public class ScriptProviderMemory implements IScriptProvider {
 			DeflaterOutputStream deflater = new DeflaterOutputStream(output);
 			DataOutputStream deflaterData = new DataOutputStream(deflater);
 			Set<String> executed = new HashSet<String>();
-			
+
 			Iterator<IScriptIterator> scripts = provider.getScripts();
 			while (scripts.hasNext()) {
 				IScriptIterator script = scripts.next();
@@ -50,8 +50,9 @@ public class ScriptProviderMemory implements IScriptProvider {
 					while (script.next()) {
 						String name = script.getName();
 						byte[] data = FileUtil.read(script.open());
-						if (data.length == 0) continue; // skip empty files
-						
+						if (data.length == 0)
+							continue; // skip empty files
+
 						deflaterData.writeUTF(name);
 						deflaterData.writeInt(data.length);
 						deflaterData.write(data);
@@ -60,21 +61,21 @@ public class ScriptProviderMemory implements IScriptProvider {
 					deflaterData.writeUTF("");
 				}
 			}
-			
+
 			deflaterData.writeUTF("");
-			
+
 			deflater.close();
 		} catch (IOException ex) {
 			MineTweakerAPI.logError("Could not collect scripts: " + ex.getMessage());
 		}
 		return output.toByteArray();
 	}
-	
+
 	private final Map<String, MemoryModule> modules;
-	
+
 	public ScriptProviderMemory(byte[] scripts) {
 		modules = new HashMap<String, MemoryModule>();
-		
+
 		try {
 			InflaterInputStream inflater = new InflaterInputStream(new ByteArrayInputStream(scripts));
 			DataInputStream inflaterData = new DataInputStream(inflater);
@@ -82,20 +83,20 @@ public class ScriptProviderMemory implements IScriptProvider {
 			String moduleName = inflaterData.readUTF();
 			while (moduleName.length() > 0) {
 				List<MemoryFile> files = new ArrayList<MemoryFile>();
-				
+
 				String fileName = inflaterData.readUTF();
 				while (fileName.length() > 0) {
 					byte[] data = new byte[inflaterData.readInt()];
 					inflaterData.readFully(data);
 					files.add(new MemoryFile(fileName, data));
-					
+
 					fileName = inflaterData.readUTF();
 				}
 				modules.put(moduleName, new MemoryModule(moduleName, files));
-				
+
 				moduleName = inflaterData.readUTF();
 			}
-			
+
 			inflaterData.close();
 		} catch (IOException ex) {
 			MineTweakerAPI.logError("Could not load transmitted scripts: " + ex.getMessage());
@@ -106,10 +107,10 @@ public class ScriptProviderMemory implements IScriptProvider {
 	public Iterator<IScriptIterator> getScripts() {
 		return new ProviderIterator();
 	}
-	
+
 	private class ProviderIterator implements Iterator<IScriptIterator> {
 		private final Iterator<MemoryModule> baseIterator = modules.values().iterator();
-		
+
 		@Override
 		public boolean hasNext() {
 			return baseIterator.hasNext();
@@ -122,21 +123,30 @@ public class ScriptProviderMemory implements IScriptProvider {
 
 		@Override
 		public void remove() {
-			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+			throw new UnsupportedOperationException("Not supported yet."); // To
+																			// change
+																			// body
+																			// of
+																			// generated
+																			// methods,
+																			// choose
+																			// Tools
+																			// |
+																			// Templates.
 		}
 	}
-	
+
 	private class ScriptIterator implements IScriptIterator {
 		private final MemoryModule module;
 		private final Iterator<MemoryFile> files;
 		private MemoryFile current;
-		
+
 		public ScriptIterator(MemoryModule module) {
 			this.module = module;
 			files = module.data.iterator();
 			current = null;
 		}
-		
+
 		@Override
 		public String getGroupName() {
 			return module.name;
@@ -162,21 +172,21 @@ public class ScriptProviderMemory implements IScriptProvider {
 			return new ByteArrayInputStream(current.data);
 		}
 	}
-	
+
 	private class MemoryModule {
 		private final String name;
 		private final List<MemoryFile> data;
-		
+
 		public MemoryModule(String name, List<MemoryFile> data) {
 			this.name = name;
 			this.data = data;
 		}
 	}
-	
+
 	private class MemoryFile {
 		private final String name;
 		private final byte[] data;
-		
+
 		public MemoryFile(String name, byte[] data) {
 			this.name = name;
 			this.data = data;

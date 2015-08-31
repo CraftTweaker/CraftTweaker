@@ -13,7 +13,7 @@ import java.util.Map;
 public class DataIntArray implements IData {
 	private final int[] data;
 	private final boolean immutable;
-	
+
 	public DataIntArray(int[] data, boolean immutable) {
 		this.data = data;
 		this.immutable = immutable;
@@ -214,7 +214,7 @@ public class DataIntArray implements IData {
 	public <T> T convert(IDataConverter<T> converter) {
 		return converter.fromIntArray(this.data);
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString() + " as int[]";

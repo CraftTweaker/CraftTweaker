@@ -30,20 +30,20 @@ import net.minecraft.server.management.UserListOps;
  */
 public class MCServer extends AbstractServer {
 	private final MinecraftServer server;
-	
+
 	public MCServer(MinecraftServer server) {
 		this.server = server;
 	}
-	
+
 	@Override
 	public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion) {
 		ICommand command = new MCCommand(name, usage, aliases, function, validator, completion);
 		MineTweakerAPI.apply(new AddCommandAction(command));
 	}
-	
+
 	@Override
 	public void removeCommand(String name) {
-		ICommand command = (ICommand)((CommandHandler) server.getCommandManager()).getCommands().get(name);
+		ICommand command = (ICommand) ((CommandHandler) server.getCommandManager()).getCommands().get(name);
 		if (command == null) {
 			MineTweakerAPI.logWarning("No such command: " + name);
 		} else {
@@ -55,7 +55,7 @@ public class MCServer extends AbstractServer {
 	public boolean isOp(IPlayer player) {
 		if (player == ServerPlayer.INSTANCE)
 			return true;
-		
+
 		UserListOps ops = MinecraftServer.getServer().getConfigurationManager().func_152603_m();
 		if (server.isDedicatedServer()) {
 			return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null;
@@ -63,7 +63,7 @@ public class MCServer extends AbstractServer {
 			return true;
 		}
 	}
-	
+
 	private static IPlayer getPlayer(ICommandSender commandSender) {
 		if (commandSender instanceof EntityPlayer) {
 			return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
@@ -75,18 +75,18 @@ public class MCServer extends AbstractServer {
 			return null;
 		}
 	}
-	
+
 	private static void removeCommand(ICommand command) {
 		CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
 		ch.getCommands().remove(command.getCommandName());
 
 		if (command.getCommandAliases() != null) {
-			for (String alias : (List<String>)command.getCommandAliases()) {
+			for (String alias : (List<String>) command.getCommandAliases()) {
 				ch.getCommands().remove(alias);
 			}
 		}
 	}
-	
+
 	private class MCCommand implements ICommand {
 		private final String name;
 		private final String usage;
@@ -94,7 +94,7 @@ public class MCServer extends AbstractServer {
 		private final ICommandFunction function;
 		private final ICommandValidator validator;
 		private final ICommandTabCompletion completion;
-		
+
 		public MCCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion) {
 			this.name = name;
 			this.usage = usage;
@@ -103,7 +103,7 @@ public class MCServer extends AbstractServer {
 			this.validator = validator;
 			this.completion = completion;
 		}
-		
+
 		@Override
 		public String getCommandName() {
 			return name;
@@ -152,10 +152,10 @@ public class MCServer extends AbstractServer {
 			return 0;
 		}
 	}
-	
+
 	private class AddCommandAction implements IUndoableAction {
 		private final ICommand command;
-		
+
 		public AddCommandAction(ICommand command) {
 			this.command = command;
 		}
@@ -191,10 +191,10 @@ public class MCServer extends AbstractServer {
 			return null;
 		}
 	}
-	
+
 	private class RemoveCommandAction implements IUndoableAction {
 		private final ICommand command;
-		
+
 		public RemoveCommandAction(ICommand command) {
 			this.command = command;
 		}

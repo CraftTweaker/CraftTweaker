@@ -14,11 +14,11 @@ import minetweaker.api.formatting.IFormattedText;
  */
 public class FormattedString implements IMCFormattedString {
 	private final String value;
-	
+
 	public FormattedString(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public String getTooltipString() {
 		return value;

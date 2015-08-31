@@ -19,7 +19,7 @@ import net.minecraft.world.World;
  */
 public class ShapelessRecipeAdvanced implements IRecipe {
 	private final ShapelessRecipe recipe;
-	
+
 	public ShapelessRecipeAdvanced(ShapelessRecipe recipe) {
 		this.recipe = recipe;
 	}

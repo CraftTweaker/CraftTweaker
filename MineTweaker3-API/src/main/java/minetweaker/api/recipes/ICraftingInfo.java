@@ -19,10 +19,10 @@ import stanhebben.zenscript.annotations.ZenGetter;
 public interface ICraftingInfo {
 	@ZenGetter("inventory")
 	public ICraftingInventory getInventory();
-	
+
 	@ZenGetter("player")
 	public IPlayer getPlayer();
-	
+
 	@ZenGetter("dimension")
 	public IDimension getDimension();
 }

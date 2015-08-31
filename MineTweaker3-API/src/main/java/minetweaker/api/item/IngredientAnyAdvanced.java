@@ -15,7 +15,7 @@ public class IngredientAnyAdvanced implements IIngredient {
 	private final String mark;
 	private final IItemCondition[] conditions;
 	private final IItemTransformer[] transformers;
-	
+
 	public IngredientAnyAdvanced(String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
 		this.mark = mark;
 		this.conditions = conditions;
@@ -36,7 +36,7 @@ public class IngredientAnyAdvanced implements IIngredient {
 	public List<IItemStack> getItems() {
 		return null;
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return null;
@@ -70,15 +70,17 @@ public class IngredientAnyAdvanced implements IIngredient {
 	@Override
 	public boolean matches(IItemStack item) {
 		// TODO: what is the point of this?
-		if (!item.matches(item)) return false;
-		
+		if (!item.matches(item))
+			return false;
+
 		for (IItemCondition condition : conditions) {
-			if (!condition.matches(item)) return false;
+			if (!condition.matches(item))
+				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		// TODO: conditions on liquids?
@@ -89,9 +91,10 @@ public class IngredientAnyAdvanced implements IIngredient {
 	public boolean contains(IIngredient ingredient) {
 		List<IItemStack> iitems = ingredient.getItems();
 		for (IItemStack iitem : iitems) {
-			if (!matches(iitem)) return false;
+			if (!matches(iitem))
+				return false;
 		}
-		
+
 		return true;
 	}
 
@@ -100,7 +103,7 @@ public class IngredientAnyAdvanced implements IIngredient {
 		for (IItemTransformer transform : transformers) {
 			item = transform.transform(item, byPlayer);
 		}
-		
+
 		return item;
 	}
 

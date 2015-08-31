@@ -32,8 +32,9 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
  */
 public class ZenTypeLongObject extends ZenType {
 	public static final ZenTypeLongObject INSTANCE = new ZenTypeLongObject();
-	
-	private ZenTypeLongObject() {}
+
+	private ZenTypeLongObject() {
+	}
 
 	@Override
 	public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
@@ -101,37 +102,31 @@ public class ZenTypeLongObject extends ZenType {
 		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleNullableStaticMethod(
 				DOUBLE_VALUEOF,
 				new CastingRuleVirtualMethod(DOUBLE_VALUE)));
-		
+
 		rules.registerCastingRule(STRING, new CastingRuleNullableVirtualMethod(LONGOBJECT, LONG_TOSTRING));
 		rules.registerCastingRule(ANY, new CastingRuleNullableStaticMethod(
 				JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, LONG),
 				new CastingRuleVirtualMethod(LONG_VALUE)));
-		
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
 
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return LONG.canCastImplicit(type, environment);
-	}
-
-	@Override
-	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return LONG.canCastExplicit(type, environment);
-	}
-	
-	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		if (type.getNumberType() > 0 || type == STRING) {
-			return new ExpressionAs(position, value, type);
-		} else if (canCastExpansion(environment, type)) {
-			return castExpansion(position, environment, value, type);
-		} else {
-			return new ExpressionAs(position, value, type);
-		}
-	}*/
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return LONG.canCastImplicit(type, environment); }
+	 * 
+	 * @Override public boolean canCastExplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return LONG.canCastExplicit(type, environment); }
+	 * 
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) { if (type.getNumberType() >
+	 * 0 || type == STRING) { return new ExpressionAs(position, value, type); }
+	 * else if (canCastExpansion(environment, type)) { return
+	 * castExpansion(position, environment, value, type); } else { return new
+	 * ExpressionAs(position, value, type); } }
+	 */
 
 	@Override
 	public Class toJavaClass() {
@@ -158,41 +153,35 @@ public class ZenTypeLongObject extends ZenType {
 		return true;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		if (type == this) {
-			// nothing to do
-		} else if (type == LONG) {
-			environment.getOutput().invokeVirtual(Long.class, "longValue", long.class);
-		} else if (type == STRING) {
-			environment.getOutput().invokeVirtual(Long.class, "toString", String.class);
-		} else if (type == ANY) {
-			MethodOutput output = environment.getOutput();
-			
-			Label lblNotNull = new Label();
-			Label lblAfter = new Label();
-			
-			output.dup();
-			output.ifNonNull(lblNotNull);
-			output.aConstNull();
-			output.goTo(lblAfter);
-			
-			output.label(lblNotNull);
-			output.invokeVirtual(Long.class, "longValue", long.class);
-			output.invokeStatic(LONG.getAnyClassName(environment), "valueOf", "(J)" + signature(IAny.class));
-			
-			output.label(lblAfter);
-		} else {
-			environment.getOutput().invokeVirtual(Long.class, "longValue", long.class);
-			LONG.compileCast(position, environment, type);
-		}
-	}*/
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { if (type == this) { //
+	 * nothing to do } else if (type == LONG) {
+	 * environment.getOutput().invokeVirtual(Long.class, "longValue",
+	 * long.class); } else if (type == STRING) {
+	 * environment.getOutput().invokeVirtual(Long.class, "toString",
+	 * String.class); } else if (type == ANY) { MethodOutput output =
+	 * environment.getOutput();
+	 * 
+	 * Label lblNotNull = new Label(); Label lblAfter = new Label();
+	 * 
+	 * output.dup(); output.ifNonNull(lblNotNull); output.aConstNull();
+	 * output.goTo(lblAfter);
+	 * 
+	 * output.label(lblNotNull); output.invokeVirtual(Long.class, "longValue",
+	 * long.class); output.invokeStatic(LONG.getAnyClassName(environment),
+	 * "valueOf", "(J)" + signature(IAny.class));
+	 * 
+	 * output.label(lblAfter); } else {
+	 * environment.getOutput().invokeVirtual(Long.class, "longValue",
+	 * long.class); LONG.compileCast(position, environment, type); } }
+	 */
 
 	@Override
 	public String getName() {
 		return "long";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		return LONG.getAnyClassName(environment);

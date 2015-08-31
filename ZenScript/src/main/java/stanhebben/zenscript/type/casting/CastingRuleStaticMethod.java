@@ -17,12 +17,12 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
 public class CastingRuleStaticMethod implements ICastingRule {
 	private final IJavaMethod method;
 	private final ICastingRule base;
-	
+
 	public CastingRuleStaticMethod(IJavaMethod method) {
 		this.method = method;
 		this.base = null;
 	}
-	
+
 	public CastingRuleStaticMethod(IJavaMethod method, ICastingRule base) {
 		this.method = method;
 		this.base = base;
@@ -32,7 +32,7 @@ public class CastingRuleStaticMethod implements ICastingRule {
 	public void compile(IEnvironmentMethod method) {
 		if (base != null)
 			base.compile(method);
-		
+
 		this.method.invokeStatic(method.getOutput());
 	}
 

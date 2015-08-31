@@ -24,10 +24,10 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	private final File directory;
 	private Iterator<File> contents;
 	private File current;
-	
+
 	public ScriptIteratorDirectory(File directory) {
 		this.directory = directory;
-		
+
 		File scriptDir = new File(directory, "scripts");
 		List<File> contentsList = new ArrayList<File>();
 		if (scriptDir.exists()) {
@@ -60,7 +60,7 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	public InputStream open() throws IOException {
 		return new BufferedInputStream(new FileInputStream(current));
 	}
-	
+
 	private static void iterate(File directory, List<File> contentsList) {
 		for (File file : directory.listFiles()) {
 			if (file.isDirectory()) {

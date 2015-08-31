@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DataShort implements IData {
 	private final short value;
-	
+
 	public DataShort(short value) {
 		this.value = value;
 	}
@@ -54,12 +54,12 @@ public class DataShort implements IData {
 	public String asString() {
 		return Short.toString(value);
 	}
-	
+
 	@Override
 	public List<IData> asList() {
 		return null;
 	}
-	
+
 	@Override
 	public Map<String, IData> asMap() {
 		return null;
@@ -104,12 +104,12 @@ public class DataShort implements IData {
 	public boolean contains(IData data) {
 		return data.asShort() == value;
 	}
-	
+
 	@Override
 	public boolean equals(IData data) {
 		return value == data.asShort();
 	}
-	
+
 	@Override
 	public int compareTo(IData data) {
 		return Short.compare(value, data.asShort());
@@ -172,14 +172,14 @@ public class DataShort implements IData {
 
 	@Override
 	public IData neg() {
-		return new DataShort((short) (- value));
+		return new DataShort((short) (-value));
 	}
 
 	@Override
 	public IData not() {
-		return new DataShort((short) (~ value));
+		return new DataShort((short) (~value));
 	}
-	
+
 	@Override
 	public String toString() {
 		return asString() + " as short";

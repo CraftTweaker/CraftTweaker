@@ -39,7 +39,7 @@ public abstract class ParsedExpression {
 	public static ParsedExpression read(ZenTokener parser, IEnvironmentGlobal environment) {
 		return readAssignExpression(parser, environment);
 	}
-	
+
 	private static ParsedExpression readAssignExpression(ZenTokener parser, IEnvironmentGlobal environment) {
 		Token token = parser.peek();
 		if (token == null) {
@@ -47,17 +47,17 @@ public abstract class ParsedExpression {
 			environment.error(position, "unexpected end of file; expression expected");
 			return new ParsedExpressionInvalid(position);
 		}
-		
+
 		ZenPosition position = token.getPosition();
-		
+
 		ParsedExpression left = readConditionalExpression(position, parser, environment);
-		
+
 		if (parser.peek() == null) {
 			ZenPosition position2 = new ZenPosition(parser.getFile(), parser.getLine(), parser.getLineOffset());
 			environment.error(position2, "unexpected end of file - ; expected");
 			return new ParsedExpressionInvalid(position2);
 		}
-		
+
 		switch (parser.peek().getType()) {
 			case T_ASSIGN:
 				parser.next();
@@ -90,76 +90,76 @@ public abstract class ParsedExpression {
 				parser.next();
 				return new ParsedExpressionOpAssign(position, left, readAssignExpression(parser, environment), OperatorType.XOR);
 		}
-		
+
 		return left;
 	}
-	
+
 	private static ParsedExpression readConditionalExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readOrOrExpression(position, parser, environment);
-		
+
 		if (parser.optional(T_QUEST) != null) {
 			ParsedExpression onIf = readOrOrExpression(parser.peek().getPosition(), parser, environment);
 			parser.required(T_COLON, ": expected");
 			ParsedExpression onElse = readConditionalExpression(parser.peek().getPosition(), parser, environment);
 			return new ParsedExpressionConditional(position, left, onIf, onElse);
 		}
-		
+
 		return left;
 	}
-	
+
 	private static ParsedExpression readOrOrExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readAndAndExpression(position, parser, environment);
-		
+
 		while (parser.optional(T_OR2) != null) {
 			ParsedExpression right = readAndAndExpression(parser.peek().getPosition(), parser, environment);
 			left = new ParsedExpressionOrOr(position, left, right);
 		}
 		return left;
 	}
-	
+
 	private static ParsedExpression readAndAndExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readOrExpression(position, parser, environment);
-		
+
 		while (parser.optional(T_AND2) != null) {
 			ParsedExpression right = readOrExpression(parser.peek().getPosition(), parser, environment);
 			left = new ParsedExpressionAndAnd(position, left, right);
 		}
 		return left;
 	}
-	
+
 	private static ParsedExpression readOrExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readXorExpression(position, parser, environment);
-		
+
 		while (parser.optional(T_OR) != null) {
 			ParsedExpression right = readXorExpression(parser.peek().getPosition(), parser, environment);
 			left = new ParsedExpressionBinary(position, left, right, OperatorType.OR);
 		}
 		return left;
 	}
-	
+
 	private static ParsedExpression readXorExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readAndExpression(position, parser, environment);
-		
+
 		while (parser.optional(T_XOR) != null) {
 			ParsedExpression right = readAndExpression(parser.peek().getPosition(), parser, environment);
 			left = new ParsedExpressionBinary(position, left, right, OperatorType.XOR);
 		}
 		return left;
 	}
-	
+
 	private static ParsedExpression readAndExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readCompareExpression(position, parser, environment);
-		
+
 		while (parser.optional(T_AND) != null) {
 			ParsedExpression right = readCompareExpression(parser.peek().getPosition(), parser, environment);
 			left = new ParsedExpressionBinary(position, left, right, OperatorType.AND);
 		}
 		return left;
 	}
-	
+
 	private static ParsedExpression readCompareExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readAddExpression(position, parser, environment);
-		
+
 		switch (parser.peek() == null ? -1 : parser.peek().getType()) {
 			case T_EQ: {
 				parser.next();
@@ -197,13 +197,13 @@ public abstract class ParsedExpression {
 				return new ParsedExpressionBinary(position, left, right, OperatorType.CONTAINS);
 			}
 		}
-		
+
 		return left;
 	}
-	
+
 	private static ParsedExpression readAddExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readMulExpression(position, parser, environment);
-		
+
 		while (true) {
 			if (parser.optional(T_PLUS) != null) {
 				ParsedExpression right = readMulExpression(parser.peek().getPosition(), parser, environment);
@@ -220,10 +220,10 @@ public abstract class ParsedExpression {
 		}
 		return left;
 	}
-	
+
 	private static ParsedExpression readMulExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression left = readUnaryExpression(position, parser, environment);
-		
+
 		while (true) {
 			if (parser.optional(T_MUL) != null) {
 				ParsedExpression right = readUnaryExpression(parser.peek().getPosition(), parser, environment);
@@ -238,10 +238,10 @@ public abstract class ParsedExpression {
 				break;
 			}
 		}
-		
+
 		return left;
 	}
-	
+
 	private static ParsedExpression readUnaryExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		switch (parser.peek().getType()) {
 			case T_NOT:
@@ -260,10 +260,10 @@ public abstract class ParsedExpression {
 				return readPostfixExpression(position, parser, environment);
 		}
 	}
-	
+
 	private static ParsedExpression readPostfixExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		ParsedExpression base = readPrimaryExpression(position, parser, environment);
-		
+
 		while (true) {
 			if (parser.optional(T_DOT) != null) {
 				Token indexString = parser.optional(T_ID);
@@ -279,8 +279,8 @@ public abstract class ParsedExpression {
 					}
 				}
 			} else if (parser.optional(T_DOT2) != null) {
-				//ParsedExpression to = readAssignExpression(parser, errors);
-				//base = base.range(position, errors, to);
+				// ParsedExpression to = readAssignExpression(parser, errors);
+				// base = base.range(position, errors, to);
 				throw new RuntimeException("not yet supported");
 			} else if (parser.optional(T_SQBROPEN) != null) {
 				ParsedExpression index = readAssignExpression(parser, environment);
@@ -303,10 +303,10 @@ public abstract class ParsedExpression {
 				break;
 			}
 		}
-		
+
 		return base;
 	}
-	
+
 	private static ParsedExpression readPrimaryExpression(ZenPosition position, ZenTokener parser, IEnvironmentGlobal environment) {
 		switch (parser.peek().getType()) {
 			case T_INTVALUE:
@@ -321,20 +321,19 @@ public abstract class ParsedExpression {
 				return new ParsedExpressionValue(
 						position,
 						new ExpressionString(position, unescapeString(parser.next().getValue())));
-			/*case T_DOLLAR: {
-				Expression result = new ExpressionDollar(position);
-				if (parser.isNext(T_STRINGVALUE)) {
-					return new ExpressionIndexString(position, result, unescapeString(parser.next().getValue()));
-				}
-				return result;
-			}*/
+				/*
+				 * case T_DOLLAR: { Expression result = new
+				 * ExpressionDollar(position); if (parser.isNext(T_STRINGVALUE))
+				 * { return new ExpressionIndexString(position, result,
+				 * unescapeString(parser.next().getValue())); } return result; }
+				 */
 			case T_ID:
 				return new ParsedExpressionVariable(position, parser.next().getValue());
 			case T_FUNCTION:
 				// function (argname, argname, ...) { ...contents... }
 				parser.next();
 				parser.required(T_BROPEN, "( expected");
-				
+
 				List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
 				if (parser.optional(T_BRCLOSE) == null) {
 					do {
@@ -344,27 +343,27 @@ public abstract class ParsedExpression {
 						if (parser.optional(T_AS) != null) {
 							type = ZenType.read(parser, environment);
 						}
-						
+
 						arguments.add(new ParsedFunctionArgument(name, type));
 					} while (parser.optional(T_COMMA) != null);
-					
+
 					parser.required(T_BRCLOSE, ") expected");
 				}
-				
+
 				ZenType returnType = ZenTypeAny.INSTANCE;
 				if (parser.optional(T_AS) != null) {
 					returnType = ZenType.read(parser, environment);
 				}
-				
+
 				parser.required(T_AOPEN, "{ expected");
-				
+
 				List<Statement> statements = new ArrayList<Statement>();
 				if (parser.optional(T_ACLOSE) == null) {
 					while (parser.optional(T_ACLOSE) == null) {
 						statements.add(Statement.read(parser, environment, returnType));
 					}
 				}
-				
+
 				return new ParsedExpressionFunction(position, returnType, arguments, statements);
 			case T_LT: {
 				Token start = parser.next();
@@ -380,12 +379,13 @@ public abstract class ParsedExpression {
 					builder.append('<');
 					Token last = null;
 					for (Token token : tokens) {
-						if (last != null) builder.append(' ');
+						if (last != null)
+							builder.append(' ');
 						builder.append(token.getValue());
 						last = token;
 					}
 					builder.append('>');
-					
+
 					parser.getEnvironment().getErrorLogger().error(start.getPosition(), "Could not resolve " + builder.toString());
 					return new ParsedExpressionInvalid(start.getPosition());
 				} else {
@@ -410,7 +410,7 @@ public abstract class ParsedExpression {
 			}
 			case T_AOPEN: {
 				parser.next();
-				
+
 				List<ParsedExpression> keys = new ArrayList<ParsedExpression>();
 				List<ParsedExpression> values = new ArrayList<ParsedExpression>();
 				if (parser.optional(T_ACLOSE) == null) {
@@ -418,13 +418,13 @@ public abstract class ParsedExpression {
 						keys.add(readAssignExpression(parser, environment));
 						parser.required(T_COLON, ": expected");
 						values.add(readAssignExpression(parser, environment));
-						
+
 						if (parser.optional(T_COMMA) == null) {
 							parser.required(T_ACLOSE, "} or , expected");
 							break;
 						}
 					}
-					
+
 					return new ParsedExpressionMap(position, keys, values);
 				}
 			}
@@ -447,18 +447,19 @@ public abstract class ParsedExpression {
 				throw new ParseException(last, "Invalid expression, last token: " + last.getValue());
 		}
 	}
+
 	private final ZenPosition position;
-	
+
 	public ParsedExpression(ZenPosition position) {
 		this.position = position;
 	}
-	
+
 	public ZenPosition getPosition() {
 		return position;
 	}
-	
+
 	public abstract IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType);
-	
+
 	public Expression compileKey(IEnvironmentMethod environment, ZenType predictedType) {
 		return compile(environment, predictedType).eval(environment);
 	}

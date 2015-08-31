@@ -28,7 +28,7 @@ public class EnvironmentScope implements IEnvironmentMethod {
 	private final IEnvironmentMethod outer;
 	private final Map<String, IZenSymbol> local;
 	private final Map<SymbolLocal, Integer> locals;
-	
+
 	public EnvironmentScope(IEnvironmentMethod outer) {
 		this.outer = outer;
 		this.local = new HashMap<String, IZenSymbol>();

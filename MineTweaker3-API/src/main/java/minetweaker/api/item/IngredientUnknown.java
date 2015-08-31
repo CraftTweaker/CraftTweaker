@@ -18,9 +18,9 @@ import minetweaker.api.player.IPlayer;
 public class IngredientUnknown implements IIngredient
 {
 	public static final IngredientUnknown INSTANCE = new IngredientUnknown(1);
-	
+
 	private final int size;
-	
+
 	public IngredientUnknown(int size)
 	{
 		this.size = size;
@@ -43,7 +43,7 @@ public class IngredientUnknown implements IIngredient
 	{
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids()
 	{
@@ -85,7 +85,7 @@ public class IngredientUnknown implements IIngredient
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid)
 	{

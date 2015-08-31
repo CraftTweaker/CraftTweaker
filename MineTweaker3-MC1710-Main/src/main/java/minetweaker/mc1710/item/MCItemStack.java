@@ -6,14 +6,15 @@
 
 package minetweaker.mc1710.item;
 
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.data.DataMap;
-import minetweaker.mc1710.data.NBTConverter;
-import minetweaker.mc1710.liquid.MCLiquidStack;
 import minetweaker.api.data.IData;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemCondition;
@@ -24,11 +25,13 @@ import minetweaker.api.item.IngredientItem;
 import minetweaker.api.item.IngredientOr;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.liquid.ILiquidStack;
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
+import minetweaker.mc1710.actions.SetStackSizeAction;
 import minetweaker.mc1710.actions.SetTranslationAction;
 import minetweaker.mc1710.block.MCItemBlock;
+import minetweaker.mc1710.data.NBTConverter;
+import minetweaker.mc1710.liquid.MCLiquidStack;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -47,28 +50,30 @@ public class MCItemStack implements IItemStack {
 	private final List<IItemStack> items;
 	private IData tag = null;
 	private boolean wildcardSize;
-	
+
 	public MCItemStack(ItemStack itemStack) {
-		if (itemStack == null) throw new IllegalArgumentException("stack cannot be null");
-		
+		if (itemStack == null)
+			throw new IllegalArgumentException("stack cannot be null");
+
 		stack = itemStack.copy();
 		items = Collections.<IItemStack>singletonList(this);
 	}
-	
+
 	public MCItemStack(ItemStack itemStack, boolean wildcardSize) {
 		this(itemStack);
-		
+
 		this.wildcardSize = wildcardSize;
 	}
-	
+
 	private MCItemStack(ItemStack itemStack, IData tag) {
-		if (itemStack == null) throw new IllegalArgumentException("stack cannot be null");
-		
+		if (itemStack == null)
+			throw new IllegalArgumentException("stack cannot be null");
+
 		stack = itemStack;
 		items = Collections.<IItemStack>singletonList(this);
 		this.tag = tag;
 	}
-	
+
 	private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
 		stack = itemStack;
 		items = Collections.<IItemStack>singletonList(this);
@@ -78,9 +83,7 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public IItemDefinition getDefinition() {
-		return new MCItemDefinition(
-				Item.itemRegistry.getNameForObject(stack.getItem()),
-				stack.getItem());
+		return new MCItemDefinition(Item.itemRegistry.getNameForObject(stack.getItem()), stack.getItem());
 	}
 
 	@Override
@@ -92,10 +95,20 @@ public class MCItemStack implements IItemStack {
 	public String getDisplayName() {
 		return stack.getDisplayName();
 	}
-	
+
 	@Override
 	public void setDisplayName(String name) {
 		MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
+	}
+
+	@Override
+	public int getMaxStackSize() {
+		return stack.getMaxStackSize();
+	}
+
+	@Override
+	public void setMaxStackSize(int size) {
+		MineTweakerAPI.apply(new SetStackSizeAction((ItemStack) getInternal(), size));
 	}
 
 	@Override
@@ -109,7 +122,7 @@ public class MCItemStack implements IItemStack {
 			if (stack.stackTagCompound == null) {
 				return DataMap.EMPTY;
 			}
-			
+
 			tag = NBTConverter.from(stack.stackTagCompound, true);
 		}
 		return tag;
@@ -119,7 +132,7 @@ public class MCItemStack implements IItemStack {
 	public int getMaxDamage() {
 		return stack.getMaxDamage();
 	}
-	
+
 	@Override
 	public ILiquidStack getLiquid() {
 		FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
@@ -149,7 +162,7 @@ public class MCItemStack implements IItemStack {
 			return new MCItemStack(result, tag);
 		}
 	}
-	
+
 	@Override
 	public IItemStack anyAmount() {
 		ItemStack result = new ItemStack(stack.getItem(), 1, stack.getItemDamage());
@@ -179,12 +192,12 @@ public class MCItemStack implements IItemStack {
 	public IItemStack updateTag(IData tagUpdate) {
 		if (tag == null) {
 			if (stack.stackTagCompound == null) {
-				return withTag(tagUpdate);	
+				return withTag(tagUpdate);
 			}
-			
+
 			tag = NBTConverter.from(stack.stackTagCompound, true);
 		}
-		
+
 		IData updated = tag.update(tagUpdate);
 		return withTag(updated);
 	}
@@ -203,7 +216,7 @@ public class MCItemStack implements IItemStack {
 	public List<IItemStack> getItems() {
 		return items;
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return Collections.emptyList();
@@ -213,12 +226,12 @@ public class MCItemStack implements IItemStack {
 	public IItemStack amount(int amount) {
 		return withAmount(amount);
 	}
-	
+
 	@Override
 	public WeightedItemStack percent(float chance) {
 		return new WeightedItemStack(this, chance * 0.01f);
 	}
-	
+
 	@Override
 	public WeightedItemStack weight(float chance) {
 		return new WeightedItemStack(this, chance);
@@ -238,7 +251,7 @@ public class MCItemStack implements IItemStack {
 	public IIngredient marked(String mark) {
 		return new IngredientItem(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
 	}
-	
+
 	@Override
 	public IIngredient or(IIngredient ingredient) {
 		return new IngredientOr(this, ingredient);
@@ -247,13 +260,9 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public boolean matches(IItemStack item) {
 		ItemStack internal = getItemStack(item);
-		return internal.getItem() == stack.getItem()
-				&& (wildcardSize || internal.stackSize >= stack.stackSize)
-				&& (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE
-					|| stack.getItemDamage() == internal.getItemDamage()
-					|| (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+		return internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		return false;
@@ -262,7 +271,8 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public boolean contains(IIngredient ingredient) {
 		List<IItemStack> iitems = ingredient.getItems();
-		if (iitems == null || iitems.size() != 1) return false;
+		if (iitems == null || iitems.size() != 1)
+			return false;
 		return matches(iitems.get(0));
 	}
 
@@ -289,28 +299,27 @@ public class MCItemStack implements IItemStack {
 			return new MCItemBlock(stack);
 		}
 	}
-	
+
 	@Override
 	public List<IOreDictEntry> getOres() {
 		List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
-		
+
 		for (String key : OreDictionary.getOreNames()) {
 			for (ItemStack is : OreDictionary.getOres(key)) {
-				if (is.getItem() == stack.getItem()
-						&& (is.getItemDamage() == OreDictionary.WILDCARD_VALUE || is.getItemDamage() == stack.getItemDamage())) {
+				if (is.getItem() == stack.getItem() && (is.getItemDamage() == OreDictionary.WILDCARD_VALUE || is.getItemDamage() == stack.getItemDamage())) {
 					result.add(MineTweakerAPI.oreDict.get(key));
 					break;
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	// #############################
 	// ### Object implementation ###
 	// #############################
-	
+
 	@Override
 	public int hashCode() {
 		int hash = 7;
@@ -331,14 +340,19 @@ public class MCItemStack implements IItemStack {
 			return false;
 		}
 		final MCItemStack other = (MCItemStack) obj;
-		if (this.stack.getItem() != other.stack.getItem()) return false;
-		if (this.stack.getItemDamage() != other.stack.getItemDamage()) return false;
-		if (this.stack.stackSize != other.stack.stackSize) return false;
-		if (this.stack.stackTagCompound != other.stack.stackTagCompound && (this.stack == null || this.stack.equals(other.stack))) return false;
-		if (this.wildcardSize != other.wildcardSize) return false;
+		if (this.stack.getItem() != other.stack.getItem())
+			return false;
+		if (this.stack.getItemDamage() != other.stack.getItemDamage())
+			return false;
+		if (this.stack.stackSize != other.stack.stackSize)
+			return false;
+		if (this.stack.stackTagCompound != other.stack.stackTagCompound && (this.stack == null || this.stack.equals(other.stack)))
+			return false;
+		if (this.wildcardSize != other.wildcardSize)
+			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -357,11 +371,8 @@ public class MCItemStack implements IItemStack {
 			result.append(NBTConverter.from(stack.getTagCompound(), wildcardSize).toString());
 			result.append(")");
 		}
-		
-		if (!wildcardSize) {
-			result.append(" * ").append(stack.stackSize);
-		}
 
 		return result.toString();
 	}
+
 }

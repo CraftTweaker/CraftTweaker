@@ -17,10 +17,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ExpressionArrayLength extends Expression {
 	private final Expression value;
-	
+
 	public ExpressionArrayLength(ZenPosition position, Expression value) {
 		super(position);
-		
+
 		this.value = value;
 	}
 

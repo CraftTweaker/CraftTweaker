@@ -23,22 +23,22 @@ import stanhebben.zenscript.util.ZenPosition;
 public abstract class ZenTypeArray extends ZenType {
 	private final ZenType base;
 	private final String name;
-	
+
 	public ZenTypeArray(ZenType base) {
 		this.base = base;
 		name = base + "[]";
 	}
-	
+
 	public ZenType getBaseType() {
 		return base;
 	}
-	
+
 	public abstract IPartialExpression getMemberLength(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value);
 
 	public abstract Expression indexGet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index);
-	
+
 	public abstract Expression indexSet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index, Expression value);
-	
+
 	@Override
 	public final String getName() {
 		return name;
@@ -48,7 +48,7 @@ public abstract class ZenTypeArray extends ZenType {
 	public final boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
 		return equals(type) || canCastExpansion(environment, type);
 	}
-	
+
 	@Override
 	public final int getNumberType() {
 		return 0;
@@ -84,7 +84,7 @@ public abstract class ZenTypeArray extends ZenType {
 	public final boolean isPointer() {
 		return true;
 	}
-	
+
 	@Override
 	public final Expression unary(
 			ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
@@ -147,7 +147,7 @@ public abstract class ZenTypeArray extends ZenType {
 		environment.error(position, "Cannot call an array");
 		return new ExpressionInvalid(position);
 	}
-	
+
 	@Override
 	public Expression defaultValue(ZenPosition position) {
 		return new ExpressionNull(position);

@@ -7,10 +7,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionOrOr extends Expression {
 	private final Expression a;
 	private final Expression b;
-	
+
 	public ExpressionOrOr(ZenPosition position, Expression a, Expression b) {
 		super(position);
-		
+
 		this.a = a;
 		this.b = b;
 	}

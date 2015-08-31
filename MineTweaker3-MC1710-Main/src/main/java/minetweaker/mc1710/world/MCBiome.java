@@ -15,7 +15,7 @@ import net.minecraft.world.biome.BiomeGenBase;
  */
 public class MCBiome implements IBiome {
 	private final BiomeGenBase biome;
-	
+
 	public MCBiome(BiomeGenBase biome) {
 		this.biome = biome;
 	}

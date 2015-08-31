@@ -41,34 +41,34 @@ public class LiquidBracketHandler implements IBracketHandler {
 				return find(environment, tokens, 2, tokens.size());
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private IZenSymbol find(IEnvironmentGlobal environment, List<Token> tokens, int startIndex, int endIndex) {
 		StringBuilder valueBuilder = new StringBuilder();
 		for (int i = startIndex; i < endIndex; i++) {
 			Token token = tokens.get(i);
 			valueBuilder.append(token.getValue());
 		}
-		
+
 		Fluid fluid = FluidRegistry.getFluid(valueBuilder.toString());
 		if (fluid != null) {
 			return new LiquidReferenceSymbol(environment, valueBuilder.toString());
 		}
-		
+
 		return null;
 	}
-	
+
 	private class LiquidReferenceSymbol implements IZenSymbol {
 		private final IEnvironmentGlobal environment;
 		private final String name;
-		
+
 		public LiquidReferenceSymbol(IEnvironmentGlobal environment, String name) {
 			this.environment = environment;
 			this.name = name;
 		}
-		
+
 		@Override
 		public IPartialExpression instance(ZenPosition position) {
 			IJavaMethod method = JavaMethod.get(
@@ -76,7 +76,7 @@ public class LiquidBracketHandler implements IBracketHandler {
 					LiquidBracketHandler.class,
 					"getLiquid",
 					String.class);
-			
+
 			return new ExpressionCallStatic(
 					position,
 					environment,

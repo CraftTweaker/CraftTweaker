@@ -17,7 +17,7 @@ import stanhebben.zenscript.type.ZenTypeArrayList;
 public class CastingRuleDelegateList implements ICastingRuleDelegate {
 	private final ICastingRuleDelegate base;
 	private final ZenTypeArrayList from;
-	
+
 	public CastingRuleDelegateList(ICastingRuleDelegate base, ZenTypeArrayList from) {
 		this.base = base;
 		this.from = from;

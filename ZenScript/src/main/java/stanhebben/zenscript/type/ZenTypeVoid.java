@@ -23,9 +23,10 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ZenTypeVoid extends ZenType {
 	public static final ZenTypeVoid INSTANCE = new ZenTypeVoid();
-	
-	private ZenTypeVoid() {}
-	
+
+	private ZenTypeVoid() {
+	}
+
 	@Override
 	public IPartialExpression getMember(
 			ZenPosition position,
@@ -52,24 +53,23 @@ public class ZenTypeVoid extends ZenType {
 
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
-		
+
 	}
 
-	/*@Override
-	public boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this || canCastExpansion(environment, type);
-	}
-
-	@Override
-	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
-		return type == this || canCastExpansion(environment, type);
-	}
-	
-	@Override
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression value, ZenType type) {
-		environment.error(position, "cannot cast void to other type");
-		return new ExpressionInvalid(position, type);
-	}*/
+	/*
+	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type == this || canCastExpansion(environment,
+	 * type); }
+	 * 
+	 * @Override public boolean canCastExplicit(ZenType type, IEnvironmentGlobal
+	 * environment) { return type == this || canCastExpansion(environment,
+	 * type); }
+	 * 
+	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+	 * environment, Expression value, ZenType type) {
+	 * environment.error(position, "cannot cast void to other type"); return new
+	 * ExpressionInvalid(position, type); }
+	 */
 
 	@Override
 	public Type toASMType() {
@@ -91,17 +91,14 @@ public class ZenTypeVoid extends ZenType {
 		return false;
 	}
 
-	/*@Override
-	public void compileCast(ZenPosition position, IEnvironmentMethod environment, ZenType type) {
-		if (type == this) {
-			// nothing to do
-		} else {
-			if (!compileCastExpansion(position, environment, type)) {
-				environment.error(position, "cannot cast " + this + " to " + type);
-			}
-		}
-	}*/
-	
+	/*
+	 * @Override public void compileCast(ZenPosition position,
+	 * IEnvironmentMethod environment, ZenType type) { if (type == this) { //
+	 * nothing to do } else { if (!compileCastExpansion(position, environment,
+	 * type)) { environment.error(position, "cannot cast " + this + " to " +
+	 * type); } } }
+	 */
+
 	@Override
 	public Expression unary(
 			ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
@@ -122,7 +119,7 @@ public class ZenTypeVoid extends ZenType {
 		environment.error(position, "void does not have operators");
 		return new ExpressionInvalid(position, this);
 	}
-	
+
 	@Override
 	public Expression compare(
 			ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
@@ -146,7 +143,7 @@ public class ZenTypeVoid extends ZenType {
 	public String getName() {
 		return "void";
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal environment) {
 		throw new UnsupportedOperationException("Cannot convert void to anything, not even any");

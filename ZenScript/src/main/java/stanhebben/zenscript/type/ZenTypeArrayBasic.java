@@ -19,20 +19,20 @@ import stanhebben.zenscript.util.ZenPosition;
 
 public class ZenTypeArrayBasic extends ZenTypeArray {
 	private final Type asmType;
-	
+
 	public ZenTypeArrayBasic(ZenType base) {
 		super(base);
-		
+
 		asmType = Type.getType("[" + base.toASMType().getDescriptor());
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof ZenTypeArrayBasic) {
 			ZenTypeArrayBasic o = (ZenTypeArrayBasic) other;
 			return o.getBaseType().equals(getBaseType());
 		}
-		
+
 		return false;
 	}
 
@@ -42,12 +42,12 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 		hash = 23 * hash + (this.getBaseType() != null ? this.getBaseType().hashCode() : 0);
 		return hash;
 	}
-	
+
 	@Override
 	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
 		ICastingRule base = super.getCastingRule(type, environment);
 		if (base == null && getBaseType() == ANY && type instanceof ZenTypeArray) {
-			ZenType toBaseType = ((ZenTypeArray)type).getBaseType();
+			ZenType toBaseType = ((ZenTypeArray) type).getBaseType();
 			if (type instanceof ZenTypeArrayBasic) {
 				return new CastingRuleArrayArray(ANY.getCastingRule(toBaseType, environment), this, (ZenTypeArrayBasic) type);
 			} else if (type instanceof ZenTypeArrayList) {
@@ -59,17 +59,17 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			return base;
 		}
 	}
-	
+
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
 		ICastingRuleDelegate arrayRules = new CastingRuleDelegateArray(rules, this);
 		getBaseType().constructCastingRules(environment, arrayRules, followCasters);
-		
+
 		if (followCasters) {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-	
+
 	@Override
 	public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
 		if (numValues == 1) {
@@ -80,7 +80,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String getAnyClassName(IEnvironmentGlobal global) {
 		return null;
@@ -104,7 +104,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 	public String getSignature() {
 		return "[" + getBaseType().getSignature();
 	}
-	
+
 	@Override
 	public IPartialExpression getMemberLength(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value) {
 		return new ExpressionArrayLength(position, value.eval(environment));
@@ -126,11 +126,11 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 				index.cast(position, environment, INT),
 				value.cast(position, environment, getBaseType()));
 	}
-	
+
 	private class ValueIterator implements IZenIterator {
 		private final MethodOutput methodOutput;
 		private int index;
-		
+
 		public ValueIterator(MethodOutput methodOutput) {
 			this.methodOutput = methodOutput;
 		}
@@ -148,19 +148,19 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			methodOutput.arrayLength();
 			methodOutput.loadInt(index);
 			methodOutput.ifICmpLE(exit);
-			
+
 			methodOutput.dup();
 			methodOutput.loadInt(index);
 			methodOutput.arrayLoad(getBaseType().toASMType());
 			methodOutput.store(getBaseType().toASMType(), locals[0]);
 		}
-		
+
 		@Override
 		public void compilePostIterate(int[] locals, Label exit, Label repeat) {
 			methodOutput.iinc(index, 1);
 			methodOutput.goTo(repeat);
 		}
-		
+
 		@Override
 		public void compileEnd() {
 			// pop the array
@@ -172,10 +172,10 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			return getBaseType();
 		}
 	}
-	
+
 	private class IndexValueIterator implements IZenIterator {
 		private final MethodOutput methodOutput;
-		
+
 		public IndexValueIterator(MethodOutput methodOutput) {
 			this.methodOutput = methodOutput;
 		}
@@ -192,19 +192,19 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
 			methodOutput.arrayLength();
 			methodOutput.loadInt(locals[0]);
 			methodOutput.ifICmpLE(exit);
-			
+
 			methodOutput.dup();
 			methodOutput.loadInt(locals[0]);
 			methodOutput.arrayLoad(getBaseType().toASMType());
 			methodOutput.store(getBaseType().toASMType(), locals[1]);
 		}
-		
+
 		@Override
 		public void compilePostIterate(int[] locals, Label exit, Label repeat) {
 			methodOutput.iinc(locals[0]);
 			methodOutput.goTo(repeat);
 		}
-		
+
 		@Override
 		public void compileEnd() {
 			// pop the array

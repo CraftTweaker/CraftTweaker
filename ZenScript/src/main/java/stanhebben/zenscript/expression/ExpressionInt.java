@@ -23,18 +23,19 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionInt extends Expression {
 	private final long value;
 	private final ZenType type;
-	
+
 	public ExpressionInt(ZenPosition position, long value, ZenType type) {
 		super(position);
-		
+
 		this.value = value;
 		this.type = type;
 	}
 
 	@Override
 	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-		if (type == this.type) return this;
-		
+		if (type == this.type)
+			return this;
+
 		switch (type.getNumberType()) {
 			case ZenType.NUM_BYTE:
 			case ZenType.NUM_SHORT:
@@ -45,7 +46,7 @@ public class ExpressionInt extends Expression {
 			case ZenType.NUM_DOUBLE:
 				return new ExpressionFloat(getPosition(), value, type);
 		}
-		
+
 		return super.cast(position, environment, type);
 	}
 
@@ -56,8 +57,9 @@ public class ExpressionInt extends Expression {
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		if (!result) return;
-		
+		if (!result)
+			return;
+
 		MethodOutput output = environment.getOutput();
 		if (type == ZenTypeByte.INSTANCE) {
 			output.biPush((byte) value);

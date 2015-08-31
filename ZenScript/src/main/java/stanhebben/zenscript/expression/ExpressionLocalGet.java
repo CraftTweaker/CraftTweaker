@@ -17,13 +17,13 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 public class ExpressionLocalGet extends Expression {
 	private final SymbolLocal variable;
-	
+
 	public ExpressionLocalGet(ZenPosition position, SymbolLocal variable) {
 		super(position);
-		
+
 		this.variable = variable;
 	}
-	
+
 	@Override
 	public ZenType getType() {
 		return variable.getType();

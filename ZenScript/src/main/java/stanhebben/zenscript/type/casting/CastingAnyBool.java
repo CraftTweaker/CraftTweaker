@@ -16,14 +16,15 @@ import stanhebben.zenscript.value.IAny;
  */
 public class CastingAnyBool implements ICastingRule {
 	public static final CastingAnyBool INSTANCE = new CastingAnyBool();
-	
-	private CastingAnyBool() {}
-	
+
+	private CastingAnyBool() {
+	}
+
 	@Override
 	public void compile(IEnvironmentMethod method) {
 		method.getOutput().invokeInterface(IAny.class, "asBool", boolean.class);
 	}
-	
+
 	@Override
 	public ZenType getInputType() {
 		return ZenType.ANY;

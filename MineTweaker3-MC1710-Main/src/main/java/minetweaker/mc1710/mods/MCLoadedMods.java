@@ -13,13 +13,14 @@ import stanhebben.zenscript.util.MappingIterator;
  * @author Stan
  */
 public class MCLoadedMods implements ILoadedMods {
-	public MCLoadedMods() {}
+	public MCLoadedMods() {
+	}
 
 	@Override
 	public boolean contains(String name) {
 		return Loader.isModLoaded(name);
 	}
-	
+
 	@Override
 	public IMod get(String name) {
 		for (ModContainer mod : Loader.instance().getActiveModList()) {
@@ -27,7 +28,7 @@ public class MCLoadedMods implements ILoadedMods {
 				return new MCMod(mod);
 			}
 		}
-		
+
 		return null;
 	}
 

@@ -27,7 +27,7 @@ public class IngredientOreDict implements IIngredient {
 	private final String mark;
 	private final IItemCondition[] conditions;
 	private final IItemTransformer[] transformers;
-	
+
 	public IngredientOreDict(
 			IOreDictEntry entry,
 			String mark,
@@ -53,7 +53,7 @@ public class IngredientOreDict implements IIngredient {
 	public List<IItemStack> getItems() {
 		return entry.getItems();
 	}
-	
+
 	@Override
 	public List<ILiquidStack> getLiquids() {
 		return Collections.emptyList();
@@ -86,15 +86,17 @@ public class IngredientOreDict implements IIngredient {
 
 	@Override
 	public boolean matches(IItemStack item) {
-		if (!entry.matches(item)) return false;
-		
+		if (!entry.matches(item))
+			return false;
+
 		for (IItemCondition condition : conditions) {
-			if (!condition.matches(item)) return false;
+			if (!condition.matches(item))
+				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean matches(ILiquidStack liquid) {
 		return false;
@@ -110,7 +112,7 @@ public class IngredientOreDict implements IIngredient {
 		for (IItemTransformer transformer : transformers) {
 			item = transformer.transform(item, byPlayer);
 		}
-		
+
 		return item;
 	}
 

@@ -16,7 +16,7 @@ public interface IZenErrorLogger {
 	 * @param message error message
 	 */
 	public void error(ZenPosition position, String message);
-	
+
 	/**
 	 * Called when a warning is generated during compilation.
 	 * 

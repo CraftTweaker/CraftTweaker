@@ -20,10 +20,10 @@ public class ParsedExpressionConditional extends ParsedExpression {
 	private final ParsedExpression condition;
 	private final ParsedExpression ifThen;
 	private final ParsedExpression ifElse;
-	
+
 	public ParsedExpressionConditional(ZenPosition position, ParsedExpression condition, ParsedExpression ifThen, ParsedExpression ifElse) {
 		super(position);
-		
+
 		this.condition = condition;
 		this.ifThen = ifThen;
 		this.ifElse = ifElse;

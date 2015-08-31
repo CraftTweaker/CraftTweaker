@@ -9,10 +9,10 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ExpressionAndAnd extends Expression {
 	private final Expression a;
 	private final Expression b;
-	
+
 	public ExpressionAndAnd(ZenPosition position, Expression a, Expression b) {
 		super(position);
-		
+
 		this.a = a;
 		this.b = b;
 	}
@@ -27,9 +27,9 @@ public class ExpressionAndAnd extends Expression {
 		// if not a: return false
 		// if not b: return false
 		// return true
-		
+
 		MethodOutput output = environment.getOutput();
-		
+
 		Label skip = new Label();
 		a.compile(true, environment);
 		output.ifEQ(skip);
@@ -37,7 +37,7 @@ public class ExpressionAndAnd extends Expression {
 		output.ifEQ(skip);
 		output.iConst1();
 		output.label(skip);
-		
+
 		if (!result) {
 			output.pop();
 		}

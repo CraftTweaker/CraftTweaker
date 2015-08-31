@@ -27,11 +27,11 @@ import net.minecraft.util.IChatComponent;
  */
 public class MCPlayer implements IPlayer {
 	private final EntityPlayer player;
-	
+
 	public MCPlayer(EntityPlayer player) {
 		this.player = player;
 	}
-	
+
 	public EntityPlayer getInternal() {
 		return player;
 	}
@@ -40,7 +40,7 @@ public class MCPlayer implements IPlayer {
 	public String getId() {
 		return null; // TODO: we should be having this for MC 1.7.10, right?
 	}
-	
+
 	@Override
 	public String getName() {
 		return player.getCommandSenderName();
@@ -50,7 +50,7 @@ public class MCPlayer implements IPlayer {
 	public IData getData() {
 		return NBTConverter.from(player.getEntityData(), true);
 	}
-	
+
 	@Override
 	public void update(IData data) {
 		NBTConverter.updateMap(player.getEntityData(), data);
@@ -114,7 +114,7 @@ public class MCPlayer implements IPlayer {
 					(EntityPlayerMP) player);
 		}
 	}
-	
+
 	@Override
 	public void copyToClipboard(String value) {
 		if (player instanceof EntityPlayerMP) {
@@ -123,12 +123,12 @@ public class MCPlayer implements IPlayer {
 					(EntityPlayerMP) player);
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (other.getClass() != this.getClass())
 			return false;
-		
+
 		return ((MCPlayer) other).player == player;
 	}
 
