@@ -4,7 +4,7 @@
 
 ext.mineTweakerVersion = "3.0.9D_alpha"
 ext.mineTweakerDebug = "false"
-ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_05/lib/tools.jar")
+ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_45/lib/tools.jar")
 
 // ######################
 // ### 1.6.4 settings ###
