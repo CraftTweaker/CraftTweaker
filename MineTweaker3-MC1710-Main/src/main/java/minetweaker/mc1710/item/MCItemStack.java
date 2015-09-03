@@ -272,7 +272,7 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public boolean matches(IItemStack item) {
 		ItemStack internal = getItemStack(item);
-		return internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+		return internal !=null && stack !=null &&internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
 	}
 
 	@Override
