@@ -38,13 +38,6 @@ import stanhebben.zenscript.util.ZenPosition;
 public class ItemBracketHandler implements IBracketHandler {
 	public static final Map<String, Item> itemNames = new HashMap<String, Item>();
 
-//	static {
-//		itemNames = new HashMap<String, Item>();
-//		for (String itemName : (Set<String>) Item.itemRegistry.getKeys()) {
-//			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
-//		}
-//	}
-
 	public static IItemStack getItem(String name, int meta) {
 		// Item item = (Item) Item.itemRegistry.getObject(name);
 		Item item = itemNames.get(name);

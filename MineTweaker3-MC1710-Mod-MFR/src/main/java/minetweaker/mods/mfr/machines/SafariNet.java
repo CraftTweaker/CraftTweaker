@@ -19,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  *
  * @author Stan
  */
-@ZenClass("mods.mfr.AutoSpawner")
+@ZenClass("mods.mfr.SafariNet")
 @ModOnly("MineFactoryReloaded")
 public class SafariNet {
 	@ZenMethod
