@@ -35,6 +35,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author Stan
  */
 public class MCOreDictEntry implements IOreDictEntry {
+	
 	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = MineTweakerHacks.getOreIdStacks();
 	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
 
@@ -242,7 +243,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(id)).remove(item);
+			int oreId = OreDictionary.getOreID(id);
+			OREDICT_CONTENTS.get(oreId).remove(item);
 		}
 
 		@Override
@@ -272,14 +274,17 @@ public class MCOreDictEntry implements IOreDictEntry {
 			this.idTarget = idTarget;
 			this.idSource = idSource;
 
-			targetCopy = OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(idTarget));
-			targetCopyUn = OREDICT_CONTENTS_UN.get(OREDICT_CONTENTS_UN.indexOf(idTarget));
+			int targetOreId = OreDictionary.getOreID(idTarget);
+			targetCopy = OREDICT_CONTENTS.get(targetOreId);
+			targetCopyUn = OREDICT_CONTENTS_UN.get(targetOreId);
 		}
 
 		@Override
 		public void apply() {
-			OREDICT_CONTENTS.set(OREDICT_CONTENTS.indexOf(idTarget), OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(idSource)));
-			OREDICT_CONTENTS_UN.set(OREDICT_CONTENTS_UN.indexOf(idTarget), OREDICT_CONTENTS_UN.get(OREDICT_CONTENTS_UN.indexOf(idSource)));
+			int sourceOreId = OreDictionary.getOreID(idSource);
+			int targetOreId = OreDictionary.getOreID(idTarget);
+			OREDICT_CONTENTS.set(targetOreId, OREDICT_CONTENTS.get(sourceOreId));
+			OREDICT_CONTENTS_UN.set(targetOreId, OREDICT_CONTENTS_UN.get(sourceOreId));
 		}
 
 		@Override
@@ -289,8 +294,9 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			OREDICT_CONTENTS.set(OREDICT_CONTENTS.indexOf(idTarget), targetCopy);
-			OREDICT_CONTENTS_UN.set(OREDICT_CONTENTS_UN.indexOf(idTarget), targetCopyUn);
+			int targetOreId = OreDictionary.getOreID(idTarget);
+			OREDICT_CONTENTS.set(targetOreId, targetCopy);
+			OREDICT_CONTENTS_UN.set(targetOreId, targetCopyUn);
 		}
 
 		@Override
@@ -320,7 +326,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void apply() {
-			OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(id)).remove(item);
+			int oreId = OreDictionary.getOreID(id);
+			OREDICT_CONTENTS.get(oreId).remove(item);
 		}
 
 		@Override
@@ -330,7 +337,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
-			OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(id)).add(item);
+			int oreId = OreDictionary.getOreID(id);
+			OREDICT_CONTENTS.get(oreId).add(item);
 		}
 
 		@Override
@@ -372,8 +380,9 @@ public class MCOreDictEntry implements IOreDictEntry {
 
 		@Override
 		public void undo() {
+			int targetOreId = OreDictionary.getOreID(idTarget);
 			for (ItemStack stack : OreDictionary.getOres(idSource)) {
-				OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(idTarget)).remove(stack);
+				OREDICT_CONTENTS.get(targetOreId).remove(stack);
 			}
 		}
 
