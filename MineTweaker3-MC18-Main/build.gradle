@@ -39,6 +39,14 @@ dependencies {
 	compile project(':MineTweaker3-API')
 }
 
+task makeRegistry(type: RegisterZenClassesTask) {
+	inputDir = file('build/classes/main')
+	outputDir = file('build/classes/main')
+	className = 'minetweaker.mc18.MineTweakerRegistry'
+}
+
+tasks.jar.dependsOn(makeRegistry)
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.

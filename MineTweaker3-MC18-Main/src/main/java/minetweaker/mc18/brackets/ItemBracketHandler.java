@@ -41,15 +41,15 @@ import com.google.common.collect.HashBiMap;
  */
 @BracketHandler(priority = 100)
 public class ItemBracketHandler implements IBracketHandler {
-	public static final BiMap<String, Item> itemNames;
-
-	static {
-		itemNames = HashBiMap.create();
+	private static final BiMap<String, Item> itemNames = HashBiMap.create();
+	
+	@SuppressWarnings("unchecked")
+	public static void rebuildItemRegistry() {
+		itemNames.clear();
 		for (ResourceLocation itemRes : (Set<ResourceLocation>) Item.itemRegistry.getKeys()) {
 			String itemName = itemRes.getResourceDomain() + ":" + itemRes.getResourcePath();
 			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
 			System.out.println(itemName + " : " + (Item) Item.itemRegistry.getObject(itemName));
-
 		}
 	}
 
@@ -84,7 +84,7 @@ public class ItemBracketHandler implements IBracketHandler {
 		if (tokens.size() == 1 && tokens.get(0).getValue().equals("*")) {
 			return symbolAny;
 		}
-
+		
 		// detect special cases:
 		// item: at the start means item-specific syntax
 		// :xxx with xxx an integer means sub-item syntax
