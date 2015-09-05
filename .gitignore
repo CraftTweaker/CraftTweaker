@@ -4,6 +4,7 @@
 # Except:
 
 # Source files & libraries
+!/buildSrc
 /buildSrc/*
 !/buildSrc/src/
 
