@@ -10,6 +10,7 @@ import static minetweaker.mc18.MineTweakerMod.NETWORK;
 import minetweaker.IPlatformFunctions;
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.item.IItemDefinition;
+import minetweaker.mc18.brackets.ItemBracketHandler;
 import minetweaker.mc18.chat.MCChatMessage;
 import minetweaker.mc18.item.MCItemDefinition;
 import minetweaker.mc18.network.MineTweakerLoadScriptsPacket;
@@ -40,7 +41,7 @@ public class MCPlatformFunctions implements IPlatformFunctions {
 		Item item = Item.getItemById(id);
 		if (item == null)
 			return null;
-		String sid = (String) Item.itemRegistry.getNameForObject(item);
+		String sid = ItemBracketHandler.getStringFromItem(item);
 		return new MCItemDefinition(sid, item);
 	}
 }
