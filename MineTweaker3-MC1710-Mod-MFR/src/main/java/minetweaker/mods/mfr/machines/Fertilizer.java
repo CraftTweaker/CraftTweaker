@@ -85,7 +85,7 @@ public class Fertilizer {
 	}
 	
 	@ZenMethod
-	public static void remmoveFertilizer(IItemStack item) {
+	public static void removeFertilizer(IItemStack item) {
 		MineTweakerAPI.apply(new FertilizerRemoveFertilizerAction(item));
 	}
 	
