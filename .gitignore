@@ -1,31 +1,85 @@
+# Ignore All
 /*
 
-!build.gradle
+# Except:
+
+# Source files & libraries
+!/buildSrc
+/buildSrc/*
 !/buildSrc/src/
-!/MineTweaker3-API/src/
-!/MineTweaker3-MC18-Main/src/
-!/MineTweaker3-MC1710-Main/bin/
-!/MineTweaker3-MC1710-Main/eclipse/
-!/MineTweaker3-MC1710-Mod-Buildcraft/src/
-!/MineTweaker3-MC1710-Mod-Buildcraft61/src/
-!/MineTweaker3-MC1710-Mod-IC2/src/
-!/MineTweaker3-MC1710-Mod-IC2/libs/
-!/MineTweaker3-MC1710-Mod-MFR/src/
-!/MineTweaker3-MC1710-Mod-MFR/libs/
-!/MineTweaker3-MC1710-Mod-NEI/src/
-!/MineTweaker3-MC1710-Mod-NEI/libs/
-!/ZenScript/src/
-!/MineTweaker3-Web/
 
-!/gradlew
-!/gradlew.bat
-!/gradle/
+!/MineTweaker3-API
+/MineTweaker3-API/*
+!/MineTweaker3-API/src
 
+!/MineTweaker3-MC18-Main
+/MineTweaker3-MC18-Main/*
+!/MineTweaker3-MC18-Main/src
+!/MineTweaker3-MC18-Main/bin
+
+!/MineTweaker3-MC18-Mod-NEI
+/MineTweaker3-MC18-Mod-NEI/*
+!/MineTweaker3-MC18-Mod-NEI/src
+!/MineTweaker3-MC18-Mod-NEI/libs
+
+!/MineTweaker3-MC1710-Main
+/MineTweaker3-MC1710-Main/*
+!/MineTweaker3-MC1710-Main/src
+!/MineTweaker3-MC1710-Main/bin
+
+!/MineTweaker3-MC1710-Mod-Buildcraft
+/MineTweaker3-MC1710-Mod-Buildcraft/*
+!/MineTweaker3-MC1710-Mod-Buildcraft/src
+!/MineTweaker3-MC1710-Mod-Buildcraft/libs
+
+!/MineTweaker3-MC1710-Mod-Buildcraft61
+/MineTweaker3-MC1710-Mod-Buildcraft61/*
+!/MineTweaker3-MC1710-Mod-Buildcraft61/src
+!/MineTweaker3-MC1710-Mod-Buildcraft61/libs
+
+!/MineTweaker3-MC1710-Mod-IC2
+/MineTweaker3-MC1710-Mod-IC2/*
+!/MineTweaker3-MC1710-Mod-IC2/src
+!/MineTweaker3-MC1710-Mod-IC2/libs
+
+!/MineTweaker3-MC1710-Mod-MFR
+/MineTweaker3-MC1710-Mod-MFR/*
+!/MineTweaker3-MC1710-Mod-MFR/src
+!/MineTweaker3-MC1710-Mod-MFR/libs
+
+!/MineTweaker3-MC1710-Mod-NEI
+/MineTweaker3-MC1710-Mod-NEI/*
+!/MineTweaker3-MC1710-Mod-NEI/src
+!/MineTweaker3-MC1710-Mod-NEI/libs
+
+!/ZenScript
+/ZenScript/*
+!/ZenScript/src
+
+!/MineTweaker3-Web
+
+# gradle
+!/build.gradle
+!/build.properties
+!/settings.gradle
 !/common.gradle
-!/configuration.gradle
 !/gradle.properties
+!/gradlew*
+!/gradle
 
 MineTweaker3-Web/doc
 
+# github
+!/.gitignore
+!/README.md
+
+# unwanted os-generated files
 nbproject/
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+*~
