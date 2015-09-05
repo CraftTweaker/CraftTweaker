@@ -43,7 +43,7 @@ ext.projects1710 = [
 	'MineTweaker3-MC1710-Mod-IC2',
 	'MineTweaker3-MC1710-Mod-NEI',
 	'MineTweaker3-MC1710-Mod-MFR',
-	'MineTweaker3-MC1710-Mod-GregTech',
+	//'MineTweaker3-MC1710-Mod-GregTech',
 	'MineTweaker3-MC1710-Mod-Buildcraft'
 	//'MineTweaker3-MC1710-Mod-Buildcraft61'
 ]

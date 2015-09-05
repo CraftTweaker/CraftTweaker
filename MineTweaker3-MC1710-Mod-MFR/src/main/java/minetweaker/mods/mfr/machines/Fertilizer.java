@@ -34,7 +34,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ModOnly("MineFactoryReloaded")
 public class Fertilizer {
 	@ZenMethod
-	public void addFertilizable(IItemStack block, String fertilizeType, @Optional String method, @Optional IItemStack replacement) {
+	public static void addFertilizable(IItemStack block, String fertilizeType, @Optional String method, @Optional IItemStack replacement) {
 		FertilizerType fertilizer;
 		if (fertilizeType.equals("any")) {
 			fertilizer = null;
@@ -64,12 +64,12 @@ public class Fertilizer {
 	}
 	
 	@ZenMethod
-	public void removeFertilizable(IItemStack item) {
+	public static void removeFertilizable(IItemStack item) {
 		MineTweakerAPI.apply(new FertilizerRemoveFertilizableAction(item));
 	}
 	
 	@ZenMethod
-	public void addFertilizer(IItemStack item, String type) {
+	public static void addFertilizer(IItemStack item, String type) {
 		FertilizerType fertilizerType;
 		if (type.equals("grass")) {
 			fertilizerType = FertilizerType.Grass;
@@ -85,7 +85,7 @@ public class Fertilizer {
 	}
 	
 	@ZenMethod
-	public void remmoveFertilizer(IItemStack item) {
+	public static void remmoveFertilizer(IItemStack item) {
 		MineTweakerAPI.apply(new FertilizerRemoveFertilizerAction(item));
 	}
 	
@@ -93,7 +93,7 @@ public class Fertilizer {
 	// ### Action Classes ###
 	// ######################
 	
-	public class FertilizerAddFertilizableAction implements IUndoableAction {
+	public static class FertilizerAddFertilizableAction implements IUndoableAction {
 		private final IItemStack block;
 		private final IItemStack plant;
 		private final FertilizerType type;
@@ -201,7 +201,7 @@ public class Fertilizer {
 		}
 	}
 	
-	public class FertilizerRemoveFertilizableAction implements IUndoableAction {
+	public static class FertilizerRemoveFertilizableAction implements IUndoableAction {
 		private final IItemStack item;
 		private final IFactoryFertilizable old;
 
@@ -241,7 +241,7 @@ public class Fertilizer {
 		}
 	}
 	
-	public class FertilizerRemoveFertilizerAction implements IUndoableAction {
+	public static class FertilizerRemoveFertilizerAction implements IUndoableAction {
 		private final IItemStack item;
 		private final IFactoryFertilizer old;
 
