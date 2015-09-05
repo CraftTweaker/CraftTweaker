@@ -9,7 +9,9 @@ package minetweaker.mc18.actions;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRedFlower;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 /**
@@ -72,9 +74,8 @@ public class SetBlockHardnessAction implements IUndoableAction {
 	}
 
 	public static boolean isBlock(ItemStack stack) {
-		String name = (String) Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-		return !name.equalsIgnoreCase("minecraft:air") && Block.blockRegistry.containsKey(name);
-
+		ResourceLocation res = (ResourceLocation) Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+		return !res.getResourcePath().equalsIgnoreCase("minecraft:air") && Block.blockRegistry.containsKey(res);
 	}
 
 	@Override

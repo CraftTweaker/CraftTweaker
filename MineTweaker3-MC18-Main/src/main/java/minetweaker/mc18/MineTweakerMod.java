@@ -12,6 +12,8 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.mc18.brackets.ItemBracketHandler;
+import minetweaker.mc18.brackets.LiquidBracketHandler;
+import minetweaker.mc18.brackets.OreBracketHandler;
 import minetweaker.mc18.client.MCClient;
 import minetweaker.mc18.formatting.MCFormatter;
 import minetweaker.mc18.furnace.FuelTweaker;
@@ -34,7 +36,6 @@ import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -154,6 +155,9 @@ public class MineTweakerMod {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
 		ItemBracketHandler.rebuildItemRegistry();
+		MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
+		MineTweakerAPI.registerBracketHandler(new LiquidBracketHandler());
+		MineTweakerAPI.registerBracketHandler(new OreBracketHandler());
 		
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();

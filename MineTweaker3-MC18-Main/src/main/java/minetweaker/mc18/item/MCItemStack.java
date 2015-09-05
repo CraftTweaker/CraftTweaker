@@ -39,6 +39,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -306,8 +307,8 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public IBlock asBlock() {
-		String name = (String) Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-		if (Block.blockRegistry.containsKey(name)) {
+		ResourceLocation res = (ResourceLocation) Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+		if (Block.blockRegistry.containsKey(res)) {
 			return new MCItemBlock(stack);
 		} else {
 			throw new ClassCastException("This item is not a block");
