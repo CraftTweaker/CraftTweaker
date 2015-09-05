@@ -30,6 +30,7 @@ import minetweaker.mc18.util.MineTweakerPlatformUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -52,8 +53,9 @@ public class MCGame implements IGame {
 	@Override
 	public List<IItemDefinition> getItems() {
 		List<IItemDefinition> result = new ArrayList<IItemDefinition>();
-		for (String item : (Set<String>) Item.itemRegistry.getKeys()) {
-			result.add(new MCItemDefinition(item, (Item) Item.itemRegistry.getObject(item)));
+		for (ResourceLocation res: (Set<ResourceLocation>) Item.itemRegistry.getKeys()) {
+			
+			result.add(new MCItemDefinition(res.getResourceDomain() + ":" + res.getResourcePath(), (Item) Item.itemRegistry.getObject(res)));
 		}
 		return result;
 	}
