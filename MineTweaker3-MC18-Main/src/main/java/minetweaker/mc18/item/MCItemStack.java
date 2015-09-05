@@ -31,6 +31,7 @@ import minetweaker.mc18.actions.SetBlockHardnessAction;
 import minetweaker.mc18.actions.SetStackSizeAction;
 import minetweaker.mc18.actions.SetTranslationAction;
 import minetweaker.mc18.block.MCItemBlock;
+import minetweaker.mc18.brackets.ItemBracketHandler;
 import minetweaker.mc18.data.NBTConverter;
 import minetweaker.mc18.liquid.MCLiquidStack;
 import minetweaker.util.ArrayUtil;
@@ -85,7 +86,7 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public IItemDefinition getDefinition() {
-		return new MCItemDefinition((String) Item.itemRegistry.getNameForObject(stack.getItem()), stack.getItem());
+		return new MCItemDefinition(ItemBracketHandler.getStringFromItem(stack.getItem()), stack.getItem());
 	}
 
 	@Override
@@ -370,7 +371,7 @@ public class MCItemStack implements IItemStack {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append('<');
-		result.append(Item.itemRegistry.getNameForObject(stack.getItem()));
+		result.append(ItemBracketHandler.getStringFromItem(stack.getItem()));
 
 		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
 			result.append(":*");

@@ -28,8 +28,9 @@ public class ForgeEventHandler {
 		minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(
 				MineTweakerMC.getIPlayer(ev.entityPlayer),
 				MineTweakerMC.getDimension(ev.world),
-				ev.pos.getX(), ev.pos.getY(), ev.pos.getZ()
-				);
+				ev.pos == null ? 0 : ev.pos.getX(),
+				ev.pos == null ? 0 : ev.pos.getY(),
+				ev.pos == null ? 0 : ev.pos.getZ());
 
 		MineTweakerImplementationAPI.events.publishPlayerInteract(event);
 	}

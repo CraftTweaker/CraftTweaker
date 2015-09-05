@@ -155,9 +155,8 @@ public class MineTweakerMod {
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-		for (String itemName : (Set<String>) Item.itemRegistry.getKeys()) {
-		ItemBracketHandler.itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
-		}
+		ItemBracketHandler.rebuildItemRegistry();
+		
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();
 		}

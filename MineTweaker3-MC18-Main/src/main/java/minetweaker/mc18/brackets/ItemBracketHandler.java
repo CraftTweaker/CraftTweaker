@@ -8,9 +8,7 @@ package minetweaker.mc18.brackets;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import minetweaker.IBracketHandler;
@@ -19,6 +17,8 @@ import minetweaker.annotations.BracketHandler;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.item.IngredientAny;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -32,21 +32,29 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 /**
  *
  * @author Stan
  */
 @BracketHandler(priority = 100)
 public class ItemBracketHandler implements IBracketHandler {
-	private static final Map<String, Item> itemNames;
-
-	static {
-		itemNames = new HashMap<String, Item>();
-		for (String itemName : (Set<String>) Item.itemRegistry.getKeys()) {
+	private static final BiMap<String, Item> itemNames = HashBiMap.create();
+	
+	@SuppressWarnings("unchecked")
+	public static void rebuildItemRegistry() {
+		itemNames.clear();
+		for (ResourceLocation itemRes : (Set<ResourceLocation>) Item.itemRegistry.getKeys()) {
+			String itemName = itemRes.getResourceDomain() + ":" + itemRes.getResourcePath();
 			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
 			System.out.println(itemName + " : " + (Item) Item.itemRegistry.getObject(itemName));
-
 		}
+	}
+
+	public static String getStringFromItem(Item item) {
+		return itemNames.inverse().get(item);
 	}
 
 	public static IItemStack getItem(String name, int meta) {
@@ -76,7 +84,7 @@ public class ItemBracketHandler implements IBracketHandler {
 		if (tokens.size() == 1 && tokens.get(0).getValue().equals("*")) {
 			return symbolAny;
 		}
-
+		
 		// detect special cases:
 		// item: at the start means item-specific syntax
 		// :xxx with xxx an integer means sub-item syntax
