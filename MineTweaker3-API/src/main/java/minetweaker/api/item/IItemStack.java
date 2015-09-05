@@ -80,6 +80,20 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenSetter("maxStackSize")
 	public void setMaxStackSize(int size);
+	
+	/**
+	 * Gets the block hardness
+	 */
+	@ZenGetter("hardness")
+	public float getBlockHardness();
+	
+	/**
+	 * Sets the block hardness
+	 * 
+	 * @param hardness the new hardness
+	 */
+	@ZenSetter("hardness")
+	public void setBlockHardness(float hardness);
 
 	/**
 	 * Gets the item damage. Returns 0 if the item cannot be damaged.

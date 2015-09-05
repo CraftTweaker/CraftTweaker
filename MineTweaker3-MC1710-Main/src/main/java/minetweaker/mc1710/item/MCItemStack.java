@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.data.DataMap;
@@ -27,6 +28,7 @@ import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
+import minetweaker.mc1710.actions.SetBlockHardnessAction;
 import minetweaker.mc1710.actions.SetStackSizeAction;
 import minetweaker.mc1710.actions.SetTranslationAction;
 import minetweaker.mc1710.block.MCItemBlock;
@@ -109,6 +111,16 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public void setMaxStackSize(int size) {
 		MineTweakerAPI.apply(new SetStackSizeAction((ItemStack) getInternal(), size));
+	}
+
+	@Override
+	public float getBlockHardness() {
+		return ReflectionHelper.getPrivateValue(Block.class, Block.getBlockFromItem(stack.getItem()), "blockHardness");
+	}
+
+	@Override
+	public void setBlockHardness(float hardness) {
+		MineTweakerAPI.apply(new SetBlockHardnessAction(stack, hardness));
 	}
 
 	@Override
@@ -260,7 +272,7 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public boolean matches(IItemStack item) {
 		ItemStack internal = getItemStack(item);
-		return internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+		return internal !=null && stack !=null &&internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
 	}
 
 	@Override
@@ -293,10 +305,11 @@ public class MCItemStack implements IItemStack {
 
 	@Override
 	public IBlock asBlock() {
-		if (Block.getBlockFromItem(stack.getItem()) == null) {
-			throw new ClassCastException("This item is not a block");
-		} else {
+		String name = Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+		if (Block.blockRegistry.containsKey(name)) {
 			return new MCItemBlock(stack);
+		} else {
+			throw new ClassCastException("This item is not a block");
 		}
 	}
 

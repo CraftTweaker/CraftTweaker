@@ -4,7 +4,7 @@
 
 ext.mineTweakerVersion = "3.0.9D_alpha"
 ext.mineTweakerDebug = "false"
-ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_05/lib/tools.jar")
+ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_45/lib/tools.jar")
 
 // ######################
 // ### 1.6.4 settings ###
@@ -37,7 +37,7 @@ ext.projects172 = [
 // ### 1.7.10 settings ###
 // #######################
 
-ext.forgeVersion1710 = "1.7.10-10.13.2.1291"
+ext.forgeVersion1710 = "1.7.10-10.13.4.1448-1.7.10"
 ext.projects1710 = [
 	'MineTweaker3-MC1710-Main',
 	'MineTweaker3-MC1710-Mod-IC2',

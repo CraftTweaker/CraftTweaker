@@ -34,7 +34,7 @@ The following global tasks are available:
 
 ### Adding mod support
 
-When starting a new mod support library, it is best to start from an existing one. For instance, copy the NEI support library, and remove the source files inside the src/java/main directory. Then you can work with it like any other support library. Make sure to update gradle.properties to add the projects in there.
+When starting a new mod support library, it is best to start from an existing one. For instance, copy the NEI support library, and remove the source files inside the src/java/main directory. Then you can work with it like any other support library. Make sure to update configuration.gradle to add the projects in there.
 
 ### Building a release
 

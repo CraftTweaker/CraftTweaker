@@ -57,7 +57,7 @@ public class MCServer extends AbstractServer {
 			return true;
 
 		UserListOps ops = MinecraftServer.getServer().getConfigurationManager().func_152603_m();
-		if (server.isDedicatedServer()) {
+		if (server.isDedicatedServer() && ops != null) {
 			return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null;
 		} else {
 			return true;

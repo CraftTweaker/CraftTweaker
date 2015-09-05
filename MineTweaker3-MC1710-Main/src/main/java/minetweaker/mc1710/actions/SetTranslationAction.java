@@ -56,6 +56,9 @@ public class SetTranslationAction implements IUndoableAction {
 	}
 
 	private static void set(String key, String value) {
+		if (value.contains("\\\"")) {
+			value = value.replace("\\\"", "\"");
+		}
 		StringTranslate.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
 	}
 

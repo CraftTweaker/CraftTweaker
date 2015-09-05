@@ -21,10 +21,12 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 import java.io.File;
+import java.util.Set;
 
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
+import minetweaker.mc1710.brackets.ItemBracketHandler;
 import minetweaker.mc1710.client.MCClient;
 import minetweaker.mc1710.formatting.MCFormatter;
 import minetweaker.mc1710.furnace.FuelTweaker;
@@ -47,6 +49,7 @@ import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -152,7 +155,9 @@ public class MineTweakerMod {
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-
+		for (String itemName : (Set<String>) Item.itemRegistry.getKeys()) {
+		ItemBracketHandler.itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
+		}
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();
 		}

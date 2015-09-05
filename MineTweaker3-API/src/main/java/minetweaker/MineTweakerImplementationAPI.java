@@ -211,20 +211,23 @@ public class MineTweakerImplementationAPI {
 							}
 						} else if (arguments[0].equals("hand") && player != null) {
 							IItemStack item = player.getCurrentItem();
+							if (item != null) {
+								List<ICraftingRecipe> recipes = MineTweakerAPI.recipes.getRecipesFor(item.anyAmount());
+								if (recipes.isEmpty()) {
+									player.sendChat("No crafting recipes found for that item");
+								} else {
+									StringBuilder recipesString = new StringBuilder();
 
-							List<ICraftingRecipe> recipes = MineTweakerAPI.recipes.getRecipesFor(item.anyAmount());
-							if (recipes.isEmpty()) {
-								player.sendChat("No crafting recipes found for that item");
-							} else {
-								StringBuilder recipesString = new StringBuilder();
+									for (ICraftingRecipe recipe : recipes) {
+										MineTweakerAPI.logCommand(recipe.toCommandString());
+										player.sendChat(recipe.toCommandString());
+										recipesString.append(recipe.toCommandString()).append("\n");
+									}
 
-								for (ICraftingRecipe recipe : recipes) {
-									MineTweakerAPI.logCommand(recipe.toCommandString());
-									player.sendChat(recipe.toCommandString());
-									recipesString.append(recipe.toCommandString()).append("\n");
+									copyToClipboard(recipesString.toString());
 								}
-
-								copyToClipboard(recipesString.toString());
+							} else {
+								player.sendChat("No item was found");
 							}
 						} else {
 							if (player != null) {
