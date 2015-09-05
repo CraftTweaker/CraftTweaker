@@ -1,15 +1,15 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "MineTweaker3",
+  "name": "MineTweaker 3",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
+  "description": "Customize your minecraft experience!",
+  "credits": "Created By Stan Hebben",
+  "logoFile": "assets/minetweaker/logo.png",
+  "url": "http://minetweaker3.powerofbytes.com",
+  "authorList": [ "Stan Hebben" ],
+  "parent": "",
   "screenshots": [],
   "dependencies": []
 }
