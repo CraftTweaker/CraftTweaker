@@ -57,7 +57,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.9B")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.10")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.8";
@@ -155,9 +155,6 @@ public class MineTweakerMod {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
 		ItemBracketHandler.rebuildItemRegistry();
-		MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
-		MineTweakerAPI.registerBracketHandler(new LiquidBracketHandler());
-		MineTweakerAPI.registerBracketHandler(new OreBracketHandler());
 		
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();

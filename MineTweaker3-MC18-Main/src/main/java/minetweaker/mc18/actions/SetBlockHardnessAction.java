@@ -9,7 +9,6 @@ package minetweaker.mc18.actions;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRedFlower;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
