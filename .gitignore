@@ -16,9 +16,14 @@
 !/MineTweaker3-MC1710-Mod-NEI/libs/
 !/ZenScript/src/
 !/MineTweaker3-Web/
+
 !/gradlew
 !/gradlew.bat
 !/gradle/
+
+!/common.gradle
+!/configuration.gradle
+!/gradle.properties
 
 MineTweaker3-Web/doc
 
