@@ -15,7 +15,7 @@
 !/MineTweaker3-MC18-Main
 /MineTweaker3-MC18-Main/*
 !/MineTweaker3-MC18-Main/src
-!/MineTweaker3-MC18-Main/bin
+/MineTweaker3-MC18-Main/bin
 
 !/MineTweaker3-MC18-Mod-NEI
 /MineTweaker3-MC18-Mod-NEI/*
@@ -25,7 +25,7 @@
 !/MineTweaker3-MC1710-Main
 /MineTweaker3-MC1710-Main/*
 !/MineTweaker3-MC1710-Main/src
-!/MineTweaker3-MC1710-Main/bin
+/MineTweaker3-MC1710-Main/bin
 
 !/MineTweaker3-MC1710-Mod-Buildcraft
 /MineTweaker3-MC1710-Mod-Buildcraft/*
