@@ -19,12 +19,12 @@ buildscript {
 
 apply plugin: 'forge'
 
+version = "1.7.10-" + ext.mineTweakerVersion
+archivesBaseName = project.projectDir.name
+
 minecraft {
 	version = forgeVersion1710
 }
-
-version = "1.7.10-" + ext.mineTweakerVersion
-archivesBaseName = project.projectDir.name
 
 dependencies {
 	dependencies {

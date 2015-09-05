@@ -19,7 +19,8 @@ The MineTweaker 3 source is setup as a multi-project Gradle project:
 
 ### Developing and running MineTweaker from source
 
-Configuration settings are stored in configuration.gradle . *Make sure to configure the tools.jar directory in that file! Nothing will compile without it.*
+Configuration settings are stored in configuration.gradle . *If buildSrc fails to compile you might have to edit the
++`javaToolsJar` location in `configuration.gradle`*
 
 In order to use the project, you have to execute the setupDecompWorkspaceAll (or use setupDecomWorkspace17X if you have errors on the 1.6.4 forge patches). It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in MineTweaker3-XYZ-Main project, which will run MineTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run MineTweaker with only the mod support for that specific mod.
 
