@@ -27,5 +27,6 @@ ext.projects1710 = [
 
 ext.forgeVersion18 = "1.8-11.14.3.1450"
 ext.projects18 = [
-	'MineTweaker3-MC18-Main'
+	'MineTweaker3-MC18-Main',
+	'MineTweaker3-MC18-Mod-NEI'
 ]

@@ -1,6 +1,7 @@
 package minetweaker.mods.ic2;
 
 import ic2.api.recipe.IMachineRecipeManager;
+import ic2.api.recipe.IMachineRecipeManagerExt;
 import java.util.Arrays;
 import minetweaker.MineTweakerAPI;
 import minetweaker.OneWayAction;
@@ -29,7 +30,11 @@ public class MachineAddRecipeAction extends OneWayAction {
 	@Override
 	public void apply() {
 		try {
-			machine.addRecipe(input, tag, output);
+			if (machine instanceof IMachineRecipeManagerExt) {
+				((IMachineRecipeManagerExt) machine).addRecipe(input, tag, true, output);
+			} else {
+				machine.addRecipe(input, tag, output);
+			}
 		} catch (RuntimeException ex) {
 			MineTweakerAPI.logError(ex.getMessage());
 		}
