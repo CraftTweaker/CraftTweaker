@@ -67,6 +67,7 @@ public class MineTweakerImplementationAPI {
 	private static final ListenPlayerLoggedOut LISTEN_LOGOUT = new ListenPlayerLoggedOut();
 	private static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
 	private static final EventList<ReloadEvent> ONRELOAD = new EventList<ReloadEvent>();
+	private static final EventList<ReloadEvent> ONPOSTRELOAD = new EventList<ReloadEvent>();
 
 	static {
 		minetweakerCommands = new HashMap<String, MineTweakerCommand>();
@@ -550,6 +551,10 @@ public class MineTweakerImplementationAPI {
 	public static IEventHandle onReloadEvent(IEventHandler<ReloadEvent> handler) {
 		return ONRELOAD.add(handler);
 	}
+	
+	public static IEventHandle onPostReload(IEventHandler<ReloadEvent> handler) {
+		return ONPOSTRELOAD.add(handler);
+	}
 
 	/**
 	 * Must be called upon server start.
@@ -653,6 +658,8 @@ public class MineTweakerImplementationAPI {
 		if (MineTweakerAPI.server != null) {
 			platform.distributeScripts(MineTweakerAPI.tweaker.getScriptData());
 		}
+		
+		ONPOSTRELOAD.publish(new ReloadEvent());
 	}
 
 	/**
