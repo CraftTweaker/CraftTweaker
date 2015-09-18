@@ -12,6 +12,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
@@ -149,11 +150,18 @@ public class MineTweakerMod {
 	}
 
 	@EventHandler
+	public void onComplete(FMLLoadCompleteEvent ev) {
+		MineTweakerAPI.logInfo("MineTweaker: Everything should be finished loading we should rebuild the registry now..");
+		ItemBracketHandler.rebuildItemRegistry();
+		MineTweakerAPI.logInfo("MineTweaker: Sucessfully rebuilt our registry");
+	}
+
+	@EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-		ItemBracketHandler.rebuildItemRegistry();
 		
+
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();
 		}
