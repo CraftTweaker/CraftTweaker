@@ -12,7 +12,7 @@ ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).ge
 // ### 1.7.10 settings ###
 // #######################
 
-ext.forgeVersion1710 = "1.7.10-10.13.4.1448-1.7.10"
+ext.forgeVersion1710 = "1.7.10-10.13.4.1492-1.7.10"
 ext.projects1710 = [
 	'MineTweaker3-MC1710-Main',
 	'MineTweaker3-MC1710-Mod-IC2',

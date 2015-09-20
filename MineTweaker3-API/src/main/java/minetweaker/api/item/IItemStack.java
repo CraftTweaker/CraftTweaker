@@ -80,13 +80,13 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenSetter("maxStackSize")
 	public void setMaxStackSize(int size);
-	
+
 	/**
 	 * Gets the block hardness
 	 */
 	@ZenGetter("hardness")
 	public float getBlockHardness();
-	
+
 	/**
 	 * Sets the block hardness
 	 * 
@@ -110,6 +110,14 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenGetter("maxDamage")
 	public int getMaxDamage();
+
+	/**
+	 * Sets the max Itemstack damage
+	 * 
+	 * @param damage the new max damage
+	 */
+	@ZenSetter("maxDamage")
+	public void setMaxDamage(int damage);
 
 	/**
 	 * Gets the item tag. (NBT data) The resulting data is immutable and can
