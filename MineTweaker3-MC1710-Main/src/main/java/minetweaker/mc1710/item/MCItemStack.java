@@ -30,6 +30,7 @@ import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
 import minetweaker.mc1710.actions.SetBlockHardnessAction;
 import minetweaker.mc1710.actions.SetStackSizeAction;
+import minetweaker.mc1710.actions.SetStackmaxDamageAction;
 import minetweaker.mc1710.actions.SetTranslationAction;
 import minetweaker.mc1710.block.MCItemBlock;
 import minetweaker.mc1710.data.NBTConverter;
@@ -101,6 +102,12 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public void setDisplayName(String name) {
 		MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
+	}
+	
+
+	@Override
+	public void setMaxDamage(int damage) {
+		MineTweakerAPI.apply(new SetStackmaxDamageAction(stack, damage));
 	}
 
 	@Override
@@ -387,5 +394,6 @@ public class MCItemStack implements IItemStack {
 
 		return result.toString();
 	}
+
 
 }
