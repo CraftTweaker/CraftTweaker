@@ -151,16 +151,15 @@ public class MineTweakerMod {
 
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent ev) {
-		MineTweakerAPI.logInfo("MineTweaker: Everything should be finished loading we should rebuild the registry now..");
+		MineTweakerAPI.logInfo("MineTweaker: Building registry");
 		ItemBracketHandler.rebuildItemRegistry();
-		MineTweakerAPI.logInfo("MineTweaker: Sucessfully rebuilt our registry");
+		MineTweakerAPI.logInfo("MineTweaker: Sucessfully built item registry");
 	}
 
 	@EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-		
 
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();
