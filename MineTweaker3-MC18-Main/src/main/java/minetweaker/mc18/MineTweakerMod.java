@@ -12,8 +12,6 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.mc18.brackets.ItemBracketHandler;
-import minetweaker.mc18.brackets.LiquidBracketHandler;
-import minetweaker.mc18.brackets.OreBracketHandler;
 import minetweaker.mc18.client.MCClient;
 import minetweaker.mc18.formatting.MCFormatter;
 import minetweaker.mc18.furnace.FuelTweaker;
@@ -42,6 +40,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
@@ -151,10 +150,16 @@ public class MineTweakerMod {
 	}
 
 	@EventHandler
+	public void onComplete(FMLLoadCompleteEvent ev) {
+		MineTweakerAPI.logInfo("MineTweaker: Building registry");
+		ItemBracketHandler.rebuildItemRegistry();
+		MineTweakerAPI.logInfo("MineTweaker: Sucessfully built item registry");
+	}
+
+	@EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-		ItemBracketHandler.rebuildItemRegistry();
 		
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();

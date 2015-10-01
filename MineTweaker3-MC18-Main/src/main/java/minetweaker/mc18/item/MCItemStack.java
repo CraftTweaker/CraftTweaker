@@ -29,6 +29,7 @@ import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
 import minetweaker.mc18.actions.SetBlockHardnessAction;
 import minetweaker.mc18.actions.SetStackSizeAction;
+import minetweaker.mc18.actions.SetStackmaxDamageAction;
 import minetweaker.mc18.actions.SetTranslationAction;
 import minetweaker.mc18.block.MCItemBlock;
 import minetweaker.mc18.brackets.ItemBracketHandler;
@@ -36,7 +37,6 @@ import minetweaker.mc18.data.NBTConverter;
 import minetweaker.mc18.liquid.MCLiquidStack;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -103,6 +103,11 @@ public class MCItemStack implements IItemStack {
 	@Override
 	public void setDisplayName(String name) {
 		MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
+	}
+	
+	@Override
+	public void setMaxDamage(int damage) {
+		MineTweakerAPI.apply(new SetStackmaxDamageAction(stack, damage));
 	}
 
 	@Override
