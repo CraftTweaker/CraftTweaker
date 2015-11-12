@@ -57,5 +57,6 @@ public class StatementForeach extends Statement {
 		body.compile(local);
 		iterator.compilePostIterate(localVariables, exit, repeat);
 		methodOutput.label(exit);
+		iterator.compileEnd();
 	}
 }
