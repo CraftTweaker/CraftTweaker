@@ -26,7 +26,10 @@ public abstract class Statement {
 			}
 			case T_RETURN: {
 				parser.next();
-				ParsedExpression expression = ParsedExpression.read(parser, environment);
+				ParsedExpression expression = null;
+				if (parser.peek() != null && !parser.isNext(T_SEMICOLON)) {
+					expression = ParsedExpression.read(parser, environment);
+				}
 				parser.required(T_SEMICOLON, "; expected");
 				return new StatementReturn(next.getPosition(), returnType, expression);
 			}
