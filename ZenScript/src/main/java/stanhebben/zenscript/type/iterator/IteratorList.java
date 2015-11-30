@@ -39,15 +39,16 @@ public class IteratorList implements IZenIterator {
 
 	@Override
 	public void compilePreIterate(int[] locals, Label exit) {
-		methodOutput.dup();
+		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(
 				Iterator.class,
 				"hasNext",
 				boolean.class);
 		methodOutput.ifEQ(exit);
 
-		methodOutput.dup();
+		methodOutput.loadObject(iterator);
 		methodOutput.invokeInterface(Iterator.class, "next", Object.class);
+		methodOutput.checkCast(iteratorType.toASMType().getInternalName());
 		methodOutput.store(iteratorType.toASMType(), locals[1]);
 	}
 
@@ -59,7 +60,6 @@ public class IteratorList implements IZenIterator {
 
 	@Override
 	public void compileEnd() {
-		methodOutput.pop();
 	}
 
 	@Override

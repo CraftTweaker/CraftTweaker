@@ -69,10 +69,13 @@ public class ExpressionArithmeticCompare extends Expression {
 
 				if (a.getType() == ZenTypeLong.INSTANCE) {
 					output.lCmp();
+					output.iConst0();
 				} else if (a.getType() == ZenTypeFloat.INSTANCE) {
 					output.fCmp();
+					output.iConst0();
 				} else if (a.getType() == ZenTypeDouble.INSTANCE) {
 					output.dCmp();
+					output.iConst0();
 				} else if (a.getType() == ZenTypeByte.INSTANCE
 						|| a.getType() == ZenTypeShort.INSTANCE
 						|| a.getType() == ZenTypeInt.INSTANCE) {

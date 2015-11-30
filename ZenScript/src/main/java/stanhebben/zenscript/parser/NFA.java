@@ -21,6 +21,10 @@ public class NFA {
 	public static final int NOFINAL = Integer.MIN_VALUE;
 	public static final int EPSILON = Integer.MIN_VALUE + 1;
 
+	/* UNICODE_ESCAPE should be between 128 and 256, so unicode chars can be
+		matched by regexp like '.' and '[^a]' and not by '[a-zA-Z]' */
+	public static final int UNICODE_ESCAPE = 256;
+
 	private final NFAState initial;
 
 	private HashMap<NodeSet, DFA.DFAState> converted;
@@ -318,6 +322,8 @@ public class NFA {
 	/* Processes a single character */
 	private int processChar(CharStream stream) {
 		if (stream.optional('\\')) {
+			if (stream.optional('u'))
+				return UNICODE_ESCAPE;
 			if (stream.optional('e'))
 				return -1;
 			if (stream.optional('r'))
