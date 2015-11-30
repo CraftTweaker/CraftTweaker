@@ -212,17 +212,12 @@ public class TokenStream implements Iterator<Token> {
 			StringBuilder value = new StringBuilder();
 			int tLine = line;
 			int tLineOffset = lineOffset;
-			int _fakeNextChar = nextChar > 127 ? NFA.UNICODE_ESCAPE : nextChar;
-			while (dfa.transitions[state].containsKey(_fakeNextChar)) {
-				if (nextChar < 0)
-					value.append((char) nextChar);
-				else
-					value.appendCodePoint(nextChar);
-				state = dfa.transitions[state].get(_fakeNextChar);
+			while (dfa.transitions[state].containsKey(nextChar)) {
+				value.append((char) nextChar);
+				state = dfa.transitions[state].get(nextChar);
 				line = reader.line;
 				lineOffset = reader.lineOffset;
 				nextChar = reader.read();
-				_fakeNextChar = nextChar > 127 ? NFA.UNICODE_ESCAPE : nextChar;
 			}
 
 			if (line < 0)

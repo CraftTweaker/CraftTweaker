@@ -90,7 +90,6 @@ public class ExpressionJavaLambda extends Expression {
 		for (Statement statement : statements) {
 			statement.compile(environmentMethod);
 		}
-		output.ret();
 		output.end();
 
 		environment.putClass(clsName, cw.toByteArray());
