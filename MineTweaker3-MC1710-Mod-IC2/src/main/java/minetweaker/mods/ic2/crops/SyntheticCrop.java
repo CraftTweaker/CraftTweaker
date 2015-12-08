@@ -29,7 +29,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
  * @author ben
  *
  */
-@ZenClass("mods.ic2.Crop")
+@ZenClass("mods.ic2.SyntheticCrop")
 public class SyntheticCrop extends CropCard {
 
 	private String name;
