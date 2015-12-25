@@ -59,23 +59,15 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid = MineTweakerMod.MODID, version = "3.0.10")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
-	public static final String MCVERSION = "1.8";
+	public static final String MCVERSION = "1.8.8";
 
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
 	private static final String[] REGISTRIES = {
-			"minetweaker.mods.ic2.ClassRegistry",
-			"minetweaker.mods.nei.ClassRegistry",
-			"minetweaker.mods.mfr.ClassRegistry",
-			"minetweaker.mods.gregtech.ClassRegistry",
-			"minetweaker.mods.buildcraft.ClassRegistry"
+			"minetweaker.mods.jei.ClassRegistry"
 	};
 	private static final String[] REGISTRY_DESCRIPTIONS = {
-			"IC2 mod support",
-			"NEI mod support",
-			"MFR mod support",
-			"GregTech mod support",
-			"Buildcraft mod support"
+			"JEI mod support",
 	};
 
 	static {

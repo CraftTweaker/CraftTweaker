@@ -51,7 +51,7 @@ public class MCLiquidStack implements ILiquidStack {
 
 	@Override
 	public String getDisplayName() {
-		return stack.getFluid().getLocalizedName();
+		return stack.getFluid().getLocalizedName(stack);
 	}
 
 	@Override

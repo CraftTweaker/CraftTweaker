@@ -8,6 +8,7 @@ package minetweaker.mc18.block;
 
 import minetweaker.api.block.IBlockDefinition;
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 
 /**
  *
@@ -26,7 +27,8 @@ public class MCBlockDefinition implements IBlockDefinition {
 
 	@Override
 	public String getId() {
-		return (String) Block.blockRegistry.getNameForObject(block);
+		ResourceLocation res = Block.blockRegistry.getNameForObject(block);
+		return res.getResourceDomain()+ ":"+res.getResourcePath();
 	}
 
 	@Override

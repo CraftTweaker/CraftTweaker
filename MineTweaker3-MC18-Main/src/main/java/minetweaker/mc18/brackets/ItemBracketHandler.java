@@ -48,8 +48,9 @@ public class ItemBracketHandler implements IBracketHandler {
 		itemNames.clear();
 		for (ResourceLocation itemRes : (Set<ResourceLocation>) Item.itemRegistry.getKeys()) {
 			String itemName = itemRes.getResourceDomain() + ":" + itemRes.getResourcePath();
-			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemName));
-			System.out.println(itemName + " : " + (Item) Item.itemRegistry.getObject(itemName));
+			ResourceLocation res = new ResourceLocation(itemRes.getResourceDomain(), itemRes.getResourcePath().replace(" ", ""));
+			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemRes));
+			System.out.println(itemName + " : " + (Item) Item.itemRegistry.getObject(itemRes));
 		}
 	}
 

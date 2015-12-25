@@ -15,6 +15,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -37,7 +38,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 	@Override
 	public String getDisplayName() {
-		return fluid.getLocalizedName();
+		return  fluid.getUnlocalizedName() == null ? "" : StatCollector.translateToLocal(fluid.getUnlocalizedName());
 	}
 
 	@Override
@@ -181,7 +182,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
 
 		@Override
 		public String describe() {
-			return "Adding " + filled.getDisplayName() + " as liquid container for " + fluid.getLocalizedName();
+			return "Adding " + filled.getDisplayName() + " as liquid container for " + fluid.getUnlocalizedName() == null ? "" : StatCollector.translateToLocal(fluid.getUnlocalizedName());
 		}
 
 		@Override

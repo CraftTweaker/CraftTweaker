@@ -17,10 +17,10 @@
 !/MineTweaker3-MC18-Main/src
 /MineTweaker3-MC18-Main/bin
 
-!/MineTweaker3-MC18-Mod-NEI
-/MineTweaker3-MC18-Mod-NEI/*
-!/MineTweaker3-MC18-Mod-NEI/src
-!/MineTweaker3-MC18-Mod-NEI/libs
+!/MineTweaker3-MC18-Mod-JEI
+/MineTweaker3-MC18-Mod-JEI/*
+!/MineTweaker3-MC18-Mod-JEI/src
+!/MineTweaker3-MC18-Mod-JEI/libs
 
 !/MineTweaker3-MC1710-Main
 /MineTweaker3-MC1710-Main/*

@@ -43,7 +43,7 @@ public class MCPlayer implements IPlayer {
 
 	@Override
 	public String getName() {
-		return player.getName();
+		return player.getCommandSenderName();
 	}
 
 	@Override

@@ -64,8 +64,8 @@ public class MCLootRegistry implements ILootRegistry {
 			results.add(new LootEntry(new WeightedItemStack(
 					MineTweakerMC.getIItemStack(content.theItemId),
 					content.itemWeight),
-					content.theMinimumChanceToGenerateItem,
-					content.theMaximumChanceToGenerateItem));
+					content.minStackSize,
+					content.maxStackSize));
 		}
 		return results;
 	}

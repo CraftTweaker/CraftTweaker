@@ -9,6 +9,8 @@ package minetweaker.mc18.block;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import minetweaker.api.block.BlockPatternOr;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.block.IBlockDefinition;
@@ -16,6 +18,7 @@ import minetweaker.api.block.IBlockPattern;
 import minetweaker.api.data.IData;
 import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -74,6 +77,7 @@ public class MCSpecificBlock implements IBlock {
 
 	private static String getBlockId(Block block)
 	{
-		return (String) Block.blockRegistry.getNameForObject(block);
+		ResourceLocation res = Block.blockRegistry.getNameForObject(block);
+		return res.getResourceDomain() + ":"+res.getResourcePath();
 	}
 }

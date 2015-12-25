@@ -63,7 +63,7 @@ public class MCGame implements IGame {
 	@Override
 	public List<IBlockDefinition> getBlocks() {
 		List<IBlockDefinition> result = new ArrayList<IBlockDefinition>();
-		for (String block : (Set<String>) Block.blockRegistry.getKeys()) {
+		for (ResourceLocation block : (Set<ResourceLocation>) Block.blockRegistry.getKeys()) {
 			result.add(MineTweakerMC.getBlockDefinition((Block) Block.blockRegistry.getObject(block)));
 		}
 
