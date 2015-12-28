@@ -19,7 +19,7 @@ task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
-	archiveName="MineTweaker3-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.7.10-${mineTweakerVersion}.jar"
 	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -33,7 +33,7 @@ task assembleMC18(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
-	archiveName="MineTweaker3-1.8-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.8.8-${mineTweakerVersion}.jar"
 	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -47,7 +47,7 @@ task assembleDevBase1710(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1710-Main:build']) {
-	archiveName="MineTweaker3-Dev-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.7.10-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -58,7 +58,7 @@ task assembleDevBase18(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC18-Main:build']) {
-	archiveName="MineTweaker3-Dev-1.8-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.8.8-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -69,7 +69,7 @@ task assembleDevFull1710(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
-	archiveName="MineTweaker3-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -83,7 +83,7 @@ task assembleDevFull18(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
-	archiveName="MineTweaker3-Dev-Full-1.8-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.8.8-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
