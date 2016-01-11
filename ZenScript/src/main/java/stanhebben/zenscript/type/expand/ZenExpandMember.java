@@ -77,12 +77,12 @@ public class ZenExpandMember {
 
 		@Override
 		public Expression eval(IEnvironmentGlobal environment) {
-			return new ExpressionCallVirtual(position, environment, getter, value.eval(environment));
+			return new ExpressionCallStatic(position, environment, getter, value.eval(environment));
 		}
 
 		@Override
 		public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
-			return new ExpressionCallVirtual(position, environment, setter, value.eval(environment), other);
+			return new ExpressionCallStatic(position, environment, setter, value.eval(environment), other);
 		}
 
 		@Override

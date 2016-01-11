@@ -128,7 +128,7 @@ public class MTTweaker implements ITweaker {
 				while (script.next()) {
 					Reader reader = null;
 					try {
-						reader = new InputStreamReader(new BufferedInputStream(script.open()));
+						reader = new InputStreamReader(new BufferedInputStream(script.open()), "UTF-8");
 
 						String filename = script.getName();
 						String className = extractClassName(filename);

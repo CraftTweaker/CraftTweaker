@@ -61,6 +61,5 @@ public class IteratorIterable implements IZenIterator {
 
 	@Override
 	public void compileEnd() {
-		methodOutput.pop();
 	}
 }
