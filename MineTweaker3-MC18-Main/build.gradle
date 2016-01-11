@@ -24,7 +24,7 @@ archivesBaseName = project.projectDir.name
 minecraft {
     version = forgeVersion18
     runDir = "eclipse"
-    mappings = "snapshot_20151122"
+    mappings = "stable_20"
 }
 
 dependencies {

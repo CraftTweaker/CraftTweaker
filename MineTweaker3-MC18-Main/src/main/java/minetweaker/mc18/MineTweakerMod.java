@@ -56,9 +56,9 @@ import net.minecraftforge.fml.relauncher.Side;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.10")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.0")
 public class MineTweakerMod {
-	public static final String MODID = "MineTweaker3";
+	public static final String MODID = "crafttweaker";
 	public static final String MCVERSION = "1.8.8";
 
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);

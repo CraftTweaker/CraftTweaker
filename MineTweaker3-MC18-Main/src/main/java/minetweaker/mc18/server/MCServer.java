@@ -74,7 +74,7 @@ public class MCServer extends AbstractServer {
 			return ServerPlayer.INSTANCE;
 		} else {
 			System.out.println("Unsupported command sender: " + commandSender);
-			System.out.println("player name: " + commandSender.getCommandSenderName());
+			System.out.println("player name: " + commandSender.getName());
 			return null;
 		}
 	}

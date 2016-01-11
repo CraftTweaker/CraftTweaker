@@ -3,7 +3,7 @@
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.0"
+ext.mineTweakerVersion = "3.0.1"
 ext.mineTweakerDebug = "false"
 ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_66/lib/tools.jar")
 
