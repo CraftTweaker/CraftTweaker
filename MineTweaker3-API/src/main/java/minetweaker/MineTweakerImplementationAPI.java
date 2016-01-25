@@ -218,6 +218,8 @@ public class MineTweakerImplementationAPI {
 										ShapelessRecipe shapeless = (ShapelessRecipe) recipe;
 										IItemStack out = shapeless.getOutput();
 										MineTweakerAPI.logError("Could not dump recipe for " + out, ex);
+									} else {
+										MineTweakerAPI.logError("Could not dump recipe", ex)
 									}
 								}
 							}
