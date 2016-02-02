@@ -1,6 +1,8 @@
 package minetweaker.mc18.brackets;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import minetweaker.IBracketHandler;
 import minetweaker.annotations.BracketHandler;
@@ -26,8 +28,18 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 @BracketHandler
 public class LiquidBracketHandler implements IBracketHandler {
+    
+    private static final Map<String, Fluid> fluidNames = new HashMap<String, Fluid>();
+
+    @SuppressWarnings("unchecked")
+    public static void rebuildLiquidRegistry() {
+        fluidNames.clear();
+        for (String fluidName : FluidRegistry.getRegisteredFluids().keySet()) {
+            fluidNames.put(fluidName.replace(" ", ""), FluidRegistry.getFluid(fluidName));
+        }
+    }
 	public static ILiquidStack getLiquid(String name) {
-		Fluid fluid = FluidRegistry.getFluid(name);
+		Fluid fluid =fluidNames.get(name);
 		if (fluid != null) {
 			return new MCLiquidStack(new FluidStack(fluid, 1));
 		} else {
@@ -53,7 +65,7 @@ public class LiquidBracketHandler implements IBracketHandler {
 			valueBuilder.append(token.getValue());
 		}
 
-		Fluid fluid = FluidRegistry.getFluid(valueBuilder.toString());
+		Fluid fluid = fluidNames.get(valueBuilder.toString());
 		if (fluid != null) {
 			return new LiquidReferenceSymbol(environment, valueBuilder.toString());
 		}

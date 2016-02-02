@@ -26,6 +26,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.mc1710.brackets.ItemBracketHandler;
+import minetweaker.mc1710.brackets.LiquidBracketHandler;
 import minetweaker.mc1710.client.MCClient;
 import minetweaker.mc1710.formatting.MCFormatter;
 import minetweaker.mc1710.furnace.FuelTweaker;
@@ -153,6 +154,7 @@ public class MineTweakerMod {
 	public void onComplete(FMLLoadCompleteEvent ev) {
 		MineTweakerAPI.logInfo("MineTweaker: Building registry");
 		ItemBracketHandler.rebuildItemRegistry();
+		LiquidBracketHandler.rebuildLiquidRegistry();
 		MineTweakerAPI.logInfo("MineTweaker: Sucessfully built item registry");
 	}
 

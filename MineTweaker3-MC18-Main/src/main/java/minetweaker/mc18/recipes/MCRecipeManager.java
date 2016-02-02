@@ -213,9 +213,9 @@ public class MCRecipeManager implements IRecipeManager {
 				if (recipe instanceof ShapelessRecipes) {
 					ShapelessRecipes srecipe = (ShapelessRecipes) recipe;
 
-					if (ingredients.length > srecipe.getRecipeSize()) {
+					if (ingredients.length > srecipe.getRecipeSize() || ingredients.length< srecipe.getRecipeSize()) {
 						continue;
-					} else if (!wildcard && ingredients.length < srecipe.getRecipeSize()) {
+					} else if (!wildcard && (ingredients.length > srecipe.getRecipeSize() || ingredients.length< srecipe.getRecipeSize())) {
 						continue;
 					}
 
@@ -251,9 +251,9 @@ public class MCRecipeManager implements IRecipeManager {
 				}
 			} else {
 				if (recipe instanceof ShapelessRecipes) {
-
+				    continue;
 				} else if (recipe instanceof ShapelessOreRecipe) {
-
+				    continue;
 				} else {
 					continue;
 				}

@@ -1,6 +1,9 @@
 package minetweaker.mc1710.brackets;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import minetweaker.IBracketHandler;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.mc1710.liquid.MCLiquidStack;
@@ -25,63 +28,65 @@ import stanhebben.zenscript.util.ZenPosition;
  */
 @BracketHandler
 public class LiquidBracketHandler implements IBracketHandler {
-	public static ILiquidStack getLiquid(String name) {
-		Fluid fluid = FluidRegistry.getFluid(name);
-		if (fluid != null) {
-			return new MCLiquidStack(new FluidStack(fluid, 1));
-		} else {
-			return null;
-		}
-	}
+    private static final Map<String, Fluid> fluidNames = new HashMap<String, Fluid>();
 
-	@Override
-	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
-		if (tokens.size() > 2) {
-			if (tokens.get(0).getValue().equals("liquid") && tokens.get(1).getValue().equals(":")) {
-				return find(environment, tokens, 2, tokens.size());
-			}
-		}
+    @SuppressWarnings("unchecked")
+    public static void rebuildLiquidRegistry() {
+        fluidNames.clear();
+        for (String fluidName : FluidRegistry.getRegisteredFluids().keySet()) {
+            fluidNames.put(fluidName.replace(" ", ""), FluidRegistry.getFluid(fluidName));
+        }
+    }
 
-		return null;
-	}
+    public static ILiquidStack getLiquid(String name) {
+        Fluid fluid = fluidNames.get(name);
+        if (fluid != null) {
+            return new MCLiquidStack(new FluidStack(fluid, 1));
+        } else {
+            return null;
+        }
+    }
 
-	private IZenSymbol find(IEnvironmentGlobal environment, List<Token> tokens, int startIndex, int endIndex) {
-		StringBuilder valueBuilder = new StringBuilder();
-		for (int i = startIndex; i < endIndex; i++) {
-			Token token = tokens.get(i);
-			valueBuilder.append(token.getValue());
-		}
+    @Override
+    public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
+        if (tokens.size() > 2) {
+            if (tokens.get(0).getValue().equals("liquid") && tokens.get(1).getValue().equals(":")) {
+                return find(environment, tokens, 2, tokens.size());
+            }
+        }
 
-		Fluid fluid = FluidRegistry.getFluid(valueBuilder.toString());
-		if (fluid != null) {
-			return new LiquidReferenceSymbol(environment, valueBuilder.toString());
-		}
+        return null;
+    }
 
-		return null;
-	}
+    private IZenSymbol find(IEnvironmentGlobal environment, List<Token> tokens, int startIndex, int endIndex) {
+        StringBuilder valueBuilder = new StringBuilder();
+        for (int i = startIndex; i < endIndex; i++) {
+            Token token = tokens.get(i);
+            valueBuilder.append(token.getValue());
+        }
 
-	private class LiquidReferenceSymbol implements IZenSymbol {
-		private final IEnvironmentGlobal environment;
-		private final String name;
+        Fluid fluid = fluidNames.get(valueBuilder.toString());
+        if (fluid != null) {
+            return new LiquidReferenceSymbol(environment, valueBuilder.toString());
+        }
 
-		public LiquidReferenceSymbol(IEnvironmentGlobal environment, String name) {
-			this.environment = environment;
-			this.name = name;
-		}
+        return null;
+    }
 
-		@Override
-		public IPartialExpression instance(ZenPosition position) {
-			IJavaMethod method = JavaMethod.get(
-					GlobalRegistry.getTypeRegistry(),
-					LiquidBracketHandler.class,
-					"getLiquid",
-					String.class);
+    private class LiquidReferenceSymbol implements IZenSymbol {
+        private final IEnvironmentGlobal environment;
+        private final String name;
 
-			return new ExpressionCallStatic(
-					position,
-					environment,
-					method,
-					new ExpressionString(position, name));
-		}
-	}
+        public LiquidReferenceSymbol(IEnvironmentGlobal environment, String name) {
+            this.environment = environment;
+            this.name = name;
+        }
+
+        @Override
+        public IPartialExpression instance(ZenPosition position) {
+            IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), LiquidBracketHandler.class, "getLiquid", String.class);
+
+            return new ExpressionCallStatic(position, environment, method, new ExpressionString(position, name));
+        }
+    }
 }
