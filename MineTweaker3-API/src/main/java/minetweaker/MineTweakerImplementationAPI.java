@@ -36,6 +36,8 @@ import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingRecipe;
 import minetweaker.api.recipes.IFurnaceManager;
 import minetweaker.api.recipes.IRecipeManager;
+import minetweaker.api.recipes.ShapedRecipe;
+import minetweaker.api.recipes.ShapelessRecipe;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandValidator;
 import minetweaker.api.server.IServer;
@@ -204,7 +206,22 @@ public class MineTweakerImplementationAPI {
 
 							MineTweakerAPI.logCommand("Recipes:");
 							for (ICraftingRecipe recipe : MineTweakerAPI.recipes.getAll()) {
-								MineTweakerAPI.logCommand(recipe.toCommandString());
+								try {
+									MineTweakerAPI.logCommand(recipe.toCommandString());
+								} catch (Throwable ex) {
+									// Some recipes can result in an NPE :-(
+									if (recipe instanceof ShapedRecipe) {
+										ShapedRecipe shaped = (ShapedRecipe) recipe;
+										IItemStack out = shaped.getOutput();
+										MineTweakerAPI.logError("Could not dump recipe for " + out, ex);
+									} else if (recipe instanceof ShapelessRecipe) {
+										ShapelessRecipe shapeless = (ShapelessRecipe) recipe;
+										IItemStack out = shapeless.getOutput();
+										MineTweakerAPI.logError("Could not dump recipe for " + out, ex);
+									} else {
+										MineTweakerAPI.logError("Could not dump recipe", ex)
+									}
+								}
 							}
 
 							if (player != null) {
