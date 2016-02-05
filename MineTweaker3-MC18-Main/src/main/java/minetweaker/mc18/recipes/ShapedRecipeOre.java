@@ -7,6 +7,7 @@
 package minetweaker.mc18.recipes;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+
 import minetweaker.api.recipes.ShapedRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -31,8 +32,13 @@ public class ShapedRecipeOre extends ShapedOreRecipe {
 		return recipe.matches(MCCraftingInventory.get(inventory));
 	}
 
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
-	}
+	 @Override
+	    public ItemStack getCraftingResult(InventoryCrafting inventory) {
+	        if(recipe !=null){
+	            if(recipe.getCraftingResult(MCCraftingInventory.get(inventory))!=null){
+	                return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
+	            }
+	        }
+	        return null;
+	    }
 }
