@@ -49,7 +49,7 @@ public class ItemBracketHandler implements IBracketHandler {
 		for (ResourceLocation itemRes : (Set<ResourceLocation>) Item.itemRegistry.getKeys()) {
 			String itemName = itemRes.getResourceDomain() + ":" + itemRes.getResourcePath();
 			ResourceLocation res = new ResourceLocation(itemRes.getResourceDomain(), itemRes.getResourcePath().replace(" ", ""));
-			itemNames.put(itemName.replace(" ", ""), (Item) Item.itemRegistry.getObject(itemRes));
+			itemNames.put(itemName.replace(" ", "").replace("'", ""), (Item) Item.itemRegistry.getObject(itemRes));
 			System.out.println(itemName + " : " + (Item) Item.itemRegistry.getObject(itemRes));
 		}
 	}
