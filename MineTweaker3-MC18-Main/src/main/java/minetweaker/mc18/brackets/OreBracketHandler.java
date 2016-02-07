@@ -84,7 +84,7 @@ public class OreBracketHandler implements IBracketHandler {
 			IJavaMethod method = JavaMethod.get(
 					GlobalRegistry.getTypeRegistry(),
 					OreBracketHandler.class,
-					"getOre",
+					name.contains("*") ? "getOreList" : "getOre",
 					String.class);
 
 			return new ExpressionCallStatic(
