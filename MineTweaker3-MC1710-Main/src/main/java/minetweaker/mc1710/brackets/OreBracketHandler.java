@@ -6,8 +6,11 @@
 
 package minetweaker.mc1710.brackets;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import minetweaker.IBracketHandler;
+import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import minetweaker.api.oredict.IOreDictEntry;
@@ -31,6 +34,20 @@ public class OreBracketHandler implements IBracketHandler {
 	public static IOreDictEntry getOre(String name) {
 		return new MCOreDictEntry(name);
 	}
+    
+    public static List<IOreDictEntry> getOreList(String wildcardName) {
+        List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
+        Pattern wildcardPattern = Pattern.compile(wildcardName.replaceAll("\\*", ".+"));
+        
+        for (IOreDictEntry someOreDict : MineTweakerAPI.oreDict.getEntries()) {
+            String oreDictName = someOreDict.getName();
+            if (wildcardPattern.matcher(oreDictName).matches()) {
+                result.add(getOre(oreDictName));
+            }
+        }
+        
+        return result;
+    }
 
 	@Override
 	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
@@ -67,7 +84,7 @@ public class OreBracketHandler implements IBracketHandler {
 			IJavaMethod method = JavaMethod.get(
 					GlobalRegistry.getTypeRegistry(),
 					OreBracketHandler.class,
-					"getOre",
+					name.contains("*") ? "getOreList" : "getOre",
 					String.class);
 
 			return new ExpressionCallStatic(
