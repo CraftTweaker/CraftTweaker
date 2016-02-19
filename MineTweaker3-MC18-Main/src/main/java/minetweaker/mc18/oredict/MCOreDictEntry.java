@@ -60,6 +60,15 @@ public class MCOreDictEntry implements IOreDictEntry {
 		return OreDictionary.getOres(getName()).isEmpty();
 	}
 
+    @Override
+    public IItemStack getFirstItem() {
+        List<ItemStack> items = OreDictionary.getOres(getName());
+        if (items.isEmpty()) {
+            return null;
+        }
+        return getIItemStackWildcardSize(items.get(0));
+    }
+
 	@Override
 	public void add(IItemStack item) {
 		ItemStack stack = getItemStack(item);

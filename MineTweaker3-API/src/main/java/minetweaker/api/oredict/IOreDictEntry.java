@@ -26,6 +26,9 @@ public interface IOreDictEntry extends IIngredient {
 	@ZenGetter("empty")
 	public boolean isEmpty();
 
+	@ZenGetter("firstItem")
+	public IItemStack getFirstItem();
+
 	@ZenMethod
 	public void add(IItemStack item);
 

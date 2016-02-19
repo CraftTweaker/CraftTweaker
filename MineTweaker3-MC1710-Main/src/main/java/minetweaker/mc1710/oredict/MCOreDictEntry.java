@@ -68,6 +68,15 @@ public class MCOreDictEntry implements IOreDictEntry {
 		}
 	}
 
+    @Override
+    public IItemStack getFirstItem() {
+        List<ItemStack> items = OreDictionary.getOres(id);
+        if (items.isEmpty()) {
+            return null;
+        }
+        return getIItemStackWildcardSize(items.get(0));
+    }
+
 	@Override
 	public void addAll(IOreDictEntry entry) {
 		if (entry instanceof MCOreDictEntry) {
