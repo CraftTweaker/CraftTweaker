@@ -24,7 +24,7 @@ ext.projects1710 = [
 // ### 1.8 settings ###
 // ####################
 
-ext.forgeVersion18 = "1.8.9-11.15.0.1694"
+ext.forgeVersion18 = "1.8.9-11.15.1.1763"
 ext.projects18 = [
 	'MineTweaker3-MC18-Main',
 	'MineTweaker3-MC18-Mod-JEI'

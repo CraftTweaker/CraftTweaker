@@ -26,7 +26,7 @@ public class SetBlockHardnessAction implements IUndoableAction {
 	public SetBlockHardnessAction(ItemStack stack, float hardness) {
 		this.stack = stack;
 		this.hardness = hardness;
-		this.oldHardness = ReflectionHelper.getPrivateValue(Block.class, Block.getBlockFromItem(stack.getItem()), "blockHardness");
+		this.oldHardness = Block.getBlockFromItem(stack.getItem()).getBlockHardness(null, null);
 	}
 
 	@Override
