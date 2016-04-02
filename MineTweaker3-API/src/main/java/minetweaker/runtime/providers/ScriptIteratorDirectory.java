@@ -28,10 +28,9 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	public ScriptIteratorDirectory(File directory) {
 		this.directory = directory;
 
-		File scriptDir = new File(directory, "scripts");
 		List<File> contentsList = new ArrayList<File>();
-		if (scriptDir.exists()) {
-			iterate(scriptDir, contentsList);
+		if (directory.exists()) {
+			iterate(directory, contentsList);
 		}
 		contents = contentsList.iterator();
 	}
@@ -62,6 +61,9 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	}
 
 	private static void iterate(File directory, List<File> contentsList) {
+		if (directory.getName().equals("disabled")) {
+			return;
+		}
 		for (File file : directory.listFiles()) {
 			if (file.isDirectory()) {
 				iterate(file, contentsList);
