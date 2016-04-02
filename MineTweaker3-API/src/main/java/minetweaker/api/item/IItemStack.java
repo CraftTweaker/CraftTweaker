@@ -211,6 +211,15 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenMethod
 	public IItemStack withTag(IData tag);
+	
+	/**
+     * Creates an item stack without the given nbt tag.
+     * 
+     * @param tag item tag to be removed
+     * @return resulting item stack
+     */
+    @ZenMethod
+    public IItemStack removeTag(String tag);
 
 	/**
 	 * Creates an item stack with updated nbt tag. Updates existing tags.

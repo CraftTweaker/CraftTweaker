@@ -222,6 +222,18 @@ public class MCItemStack implements IItemStack {
 	}
 
 	@Override
+    public IItemStack removeTag(String tag) {
+        ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
+        
+        if (tag == null) {
+            result.stackTagCompound = null;
+        } else {
+            result.stackTagCompound.removeTag(tag);
+        }
+        IData dataTag = NBTConverter.from(result.stackTagCompound, false);
+        return new MCItemStack(result, dataTag);
+    }
+	@Override
 	public String getMark() {
 		return null;
 	}
@@ -394,6 +406,8 @@ public class MCItemStack implements IItemStack {
 
 		return result.toString();
 	}
+
+    
 
 
 }

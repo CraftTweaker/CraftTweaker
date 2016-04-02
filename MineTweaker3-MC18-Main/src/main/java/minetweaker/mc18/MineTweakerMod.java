@@ -8,6 +8,9 @@ package minetweaker.mc18;
 
 import java.io.File;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
@@ -35,7 +38,10 @@ import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
+import net.minecraft.item.ItemFishingRod;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.WeightedRandomFishable;
+import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -96,7 +102,6 @@ public class MineTweakerMod {
 
 		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
-
 		File globalDir = new File("scripts");
 		if (!globalDir.exists())
 			globalDir.mkdirs();
@@ -144,17 +149,19 @@ public class MineTweakerMod {
 
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent ev) {
-		MineTweakerAPI.logInfo("MineTweaker: Building registry");
-		ItemBracketHandler.rebuildItemRegistry();
-		LiquidBracketHandler.rebuildLiquidRegistry();
-		MineTweakerAPI.logInfo("MineTweaker: Sucessfully built item registry");
+	    MineTweakerAPI.logInfo("MineTweaker: Building registry");
+        ItemBracketHandler.rebuildItemRegistry();
+        LiquidBracketHandler.rebuildLiquidRegistry();
+        MineTweakerAPI.logInfo("MineTweaker: Sucessfully built item registry");
+        
+        
 	}
 
 	@EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
 		// starts before loading worlds
 		// perfect place to start MineTweaker!
-		
+	    
 		if (MineTweakerPlatformUtils.isClient()) {
 			MineTweakerAPI.client = new MCClient();
 		}

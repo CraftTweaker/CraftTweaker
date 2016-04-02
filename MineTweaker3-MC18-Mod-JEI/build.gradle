@@ -1,0 +1,50 @@
+import minetweaker.tasks.RegisterZenClassesTask;
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+	
+    }
+    dependencies {
+       classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.8.9-" + ext.mineTweakerVersion
+archivesBaseName = project.projectDir.name
+
+minecraft {
+	version = forgeVersion18
+	runDir = "eclipse"
+    mappings = "stable_20"
+	useDepAts = true
+	}
+repositories {
+  maven {
+    url "http://dvs1.progwml6.com/files/maven"
+  }
+}
+
+dependencies {
+	compile project(':ZenScript')
+	compile project(':MineTweaker3-API')
+	compile project(':MineTweaker3-MC18-Main')
+	deobfCompile "mezz.jei:jei_1.8.9:2.14.0.67"
+}
+
+task makeRegistry(type: RegisterZenClassesTask) {
+	inputDir = file('build/classes/main')
+	outputDir = file('build/classes/main')
+	className = 'minetweaker.mods.jei.ClassRegistry'
+}
+
+tasks.jar.dependsOn(makeRegistry)

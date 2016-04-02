@@ -23,6 +23,8 @@
 /MineTweaker3-MC18-Mod-JEI/*
 !/MineTweaker3-MC18-Mod-JEI/src
 !/MineTweaker3-MC18-Mod-JEI/libs
+!/MineTweaker3-MC18-Mod-JEI/build.gradle
+
 
 
 !/MineTweaker3-MC1710-Main
