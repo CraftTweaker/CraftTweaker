@@ -113,56 +113,55 @@ public class MTTweaker implements ITweaker {
 		scriptData = ScriptProviderMemory.collect(scriptProvider);
 		Set<String> executed = new HashSet<String>();
 
-		Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
-		while (scripts.hasNext()) {
-			IScriptIterator script = scripts.next();
+		Iterator<IScriptIterator> scriptIterators = scriptProvider.getScriptIterators();
+		while (scriptIterators.hasNext()) {
+			IScriptIterator scriptIterator = scriptIterators.next();
+			String groupName = scriptIterator.getGroupName();
 
-			if (!executed.contains(script.getGroupName())) {
-				executed.add(script.getGroupName());
+			if (!executed.contains(groupName)) {
+				executed.add(groupName);
 
 				Map<String, byte[]> classes = new HashMap<String, byte[]>();
 				IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
 
 				List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
 
-				while (script.next()) {
+				while (scriptIterator.next()) {
 					Reader reader = null;
 					try {
-						reader = new InputStreamReader(new BufferedInputStream(script.open()), "UTF-8");
+						reader = new InputStreamReader(new BufferedInputStream(scriptIterator.open()), "UTF-8");
 
-						String filename = script.getName();
+						String filename = scriptIterator.getName();
 						String className = extractClassName(filename);
 
 						ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
 						ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
 						files.add(pfile);
 					} catch (IOException ex) {
-						MineTweakerAPI.logError("Could not load script " + script.getName() + ": " + ex.getMessage());
+						MineTweakerAPI.logError("Could not load script " + scriptIterator.getName() + ": " + ex.getMessage());
 					} catch (ParseException ex) {
-						// ex.printStackTrace();
 						MineTweakerAPI.logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
 					} catch (Exception ex) {
-						MineTweakerAPI.logError("Error loading " + script.getName() + ": " + ex.toString(), ex);
+						MineTweakerAPI.logError("Error loading " + scriptIterator.getName() + ": " + ex.toString(), ex);
 					}
 
 					if (reader != null) {
 						try {
 							reader.close();
-						} catch (IOException ex) {
+						} catch (IOException ignored) {
 						}
 					}
 				}
 
 				try {
-					String filename = script.getGroupName();
-					System.out.println("MineTweaker: Loading " + filename);
-					compileScripts(filename, files, environmentGlobal, DEBUG);
+					System.out.println("MineTweaker: Loading " + groupName);
+					compileScripts(groupName, files, environmentGlobal, DEBUG);
 
 					// execute scripts
 					ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());
 					module.getMain().run();
 				} catch (Throwable ex) {
-					MineTweakerAPI.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage(), ex);
+					MineTweakerAPI.logError("Error executing " + groupName + ": " + ex.getMessage(), ex);
 				}
 			}
 		}

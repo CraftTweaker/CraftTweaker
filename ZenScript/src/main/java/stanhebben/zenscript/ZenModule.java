@@ -1,36 +1,25 @@
 package stanhebben.zenscript;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
-import stanhebben.zenscript.compiler.ClassNameGenerator;
-import stanhebben.zenscript.compiler.EnvironmentClass;
-import stanhebben.zenscript.compiler.EnvironmentGlobal;
-import stanhebben.zenscript.compiler.EnvironmentMethod;
-import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.ParsedFunction;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
+import stanhebben.zenscript.definitions.ParsedGlobalValue;
+import stanhebben.zenscript.symbols.SymbolGlobal;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.statements.StatementReturn;
 import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.symbols.SymbolZenStaticMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.MethodOutput;
+
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 
 /**
@@ -44,227 +33,184 @@ import static stanhebben.zenscript.util.ZenTypeUtil.internal;
  * @author Stan Hebben
  */
 public class ZenModule {
+	public static final String zenMainClassName = "__ZenMain__";
 	/**
 	 * Compiles a set of parsed files into a module.
 	 * 
 	 * @param mainFileName main filename (used for debug info)
-	 * @param scripts scripts to compile
+	 * @param parsedScripts scripts to compile
 	 * @param environmentGlobal global compile environment
 	 * @param debug enable debug mode (outputs classes to generated directory)
 	 */
-	public static void compileScripts(String mainFileName, List<ZenParsedFile> scripts, IEnvironmentGlobal environmentGlobal, boolean debug) {
-		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		clsMain.visitSource(mainFileName, null);
-
-		clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[] { internal(Runnable.class) });
-		MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
-		mainRun.start();
-
-		for (ZenParsedFile script : scripts) {
-			for (Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
-				ParsedFunction fn = function.getValue();
-				environmentGlobal.putValue(function.getKey(), new SymbolZenStaticMethod(
-						script.getClassName(),
-						fn.getName(),
-						fn.getSignature(),
-						fn.getArgumentTypes(),
-						fn.getReturnType()), fn.getPosition());
+	public static void compileScripts(String mainFileName, List<ZenParsedFile> parsedScripts, IEnvironmentGlobal environmentGlobal, boolean debug) {
+		for (ZenParsedFile parsedScript : parsedScripts) {
+			String internalClassName = internal(parsedScript.getClassName());
+			for (ParsedGlobalValue globalValue : parsedScript.getGlobalValues().values()) {
+				environmentGlobal.putValue(globalValue.getName(), new SymbolGlobal(
+						internalClassName,
+						globalValue.getName(),
+						globalValue.getType()), globalValue.getPosition());
+			}
+			for (ParsedFunction function : parsedScript.getFunctions().values()) {
+				environmentGlobal.putValue(function.getName(), new SymbolZenStaticMethod(
+						internalClassName,
+						function.getName(),
+						function.getSignature(),
+						function.getArgumentTypes(),
+						function.getReturnType()), function.getPosition());
 			}
 		}
 
-		for (ZenParsedFile script : scripts) {
+		ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+
+		clsMain.visitSource(mainFileName, null);
+		clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, zenMainClassName, null, internal(Object.class), new String[] { internal(Runnable.class) });
+
+		compileConstructor(clsMain);
+
+		MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
+		mainRun.start();
+
+		for (ZenParsedFile parsedScript : parsedScripts) {
 			ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-			clsScript.visitSource(script.getFileName(), null);
-			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
 
-			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[] { internal(Runnable.class) });
+			clsScript.visitSource(parsedScript.getFileName(), null);
+			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, internal(parsedScript.getClassName()), null, internal(Object.class), new String[] { internal(Runnable.class) });
 
-			for (Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
-				ParsedFunction fn = function.getValue();
+			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, parsedScript.getEnvironment());
 
-				String signature = fn.getSignature();
-				MethodOutput methodOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, function.getKey(), signature, null, null);
-				EnvironmentMethod methodEnvironment = new EnvironmentMethod(methodOutput, environmentScript);
-
-				List<ParsedFunctionArgument> arguments = function.getValue().getArguments();
-				for (int i = 0; i < arguments.size(); i++) {
-					ParsedFunctionArgument argument = arguments.get(i);
-					methodEnvironment.putValue(argument.getName(), new SymbolArgument(i, argument.getType()), fn.getPosition());
-				}
-
-				methodOutput.start();
-				Statement[] statements = fn.getStatements();
-				for (Statement statement : statements) {
-					statement.compile(methodEnvironment);
-				}
-				if (function.getValue().getReturnType() != ZenType.VOID) {
-					if (statements[statements.length - 1] instanceof StatementReturn) {
-						if (((StatementReturn) statements[statements.length - 1]).getExpression() != null) {
-							fn.getReturnType()
-								.defaultValue(fn.getPosition())
-								.compile(true, methodEnvironment);
-							methodOutput.returnType(fn.getReturnType().toASMType());
-						}
-					} else {
-						fn.getReturnType()
-							.defaultValue(fn.getPosition())
-							.compile(true, methodEnvironment);
-						methodOutput.returnType(fn.getReturnType().toASMType());
-					}
-				}
-				methodOutput.end();
-			}
-
-			if (script.getStatements().size() > 0) {
-				MethodOutput scriptOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "__script__", "()V", null, null);
-				IEnvironmentMethod functionMethod = new EnvironmentMethod(scriptOutput, environmentScript);
-				// scriptOutput.enableDebug();
-				scriptOutput.start();
-				for (Statement statement : script.getStatements()) {
-					statement.compile(functionMethod);
-				}
-				scriptOutput.ret();
-				scriptOutput.end();
-
-				mainRun.invokeStatic(script.getClassName().replace('.', '/'), "__script__", "()V");
-			}
+			compileConstructor(clsScript);
+			compileGlobalValues(parsedScript, environmentScript, clsScript);
+			compileFunctions(parsedScript, environmentScript, clsScript);
+			compileStatements(parsedScript, environmentScript, clsScript, mainRun);
 
 			clsScript.visitEnd();
-			environmentGlobal.putClass(script.getClassName(), clsScript.toByteArray());
+
+			environmentGlobal.putClass(parsedScript.getClassName(), clsScript.toByteArray());
 		}
 
 		mainRun.ret();
 		mainRun.end();
 		clsMain.visitEnd();
 
-		MethodVisitor constructor = clsMain.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
-		constructor.visitCode();
-		constructor.visitVarInsn(Opcodes.ALOAD, 0);
-		constructor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
-		constructor.visitInsn(Opcodes.RETURN);
-		constructor.visitMaxs(0, 0);
-		constructor.visitEnd();
+		environmentGlobal.putClass(zenMainClassName, clsMain.toByteArray());
 
 		// debug: output classes
 		if (debug) {
-			try {
-				File outputDir = new File("generated");
-				outputDir.mkdir();
+			debugOutput(environmentGlobal);
+		}
+	}
 
-				for (String className : environmentGlobal.getClassNames()) {
-					File outputFile = new File(outputDir, className.replace('.', '/') + ".class");
+	public static void compileConstructor(ClassWriter classWriter) {
+		MethodOutput ctor = new MethodOutput(classWriter, Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+		ctor.start();
+		ctor.loadObject(0);
+		ctor.invokeSpecial(internal(Object.class), "<init>", "()V");
+		ctor.ret();
+		ctor.end();
+	}
 
-					if (!outputFile.getParentFile().exists()) {
-						outputFile.getParentFile().mkdirs();
-					}
+	public static void compileGlobalValues(ZenParsedFile script, IEnvironmentClass environmentScript, ClassWriter clsScript) {
+		if (script.getGlobalValues().size() > 0) {
+			//define static fields
+			for (ParsedGlobalValue globalValue : script.getGlobalValues().values()) {
+				FieldVisitor fieldVisitor = clsScript.visitField(
+						Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL,
+						globalValue.getName(), globalValue.getSignature(),
+						null, null);
+				fieldVisitor.visitEnd();
+			}
 
-					FileOutputStream output = new FileOutputStream(outputFile);
-					output.write(environmentGlobal.getClass(className));
-					output.close();
+			//init static fields
+			MethodOutput clinit = new MethodOutput(clsScript, Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			EnvironmentMethod clinitEnvironment = new EnvironmentMethod(clinit, environmentScript);
+			clinit.start();
+			clinit.visitPrintln("Init global values " + script.getFileName());
+			for (ParsedGlobalValue globalValue : script.getGlobalValues().values()) {
+				globalValue.getValue().compile(true, clinitEnvironment);
+				clinit.putStaticField(internal(script.getClassName()), globalValue.getName(), globalValue.getSignature());
+			}
+			clinit.ret();
+			clinit.end();
+		}
+	}
+
+	private static void compileFunctions(ZenParsedFile script, EnvironmentClass environmentScript, ClassWriter clsScript) {
+		for (ParsedFunction function : script.getFunctions().values()) {
+            MethodOutput methodOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, function.getName(), function.getSignature(), null, null);
+            EnvironmentMethod environmentMethod = new EnvironmentMethod(methodOutput, environmentScript);
+
+            for (ParsedFunctionArgument argument : function.getArguments()) {
+                environmentMethod.putValue(argument.getName(), new SymbolArgument(
+                        argument.getIndex(),
+                        argument.getType()), function.getPosition());
+            }
+
+            methodOutput.start();
+
+			List<Statement> statements = function.getStatements();
+			for (Statement statement : statements) {
+                statement.compile(environmentMethod);
+            }
+
+			ZenType returnType = function.getReturnType();
+			int lastIndex = statements.size() - 1;
+			if (returnType != ZenType.VOID && lastIndex >= 0) {
+                Statement lastStatement = statements.get(lastIndex);
+                if (!(lastStatement instanceof StatementReturn) || ((StatementReturn) lastStatement).getExpression() != null) {
+                    returnType.defaultValue(function.getPosition()).compile(true, environmentMethod);
+                    methodOutput.returnType(returnType.toASMType());
+                } else {
+					methodOutput.ret();
 				}
-			} catch (IOException ex) {
-				ex.printStackTrace();
+            } else {
+				methodOutput.ret();
 			}
-		}
 
-		environmentGlobal.putClass("__ZenMain__", clsMain.toByteArray());
+            methodOutput.end();
+        }
 	}
 
-	/**
-	 * Compiles a single script file.
-	 * 
-	 * @param single file to be compiled
-	 * @param environment compile environment
-	 * @param baseClassLoader
-	 * @return compiled module
-	 * @throws IOException if the file could not be read
-	 */
-	public static ZenModule compileScriptFile(File single, IZenCompileEnvironment environment, ClassLoader baseClassLoader) throws IOException {
-		Map<String, byte[]> classes = new HashMap<String, byte[]>();
-		ClassNameGenerator nameGen = new ClassNameGenerator();
-		EnvironmentGlobal environmentGlobal = new EnvironmentGlobal(
-				environment,
-				classes,
-				nameGen
-				);
+	private static void compileStatements(ZenParsedFile script, EnvironmentClass environmentScript, ClassWriter clsScript, MethodOutput mainRun) {
+		if (script.getStatements().size() > 0) {
+			MethodOutput scriptOutput = new MethodOutput(clsScript, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
+			IEnvironmentMethod functionMethod = new EnvironmentMethod(scriptOutput, environmentScript);
 
-		String filename = single.getName();
-		String className = extractClassName(filename);
-
-		FileInputStream input = new FileInputStream(single);
-		Reader reader = new InputStreamReader(new BufferedInputStream(input));
-		ZenTokener parser = new ZenTokener(reader, environment);
-		ZenParsedFile file = new ZenParsedFile(filename, className, parser, environmentGlobal);
-		reader.close();
-
-		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
-		files.add(file);
-
-		compileScripts(filename, files, environmentGlobal, false);
-
-		// debug: output classes
-		File outputDir = new File("generated");
-		outputDir.mkdir();
-
-		for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
-			File outputFile = new File(outputDir, entry.getKey().replace('.', '/') + ".class");
-			if (!outputFile.getParentFile().exists()) {
-				outputFile.getParentFile().mkdirs();
+			scriptOutput.start();
+			scriptOutput.visitPrintln("Executing " + script.getFileName());
+			for (Statement statement : script.getStatements()) {
+				statement.compile(functionMethod);
 			}
-			FileOutputStream output = new FileOutputStream(outputFile);
-			output.write(entry.getValue());
-			output.close();
-		}
+			scriptOutput.ret();
+			scriptOutput.end();
 
-		return new ZenModule(classes, baseClassLoader);
+			String internalClassName = internal(script.getClassName());
+			mainRun.newObject(internalClassName);
+			mainRun.dup();
+			mainRun.construct(internalClassName);
+			mainRun.invokeVirtual(internalClassName, "run", "()V");
+		}
 	}
 
-	/**
-	 * Compiles a zip file as module. All containing files (inside the given
-	 * subdirectory) will be compiled.
-	 * 
-	 * @param file zip file
-	 * @param subdir subdirectory (use empty string to compile all)
-	 * @param environment compile environment
-	 * @return compiled module
-	 * @throws IOException if the file could not be read properly
-	 */
-	public static ZenModule compileZip(
-			File file,
-			String subdir,
-			IZenCompileEnvironment environment,
-			ClassLoader baseClassLoader) throws IOException {
-		Map<String, byte[]> classes = new HashMap<String, byte[]>();
-		ClassNameGenerator nameGen = new ClassNameGenerator();
-		EnvironmentGlobal environmentGlobal = new EnvironmentGlobal(
-				environment,
-				classes,
-				nameGen
-				);
+	public static void debugOutput(IEnvironmentGlobal environmentGlobal) {
+		try {
+			File outputDir = new File("generated");
+			outputDir.mkdir();
 
-		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
+			for (String className : environmentGlobal.getClassNames()) {
+				File outputFile = new File(outputDir, className.replace('.', '/') + ".class");
 
-		ZipFile zipFile = new ZipFile(file);
-		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-		while (entries.hasMoreElements()) {
-			ZipEntry entry = entries.nextElement();
+				if (!outputFile.getParentFile().exists()) {
+					outputFile.getParentFile().mkdirs();
+				}
 
-			if (entry.getName().startsWith(subdir) && !entry.getName().equals(subdir)) {
-				String filename = entry.getName().substring(subdir.length());
-				String className = extractClassName(filename);
-
-				Reader reader = new InputStreamReader(new BufferedInputStream(zipFile.getInputStream(entry)));
-				ZenTokener parser = new ZenTokener(reader, environment);
-				ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-				files.add(pfile);
-				reader.close();
+				FileOutputStream output = new FileOutputStream(outputFile);
+				output.write(environmentGlobal.getClass(className));
+				output.close();
 			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
-
-		String filename = file.getName();
-		compileScripts(filename, files, environmentGlobal, true);
-
-		return new ZenModule(classes, baseClassLoader);
 	}
 
 	private final Map<String, byte[]> classes;
@@ -289,7 +235,7 @@ public class ZenModule {
 	 */
 	public Runnable getMain() {
 		try {
-			return (Runnable) classLoader.loadClass("__ZenMain__").newInstance();
+			return (Runnable) classLoader.loadClass(zenMainClassName).newInstance();
 		} catch (InstantiationException e) {
 			return null;
 		} catch (IllegalAccessException e) {

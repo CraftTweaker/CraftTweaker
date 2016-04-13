@@ -24,7 +24,7 @@ public class ScriptProviderCascade implements IScriptProvider {
 	}
 
 	@Override
-	public Iterator<IScriptIterator> getScripts() {
+	public Iterator<IScriptIterator> getScriptIterators() {
 		return new MyScripterator();
 	}
 
@@ -37,7 +37,7 @@ public class ScriptProviderCascade implements IScriptProvider {
 
 		public MyScripterator() {
 			currentIndex = providers.length - 1;
-			current = providers[currentIndex].getScripts();
+			current = providers[currentIndex].getScriptIterators();
 
 			advance();
 		}
@@ -64,7 +64,7 @@ public class ScriptProviderCascade implements IScriptProvider {
 					if (currentIndex < 0)
 						return;
 
-					current = providers[currentIndex].getScripts();
+					current = providers[currentIndex].getScriptIterators();
 				}
 				if (currentIndex < 0)
 					break;

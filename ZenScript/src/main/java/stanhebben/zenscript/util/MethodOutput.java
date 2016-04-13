@@ -45,6 +45,12 @@ public class MethodOutput {
 		debug = true;
 	}
 
+	public void visitPrintln(String message) {
+		this.getStaticField("java/lang/System", "out", "Ljava/io/PrintStream;");
+		this.constant(message);
+		this.invokeVirtual("java/io/PrintStream", "println", "(Ljava/lang/String;)V");
+	}
+
 	public void start() {
 		if (debug)
 			System.out.println("--start--");
