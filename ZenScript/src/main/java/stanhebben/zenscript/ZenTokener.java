@@ -85,6 +85,7 @@ public class ZenTokener extends TokenStream {
 	public static final int T_RETURN = 125;
 	public static final int T_VAR = 126;
 	public static final int T_VAL = 127;
+	public static final int T_GLOBAL = 128;
 
 	public static final int T_NULL = 140;
 	public static final int T_TRUE = 141;
@@ -221,6 +222,7 @@ public class ZenTokener extends TokenStream {
 		KEYWORDS.put("return", T_RETURN);
 		KEYWORDS.put("var", T_VAR);
 		KEYWORDS.put("val", T_VAL);
+		KEYWORDS.put("global", T_GLOBAL);
 
 		KEYWORDS.put("null", T_NULL);
 		KEYWORDS.put("true", T_TRUE);
