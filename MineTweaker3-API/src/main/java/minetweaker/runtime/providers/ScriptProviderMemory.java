@@ -38,7 +38,7 @@ public class ScriptProviderMemory implements IScriptProvider {
 			DataOutputStream deflaterData = new DataOutputStream(deflater);
 			Set<String> executed = new HashSet<String>();
 
-			Iterator<IScriptIterator> scripts = provider.getScripts();
+			Iterator<IScriptIterator> scripts = provider.getScriptIterators();
 			while (scripts.hasNext()) {
 				IScriptIterator script = scripts.next();
 
@@ -104,7 +104,7 @@ public class ScriptProviderMemory implements IScriptProvider {
 	}
 
 	@Override
-	public Iterator<IScriptIterator> getScripts() {
+	public Iterator<IScriptIterator> getScriptIterators() {
 		return new ProviderIterator();
 	}
 
