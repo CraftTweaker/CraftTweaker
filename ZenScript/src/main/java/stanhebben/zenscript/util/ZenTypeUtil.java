@@ -47,7 +47,11 @@ public class ZenTypeUtil {
 	}
 
 	public static String internal(Class<?> cls) {
-		return cls.getName().replace('.', '/');
+		return internal(cls.getName());
+	}
+
+	public static String internal(String clsName) {
+		return clsName.replace('.', '/');
 	}
 
 	public static String descriptor(Method method) {
