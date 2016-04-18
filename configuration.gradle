@@ -1,10 +1,12 @@
+//import javax.tools.ToolProvider
 
 // #######################
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.2"
+ext.mineTweakerVersion = "3.0.3"
 ext.mineTweakerDebug = "false"
+//ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
 ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_66/lib/tools.jar")
 
 // #######################
@@ -13,11 +15,11 @@ ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_66/lib/tools.jar")
 
 ext.forgeVersion1710 = "1.7.10-10.13.4.1492-1.7.10"
 ext.projects1710 = [
-	'MineTweaker3-MC1710-Main',
-	'MineTweaker3-MC1710-Mod-IC2',
-	'MineTweaker3-MC1710-Mod-NEI',
-	'MineTweaker3-MC1710-Mod-MFR',
-	'MineTweaker3-MC1710-Mod-Buildcraft'
+	'MineTweaker3-MC1710-Main'
+	//'MineTweaker3-MC1710-Mod-IC2',
+//	'MineTweaker3-MC1710-Mod-NEI',
+//	'MineTweaker3-MC1710-Mod-MFR',
+//	'MineTweaker3-MC1710-Mod-Buildcraft'
 ]
 
 // ####################
@@ -26,6 +28,16 @@ ext.projects1710 = [
 
 ext.forgeVersion18 = "1.8.9-11.15.1.1763"
 ext.projects18 = [
-	'MineTweaker3-MC18-Main',
-	'MineTweaker3-MC18-Mod-JEI'
+	//'MineTweaker3-MC18-Main',
+	//'MineTweaker3-MC18-Mod-JEI'
+]
+
+// ####################
+// ### 1.9 settings ###
+// ####################
+
+ext.forgeVersion19 = "1.9-12.16.0.1863-1.9"
+ext.projects19 = [
+	'MineTweaker3-MC19-Main',
+	'MineTweaker3-MC19-Mod-JEI'
 ]

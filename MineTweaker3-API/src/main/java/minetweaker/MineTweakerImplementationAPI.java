@@ -1,26 +1,10 @@
 package minetweaker;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import static minetweaker.MineTweakerAPI.server;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.block.IBlockDefinition;
 import minetweaker.api.data.IData;
 import minetweaker.api.entity.IEntityDefinition;
-import minetweaker.api.event.IEventHandle;
-import minetweaker.api.event.MTEventManager;
-import minetweaker.api.event.PlayerInteractEvent;
-import minetweaker.api.event.PlayerLoggedInEvent;
-import minetweaker.api.event.PlayerLoggedOutEvent;
+import minetweaker.api.event.*;
 import minetweaker.api.formatting.IFormatter;
 import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
@@ -33,11 +17,7 @@ import minetweaker.api.mods.IMod;
 import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
-import minetweaker.api.recipes.ICraftingRecipe;
-import minetweaker.api.recipes.IFurnaceManager;
-import minetweaker.api.recipes.IRecipeManager;
-import minetweaker.api.recipes.ShapedRecipe;
-import minetweaker.api.recipes.ShapelessRecipe;
+import minetweaker.api.recipes.*;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandValidator;
 import minetweaker.api.server.IServer;
@@ -47,6 +27,15 @@ import minetweaker.api.world.IBiome;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.util.EventList;
 import minetweaker.util.IEventHandler;
+import sun.awt.HeadlessToolkit;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.util.*;
+import java.util.List;
+
+import static minetweaker.MineTweakerAPI.server;
 
 /**
  * The implementation API is used by API implementations for internal
@@ -697,8 +686,10 @@ public class MineTweakerImplementationAPI {
 
 	private static void copyToClipboard(String value) {
 		StringSelection stringSelection = new StringSelection(value);
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(stringSelection, null);
+		if(!(Toolkit.getDefaultToolkit() instanceof HeadlessToolkit)) {
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			clipboard.setContents(stringSelection, null);
+		}
 	}
 
 	// ############################
