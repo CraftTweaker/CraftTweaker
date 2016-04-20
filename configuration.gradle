@@ -1,4 +1,4 @@
-//import javax.tools.ToolProvider
+import javax.tools.ToolProvider
 
 // #######################
 // ### Global settings ###
@@ -6,8 +6,9 @@
 
 ext.mineTweakerVersion = "3.0.3"
 ext.mineTweakerDebug = "false"
-//ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
-ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_66/lib/tools.jar")
+//Make sure JAVA_HOME is set as an environment variable
+ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
+//ext.javaToolsJar = new File("C:/Program Files/Java/jdk1.8.0_66/lib/tools.jar")
 
 // #######################
 // ### 1.7.10 settings ###
