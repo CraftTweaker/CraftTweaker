@@ -12,12 +12,11 @@
 /MineTweaker3-API/*
 !/MineTweaker3-API/src
 
-!/MineTweaker3-MC18-Main
-/MineTweaker3-MC18-Main/*
-!/MineTweaker3-MC18-Main/src
-!/MineTweaker3-MC18-Main/build.gradle
-/MineTweaker3-MC18-Main/bin
-
+!/MineTweaker3-MC19-Main
+/MineTweaker3-MC19-Main/*
+!/MineTweaker3-MC19-Main/src
+!/MineTweaker3-MC19-Main/build.gradle
+/MineTweaker3-MC19-Main/bin
 
 !/MineTweaker3-MC18-Mod-JEI
 /MineTweaker3-MC18-Mod-JEI/*
@@ -25,12 +24,11 @@
 !/MineTweaker3-MC18-Mod-JEI/libs
 !/MineTweaker3-MC18-Mod-JEI/build.gradle
 
-
-
 !/MineTweaker3-MC1710-Main
 /MineTweaker3-MC1710-Main/*
 !/MineTweaker3-MC1710-Main/src
 /MineTweaker3-MC1710-Main/bin
+
 
 !/MineTweaker3-MC1710-Mod-Buildcraft
 /MineTweaker3-MC1710-Mod-Buildcraft/*
