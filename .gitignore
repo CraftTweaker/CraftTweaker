@@ -18,11 +18,11 @@
 !/MineTweaker3-MC19-Main/build.gradle
 /MineTweaker3-MC19-Main/bin
 
-!/MineTweaker3-MC18-Mod-JEI
-/MineTweaker3-MC18-Mod-JEI/*
-!/MineTweaker3-MC18-Mod-JEI/src
-!/MineTweaker3-MC18-Mod-JEI/libs
-!/MineTweaker3-MC18-Mod-JEI/build.gradle
+!/MineTweaker3-MC19-Mod-JEI
+/MineTweaker3-MC19-Mod-JEI/*
+!/MineTweaker3-MC19-Mod-JEI/src
+!/MineTweaker3-MC19-Mod-JEI/libs
+!/MineTweaker3-MC19-Mod-JEI/build.gradle
 
 !/MineTweaker3-MC1710-Main
 /MineTweaker3-MC1710-Main/*
