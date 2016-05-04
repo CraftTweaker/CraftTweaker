@@ -1,28 +1,9 @@
 package stanhebben.zenscript;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import stanhebben.zenscript.compiler.ClassNameGenerator;
-import stanhebben.zenscript.compiler.EnvironmentClass;
-import stanhebben.zenscript.compiler.EnvironmentGlobal;
-import stanhebben.zenscript.compiler.EnvironmentMethod;
-import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.ParsedFunction;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.statements.Statement;
@@ -31,6 +12,12 @@ import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.symbols.SymbolZenStaticMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.MethodOutput;
+
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 
 /**
@@ -149,7 +136,7 @@ public class ZenModule {
 		if (debug) {
 			try {
 				File outputDir = new File("generated");
-				outputDir.mkdir();
+                outputDir.mkdir();
 
 				for (String className : environmentGlobal.getClassNames()) {
 					File outputFile = new File(outputDir, className.replace('.', '/') + ".class");
@@ -289,6 +276,7 @@ public class ZenModule {
 	 */
 	public Runnable getMain() {
 		try {
+
 			return (Runnable) classLoader.loadClass("__ZenMain__").newInstance();
 		} catch (InstantiationException e) {
 			return null;

@@ -34,7 +34,9 @@ public class ForgeEventHandler{
         for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)){
             ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
         }
-
+        if (!Keyboard.isCreated()) {
+            return;
+        }
         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
             for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)){
                 ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());

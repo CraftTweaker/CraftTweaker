@@ -6,7 +6,6 @@
 
 package minetweaker.api.tooltip;
 
-import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.formatting.IFormattedText;
@@ -16,6 +15,8 @@ import minetweaker.api.util.IngredientMap;
 import minetweaker.api.util.IngredientMap.IngredientMapEntry;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.List;
 
 /**
  *
@@ -52,7 +53,6 @@ public class IngredientTooltips {
 		private final IIngredient ingredient;
 		private final IFormattedText tooltip;
 		private final boolean shift;
-
 		private IngredientMapEntry<IFormattedText> entry;
 
 		public AddTooltipAction(IIngredient ingredient, IFormattedText tooltip, boolean shift) {
