@@ -30,7 +30,6 @@ public class JEIAddonPlugin implements IModPlugin {
                 @Override
                 public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
                     jeiHelpers.reload();
-                    System.out.println("hi");
                 }
             });
             eventAdded = true;
