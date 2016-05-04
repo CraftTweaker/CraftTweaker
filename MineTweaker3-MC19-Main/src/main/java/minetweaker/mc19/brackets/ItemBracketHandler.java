@@ -70,13 +70,8 @@ public class ItemBracketHandler implements IBracketHandler{
     @Override
     public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens){
         // any symbol
-        System.out.println("resolving");
         if(tokens.size() == 1 && tokens.get(0).getValue().equals("*")){
             return symbolAny;
-        }
-
-        for(Token tok : tokens){
-            System.out.println(tok.getValue());
         }
 
         // detect special cases:

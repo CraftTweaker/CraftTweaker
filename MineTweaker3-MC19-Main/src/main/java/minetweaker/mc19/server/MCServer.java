@@ -33,71 +33,55 @@ import java.util.List;
 /**
  * @author Stan
  */
-public class MCServer extends AbstractServer{
+public class MCServer extends AbstractServer {
     private final MinecraftServer server;
 
-    public MCServer(MinecraftServer server){
+    public MCServer(MinecraftServer server) {
         this.server = server;
     }
 
-    private static IPlayer getPlayer(ICommandSender commandSender){
-        if(commandSender instanceof EntityPlayer){
+    private static IPlayer getPlayer(ICommandSender commandSender) {
+        if (commandSender instanceof EntityPlayer) {
             return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
-        }else if(commandSender instanceof DedicatedServer){
+        } else if (commandSender instanceof DedicatedServer) {
             return ServerPlayer.INSTANCE;
-        }else if(commandSender instanceof RConConsoleSource){
+        } else if (commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
-        }else{
+        } else {
             System.out.println("Unsupported command sender: " + commandSender);
             System.out.println("player name: " + commandSender.getName());
             return null;
         }
     }
 
-    private static void removeCommand(ICommand command){
-        CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
-        ch.getCommands().remove(command.getCommandName());
-
-        if(command.getCommandAliases() != null){
-            for(String alias : command.getCommandAliases()){
-                ch.getCommands().remove(alias);
-            }
-        }
-    }
-
     @Override
-    public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion){
+    public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion) {
 
         ICommand command = new MCCommand(name, usage, aliases, function, validator, completion);
         MineTweakerAPI.apply(new AddCommandAction(command));
     }
 
     @Override
-    public void removeCommand(String name){
-        ICommand command = server.getCommandManager().getCommands().get(name);
-        if(command == null){
-            MineTweakerAPI.logWarning("No such command: " + name);
-        }else{
-            MineTweakerAPI.apply(new RemoveCommandAction(command));
+    public boolean isOp(IPlayer player) {
+        if (player == ServerPlayer.INSTANCE)
+            return true;
+
+        UserListOps ops = MineTweakerMod.server.getPlayerList().getOppedPlayers();
+        if (server.isDedicatedServer() && ops != null) {
+            //TODO figure if this is correct
+            //            return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null || player instanceof RconPlayer;
+            return ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
+        } else {
+            return true;
         }
     }
 
     @Override
-    public boolean isOp(IPlayer player){
-        if(player == ServerPlayer.INSTANCE)
-            return true;
-
-        UserListOps ops = MineTweakerMod.server.getPlayerList().getOppedPlayers();
-        if(server.isDedicatedServer() && ops != null){
-            //TODO figure if this is correct
-            //            return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null || player instanceof RconPlayer;
-            return ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
-        }else{
-            return true;
-        }
+    public boolean isCommandAdded(String name) {
+        return MineTweakerMod.server.getCommandManager().getCommands().containsKey(name);
     }
 
-    private class MCCommand implements ICommand{
+    private class MCCommand implements ICommand {
         private final String name;
         private final String usage;
         private final List<String> aliases;
@@ -105,7 +89,7 @@ public class MCServer extends AbstractServer{
         private final ICommandValidator validator;
         private final ICommandTabCompletion completion;
 
-        public MCCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion){
+        public MCCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion) {
             this.name = name;
             this.usage = usage;
             this.aliases = Arrays.asList(aliases);
@@ -115,129 +99,95 @@ public class MCServer extends AbstractServer{
         }
 
         @Override
-        public String getCommandName(){
+        public String getCommandName() {
             return name;
         }
 
         @Override
-        public String getCommandUsage(ICommandSender var1){
+        public String getCommandUsage(ICommandSender var1) {
             return usage;
         }
 
         @Override
-        public List getCommandAliases(){
+        public List getCommandAliases() {
             return aliases;
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
             function.execute(args, getPlayer(sender));
         }
 
         @Override
-        public boolean checkPermission(MinecraftServer server, ICommandSender sender){
-            if(validator == null){
+        public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+            if (validator == null) {
                 return true;
-            }else{
+            } else {
                 return validator.canExecute(getPlayer(sender));
             }
         }
 
         @Override
-        public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos){
-            if(completion != null){
+        public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            if (completion != null) {
                 return Arrays.asList(completion.getTabCompletionOptions(args, getPlayer(sender)));
-            }else{
+            } else {
                 return null;
             }
         }
 
         @Override
-        public boolean isUsernameIndex(String[] var1, int var2){
+        public boolean isUsernameIndex(String[] var1, int var2) {
             return false;
         }
 
         @Override
-        public int compareTo(ICommand o){
+        public int compareTo(ICommand o) {
             return 0;
         }
     }
 
-    private class AddCommandAction implements IUndoableAction{
+    private class AddCommandAction implements IUndoableAction {
         private final ICommand command;
 
-        public AddCommandAction(ICommand command){
+        public AddCommandAction(ICommand command) {
             this.command = command;
         }
 
         @Override
-        public void apply(){
+        public void apply() {
             CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
-            ch.registerCommand(command);
+            if (!ch.getCommands().containsValue(command))
+                ch.registerCommand(command);
         }
 
         @Override
-        public boolean canUndo(){
+        public boolean canUndo() {
             return true;
         }
 
         @Override
-        public void undo(){
-            removeCommand(command);
+        public void undo() {
+
         }
 
         @Override
-        public String describe(){
-            return "Adding command " + command.getCommandName();
-        }
-
-        @Override
-        public String describeUndo(){
-            return "Removing command " + command.getCommandName();
-        }
-
-        @Override
-        public Object getOverrideKey(){
-            return null;
-        }
-    }
-
-    private class RemoveCommandAction implements IUndoableAction{
-        private final ICommand command;
-
-        public RemoveCommandAction(ICommand command){
-            this.command = command;
-        }
-
-        @Override
-        public void apply(){
-            removeCommand(command);
-        }
-
-        @Override
-        public boolean canUndo(){
-            return true;
-        }
-
-        @Override
-        public void undo(){
+        public String describe() {
             CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
-            ch.registerCommand(command);
+            if (!ch.getCommands().containsValue(command))
+                return "Adding command " + command.getCommandName();
+            return "";
         }
 
         @Override
-        public String describe(){
-            return "Adding command " + command.getCommandName();
+        public String describeUndo() {
+            return "";
         }
 
         @Override
-        public String describeUndo(){
-            return "Removing command " + command.getCommandName();
-        }
-
-        @Override
-        public Object getOverrideKey(){
+        public Object getOverrideKey() {
             return null;
         }
     }
+
 }

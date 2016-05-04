@@ -645,34 +645,36 @@ public class MineTweakerImplementationAPI {
         MineTweakerAPI.tweaker.rollback();
 
         if (MineTweakerAPI.server != null) {
-            server.addCommand("minetweaker", "", new String[]{"mt"}, new ICommandFunction() {
-                @Override
-                public void execute(String[] arguments, IPlayer player) {
-                    if (arguments.length == 0) {
-                        player.sendChat("Please provide a command. Use /mt help for more info.");
-                    } else if (arguments[0].equals("help")) {
-                        String[] keys = minetweakerCommands.keySet().toArray(new String[minetweakerCommands.size()]);
-                        Arrays.sort(keys);
-                        for (String key : keys) {
-                            for (String helpMessage : minetweakerCommands.get(key).description) {
-                                player.sendChat(helpMessage);
+            if (!MineTweakerAPI.server.isCommandAdded("minetweaker")) {
+                server.addCommand("minetweaker", "", new String[]{"mt"}, new ICommandFunction() {
+                    @Override
+                    public void execute(String[] arguments, IPlayer player) {
+                        if (arguments.length == 0) {
+                            player.sendChat("Please provide a command. Use /mt help for more info.");
+                        } else if (arguments[0].equals("help")) {
+                            String[] keys = minetweakerCommands.keySet().toArray(new String[minetweakerCommands.size()]);
+                            Arrays.sort(keys);
+                            for (String key : keys) {
+                                for (String helpMessage : minetweakerCommands.get(key).description) {
+                                    player.sendChat(helpMessage);
+                                }
+                            }
+                        } else {
+                            MineTweakerCommand command = minetweakerCommands.get(arguments[0]);
+                            if (command == null) {
+                                player.sendChat("No such minetweaker command available");
+                            } else {
+                                command.function.execute(Arrays.copyOfRange(arguments, 1, arguments.length), player);
                             }
                         }
-                    } else {
-                        MineTweakerCommand command = minetweakerCommands.get(arguments[0]);
-                        if (command == null) {
-                            player.sendChat("No such minetweaker command available");
-                        } else {
-                            command.function.execute(Arrays.copyOfRange(arguments, 1, arguments.length), player);
-                        }
                     }
-                }
-            }, new ICommandValidator() {
-                @Override
-                public boolean canExecute(IPlayer player) {
-                    return server.isOp(player);
-                }
-            }, null);
+                }, new ICommandValidator() {
+                    @Override
+                    public boolean canExecute(IPlayer player) {
+                        return server.isOp(player);
+                    }
+                }, null);
+            }
         }
 
         ONRELOAD.publish(new ReloadEvent());
@@ -724,7 +726,6 @@ public class MineTweakerImplementationAPI {
 
     private static class AddMineTweakerCommandAction implements IUndoableAction {
         private final MineTweakerCommand command;
-        private boolean added;
 
         public AddMineTweakerCommandAction(MineTweakerCommand command) {
             this.command = command;
@@ -734,32 +735,30 @@ public class MineTweakerImplementationAPI {
         public void apply() {
             if (!minetweakerCommands.containsKey(command.name)) {
                 minetweakerCommands.put(command.name, command);
-                added = true;
             } else {
-                added = false;
             }
         }
 
         @Override
         public boolean canUndo() {
-            return true;
+            return false;
         }
 
         @Override
         public void undo() {
-            if (added) {
-                minetweakerCommands.remove(command.name);
-            }
         }
 
         @Override
         public String describe() {
-            return "Adding minetweaker command " + command.name;
+            if (!minetweakerCommands.containsKey(command.name)) {
+                return "Adding minetweaker command " + command.name;
+            }
+            return "";
         }
 
         @Override
         public String describeUndo() {
-            return "Removing minetweaker command " + command.name;
+            return "";
         }
 
         @Override

@@ -2,9 +2,7 @@ package minetweaker.mods.jei;
 
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.item.IItemStack;
-import minetweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.NotNull;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -14,12 +12,12 @@ import static minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers;
 
 /**
  * MineTweaker JEI support.
- * 
+ *
  * Enables hiding JEI items as well as adding new item stacks. These item stacks
  * can then show a custom message or contain NBT data. Can be used to show a
  * custom message or lore with certain items, or to provide spawnable items with
  * specific NBT tags.
- * 
+ *
  * @author Stan Hebben
  */
 @ZenClass("mods.jei.JEI")
@@ -28,7 +26,7 @@ public class JEI {
 	/**
 	 * Hides a specific item in JEI. Will take into account metadata values, if
 	 * any.
-	 * 
+	 *
 	 * @param item
 	 *            item to be hidden
 	 */
