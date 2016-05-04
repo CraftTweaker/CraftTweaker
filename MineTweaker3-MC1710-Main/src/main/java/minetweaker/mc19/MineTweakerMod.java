@@ -9,19 +9,10 @@ package minetweaker.mc19;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-
-import java.io.File;
-
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
@@ -33,12 +24,7 @@ import minetweaker.mc19.furnace.FuelTweaker;
 import minetweaker.mc19.furnace.MCFurnaceManager;
 import minetweaker.mc19.game.MCGame;
 import minetweaker.mc19.mods.MCLoadedMods;
-import minetweaker.mc19.network.MineTweakerCopyClipboardHandler;
-import minetweaker.mc19.network.MineTweakerCopyClipboardPacket;
-import minetweaker.mc19.network.MineTweakerLoadScriptsHandler;
-import minetweaker.mc19.network.MineTweakerLoadScriptsPacket;
-import minetweaker.mc19.network.MineTweakerOpenBrowserHandler;
-import minetweaker.mc19.network.MineTweakerOpenBrowserPacket;
+import minetweaker.mc19.network.*;
 import minetweaker.mc19.oredict.MCOreDict;
 import minetweaker.mc19.recipes.MCRecipeManager;
 import minetweaker.mc19.server.MCServer;
@@ -51,6 +37,8 @@ import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.io.File;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -173,7 +161,7 @@ public class MineTweakerMod {
 		}
 
 		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
-		IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal, scriptsLocal);
+		IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsLocal, scriptsGlobal);
 
 		MineTweakerImplementationAPI.setScriptProvider(cascaded);
 		MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));

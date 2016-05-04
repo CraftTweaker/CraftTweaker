@@ -50,7 +50,7 @@ import java.io.File;
  * @author Stan Hebben
  */
 @Mod(modid = MineTweakerMod.MODID, version = "3.0.3")
-public class MineTweakerMod{
+public class MineTweakerMod {
     public static final String MODID = "MineTweaker3";
     public static final String MCVERSION = "1.9";
 
@@ -62,7 +62,7 @@ public class MineTweakerMod{
     @Mod.Instance(MODID)
     public static MineTweakerMod INSTANCE;
 
-    static{
+    static {
         NETWORK.registerMessage(MineTweakerLoadScriptsHandler.class, MineTweakerLoadScriptsPacket.class, 0, Side.CLIENT);
         NETWORK.registerMessage(MineTweakerOpenBrowserHandler.class, MineTweakerOpenBrowserPacket.class, 1, Side.CLIENT);
         NETWORK.registerMessage(MineTweakerCopyClipboardHandler.class, MineTweakerCopyClipboardPacket.class, 2, Side.CLIENT);
@@ -72,14 +72,14 @@ public class MineTweakerMod{
     private final IScriptProvider scriptsGlobal;
     private final ScriptProviderCustom scriptsIMC;
 
-    public MineTweakerMod(){
+    public MineTweakerMod() {
         MineTweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla());
 
         MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
         MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 
         File globalDir = new File("scripts");
-        if(!globalDir.exists())
+        if (!globalDir.exists())
             globalDir.mkdirs();
 
         scriptsIMC = new ScriptProviderCustom("intermod");
@@ -92,12 +92,12 @@ public class MineTweakerMod{
     // ##########################
 
     @EventHandler
-    public void onIMCEvent(FMLInterModComms.IMCEvent event){
-        for(final FMLInterModComms.IMCMessage imcMessage : event.getMessages()){
-            if(imcMessage.key.equalsIgnoreCase("addMineTweakerScript")){
-                if(imcMessage.isStringMessage()){
+    public void onIMCEvent(FMLInterModComms.IMCEvent event) {
+        for (final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
+            if (imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
+                if (imcMessage.isStringMessage()) {
                     scriptsIMC.add(imcMessage.getSender() + "::imc", imcMessage.getStringValue());
-                }else if(imcMessage.isNBTMessage()){
+                } else if (imcMessage.isNBTMessage()) {
                     NBTTagCompound message = imcMessage.getNBTValue();
                     scriptsIMC.add(imcMessage.getSender() + "::" + message.getString("name"), message.getString("content"));
                 }
@@ -106,16 +106,16 @@ public class MineTweakerMod{
     }
 
     @EventHandler
-    public void onLoad(FMLPreInitializationEvent ev){
+    public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         FMLCommonHandler.instance().bus().register(new FMLEventHandler());
     }
 
     @EventHandler
-    public void onPostInit(FMLPostInitializationEvent ev){
+    public void onPostInit(FMLPostInitializationEvent ev) {
         MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
 
-        for(int i = 0; i < REGISTRIES.length; i++){
+        for (int i = 0; i < REGISTRIES.length; i++) {
             MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
         }
 
@@ -123,7 +123,7 @@ public class MineTweakerMod{
     }
 
     @EventHandler
-    public void onComplete(FMLLoadCompleteEvent ev){
+    public void onComplete(FMLLoadCompleteEvent ev) {
         MineTweakerAPI.logInfo("MineTweaker: Building registry");
         ItemBracketHandler.rebuildItemRegistry();
         LiquidBracketHandler.rebuildLiquidRegistry();
@@ -134,35 +134,35 @@ public class MineTweakerMod{
     }
 
     @EventHandler
-    public void onServerAboutToStart(FMLServerAboutToStartEvent ev){
+    public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
         this.server = ev.getServer();
         // starts before loading worlds
         // perfect place to start MineTweaker!
 
-        if(MineTweakerPlatformUtils.isClient()){
+        if (MineTweakerPlatformUtils.isClient()) {
             MineTweakerAPI.client = new MCClient();
         }
 
         File scriptsDir = new File(MineTweakerHacks.getWorldDirectory(ev.getServer()), "scripts");
-        if(!scriptsDir.exists()){
+        if (!scriptsDir.exists()) {
             scriptsDir.mkdir();
         }
 
         IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
-        IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal, scriptsLocal);
+        IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsLocal, scriptsGlobal);
 
         MineTweakerImplementationAPI.setScriptProvider(cascaded);
         MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
     }
 
     @EventHandler
-    public void onServerStarting(FMLServerStartingEvent ev){
+    public void onServerStarting(FMLServerStartingEvent ev) {
         this.server = ev.getServer();
 
     }
 
     @EventHandler
-    public void onServerStopped(FMLServerStoppedEvent ev){
+    public void onServerStopped(FMLServerStoppedEvent ev) {
         MineTweakerImplementationAPI.onServerStop();
         MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
         this.server = null;
