@@ -685,7 +685,6 @@ public class MineTweakerImplementationAPI {
             platform.distributeScripts(MineTweakerAPI.tweaker.getScriptData());
         }
 
-
         ONPOSTRELOAD.publish(new ReloadEvent());
 
     }

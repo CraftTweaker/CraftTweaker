@@ -24,6 +24,13 @@
 !/MineTweaker3-MC19-Mod-JEI/libs
 !/MineTweaker3-MC19-Mod-JEI/build.gradle
 
+!/MineTweaker3-MC18-Main
+/MineTweaker3-MC18-Main/*
+!/MineTweaker3-MC18-Main/src
+!/MineTweaker3-MC18-Main/build.gradle
+/MineTweaker3-MC18-Main/bin
+
+
 !/MineTweaker3-MC1710-Main
 /MineTweaker3-MC1710-Main/*
 !/MineTweaker3-MC1710-Main/src
