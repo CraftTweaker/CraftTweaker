@@ -14,7 +14,7 @@ ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).ge
 // ### 1.7.10 settings ###
 // #######################
 
-ext.forgeVersion1710 = "1.7.10-10.13.4.1492-1.7.10"
+ext.forgeVersion1710 = "1.7.10-10.13.4.1614-1.7.10"
 ext.projects1710 = [
 	'MineTweaker3-MC1710-Main'
 	//'MineTweaker3-MC1710-Mod-IC2',
@@ -27,7 +27,7 @@ ext.projects1710 = [
 // ### 1.8 settings ###
 // ####################
 
-ext.forgeVersion18 = "1.8.9-11.15.1.1875"
+ext.forgeVersion18 = "1.8.9-11.15.1.1890-1.8.9"
 ext.projects18 = [
 	'MineTweaker3-MC18-Main',
 	'MineTweaker3-MC18-Mod-JEI'
@@ -37,7 +37,7 @@ ext.projects18 = [
 // ### 1.9 settings ###
 // ####################
 
-ext.forgeVersion19 = "1.9-12.16.1.1891"
+ext.forgeVersion19 = "1.9-12.16.1.1892"
 ext.projects19 = [
 	'MineTweaker3-MC19-Main',
 	'MineTweaker3-MC19-Mod-JEI'
