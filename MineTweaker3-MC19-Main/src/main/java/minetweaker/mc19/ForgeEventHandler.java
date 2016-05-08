@@ -22,8 +22,13 @@ import org.lwjgl.input.Keyboard;
  */
 public class ForgeEventHandler{
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent ev){
-        minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(MineTweakerMC.getIPlayer(ev.getEntityPlayer()), MineTweakerMC.getDimension(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
+    public void onPlayerInteract(PlayerInteractEvent ev) {
+        minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(
+                MineTweakerMC.getIPlayer(ev.getEntityPlayer()),
+                MineTweakerMC.getDimension(ev.getWorld()),
+                ev.getPos() == null ? 0 : ev.getPos().getX(),
+                ev.getPos() == null ? 0 : ev.getPos().getY(),
+                ev.getPos() == null ? 0 : ev.getPos().getZ());
 
         MineTweakerImplementationAPI.events.publishPlayerInteract(event);
     }
