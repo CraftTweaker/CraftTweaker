@@ -41,32 +41,41 @@
 /MineTweaker3-MC1710-Main/*
 !/MineTweaker3-MC1710-Main/src
 /MineTweaker3-MC1710-Main/bin
+!/MineTweaker3-MC1710-Main/build.gradle
 
 
 !/MineTweaker3-MC1710-Mod-Buildcraft
 /MineTweaker3-MC1710-Mod-Buildcraft/*
 !/MineTweaker3-MC1710-Mod-Buildcraft/src
 !/MineTweaker3-MC1710-Mod-Buildcraft/libs
+!/MineTweaker3-MC1710-Mod-Buildcraft/build.gradle
+
 
 !/MineTweaker3-MC1710-Mod-Buildcraft61
 /MineTweaker3-MC1710-Mod-Buildcraft61/*
 !/MineTweaker3-MC1710-Mod-Buildcraft61/src
 !/MineTweaker3-MC1710-Mod-Buildcraft61/libs
+!/MineTweaker3-MC1710-Mod-Buildcraft61/build.gradle
 
 !/MineTweaker3-MC1710-Mod-IC2
 /MineTweaker3-MC1710-Mod-IC2/*
 !/MineTweaker3-MC1710-Mod-IC2/src
 !/MineTweaker3-MC1710-Mod-IC2/libs
+!/MineTweaker3-MC1710-Mod-IC2/build.gradle
 
 !/MineTweaker3-MC1710-Mod-MFR
 /MineTweaker3-MC1710-Mod-MFR/*
 !/MineTweaker3-MC1710-Mod-MFR/src
 !/MineTweaker3-MC1710-Mod-MFR/libs
+!/MineTweaker3-MC1710-Mod-MFR/build.gradle
+
 
 !/MineTweaker3-MC1710-Mod-NEI
 /MineTweaker3-MC1710-Mod-NEI/*
 !/MineTweaker3-MC1710-Mod-NEI/src
 !/MineTweaker3-MC1710-Mod-NEI/libs
+!/MineTweaker3-MC1710-Mod-NEI/build.gradle
+
 
 !/ZenScript
 /ZenScript/*

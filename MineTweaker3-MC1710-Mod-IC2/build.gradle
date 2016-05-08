@@ -1,0 +1,42 @@
+import minetweaker.tasks.RegisterZenClassesTask;
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+minecraft {
+	version = forgeVersion1710
+}
+
+version = "1.0"
+archivesBaseName = project.projectDir.name
+
+dependencies {
+	compile project(':ZenScript')
+	compile project(':MineTweaker3-API')
+	compile project(':MineTweaker3-MC1710-Main')
+	compile files('libs/industrialcraft-2-2.2.756-experimental-api.jar')
+}
+
+task makeRegistry(type: RegisterZenClassesTask) {
+	inputDir = file('build/classes/main')
+	outputDir = file('build/classes/main')
+	className = 'minetweaker.mods.ic2.ClassRegistry'
+}
+
+tasks.jar.dependsOn(makeRegistry)
