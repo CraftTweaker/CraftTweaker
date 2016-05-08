@@ -8,6 +8,7 @@ package minetweaker.mc18.oredict;
 
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
+import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
@@ -245,6 +246,9 @@ public class MCOreDictEntry implements IOreDictEntry{
 
         @Override
         public void undo(){
+            MineTweakerImplementationAPI.logger.logWarning(id);
+            MineTweakerImplementationAPI.logger.logWarning(""+OREDICT_CONTENTS.indexOf(id));
+            MineTweakerImplementationAPI.logger.logWarning(item +"");
             OREDICT_CONTENTS.get(OREDICT_CONTENTS.indexOf(id)).remove(item);
         }
 
