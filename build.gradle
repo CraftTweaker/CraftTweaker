@@ -13,6 +13,8 @@ subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
 
 task setupDecompWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupDecompWorkspace" } + projects18.collect { ':' + it + ':setupDecompWorkspace'} +projects19.collect { ':' + it + ':setupDecompWorkspace'}) {}
 
+task setupCIWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupCIWorkspace" } + projects18.collect { ':' + it + ':setupCIWorkspace'} +projects19.collect { ':' + it + ':setupCIWorkspace'}) {}
+
 task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
