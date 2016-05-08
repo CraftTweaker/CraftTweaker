@@ -145,28 +145,3 @@ task assembleAll(dependsOn: [
 	assembleDevFull19]) {
 	
 }
-
-task zendoc1710(type: Javadoc) {
-	source = files([
-		'MineTweaker3-API/src/main/java',
-		'MineTweaker3-MC1710-Main/src/main/java']
-		+ projects1710.collect { it + '/src/main/java' })
-	
-	destinationDir = file("build/zendoc1710")
-	options.docletpath = [file('buildSrc/build/libs/buildSrc.jar')].asList()
-	options.doclet = 'stanhebben.zenscript.docs.ZenScriptDoclet'
-	
-	def classpathList = [
-		project(":ZenScript").jar.archivePath,
-		project(':MineTweaker3-MC1710-Main').jar.archivePath
-	]
-	
-	for (p in projects1710) {
-		for (file in project(':' + p).configurations.compile) {
-			classpathList += file
-		}
-	}
-	
-	options.classpath = classpathList.asList()
-	options.addStringOption("baseurl", "/doc/mc1710/")
-}
