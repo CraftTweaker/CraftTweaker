@@ -6,13 +6,13 @@ import javax.tools.ToolProvider
 
 ext.mineTweakerVersion = "3.0.7"
 if (System.getenv('BUILD_NUMBER') != null)
-    project.buildnumber = System.getenv('BUILD_NUMBER')
+    project.mineTweakerVersion = System.getenv('BUILD_NUMBER')
 else {
     try {
-        ext.buildnumber += "." + "git rev-parse --abbrev-ref HEAD".execute().text.trim();
-        ext.buildnumber += "." + "git rev-parse --short HEAD".execute().text.trim();
+        ext.mineTweakerVersion += "." + "git rev-parse --abbrev-ref HEAD".execute().text.trim();
+        ext.mineTweakerVersion += "." + "git rev-parse --short HEAD".execute().text.trim();
     } catch (all) {}
-    logger.lifecycle "No build number detected, setting to ${ext.buildnumber}"
+    logger.lifecycle "No build number detected, setting to ${ext.mineTweakerVersion}"
 }
 
 ext.mineTweakerDebug = "false"
