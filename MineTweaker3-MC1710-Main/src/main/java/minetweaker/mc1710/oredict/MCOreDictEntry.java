@@ -6,27 +6,24 @@
 
 package minetweaker.mc1710.oredict;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import minetweaker.mc1710.util.MineTweakerHacks;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemCondition;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.item.IItemTransformer;
-import minetweaker.api.item.IngredientOr;
-import minetweaker.api.item.IngredientStack;
+import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
-import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.oredict.IngredientOreDict;
 import minetweaker.api.player.IPlayer;
+import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
 /**
  *
@@ -68,7 +65,17 @@ public class MCOreDictEntry implements IOreDictEntry {
 		}
 	}
 
-    @Override
+	@Override
+	public void add(IItemStack... items) {
+		for(IItemStack item : items){
+			ItemStack stack = getItemStack(item);
+			if (stack != null) {
+				MineTweakerAPI.apply(new ActionAddItem(id, stack));
+			}
+		}
+	}
+
+	@Override
     public IItemStack getFirstItem() {
         List<ItemStack> items = OreDictionary.getOres(id);
         if (items.isEmpty()) {
@@ -99,6 +106,23 @@ public class MCOreDictEntry implements IOreDictEntry {
 		if (result != null) {
 			MineTweakerAPI.apply(new ActionRemoveItem(id, result));
 		}
+	}
+
+	@Override
+	public void remove(IItemStack... items) {
+        for(IItemStack item : items){
+            ItemStack result = null;
+            for (ItemStack itemStack : OreDictionary.getOres(id)) {
+                if (item.matches(getIItemStackWildcardSize(itemStack))) {
+                    result = itemStack;
+                    break;
+                }
+            }
+
+            if (result != null) {
+                MineTweakerAPI.apply(new ActionRemoveItem(id, result));
+            }
+        }
 	}
 
 	@Override

@@ -68,6 +68,16 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
+    public void add(IItemStack... items) {
+        for(IItemStack item : items){
+            ItemStack stack = getItemStack(item);
+            if (stack != null) {
+                MineTweakerAPI.apply(new ActionAddItem(id, stack));
+            }
+        }
+    }
+
+    @Override
     public void addAll(IOreDictEntry entry) {
         if (entry instanceof MCOreDictEntry) {
             MineTweakerAPI.apply(new ActionAddAll(id, ((MCOreDictEntry) entry).id));
@@ -88,6 +98,22 @@ public class MCOreDictEntry implements IOreDictEntry {
 
         if (result != null) {
             MineTweakerAPI.apply(new ActionRemoveItem(id, result));
+        }
+    }
+    @Override
+    public void remove(IItemStack... items) {
+        for(IItemStack item : items){
+            ItemStack result = null;
+            for (ItemStack itemStack : OreDictionary.getOres(id)) {
+                if (item.matches(getIItemStackWildcardSize(itemStack))) {
+                    result = itemStack;
+                    break;
+                }
+            }
+
+            if (result != null) {
+                MineTweakerAPI.apply(new ActionRemoveItem(id, result));
+            }
         }
     }
 
