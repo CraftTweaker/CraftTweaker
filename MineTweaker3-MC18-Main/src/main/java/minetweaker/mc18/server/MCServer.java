@@ -187,7 +187,7 @@ public class MCServer extends AbstractServer {
 
         @Override
         public String describeUndo() {
-            return "";
+            return "tried to remove command: " + command.getCommandName() + " failed. THIS IS NOT AN ERROR!";
         }
 
         @Override

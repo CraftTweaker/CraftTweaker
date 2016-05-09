@@ -68,7 +68,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
-    public void add(IItemStack... items) {
+    public void addItems(IItemStack[] items) {
         for(IItemStack item : items){
             ItemStack stack = getItemStack(item);
             if (stack != null) {
@@ -101,7 +101,7 @@ public class MCOreDictEntry implements IOreDictEntry {
         }
     }
     @Override
-    public void remove(IItemStack... items) {
+    public void removeItems(IItemStack[] items) {
         for(IItemStack item : items){
             ItemStack result = null;
             for (ItemStack itemStack : OreDictionary.getOres(id)) {
