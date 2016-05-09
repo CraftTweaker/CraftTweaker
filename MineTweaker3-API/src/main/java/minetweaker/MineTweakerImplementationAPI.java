@@ -742,7 +742,7 @@ public class MineTweakerImplementationAPI {
 
         @Override
         public boolean canUndo() {
-            return false;
+            return true;
         }
 
         @Override
@@ -759,9 +759,8 @@ public class MineTweakerImplementationAPI {
 
         @Override
         public String describeUndo() {
-            return "";
+            return "tried to remove command: " + command.name + " failed. THIS IS NOT AN ERROR!";
         }
-
         @Override
         public Object getOverrideKey() {
             return null;

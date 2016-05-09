@@ -145,7 +145,7 @@ task assembleAll(dependsOn: [
 	assembleDevFull19]) {
 }
 
-task("uploadJars", dependsOn: "build") {
+task("uploadJars", dependsOn: "assembleAll") {
 	description = "uploads JARs"
 	if (project.hasProperty("local_maven")) {
 		apply plugin: 'maven'
