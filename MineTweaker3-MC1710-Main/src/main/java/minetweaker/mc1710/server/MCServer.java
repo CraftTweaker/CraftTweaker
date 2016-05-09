@@ -14,10 +14,12 @@ import minetweaker.api.server.AbstractServer;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandTabCompletion;
 import minetweaker.api.server.ICommandValidator;
+import minetweaker.mc1710.player.CommandBlockPlayer;
 import minetweaker.mc1710.player.RconPlayer;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
@@ -68,7 +70,9 @@ public class MCServer extends AbstractServer {
             return ServerPlayer.INSTANCE;
         } else if (commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
-        } else {
+        } else if(commandSender instanceof CommandBlockLogic){
+            return new CommandBlockPlayer(commandSender);
+        }else {
             System.out.println("Unsupported command sender: " + commandSender);
             System.out.println("player name: " + commandSender.getCommandSenderName());
             return null;

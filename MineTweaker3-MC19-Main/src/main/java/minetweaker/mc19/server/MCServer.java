@@ -15,6 +15,7 @@ import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandTabCompletion;
 import minetweaker.api.server.ICommandValidator;
 import minetweaker.mc19.MineTweakerMod;
+import minetweaker.mc19.player.CommandBlockPlayer;
 import minetweaker.mc19.player.RconPlayer;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandHandler;
@@ -25,6 +26,7 @@ import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.UserListOps;
+import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
@@ -47,6 +49,8 @@ public class MCServer extends AbstractServer {
             return ServerPlayer.INSTANCE;
         } else if (commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
+        }else if(commandSender instanceof CommandBlockBaseLogic){
+            return new CommandBlockPlayer(commandSender);
         } else {
             System.out.println("Unsupported command sender: " + commandSender);
             System.out.println("player name: " + commandSender.getName());
