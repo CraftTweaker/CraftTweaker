@@ -19,7 +19,7 @@ task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Customized-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.7.10-${mineTweakerVersion}.jar"
 	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -33,7 +33,7 @@ task assembleMC18(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Customized-1.8.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.8.9-${mineTweakerVersion}.jar"
 	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -47,7 +47,7 @@ task assembleMC19(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects19.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Customized-1.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.9-${mineTweakerVersion}.jar"
 	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -61,7 +61,7 @@ task assembleDevBase1710(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1710-Main:build']) {
-	archiveName="CraftTweaker-Customized-Dev-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.7.10-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -72,7 +72,7 @@ task assembleDevBase18(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC18-Main:build']) {
-	archiveName="CraftTweaker-Customized-Dev-1.8.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.8.9-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -83,7 +83,7 @@ task assembleDevBase19(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC19-Main:build']) {
-	archiveName="CraftTweaker-Customized-Dev-1.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.9-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -94,7 +94,7 @@ task assembleDevFull1710(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Customized-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -109,7 +109,7 @@ task assembleDevFull18(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Customized-Dev-Full-1.8.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.8.9-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -123,7 +123,7 @@ task assembleDevFull19(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects19.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Customized-Dev-Full-1.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.9-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -143,5 +143,18 @@ task assembleAll(dependsOn: [
 	assembleDevFull1710,
 	assembleDevFull18,
 	assembleDevFull19]) {
-	
+}
+
+task("uploadJars", dependsOn: "build") {
+	description = "uploads JARs"
+	if (project.hasProperty("local_maven")) {
+		apply plugin: 'maven'
+		uploadArchives {
+			repositories {
+				mavenDeployer {
+					repository(url: "file://${local_maven}")
+				}
+			}
+		}
+	}
 }
