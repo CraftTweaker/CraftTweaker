@@ -643,7 +643,6 @@ public class MineTweakerImplementationAPI {
 //		}
 
         MineTweakerAPI.tweaker.rollback();
-
         if (MineTweakerAPI.server != null) {
             if (!MineTweakerAPI.server.isCommandAdded("minetweaker")) {
                 server.addCommand("minetweaker", "", new String[]{"mt"}, new ICommandFunction() {

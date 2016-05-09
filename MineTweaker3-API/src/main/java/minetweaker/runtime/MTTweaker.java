@@ -6,29 +6,24 @@
 
 package minetweaker.runtime;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.runtime.providers.ScriptProviderMemory;
 import stanhebben.zenscript.ZenModule;
-import static stanhebben.zenscript.ZenModule.compileScripts;
-import static stanhebben.zenscript.ZenModule.extractClassName;
 import stanhebben.zenscript.ZenParsedFile;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.ParseException;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.*;
+
+import static stanhebben.zenscript.ZenModule.compileScripts;
+import static stanhebben.zenscript.ZenModule.extractClassName;
 
 /**
  * 
@@ -87,8 +82,11 @@ public class MTTweaker implements ITweaker {
 				MineTweakerAPI.logInfo(action.describeUndo());
 				action.undo();
 			} else {
-				MineTweakerAPI.logInfo("[Stuck] " + action.describe());
-				stuck.add(0, action);
+				MineTweakerAPI.logInfo("[Stuck] 1 " + action.describe());
+                MineTweakerAPI.logInfo("[Stuck] 2 " + action.describeUndo());
+                MineTweakerAPI.logInfo("[Stuck] 3 " + action.toString());
+
+                stuck.add(0, action);
 				wereStuck.add(action);
 
 				Object overrideKey = action.getOverrideKey();
