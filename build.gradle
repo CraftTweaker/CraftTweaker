@@ -145,16 +145,48 @@ task assembleAll(dependsOn: [
 	assembleDevFull19]) {
 }
 
-task("uploadJars", dependsOn: "assembleAll") {
-	description = "uploads JARs"
-	if (project.hasProperty("local_maven")) {
-		apply plugin: 'maven'
-		uploadArchives {
-			repositories {
-				mavenDeployer {
-					repository(url: "file://${local_maven}")
-				}
-			}
-		}
-	}
+configurations {
+    deployerJars
 }
+
+dependencies {
+    deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            configuration = configurations.deployerJars
+            repository(url: "ftp://maven2.aktheknight.co.uk/public_html/maven2") {
+                authentication(userName: mavenUser, password: mavenPass)
+            }
+            pom {
+                groupId = "us.getfluxed.crafttweaker"
+                version = project.version
+                artifactId = project.archivesBaseName
+                project {
+                    name project.archivesBaseName
+                    packaging 'jar'
+                    description 'CraftTweaker'
+                    url 'https://github.com/jaredlll08/CraftTweaker'
+                    scm {
+                        url 'https://github.com/jaredlll08/CraftTweaker'
+                        connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+                        developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+                    }
+                    developers {
+                        developer {
+                            id 'Jaredlll08'
+                            name 'Jaredlll08'
+                            roles { role 'developer' }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+

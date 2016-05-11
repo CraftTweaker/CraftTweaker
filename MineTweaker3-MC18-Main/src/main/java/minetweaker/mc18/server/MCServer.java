@@ -182,12 +182,12 @@ public class MCServer extends AbstractServer {
             CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
             if (!ch.getCommands().containsValue(command))
                 return "Adding command " + command.getCommandName();
-            return "";
+            return "Tried to add command: " + command.getCommandName() + ", failed. THIS IS NOT AN ERROR!";
         }
 
         @Override
         public String describeUndo() {
-            return "tried to remove command: " + command.getCommandName() + " failed. THIS IS NOT AN ERROR!";
+            return "Tried to remove command: " + command.getCommandName() + ", failed. THIS IS NOT AN ERROR!";
         }
 
         @Override

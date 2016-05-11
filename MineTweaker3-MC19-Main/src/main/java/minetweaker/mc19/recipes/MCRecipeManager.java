@@ -1,5 +1,6 @@
 package minetweaker.mc19.recipes;
 
+import com.google.common.collect.ImmutableList;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;

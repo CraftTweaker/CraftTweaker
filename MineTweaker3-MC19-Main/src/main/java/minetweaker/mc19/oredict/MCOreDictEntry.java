@@ -33,6 +33,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = MineTweakerHacks.getOreIdStacks();
     private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
 
+
     private final String id;
 
     public MCOreDictEntry(String id) {
@@ -286,6 +287,7 @@ public class MCOreDictEntry implements IOreDictEntry {
         public Object getOverrideKey() {
             return null;
         }
+
     }
 
     private static class ActionMirror implements IUndoableAction {
