@@ -12,7 +12,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  * 
  * @author Stan Hebben
  */
-@ZenClass("minetweaker.item.WeightedItemStack")
+@ZenClass("minetweaker.item.WeightedLiquidStack")
 public final class WeightedLiquidStack {
 	public static List<ILiquidStack> pickRandomDrops(Random random, WeightedLiquidStack[] items) {
 		ArrayList<ILiquidStack> result = new ArrayList<ILiquidStack>();
