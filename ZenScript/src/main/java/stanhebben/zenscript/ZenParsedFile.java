@@ -1,5 +1,7 @@
 package stanhebben.zenscript;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +51,7 @@ public class ZenParsedFile {
 	 * @param tokener input tokener
 	 * @param environment compile environment
 	 */
-	public ZenParsedFile(String filename, String classname, ZenTokener tokener, IEnvironmentGlobal environment) {
+	public ZenParsedFile(String filename, String classname, Reader reader, IEnvironmentGlobal environment) throws IOException {
 		this.filename = filename;
 		this.classname = classname;
 
@@ -59,7 +61,7 @@ public class ZenParsedFile {
 		statements = new ArrayList<Statement>();
 		environmentScript = new EnvironmentScript(environment);
 
-		tokener.setFile(this);
+		ZenTokener tokener = new ZenTokener(reader, this, environment.getEnvironment());
 
 		while (tokener.peek() != null && tokener.peek().getType() == T_IMPORT) {
 			Token start = tokener.next();

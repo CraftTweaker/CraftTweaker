@@ -237,11 +237,12 @@ public class ZenTokener extends TokenStream {
 	 * Constructs a tokener from the given reader.
 	 * 
 	 * @param contents file reader
+	 * @param zenParsedFile
 	 * @param environment compile environment
 	 * @throws IOException if the file could not be read properly
 	 */
-	public ZenTokener(Reader contents, IZenCompileEnvironment environment) throws IOException {
-		super(contents, DFA);
+	public ZenTokener(Reader contents, ZenParsedFile zenParsedFile, IZenCompileEnvironment environment) throws IOException {
+		super(contents, zenParsedFile, DFA);
 
 		this.environment = environment;
 	}
@@ -254,7 +255,7 @@ public class ZenTokener extends TokenStream {
 	 * @throws IOException shouldn't happen
 	 */
 	public ZenTokener(String contents, IZenCompileEnvironment environment) throws IOException {
-		super(new StringReader(contents), DFA);
+		super(new StringReader(contents), null, DFA);
 
 		this.environment = environment;
 	}
