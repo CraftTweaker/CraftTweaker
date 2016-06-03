@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.IZenCompileEnvironment;
@@ -23,18 +23,18 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan
  */
 public class EnvironmentClass implements IEnvironmentClass {
-	private final ClassVisitor output;
+	private final ClassWriter output;
 	private final IEnvironmentGlobal global;
 	private final Map<String, IZenSymbol> local;
 
-	public EnvironmentClass(ClassVisitor output, IEnvironmentGlobal global) {
+	public EnvironmentClass(ClassWriter output, IEnvironmentGlobal global) {
 		this.output = output;
 		this.global = global;
 		this.local = new HashMap<String, IZenSymbol>();
 	}
 
 	@Override
-	public ClassVisitor getClassOutput() {
+	public ClassWriter getClassOutput() {
 		return output;
 	}
 
