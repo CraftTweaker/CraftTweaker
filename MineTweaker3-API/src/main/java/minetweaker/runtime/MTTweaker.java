@@ -134,8 +134,7 @@ public class MTTweaker implements ITweaker {
 						String filename = scriptIterator.getName();
 						String className = extractClassName(filename);
 
-						ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
-						ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
+						ZenParsedFile pfile = new ZenParsedFile(filename, className, reader, environmentGlobal);
 						files.add(pfile);
 					} catch (IOException ex) {
 						MineTweakerAPI.logError("Could not load script " + scriptIterator.getName() + ": " + ex.getMessage());
@@ -154,7 +153,12 @@ public class MTTweaker implements ITweaker {
 				}
 
 				try {
-					System.out.println("MineTweaker: Loading " + groupName);
+					List<String> s = new ArrayList<String>();
+					for(ZenParsedFile pf : files) {
+						s.add(pf.getClassName());
+					}
+					MineTweakerAPI.logInfo("MineTweaker: Loading " + groupName);
+					MineTweakerAPI.logInfo("MineTweaker: Classes " + String.join("; ", s));
 					compileScripts(groupName, files, environmentGlobal, DEBUG);
 
 					// execute scripts
