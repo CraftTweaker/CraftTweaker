@@ -3,6 +3,7 @@ package stanhebben.zenscript;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.objectweb.asm.ClassWriter;
@@ -12,6 +13,7 @@ import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.ParsedFunction;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.definitions.ParsedGlobalValue;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.SymbolGlobal;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.statements.StatementReturn;
@@ -45,12 +47,6 @@ public class ZenModule {
 	public static void compileScripts(String mainFileName, List<ZenParsedFile> parsedScripts, IEnvironmentGlobal environmentGlobal, boolean debug) {
 		for (ZenParsedFile parsedScript : parsedScripts) {
 			String internalClassName = internal(parsedScript.getClassName());
-			for (ParsedGlobalValue globalValue : parsedScript.getGlobalValues().values()) {
-				environmentGlobal.putValue(globalValue.getName(), new SymbolGlobal(
-						internalClassName,
-						globalValue.getName(),
-						globalValue.getType()), globalValue.getPosition());
-			}
 			for (ParsedFunction function : parsedScript.getFunctions().values()) {
 				environmentGlobal.putValue(function.getName(), new SymbolZenStaticMethod(
 						internalClassName,
@@ -71,21 +67,30 @@ public class ZenModule {
 		MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
 		mainRun.start();
 
+		Map<String, EnvironmentClass> envs = new HashMap<String, EnvironmentClass>();
+
 		for (ZenParsedFile parsedScript : parsedScripts) {
+			String internalClassName = internal(parsedScript.getClassName());
 			ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 			clsScript.visitSource(parsedScript.getFileName(), null);
-			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, internal(parsedScript.getClassName()), null, internal(Object.class), new String[] { internal(Runnable.class) });
+			clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, internalClassName, null, internal(Object.class), new String[]{internal(Runnable.class)});
 
 			EnvironmentClass environmentScript = new EnvironmentClass(clsScript, parsedScript.getEnvironment());
 
 			compileConstructor(clsScript);
-			compileGlobalValues(parsedScript, environmentScript, clsScript);
+			compileGlobalValues(parsedScript, environmentScript, clsScript, environmentGlobal);
 			compileFunctions(parsedScript, environmentScript, clsScript);
+
+			envs.put(internalClassName, environmentScript);
+		}
+
+		for (ZenParsedFile parsedScript : parsedScripts) {
+			String internalClassName = internal(parsedScript.getClassName());
+			EnvironmentClass environmentScript = envs.get(internalClassName);
+			ClassWriter clsScript = environmentScript.getClassOutput();
 			compileStatements(parsedScript, environmentScript, clsScript, mainRun);
-
 			clsScript.visitEnd();
-
 			environmentGlobal.putClass(parsedScript.getClassName(), clsScript.toByteArray());
 		}
 
@@ -110,25 +115,28 @@ public class ZenModule {
 		ctor.end();
 	}
 
-	public static void compileGlobalValues(ZenParsedFile script, IEnvironmentClass environmentScript, ClassWriter clsScript) {
+	public static void compileGlobalValues(ZenParsedFile script, IEnvironmentClass environmentScript, ClassWriter clsScript, IEnvironmentGlobal environmentGlobal) {
 		if (script.getGlobalValues().size() > 0) {
-			//define static fields
-			for (ParsedGlobalValue globalValue : script.getGlobalValues().values()) {
-				FieldVisitor fieldVisitor = clsScript.visitField(
-						Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL,
-						globalValue.getName(), globalValue.getSignature(),
-						null, null);
-				fieldVisitor.visitEnd();
-			}
-
-			//init static fields
+			String internalClassName = internal(script.getClassName());
 			MethodOutput clinit = new MethodOutput(clsScript, Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
 			EnvironmentMethod clinitEnvironment = new EnvironmentMethod(clinit, environmentScript);
+
 			clinit.start();
 			clinit.visitPrintln("Init global values " + script.getFileName());
 			for (ParsedGlobalValue globalValue : script.getGlobalValues().values()) {
-				globalValue.getValue().compile(true, clinitEnvironment);
-				clinit.putStaticField(internal(script.getClassName()), globalValue.getName(), globalValue.getSignature());
+				String name = globalValue.getName();
+				IPartialExpression value = globalValue.getValue().compile(clinitEnvironment, globalValue.getType());
+				ZenType type = value.getType();
+
+				//define static fields
+				FieldVisitor fieldVisitor = clsScript.visitField(
+						Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL,
+						name, type.getSignature(), null, null);
+				fieldVisitor.visitEnd();
+
+				environmentGlobal.putValue(name, new SymbolGlobal(internalClassName, name, type), globalValue.getPosition());
+				value.eval(environmentGlobal).compile(true, clinitEnvironment);
+				clinit.putStaticField(internalClassName, name, type.getSignature());
 			}
 			clinit.ret();
 			clinit.end();

@@ -2,12 +2,9 @@ package stanhebben.zenscript.definitions;
 
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.ZenPosition;
 
 import static stanhebben.zenscript.ZenTokener.*;
@@ -19,33 +16,28 @@ public class ParsedGlobalValue {
         Token start = parser.next();
         String name = parser.required(T_ID, "identifier expected").getValue();
 
-        ZenType type = ZenTypeAny.INSTANCE;
+        ZenType type = ZenType.ANY;
         if (parser.optional(T_AS) != null) {
             type = ZenType.read(parser, environment);
         }
 
         parser.required(T_ASSIGN, "global value must be initialized immediately");
-
         ParsedExpression parsedValue = ParsedExpression.read(parser, environment);
-        Expression value = parsedValue.compile(null, type).eval(environment);
 
-        type = value.getType();
         parser.required(T_SEMICOLON, "; expected");
-        return new ParsedGlobalValue(start.getPosition(), name, type, value);
+        return new ParsedGlobalValue(start.getPosition(), name, type, parsedValue);
     }
 
     private final String name;
     private final ZenPosition position;
     private final ZenType type;
-    private final Expression value;
-    private final String signature;
+    private final ParsedExpression value;
 
-    public ParsedGlobalValue(ZenPosition position, String name, ZenType type, Expression value) {
+    public ParsedGlobalValue(ZenPosition position, String name, ZenType type, ParsedExpression value) {
         this.position = position;
         this.name = name;
         this.type = type;
         this.value = value;
-        this.signature = type.getSignature();
     }
 
     public ZenPosition getPosition() {
@@ -60,11 +52,7 @@ public class ParsedGlobalValue {
         return this.type;
     }
 
-    public Expression getValue() {
-        return this.value;
-    }
-
-    public String getSignature() {
-        return signature;
+    public ParsedExpression getValue() {
+        return value;
     }
 }
