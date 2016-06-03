@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import minetweaker.MineTweakerAPI;
 import minetweaker.runtime.IScriptIterator;
 
 /**
@@ -24,20 +26,25 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	private final File directory;
 	private Iterator<File> contents;
 	private File current;
+	private String groupName;
 
 	public ScriptIteratorDirectory(File scriptDir) {
-		this.directory = scriptDir;
-
+		directory = scriptDir;
 		List<File> contentsList = new ArrayList<File>();
 		if (directory.exists()) {
 			iterate(directory, contentsList);
 		}
 		contents = contentsList.iterator();
+
+		groupName = directory.getName() + "_" + directory.hashCode();
+		if (directory.getParentFile() != null) {
+			groupName = directory.getParentFile().getName() + ":" + groupName;
+		}
 	}
 
 	@Override
 	public String getGroupName() {
-		return directory.getName();
+		return groupName;
 	}
 
 	@Override
