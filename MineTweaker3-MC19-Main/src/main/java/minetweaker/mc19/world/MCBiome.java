@@ -7,15 +7,15 @@
 package minetweaker.mc19.world;
 
 import minetweaker.api.world.IBiome;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 /**
  * @author Stan
  */
 public class MCBiome implements IBiome{
-    private final BiomeGenBase biome;
+    private final Biome biome;
 
-    public MCBiome(BiomeGenBase biome){
+    public MCBiome(Biome biome){
         this.biome = biome;
     }
 

@@ -50,8 +50,8 @@ public class MCGame implements IGame{
     @Override
     public List<IItemDefinition> getItems(){
         List<IItemDefinition> result = new ArrayList<IItemDefinition>();
-        for(ResourceLocation item : (Set<ResourceLocation>) Item.itemRegistry.getKeys()){
-            result.add(new MCItemDefinition(item.toString(), Item.itemRegistry.getObject(item)));
+        for(ResourceLocation item : (Set<ResourceLocation>) Item.REGISTRY.getKeys()){
+            result.add(new MCItemDefinition(item.toString(), Item.REGISTRY.getObject(item)));
         }
         return result;
     }
@@ -59,8 +59,8 @@ public class MCGame implements IGame{
     @Override
     public List<IBlockDefinition> getBlocks(){
         List<IBlockDefinition> result = new ArrayList<IBlockDefinition>();
-        for(ResourceLocation block : (Set<ResourceLocation>) Block.blockRegistry.getKeys()){
-            result.add(MineTweakerMC.getBlockDefinition(Block.blockRegistry.getObject(block)));
+        for(ResourceLocation block : (Set<ResourceLocation>) Block.REGISTRY.getKeys()){
+            result.add(MineTweakerMC.getBlockDefinition(Block.REGISTRY.getObject(block)));
         }
 
         return result;

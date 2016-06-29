@@ -78,7 +78,7 @@ public class MCItemStack implements IItemStack{
 
     @Override
     public IItemDefinition getDefinition(){
-        return new MCItemDefinition(Item.itemRegistry.getNameForObject(stack.getItem()).toString(), stack.getItem());
+        return new MCItemDefinition(Item.REGISTRY.getNameForObject(stack.getItem()).toString(), stack.getItem());
     }
 
     @Override
@@ -316,8 +316,8 @@ public class MCItemStack implements IItemStack{
 
     @Override
     public IBlock asBlock(){
-        ResourceLocation name = Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-        if(Block.blockRegistry.containsKey(name)){
+        ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+        if(Block.REGISTRY.containsKey(name)){
             return new MCItemBlock(stack);
         }else{
             throw new ClassCastException("This item is not a block");
@@ -379,7 +379,7 @@ public class MCItemStack implements IItemStack{
     public String toString(){
         StringBuilder result = new StringBuilder();
         result.append('<');
-        result.append(Item.itemRegistry.getNameForObject(stack.getItem()));
+        result.append(Item.REGISTRY.getNameForObject(stack.getItem()));
 
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE){
             result.append(":*");

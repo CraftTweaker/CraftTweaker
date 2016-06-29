@@ -6,31 +6,30 @@
 
 package minetweaker.api.vanilla;
 
-import java.util.List;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.WeightedItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import java.util.List;
+
 /**
- *
  * @author Stan
  */
 @ZenClass("vanilla.ILootRegistry")
 public interface ILootRegistry {
-	@ZenMethod
-	public void addChestLoot(String name, WeightedItemStack item);
+    @ZenMethod
+    public void addChestLoot(String name, WeightedItemStack item);
+    @ZenMethod
+    public void addChestLoot(String name, WeightedItemStack item, int min, int max);
 
-	@ZenMethod
-	public void addChestLoot(String name, WeightedItemStack item, int min, int max);
+    @ZenMethod
+    public void removeChestLoot(String name, IIngredient ingredient);
 
-	@ZenMethod
-	public void removeChestLoot(String name, IIngredient ingredient);
+    @ZenMethod
+    public List<LootEntry> getLoot(String name);
 
-	@ZenMethod
-	public List<LootEntry> getLoot(String name);
-
-	@ZenGetter("lootTypes")
-	public List<String> getLootTypes();
+    @ZenGetter("lootTypes")
+    public List<String> getLootTypes();
 }

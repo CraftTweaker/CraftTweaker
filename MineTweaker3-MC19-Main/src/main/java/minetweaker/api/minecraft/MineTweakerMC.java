@@ -30,7 +30,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -48,10 +48,10 @@ public class MineTweakerMC {
 	public static final IBiome[] biomes;
 
 	static {
-		biomes = new IBiome[BiomeGenBase.biomeRegistry.getKeys().size()];
-		for (int i = 0; i <BiomeGenBase.biomeRegistry.getKeys().size(); i++) {
-			if (BiomeGenBase.biomeRegistry.getObjectById(i)!= null)
-				biomes[i] = new MCBiome(BiomeGenBase.biomeRegistry.getObjectById(i));
+		biomes = new IBiome[Biome.REGISTRY.getKeys().size()];
+		for (int i = 0; i <Biome.REGISTRY.getKeys().size(); i++) {
+			if (Biome.REGISTRY.getObjectById(i)!= null)
+				biomes[i] = new MCBiome(Biome.REGISTRY.getObjectById(i));
 		}
 	}
 

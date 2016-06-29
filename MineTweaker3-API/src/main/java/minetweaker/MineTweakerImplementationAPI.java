@@ -35,6 +35,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.*;
 import java.util.List;
 
+import static minetweaker.MineTweakerAPI.furnace;
 import static minetweaker.MineTweakerAPI.server;
 
 /**
@@ -243,7 +244,7 @@ public class MineTweakerImplementationAPI {
                     }
 
                     MineTweakerAPI.logCommand("Furnace Recipes:");
-                    for (IFurnaceRecipe recipe : MineTweakerAPI.furnace.getAll()) {
+                    for (IFurnaceRecipe recipe : furnace.getAll()) {
                         try {
                             MineTweakerAPI.logCommand(recipe.toCommandString());
                         } catch (Throwable ex) {
@@ -761,6 +762,7 @@ public class MineTweakerImplementationAPI {
         public String describeUndo() {
             return "tried to remove command: " + command.name + " failed. THIS IS NOT AN ERROR!";
         }
+
         @Override
         public Object getOverrideKey() {
             return null;

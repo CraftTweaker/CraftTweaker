@@ -14,26 +14,28 @@
 //import minetweaker.api.vanilla.ILootRegistry;
 //import minetweaker.api.vanilla.LootEntry;
 //import minetweaker.mc19.util.MineTweakerHacks;
-//import net.minecraft.util.WeightedRandomChestContent;
-//import net.minecraftforge.common.ChestGenHooks;
+//import net.minecraft.item.ItemStack;
+//import net.minecraft.world.storage.loot.LootEntryItem;
+//import net.minecraft.world.storage.loot.functions.LootFunction;
+//import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 //
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Set;
+//import java.util.*;
 //
 ///**
 // * @author Stan
 // */
 //public class MCLootRegistry implements ILootRegistry{
-////    private static final Map<String, ChestGenHooks> LOOT = MineTweakerHacks.getChestLoot();
+//    private static final Map<String, List<ItemStack>> LOOT = new HashMap<String, List<ItemStack>>();
 //
 //    @Override
 //    public void addChestLoot(String type, WeightedItemStack item){
-//        WeightedRandomChestContent content = new WeightedRandomChestContent(MineTweakerMC.getItemStack(item.getStack()), 1, 1, (int) item.getChance());
+//        LootEntryItem content = new LootEntryItem(MineTweakerMC.getItemStack(item.getStack()).getItem(), 1, 1, (int) item.getChance());
+//        WeightedItemStack sta = new WeightedItemStack();
 //        MineTweakerAPI.apply(new AddLootAction(type, content));
+//        LootFunctionManager.getSerializerFor()
 //    }
 //
+//    //addEntry(new LootEntryItem(ITEM, WEIGHT, QUALITY, FUNCTIONS, CONDITIONS, NAME));
 //    @Override
 //    public void addChestLoot(String type, WeightedItemStack item, int min, int max){
 //        WeightedRandomChestContent content = new WeightedRandomChestContent(MineTweakerMC.getItemStack(item.getStack()), min, max, (int) item.getChance());

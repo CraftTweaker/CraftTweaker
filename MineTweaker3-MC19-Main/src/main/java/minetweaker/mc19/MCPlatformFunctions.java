@@ -41,7 +41,7 @@ public class MCPlatformFunctions implements IPlatformFunctions{
         Item item = Item.getItemById(id);
         if(item == null)
             return null;
-        ResourceLocation res = Item.itemRegistry.getNameForObject(item);
+        ResourceLocation res = Item.REGISTRY.getNameForObject(item);
         String sid = res.getResourceDomain() + ":" + res.getResourcePath();
         return new MCItemDefinition(sid, item);
     }

@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * The RecipeManager adds and removes crafting recipes. The IRecipeManager
- * instance is available throug the recipes global variable.
+ * instance is available through the recipes global variable.
  * 
  * @author Stan Hebben
  */

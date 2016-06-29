@@ -49,10 +49,10 @@ import java.io.File;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.7")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.9")
 public class MineTweakerMod {
     public static final String MODID = "MineTweaker3";
-    public static final String MCVERSION = "1.9";
+    public static final String MCVERSION = "1.9.4";
 
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
@@ -81,7 +81,6 @@ public class MineTweakerMod {
         File globalDir = new File("scripts");
         if (!globalDir.exists())
             globalDir.mkdirs();
-
         scriptsIMC = new ScriptProviderCustom("intermod");
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
         MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);

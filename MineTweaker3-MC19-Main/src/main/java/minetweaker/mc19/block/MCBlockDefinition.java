@@ -25,7 +25,7 @@ public class MCBlockDefinition implements IBlockDefinition{
 
     @Override
     public String getId(){
-        return Block.blockRegistry.getNameForObject(block).toString();
+        return Block.REGISTRY.getNameForObject(block).toString();
     }
 
     @Override

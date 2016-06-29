@@ -37,8 +37,8 @@ public class SetBlockHardnessAction implements IUndoableAction{
     }
 
     public static boolean isBlock(ItemStack stack){
-        ResourceLocation name = Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-        return !name.toString().equals("minecraft:air") && Block.blockRegistry.containsKey(name);
+        ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+        return !name.toString().equals("minecraft:air") && Block.REGISTRY.containsKey(name);
 
     }
 

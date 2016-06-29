@@ -4,13 +4,13 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.7"
+ext.mineTweakerVersion = "3.0.9"
 if (System.getenv('BUILD_NUMBER') != null)
     project.mineTweakerVersion += "."+System.getenv('BUILD_NUMBER')
 else {
     try {
-        ext.mineTweakerVersion += "." + "git rev-parse --abbrev-ref HEAD".execute().text.trim();
-        ext.mineTweakerVersion += "." + "git rev-parse --short HEAD".execute().text.trim();
+        //ext.mineTweakerVersion += "." + "git rev-parse --abbrev-ref HEAD".execute().text.trim();
+        //ext.mineTweakerVersion += "." + "git rev-parse --short HEAD".execute().text.trim();
     } catch (all) {}
     logger.lifecycle "No build number detected, setting to ${ext.mineTweakerVersion}"
 }
@@ -46,7 +46,7 @@ ext.projects18 = [
 // ### 1.9 settings ###
 // ####################
 
-ext.forgeVersion19 = "1.9-12.16.1.1892"
+ext.forgeVersion19 = "1.9.4-12.17.0.1910-1.9.4"
 ext.projects19 = [
 	'MineTweaker3-MC19-Main',
 	'MineTweaker3-MC19-Mod-JEI'

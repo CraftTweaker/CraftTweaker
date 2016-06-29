@@ -31,7 +31,7 @@ public class MCSpecificBlock implements IBlock{
     }
 
     private static String getBlockId(Block block){
-        return Block.blockRegistry.getNameForObject(block).toString();
+        return Block.REGISTRY.getNameForObject(block).toString();
     }
 
     @Override
