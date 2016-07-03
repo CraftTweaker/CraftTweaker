@@ -4,7 +4,7 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.9"
+ext.mineTweakerVersion = "3.0.10"
 if (System.getenv('BUILD_NUMBER') != null)
     project.mineTweakerVersion += "."+System.getenv('BUILD_NUMBER')
 else {
@@ -42,12 +42,12 @@ ext.projects18 = [
 	'MineTweaker3-MC18-Mod-JEI'
 ]
 
-// ####################
-// ### 1.9 settings ###
-// ####################
+// #######################
+// ### 1.10.2 settings ###
+// #######################
 
-ext.forgeVersion19 = "1.9.4-12.17.0.1910-1.9.4"
-ext.projects19 = [
-	'MineTweaker3-MC19-Main',
-	'MineTweaker3-MC19-Mod-JEI'
+ext.forgeVersion1102 = "1.10.2-12.18.0.2005-1.10.0"
+ext.projects1102 = [
+	'MineTweaker3-MC1102-Main',
+	'MineTweaker3-MC1102-Mod-JEI'
 ]

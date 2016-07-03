@@ -4,27 +4,27 @@
  * and open the template in the editor.
  */
 
-package minetweaker.mc18;
+package minetweaker.mc1102;
 
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
-import minetweaker.mc18.brackets.ItemBracketHandler;
-import minetweaker.mc18.brackets.LiquidBracketHandler;
-import minetweaker.mc18.brackets.OreBracketHandler;
-import minetweaker.mc18.client.MCClient;
-import minetweaker.mc18.formatting.MCFormatter;
-import minetweaker.mc18.furnace.FuelTweaker;
-import minetweaker.mc18.furnace.MCFurnaceManager;
-import minetweaker.mc18.game.MCGame;
-import minetweaker.mc18.mods.MCLoadedMods;
-import minetweaker.mc18.network.*;
-import minetweaker.mc18.oredict.MCOreDict;
-import minetweaker.mc18.recipes.MCRecipeManager;
-import minetweaker.mc18.server.MCServer;
-import minetweaker.mc18.util.MineTweakerHacks;
-import minetweaker.mc18.util.MineTweakerPlatformUtils;
-import minetweaker.mc18.vanilla.MCVanilla;
+import minetweaker.mc1102.brackets.ItemBracketHandler;
+import minetweaker.mc1102.brackets.LiquidBracketHandler;
+import minetweaker.mc1102.brackets.OreBracketHandler;
+import minetweaker.mc1102.client.MCClient;
+import minetweaker.mc1102.formatting.MCFormatter;
+import minetweaker.mc1102.furnace.FuelTweaker;
+import minetweaker.mc1102.furnace.MCFurnaceManager;
+import minetweaker.mc1102.game.MCGame;
+import minetweaker.mc1102.mods.MCLoadedMods;
+import minetweaker.mc1102.network.*;
+import minetweaker.mc1102.oredict.MCOreDict;
+import minetweaker.mc1102.recipes.MCRecipeManager;
+import minetweaker.mc1102.server.MCServer;
+import minetweaker.mc1102.util.MineTweakerHacks;
+import minetweaker.mc1102.util.MineTweakerPlatformUtils;
+import minetweaker.mc1102.vanilla.MCVanilla;
 import minetweaker.runtime.GlobalRegistry;
 import minetweaker.runtime.IScriptProvider;
 import minetweaker.runtime.providers.ScriptProviderCascade;
@@ -52,7 +52,7 @@ import java.io.File;
 @Mod(modid = MineTweakerMod.MODID, version = "3.0.10")
 public class MineTweakerMod {
     public static final String MODID = "MineTweaker3";
-    public static final String MCVERSION = "1.8.9";
+    public static final String MCVERSION = "1.10.2";
 
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
@@ -73,28 +73,14 @@ public class MineTweakerMod {
     private final ScriptProviderCustom scriptsIMC;
 
     public MineTweakerMod() {
-        MCOreDict ore = new MCOreDict();
-        recipes = new MCRecipeManager();
-        MCFurnaceManager furnace = new MCFurnaceManager();
-        MCGame game = new MCGame();
-        MCLoadedMods mods = new MCLoadedMods();
-        MCFormatter formatter = new MCFormatter();
-        MCVanilla vanilla = new MCVanilla();
-        MineTweakerImplementationAPI.init(
-                ore,
-                recipes,
-                furnace,
-                game,
-                mods,
-                formatter,
-                vanilla);
+        MineTweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla());
+
         MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
         MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 
         File globalDir = new File("scripts");
         if (!globalDir.exists())
             globalDir.mkdirs();
-
         scriptsIMC = new ScriptProviderCustom("intermod");
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
         MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
@@ -149,6 +135,12 @@ public class MineTweakerMod {
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
         this.server = ev.getServer();
+
+    }
+
+    @EventHandler
+    public void onServerStarting(FMLServerStartingEvent ev) {
+        this.server = ev.getServer();
         // starts before loading worlds
         // perfect place to start MineTweaker!
 
@@ -166,11 +158,6 @@ public class MineTweakerMod {
 
         MineTweakerImplementationAPI.setScriptProvider(cascaded);
         MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
-    }
-
-    @EventHandler
-    public void onServerStarting(FMLServerStartingEvent ev) {
-        this.server = ev.getServer();
 
     }
 

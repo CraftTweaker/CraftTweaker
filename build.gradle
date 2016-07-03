@@ -11,9 +11,9 @@ task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper
 
 subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
 
-task setupDecompWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupDecompWorkspace" } + projects18.collect { ':' + it + ':setupDecompWorkspace'} +projects19.collect { ':' + it + ':setupDecompWorkspace'}) {}
+task setupDecompWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupDecompWorkspace" } + projects18.collect { ':' + it + ':setupDecompWorkspace'} + projects1102.collect { ':' + it + ':setupDecompWorkspace'}) {}
 
-task setupCIWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupCIWorkspace" } + projects18.collect { ':' + it + ':setupCIWorkspace'} +projects19.collect { ':' + it + ':setupCIWorkspace'}) {}
+task setupCIWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupCIWorkspace" } + projects18.collect { ':' + it + ':setupCIWorkspace'} + projects1102.collect { ':' + it + ':setupCIWorkspace'}) {}
 
 task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
@@ -43,16 +43,16 @@ task assembleMC18(type: Jar, dependsOn: [\
 	}
 }
 
-task assembleMC19(type: Jar, dependsOn: [\
+task assembleMC1102(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
-		+ projects19.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-1.9.4-${mineTweakerVersion}.jar"
+		+ projects1102.collect { ':' + it + ":build" }) {
+	archiveName="CraftTweaker-1.10.2-${mineTweakerVersion}.jar"
 	
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
 	
-	for (p in projects19) {
+	for (p in projects1102) {
 		from zipTree(project(p).jar.archivePath)
 	}
 }
@@ -79,15 +79,15 @@ task assembleDevBase18(type: Jar, dependsOn: [
 	from project(':MineTweaker3-MC18-Main').sourceSets.main.output
 }
 
-task assembleDevBase19(type: Jar, dependsOn: [
+task assembleDevBase1102(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
-		':MineTweaker3-MC19-Main:build']) {
-	archiveName="CraftTweaker-Dev-1.9.4-${mineTweakerVersion}.jar"
+		':MineTweaker3-MC1102-Main:build']) {
+	archiveName="CraftTweaker-Dev-1.10.2-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
-	from project(':MineTweaker3-MC19-Main').sourceSets.main.output
+	from project(':MineTweaker3-MC1102-Main').sourceSets.main.output
 }
 
 task assembleDevFull1710(type: Jar, dependsOn: [
@@ -119,16 +119,16 @@ task assembleDevFull18(type: Jar, dependsOn: [
 	}
 }
 
-task assembleDevFull19(type: Jar, dependsOn: [
+task assembleDevFull1102(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
-		+ projects19.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Dev-Full-1.9.4-${mineTweakerVersion}.jar"
+		+ projects1102.collect { ':' + it + ":build" }) {
+	archiveName="CraftTweaker-Dev-Full-1.10.2-${mineTweakerVersion}.jar"
 	
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
 	
-	for (p in projects19) {
+	for (p in projects1102) {
 		from project(p).sourceSets.main.output
 	}
 }
@@ -136,13 +136,13 @@ task assembleDevFull19(type: Jar, dependsOn: [
 task assembleAll(dependsOn: [
 	assembleMC1710,
 	assembleMC18,
-	assembleMC19,
+	assembleMC1102,
 	assembleDevBase1710,
 	assembleDevBase18,
-	assembleDevBase19,
+	assembleDevBase1102,
 	assembleDevFull1710,
 	assembleDevFull18,
-	assembleDevFull19]) {
+	assembleDevFull1102]) {
 }
 
 configurations {
