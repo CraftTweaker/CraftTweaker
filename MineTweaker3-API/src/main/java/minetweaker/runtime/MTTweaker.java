@@ -157,8 +157,8 @@ public class MTTweaker implements ITweaker {
 					for(ZenParsedFile pf : files) {
 						s.add(pf.getClassName());
 					}
-					MineTweakerAPI.logInfo("MineTweaker: Loading " + groupName);
-					MineTweakerAPI.logInfo("MineTweaker: Classes " + String.join("; ", s));
+//					MineTweakerAPI.logInfo("MineTweaker: Loading " + groupName);
+//					MineTweakerAPI.logInfo("MineTweaker: Classes " + String.join("; ", s));
 					compileScripts(groupName, files, environmentGlobal, DEBUG);
 
 					// execute scripts
