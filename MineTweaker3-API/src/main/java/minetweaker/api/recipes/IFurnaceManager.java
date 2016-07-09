@@ -10,7 +10,10 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.List;
 
 /**
  *
@@ -29,4 +32,12 @@ public interface IFurnaceManager {
 
 	@ZenMethod
 	public int getFuel(IItemStack item);
+
+	/**
+	 * Returns all crafting recipes.
+	 *
+	 * @return all crafting recipes
+	 */
+	@ZenGetter("all")
+	public List<IFurnaceRecipe> getAll();
 }

@@ -22,125 +22,120 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 /**
- *
  * @author Stan
  */
-public class MCPlayer implements IPlayer {
-	private final EntityPlayer player;
+public class MCPlayer implements IPlayer{
+    private final EntityPlayer player;
 
-	public MCPlayer(EntityPlayer player) {
-		this.player = player;
-	}
+    public MCPlayer(EntityPlayer player){
+        this.player = player;
+    }
 
-	public EntityPlayer getInternal() {
-		return player;
-	}
+    public EntityPlayer getInternal(){
+        return player;
+    }
 
-	@Override
-	public String getId() {
-		return null; // TODO: we should be having this for MC 1.7.10, right?
-	}
+    @Override
+    public String getId(){
+        return null; // TODO: we should be having this for MC 1.7.10, right?
+    }
 
-	@Override
-	public String getName() {
-		return player.getName();
-	}
+    @Override
+    public String getName(){
+        return player.getName();
+    }
 
-	@Override
-	public IData getData() {
-		return NBTConverter.from(player.getEntityData(), true);
-	}
+    @Override
+    public IData getData(){
+        return NBTConverter.from(player.getEntityData(), true);
+    }
 
-	@Override
-	public void update(IData data) {
-		NBTConverter.updateMap(player.getEntityData(), data);
-	}
+    @Override
+    public void update(IData data){
+        NBTConverter.updateMap(player.getEntityData(), data);
+    }
 
-	@Override
-	public void sendChat(IChatMessage message) {
-		Object internal = message.getInternal();
-		if (!(internal instanceof IChatComponent)) {
-			MineTweakerAPI.logError("not a valid chat message");
-			return;
-		}
-		player.addChatMessage((IChatComponent) internal);
-	}
+    @Override
+    public void sendChat(IChatMessage message){
+        Object internal = message.getInternal();
+        if(!(internal instanceof IChatComponent)){
+            MineTweakerAPI.logError("not a valid chat message");
+            return;
+        }
+        player.addChatMessage((IChatComponent) internal);
+    }
 
-	@Override
-	public void sendChat(String message) {
-		player.addChatMessage(new ChatComponentText(message));
-	}
+    @Override
+    public void sendChat(String message){
+        player.addChatMessage(new ChatComponentText(message));
+    }
 
-	@Override
-	public int getHotbarSize() {
-		return 9;
-	}
+    @Override
+    public int getHotbarSize(){
+        return 9;
+    }
 
-	@Override
-	public IItemStack getHotbarStack(int i) {
-		return i < 0 || i >= 9 ? null : MineTweakerMC.getIItemStack(player.inventory.getStackInSlot(i));
-	}
+    @Override
+    public IItemStack getHotbarStack(int i){
+        return i < 0 || i >= 9 ? null : MineTweakerMC.getIItemStack(player.inventory.getStackInSlot(i));
+    }
 
-	@Override
-	public int getInventorySize() {
-		return player.inventory.getSizeInventory();
-	}
+    @Override
+    public int getInventorySize(){
+        return player.inventory.getSizeInventory();
+    }
 
-	@Override
-	public IItemStack getInventoryStack(int i) {
-		return MineTweakerMC.getIItemStack(player.inventory.getStackInSlot(i));
-	}
+    @Override
+    public IItemStack getInventoryStack(int i){
+        return MineTweakerMC.getIItemStack(player.inventory.getStackInSlot(i));
+    }
 
-	@Override
-	public IItemStack getCurrentItem() {
-		return MineTweakerMC.getIItemStack(player.getCurrentEquippedItem());
-	}
+    @Override
+    public IItemStack getCurrentItem(){
+        return MineTweakerMC.getIItemStack(player.inventory.getCurrentItem());
+    }
 
-	@Override
-	public boolean isCreative() {
-		return player.capabilities.isCreativeMode;
-	}
+    @Override
+    public boolean isCreative(){
+        return player.capabilities.isCreativeMode;
+    }
 
-	@Override
-	public boolean isAdventure() {
-		return !player.capabilities.allowEdit;
-	}
+    @Override
+    public boolean isAdventure(){
+        return !player.capabilities.allowEdit;
+    }
 
-	@Override
-	public void openBrowser(String url) {
-		if (player instanceof EntityPlayerMP) {
-			MineTweakerMod.NETWORK.sendTo(
-					new MineTweakerOpenBrowserPacket(url),
-					(EntityPlayerMP) player);
-		}
-	}
+    @Override
+    public void openBrowser(String url){
+        if(player instanceof EntityPlayerMP){
+            MineTweakerMod.NETWORK.sendTo(new MineTweakerOpenBrowserPacket(url), (EntityPlayerMP) player);
+        }
+    }
 
-	@Override
-	public void copyToClipboard(String value) {
-		if (player instanceof EntityPlayerMP) {
-			MineTweakerMod.NETWORK.sendTo(
-					new MineTweakerCopyClipboardPacket(value),
-					(EntityPlayerMP) player);
-		}
-	}
+    @Override
+    public void copyToClipboard(String value){
+        if(player instanceof EntityPlayerMP){
+            MineTweakerMod.NETWORK.sendTo(new MineTweakerCopyClipboardPacket(value), (EntityPlayerMP) player);
+        }
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (other.getClass() != this.getClass())
-			return false;
+    @Override
+    public boolean equals(Object other){
+        if(other.getClass() != this.getClass())
+            return false;
 
-		return ((MCPlayer) other).player == player;
-	}
+        return ((MCPlayer) other).player == player;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 5;
-		hash = 23 * hash + (this.player != null ? this.player.hashCode() : 0);
-		return hash;
-	}
+    @Override
+    public int hashCode(){
+        int hash = 5;
+        hash = 23 * hash + (this.player != null ? this.player.hashCode() : 0);
+        return hash;
+    }
 
-	@Override
-	public void give(IItemStack stack) {
-		player.inventory.addItemStackToInventory(MineTweakerMC.getItemStack(stack).copy());
-	}
+    @Override
+    public void give(IItemStack stack){
+        player.inventory.addItemStackToInventory(MineTweakerMC.getItemStack(stack).copy());
+    }
 }

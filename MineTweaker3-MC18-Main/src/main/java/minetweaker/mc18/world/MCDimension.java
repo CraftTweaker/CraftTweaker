@@ -13,33 +13,32 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
- *
  * @author Stan
  */
-public class MCDimension implements IDimension {
-	private final World world;
+public class MCDimension implements IDimension{
+    private final World world;
 
-	public MCDimension(World world) {
-		this.world = world;
-	}
+    public MCDimension(World world){
+        this.world = world;
+    }
 
-	@Override
-	public boolean isDay() {
-		return world.isDaytime();
-	}
+    @Override
+    public boolean isDay(){
+        return world.isDaytime();
+    }
 
-	@Override
-	public int getBrightness(int x, int y, int z) {
-		return (int) world.getLightBrightness(new BlockPos(x, y, z));
-	}
+    @Override
+    public int getBrightness(int x, int y, int z){
+        return world.getLight(new BlockPos(x, y, z));
+    }
 
-	@Override
-	public IDimension getDimension() {
-		return this;
-	}
+    @Override
+    public IDimension getDimension(){
+        return this;
+    }
 
-	@Override
-	public IBlock getBlock(int x, int y, int z) {
-		return MineTweakerMC.getBlock(world, x, y, z);
-	}
+    @Override
+    public IBlock getBlock(int x, int y, int z){
+        return MineTweakerMC.getBlock(world, x, y, z);
+    }
 }

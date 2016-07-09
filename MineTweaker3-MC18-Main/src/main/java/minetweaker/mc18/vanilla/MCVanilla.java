@@ -11,20 +11,19 @@ import minetweaker.api.vanilla.ISeedRegistry;
 import minetweaker.api.vanilla.IVanilla;
 
 /**
- *
  * @author Stan
  */
-public class MCVanilla implements IVanilla {
-	private final MCLootRegistry lootRegistry = new MCLootRegistry();
-	private final MCSeedRegistry seedRegistry = new MCSeedRegistry();
+public class MCVanilla implements IVanilla{
+//    private final MCLootRegistry lootRegistry = new MCLootRegistry();
+    private final MCSeedRegistry seedRegistry = new MCSeedRegistry();
 
-	@Override
-	public ILootRegistry getLoot() {
-		return lootRegistry;
-	}
+    @Override
+    public ILootRegistry getLoot(){
+        return null;
+    }
 
-	@Override
-	public ISeedRegistry getSeeds() {
-		return seedRegistry;
-	}
+    @Override
+    public ISeedRegistry getSeeds(){
+        return seedRegistry;
+    }
 }

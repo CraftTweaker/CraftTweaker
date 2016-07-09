@@ -7,7 +7,8 @@
 package minetweaker.mc1710.recipes;
 
 import java.util.List;
-import minetweaker.mc1710.item.MCItemStack;
+
+import minetweaker.mc1710.player.MCPlayer;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.api.item.IItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
@@ -15,7 +16,6 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIPlayer;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.ICraftingInventory;
-import minetweaker.mc1710.player.MCPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;

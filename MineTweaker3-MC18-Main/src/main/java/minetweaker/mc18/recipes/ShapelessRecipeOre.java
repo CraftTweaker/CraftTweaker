@@ -6,33 +6,33 @@
 
 package minetweaker.mc18.recipes;
 
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import minetweaker.api.recipes.ShapelessRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+
 /**
- *
  * @author Stan
  */
-public class ShapelessRecipeOre extends ShapelessOreRecipe {
-	private final ShapelessRecipe recipe;
+public class ShapelessRecipeOre extends ShapelessOreRecipe{
+    private final ShapelessRecipe recipe;
 
-	public ShapelessRecipeOre(Object[] ingredients, ShapelessRecipe recipe) {
-		super(getItemStack(recipe.getOutput()), ingredients);
+    public ShapelessRecipeOre(Object[] ingredients, ShapelessRecipe recipe){
+        super(getItemStack(recipe.getOutput()), ingredients);
 
-		this.recipe = recipe;
-	}
+        this.recipe = recipe;
+    }
 
-	@Override
-	public boolean matches(InventoryCrafting inventory, World world) {
-		return recipe.matches(MCCraftingInventory.get(inventory));
-	}
+    @Override
+    public boolean matches(InventoryCrafting inventory, World world){
+        return recipe.matches(MCCraftingInventory.get(inventory));
+    }
 
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
-	}
+    @Override
+    public ItemStack getCraftingResult(InventoryCrafting inventory){
+        return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
+    }
 }

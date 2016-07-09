@@ -33,12 +33,19 @@ public interface IOreDictEntry extends IIngredient {
 	public void add(IItemStack item);
 
 	@ZenMethod
+	public void addItems(IItemStack[] items);
+
+	@ZenMethod
 	public void addAll(IOreDictEntry entry);
 
 	@ZenMethod
 	public void remove(IItemStack item);
 
-	@ZenOperator(OperatorType.CONTAINS)
+    @ZenMethod
+    public void removeItems(IItemStack[] items);
+
+
+    @ZenOperator(OperatorType.CONTAINS)
 	public boolean contains(IItemStack item);
 
 	@ZenMethod

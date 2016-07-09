@@ -11,27 +11,26 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 /**
- *
  * @author Stan
  */
-public class MCChatMessage implements IChatMessage {
-	private final IChatComponent data;
+public class MCChatMessage implements IChatMessage{
+    private final IChatComponent data;
 
-	public MCChatMessage(String message) {
-		data = new ChatComponentText(message);
-	}
+    public MCChatMessage(String message){
+        data = new ChatComponentText(message);
+    }
 
-	public MCChatMessage(IChatComponent data) {
-		this.data = data;
-	}
+    public MCChatMessage(IChatComponent data){
+        this.data = data;
+    }
 
-	@Override
-	public IChatMessage add(IChatMessage other) {
-		return new MCChatMessage(data.appendSibling((IChatComponent) other.getInternal()));
-	}
+    @Override
+    public IChatMessage add(IChatMessage other){
+        return new MCChatMessage(data.appendSibling((IChatComponent) other.getInternal()));
+    }
 
-	@Override
-	public Object getInternal() {
-		return data;
-	}
+    @Override
+    public Object getInternal(){
+        return data;
+    }
 }

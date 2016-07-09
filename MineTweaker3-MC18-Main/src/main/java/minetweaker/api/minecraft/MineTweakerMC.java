@@ -1,9 +1,5 @@
 package minetweaker.api.minecraft;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.block.IBlockDefinition;
@@ -38,6 +34,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * MineTweaker - MineCraft API bridge.
  * 
@@ -49,9 +49,9 @@ public class MineTweakerMC {
 
 	static {
 		biomes = new IBiome[BiomeGenBase.getBiomeGenArray().length];
-		for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++) {
-			if (BiomeGenBase.getBiomeGenArray()[i] != null)
-				biomes[i] = new MCBiome(BiomeGenBase.getBiomeGenArray()[i]);
+		for (int i = 0; i <BiomeGenBase.getBiomeGenArray().length; i++) {
+			if (BiomeGenBase.getBiome(i)!= null)
+				biomes[i] = new MCBiome(BiomeGenBase.getBiome(i));
 		}
 	}
 

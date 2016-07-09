@@ -9,19 +9,10 @@ package minetweaker.mc1710;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-
-import java.io.File;
-
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.logger.FileLogger;
@@ -33,12 +24,7 @@ import minetweaker.mc1710.furnace.FuelTweaker;
 import minetweaker.mc1710.furnace.MCFurnaceManager;
 import minetweaker.mc1710.game.MCGame;
 import minetweaker.mc1710.mods.MCLoadedMods;
-import minetweaker.mc1710.network.MineTweakerCopyClipboardHandler;
-import minetweaker.mc1710.network.MineTweakerCopyClipboardPacket;
-import minetweaker.mc1710.network.MineTweakerLoadScriptsHandler;
-import minetweaker.mc1710.network.MineTweakerLoadScriptsPacket;
-import minetweaker.mc1710.network.MineTweakerOpenBrowserHandler;
-import minetweaker.mc1710.network.MineTweakerOpenBrowserPacket;
+import minetweaker.mc1710.network.*;
 import minetweaker.mc1710.oredict.MCOreDict;
 import minetweaker.mc1710.recipes.MCRecipeManager;
 import minetweaker.mc1710.server.MCServer;
@@ -52,13 +38,15 @@ import minetweaker.runtime.providers.ScriptProviderDirectory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.io.File;
+
 /**
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.0")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.10")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.7.10";
@@ -173,7 +161,7 @@ public class MineTweakerMod {
 		}
 
 		IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
-		IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal, scriptsLocal);
+		IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsLocal, scriptsGlobal);
 
 		MineTweakerImplementationAPI.setScriptProvider(cascaded);
 		MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));

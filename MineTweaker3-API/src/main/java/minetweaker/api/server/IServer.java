@@ -31,9 +31,6 @@ public interface IServer {
 			@Optional ICommandTabCompletion completion);
 
 	@ZenMethod
-	public void removeCommand(String name);
-
-	@ZenMethod
 	public void addMineTweakerCommand(String name, String[] usage, ICommandFunction function);
 
 	@ZenMethod
@@ -44,4 +41,7 @@ public interface IServer {
 
 	@ZenMethod
 	public IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
+
+	@ZenMethod
+	public boolean isCommandAdded(String name);
 }

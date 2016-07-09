@@ -9,10 +9,10 @@ package minetweaker.mc1710;
 import minetweaker.IPlatformFunctions;
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.item.IItemDefinition;
-import static minetweaker.mc1710.MineTweakerMod.NETWORK;
-import minetweaker.mc1710.chat.MCChatMessage;
+
 import minetweaker.mc1710.item.MCItemDefinition;
 import minetweaker.mc1710.network.MineTweakerLoadScriptsPacket;
+import minetweaker.mc1710.chat.MCChatMessage;
 import net.minecraft.item.Item;
 
 /**
@@ -32,7 +32,7 @@ public class MCPlatformFunctions implements IPlatformFunctions {
 
 	@Override
 	public void distributeScripts(byte[] data) {
-		NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(data));
+		MineTweakerMod.NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(data));
 	}
 
 	@Override

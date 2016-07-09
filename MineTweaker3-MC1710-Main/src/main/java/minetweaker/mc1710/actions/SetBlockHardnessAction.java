@@ -10,7 +10,6 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  *

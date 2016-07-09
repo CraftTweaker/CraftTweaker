@@ -6,28 +6,26 @@
 
 package minetweaker.mc18.network;
 
-import java.awt.Desktop;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+
 /**
- *
  * @author Stan
  */
-public class MineTweakerCopyClipboardHandler implements IMessageHandler<MineTweakerCopyClipboardPacket, IMessage> {
-	@Override
-	public IMessage onMessage(MineTweakerCopyClipboardPacket message, MessageContext ctx) {
-		if (Desktop.isDesktopSupported()) {
-			StringSelection stringSelection = new StringSelection(message.getData());
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(stringSelection, null);
-		}
+public class MineTweakerCopyClipboardHandler implements IMessageHandler<MineTweakerCopyClipboardPacket, IMessage>{
+    @Override
+    public IMessage onMessage(MineTweakerCopyClipboardPacket message, MessageContext ctx){
+        if(Desktop.isDesktopSupported()){
+            StringSelection stringSelection = new StringSelection(message.getData());
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

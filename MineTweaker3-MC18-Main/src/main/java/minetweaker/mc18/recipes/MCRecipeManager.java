@@ -1,24 +1,12 @@
 package minetweaker.mc18.recipes;
 
-import static minetweaker.api.minecraft.MineTweakerMC.getIItemStack;
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
-import static minetweaker.api.minecraft.MineTweakerMC.getOreDict;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
-import minetweaker.api.recipes.ICraftingInventory;
-import minetweaker.api.recipes.ICraftingRecipe;
-import minetweaker.api.recipes.IRecipeFunction;
-import minetweaker.api.recipes.IRecipeManager;
-import minetweaker.api.recipes.ShapedRecipe;
-import minetweaker.api.recipes.ShapelessRecipe;
+import minetweaker.api.recipes.*;
 import minetweaker.mc18.util.MineTweakerHacks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -31,392 +19,400 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static minetweaker.api.minecraft.MineTweakerMC.*;
+
 /**
- *
  * @author Stan
  */
-public class MCRecipeManager implements IRecipeManager {
-	private final List<IRecipe> recipes;
-	private final List<ICraftingRecipe> transformerRecipes;
+public class MCRecipeManager implements IRecipeManager{
+    private final List<IRecipe> recipes;
+    private final List<ICraftingRecipe> transformerRecipes;
 
-	public MCRecipeManager() {
-		recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
-		transformerRecipes = new ArrayList<ICraftingRecipe>();
-	}
+    public MCRecipeManager(){
+        recipes = CraftingManager.getInstance().getRecipeList();
+        transformerRecipes = new ArrayList<ICraftingRecipe>();
+    }
 
-	public boolean hasTransformerRecipes() {
-		return transformerRecipes.size() > 0;
-	}
+    private static boolean matches(Object input, IIngredient ingredient){
+        if((input == null) != (ingredient == null)){
+            return false;
+        }else if(ingredient != null){
+            if(input instanceof ItemStack){
+                if(!ingredient.matches(getIItemStack((ItemStack) input))){
+                    return false;
+                }
+            }else if(input instanceof String){
+                if(!ingredient.contains(getOreDict((String) input))){
+                    return false;
+                }
+            }
+        }
 
-	public void applyTransformations(ICraftingInventory inventory, IPlayer byPlayer) {
-		for (ICraftingRecipe recipe : transformerRecipes) {
-			if (recipe.matches(inventory)) {
-				recipe.applyTransformers(inventory, byPlayer);
-				return;
-			}
-		}
-	}
+        return true;
+    }
 
-	@Override
-	public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
-		List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
+    public boolean hasTransformerRecipes(){
+        return transformerRecipes.size() > 0;
+    }
 
-		for (IRecipe recipe : recipes) {
-			if (ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))) {
-				ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
-				results.add(converted);
-			}
-		}
+    public void applyTransformations(ICraftingInventory inventory, IPlayer byPlayer){
+        for(ICraftingRecipe recipe : transformerRecipes){
+            if(recipe.matches(inventory)){
+                recipe.applyTransformers(inventory, byPlayer);
+                return;
+            }
+        }
+    }
 
-		return results;
-	}
+    @Override
+    public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient){
+        List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
 
-	@Override
-	public List<ICraftingRecipe> getAll() {
-		List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
+        for(IRecipe recipe : recipes){
+            if(ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))){
+                ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
+                results.add(converted);
+            }
+        }
 
-		for (IRecipe recipe : recipes) {
-			ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
-			results.add(converted);
-		}
+        return results;
+    }
 
-		return results;
-	}
+    @Override
+    public List<ICraftingRecipe> getAll(){
+        List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
 
-	@Override
-	public int remove(IIngredient output) {
-		List<IRecipe> toRemove = new ArrayList<IRecipe>();
-		List<Integer> removeIndex = new ArrayList<Integer>();
-		for (int i = 0; i < recipes.size(); i++) {
-			IRecipe recipe = recipes.get(i);
+        for(IRecipe recipe : recipes){
+            ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
+            results.add(converted);
+        }
 
-			// certain special recipes have no predefined output. ignore those
-			// since these cannot be removed with MineTweaker scripts
-			if (recipe.getRecipeOutput() != null) {
-				if (output.matches(getIItemStack(recipe.getRecipeOutput()))) {
-					toRemove.add(recipe);
-					removeIndex.add(i);
-				}
-			}
-		}
+        return results;
+    }
 
-		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
-		return toRemove.size();
-	}
+    @Override
+    public int remove(IIngredient output){
+        List<IRecipe> toRemove = new ArrayList<IRecipe>();
+        List<Integer> removeIndex = new ArrayList<Integer>();
+        for(int i = 0; i < recipes.size(); i++){
+            IRecipe recipe = recipes.get(i);
 
-	@Override
-	public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
-		addShaped(output, ingredients, function, false);
-	}
+            // certain special recipes have no predefined output. ignore those
+            // since these cannot be removed with MineTweaker scripts
+            if(recipe.getRecipeOutput() != null){
+                if(output.matches(getIItemStack(recipe.getRecipeOutput()))){
+                    toRemove.add(recipe);
+                    removeIndex.add(i);
+                }
+            }
+        }
 
-	@Override
-	public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
-		addShaped(output, ingredients, function, true);
-	}
+        MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+        return toRemove.size();
+    }
 
-	@Override
-	public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
-		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
-		IRecipe irecipe = RecipeConverter.convert(recipe);
-		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
-	}
+    @Override
+    public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function){
+        addShaped(output, ingredients, function, false);
+    }
 
-	@Override
-	public int removeShaped(IIngredient output, IIngredient[][] ingredients) {
-		int ingredientsWidth = 0;
-		int ingredientsHeight = 0;
+    @Override
+    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function){
+        addShaped(output, ingredients, function, true);
+    }
 
-		if (ingredients != null) {
-			ingredientsHeight = ingredients.length;
+    @Override
+    public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function){
+        ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
+        IRecipe irecipe = RecipeConverter.convert(recipe);
+        MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
+    }
 
-			for (int i = 0; i < ingredients.length; i++) {
-				ingredientsWidth = Math.max(ingredientsWidth, ingredients[i].length);
-			}
-		}
+    @Override
+    public int removeShaped(IIngredient output, IIngredient[][] ingredients){
+        int ingredientsWidth = 0;
+        int ingredientsHeight = 0;
 
-		List<IRecipe> toRemove = new ArrayList<IRecipe>();
-		List<Integer> removeIndex = new ArrayList<Integer>();
-		outer: for (int i = 0; i < recipes.size(); i++) {
-			IRecipe recipe = recipes.get(i);
+        if(ingredients != null){
+            ingredientsHeight = ingredients.length;
 
-			if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
-				continue;
-			}
+            for(int i = 0; i < ingredients.length; i++){
+                ingredientsWidth = Math.max(ingredientsWidth, ingredients[i].length);
+            }
+        }
 
-			if (ingredients != null) {
-				if (recipe instanceof ShapedRecipes) {
-					ShapedRecipes srecipe = (ShapedRecipes) recipe;
-					if (ingredientsWidth != srecipe.recipeWidth || ingredientsHeight != srecipe.recipeHeight) {
-						continue;
-					}
+        List<IRecipe> toRemove = new ArrayList<IRecipe>();
+        List<Integer> removeIndex = new ArrayList<Integer>();
+        outer:
+        for(int i = 0; i < recipes.size(); i++){
+            IRecipe recipe = recipes.get(i);
 
-					for (int j = 0; j < ingredientsHeight; j++) {
-						IIngredient[] row = ingredients[j];
-						for (int k = 0; k < ingredientsWidth; k++) {
-							IIngredient ingredient = k > row.length ? null : row[k];
-							ItemStack recipeIngredient = srecipe.recipeItems[j * srecipe.recipeWidth + k];
+            if(recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))){
+                continue;
+            }
 
-							if (!matches(recipeIngredient, ingredient)) {
-								continue outer;
-							}
-						}
-					}
-				} else if (recipe instanceof ShapedOreRecipe) {
-					ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe;
-					int recipeWidth = MineTweakerHacks.getShapedOreRecipeWidth(srecipe);
-					int recipeHeight = srecipe.getRecipeSize() / recipeWidth;
-					if (ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
-						continue;
-					}
+            if(ingredients != null){
+                if(recipe instanceof ShapedRecipes){
+                    ShapedRecipes srecipe = (ShapedRecipes) recipe;
+                    if(ingredientsWidth != srecipe.recipeWidth || ingredientsHeight != srecipe.recipeHeight){
+                        continue;
+                    }
 
-					for (int j = 0; j < ingredientsHeight; j++) {
-						IIngredient[] row = ingredients[j];
-						for (int k = 0; k < ingredientsWidth; k++) {
-							IIngredient ingredient = k > row.length ? null : row[k];
-							Object input = srecipe.getInput()[j * recipeWidth + k];
-							if (!matches(input, ingredient)) {
-								continue outer;
-							}
-						}
-					}
-				}
-			} else {
-				if (recipe instanceof ShapedRecipes) {
+                    for(int j = 0; j < ingredientsHeight; j++){
+                        IIngredient[] row = ingredients[j];
+                        for(int k = 0; k < ingredientsWidth; k++){
+                            IIngredient ingredient = k > row.length ? null : row[k];
+                            ItemStack recipeIngredient = srecipe.recipeItems[j * srecipe.recipeWidth + k];
 
-				} else if (recipe instanceof ShapedOreRecipe) {
+                            if(!matches(recipeIngredient, ingredient)){
+                                continue outer;
+                            }
+                        }
+                    }
+                }else if(recipe instanceof ShapedOreRecipe){
+                    ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe;
+                    int recipeWidth = MineTweakerHacks.getShapedOreRecipeWidth(srecipe);
+                    int recipeHeight = srecipe.getRecipeSize() / recipeWidth;
+                    if(ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight){
+                        continue;
+                    }
 
-				} else {
-					continue;
-				}
-			}
+                    for(int j = 0; j < ingredientsHeight; j++){
+                        IIngredient[] row = ingredients[j];
+                        for(int k = 0; k < ingredientsWidth; k++){
+                            IIngredient ingredient = k > row.length ? null : row[k];
+                            Object input = srecipe.getInput()[j * recipeWidth + k];
+                            if(!matches(input, ingredient)){
+                                continue outer;
+                            }
+                        }
+                    }
+                }
+            }else{
+                if(recipe instanceof ShapedRecipes){
 
-			toRemove.add(recipe);
-			removeIndex.add(i);
-		}
+                }else if(recipe instanceof ShapedOreRecipe){
 
-		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
-		return toRemove.size();
-	}
+                }else{
+                    continue;
+                }
+            }
 
-	@Override
-	public int removeShapeless(IIngredient output, IIngredient[] ingredients, boolean wildcard) {
-		List<IRecipe> toRemove = new ArrayList<IRecipe>();
-		List<Integer> removeIndex = new ArrayList<Integer>();
-		outer: for (int i = 0; i < recipes.size(); i++) {
-			IRecipe recipe = recipes.get(i);
+            toRemove.add(recipe);
+            removeIndex.add(i);
+        }
 
-			if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
-				continue;
-			}
+        MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+        return toRemove.size();
+    }
 
-			if (ingredients != null) {
-				if (recipe instanceof ShapelessRecipes) {
-					ShapelessRecipes srecipe = (ShapelessRecipes) recipe;
+    @Override
+    public int removeShapeless(IIngredient output, IIngredient[] ingredients, boolean wildcard){
+        List<IRecipe> toRemove = new ArrayList<IRecipe>();
+        List<Integer> removeIndex = new ArrayList<Integer>();
+        outer:
+        for(int i = 0; i < recipes.size(); i++){
+            IRecipe recipe = recipes.get(i);
 
-					if (ingredients.length > srecipe.getRecipeSize() || ingredients.length< srecipe.getRecipeSize()) {
-						continue;
-					} else if (!wildcard && (ingredients.length > srecipe.getRecipeSize() || ingredients.length< srecipe.getRecipeSize())) {
-						continue;
-					}
+            if(recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))){
+                continue;
+            }
 
-					checkIngredient: for (int j = 0; j < ingredients.length; j++) {
-						for (int k = 0; k < srecipe.getRecipeSize(); k++) {
-							if (matches(srecipe.recipeItems.get(k), ingredients[j])) {
-								continue checkIngredient;
-							}
-						}
+            if(ingredients != null){
+                if(recipe instanceof ShapelessRecipes){
+                    ShapelessRecipes srecipe = (ShapelessRecipes) recipe;
 
-						continue outer;
-					}
-				} else if (recipe instanceof ShapelessOreRecipe) {
-					ShapelessOreRecipe srecipe = (ShapelessOreRecipe) recipe;
-					ArrayList<Object> inputs = srecipe.getInput();
+                    if(ingredients.length > srecipe.getRecipeSize()){
+                        continue;
+                    }else if(!wildcard && ingredients.length < srecipe.getRecipeSize()){
+                        continue;
+                    }
 
-					if (inputs.size() < ingredients.length) {
-						continue;
-					}
-					if (!wildcard && inputs.size() > ingredients.length) {
-						continue;
-					}
+                    checkIngredient:
+                    for(int j = 0; j < ingredients.length; j++){
+                        for(int k = 0; k < srecipe.getRecipeSize(); k++){
+                            if(matches(srecipe.recipeItems.get(k), ingredients[j])){
+                                continue checkIngredient;
+                            }
+                        }
 
-					checkIngredient: for (int j = 0; j < ingredients.length; j++) {
-						for (int k = 0; k < srecipe.getRecipeSize(); k++) {
-							if (matches(inputs.get(k), ingredients[j])) {
-								continue checkIngredient;
-							}
-						}
+                        continue outer;
+                    }
+                }else if(recipe instanceof ShapelessOreRecipe){
+                    ShapelessOreRecipe srecipe = (ShapelessOreRecipe) recipe;
+                    ArrayList<Object> inputs = srecipe.getInput();
 
-						continue outer;
-					}
-				}
-			} else {
-				if (recipe instanceof ShapelessRecipes) {
-				    continue;
-				} else if (recipe instanceof ShapelessOreRecipe) {
-				    continue;
-				} else {
-					continue;
-				}
-			}
+                    if(inputs.size() < ingredients.length){
+                        continue;
+                    }
+                    if(!wildcard && inputs.size() > ingredients.length){
+                        continue;
+                    }
 
-			toRemove.add(recipe);
-			removeIndex.add(i);
-		}
+                    checkIngredient:
+                    for(int j = 0; j < ingredients.length; j++){
+                        for(int k = 0; k < srecipe.getRecipeSize(); k++){
+                            if(matches(inputs.get(k), ingredients[j])){
+                                continue checkIngredient;
+                            }
+                        }
 
-		MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
-		return toRemove.size();
-	}
+                        continue outer;
+                    }
+                }
+            }else{
+                if(recipe instanceof ShapelessRecipes){
 
-	@Override
-	public IItemStack craft(IItemStack[][] contents) {
-		Container container = new ContainerVirtual();
+                }else if(recipe instanceof ShapelessOreRecipe){
 
-		int width = 0;
-		int height = contents.length;
-		for (IItemStack[] row : contents) {
-			width = Math.max(width, row.length);
-		}
+                }else{
+                    continue;
+                }
+            }
 
-		ItemStack[] iContents = new ItemStack[width * height];
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < contents[i].length; j++) {
-				if (contents[i][j] != null) {
-					iContents[i * width + j] = getItemStack(contents[i][j]);
-				}
-			}
-		}
+            toRemove.add(recipe);
+            removeIndex.add(i);
+        }
 
-		InventoryCrafting inventory = new InventoryCrafting(container, width, height);
-		for (int i = 0; i < iContents.length; i++) {
-			inventory.setInventorySlotContents(i, iContents[i]);
-		}
-		ItemStack result = CraftingManager.getInstance().findMatchingRecipe(inventory, null);
-		if (result == null) {
-			return null;
-		} else {
-			return getIItemStack(result);
-		}
-	}
+        MineTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+        return toRemove.size();
+    }
 
-	private class ContainerVirtual extends Container {
-		@Override
-		public boolean canInteractWith(EntityPlayer var1) {
-			return false;
-		}
-	}
+    @Override
+    public IItemStack craft(IItemStack[][] contents){
+        Container container = new ContainerVirtual();
 
-	private class ActionRemoveRecipes implements IUndoableAction {
-		private final List<Integer> removingIndices;
-		private final List<IRecipe> removingRecipes;
+        int width = 0;
+        int height = contents.length;
+        for(IItemStack[] row : contents){
+            width = Math.max(width, row.length);
+        }
 
-		public ActionRemoveRecipes(List<IRecipe> recipes, List<Integer> indices) {
-			this.removingIndices = indices;
-			this.removingRecipes = recipes;
-		}
+        ItemStack[] iContents = new ItemStack[width * height];
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < contents[i].length; j++){
+                if(contents[i][j] != null){
+                    iContents[i * width + j] = getItemStack(contents[i][j]);
+                }
+            }
+        }
 
-		@Override
-		public void apply() {
-			for (int i = removingIndices.size() - 1; i >= 0; i--) {
-				recipes.remove((int) removingIndices.get(i));
-			}
-		}
+        InventoryCrafting inventory = new InventoryCrafting(container, width, height);
+        for(int i = 0; i < iContents.length; i++){
+            inventory.setInventorySlotContents(i, iContents[i]);
+        }
+        ItemStack result = CraftingManager.getInstance().findMatchingRecipe(inventory, null);
+        if(result == null){
+            return null;
+        }else{
+            return getIItemStack(result);
+        }
+    }
 
-		@Override
-		public boolean canUndo() {
-			return true;
-		}
+    private void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored){
+        ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
+        IRecipe irecipe = RecipeConverter.convert(recipe);
+        MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
+    }
 
-		@Override
-		public void undo() {
-			for (int i = 0; i < removingIndices.size(); i++) {
-				int index = Math.min(recipes.size(), removingIndices.get(i));
-				recipes.add(index, removingRecipes.get(i));
-			}
-		}
+    private class ContainerVirtual extends Container{
+        @Override
+        public boolean canInteractWith(EntityPlayer var1){
+            return false;
+        }
+    }
 
-		@Override
-		public String describe() {
-			return "Removing " + removingIndices.size() + " recipes";
-		}
+    private class ActionRemoveRecipes implements IUndoableAction{
+        private final List<Integer> removingIndices;
+        private final List<IRecipe> removingRecipes;
 
-		@Override
-		public String describeUndo() {
-			return "Restoring " + removingIndices.size() + " recipes";
-		}
+        public ActionRemoveRecipes(List<IRecipe> recipes, List<Integer> indices){
+            this.removingIndices = indices;
+            this.removingRecipes = recipes;
+        }
 
-		@Override
-		public Object getOverrideKey() {
-			return null;
-		}
-	}
+        @Override
+        public void apply(){
+            for(int i = removingIndices.size() - 1; i >= 0; i--){
+                recipes.remove((int) removingIndices.get(i));
+            }
+        }
 
-	private class ActionAddRecipe implements IUndoableAction {
-		private final IRecipe recipe;
-		private final ICraftingRecipe craftingRecipe;
+        @Override
+        public boolean canUndo(){
+            return true;
+        }
 
-		public ActionAddRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
-			this.recipe = recipe;
-			this.craftingRecipe = craftingRecipe;
-		}
+        @Override
+        public void undo(){
+            for(int i = 0; i < removingIndices.size(); i++){
+                int index = Math.min(recipes.size(), removingIndices.get(i));
+                recipes.add(index, removingRecipes.get(i));
+            }
+        }
 
-		@Override
-		public void apply() {
-			recipes.add(recipe);
-			if (craftingRecipe.hasTransformers()) {
-				transformerRecipes.add(craftingRecipe);
-			}
-		}
+        @Override
+        public String describe(){
+            return "Removing " + removingIndices.size() + " recipes";
+        }
 
-		@Override
-		public boolean canUndo() {
-			return true;
-		}
+        @Override
+        public String describeUndo(){
+            return "Restoring " + removingIndices.size() + " recipes";
+        }
 
-		@Override
-		public void undo() {
-			recipes.remove(recipe);
-			if (craftingRecipe.hasTransformers()) {
-				transformerRecipes.remove(craftingRecipe);
-			}
-		}
+        @Override
+        public Object getOverrideKey(){
+            return null;
+        }
+    }
 
-		@Override
-		public String describe() {
-			return "Adding recipe for " + recipe.getRecipeOutput().getDisplayName();
-		}
+    private class ActionAddRecipe implements IUndoableAction{
+        private final IRecipe recipe;
+        private final ICraftingRecipe craftingRecipe;
 
-		@Override
-		public String describeUndo() {
-			return "Removing recipe for " + recipe.getRecipeOutput().getDisplayName();
-		}
+        public ActionAddRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe){
+            this.recipe = recipe;
+            this.craftingRecipe = craftingRecipe;
+        }
 
-		@Override
-		public Object getOverrideKey() {
-			return null;
-		}
-	}
+        @Override
+        public void apply(){
+            recipes.add(recipe);
+            if(craftingRecipe.hasTransformers()){
+                transformerRecipes.add(craftingRecipe);
+            }
+        }
 
-	private void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
-		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
-		IRecipe irecipe = RecipeConverter.convert(recipe);
-		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
-	}
+        @Override
+        public boolean canUndo(){
+            return true;
+        }
 
-	private static boolean matches(Object input, IIngredient ingredient) {
-		if ((input == null) != (ingredient == null)) {
-			return false;
-		} else if (ingredient != null) {
-			if (input instanceof ItemStack) {
-				if (!ingredient.matches(getIItemStack((ItemStack) input))) {
-					return false;
-				}
-			} else if (input instanceof String) {
-				if (!ingredient.contains(getOreDict((String) input))) {
-					return false;
-				}
-			}
-		}
+        @Override
+        public void undo(){
+            recipes.remove(recipe);
+            if(craftingRecipe.hasTransformers()){
+                transformerRecipes.remove(craftingRecipe);
+            }
+        }
 
-		return true;
-	}
+        @Override
+        public String describe(){
+            return "Adding recipe for " + recipe.getRecipeOutput().getDisplayName();
+        }
+
+        @Override
+        public String describeUndo(){
+            return "Removing recipe for " + recipe.getRecipeOutput().getDisplayName();
+        }
+
+        @Override
+        public Object getOverrideKey(){
+            return null;
+        }
+    }
 }

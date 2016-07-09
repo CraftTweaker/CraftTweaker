@@ -10,52 +10,51 @@ import minetweaker.IUndoableAction;
 import net.minecraft.item.ItemStack;
 
 /**
- *
  * @author Jared
  */
-public class SetStackmaxDamageAction implements IUndoableAction {
+public class SetStackmaxDamageAction implements IUndoableAction{
 
-	private final ItemStack stack;
-	private final int damage;
-	private final int oldDamage;
+    private final ItemStack stack;
+    private final int damage;
+    private final int oldDamage;
 
-	public SetStackmaxDamageAction(ItemStack stack, int damage) {
-		this.stack = stack;
-		this.damage= damage;
-		this.oldDamage= stack.getMaxDamage();
-	}
+    public SetStackmaxDamageAction(ItemStack stack, int damage){
+        this.stack = stack;
+        this.damage = damage;
+        this.oldDamage = stack.getMaxDamage();
+    }
 
-	@Override
-	public void apply() {
-		set(stack, damage);
-	}
+    private static void set(ItemStack stack, int damage){
+        stack.getItem().setMaxDamage(damage);
+    }
 
-	@Override
-	public boolean canUndo() {
-		return true;
-	}
+    @Override
+    public void apply(){
+        set(stack, damage);
+    }
 
-	@Override
-	public void undo() {
-		set(stack, oldDamage);
-	}
+    @Override
+    public boolean canUndo(){
+        return true;
+    }
 
-	@Override
-	public String describe() {
-		return "Setting max damage of  " + stack.getDisplayName() + " to " + damage;
-	}
+    @Override
+    public void undo(){
+        set(stack, oldDamage);
+    }
 
-	@Override
-	public String describeUndo() {
-		return "Reverting max damage of " + stack.getDisplayName() + " to " + oldDamage;
-	}
+    @Override
+    public String describe(){
+        return "Setting max damage of  " + stack.getDisplayName() + " to " + damage;
+    }
 
-	private static void set(ItemStack stack, int damage) {
-		stack.getItem().setMaxDamage(damage);
-	}
+    @Override
+    public String describeUndo(){
+        return "Reverting max damage of " + stack.getDisplayName() + " to " + oldDamage;
+    }
 
-	@Override
-	public Object getOverrideKey() {
-		return null;
-	}
+    @Override
+    public Object getOverrideKey(){
+        return null;
+    }
 }

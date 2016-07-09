@@ -9,11 +9,10 @@ package minetweaker.mc18.formatting;
 import minetweaker.api.formatting.IFormattedText;
 
 /**
- *
  * @author Stan
  */
-public interface IMCFormattedString extends IFormattedText {
-	public String getTooltipString();
+public interface IMCFormattedString extends IFormattedText{
+    String getTooltipString();
 
-	public String getTooltipString(String context);
+    String getTooltipString(String context);
 }

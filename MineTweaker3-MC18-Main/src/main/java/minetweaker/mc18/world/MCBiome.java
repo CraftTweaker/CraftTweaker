@@ -10,18 +10,17 @@ import minetweaker.api.world.IBiome;
 import net.minecraft.world.biome.BiomeGenBase;
 
 /**
- *
  * @author Stan
  */
-public class MCBiome implements IBiome {
-	private final BiomeGenBase biome;
+public class MCBiome implements IBiome{
+    private final BiomeGenBase biome;
 
-	public MCBiome(BiomeGenBase biome) {
-		this.biome = biome;
-	}
+    public MCBiome(BiomeGenBase biome){
+        this.biome = biome;
+    }
 
-	@Override
-	public String getName() {
-		return biome.biomeName;
-	}
+    @Override
+    public String getName(){
+        return biome.biomeName;
+    }
 }

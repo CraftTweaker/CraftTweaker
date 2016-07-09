@@ -6,9 +6,6 @@
 
 package minetweaker.mc1710.server;
 
-import java.util.Arrays;
-import java.util.List;
-
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.minecraft.MineTweakerMC;
@@ -17,18 +14,22 @@ import minetweaker.api.server.AbstractServer;
 import minetweaker.api.server.ICommandFunction;
 import minetweaker.api.server.ICommandTabCompletion;
 import minetweaker.api.server.ICommandValidator;
+import minetweaker.mc1710.player.CommandBlockPlayer;
 import minetweaker.mc1710.player.RconPlayer;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.UserListOps;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- *
  * @author Stan
  */
 public class MCServer extends AbstractServer {
@@ -45,16 +46,6 @@ public class MCServer extends AbstractServer {
     }
 
     @Override
-    public void removeCommand(String name) {
-        ICommand command = (ICommand) ((CommandHandler) server.getCommandManager()).getCommands().get(name);
-        if (command == null) {
-            MineTweakerAPI.logWarning("No such command: " + name);
-        } else {
-            MineTweakerAPI.apply(new RemoveCommandAction(command));
-        }
-    }
-
-    @Override
     public boolean isOp(IPlayer player) {
         if (player == ServerPlayer.INSTANCE)
             return true;
@@ -67,6 +58,11 @@ public class MCServer extends AbstractServer {
         }
     }
 
+    @Override
+    public boolean isCommandAdded(String name) {
+        return  MinecraftServer.getServer().getCommandManager().getCommands().containsKey(name);
+    }
+
     private static IPlayer getPlayer(ICommandSender commandSender) {
         if (commandSender instanceof EntityPlayer) {
             return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
@@ -74,21 +70,12 @@ public class MCServer extends AbstractServer {
             return ServerPlayer.INSTANCE;
         } else if (commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
-        } else {
+        } else if(commandSender instanceof CommandBlockLogic){
+            return new CommandBlockPlayer(commandSender);
+        }else {
             System.out.println("Unsupported command sender: " + commandSender);
             System.out.println("player name: " + commandSender.getCommandSenderName());
             return null;
-        }
-    }
-
-    private static void removeCommand(ICommand command) {
-        CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
-        ch.getCommands().remove(command.getCommandName());
-
-        if (command.getCommandAliases() != null) {
-            for (String alias : (List<String>) command.getCommandAliases()) {
-                ch.getCommands().remove(alias);
-            }
         }
     }
 
@@ -164,11 +151,11 @@ public class MCServer extends AbstractServer {
         public AddCommandAction(ICommand command) {
             this.command = command;
         }
-
         @Override
         public void apply() {
             CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
-            ch.registerCommand(command);
+            if (!ch.getCommands().containsValue(command))
+                ch.registerCommand(command);
         }
 
         @Override
@@ -178,56 +165,20 @@ public class MCServer extends AbstractServer {
 
         @Override
         public void undo() {
-            removeCommand(command);
+
         }
 
         @Override
         public String describe() {
-            return "Adding command " + command.getCommandName();
-        }
-
-        @Override
-        public String describeUndo() {
-            return "Removing command " + command.getCommandName();
-        }
-
-        @Override
-        public Object getOverrideKey() {
-            return null;
-        }
-    }
-
-    private class RemoveCommandAction implements IUndoableAction {
-        private final ICommand command;
-
-        public RemoveCommandAction(ICommand command) {
-            this.command = command;
-        }
-
-        @Override
-        public void apply() {
-            removeCommand(command);
-        }
-
-        @Override
-        public boolean canUndo() {
-            return true;
-        }
-
-        @Override
-        public void undo() {
             CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
-            ch.registerCommand(command);
-        }
-
-        @Override
-        public String describe() {
-            return "Adding command " + command.getCommandName();
+            if (!ch.getCommands().containsValue(command))
+                return "Adding command " + command.getCommandName();
+            return "";
         }
 
         @Override
         public String describeUndo() {
-            return "Removing command " + command.getCommandName();
+            return "tried to remove command: " + command.getCommandName() + " failed. THIS IS NOT AN ERROR!";
         }
 
         @Override
@@ -235,4 +186,5 @@ public class MCServer extends AbstractServer {
             return null;
         }
     }
+
 }

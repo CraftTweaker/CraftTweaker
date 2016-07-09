@@ -6,11 +6,6 @@
 
 package minetweaker.mc18.game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlockDefinition;
@@ -20,8 +15,6 @@ import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.world.IBiome;
-// TODO Find this
-// import minetweaker.mc1710.GuiCannotRemodify;
 import minetweaker.mc18.entity.MCEntityDefinition;
 import minetweaker.mc18.item.MCItemDefinition;
 import minetweaker.mc18.liquid.MCLiquidDefinition;
@@ -31,186 +24,187 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+// TODO Find this
+// import minetweaker.mc18.GuiCannotRemodify;
 
 /**
- *
  * @author Stan
  */
-public class MCGame implements IGame {
-	private static final Map<String, String> TRANSLATIONS = MineTweakerHacks.getTranslations();
+public class MCGame implements IGame{
+    public static final MCGame INSTANCE = new MCGame();
+    private static final Map<String, String> TRANSLATIONS = MineTweakerHacks.getTranslations();
+    private boolean locked = false;
 
-	public static final MCGame INSTANCE = new MCGame();
+    public MCGame(){
+    }
 
-	private boolean locked = false;
+    @Override
+    public List<IItemDefinition> getItems(){
+        List<IItemDefinition> result = new ArrayList<IItemDefinition>();
+        for(ResourceLocation item : (Set<ResourceLocation>) Item.itemRegistry.getKeys()){
+            result.add(new MCItemDefinition(item.toString(), Item.itemRegistry.getObject(item)));
+        }
+        return result;
+    }
 
-	private MCGame() {
-	}
+    @Override
+    public List<IBlockDefinition> getBlocks(){
+        List<IBlockDefinition> result = new ArrayList<IBlockDefinition>();
+        for(ResourceLocation block : (Set<ResourceLocation>) Block.blockRegistry.getKeys()){
+            result.add(MineTweakerMC.getBlockDefinition(Block.blockRegistry.getObject(block)));
+        }
 
-	@Override
-	public List<IItemDefinition> getItems() {
-		List<IItemDefinition> result = new ArrayList<IItemDefinition>();
-		for (ResourceLocation res: (Set<ResourceLocation>) Item.itemRegistry.getKeys()) {
-			
-			result.add(new MCItemDefinition(res.getResourceDomain() + ":" + res.getResourcePath(), (Item) Item.itemRegistry.getObject(res)));
-		}
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public List<IBlockDefinition> getBlocks() {
-		List<IBlockDefinition> result = new ArrayList<IBlockDefinition>();
-		for (ResourceLocation block : (Set<ResourceLocation>) Block.blockRegistry.getKeys()) {
-			result.add(MineTweakerMC.getBlockDefinition((Block) Block.blockRegistry.getObject(block)));
-		}
+    @Override
+    public List<ILiquidDefinition> getLiquids(){
+        List<ILiquidDefinition> result = new ArrayList<ILiquidDefinition>();
+        for(Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()){
+            result.add(new MCLiquidDefinition(entry.getValue()));
+        }
+        return result;
+    }
 
-		return result;
-	}
+    @Override
+    public List<IBiome> getBiomes(){
+        List<IBiome> result = new ArrayList<IBiome>();
+        for(IBiome biome : MineTweakerMC.biomes){
+            if(biome != null){
+                result.add(biome);
+            }
+        }
+        return result;
+    }
 
-	@Override
-	public List<ILiquidDefinition> getLiquids() {
-		List<ILiquidDefinition> result = new ArrayList<ILiquidDefinition>();
-		for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
-			result.add(new MCLiquidDefinition(entry.getValue()));
-		}
-		return result;
-	}
+    @Override
+    public List<IEntityDefinition> getEntities(){
+        List<IEntityDefinition> result = new ArrayList<IEntityDefinition>();
 
-	@Override
-	public List<IBiome> getBiomes() {
-		List<IBiome> result = new ArrayList<IBiome>();
-		for (IBiome biome : MineTweakerMC.biomes) {
-			if (biome != null) {
-				result.add(biome);
-			}
-		}
-		return result;
-	}
+        for(EntityRegistry.EntityRegistration entityRegistration : MineTweakerHacks.getEntityClassRegistrations().values()){
+            result.add(new MCEntityDefinition(entityRegistration));
+        }
 
-	@Override
-	public List<IEntityDefinition> getEntities() {
-		List<IEntityDefinition> result = new ArrayList<IEntityDefinition>();
+        return result;
+    }
 
-		for (EntityRegistry.EntityRegistration entityRegistration : MineTweakerHacks.getEntityClassRegistrations().values()) {
-			result.add(new MCEntityDefinition(entityRegistration));
-		}
+    @Override
+    public void setLocalization(String key, String value){
+        MineTweakerAPI.apply(new SetTranslation(null, key, value));
+    }
 
-		return result;
-	}
+    @Override
+    public void setLocalization(String lang, String key, String value){
+        MineTweakerAPI.apply(new SetTranslation(lang, key, value));
+    }
 
-	@Override
-	public void setLocalization(String key, String value) {
-		MineTweakerAPI.apply(new SetTranslation(null, key, value));
-	}
+    @Override
+    public String localize(String key){
+        return StatCollector.translateToLocal(key);
+    }
 
-	@Override
-	public void setLocalization(String lang, String key, String value) {
-		MineTweakerAPI.apply(new SetTranslation(lang, key, value));
-	}
+    @Override
+    public String localize(String key, String lang){
+        return StatCollector.translateToLocal(key);
+    }
 
-	@Override
-	public String localize(String key) {
-		return LanguageRegistry.instance().getStringLocalization(key);
-	}
+    @Override
+    public void lock(){
+        locked = true;
+    }
 
-	@Override
-	public String localize(String key, String lang) {
-		return LanguageRegistry.instance().getStringLocalization(key, lang);
-	}
+    @Override
+    public boolean isLocked(){
+        return locked;
+    }
 
-	@Override
-	public void lock()
-	{
-		locked = true;
-	}
+    @Override
+    public void signalLockError(){
+        MineTweakerAPI.getLogger().logError("Reload of scripts blocked (script lock)");
 
-	@Override
-	public boolean isLocked()
-	{
-		return locked;
-	}
+        if(Minecraft.isGuiEnabled()){
+            // Commented out due to unresolved import
+            /**
+             * Minecraft.getMinecraft().displayGuiScreen( new GuiCannotRemodify(
+             * "Minecraft has been tweaked for another server",
+             * "with modifications that cannot be rolled back.",
+             * "Please restart your game."));
+             **/
+        }
+    }
 
-	@Override
-	public void signalLockError()
-	{
-		MineTweakerAPI.getLogger().logError("Reload of scripts blocked (script lock)");
+    // ######################
+    // ### Action classes ###
+    // ######################
 
-		if (Minecraft.isGuiEnabled()) {
-			// Commented out due to unresolved import
-			/**
-			 * Minecraft.getMinecraft().displayGuiScreen( new GuiCannotRemodify(
-			 * "Minecraft has been tweaked for another server",
-			 * "with modifications that cannot be rolled back.",
-			 * "Please restart your game."));
-			 **/
-		}
-	}
+    /**
+     * Ported from ModTweaker.
+     *
+     * @author Joshiejack
+     */
+    private static class SetTranslation implements IUndoableAction{
+        private final String lang;
+        private final String key;
+        private final String text;
+        private String original;
+        private boolean added;
 
-	// ######################
-	// ### Action classes ###
-	// ######################
+        public SetTranslation(String lang, String key, String text){
+            this.lang = lang;
+            this.key = key;
+            this.text = text;
+        }
 
-	/**
-	 * Ported from ModTweaker.
-	 * 
-	 * @author Joshiejack
-	 */
-	private static class SetTranslation implements IUndoableAction {
-		private String original;
-		private final String lang;
-		private final String key;
-		private final String text;
-		private boolean added;
+        @Override
+        public void apply(){
+            if(lang == null || MineTweakerPlatformUtils.isLanguageActive(lang)){
+                original = TRANSLATIONS.get(key);
+                TRANSLATIONS.put(key, text);
+                added = true;
+            }else{
+                added = false;
+            }
+        }
 
-		public SetTranslation(String lang, String key, String text) {
-			this.lang = lang;
-			this.key = key;
-			this.text = text;
-		}
+        @Override
+        public boolean canUndo(){
+            return TRANSLATIONS != null;
+        }
 
-		@Override
-		public void apply() {
-			if (lang == null || MineTweakerPlatformUtils.isLanguageActive(lang)) {
-				original = TRANSLATIONS.get(key);
-				TRANSLATIONS.put(key, text);
-				added = true;
-			} else {
-				added = false;
-			}
-		}
+        @Override
+        public void undo(){
+            if(added){
+                if(original == null){
+                    TRANSLATIONS.remove(key);
+                }else{
+                    TRANSLATIONS.put(key, original);
+                }
+            }
+        }
 
-		@Override
-		public boolean canUndo() {
-			return TRANSLATIONS != null;
-		}
+        @Override
+        public String describe(){
+            return "Setting localization for the key: " + key + " to " + text;
+        }
 
-		@Override
-		public void undo() {
-			if (added) {
-				if (original == null) {
-					TRANSLATIONS.remove(key);
-				} else {
-					TRANSLATIONS.put(key, original);
-				}
-			}
-		}
+        @Override
+        public String describeUndo(){
+            return "Setting localization for the key: " + key + " to " + original;
+        }
 
-		@Override
-		public String describe() {
-			return "Setting localization for the key: " + key + " to " + text;
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Setting localization for the key: " + key + " to " + original;
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
-		}
-	}
+        @Override
+        public Object getOverrideKey(){
+            return null;
+        }
+    }
 }

@@ -6,11 +6,6 @@
 
 package minetweaker.mc18.block;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import minetweaker.api.block.BlockPatternOr;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.block.IBlockDefinition;
@@ -18,66 +13,64 @@ import minetweaker.api.block.IBlockPattern;
 import minetweaker.api.data.IData;
 import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- *
  * @author Stan
  */
-public class MCSpecificBlock implements IBlock {
-	private final Block block;
-	private final int meta;
+public class MCSpecificBlock implements IBlock{
+    private final Block block;
+    private final int meta;
 
-	public MCSpecificBlock(Block block, int meta) {
-		this.block = block;
-		this.meta = meta;
-	}
+    public MCSpecificBlock(Block block, int meta){
+        this.block = block;
+        this.meta = meta;
+    }
 
-	@Override
-	public IBlockDefinition getDefinition() {
-		return MineTweakerMC.getBlockDefinition(block);
-	}
+    private static String getBlockId(Block block){
+        return Block.blockRegistry.getNameForObject(block).toString();
+    }
 
-	@Override
-	public int getMeta() {
-		return meta;
-	}
+    @Override
+    public IBlockDefinition getDefinition(){
+        return MineTweakerMC.getBlockDefinition(block);
+    }
 
-	@Override
-	public IData getTileData() {
-		return null;
-	}
+    @Override
+    public int getMeta(){
+        return meta;
+    }
 
-	@Override
-	public List<IBlock> getBlocks() {
-		return Collections.<IBlock>singletonList(this);
-	}
+    @Override
+    public IData getTileData(){
+        return null;
+    }
 
-	@Override
-	public boolean matches(IBlock block) {
-		return block.getDefinition() == getDefinition()
-				&& (meta == OreDictionary.WILDCARD_VALUE || block.getMeta() == meta);
-	}
+    @Override
+    public List<IBlock> getBlocks(){
+        return Collections.<IBlock>singletonList(this);
+    }
 
-	@Override
-	public IBlockPattern or(IBlockPattern pattern) {
-		return new BlockPatternOr(this, pattern);
-	}
+    @Override
+    public boolean matches(IBlock block){
+        return block.getDefinition() == getDefinition() && (meta == OreDictionary.WILDCARD_VALUE || block.getMeta() == meta);
+    }
 
-	@Override
-	public String getDisplayName() {
-		return block.getLocalizedName();
-	}
+    @Override
+    public IBlockPattern or(IBlockPattern pattern){
+        return new BlockPatternOr(this, pattern);
+    }
 
-	@Override
-	public String toString() {
-		return "<block:" + getBlockId(block) + ":" + (meta == OreDictionary.WILDCARD_VALUE ? '*' : meta) + ">";
-	}
+    @Override
+    public String getDisplayName(){
+        return block.getLocalizedName();
+    }
 
-	private static String getBlockId(Block block)
-	{
-		ResourceLocation res = Block.blockRegistry.getNameForObject(block);
-		return res.getResourceDomain() + ":"+res.getResourcePath();
-	}
+    @Override
+    public String toString(){
+        return "<block:" + getBlockId(block) + ":" + (meta == OreDictionary.WILDCARD_VALUE ? '*' : meta) + ">";
+    }
 }

@@ -11,74 +11,73 @@ import minetweaker.MineTweakerAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 /**
- *
  * @author Jared
  */
-public class SetBlockHardnessAction implements IUndoableAction {
+public class SetBlockHardnessAction implements IUndoableAction{
 
-	private final ItemStack stack;
-	private final float hardness;
-	private final float oldHardness;
+    private final ItemStack stack;
+    private final float hardness;
+    private final float oldHardness;
 
-	public SetBlockHardnessAction(ItemStack stack, float hardness) {
-		this.stack = stack;
-		this.hardness = hardness;
-		this.oldHardness = Block.getBlockFromItem(stack.getItem()).getBlockHardness(null, null);
-	}
+    public SetBlockHardnessAction(ItemStack stack, float hardness){
+        this.stack = stack;
+        this.hardness = hardness;
+        this.oldHardness = Block.getBlockFromItem(stack.getItem()).getBlockHardness(null,null);
+    }
 
-	@Override
-	public void apply() {
-		if (isBlock(stack)) {
-			set(stack, hardness);
-		}
-	}
+    private static void set(ItemStack stack, float hardness){
+        if(isBlock(stack)){
+            Block block = Block.getBlockFromItem(stack.getItem());
+            block.setHardness(hardness);
+        }else{
+            MineTweakerAPI.logError("Item is not a block");
+        }
+    }
 
-	@Override
-	public boolean canUndo() {
-		return true;
-	}
+    public static boolean isBlock(ItemStack stack){
+        ResourceLocation name = Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+        return !name.toString().equals("minecraft:air") && Block.blockRegistry.containsKey(name);
 
-	@Override
-	public void undo() {
-		if (isBlock(stack))
-			set(stack, oldHardness);
-	}
+    }
 
-	@Override
-	public String describe() {
-		if (isBlock(stack)) {
-			return "Setting hardness of " + stack.getDisplayName() + " to " + hardness;
-		}
-		return "Unable to set hardness of " + stack.getDisplayName() + " because it is an Item";
-	}
+    @Override
+    public void apply(){
+        if(isBlock(stack)){
+            set(stack, hardness);
+        }
+    }
 
-	@Override
-	public String describeUndo() {
-		if (isBlock(stack)) {
-			return "Reverting hardness of " + stack.getDisplayName() + " to " + oldHardness;
-		}
-		return "Unable to revert hardness of " + stack.getDisplayName() + " because it is an Item";
-	}
+    @Override
+    public boolean canUndo(){
+        return true;
+    }
 
-	private static void set(ItemStack stack, float hardness) {
-		if (isBlock(stack)) {
-			Block block = Block.getBlockFromItem(stack.getItem());
-			block.setHardness(hardness);
-		} else {
-			MineTweakerAPI.logError("Item is not a block");
-		}
-	}
+    @Override
+    public void undo(){
+        if(isBlock(stack))
+            set(stack, oldHardness);
+    }
 
-	public static boolean isBlock(ItemStack stack) {
-		ResourceLocation res = (ResourceLocation) Block.blockRegistry.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-		return !res.getResourcePath().equalsIgnoreCase("minecraft:air") && Block.blockRegistry.containsKey(res);
-	}
+    @Override
+    public String describe(){
+        if(isBlock(stack)){
+            return "Setting hardness of " + stack.getDisplayName() + " to " + hardness;
+        }
+        return "Unable to set hardness of " + stack.getDisplayName() + " because it is an Item";
+    }
 
-	@Override
-	public Object getOverrideKey() {
-		return null;
-	}
+    @Override
+    public String describeUndo(){
+        if(isBlock(stack)){
+            return "Reverting hardness of " + stack.getDisplayName() + " to " + oldHardness;
+        }
+        return "Unable to revert hardness of " + stack.getDisplayName() + " because it is an Item";
+    }
+
+    @Override
+    public Object getOverrideKey(){
+        return null;
+    }
 }

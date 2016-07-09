@@ -34,7 +34,7 @@ public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> 
 						NBTTagCompound tag = (NBTTagCompound) nbt.getTag(entry.getKey());
 						nbt.setTag(entry.getKey(), entry.getValue().convert(new NBTUpdater(nbt)));
 					} else {
-						nbt.setTag(entry.getKey(), NBTConverter.from(entry.getValue()));
+						nbt.setTag(entry.getKey(), from(entry.getValue()));
 					}
 				}
 			} else if (entry.getValue() != null) {

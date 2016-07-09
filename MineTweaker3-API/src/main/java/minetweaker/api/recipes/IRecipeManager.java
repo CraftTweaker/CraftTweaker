@@ -1,21 +1,23 @@
 package minetweaker.api.recipes;
 
-import java.util.List;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import java.util.List;
+
 /**
  * The RecipeManager adds and removes crafting recipes. The IRecipeManager
- * instance is available throug the recipes global variable.
+ * instance is available through the recipes global variable.
  * 
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.recipes.IRecipeManager")
 public interface IRecipeManager {
+
 	/**
 	 * Returns all crafting recipes.
 	 * 
@@ -117,4 +119,5 @@ public interface IRecipeManager {
 	 */
 	@ZenMethod
 	public IItemStack craft(IItemStack[][] contents);
+
 }

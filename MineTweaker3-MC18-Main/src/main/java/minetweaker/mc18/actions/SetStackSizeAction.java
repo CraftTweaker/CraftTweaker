@@ -10,52 +10,51 @@ import minetweaker.IUndoableAction;
 import net.minecraft.item.ItemStack;
 
 /**
- *
  * @author Jared
  */
-public class SetStackSizeAction implements IUndoableAction {
+public class SetStackSizeAction implements IUndoableAction{
 
-	private final ItemStack stack;
-	private final int size;
-	private final int oldSize;
+    private final ItemStack stack;
+    private final int size;
+    private final int oldSize;
 
-	public SetStackSizeAction(ItemStack stack, int size) {
-		this.stack = stack;
-		this.size = size;
-		this.oldSize = stack.getMaxStackSize();
-	}
+    public SetStackSizeAction(ItemStack stack, int size){
+        this.stack = stack;
+        this.size = size;
+        this.oldSize = stack.getMaxStackSize();
+    }
 
-	@Override
-	public void apply() {
-		set(stack, size);
-	}
+    private static void set(ItemStack stack, int size){
+        stack.getItem().setMaxStackSize(size);
+    }
 
-	@Override
-	public boolean canUndo() {
-		return true;
-	}
+    @Override
+    public void apply(){
+        set(stack, size);
+    }
 
-	@Override
-	public void undo() {
-		set(stack, oldSize);
-	}
+    @Override
+    public boolean canUndo(){
+        return true;
+    }
 
-	@Override
-	public String describe() {
-		return "Setting max stack size of  " + stack.getDisplayName() + " to " + size;
-	}
+    @Override
+    public void undo(){
+        set(stack, oldSize);
+    }
 
-	@Override
-	public String describeUndo() {
-		return "Reverting max stack size of " + stack.getDisplayName() + " to " + oldSize;
-	}
+    @Override
+    public String describe(){
+        return "Setting max stack size of  " + stack.getDisplayName() + " to " + size;
+    }
 
-	private static void set(ItemStack stack, int size) {
-		stack.getItem().setMaxStackSize(size);
-	}
+    @Override
+    public String describeUndo(){
+        return "Reverting max stack size of " + stack.getDisplayName() + " to " + oldSize;
+    }
 
-	@Override
-	public Object getOverrideKey() {
-		return null;
-	}
+    @Override
+    public Object getOverrideKey(){
+        return null;
+    }
 }

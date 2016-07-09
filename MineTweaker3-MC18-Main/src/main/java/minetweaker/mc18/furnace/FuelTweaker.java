@@ -6,11 +6,6 @@
 
 package minetweaker.mc18.furnace;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
@@ -19,77 +14,82 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.IFuelHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class FuelTweaker {
-	public static final FuelTweaker INSTANCE = new FuelTweaker();
+    public static final FuelTweaker INSTANCE = new FuelTweaker();
+    private final HashMap<Item, List<SetFuelPattern>> quickList = new HashMap<Item, List<SetFuelPattern>>();
+    private List<IFuelHandler> original;
 
-	private List<IFuelHandler> original;
-	private final HashMap<Item, List<SetFuelPattern>> quickList = new HashMap<Item, List<SetFuelPattern>>();
+    private FuelTweaker() {
+    }
 
-	private FuelTweaker() {
-	}
+    public void register() {
+        try {
+            Field fuelHandlers = GameRegistry.class.getDeclaredField("fuelHandlers");
+            fuelHandlers.setAccessible(true);
+            original = (List<IFuelHandler>) fuelHandlers.get(null);
+            List<IFuelHandler> modified = new ArrayList<IFuelHandler>();
+            modified.add(new OverridingFuelHandler());
+            fuelHandlers.set(null, modified);
+        } catch (NoSuchFieldException ex) {
+            System.out.println("[MineTweaker] Error: could not get GameRegistry fuel handlers field. Cannot use custom fuel values.");
+        } catch (SecurityException ex) {
+            System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
+        } catch (IllegalAccessException ex) {
+            System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
+        }
+    }
 
-	public void register() {
-		try {
-			Field fuelHandlers = GameRegistry.class.getDeclaredField("fuelHandlers");
-			fuelHandlers.setAccessible(true);
-			original = (List<IFuelHandler>) fuelHandlers.get(null);
-			List<IFuelHandler> modified = new ArrayList<IFuelHandler>();
-			modified.add(new OverridingFuelHandler());
-			fuelHandlers.set(null, modified);
-		} catch (NoSuchFieldException ex) {
-			System.out.println("[MineTweaker] Error: could not get GameRegistry fuel handlers field. Cannot use custom fuel values.");
-		} catch (SecurityException ex) {
-			System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
-		} catch (IllegalAccessException ex) {
-			System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
-		}
-	}
+    public void addFuelPattern(SetFuelPattern pattern) {
+        List<IItemStack> items = pattern.getPattern().getItems();
+        if (items == null) {
+            MineTweakerAPI.logError("Cannot set fuel for <*>");
+            return;
+        }
 
-	public void addFuelPattern(SetFuelPattern pattern) {
-		List<IItemStack> items = pattern.getPattern().getItems();
-		if (items == null) {
-			MineTweakerAPI.logError("Cannot set fuel for <*>");
-			return;
-		}
+        for (IItemStack item : pattern.getPattern().getItems()) {
+            ItemStack itemStack = MineTweakerMC.getItemStack(item);
+            Item mcItem = itemStack.getItem();
+            if (!quickList.containsKey(mcItem)) {
+                quickList.put(mcItem, new ArrayList<SetFuelPattern>());
+            }
+            quickList.get(mcItem).add(pattern);
+        }
+    }
 
-		for (IItemStack item : pattern.getPattern().getItems()) {
-			ItemStack itemStack = MineTweakerMC.getItemStack(item);
-			Item mcItem = itemStack.getItem();
-			if (!quickList.containsKey(mcItem)) {
-				quickList.put(mcItem, new ArrayList<SetFuelPattern>());
-			}
-			quickList.get(mcItem).add(pattern);
-		}
-	}
+    public void removeFuelPattern(SetFuelPattern pattern) {
+        for (IItemStack item : pattern.getPattern().getItems()) {
+            ItemStack itemStack = MineTweakerMC.getItemStack(item);
+            Item mcItem = itemStack.getItem();
+            if (quickList.containsKey(mcItem)) {
+                quickList.get(mcItem).remove(pattern);
+            }
+        }
+    }
 
-	public void removeFuelPattern(SetFuelPattern pattern) {
-		for (IItemStack item : pattern.getPattern().getItems()) {
-			ItemStack itemStack = MineTweakerMC.getItemStack(item);
-			Item mcItem = itemStack.getItem();
-			if (quickList.containsKey(mcItem)) {
-				quickList.get(mcItem).remove(pattern);
-			}
-		}
-	}
+    private class OverridingFuelHandler implements IFuelHandler {
+        @Override
+        public int getBurnTime(ItemStack fuel) {
+            if (quickList.containsKey(fuel.getItem())) {
+                IItemStack stack = MineTweakerMC.getIItemStack(fuel);
 
-	private class OverridingFuelHandler implements IFuelHandler {
-		@Override
-		public int getBurnTime(ItemStack fuel) {
-			if (quickList.containsKey(fuel.getItem())) {
-				IItemStack stack = MineTweakerMC.getIItemStack(fuel);
+                for (SetFuelPattern override : quickList.get(fuel.getItem())) {
+                    if (override.getPattern().matches(stack)) {
+                        return override.getValue();
+                    }
+                }
+            }
 
-				for (SetFuelPattern override : quickList.get(fuel.getItem())) {
-					if (override.getPattern().matches(stack)) {
-						return override.getValue();
-					}
-				}
-			}
-
-			int max = 0;
-			for (IFuelHandler handler : original) {
-				max = Math.max(max, handler.getBurnTime(fuel));
-			}
-			return max;
-		}
-	}
+            int max = 0;
+            for (IFuelHandler handler : original) {
+                if (handler != this)
+                    max = Math.max(max, handler.getBurnTime(fuel));
+            }
+            return max;
+        }
+    }
 }

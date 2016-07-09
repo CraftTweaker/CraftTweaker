@@ -22,7 +22,7 @@ import minetweaker.api.liquid.ILiquidDefinition;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.world.IBiome;
 // TODO Find this
-// import minetweaker.mc1710.GuiCannotRemodify;
+// import GuiCannotRemodify;
 import minetweaker.mc1710.entity.MCEntityDefinition;
 import minetweaker.mc1710.item.MCItemDefinition;
 import minetweaker.mc1710.liquid.MCLiquidDefinition;

@@ -13,17 +13,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 /**
- *
  * @author Stan
  */
-public class MCClient implements IClient {
-	@Override
-	public IPlayer getPlayer() {
-		return MineTweakerMC.getIPlayer(Minecraft.getMinecraft().thePlayer);
-	}
+public class MCClient implements IClient{
+    @Override
+    public IPlayer getPlayer(){
+        return MineTweakerMC.getIPlayer(Minecraft.getMinecraft().thePlayer);
+    }
 
-	@Override
-	public String getLanguage() {
-		return FMLClientHandler.instance().getCurrentLanguage();
-	}
+    @Override
+    public String getLanguage(){
+        return FMLClientHandler.instance().getCurrentLanguage();
+    }
 }

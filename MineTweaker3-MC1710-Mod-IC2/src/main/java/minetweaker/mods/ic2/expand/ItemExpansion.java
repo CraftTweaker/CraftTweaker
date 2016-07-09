@@ -17,7 +17,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  *
  * @author Stan
  */
-@ZenExpansion("minetweaker.item.IItemStack")
+@ZenExpansion("minecraft.item.IItemStack")
 @ModOnly("IC2")
 public class ItemExpansion {
 	/**
