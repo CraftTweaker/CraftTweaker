@@ -103,7 +103,7 @@ public class MCItemStack implements IItemStack {
 	public void setDisplayName(String name) {
 		MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
 	}
-	
+
 
 	@Override
 	public void setMaxDamage(int damage) {
@@ -224,7 +224,7 @@ public class MCItemStack implements IItemStack {
 	@Override
     public IItemStack removeTag(String tag) {
         ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
-        
+
         if (tag == null) {
             result.stackTagCompound = null;
         } else {
@@ -404,10 +404,11 @@ public class MCItemStack implements IItemStack {
 			result.append(")");
 		}
 
+		if (stack.stackSize > 1) {
+			result.append(" * ");
+			result.append(stack.stackSize);
+		}
+
 		return result.toString();
 	}
-
-    
-
-
 }

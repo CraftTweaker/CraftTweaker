@@ -20,6 +20,6 @@ public class BrewingRecipe implements IBrewingRecipe {
 
     @Override
     public String toCommandString() {
-        return String.format("brewing.add(%s, %s, %s", output, input, ingredient);
+        return String.format("brewing.add(%s, %s, %s)", output, input, ingredient);
     }
 }
