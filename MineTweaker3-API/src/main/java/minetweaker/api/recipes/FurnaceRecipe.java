@@ -18,7 +18,7 @@ public class FurnaceRecipe implements IFurnaceRecipe {
 
     @Override
     public String toCommandString() {
-        return String.format("furnace.addRecipe(%s, %s, %s", output, input, xp);
+        return String.format("furnace.addRecipe(%s, %s, %s)", output, input, xp);
     }
 
 }
