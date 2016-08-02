@@ -3,7 +3,6 @@ package minetweaker.mods.jei;
 import mezz.jei.api.*;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.util.IEventHandler;
-import sun.util.resources.cldr.zh.TimeZoneNames_zh;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +25,7 @@ public class JEIAddonPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(@Nonnull IJeiRuntime iJeiRuntime) {
         this.recipeRegistry = iJeiRuntime.getRecipeRegistry();
-        if(!eventAdded){
+        if (!eventAdded) {
             MineTweakerImplementationAPI.onPostReload(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {
                 @Override
                 public void handle(MineTweakerImplementationAPI.ReloadEvent event) {

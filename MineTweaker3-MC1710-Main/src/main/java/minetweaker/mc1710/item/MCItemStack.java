@@ -6,25 +6,12 @@
 
 package minetweaker.mc1710.item;
 
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlock;
 import minetweaker.api.data.DataMap;
 import minetweaker.api.data.IData;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemCondition;
-import minetweaker.api.item.IItemDefinition;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.item.IItemTransformer;
-import minetweaker.api.item.IngredientItem;
-import minetweaker.api.item.IngredientOr;
-import minetweaker.api.item.WeightedItemStack;
+import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
@@ -43,6 +30,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
 /**
  *

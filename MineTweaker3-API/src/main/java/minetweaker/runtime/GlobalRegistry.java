@@ -6,20 +6,11 @@
 
 package minetweaker.runtime;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import minetweaker.IBracketHandler;
 import minetweaker.IRecipeRemover;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
+import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -28,17 +19,19 @@ import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
-import stanhebben.zenscript.IZenCompileEnvironment;
-import stanhebben.zenscript.symbols.IZenSymbol;
-import stanhebben.zenscript.symbols.SymbolJavaStaticField;
-import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
-import stanhebben.zenscript.symbols.SymbolPackage;
-import stanhebben.zenscript.symbols.SymbolType;
+import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
