@@ -1,10 +1,38 @@
 apply plugin: 'base' // To add "clean" task to the root project.
 apply from: 'configuration.gradle'
-
+apply plugin: "maven"
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
-
+repositories {    
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name "Tesla"
+        url 'http://maven.epoxide.xyz'
+    }
+    maven {
+        name 'Mobius'
+        url 'http://mobiusstrip.eu/maven'
+    }
+    maven {
+        name 'JEI'
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+}
+configurations {
+    deployerJars
+}
+dependencies {
+    deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///var/www/html/maven")
+        }
+    }
+}
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
     gradleVersion = '2.6'
 }
