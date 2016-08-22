@@ -6,16 +6,16 @@
 
 package stanhebben.zenscript.util;
 
-import java.util.Iterator;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
-import static stanhebben.zenscript.util.ZenTypeUtil.EMPTY_REGISTRY;
-import static stanhebben.zenscript.util.ZenTypeUtil.internal;
-import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 import stanhebben.zenscript.value.IAny;
+
+import java.util.Iterator;
+
+import static stanhebben.zenscript.util.ZenTypeUtil.*;
 
 /**
  *
@@ -396,12 +396,12 @@ public class AnyClassWriter {
 			definition.defineHashCode(outputHashCode);
 			outputHashCode.end();
 
-			/*
-			 * MethodOutput outputEquals = new MethodOutput( writer,
-			 * Opcodes.ACC_PUBLIC, "equals", "(Ljava/lang/Object;)Z", null,
-			 * null); outputEquals.enableDebug(); outputEquals.start();
-			 * definition.defineEquals(outputEquals); outputEquals.end();
-			 */
+
+			 MethodOutput outputEquals = new MethodOutput( writer,
+			  Opcodes.ACC_PUBLIC, "equals", "(Ljava/lang/Object;)Z", null,
+			  null); outputEquals.enableDebug(); outputEquals.start();
+			  definition.defineEquals(outputEquals); outputEquals.end();
+
 
 			writer.visitEnd();
 			return writer.toByteArray();

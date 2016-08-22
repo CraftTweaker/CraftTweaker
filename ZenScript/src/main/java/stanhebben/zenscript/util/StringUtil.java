@@ -194,8 +194,8 @@ public class StringUtil {
 		if ((oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"')
 				&& (oldstr.charAt(0) != '\'' || oldstr.charAt(oldstr.length() - 1) != '\'')) {
 			// TODO: error
-			// throw new TweakerExecuteException("Not a valid string constant: "
-			// + oldstr);
+//			 throw new TweakerExecuteException("Not a valid string constant: "
+//			 + oldstr);
 		}
 		oldstr = oldstr.substring(1, oldstr.length() - 1);
 
