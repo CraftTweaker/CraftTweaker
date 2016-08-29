@@ -75,6 +75,12 @@
 !/MineTweaker3-MC1710-Mod-IC2/libs
 !/MineTweaker3-MC1710-Mod-IC2/build.gradle
 
+!/MineTweaker3-MC1102-Mod-IC2
+/MineTweaker3-MC1102-Mod-IC2/*
+!/MineTweaker3-MC1102-Mod-IC2/src
+!/MineTweaker3-MC1102-Mod-IC2/libs
+!/MineTweaker3-MC1102-Mod-IC2/build.gradle
+
 !/MineTweaker3-MC1710-Mod-MFR
 /MineTweaker3-MC1710-Mod-MFR/*
 !/MineTweaker3-MC1710-Mod-MFR/src
