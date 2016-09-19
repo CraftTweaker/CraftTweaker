@@ -33,4 +33,5 @@ public interface IJavaMethod {
 	public ZenType getReturnType();
 
 	public boolean isVarargs();
+
 }

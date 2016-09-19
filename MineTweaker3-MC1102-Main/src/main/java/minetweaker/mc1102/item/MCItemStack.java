@@ -17,6 +17,7 @@ import minetweaker.api.player.IPlayer;
 import minetweaker.mc1102.actions.SetBlockHardnessAction;
 import minetweaker.mc1102.actions.SetStackSizeAction;
 import minetweaker.mc1102.actions.SetStackmaxDamageAction;
+import minetweaker.mc1102.actions.SetTranslationAction;
 import minetweaker.mc1102.block.MCItemBlock;
 import minetweaker.mc1102.data.NBTConverter;
 import minetweaker.mc1102.liquid.MCLiquidStack;
@@ -93,7 +94,7 @@ public class MCItemStack implements IItemStack{
 
     @Override
     public void setDisplayName(String name){
-//        MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
+        MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
     }
 
     @Override

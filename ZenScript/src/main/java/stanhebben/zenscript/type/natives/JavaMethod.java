@@ -6,10 +6,6 @@
 
 package stanhebben.zenscript.type.natives;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.List;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.ITypeRegistry;
@@ -20,6 +16,11 @@ import stanhebben.zenscript.type.ZenTypeArray;
 import stanhebben.zenscript.type.ZenTypeArrayBasic;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  *

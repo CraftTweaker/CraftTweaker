@@ -6,8 +6,6 @@
 
 package stanhebben.zenscript.type.natives;
 
-import java.util.ArrayList;
-import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
@@ -17,8 +15,12 @@ import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
-import static stanhebben.zenscript.util.StringUtil.methodMatchingError;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static stanhebben.zenscript.util.StringUtil.methodMatchingError;
 
 /**
  *
