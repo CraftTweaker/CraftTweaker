@@ -1,6 +1,10 @@
 apply plugin: 'base' // To add "clean" task to the root project.
 apply from: 'configuration.gradle'
 apply plugin: "maven"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 subprojects {
     apply from: rootProject.file('common.gradle')
 }

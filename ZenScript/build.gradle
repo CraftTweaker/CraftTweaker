@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
-sourceCompatibility = '1.6'
-targetCompatibility = '1.6'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
 	compile 'org.ow2.asm:asm-debug-all:5.0.3'

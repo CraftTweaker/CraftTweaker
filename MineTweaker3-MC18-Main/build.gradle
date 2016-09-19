@@ -14,6 +14,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 version = "1.8.9-" + ext.mineTweakerVersion
 archivesBaseName = project.projectDir.name
 

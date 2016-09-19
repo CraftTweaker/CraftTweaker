@@ -19,6 +19,9 @@ buildscript {
 
 apply plugin: 'forge'
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 minecraft {
 	version = forgeVersion1710
 }
