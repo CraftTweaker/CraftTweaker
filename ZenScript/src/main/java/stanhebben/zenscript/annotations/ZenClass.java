@@ -21,4 +21,5 @@ public @interface ZenClass {
 	 * @return
 	 */
 	String value() default "";
+
 }

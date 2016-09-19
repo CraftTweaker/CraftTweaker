@@ -342,7 +342,6 @@ public class MineTweakerAPI {
 			if (annotation instanceof ZenClass) {
 				GlobalRegistry.registerNativeClass(annotatedClass);
 			}
-
 			if ((annotation instanceof BracketHandler) && IBracketHandler.class.isAssignableFrom(annotatedClass)) {
 				try {
 					IBracketHandler bracketHandler = (IBracketHandler) annotatedClass.newInstance();

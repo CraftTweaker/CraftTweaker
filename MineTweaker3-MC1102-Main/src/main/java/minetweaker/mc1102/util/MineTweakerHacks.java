@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -190,7 +191,15 @@ public class MineTweakerHacks{
         }
     }
 
-
+    public static LanguageMap getStringTranslateInstance() {
+        try {
+            Field field = getField(LanguageMap.class, MineTweakerObfuscation.LANGUAGEMAP_INSTANCE);
+            return (LanguageMap) field.get(null);
+        } catch (IllegalAccessException ex) {
+            MineTweakerAPI.logError("could not get LanguageMap");
+            return null;
+        }
+    }
 
     public static ItemStack getSeedEntrySeed(Object entry){
         try{
@@ -200,6 +209,8 @@ public class MineTweakerHacks{
             return null;
         }
     }
+
+
 
     public static WeightedRandom.Item constructSeedEntry(WeightedItemStack stack){
         try{

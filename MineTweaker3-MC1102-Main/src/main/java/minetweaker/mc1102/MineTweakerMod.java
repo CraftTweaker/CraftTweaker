@@ -17,6 +17,8 @@ import minetweaker.mc1102.formatting.MCFormatter;
 import minetweaker.mc1102.furnace.FuelTweaker;
 import minetweaker.mc1102.furnace.MCFurnaceManager;
 import minetweaker.mc1102.game.MCGame;
+import minetweaker.mc1102.gui.CommandRecipeMaker;
+import minetweaker.mc1102.gui.GUIHandler;
 import minetweaker.mc1102.mods.MCLoadedMods;
 import minetweaker.mc1102.network.*;
 import minetweaker.mc1102.oredict.MCOreDict;
@@ -108,6 +110,7 @@ public class MineTweakerMod {
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+        new GUIHandler();
     }
 
     @EventHandler

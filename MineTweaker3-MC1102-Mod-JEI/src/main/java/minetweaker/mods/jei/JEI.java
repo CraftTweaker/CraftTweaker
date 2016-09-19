@@ -37,7 +37,6 @@ public class JEI {
 
 	private static class JEIHideItemAction implements IUndoableAction {
 		private final IItemStack stack;
-
 		public JEIHideItemAction(IItemStack stack) {
 			this.stack = stack;
 		}

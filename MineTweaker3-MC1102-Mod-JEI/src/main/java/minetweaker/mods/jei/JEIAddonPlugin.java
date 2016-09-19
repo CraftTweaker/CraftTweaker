@@ -4,7 +4,6 @@ import mezz.jei.api.*;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.util.IEventHandler;
 
-import javax.annotation.Nonnull;
 
 @mezz.jei.api.JEIPlugin
 public class JEIAddonPlugin implements IModPlugin {
@@ -18,12 +17,10 @@ public class JEIAddonPlugin implements IModPlugin {
     public void register(IModRegistry registry) {
         this.jeiHelpers = registry.getJeiHelpers();
         this.itemRegistry = registry.getItemRegistry();
-
     }
 
-
     @Override
-    public void onRuntimeAvailable(@Nonnull IJeiRuntime iJeiRuntime) {
+    public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
         this.recipeRegistry = iJeiRuntime.getRecipeRegistry();
         if (!eventAdded) {
             MineTweakerImplementationAPI.onPostReload(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {

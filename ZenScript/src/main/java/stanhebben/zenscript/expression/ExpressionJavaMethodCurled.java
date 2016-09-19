@@ -6,8 +6,6 @@
 
 package stanhebben.zenscript.expression;
 
-import java.util.ArrayList;
-import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
@@ -15,6 +13,9 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeFunction;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
