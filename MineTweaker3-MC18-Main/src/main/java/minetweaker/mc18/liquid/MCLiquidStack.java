@@ -166,6 +166,10 @@ public class MCLiquidStack implements ILiquidStack{
     }
 
     @Override
+    public boolean matchesExact(IItemStack item) {
+        return false;
+    }
+    @Override
     public boolean contains(IIngredient ingredient){
         if(!ingredient.getItems().isEmpty())
             return false;
