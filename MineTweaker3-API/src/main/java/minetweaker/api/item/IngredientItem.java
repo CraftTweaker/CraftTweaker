@@ -1,10 +1,11 @@
 package minetweaker.api.item;
 
-import java.util.Collections;
-import java.util.List;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Contains an item stack with modifiers applied to it.
@@ -75,6 +76,19 @@ public class IngredientItem implements IIngredient {
 	@Override
 	public boolean matches(IItemStack item) {
 		if (!this.item.matches(item))
+			return false;
+
+		for (IItemCondition condition : conditions) {
+			if (!condition.matches(item))
+				return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean matchesExact(IItemStack item) {
+		if (!this.item.matchesExact(item))
 			return false;
 
 		for (IItemCondition condition : conditions) {
