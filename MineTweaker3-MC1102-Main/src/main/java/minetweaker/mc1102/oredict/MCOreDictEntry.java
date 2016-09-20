@@ -70,7 +70,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public void addItems(IItemStack[] items) {
-        for(IItemStack item : items){
+        for (IItemStack item : items) {
             ItemStack stack = getItemStack(item);
             if (stack != null) {
                 MineTweakerAPI.apply(new ActionAddItem(id, stack));
@@ -101,9 +101,10 @@ public class MCOreDictEntry implements IOreDictEntry {
             MineTweakerAPI.apply(new ActionRemoveItem(id, result));
         }
     }
+
     @Override
     public void removeItems(IItemStack[] items) {
-        for(IItemStack item : items){
+        for (IItemStack item : items) {
             ItemStack result = null;
             for (ItemStack itemStack : OreDictionary.getOres(id)) {
                 if (item.matches(getIItemStackWildcardSize(itemStack))) {
@@ -169,12 +170,12 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientOreDict(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[] { transformer });
+        return new IngredientOreDict(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[]{transformer});
     }
 
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientOreDict(this, null, new IItemCondition[] { condition }, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientOreDict(this, null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS);
     }
 
     @Override
@@ -189,6 +190,11 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public boolean matches(IItemStack item) {
+        return contains(item);
+    }
+
+    @Override
+    public boolean matchesExact(IItemStack item) {
         return contains(item);
     }
 
@@ -333,7 +339,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
         @Override
         public String describeUndo() {
-            return "Undoing mirror of " + idSource+ " to " + idTarget;
+            return "Undoing mirror of " + idSource + " to " + idTarget;
         }
 
         @Override

@@ -34,6 +34,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
@@ -285,6 +286,28 @@ public class MCItemStack implements IItemStack {
 	public boolean matches(IItemStack item) {
 		ItemStack internal = getItemStack(item);
 		return internal !=null && stack !=null &&internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+	}
+
+	@Override
+	public boolean matchesExact(IItemStack item) {
+		ItemStack internal = getItemStack(item);
+		if (internal.getTagCompound() != null && stack.getTagCompound() == null) {
+			return false;
+		}
+		if (internal.getTagCompound() == null && stack.getTagCompound() != null) {
+			return false;
+		}
+		if (internal.getTagCompound() == null && stack.getTagCompound() == null) {
+			return stack.getItem() == internal.getItem() && (internal.getItemDamage() == 32767 || stack.getItemDamage() == internal.getItemDamage());
+		}
+		if (internal.getTagCompound().func_150296_c().equals(stack.getTagCompound().func_150296_c())) {
+			for (String s : (Set<String>)internal.getTagCompound().func_150296_c()) {
+				if (!internal.getTagCompound().getTag(s).equals(stack.getTagCompound().getTag(s))) {
+					return false;
+				}
+			}
+		}
+		return stack.getItem() == internal.getItem() && (internal.getItemDamage() == 32767 || stack.getItemDamage() == internal.getItemDamage());
 	}
 
 	@Override

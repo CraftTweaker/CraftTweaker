@@ -6,10 +6,11 @@
 
 package minetweaker.api.item;
 
-import java.util.Collections;
-import java.util.List;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -85,6 +86,12 @@ public class IngredientUnknown implements IIngredient
 	{
 		return false;
 	}
+	@Override
+	public boolean matchesExact(IItemStack item)
+	{
+		return false;
+	}
+
 
 	@Override
 	public boolean matches(ILiquidStack liquid)

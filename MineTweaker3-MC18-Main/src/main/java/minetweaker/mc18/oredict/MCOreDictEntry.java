@@ -192,6 +192,11 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
+    public boolean matchesExact(IItemStack item) {
+        return contains(item);
+    }
+
+    @Override
     public boolean matches(ILiquidStack liquid) {
         return false;
     }

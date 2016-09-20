@@ -161,6 +161,11 @@ public class MCLiquidStack implements ILiquidStack{
     }
 
     @Override
+    public boolean matchesExact(IItemStack item) {
+        return false;
+    }
+
+    @Override
     public boolean matches(ILiquidStack liquid){
         return getDefinition().equals(liquid.getDefinition()) && getAmount() <= liquid.getAmount();
     }

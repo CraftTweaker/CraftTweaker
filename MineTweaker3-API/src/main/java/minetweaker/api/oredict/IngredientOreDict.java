@@ -6,17 +6,13 @@
 
 package minetweaker.api.oredict;
 
-import java.util.Collections;
-import java.util.List;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemCondition;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.item.IItemTransformer;
-import minetweaker.api.item.IngredientOr;
-import minetweaker.api.item.IngredientStack;
+import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -87,6 +83,19 @@ public class IngredientOreDict implements IIngredient {
 	@Override
 	public boolean matches(IItemStack item) {
 		if (!entry.matches(item))
+			return false;
+
+		for (IItemCondition condition : conditions) {
+			if (!condition.matches(item))
+				return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean matchesExact(IItemStack item) {
+		if (!entry.matchesExact(item))
 			return false;
 
 		for (IItemCondition condition : conditions) {

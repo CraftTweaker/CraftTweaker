@@ -6,11 +6,12 @@
 
 package minetweaker.api.item;
 
-import java.util.ArrayList;
-import java.util.List;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 import minetweaker.util.ArrayUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -101,6 +102,15 @@ public class IngredientOr implements IIngredient {
 	public boolean matches(IItemStack item) {
 		for (IIngredient ingredient : elements) {
 			if (ingredient.matches(item))
+				return true;
+		}
+
+		return false;
+	}
+	@Override
+	public boolean matchesExact(IItemStack item) {
+		for (IIngredient ingredient : elements) {
+			if (ingredient.matchesExact(item))
 				return true;
 		}
 
