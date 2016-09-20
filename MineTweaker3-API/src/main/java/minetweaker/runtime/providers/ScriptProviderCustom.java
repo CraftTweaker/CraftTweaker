@@ -6,18 +6,17 @@
 
 package minetweaker.runtime.providers;
 
+import minetweaker.runtime.IScriptIterator;
+import minetweaker.runtime.IScriptProvider;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import minetweaker.runtime.IScriptIterator;
-import minetweaker.runtime.IScriptProvider;
 
 /**
  *
@@ -44,6 +43,7 @@ public class ScriptProviderCustom implements IScriptProvider {
 
 	@Override
 	public Iterator<IScriptIterator> getScripts() {
+
 		return Collections.<IScriptIterator>singleton(new CustomScriptIterator()).iterator();
 	}
 

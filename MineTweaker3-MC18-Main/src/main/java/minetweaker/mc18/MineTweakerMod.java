@@ -162,7 +162,7 @@ public class MineTweakerMod {
         }
 
         IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
-        IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsLocal, scriptsGlobal);
+        IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal,scriptsLocal);
 
         MineTweakerImplementationAPI.setScriptProvider(cascaded);
         MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
