@@ -29,30 +29,8 @@ public class ParsedFunction {
 
 		// function (argname [as type], argname [as type], ...) [as type] {
 		// ...contents... }
-		parser.required(T_BROPEN, "( expected");
-
 		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
-		if (parser.optional(T_BRCLOSE) == null) {
-			Token argName = parser.required(T_ID, "identifier expected");
-			ZenType type = ZenTypeAny.INSTANCE;
-			if (parser.optional(T_AS) != null) {
-				type = ZenType.read(parser, environment);
-			}
-
-			arguments.add(new ParsedFunctionArgument(argName.getValue(), type));
-
-			while (parser.optional(T_COMMA) != null) {
-				Token argName2 = parser.required(T_ID, "identifier expected");
-				ZenType type2 = ZenTypeAny.INSTANCE;
-				if (parser.optional(T_AS) != null) {
-					type2 = ZenType.read(parser, environment);
-				}
-
-				arguments.add(new ParsedFunctionArgument(argName2.getValue(), type2));
-			}
-
-			parser.required(T_BRCLOSE, ") expected");
-		}
+		parseArguments(parser, environment, arguments);
 
 		ZenType type = ZenTypeAny.INSTANCE;
 		if (parser.optional(T_AS) != null) {
@@ -61,30 +39,41 @@ public class ParsedFunction {
 
 		parser.required(T_AOPEN, "{ expected");
 
-		Statement[] statements;
-		if (parser.optional(T_ACLOSE) != null) {
-			statements = new Statement[0];
-		} else {
-			ArrayList<Statement> statementsAL = new ArrayList<Statement>();
-
-			while (parser.optional(T_ACLOSE) == null) {
-				statementsAL.add(Statement.read(parser, environment, type));
-			}
-			statements = statementsAL.toArray(new Statement[statementsAL.size()]);
+		List<Statement> statements = new ArrayList<Statement>();
+		while (parser.optional(T_ACLOSE) == null) {
+			statements.add(Statement.read(parser, environment, type));
 		}
-
 		return new ParsedFunction(tName.getPosition(), tName.getValue(), arguments, type, statements);
+	}
+
+	public static void parseArguments(ZenTokener parser, IEnvironmentGlobal environment, List<ParsedFunctionArgument> arguments) {
+		parser.required(T_BROPEN, "( expected");
+		if (parser.optional(T_BRCLOSE) == null) {
+			int index = 0;
+			do {
+				String name = parser.required(T_ID, "identifier expected").getValue();
+				ZenType type = ZenTypeAny.INSTANCE;
+
+				if (parser.optional(T_AS) != null) {
+					type = ZenType.read(parser, environment);
+				}
+
+				arguments.add(new ParsedFunctionArgument(index++, name, type));
+			} while (parser.optional(T_COMMA) != null);
+
+			parser.required(T_BRCLOSE, ") expected");
+		}
 	}
 
 	private final ZenPosition position;
 	private final String name;
 	private final List<ParsedFunctionArgument> arguments;
 	private final ZenType returnType;
-	private final Statement[] statements;
+	private final List<Statement> statements;
 
 	private final String signature;
 
-	private ParsedFunction(ZenPosition position, String name, List<ParsedFunctionArgument> arguments, ZenType returnType, Statement[] statements) {
+	private ParsedFunction(ZenPosition position, String name, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements) {
 		this.position = position;
 		this.name = name;
 		this.arguments = arguments;
@@ -129,7 +118,7 @@ public class ParsedFunction {
 		return result;
 	}
 
-	public Statement[] getStatements() {
+	public List<Statement> getStatements() {
 		return statements;
 	}
 }

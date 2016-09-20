@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import minetweaker.MineTweakerAPI;
 import minetweaker.runtime.IScriptIterator;
 
 /**
@@ -24,21 +26,25 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	private final File directory;
 	private Iterator<File> contents;
 	private File current;
+	private String groupName;
 
-	public ScriptIteratorDirectory(File directory) {
-		this.directory = directory;
-
-		File scriptDir = new File(directory, "scripts");
+	public ScriptIteratorDirectory(File scriptDir) {
+		directory = scriptDir;
 		List<File> contentsList = new ArrayList<File>();
-		if (scriptDir.exists()) {
-			iterate(scriptDir, contentsList);
+		if (directory.exists()) {
+			iterate(directory, contentsList);
 		}
 		contents = contentsList.iterator();
+
+		groupName = directory.getName() + "_" + directory.hashCode();
+		if (directory.getParentFile() != null) {
+			groupName = directory.getParentFile().getName() + ":" + groupName;
+		}
 	}
 
 	@Override
 	public String getGroupName() {
-		return directory.getName();
+		return groupName;
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 
 	@Override
 	public String getName() {
-		return current.getAbsolutePath().substring(directory.getAbsolutePath().length());
+		return current.getAbsolutePath().substring(directory.getAbsolutePath().length() + 1);
 	}
 
 	@Override
@@ -62,8 +68,10 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 	}
 
 	private static void iterate(File directory, List<File> contentsList) {
-		for (File file : directory.listFiles()) {
-			if (file.isDirectory()) {
+		File[] files = directory.listFiles();
+		if (files == null) return;
+		for (File file : files) {
+			if (file.isDirectory() && !file.getName().equals("disabled")) {
 				iterate(file, contentsList);
 			} else if (file.isFile() && file.getName().endsWith(".zs")) {
 				contentsList.add(file);

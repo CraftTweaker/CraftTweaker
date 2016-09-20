@@ -43,7 +43,7 @@ public class ScriptProviderCustom implements IScriptProvider {
 	}
 
 	@Override
-	public Iterator<IScriptIterator> getScripts() {
+	public Iterator<IScriptIterator> getScriptIterators() {
 		return Collections.<IScriptIterator>singleton(new CustomScriptIterator()).iterator();
 	}
 

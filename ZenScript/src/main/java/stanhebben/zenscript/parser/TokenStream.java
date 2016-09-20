@@ -44,13 +44,14 @@ public class TokenStream implements Iterator<Token> {
 	 * @param dfa DFA to tokenize the stream
 	 * @throws IOException
 	 */
-	public TokenStream(Reader reader, CompiledDFA dfa) throws IOException {
+	public TokenStream(Reader reader, ZenParsedFile zenParsedFile, CompiledDFA dfa) throws IOException {
 		tokenMemoryOffset = 0;
 		tokenMemoryCurrent = 0;
 		tokenMemory = new LinkedList<Token>();
 		marks = new Stack<Integer>();
 
 		this.reader = new CountingReader(reader);
+		this.file = zenParsedFile;
 		this.dfa = dfa;
 		nextChar = this.reader.read();
 		line = 1;
@@ -66,7 +67,7 @@ public class TokenStream implements Iterator<Token> {
 	 * @throws IOException
 	 */
 	public TokenStream(String data, CompiledDFA dfa) throws IOException {
-		this(new StringReader(data), dfa);
+		this(new StringReader(data), null, dfa);
 	}
 
 	public void setFile(ZenParsedFile file) {

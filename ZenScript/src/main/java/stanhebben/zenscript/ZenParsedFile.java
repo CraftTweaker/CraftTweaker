@@ -1,5 +1,7 @@
 package stanhebben.zenscript;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +11,7 @@ import stanhebben.zenscript.compiler.EnvironmentScript;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.definitions.Import;
 import stanhebben.zenscript.definitions.ParsedFunction;
+import stanhebben.zenscript.definitions.ParsedGlobalValue;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.statements.Statement;
@@ -35,6 +38,7 @@ public class ZenParsedFile {
 	private final String filename;
 	private final String classname;
 	private final List<Import> imports;
+	private final Map<String, ParsedGlobalValue> globals;
 	private final Map<String, ParsedFunction> functions;
 	private final List<Statement> statements;
 	private final IEnvironmentGlobal environmentScript;
@@ -47,16 +51,17 @@ public class ZenParsedFile {
 	 * @param tokener input tokener
 	 * @param environment compile environment
 	 */
-	public ZenParsedFile(String filename, String classname, ZenTokener tokener, IEnvironmentGlobal environment) {
+	public ZenParsedFile(String filename, String classname, Reader reader, IEnvironmentGlobal environment) throws IOException {
 		this.filename = filename;
 		this.classname = classname;
 
 		imports = new ArrayList<Import>();
+		globals = new HashMap<String, ParsedGlobalValue>();
 		functions = new HashMap<String, ParsedFunction>();
 		statements = new ArrayList<Statement>();
 		environmentScript = new EnvironmentScript(environment);
 
-		tokener.setFile(this);
+		ZenTokener tokener = new ZenTokener(reader, this, environment.getEnvironment());
 
 		while (tokener.peek() != null && tokener.peek().getType() == T_IMPORT) {
 			Token start = tokener.next();
@@ -119,7 +124,13 @@ public class ZenParsedFile {
 
 		while (tokener.hasNext()) {
 			Token next = tokener.peek();
-			if (next.getType() == T_FUNCTION) {
+			if (next.getType() == T_GLOBAL) {
+				ParsedGlobalValue globalValue = ParsedGlobalValue.parse(tokener, environmentScript);
+				if (globals.containsKey(globalValue.getName())) {
+					environment.error(globalValue.getPosition(), "global value " + globalValue.getName() + " already exists");
+				}
+				globals.put(globalValue.getName(), globalValue);
+			} else if (next.getType() == T_FUNCTION) {
 				ParsedFunction function = ParsedFunction.parse(tokener, environmentScript);
 				if (functions.containsKey(function.getName())) {
 					environment.error(function.getPosition(), "function " + function.getName() + " already exists");
@@ -178,6 +189,15 @@ public class ZenParsedFile {
 	 */
 	public Map<String, ParsedFunction> getFunctions() {
 		return functions;
+	}
+
+	/**
+	 * Gets global values defined inside this file.
+	 *
+	 * @return script global values
+	 */
+	public Map<String, ParsedGlobalValue> getGlobalValues() {
+		return globals;
 	}
 
 	@Override

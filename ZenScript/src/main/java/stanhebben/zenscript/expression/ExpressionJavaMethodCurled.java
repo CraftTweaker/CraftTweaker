@@ -38,7 +38,7 @@ public class ExpressionJavaMethodCurled extends Expression {
 
 		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
 		for (int i = 0; i < method.getMethod().getParameterTypes().length; i++) {
-			arguments.add(new ParsedFunctionArgument("p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
+			arguments.add(new ParsedFunctionArgument(i, "p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
 		}
 
 		this.type = new ZenTypeFunction(environment.getType(method.getMethod().getGenericReturnType()), arguments);

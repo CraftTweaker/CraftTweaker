@@ -6,12 +6,12 @@
 
 package stanhebben.zenscript.compiler;
 
-import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 
 /**
  *
  * @author Stan
  */
 public interface IEnvironmentClass extends IEnvironmentGlobal {
-	public ClassVisitor getClassOutput();
+	public ClassWriter getClassOutput();
 }

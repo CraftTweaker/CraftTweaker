@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.IZenCompileEnvironment;
@@ -50,7 +51,7 @@ public class EnvironmentScope implements IEnvironmentMethod {
 	}
 
 	@Override
-	public ClassVisitor getClassOutput() {
+	public ClassWriter getClassOutput() {
 		return outer.getClassOutput();
 	}
 

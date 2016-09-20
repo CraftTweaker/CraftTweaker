@@ -85,6 +85,7 @@ public class ZenTokener extends TokenStream {
 	public static final int T_RETURN = 125;
 	public static final int T_VAR = 126;
 	public static final int T_VAL = 127;
+	public static final int T_GLOBAL = 128;
 
 	public static final int T_NULL = 140;
 	public static final int T_TRUE = 141;
@@ -221,6 +222,7 @@ public class ZenTokener extends TokenStream {
 		KEYWORDS.put("return", T_RETURN);
 		KEYWORDS.put("var", T_VAR);
 		KEYWORDS.put("val", T_VAL);
+		KEYWORDS.put("global", T_GLOBAL);
 
 		KEYWORDS.put("null", T_NULL);
 		KEYWORDS.put("true", T_TRUE);
@@ -235,11 +237,12 @@ public class ZenTokener extends TokenStream {
 	 * Constructs a tokener from the given reader.
 	 * 
 	 * @param contents file reader
+	 * @param zenParsedFile
 	 * @param environment compile environment
 	 * @throws IOException if the file could not be read properly
 	 */
-	public ZenTokener(Reader contents, IZenCompileEnvironment environment) throws IOException {
-		super(contents, DFA);
+	public ZenTokener(Reader contents, ZenParsedFile zenParsedFile, IZenCompileEnvironment environment) throws IOException {
+		super(contents, zenParsedFile, DFA);
 
 		this.environment = environment;
 	}
@@ -252,7 +255,7 @@ public class ZenTokener extends TokenStream {
 	 * @throws IOException shouldn't happen
 	 */
 	public ZenTokener(String contents, IZenCompileEnvironment environment) throws IOException {
-		super(new StringReader(contents), DFA);
+		super(new StringReader(contents), null, DFA);
 
 		this.environment = environment;
 	}

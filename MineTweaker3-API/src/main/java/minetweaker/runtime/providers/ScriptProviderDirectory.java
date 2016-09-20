@@ -30,23 +30,11 @@ public class ScriptProviderDirectory implements IScriptProvider {
 	}
 
 	@Override
-	public Iterator<IScriptIterator> getScripts() {
-		List<IScriptIterator> scripts = new ArrayList<IScriptIterator>();
+	public Iterator<IScriptIterator> getScriptIterators() {
+		List<IScriptIterator> iterators = new ArrayList<IScriptIterator>();
 		if (directory.exists()) {
-			for (File file : directory.listFiles()) {
-				if (file.isDirectory()) {
-					scripts.add(new ScriptIteratorDirectory(file));
-				} else if (file.getName().endsWith(".zs")) {
-					scripts.add(new ScriptIteratorSingle(file));
-				} else if (file.getName().endsWith(".zip")) {
-					try {
-						scripts.add(new ScriptIteratorZip(file));
-					} catch (IOException ex) {
-						MineTweakerAPI.logError("Could not load " + file.getName() + ": " + ex.getMessage());
-					}
-				}
-			}
+			iterators.add(new ScriptIteratorDirectory(directory));
 		}
-		return scripts.iterator();
+		return iterators.iterator();
 	}
 }

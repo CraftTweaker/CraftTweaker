@@ -14,6 +14,7 @@ import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.definitions.ParsedFunction;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionFloat;
@@ -332,23 +333,9 @@ public abstract class ParsedExpression {
 			case T_FUNCTION:
 				// function (argname, argname, ...) { ...contents... }
 				parser.next();
-				parser.required(T_BROPEN, "( expected");
 
 				List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
-				if (parser.optional(T_BRCLOSE) == null) {
-					do {
-						String name = parser.required(T_ID, "identifier expected").getValue();
-						ZenType type = ZenTypeAny.INSTANCE;
-
-						if (parser.optional(T_AS) != null) {
-							type = ZenType.read(parser, environment);
-						}
-
-						arguments.add(new ParsedFunctionArgument(name, type));
-					} while (parser.optional(T_COMMA) != null);
-
-					parser.required(T_BRCLOSE, ") expected");
-				}
+				ParsedFunction.parseArguments(parser, environment, arguments);
 
 				ZenType returnType = ZenTypeAny.INSTANCE;
 				if (parser.optional(T_AS) != null) {
@@ -358,10 +345,8 @@ public abstract class ParsedExpression {
 				parser.required(T_AOPEN, "{ expected");
 
 				List<Statement> statements = new ArrayList<Statement>();
-				if (parser.optional(T_ACLOSE) == null) {
-					while (parser.optional(T_ACLOSE) == null) {
-						statements.add(Statement.read(parser, environment, returnType));
-					}
+				while (parser.optional(T_ACLOSE) == null) {
+					statements.add(Statement.read(parser, environment, returnType));
 				}
 
 				return new ParsedExpressionFunction(position, returnType, arguments, statements);

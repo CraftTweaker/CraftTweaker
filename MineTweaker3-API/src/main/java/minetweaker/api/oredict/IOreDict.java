@@ -10,6 +10,7 @@ import java.util.List;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMemberGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  *
@@ -17,6 +18,7 @@ import stanhebben.zenscript.annotations.ZenMemberGetter;
  */
 @ZenClass("minetweaker.oredict.IOreDict")
 public interface IOreDict {
+	@ZenMethod
 	@ZenMemberGetter
 	public IOreDictEntry get(String name);
 
