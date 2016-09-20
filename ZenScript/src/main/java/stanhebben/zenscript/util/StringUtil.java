@@ -7,7 +7,6 @@
 package stanhebben.zenscript.util;
 
 import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.natives.IJavaMethod;
 
 import java.util.ArrayList;
@@ -77,19 +76,6 @@ public class StringUtil {
                 message.append(value.getType().toString());
             }
             message.append(")");
-            message.append("\nAvailable methods:\n");
-            methods.forEach(me -> {
-                boolean firstVal = true;
-                for (ZenType type : me.getParameterTypes()) {
-                    if (firstVal) {
-                        firstVal = false;
-                    } else {
-                        message.append(", ");
-                    }
-                    message.append(type.getName().substring(type.getName().lastIndexOf(".")+1));
-                }
-                message.append("\n");
-            });
             return message.toString();
         }
     }
