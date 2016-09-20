@@ -86,7 +86,7 @@ public class StringUtil {
                     } else {
                         message.append(", ");
                     }
-                    message.append(type.toJavaClass().getSimpleName());
+                    message.append(type.getName().substring(type.getName().lastIndexOf(".")+1));
                 }
                 message.append("\n");
             });
