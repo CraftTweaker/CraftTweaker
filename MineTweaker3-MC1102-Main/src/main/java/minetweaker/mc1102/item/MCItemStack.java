@@ -288,6 +288,28 @@ public class MCItemStack implements IItemStack{
     }
 
     @Override
+    public boolean matchesExact(IItemStack item) {
+        ItemStack internal = getItemStack(item);
+        if (internal.getTagCompound() != null && stack.getTagCompound() == null) {
+            return false;
+        }
+        if (internal.getTagCompound() == null && stack.getTagCompound() != null) {
+            return false;
+        }
+        if (internal.getTagCompound() == null && stack.getTagCompound() == null) {
+            return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
+        }
+        if (internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
+            for (String s : internal.getTagCompound().getKeySet()) {
+                if (!internal.getTagCompound().getTag(s).equals(stack.getTagCompound().getTag(s))) {
+                    return false;
+                }
+            }
+        }
+        return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
+    }
+
+    @Override
     public boolean matches(ILiquidStack liquid){
         return false;
     }

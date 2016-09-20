@@ -42,7 +42,7 @@ public interface IRecipeManager {
 	 * @return number of removed recipes
 	 */
 	@ZenMethod
-	public int remove(IIngredient output);
+	public int remove(IIngredient output, @Optional boolean nbtMatch);
 
 	/**
 	 * Adds a shaped recipe.
