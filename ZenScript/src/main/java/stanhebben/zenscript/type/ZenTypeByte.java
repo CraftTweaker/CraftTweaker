@@ -9,32 +9,19 @@ import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionArithmeticBinary;
-import stanhebben.zenscript.expression.ExpressionArithmeticCompare;
-import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
-import stanhebben.zenscript.expression.ExpressionInt;
-import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import static stanhebben.zenscript.type.ZenTypeAny.*;
-import stanhebben.zenscript.type.casting.CastingRuleI2D;
-import stanhebben.zenscript.type.casting.CastingRuleI2F;
-import stanhebben.zenscript.type.casting.CastingRuleI2L;
-import stanhebben.zenscript.type.casting.CastingRuleNone;
-import stanhebben.zenscript.type.casting.CastingRuleStaticMethod;
-import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.casting.*;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.AnyClassWriter;
-import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASBYTE;
-import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSTRING;
-import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
-import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
 import stanhebben.zenscript.util.IAnyDefinition;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.value.IAny;
+
+import static stanhebben.zenscript.util.AnyClassWriter.*;
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
-import stanhebben.zenscript.value.IAny;
 
 public class ZenTypeByte extends ZenType {
 	public static final ZenTypeByte INSTANCE = new ZenTypeByte();
@@ -52,6 +39,7 @@ public class ZenTypeByte extends ZenType {
 
 	@Override
 	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
+
 		rules.registerCastingRule(BYTEOBJECT, new CastingRuleStaticMethod(BYTE_VALUEOF));
 		rules.registerCastingRule(SHORT, new CastingRuleNone(BYTE, SHORT));
 		rules.registerCastingRule(SHORTOBJECT, new CastingRuleStaticMethod(SHORT_VALUEOF));
@@ -63,7 +51,6 @@ public class ZenTypeByte extends ZenType {
 		rules.registerCastingRule(FLOATOBJECT, new CastingRuleStaticMethod(FLOAT_VALUEOF, new CastingRuleI2F(null)));
 		rules.registerCastingRule(DOUBLE, new CastingRuleI2D(null));
 		rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleStaticMethod(DOUBLE_VALUEOF, new CastingRuleI2D(null)));
-
 		rules.registerCastingRule(STRING, new CastingRuleStaticMethod(BYTE_TOSTRING_STATIC));
 		rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, BYTE)));
 
