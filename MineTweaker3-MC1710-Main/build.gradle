@@ -18,6 +18,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'maven'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -59,5 +60,40 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://" + System.getenv("local_maven"))
+            pom {
+                groupId = project.group
+                version
+                artifactId = project.archivesBaseName
+                project {
+                    name project.archivesBaseName
+                    packaging 'jar'
+                    description 'CraftTweaker'
+                    url 'https://github.com/jaredlll08/CraftTweaker'
+                    scm {
+                        url 'https://github.com/jaredlll08/CraftTweaker.git'
+                        connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+                        developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+                    }
+                    issueManagement {
+                        system 'github'
+                        url 'https://github.com/jaredlll08/CraftTweaker/issues'
+                    }
+                    developers {
+                        developer {
+                            id 'Jared'
+                            name 'Jared'
+                            roles { role 'developer' }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
