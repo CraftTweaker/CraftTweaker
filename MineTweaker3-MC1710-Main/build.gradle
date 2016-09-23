@@ -18,6 +18,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'maven'
 
 version = "1.7.10-" + ext.mineTweakerVersion
 archivesBaseName = project.projectDir.name

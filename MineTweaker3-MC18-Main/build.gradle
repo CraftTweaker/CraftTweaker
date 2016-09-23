@@ -13,6 +13,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
 
 version = "1.8.9-" + ext.mineTweakerVersion
 archivesBaseName = project.projectDir.name
