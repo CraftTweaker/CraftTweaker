@@ -61,7 +61,7 @@ processResources
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "file://" + System.getenv("bamboo_local_maven"))
+            repository(url: "file://" + System.getenv("local_maven"))
             pom {
                 groupId = project.group
                 version
@@ -70,7 +70,7 @@ uploadArchives {
                     name project.archivesBaseName
                     packaging 'jar'
                     description 'CraftTweaker'
-                    url 'http://BrassGoggledCoders.xyz'
+                    url 'https://github.com/jaredlll08/CraftTweaker'
                     scm {
                         url 'https://github.com/jaredlll08/CraftTweaker.git'
                         connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
