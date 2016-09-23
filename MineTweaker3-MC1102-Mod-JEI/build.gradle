@@ -38,7 +38,7 @@ dependencies {
 	compile project(':ZenScript')
 	compile project(':MineTweaker3-API')
 	compile project(':MineTweaker3-MC1102-Main')
-    deobfCompile "mezz.jei:jei_1.10:3.7.0.218"
+    deobfCompile "mezz.jei:jei_1.10.2:3.9.7.260"
 }
 
 task makeRegistry(type: RegisterZenClassesTask) {
