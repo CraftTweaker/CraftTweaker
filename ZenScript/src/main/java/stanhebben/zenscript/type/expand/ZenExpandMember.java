@@ -158,7 +158,7 @@ public class ZenExpandMember {
 		@Override
 		public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
 			IJavaMethod method = JavaMethod.select(true, methods, environment, values);
-			if (method == null ) {
+			if (method == null) {
 				environment.error(position, methodMatchingError(methods, values));
 				return new ExpressionInvalid(position);
 			} else {
