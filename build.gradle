@@ -4,7 +4,7 @@ apply plugin: "maven"
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
-repositories {    
+repositories {
     mavenLocal()
     mavenCentral()
     maven {
@@ -27,46 +27,39 @@ dependencies {
     deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
 }
 
-task("uploadJars", dependsOn: "reobf") {
-    description = "uploads JARs"
-    if (System.getenv("bamboo_local_maven") != null) {
-        uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: "file://" + System.getenv("bamboo_local_maven"))
-                    pom {
-                        groupId = project.group
-                        version
-                        artifactId = project.archivesBaseName
-                        project {
-                            name project.archivesBaseName
-                            packaging 'jar'
-                            description 'CraftTweaker'
-                            url 'http://BrassGoggledCoders.xyz'
-                            scm {
-                                url 'https://github.com/jaredlll08/CraftTweaker.git'
-                                connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-                                developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-                            }
-                            issueManagement {
-                                system 'github'
-                                url 'https://github.com/jaredlll08/CraftTweaker/issues'
-                            }
-                            developers {
-                                developer {
-                                    id 'Jared'
-                                    name 'Jared'
-                                    roles { role 'developer' }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        println "Local_Maven not set"
-    }
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: "file://" + System.getenv("bamboo_local_maven"))
+			pom {
+				groupId = project.group
+				version
+				artifactId = project.archivesBaseName
+				project {
+					name project.archivesBaseName
+					packaging 'jar'
+					description 'CraftTweaker'
+					url 'http://BrassGoggledCoders.xyz'
+					scm {
+						url 'https://github.com/jaredlll08/CraftTweaker.git'
+						connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+						developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+					}
+					issueManagement {
+						system 'github'
+						url 'https://github.com/jaredlll08/CraftTweaker/issues'
+					}
+					developers {
+						developer {
+							id 'Jared'
+							name 'Jared'
+							roles { role 'developer' }
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
@@ -84,10 +77,10 @@ task assembleMC1710(type: Jar, dependsOn: [\
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
 	archiveName="CraftTweaker-1.7.10-${mineTweakerVersion}.jar"
-	
+
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
-	
+
 	for (p in projects1710) {
 		from zipTree(project(p).jar.archivePath)
 	}
@@ -98,10 +91,10 @@ task assembleMC18(type: Jar, dependsOn: [\
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
 	archiveName="CraftTweaker-1.8.9-${mineTweakerVersion}.jar"
-	
+
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
-	
+
 	for (p in projects18) {
 		from zipTree(project(p).jar.archivePath)
 	}
@@ -112,10 +105,10 @@ task assembleMC1102(type: Jar, dependsOn: [\
 		':MineTweaker3-API:build']
 		+ projects1102.collect { ':' + it + ":build" }) {
 	archiveName="CraftTweaker-1.10.2-${mineTweakerVersion}.jar"
-	
+
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
-	
+
 	for (p in projects1102) {
 		from zipTree(project(p).jar.archivePath)
 	}
@@ -126,7 +119,7 @@ task assembleDevBase1710(type: Jar, dependsOn: [
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1710-Main:build']) {
 	archiveName="CraftTweaker-Dev-1.7.10-${mineTweakerVersion}.jar"
-	
+
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
 	from project(':MineTweaker3-MC1710-Main').sourceSets.main.output
@@ -137,7 +130,7 @@ task assembleDevBase18(type: Jar, dependsOn: [
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC18-Main:build']) {
 	archiveName="CraftTweaker-Dev-1.8.9-${mineTweakerVersion}.jar"
-	
+
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
 	from project(':MineTweaker3-MC18-Main').sourceSets.main.output
@@ -148,7 +141,7 @@ task assembleDevBase1102(type: Jar, dependsOn: [
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1102-Main:build']) {
 	archiveName="CraftTweaker-Dev-1.10.2-${mineTweakerVersion}.jar"
-	
+
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
 	from project(':MineTweaker3-MC1102-Main').sourceSets.main.output
@@ -159,10 +152,10 @@ task assembleDevFull1710(type: Jar, dependsOn: [
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
 	archiveName="CraftTweaker-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
-	
+
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
-	
+
 	for (p in projects1710) {
 		from project(p).sourceSets.main.output
 	}
@@ -174,10 +167,10 @@ task assembleDevFull18(type: Jar, dependsOn: [
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
 	archiveName="CraftTweaker-Dev-Full-1.8.9-${mineTweakerVersion}.jar"
-	
+
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
-	
+
 	for (p in projects18) {
 		from project(p).sourceSets.main.output
 	}
@@ -188,10 +181,10 @@ task assembleDevFull1102(type: Jar, dependsOn: [
 		':MineTweaker3-API:build']
 		+ projects1102.collect { ':' + it + ":build" }) {
 	archiveName="CraftTweaker-Dev-Full-1.10.2-${mineTweakerVersion}.jar"
-	
+
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
-	
+
 	for (p in projects1102) {
 		from project(p).sourceSets.main.output
 	}
