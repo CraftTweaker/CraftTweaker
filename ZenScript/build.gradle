@@ -9,38 +9,3 @@ dependencies {
 	//compile files("${System.properties['java.home']}/../lib/tools.jar")
 	//compile files("libs/tools.jar")
 }
-
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: "file://" + System.getenv("bamboo_local_maven"))
-			pom {
-				groupId = project.group
-				version
-				artifactId = project.archivesBaseName
-				project {
-					name project.archivesBaseName
-					packaging 'jar'
-					description 'CraftTweaker'
-					url 'http://BrassGoggledCoders.xyz'
-					scm {
-						url 'https://github.com/jaredlll08/CraftTweaker.git'
-						connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-						developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-					}
-					issueManagement {
-						system 'github'
-						url 'https://github.com/jaredlll08/CraftTweaker/issues'
-					}
-					developers {
-						developer {
-							id 'Jared'
-							name 'Jared'
-							roles { role 'developer' }
-						}
-					}
-				}
-			}
-		}
-	}
-}
