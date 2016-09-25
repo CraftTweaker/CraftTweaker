@@ -2,10 +2,14 @@ package minetweaker.mods.jei;
 
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
+import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.annotations.OnRegister;
 import minetweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.NotNull;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.LinkedList;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import static minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers;
@@ -35,6 +39,36 @@ public class JEI {
 		MineTweakerAPI.apply(new JEIHideItemAction(item));
 	}
 
+	/**
+	 * Register callbacks otherwise the load order with JEI is all messed up.
+	 */
+	@OnRegister
+	public static void onRegister() {
+		// discard all not yet applied actions before a reload
+		MineTweakerImplementationAPI.onReloadEvent(event -> {
+			apply.clear();
+		});
+
+		// after the reload JEI needs to be reloaded as well
+		MineTweakerImplementationAPI.onPostReload(event -> {
+			// on server start, this will still be null since JEI only registers the addons when a player joins
+			if (jeiHelpers != null) {
+				jeiHelpers.reload();
+			}
+		});
+	}
+
+	// list of all hide actions that need to be applied after JEI is available
+    private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
+
+	/**
+	 * JEI is available and the Hiding of the actions can now be applied.
+	 */
+	public static void onJEIStarted() {
+        apply.forEach(JEIHideItemAction::doApply);
+        apply.clear();
+    }
+
 	private static class JEIHideItemAction implements IUndoableAction {
 		private final IItemStack stack;
 		public JEIHideItemAction(IItemStack stack) {
@@ -43,7 +77,20 @@ public class JEI {
 
 		@Override
 		public void apply() {
-			jeiHelpers.getItemBlacklist().addItemToBlacklist(getItemStack(stack));
+			// just register until the JEI addon is registered, otherwise the jeiHelpers are null
+			apply.add(this);
+		}
+
+		/**
+		 * Really adds the item to the blacklist when JEI is available
+		 */
+		void doApply() {
+			if (jeiHelpers != null) {
+				jeiHelpers.getItemBlacklist().addItemToBlacklist(getItemStack(stack));
+			} else {
+				// Should not happen, but in case only log an error
+				MineTweakerImplementationAPI.logger.logError("JEI not initialized yet!");
+			}
 		}
 
 		@Override
@@ -53,7 +100,8 @@ public class JEI {
 
 		@Override
 		public void undo() {
-			jeiHelpers.getItemBlacklist().removeItemFromBlacklist(getItemStack(stack));
+			// Doesn't need to be called since on reload of JEI the blacklist will be cleared anyway
+            // jeiHelpers.getItemBlacklist().removeItemFromBlacklist(getItemStack(stack));
 		}
 
 		@Override
