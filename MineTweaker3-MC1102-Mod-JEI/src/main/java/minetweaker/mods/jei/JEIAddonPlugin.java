@@ -1,13 +1,10 @@
 package minetweaker.mods.jei;
 
 import mezz.jei.api.*;
-import minetweaker.MineTweakerImplementationAPI;
-import minetweaker.util.IEventHandler;
 
 
 @mezz.jei.api.JEIPlugin
 public class JEIAddonPlugin implements IModPlugin {
-    private static boolean eventAdded = false;
     public static IJeiHelpers jeiHelpers;
     public static IItemRegistry itemRegistry;
     public static IRecipeRegistry recipeRegistry;
@@ -15,23 +12,17 @@ public class JEIAddonPlugin implements IModPlugin {
 
     @Override
     public void register(IModRegistry registry) {
-        this.jeiHelpers = registry.getJeiHelpers();
-        this.itemRegistry = registry.getItemRegistry();
+        jeiHelpers = registry.getJeiHelpers();
+        itemRegistry = registry.getItemRegistry();
+
+        // The blacklist items must be registered here, otherwise the item filters are already created and
+        // anything that is added doesn't have an effect
+        JEI.onJEIStarted();
     }
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
-        this.recipeRegistry = iJeiRuntime.getRecipeRegistry();
-        if (!eventAdded) {
-            MineTweakerImplementationAPI.onPostReload(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {
-                @Override
-                public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
-                    jeiHelpers.reload();
-                }
-            });
-            eventAdded = true;
-        }
-
+        recipeRegistry = iJeiRuntime.getRecipeRegistry();
     }
 
 
