@@ -13,6 +13,7 @@ import minetweaker.runtime.IScriptProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,7 +48,12 @@ public class ScriptProviderDirectory implements IScriptProvider {
                 }
             }
         }
-        scripts.sort((sc, sc1) -> sc.getName().compareTo(sc1.getName()));
+        scripts.sort(new Comparator<IScriptIterator>() {
+            @Override
+            public int compare(IScriptIterator sc, IScriptIterator sc1) {
+                return sc.getName().compareTo(sc1.getName());
+            }
+        });
         return scripts.iterator();
     }
 }
