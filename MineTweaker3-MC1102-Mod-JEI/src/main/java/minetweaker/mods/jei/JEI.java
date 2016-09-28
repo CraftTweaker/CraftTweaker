@@ -5,6 +5,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.annotations.OnRegister;
 import minetweaker.api.item.IItemStack;
+import minetweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.NotNull;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -45,27 +46,34 @@ public class JEI {
 	@OnRegister
 	public static void onRegister() {
 		// discard all not yet applied actions before a reload
-		MineTweakerImplementationAPI.onReloadEvent(event -> {
-			apply.clear();
+		MineTweakerImplementationAPI.onReloadEvent(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {
+			@Override
+			public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
+				apply.clear();
+			}
 		});
 
 		// after the reload JEI needs to be reloaded as well
-		MineTweakerImplementationAPI.onPostReload(event -> {
-			// on server start, this will still be null since JEI only registers the addons when a player joins
-			if (jeiHelpers != null) {
-				jeiHelpers.reload();
+		MineTweakerImplementationAPI.onPostReload(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {
+			@Override
+			public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
+				if (jeiHelpers != null) {
+					jeiHelpers.reload();
+				}
 			}
 		});
 	}
 
 	// list of all hide actions that need to be applied after JEI is available
-    private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
+    private static LinkedList<JEIHideItemAction> apply = new LinkedList<JEIHideItemAction>();
 
 	/**
 	 * JEI is available and the Hiding of the actions can now be applied.
 	 */
 	public static void onJEIStarted() {
-        apply.forEach(JEIHideItemAction::doApply);
+		for (JEIHideItemAction action : apply) {
+			action.doApply();
+		}
         apply.clear();
     }
 
