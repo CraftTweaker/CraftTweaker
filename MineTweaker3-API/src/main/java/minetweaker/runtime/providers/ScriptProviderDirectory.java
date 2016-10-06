@@ -48,12 +48,13 @@ public class ScriptProviderDirectory implements IScriptProvider {
                 }
             }
         }
-        scripts.sort(new Comparator<IScriptIterator>() {
-            @Override
-            public int compare(IScriptIterator sc, IScriptIterator sc1) {
-                return sc.getName().compareTo(sc1.getName());
-            }
-        });
+        if (scripts.size() > 1)
+            scripts.sort(new Comparator<IScriptIterator>() {
+                @Override
+                public int compare(IScriptIterator sc, IScriptIterator sc1) {
+                    return sc.getName().compareTo(sc1.getName());
+                }
+            });
         return scripts.iterator();
     }
 }
