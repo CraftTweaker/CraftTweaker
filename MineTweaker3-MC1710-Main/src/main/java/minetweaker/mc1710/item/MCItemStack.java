@@ -420,11 +420,6 @@ public class MCItemStack implements IItemStack {
 			result.append(")");
 		}
 
-		if (stack.stackSize > 1) {
-			result.append(" * ");
-			result.append(stack.stackSize);
-		}
-
 		return result.toString();
 	}
 }
