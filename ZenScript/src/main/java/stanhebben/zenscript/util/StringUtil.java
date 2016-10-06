@@ -77,6 +77,7 @@ public class StringUtil {
                 message.append(value.getType().toString());
             }
             message.append(")");
+            message.append("\nThis is usually an error in your script, not in the mod");
             return message.toString();
         }
     }
