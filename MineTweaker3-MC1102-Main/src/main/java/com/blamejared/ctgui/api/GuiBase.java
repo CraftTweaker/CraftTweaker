@@ -126,58 +126,44 @@ public abstract class GuiBase extends GuiContainer {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         final boolean[] clickedSlot = new boolean[]{false};
-        container.getRecipeSlots().stream().filter(slot -> {
+        for (SlotRecipe slot : container.getRecipeSlots()) {
             Rectangle rectangle = new Rectangle(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 18, 18);
             if (rectangle.contains(mouseX, mouseY)) {
                 switch (mouseButton) {
                     case 0:
-                        return false;
                     case 1:
                         if (slot.getHasStack()) {
                             clickedSlot[0] = true;
-                            return true;
+                            selectedSlot = slot;
+                            editingField.setText(slot.getItemString());
+                            if (shouldOpenMenu) {
+                                menu.toggle(true);
+                                for (Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
+                                    for (Slider slider : but.getValue()) {
+                                        buttonList.remove(slider);
+                                    }
+                                }
+                                menu.getFromMap(slot.getPropertyMap(), slot.getProperties());
+                            }
                         }
-                        return false;
                     case 2:
                         clickedSlot[0] = true;
-                        return true;
+                        selectedSlot = null;
+                        if (shouldOpenMenu) {
+                            menu.toggle(false);
+                            for (Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
+                                for (Slider slider : but.getValue()) {
+                                    slider.updateSlider();
+                                    buttonList.remove(slider);
+                                }
+                            }
+                        }
+                        if (editingField != null)
+                            editingField.setText("");
                 }
             }
-            return false;
-        }).forEach(slot -> {
-            switch (mouseButton) {
-                case 0:
-                    break;
-                case 1:
-                    selectedSlot = slot;
-                    editingField.setText(slot.getItemString());
-                    if (shouldOpenMenu) {
-                        menu.toggle(true);
-                        menu.getButtons().forEach(but -> {
-                            for (Slider slider : but.getValue()) {
-                                buttonList.remove(slider);
-                            }
-                        });
-                        menu.getFromMap(slot.getPropertyMap(), slot.getProperties());
-                    }
-                    break;
-                case 2:
-                    selectedSlot = null;
-                    if (shouldOpenMenu) {
-                        menu.toggle(false);
-                        menu.getButtons().forEach(but -> {
-                            for (Slider slider : but.getValue()) {
-                                slider.updateSlider();
-                                buttonList.remove(slider);
-                            }
-                        });
-                    }
-                    if (editingField != null)
-                        editingField.setText("");
-                    break;
-            }
 
-        });
+        }
         if (!clickedSlot[0]) {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
@@ -195,12 +181,17 @@ public abstract class GuiBase extends GuiContainer {
                 generateFile(scriptFile);
             }
             try {
-                List<String> lines = new LinkedList<>();
+                List<String> lines = new LinkedList<String>();
                 BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
-                reader.lines().forEach(line -> lines.add(line));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
                 if (lines.isEmpty()) {
                     generateFile(scriptFile);
-                    reader.lines().forEach(line -> lines.add(line));
+                    while ((line = reader.readLine()) != null) {
+                        lines.add(line);
+                    }
                 }
                 reader.close();
                 PrintWriter writer = new PrintWriter(new FileWriter(scriptFile));
@@ -209,14 +200,14 @@ public abstract class GuiBase extends GuiContainer {
                     if (i > 0)
                         beforeLine = lines.get(i - 1);
 
-                    String line = lines.get(i);
+                    String lined = lines.get(i);
                     if (beforeLine.trim().equals("//#Remove")) {
                     }
                     if (beforeLine.trim().equals("//#Add")) {
                         writer.println(getOutputAdd());
                     }
-                    if (!line.isEmpty()) {
-                        writer.println(line);
+                    if (!lined.isEmpty()) {
+                        writer.println(lined);
                     }
 
                 }
@@ -234,12 +225,17 @@ public abstract class GuiBase extends GuiContainer {
             }
 
             try {
-                List<String> lines = new LinkedList<>();
+                List<String> lines = new LinkedList<String>();
                 BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
-                reader.lines().forEach(line -> lines.add(line));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
                 if (lines.isEmpty()) {
                     generateFile(scriptFile);
-                    reader.lines().forEach(line -> lines.add(line));
+                    while ((line = reader.readLine()) != null) {
+                        lines.add(line);
+                    }
                 }
                 reader.close();
                 PrintWriter writer = new PrintWriter(new FileWriter(scriptFile));
@@ -248,14 +244,14 @@ public abstract class GuiBase extends GuiContainer {
                     if (i > 0)
                         beforeLine = lines.get(i - 1);
 
-                    String line = lines.get(i);
+                    String lined = lines.get(i);
                     if (beforeLine.trim().equals("//#Remove")) {
                         writer.println(getOutputRemove());
                     }
                     if (beforeLine.trim().equals("//#Add")) {
                     }
-                    if (!line.isEmpty()) {
-                        writer.println(line);
+                    if (!lined.isEmpty()) {
+                        writer.println(lined);
                     }
                 }
                 writer.close();

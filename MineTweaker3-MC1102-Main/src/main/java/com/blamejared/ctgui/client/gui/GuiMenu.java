@@ -3,6 +3,8 @@ package com.blamejared.ctgui.client.gui;
 import com.blamejared.ctgui.api.CheckButtonRecipe;
 import com.blamejared.ctgui.api.GuiBase;
 import com.blamejared.ctgui.api.Slider;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.fml.client.config.GuiSlider;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -18,7 +20,7 @@ public class GuiMenu {
     private GuiBase parent;
     private int x;
     private int y;
-    private List<Pair<CheckButtonRecipe, Slider[]>> buttons = new ArrayList<>();
+    private List<Pair<CheckButtonRecipe, Slider[]>> buttons = new ArrayList<Pair<CheckButtonRecipe, Slider[]>>();
     //    public Pair<CheckButtonRecipe, Slider[]> matchNotEmpty;
     public Pair<CheckButtonRecipe, Slider[]> useOreDict;
     public Pair<CheckButtonRecipe, Slider[]> matchAnyMetadata;
@@ -42,40 +44,52 @@ public class GuiMenu {
     public GuiMenu() {
     }
 
-    public void open(GuiBase parent, int x, int y) {
+    public void open(final GuiBase parent, int x, int y) {
         this.parent = parent;
         this.x = x;
         this.y = y;
         int buttonCount = 0;
 //        matchNotEmpty = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "Match Not Empty", false, "matchNotEmpty"), new Slider[]{});
-        useOreDict = new MutablePair<>(new CheckButtonRecipe(parent, 1, x, y + (15 * buttonCount++), "Ore Dictionary", false, "oreDictionary"), new Slider[]{});
-        matchAnyMetadata = new MutablePair<>(new CheckButtonRecipe(parent, 2, x, y + (15 * buttonCount++), "Any Metadata", false, "anyMetadata"), new Slider[]{});
-        anyDamage = new MutablePair<>(new CheckButtonRecipe(parent, 3, x, y + (15 * buttonCount++), "Any Damage", false, "anyDamage"), new Slider[]{});
-        onlyDamage = new MutablePair<>(new CheckButtonRecipe(parent, 4, x, y + (15 * buttonCount++), "Only Damage", false, "onlyDamage"), new Slider[]{});
-        greaterThanEqualDamage = new MutablePair<>(new CheckButtonRecipe(parent, 6, x, y + (15 * buttonCount++), "X>=Damage", false, "gted"), new Slider[]{new Slider("gted", 10, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, slider -> {
-            if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
-                parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+        useOreDict = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 1, x, y + (15 * buttonCount++), "Ore Dictionary", false, "oreDictionary"), new Slider[]{});
+        matchAnyMetadata = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 2, x, y + (15 * buttonCount++), "Any Metadata", false, "anyMetadata"), new Slider[]{});
+        anyDamage = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 3, x, y + (15 * buttonCount++), "Any Damage", false, "anyDamage"), new Slider[]{});
+        onlyDamage = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 4, x, y + (15 * buttonCount++), "Only Damage", false, "onlyDamage"), new Slider[]{});
+        greaterThanEqualDamage = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 6, x, y + (15 * buttonCount++), "X>=Damage", false, "gted"), new Slider[]{new Slider("gted", 10, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, new GuiSlider.ISlider() {
+            @Override
+            public void onChangeSliderValue(GuiSlider slider) {
+                if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
+                    parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+                }
             }
         })});
-        lessThanDamage = new MutablePair<>(new CheckButtonRecipe(parent, 7, x, y + (15 * buttonCount++), "Damage<X", false, "ltd"), new Slider[]{new Slider("ltd", 11, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, slider -> {
-            if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
-                parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+        lessThanDamage = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 7, x, y + (15 * buttonCount++), "Damage<X", false, "ltd"), new Slider[]{new Slider("ltd", 11, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, new GuiSlider.ISlider() {
+            @Override
+            public void onChangeSliderValue(GuiSlider slider) {
+                if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
+                    parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+                }
             }
         })});
-        betweenDamage = new MutablePair<>(new CheckButtonRecipe(parent, 8, x, y + (15 * buttonCount++), "X<Damage<Y", false, "betweenDamage"), new Slider[]{new Slider("betweenDamageX", 12, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, slider -> {
-            if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
-                parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+        betweenDamage = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 8, x, y + (15 * buttonCount++), "X<Damage<Y", false, "betweenDamage"), new Slider[]{new Slider("betweenDamageX", 12, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, new GuiSlider.ISlider() {
+            @Override
+            public void onChangeSliderValue(GuiSlider slider) {
+                if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
+                    parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+                }
             }
-        }), new Slider("betweenDamageY", 13, x - 2, parent.getGuiTop() + parent.getYSize() + 44, parent.getXSize() + 102, 20, "Y= ", "", 0, 0, 0, false, true, slider -> {
-            if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
-                parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+        }), new Slider("betweenDamageY", 13, x - 2, parent.getGuiTop() + parent.getYSize() + 44, parent.getXSize() + 102, 20, "Y= ", "", 0, 0, 0, false, true, new GuiSlider.ISlider() {
+            @Override
+            public void onChangeSliderValue(GuiSlider slider) {
+                if (parent.selectedSlot != null && parent.selectedSlot.getStack() != null) {
+                    parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
+                }
             }
         })});
 
-        nbt = new MutablePair<>(new CheckButtonRecipe(parent, 8, x, y + (15 * buttonCount++), "NBT", false, "nbt"), new Slider[]{});
+        nbt = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 8, x, y + (15 * buttonCount++), "NBT", false, "nbt"), new Slider[]{});
 
-        reuse = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "Reuse", false, "reuse"), new Slider[]{});
-        noReturn = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "No Return", false, "noreturn"), new Slider[]{});
+        reuse = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "Reuse", false, "reuse"), new Slider[]{});
+        noReturn = new MutablePair<CheckButtonRecipe, Slider[]>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "No Return", false, "noreturn"), new Slider[]{});
 
 
         this.buttons.add(useOreDict);
@@ -92,20 +106,22 @@ public class GuiMenu {
         this.buttons.add(reuse);
         this.buttons.add(noReturn);
 
-        this.buttons.forEach(but -> parent.getButtonList().add(but.getLeft()));
+        for (Pair<CheckButtonRecipe, Slider[]> but : this.buttons) {
+            parent.getButtonList().add(but.getLeft());
+        }
 
-        useOreDict.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft(), nbt.getLeft()}));
-        matchAnyMetadata.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
-        anyDamage.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
-        onlyDamage.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
+        useOreDict.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft(), nbt.getLeft()}));
+        matchAnyMetadata.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
+        anyDamage.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
+        onlyDamage.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
 
-        greaterThanEqualDamage.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
-        lessThanDamage.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), betweenDamage.getLeft()}));
-        betweenDamage.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft()}));
+        greaterThanEqualDamage.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), lessThanDamage.getLeft(), betweenDamage.getLeft()}));
+        lessThanDamage.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), betweenDamage.getLeft()}));
+        betweenDamage.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft()}));
 
-        nbt.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft()}));
-        noReturn.getLeft().setIncompatible(Arrays.asList(reuse.getLeft()));
-        reuse.getLeft().setIncompatible(Arrays.asList(noReturn.getLeft()));
+        nbt.getLeft().setIncompatible(Arrays.<GuiButton>asList(new CheckButtonRecipe[]{useOreDict.getLeft()}));
+        noReturn.getLeft().setIncompatible(Arrays.<GuiButton>asList(reuse.getLeft()));
+        reuse.getLeft().setIncompatible(Arrays.<GuiButton>asList(noReturn.getLeft()));
 
 
     }

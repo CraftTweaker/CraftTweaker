@@ -18,8 +18,7 @@ public class GuiFurnace extends GuiBase {
     @Override
     public void initGui() {
         super.initGui();
-        xpSlider = new Slider("slider", 10, getGuiLeft() - 102 - 2, getGuiTop() + getYSize() + 20, getXSize()+102, 20, "XP= ", "", 0, 50, 0, true, true, slider -> {
-        });
+        xpSlider = new Slider("slider", 10, getGuiLeft() - 102 - 2, getGuiTop() + getYSize() + 20, getXSize() + 102, 20, "XP= ", "", 0, 50, 0, true, true);
         getButtonList().add(xpSlider);
     }
 

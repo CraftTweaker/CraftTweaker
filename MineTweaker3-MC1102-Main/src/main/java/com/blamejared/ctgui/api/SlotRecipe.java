@@ -18,8 +18,8 @@ import java.util.Map;
 public class SlotRecipe extends Slot {
 
     //key is the operation, value is the values, for more than 1 value, seperate using §
-    private Map<String, Boolean> propertyMap = new HashMap<>();
-    private Map<String, Integer> properties = new HashMap<>();
+    private Map<String, Boolean> propertyMap = new HashMap<String, Boolean>();
+    private Map<String, Integer> properties = new HashMap<String, Integer>();
 
 
     public SlotRecipe(IInventory inventoryIn, int index, int xPosition, int yPosition) {

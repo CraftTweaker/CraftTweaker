@@ -4,6 +4,7 @@ import com.blamejared.ctgui.api.CheckButton;
 import com.blamejared.ctgui.api.ContainerBase;
 import com.blamejared.ctgui.api.GuiBase;
 import com.blamejared.ctgui.api.SlotRecipe;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
@@ -35,8 +36,8 @@ public class GuiCraftingTable extends GuiBase {
         getButtonList().add(shapeless);
         getButtonList().add(shaped);
         getButtonList().add(mirror);
-        shaped.setIncompatible(Arrays.asList(shapeless));
-        shapeless.setIncompatible(Arrays.asList(shaped, mirror));
+        shaped.setIncompatible(Arrays.<GuiButton>asList(shapeless));
+        shapeless.setIncompatible(Arrays.<GuiButton>asList(shaped, mirror));
         mirror.setIncompatible(Arrays.asList(remove));
         shaped.setIsChecked(true);
 
