@@ -34,14 +34,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import stanhebben.zenscript.annotations.ZenExpansion;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -108,6 +113,15 @@ public class MineTweakerMod {
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+        for (ASMDataTable.ASMData data : ev.getAsmData().getAll(ZenExpansion.class.getCanonicalName())) {
+            try {
+                Class<?> asmClass = Class.forName(data.getClassName());
+                MineTweakerAPI.registerClass(asmClass);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @EventHandler
@@ -119,6 +133,20 @@ public class MineTweakerMod {
         }
 
         FuelTweaker.INSTANCE.register();
+        if (Loader.isModLoaded("JEI")) {
+            try {
+                Method register = Class.forName("minetweaker.mods.jei.JEI").getMethod("onRegister");
+                register.invoke(null);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @EventHandler
@@ -154,7 +182,7 @@ public class MineTweakerMod {
         }
 
         IScriptProvider scriptsLocal = new ScriptProviderDirectory(scriptsDir);
-        IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal,scriptsLocal);
+        IScriptProvider cascaded = new ScriptProviderCascade(scriptsIMC, scriptsGlobal, scriptsLocal);
 
         MineTweakerImplementationAPI.setScriptProvider(cascaded);
         MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
