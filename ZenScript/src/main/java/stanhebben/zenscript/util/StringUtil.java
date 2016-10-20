@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Stanneke
  */
 public class StringUtil {
@@ -52,7 +51,7 @@ public class StringUtil {
      * If a set of methods is available and none matches, this method creates a
      * suitable message.
      *
-     * @param methods matching methods
+     * @param methods   matching methods
      * @param arguments calling arguments
      * @return return value
      */
@@ -85,7 +84,7 @@ public class StringUtil {
     /**
      * Splits a string in parts, given a specified delimiter.
      *
-     * @param value string to be split
+     * @param value     string to be split
      * @param delimiter delimiter
      * @return
      */
@@ -95,7 +94,8 @@ public class StringUtil {
 
         ArrayList<String> result = new ArrayList<String>();
         int start = 0;
-        outer: for (int i = 0; i < value.length(); i++) {
+        outer:
+        for (int i = 0; i < value.length(); i++) {
             if (value.charAt(i) == delimiter) {
                 result.add(value.substring(start, i));
                 start = i + 1;
@@ -140,50 +140,49 @@ public class StringUtil {
     // ########################
 
     /**
-     *
      * unescape_perl_string()
-     *
+     * <p>
      * Tom Christiansen <tchrist@perl.com> Sun Nov 28 12:55:24 MST 2010
-     *
+     * <p>
      * It's completely ridiculous that there's no standard unescape_java_string
      * function. Since I have to do the damn thing myself, I might as well make
      * it halfway useful by supporting things Java was too stupid to consider in
      * strings:
-     *
+     * <p>
      * => "?" items are additions to Java string escapes but normal in Java
      * regexes
-     *
+     * <p>
      * => "!" items are also additions to Java regex escapes
-     *
+     * <p>
      * Standard singletons: ?\a ?\e \f \n \r \t
-     *
+     * <p>
      * NB: \b is unsupported as backspace so it can pass-through to the regex
      * translator untouched; I refuse to make anyone doublebackslash it as
      * doublebackslashing is a Java idiocy I desperately wish would die out.
      * There are plenty of other ways to write it:
-     *
+     * <p>
      * \cH, \12, \012, \x08 \x{8}, \u0008, \U00000008
-     *
+     * <p>
      * Octal escapes: \0 \0N \0NN \N \NN \NNN Can range up to !\777 not \377
-     *
+     * <p>
      * TODO: add !\o{NNNNN} last Unicode is 4177777 maxint is 37777777777
-     *
+     * <p>
      * Control chars: ?\cX Means: ord(X) ^ ord('@')
-     *
+     * <p>
      * Old hex escapes: \xXX unbraced must be 2 xdigits
-     *
+     * <p>
      * Perl hex escapes: !\x{XXX} braced may be 1-8 xdigits NB: proper Unicode
      * never needs more than 6, as highest valid codepoint is 0x10FFFF, not
      * maxint 0xFFFFFFFF
-     *
+     * <p>
      * Lame Java escape: \[IDIOT JAVA PREPROCESSOR]uXXXX must be exactly 4
      * xdigits;
-     *
+     * <p>
      * I can't write XXXX in this comment where it belongs because the damned
      * Java Preprocessor can't mind its own business. Idiots!
-     *
+     * <p>
      * Lame Python escape: !\UXXXXXXXX must be exactly 8 xdigits
-     *
+     * <p>
      * TODO: Perl translation escapes: \Q \U \L \E \[IDIOT JAVA PREPROCESSOR]u
      * \l These are not so important to cover if you're passing the result to
      * Pattern.compile(), since it handles them for you further downstream. Hm,
@@ -202,7 +201,7 @@ public class StringUtil {
         oldstr = oldstr.substring(1, oldstr.length() - 1);
 
 		/*
-		 * In contrast to fixing Java's broken regex charclasses, this one need
+         * In contrast to fixing Java's broken regex charclasses, this one need
 		 * be no bigger, as unescaping shrinks the string here, where in the
 		 * other one, it grows it.
 		 */
@@ -266,7 +265,7 @@ public class StringUtil {
                     break; /* switch */
 
 				/*
-				 * A "control" character is what you get when you xor its
+                 * A "control" character is what you get when you xor its
 				 * codepoint with '@'==64. This only makes sense for ASCII, and
 				 * may not yield a "control" character after all.
 				 *

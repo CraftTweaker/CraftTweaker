@@ -131,6 +131,7 @@ public abstract class GuiBase extends GuiContainer {
             if (rectangle.contains(mouseX, mouseY)) {
                 switch (mouseButton) {
                     case 0:
+                        break;
                     case 1:
                         if (slot.getHasStack()) {
                             clickedSlot[0] = true;
@@ -146,6 +147,7 @@ public abstract class GuiBase extends GuiContainer {
                                 menu.getFromMap(slot.getPropertyMap(), slot.getProperties());
                             }
                         }
+                        break;
                     case 2:
                         clickedSlot[0] = true;
                         selectedSlot = null;
@@ -160,6 +162,7 @@ public abstract class GuiBase extends GuiContainer {
                         }
                         if (editingField != null)
                             editingField.setText("");
+                        break;
                 }
             }
 
