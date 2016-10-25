@@ -9,14 +9,14 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * Transformations can be used to modify an ingredient after it is used in a
  * crafting recipe. It could reuse the item, damage it or consume multiple
  * items.
- * 
+ *
  * @author Stan Hebben
  */
 @ZenExpansion("minetweaker.item.IIngredient")
 public class IngredientTransform {
 	/**
 	 * Makes the item reusable. Prevents consumption of the item upon crafting.
-	 * 
+	 *
 	 * @param ingredient target value
 	 * @return reuse transformer
 	 */
@@ -33,7 +33,7 @@ public class IngredientTransform {
 	/**
 	 * Damages the item. Also makes the item reusable. Will damage the item for
 	 * 1 point upon crafting and consume it when broken.
-	 * 
+	 *
 	 * @param ingredient target value
 	 * @return damage transformer
 	 */
@@ -57,7 +57,7 @@ public class IngredientTransform {
 	 * Upon reaching maximum damage, the item will be consumed. Take care to set
 	 * the proper condition such that an almost-broken item becomes invalid for
 	 * crafting.
-	 * 
+	 *
 	 * @param ingredient target value
 	 * @param damage damage to be applied
 	 * @return damage transformer
@@ -81,7 +81,7 @@ public class IngredientTransform {
 	/**
 	 * Causes the item to be replaced upon crafting. Can be used, for instance,
 	 * to return empty bottles or buckets.
-	 * 
+	 *
 	 * @param ingredient target value
 	 * @param withItem replacement item
 	 * @return replacement transformer
@@ -105,7 +105,7 @@ public class IngredientTransform {
 	 * Causes multiple items to be consumed. Take care to set a condition for a
 	 * minimum stack size too, as otherwise smaller stacks would still be
 	 * accepted for input.
-	 * 
+	 *
 	 * @param ingredient target value
 	 * @param amount consumption amount
 	 * @return consuming transformer
@@ -122,7 +122,7 @@ public class IngredientTransform {
 
 	/**
 	 * Makes sure there is no return value.
-	 * 
+	 *
 	 * @param ingredient
 	 * @return
 	 */
@@ -139,7 +139,7 @@ public class IngredientTransform {
 	/**
 	 * Gives an item back to the player. Also clears the inventory slot at that
 	 * position.
-	 * 
+	 *
 	 * @param ingredient
 	 * @param givenItem
 	 * @return

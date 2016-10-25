@@ -42,7 +42,7 @@ public abstract class GuiBase extends GuiContainer {
         super.initGui();
         buttonList.clear();
         if (shouldOpenMenu)
-            menu.open(this, guiLeft - 102, guiTop);
+            menu.open(this, guiLeft - 102, guiTop+2);
         editingField = new GuiTextField(2906, fontRendererObj, guiLeft - 104, guiTop - 26, xSize + 102, 20);
         editingField.setMaxStringLength(Integer.MAX_VALUE);
         editingField.setEnabled(true);

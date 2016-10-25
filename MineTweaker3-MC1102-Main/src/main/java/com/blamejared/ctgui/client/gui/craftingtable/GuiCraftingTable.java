@@ -14,7 +14,6 @@ import java.util.Arrays;
  */
 public class GuiCraftingTable extends GuiBase {
 
-
     public GuiCraftingTable(ContainerBase container) {
         super(container, 176, 166, true);
     }

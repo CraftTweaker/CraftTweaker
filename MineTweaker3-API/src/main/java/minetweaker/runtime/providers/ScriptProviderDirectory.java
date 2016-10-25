@@ -21,7 +21,7 @@ public class ScriptProviderDirectory implements IScriptProvider {
     private final File directory;
 
     public ScriptProviderDirectory(File directory) {
-        if (directory == null)
+        if(directory == null)
             throw new IllegalArgumentException("directory cannot be null");
 
         this.directory = directory;
@@ -30,25 +30,28 @@ public class ScriptProviderDirectory implements IScriptProvider {
     @Override
     public Iterator<IScriptIterator> getScripts() {
         List<IScriptIterator> scripts = new ArrayList<IScriptIterator>();
-        if (directory.exists()) {
-            for (File file : directory.listFiles()) {
-                if (file.isDirectory()) {
+        if(directory.exists()) {
+            for(File file : directory.listFiles()) {
+                if(file.isDirectory()) {
                     scripts.add(new ScriptIteratorDirectory(file));
-                } else if (file.getName().endsWith(".zs")) {
+                } else if(file.getName().endsWith(".zs")) {
                     scripts.add(new ScriptIteratorSingle(file));
-                } else if (file.getName().endsWith(".zip")) {
+                } else if(file.getName().endsWith(".zip")) {
                     try {
                         scripts.add(new ScriptIteratorZip(file));
-                    } catch (IOException ex) {
+                    } catch(IOException ex) {
                         MineTweakerAPI.logError("Could not load " + file.getName() + ": " + ex.getMessage());
                     }
                 }
             }
         }
-        if (scripts.size() > 1)
+        if(scripts.size() > 1)
             scripts.sort(new Comparator<IScriptIterator>() {
                 @Override
                 public int compare(IScriptIterator sc, IScriptIterator sc1) {
+                    if(sc == null || sc1 == null) {
+                        return -1;
+                    }
                     return sc.getName().compareTo(sc1.getName());
                 }
             });
