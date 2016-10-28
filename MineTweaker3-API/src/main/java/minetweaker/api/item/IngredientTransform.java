@@ -25,7 +25,7 @@ public class IngredientTransform {
 		return ingredient.transform(new IItemTransformer() {
 			@Override
 			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
-				return item.withAmount(item.getAmount() + 1);
+				return item.withAmount(item.getAmount());
 			}
 		});
 	}
@@ -72,7 +72,7 @@ public class IngredientTransform {
 				if (newDamage >= item.getMaxDamage()) {
 					return item.withAmount(item.getAmount()).withDamage(0);
 				} else {
-					return item.withAmount(item.getAmount() + 1).withDamage(newDamage);
+					return item.withAmount(item.getAmount()).withDamage(newDamage);
 				}
 			}
 		});
@@ -95,7 +95,7 @@ public class IngredientTransform {
 					byPlayer.give(withItem);
 					return item;
 				} else {
-					return withItem.withAmount(withItem.getAmount() + 1);
+					return withItem.withAmount(withItem.getAmount());
 				}
 			}
 		});

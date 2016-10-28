@@ -184,7 +184,6 @@ public class MineTweakerMod {
 
         MineTweakerImplementationAPI.setScriptProvider(cascaded);
         MineTweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
-
     }
 
     @EventHandler
