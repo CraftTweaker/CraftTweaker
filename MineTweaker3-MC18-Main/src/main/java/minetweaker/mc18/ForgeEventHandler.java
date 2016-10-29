@@ -35,16 +35,18 @@ public class ForgeEventHandler {
 
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent ev) {
-        IItemStack itemStack = MineTweakerMC.getIItemStack(ev.itemStack);
-        for (IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
-            ev.toolTip.add(((IMCFormattedString) tooltip).getTooltipString());
-        }
-        if (!Keyboard.isCreated()) {
-            return;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-            for (IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
+        if(ev.itemStack != null) {
+            IItemStack itemStack = MineTweakerMC.getIItemStack(ev.itemStack);
+            for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
                 ev.toolTip.add(((IMCFormattedString) tooltip).getTooltipString());
+            }
+            if(!Keyboard.isCreated()) {
+                return;
+            }
+            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+                for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
+                    ev.toolTip.add(((IMCFormattedString) tooltip).getTooltipString());
+                }
             }
         }
     }

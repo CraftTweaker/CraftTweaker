@@ -20,7 +20,7 @@ import org.lwjgl.input.Keyboard;
 /**
  * @author Stan
  */
-public class ForgeEventHandler{
+public class ForgeEventHandler {
     @SubscribeEvent
     public void onPlayerInteract(PlayerInteractEvent ev) {
         minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(
@@ -34,17 +34,19 @@ public class ForgeEventHandler{
     }
 
     @SubscribeEvent
-    public void onItemTooltip(ItemTooltipEvent ev){
-        IItemStack itemStack = MineTweakerMC.getIItemStack(ev.getItemStack());
-        for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)){
-            ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
-        }
-        if (!Keyboard.isCreated()) {
-            return;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
-            for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)){
+    public void onItemTooltip(ItemTooltipEvent ev) {
+        if(ev.getItemStack() != null) {
+            IItemStack itemStack = MineTweakerMC.getIItemStack(ev.getItemStack());
+            for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
                 ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
+            }
+            if(!Keyboard.isCreated()) {
+                return;
+            }
+            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+                for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
+                    ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
+                }
             }
         }
     }
