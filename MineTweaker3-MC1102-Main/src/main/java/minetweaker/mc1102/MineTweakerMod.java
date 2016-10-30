@@ -8,6 +8,7 @@ package minetweaker.mc1102;
 
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.annotations.BracketHandler;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.mc1102.brackets.ItemBracketHandler;
 import minetweaker.mc1102.brackets.LiquidBracketHandler;
@@ -41,10 +42,16 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenExpansion;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import static minetweaker.MineTweakerAPI.registerClass;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -82,7 +89,7 @@ public class MineTweakerMod {
         MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
 
         File globalDir = new File("scripts");
-        if (!globalDir.exists())
+        if(!globalDir.exists())
             globalDir.mkdirs();
         scriptsIMC = new ScriptProviderCustom("intermod");
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
@@ -95,11 +102,11 @@ public class MineTweakerMod {
 
     @EventHandler
     public void onIMCEvent(FMLInterModComms.IMCEvent event) {
-        for (final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
-            if (imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
-                if (imcMessage.isStringMessage()) {
+        for(final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
+            if(imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
+                if(imcMessage.isStringMessage()) {
                     scriptsIMC.add(imcMessage.getSender() + "::imc", imcMessage.getStringValue());
-                } else if (imcMessage.isNBTMessage()) {
+                } else if(imcMessage.isNBTMessage()) {
                     NBTTagCompound message = imcMessage.getNBTValue();
                     scriptsIMC.add(imcMessage.getSender() + "::" + message.getString("name"), message.getString("content"));
                 }
@@ -111,14 +118,24 @@ public class MineTweakerMod {
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         FMLCommonHandler.instance().bus().register(new FMLEventHandler());
-//        for (ASMDataTable.ASMData data : ev.getAsmData().getAll(ZenExpansion.class.getCanonicalName())) {
-//            try {
-//                Class<?> asmClass = Class.forName(data.getClassName());
-//                MineTweakerAPI.registerClass(asmClass);
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        List<Class> apiClasses = new ArrayList<Class>();
+        String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
+        for(String name : classNames) {
+            ev.getAsmData().getAll(name).forEach(clazz -> {
+
+                try {
+                    Class<?> asmClass = Class.forName(clazz.getClassName());
+                    apiClasses.add(asmClass);
+                } catch(ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+//        ClassRegistry.getClasses(apiClasses);
+        for(Class cls : apiClasses) {
+            registerClass(cls);
+        }
 
     }
 
@@ -126,22 +143,22 @@ public class MineTweakerMod {
     public void onPostInit(FMLPostInitializationEvent ev) {
         MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
 
-        for (int i = 0; i < REGISTRIES.length; i++) {
+        for(int i = 0; i < REGISTRIES.length; i++) {
             MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
         }
 
         FuelTweaker.INSTANCE.register();
-        if (Loader.isModLoaded("JEI")) {
+        if(Loader.isModLoaded("JEI")) {
             try {
                 Method register = Class.forName("minetweaker.mods.jei.JEI").getMethod("onRegister");
                 register.invoke(null);
-            } catch (NoSuchMethodException e) {
+            } catch(NoSuchMethodException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch(ClassNotFoundException e) {
                 e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch(InvocationTargetException e) {
                 e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch(IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -170,12 +187,12 @@ public class MineTweakerMod {
         // starts before loading worlds
         // perfect place to start MineTweaker!
 
-        if (MineTweakerPlatformUtils.isClient()) {
+        if(MineTweakerPlatformUtils.isClient()) {
             MineTweakerAPI.client = new MCClient();
         }
 
         File scriptsDir = new File(MineTweakerHacks.getWorldDirectory(ev.getServer()), "scripts");
-        if (!scriptsDir.exists()) {
+        if(!scriptsDir.exists()) {
             scriptsDir.mkdir();
         }
 

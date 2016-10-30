@@ -1,5 +1,7 @@
 import minetweaker.tasks.RegisterZenClassesTask;
 
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -18,6 +20,9 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 version = "1.10.2-" + ext.mineTweakerVersion
 archivesBaseName = project.projectDir.name

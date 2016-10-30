@@ -70,12 +70,12 @@ public class MineTweakerAPI {
 	};
 
 	static {
-		List<Class> apiClasses = new ArrayList<Class>();
-		ClassRegistry.getClasses(apiClasses);
-
-		for (Class cls : apiClasses) {
-			registerClass(cls);
-		}
+//		List<Class> apiClasses = new ArrayList<Class>();
+//		ClassRegistry.getClasses(apiClasses);
+//
+//		for (Class cls : apiClasses) {
+//			registerClass(cls);
+//		}
 
 		registerGlobalSymbol("logger", getJavaStaticGetterSymbol(MineTweakerAPI.class, "getLogger"));
 		registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(MineTweakerAPI.class, "recipes"));
