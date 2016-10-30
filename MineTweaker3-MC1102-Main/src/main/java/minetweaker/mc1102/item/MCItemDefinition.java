@@ -14,6 +14,7 @@ import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import stanhebben.zenscript.annotations.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class MCItemDefinition implements IItemDefinition{
     }
 
     @Override
-    public IItemStack makeStack(int meta){
+    public IItemStack makeStack(@Optional int meta){
         return MineTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
     }
 

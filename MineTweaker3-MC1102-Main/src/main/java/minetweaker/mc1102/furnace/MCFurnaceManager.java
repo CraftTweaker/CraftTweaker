@@ -17,6 +17,7 @@ import minetweaker.mc1102.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import stanhebben.zenscript.annotations.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class MCFurnaceManager implements IFurnaceManager{
     }
 
     @Override
-    public void remove(IIngredient output, IIngredient input){
+    public void remove(IIngredient output, @Optional IIngredient input){
         if(output == null)
             throw new IllegalArgumentException("output cannot be null");
 
@@ -57,7 +58,7 @@ public class MCFurnaceManager implements IFurnaceManager{
     }
 
     @Override
-    public void addRecipe(IItemStack output, IIngredient input, double xp){
+    public void addRecipe(IItemStack output, IIngredient input, @Optional  double xp){
         List<IItemStack> items = input.getItems();
         if(items == null){
             MineTweakerAPI.logError("Cannot turn " + input.toString() + " into a furnace recipe");

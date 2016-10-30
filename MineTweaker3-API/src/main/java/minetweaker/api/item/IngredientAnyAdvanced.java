@@ -70,10 +70,6 @@ public class IngredientAnyAdvanced implements IIngredient {
 
 	@Override
 	public boolean matches(IItemStack item) {
-		// TODO: what is the point of this?
-		if (!item.matches(item))
-			return false;
-
 		for (IItemCondition condition : conditions) {
 			if (!condition.matches(item))
 				return false;
@@ -84,10 +80,6 @@ public class IngredientAnyAdvanced implements IIngredient {
 
 	@Override
 	public boolean matchesExact(IItemStack item) {
-		// TODO: what is the point of this?
-		if (!item.matchesExact(item))
-			return false;
-
 		for (IItemCondition condition : conditions) {
 			if (!condition.matches(item))
 				return false;

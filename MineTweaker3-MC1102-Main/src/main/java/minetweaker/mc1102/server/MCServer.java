@@ -28,6 +28,7 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.UserListOps;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
+import stanhebben.zenscript.annotations.Optional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,13 +44,13 @@ public class MCServer extends AbstractServer {
     }
 
     private static IPlayer getPlayer(ICommandSender commandSender) {
-        if (commandSender instanceof EntityPlayer) {
+        if(commandSender instanceof EntityPlayer) {
             return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
-        } else if (commandSender instanceof DedicatedServer) {
+        } else if(commandSender instanceof DedicatedServer) {
             return ServerPlayer.INSTANCE;
-        } else if (commandSender instanceof RConConsoleSource) {
+        } else if(commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
-        }else if(commandSender instanceof CommandBlockBaseLogic){
+        } else if(commandSender instanceof CommandBlockBaseLogic) {
             return new CommandBlockPlayer(commandSender);
         } else {
             System.out.println("Unsupported command sender: " + commandSender);
@@ -59,7 +60,7 @@ public class MCServer extends AbstractServer {
     }
 
     @Override
-    public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, ICommandValidator validator, ICommandTabCompletion completion) {
+    public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, @Optional ICommandValidator validator, @Optional ICommandTabCompletion completion) {
 
         ICommand command = new MCCommand(name, usage, aliases, function, validator, completion);
         MineTweakerAPI.apply(new AddCommandAction(command));
@@ -67,11 +68,11 @@ public class MCServer extends AbstractServer {
 
     @Override
     public boolean isOp(IPlayer player) {
-        if (player == ServerPlayer.INSTANCE)
+        if(player == ServerPlayer.INSTANCE)
             return true;
 
         UserListOps ops = MineTweakerMod.server.getPlayerList().getOppedPlayers();
-        if (server.isDedicatedServer() && ops != null) {
+        if(server.isDedicatedServer() && ops != null) {
             //TODO figure if this is correct
             //            return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null || player instanceof RconPlayer;
             return ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
@@ -124,7 +125,7 @@ public class MCServer extends AbstractServer {
 
         @Override
         public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-            if (validator == null) {
+            if(validator == null) {
                 return true;
             } else {
                 return validator.canExecute(getPlayer(sender));
@@ -133,7 +134,7 @@ public class MCServer extends AbstractServer {
 
         @Override
         public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-            if (completion != null) {
+            if(completion != null) {
                 return Arrays.asList(completion.getTabCompletionOptions(args, getPlayer(sender)));
             } else {
                 return null;
@@ -161,7 +162,7 @@ public class MCServer extends AbstractServer {
         @Override
         public void apply() {
             CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
-            if (!ch.getCommands().containsValue(command))
+            if(!ch.getCommands().containsValue(command))
                 ch.registerCommand(command);
         }
 
@@ -178,7 +179,7 @@ public class MCServer extends AbstractServer {
         @Override
         public String describe() {
             CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
-            if (!ch.getCommands().containsValue(command))
+            if(!ch.getCommands().containsValue(command))
                 return "Adding command " + command.getCommandName();
             return "";
         }

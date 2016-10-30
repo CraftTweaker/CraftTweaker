@@ -38,15 +38,15 @@ public class MCRecipeManager implements IRecipeManager {
     }
 
     private static boolean matches(Object input, IIngredient ingredient) {
-        if ((input == null) != (ingredient == null)) {
+        if((input == null) != (ingredient == null)) {
             return false;
-        } else if (ingredient != null) {
-            if (input instanceof ItemStack) {
-                if (!ingredient.matches(getIItemStack((ItemStack) input))) {
+        } else if(ingredient != null) {
+            if(input instanceof ItemStack) {
+                if(!ingredient.matches(getIItemStack((ItemStack) input))) {
                     return false;
                 }
-            } else if (input instanceof String) {
-                if (!ingredient.contains(getOreDict((String) input))) {
+            } else if(input instanceof String) {
+                if(!ingredient.contains(getOreDict((String) input))) {
                     return false;
                 }
             }
@@ -60,8 +60,8 @@ public class MCRecipeManager implements IRecipeManager {
     }
 
     public void applyTransformations(ICraftingInventory inventory, IPlayer byPlayer) {
-        for (ICraftingRecipe recipe : transformerRecipes) {
-            if (recipe.matches(inventory)) {
+        for(ICraftingRecipe recipe : transformerRecipes) {
+            if(recipe.matches(inventory)) {
                 recipe.applyTransformers(inventory, byPlayer);
                 return;
             }
@@ -72,8 +72,8 @@ public class MCRecipeManager implements IRecipeManager {
     public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
         List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
 
-        for (IRecipe recipe : recipes) {
-            if (ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))) {
+        for(IRecipe recipe : recipes) {
+            if(ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))) {
                 ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
                 results.add(converted);
             }
@@ -86,7 +86,7 @@ public class MCRecipeManager implements IRecipeManager {
     public List<ICraftingRecipe> getAll() {
         List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
 
-        for (IRecipe recipe : recipes) {
+        for(IRecipe recipe : recipes) {
             ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
             results.add(converted);
         }
@@ -98,13 +98,13 @@ public class MCRecipeManager implements IRecipeManager {
     public int remove(IIngredient output, @Optional boolean nbtMatch) {
         List<IRecipe> toRemove = new ArrayList<IRecipe>();
         List<Integer> removeIndex = new ArrayList<Integer>();
-        for (int i = 0; i < recipes.size(); i++) {
+        for(int i = 0; i < recipes.size(); i++) {
             IRecipe recipe = recipes.get(i);
 
             // certain special recipes have no predefined output. ignore those
             // since these cannot be removed with MineTweaker scripts
-            if (recipe.getRecipeOutput() != null) {
-                if (nbtMatch ? output.matchesExact(getIItemStack(recipe.getRecipeOutput())) : output.matches(getIItemStack(recipe.getRecipeOutput()))) {
+            if(recipe.getRecipeOutput() != null) {
+                if(nbtMatch ? output.matchesExact(getIItemStack(recipe.getRecipeOutput())) : output.matches(getIItemStack(recipe.getRecipeOutput()))) {
                     toRemove.add(recipe);
                     removeIndex.add(i);
                 }
@@ -116,31 +116,31 @@ public class MCRecipeManager implements IRecipeManager {
     }
 
     @Override
-    public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
+    public void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function) {
         addShaped(output, ingredients, function, false);
     }
 
     @Override
-    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
+    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function) {
         addShaped(output, ingredients, function, true);
     }
 
     @Override
-    public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
+    public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function) {
         ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
         IRecipe irecipe = RecipeConverter.convert(recipe);
         MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
     }
 
     @Override
-    public int removeShaped(IIngredient output, IIngredient[][] ingredients) {
+    public int removeShaped(IIngredient output, @Optional IIngredient[][] ingredients) {
         int ingredientsWidth = 0;
         int ingredientsHeight = 0;
 
-        if (ingredients != null) {
+        if(ingredients != null) {
             ingredientsHeight = ingredients.length;
 
-            for (int i = 0; i < ingredients.length; i++) {
+            for(int i = 0; i < ingredients.length; i++) {
                 ingredientsWidth = Math.max(ingredientsWidth, ingredients[i].length);
             }
         }
@@ -148,54 +148,54 @@ public class MCRecipeManager implements IRecipeManager {
         List<IRecipe> toRemove = new ArrayList<IRecipe>();
         List<Integer> removeIndex = new ArrayList<Integer>();
         outer:
-        for (int i = 0; i < recipes.size(); i++) {
+        for(int i = 0; i < recipes.size(); i++) {
             IRecipe recipe = recipes.get(i);
 
-            if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
+            if(recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
                 continue;
             }
 
-            if (ingredients != null) {
-                if (recipe instanceof ShapedRecipes) {
+            if(ingredients != null) {
+                if(recipe instanceof ShapedRecipes) {
                     ShapedRecipes srecipe = (ShapedRecipes) recipe;
-                    if (ingredientsWidth != srecipe.recipeWidth || ingredientsHeight != srecipe.recipeHeight) {
+                    if(ingredientsWidth != srecipe.recipeWidth || ingredientsHeight != srecipe.recipeHeight) {
                         continue;
                     }
 
-                    for (int j = 0; j < ingredientsHeight; j++) {
+                    for(int j = 0; j < ingredientsHeight; j++) {
                         IIngredient[] row = ingredients[j];
-                        for (int k = 0; k < ingredientsWidth; k++) {
+                        for(int k = 0; k < ingredientsWidth; k++) {
                             IIngredient ingredient = k > row.length ? null : row[k];
                             ItemStack recipeIngredient = srecipe.recipeItems[j * srecipe.recipeWidth + k];
 
-                            if (!matches(recipeIngredient, ingredient)) {
+                            if(!matches(recipeIngredient, ingredient)) {
                                 continue outer;
                             }
                         }
                     }
-                } else if (recipe instanceof ShapedOreRecipe) {
+                } else if(recipe instanceof ShapedOreRecipe) {
                     ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe;
                     int recipeWidth = MineTweakerHacks.getShapedOreRecipeWidth(srecipe);
                     int recipeHeight = srecipe.getRecipeSize() / recipeWidth;
-                    if (ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
+                    if(ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
                         continue;
                     }
 
-                    for (int j = 0; j < ingredientsHeight; j++) {
+                    for(int j = 0; j < ingredientsHeight; j++) {
                         IIngredient[] row = ingredients[j];
-                        for (int k = 0; k < ingredientsWidth; k++) {
+                        for(int k = 0; k < ingredientsWidth; k++) {
                             IIngredient ingredient = k > row.length ? null : row[k];
                             Object input = srecipe.getInput()[j * recipeWidth + k];
-                            if (!matches(input, ingredient)) {
+                            if(!matches(input, ingredient)) {
                                 continue outer;
                             }
                         }
                     }
                 }
             } else {
-                if (recipe instanceof ShapedRecipes) {
+                if(recipe instanceof ShapedRecipes) {
 
-                } else if (recipe instanceof ShapedOreRecipe) {
+                } else if(recipe instanceof ShapedOreRecipe) {
 
                 } else {
                     continue;
@@ -211,52 +211,52 @@ public class MCRecipeManager implements IRecipeManager {
     }
 
     @Override
-    public int removeShapeless(IIngredient output, IIngredient[] ingredients, boolean wildcard) {
+    public int removeShapeless(IIngredient output, @Optional IIngredient[] ingredients, @Optional boolean wildcard) {
         List<IRecipe> toRemove = new ArrayList<IRecipe>();
         List<Integer> removeIndex = new ArrayList<Integer>();
         outer:
-        for (int i = 0; i < recipes.size(); i++) {
+        for(int i = 0; i < recipes.size(); i++) {
             IRecipe recipe = recipes.get(i);
 
-            if (recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
+            if(recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
                 continue;
             }
 
-            if (ingredients != null) {
-                if (recipe instanceof ShapelessRecipes) {
+            if(ingredients != null) {
+                if(recipe instanceof ShapelessRecipes) {
                     ShapelessRecipes srecipe = (ShapelessRecipes) recipe;
 
-                    if (ingredients.length > srecipe.getRecipeSize()) {
+                    if(ingredients.length > srecipe.getRecipeSize()) {
                         continue;
-                    } else if (!wildcard && ingredients.length < srecipe.getRecipeSize()) {
+                    } else if(!wildcard && ingredients.length < srecipe.getRecipeSize()) {
                         continue;
                     }
 
                     checkIngredient:
-                    for (int j = 0; j < ingredients.length; j++) {
-                        for (int k = 0; k < srecipe.getRecipeSize(); k++) {
-                            if (matches(srecipe.recipeItems.get(k), ingredients[j])) {
+                    for(int j = 0; j < ingredients.length; j++) {
+                        for(int k = 0; k < srecipe.getRecipeSize(); k++) {
+                            if(matches(srecipe.recipeItems.get(k), ingredients[j])) {
                                 continue checkIngredient;
                             }
                         }
 
                         continue outer;
                     }
-                } else if (recipe instanceof ShapelessOreRecipe) {
+                } else if(recipe instanceof ShapelessOreRecipe) {
                     ShapelessOreRecipe srecipe = (ShapelessOreRecipe) recipe;
                     ArrayList<Object> inputs = srecipe.getInput();
 
-                    if (inputs.size() < ingredients.length) {
+                    if(inputs.size() < ingredients.length) {
                         continue;
                     }
-                    if (!wildcard && inputs.size() > ingredients.length) {
+                    if(!wildcard && inputs.size() > ingredients.length) {
                         continue;
                     }
 
                     checkIngredient:
-                    for (int j = 0; j < ingredients.length; j++) {
-                        for (int k = 0; k < srecipe.getRecipeSize(); k++) {
-                            if (matches(inputs.get(k), ingredients[j])) {
+                    for(int j = 0; j < ingredients.length; j++) {
+                        for(int k = 0; k < srecipe.getRecipeSize(); k++) {
+                            if(matches(inputs.get(k), ingredients[j])) {
                                 continue checkIngredient;
                             }
                         }
@@ -265,9 +265,9 @@ public class MCRecipeManager implements IRecipeManager {
                     }
                 }
             } else {
-                if (recipe instanceof ShapelessRecipes) {
+                if(recipe instanceof ShapelessRecipes) {
 
-                } else if (recipe instanceof ShapelessOreRecipe) {
+                } else if(recipe instanceof ShapelessOreRecipe) {
 
                 } else {
                     continue;
@@ -288,25 +288,25 @@ public class MCRecipeManager implements IRecipeManager {
 
         int width = 0;
         int height = contents.length;
-        for (IItemStack[] row : contents) {
+        for(IItemStack[] row : contents) {
             width = Math.max(width, row.length);
         }
 
         ItemStack[] iContents = new ItemStack[width * height];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < contents[i].length; j++) {
-                if (contents[i][j] != null) {
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < contents[i].length; j++) {
+                if(contents[i][j] != null) {
                     iContents[i * width + j] = getItemStack(contents[i][j]);
                 }
             }
         }
 
         InventoryCrafting inventory = new InventoryCrafting(container, width, height);
-        for (int i = 0; i < iContents.length; i++) {
+        for(int i = 0; i < iContents.length; i++) {
             inventory.setInventorySlotContents(i, iContents[i]);
         }
         ItemStack result = CraftingManager.getInstance().findMatchingRecipe(inventory, null);
-        if (result == null) {
+        if(result == null) {
             return null;
         } else {
             return getIItemStack(result);
@@ -337,7 +337,7 @@ public class MCRecipeManager implements IRecipeManager {
 
         @Override
         public void apply() {
-            for (int i = removingIndices.size() - 1; i >= 0; i--) {
+            for(int i = removingIndices.size() - 1; i >= 0; i--) {
                 recipes.remove((int) removingIndices.get(i));
             }
         }
@@ -349,7 +349,7 @@ public class MCRecipeManager implements IRecipeManager {
 
         @Override
         public void undo() {
-            for (int i = 0; i < removingIndices.size(); i++) {
+            for(int i = 0; i < removingIndices.size(); i++) {
                 int index = Math.min(recipes.size(), removingIndices.get(i));
                 recipes.add(index, removingRecipes.get(i));
             }
@@ -383,7 +383,7 @@ public class MCRecipeManager implements IRecipeManager {
         @Override
         public void apply() {
             recipes.add(recipe);
-            if (craftingRecipe.hasTransformers()) {
+            if(craftingRecipe.hasTransformers()) {
                 transformerRecipes.add(craftingRecipe);
             }
         }
@@ -396,7 +396,7 @@ public class MCRecipeManager implements IRecipeManager {
         @Override
         public void undo() {
             recipes.remove(recipe);
-            if (craftingRecipe.hasTransformers()) {
+            if(craftingRecipe.hasTransformers()) {
                 transformerRecipes.remove(craftingRecipe);
             }
         }
