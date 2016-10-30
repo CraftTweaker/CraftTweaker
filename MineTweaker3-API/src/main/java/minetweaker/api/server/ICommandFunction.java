@@ -15,5 +15,5 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.server.ICommandFunction")
 public interface ICommandFunction {
-	public void execute(String[] arguments, IPlayer player);
+	void execute(String[] arguments, IPlayer player);
 }

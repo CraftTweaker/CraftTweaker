@@ -6,11 +6,12 @@
 
 package stanhebben.zenscript.util;
 
+import stanhebben.zenscript.compiler.ITypeRegistry;
+import stanhebben.zenscript.compiler.TypeRegistry;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import stanhebben.zenscript.compiler.ITypeRegistry;
-import stanhebben.zenscript.compiler.TypeRegistry;
 
 /**
  *
@@ -22,7 +23,7 @@ public class ZenTypeUtil {
 	private static final Map<String, String> SIGNATURE_MAP;
 
 	static {
-		SIGNATURE_MAP = new HashMap<String, String>();
+		SIGNATURE_MAP = new HashMap<>();
 		SIGNATURE_MAP.put(boolean.class.getName(), "Z");
 		SIGNATURE_MAP.put(byte.class.getName(), "B");
 		SIGNATURE_MAP.put(short.class.getName(), "S");

@@ -19,8 +19,8 @@ import stanhebben.zenscript.annotations.ZenOperator;
 @IterableSimple("minetweaker.mods.IMod")
 public interface ILoadedMods extends Iterable<IMod> {
 	@ZenOperator(OperatorType.CONTAINS)
-	public boolean contains(String name);
+    boolean contains(String name);
 
 	@ZenOperator(OperatorType.INDEXGET)
-	public IMod get(String name);
+    IMod get(String name);
 }

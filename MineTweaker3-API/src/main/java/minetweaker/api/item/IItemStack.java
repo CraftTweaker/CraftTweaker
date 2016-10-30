@@ -31,7 +31,7 @@ public interface IItemStack extends IIngredient {
 	 * @return item definition
 	 */
 	@ZenGetter("definition")
-	public IItemDefinition getDefinition();
+    IItemDefinition getDefinition();
 
 	/**
 	 * Gets the unlocalized item name.
@@ -39,7 +39,7 @@ public interface IItemStack extends IIngredient {
 	 * @return unlocalized item name
 	 */
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 
 	/**
 	 * Gets the display name. By default, it is the localized item name, but
@@ -49,7 +49,7 @@ public interface IItemStack extends IIngredient {
 	 * @return item display name
 	 */
 	@ZenGetter("displayName")
-	public String getDisplayName();
+    String getDisplayName();
 
 	/**
 	 * Sets the display name. Only works if the name is translatable. Does not
@@ -58,7 +58,7 @@ public interface IItemStack extends IIngredient {
 	 * @param name item display name
 	 */
 	@ZenSetter("displayName")
-	public void setDisplayName(String name);
+    void setDisplayName(String name);
 
 	/**
 	 * Gets the max stack size for an item
@@ -66,7 +66,7 @@ public interface IItemStack extends IIngredient {
 	 * @return int max stack size
 	 */
 	@ZenGetter("maxStackSize")
-	public int getMaxStackSize();
+    int getMaxStackSize();
 
 	/**
 	 * Sets the ItemStack max stack size.
@@ -74,13 +74,13 @@ public interface IItemStack extends IIngredient {
 	 * @param size the new max size
 	 */
 	@ZenSetter("maxStackSize")
-	public void setMaxStackSize(int size);
+    void setMaxStackSize(int size);
 
 	/**
 	 * Gets the block hardness
 	 */
 	@ZenGetter("hardness")
-	public float getBlockHardness();
+    float getBlockHardness();
 
 	/**
 	 * Sets the block hardness
@@ -88,7 +88,7 @@ public interface IItemStack extends IIngredient {
 	 * @param hardness the new hardness
 	 */
 	@ZenSetter("hardness")
-	public void setBlockHardness(float hardness);
+    void setBlockHardness(float hardness);
 
 	/**
 	 * Gets the item damage. Returns 0 if the item cannot be damaged.
@@ -96,7 +96,7 @@ public interface IItemStack extends IIngredient {
 	 * @return item damage
 	 */
 	@ZenGetter("damage")
-	public int getDamage();
+    int getDamage();
 
 	/**
 	 * Gets the maximum item damage. Returns 0 if the item cannot be damaged.
@@ -104,7 +104,7 @@ public interface IItemStack extends IIngredient {
 	 * @return maximum item damage
 	 */
 	@ZenGetter("maxDamage")
-	public int getMaxDamage();
+    int getMaxDamage();
 
 	/**
 	 * Sets the max Itemstack damage
@@ -112,7 +112,7 @@ public interface IItemStack extends IIngredient {
 	 * @param damage the new max damage
 	 */
 	@ZenSetter("maxDamage")
-	public void setMaxDamage(int damage);
+    void setMaxDamage(int damage);
 
 	/**
 	 * Gets the item tag. (NBT data) The resulting data is immutable and can
@@ -122,7 +122,7 @@ public interface IItemStack extends IIngredient {
 	 * @return item tag
 	 */
 	@ZenGetter("tag")
-	public IData getTag();
+    IData getTag();
 
 	/**
 	 * Gets the liquid contained in this item, if any. If this item stack is not
@@ -132,7 +132,7 @@ public interface IItemStack extends IIngredient {
 	 * @return liquid data
 	 */
 	@ZenGetter("liquid")
-	public ILiquidStack getLiquid();
+    ILiquidStack getLiquid();
 
 	/**
 	 * Creates a new item stack with a different stack size.
@@ -142,7 +142,7 @@ public interface IItemStack extends IIngredient {
 	 */
 	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
-	public IItemStack amount(int amount);
+    IItemStack amount(int amount);
 
 	/**
 	 * Creates a weighted item stack with the given percentage chance. Does the
@@ -152,7 +152,7 @@ public interface IItemStack extends IIngredient {
 	 * @return weighted item stack
 	 */
 	@ZenOperator(OperatorType.MOD)
-	public WeightedItemStack percent(float p);
+    WeightedItemStack percent(float p);
 
 	/**
 	 * Creates a weighted item stack with the given weight.
@@ -161,7 +161,7 @@ public interface IItemStack extends IIngredient {
 	 * @return weighted item stack
 	 */
 	@ZenMethod
-	public WeightedItemStack weight(float p);
+    WeightedItemStack weight(float p);
 
 	/**
 	 * Creates an item stack with the same item and stack size, but accepting
@@ -170,7 +170,7 @@ public interface IItemStack extends IIngredient {
 	 * @return item stack with wildcard damage
 	 */
 	@ZenMethod
-	public IIngredient anyDamage();
+    IIngredient anyDamage();
 
 	/**
 	 * Creates an item stack with the specified damage.
@@ -179,7 +179,7 @@ public interface IItemStack extends IIngredient {
 	 * @return new, modified item stack
 	 */
 	@ZenMethod
-	public IItemStack withDamage(int damage);
+    IItemStack withDamage(int damage);
 
 	/**
 	 * Creates an item stack with the specified stack size.
@@ -188,7 +188,7 @@ public interface IItemStack extends IIngredient {
 	 * @return new, modified item stack
 	 */
 	@ZenMethod
-	public IItemStack withAmount(int amount);
+    IItemStack withAmount(int amount);
 
 	/**
 	 * Creates an item stack with wildcard stack size.
@@ -196,7 +196,7 @@ public interface IItemStack extends IIngredient {
 	 * @return new, modified item stack
 	 */
 	@ZenMethod
-	public IItemStack anyAmount();
+    IItemStack anyAmount();
 
 	/**
 	 * Creates an item stack with the given nbt tag. Ignores existing tags.
@@ -205,7 +205,7 @@ public interface IItemStack extends IIngredient {
 	 * @return resulting item stack
 	 */
 	@ZenMethod
-	public IItemStack withTag(IData tag);
+    IItemStack withTag(IData tag);
 	
 	/**
      * Creates an item stack without the given nbt tag.
@@ -214,7 +214,7 @@ public interface IItemStack extends IIngredient {
      * @return resulting item stack
      */
     @ZenMethod
-    public IItemStack removeTag(String tag);
+    IItemStack removeTag(String tag);
 
 	/**
 	 * Creates an item stack with updated nbt tag. Updates existing tags.
@@ -223,7 +223,7 @@ public interface IItemStack extends IIngredient {
 	 * @return updated item stack
 	 */
 	@ZenMethod
-	public IItemStack updateTag(IData tagUpdate);
+    IItemStack updateTag(IData tagUpdate);
 
 	/**
 	 * Converts this item stack into a block.
@@ -231,7 +231,7 @@ public interface IItemStack extends IIngredient {
 	 * @return block, or null if this item is not a block
 	 */
 	@ZenCaster
-	public IBlock asBlock();
+    IBlock asBlock();
 
 	/**
 	 * Retrieves all the ores referring to this item. Includes wildcard ore
@@ -240,5 +240,5 @@ public interface IItemStack extends IIngredient {
 	 * @return ore entries containing this item stack
 	 */
 	@ZenGetter("ores")
-	public List<IOreDictEntry> getOres();
+    List<IOreDictEntry> getOres();
 }

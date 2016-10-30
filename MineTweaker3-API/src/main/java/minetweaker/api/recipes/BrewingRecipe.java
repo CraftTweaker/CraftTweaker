@@ -3,9 +3,6 @@ package minetweaker.api.recipes;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 
-/**
- * Created by Jared on 6/3/2016.
- */
 public class BrewingRecipe implements IBrewingRecipe {
 
     private final IItemStack output;

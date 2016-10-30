@@ -41,8 +41,8 @@ public abstract class GuiBase extends GuiContainer {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        if (shouldOpenMenu)
-            menu.open(this, guiLeft - 102, guiTop+2);
+        if(shouldOpenMenu)
+            menu.open(this, guiLeft - 102, guiTop + 2);
         editingField = new GuiTextField(2906, fontRendererObj, guiLeft - 104, guiTop - 26, xSize + 102, 20);
         editingField.setMaxStringLength(Integer.MAX_VALUE);
         editingField.setEnabled(true);
@@ -62,15 +62,15 @@ public abstract class GuiBase extends GuiContainer {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (selectedSlot != null) {
-            if (!selectedSlot.getHasStack()) {
+        if(selectedSlot != null) {
+            if(!selectedSlot.getHasStack()) {
                 selectedSlot = null;
                 editingField.setText("");
-                if (shouldOpenMenu) {
+                if(shouldOpenMenu) {
                     menu.setState(false);
                     menu.toggle(false);
-                    for (Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
-                        for (Slider slider : but.getValue()) {
+                    for(Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
+                        for(Slider slider : but.getValue()) {
                             slider.setValue(0);
                             slider.maxValue = 0;
                             slider.updateSlider();
@@ -83,40 +83,33 @@ public abstract class GuiBase extends GuiContainer {
             }
         } else {
             editingField.setText("");
-            if (shouldOpenMenu) {
+            if(shouldOpenMenu) {
                 menu.setState(false);
                 menu.toggle(false);
-                for (Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
-                    for (Slider slider : but.getValue()) {
+                for(Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
+                    for(Slider slider : but.getValue()) {
                         slider.setValue(0);
                         slider.maxValue = 0;
                         slider.updateSlider();
                         buttonList.remove(slider);
                     }
                 }
-                ;
             }
 
         }
         editingField.updateCursorCounter();
         final boolean[] canCreate = {true};
-        for (SlotRecipe slot : container.getRecipeSlots()) {
-            if (slot instanceof SlotRecipeOutput) {
-                if (!slot.getHasStack()) {
-                    canCreate[0] = false;
-                }
-            }
-        }
-        if (!canCreate[0]) {
+        container.getRecipeSlots().stream().filter(slot -> slot instanceof SlotRecipeOutput).filter(slot -> !slot.getHasStack()).forEach(slot -> canCreate[0] = false);
+        if(!canCreate[0]) {
             add.enabled = false;
             remove.enabled = false;
         } else {
             add.enabled = true;
             remove.enabled = true;
         }
-        if (shouldOpenMenu) {
-            if (selectedSlot != null) {
-                if (selectedSlot.getHasStack() && !selectedSlot.getStack().hasTagCompound()) {
+        if(shouldOpenMenu) {
+            if(selectedSlot != null) {
+                if(selectedSlot.getHasStack() && !selectedSlot.getStack().hasTagCompound()) {
                     menu.nbt.getLeft().enabled = false;
                 }
             }
@@ -126,21 +119,21 @@ public abstract class GuiBase extends GuiContainer {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         final boolean[] clickedSlot = new boolean[]{false};
-        for (SlotRecipe slot : container.getRecipeSlots()) {
+        for(SlotRecipe slot : container.getRecipeSlots()) {
             Rectangle rectangle = new Rectangle(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 18, 18);
-            if (rectangle.contains(mouseX, mouseY)) {
-                switch (mouseButton) {
+            if(rectangle.contains(mouseX, mouseY)) {
+                switch(mouseButton) {
                     case 0:
                         break;
                     case 1:
-                        if (slot.getHasStack()) {
+                        if(slot.getHasStack()) {
                             clickedSlot[0] = true;
                             selectedSlot = slot;
                             editingField.setText(slot.getItemString());
-                            if (shouldOpenMenu) {
+                            if(shouldOpenMenu) {
                                 menu.toggle(true);
-                                for (Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
-                                    for (Slider slider : but.getValue()) {
+                                for(Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
+                                    for(Slider slider : but.getValue()) {
                                         buttonList.remove(slider);
                                     }
                                 }
@@ -151,23 +144,23 @@ public abstract class GuiBase extends GuiContainer {
                     case 2:
                         clickedSlot[0] = true;
                         selectedSlot = null;
-                        if (shouldOpenMenu) {
+                        if(shouldOpenMenu) {
                             menu.toggle(false);
-                            for (Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
-                                for (Slider slider : but.getValue()) {
+                            for(Pair<CheckButtonRecipe, Slider[]> but : menu.getButtons()) {
+                                for(Slider slider : but.getValue()) {
                                     slider.updateSlider();
                                     buttonList.remove(slider);
                                 }
                             }
                         }
-                        if (editingField != null)
+                        if(editingField != null)
                             editingField.setText("");
                         break;
                 }
             }
 
         }
-        if (!clickedSlot[0]) {
+        if(!clickedSlot[0]) {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }
@@ -178,89 +171,81 @@ public abstract class GuiBase extends GuiContainer {
 
 
     protected void actionPerformed(GuiButton btn) {
-        if (btn.equals(add)) {
+        if(btn.equals(add)) {
             File scriptFile = new File(new File("scripts"), "/recipes.zs");
-            if (!scriptFile.exists()) {
+            if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
             try {
-                List<String> lines = new LinkedList<String>();
+                List<String> lines = new LinkedList<>();
                 BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
+                String line;
+                while((line = reader.readLine()) != null) {
                     lines.add(line);
                 }
-                if (lines.isEmpty()) {
+                if(lines.isEmpty()) {
                     generateFile(scriptFile);
-                    while ((line = reader.readLine()) != null) {
+                    while((line = reader.readLine()) != null) {
                         lines.add(line);
                     }
                 }
                 reader.close();
                 PrintWriter writer = new PrintWriter(new FileWriter(scriptFile));
-                for (int i = 0; i < lines.size(); i++) {
+                for(int i = 0; i < lines.size(); i++) {
                     String beforeLine = "";
-                    if (i > 0)
+                    if(i > 0)
                         beforeLine = lines.get(i - 1);
 
                     String lined = lines.get(i);
-                    if (beforeLine.trim().equals("//#Remove")) {
-                    }
-                    if (beforeLine.trim().equals("//#Add")) {
+                    if(beforeLine.trim().equals("//#Add")) {
                         writer.println(getOutputAdd());
                     }
-                    if (!lined.isEmpty()) {
+                    if(!lined.isEmpty()) {
                         writer.println(lined);
                     }
 
                 }
                 writer.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch(IOException e) {
                 e.printStackTrace();
             }
         }
-        if (btn.equals(remove)) {
+        if(btn.equals(remove)) {
             File scriptFile = new File(new File("scripts"), "/recipes.zs");
-            if (!scriptFile.exists()) {
+            if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
 
             try {
-                List<String> lines = new LinkedList<String>();
+                List<String> lines = new LinkedList<>();
                 BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
+                String line;
+                while((line = reader.readLine()) != null) {
                     lines.add(line);
                 }
-                if (lines.isEmpty()) {
+                if(lines.isEmpty()) {
                     generateFile(scriptFile);
-                    while ((line = reader.readLine()) != null) {
+                    while((line = reader.readLine()) != null) {
                         lines.add(line);
                     }
                 }
                 reader.close();
                 PrintWriter writer = new PrintWriter(new FileWriter(scriptFile));
-                for (int i = 0; i < lines.size(); i++) {
+                for(int i = 0; i < lines.size(); i++) {
                     String beforeLine = "";
-                    if (i > 0)
+                    if(i > 0)
                         beforeLine = lines.get(i - 1);
 
                     String lined = lines.get(i);
-                    if (beforeLine.trim().equals("//#Remove")) {
+                    if(beforeLine.trim().equals("//#Remove")) {
                         writer.println(getOutputRemove());
                     }
-                    if (beforeLine.trim().equals("//#Add")) {
-                    }
-                    if (!lined.isEmpty()) {
+                    if(!lined.isEmpty()) {
                         writer.println(lined);
                     }
                 }
                 writer.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch(IOException e) {
                 e.printStackTrace();
             }
         }
@@ -275,7 +260,7 @@ public abstract class GuiBase extends GuiContainer {
         Minecraft.getMinecraft().renderEngine.bindTexture(getTexture());
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         GlStateManager.popAttrib();
-        if (selectedSlot != null) {
+        if(selectedSlot != null) {
             GlStateManager.colorMask(true, true, true, false);
             this.drawGradientRect(guiLeft + selectedSlot.xDisplayPosition, guiTop + selectedSlot.yDisplayPosition, guiLeft + selectedSlot.xDisplayPosition + 16, guiTop + selectedSlot.yDisplayPosition + 16, Color.cyan.darker().getRGB(), Color.cyan.darker().getRGB());
             GlStateManager.colorMask(true, true, true, true);
@@ -306,10 +291,7 @@ public abstract class GuiBase extends GuiContainer {
 
     public static boolean isBlock(ItemStack stack) {
         ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-        if (name != null && name.toString().equals("minecraft:air")) {
-            return false;
-        }
-        return Block.REGISTRY.containsKey(name);
+        return !(name != null && name.toString().equals("minecraft:air")) && Block.REGISTRY.containsKey(name);
     }
 
     public GuiMenu getMenu() {
@@ -330,7 +312,7 @@ public abstract class GuiBase extends GuiContainer {
             writer.println();
             writer.println("//File End");
             writer.close();
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

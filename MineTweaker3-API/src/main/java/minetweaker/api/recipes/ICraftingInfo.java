@@ -18,11 +18,11 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("minetweaker.recipes.ICraftingInfo")
 public interface ICraftingInfo {
 	@ZenGetter("inventory")
-	public ICraftingInventory getInventory();
+    ICraftingInventory getInventory();
 
 	@ZenGetter("player")
-	public IPlayer getPlayer();
+    IPlayer getPlayer();
 
 	@ZenGetter("dimension")
-	public IDimension getDimension();
+    IDimension getDimension();
 }

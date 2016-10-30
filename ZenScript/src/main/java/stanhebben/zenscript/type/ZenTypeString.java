@@ -1,7 +1,5 @@
 package stanhebben.zenscript.type;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -11,31 +9,24 @@ import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionCompareGeneric;
-import stanhebben.zenscript.expression.ExpressionInvalid;
-import stanhebben.zenscript.expression.ExpressionCallVirtual;
-import stanhebben.zenscript.expression.ExpressionNull;
-import stanhebben.zenscript.expression.ExpressionStringConcat;
-import stanhebben.zenscript.expression.ExpressionStringContains;
-import stanhebben.zenscript.expression.ExpressionStringIndex;
+import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import static stanhebben.zenscript.type.ZenType.BYTE;
 import stanhebben.zenscript.type.casting.CastingRuleNullableStaticMethod;
 import stanhebben.zenscript.type.casting.CastingRuleStaticMethod;
 import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.AnyClassWriter;
-import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASINT;
-import static stanhebben.zenscript.util.AnyClassWriter.METHOD_ASSTRING;
-import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
-import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
 import stanhebben.zenscript.util.IAnyDefinition;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.value.IAny;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static stanhebben.zenscript.util.AnyClassWriter.*;
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
-import stanhebben.zenscript.value.IAny;
 
 public class ZenTypeString extends ZenType {
 	public static final ZenTypeString INSTANCE = new ZenTypeString();
@@ -199,7 +190,7 @@ public class ZenTypeString extends ZenType {
 				return left;
 			} else {
 				if (right.getType().canCastImplicit(STRING, environment)) {
-					List<Expression> values = new ArrayList<Expression>();
+					List<Expression> values = new ArrayList<>();
 					values.add(left);
 					values.add(right.cast(position, environment, this));
 					return new ExpressionStringConcat(position, values);

@@ -6,10 +6,7 @@
 
 package stanhebben.zenscript.parser.expression;
 
-import java.util.ArrayList;
-import java.util.List;
 import stanhebben.zenscript.ZenTokener;
-import static stanhebben.zenscript.ZenTokener.*;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -19,17 +16,22 @@ import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.expression.ExpressionFloat;
 import stanhebben.zenscript.expression.ExpressionInt;
 import stanhebben.zenscript.expression.ExpressionString;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.ParseException;
 import stanhebben.zenscript.parser.Token;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.type.ZenTypeDouble;
 import stanhebben.zenscript.type.ZenTypeInt;
-import static stanhebben.zenscript.util.StringUtil.unescapeString;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static stanhebben.zenscript.ZenTokener.*;
+import static stanhebben.zenscript.util.StringUtil.unescapeString;
 
 /**
  *
@@ -287,7 +289,7 @@ public abstract class ParsedExpression {
 				base = new ParsedExpressionIndex(position, base, index);
 				parser.required(T_SQBRCLOSE, "] expected");
 			} else if (parser.optional(T_BROPEN) != null) {
-				ArrayList<ParsedExpression> arguments = new ArrayList<ParsedExpression>();
+				ArrayList<ParsedExpression> arguments = new ArrayList<>();
 				if (parser.optional(T_BRCLOSE) == null) {
 					arguments.add(readAssignExpression(parser, environment));
 					while (parser.optional(T_COMMA) != null) {
@@ -334,7 +336,7 @@ public abstract class ParsedExpression {
 				parser.next();
 				parser.required(T_BROPEN, "( expected");
 
-				List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
+				List<ParsedFunctionArgument> arguments = new ArrayList<>();
 				if (parser.optional(T_BRCLOSE) == null) {
 					do {
 						String name = parser.required(T_ID, "identifier expected").getValue();
@@ -357,7 +359,7 @@ public abstract class ParsedExpression {
 
 				parser.required(T_AOPEN, "{ expected");
 
-				List<Statement> statements = new ArrayList<Statement>();
+				List<Statement> statements = new ArrayList<>();
 				if (parser.optional(T_ACLOSE) == null) {
 					while (parser.optional(T_ACLOSE) == null) {
 						statements.add(Statement.read(parser, environment, returnType));
@@ -367,7 +369,7 @@ public abstract class ParsedExpression {
 				return new ParsedExpressionFunction(position, returnType, arguments, statements);
 			case T_LT: {
 				Token start = parser.next();
-				List<Token> tokens = new ArrayList<Token>();
+				List<Token> tokens = new ArrayList<>();
 				Token next = parser.next();
 				while (next.getType() != ZenTokener.T_GT) {
 					tokens.add(next);
@@ -396,7 +398,7 @@ public abstract class ParsedExpression {
 			}
 			case T_SQBROPEN: {
 				parser.next();
-				List<ParsedExpression> contents = new ArrayList<ParsedExpression>();
+				List<ParsedExpression> contents = new ArrayList<>();
 				if (parser.optional(T_SQBRCLOSE) == null) {
 					while (parser.optional(T_SQBRCLOSE) == null) {
 						contents.add(readAssignExpression(parser, environment));
@@ -411,8 +413,8 @@ public abstract class ParsedExpression {
 			case T_AOPEN: {
 				parser.next();
 
-				List<ParsedExpression> keys = new ArrayList<ParsedExpression>();
-				List<ParsedExpression> values = new ArrayList<ParsedExpression>();
+				List<ParsedExpression> keys = new ArrayList<>();
+				List<ParsedExpression> values = new ArrayList<>();
 				if (parser.optional(T_ACLOSE) == null) {
 					while (parser.optional(T_ACLOSE) == null) {
 						keys.add(readAssignExpression(parser, environment));

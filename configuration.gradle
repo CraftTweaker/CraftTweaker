@@ -4,7 +4,7 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.13"
+ext.mineTweakerVersion = "3.0.14"
 if (System.getenv('BUILD_NUMBER') != null)
     project.mineTweakerVersion += "."+System.getenv('BUILD_NUMBER')
 else {
@@ -19,28 +19,6 @@ ext.mineTweakerDebug = "false"
 //Make sure JAVA_HOME is set as an environment variable
 ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
 
-
-// #######################
-// ### 1.7.10 settings ###
-// #######################
-
-ext.forgeVersion1710 = "1.7.10-10.13.4.1614-1.7.10"
-ext.projects1710 = [
-	'MineTweaker3-MC1710-Main',
-	'MineTweaker3-MC1710-Mod-IC2',
-	'MineTweaker3-MC1710-Mod-NEI',
-	'MineTweaker3-MC1710-Mod-MFR'
-]
-
-// ####################
-// ### 1.8 settings ###
-// ####################
-
-ext.forgeVersion18 = "1.8.9-11.15.1.1890-1.8.9"
-ext.projects18 = [
-	'MineTweaker3-MC18-Main',
-	'MineTweaker3-MC18-Mod-JEI'
-]
 
 // #######################
 // ### 1.10.2 settings ###

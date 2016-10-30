@@ -14,11 +14,11 @@ import java.io.InputStream;
  * @author Stan
  */
 public interface IScriptIterator {
-	public String getGroupName();
+	String getGroupName();
 
-	public boolean next();
+	boolean next();
 
-	public String getName();
+	String getName();
 
-	public InputStream open() throws IOException;
+	InputStream open() throws IOException;
 }

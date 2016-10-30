@@ -6,5 +6,5 @@ package minetweaker.api.recipes;
 public interface IFurnaceRecipe {
 
 
-    public String toCommandString();
+    String toCommandString();
 }

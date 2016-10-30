@@ -18,17 +18,16 @@ import java.net.URISyntaxException;
 /**
  * @author Stan
  */
-public class MineTweakerOpenBrowserHandler implements IMessageHandler<MineTweakerOpenBrowserPacket, IMessage>{
+public class MineTweakerOpenBrowserHandler implements IMessageHandler<MineTweakerOpenBrowserPacket, IMessage> {
     @Override
-    public IMessage onMessage(MineTweakerOpenBrowserPacket message, MessageContext ctx){
-        if(Desktop.isDesktopSupported()){
+    public IMessage onMessage(MineTweakerOpenBrowserPacket message, MessageContext ctx) {
+        if(Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
-            try{
+            try {
                 desktop.browse(new URI(message.getUrl()));
-            }catch(IOException e){
-            }catch(URISyntaxException e){
+            } catch(IOException | URISyntaxException ignored) {
             }
-        }else{
+        } else {
             System.out.println("Desktop not supported");
         }
 

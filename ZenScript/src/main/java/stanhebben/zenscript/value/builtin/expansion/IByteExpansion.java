@@ -13,5 +13,5 @@ import stanhebben.zenscript.value.IAny;
  * @author Stan
  */
 public interface IByteExpansion {
-	public IAny member(byte value, String member);
+	IAny member(byte value, String member);
 }

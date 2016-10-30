@@ -4,18 +4,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Jared on 5/29/2016.
- */
 public class ContainerBase extends Container {
 
-    protected List<SlotRecipe> recipeSlots = new LinkedList<SlotRecipe>();
+    protected List<SlotRecipe> recipeSlots = new LinkedList<>();
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
@@ -84,5 +82,13 @@ public class ContainerBase extends Container {
 
     public List<SlotRecipe> getRecipeSlots() {
         return recipeSlots;
+    }
+
+    @Override
+    protected Slot addSlotToContainer(Slot slotIn) {
+        if (slotIn instanceof SlotRecipe) {
+            getRecipeSlots().add((SlotRecipe) slotIn);
+        }
+        return super.addSlotToContainer(slotIn);
     }
 }

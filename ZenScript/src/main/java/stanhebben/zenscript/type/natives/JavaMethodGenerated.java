@@ -51,7 +51,7 @@ public class JavaMethodGenerated implements IJavaMethod {
 
         StringBuilder descriptorString = new StringBuilder();
         descriptorString.append('(');
-        for (ZenType argument : arguments) {
+        for(ZenType argument : arguments) {
             descriptorString.append(argument.getSignature());
         }
         descriptorString.append(')');
@@ -71,14 +71,14 @@ public class JavaMethodGenerated implements IJavaMethod {
 
     @Override
     public boolean accepts(int numArguments) {
-        if (numArguments > parameterTypes.length) {
+        if(numArguments > parameterTypes.length) {
             return isVarargs;
         }
-        if (numArguments == parameterTypes.length) {
+        if(numArguments == parameterTypes.length) {
             return true;
         } else {
-            for (int i = numArguments; i < parameterTypes.length; i++) {
-                if (!optional[i])
+            for(int i = numArguments; i < parameterTypes.length; i++) {
+                if(!optional[i])
                     return false;
             }
             return true;
@@ -93,15 +93,15 @@ public class JavaMethodGenerated implements IJavaMethod {
     @Override
     public int getPriority(IEnvironmentGlobal environment, Expression... arguments) {
         int result = PRIORITY_HIGH;
-        if (arguments.length > parameterTypes.length) {
-            if (isVarargs) {
+        if(arguments.length > parameterTypes.length) {
+            if(isVarargs) {
                 ZenType arrayType = parameterTypes[parameterTypes.length - 1];
                 ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
-                for (int i = parameterTypes.length - 1; i < arguments.length; i++) {
+                for(int i = parameterTypes.length - 1; i < arguments.length; i++) {
                     ZenType argType = arguments[i].getType();
-                    if (argType.equals(baseType)) {
+                    if(argType.equals(baseType)) {
                         // OK
-                    } else if (argType.canCastImplicit(baseType, environment)) {
+                    } else if(argType.canCastImplicit(baseType, environment)) {
                         result = Math.min(result, PRIORITY_LOW);
                     } else {
                         return PRIORITY_INVALID;
@@ -110,35 +110,32 @@ public class JavaMethodGenerated implements IJavaMethod {
             } else {
                 return PRIORITY_INVALID;
             }
-        } else if (arguments.length < parameterTypes.length) {
+        } else if(arguments.length < parameterTypes.length) {
             result = PRIORITY_MEDIUM;
 
             int checkUntil = parameterTypes.length;
-            if (isVarargs) {
+            if(isVarargs) {
                 checkUntil--;
             }
 
-            checkOptional:
-            for (int i = arguments.length; i < checkUntil; i++) {
-                if (!optional[i]) {
+            for(int i = arguments.length; i < checkUntil; i++) {
+                if(!optional[i]) {
                     return PRIORITY_INVALID;
                 }
             }
         }
 
         int checkUntil = arguments.length;
-        if (arguments.length == parameterTypes.length && isVarargs) {
+        if(arguments.length == parameterTypes.length && isVarargs) {
             ZenType arrayType = parameterTypes[parameterTypes.length - 1];
             ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
             ZenType argType = arguments[arguments.length - 1].getType();
 
-            if (argType.equals(arrayType)) {
+            if(argType.equals(arrayType) || argType.equals(baseType)) {
                 // OK
-            } else if (argType.equals(baseType)) {
-                // OK
-            } else if (argType.canCastImplicit(arrayType, environment)) {
+            } else if(argType.canCastImplicit(arrayType, environment)) {
                 result = Math.min(result, PRIORITY_LOW);
-            } else if (argType.canCastImplicit(baseType, environment)) {
+            } else if(argType.canCastImplicit(baseType, environment)) {
                 result = Math.min(result, PRIORITY_LOW);
             } else {
                 return PRIORITY_INVALID;
@@ -147,11 +144,11 @@ public class JavaMethodGenerated implements IJavaMethod {
             checkUntil = arguments.length - 1;
         }
 
-        for (int i = 0; i < checkUntil; i++) {
+        for(int i = 0; i < checkUntil; i++) {
             ZenType argType = arguments[i].getType();
             ZenType paramType = parameterTypes[i];
-            if (!argType.equals(paramType)) {
-                if (argType.canCastImplicit(paramType, environment)) {
+            if(!argType.equals(paramType)) {
+                if(argType.canCastImplicit(paramType, environment)) {
                     result = Math.min(result, PRIORITY_LOW);
                 } else {
                     return PRIORITY_INVALID;
@@ -164,10 +161,10 @@ public class JavaMethodGenerated implements IJavaMethod {
 
     @Override
     public void invokeVirtual(MethodOutput output) {
-        if (isStatic) {
+        if(isStatic) {
             throw new UnsupportedOperationException("Not supported yet.");
         } else {
-            if (isInterface) {
+            if(isInterface) {
                 output.invokeInterface(owner, name, descriptor);
             } else {
                 output.invokeVirtual(owner, name, descriptor);
@@ -177,7 +174,7 @@ public class JavaMethodGenerated implements IJavaMethod {
 
     @Override
     public void invokeStatic(MethodOutput output) {
-        if (!isStatic) {
+        if(!isStatic) {
             throw new UnsupportedOperationException("Not supported yet."); // To
             // change
             // body

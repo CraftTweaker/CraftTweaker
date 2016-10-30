@@ -13,11 +13,11 @@ import java.util.List;
 public interface IVillagerRegistry {
 
     @ZenMethod
-    public void addSeed(WeightedItemStack item);
+    void addSeed(WeightedItemStack item);
 
     @ZenMethod
-    public void removeSeed(IIngredient item);
+    void removeSeed(IIngredient item);
 
     @ZenGetter("seeds")
-    public List<WeightedItemStack> getSeeds();
+    List<WeightedItemStack> getSeeds();
 }

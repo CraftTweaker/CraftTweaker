@@ -13,68 +13,68 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @author Stan
  */
 public interface IFormatter {
-	public IFormattedText string(String text);
+	IFormattedText string(String text);
 
 	@ZenMethod
-	public IFormattedText black(IFormattedText text);
+	IFormattedText black(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText darkBlue(IFormattedText text);
+	IFormattedText darkBlue(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText darkGreen(IFormattedText text);
+	IFormattedText darkGreen(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText darkAqua(IFormattedText text);
+	IFormattedText darkAqua(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText darkRed(IFormattedText text);
+	IFormattedText darkRed(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText darkPurple(IFormattedText text);
+	IFormattedText darkPurple(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText gold(IFormattedText text);
+	IFormattedText gold(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText gray(IFormattedText text);
+	IFormattedText gray(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText darkGray(IFormattedText text);
+	IFormattedText darkGray(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText blue(IFormattedText text);
+	IFormattedText blue(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText green(IFormattedText text);
+	IFormattedText green(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText aqua(IFormattedText text);
+	IFormattedText aqua(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText red(IFormattedText text);
+	IFormattedText red(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText lightPurple(IFormattedText text);
+	IFormattedText lightPurple(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText yellow(IFormattedText text);
+	IFormattedText yellow(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText white(IFormattedText text);
+	IFormattedText white(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText obfuscated(IFormattedText text);
+	IFormattedText obfuscated(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText bold(IFormattedText text);
+	IFormattedText bold(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText strikethrough(IFormattedText text);
+	IFormattedText strikethrough(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText underline(IFormattedText text);
+	IFormattedText underline(IFormattedText text);
 
 	@ZenMethod
-	public IFormattedText italic(IFormattedText text);
+	IFormattedText italic(IFormattedText text);
 }

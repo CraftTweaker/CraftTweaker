@@ -7,7 +7,6 @@ import minetweaker.api.recipes.BrewingRecipe;
 import minetweaker.api.recipes.IBrewingManager;
 import minetweaker.api.recipes.IBrewingRecipe;
 import minetweaker.mc1102.item.MCItemStack;
-import minetweaker.util.ArrayUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.brewing.AbstractBrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingOreRecipe;
@@ -16,17 +15,14 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jared on 6/3/2016.
- */
 public class MCBrewingManager implements IBrewingManager {
     @Override
     public List<IBrewingRecipe> getAll() {
-        List<IBrewingRecipe> ret = new ArrayList<IBrewingRecipe>();
-        for (net.minecraftforge.common.brewing.IBrewingRecipe rec : BrewingRecipeRegistry.getRecipes()) {
-            if (rec instanceof net.minecraftforge.common.brewing.AbstractBrewingRecipe) {
+        List<IBrewingRecipe> ret = new ArrayList<>();
+        for(net.minecraftforge.common.brewing.IBrewingRecipe rec : BrewingRecipeRegistry.getRecipes()) {
+            if(rec instanceof net.minecraftforge.common.brewing.AbstractBrewingRecipe) {
                 AbstractBrewingRecipe abs = (AbstractBrewingRecipe) rec;
-                if (abs instanceof BrewingOreRecipe) {
+                if(abs instanceof BrewingOreRecipe) {
                     BrewingOreRecipe brew = (BrewingOreRecipe) abs;
                     ret.add(new BrewingRecipe(new MCItemStack(brew.getOutput()), new MCItemStack(brew.getInput()), convert(brew.getIngredient())));
                 }
@@ -73,11 +69,7 @@ public class MCBrewingManager implements IBrewingManager {
 
     private IngredientOr convert(List<ItemStack> ingredients) {
         IngredientOr ing;
-        List<IngredientItem> stacks = new ArrayList<IngredientItem>();
 
-        for (ItemStack stack : ingredients) {
-            stacks.add(new IngredientItem(new MCItemStack(stack), null, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS));
-        }
         ing = new IngredientOr((IngredientItem[]) ingredients.toArray());
 
         return ing;

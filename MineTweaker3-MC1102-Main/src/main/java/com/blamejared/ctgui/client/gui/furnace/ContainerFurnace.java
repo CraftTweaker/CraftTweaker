@@ -25,22 +25,16 @@ public class ContainerFurnace extends ContainerBase {
         this.addSlotToContainer(new SlotRecipe(inventory, 0, 56, 17));
 
         //Player
-        for (int x = 0; x < 9; x++) {
+        for(int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 142));
         }
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
+        for(int y = 0; y < 3; y++) {
+            for(int x = 0; x < 9; x++) {
                 addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 84 + y * 18));
             }
         }
     }
 
-    @Override
-    protected Slot addSlotToContainer(Slot slotIn) {
-        if (slotIn instanceof SlotRecipe) {
-            getRecipeSlots().add((SlotRecipe) slotIn);
-        }
-        return super.addSlotToContainer(slotIn);
-    }
+
 }

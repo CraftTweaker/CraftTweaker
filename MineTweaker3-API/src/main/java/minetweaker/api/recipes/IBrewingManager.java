@@ -22,16 +22,15 @@ public interface IBrewingManager {
      * @return all crafting recipes
      */
     @ZenGetter("all")
-    public List<IBrewingRecipe> getAll();
+    List<IBrewingRecipe> getAll();
 
     /**
      * Removes a brewing recipe from the specified item.
      *
      * @param output recipe output pattern
-     * @return number of removed recipes
      */
     @ZenMethod
-    public void remove(IItemStack output);
+    void remove(IItemStack output);
 
     /**
      * Adds a recipe.
@@ -41,7 +40,7 @@ public interface IBrewingManager {
      * @param input      recipe input
      */
     @ZenMethod
-    public void add(
+    void add(
             IItemStack output,
             IItemStack ingredient,
             IItemStack input);
@@ -54,7 +53,7 @@ public interface IBrewingManager {
      * @return number of removed recipes
      */
     @ZenMethod
-    public int remove(
+    int remove(
             IItemStack output,
             IItemStack ingredients);
 

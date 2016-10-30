@@ -13,5 +13,5 @@ import java.util.Iterator;
  * @author Stan
  */
 public interface IScriptProvider {
-	public Iterator<IScriptIterator> getScripts();
+	Iterator<IScriptIterator> getScripts();
 }

@@ -32,7 +32,7 @@ public class GuiCannotRemodify extends GuiScreen{
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, message1, this.width / 2, this.height / 2 - 40, 11184810);
         this.drawCenteredString(this.fontRendererObj, message2, this.width / 2, this.height / 2 - 20, 11184810);
-        this.drawCenteredString(this.fontRendererObj, message3, this.width / 2, this.height / 2 - 0, 11184810);
+        this.drawCenteredString(this.fontRendererObj, message3, this.width / 2, this.height / 2, 11184810);
 
         super.drawScreen(par1, par2, par3);
     }

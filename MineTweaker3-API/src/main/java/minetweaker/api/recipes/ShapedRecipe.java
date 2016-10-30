@@ -276,7 +276,7 @@ public class ShapedRecipe implements ICraftingRecipe {
         // determine output and apply transformations
 
         if(function != null) {
-            Map<String, IItemStack> tagged = new HashMap<String, IItemStack>();
+            Map<String, IItemStack> tagged = new HashMap<>();
             for(int k = 0; k < ingredients.length; k++) {
                 if(ingredients[k].getMark() != null) {
                     tagged.put(ingredients[k].getMark(), stacks[k]);

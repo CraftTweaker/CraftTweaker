@@ -44,7 +44,7 @@ import java.util.Map;
  * @author Stan Hebben
  */
 public class MineTweakerMC {
-	private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<Block, MCBlockDefinition>();
+	private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<>();
 	public static final IBiome[] biomes;
 
 	static {

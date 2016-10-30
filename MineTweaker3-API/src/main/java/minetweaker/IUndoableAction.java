@@ -26,7 +26,7 @@ public interface IUndoableAction {
 	 * Executes what the action is supposed to do. This method can be called
 	 * again if undo() has been called in between.
 	 */
-	public void apply();
+    void apply();
 
 	/**
 	 * Checks if this action can be undone. If this method returns true, it must
@@ -38,14 +38,14 @@ public interface IUndoableAction {
 	 * 
 	 * @return undoable status
 	 */
-	public boolean canUndo();
+    boolean canUndo();
 
 	/**
 	 * Undoes the action. Will only be called after apply() has been executed.
 	 * After an undo, apply may be called again. They could be done multiple
 	 * times in certain scenarios.
 	 */
-	public void undo();
+    void undo();
 
 	/**
 	 * Describes, in a single human-readable sentence, what this specific action
@@ -58,7 +58,7 @@ public interface IUndoableAction {
 	 * 
 	 * @return the description of this action
 	 */
-	public String describe();
+    String describe();
 
 	/**
 	 * Describes what this action does if it is undone. Similar to the
@@ -67,7 +67,7 @@ public interface IUndoableAction {
 	 * 
 	 * @return the description of this action, when undone
 	 */
-	public String describeUndo();
+    String describeUndo();
 
 	/**
 	 * Returns the override key. Two actions are considered to override each
@@ -80,5 +80,5 @@ public interface IUndoableAction {
 	 * @return override key (null for actions that are undoable or which can
 	 *         never be overridden by another action)
 	 */
-	public Object getOverrideKey();
+    Object getOverrideKey();
 }

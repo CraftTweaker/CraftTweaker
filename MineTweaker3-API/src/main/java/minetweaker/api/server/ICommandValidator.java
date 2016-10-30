@@ -15,5 +15,5 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.server.ICommandValidator")
 public interface ICommandValidator {
-	public boolean canExecute(IPlayer player);
+	boolean canExecute(IPlayer player);
 }

@@ -34,9 +34,7 @@ public class CharStream {
 	 * @return true if the next character equals the specified character
 	 */
 	public boolean peek(char ch) {
-		if (index == data.length)
-			return false;
-		return data[index] == ch;
+		return index != data.length && data[index] == ch;
 	}
 
 	/**

@@ -1,10 +1,5 @@
 package stanhebben.zenscript;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import static stanhebben.zenscript.ZenTokener.*;
 import stanhebben.zenscript.compiler.EnvironmentScript;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.definitions.Import;
@@ -15,6 +10,13 @@ import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolType;
 import stanhebben.zenscript.type.ZenType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static stanhebben.zenscript.ZenTokener.*;
 
 /**
  * Contains a parsed file.
@@ -51,9 +53,9 @@ public class ZenParsedFile {
 		this.filename = filename;
 		this.classname = classname;
 
-		imports = new ArrayList<Import>();
-		functions = new HashMap<String, ParsedFunction>();
-		statements = new ArrayList<Statement>();
+		imports = new ArrayList<>();
+		functions = new HashMap<>();
+		statements = new ArrayList<>();
 		environmentScript = new EnvironmentScript(environment);
 
 		tokener.setFile(this);
@@ -61,7 +63,7 @@ public class ZenParsedFile {
 		while (tokener.peek() != null && tokener.peek().getType() == T_IMPORT) {
 			Token start = tokener.next();
 
-			List<String> importName = new ArrayList<String>();
+			List<String> importName = new ArrayList<>();
 			Token tName = tokener.required(T_ID, "identifier expected");
 			importName.add(tName.getValue());
 

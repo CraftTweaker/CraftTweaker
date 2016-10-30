@@ -6,15 +6,12 @@
 
 package minetweaker.api.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.item.IItemStack;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -24,20 +21,17 @@ public class IngredientMap<T> {
 	private final HashMap<IItemDefinition, List<IngredientMapEntry<T>>> entries;
 
 	public IngredientMap() {
-		entries = new HashMap<IItemDefinition, List<IngredientMapEntry<T>>>();
+		entries = new HashMap<>();
 	}
 
 	public IngredientMapEntry<T> register(IIngredient ingredient, T entry) {
-		Set<IItemDefinition> items = new HashSet<IItemDefinition>();
-		for (IItemStack item : ingredient.getItems()) {
-			items.add(item.getDefinition());
-		}
+		Set<IItemDefinition> items = ingredient.getItems().stream().map(IItemStack::getDefinition).collect(Collectors.toSet());
 
-		IngredientMapEntry<T> actualEntry = new IngredientMapEntry<T>(ingredient, entry);
+		IngredientMapEntry<T> actualEntry = new IngredientMapEntry<>(ingredient, entry);
 
 		for (IItemDefinition item : items) {
 			if (!entries.containsKey(item)) {
-				entries.put(item, new ArrayList<IngredientMapEntry<T>>());
+				entries.put(item, new ArrayList<>());
 			}
 
 			entries.get(item).add(actualEntry);
@@ -47,10 +41,7 @@ public class IngredientMap<T> {
 	}
 
 	public void unregister(IngredientMapEntry<T> entry) {
-		Set<IItemDefinition> items = new HashSet<IItemDefinition>();
-		for (IItemStack item : entry.ingredient.getItems()) {
-			items.add(item.getDefinition());
-		}
+		Set<IItemDefinition> items = entry.ingredient.getItems().stream().map(IItemStack::getDefinition).collect(Collectors.toSet());
 
 		for (IItemDefinition item : items) {
 			if (entries.containsKey(item)) {
@@ -72,13 +63,7 @@ public class IngredientMap<T> {
 	public List<T> getEntries(IItemStack item) {
 		List<IngredientMapEntry<T>> entries = this.entries.get(item.getDefinition());
 		if (entries != null) {
-			ArrayList<T> results = new ArrayList<T>();
-			for (IngredientMapEntry<T> entry : entries) {
-				if (entry.ingredient.matches(item)) {
-					results.add(entry.entry);
-				}
-			}
-			return results;
+			return entries.stream().filter(entry -> entry.ingredient.matches(item)).map(entry -> entry.entry).collect(Collectors.toCollection(ArrayList::new));
 		} else {
 			return Collections.EMPTY_LIST;
 		}

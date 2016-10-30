@@ -72,10 +72,7 @@ public class Recycler {
 				return false;
 			}
 			final AddBlacklistAction other = (AddBlacklistAction) obj;
-			if (this.ingredient != other.ingredient && (this.ingredient == null || !this.ingredient.equals(other.ingredient))) {
-				return false;
-			}
-			return true;
-		}
+            return !(this.ingredient != other.ingredient && (this.ingredient == null || !this.ingredient.equals(other.ingredient)));
+        }
 	}
 }

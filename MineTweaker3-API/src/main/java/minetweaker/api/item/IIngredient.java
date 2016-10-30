@@ -25,7 +25,7 @@ public interface IIngredient {
 	 * @return ingredient mark
 	 */
 	@ZenGetter("mark")
-	public String getMark();
+	String getMark();
 
 	/**
 	 * Gets the amount.
@@ -36,7 +36,7 @@ public interface IIngredient {
 	 * @return stack size
 	 */
 	@ZenGetter("amount")
-	public int getAmount();
+	int getAmount();
 
 	/**
 	 * Gets all possible items for this ingredient.
@@ -47,7 +47,7 @@ public interface IIngredient {
 	 * @return the items for this ingredient, or null
 	 */
 	@ZenGetter("items")
-	public List<IItemStack> getItems();
+	List<IItemStack> getItems();
 
 	/**
 	 * Gets all possible liquids for this ingredient.
@@ -58,7 +58,7 @@ public interface IIngredient {
 	 * @return the liquids for this ingredient, or null
 	 */
 	@ZenGetter("liquids")
-	public List<ILiquidStack> getLiquids();
+	List<ILiquidStack> getLiquids();
 
 	/**
 	 * Returns a new ingredient with the given stack size.
@@ -68,7 +68,7 @@ public interface IIngredient {
 	 */
 	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
-	public IIngredient amount(int amount);
+	IIngredient amount(int amount);
 
 	/**
 	 * Combines multiple ingredients into a single one. Note that ore dictionary
@@ -79,7 +79,7 @@ public interface IIngredient {
 	 */
 	@ZenOperator(OperatorType.OR)
 	@ZenMethod
-	public IIngredient or(IIngredient ingredient);
+	IIngredient or(IIngredient ingredient);
 
 	/**
 	 * Returns a new ingredient with the given transform added to it.
@@ -88,7 +88,7 @@ public interface IIngredient {
 	 * @return modified ingredient
 	 */
 	@ZenMethod
-	public IIngredient transform(IItemTransformer transformer);
+	IIngredient transform(IItemTransformer transformer);
 
 	/**
 	 * Returns a new ingredient with the given condition added to it.
@@ -97,7 +97,7 @@ public interface IIngredient {
 	 * @return modified ingredient
 	 */
 	@ZenMethod
-	public IIngredient only(IItemCondition condition);
+	IIngredient only(IItemCondition condition);
 
 	/**
 	 * Returns a new ingredient marked with the given name.
@@ -106,7 +106,7 @@ public interface IIngredient {
 	 * @return modified ingredient
 	 */
 	@ZenMethod
-	public IIngredient marked(String mark);
+	IIngredient marked(String mark);
 
 	/**
 	 * Checks if this ingredient matches the given item. For liquids, will match
@@ -116,7 +116,7 @@ public interface IIngredient {
 	 * @return true if the item matches
 	 */
 	@ZenMethod
-	public boolean matches(IItemStack item);
+	boolean matches(IItemStack item);
 
     /**
      * Checks if this ingredient matches the given item. For liquids, will match
@@ -126,17 +126,17 @@ public interface IIngredient {
      * @return true if the item matches
      */
     @ZenMethod
-    public boolean matchesExact(IItemStack item);
+	boolean matchesExact(IItemStack item);
 
 
     /**
 	 * Checks if this ingredient matches the given liquid.
 	 *
-	 * @param liquid
-	 * @return
+	 * @param liquid liquid to check
+	 * @return true if the liquid matches
 	 */
 	@ZenMethod
-	public boolean matches(ILiquidStack liquid);
+	boolean matches(ILiquidStack liquid);
 
 	/**
 	 * Check if this ingredient contains all possible values for the given
@@ -146,7 +146,7 @@ public interface IIngredient {
 	 * @return true if the ingredient contains the given one
 	 */
 	@ZenOperator(OperatorType.CONTAINS)
-	public boolean contains(IIngredient ingredient);
+	boolean contains(IIngredient ingredient);
 
 	/**
 	 * Applies transformations after crafting, if any, to the given item.
@@ -156,7 +156,7 @@ public interface IIngredient {
 	 * @return transformed item
 	 */
 	@ZenMethod
-	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer);
+	IItemStack applyTransform(IItemStack item, IPlayer byPlayer);
 
 	/**
 	 * Checks if this ingredient has (or could have) any transformatiosns.
@@ -165,7 +165,7 @@ public interface IIngredient {
 	 *         otherwise.
 	 */
 	@ZenGetter("hasTransformations")
-	public boolean hasTransformers();
+	boolean hasTransformers();
 
 	/**
 	 * Gets the internal item backing this ingredient.
@@ -176,6 +176,6 @@ public interface IIngredient {
 	 *
 	 * @return internal item
 	 */
-	public Object getInternal();
+	Object getInternal();
 
 }

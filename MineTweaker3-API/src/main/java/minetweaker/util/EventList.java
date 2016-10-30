@@ -45,7 +45,7 @@ public class EventList<T> {
 	}
 
 	public void publish(T event) {
-		EventNode current = null;
+		EventNode current;
 
 		synchronized (this) {
 			current = first;

@@ -6,14 +6,15 @@
 
 package stanhebben.zenscript.symbols;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import stanhebben.zenscript.IZenErrorLogger;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.expression.partial.PartialPackage;
 import stanhebben.zenscript.util.StringUtil;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -26,7 +27,7 @@ public class SymbolPackage implements IZenSymbol {
 
 	public SymbolPackage(String name) {
 		this.name = name;
-		members = new HashMap<String, IZenSymbol>();
+		members = new HashMap<>();
 	}
 
 	public String getName() {

@@ -271,8 +271,8 @@ public class JavaMethod implements IJavaMethod {
 				checkUntil--;
 			}
 
-			checkOptional: for (int i = arguments.length; i < checkUntil; i++) {
-				if (!optional[i]) {
+			for(int i = arguments.length; i < checkUntil; i++) {
+				if(!optional[i]) {
 					return PRIORITY_INVALID;
 				}
 			}
@@ -284,13 +284,11 @@ public class JavaMethod implements IJavaMethod {
 			ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
 			ZenType argType = arguments[arguments.length - 1].getType();
 
-			if (argType.equals(arrayType)) {
+			if(argType.equals(arrayType) || argType.equals(baseType)) {
 				// OK
-			} else if (argType.equals(baseType)) {
-				// OK
-			} else if (argType.canCastImplicit(arrayType, environment)) {
+			} else if(argType.canCastImplicit(arrayType, environment)) {
 				result = Math.min(result, PRIORITY_LOW);
-			} else if (argType.canCastImplicit(baseType, environment)) {
+			} else if(argType.canCastImplicit(baseType, environment)) {
 				result = Math.min(result, PRIORITY_LOW);
 			} else {
 				return PRIORITY_INVALID;

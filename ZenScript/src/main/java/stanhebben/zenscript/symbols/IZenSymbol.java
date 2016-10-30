@@ -14,5 +14,5 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stanneke
  */
 public interface IZenSymbol {
-	public IPartialExpression instance(ZenPosition position);
+	IPartialExpression instance(ZenPosition position);
 }

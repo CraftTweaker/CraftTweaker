@@ -5,13 +5,7 @@
 
 package stanhebben.zenscript.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 /**
  *
@@ -83,13 +77,12 @@ public class NFA {
 	 * @return this NFA as DFA
 	 */
 	public DFA toDFA() {
-		converted = new HashMap<NodeSet, DFA.DFAState>();
-		HashSet<NFAState> closure = new HashSet<NFAState>();
+		converted = new HashMap<>();
+		HashSet<NFAState> closure = new HashSet<>();
 		this.initial.closure(closure);
 		DFA.DFAState init = convert(new NodeSet(closure));
 
-		DFA dfs = new DFA(init);
-		return dfs;
+		return new DFA(init);
 	}
 
 	// //////////////////
@@ -102,12 +95,12 @@ public class NFA {
 			DFA.DFAState node = new DFA.DFAState();
 			converted.put(nodes, node);
 
-			HashSet<Integer> edgeSet = new HashSet<Integer>();
+			HashSet<Integer> edgeSet = new HashSet<>();
 			for (NFAState n : nodes.nodes) {
 				n.alphabet(edgeSet);
 			}
 			for (int i : edgeSet) {
-				HashSet<NFAState> edge = new HashSet<NFAState>();
+				HashSet<NFAState> edge = new HashSet<>();
 				for (NFAState n : nodes.nodes) {
 					n.edge(i, edge);
 				}
@@ -135,7 +128,7 @@ public class NFA {
 	private Partial processRegExp(CharStream stream) {
 		Partial partial = processRegExp0(stream);
 		if (stream.optional('|')) {
-			ArrayList<Partial> partials = new ArrayList<Partial>();
+			ArrayList<Partial> partials = new ArrayList<>();
 			partials.add(partial);
 			partials.add(processRegExp0(stream));
 			while (stream.optional('|')) {
@@ -417,7 +410,7 @@ public class NFA {
 		 * Creates a new state.
 		 */
 		public NFAState() {
-			transitions = new ArrayList<Transition>();
+			transitions = new ArrayList<>();
 			index = counter++;
 		}
 
@@ -441,11 +434,9 @@ public class NFA {
 				return;
 			this.finalCode = finalCode;
 
-			for (Transition t : transitions) {
-				if (t.label == EPSILON) {
-					t.next.setFinal(finalCode);
-				}
-			}
+			transitions.stream().filter(t -> t.label == EPSILON).forEach(t -> {
+				t.next.setFinal(finalCode);
+			});
 		}
 
 		// //////////////////
@@ -458,8 +449,7 @@ public class NFA {
 		 * @param output output to store the closure in
 		 */
 		private void closure(HashSet<NFAState> output) {
-			for (NFAState node : closure())
-				output.add(node);
+			output.addAll(closure());
 		}
 
 		/**
@@ -469,7 +459,7 @@ public class NFA {
 		 */
 		private ArrayList<NFAState> closure() {
 			if (closure == null) {
-				HashSet<NFAState> tmp = new HashSet<NFAState>();
+				HashSet<NFAState> tmp = new HashSet<>();
 				tmp.add(this);
 				for (Transition transition : transitions) {
 					if (transition.label == EPSILON) {
@@ -494,14 +484,10 @@ public class NFA {
 		 * @param output possible set of states (out)
 		 */
 		private void edge(int label, HashSet<NFAState> output) {
-			for (Transition transition : transitions) {
-				if (transition.label == label) {
-					if (!output.contains(transition.next)) {
-						output.add(transition.next);
-						transition.next.closure(output);
-					}
-				}
-			}
+			transitions.stream().filter(transition -> transition.label == label).filter(transition -> !output.contains(transition.next)).forEach(transition -> {
+				output.add(transition.next);
+				transition.next.closure(output);
+			});
 		}
 
 		/**
@@ -544,11 +530,7 @@ public class NFA {
 			int i = 0;
 			for (NFAState node : nodes)
 				this.nodes[i++] = node;
-			Arrays.sort(this.nodes, new Comparator<NFAState>() {
-				public int compare(NFAState o1, NFAState o2) {
-					return o1.index - o2.index;
-				}
-			});
+			Arrays.sort(this.nodes, (o1, o2) -> o1.index - o2.index);
 		}
 
 		@Override
@@ -558,9 +540,7 @@ public class NFA {
 
 		@Override
 		public boolean equals(Object other) {
-			if (other.getClass() != NodeSet.class)
-				return false;
-			return Arrays.equals(nodes, ((NodeSet) other).nodes);
+			return other.getClass() == NodeSet.class && Arrays.equals(nodes, ((NodeSet) other).nodes);
 		}
 	}
 
@@ -594,9 +574,9 @@ public class NFA {
 		 * @return a duplicate of this partial
 		 */
 		public Partial duplicate() {
-			HashMap<NFAState, NFAState> nodes = new HashMap<NFAState, NFAState>();
+			HashMap<NFAState, NFAState> nodes = new HashMap<>();
 
-			Queue<NFAState> todo = new LinkedList<NFAState>();
+			Queue<NFAState> todo = new LinkedList<>();
 			todo.add(tail);
 			nodes.put(tail, new NFAState());
 			while (!todo.isEmpty()) {

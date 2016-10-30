@@ -22,26 +22,26 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("minetweaker.server.IServer")
 public interface IServer {
 	@ZenMethod
-	public void addCommand(
-			String name,
-			String usage,
-			String[] aliases,
-			ICommandFunction function,
-			@Optional ICommandValidator validator,
-			@Optional ICommandTabCompletion completion);
+    void addCommand(
+            String name,
+            String usage,
+            String[] aliases,
+            ICommandFunction function,
+            @Optional ICommandValidator validator,
+            @Optional ICommandTabCompletion completion);
 
 	@ZenMethod
-	public void addMineTweakerCommand(String name, String[] usage, ICommandFunction function);
+    void addMineTweakerCommand(String name, String[] usage, ICommandFunction function);
 
 	@ZenMethod
-	public boolean isOp(IPlayer player);
+    boolean isOp(IPlayer player);
 
 	@ZenMethod
-	public IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
+    IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
 
 	@ZenMethod
-	public IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
+    IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
 
 	@ZenMethod
-	public boolean isCommandAdded(String name);
+    boolean isCommandAdded(String name);
 }

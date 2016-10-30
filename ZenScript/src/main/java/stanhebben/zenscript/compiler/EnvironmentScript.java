@@ -6,16 +6,17 @@
 
 package stanhebben.zenscript.compiler;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -27,7 +28,7 @@ public class EnvironmentScript implements IEnvironmentGlobal {
 
 	public EnvironmentScript(IEnvironmentGlobal parent) {
 		this.parent = parent;
-		imports = new HashMap<String, IZenSymbol>();
+		imports = new HashMap<>();
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class ExpressionJavaMethodCurled extends Expression {
 		this.method = method;
 		this.receiver = receiver;
 
-		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
+		List<ParsedFunctionArgument> arguments = new ArrayList<>();
 		for (int i = 0; i < method.getMethod().getParameterTypes().length; i++) {
 			arguments.add(new ParsedFunctionArgument("p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
 		}

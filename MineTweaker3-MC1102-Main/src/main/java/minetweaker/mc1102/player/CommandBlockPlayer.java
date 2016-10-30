@@ -102,11 +102,9 @@ public class CommandBlockPlayer implements IPlayer{
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other.getClass() != this.getClass())
-            return false;
+    public boolean equals(Object other) {
+        return other.getClass() == this.getClass() && ((CommandBlockPlayer) other).sender.equals(sender);
 
-        return ((CommandBlockPlayer) other).sender.equals(sender);
     }
 
     @Override

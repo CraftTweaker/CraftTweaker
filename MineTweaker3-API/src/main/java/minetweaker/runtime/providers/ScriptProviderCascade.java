@@ -6,85 +6,76 @@
 
 package minetweaker.runtime.providers;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import minetweaker.runtime.IScriptIterator;
 import minetweaker.runtime.IScriptProvider;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
- *
  * @author Stan Hebben
  */
 public class ScriptProviderCascade implements IScriptProvider {
-	private final IScriptProvider[] providers;
+    private final IScriptProvider[] providers;
 
-	public ScriptProviderCascade(IScriptProvider... providers) {
-		this.providers = providers;
-	}
+    public ScriptProviderCascade(IScriptProvider... providers) {
+        this.providers = providers;
+    }
 
-	@Override
-	public Iterator<IScriptIterator> getScripts() {
-		return new MyScripterator();
-	}
+    @Override
+    public Iterator<IScriptIterator> getScripts() {
+        return new MyScripterator();
+    }
 
-	private class MyScripterator implements Iterator<IScriptIterator> {
-		private final Set<String> executed = new HashSet<String>();
+    private class MyScripterator implements Iterator<IScriptIterator> {
+        private final Set<String> executed = new HashSet<String>();
 
-		private int currentIndex = providers.length - 1;
-		private Iterator<IScriptIterator> current;
-		private IScriptIterator currentValue;
+        private int currentIndex = providers.length - 1;
+        private Iterator<IScriptIterator> current;
+        private IScriptIterator currentValue;
 
-		public MyScripterator() {
-			currentIndex = providers.length - 1;
-			current = providers[currentIndex].getScripts();
+        public MyScripterator() {
+            currentIndex = providers.length - 1;
+            current = providers[currentIndex].getScripts();
 
-			advance();
-		}
+            advance();
+        }
 
-		@Override
-		public boolean hasNext() {
-			return currentIndex >= 0;
-		}
+        @Override
+        public boolean hasNext() {
+            return currentIndex >= 0;
+        }
 
-		@Override
-		public IScriptIterator next() {
-			IScriptIterator result = currentValue;
-			executed.add(result.getGroupName());
+        @Override
+        public IScriptIterator next() {
+            IScriptIterator result = currentValue;
+            executed.add(result.getGroupName());
 
-			advance();
+            advance();
 
-			return result;
-		}
+            return result;
+        }
 
-		private void advance() {
-			do {
-				while (!current.hasNext()) {
-					currentIndex--;
-					if (currentIndex < 0)
-						return;
+        private void advance() {
+            do {
+                while(!current.hasNext()) {
+                    currentIndex--;
+                    if(currentIndex < 0)
+                        return;
 
-					current = providers[currentIndex].getScripts();
-				}
-				if (currentIndex < 0)
-					break;
+                    current = providers[currentIndex].getScripts();
+                }
+                if(currentIndex < 0)
+                    break;
 
-				currentValue = current.next();
-			} while (executed.contains(currentValue.getGroupName()) && hasNext());
-		}
+                currentValue = current.next();
+            } while(executed.contains(currentValue.getGroupName()) && hasNext());
+        }
 
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException("Not supported yet."); // To
-																			// change
-																			// body
-																			// of
-																			// generated
-																			// methods,
-																			// choose
-																			// Tools
-																			// |
-																			// Templates.
-		}
-	}
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
 }

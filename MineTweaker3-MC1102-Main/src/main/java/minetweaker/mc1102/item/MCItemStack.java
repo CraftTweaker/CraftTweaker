@@ -52,7 +52,7 @@ public class MCItemStack implements IItemStack{
             throw new IllegalArgumentException("stack cannot be null");
 
         stack = itemStack.copy();
-        items = Collections.<IItemStack>singletonList(this);
+        items = Collections.singletonList(this);
     }
 
     public MCItemStack(ItemStack itemStack, boolean wildcardSize){
@@ -66,13 +66,13 @@ public class MCItemStack implements IItemStack{
             throw new IllegalArgumentException("stack cannot be null");
 
         stack = itemStack;
-        items = Collections.<IItemStack>singletonList(this);
+        items = Collections.singletonList(this);
         this.tag = tag;
     }
 
     private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize){
         stack = itemStack;
-        items = Collections.<IItemStack>singletonList(this);
+        items = Collections.singletonList(this);
         this.tag = tag;
         this.wildcardSize = wildcardSize;
     }
@@ -315,11 +315,9 @@ public class MCItemStack implements IItemStack{
     }
 
     @Override
-    public boolean contains(IIngredient ingredient){
+    public boolean contains(IIngredient ingredient) {
         List<IItemStack> iitems = ingredient.getItems();
-        if(iitems == null || iitems.size() != 1)
-            return false;
-        return matches(iitems.get(0));
+        return !(iitems == null || iitems.size() != 1) && matches(iitems.get(0));
     }
 
     @Override
@@ -349,7 +347,7 @@ public class MCItemStack implements IItemStack{
 
     @Override
     public List<IOreDictEntry> getOres(){
-        List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
+        List<IOreDictEntry> result = new ArrayList<>();
 
         for(String key : OreDictionary.getOreNames()){
             for(ItemStack is : OreDictionary.getOres(key)){
@@ -379,23 +377,15 @@ public class MCItemStack implements IItemStack{
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == null){
+    public boolean equals(Object obj) {
+        if(obj == null) {
             return false;
         }
-        if(getClass() != obj.getClass()){
+        if(getClass() != obj.getClass()) {
             return false;
         }
         final MCItemStack other = (MCItemStack) obj;
-        if(this.stack.getItem() != other.stack.getItem())
-            return false;
-        if(this.stack.getItemDamage() != other.stack.getItemDamage())
-            return false;
-        if(this.stack.stackSize != other.stack.stackSize)
-            return false;
-        if(this.stack.getTagCompound() != other.stack.getTagCompound() && (this.stack == null || this.stack.equals(other.stack)))
-            return false;
-        return this.wildcardSize == other.wildcardSize;
+        return this.stack.getItem() == other.stack.getItem() && this.stack.getItemDamage() == other.stack.getItemDamage() && this.stack.stackSize == other.stack.stackSize && !(this.stack.getTagCompound() != other.stack.getTagCompound() && (this.stack == null || this.stack.equals(other.stack))) && this.wildcardSize == other.wildcardSize;
     }
 
     @Override

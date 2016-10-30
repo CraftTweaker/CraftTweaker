@@ -11,44 +11,33 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeAssociative;
 
 /**
- *
  * @author Stan
  */
 public class CastingRuleMap implements ICastingRule {
-	private final ICastingRule keyRule;
-	private final ICastingRule valueRule;
-	private final ZenTypeAssociative fromType;
-	private final ZenTypeAssociative toType;
+    private final ICastingRule keyRule;
+    private final ICastingRule valueRule;
+    private final ZenTypeAssociative fromType;
+    private final ZenTypeAssociative toType;
 
-	public CastingRuleMap(ICastingRule keyRule, ICastingRule valueRule, ZenTypeAssociative fromType, ZenTypeAssociative toType) {
-		this.keyRule = keyRule;
-		this.valueRule = valueRule;
-		this.fromType = fromType;
-		this.toType = toType;
-	}
+    public CastingRuleMap(ICastingRule keyRule, ICastingRule valueRule, ZenTypeAssociative fromType, ZenTypeAssociative toType) {
+        this.keyRule = keyRule;
+        this.valueRule = valueRule;
+        this.fromType = fromType;
+        this.toType = toType;
+    }
 
-	@Override
-	public void compile(IEnvironmentMethod method) {
-		// TODO: implement
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
-	}
+    @Override
+    public void compile(IEnvironmentMethod method) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public ZenType getInputType() {
-		return fromType;
-	}
+    @Override
+    public ZenType getInputType() {
+        return fromType;
+    }
 
-	@Override
-	public ZenType getResultingType() {
-		return toType;
-	}
+    @Override
+    public ZenType getResultingType() {
+        return toType;
+    }
 }

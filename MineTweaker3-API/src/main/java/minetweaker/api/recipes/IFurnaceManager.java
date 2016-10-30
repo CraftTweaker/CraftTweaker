@@ -22,16 +22,16 @@ import java.util.List;
 @ZenClass("minetweaker.recipes.IFurnaceManager")
 public interface IFurnaceManager {
 	@ZenMethod
-	public void remove(IIngredient output, @Optional IIngredient input);
+    void remove(IIngredient output, @Optional IIngredient input);
 
 	@ZenMethod
-	public void addRecipe(IItemStack output, IIngredient input, @Optional double xp);
+    void addRecipe(IItemStack output, IIngredient input, @Optional double xp);
 
 	@ZenMethod
-	public void setFuel(IIngredient item, int fuel);
+    void setFuel(IIngredient item, int fuel);
 
 	@ZenMethod
-	public int getFuel(IItemStack item);
+    int getFuel(IItemStack item);
 
 	/**
 	 * Returns all crafting recipes.
@@ -39,5 +39,5 @@ public interface IFurnaceManager {
 	 * @return all crafting recipes
 	 */
 	@ZenGetter("all")
-	public List<IFurnaceRecipe> getAll();
+    List<IFurnaceRecipe> getAll();
 }

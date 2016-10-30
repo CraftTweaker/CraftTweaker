@@ -19,5 +19,5 @@ public interface IItemCondition {
 	 * @param stack item stack to check
 	 * @return true if the condition applies to this stack
 	 */
-	public boolean matches(IItemStack stack);
+    boolean matches(IItemStack stack);
 }

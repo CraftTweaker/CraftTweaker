@@ -92,11 +92,10 @@ public class StringUtil {
         if (value == null)
             return null;
 
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         int start = 0;
-        outer:
-        for (int i = 0; i < value.length(); i++) {
-            if (value.charAt(i) == delimiter) {
+        for(int i = 0; i < value.length(); i++) {
+            if(value.charAt(i) == delimiter) {
                 result.add(value.substring(start, i));
                 start = i + 1;
             }
@@ -116,16 +115,16 @@ public class StringUtil {
         for (int i = 0; i < lines.length; i++) {
             lines[i] = lines[i].trim();
         }
-        ArrayList<String> output = new ArrayList<String>();
+        ArrayList<String> output = new ArrayList<>();
         StringBuilder current = new StringBuilder();
-        for (int i = 0; i < lines.length; i++) {
-            if (lines[i].length() == 0) {
-                if (current.length() > 0) {
+        for(String line : lines) {
+            if(line.length() == 0) {
+                if(current.length() > 0) {
                     output.add(current.toString());
                     current = new StringBuilder();
                 }
             } else {
-                current.append(' ').append(lines[i]);
+                current.append(' ').append(line);
             }
         }
         if (current.length() > 0) {
@@ -214,7 +213,7 @@ public class StringUtil {
             int cp = oldstr.codePointAt(i);
             if (oldstr.codePointAt(i) > Character.MAX_VALUE) {
                 i++;
-                /**** WE HATES UTF-16! WE HATES IT FOREVERSES!!! ****/
+                /* WE HATES UTF-16! WE HATES IT FOREVERSES!!! */
             }
 
             if (!saw_backslash) {
@@ -510,7 +509,7 @@ public class StringUtil {
             sb.append(String.format("%X", s.codePointAt(i)));
             if (s.codePointAt(i) > Character.MAX_VALUE) {
                 i++;
-                /**** WE HATES UTF-16! WE HATES IT FOREVERSES!!! ****/
+                /* WE HATES UTF-16! WE HATES IT FOREVERSES!!! */
             }
             if (i + 1 < s.length()) {
                 sb.append(".");

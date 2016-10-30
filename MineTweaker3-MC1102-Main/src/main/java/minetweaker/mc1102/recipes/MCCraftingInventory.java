@@ -23,8 +23,8 @@ import static minetweaker.api.minecraft.MineTweakerMC.*;
  * @author Stan
  */
 public class MCCraftingInventory implements ICraftingInventory{
-    private static final ThreadLocal<MCCraftingInventory> cache = new ThreadLocal<MCCraftingInventory>();
-    private static final ThreadLocal<MCCraftingInventory> cache2 = new ThreadLocal<MCCraftingInventory>();
+    private static final ThreadLocal<MCCraftingInventory> cache = new ThreadLocal<>();
+    private static final ThreadLocal<MCCraftingInventory> cache2 = new ThreadLocal<>();
     private final IInventory inventory;
     private final IPlayer player;
     private final EntityPlayer playerOrig;
@@ -193,10 +193,8 @@ public class MCCraftingInventory implements ICraftingInventory{
         }
     }
 
-    private boolean changed(int i){
-        if(original[i] != inventory.getStackInSlot(i))
-            return true;
-        return original[i] != null && stacks[i].getAmount() != original[i].stackSize;
+    private boolean changed(int i) {
+        return original[i] != inventory.getStackInSlot(i) || original[i] != null && stacks[i].getAmount() != original[i].stackSize;
 
     }
 }

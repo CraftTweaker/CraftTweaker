@@ -1,10 +1,11 @@
 package minetweaker.api.liquid;
 
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * Contains a weighted item stack. Weighted item stacks simply contain a stack
@@ -15,7 +16,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("minetweaker.item.WeightedItemStack")
 public final class WeightedLiquidStack {
 	public static List<ILiquidStack> pickRandomDrops(Random random, WeightedLiquidStack[] items) {
-		ArrayList<ILiquidStack> result = new ArrayList<ILiquidStack>();
+		ArrayList<ILiquidStack> result = new ArrayList<>();
 
 		for (WeightedLiquidStack item : items) {
 			if (random.nextFloat() <= item.getChance()) {
@@ -63,19 +64,13 @@ public final class WeightedLiquidStack {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
+		if(obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if(getClass() != obj.getClass()) {
 			return false;
 		}
 		final WeightedLiquidStack other = (WeightedLiquidStack) obj;
-		if (this.stack != other.stack && (this.stack == null || !this.stack.equals(other.stack))) {
-			return false;
-		}
-		if (Float.floatToIntBits(this.p) != Float.floatToIntBits(other.p)) {
-			return false;
-		}
-		return true;
+		return !(this.stack != other.stack && (this.stack == null || !this.stack.equals(other.stack))) && Float.floatToIntBits(this.p) == Float.floatToIntBits(other.p);
 	}
 }

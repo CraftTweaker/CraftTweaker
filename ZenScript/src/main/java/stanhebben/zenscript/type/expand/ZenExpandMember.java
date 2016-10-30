@@ -125,9 +125,7 @@ public class ZenExpandMember {
 		public ZenType[] predictCallTypes(int numArguments) {
 			ZenType[] base = JavaMethod.predict(methods, numArguments + 1);
 			ZenType[] result = new ZenType[base.length - 1];
-			for (int i = 0; i < result.length; i++) {
-				result[i] = base[i + 1];
-			}
+			System.arraycopy(base, 1, result, 0, result.length);
 
 			return result;
 		}

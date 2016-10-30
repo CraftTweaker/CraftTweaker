@@ -19,21 +19,21 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan
  */
 public interface IEnvironmentGlobal extends ITypeRegistry, IZenErrorLogger {
-	public IZenCompileEnvironment getEnvironment();
+	IZenCompileEnvironment getEnvironment();
 
-	public TypeExpansion getExpansion(String name);
+	TypeExpansion getExpansion(String name);
 
-	public String makeClassName();
+	String makeClassName();
 
-	public boolean containsClass(String name);
+	boolean containsClass(String name);
 
-	public Set<String> getClassNames();
+	Set<String> getClassNames();
 
-	public byte[] getClass(String name);
+	byte[] getClass(String name);
 
-	public void putClass(String name, byte[] data);
+	void putClass(String name, byte[] data);
 
-	public IPartialExpression getValue(String name, ZenPosition position);
+	IPartialExpression getValue(String name, ZenPosition position);
 
-	public void putValue(String name, IZenSymbol value, ZenPosition position);
+	void putValue(String name, IZenSymbol value, ZenPosition position);
 }

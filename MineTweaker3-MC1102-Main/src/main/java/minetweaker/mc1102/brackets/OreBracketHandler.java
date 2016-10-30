@@ -36,7 +36,7 @@ public class OreBracketHandler implements IBracketHandler{
     }
 
     public static List<IOreDictEntry> getOreList(String wildcardName){
-        List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
+        List<IOreDictEntry> result = new ArrayList<>();
         Pattern wildcardPattern = Pattern.compile(wildcardName.replaceAll("\\*", ".+"));
 
         for(IOreDictEntry someOreDict : MineTweakerAPI.oreDict.getEntries()){

@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @BracketHandler
 public class LiquidBracketHandler implements IBracketHandler{
-    private static final Map<String, Fluid> fluidNames = new HashMap<String, Fluid>();
+    private static final Map<String, Fluid> fluidNames = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public static void rebuildLiquidRegistry(){

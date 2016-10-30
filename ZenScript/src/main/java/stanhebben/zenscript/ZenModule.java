@@ -167,7 +167,7 @@ public class ZenModule {
 	 * @throws IOException if the file could not be read
 	 */
 	public static ZenModule compileScriptFile(File single, IZenCompileEnvironment environment, ClassLoader baseClassLoader) throws IOException {
-		Map<String, byte[]> classes = new HashMap<String, byte[]>();
+		Map<String, byte[]> classes = new HashMap<>();
 		ClassNameGenerator nameGen = new ClassNameGenerator();
 		EnvironmentGlobal environmentGlobal = new EnvironmentGlobal(
 				environment,
@@ -184,7 +184,7 @@ public class ZenModule {
 		ZenParsedFile file = new ZenParsedFile(filename, className, parser, environmentGlobal);
 		reader.close();
 
-		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
+		List<ZenParsedFile> files = new ArrayList<>();
 		files.add(file);
 
 		compileScripts(filename, files, environmentGlobal, false);
@@ -221,7 +221,7 @@ public class ZenModule {
 			String subdir,
 			IZenCompileEnvironment environment,
 			ClassLoader baseClassLoader) throws IOException {
-		Map<String, byte[]> classes = new HashMap<String, byte[]>();
+		Map<String, byte[]> classes = new HashMap<>();
 		ClassNameGenerator nameGen = new ClassNameGenerator();
 		EnvironmentGlobal environmentGlobal = new EnvironmentGlobal(
 				environment,
@@ -229,7 +229,7 @@ public class ZenModule {
 				nameGen
 				);
 
-		List<ZenParsedFile> files = new ArrayList<ZenParsedFile>();
+		List<ZenParsedFile> files = new ArrayList<>();
 
 		ZipFile zipFile = new ZipFile(file);
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();

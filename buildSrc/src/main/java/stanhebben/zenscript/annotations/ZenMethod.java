@@ -22,5 +22,5 @@ public @interface ZenMethod {
 	 * 
 	 * @return method name
 	 */
-	public String value() default "";
+    String value() default "";
 }

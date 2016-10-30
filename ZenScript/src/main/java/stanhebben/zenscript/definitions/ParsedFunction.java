@@ -6,17 +6,18 @@
 
 package stanhebben.zenscript.definitions;
 
-import static stanhebben.zenscript.ZenTokener.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.statements.Statement;
-import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static stanhebben.zenscript.ZenTokener.*;
 
 /**
  *
@@ -65,7 +66,7 @@ public class ParsedFunction {
 		if (parser.optional(T_ACLOSE) != null) {
 			statements = new Statement[0];
 		} else {
-			ArrayList<Statement> statementsAL = new ArrayList<Statement>();
+			ArrayList<Statement> statementsAL = new ArrayList<>();
 
 			while (parser.optional(T_ACLOSE) == null) {
 				statementsAL.add(Statement.read(parser, environment, type));

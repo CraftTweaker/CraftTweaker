@@ -18,8 +18,8 @@ import java.util.Map;
 public class SlotRecipe extends Slot {
 
     //key is the operation, value is the values, for more than 1 value, seperate using §
-    private Map<String, Boolean> propertyMap = new HashMap<String, Boolean>();
-    private Map<String, Integer> properties = new HashMap<String, Integer>();
+    private Map<String, Boolean> propertyMap = new HashMap<>();
+    private Map<String, Integer> properties = new HashMap<>();
 
 
     public SlotRecipe(IInventory inventoryIn, int index, int xPosition, int yPosition) {
@@ -67,11 +67,12 @@ public class SlotRecipe extends Slot {
         if (getPropertyFromMap("anyDamage")) builder.append(".anyDamage()");
         if (getPropertyFromMap("onlyDamage")) builder.append(".onlyDamaged()");
         if (getPropertyFromMap("gted"))
-            builder.append(".onlyDamageAtLeast(").append("" + getProperty("gted")).append(')');
+            builder.append(".onlyDamageAtLeast(").append("").append(getProperty("gted")).append(')');
         if (getPropertyFromMap("ltd"))
-            builder.append(".onlyDamageAtMost(").append("" + getProperty("ltd")).append(')');
-        if (getPropertyFromMap("betweenDamage"))
-            builder.append(".onlyDamageBetween(").append("" + getProperty("betweenDamageX")).append(", ").append("" + getProperty("betweenDamageY")).append(')');
+            builder.append(".onlyDamageAtMost(").append("").append(getProperty("ltd")).append(')');
+        if (getPropertyFromMap("betweenDamage")) {
+            builder.append(".onlyDamageBetween(").append("").append(getProperty("betweenDamageX")).append(", ").append("").append(getProperty("betweenDamageY")).append(')');
+        }
         if (getPropertyFromMap("reuse")) builder.append(".reuse()");
         if (getPropertyFromMap("noreturn")) builder.append(".noReturn()");
         if (getPropertyFromMap("nbt")) {

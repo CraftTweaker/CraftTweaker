@@ -16,8 +16,8 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("vanilla.IVanilla")
 public interface IVanilla {
 	@ZenGetter("loot")
-	public ILootRegistry getLoot();
+    ILootRegistry getLoot();
 
 	@ZenGetter("seeds")
-	public ISeedRegistry getSeeds();
+    ISeedRegistry getSeeds();
 }

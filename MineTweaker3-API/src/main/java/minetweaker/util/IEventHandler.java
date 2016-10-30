@@ -11,5 +11,5 @@ package minetweaker.util;
  * @author Stan
  */
 public interface IEventHandler<T> {
-	public void handle(T event);
+	void handle(T event);
 }

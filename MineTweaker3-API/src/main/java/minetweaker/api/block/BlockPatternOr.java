@@ -6,63 +6,63 @@
 
 package minetweaker.api.block;
 
-import java.util.ArrayList;
-import java.util.List;
 import minetweaker.util.ArrayUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- *
  * @author Stan
  */
 public class BlockPatternOr implements IBlockPattern {
-	private final IBlockPattern[] elements;
+    private final IBlockPattern[] elements;
 
-	public BlockPatternOr(IBlockPattern[] elements) {
-		this.elements = elements;
-	}
+    public BlockPatternOr(IBlockPattern[] elements) {
+        this.elements = elements;
+    }
 
-	public BlockPatternOr(IBlockPattern a, IBlockPattern b) {
-		this.elements = new IBlockPattern[] { a, b };
-	}
+    public BlockPatternOr(IBlockPattern a, IBlockPattern b) {
+        this.elements = new IBlockPattern[]{a, b};
+    }
 
-	@Override
-	public List<IBlock> getBlocks() {
-		List<IBlock> blocks = new ArrayList<IBlock>();
-		for (IBlockPattern pattern : elements) {
-			blocks.addAll(pattern.getBlocks());
-		}
-		return blocks;
-	}
+    @Override
+    public List<IBlock> getBlocks() {
+        List<IBlock> blocks = new ArrayList<>();
+        for(IBlockPattern pattern : elements) {
+            blocks.addAll(pattern.getBlocks());
+        }
+        return blocks;
+    }
 
-	@Override
-	public boolean matches(IBlock block) {
-		for (IBlockPattern pattern : elements) {
-			if (pattern.matches(block))
-				return true;
-		}
+    @Override
+    public boolean matches(IBlock block) {
+        for(IBlockPattern pattern : elements) {
+            if(pattern.matches(block))
+                return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public String getDisplayName() {
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		for (IBlockPattern pattern : elements) {
-			if (first) {
-				first = false;
-			} else {
-				result.append(" | ");
-			}
+    @Override
+    public String getDisplayName() {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for(IBlockPattern pattern : elements) {
+            if(first) {
+                first = false;
+            } else {
+                result.append(" | ");
+            }
 
-			result.append(pattern.getDisplayName());
-		}
+            result.append(pattern.getDisplayName());
+        }
 
-		return result.toString();
-	}
+        return result.toString();
+    }
 
-	@Override
-	public IBlockPattern or(IBlockPattern pattern) {
-		return new BlockPatternOr(ArrayUtil.append(elements, pattern));
-	}
+    @Override
+    public IBlockPattern or(IBlockPattern pattern) {
+        return new BlockPatternOr(ArrayUtil.append(elements, pattern));
+    }
 }

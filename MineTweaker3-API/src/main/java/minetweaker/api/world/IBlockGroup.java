@@ -18,8 +18,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("minetweaker.world.IBlockGroup")
 public interface IBlockGroup {
 	@ZenGetter("dimension")
-	public IDimension getDimension();
+    IDimension getDimension();
 
 	@ZenMethod
-	public IBlock getBlock(int x, int y, int z);
+    IBlock getBlock(int x, int y, int z);
 }

@@ -127,7 +127,7 @@ public class MCLiquidStack implements ILiquidStack{
 
     @Override
     public List<ILiquidStack> getLiquids(){
-        return Collections.<ILiquidStack>singletonList(this);
+        return Collections.singletonList(this);
     }
 
     @Override

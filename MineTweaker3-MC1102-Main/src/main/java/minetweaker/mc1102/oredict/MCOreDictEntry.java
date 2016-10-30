@@ -10,6 +10,7 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.oredict.IngredientOreDict;
 import minetweaker.api.player.IPlayer;
@@ -21,6 +22,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
@@ -151,11 +154,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public List<IItemStack> getItems() {
-        List<IItemStack> result = new ArrayList<IItemStack>();
-        for (ItemStack item : OreDictionary.getOres(getName())) {
-            result.add(getIItemStackWildcardSize(item));
-        }
-        return result;
+        return OreDictionary.getOres(getName()).stream().map(MineTweakerMC::getIItemStackWildcardSize).collect(Collectors.toList());
     }
 
     @Override
@@ -245,9 +244,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof MCOreDictEntry))
-            return false;
-        return ((MCOreDictEntry) other).id == id;
+        return other instanceof MCOreDictEntry && Objects.equals(((MCOreDictEntry) other).id, id);
     }
 
     // ######################

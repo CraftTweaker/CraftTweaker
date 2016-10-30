@@ -31,5 +31,5 @@ public @interface ZenExpansion {
 	 * 
 	 * @return expanded type
 	 */
-	public String value();
+    String value();
 }

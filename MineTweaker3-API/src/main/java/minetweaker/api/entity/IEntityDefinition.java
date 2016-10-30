@@ -10,14 +10,13 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
- *
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.entity.IEntityDefinition")
 public interface IEntityDefinition {
-	@ZenGetter("id")
-	public String getId();
+    @ZenGetter("id")
+    String getId();
 
-	@ZenGetter("name")
-	public String getName();
+    @ZenGetter("name")
+    String getName();
 }

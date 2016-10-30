@@ -14,5 +14,5 @@ import stanhebben.zenscript.type.ZenType;
  * @author Stan
  */
 public interface ITypeRegistry {
-	public ZenType getType(Type type);
+	ZenType getType(Type type);
 }

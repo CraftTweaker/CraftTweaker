@@ -69,23 +69,14 @@ public class FluidHeatGenerator {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj == null) {
+			if(obj == null) {
 				return false;
 			}
-			if (getClass() != obj.getClass()) {
+			if(getClass() != obj.getClass()) {
 				return false;
 			}
 			final AddFluidAction other = (AddFluidAction) obj;
-			if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-				return false;
-			}
-			if (this.liquidPerTick != other.liquidPerTick) {
-				return false;
-			}
-			if (this.heatPerTick != other.heatPerTick) {
-				return false;
-			}
-			return true;
+			return (this.name == null) ? other.name == null : this.name.equals(other.name) && this.liquidPerTick == other.liquidPerTick && this.heatPerTick == other.heatPerTick;
 		}
 	}
 }

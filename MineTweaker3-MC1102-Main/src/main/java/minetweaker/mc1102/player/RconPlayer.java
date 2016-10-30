@@ -102,11 +102,9 @@ public class RconPlayer implements IPlayer{
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other.getClass() != this.getClass())
-            return false;
+    public boolean equals(Object other) {
+        return other.getClass() == this.getClass() && ((RconPlayer) other).sender == sender;
 
-        return ((RconPlayer) other).sender == sender;
     }
 
     @Override

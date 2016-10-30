@@ -1,11 +1,12 @@
 package minetweaker.api.item;
 
-import java.util.List;
 import minetweaker.api.oredict.IOreDictEntry;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.List;
 
 /**
  * Contains an item definition. Item definitions provide general information
@@ -24,7 +25,7 @@ public interface IItemDefinition {
 	 * @return item ID
 	 */
 	@ZenGetter("id")
-	public String getId();
+    String getId();
 
 	/**
 	 * Gets the unlocalized item name.
@@ -32,7 +33,7 @@ public interface IItemDefinition {
 	 * @return item name
 	 */
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 
 	/**
 	 * Makes an item stack from this definition.
@@ -41,14 +42,14 @@ public interface IItemDefinition {
 	 * @return item stack
 	 */
 	@ZenMethod
-	public IItemStack makeStack(@Optional int meta);
+    IItemStack makeStack(@Optional int meta);
 
 	/**
 	 * Returns all ore entries containing this item. Also contains ore entries
 	 * that refer to a specific sub-item.
 	 * 
-	 * @return
+	 * @return all the ore entries containing this item.
 	 */
 	@ZenGetter("ores")
-	public List<IOreDictEntry> getOres();
+    List<IOreDictEntry> getOres();
 }

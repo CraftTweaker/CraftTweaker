@@ -6,12 +6,13 @@
 
 package minetweaker.api.vanilla;
 
-import java.util.List;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.WeightedItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.List;
 
 /**
  *
@@ -20,11 +21,11 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("vanilla.ISeedRegistry")
 public interface ISeedRegistry {
 	@ZenMethod
-	public void addSeed(WeightedItemStack item);
+    void addSeed(WeightedItemStack item);
 
 	@ZenMethod
-	public void removeSeed(IIngredient item);
+    void removeSeed(IIngredient item);
 
 	@ZenGetter("seeds")
-	public List<WeightedItemStack> getSeeds();
+    List<WeightedItemStack> getSeeds();
 }

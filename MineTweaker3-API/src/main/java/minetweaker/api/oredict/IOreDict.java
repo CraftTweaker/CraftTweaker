@@ -6,10 +6,11 @@
 
 package minetweaker.api.oredict;
 
-import java.util.List;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMemberGetter;
+
+import java.util.List;
 
 /**
  *
@@ -18,8 +19,8 @@ import stanhebben.zenscript.annotations.ZenMemberGetter;
 @ZenClass("minetweaker.oredict.IOreDict")
 public interface IOreDict {
 	@ZenMemberGetter
-	public IOreDictEntry get(String name);
+    IOreDictEntry get(String name);
 
 	@ZenGetter("entries")
-	public List<IOreDictEntry> getEntries();
+    List<IOreDictEntry> getEntries();
 }

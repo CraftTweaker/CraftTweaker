@@ -6,30 +6,25 @@
 
 package minetweaker.api.block;
 
+import stanhebben.zenscript.annotations.*;
+
 import java.util.List;
 
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenOperator;
-
 /**
- *
  * @author Stan
  */
 @ZenClass("minetweaker.block.IBlockPattern")
 public interface IBlockPattern {
-	@ZenMethod("blocks")
-	public List<IBlock> getBlocks();
+    @ZenMethod("blocks")
+    List<IBlock> getBlocks();
 
-	@ZenOperator(OperatorType.CONTAINS)
-	public boolean matches(IBlock block);
+    @ZenOperator(OperatorType.CONTAINS)
+    boolean matches(IBlock block);
 
-	@ZenOperator(OperatorType.OR)
-	public IBlockPattern or(IBlockPattern pattern);
+    @ZenOperator(OperatorType.OR)
+    IBlockPattern or(IBlockPattern pattern);
 
-	@ZenGetter("displayName")
-	public String getDisplayName();
+    @ZenGetter("displayName")
+    String getDisplayName();
 
 }

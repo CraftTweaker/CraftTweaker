@@ -6,15 +6,12 @@
 
 package minetweaker.runtime.providers;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import minetweaker.runtime.IScriptIterator;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import minetweaker.runtime.IScriptIterator;
 
 /**
  *
@@ -29,7 +26,7 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 		this.directory = directory;
 
 		File scriptDir = new File(directory, "scripts");
-		List<File> contentsList = new ArrayList<File>();
+		List<File> contentsList = new ArrayList<>();
 		if (scriptDir.exists()) {
 			iterate(scriptDir, contentsList);
 		}

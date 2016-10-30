@@ -13,5 +13,5 @@ import org.objectweb.asm.ClassVisitor;
  * @author Stan
  */
 public interface IEnvironmentClass extends IEnvironmentGlobal {
-	public ClassVisitor getClassOutput();
+	ClassVisitor getClassOutput();
 }

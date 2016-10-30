@@ -132,9 +132,9 @@ public class HashMapI<T> {
 	public int[] keysArray() {
 		int[] result = new int[size];
 		int ix = 0;
-		for (int i = 0; i < keys.length; i++) {
-			if (keys[i] != Integer.MIN_VALUE)
-				result[ix++] = keys[i];
+		for(int key : keys) {
+			if(key != Integer.MIN_VALUE)
+				result[ix++] = key;
 		}
 		return result;
 	}

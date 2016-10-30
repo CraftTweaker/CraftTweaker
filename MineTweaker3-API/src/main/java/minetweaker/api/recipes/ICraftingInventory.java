@@ -26,7 +26,7 @@ public interface ICraftingInventory {
 	 * @return inventory player
 	 */
 	@ZenGetter("player")
-	public IPlayer getPlayer();
+    IPlayer getPlayer();
 
 	/**
 	 * Gets the size of this inventory.
@@ -34,7 +34,7 @@ public interface ICraftingInventory {
 	 * @return inventory size
 	 */
 	@ZenGetter("size")
-	public int getSize();
+    int getSize();
 
 	/**
 	 * Gets the width of this inventory.
@@ -42,7 +42,7 @@ public interface ICraftingInventory {
 	 * @return inventory width
 	 */
 	@ZenGetter("width")
-	public int getWidth();
+    int getWidth();
 
 	/**
 	 * Gets the height of this inventory.
@@ -50,7 +50,7 @@ public interface ICraftingInventory {
 	 * @return inventory height
 	 */
 	@ZenGetter("height")
-	public int getHeight();
+    int getHeight();
 
 	/**
 	 * Gets the number of stacks that are actually filled in.
@@ -58,7 +58,7 @@ public interface ICraftingInventory {
 	 * @return effective stack count
 	 */
 	@ZenGetter("stackCount")
-	public int getStackCount();
+    int getStackCount();
 
 	/**
 	 * Gets the stack at the given location.
@@ -67,7 +67,7 @@ public interface ICraftingInventory {
 	 * @return stack contents, or null
 	 */
 	@ZenMethod
-	public IItemStack getStack(int i);
+    IItemStack getStack(int i);
 
 	/**
 	 * Gets the stack at the given position. The top left stack is position (0,
@@ -78,7 +78,7 @@ public interface ICraftingInventory {
 	 * @return item stack, or null if there is no item stack at that position
 	 */
 	@ZenMethod
-	public IItemStack getStack(int x, int y);
+    IItemStack getStack(int x, int y);
 
 	/**
 	 * Sets the stack at the given position. The top left stack is position (0,
@@ -90,7 +90,7 @@ public interface ICraftingInventory {
 	 *        position
 	 */
 	@ZenMethod
-	public void setStack(int x, int y, IItemStack stack);
+    void setStack(int x, int y, IItemStack stack);
 
 	/**
 	 * Sets the stack at the given index.
@@ -100,5 +100,5 @@ public interface ICraftingInventory {
 	 *        index
 	 */
 	@ZenMethod
-	public void setStack(int i, IItemStack stack);
+    void setStack(int i, IItemStack stack);
 }

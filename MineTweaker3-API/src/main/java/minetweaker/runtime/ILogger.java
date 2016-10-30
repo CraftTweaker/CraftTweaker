@@ -14,17 +14,17 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 public interface ILogger {
 	@ZenMethod
-	public void logCommand(String message);
+    void logCommand(String message);
 
 	@ZenMethod
-	public void logInfo(String message);
+    void logInfo(String message);
 
 	@ZenMethod
-	public void logWarning(String message);
+    void logWarning(String message);
 
 	@ZenMethod
-	public void logError(String message);
+    void logError(String message);
 
 	@ZenMethod
-	public void logError(String message, Throwable exception);
+    void logError(String message, Throwable exception);
 }

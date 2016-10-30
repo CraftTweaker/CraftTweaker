@@ -25,7 +25,7 @@ public class MTRecipe {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        List<Integer> idrange = new ArrayList<Integer>();
+        List<Integer> idrange = new ArrayList<>();
         idrange.add(1);
         idrange.add(2);
         GuiRegistry.registerGui(idrange, new GuiHandlerVanilla());

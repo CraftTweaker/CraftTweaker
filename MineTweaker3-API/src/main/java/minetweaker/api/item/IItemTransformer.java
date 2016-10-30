@@ -22,5 +22,5 @@ public interface IItemTransformer {
 	 * @return output item
 	 */
 	@ZenMethod
-	public IItemStack transform(IItemStack item, IPlayer byPlayer);
+    IItemStack transform(IItemStack item, IPlayer byPlayer);
 }

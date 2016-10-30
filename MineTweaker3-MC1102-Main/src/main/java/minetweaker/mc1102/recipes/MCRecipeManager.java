@@ -34,7 +34,7 @@ public class MCRecipeManager implements IRecipeManager {
 
     public MCRecipeManager() {
         recipes = CraftingManager.getInstance().getRecipeList();
-        transformerRecipes = new ArrayList<ICraftingRecipe>();
+        transformerRecipes = new ArrayList<>();
     }
 
     private static boolean matches(Object input, IIngredient ingredient) {
@@ -70,21 +70,19 @@ public class MCRecipeManager implements IRecipeManager {
 
     @Override
     public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
-        List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
+        List<ICraftingRecipe> results = new ArrayList<>();
 
-        for(IRecipe recipe : recipes) {
-            if(ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))) {
-                ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
-                results.add(converted);
-            }
-        }
+        recipes.stream().filter(recipe -> ingredient.matches(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()))).forEach(recipe -> {
+            ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
+            results.add(converted);
+        });
 
         return results;
     }
 
     @Override
     public List<ICraftingRecipe> getAll() {
-        List<ICraftingRecipe> results = new ArrayList<ICraftingRecipe>();
+        List<ICraftingRecipe> results = new ArrayList<>();
 
         for(IRecipe recipe : recipes) {
             ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe);
@@ -96,8 +94,8 @@ public class MCRecipeManager implements IRecipeManager {
 
     @Override
     public int remove(IIngredient output, @Optional boolean nbtMatch) {
-        List<IRecipe> toRemove = new ArrayList<IRecipe>();
-        List<Integer> removeIndex = new ArrayList<Integer>();
+        List<IRecipe> toRemove = new ArrayList<>();
+        List<Integer> removeIndex = new ArrayList<>();
         for(int i = 0; i < recipes.size(); i++) {
             IRecipe recipe = recipes.get(i);
 
@@ -140,13 +138,13 @@ public class MCRecipeManager implements IRecipeManager {
         if(ingredients != null) {
             ingredientsHeight = ingredients.length;
 
-            for(int i = 0; i < ingredients.length; i++) {
-                ingredientsWidth = Math.max(ingredientsWidth, ingredients[i].length);
+            for(IIngredient[] ingredient : ingredients) {
+                ingredientsWidth = Math.max(ingredientsWidth, ingredient.length);
             }
         }
 
-        List<IRecipe> toRemove = new ArrayList<IRecipe>();
-        List<Integer> removeIndex = new ArrayList<Integer>();
+        List<IRecipe> toRemove = new ArrayList<>();
+        List<Integer> removeIndex = new ArrayList<>();
         outer:
         for(int i = 0; i < recipes.size(); i++) {
             IRecipe recipe = recipes.get(i);
@@ -212,8 +210,8 @@ public class MCRecipeManager implements IRecipeManager {
 
     @Override
     public int removeShapeless(IIngredient output, @Optional IIngredient[] ingredients, @Optional boolean wildcard) {
-        List<IRecipe> toRemove = new ArrayList<IRecipe>();
-        List<Integer> removeIndex = new ArrayList<Integer>();
+        List<IRecipe> toRemove = new ArrayList<>();
+        List<Integer> removeIndex = new ArrayList<>();
         outer:
         for(int i = 0; i < recipes.size(); i++) {
             IRecipe recipe = recipes.get(i);
@@ -233,9 +231,9 @@ public class MCRecipeManager implements IRecipeManager {
                     }
 
                     checkIngredient:
-                    for(int j = 0; j < ingredients.length; j++) {
+                    for(IIngredient ingredient : ingredients) {
                         for(int k = 0; k < srecipe.getRecipeSize(); k++) {
-                            if(matches(srecipe.recipeItems.get(k), ingredients[j])) {
+                            if(matches(srecipe.recipeItems.get(k), ingredient)) {
                                 continue checkIngredient;
                             }
                         }
@@ -254,9 +252,9 @@ public class MCRecipeManager implements IRecipeManager {
                     }
 
                     checkIngredient:
-                    for(int j = 0; j < ingredients.length; j++) {
+                    for(IIngredient ingredient : ingredients) {
                         for(int k = 0; k < srecipe.getRecipeSize(); k++) {
-                            if(matches(inputs.get(k), ingredients[j])) {
+                            if(matches(inputs.get(k), ingredient)) {
                                 continue checkIngredient;
                             }
                         }

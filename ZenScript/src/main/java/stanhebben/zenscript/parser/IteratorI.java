@@ -16,12 +16,12 @@ public interface IteratorI {
 	 *
 	 * @return true if the iteration has more elements
 	 */
-	public boolean hasNext();
+    boolean hasNext();
 
 	/**
 	 * Returns the next element in this iteration.
 	 *
 	 * @return the next element in this iteration
 	 */
-	public int next();
+    int next();
 }

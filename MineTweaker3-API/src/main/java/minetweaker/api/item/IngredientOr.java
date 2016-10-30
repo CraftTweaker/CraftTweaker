@@ -53,7 +53,7 @@ public class IngredientOr implements IIngredient {
 
 	@Override
 	public List<IItemStack> getItems() {
-		List<IItemStack> result = new ArrayList<IItemStack>();
+		List<IItemStack> result = new ArrayList<>();
 		for (IIngredient element : elements) {
 			result.addAll(element.getItems());
 		}
@@ -62,7 +62,7 @@ public class IngredientOr implements IIngredient {
 
 	@Override
 	public List<ILiquidStack> getLiquids() {
-		List<ILiquidStack> result = new ArrayList<ILiquidStack>();
+		List<ILiquidStack> result = new ArrayList<>();
 		for (IIngredient element : elements) {
 			result.addAll(element.getLiquids());
 		}

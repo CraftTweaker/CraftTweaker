@@ -38,14 +38,14 @@ import java.util.logging.Logger;
  * @author Stan
  */
 public class GlobalRegistry {
-	private static final Map<String, IZenSymbol> globals = new HashMap<String, IZenSymbol>();
-	private static final List<IRecipeRemover> removers = new ArrayList<IRecipeRemover>();
-	private static final List<IBracketHandler> bracketHandlers = new ArrayList<IBracketHandler>();
+	private static final Map<String, IZenSymbol> globals = new HashMap<>();
+	private static final List<IRecipeRemover> removers = new ArrayList<>();
+	private static final List<IBracketHandler> bracketHandlers = new ArrayList<>();
 	private static final TypeRegistry types = new TypeRegistry();
 	private static final SymbolPackage root = new SymbolPackage("<root>");
 	private static final IZenErrorLogger errors = new MyErrorLogger();
 	private static final IZenCompileEnvironment environment = new MyCompileEnvironment();
-	private static final Map<String, TypeExpansion> expansions = new HashMap<String, TypeExpansion>();
+	private static final Map<String, TypeExpansion> expansions = new HashMap<>();
 
 	static {
 		registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
@@ -207,7 +207,7 @@ public class GlobalRegistry {
 
 		public MyGlobalEnvironment(Map<String, byte[]> classes) {
 			this.classes = classes;
-			symbols = new HashMap<String, IZenSymbol>();
+			symbols = new HashMap<>();
 			generator = new ClassNameGenerator();
 		}
 

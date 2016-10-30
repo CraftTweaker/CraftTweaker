@@ -22,6 +22,7 @@ import stanhebben.zenscript.annotations.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
@@ -41,14 +42,12 @@ public class MCFurnaceManager implements IFurnaceManager{
 
         Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.instance().getSmeltingList();
 
-        List<ItemStack> toRemove = new ArrayList<ItemStack>();
-        List<ItemStack> toRemoveValues = new ArrayList<ItemStack>();
-        for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()){
-            if(output.matches(new MCItemStack(entry.getValue())) && (input == null || input.matches(new MCItemStack(entry.getKey())))){
-                toRemove.add(entry.getKey());
-                toRemoveValues.add(entry.getValue());
-            }
-        }
+        List<ItemStack> toRemove = new ArrayList<>();
+        List<ItemStack> toRemoveValues = new ArrayList<>();
+        smeltingList.entrySet().stream().filter(entry -> output.matches(new MCItemStack(entry.getValue())) && (input == null || input.matches(new MCItemStack(entry.getKey())))).forEach(entry -> {
+            toRemove.add(entry.getKey());
+            toRemoveValues.add(entry.getValue());
+        });
 
         if(toRemove.isEmpty()){
             MineTweakerAPI.logWarning("No furnace recipes for " + output.toString());
@@ -81,11 +80,7 @@ public class MCFurnaceManager implements IFurnaceManager{
 
     @Override
     public List<IFurnaceRecipe> getAll() {
-        List<IFurnaceRecipe> retList = new ArrayList<IFurnaceRecipe>();
-        for(Map.Entry<ItemStack, ItemStack> ent : FurnaceRecipes.instance().getSmeltingList().entrySet()){
-            retList.add(new FurnaceRecipe(new MCItemStack(ent.getKey()), new MCItemStack(ent.getValue()), FurnaceRecipes.instance().getSmeltingExperience(ent.getValue())));
-        }
-        return retList;
+        return FurnaceRecipes.instance().getSmeltingList().entrySet().stream().map(ent -> new FurnaceRecipe(new MCItemStack(ent.getKey()), new MCItemStack(ent.getValue()), FurnaceRecipes.instance().getSmeltingExperience(ent.getValue()))).collect(Collectors.toList());
     }
 
     // ######################

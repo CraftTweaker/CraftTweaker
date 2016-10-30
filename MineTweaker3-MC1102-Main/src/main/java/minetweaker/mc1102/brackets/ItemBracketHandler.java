@@ -29,7 +29,6 @@ import stanhebben.zenscript.util.ZenPosition;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 
@@ -38,7 +37,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
  */
 @BracketHandler(priority = 100)
 public class ItemBracketHandler implements IBracketHandler{
-    private static final Map<String, Item> itemNames = new HashMap<String, Item>();
+    private static final Map<String, Item> itemNames = new HashMap<>();
     private final IZenSymbol symbolAny;
     private final IJavaMethod method;
 
@@ -51,7 +50,7 @@ public class ItemBracketHandler implements IBracketHandler{
     public static void rebuildItemRegistry(){
         itemNames.clear();
 
-        for(ResourceLocation itemName : (Set<ResourceLocation>) Item.REGISTRY.getKeys()){
+        for(ResourceLocation itemName : Item.REGISTRY.getKeys()){
             String domain = itemName.toString().replace(" ", "").replace("'", "");
             itemNames.put(domain, Item.REGISTRY.getObject(itemName));
         }

@@ -9,14 +9,14 @@ import stanhebben.zenscript.annotations.ZenGetter;
  */
 public interface IMod {
 	@ZenGetter("id")
-	public String getId();
+    String getId();
 
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 
 	@ZenGetter("version")
-	public String getVersion();
+    String getVersion();
 
 	@ZenGetter("decription")
-	public String getDescription();
+    String getDescription();
 }

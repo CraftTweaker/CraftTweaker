@@ -6,19 +6,20 @@
 
 package stanhebben.zenscript.compiler;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import org.objectweb.asm.ClassVisitor;
+import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.IZenCompileEnvironment;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolLocal;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -32,9 +33,9 @@ public class EnvironmentMethod implements IEnvironmentMethod {
 
 	public EnvironmentMethod(MethodOutput output, IEnvironmentClass environment) {
 		this.output = output;
-		this.locals = new HashMap<SymbolLocal, Integer>();
+		this.locals = new HashMap<>();
 		this.environment = environment;
-		this.local = new HashMap<String, IZenSymbol>();
+		this.local = new HashMap<>();
 	}
 
 	@Override

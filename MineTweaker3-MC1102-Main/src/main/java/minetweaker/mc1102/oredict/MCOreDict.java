@@ -27,7 +27,7 @@ public class MCOreDict implements IOreDict{
 
     @Override
     public List<IOreDictEntry> getEntries(){
-        List<IOreDictEntry> entries = new ArrayList<IOreDictEntry>();
+        List<IOreDictEntry> entries = new ArrayList<>();
         for(String key : OreDictionary.getOreNames()){
             if(!OreDictionary.getOres(key).isEmpty()){
                 entries.add(MineTweakerMC.getOreDict(key));

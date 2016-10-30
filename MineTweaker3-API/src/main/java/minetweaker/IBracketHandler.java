@@ -1,9 +1,10 @@
 package minetweaker;
 
-import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
+
+import java.util.List;
 
 /**
  * Bracket handlers enable processing of the bracket syntax.
@@ -28,5 +29,5 @@ public interface IBracketHandler {
 	 * @param tokens token stream to be detected
 	 * @return the resolved symbol, or null
 	 */
-	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens);
+    IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens);
 }

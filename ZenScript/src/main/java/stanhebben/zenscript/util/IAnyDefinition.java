@@ -13,79 +13,79 @@ import org.objectweb.asm.ClassVisitor;
  * @author Stan
  */
 public interface IAnyDefinition {
-	public void defineMembers(ClassVisitor output);
+	void defineMembers(ClassVisitor output);
 
-	public void defineStaticCanCastImplicit(MethodOutput output);
+	void defineStaticCanCastImplicit(MethodOutput output);
 
-	public void defineStaticAs(MethodOutput output);
+	void defineStaticAs(MethodOutput output);
 
-	public void defineNot(MethodOutput output);
+	void defineNot(MethodOutput output);
 
-	public void defineNeg(MethodOutput output);
+	void defineNeg(MethodOutput output);
 
-	public void defineAdd(MethodOutput output);
+	void defineAdd(MethodOutput output);
 
-	public void defineSub(MethodOutput output);
+	void defineSub(MethodOutput output);
 
-	public void defineCat(MethodOutput output);
+	void defineCat(MethodOutput output);
 
-	public void defineMul(MethodOutput output);
+	void defineMul(MethodOutput output);
 
-	public void defineDiv(MethodOutput output);
+	void defineDiv(MethodOutput output);
 
-	public void defineMod(MethodOutput output);
+	void defineMod(MethodOutput output);
 
-	public void defineAnd(MethodOutput output);
+	void defineAnd(MethodOutput output);
 
-	public void defineOr(MethodOutput output);
+	void defineOr(MethodOutput output);
 
-	public void defineXor(MethodOutput output);
+	void defineXor(MethodOutput output);
 
-	public void defineRange(MethodOutput output);
+	void defineRange(MethodOutput output);
 
-	public void defineCompareTo(MethodOutput output);
+	void defineCompareTo(MethodOutput output);
 
-	public void defineContains(MethodOutput output);
+	void defineContains(MethodOutput output);
 
-	public void defineMemberGet(MethodOutput output);
+	void defineMemberGet(MethodOutput output);
 
-	public void defineMemberSet(MethodOutput output);
+	void defineMemberSet(MethodOutput output);
 
-	public void defineMemberCall(MethodOutput output);
+	void defineMemberCall(MethodOutput output);
 
-	public void defineIndexGet(MethodOutput output);
+	void defineIndexGet(MethodOutput output);
 
-	public void defineIndexSet(MethodOutput output);
+	void defineIndexSet(MethodOutput output);
 
-	public void defineCall(MethodOutput output);
+	void defineCall(MethodOutput output);
 
-	public void defineAsBool(MethodOutput output);
+	void defineAsBool(MethodOutput output);
 
-	public void defineAsByte(MethodOutput output);
+	void defineAsByte(MethodOutput output);
 
-	public void defineAsShort(MethodOutput output);
+	void defineAsShort(MethodOutput output);
 
-	public void defineAsInt(MethodOutput output);
+	void defineAsInt(MethodOutput output);
 
-	public void defineAsLong(MethodOutput output);
+	void defineAsLong(MethodOutput output);
 
-	public void defineAsFloat(MethodOutput output);
+	void defineAsFloat(MethodOutput output);
 
-	public void defineAsDouble(MethodOutput output);
+	void defineAsDouble(MethodOutput output);
 
-	public void defineAsString(MethodOutput output);
+	void defineAsString(MethodOutput output);
 
-	public void defineAs(MethodOutput output);
+	void defineAs(MethodOutput output);
 
-	public void defineIs(MethodOutput output);
+	void defineIs(MethodOutput output);
 
-	public void defineGetNumberType(MethodOutput output);
+	void defineGetNumberType(MethodOutput output);
 
-	public void defineIteratorSingle(MethodOutput output);
+	void defineIteratorSingle(MethodOutput output);
 
-	public void defineIteratorMulti(MethodOutput output);
+	void defineIteratorMulti(MethodOutput output);
 
-	public void defineEquals(MethodOutput output);
+	void defineEquals(MethodOutput output);
 
-	public void defineHashCode(MethodOutput output);
+	void defineHashCode(MethodOutput output);
 }

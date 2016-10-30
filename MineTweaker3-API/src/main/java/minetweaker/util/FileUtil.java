@@ -15,7 +15,7 @@ import java.io.InputStream;
  * @author Stan
  */
 public class FileUtil {
-	public static final byte[] read(InputStream input) throws IOException {
+	public static byte[] read(InputStream input) throws IOException {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		byte[] buffer = new byte[65536];
 		while (input.available() > 0) {

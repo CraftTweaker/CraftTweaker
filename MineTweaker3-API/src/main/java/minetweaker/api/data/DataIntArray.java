@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Contains an int array.
- * 
+ *
  * @author Stan Hebben
  */
 public class DataIntArray implements IData {
@@ -112,8 +112,8 @@ public class DataIntArray implements IData {
         StringBuilder result = new StringBuilder();
         result.append('[');
         boolean first = true;
-        for (int value : data) {
-            if (first) {
+        for(int value : data) {
+            if(first) {
                 first = false;
             } else {
                 result.append(", ");
@@ -126,8 +126,8 @@ public class DataIntArray implements IData {
 
     @Override
     public List<IData> asList() {
-        List<IData> result = new ArrayList<IData>();
-        for (int value : data) {
+        List<IData> result = new ArrayList<>();
+        for(int value : data) {
             result.add(new DataInt(value));
         }
         return result;
@@ -141,7 +141,7 @@ public class DataIntArray implements IData {
     @Override
     public byte[] asByteArray() {
         byte[] result = new byte[data.length];
-        for (int i = 0; i < result.length; i++) {
+        for(int i = 0; i < result.length; i++) {
             result[i] = (byte) data[i];
         }
         return result;
@@ -159,7 +159,7 @@ public class DataIntArray implements IData {
 
     @Override
     public void setAt(int i, IData value) {
-        if (immutable) {
+        if(immutable) {
             throw new UnsupportedOperationException("Cannot modify this byte array");
         } else {
             data[i] = value.asInt();
@@ -198,7 +198,7 @@ public class DataIntArray implements IData {
 
     @Override
     public IData immutable() {
-        if (immutable) {
+        if(immutable) {
             return this;
         } else {
             return new DataIntArray(Arrays.copyOf(this.data, this.data.length), true);

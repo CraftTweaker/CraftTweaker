@@ -24,8 +24,8 @@ import java.util.List;
  */
 @ZenExpansion("minetweaker.item.IIngredient")
 public class IngredientTooltips {
-	private static final IngredientMap<IFormattedText> TOOLTIPS = new IngredientMap<IFormattedText>();
-	private static final IngredientMap<IFormattedText> SHIFT_TOOLTIPS = new IngredientMap<IFormattedText>();
+	private static final IngredientMap<IFormattedText> TOOLTIPS = new IngredientMap<>();
+	private static final IngredientMap<IFormattedText> SHIFT_TOOLTIPS = new IngredientMap<>();
 
 	@ZenMethod
 	public static void addTooltip(IIngredient ingredient, IFormattedText tooltip) {

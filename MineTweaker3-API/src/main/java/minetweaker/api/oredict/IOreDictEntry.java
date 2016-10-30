@@ -21,33 +21,33 @@ import stanhebben.zenscript.annotations.ZenOperator;
 @ZenClass("minetweaker.oredict.IOreDictEntry")
 public interface IOreDictEntry extends IIngredient {
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 
 	@ZenGetter("empty")
-	public boolean isEmpty();
+    boolean isEmpty();
 
 	@ZenGetter("firstItem")
-	public IItemStack getFirstItem();
+    IItemStack getFirstItem();
 
 	@ZenMethod
-	public void add(IItemStack item);
+    void add(IItemStack item);
 
 	@ZenMethod
-	public void addItems(IItemStack[] items);
+    void addItems(IItemStack[] items);
 
 	@ZenMethod
-	public void addAll(IOreDictEntry entry);
+    void addAll(IOreDictEntry entry);
 
 	@ZenMethod
-	public void remove(IItemStack item);
+    void remove(IItemStack item);
 
     @ZenMethod
-    public void removeItems(IItemStack[] items);
+    void removeItems(IItemStack[] items);
 
 
     @ZenOperator(OperatorType.CONTAINS)
-	public boolean contains(IItemStack item);
+    boolean contains(IItemStack item);
 
 	@ZenMethod
-	public void mirror(IOreDictEntry other);
+    void mirror(IOreDictEntry other);
 }

@@ -11,5 +11,5 @@ package minetweaker.api.world;
  * @author Stan
  */
 public interface IBiome {
-	public String getName();
+	String getName();
 }

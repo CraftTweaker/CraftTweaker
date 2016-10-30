@@ -8,9 +8,6 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 
-/**
- * Created by Jared.
- */
 public class CheckButtonRecipe extends CheckButton {
 
     private String propertyKey;
@@ -28,16 +25,16 @@ public class CheckButtonRecipe extends CheckButton {
             parent.selectedSlot.getPropertyMap().put(getPropertyKey(), isChecked());
             if (isChecked()) {
                 for (Slider slider : parent.getMenu().getSliders(this)) {
-                    if (parent.isBlock(parent.selectedSlot.getStack())) {
+                    if (GuiBase.isBlock(parent.selectedSlot.getStack())) {
                         Block b = Block.getBlockFromItem(parent.selectedSlot.getStack().getItem());
-                        ArrayList<ItemStack> list = new ArrayList();
+                        ArrayList<ItemStack> list = new ArrayList<>();
                         b.getSubBlocks(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
                         slider.setValue(parent.selectedSlot.getProperty(slider.getPropertyKey()));
                         slider.maxValue = list.size() - 1;
                         slider.updateSlider();
                     } else {
                         if (parent.selectedSlot.getStack().getItem().getHasSubtypes()) {
-                            ArrayList<ItemStack> list = new ArrayList();
+                            ArrayList<ItemStack> list = new ArrayList<>();
                             parent.selectedSlot.getStack().getItem().getSubItems(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
                             slider.setValue(parent.selectedSlot.getProperty(slider.getPropertyKey()));
                             slider.maxValue = list.size() - 1;
@@ -67,14 +64,14 @@ public class CheckButtonRecipe extends CheckButton {
             for (Slider slider : parent.getMenu().getSliders(this)) {
                 if (GuiBase.isBlock(parent.selectedSlot.getStack())) {
                     Block b = Block.getBlockFromItem(parent.selectedSlot.getStack().getItem());
-                    ArrayList<ItemStack> list = new ArrayList();
+                    ArrayList<ItemStack> list = new ArrayList<>();
                     b.getSubBlocks(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
                     slider.setValue(parent.selectedSlot.getProperty(slider.getPropertyKey()));
                     slider.maxValue = list.size() - 1;
                     slider.updateSlider();
                 } else {
                     if (parent.selectedSlot.getStack().getItem().getHasSubtypes()) {
-                        ArrayList<ItemStack> list = new ArrayList();
+                        ArrayList<ItemStack> list = new ArrayList<>();
                         parent.selectedSlot.getStack().getItem().getSubItems(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
                         slider.setValue(parent.selectedSlot.getProperty(slider.getPropertyKey()));
                         slider.maxValue = list.size() - 1;

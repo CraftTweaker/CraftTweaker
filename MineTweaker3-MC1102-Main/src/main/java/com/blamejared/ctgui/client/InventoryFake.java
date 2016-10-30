@@ -35,8 +35,7 @@ public class InventoryFake implements IInventory {
     @Nullable
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        ItemStack itemstack = ItemStackHelper.getAndSplit(items, index, count);
-        return itemstack;
+        return ItemStackHelper.getAndSplit(items, index, count);
     }
 
     @Nullable

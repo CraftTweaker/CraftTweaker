@@ -1,21 +1,8 @@
 package stanhebben.zenscript;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenCaster;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenMethodStatic;
-import stanhebben.zenscript.annotations.ZenOperator;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.compiler.ITypeRegistry;
@@ -30,8 +17,14 @@ import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.type.natives.ZenNativeOperator;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
-import static stanhebben.zenscript.util.ZenTypeUtil.signature;
-import stanhebben.zenscript.value.IAny;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Type expansions provide additional members for existing types. They can add
@@ -58,12 +51,12 @@ public class TypeExpansion {
 	public TypeExpansion(String type) {
 		this.type = type;
 
-		members = new HashMap<String, ZenExpandMember>();
-		staticMembers = new HashMap<String, ZenExpandMember>();
-		casters = new ArrayList<ZenExpandCaster>();
-		trinaryOperators = new ArrayList<ZenNativeOperator>();
-		binaryOperators = new ArrayList<ZenNativeOperator>();
-		unaryOperators = new ArrayList<ZenNativeOperator>();
+		members = new HashMap<>();
+		staticMembers = new HashMap<>();
+		casters = new ArrayList<>();
+		trinaryOperators = new ArrayList<>();
+		binaryOperators = new ArrayList<>();
+		unaryOperators = new ArrayList<>();
 	}
 
 	/**

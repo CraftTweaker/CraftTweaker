@@ -10,9 +10,6 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Created by Jared.
- */
 public class CheckButton extends GuiCheckBox {
 
     protected GuiBase parent;

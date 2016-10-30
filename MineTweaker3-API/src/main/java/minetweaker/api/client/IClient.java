@@ -17,8 +17,8 @@ public interface IClient {
 	 * @return current player
 	 */
 	@ZenGetter("player")
-	public IPlayer getPlayer();
+	IPlayer getPlayer();
 
 	@ZenGetter("language")
-	public String getLanguage();
+	String getLanguage();
 }

@@ -16,22 +16,22 @@ import stanhebben.zenscript.util.MethodOutput;
  * @author Stan
  */
 public interface IJavaMethod {
-	public boolean isStatic();
+	boolean isStatic();
 
-	public boolean accepts(int numArguments);
+	boolean accepts(int numArguments);
 
-	public boolean accepts(IEnvironmentGlobal environment, Expression... arguments);
+	boolean accepts(IEnvironmentGlobal environment, Expression... arguments);
 
-	public int getPriority(IEnvironmentGlobal environment, Expression... arguments);
+	int getPriority(IEnvironmentGlobal environment, Expression... arguments);
 
-	public void invokeVirtual(MethodOutput output);
+	void invokeVirtual(MethodOutput output);
 
-	public void invokeStatic(MethodOutput output);
+	void invokeStatic(MethodOutput output);
 
-	public ZenType[] getParameterTypes();
+	ZenType[] getParameterTypes();
 
-	public ZenType getReturnType();
+	ZenType getReturnType();
 
-	public boolean isVarargs();
+	boolean isVarargs();
 
 }

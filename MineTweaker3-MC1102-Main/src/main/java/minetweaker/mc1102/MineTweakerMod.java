@@ -34,7 +34,6 @@ import minetweaker.runtime.providers.ScriptProviderDirectory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -50,8 +49,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import static minetweaker.MineTweakerAPI.registerClass;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -102,23 +99,20 @@ public class MineTweakerMod {
 
     @EventHandler
     public void onIMCEvent(FMLInterModComms.IMCEvent event) {
-        for(final FMLInterModComms.IMCMessage imcMessage : event.getMessages()) {
-            if(imcMessage.key.equalsIgnoreCase("addMineTweakerScript")) {
-                if(imcMessage.isStringMessage()) {
-                    scriptsIMC.add(imcMessage.getSender() + "::imc", imcMessage.getStringValue());
-                } else if(imcMessage.isNBTMessage()) {
-                    NBTTagCompound message = imcMessage.getNBTValue();
-                    scriptsIMC.add(imcMessage.getSender() + "::" + message.getString("name"), message.getString("content"));
-                }
+        event.getMessages().stream().filter(imcMessage -> imcMessage.key.equalsIgnoreCase("addMineTweakerScript")).forEach(imcMessage -> {
+            if(imcMessage.isStringMessage()) {
+                scriptsIMC.add(imcMessage.getSender() + "::imc", imcMessage.getStringValue());
+            } else if(imcMessage.isNBTMessage()) {
+                NBTTagCompound message = imcMessage.getNBTValue();
+                scriptsIMC.add(imcMessage.getSender() + "::" + message.getString("name"), message.getString("content"));
             }
-        }
+        });
     }
 
     @EventHandler
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
-        FMLCommonHandler.instance().bus().register(new FMLEventHandler());
-        List<Class> apiClasses = new ArrayList<Class>();
+        List<Class> apiClasses = new ArrayList<>();
         String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
         for(String name : classNames) {
             ev.getAsmData().getAll(name).forEach(clazz -> {
@@ -130,9 +124,7 @@ public class MineTweakerMod {
                 }
             });
         }
-        for(Class cls : apiClasses) {
-            registerClass(cls);
-        }
+        apiClasses.forEach(MineTweakerAPI::registerClass);
 
     }
 
@@ -149,13 +141,7 @@ public class MineTweakerMod {
             try {
                 Method register = Class.forName("minetweaker.mods.jei.JEI").getMethod("onRegister");
                 register.invoke(null);
-            } catch(NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch(ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch(InvocationTargetException e) {
-                e.printStackTrace();
-            } catch(IllegalAccessException e) {
+            } catch(NoSuchMethodException | ClassNotFoundException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -174,13 +160,13 @@ public class MineTweakerMod {
 
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
-        this.server = ev.getServer();
+        server = ev.getServer();
 
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent ev) {
-        this.server = ev.getServer();
+        server = ev.getServer();
         // starts before loading worlds
         // perfect place to start MineTweaker!
 
@@ -204,6 +190,6 @@ public class MineTweakerMod {
     public void onServerStopped(FMLServerStoppedEvent ev) {
         MineTweakerImplementationAPI.onServerStop();
         MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
-        this.server = null;
+        server = null;
     }
 }

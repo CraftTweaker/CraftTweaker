@@ -11,6 +11,7 @@ import minetweaker.mc1102.util.MineTweakerHacks;
 import net.minecraft.nbt.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Stan
@@ -47,17 +48,15 @@ public class NBTConverter implements IDataConverter<NBTBase>{
             case 8: // string
                 return new DataString(((NBTTagString) nbt).getString());
             case 9:{ // list
-                List<IData> values = new ArrayList<IData>();
+                List<IData> values = new ArrayList<>();
                 List<NBTBase> original = MineTweakerHacks.getTagList((NBTTagList) nbt);
-                for(NBTBase value : original){
-                    values.add(from(value, immutable));
-                }
+                values.addAll(original.stream().map(value -> from(value, immutable)).collect(Collectors.toList()));
                 return new DataList(values, immutable);
             }
             case 10:{ // compound
-                Map<String, IData> values = new HashMap<String, IData>();
+                Map<String, IData> values = new HashMap<>();
                 NBTTagCompound original = (NBTTagCompound) nbt;
-                for(String key : (Set<String>) original.getKeySet()){
+                for(String key : original.getKeySet()){
                     values.put(key, from(original.getTag(key), immutable));
                 }
                 return new DataMap(values, immutable);

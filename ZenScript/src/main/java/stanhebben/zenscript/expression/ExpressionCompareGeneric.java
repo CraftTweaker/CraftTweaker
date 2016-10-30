@@ -36,8 +36,7 @@ public class ExpressionCompareGeneric extends Expression {
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		;
-		value.compile(result, environment);
+        value.compile(result, environment);
 		if (result) {
 			MethodOutput output = environment.getOutput();
 			Label lblThen = new Label();

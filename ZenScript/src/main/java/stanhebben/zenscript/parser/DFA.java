@@ -35,8 +35,8 @@ public class DFA {
 	 * @return the compiled DFA
 	 */
 	public CompiledDFA compile() {
-		ArrayList<DFAState> nodeList = new ArrayList<DFAState>();
-		HashMap<DFAState, Integer> nodes = new HashMap<DFAState, Integer>();
+		ArrayList<DFAState> nodeList = new ArrayList<>();
+		HashMap<DFAState, Integer> nodes = new HashMap<>();
 		nodes.put(initial, 0);
 		nodeList.add(initial);
 
@@ -92,9 +92,9 @@ public class DFA {
 
 		/* Collect all edges and determine alphabet */
 		HashSetI alphabet = new HashSetI();
-		for (int i = 0; i < size; i++) {
-			IteratorI it = transitions[i].keys();
-			while (it.hasNext()) {
+		for(HashMapII transition : transitions) {
+			IteratorI it = transition.keys();
+			while(it.hasNext()) {
 				int k = it.next();
 				alphabet.add(k);
 			}
@@ -136,7 +136,7 @@ public class DFA {
 		} while (changed);
 
 		/* Group nodes */
-		HashMapI<DFAState> nodeMap = new HashMapI<DFAState>();
+		HashMapI<DFAState> nodeMap = new HashMapI<>();
 		outer: for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (!distinguishable[i][j] && nodeMap.containsKey(j)) {
@@ -163,8 +163,7 @@ public class DFA {
 			}
 		}
 
-		DFA result = new DFA(nodeMap.get(0));
-		return result;
+		return new DFA(nodeMap.get(0));
 	}
 
 	@Override
@@ -213,7 +212,7 @@ public class DFA {
 		 * Creates a new DFA state.
 		 */
 		public DFAState() {
-			transitions = new HashMapI<DFAState>();
+			transitions = new HashMapI<>();
 		}
 
 		/**

@@ -60,7 +60,7 @@ public class SetTranslationAction implements IUndoableAction {
 		if (value.contains("\\\"")) {
 			value = value.replace("\\\"", "\"");
 		}
-		INSTANCE.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
+		LanguageMap.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
 	}
 
 	@Override

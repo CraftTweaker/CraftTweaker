@@ -30,7 +30,7 @@ public class ExpressionJavaMethodStatic extends Expression {
 
 		this.method = method;
 
-		List<ParsedFunctionArgument> arguments = new ArrayList<ParsedFunctionArgument>();
+		List<ParsedFunctionArgument> arguments = new ArrayList<>();
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
 			arguments.add(new ParsedFunctionArgument("p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
 		}

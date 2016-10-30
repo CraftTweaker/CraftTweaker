@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class GuiRegistry {
 
-    public static Map<List<Integer>, IGuiHandler> guiMap = new HashMap<List<Integer>, IGuiHandler>();
+    public static Map<List<Integer>, IGuiHandler> guiMap = new HashMap<>();
 
     public static void registerGui(List<Integer> idRange, IGuiHandler handler) {
         getGuiMap().put(idRange, handler);

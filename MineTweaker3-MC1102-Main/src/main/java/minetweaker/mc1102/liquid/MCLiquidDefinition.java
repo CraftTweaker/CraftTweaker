@@ -96,7 +96,7 @@ public class MCLiquidDefinition implements ILiquidDefinition{
 
     @Override
     public List<IItemStack> getContainers(){
-        List<IItemStack> result = new ArrayList<IItemStack>();
+        List<IItemStack> result = new ArrayList<>();
         for(FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()){
             if(data.fluid.getFluid() == fluid){
                 result.add(MineTweakerMC.getIItemStack(data.filledContainer));

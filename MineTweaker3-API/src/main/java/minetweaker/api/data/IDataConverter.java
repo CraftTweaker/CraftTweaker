@@ -10,27 +10,27 @@ import java.util.Map;
  * @param <T> output type
  */
 public interface IDataConverter<T> {
-	public T fromBool(boolean value);
+	T fromBool(boolean value);
 
-	public T fromByte(byte value);
+	T fromByte(byte value);
 
-	public T fromShort(short value);
+	T fromShort(short value);
 
-	public T fromInt(int value);
+	T fromInt(int value);
 
-	public T fromLong(long value);
+	T fromLong(long value);
 
-	public T fromFloat(float value);
+	T fromFloat(float value);
 
-	public T fromDouble(double value);
+	T fromDouble(double value);
 
-	public T fromString(String value);
+	T fromString(String value);
 
-	public T fromList(List<IData> values);
+	T fromList(List<IData> values);
 
-	public T fromMap(Map<String, IData> values);
+	T fromMap(Map<String, IData> values);
 
-	public T fromByteArray(byte[] value);
+	T fromByteArray(byte[] value);
 
-	public T fromIntArray(int[] value);
+	T fromIntArray(int[] value);
 }

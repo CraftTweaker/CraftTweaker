@@ -6,16 +6,14 @@
 
 package stanhebben.zenscript.util;
 
+import org.objectweb.asm.*;
+import org.objectweb.asm.commons.LocalVariablesSorter;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+
 import static org.objectweb.asm.Opcodes.*;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.LocalVariablesSorter;
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 
@@ -253,7 +251,7 @@ public class MethodOutput {
 		} else if (sort == Type.OBJECT || sort == Type.ARRAY) {
 			visitor.visitTypeInsn(ANEWARRAY, componentType.getInternalName());
 		} else {
-			int type = 0;
+			int type;
 			switch (sort) {
 				case Type.BOOLEAN:
 					type = Opcodes.T_BOOLEAN;
@@ -1048,7 +1046,7 @@ public class MethodOutput {
 
 	private String getLabelName(Label lbl) {
 		if (labelNames == null)
-			labelNames = new HashMap<Label, String>();
+			labelNames = new HashMap<>();
 
 		if (!labelNames.containsKey(lbl)) {
 			labelNames.put(lbl, "L" + labelIndex++);

@@ -14,5 +14,5 @@ public interface IRecipeRemover {
 	 * 
 	 * @param ingredient ingredient
 	 */
-	public void remove(IIngredient ingredient);
+    void remove(IIngredient ingredient);
 }

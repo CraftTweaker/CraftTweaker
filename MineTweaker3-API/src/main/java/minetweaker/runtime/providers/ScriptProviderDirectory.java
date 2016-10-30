@@ -29,7 +29,7 @@ public class ScriptProviderDirectory implements IScriptProvider {
 
     @Override
     public Iterator<IScriptIterator> getScripts() {
-        List<IScriptIterator> scripts = new ArrayList<IScriptIterator>();
+        List<IScriptIterator> scripts = new ArrayList<>();
         if(directory.exists()) {
             for(File file : directory.listFiles()) {
                 if(file.isDirectory()) {
@@ -46,14 +46,11 @@ public class ScriptProviderDirectory implements IScriptProvider {
             }
         }
         if(scripts.size() > 1)
-            scripts.sort(new Comparator<IScriptIterator>() {
-                @Override
-                public int compare(IScriptIterator sc, IScriptIterator sc1) {
-                    if(sc == null || sc1 == null) {
-                        return -1;
-                    }
-                    return sc.getName().compareTo(sc1.getName());
+            scripts.sort((sc, sc1) -> {
+                if(sc == null || sc1 == null) {
+                    return -1;
                 }
+                return sc.getName().compareTo(sc1.getName());
             });
         return scripts.iterator();
     }

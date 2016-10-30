@@ -19,7 +19,7 @@ public interface IZenIterator {
 	 * 
 	 * @param locals
 	 */
-	public void compileStart(int[] locals);
+    void compileStart(int[] locals);
 
 	/**
 	 * Compiles the start of an iteration. The stack is unmodified from the
@@ -28,7 +28,7 @@ public interface IZenIterator {
 	 * @param locals
 	 * @param exit
 	 */
-	public void compilePreIterate(int[] locals, Label exit);
+    void compilePreIterate(int[] locals, Label exit);
 
 	/**
 	 * Compiles the end of an iteration. The stack is the same as it was after
@@ -38,12 +38,12 @@ public interface IZenIterator {
 	 * @param exit
 	 * @param repeat
 	 */
-	public void compilePostIterate(int[] locals, Label exit, Label repeat);
+    void compilePostIterate(int[] locals, Label exit, Label repeat);
 
 	/**
 	 * Compiles the end of the whole iteration.
 	 */
-	public void compileEnd();
+    void compileEnd();
 
-	public ZenType getType(int i);
+	ZenType getType(int i);
 }

@@ -6,19 +6,20 @@
 
 package minetweaker.api.logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import minetweaker.api.player.IPlayer;
 import minetweaker.runtime.ILogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Stan
  */
 public class MTLogger implements ILogger {
-	private final List<ILogger> loggers = new ArrayList<ILogger>();
-	private final List<IPlayer> players = new ArrayList<IPlayer>();
-	private final List<String> unprocessed = new ArrayList<String>();
+	private final List<ILogger> loggers = new ArrayList<>();
+	private final List<IPlayer> players = new ArrayList<>();
+	private final List<String> unprocessed = new ArrayList<>();
 
 	public void addLogger(ILogger logger) {
 		loggers.add(logger);

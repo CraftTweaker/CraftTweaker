@@ -6,11 +6,12 @@
 
 package minetweaker.api.recipes;
 
-import java.util.HashMap;
-import java.util.Map;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.player.IPlayer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -50,7 +51,7 @@ public class ShapelessRecipe implements ICraftingRecipe {
 
 		IItemStack actualOutput = output;
 		if (function != null) {
-			Map<String, IItemStack> map = new HashMap<String, IItemStack>();
+			Map<String, IItemStack> map = new HashMap<>();
 			for (int i = 0; i < ingredients.length; i++) {
 				if (ingredients[i].getMark() != null) {
 					map.put(ingredients[i].getMark(), matching.inputs[i]);

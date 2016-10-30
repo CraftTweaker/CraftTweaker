@@ -20,50 +20,50 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("minetweaker.player.IPlayer")
 public interface IPlayer {
 	@ZenGetter("id")
-	public String getId();
+    String getId();
 
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 
 	@ZenGetter("data")
-	public IData getData();
+    IData getData();
 
 	@ZenMethod
-	public void update(IData data);
+    void update(IData data);
 
 	@ZenMethod
-	public void sendChat(IChatMessage message);
+    void sendChat(IChatMessage message);
 
 	@ZenMethod
-	public void sendChat(String message);
+    void sendChat(String message);
 
 	@ZenGetter("hotbarSize")
-	public int getHotbarSize();
+    int getHotbarSize();
 
 	@ZenMethod
-	public IItemStack getHotbarStack(int i);
+    IItemStack getHotbarStack(int i);
 
 	@ZenGetter("inventorySize")
-	public int getInventorySize();
+    int getInventorySize();
 
 	@ZenMethod
-	public IItemStack getInventoryStack(int i);
+    IItemStack getInventoryStack(int i);
 
 	@ZenGetter("currentItem")
-	public IItemStack getCurrentItem();
+    IItemStack getCurrentItem();
 
 	@ZenGetter("creative")
-	public boolean isCreative();
+    boolean isCreative();
 
 	@ZenGetter("adventure")
-	public boolean isAdventure();
+    boolean isAdventure();
 
 	@ZenMethod
-	public void give(IItemStack stack);
+    void give(IItemStack stack);
 
 	// not an exposed method. risks abuse
-	public void openBrowser(String url);
+    void openBrowser(String url);
 
 	// not an exposed method, so far. would it be useful?
-	public void copyToClipboard(String value);
+    void copyToClipboard(String value);
 }

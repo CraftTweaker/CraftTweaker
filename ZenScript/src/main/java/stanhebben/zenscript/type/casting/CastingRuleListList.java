@@ -9,7 +9,6 @@ package stanhebben.zenscript.type.casting;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeArrayList;
-import stanhebben.zenscript.util.MethodOutput;
 
 /**
  *
@@ -28,7 +27,6 @@ public class CastingRuleListList implements ICastingRule {
 
 	@Override
 	public void compile(IEnvironmentMethod method) {
-		MethodOutput output = method.getOutput();
 
 		// TODO: implement this
 		throw new UnsupportedOperationException("Not yet implemented");

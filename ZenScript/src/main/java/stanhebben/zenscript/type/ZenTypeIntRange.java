@@ -15,8 +15,8 @@ import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.compiler.ITypeRegistry;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.ExpressionCallVirtual;
+import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.ExpressionNull;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
@@ -24,8 +24,9 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
-import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 import stanhebben.zenscript.value.IntRange;
+
+import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 
 /**
  *
@@ -74,13 +75,14 @@ public class ZenTypeIntRange extends ZenType {
 
 	@Override
 	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
-		if (name.equals("from")) {
-			return new ExpressionCallVirtual(position, environment, methodFrom, value.eval(environment));
-		} else if (name.equals("to")) {
-			return new ExpressionCallVirtual(position, environment, methodTo, value.eval(environment));
-		} else {
-			environment.error(position, "no such member " + name + " in int range");
-			return new ExpressionInvalid(position);
+		switch(name) {
+			case "from":
+				return new ExpressionCallVirtual(position, environment, methodFrom, value.eval(environment));
+			case "to":
+				return new ExpressionCallVirtual(position, environment, methodTo, value.eval(environment));
+			default:
+				environment.error(position, "no such member " + name + " in int range");
+				return new ExpressionInvalid(position);
 		}
 	}
 

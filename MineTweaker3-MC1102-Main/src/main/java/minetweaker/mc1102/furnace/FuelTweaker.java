@@ -21,7 +21,7 @@ import java.util.List;
 
 public class FuelTweaker{
     public static final FuelTweaker INSTANCE = new FuelTweaker();
-    private final HashMap<Item, List<SetFuelPattern>> quickList = new HashMap<Item, List<SetFuelPattern>>();
+    private final HashMap<Item, List<SetFuelPattern>> quickList = new HashMap<>();
     private List<IFuelHandler> original;
 
     private FuelTweaker(){
@@ -32,14 +32,12 @@ public class FuelTweaker{
             Field fuelHandlers = GameRegistry.class.getDeclaredField("fuelHandlers");
             fuelHandlers.setAccessible(true);
             original = (List<IFuelHandler>) fuelHandlers.get(null);
-            List<IFuelHandler> modified = new ArrayList<IFuelHandler>();
+            List<IFuelHandler> modified = new ArrayList<>();
             modified.add(new OverridingFuelHandler());
             fuelHandlers.set(null, modified);
         }catch(NoSuchFieldException ex){
             System.out.println("[MineTweaker] Error: could not get GameRegistry fuel handlers field. Cannot use custom fuel values.");
-        }catch(SecurityException ex){
-            System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
-        }catch(IllegalAccessException ex){
+        }catch(SecurityException | IllegalAccessException ex){
             System.out.println("[MineTweaker] Error: could not alter GameRegistry fuel handlers field. Cannot use custom fuel values.");
         }
     }
@@ -55,7 +53,7 @@ public class FuelTweaker{
             ItemStack itemStack = MineTweakerMC.getItemStack(item);
             Item mcItem = itemStack.getItem();
             if(!quickList.containsKey(mcItem)){
-                quickList.put(mcItem, new ArrayList<SetFuelPattern>());
+                quickList.put(mcItem, new ArrayList<>());
             }
             quickList.get(mcItem).add(pattern);
         }

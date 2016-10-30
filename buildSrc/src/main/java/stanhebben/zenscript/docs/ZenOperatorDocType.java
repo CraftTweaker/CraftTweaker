@@ -33,7 +33,7 @@ public enum ZenOperatorDocType {
 	
 	private final String pattern;
 	
-	private ZenOperatorDocType(String pattern) {
+	ZenOperatorDocType(String pattern) {
 		this.pattern = pattern;
 	}
 	

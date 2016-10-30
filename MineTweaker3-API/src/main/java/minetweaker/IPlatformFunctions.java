@@ -16,7 +16,7 @@ public interface IPlatformFunctions {
 	 * @param message message string
 	 * @return chat message
 	 */
-	public IChatMessage getMessage(String message);
+    IChatMessage getMessage(String message);
 
 	/**
 	 * Distributes the given script data to all connected clients. Automatically
@@ -24,7 +24,7 @@ public interface IPlatformFunctions {
 	 * 
 	 * @param data data to be distributed
 	 */
-	public void distributeScripts(byte[] data);
+    void distributeScripts(byte[] data);
 
 	/**
 	 * Finds the item definition with the given ID.
@@ -32,5 +32,5 @@ public interface IPlatformFunctions {
 	 * @param id item ID
 	 * @return resulting item definition
 	 */
-	public IItemDefinition getItemDefinition(int id);
+    IItemDefinition getItemDefinition(int id);
 }

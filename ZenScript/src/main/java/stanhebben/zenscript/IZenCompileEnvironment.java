@@ -17,15 +17,15 @@ import stanhebben.zenscript.symbols.IZenSymbol;
  * @author Stanneke
  */
 public interface IZenCompileEnvironment {
-	public IZenErrorLogger getErrorLogger();
+	IZenErrorLogger getErrorLogger();
 
-	public IZenSymbol getGlobal(String name);
+	IZenSymbol getGlobal(String name);
 
-	public IZenSymbol getDollar(String name);
+	IZenSymbol getDollar(String name);
 
-	public IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens);
+	IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens);
 
-	public TypeRegistry getTypeRegistry();
+	TypeRegistry getTypeRegistry();
 
-	public TypeExpansion getExpansion(String type);
+	TypeExpansion getExpansion(String type);
 }

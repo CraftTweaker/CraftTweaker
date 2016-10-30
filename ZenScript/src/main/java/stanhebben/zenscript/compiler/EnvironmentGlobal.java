@@ -6,17 +6,18 @@
 
 package stanhebben.zenscript.compiler;
 
+import stanhebben.zenscript.IZenCompileEnvironment;
+import stanhebben.zenscript.IZenErrorLogger;
+import stanhebben.zenscript.TypeExpansion;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.util.ZenPosition;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import stanhebben.zenscript.IZenErrorLogger;
-import stanhebben.zenscript.TypeExpansion;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.IZenCompileEnvironment;
-import stanhebben.zenscript.symbols.IZenSymbol;
-import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.util.ZenPosition;
 
 /**
  *
@@ -39,7 +40,7 @@ public class EnvironmentGlobal implements IEnvironmentGlobal {
 		this.classes = classes;
 		this.nameGen = nameGen;
 		this.types = environment.getTypeRegistry();
-		this.local = new HashMap<String, IZenSymbol>();
+		this.local = new HashMap<>();
 	}
 
 	public IZenCompileEnvironment getCompileEnvironment() {

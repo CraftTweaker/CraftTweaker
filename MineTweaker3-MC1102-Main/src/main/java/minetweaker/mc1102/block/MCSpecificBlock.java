@@ -51,7 +51,7 @@ public class MCSpecificBlock implements IBlock{
 
     @Override
     public List<IBlock> getBlocks(){
-        return Collections.<IBlock>singletonList(this);
+        return Collections.singletonList(this);
     }
 
     @Override

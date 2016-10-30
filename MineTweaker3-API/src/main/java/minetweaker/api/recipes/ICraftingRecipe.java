@@ -16,13 +16,13 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.recipes.ICraftingRecipe")
 public interface ICraftingRecipe {
-	public boolean matches(ICraftingInventory inventory);
+	boolean matches(ICraftingInventory inventory);
 
-	public IItemStack getCraftingResult(ICraftingInventory inventory);
+	IItemStack getCraftingResult(ICraftingInventory inventory);
 
-	public boolean hasTransformers();
+	boolean hasTransformers();
 
-	public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
+	void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
 
-	public String toCommandString();
+	String toCommandString();
 }

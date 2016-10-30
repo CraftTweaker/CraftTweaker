@@ -120,11 +120,9 @@ public class MCPlayer implements IPlayer{
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other.getClass() != this.getClass())
-            return false;
+    public boolean equals(Object other) {
+        return other.getClass() == this.getClass() && ((MCPlayer) other).player == player;
 
-        return ((MCPlayer) other).player == player;
     }
 
     @Override

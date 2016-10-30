@@ -81,10 +81,7 @@ public class ScrapBox {
 				return false;
 			}
 			final AddDropAction other = (AddDropAction) obj;
-			if (this.stack != other.stack && (this.stack == null || !this.stack.equals(other.stack))) {
-				return false;
-			}
-			return true;
-		}
+            return !(this.stack != other.stack && (this.stack == null || !this.stack.equals(other.stack)));
+        }
 	}
 }

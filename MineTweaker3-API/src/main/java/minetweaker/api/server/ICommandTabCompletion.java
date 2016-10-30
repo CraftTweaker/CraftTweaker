@@ -15,5 +15,5 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.server.ICommandTabCompletion")
 public interface ICommandTabCompletion {
-	public String[] getTabCompletionOptions(String[] command, IPlayer player);
+	String[] getTabCompletionOptions(String[] command, IPlayer player);
 }

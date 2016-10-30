@@ -16,5 +16,5 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("minetweaker.resource.IResourceFile")
 public interface IResourceFile {
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 }

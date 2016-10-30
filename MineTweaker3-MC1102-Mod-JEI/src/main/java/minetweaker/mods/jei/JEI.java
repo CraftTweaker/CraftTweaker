@@ -5,7 +5,6 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.annotations.OnRegister;
 import minetweaker.api.item.IItemStack;
-import minetweaker.util.IEventHandler;
 import net.minecraftforge.fml.common.Loader;
 import stanhebben.zenscript.annotations.NotNull;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -46,42 +45,32 @@ public class JEI {
     @OnRegister
     public static void onRegister() {
         // discard all not yet applied actions before a reload
-        MineTweakerImplementationAPI.onReloadEvent(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {
-            @Override
-            public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
-                apply.clear();
-            }
-        });
+        MineTweakerImplementationAPI.onReloadEvent(event -> apply.clear());
 
         // after the reload JEI needs to be reloaded as well
-        MineTweakerImplementationAPI.onPostReload(new IEventHandler<MineTweakerImplementationAPI.ReloadEvent>() {
-            @Override
-            public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
-                if (Loader.isModLoaded("JEI")) {
-                    try {
-                        if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
-                            System.out.println("class exists");
-                        }
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+        MineTweakerImplementationAPI.onPostReload(event -> {
+            if (Loader.isModLoaded("JEI")) {
+                try {
+                    if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
+                        System.out.println("class exists");
                     }
-                    if (minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers != null)
-                        minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers.reload();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
+                if (JEIAddonPlugin.jeiHelpers != null)
+                    JEIAddonPlugin.jeiHelpers.reload();
             }
         });
     }
 
     // list of all hide actions that need to be applied after JEI is available
-    private static LinkedList<JEIHideItemAction> apply = new LinkedList<JEIHideItemAction>();
+    private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
 
     /**
      * JEI is available and the Hiding of the actions can now be applied.
      */
     public static void onJEIStarted() {
-        for (JEIHideItemAction action : apply) {
-            action.doApply();
-        }
+        apply.forEach(JEIHideItemAction::doApply);
         apply.clear();
     }
 

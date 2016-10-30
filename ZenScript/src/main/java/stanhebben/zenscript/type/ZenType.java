@@ -1,8 +1,5 @@
 package stanhebben.zenscript.type;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.ZenTokener;
@@ -11,9 +8,9 @@ import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.ParseException;
 import stanhebben.zenscript.parser.Token;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.CastingRuleDelegateMap;
 import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
@@ -21,6 +18,11 @@ import stanhebben.zenscript.type.expand.ZenExpandCaster;
 import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import static stanhebben.zenscript.util.ZenTypeUtil.EMPTY_REGISTRY;
 
 public abstract class ZenType {
@@ -242,7 +244,7 @@ public abstract class ZenType {
 
 	public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
 		if (castingRules == null) {
-			castingRules = new HashMap<ZenType, ICastingRule>();
+			castingRules = new HashMap<>();
 			constructCastingRules(environment, new CastingRuleDelegateMap(this, castingRules), true);
 		}
 
@@ -250,10 +252,8 @@ public abstract class ZenType {
 	}
 
 	public final boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-		if (equals(type))
-			return true;
+		return equals(type) || getCastingRule(type, environment) != null;
 
-		return getCastingRule(type, environment) != null;
 	}
 
 	public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
@@ -403,10 +403,6 @@ public abstract class ZenType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof ZenType) {
-			return getName().equals(((ZenType) other).getName());
-		} else {
-			return false;
-		}
+		return other instanceof ZenType && getName().equals(((ZenType) other).getName());
 	}
 }

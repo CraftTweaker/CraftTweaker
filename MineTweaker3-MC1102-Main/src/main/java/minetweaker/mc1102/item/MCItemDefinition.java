@@ -48,7 +48,7 @@ public class MCItemDefinition implements IItemDefinition{
 
     @Override
     public List<IOreDictEntry> getOres(){
-        List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
+        List<IOreDictEntry> result = new ArrayList<>();
 
         for(String key : OreDictionary.getOreNames()){
             for(ItemStack is : OreDictionary.getOres(key)){

@@ -6,34 +6,14 @@
 
 package stanhebben.zenscript.compiler;
 
+import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.value.IAny;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAny;
-import stanhebben.zenscript.type.ZenTypeArrayBasic;
-import stanhebben.zenscript.type.ZenTypeArrayList;
-import stanhebben.zenscript.type.ZenTypeAssociative;
-import stanhebben.zenscript.type.ZenTypeBool;
-import stanhebben.zenscript.type.ZenTypeBoolObject;
-import stanhebben.zenscript.type.ZenTypeByte;
-import stanhebben.zenscript.type.ZenTypeByteObject;
-import stanhebben.zenscript.type.ZenTypeDouble;
-import stanhebben.zenscript.type.ZenTypeDoubleObject;
-import stanhebben.zenscript.type.ZenTypeFloat;
-import stanhebben.zenscript.type.ZenTypeFloatObject;
-import stanhebben.zenscript.type.ZenTypeInt;
-import stanhebben.zenscript.type.ZenTypeIntObject;
-import stanhebben.zenscript.type.ZenTypeLong;
-import stanhebben.zenscript.type.ZenTypeLongObject;
-import stanhebben.zenscript.type.ZenTypeNative;
-import stanhebben.zenscript.type.ZenTypeShort;
-import stanhebben.zenscript.type.ZenTypeShortObject;
-import stanhebben.zenscript.type.ZenTypeString;
-import stanhebben.zenscript.type.ZenTypeVoid;
-import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -43,7 +23,7 @@ public class TypeRegistry implements ITypeRegistry {
 	private final Map<Class, ZenType> types;
 
 	public TypeRegistry() {
-		types = new HashMap<Class, ZenType>();
+		types = new HashMap<>();
 
 		types.put(boolean.class, ZenType.BOOL);
 		types.put(byte.class, ZenTypeByte.INSTANCE);

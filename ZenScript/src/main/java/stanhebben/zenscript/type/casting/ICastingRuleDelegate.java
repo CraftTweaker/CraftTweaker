@@ -13,5 +13,5 @@ import stanhebben.zenscript.type.ZenType;
  * @author Stan
  */
 public interface ICastingRuleDelegate {
-	public void registerCastingRule(ZenType type, ICastingRule rule);
+	void registerCastingRule(ZenType type, ICastingRule rule);
 }

@@ -30,7 +30,7 @@ public class ScriptProviderCustom implements IScriptProvider {
 
 	public ScriptProviderCustom(String moduleName) {
 		this.moduleName = moduleName;
-		scripts = new ArrayList<CustomScript>();
+		scripts = new ArrayList<>();
 	}
 
 	public void add(String name, byte[] content) {

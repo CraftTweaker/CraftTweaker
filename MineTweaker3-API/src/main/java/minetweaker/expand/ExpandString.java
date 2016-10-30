@@ -6,20 +6,16 @@
 
 package minetweaker.expand;
 
-import java.util.ArrayList;
-import java.util.List;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.DataString;
 import minetweaker.api.data.IData;
 import minetweaker.api.formatting.IFormattedText;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.ZenCaster;
-import stanhebben.zenscript.annotations.ZenExpansion;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenOperator;
+import stanhebben.zenscript.annotations.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -54,7 +50,7 @@ public class ExpandString {
 
 	@ZenMethod
 	public static List<String> split(String value, String separator, @Optional int maximum) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		int minIndex = 0;
 		int numSplits = 0;
 

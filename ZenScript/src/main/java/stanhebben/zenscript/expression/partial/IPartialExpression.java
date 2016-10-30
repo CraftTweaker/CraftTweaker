@@ -18,19 +18,19 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stanneke
  */
 public interface IPartialExpression {
-	public Expression eval(IEnvironmentGlobal environment);
+	Expression eval(IEnvironmentGlobal environment);
 
-	public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other);
+	Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other);
 
-	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name);
+	IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name);
 
-	public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values);
+	Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values);
 
-	public ZenType[] predictCallTypes(int numArguments);
+	ZenType[] predictCallTypes(int numArguments);
 
-	public IZenSymbol toSymbol();
+	IZenSymbol toSymbol();
 
-	public ZenType getType();
+	ZenType getType();
 
-	public ZenType toType(IEnvironmentGlobal environment);
+	ZenType toType(IEnvironmentGlobal environment);
 }

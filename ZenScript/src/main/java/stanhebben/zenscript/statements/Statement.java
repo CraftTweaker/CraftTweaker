@@ -1,16 +1,17 @@
 package stanhebben.zenscript.statements;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import stanhebben.zenscript.ZenTokener;
-import static stanhebben.zenscript.ZenTokener.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static stanhebben.zenscript.ZenTokener.*;
 
 public abstract class Statement {
 	public static Statement read(ZenTokener parser, IEnvironmentGlobal environment, ZenType returnType) {
@@ -62,7 +63,7 @@ public abstract class Statement {
 			case T_FOR: {
 				Token t = parser.next();
 				String name = parser.required(T_ID, "identifier expected").getValue();
-				List<String> names = new ArrayList<String>();
+				List<String> names = new ArrayList<>();
 				names.add(name);
 
 				while (parser.optional(T_COMMA) != null) {

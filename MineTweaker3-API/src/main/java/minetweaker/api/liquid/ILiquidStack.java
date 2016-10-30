@@ -21,41 +21,41 @@ import stanhebben.zenscript.annotations.ZenOperator;
 @ZenClass("minetweaker.liquid.ILiquidStack")
 public interface ILiquidStack extends IIngredient {
 	@ZenGetter("definition")
-	public ILiquidDefinition getDefinition();
+    ILiquidDefinition getDefinition();
 
 	@ZenGetter("name")
-	public String getName();
+    String getName();
 
 	@ZenGetter("displayName")
-	public String getDisplayName();
+    String getDisplayName();
 
 	@ZenGetter("amount")
-	public int getAmount();
+    int getAmount();
 
 	@ZenGetter("luminosity")
-	public int getLuminosity();
+    int getLuminosity();
 
 	@ZenGetter("density")
-	public int getDensity();
+    int getDensity();
 
 	@ZenGetter("temperature")
-	public int getTemperature();
+    int getTemperature();
 
 	@ZenGetter("viscosity")
-	public int getViscosity();
+    int getViscosity();
 
 	@ZenGetter("gaseous")
-	public boolean isGaseous();
+    boolean isGaseous();
 
 	@ZenGetter("tag")
-	public IData getTag();
+    IData getTag();
 
 	@ZenMethod
-	public ILiquidStack withTag(IData data);
+    ILiquidStack withTag(IData data);
 
 	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
-	public ILiquidStack withAmount(int amount);
+    ILiquidStack withAmount(int amount);
 
-	public Object getInternal();
+	Object getInternal();
 }

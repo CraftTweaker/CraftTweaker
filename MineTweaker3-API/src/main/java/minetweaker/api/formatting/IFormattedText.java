@@ -11,14 +11,13 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenOperator;
 
 /**
- *
  * @author Stan
  */
 @ZenClass("minetweaker.formatting.IFormattedText")
 public interface IFormattedText {
-	@ZenOperator(OperatorType.ADD)
-	public IFormattedText add(IFormattedText other);
+    @ZenOperator(OperatorType.ADD)
+    IFormattedText add(IFormattedText other);
 
-	@ZenOperator(OperatorType.CAT)
-	public IFormattedText cat(IFormattedText other);
+    @ZenOperator(OperatorType.CAT)
+    IFormattedText cat(IFormattedText other);
 }

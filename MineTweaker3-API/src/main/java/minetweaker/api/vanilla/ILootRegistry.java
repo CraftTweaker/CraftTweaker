@@ -20,16 +20,16 @@ import java.util.List;
 @ZenClass("vanilla.ILootRegistry")
 public interface ILootRegistry {
     @ZenMethod
-    public void addChestLoot(String name, WeightedItemStack item);
+    void addChestLoot(String name, WeightedItemStack item);
     @ZenMethod
-    public void addChestLoot(String name, WeightedItemStack item, int min, int max);
+    void addChestLoot(String name, WeightedItemStack item, int min, int max);
 
     @ZenMethod
-    public void removeChestLoot(String name, IIngredient ingredient);
+    void removeChestLoot(String name, IIngredient ingredient);
 
     @ZenMethod
-    public List<LootEntry> getLoot(String name);
+    List<LootEntry> getLoot(String name);
 
     @ZenGetter("lootTypes")
-    public List<String> getLootTypes();
+    List<String> getLootTypes();
 }

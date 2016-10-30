@@ -6,9 +6,10 @@
 
 package minetweaker.api.recipes;
 
-import java.util.Map;
 import minetweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
+
+import java.util.Map;
 
 /**
  *
@@ -16,5 +17,5 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.recipes.IRecipeFunction")
 public interface IRecipeFunction {
-	public IItemStack process(IItemStack output, Map<String, IItemStack> inputs, ICraftingInfo craftingInfo);
+	IItemStack process(IItemStack output, Map<String, IItemStack> inputs, ICraftingInfo craftingInfo);
 }

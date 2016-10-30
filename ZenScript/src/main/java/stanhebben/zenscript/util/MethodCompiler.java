@@ -11,5 +11,5 @@ package stanhebben.zenscript.util;
  * @author Stanneke
  */
 public interface MethodCompiler {
-	public void compile(MethodOutput output);
+	void compile(MethodOutput output);
 }
