@@ -6,43 +6,16 @@
 
 package stanhebben.zenscript.type;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.TypeExpansion;
-import stanhebben.zenscript.annotations.ZenCaster;
-import stanhebben.zenscript.annotations.CompareType;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.IterableList;
-import stanhebben.zenscript.annotations.IterableMap;
-import stanhebben.zenscript.annotations.IterableSimple;
-import stanhebben.zenscript.annotations.ZenOperator;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenMemberGetter;
-import stanhebben.zenscript.annotations.ZenMemberSetter;
-import stanhebben.zenscript.annotations.ZenSetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.compiler.ITypeRegistry;
-import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
-import stanhebben.zenscript.expression.ExpressionCallVirtual;
-import stanhebben.zenscript.expression.ExpressionCompareGeneric;
-import stanhebben.zenscript.expression.ExpressionInvalid;
-import stanhebben.zenscript.expression.ExpressionNull;
-import stanhebben.zenscript.expression.ExpressionString;
+import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.CastingNotNull;
 import stanhebben.zenscript.type.casting.CastingRuleNone;
@@ -56,14 +29,20 @@ import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.type.natives.ZenNativeCaster;
 import stanhebben.zenscript.type.natives.ZenNativeMember;
 import stanhebben.zenscript.type.natives.ZenNativeOperator;
-import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
-import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
 import stanhebben.zenscript.util.IAnyDefinition;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.value.IAny;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+
+import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
+import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
-import stanhebben.zenscript.value.IAny;
 
 /**
  *
@@ -153,7 +132,7 @@ public class ZenTypeNative extends ZenType {
 				}
 			}
 		}
-
+//TODO check this
 		for (Method method : cls.getMethods()) {
 			boolean isMethod = fully;
 			String methodName = method.getName();

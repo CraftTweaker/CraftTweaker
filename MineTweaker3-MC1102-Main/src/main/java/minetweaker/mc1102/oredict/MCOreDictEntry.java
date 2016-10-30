@@ -31,7 +31,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 public class MCOreDictEntry implements IOreDictEntry {
 
     private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = MineTweakerHacks.getOreIdStacks();
-    private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
+    private static final List<List<ItemStack>> OREDICT_CONTENTS_UN = MineTweakerHacks.getOreIdStacksUn();
 
 
     private final String id;
@@ -301,7 +301,7 @@ public class MCOreDictEntry implements IOreDictEntry {
         private final String idSource;
 
         private final ArrayList<ItemStack> targetCopy;
-        private final ArrayList<ItemStack> targetCopyUn;
+        private final List<ItemStack> targetCopyUn;
 
         public ActionMirror(String idTarget, String idSource) {
             this.idTarget = idTarget;

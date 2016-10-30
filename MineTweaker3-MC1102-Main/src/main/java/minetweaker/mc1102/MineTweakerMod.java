@@ -122,7 +122,6 @@ public class MineTweakerMod {
         String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
         for(String name : classNames) {
             ev.getAsmData().getAll(name).forEach(clazz -> {
-
                 try {
                     Class<?> asmClass = Class.forName(clazz.getClassName());
                     apiClasses.add(asmClass);
@@ -131,8 +130,6 @@ public class MineTweakerMod {
                 }
             });
         }
-
-//        ClassRegistry.getClasses(apiClasses);
         for(Class cls : apiClasses) {
             registerClass(cls);
         }

@@ -134,9 +134,9 @@ public class MineTweakerHacks{
         }
     }
 
-    public static List<ArrayList<ItemStack>> getOreIdStacksUn(){
+    public static List<List<ItemStack>> getOreIdStacksUn(){
         try{
-            return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACKUN.get(null);
+            return (List<List<ItemStack>>) OREDICTIONARY_IDTOSTACKUN.get(null);
         }catch(IllegalAccessException ex){
             MineTweakerAPI.logError("ERROR - could not load ore dictionary stacks!");
             return null;

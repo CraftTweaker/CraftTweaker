@@ -181,7 +181,6 @@ public class JavaMethod implements IJavaMethod {
 		optional = new boolean[parameterTypes.length];
 		for (int i = 0; i < parameterTypes.length; i++) {
 			parameterTypes[i] = types.getType(method.getGenericParameterTypes()[i]);
-
 			optional[i] = false;
 			for (Annotation annotation : method.getParameterAnnotations()[i]) {
 				if (annotation instanceof Optional) {
