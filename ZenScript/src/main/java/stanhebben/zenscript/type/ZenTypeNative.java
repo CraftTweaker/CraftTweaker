@@ -689,8 +689,8 @@ public class ZenTypeNative extends ZenType {
         public void defineNot(MethodOutput output) {
             // TODO: implement
             throwUnsupportedException(output, getName(), "not");
-			/*
-			 * for (ZenNativeOperator unaryOperator : unaryOperators) { if
+            /*
+             * for (ZenNativeOperator unaryOperator : unaryOperators) { if
 			 * (unaryOperator.getOperator() == OperatorType.NOT) {
 			 * 
 			 * } }

@@ -136,11 +136,10 @@ public interface IItemStack extends IIngredient {
 
 	/**
 	 * Creates a new item stack with a different stack size.
-	 * 
+	 *
 	 * @param amount new item stack size
 	 * @return new item stack
 	 */
-	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
     IItemStack amount(int amount);
 
@@ -178,6 +177,7 @@ public interface IItemStack extends IIngredient {
 	 * @param damage damage value
 	 * @return new, modified item stack
 	 */
+	@ZenOperator(OperatorType.MUL)
 	@ZenMethod
     IItemStack withDamage(int damage);
 
@@ -187,6 +187,7 @@ public interface IItemStack extends IIngredient {
 	 * @param amount stack size
 	 * @return new, modified item stack
 	 */
+
 	@ZenMethod
     IItemStack withAmount(int amount);
 
@@ -195,6 +196,7 @@ public interface IItemStack extends IIngredient {
 	 * 
 	 * @return new, modified item stack
 	 */
+
 	@ZenMethod
     IItemStack anyAmount();
 

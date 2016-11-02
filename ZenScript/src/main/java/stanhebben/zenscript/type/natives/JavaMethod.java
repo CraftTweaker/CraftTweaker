@@ -78,7 +78,6 @@ public class JavaMethod implements IJavaMethod {
     public static ZenType[] predict(List<IJavaMethod> methods, int numArguments) {
         ZenType[] results = new ZenType[numArguments];
         boolean[] ambiguous = new boolean[numArguments];
-
         for(IJavaMethod method : methods) {
             if(method.accepts(numArguments)) {
                 ZenType[] parameterTypes = method.getParameterTypes();
@@ -269,7 +268,6 @@ public class JavaMethod implements IJavaMethod {
             if(method.isVarArgs()) {
                 checkUntil--;
             }
-
             for(int i = arguments.length; i < checkUntil; i++) {
                 if(!optional[i]) {
                     return PRIORITY_INVALID;

@@ -247,7 +247,7 @@ public class MCItemStack implements IItemStack{
     }
 
     @Override
-    public IItemStack amount(int amount){
+    public IItemStack amount(int amount) {
         return withAmount(amount);
     }
 

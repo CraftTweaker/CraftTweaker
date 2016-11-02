@@ -60,7 +60,7 @@ public class StringUtil {
      */
     public static String methodMatchingError(List<IJavaMethod> methods, Expression... arguments) {
         if(methods.isEmpty()) {
-            return "no method with that name available";
+            return "\u00a7cno method with that name available";
         } else {
             StringBuilder message = new StringBuilder();
             if(methods.size() == 1) {
@@ -68,7 +68,7 @@ public class StringUtil {
             } else {
                 message.append(methods.size()).append(" methods ");
             }
-            message.append("available but none matches the parameters (");
+            message.append("available but \u00a74none\u00a7r matches the parameters (");
             boolean first = true;
             for(Expression value : arguments) {
                 if(first) {
@@ -79,7 +79,7 @@ public class StringUtil {
                 message.append(value.getType().toString());
             }
             message.append(")");
-            message.append("\nThis is usually an error in your script, not in the mod");
+            message.append("\nThis is \u00a7ousually\u00a7r an error in your script, not in the mod");
             methods.forEach(meth -> {
                 if(meth instanceof JavaMethod) {
                     JavaMethod m = (JavaMethod) meth;
@@ -88,11 +88,11 @@ public class StringUtil {
                         ZenType type = m.getParameterTypes()[i];
                         for(int i1 = 0; i1 < m.getMethod().getParameterAnnotations()[i].length; i1++) {
                             Annotation an = m.getMethod().getParameterAnnotations()[i][i1];
-                            message.append(an.annotationType().getSimpleName() + " ");
+                            message.append("\u00a7a" + an.annotationType().getSimpleName() + " ");
                         }
-                        message.append(type.getName() + ",");
+                        message.append("\u00a7r" +type.getClass().getSimpleName() + ", ");
                     }
-                    message.deleteCharAt(message.lastIndexOf(","));
+                    message.deleteCharAt(message.lastIndexOf(", "));
                     message.append(")");
                 }
             });
@@ -329,7 +329,7 @@ public class StringUtil {
                     /* FALLTHROUGH */
 
 					/*
-					 * Can have 0, 1, or 2 octal digits following a 0 this
+                     * Can have 0, 1, or 2 octal digits following a 0 this
 					 * permits larger values than octal 377, up to octal 777.
 					 */
                 case '0': {
