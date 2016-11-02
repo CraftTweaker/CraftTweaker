@@ -7,8 +7,11 @@
 package stanhebben.zenscript.util;
 
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.natives.IJavaMethod;
+import stanhebben.zenscript.type.natives.JavaMethod;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +25,8 @@ public class StringUtil {
     public static String join(String[] values, String separator) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for (String value : values) {
-            if (first) {
+        for(String value : values) {
+            if(first) {
                 first = false;
             } else {
                 result.append(separator);
@@ -36,8 +39,8 @@ public class StringUtil {
     public static String join(Iterable<String> values, String separator) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for (String value : values) {
-            if (first) {
+        for(String value : values) {
+            if(first) {
                 first = false;
             } else {
                 result.append('.');
@@ -56,19 +59,19 @@ public class StringUtil {
      * @return return value
      */
     public static String methodMatchingError(List<IJavaMethod> methods, Expression... arguments) {
-        if (methods.isEmpty()) {
+        if(methods.isEmpty()) {
             return "no method with that name available";
         } else {
             StringBuilder message = new StringBuilder();
-            if (methods.size() == 1) {
+            if(methods.size() == 1) {
                 message.append("a method ");
             } else {
                 message.append(methods.size()).append(" methods ");
             }
             message.append("available but none matches the parameters (");
             boolean first = true;
-            for (Expression value : arguments) {
-                if (first) {
+            for(Expression value : arguments) {
+                if(first) {
                     first = false;
                 } else {
                     message.append(", ");
@@ -77,6 +80,22 @@ public class StringUtil {
             }
             message.append(")");
             message.append("\nThis is usually an error in your script, not in the mod");
+            methods.forEach(meth -> {
+                if(meth instanceof JavaMethod) {
+                    JavaMethod m = (JavaMethod) meth;
+                    message.append("\n" + m.getMethod().getName() + "(");
+                    for(int i = 0; i < m.getParameterTypes().length; i++) {
+                        ZenType type = m.getParameterTypes()[i];
+                        for(int i1 = 0; i1 < m.getMethod().getParameterAnnotations()[i].length; i1++) {
+                            Annotation an = m.getMethod().getParameterAnnotations()[i][i1];
+                            message.append(an.annotationType().getSimpleName() + " ");
+                        }
+                        message.append(type.getName() + ",");
+                    }
+                    message.deleteCharAt(message.lastIndexOf(","));
+                    message.append(")");
+                }
+            });
             return message.toString();
         }
     }
@@ -89,7 +108,7 @@ public class StringUtil {
      * @return
      */
     public static String[] split(String value, char delimiter) {
-        if (value == null)
+        if(value == null)
             return null;
 
         ArrayList<String> result = new ArrayList<>();
@@ -112,7 +131,7 @@ public class StringUtil {
      */
     public static String[] splitParagraphs(String value) {
         String[] lines = split(value, '\n');
-        for (int i = 0; i < lines.length; i++) {
+        for(int i = 0; i < lines.length; i++) {
             lines[i] = lines[i].trim();
         }
         ArrayList<String> output = new ArrayList<>();
@@ -127,7 +146,7 @@ public class StringUtil {
                 current.append(' ').append(line);
             }
         }
-        if (current.length() > 0) {
+        if(current.length() > 0) {
             output.add(current.toString());
         }
 
@@ -191,7 +210,7 @@ public class StringUtil {
      * @return
      */
     public static String unescapeString(String oldstr) {
-        if ((oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"')
+        if((oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"')
                 && (oldstr.charAt(0) != '\'' || oldstr.charAt(oldstr.length() - 1) != '\'')) {
             // TODO: error
             // throw new TweakerExecuteException("Not a valid string constant: "
@@ -209,15 +228,15 @@ public class StringUtil {
 
         boolean saw_backslash = false;
 
-        for (int i = 0; i < oldstr.length(); i++) {
+        for(int i = 0; i < oldstr.length(); i++) {
             int cp = oldstr.codePointAt(i);
-            if (oldstr.codePointAt(i) > Character.MAX_VALUE) {
+            if(oldstr.codePointAt(i) > Character.MAX_VALUE) {
                 i++;
                 /* WE HATES UTF-16! WE HATES IT FOREVERSES!!! */
             }
 
-            if (!saw_backslash) {
-                if (cp == '\\') {
+            if(!saw_backslash) {
+                if(cp == '\\') {
                     saw_backslash = true;
                 } else {
                     newstr.append(Character.toChars(cp));
@@ -225,14 +244,14 @@ public class StringUtil {
                 continue; /* switch */
             }
 
-            if (cp == '\\') {
+            if(cp == '\\') {
                 saw_backslash = false;
                 newstr.append('\\');
                 newstr.append('\\');
                 continue; /* switch */
             }
 
-            switch (cp) {
+            switch(cp) {
 
                 case 'r':
                     newstr.append('\r');
@@ -271,15 +290,15 @@ public class StringUtil {
 				 * Strange but true: "\c{" is ";", "\c}" is "=", etc.
 				 */
                 case 'c': {
-                    if (++i == oldstr.length()) {
+                    if(++i == oldstr.length()) {
                         // TODO: error
                         // throw new TweakerExecuteException("trailing \\c");
                     }
                     cp = oldstr.codePointAt(i);
-					/*
-					 * don't need to grok surrogates, as next line blows them up
+                    /*
+                     * don't need to grok surrogates, as next line blows them up
 					 */
-                    if (cp > 0x7f) {
+                    if(cp > 0x7f) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "expected ASCII after \\c");
@@ -292,10 +311,10 @@ public class StringUtil {
                 case '9':
                     // TODO: error
                     // throw new TweakerExecuteException("illegal octal digit");
-					/* NOTREACHED */
+                    /* NOTREACHED */
 
 					/*
-					 * may be 0 to 2 octal digits following this one so back up
+                     * may be 0 to 2 octal digits following this one so back up
 					 * one for fallthrough to next case; unread this digit and
 					 * fall through to next case.
 					 */
@@ -307,14 +326,14 @@ public class StringUtil {
                 case '6':
                 case '7':
                     --i;
-					/* FALLTHROUGH */
+                    /* FALLTHROUGH */
 
 					/*
 					 * Can have 0, 1, or 2 octal digits following a 0 this
 					 * permits larger values than octal 377, up to octal 777.
 					 */
                 case '0': {
-                    if (i + 1 == oldstr.length()) {
+                    if(i + 1 == oldstr.length()) {
 						/* found \0 at end of string */
                         newstr.append(Character.toChars(0));
                         break; /* switch */
@@ -322,18 +341,18 @@ public class StringUtil {
                     i++;
                     int digits = 0;
                     int j;
-                    for (j = 0; j <= 2; j++) {
-                        if (i + j == oldstr.length()) {
+                    for(j = 0; j <= 2; j++) {
+                        if(i + j == oldstr.length()) {
                             break; /* for */
                         }
 						/* safe because will unread surrogate */
                         int ch = oldstr.charAt(i + j);
-                        if (ch < '0' || ch > '7') {
+                        if(ch < '0' || ch > '7') {
                             break; /* for */
                         }
                         digits++;
                     }
-                    if (digits == 0) {
+                    if(digits == 0) {
                         --i;
                         newstr.append('\0');
                         break; /* switch */
@@ -342,7 +361,7 @@ public class StringUtil {
                     try {
                         value = Integer
                                 .parseInt(oldstr.substring(i, i + digits), 8);
-                    } catch (NumberFormatException nfe) {
+                    } catch(NumberFormatException nfe) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "invalid octal value for \\0 escape");
@@ -353,22 +372,22 @@ public class StringUtil {
                 } /* end case '0' */
 
                 case 'x': {
-                    if (i + 2 > oldstr.length()) {
+                    if(i + 2 > oldstr.length()) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "string too short for \\x escape");
                     }
                     i++;
                     boolean saw_brace = false;
-                    if (oldstr.charAt(i) == '{') {
+                    if(oldstr.charAt(i) == '{') {
 						/* ^^^^^^ ok to ignore surrogates here */
                         i++;
                         saw_brace = true;
                     }
                     int j;
-                    for (j = 0; j < 8; j++) {
+                    for(j = 0; j < 8; j++) {
 
-                        if (!saw_brace && j == 2) {
+                        if(!saw_brace && j == 2) {
                             break; /* for */
                         }
 
@@ -376,24 +395,24 @@ public class StringUtil {
 						 * ASCII test also catches surrogates
 						 */
                         int ch = oldstr.charAt(i + j);
-                        if (ch > 127) {
+                        if(ch > 127) {
                             // TODO: error
                             // throw new TweakerExecuteException(
                             // "illegal non-ASCII hex digit in \\x escape");
                         }
 
-                        if (saw_brace && ch == '}') {
+                        if(saw_brace && ch == '}') {
                             break; /* for */
                         }
 
-                        if (!((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))) {
+                        if(!((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))) {
                             // TODO: error
                             // throw new TweakerExecuteException(String.format(
                             // "illegal hex digit #%d '%c' in \\x", ch, ch));
                         }
 
                     }
-                    if (j == 0) {
+                    if(j == 0) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "empty braces in \\x{} escape");
@@ -401,13 +420,13 @@ public class StringUtil {
                     int value = 0;
                     try {
                         value = Integer.parseInt(oldstr.substring(i, i + j), 16);
-                    } catch (NumberFormatException nfe) {
+                    } catch(NumberFormatException nfe) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "invalid hex value for \\x escape");
                     }
                     newstr.append(Character.toChars(value));
-                    if (saw_brace) {
+                    if(saw_brace) {
                         j++;
                     }
                     i += j - 1;
@@ -415,16 +434,16 @@ public class StringUtil {
                 }
 
                 case 'u': {
-                    if (i + 4 > oldstr.length()) {
+                    if(i + 4 > oldstr.length()) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "string too short for \\u escape");
                     }
                     i++;
                     int j;
-                    for (j = 0; j < 4; j++) {
+                    for(j = 0; j < 4; j++) {
 						/* this also handles the surrogate issue */
-                        if (oldstr.charAt(i + j) > 127) {
+                        if(oldstr.charAt(i + j) > 127) {
                             // TODO: error
                             // throw new TweakerExecuteException(
                             // "illegal non-ASCII hex digit in \\u escape");
@@ -433,7 +452,7 @@ public class StringUtil {
                     int value = 0;
                     try {
                         value = Integer.parseInt(oldstr.substring(i, i + j), 16);
-                    } catch (NumberFormatException nfe) {
+                    } catch(NumberFormatException nfe) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "invalid hex value for \\u escape");
@@ -444,16 +463,16 @@ public class StringUtil {
                 }
 
                 case 'U': {
-                    if (i + 8 > oldstr.length()) {
+                    if(i + 8 > oldstr.length()) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "string too short for \\U escape");
                     }
                     i++;
                     int j;
-                    for (j = 0; j < 8; j++) {
+                    for(j = 0; j < 8; j++) {
 						/* this also handles the surrogate issue */
-                        if (oldstr.charAt(i + j) > 127) {
+                        if(oldstr.charAt(i + j) > 127) {
                             // TODO: error
                             // throw new TweakerExecuteException(
                             // "illegal non-ASCII hex digit in \\U escape");
@@ -462,7 +481,7 @@ public class StringUtil {
                     int value = 0;
                     try {
                         value = Integer.parseInt(oldstr.substring(i, i + j), 16);
-                    } catch (NumberFormatException nfe) {
+                    } catch(NumberFormatException nfe) {
                         // TODO: error
                         // throw new TweakerExecuteException(
                         // "invalid hex value for \\U escape");
@@ -486,7 +505,7 @@ public class StringUtil {
         }
 
 		/* weird to leave one at the end */
-        if (saw_backslash) {
+        if(saw_backslash) {
             newstr.append('\\');
         }
 
@@ -499,19 +518,19 @@ public class StringUtil {
      * crap, just true logical characters.
      */
     private static String uniplus(String s) {
-        if (s.length() == 0) {
+        if(s.length() == 0) {
             return "";
         }
 		/* This is just the minimum; sb will grow as needed. */
         StringBuilder sb = new StringBuilder(2 + 3 * s.length());
         sb.append("U+");
-        for (int i = 0; i < s.length(); i++) {
+        for(int i = 0; i < s.length(); i++) {
             sb.append(String.format("%X", s.codePointAt(i)));
-            if (s.codePointAt(i) > Character.MAX_VALUE) {
+            if(s.codePointAt(i) > Character.MAX_VALUE) {
                 i++;
                 /* WE HATES UTF-16! WE HATES IT FOREVERSES!!! */
             }
-            if (i + 1 < s.length()) {
+            if(i + 1 < s.length()) {
                 sb.append(".");
             }
         }

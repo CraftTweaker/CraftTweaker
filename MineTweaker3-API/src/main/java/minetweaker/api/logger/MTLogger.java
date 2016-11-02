@@ -33,9 +33,7 @@ public class MTLogger implements ILogger {
 		players.add(player);
 
 		if (!unprocessed.isEmpty()) {
-			for (String message : unprocessed) {
-				player.sendChat(message);
-			}
+			unprocessed.forEach(player::sendChat);
 		}
 	}
 
