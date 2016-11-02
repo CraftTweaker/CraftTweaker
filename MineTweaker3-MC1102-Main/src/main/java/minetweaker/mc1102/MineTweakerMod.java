@@ -112,6 +112,7 @@ public class MineTweakerMod {
     @EventHandler
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
         List<Class> apiClasses = new ArrayList<>();
         String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
         for(String name : classNames) {
