@@ -118,6 +118,10 @@ public class MineTweakerMod {
         for(String name : classNames) {
             ev.getAsmData().getAll(name).forEach(clazz -> {
                 try {
+                    System.out.println(">>> " + name);
+                    clazz.getCandidate().getContainedMods().forEach(i-> {
+                        System.out.println(i.getName());
+                    });
                     Class<?> asmClass = Class.forName(clazz.getClassName());
                     if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker")) {
                         System.out.println(asmClass.getPackage().getName());
