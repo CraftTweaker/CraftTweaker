@@ -119,8 +119,10 @@ public class MineTweakerMod {
             ev.getAsmData().getAll(name).forEach(clazz -> {
                 try {
                     Class<?> asmClass = Class.forName(clazz.getClassName());
-                    if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker"))
+                    if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker")) {
+                        System.out.println(asmClass.getPackage().getName());
                         apiClasses.add(asmClass);
+                    }
                 } catch(ClassNotFoundException e) {
                     e.printStackTrace();
                 }
