@@ -37,6 +37,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -115,17 +116,24 @@ public class MineTweakerMod {
         MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
         List<Class> apiClasses = new ArrayList<>();
         String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
+        asm:
         for(String name : classNames) {
             ev.getAsmData().getAll(name).forEach(clazz -> {
+                boolean valid = true;
                 try {
                     System.out.println(">>> " + name);
-                    clazz.getCandidate().getContainedMods().forEach(i-> {
-                        System.out.println(i.getName());
-                    });
-                    Class<?> asmClass = Class.forName(clazz.getClassName());
-                    if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker")) {
-                        System.out.println(asmClass.getPackage().getName());
-                        apiClasses.add(asmClass);
+                    for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
+                        System.out.println(mod.getName());
+                        if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
+                            valid = false;
+                        }
+                    }
+                    if(valid) {
+                        Class<?> asmClass = Class.forName(clazz.getClassName());
+                        if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker")) {
+                            System.out.println(asmClass.getPackage().getName());
+                            apiClasses.add(asmClass);
+                        }
                     }
                 } catch(ClassNotFoundException e) {
                     e.printStackTrace();
