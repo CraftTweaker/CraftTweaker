@@ -83,7 +83,6 @@ public class MTTweaker implements ITweaker {
                 MineTweakerAPI.logInfo("[Stuck] 1 " + action.describe());
                 MineTweakerAPI.logInfo("[Stuck] 2 " + action.describeUndo());
                 MineTweakerAPI.logInfo("[Stuck] 3 " + action.toString());
-
                 stuck.add(0, action);
                 wereStuck.add(action);
 
@@ -174,5 +173,11 @@ public class MTTweaker implements ITweaker {
     @Override
     public byte[] getScriptData() {
         return scriptData;
+    }
+
+
+    @Override
+    public List<IUndoableAction> getActions() {
+        return actions;
     }
 }

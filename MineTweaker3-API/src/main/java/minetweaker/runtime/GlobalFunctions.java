@@ -9,14 +9,18 @@ package minetweaker.runtime;
 import minetweaker.MineTweakerAPI;
 
 /**
- *
  * @author Stan
  */
 public class GlobalFunctions {
-	private GlobalFunctions() {
-	}
+    private GlobalFunctions() {
+    }
 
-	public static void print(String message) {
-		MineTweakerAPI.logInfo(message);
-	}
+    public static void print(String message) {
+        MineTweakerAPI.logInfo(message);
+    }
+
+    public static int totalActions() {
+        return MineTweakerAPI.tweaker.getActions().size();
+    }
+
 }

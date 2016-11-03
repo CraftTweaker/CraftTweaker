@@ -49,6 +49,7 @@ public class GlobalRegistry {
 
 	static {
 		registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
+		registerGlobal("totalActions", getStaticFunction(GlobalFunctions.class, "totalActions"));
 		registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
 		registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
 	}

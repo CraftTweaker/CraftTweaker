@@ -68,4 +68,11 @@ public interface ITweaker {
      * @return scripts data
      */
     byte[] getScriptData();
+
+    /**
+     * Retrieves all actions that have been performed.
+     *
+     * @return actions performed
+     */
+    List<IUndoableAction> getActions();
 }
