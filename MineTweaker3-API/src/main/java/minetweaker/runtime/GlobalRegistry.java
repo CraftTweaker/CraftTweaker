@@ -93,7 +93,6 @@ public class GlobalRegistry {
 		try {
 			ZenTypeNative type = new ZenTypeNative(cls);
 			type.complete(types);
-
 			root.put(type.getName(), new SymbolType(type), errors);
 		} catch (Throwable ex) {
 			ex.printStackTrace();

@@ -116,14 +116,12 @@ public class MineTweakerMod {
         MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
         List<Class> apiClasses = new ArrayList<>();
         String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
-        asm:
         for(String name : classNames) {
             ev.getAsmData().getAll(name).forEach(clazz -> {
                 boolean valid = true;
                 try {
-                    System.out.println(">>> " + name);
                     for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
-                        System.out.println(mod.getName());
+                        System.out.println(clazz.getClassName() + ":" + mod.getName());
                         if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
                             valid = false;
                         }
@@ -131,7 +129,6 @@ public class MineTweakerMod {
                     if(valid) {
                         Class<?> asmClass = Class.forName(clazz.getClassName());
                         if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker")) {
-                            System.out.println(asmClass.getPackage().getName());
                             apiClasses.add(asmClass);
                         }
                     }
@@ -146,12 +143,11 @@ public class MineTweakerMod {
 
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
-        MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
-
-        for(int i = 0; i < REGISTRIES.length; i++) {
-            MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
-        }
-
+//        MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
+//
+//        for(int i = 0; i < REGISTRIES.length; i++) {
+//            MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
+//        }
         FuelTweaker.INSTANCE.register();
         if(Loader.isModLoaded("JEI")) {
             try {

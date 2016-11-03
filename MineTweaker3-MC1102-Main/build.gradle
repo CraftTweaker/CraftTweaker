@@ -1,8 +1,5 @@
 import minetweaker.tasks.RegisterZenClassesTask;
 
-
-
-
 buildscript {
     repositories {
         jcenter()

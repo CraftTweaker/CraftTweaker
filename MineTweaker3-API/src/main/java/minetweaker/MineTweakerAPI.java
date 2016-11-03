@@ -328,7 +328,7 @@ public class MineTweakerAPI {
      * @param annotatedClass class that is annotated
      */
     public static void registerClass(Class annotatedClass) {
-        // System.out.println("Registering " + annotatedClass.getName());
+         System.out.println("Registering " + annotatedClass.getName());
 
         for(Annotation annotation : annotatedClass.getAnnotations()) {
             if(annotation instanceof ZenExpansion) {
