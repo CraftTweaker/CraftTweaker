@@ -137,7 +137,11 @@ public class MineTweakerMod {
                 }
             });
         }
-        apiClasses.forEach(MineTweakerAPI::registerClass);
+        apiClasses.forEach(i->{
+            System.out.println(">>> " + i.getName());
+            MineTweakerAPI.registerClass(i);
+        });
+//        apiClasses.forEach(MineTweakerAPI::registerClass);
 
     }
 
