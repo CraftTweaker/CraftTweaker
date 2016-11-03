@@ -121,7 +121,7 @@ public class MineTweakerMod {
                 boolean valid = true;
                 try {
                     for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
-                        System.out.println(clazz.getClassName() + ":" + mod.getName());
+                        System.out.println(">>> " + clazz.getClassName() + ":" + mod.getName());
                         if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
                             valid = false;
                         }
