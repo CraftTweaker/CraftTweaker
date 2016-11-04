@@ -121,23 +121,20 @@ public class MineTweakerMod {
                 boolean valid = true;
                 try {
                     for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
-                        System.out.println(">>> " + clazz.getClassName() + ":" + mod.getName());
                         if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
                             valid = false;
                         }
                     }
                     if(valid) {
                         Class<?> asmClass = Class.forName(clazz.getClassName());
-                        if(asmClass.getPackage().getName().startsWith("stanhebben.zenscript") || asmClass.getPackage().getName().startsWith("minetweaker")) {
-                            apiClasses.add(asmClass);
-                        }
+                        apiClasses.add(asmClass);
                     }
                 } catch(ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             });
         }
-        apiClasses.forEach(i->{
+        apiClasses.forEach(i -> {
             System.out.println(">>> " + i.getName());
             MineTweakerAPI.registerClass(i);
         });
