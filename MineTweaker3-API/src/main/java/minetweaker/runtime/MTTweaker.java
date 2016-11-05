@@ -29,7 +29,7 @@ import static stanhebben.zenscript.ZenModule.extractClassName;
  * @author Stan Hebben
  */
 public class MTTweaker implements ITweaker {
-    private static final boolean DEBUG = true;
+    private static boolean DEBUG = false;
 
     private final List<IUndoableAction> actions = new ArrayList<>();
     private final Set<IUndoableAction> wereStuck = new LinkedHashSet<>();
@@ -179,5 +179,10 @@ public class MTTweaker implements ITweaker {
     @Override
     public List<IUndoableAction> getActions() {
         return actions;
+    }
+    
+    @Override
+    public void enableDebug() {
+        DEBUG = true;
     }
 }

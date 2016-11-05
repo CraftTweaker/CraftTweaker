@@ -75,4 +75,9 @@ public interface ITweaker {
      * @return actions performed
      */
     List<IUndoableAction> getActions();
+    
+    /**
+     * Enables debug class generations
+     */
+    void enableDebug();
 }

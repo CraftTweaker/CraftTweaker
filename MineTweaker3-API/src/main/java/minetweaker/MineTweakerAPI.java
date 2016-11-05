@@ -70,7 +70,7 @@ public class MineTweakerAPI {
     };
 
     static {
-		List<Class> apiClasses = new ArrayList<Class>();
+		List<Class> apiClasses = new ArrayList<>();
 		ClassRegistry.getClasses(apiClasses);
 
 		for (Class cls : apiClasses) {
@@ -328,8 +328,6 @@ public class MineTweakerAPI {
      * @param annotatedClass class that is annotated
      */
     public static void registerClass(Class annotatedClass) {
-         System.out.println("Registering " + annotatedClass.getName());
-
         for(Annotation annotation : annotatedClass.getAnnotations()) {
             if(annotation instanceof ZenExpansion) {
                 GlobalRegistry.registerExpansion(annotatedClass);
