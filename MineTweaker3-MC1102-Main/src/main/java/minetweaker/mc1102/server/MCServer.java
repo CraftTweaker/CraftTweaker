@@ -61,7 +61,6 @@ public class MCServer extends AbstractServer {
 
     @Override
     public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, @Optional ICommandValidator validator, @Optional ICommandTabCompletion completion) {
-
         ICommand command = new MCCommand(name, usage, aliases, function, validator, completion);
         MineTweakerAPI.apply(new AddCommandAction(command));
     }
@@ -148,7 +147,7 @@ public class MCServer extends AbstractServer {
 
         @Override
         public int compareTo(ICommand o) {
-            return 0;
+            return this.getCommandName().compareTo(o.getCommandName());
         }
     }
 
