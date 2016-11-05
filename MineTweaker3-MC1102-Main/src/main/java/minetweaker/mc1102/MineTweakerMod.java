@@ -144,11 +144,11 @@ public class MineTweakerMod {
 
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
-//        MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
-//
-//        for(int i = 0; i < REGISTRIES.length; i++) {
-//            MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
-//        }
+        MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
+
+        for(int i = 0; i < REGISTRIES.length; i++) {
+            MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
+        }
         FuelTweaker.INSTANCE.register();
         if(Loader.isModLoaded("JEI")) {
             try {
