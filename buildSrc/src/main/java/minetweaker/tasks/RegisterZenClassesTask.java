@@ -52,7 +52,7 @@ public class RegisterZenClassesTask extends DefaultTask {
         for(String clsName : classNames) {
             method.visitVarInsn(Opcodes.ALOAD, 0);
             method.visitLdcInsn(Type.getType("L" + clsName + ";"));
-            method.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z");
+            method.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
             System.out.println(clsName);
         }
 
