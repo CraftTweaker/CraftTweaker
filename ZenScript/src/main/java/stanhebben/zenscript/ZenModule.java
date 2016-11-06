@@ -43,7 +43,7 @@ public class ZenModule {
         ClassWriter clsMain = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         clsMain.visitSource(mainFileName, null);
 
-        clsMain.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[]{internal(Runnable.class)});
+        clsMain.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[]{internal(Runnable.class)});
         MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
         mainRun.start();
 
@@ -64,7 +64,7 @@ public class ZenModule {
             clsScript.visitSource(script.getFileName(), null);
             EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
 
-            clsScript.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[]{internal(Runnable.class)});
+            clsScript.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[]{internal(Runnable.class)});
 
             for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
                 ParsedFunction fn = function.getValue();
