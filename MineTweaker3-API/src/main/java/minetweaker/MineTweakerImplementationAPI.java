@@ -35,8 +35,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.*;
 import java.util.List;
 
-import static minetweaker.MineTweakerAPI.furnace;
-import static minetweaker.MineTweakerAPI.server;
+import static minetweaker.MineTweakerAPI.*;
 
 /**
  * The implementation API is used by API implementations for internal
@@ -245,7 +244,11 @@ public class MineTweakerImplementationAPI {
             for(int i = 0; i < player.getInventorySize(); i++) {
                 IItemStack stack = player.getInventoryStack(i);
                 if(stack != null) {
-                    player.sendChat(stack.toString());
+                    MineTweakerAPI.logCommand(stack.toString());
+//                    player.sendChat(stack.toString());
+					if(player != null) {
+						player.sendChat("Recipe list generated; see minetweaker.log in your minecraft dir");
+					}
                 }
             }
         }));
@@ -262,12 +265,16 @@ public class MineTweakerImplementationAPI {
             if(hand != null) {
                 String value = hand.toString();
                 player.sendChat(value);
-                copyToClipboard(value);
+				MineTweakerAPI.logCommand(value);
+				copyToClipboard(value);
 
                 List<IOreDictEntry> entries = hand.getOres();
                 for(IOreDictEntry entry : entries) {
                     player.sendChat("Is in <ore:" + entry.getName() + ">");
-                }
+					MineTweakerAPI.logCommand("Is in <ore:" + entry.getName() + ">");
+	
+				}
+				
             }
         }));
 
