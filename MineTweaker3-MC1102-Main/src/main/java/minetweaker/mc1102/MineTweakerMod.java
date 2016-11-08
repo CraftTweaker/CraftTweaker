@@ -41,7 +41,7 @@ import java.lang.reflect.*;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.13")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.14")
 public class MineTweakerMod {
 	
 	public static final String MODID = "MineTweaker3";
