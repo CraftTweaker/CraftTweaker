@@ -6,27 +6,29 @@
 
 package minetweaker.mc1102.network;
 
-import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
+import minetweaker.*;
 import minetweaker.mc1102.client.MCClient;
 import minetweaker.runtime.providers.ScriptProviderMemory;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 /**
  * @author Stan
  */
-public class MineTweakerLoadScriptsHandler implements IMessageHandler<MineTweakerLoadScriptsPacket, IMessage>{
-    @Override
-    public IMessage onMessage(MineTweakerLoadScriptsPacket message, MessageContext ctx){
-        if(MineTweakerAPI.server == null){
-            MineTweakerAPI.client = new MCClient();
-
-            MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(message.getData()));
-            MineTweakerImplementationAPI.reload();
-        }
-
-        return null;
-    }
+public class MineTweakerLoadScriptsHandler implements IMessageHandler<MineTweakerLoadScriptsPacket, IMessage> {
+	
+	@Override
+	public IMessage onMessage(MineTweakerLoadScriptsPacket message, MessageContext ctx) {
+		Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
+		return null;
+	}
+	
+	private void handle(MineTweakerLoadScriptsPacket message, MessageContext ctx) {
+		if(MineTweakerAPI.server == null) {
+			MineTweakerAPI.client = new MCClient();
+			
+			MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderMemory(message.getData()));
+			MineTweakerImplementationAPI.reload();
+		}
+	}
 }
