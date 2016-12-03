@@ -4,16 +4,10 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.14"
+ext.mineTweakerVersion = "3.0.16"
 if (System.getenv('BUILD_NUMBER') != null)
     project.mineTweakerVersion += "."+System.getenv('BUILD_NUMBER')
-else {
-    try {
-        //ext.mineTweakerVersion += "." + "git rev-parse --abbrev-ref HEAD".execute().text.trim();
-        //ext.mineTweakerVersion += "." + "git rev-parse --short HEAD".execute().text.trim();
-    } catch (all) {}
-    logger.lifecycle "No build number detected, setting to ${ext.mineTweakerVersion}"
-}
+else {}
 
 ext.mineTweakerDebug = "false"
 //Make sure JAVA_HOME is set as an environment variable
@@ -29,4 +23,16 @@ ext.projects1102 = [
 	'MineTweaker3-MC1102-Main',
 	'MineTweaker3-MC1102-Mod-JEI',
 	'MineTweaker3-MC1102-Mod-IC2'
+]
+
+
+// #######################
+// ### 1.11 settings ###
+// #######################
+
+ext.forgeVersion11 = "1.11-13.19.0.2176"
+ext.forgeMappings11 = "snapshot_20161130"
+ext.projects11 = [
+	'MineTweaker3-MC11-Main',
+	'MineTweaker3-MC11-Mod-JEI'
 ]

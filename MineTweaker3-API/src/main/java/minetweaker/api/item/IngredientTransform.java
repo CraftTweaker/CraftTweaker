@@ -1,8 +1,7 @@
 package minetweaker.api.item;
 
-import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.ZenExpansion;
-import stanhebben.zenscript.annotations.ZenMethod;
+import minetweaker.api.player.IPlayer;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Transformations can be used to modify an ingredient after it is used in a
@@ -23,7 +22,12 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient reuse(IIngredient ingredient) {
-		return ingredient.transform((item, byPlayer) -> item.withAmount(item.getAmount()+1));
+		return ingredient.transform(new IItemTransformer() {
+			@Override
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
+				return item.withAmount(1);
+			}
+		});
 	}
 	
 	/**
@@ -36,14 +40,7 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient transformDamage(IIngredient ingredient) {
-		return ingredient.transform((item, byPlayer) -> {
-			int newDamage = item.getDamage() + 1;
-			if(newDamage >= item.getMaxDamage()) {
-				return item.withAmount(item.getAmount()).withDamage(0);
-			} else {
-				return item.withAmount(item.getAmount() + 1).withDamage(newDamage);
-			}
-		});
+		return transformDamage(ingredient, 1);
 	}
 	
 	/**
@@ -59,13 +56,16 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient transformDamage(IIngredient ingredient, final int damage) {
-		return ingredient.transform((item, byPlayer) -> {
-			System.out.println("Transform damage: " + item);
-			int newDamage = item.getDamage() + damage;
-			if(newDamage >= item.getMaxDamage()) {
-				return item.withAmount(item.getAmount()).withDamage(0);
-			} else {
-				return item.withAmount(item.getAmount()+1).withDamage(newDamage);
+		return ingredient.transform(new IItemTransformer() {
+			@Override
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
+				System.out.println("Transform damage: " + item);
+				int newDamage = item.getDamage() + damage;
+				if(newDamage >= item.getMaxDamage()) {
+					return item.withAmount(1).withDamage(0);
+				} else {
+					return item.withAmount(1).withDamage(newDamage);
+				}
 			}
 		});
 	}
@@ -81,12 +81,16 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient transformReplace(IIngredient ingredient, final IItemStack withItem) {
-		return ingredient.transform((item, byPlayer) -> {
-			if(item.getAmount() > 1) {
-				byPlayer.give(withItem);
-				return item;
-			} else {
-				return withItem.withAmount(withItem.getAmount()+1);
+		return ingredient.transform(new IItemTransformer() {
+			@Override
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
+				if(item.getAmount() < 0) { // transformConsume has been applied
+					if(withItem != null)
+						byPlayer.give(withItem);
+					return item;
+				} else {
+					return withItem;
+				}
 			}
 		});
 	}
@@ -103,7 +107,12 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient transformConsume(IIngredient ingredient, final int amount) {
-		return ingredient.transform((item, byPlayer) -> item.withAmount(Math.max(item.getAmount() - amount, 0) + 1));
+		return ingredient.transform(new IItemTransformer() {
+			@Override
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
+				return item.withAmount(1 - amount);
+			}
+		});
 	}
 	
 	/**
@@ -115,27 +124,32 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient noReturn(IIngredient ingredient) {
-		return ingredient.transform((item, byPlayer) -> null);
+		return ingredient.transform(new IItemTransformer() {
+			@Override
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
+				return null;  // TODO shouldn't be even a thing done by user, as we don't have auto de-container ( bottler/bucketer )
+			}
+		});
 	}
 	
 	/**
-	 * Gives an item back to the player. Also clears the inventory slot at that
-	 * position.
+	 * Gives an item back to the player.
 	 *
 	 * @param ingredient
-	 * @param givenItem
+	 * @param giveItem
 	 *
 	 * @return
 	 */
 	@ZenMethod
-	public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {
-		return ingredient.transform((item, byPlayer) -> {
-			if(givenItem == null) {
-				byPlayer.give(item);
-			} else {
-				byPlayer.give(givenItem);
+	public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack giveItem) {
+		return ingredient.transform(new IItemTransformer() {
+			@Override
+			public IItemStack transform(IItemStack item, IPlayer byPlayer) {
+				IItemStack result = item.getAmount() < 0 ? item : null;
+				if(giveItem != null)
+					byPlayer.give(giveItem);
+				return result;
 			}
-			return null;
 		});
 	}
 }

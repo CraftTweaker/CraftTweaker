@@ -6,48 +6,43 @@
 
 package minetweaker.api.oredict;
 
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenOperator;
+import minetweaker.api.item.*;
+import stanhebben.zenscript.annotations.*;
 
 /**
- *
  * @author Stan
  */
 @ZenClass("minetweaker.oredict.IOreDictEntry")
 public interface IOreDictEntry extends IIngredient {
+	
 	@ZenGetter("name")
-    String getName();
-
+	String getName();
+	
 	@ZenGetter("empty")
-    boolean isEmpty();
-
+	boolean isEmpty();
+	
 	@ZenGetter("firstItem")
-    IItemStack getFirstItem();
-
+	IItemStack getFirstItem();
+	
 	@ZenMethod
-    void add(IItemStack item);
-
+	void add(IItemStack item);
+	
 	@ZenMethod
-    void addItems(IItemStack[] items);
-
+	void addItems(IItemStack[] items);
+	
 	@ZenMethod
-    void addAll(IOreDictEntry entry);
-
+	void addAll(IOreDictEntry entry);
+	
 	@ZenMethod
-    void remove(IItemStack item);
-
-    @ZenMethod
-    void removeItems(IItemStack[] items);
-
-
-    @ZenOperator(OperatorType.CONTAINS)
-    boolean contains(IItemStack item);
-
+	void remove(IItemStack item);
+	
 	@ZenMethod
-    void mirror(IOreDictEntry other);
+	void removeItems(IItemStack[] items);
+	
+	
+	@ZenOperator(OperatorType.CONTAINS)
+	boolean contains(IItemStack item);
+	
+	@ZenMethod
+	void mirror(IOreDictEntry other);
 }
