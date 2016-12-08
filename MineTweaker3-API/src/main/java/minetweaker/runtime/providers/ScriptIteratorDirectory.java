@@ -50,6 +50,9 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 
 	@Override
 	public String getName() {
+		if(current == null || directory == null) {
+			return "zzNullzz";
+		}
 		return current.getAbsolutePath().substring(directory.getAbsolutePath().length());
 	}
 
