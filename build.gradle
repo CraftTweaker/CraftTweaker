@@ -10,18 +10,6 @@ subprojects {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven {
-        name "Tesla"
-        url 'http://maven.epoxide.xyz'
-    }
-    maven {
-        name 'Mobius'
-        url 'http://mobiusstrip.eu/maven'
-    }
-    maven {
-        name 'JEI'
-        url "http://dvs1.progwml6.com/files/maven"
-    }
 }
 configurations {
     deployerJars

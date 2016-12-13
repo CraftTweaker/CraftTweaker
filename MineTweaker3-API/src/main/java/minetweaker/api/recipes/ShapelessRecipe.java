@@ -133,7 +133,6 @@ public class ShapelessRecipe implements ICraftingRecipe {
 			for (int j = 0; j < recipe.length; j++) {
 				if (matched[j] != null)
 					continue;
-
 				if (recipe[j].matches(ingredient)) {
 					matched[j] = ingredient;
 					indices[j] = i;

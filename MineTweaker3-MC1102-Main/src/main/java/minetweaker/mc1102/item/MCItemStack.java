@@ -284,6 +284,9 @@ public class MCItemStack implements IItemStack{
     @Override
     public boolean matches(IItemStack item){
         ItemStack internal = getItemStack(item);
+        if(stack.hasTagCompound()){
+            return matchesExact(item);
+        }
         return internal != null && stack != null && internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
     }
 

@@ -1,19 +1,30 @@
 package minetweaker.mods.jei;
 
 import mezz.jei.api.*;
+import mezz.jei.api.ingredients.*;
 
 
 @mezz.jei.api.JEIPlugin
 public class JEIAddonPlugin implements IModPlugin {
     public static IJeiHelpers jeiHelpers;
-    public static IItemRegistry itemRegistry;
+    public static IIngredientRegistry itemRegistry;
     public static IRecipeRegistry recipeRegistry;
-
-
+    
+    
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
+        
+    }
+    
+    @Override
+    public void registerIngredients(IModIngredientRegistration registry) {
+        
+    }
+    
     @Override
     public void register(IModRegistry registry) {
         jeiHelpers = registry.getJeiHelpers();
-        itemRegistry = registry.getItemRegistry();
+        itemRegistry = registry.getIngredientRegistry();
 
         // The blacklist items must be registered here, otherwise the item filters are already created and
         // anything that is added doesn't have an effect
