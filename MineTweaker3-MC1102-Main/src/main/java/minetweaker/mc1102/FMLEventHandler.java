@@ -1,12 +1,18 @@
-package minetweaker.mc11;
+package minetweaker.mc1102;
 
 import minetweaker.*;
 import minetweaker.api.event.*;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
-import minetweaker.mc11.network.MineTweakerLoadScriptsPacket;
-import minetweaker.mc11.recipes.MCCraftingInventory;
+import minetweaker.api.recipes.*;
+import minetweaker.mc1102.item.MCItemStack;
+import minetweaker.mc1102.network.MineTweakerLoadScriptsPacket;
+import minetweaker.mc1102.player.MCPlayer;
+import minetweaker.mc1102.recipes.MCCraftingInventory;
+import minetweaker.mc1102.world.MCDimension;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -28,7 +34,26 @@ public class FMLEventHandler {
 	@SubscribeEvent
 	public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
 		IPlayer iPlayer = MineTweakerMC.getIPlayer(ev.player);
-		
+		if(MineTweakerMod.INSTANCE.recipes.hasTransformerRecipes()) {
+			MineTweakerMod.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(ev.craftMatrix, ev.player), iPlayer);
+		}
+		if(ev.craftMatrix instanceof InventoryCrafting) {
+			
+			CraftingManager.getInstance().getRecipeList().stream().filter(i -> i instanceof IMTRecipe && i.getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {
+				IMTRecipe rec = (IMTRecipe) i;
+				if(rec.getRecipe() instanceof ShapedRecipe) {
+					ShapedRecipe r = (ShapedRecipe) rec.getRecipe();
+					if(r.getAction() != null) {
+						r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.worldObj)), new MCPlayer(ev.player));
+					}
+				} else if(rec.getRecipe() instanceof ShapelessRecipe) {
+					ShapelessRecipe r = (ShapelessRecipe) rec.getRecipe();
+					if(r.getAction() != null) {
+						r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.worldObj)), new MCPlayer(ev.player));
+					}
+				}
+			});
+		}
 		if(MineTweakerImplementationAPI.events.hasPlayerCrafted()) {
 			MineTweakerImplementationAPI.events.publishPlayerCrafted(new PlayerCraftedEvent(iPlayer, MineTweakerMC.getIItemStack(ev.crafting), MCCraftingInventory.get(ev.craftMatrix, ev.player)));
 		}
