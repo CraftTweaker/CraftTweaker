@@ -25,14 +25,3 @@ ext.projects1102 = [
 	'MineTweaker3-MC1102-Mod-IC2'
 ]
 
-
-// #######################
-// ### 1.11 settings ###
-// #######################
-
-ext.forgeVersion11 = "1.11-13.19.0.2176"
-ext.forgeMappings11 = "snapshot_20161130"
-ext.projects11 = [
-	'MineTweaker3-MC11-Main',
-	'MineTweaker3-MC11-Mod-JEI'
-]
