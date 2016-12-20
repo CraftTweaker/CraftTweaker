@@ -1,27 +1,19 @@
 package minetweaker.mc1102.recipes;
 
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemStack;
+import minetweaker.*;
+import minetweaker.api.item.*;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
 import minetweaker.api.recipes.*;
 import minetweaker.mc1102.util.MineTweakerHacks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraft.item.crafting.*;
+import net.minecraftforge.oredict.*;
 import stanhebben.zenscript.annotations.Optional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static minetweaker.api.minecraft.MineTweakerMC.*;
 
@@ -115,18 +107,18 @@ public class MCRecipeManager implements IRecipeManager {
 	}
 	
 	@Override
-	public void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function) {
-		addShaped(output, ingredients, function, false);
+	public void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+		addShaped(output, ingredients, function, action, false);
 	}
 	
 	@Override
-	public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function) {
-		addShaped(output, ingredients, function, true);
+	public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+		addShaped(output, ingredients, function, action, true);
 	}
 	
 	@Override
-	public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function) {
-		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
+	public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+		ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function, action);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
 	}
@@ -153,7 +145,7 @@ public class MCRecipeManager implements IRecipeManager {
 			if(recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
-			if(!(recipe instanceof ShapedRecipes) && !(recipe instanceof ShapedOreRecipe)){
+			if(!(recipe instanceof ShapedRecipes) && !(recipe instanceof ShapedOreRecipe)) {
 				continue;
 			}
 			if(ingredients != null) {
@@ -218,7 +210,7 @@ public class MCRecipeManager implements IRecipeManager {
 			if(recipe.getRecipeOutput() == null || !output.matches(getIItemStack(recipe.getRecipeOutput()))) {
 				continue;
 			}
-			if(!(recipe instanceof ShapelessOreRecipe) && !(recipe instanceof ShapelessRecipe)){
+			if(!(recipe instanceof ShapelessOreRecipe) && !(recipe instanceof ShapelessRecipe)) {
 				continue;
 			}
 			
@@ -309,8 +301,8 @@ public class MCRecipeManager implements IRecipeManager {
 		}
 	}
 	
-	private void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
-		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
+	private void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
+		ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, action, mirrored);
 		IRecipe irecipe = RecipeConverter.convert(recipe);
 		MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
 	}

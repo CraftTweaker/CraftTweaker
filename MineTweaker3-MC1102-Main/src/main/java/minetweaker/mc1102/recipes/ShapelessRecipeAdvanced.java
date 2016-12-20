@@ -6,7 +6,7 @@
 
 package minetweaker.mc1102.recipes;
 
-import minetweaker.api.recipes.ShapelessRecipe;
+import minetweaker.api.recipes.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -17,7 +17,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 /**
  * @author Stan
  */
-public class ShapelessRecipeAdvanced implements IRecipe{
+public class ShapelessRecipeAdvanced implements IRecipe, IMTRecipe{
     private final ShapelessRecipe recipe;
 
     public ShapelessRecipeAdvanced(ShapelessRecipe recipe){
@@ -47,5 +47,10 @@ public class ShapelessRecipeAdvanced implements IRecipe{
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inv){
         return new ItemStack[]{};
+    }
+    
+    @Override
+    public ICraftingRecipe getRecipe() {
+        return recipe;
     }
 }

@@ -22,11 +22,13 @@ public class ShapedRecipe implements ICraftingRecipe {
 	private final byte[] posy;
 	private final boolean mirrored;
 	private final IRecipeFunction function;
+	private final IRecipeAction action;
+	
 	
 	private final IItemStack output;
 	private final IIngredient[] ingredients;
 	
-	public ShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
+	public ShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
 		int numIngredients = 0;
 		for(IIngredient[] row : ingredients) {
 			for(IIngredient ingredient : row) {
@@ -41,6 +43,7 @@ public class ShapedRecipe implements ICraftingRecipe {
 		this.output = output;
 		this.ingredients = new IIngredient[numIngredients];
 		this.function = function;
+		this.action = action;
 		
 		int width1 = 0;
 		int height1 = ingredients.length;
@@ -308,5 +311,9 @@ public class ShapedRecipe implements ICraftingRecipe {
 				}
 			}
 		}
+	}
+	
+	public IRecipeAction getAction() {
+		return action;
 	}
 }
