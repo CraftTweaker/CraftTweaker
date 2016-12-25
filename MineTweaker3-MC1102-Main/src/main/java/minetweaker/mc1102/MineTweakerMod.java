@@ -41,10 +41,11 @@ import java.lang.reflect.*;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.14")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.16", name = MineTweakerMod.NAME)
 public class MineTweakerMod {
 	
 	public static final String MODID = "MineTweaker3";
+	public static final String NAME = "MineTweaker3";
 	public static final String MCVERSION = "1.10.2";
 	
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
