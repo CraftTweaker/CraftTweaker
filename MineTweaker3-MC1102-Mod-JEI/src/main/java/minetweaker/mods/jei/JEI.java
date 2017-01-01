@@ -42,26 +42,26 @@ public class JEI {
     /**
      * Register callbacks otherwise the load order with JEI is all messed up.
      */
-    @OnRegister
-    public static void onRegister() {
-        // discard all not yet applied actions before a reload
-        MineTweakerImplementationAPI.onReloadEvent(event -> apply.clear());
-
-        // after the reload JEI needs to be reloaded as well
-        MineTweakerImplementationAPI.onPostReload(event -> {
-            if (Loader.isModLoaded("JEI")) {
-                try {
-                    if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
-                        System.out.println("class exists");
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if (JEIAddonPlugin.jeiHelpers != null)
-                    JEIAddonPlugin.jeiHelpers.reload();
-            }
-        });
-    }
+//    @OnRegister
+//    public static void onRegister() {
+//        // discard all not yet applied actions before a reload
+//        MineTweakerImplementationAPI.onReloadEvent(event -> apply.clear());
+//
+//        // after the reload JEI needs to be reloaded as well
+//        MineTweakerImplementationAPI.onPostReload(event -> {
+//            if (Loader.isModLoaded("JEI")) {
+//                try {
+//                    if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
+//                        System.out.println("class exists");
+//                    }
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                if (JEIAddonPlugin.jeiHelpers != null)
+//                    JEIAddonPlugin.jeiHelpers.reload();
+//            }
+//        });
+//    }
 
     // list of all hide actions that need to be applied after JEI is available
     private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
