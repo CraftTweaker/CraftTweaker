@@ -40,11 +40,9 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
 		IFocus<ItemStack> focus = recipeRegistry.createFocus(IFocus.Mode.INPUT, (ItemStack) object);
 		List<IRecipeCategory> categories = recipeRegistry.getRecipeCategories(focus);
 		for(IRecipeCategory category : categories) {
-			System.out.println(category.getTitle());
 			if(category.getUid().equals(VanillaRecipeCategoryUid.SMELTING)) {
 				List<IRecipeWrapper> wrappers = recipeRegistry.getRecipeWrappers(category, focus);
 				for(IRecipeWrapper wrapper : wrappers) {
-					System.out.println("removing");
 					recipeRegistry.removeRecipe(wrapper);
 				}
 			}
