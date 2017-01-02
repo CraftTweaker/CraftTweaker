@@ -329,6 +329,7 @@ public class MCRecipeManager implements IRecipeManager {
 		public void apply() {
 			for(int i = removingIndices.size() - 1; i >= 0; i--) {
 				recipes.remove((int) removingIndices.get(i));
+				MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(removingRecipes.get(i));
 			}
 		}
 		
@@ -342,6 +343,7 @@ public class MCRecipeManager implements IRecipeManager {
 			for(int i = 0; i < removingIndices.size(); i++) {
 				int index = Math.min(recipes.size(), removingIndices.get(i));
 				recipes.add(index, removingRecipes.get(i));
+				MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(removingRecipes.get(i));
 			}
 		}
 		
@@ -377,6 +379,7 @@ public class MCRecipeManager implements IRecipeManager {
 			if(craftingRecipe.hasTransformers()) {
 				transformerRecipes.add(craftingRecipe);
 			}
+			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe);
 		}
 		
 		@Override
@@ -390,6 +393,7 @@ public class MCRecipeManager implements IRecipeManager {
 			if(craftingRecipe.hasTransformers()) {
 				transformerRecipes.remove(craftingRecipe);
 			}
+			MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe);
 		}
 		
 		@Override
