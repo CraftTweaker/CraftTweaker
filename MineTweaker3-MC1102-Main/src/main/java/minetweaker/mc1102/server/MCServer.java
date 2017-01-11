@@ -41,6 +41,8 @@ public class MCServer extends AbstractServer {
 			return new RconPlayer(commandSender);
 		} else if(commandSender instanceof CommandBlockBaseLogic) {
 			return new CommandBlockPlayer(commandSender);
+		} else if(commandSender.getName().equals("Server")) {
+			return ServerPlayer.INSTANCE;
 		} else {
 			System.out.println("Unsupported command sender: " + commandSender + " defaulting to server player!");
 			System.out.println("player name: " + commandSender.getName());
