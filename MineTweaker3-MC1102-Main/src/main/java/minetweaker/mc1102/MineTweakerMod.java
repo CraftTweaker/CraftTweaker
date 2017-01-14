@@ -163,6 +163,8 @@ public class MineTweakerMod {
 	public void onServerStopped(FMLServerStoppedEvent ev) {
 		MineTweakerImplementationAPI.onServerStop();
 		MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
+		MineTweakerAPI.logInfo("Server stopping, Scripts are being rolled back!");
+		MineTweakerAPI.tweaker.rollback();
 		server = null;
 	}
 }
