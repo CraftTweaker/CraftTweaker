@@ -102,7 +102,9 @@ public abstract class ZenType {
     protected static final IJavaMethod PARSE_LONG_OBJECT = JavaMethod.get(EMPTY_REGISTRY, Long.class, "valueOf", String.class);
     protected static final IJavaMethod PARSE_FLOAT_OBJECT = JavaMethod.get(EMPTY_REGISTRY, Float.class, "valueOf", String.class);
     protected static final IJavaMethod PARSE_DOUBLE_OBJECT = JavaMethod.get(EMPTY_REGISTRY, Double.class, "valueOf", String.class);
-
+    
+    protected static final IJavaMethod STRING_COMPARETO = JavaMethod.get(EMPTY_REGISTRY, String.class, "compareTo", String.class);
+    
     public static ZenType parse(String type, IEnvironmentGlobal environment) {
         try {
             ZenTokener parser = new ZenTokener(type, environment.getEnvironment());

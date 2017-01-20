@@ -71,7 +71,6 @@ public class ZenTypeString extends ZenType {
 			constructExpansionCastingRules(environment, rules);
 		}
 	}
-
 	/*
 	 * @Override public boolean canCastImplicit(ZenType type, IEnvironmentGlobal
 	 * environment) { return type == this || type == ANY ||
@@ -230,16 +229,15 @@ public class ZenTypeString extends ZenType {
 			return result;
 		}
 	}
-
+	
 	@Override
-	public Expression compare(
-			ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
-		if (right.getType().canCastImplicit(STRING, environment)) {
-			return new ExpressionCompareGeneric(position, new ExpressionCallVirtual(position, environment, METHOD_ASINT, left, right), type);
+	public Expression compare(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
+		if(right.getType().canCastImplicit(STRING, environment)) {
+			return new ExpressionCompareGeneric(position, new ExpressionCallVirtual(position, environment, STRING_COMPARETO, left, right.cast(position, environment, STRING)), type);
 		}
-
+		
 		Expression result = binaryExpansion(position, environment, left, right, OperatorType.COMPARE);
-		if (result == null) {
+		if(result == null) {
 			environment.error(position, "cannot compare strings");
 			return new ExpressionInvalid(position, BOOL);
 		} else {
