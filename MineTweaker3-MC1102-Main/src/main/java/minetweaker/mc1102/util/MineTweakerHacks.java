@@ -53,7 +53,6 @@ public class MineTweakerHacks {
     private static final Field INVENTORYCRAFTING_EVENTHANDLER;
     private static final Field SLOTCRAFTING_PLAYER;
 
-    private static final Field ENTITYREGISTRY_CLASSREGISTRATIONS;
     private static final Field SEEDENTRY_SEED;
     private static final Constructor<? extends WeightedRandom.Item> SEEDENTRY_CONSTRUCTOR;
 
@@ -66,7 +65,6 @@ public class MineTweakerHacks {
         INVENTORYCRAFTING_EVENTHANDLER = getField(InventoryCrafting.class, MineTweakerObfuscation.INVENTORYCRAFTING_EVENTHANDLER);
         SLOTCRAFTING_PLAYER = getField(SlotCrafting.class, MineTweakerObfuscation.SLOTCRAFTING_PLAYER);
 
-        ENTITYREGISTRY_CLASSREGISTRATIONS = getField(EntityRegistry.class, "entityClassRegistrations");
 
         Class<? extends WeightedRandom.Item> forgeSeedEntry = null;
         try {
@@ -91,15 +89,6 @@ public class MineTweakerHacks {
     private MineTweakerHacks() {
     }
 
-    public static BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration> getEntityClassRegistrations() {
-        try {
-            return (BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration>) ENTITYREGISTRY_CLASSREGISTRATIONS.get(EntityRegistry.instance());
-        } catch(IllegalArgumentException ex) {
-            return null;
-        } catch(IllegalAccessException ex) {
-            return null;
-        }
-    }
 
     public static List<NBTBase> getTagList(NBTTagList list) {
         if(NBTTAGLIST_TAGLIST == null) {
@@ -259,6 +248,8 @@ public class MineTweakerHacks {
                 field.setAccessible(true);
                 return field;
             } catch(NoSuchFieldException | SecurityException ignored) {
+                System.out.println(">>>");
+                ignored.printStackTrace();
             }
         }
 

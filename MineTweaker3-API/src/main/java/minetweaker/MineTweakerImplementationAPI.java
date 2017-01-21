@@ -28,6 +28,7 @@ import minetweaker.runtime.IScriptProvider;
 import minetweaker.util.EventList;
 import minetweaker.util.IEventHandler;
 import sun.awt.HeadlessToolkit;
+//import sun.awt.HeadlessToolkit;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -559,6 +560,11 @@ public class MineTweakerImplementationAPI {
 
         logger.clear();
         events.clear();
+        game.getEntities().forEach(ent ->{
+            ent.getDropsToAdd().clear();
+            ent.getDropsToAddPlayerOnly().clear();
+            ent.getDropsToRemove().clear();
+        });
 
         if(MineTweakerAPI.server != null) {
             events.onPlayerLoggedIn(LISTEN_LOGIN);
