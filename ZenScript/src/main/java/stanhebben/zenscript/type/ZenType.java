@@ -44,6 +44,7 @@ public abstract class ZenType {
     public static final ZenTypeString STRING = ZenTypeString.INSTANCE;
     public static final ZenTypeVoid VOID = ZenTypeVoid.INSTANCE;
     public static final ZenTypeNull NULL = ZenTypeNull.INSTANCE;
+	public static final ZenTypeIntRange INTRANGE = ZenTypeIntRange.INSTANCE;
 
     public static final ZenTypeArrayBasic ANYARRAY = new ZenTypeArrayBasic(ANY);
     public static final ZenTypeAssociative ANYMAP = new ZenTypeAssociative(ANY, ANY);

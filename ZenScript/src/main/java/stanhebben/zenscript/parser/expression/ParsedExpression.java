@@ -267,6 +267,7 @@ public abstract class ParsedExpression {
 		ParsedExpression base = readPrimaryExpression(position, parser, environment);
 
 		while (true) {
+			Token next = parser.peek();
 			if (parser.optional(T_DOT) != null) {
 				Token indexString = parser.optional(T_ID);
 				if (indexString != null) {
@@ -280,10 +281,10 @@ public abstract class ParsedExpression {
 						throw new ParseException(last, "Invalid expression, last token: " + last.getValue());
 					}
 				}
-			} else if (parser.optional(T_DOT2) != null) {
-				// ParsedExpression to = readAssignExpression(parser, errors);
-				// base = base.range(position, errors, to);
-				throw new RuntimeException("not yet supported");
+			} else if (next.getType() == T_DOT2 || (next.getType() == T_ID && next.getValue().equals("to"))) {
+				parser.next();
+				ParsedExpression to = readAssignExpression(parser, environment);
+				return new ParsedExpressionBinary(position, base, to, OperatorType.RANGE);
 			} else if (parser.optional(T_SQBROPEN) != null) {
 				ParsedExpression index = readAssignExpression(parser, environment);
 				base = new ParsedExpressionIndex(position, base, index);

@@ -6,7 +6,9 @@ package stanhebben.zenscript.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.value.IntRange;
 
 /**
  *
@@ -25,11 +27,16 @@ public class ExpressionIntegerRange extends Expression {
 
 	@Override
 	public ZenType getType() {
-		return null; // TODO: implement
+		return ZenType.INTRANGE;
 	}
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		// TODO: implement
+		MethodOutput output = environment.getOutput();
+		output.newObject(IntRange.class);
+		output.dup();
+		from.compile(true, environment);
+		to.compile(true, environment);
+		output.construct(IntRange.class, int.class, int.class);
 	}
 }

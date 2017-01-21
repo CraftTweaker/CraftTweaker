@@ -14,6 +14,7 @@ import stanhebben.zenscript.expression.ExpressionArithmeticBinary;
 import stanhebben.zenscript.expression.ExpressionArithmeticCompare;
 import stanhebben.zenscript.expression.ExpressionArithmeticUnary;
 import stanhebben.zenscript.expression.ExpressionInt;
+import stanhebben.zenscript.expression.ExpressionIntegerRange;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import static stanhebben.zenscript.type.ZenType.BYTE;
@@ -177,6 +178,8 @@ public class ZenTypeInt extends ZenType {
 					environment,
 					left.cast(position, environment, STRING),
 					right.cast(position, environment, STRING), OperatorType.CAT);
+		} else if (operator == OperatorType.RANGE) {
+			return new ExpressionIntegerRange(position, left, right.cast(position, environment, INT));
 		}
 
 		return new ExpressionArithmeticBinary(position, operator, left, right.cast(position, environment, this));

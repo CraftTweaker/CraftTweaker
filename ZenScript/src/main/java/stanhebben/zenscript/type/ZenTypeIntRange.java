@@ -185,6 +185,7 @@ public class ZenTypeIntRange extends ZenType {
 			output.dup(); // copy IntRange reference
 			methodFrom.invokeVirtual(output);
 			output.storeInt(locals[0]);
+			methodTo.invokeVirtual(output);
 		}
 
 		@Override
@@ -195,22 +196,19 @@ public class ZenTypeIntRange extends ZenType {
 		@Override
 		public void compilePostIterate(int[] locals, Label exit, Label repeat) {
 			MethodOutput output = method.getOutput();
+			
+			output.dup(); // copy limit
 
-			output.dup(); // copy IntRange reference
-			methodTo.invokeVirtual(output);
-
-			output.loadInt(locals[0]);
 			output.iinc(locals[0]);
-			output.dup();
-			output.storeInt(locals[0]);
-
+			output.loadInt(locals[0]);
+			
 			output.ifICmpGT(repeat);
 			output.goTo(exit);
 		}
 
 		@Override
 		public void compileEnd() {
-			method.getOutput().pop(); // remove IntRange reference
+			method.getOutput().pop(); // remove limit
 		}
 
 		@Override
