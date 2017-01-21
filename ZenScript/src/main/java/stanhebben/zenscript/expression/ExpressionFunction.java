@@ -59,7 +59,7 @@ public class ExpressionFunction extends Expression {
 					return new ExpressionInvalid(position);
 				}
 				if (arguments.size() != method.getParameterTypes().length) {
-					environment.error(position, "number of arguments incorrect");
+					environment.error(getPosition(), String.format("Expected %s arguments, received %s arguments", method.getParameterTypes().length, arguments.size()));
 					return new ExpressionInvalid(position);
 				}
 				for (int i = 0; i < arguments.size(); i++) {
