@@ -7,6 +7,7 @@
 package minetweaker.mc1102;
 
 import minetweaker.*;
+import minetweaker.api.entity.IEntityDefinition;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.mc1102.brackets.*;
 import minetweaker.mc1102.client.MCClient;
@@ -110,14 +111,6 @@ public class MineTweakerMod {
 			MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
 		}
 		FuelTweaker.INSTANCE.register();
-		if(Loader.isModLoaded("JEI")) {
-			try {
-				Method register = Class.forName("minetweaker.mods.jei.JEI").getMethod("onRegister");
-				register.invoke(null);
-			} catch(NoSuchMethodException | ClassNotFoundException | InvocationTargetException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	@EventHandler
