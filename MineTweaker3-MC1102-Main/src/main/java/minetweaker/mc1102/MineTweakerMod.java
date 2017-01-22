@@ -25,7 +25,10 @@ import minetweaker.runtime.*;
 import minetweaker.runtime.providers.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.*;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
@@ -118,10 +121,13 @@ public class MineTweakerMod {
 		MineTweakerAPI.logInfo("MineTweaker: Building registry");
 		ItemBracketHandler.rebuildItemRegistry();
 		LiquidBracketHandler.rebuildLiquidRegistry();
+		EntityBracketHandler.rebuildEntityRegistry();
 		MineTweakerAPI.logInfo("MineTweaker: Sucessfully built item registry");
 		GlobalRegistry.registerBracketHandler(new ItemBracketHandler());
 		GlobalRegistry.registerBracketHandler(new LiquidBracketHandler());
 		GlobalRegistry.registerBracketHandler(new OreBracketHandler());
+		GlobalRegistry.registerBracketHandler(new EntityBracketHandler());
+		
 	}
 	
 	@EventHandler
