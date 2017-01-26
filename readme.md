@@ -4,7 +4,7 @@ Welcome to the Crafttwaeker source! Crafttweaker is the official continuation of
 
 ## License and contributions
 
-The mod is licensed under the MIT license with the one stipulation that the name has to be changed, the reason for this is so that we do not have to deal with code that we did write.
+The mod is licensed under the MIT license with the one stipulation that the name has to be changed, the reason for this is so that we do not have to deal with code that we didn't write.
 
 The mod itself may be redistributed in modpacks as long as these modpacks are distributed for free. No money can be made from the distribution of the mod.
 
