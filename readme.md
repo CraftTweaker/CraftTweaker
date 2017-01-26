@@ -1,10 +1,12 @@
-# MineTweaker 3
+# CraftTweaker
 
-Welcome to the MineTweaker 3 source! MineTweaker 3 is the new version of MineTweaker and will be released for both 1.7.2 and 1.6.4, as well as upgraded as new versions of Minecraft become available.
+Welcome to the Crafttwaeker source! Crafttweaker is the official continuation of Minetweaker 3 and plans on staying updated for the latest Minecraft versions.
 
 ## License and contributions
 
-The source code is freely available in here, at GitHub. The mod itself may be redistributed in modpacks as long as these modpacks are distributed for free. No money can be made from the distribution of the mod.
+The mod is licensed under the MIT license with the one stipulation that the name has to be changed, the reason for this is so that we do not have to deal with code that we did write.
+
+The mod itself may be redistributed in modpacks as long as these modpacks are distributed for free. No money can be made from the distribution of the mod.
 
 Want to contribute? That's great! Contact me if you want to propose or discuss new features. Adding new mods is definitely welcome and doesn't need prior permission (just follow the existing structure, add it & make a pull request). Credit will be granted appropriately.
 
@@ -19,18 +21,14 @@ The MineTweaker 3 source is setup as a multi-project Gradle project:
 
 ### Developing and running MineTweaker from source
 
-Configuration settings are stored in configuration.gradle . *If buildSrc fails to compile you might have to edit the
-+`javaToolsJar` location in `configuration.gradle`*
+Configuration settings are stored in configuration.gradle.
 
-In order to use the project, you have to execute the setupDecompWorkspaceAll (or use setupDecomWorkspace17X if you have errors on the 1.6.4 forge patches). It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in MineTweaker3-XYZ-Main project, which will run MineTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run MineTweaker with only the mod support for that specific mod.
+In order to use the project, you have to execute the setupDecompWorkspaceAll. It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in MineTweaker3-XYZ-Main project, which will run MineTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run MineTweaker with only the mod support for that specific mod.
 
 The following global tasks are available:
 
 - setupDecompWorkspaceAll: sets up all workspaces in all subprojects
-- setupDecompWorkspace17X: sets up all workspaces for anything that's not 1.6.4
-- assembleMC164: builds MineTweaker for Minecraft 1.6.4
-- assembleMC172: builds MineTweaker for Minecraft 1.7.2
-- assembleMC1710: builds MineTweaker for Minecraft 1.7.10
+- assembleMC1102: builds MineTweaker for Minecraft 1.10.2
 - assembleAll: builds all versions of MineTweaker
 
 ### Adding mod support
@@ -43,4 +41,4 @@ Use the assembleAll task to build all versions, or assembleMCxxx tasks to build 
 
 ## Customized builds
 
-You may modify and redistribute your own customized version of MineTweaker as long as you mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name) and as long as you make the modified source code publicly available. Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (me) ;)
+You may modify and redistribute your own customized version of MineTweaker as long as you mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name) and as long as you make the modified source code publicly available. Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (Stan) ;)
