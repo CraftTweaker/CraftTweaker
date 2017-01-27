@@ -7,7 +7,6 @@
 package minetweaker.mc1102;
 
 import minetweaker.*;
-import minetweaker.api.entity.IEntityDefinition;
 import minetweaker.api.logger.FileLogger;
 import minetweaker.mc1102.brackets.*;
 import minetweaker.mc1102.client.MCClient;
@@ -25,11 +24,8 @@ import minetweaker.runtime.*;
 import minetweaker.runtime.providers.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.*;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -37,7 +33,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
-import java.lang.reflect.*;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -45,7 +40,7 @@ import java.lang.reflect.*;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.17", name = MineTweakerMod.NAME,dependencies="after:JEI@[3.14.2.398,)")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.19", name = MineTweakerMod.NAME, dependencies = "after:JEI@[3.14.2.398,)")
 public class MineTweakerMod {
 	
 	public static final String MODID = "MineTweaker3";
