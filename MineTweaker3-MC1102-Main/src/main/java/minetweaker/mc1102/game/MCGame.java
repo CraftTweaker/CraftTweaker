@@ -40,6 +40,7 @@ public class MCGame implements IGame {
 	private boolean locked = false;
 	
 	private static final List<IEntityDefinition> ENTITY_DEFINITIONS = new ArrayList<>();
+	
 	private MCGame() {
 	}
 	
@@ -71,7 +72,7 @@ public class MCGame implements IGame {
 	
 	@Override
 	public List<IEntityDefinition> getEntities() {
-		if(ENTITY_DEFINITIONS.isEmpty()){
+		if(ENTITY_DEFINITIONS.isEmpty()) {
 			EntityList.CLASS_TO_NAME.forEach((key, val) -> {
 				ENTITY_DEFINITIONS.add(new MCEntityDefinition(key, val));
 			});
@@ -81,6 +82,24 @@ public class MCGame implements IGame {
 	
 	@Override
 	public IEntityDefinition getEntity(String entityName) {
+		for(IEntityDefinition ent : getEntities()) {
+			if(ent.getName().equalsIgnoreCase(entityName)) {
+				return ent;
+			}
+		}
+		boolean needsReloading = false;
+		for(String s : EntityList.NAME_TO_CLASS.keySet()) {
+			if(s.equalsIgnoreCase(entityName)) {
+				needsReloading = true;
+				break;
+			}
+		}
+		if(needsReloading) {
+			ENTITY_DEFINITIONS.clear();
+			EntityList.CLASS_TO_NAME.forEach((key, val) -> {
+				ENTITY_DEFINITIONS.add(new MCEntityDefinition(key, val));
+			});
+		}
 		return getEntities().stream().filter(ent -> ent.getName().equals(entityName)).findFirst().orElse(null);
 	}
 	

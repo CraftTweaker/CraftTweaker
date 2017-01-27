@@ -58,21 +58,9 @@ public class ForgeEventHandler {
 	public void mobDrop(LivingDropsEvent ev) {
 		Entity entity = ev.getEntity();
 		IEntityDefinition entityDefinition = MineTweakerAPI.game.getEntity(EntityList.getEntityString(ev.getEntity()));
-		
-		if(!entityDefinition.getDropsToAdd().isEmpty()) {
-			entityDefinition.getDropsToAdd().forEach((key, val) -> {
-				EntityItem item = null;
-				if(val.getMin() == 0 && val.getMax() == 0) {
-					item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
-				} else {
-					item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
-				}
-				ev.getDrops().add(item);
-			});
-		}
-		if(ev.getSource().getEntity() instanceof EntityPlayer){
-			if(!entityDefinition.getDropsToAddPlayerOnly().isEmpty()) {
-				entityDefinition.getDropsToAddPlayerOnly().forEach((key, val) -> {
+		if(entityDefinition != null) {
+			if(!entityDefinition.getDropsToAdd().isEmpty()) {
+				entityDefinition.getDropsToAdd().forEach((key, val) -> {
 					EntityItem item = null;
 					if(val.getMin() == 0 && val.getMax() == 0) {
 						item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
@@ -82,18 +70,31 @@ public class ForgeEventHandler {
 					ev.getDrops().add(item);
 				});
 			}
-		}
-		if(!entityDefinition.getDropsToRemove().isEmpty()) {
-			List<EntityItem> removedDrops = new ArrayList<>();
-			entityDefinition.getDropsToRemove().forEach(drop -> {
-				//				if(drop.matches(new MCItemStack()))
-				ev.getDrops().forEach(drops -> {
-					if(drop.matches(new MCItemStack(drops.getEntityItem()))) {
-						removedDrops.add(drops);
-					}
+			if(ev.getSource().getEntity() instanceof EntityPlayer) {
+				if(!entityDefinition.getDropsToAddPlayerOnly().isEmpty()) {
+					entityDefinition.getDropsToAddPlayerOnly().forEach((key, val) -> {
+						EntityItem item = null;
+						if(val.getMin() == 0 && val.getMax() == 0) {
+							item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
+						} else {
+							item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
+						}
+						ev.getDrops().add(item);
+					});
+				}
+			}
+			if(!entityDefinition.getDropsToRemove().isEmpty()) {
+				List<EntityItem> removedDrops = new ArrayList<>();
+				entityDefinition.getDropsToRemove().forEach(drop -> {
+					//				if(drop.matches(new MCItemStack()))
+					ev.getDrops().forEach(drops -> {
+						if(drop.matches(new MCItemStack(drops.getEntityItem()))) {
+							removedDrops.add(drops);
+						}
+					});
 				});
-			});
-			ev.getDrops().removeAll(removedDrops);
+				ev.getDrops().removeAll(removedDrops);
+			}
 		}
 	}
 }
