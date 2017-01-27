@@ -4,7 +4,7 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.mineTweakerVersion = "3.0.19"
+ext.mineTweakerVersion = "3.0.20"
 if (System.getenv('BUILD_NUMBER') != null)
     project.mineTweakerVersion += "."+System.getenv('BUILD_NUMBER')
 else {}
