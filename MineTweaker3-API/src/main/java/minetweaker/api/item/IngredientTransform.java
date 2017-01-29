@@ -21,7 +21,7 @@ public class IngredientTransform {
 	 */
 	@ZenMethod
 	public static IIngredient reuse(IIngredient ingredient) {
-		return ingredient.transform((item, byPlayer) -> item.withAmount(item.getAmount()));
+		return ingredient.transform((item, byPlayer) -> item.withAmount(item.getAmount()+1));
 	}
 	
 	/**
