@@ -248,8 +248,6 @@ public class MineTweakerHacks {
                 field.setAccessible(true);
                 return field;
             } catch(NoSuchFieldException | SecurityException ignored) {
-                System.out.println(">>>");
-                ignored.printStackTrace();
             }
         }
 
