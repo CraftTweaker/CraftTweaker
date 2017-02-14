@@ -1,7 +1,7 @@
 package minetweaker.mc1102.logger;
 
 import minetweaker.runtime.ILogger;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.*;
 
 import java.io.*;
 import java.util.regex.Pattern;
@@ -25,7 +25,7 @@ public class MCLogger implements ILogger {
 	@Override
 	public void logCommand(String message) {
 		try {
-			writer.write("[" + FMLCommonHandler.instance().getEffectiveSide() + "]" + stripMessage(message) + "\n");
+			writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "]" + stripMessage(message) + "\n");
 			writer.flush();
 		} catch(IOException ex) {
 			throw new RuntimeException(ex);
@@ -35,7 +35,7 @@ public class MCLogger implements ILogger {
 	@Override
 	public void logInfo(String message) {
 		try {
-			writer.write("[" + FMLCommonHandler.instance().getEffectiveSide() + "][INFO] " + stripMessage(message) + "\n");
+			writer.write("[" + Loader.instance().getLoaderState() + "][" +FMLCommonHandler.instance().getEffectiveSide() + "][INFO] " + stripMessage(message) + "\n");
 			writer.flush();
 		} catch(IOException ex) {
 			throw new RuntimeException(ex);
@@ -45,7 +45,7 @@ public class MCLogger implements ILogger {
 	@Override
 	public void logWarning(String message) {
 		try {
-			writer.write("[" + FMLCommonHandler.instance().getEffectiveSide() + "][WARNING] " + stripMessage(message) + "\n");
+			writer.write("[" + Loader.instance().getLoaderState() + "][" +FMLCommonHandler.instance().getEffectiveSide() + "][WARNING] " + stripMessage(message) + "\n");
 			writer.flush();
 		} catch(IOException ex) {
 			throw new RuntimeException(ex);
@@ -60,7 +60,7 @@ public class MCLogger implements ILogger {
 	@Override
 	public void logError(String message, Throwable exception) {
 		try {
-			writer.write("[" + FMLCommonHandler.instance().getEffectiveSide() + "][ERROR] " + stripMessage(message) + "\n");
+			writer.write("[" + Loader.instance().getLoaderState() + "][" +FMLCommonHandler.instance().getEffectiveSide() + "][ERROR] " + stripMessage(message) + "\n");
 			if(exception != null) {
 				exception.printStackTrace(printWriter);
 			}
