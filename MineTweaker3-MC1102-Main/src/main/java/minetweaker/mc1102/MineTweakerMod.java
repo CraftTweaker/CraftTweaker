@@ -13,6 +13,7 @@ import minetweaker.mc1102.client.MCClient;
 import minetweaker.mc1102.formatting.MCFormatter;
 import minetweaker.mc1102.furnace.*;
 import minetweaker.mc1102.game.MCGame;
+import minetweaker.mc1102.logger.MCLogger;
 import minetweaker.mc1102.mods.MCLoadedMods;
 import minetweaker.mc1102.network.*;
 import minetweaker.mc1102.oredict.MCOreDict;
@@ -66,11 +67,9 @@ public class MineTweakerMod {
 	private final ScriptProviderCustom scriptsIMC;
 	
 	public MineTweakerMod() {
-		MineTweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla());
-		
-		MineTweakerImplementationAPI.logger.addLogger(new FileLogger(new File("minetweaker.log")));
+		MineTweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCUtilities());
+		MineTweakerImplementationAPI.logger.addLogger(new MCLogger(new File("minetweaker.log")));
 		MineTweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
-		
 		File globalDir = new File("scripts");
 		if(!globalDir.exists())
 			globalDir.mkdirs();
@@ -122,6 +121,8 @@ public class MineTweakerMod {
 		GlobalRegistry.registerBracketHandler(new LiquidBracketHandler());
 		GlobalRegistry.registerBracketHandler(new OreBracketHandler());
 		GlobalRegistry.registerBracketHandler(new EntityBracketHandler());
+		GlobalRegistry.registerBracketHandler(new BlockPosBracketHandler());
+		
 		
 	}
 	
