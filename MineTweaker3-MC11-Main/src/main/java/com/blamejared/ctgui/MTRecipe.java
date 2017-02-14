@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.blamejared.ctgui.reference.Reference.*;
 
-@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, clientSideOnly = true, dependencies = "required-after:MineTweaker3;")
+@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, clientSideOnly = true, dependencies = "required-after:minetweaker3;")
 public class MTRecipe {
 
     @Mod.Instance(MOD_ID)

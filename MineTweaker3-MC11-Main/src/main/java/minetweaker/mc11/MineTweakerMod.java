@@ -43,7 +43,7 @@ import java.io.File;
 @Mod(modid = MineTweakerMod.MODID, name = MineTweakerMod.NAME, version = "3.0.14", dependencies = "after:JEI;")
 public class MineTweakerMod {
 	
-	public static final String MODID = "MineTweaker3";
+	public static final String MODID = "minetweaker3";
 	public static final String NAME = "MineTweaker 3";
 	public static final String MCVERSION = "1.10.2";
 	
