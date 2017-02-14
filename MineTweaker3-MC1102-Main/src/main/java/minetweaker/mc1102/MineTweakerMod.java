@@ -121,6 +121,7 @@ public class MineTweakerMod {
 		GlobalRegistry.registerBracketHandler(new LiquidBracketHandler());
 		GlobalRegistry.registerBracketHandler(new OreBracketHandler());
 		GlobalRegistry.registerBracketHandler(new EntityBracketHandler());
+		GlobalRegistry.registerBracketHandler(new BlockPosBracketHandler());
 		
 		
 	}
