@@ -13,10 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -55,6 +52,15 @@ public class ScriptProviderCustom implements IScriptProvider {
 			this.name = name;
 			this.content = content;
 		}
+		
+		@Override
+		public String toString() {
+			final StringBuilder sb = new StringBuilder("CustomScript{");
+			sb.append("name='").append(name).append('\'');
+			sb.append(", content=").append(Arrays.toString(content));
+			sb.append('}');
+			return sb.toString();
+		}
 	}
 
 	private class CustomScriptIterator implements IScriptIterator {
@@ -85,5 +91,14 @@ public class ScriptProviderCustom implements IScriptProvider {
 		public InputStream open() throws IOException {
 			return new ByteArrayInputStream(current.content);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("ScriptProviderCustom{");
+		sb.append("moduleName='").append(moduleName).append('\'');
+		sb.append(", scripts=").append(scripts);
+		sb.append('}');
+		return sb.toString();
 	}
 }

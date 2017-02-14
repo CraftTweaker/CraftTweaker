@@ -161,6 +161,15 @@ public class ScriptProviderMemory implements IScriptProvider {
             this.name = name;
             this.data = data;
         }
+    
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("MemoryModule{");
+            sb.append("name='").append(name).append('\'');
+            sb.append(", data=").append(data);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     private class MemoryFile {
@@ -171,5 +180,22 @@ public class ScriptProviderMemory implements IScriptProvider {
             this.name = name;
             this.data = data;
         }
+    
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("MemoryFile{");
+            sb.append("name='").append(name).append('\'');
+            sb.append(", data=").append(Arrays.toString(data));
+            sb.append('}');
+            return sb.toString();
+        }
+    }
+    
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ScriptProviderMemory{");
+        sb.append("modules=").append(modules);
+        sb.append('}');
+        return sb.toString();
     }
 }
