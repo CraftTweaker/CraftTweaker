@@ -9,7 +9,9 @@ package minetweaker.runtime.providers;
 import minetweaker.runtime.IScriptIterator;
 import minetweaker.runtime.IScriptProvider;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Stan Hebben
@@ -75,13 +77,5 @@ public class ScriptProviderCascade implements IScriptProvider {
         public void remove() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    }
-    
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("ScriptProviderCascade{");
-        sb.append("providers=").append(Arrays.toString(providers));
-        sb.append('}');
-        return sb.toString();
     }
 }

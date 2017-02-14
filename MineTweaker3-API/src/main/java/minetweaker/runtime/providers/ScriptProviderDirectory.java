@@ -54,12 +54,4 @@ public class ScriptProviderDirectory implements IScriptProvider {
             });
         return scripts.iterator();
     }
-    
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("ScriptProviderDirectory{");
-        sb.append("directory=").append(directory.getAbsolutePath());
-        sb.append('}');
-        return sb.toString();
-    }
 }

@@ -548,7 +548,6 @@ public class MineTweakerImplementationAPI {
      * @param provider script provider
      */
     public static void setScriptProvider(IScriptProvider provider) {
-        MineTweakerAPI.logInfo("Changing script provider to: " + provider.toString());
         MineTweakerAPI.tweaker.setScriptProvider(provider);
     }
 
