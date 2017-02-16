@@ -9,7 +9,7 @@ public class JEIMod {
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent ev) {
-		if(Loader.isModLoaded("JEI"))
-			MineTweakerAPI.registerClass(JEI.class);
+//		if(Loader.isModLoaded("JEI"))
+//			MineTweakerAPI.registerClass(JEI.class);
 	}
 }
