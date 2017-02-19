@@ -1,6 +1,6 @@
 package com.blamejared.ctgui.api;
 
-import minetweaker.mc1102.data.NBTConverter;
+import minetweaker.mc1112.data.NBTConverter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

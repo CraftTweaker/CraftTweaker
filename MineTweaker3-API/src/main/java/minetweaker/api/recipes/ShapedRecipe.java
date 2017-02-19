@@ -30,14 +30,23 @@ public class ShapedRecipe implements ICraftingRecipe {
 	
 	public ShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
 		int numIngredients = 0;
-		for(IIngredient[] row : ingredients) {
-			for(IIngredient ingredient : row) {
-				if(ingredient != null) {
-					numIngredients++;
-				}
-			}
-		}
-		
+        System.out.println(">>>");
+        for(int i = 0; i < ingredients.length; i++) {
+            IIngredient[] ingredient = ingredients[i];
+            for(int i1 = 0; i1 < ingredient.length; i1++) {
+                System.out.println(ingredient[i1]);
+                if(ingredient[i1]!=null){
+                    numIngredients++;
+                }
+            }
+        }
+//        for(IIngredient[] row : ingredients) {
+//			for(IIngredient ingredient : row) {
+//				if(ingredient != null) {
+//					numIngredients++;
+//				}
+//			}
+//		}
 		this.posx = new byte[numIngredients];
 		this.posy = new byte[numIngredients];
 		this.output = output;
@@ -98,9 +107,9 @@ public class ShapedRecipe implements ICraftingRecipe {
 	
 	@Override
 	public boolean matches(ICraftingInventory inventory) {
-		if(inventory.getStackCount() != ingredients.length) {
-			return false;
-		}
+//        if(inventory.getStackCount() != ingredients.length) {
+//			return false;
+//		}
 		for(int i = 0; i <= inventory.getWidth() - width; i++) {
 			out:
 			for(int j = 0; j <= inventory.getHeight() - height; j++) {
