@@ -2,8 +2,6 @@ apply plugin: 'base' // To add "clean" task to the root project.
 apply from: 'configuration.gradle'
 apply plugin: "maven"
 
-
-
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
@@ -59,9 +57,9 @@ task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper
 
 subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
 
-task setupDecompWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupDecompWorkspace'}) {}
+task setupDecompWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupDecompWorkspace'}+projects1112.collect { ':' + it + ':setupDecompWorkspace'}) {}
 
-task setupCIWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupCIWorkspace'}) {}
+task setupCIWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupCIWorkspace'}+projects1112.collect { ':' + it + ':setupCIWorkspace'}) {}
 
 task assembleMC1102(type: Jar, dependsOn: [\
 		':ZenScript:build',
@@ -102,10 +100,52 @@ task assembleDevFull1102(type: Jar, dependsOn: [
 	}
 }
 
+task assembleMC1112(type: Jar, dependsOn: [\
+		':ZenScript:build',
+		':MineTweaker3-API:build']
+		+ projects1112.collect { ':' + it + ":build" }) {
+	archiveName="CraftTweaker-1.11.2-${mineTweakerVersion}.jar"
+
+	from zipTree(project(":ZenScript").jar.archivePath)
+	from zipTree(project(':MineTweaker3-API').jar.archivePath)
+
+	for (p in projects1112) {
+		from zipTree(project(p).jar.archivePath)
+	}
+}
+
+task assembleDevBase1112(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build',
+		':MineTweaker3-MC1112-Main:build']) {
+	archiveName="CraftTweaker-Dev-1.11.2-${mineTweakerVersion}.jar"
+
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+	from project(':MineTweaker3-MC1112-Main').sourceSets.main.output
+}
+
+task assembleDevFull1112(type: Jar, dependsOn: [
+		':ZenScript:build',
+		':MineTweaker3-API:build']
+		+ projects1112.collect { ':' + it + ":build" }) {
+	archiveName="CraftTweaker-Dev-Full-1.11.2-${mineTweakerVersion}.jar"
+
+	from project(':ZenScript').sourceSets.main.output
+	from project(':MineTweaker3-API').sourceSets.main.output
+
+	for (p in projects1112) {
+		from project(p).sourceSets.main.output
+	}
+}
+
 task assembleAll(dependsOn: [
 	assembleMC1102,
 	assembleDevBase1102,
-	assembleDevFull1102
+	assembleDevFull1102,
+	assembleMC1112,
+	assembleDevBase1112,
+	assembleDevFull1112
 	]) {
 }
 

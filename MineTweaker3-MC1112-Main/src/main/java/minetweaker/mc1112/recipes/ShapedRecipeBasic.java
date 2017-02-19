@@ -1,0 +1,57 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package minetweaker.mc1112.recipes;
+
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.recipes.*;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.world.World;
+
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+
+/**
+ * @author Stan
+ */
+public class ShapedRecipeBasic extends ShapedRecipes implements IMTRecipe {
+	
+	private final ShapedRecipe recipe;
+	
+	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedRecipe recipe) {
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, getItemStack(recipe.getOutput()));
+		
+		this.recipe = recipe;
+	}
+	
+	@Override
+	public boolean matches(InventoryCrafting inventory, World world) {
+        System.out.println(">>>");
+        for(int i = 0; i < recipe.getIngredients().length; i++) {
+            System.out.println(recipe.getIngredients()[i]);
+        }
+        for(int i = 0; i < MCCraftingInventory.get(inventory).getSize(); i++) {
+            System.out.println(MCCraftingInventory.get(inventory).getStack(i));
+        }
+        return recipe.matches(MCCraftingInventory.get(inventory));
+	}
+	
+	@Override
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
+		IItemStack result = recipe.getCraftingResult(MCCraftingInventory.get(inventory));
+		if(result == null) {
+			return ItemStack.EMPTY;
+		} else {
+			return getItemStack(result).copy();
+		}
+	}
+	
+	@Override
+	public ICraftingRecipe getRecipe() {
+		return recipe;
+	}
+}
