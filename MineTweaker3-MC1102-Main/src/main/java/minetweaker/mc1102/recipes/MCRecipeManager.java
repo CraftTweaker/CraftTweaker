@@ -181,14 +181,20 @@ public class MCRecipeManager implements IRecipeManager {
                             }
                         }
                     }
+                }else {
+                    if (recipe instanceof ShapelessRecipes) {
+                        continue;
+                    } else if (recipe instanceof ShapelessOreRecipe) {
+                        continue;
+                    } else {
+                    }
                 }
             } else {
-                if (recipe instanceof ShapedRecipes) {
-                    
-                } else if (recipe instanceof ShapedOreRecipe) {
-                    
-                } else {
+                if (recipe instanceof ShapelessRecipes) {
                     continue;
+                } else if (recipe instanceof ShapelessOreRecipe) {
+                    continue;
+                } else {
                 }
             }
             
@@ -250,16 +256,22 @@ public class MCRecipeManager implements IRecipeManager {
                         
                         continue outer;
                     }
+                }if (recipe instanceof ShapedRecipes) {
+                    continue;
+                } else if (recipe instanceof ShapedOreRecipe) {
+                    continue;
+                } else {
                 }
             } else {
-                if (recipe instanceof ShapelessRecipes) {
-                    
-                } else if (recipe instanceof ShapelessOreRecipe) {
-                    
-                } else {
+                if (recipe instanceof ShapedRecipes) {
                     continue;
+                } else if (recipe instanceof ShapedOreRecipe) {
+                    continue;
+                } else {
+        
                 }
             }
+           
             
             toRemove.add(recipe);
             removeIndex.add(i);

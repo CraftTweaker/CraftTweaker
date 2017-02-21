@@ -30,13 +30,6 @@ public class ShapedRecipeBasic extends ShapedRecipes implements IMTRecipe {
 	
 	@Override
 	public boolean matches(InventoryCrafting inventory, World world) {
-        System.out.println(">>>");
-        for(int i = 0; i < recipe.getIngredients().length; i++) {
-            System.out.println(recipe.getIngredients()[i]);
-        }
-        for(int i = 0; i < MCCraftingInventory.get(inventory).getSize(); i++) {
-            System.out.println(MCCraftingInventory.get(inventory).getStack(i));
-        }
         return recipe.matches(MCCraftingInventory.get(inventory));
 	}
 	

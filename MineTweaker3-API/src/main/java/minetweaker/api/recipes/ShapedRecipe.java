@@ -30,11 +30,9 @@ public class ShapedRecipe implements ICraftingRecipe {
 	
 	public ShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
 		int numIngredients = 0;
-        System.out.println(">>>");
         for(int i = 0; i < ingredients.length; i++) {
             IIngredient[] ingredient = ingredients[i];
             for(int i1 = 0; i1 < ingredient.length; i1++) {
-                System.out.println(ingredient[i1]);
                 if(ingredient[i1]!=null){
                     numIngredients++;
                 }
