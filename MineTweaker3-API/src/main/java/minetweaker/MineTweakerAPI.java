@@ -146,7 +146,7 @@ public class MineTweakerAPI {
 	 *
 	 * @param action action object
 	 */
-	public static void apply(IUndoableAction action) {
+	public static void apply(IAction action) {
 		tweaker.apply(action);
 	}
 	
