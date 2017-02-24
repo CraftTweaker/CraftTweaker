@@ -30,7 +30,7 @@ archivesBaseName = project.projectDir.name
 minecraft {
 	version = forgeVersion1102
 	runDir = "eclipse"
-    mappings = "snapshot_20161111"
+    mappings = "stable_29"
 	useDepAts = true
 }
 

@@ -21,6 +21,7 @@ import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
 import stanhebben.zenscript.annotations.Optional;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -96,17 +97,17 @@ public class MCServer extends AbstractServer {
 		}
 		
 		@Override
-		public String getCommandName() {
+		public String getName() {
 			return name;
 		}
 		
 		@Override
-		public String getCommandUsage(ICommandSender var1) {
+		public String getUsage(ICommandSender var1) {
 			return usage;
 		}
 		
 		@Override
-		public List getCommandAliases() {
+		public List getAliases() {
 			return aliases;
 		}
 		
@@ -123,9 +124,9 @@ public class MCServer extends AbstractServer {
 				return validator.canExecute(getPlayer(sender));
 			}
 		}
-		
-		@Override
-		public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        
+        @Override
+        public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
 			if(completion != null) {
 				return Arrays.asList(completion.getTabCompletionOptions(args, getPlayer(sender)));
 			} else {
@@ -140,7 +141,7 @@ public class MCServer extends AbstractServer {
 		
 		@Override
 		public int compareTo(ICommand o) {
-			return this.getCommandName().compareTo(o.getCommandName());
+			return this.getName().compareTo(o.getName());
 		}
 	}
 	
@@ -173,13 +174,13 @@ public class MCServer extends AbstractServer {
 		public String describe() {
 			CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
 			if(!ch.getCommands().containsValue(command))
-				return "Adding command " + command.getCommandName();
+				return "Adding command " + command.getName();
 			return "";
 		}
 		
 		@Override
 		public String describeUndo() {
-			return "tried to remove command: " + command.getCommandName() + " failed. THIS IS NOT AN ERROR!";
+			return "tried to remove command: " + command.getName() + " failed. THIS IS NOT AN ERROR!";
 		}
 		
 		@Override

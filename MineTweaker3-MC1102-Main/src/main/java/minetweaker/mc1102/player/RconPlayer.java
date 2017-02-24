@@ -65,12 +65,12 @@ public class RconPlayer implements IPlayer{
             MineTweakerAPI.logError("not a valid chat message");
             return;
         }
-        sender.addChatMessage((ITextComponent) internal);
+        sender.sendMessage((ITextComponent) internal);
     }
 
     @Override
     public void sendChat(String message){
-        sender.addChatMessage(new TextComponentString(message));
+        sender.sendMessage(new TextComponentString(message));
     }
 
     @Override

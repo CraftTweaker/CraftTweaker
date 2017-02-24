@@ -58,11 +58,12 @@ public class InventoryFake implements IInventory {
     public void markDirty() {
 
     }
-
+    
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return true;
     }
+    
 
     @Override
     public void openInventory(EntityPlayer player) {

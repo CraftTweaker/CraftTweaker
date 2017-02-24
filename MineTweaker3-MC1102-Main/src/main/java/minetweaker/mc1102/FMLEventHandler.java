@@ -44,12 +44,12 @@ public class FMLEventHandler {
 				if(rec.getRecipe() instanceof ShapedRecipe) {
 					ShapedRecipe r = (ShapedRecipe) rec.getRecipe();
 					if(r.getAction() != null) {
-						r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.worldObj)), new MCPlayer(ev.player));
+						r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.world)), new MCPlayer(ev.player));
 					}
 				} else if(rec.getRecipe() instanceof ShapelessRecipe) {
 					ShapelessRecipe r = (ShapelessRecipe) rec.getRecipe();
 					if(r.getAction() != null) {
-						r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.worldObj)), new MCPlayer(ev.player));
+						r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.world)), new MCPlayer(ev.player));
 					}
 				}
 			});

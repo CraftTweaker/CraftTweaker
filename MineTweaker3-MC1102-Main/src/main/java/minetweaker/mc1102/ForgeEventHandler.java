@@ -63,9 +63,9 @@ public class ForgeEventHandler {
 				entityDefinition.getDropsToAdd().forEach((key, val) -> {
 					EntityItem item = null;
 					if(val.getMin() == 0 && val.getMax() == 0) {
-						item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
+						item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
 					} else {
-						item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
+						item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
 					}
 					ev.getDrops().add(item);
 				});
@@ -75,9 +75,9 @@ public class ForgeEventHandler {
 					entityDefinition.getDropsToAddPlayerOnly().forEach((key, val) -> {
 						EntityItem item = null;
 						if(val.getMin() == 0 && val.getMax() == 0) {
-							item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
+							item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
 						} else {
-							item = new EntityItem(entity.worldObj, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
+							item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
 						}
 						ev.getDrops().add(item);
 					});

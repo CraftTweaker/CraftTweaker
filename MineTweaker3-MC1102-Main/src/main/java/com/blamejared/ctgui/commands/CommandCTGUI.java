@@ -15,12 +15,12 @@ import net.minecraft.util.text.TextComponentString;
 public class CommandCTGUI extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "CTGUI";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "CTGUI <id>";
     }
 
@@ -32,7 +32,7 @@ public class CommandCTGUI extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length == 0 || Integer.parseInt(args[0]) < 1 || GuiRegistry.getHandlerForID(Integer.parseInt(args[0])) == null) {
-            sender.addChatMessage(new TextComponentString("Invalid ID!"));
+            sender.sendMessage(new TextComponentString("Invalid ID!"));
             return;
         }
 

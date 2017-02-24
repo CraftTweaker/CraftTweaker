@@ -120,7 +120,7 @@ public abstract class GuiBase extends GuiContainer {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         final boolean[] clickedSlot = new boolean[]{false};
         for(SlotRecipe slot : container.getRecipeSlots()) {
-            Rectangle rectangle = new Rectangle(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 18, 18);
+            Rectangle rectangle = new Rectangle(guiLeft + slot.xPos, guiTop + slot.yPos, 18, 18);
             if(rectangle.contains(mouseX, mouseY)) {
                 switch(mouseButton) {
                     case 0:
@@ -262,7 +262,7 @@ public abstract class GuiBase extends GuiContainer {
         GlStateManager.popAttrib();
         if(selectedSlot != null) {
             GlStateManager.colorMask(true, true, true, false);
-            this.drawGradientRect(guiLeft + selectedSlot.xDisplayPosition, guiTop + selectedSlot.yDisplayPosition, guiLeft + selectedSlot.xDisplayPosition + 16, guiTop + selectedSlot.yDisplayPosition + 16, Color.cyan.darker().getRGB(), Color.cyan.darker().getRGB());
+            this.drawGradientRect(guiLeft + selectedSlot.xPos, guiTop + selectedSlot.yPos, guiLeft + selectedSlot.xPos + 16, guiTop + selectedSlot.yPos + 16, Color.cyan.darker().getRGB(), Color.cyan.darker().getRGB());
             GlStateManager.colorMask(true, true, true, true);
         }
     }

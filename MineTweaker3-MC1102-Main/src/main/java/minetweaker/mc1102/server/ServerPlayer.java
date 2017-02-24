@@ -70,12 +70,12 @@ public class ServerPlayer implements IPlayer{
 
     @Override
     public void sendChat(IChatMessage message){
-        FMLServerHandler.instance().getServer().addChatMessage((ITextComponent) message.getInternal());
+        FMLServerHandler.instance().getServer().sendMessage((ITextComponent) message.getInternal());
     }
 
     @Override
     public void sendChat(String message){
-        FMLServerHandler.instance().getServer().addChatMessage(new TextComponentString(message));
+        FMLServerHandler.instance().getServer().sendMessage(new TextComponentString(message));
     }
 
     @Override

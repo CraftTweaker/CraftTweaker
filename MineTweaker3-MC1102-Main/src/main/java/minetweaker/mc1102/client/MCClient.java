@@ -18,7 +18,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 public class MCClient implements IClient{
     @Override
     public IPlayer getPlayer(){
-        return MineTweakerMC.getIPlayer(Minecraft.getMinecraft().thePlayer);
+        return MineTweakerMC.getIPlayer(Minecraft.getMinecraft().player);
     }
 
     @Override
