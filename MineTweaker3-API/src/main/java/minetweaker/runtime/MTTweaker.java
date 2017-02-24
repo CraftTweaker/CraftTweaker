@@ -6,44 +6,51 @@
 
 package minetweaker.runtime;
 
-import minetweaker.*;
+import minetweaker.IUndoableAction;
+import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.runtime.providers.ScriptProviderMemory;
 import stanhebben.zenscript.ZenModule;
-import stanhebben.zenscript.*;
+import stanhebben.zenscript.ZenParsedFile;
+import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.ParseException;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 
-import static stanhebben.zenscript.ZenModule.*;
+import static stanhebben.zenscript.ZenModule.compileScripts;
+import static stanhebben.zenscript.ZenModule.extractClassName;
 
 /**
  * @author Stan Hebben
  */
 public class MTTweaker implements ITweaker {
-    
     private static boolean DEBUG = false;
-    private final LinkedList<IAction> actions = new LinkedList<>();
-    //    private final List<IUndoableAction> actions = new ArrayList<>();
-    private final Set<IAction> wereStuck = new LinkedHashSet<>();
-    private final Map<Object, IAction> stuckOverridable = new HashMap<>();
-    
+
+    private final List<IUndoableAction> actions = new ArrayList<>();
+    private final Set<IUndoableAction> wereStuck = new LinkedHashSet<>();
+    private final Map<Object, IUndoableAction> stuckOverridable = new HashMap<>();
+
     private IScriptProvider scriptProvider;
     private byte[] scriptData;
-    
+
     @Override
     public byte[] getStagedScriptData() {
         return ScriptProviderMemory.collect(scriptProvider);
     }
-    
+
     @Override
-    public void apply(IAction action) {
+    public void apply(IUndoableAction action) {
+        MineTweakerAPI.logInfo(action.describe());
+
         Object overrideKey = action.getOverrideKey();
         if(wereStuck.contains(action)) {
             wereStuck.remove(action);
-            MineTweakerAPI.logInfo(action.describe());
+
             if(overrideKey != null) {
                 stuckOverridable.remove(overrideKey);
             }
@@ -52,34 +59,23 @@ public class MTTweaker implements ITweaker {
                 wereStuck.remove(stuckOverridable.get(overrideKey));
                 stuckOverridable.remove(overrideKey);
             }
-            if(!actions.contains(action)) {
-                MineTweakerAPI.logInfo(action.describe());
-                action.apply();
-            }
+
+            action.apply();
         }
+
         actions.add(action);
     }
-    
+
     @Override
     public void remove(IIngredient items) {
         GlobalRegistry.remove(items);
     }
-    
+
     @Override
-    public List<IAction> rollback() {
-        List<IAction> stuck = new ArrayList<>();
-        LinkedList<IUndoableAction> actionList = new LinkedList<>();
-        System.out.println(actions.size());
-        actions.stream().forEachOrdered(action ->{
-            if(action instanceof IUndoableAction){
-                actionList.add((IUndoableAction) action);
-            }
-        });
-        System.out.println("Action list Size" + actionList.size());
-        List<IUndoableAction> removedActions = new LinkedList<>();
-        for(int i = actionList.size() - 1; i >= 0; i--) {
-            IUndoableAction action = actionList.get(i);
-            removedActions.add(action);
+    public List<IUndoableAction> rollback() {
+        List<IUndoableAction> stuck = new ArrayList<>();
+        for(int i = actions.size() - 1; i >= 0; i--) {
+            IUndoableAction action = actions.get(i);
             if(action.canUndo()) {
                 MineTweakerAPI.logInfo(action.describeUndo());
                 action.undo();
@@ -89,51 +85,49 @@ public class MTTweaker implements ITweaker {
                 MineTweakerAPI.logInfo("[Stuck] 3 " + action.toString());
                 stuck.add(0, action);
                 wereStuck.add(action);
-                
+
                 Object overrideKey = action.getOverrideKey();
                 if(overrideKey != null) {
                     stuckOverridable.put(overrideKey, action);
                 }
             }
         }
-        actionList.clear();
-        //    actions.clear();
-            actions.removeAll(removedActions);
+        actions.clear();
         return stuck;
     }
-    
+
     @Override
     public void setScriptProvider(IScriptProvider provider) {
         scriptProvider = provider;
     }
-    
+
     @Override
     public void load() {
         System.out.println("Loading scripts");
-        
+
         scriptData = ScriptProviderMemory.collect(scriptProvider);
         Set<String> executed = new HashSet<>();
-        
+
         Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
         while(scripts.hasNext()) {
             IScriptIterator script = scripts.next();
-            
+
             if(!executed.contains(script.getGroupName())) {
                 executed.add(script.getGroupName());
-                
+
                 Map<String, byte[]> classes = new HashMap<>();
                 IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
-                
+
                 List<ZenParsedFile> files = new ArrayList<>();
-                
+
                 while(script.next()) {
                     Reader reader = null;
                     try {
                         reader = new InputStreamReader(new BufferedInputStream(script.open()), "UTF-8");
-                        
+
                         String filename = script.getName();
                         String className = extractClassName(filename);
-                        
+
                         ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
                         ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                         files.add(pfile);
@@ -145,7 +139,7 @@ public class MTTweaker implements ITweaker {
                     } catch(Exception ex) {
                         MineTweakerAPI.logError("Error loading " + script.getName() + ": " + ex.toString(), ex);
                     }
-                    
+
                     if(reader != null) {
                         try {
                             reader.close();
@@ -153,12 +147,12 @@ public class MTTweaker implements ITweaker {
                         }
                     }
                 }
-                
+
                 try {
                     String filename = script.getGroupName();
                     System.out.println("MineTweaker: Loading " + filename);
                     compileScripts(filename, files, environmentGlobal, DEBUG);
-                    
+
                     // execute scripts
                     ZenModule module = new ZenModule(classes, MineTweakerAPI.class.getClassLoader());
                     module.getMain().run();
@@ -167,22 +161,23 @@ public class MTTweaker implements ITweaker {
                 }
             }
         }
-        
+
         if(wereStuck.size() > 0) {
             MineTweakerAPI.logWarning(Integer.toString(wereStuck.size()) + " modifications were stuck");
-            for(IAction action : wereStuck) {
+            for(IUndoableAction action : wereStuck) {
                 MineTweakerAPI.logInfo("Stuck: " + action.describe());
             }
         }
     }
-    
+
     @Override
     public byte[] getScriptData() {
         return scriptData;
     }
-    
+
+
     @Override
-    public LinkedList<IAction> getActions() {
+    public List<IUndoableAction> getActions() {
         return actions;
     }
     

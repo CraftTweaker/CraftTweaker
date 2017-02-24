@@ -21,7 +21,13 @@ package minetweaker;
  * 
  * @author Stan Hebben
  */
-public interface IUndoableAction extends IAction{
+public interface IUndoableAction {
+	/**
+	 * Executes what the action is supposed to do. This method can be called
+	 * again if undo() has been called in between.
+	 */
+    void apply();
+
 	/**
 	 * Checks if this action can be undone. If this method returns true, it must
 	 * implement undo() properly. If this method returns false, the action is
@@ -40,6 +46,19 @@ public interface IUndoableAction extends IAction{
 	 * times in certain scenarios.
 	 */
     void undo();
+
+	/**
+	 * Describes, in a single human-readable sentence, what this specific action
+	 * is doing. Used in logging messages, lists, ...
+	 * 
+	 * Try to be as descriptive as possible without being too verbose.
+	 * 
+	 * Examples: - Adding Peach planks to the woodPlanks ore dictionary entry -
+	 * Removing a recipe for Iron Ore
+	 * 
+	 * @return the description of this action
+	 */
+    String describe();
 
 	/**
 	 * Describes what this action does if it is undone. Similar to the

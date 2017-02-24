@@ -6,7 +6,7 @@
 
 package minetweaker.runtime;
 
-import minetweaker.*;
+import minetweaker.IUndoableAction;
 import minetweaker.api.item.IIngredient;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -31,7 +31,7 @@ public interface ITweaker {
      *
      * @param action action to execute
      */
-    void apply(IAction action);
+    void apply(IUndoableAction action);
 
     /**
      * Removes a specific item from all known recipes handlers.
@@ -48,7 +48,7 @@ public interface ITweaker {
      *
      * @return stuck action list
      */
-    List<IAction> rollback();
+    List<IUndoableAction> rollback();
 
     /**
      * Sets the script provider.
@@ -74,7 +74,7 @@ public interface ITweaker {
      *
      * @return actions performed
      */
-    List<IAction> getActions();
+    List<IUndoableAction> getActions();
     
     /**
      * Enables debug class generations
