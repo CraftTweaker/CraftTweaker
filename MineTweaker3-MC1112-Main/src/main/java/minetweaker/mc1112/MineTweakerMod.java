@@ -52,8 +52,8 @@ public class MineTweakerMod {
 	
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 	
-	private static final String[] REGISTRIES = {"minetweaker.mods.jei.ClassRegistry", "minetweaker.mods.ic2.ClassRegistry"};
-	private static final String[] REGISTRY_DESCRIPTIONS = {"JEI mod support", "IC2 mod support"};
+	private static final String[] REGISTRIES = {"minetweaker.mods.jei.ClassRegistry"};
+	private static final String[] REGISTRY_DESCRIPTIONS = {"JEI mod support"};
 	public static MinecraftServer server;
 	@Mod.Instance(MODID)
 	public static MineTweakerMod INSTANCE;
