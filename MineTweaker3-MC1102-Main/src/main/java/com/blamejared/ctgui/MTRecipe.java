@@ -4,13 +4,10 @@ import com.blamejared.ctgui.api.GuiRegistry;
 import com.blamejared.ctgui.client.GuiHandlerVanilla;
 import com.blamejared.ctgui.commands.CommandCTGUI;
 import com.blamejared.ctgui.proxy.CommonProxy;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.event.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.blamejared.ctgui.reference.Reference.*;
 

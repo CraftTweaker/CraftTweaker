@@ -1,7 +1,6 @@
 package minetweaker.api.data;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Contains a byte value (-128 .. 127)
@@ -9,6 +8,7 @@ import java.util.Map;
  * @author Stan Hebben
  */
 public class DataByte implements IData {
+
     private final byte value;
 
     public DataByte(byte value) {

@@ -1,7 +1,3 @@
-/*
- * This file is subject to the license.txt file in the main folder
- * of this project.
- */
 package stanhebben.zenscript.parser;
 
 import java.util.Arrays;
@@ -12,187 +8,190 @@ import java.util.Arrays;
  * @author Stan Hebben
  */
 public class HashSetI {
-	private int[] values;
-	private int[] next;
-	private int mask;
-	private int size;
 
-	/**
-	 * Creates a new HashSet for integer values.
-	 */
-	public HashSetI() {
-		values = new int[16];
-		next = new int[16];
-		mask = 15;
-		size = 0;
+    private int[] values;
+    private int[] next;
+    private int mask;
+    private int size;
 
-		for (int i = 0; i < values.length; i++) {
-			values[i] = Integer.MIN_VALUE;
-		}
-	}
+    /**
+     * Creates a new HashSet for integer values.
+     */
+    public HashSetI() {
+        values = new int[16];
+        next = new int[16];
+        mask = 15;
+        size = 0;
 
-	public HashSetI(HashSetI original) {
-		values = Arrays.copyOf(original.values, original.values.length);
-		next = Arrays.copyOf(original.next, original.next.length);
-		mask = original.mask;
-		size = original.size;
-	}
+        for(int i = 0; i < values.length; i++) {
+            values[i] = Integer.MIN_VALUE;
+        }
+    }
 
-	/**
-	 * Adds the specified value to this HashSet. If this value is already in
-	 * this HashSet, nothing happens.
-	 *
-	 * @param value value to be added to the HashSet
-	 */
-	public void add(int value) {
-		if (size > (values.length * 3) >> 2) {
-			expand();
-		}
+    public HashSetI(HashSetI original) {
+        values = Arrays.copyOf(original.values, original.values.length);
+        next = Arrays.copyOf(original.next, original.next.length);
+        mask = original.mask;
+        size = original.size;
+    }
 
-		int index = value & mask;
+    /**
+     * Adds the specified value to this HashSet. If this value is already in
+     * this HashSet, nothing happens.
+     *
+     * @param value value to be added to the HashSet
+     */
+    public void add(int value) {
+        if(size > (values.length * 3) >> 2) {
+            expand();
+        }
 
-		if (values[index] == Integer.MIN_VALUE) {
-			values[index] = value;
-		} else {
-			if (values[index] == value) {
-				return;
-			}
-			while (next[index] != 0) {
-				index = next[index] - 1;
-				if (values[index] == value) {
-					return;
-				}
-			}
-			int ref = index;
-			while (values[index] != Integer.MIN_VALUE) {
-				index++;
-				if (index == values.length)
-					index = 0;
-			}
-			next[ref] = index + 1;
+        int index = value & mask;
 
-			values[index] = value;
-		}
+        if(values[index] == Integer.MIN_VALUE) {
+            values[index] = value;
+        } else {
+            if(values[index] == value) {
+                return;
+            }
+            while(next[index] != 0) {
+                index = next[index] - 1;
+                if(values[index] == value) {
+                    return;
+                }
+            }
+            int ref = index;
+            while(values[index] != Integer.MIN_VALUE) {
+                index++;
+                if(index == values.length)
+                    index = 0;
+            }
+            next[ref] = index + 1;
 
-		size++;
-	}
+            values[index] = value;
+        }
 
-	/**
-	 * Checks if this HashSet contains the specified value.
-	 *
-	 * @param value integer value to add
-	 * @return true if this HashSet contains the specified value
-	 */
-	public boolean contains(int value) {
-		int index = value & mask;
-		while (values[index] != value) {
-			if (next[index] == 0) {
-				return false;
-			}
-			index = next[index] - 1;
-		}
-		return true;
-	}
+        size++;
+    }
 
-	/**
-	 * Returns an iterator over this HashSet. The elements are returned in no
-	 * particular order.
-	 *
-	 * @return an iterator over this HashSet
-	 */
-	public IteratorI iterator() {
-		return new KeyIterator();
-	}
+    /**
+     * Checks if this HashSet contains the specified value.
+     *
+     * @param value integer value to add
+     *
+     * @return true if this HashSet contains the specified value
+     */
+    public boolean contains(int value) {
+        int index = value & mask;
+        while(values[index] != value) {
+            if(next[index] == 0) {
+                return false;
+            }
+            index = next[index] - 1;
+        }
+        return true;
+    }
 
-	/**
-	 * Converts the contents of this HashSet to an integer array. The order of
-	 * the elements is unspecified.
-	 *
-	 * @return this HashSet as integer array
-	 */
-	public int[] toArray() {
-		int[] result = new int[size];
-		int ix = 0;
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] != Integer.MIN_VALUE) {
-				result[ix++] = values[i];
-			}
-		}
-		return result;
-	}
+    /**
+     * Returns an iterator over this HashSet. The elements are returned in no
+     * particular order.
+     *
+     * @return an iterator over this HashSet
+     */
+    public IteratorI iterator() {
+        return new KeyIterator();
+    }
 
-	// ////////////////////////
-	// Private inner methods
-	// ////////////////////////
+    /**
+     * Converts the contents of this HashSet to an integer array. The order of
+     * the elements is unspecified.
+     *
+     * @return this HashSet as integer array
+     */
+    public int[] toArray() {
+        int[] result = new int[size];
+        int ix = 0;
+        for(int value : values) {
+            if(value != Integer.MIN_VALUE) {
+                result[ix++] = value;
+            }
+        }
+        return result;
+    }
 
-	/**
-	 * Expands the capacity of this HashSet. (double it)
-	 */
-	private void expand() {
-		int[] newKeys = new int[values.length * 2];
-		int[] newNext = new int[next.length * 2];
-		int newMask = newKeys.length - 1;
+    // ////////////////////////
+    // Private inner methods
+    // ////////////////////////
 
-		for (int i = 0; i < newKeys.length; i++) {
-			newKeys[i] = Integer.MIN_VALUE;
-		}
+    /**
+     * Expands the capacity of this HashSet. (double it)
+     */
+    private void expand() {
+        int[] newKeys = new int[values.length * 2];
+        int[] newNext = new int[next.length * 2];
+        int newMask = newKeys.length - 1;
 
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] == Integer.MIN_VALUE) {
-				continue;
-			}
+        for(int i = 0; i < newKeys.length; i++) {
+            newKeys[i] = Integer.MIN_VALUE;
+        }
+        
+        for(int value : values) {
+            if(value == Integer.MIN_VALUE) {
+                continue;
+            }
+            
+            int key = value;
+            int index = key & newMask;
+            
+            if(newKeys[index] == Integer.MIN_VALUE) {
+                newKeys[index] = key;
+            } else {
+                while(newNext[index] != 0) {
+                    index = newNext[index] - 1;
+                }
+                int ref = index;
+                while(newKeys[index] != Integer.MIN_VALUE) {
+                    index = (index + 1) & newMask;
+                }
+                newNext[ref] = index + 1;
+                
+                newKeys[index] = key;
+            }
+        }
 
-			int key = values[i];
-			int index = key & newMask;
+        values = newKeys;
+        next = newNext;
+        mask = newMask;
+    }
 
-			if (newKeys[index] == Integer.MIN_VALUE) {
-				newKeys[index] = key;
-			} else {
-				while (newNext[index] != 0) {
-					index = newNext[index] - 1;
-				}
-				int ref = index;
-				while (newKeys[index] != Integer.MIN_VALUE) {
-					index = (index + 1) & newMask;
-				}
-				newNext[ref] = index + 1;
+    // ////////////////////////
+    // Private inner classes
+    // ////////////////////////
 
-				newKeys[index] = key;
-			}
-		}
+    private class KeyIterator implements IteratorI {
 
-		values = newKeys;
-		next = newNext;
-		mask = newMask;
-	}
+        private int i;
 
-	// ////////////////////////
-	// Private inner classes
-	// ////////////////////////
+        public KeyIterator() {
+            i = 0;
+            skip();
+        }
 
-	private class KeyIterator implements IteratorI {
-		private int i;
+        @Override
+        public boolean hasNext() {
+            return i < values.length;
+        }
 
-		public KeyIterator() {
-			i = 0;
-			skip();
-		}
+        @Override
+        public int next() {
+            int result = values[i++];
+            skip();
+            return result;
+        }
 
-		@Override
-		public boolean hasNext() {
-			return i < values.length;
-		}
-
-		@Override
-		public int next() {
-			int result = values[i++];
-			skip();
-			return result;
-		}
-
-		private void skip() {
-			while (i < values.length && values[i] == Integer.MIN_VALUE)
-				i++;
-		}
-	}
+        private void skip() {
+            while(i < values.length && values[i] == Integer.MIN_VALUE)
+                i++;
+        }
+    }
 }

@@ -1,92 +1,86 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.value;
 
 import java.util.Iterator;
 
 /**
- *
  * @author Stan Hebben
  */
 public interface IAny {
-	String NAME = "stanhebben/zenscript/value/IAny";
 
-	int NUM_BYTE = 1;
-	int NUM_SHORT = 2;
-	int NUM_INT = 3;
-	int NUM_LONG = 4;
-	int NUM_FLOAT = 5;
-	int NUM_DOUBLE = 6;
+    String NAME = "stanhebben/zenscript/value/IAny";
 
-	IAny not();
+    int NUM_BYTE = 1;
+    int NUM_SHORT = 2;
+    int NUM_INT = 3;
+    int NUM_LONG = 4;
+    int NUM_FLOAT = 5;
+    int NUM_DOUBLE = 6;
 
-	IAny neg();
+    IAny not();
 
-	IAny add(IAny value);
+    IAny neg();
 
-	IAny sub(IAny value);
+    IAny add(IAny value);
 
-	IAny cat(IAny value);
+    IAny sub(IAny value);
 
-	IAny mul(IAny value);
+    IAny cat(IAny value);
 
-	IAny div(IAny value);
+    IAny mul(IAny value);
 
-	IAny mod(IAny value);
+    IAny div(IAny value);
 
-	IAny and(IAny value);
+    IAny mod(IAny value);
 
-	IAny or(IAny value);
+    IAny and(IAny value);
 
-	IAny xor(IAny value);
+    IAny or(IAny value);
 
-	IAny range(IAny value);
+    IAny xor(IAny value);
 
-	int compareTo(IAny value);
+    IAny range(IAny value);
 
-	boolean contains(IAny value);
+    int compareTo(IAny value);
 
-	IAny memberGet(String member);
+    boolean contains(IAny value);
 
-	void memberSet(String member, IAny value);
+    IAny memberGet(String member);
 
-	IAny memberCall(String member, IAny... values);
+    void memberSet(String member, IAny value);
 
-	IAny indexGet(IAny key);
+    IAny memberCall(String member, IAny... values);
 
-	void indexSet(IAny key, IAny value);
+    IAny indexGet(IAny key);
 
-	IAny call(IAny... values);
+    void indexSet(IAny key, IAny value);
 
-	boolean asBool();
+    IAny call(IAny... values);
 
-	byte asByte();
+    boolean asBool();
 
-	short asShort();
+    byte asByte();
 
-	int asInt();
+    short asShort();
 
-	long asLong();
+    int asInt();
 
-	float asFloat();
+    long asLong();
 
-	double asDouble();
+    float asFloat();
 
-	String asString();
+    double asDouble();
 
-	<T> T as(Class<T> cls);
+    String asString();
 
-	boolean is(Class<?> cls);
+    <T> T as(Class<T> cls);
 
-	boolean canCastImplicit(Class<?> cls);
+    boolean is(Class<?> cls);
 
-	int getNumberType();
+    boolean canCastImplicit(Class<?> cls);
 
-	Iterator<IAny> iteratorSingle();
+    int getNumberType();
 
-	Iterator<IAny[]> iteratorMulti(int n);
+    Iterator<IAny> iteratorSingle();
+
+    Iterator<IAny[]> iteratorMulti(int n);
 }

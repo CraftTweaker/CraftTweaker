@@ -1,8 +1,7 @@
 package minetweaker.mods.ic2;
 
 import ic2.api.recipe.IMachineRecipeManager;
-import minetweaker.MineTweakerAPI;
-import minetweaker.OneWayAction;
+import minetweaker.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -12,6 +11,7 @@ import java.util.Arrays;
  * @author Stan Hebben
  */
 public class MachineAddRecipeAction extends OneWayAction {
+
     private final String name;
     private final IMachineRecipeManager machine;
     private final ItemStack[] output;
@@ -30,21 +30,21 @@ public class MachineAddRecipeAction extends OneWayAction {
     public void apply() {
         try {
             machine.addRecipe(input, tag, false, output);
-        } catch (RuntimeException ex) {
+        } catch(RuntimeException ex) {
             MineTweakerAPI.logError(ex.getMessage());
         }
     }
 
     @Override
     public String describe() {
-        if (output.length == 1) {
+        if(output.length == 1) {
             return "Adding " + name + " recipe for " + output[0].getDisplayName();
         } else {
             StringBuilder result = new StringBuilder();
             result.append("Adding ").append(name).append(" recipe for ");
             result.append("[");
-            for (int i = 0; i < output.length; i++) {
-                if (i == 0) {
+            for(int i = 0; i < output.length; i++) {
+                if(i == 0) {
                     result.append(", ");
                 } else {
                     result.append(output[i].getDisplayName());

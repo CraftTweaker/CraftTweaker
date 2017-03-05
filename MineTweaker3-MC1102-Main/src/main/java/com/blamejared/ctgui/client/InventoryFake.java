@@ -1,8 +1,7 @@
 package com.blamejared.ctgui.client;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -97,7 +96,7 @@ public class InventoryFake implements IInventory {
 
     @Override
     public void clear() {
-        for (int i = 0; i < this.items.length; ++i) {
+        for(int i = 0; i < this.items.length; ++i) {
             this.items[i] = null;
         }
     }

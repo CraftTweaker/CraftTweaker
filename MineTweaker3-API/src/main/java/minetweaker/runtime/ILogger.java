@@ -1,30 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.runtime;
 
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
  * @author Stan
  */
 public interface ILogger {
-	@ZenMethod
+    
+    @ZenMethod
     void logCommand(String message);
-
-	@ZenMethod
+    
+    @ZenMethod
     void logInfo(String message);
-
-	@ZenMethod
+    
+    @ZenMethod
     void logWarning(String message);
-
-	@ZenMethod
+    
+    @ZenMethod
     void logError(String message);
-
-	@ZenMethod
+    
+    @ZenMethod
     void logError(String message, Throwable exception);
 }

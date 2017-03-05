@@ -12,16 +12,16 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("minetweaker.item.IItemTransformer")
 public interface IItemTransformer {
-	
-	/**
-	 * Transforms the specified item. May modify this item (and return it) or
-	 * return an entirely new one.
-	 *
-	 * @param item     input item
-	 * @param byPlayer player that performs the crafting
-	 *
-	 * @return output item
-	 */
-	@ZenMethod
-	IItemStack transform(IItemStack item, IPlayer byPlayer);
+
+    /**
+     * Transforms the specified item. May modify this item (and return it) or
+     * return an entirely new one.
+     *
+     * @param item     input item
+     * @param byPlayer player that performs the crafting
+     *
+     * @return output item
+     */
+    @ZenMethod
+    IItemStack transform(IItemStack item, IPlayer byPlayer);
 }

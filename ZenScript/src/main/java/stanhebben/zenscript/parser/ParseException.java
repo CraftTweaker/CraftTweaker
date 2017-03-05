@@ -1,57 +1,52 @@
-/*
- * This file is subject to the license.txt file in the main folder
- * of this project.
- */
-
 package stanhebben.zenscript.parser;
 
 import stanhebben.zenscript.ZenParsedFile;
 
 /**
- *
  * @author Stan
  */
 public class ParseException extends RuntimeException {
-	private final ZenParsedFile file;
-	private final int line;
-	private final int lineOffset;
 
-	private final Token token;
-	private final String message;
+    private final ZenParsedFile file;
+    private final int line;
+    private final int lineOffset;
 
-	public ParseException(Token token, String error) {
-		super("Error parsing line " + token.getPosition().getLine() + ":" + token.getPosition().getLineOffset() + " - " + error + " (last token: " + token.getValue() + ")");
+    private final Token token;
+    private final String message;
 
-		this.file = token.getPosition().getFile();
-		this.line = token.getPosition().getLine();
-		this.lineOffset = token.getPosition().getLineOffset();
+    public ParseException(Token token, String error) {
+        super("Error parsing line " + token.getPosition().getLine() + ":" + token.getPosition().getLineOffset() + " - " + error + " (last token: " + token.getValue() + ")");
 
-		this.token = token;
-		this.message = error;
-	}
+        this.file = token.getPosition().getFile();
+        this.line = token.getPosition().getLine();
+        this.lineOffset = token.getPosition().getLineOffset();
 
-	public ParseException(ZenParsedFile file, int line, int lineOffset, String error) {
-		this.file = file;
-		this.line = line;
-		this.lineOffset = lineOffset;
+        this.token = token;
+        this.message = error;
+    }
 
-		token = null;
-		message = error;
-	}
+    public ParseException(ZenParsedFile file, int line, int lineOffset, String error) {
+        this.file = file;
+        this.line = line;
+        this.lineOffset = lineOffset;
 
-	public ZenParsedFile getFile() {
-		return file;
-	}
+        token = null;
+        message = error;
+    }
 
-	public int getLine() {
-		return line;
-	}
+    public ZenParsedFile getFile() {
+        return file;
+    }
 
-	public int getLineOffset() {
-		return lineOffset;
-	}
+    public int getLine() {
+        return line;
+    }
 
-	public String getExplanation() {
-		return message;
-	}
+    public int getLineOffset() {
+        return lineOffset;
+    }
+
+    public String getExplanation() {
+        return message;
+    }
 }

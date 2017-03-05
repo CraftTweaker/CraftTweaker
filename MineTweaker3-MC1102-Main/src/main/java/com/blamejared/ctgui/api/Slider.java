@@ -6,6 +6,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
  * Created by Jared.
  */
 public class Slider extends GuiSlider {
+
     private String propertyKey;
 
     public Slider(String propertyKey, int id, int xPos, int yPos, int width, int height, String prefix, String suf, double minVal, double maxVal, double currentVal, boolean showDec, boolean drawStr) {

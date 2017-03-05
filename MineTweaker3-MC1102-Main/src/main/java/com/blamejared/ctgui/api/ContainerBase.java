@@ -1,15 +1,11 @@
 package com.blamejared.ctgui.api;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ContainerBase extends Container {
 
@@ -26,45 +22,51 @@ public class ContainerBase extends Container {
     public ItemStack slotClick(int i, int mousebtn, ClickType clickTypeIn, EntityPlayer player) {
         ItemStack stack = null;
 
-        if (i >= 0 && getSlot(i) != null && getSlot(i) instanceof SlotRecipe) // Fake slots
+        if(i >= 0 && getSlot(i) != null && getSlot(i) instanceof SlotRecipe) // Fake slots
         {
-            if (mousebtn == 2) {
+            if(mousebtn == 2) {
                 getSlot(i).putStack(null);
-            } else if (mousebtn == 0) {
+            } else if(mousebtn == 0) {
                 InventoryPlayer playerInv = player.inventory;
                 getSlot(i).onSlotChanged();
                 ItemStack stackSlot = getSlot(i).getStack();
                 ItemStack stackHeld = playerInv.getItemStack();
 
-                if (stackSlot != null) stack = stackSlot.copy();
+                if(stackSlot != null)
+                    stack = stackSlot.copy();
 
-                if (stackHeld != null) {
+                if(stackHeld != null) {
                     ItemStack newStack = stackHeld.copy();
-                    if (!(getSlot(i) instanceof SlotRecipeOutput)) newStack.stackSize = 1;
+                    if(!(getSlot(i) instanceof SlotRecipeOutput))
+                        newStack.stackSize = 1;
                     getSlot(i).putStack(newStack);
-                } else getSlot(i).putStack(null);
-            } else if (mousebtn == 1) {
+                } else
+                    getSlot(i).putStack(null);
+            } else if(mousebtn == 1) {
                 InventoryPlayer playerInv = player.inventory;
                 getSlot(i).onSlotChanged();
                 ItemStack stackSlot = getSlot(i).getStack();
                 ItemStack stackHeld = playerInv.getItemStack();
 
-                if (stackSlot != null) stack = stackSlot.copy();
+                if(stackSlot != null)
+                    stack = stackSlot.copy();
 
-                if (stackHeld != null) {
+                if(stackHeld != null) {
                     stackHeld = stackHeld.copy();
-                    if (stackSlot != null && stackHeld.isItemEqual(stackSlot) && (i == 0 || i == 0)) {
+                    if(stackSlot != null && stackHeld.isItemEqual(stackSlot) && (i == 0 || i == 0)) {
                         int max = stackSlot.getMaxStackSize();
-                        if (++stackSlot.stackSize > max) stackSlot.stackSize = max;
+                        if(++stackSlot.stackSize > max)
+                            stackSlot.stackSize = max;
                         getSlot(i).putStack(stackSlot);
                     } else {
                         stackHeld.stackSize = 1;
                         getSlot(i).putStack(stackHeld);
                     }
                 } else {
-                    if (stackSlot != null) {
+                    if(stackSlot != null) {
                         stackSlot.stackSize--;
-                        if (stackSlot.stackSize == 0) getSlot(i).putStack(null);
+                        if(stackSlot.stackSize == 0)
+                            getSlot(i).putStack(null);
                     }
                 }
             }
@@ -86,7 +88,7 @@ public class ContainerBase extends Container {
 
     @Override
     protected Slot addSlotToContainer(Slot slotIn) {
-        if (slotIn instanceof SlotRecipe) {
+        if(slotIn instanceof SlotRecipe) {
             getRecipeSlots().add((SlotRecipe) slotIn);
         }
         return super.addSlotToContainer(slotIn);

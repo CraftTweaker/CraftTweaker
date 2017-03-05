@@ -1,63 +1,56 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.liquid;
 
 import minetweaker.api.data.IData;
 import minetweaker.api.item.*;
-import minetweaker.api.liquid.ILiquidDefinition;
-import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.api.liquid.*;
 import minetweaker.api.player.IPlayer;
 import minetweaker.mc1102.data.NBTConverter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Stan
  */
-public class MCLiquidStack implements ILiquidStack{
+public class MCLiquidStack implements ILiquidStack {
+
     private final FluidStack stack;
     private IData tag = null;
 
-    public MCLiquidStack(FluidStack stack){
+    public MCLiquidStack(FluidStack stack) {
         this.stack = stack;
     }
 
-    private MCLiquidStack(FluidStack stack, IData tag){
+    private MCLiquidStack(FluidStack stack, IData tag) {
         this.stack = stack;
         this.tag = tag;
     }
 
     @Override
-    public ILiquidDefinition getDefinition(){
+    public ILiquidDefinition getDefinition() {
         return new MCLiquidDefinition(stack.getFluid());
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return stack.getFluid().getName();
     }
 
     @Override
-    public String getDisplayName(){
+    public String getDisplayName() {
         return stack.getFluid().getLocalizedName(stack);
     }
 
     @Override
-    public int getAmount(){
+    public int getAmount() {
         return stack.amount;
     }
 
     @Override
-    public IData getTag(){
-        if(tag == null){
-            if(stack.tag == null){
+    public IData getTag() {
+        if(tag == null) {
+            if(stack.tag == null) {
                 return null;
             }
 
@@ -68,46 +61,46 @@ public class MCLiquidStack implements ILiquidStack{
     }
 
     @Override
-    public ILiquidStack withTag(IData data){
+    public ILiquidStack withTag(IData data) {
         FluidStack result = new FluidStack(stack.getFluid(), stack.amount);
         result.tag = (NBTTagCompound) NBTConverter.from(data);
         return new MCLiquidStack(result, data.immutable());
     }
 
     @Override
-    public ILiquidStack withAmount(int amount){
+    public ILiquidStack withAmount(int amount) {
         FluidStack result = new FluidStack(stack.getFluid(), amount);
         result.tag = stack.tag;
         return new MCLiquidStack(result, tag);
     }
 
     @Override
-    public int getLuminosity(){
+    public int getLuminosity() {
         return stack.getFluid().getLuminosity(stack);
     }
 
     @Override
-    public int getDensity(){
+    public int getDensity() {
         return stack.getFluid().getDensity(stack);
     }
 
     @Override
-    public int getTemperature(){
+    public int getTemperature() {
         return stack.getFluid().getTemperature(stack);
     }
 
     @Override
-    public int getViscosity(){
+    public int getViscosity() {
         return stack.getFluid().getViscosity(stack);
     }
 
     @Override
-    public boolean isGaseous(){
+    public boolean isGaseous() {
         return stack.getFluid().isGaseous(stack);
     }
 
     @Override
-    public Object getInternal(){
+    public Object getInternal() {
         return stack;
     }
 
@@ -116,47 +109,47 @@ public class MCLiquidStack implements ILiquidStack{
     // ##################################
 
     @Override
-    public String getMark(){
+    public String getMark() {
         return null;
     }
 
     @Override
-    public List<IItemStack> getItems(){
+    public List<IItemStack> getItems() {
         return Collections.emptyList();
     }
 
     @Override
-    public List<ILiquidStack> getLiquids(){
+    public List<ILiquidStack> getLiquids() {
         return Collections.singletonList(this);
     }
 
     @Override
-    public IIngredient amount(int amount){
+    public IIngredient amount(int amount) {
         return withAmount(amount);
     }
 
     @Override
-    public IIngredient or(IIngredient ingredient){
+    public IIngredient or(IIngredient ingredient) {
         return new IngredientOr(this, ingredient);
     }
 
     @Override
-    public IIngredient transform(IItemTransformer transformer){
+    public IIngredient transform(IItemTransformer transformer) {
         throw new UnsupportedOperationException("Liquid stack can't have transformers");
     }
 
     @Override
-    public IIngredient only(IItemCondition condition){
+    public IIngredient only(IItemCondition condition) {
         throw new UnsupportedOperationException("Liquid stack can't have conditions");
     }
 
     @Override
-    public IIngredient marked(String mark){
+    public IIngredient marked(String mark) {
         throw new UnsupportedOperationException("Liquid stack can't be marked");
     }
 
     @Override
-    public boolean matches(IItemStack item){
+    public boolean matches(IItemStack item) {
         return false;
     }
 
@@ -166,16 +159,16 @@ public class MCLiquidStack implements ILiquidStack{
     }
 
     @Override
-    public boolean matches(ILiquidStack liquid){
+    public boolean matches(ILiquidStack liquid) {
         return getDefinition().equals(liquid.getDefinition()) && getAmount() <= liquid.getAmount();
     }
 
     @Override
-    public boolean contains(IIngredient ingredient){
+    public boolean contains(IIngredient ingredient) {
         if(!ingredient.getItems().isEmpty())
             return false;
 
-        for(ILiquidStack liquid : ingredient.getLiquids()){
+        for(ILiquidStack liquid : ingredient.getLiquids()) {
             if(!matches(liquid))
                 return false;
         }
@@ -184,12 +177,12 @@ public class MCLiquidStack implements ILiquidStack{
     }
 
     @Override
-    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer){
+    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
         return item;
     }
 
     @Override
-    public boolean hasTransformers(){
+    public boolean hasTransformers() {
         return false;
     }
 }

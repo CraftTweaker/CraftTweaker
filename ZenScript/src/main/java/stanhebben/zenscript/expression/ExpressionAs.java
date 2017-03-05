@@ -1,24 +1,24 @@
 package stanhebben.zenscript.expression;
 
-import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
 public class ExpressionAs extends Expression {
-	private final Expression value;
-	private final ICastingRule castingRule;
 
-	public ExpressionAs(ZenPosition position, Expression value, ICastingRule castingRule) {
-		super(position);
+    private final Expression value;
+    private final ICastingRule castingRule;
 
-		this.value = value;
-		this.castingRule = castingRule;
-	}
+    public ExpressionAs(ZenPosition position, Expression value, ICastingRule castingRule) {
+        super(position);
+
+        this.value = value;
+        this.castingRule = castingRule;
+    }
 
 	/*
-	 * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
+     * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
 	 * environment, ZenType type) { if
 	 * (castingRule.getResultingType().equals(type)) { return this; }
 	 * 
@@ -28,17 +28,17 @@ public class ExpressionAs extends Expression {
 	 * } else { return new ExpressionAs(position, this, newCastingRule); } }
 	 */
 
-	@Override
-	public ZenType getType() {
-		return castingRule.getResultingType();
-	}
+    @Override
+    public ZenType getType() {
+        return castingRule.getResultingType();
+    }
 
-	@Override
-	public void compile(boolean result, IEnvironmentMethod environment) {
-		value.compile(result, environment);
+    @Override
+    public void compile(boolean result, IEnvironmentMethod environment) {
+        value.compile(result, environment);
 
-		if (result) {
-			castingRule.compile(environment);
-		}
-	}
+        if(result) {
+            castingRule.compile(environment);
+        }
+    }
 }

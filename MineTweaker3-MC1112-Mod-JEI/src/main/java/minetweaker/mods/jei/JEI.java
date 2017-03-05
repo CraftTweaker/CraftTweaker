@@ -1,14 +1,8 @@
 package minetweaker.mods.jei;
 
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
-import minetweaker.annotations.OnRegister;
+import minetweaker.*;
 import minetweaker.api.item.IItemStack;
-import net.minecraftforge.fml.common.Loader;
-import stanhebben.zenscript.annotations.NotNull;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 import java.util.LinkedList;
 
@@ -29,6 +23,33 @@ import static minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers;
 public class JEI {
 
     /**
+     * Register callbacks otherwise the load order with JEI is all messed up.
+     */
+    //    @OnRegister
+    //    public static void onRegister() {
+    //        // discard all not yet applied actions before a reload
+    //        MineTweakerImplementationAPI.onReloadEvent(event -> apply.clear());
+    //
+    //        // after the reload JEI needs to be reloaded as well
+    //        MineTweakerImplementationAPI.onPostReload(event -> {
+    //            if (Loader.isModLoaded("JEI")) {
+    //                try {
+    //                    if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
+    //                        System.out.println("class exists");
+    //                    }
+    //                } catch (ClassNotFoundException e) {
+    //                    e.printStackTrace();
+    //                }
+    //                if (JEIAddonPlugin.jeiHelpers != null)
+    //                    JEIAddonPlugin.jeiHelpers.reload();
+    //            }
+    //        });
+    //    }
+
+    // list of all hide actions that need to be applied after JEI is available
+    private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
+
+    /**
      * Hides a specific item in JEI. Will take into account metadata values, if
      * any.
      *
@@ -40,33 +61,6 @@ public class JEI {
     }
 
     /**
-     * Register callbacks otherwise the load order with JEI is all messed up.
-     */
-//    @OnRegister
-//    public static void onRegister() {
-//        // discard all not yet applied actions before a reload
-//        MineTweakerImplementationAPI.onReloadEvent(event -> apply.clear());
-//
-//        // after the reload JEI needs to be reloaded as well
-//        MineTweakerImplementationAPI.onPostReload(event -> {
-//            if (Loader.isModLoaded("JEI")) {
-//                try {
-//                    if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
-//                        System.out.println("class exists");
-//                    }
-//                } catch (ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                if (JEIAddonPlugin.jeiHelpers != null)
-//                    JEIAddonPlugin.jeiHelpers.reload();
-//            }
-//        });
-//    }
-
-    // list of all hide actions that need to be applied after JEI is available
-    private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
-
-    /**
      * JEI is available and the Hiding of the actions can now be applied.
      */
     public static void onJEIStarted() {
@@ -75,6 +69,7 @@ public class JEI {
     }
 
     private static class JEIHideItemAction implements IUndoableAction {
+
         private final IItemStack stack;
 
         public JEIHideItemAction(IItemStack stack) {
@@ -91,7 +86,7 @@ public class JEI {
          * Really adds the item to the blacklist when JEI is available
          */
         void doApply() {
-            if (jeiHelpers != null) {
+            if(jeiHelpers != null) {
                 jeiHelpers.getItemBlacklist().addItemToBlacklist(getItemStack(stack));
             } else {
                 // Should not happen, but in case only log an error

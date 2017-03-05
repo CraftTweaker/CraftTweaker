@@ -5,23 +5,24 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 public class ExpressionOrOr extends Expression {
-	private final Expression a;
-	private final Expression b;
 
-	public ExpressionOrOr(ZenPosition position, Expression a, Expression b) {
-		super(position);
+    private final Expression a;
+    private final Expression b;
 
-		this.a = a;
-		this.b = b;
-	}
+    public ExpressionOrOr(ZenPosition position, Expression a, Expression b) {
+        super(position);
 
-	@Override
-	public ZenType getType() {
-		return a.getType();
-	}
+        this.a = a;
+        this.b = b;
+    }
 
-	@Override
-	public void compile(boolean result, IEnvironmentMethod environment) {
-		// TODO: implement
-	}
+    @Override
+    public ZenType getType() {
+        return a.getType();
+    }
+
+    @Override
+    public void compile(boolean result, IEnvironmentMethod environment) {
+        // TODO: implement
+    }
 }

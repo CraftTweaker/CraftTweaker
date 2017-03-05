@@ -1,7 +1,6 @@
 package minetweaker.api.block;
 
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Blocks definitions provide additional information about blocks.
@@ -10,6 +9,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  */
 @ZenClass("minetweaker.block.IBlockDefinition")
 public interface IBlockDefinition {
+
     @ZenGetter("id")
     String getId();
 

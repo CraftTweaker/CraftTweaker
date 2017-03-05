@@ -1,9 +1,7 @@
 package minetweaker.api.vanilla;
 
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.WeightedItemStack;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import minetweaker.api.item.*;
+import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
 

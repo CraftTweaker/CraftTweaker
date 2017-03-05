@@ -3,17 +3,16 @@ package minetweaker.api.item;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.player.IPlayer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Contains an ingredient stack. Is an ingredient with a specific stack size
  * assigned to it.
- * 
+ *
  * @author Stan Hebben
  */
 public class IngredientStack implements IIngredient {
+
     private final IIngredient ingredient;
     private final int amount;
 
@@ -71,6 +70,7 @@ public class IngredientStack implements IIngredient {
     public boolean matches(IItemStack item) {
         return item.getAmount() == amount && ingredient.matches(item);
     }
+
     @Override
     public boolean matchesExact(IItemStack item) {
         return item.getAmount() == amount && ingredient.matchesExact(item);
@@ -110,7 +110,7 @@ public class IngredientStack implements IIngredient {
         String s = "(Ingredients) ";
         List<String> names = new ArrayList<>();
 
-        for (IItemStack st : ingredient.getItems()) {
+        for(IItemStack st : ingredient.getItems()) {
             names.add(st.getName());
         }
         s += String.join(",", names);

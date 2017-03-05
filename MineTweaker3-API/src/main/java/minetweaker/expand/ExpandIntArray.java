@@ -10,9 +10,9 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenExpansion("int[]")
 public class ExpandIntArray {
-	
-	@ZenCaster
-	public static IData asData(int[] values) {
-		return new DataIntArray(values, true);
-	}
+
+    @ZenCaster
+    public static IData asData(int[] values) {
+        return new DataIntArray(values, true);
+    }
 }

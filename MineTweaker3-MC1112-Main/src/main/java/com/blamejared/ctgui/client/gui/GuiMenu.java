@@ -1,39 +1,33 @@
 package com.blamejared.ctgui.client.gui;
 
-import com.blamejared.ctgui.api.CheckButtonRecipe;
-import com.blamejared.ctgui.api.GuiBase;
-import com.blamejared.ctgui.api.Slider;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import com.blamejared.ctgui.api.*;
+import net.minecraftforge.fml.relauncher.*;
+import org.apache.commons.lang3.tuple.*;
 
 import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiMenu {
-    private GuiBase parent;
-    private int x;
-    private int y;
-    private List<Pair<CheckButtonRecipe, Slider[]>> buttons = new ArrayList<>();
+
     //    public Pair<CheckButtonRecipe, Slider[]> matchNotEmpty;
     public Pair<CheckButtonRecipe, Slider[]> useOreDict;
     public Pair<CheckButtonRecipe, Slider[]> matchAnyMetadata;
     public Pair<CheckButtonRecipe, Slider[]> anyDamage;
     public Pair<CheckButtonRecipe, Slider[]> onlyDamage;
-
     //    public Pair<CheckButtonRecipe, Slider[]> damage;
     public Pair<CheckButtonRecipe, Slider[]> greaterThanEqualDamage;
     public Pair<CheckButtonRecipe, Slider[]> lessThanDamage;
     public Pair<CheckButtonRecipe, Slider[]> betweenDamage;
-
     public Pair<CheckButtonRecipe, Slider[]> nbt;
-
     //    public Pair<CheckButtonRecipe, Slider[]> transformDamage;
-//    public Pair<CheckButtonRecipe, Slider[]> transformReplace;
+    //    public Pair<CheckButtonRecipe, Slider[]> transformReplace;
     public Pair<CheckButtonRecipe, Slider[]> reuse;
     public Pair<CheckButtonRecipe, Slider[]> noReturn;
-//    public Pair<CheckButtonRecipe, Slider[]> giveBack;
+    private GuiBase parent;
+    private int x;
+    private int y;
+    private List<Pair<CheckButtonRecipe, Slider[]>> buttons = new ArrayList<>();
+    //    public Pair<CheckButtonRecipe, Slider[]> giveBack;
 
 
     public GuiMenu() {
@@ -44,7 +38,7 @@ public class GuiMenu {
         this.x = x;
         this.y = y;
         int buttonCount = 0;
-//        matchNotEmpty = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "Match Not Empty", false, "matchNotEmpty"), new Slider[]{});
+        //        matchNotEmpty = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "Match Not Empty", false, "matchNotEmpty"), new Slider[]{});
         useOreDict = new MutablePair<>(new CheckButtonRecipe(parent, 1, x, y + (15 * buttonCount++), "Ore Dictionary", false, "oreDictionary"), new Slider[]{});
         matchAnyMetadata = new MutablePair<>(new CheckButtonRecipe(parent, 2, x, y + (15 * buttonCount++), "Any Metadata", false, "anyMetadata"), new Slider[]{});
         anyDamage = new MutablePair<>(new CheckButtonRecipe(parent, 3, x, y + (15 * buttonCount++), "Any Damage", false, "anyDamage"), new Slider[]{});

@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112;
 
 import minetweaker.*;
+import minetweaker.annotations.BracketHandler;
 import minetweaker.mc1112.brackets.*;
 import minetweaker.mc1112.client.MCClient;
 import minetweaker.mc1112.formatting.MCFormatter;
@@ -25,14 +20,16 @@ import minetweaker.runtime.providers.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import stanhebben.zenscript.annotations.*;
 
 import java.io.File;
+import java.util.*;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -97,6 +94,30 @@ public class MineTweakerMod {
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
+        List<Class> apiClasses = new ArrayList<>();
+        String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
+        for(String name : classNames) {
+            ev.getAsmData().getAll(name).forEach(clazz -> {
+                boolean valid = true;
+                try {
+                    for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
+                        if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
+                            valid = false;
+                        }
+                    }
+                    if(valid) {
+                        Class<?> asmClass = Class.forName(clazz.getClassName());
+                        apiClasses.add(asmClass);
+                    }
+                } catch(ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        apiClasses.forEach(i -> {
+            System.out.println(">>> " + i.getName());
+            MineTweakerAPI.registerClass(i);
+        });
     }
     
     @EventHandler

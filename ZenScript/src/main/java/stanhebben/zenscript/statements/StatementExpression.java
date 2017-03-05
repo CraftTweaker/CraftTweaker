@@ -5,19 +5,18 @@ import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.util.ZenPosition;
 
 public class StatementExpression extends Statement {
-	private final ParsedExpression expression;
 
-	public StatementExpression(ZenPosition position, ParsedExpression expression) {
-		super(position);
+    private final ParsedExpression expression;
 
-		this.expression = expression;
-	}
+    public StatementExpression(ZenPosition position, ParsedExpression expression) {
+        super(position);
 
-	@Override
-	public void compile(IEnvironmentMethod environment) {
-		environment.getOutput().position(getPosition());
-		expression.compile(environment, null)
-			.eval(environment)
-			.compile(false, environment);
-	}
+        this.expression = expression;
+    }
+
+    @Override
+    public void compile(IEnvironmentMethod environment) {
+        environment.getOutput().position(getPosition());
+        expression.compile(environment, null).eval(environment).compile(false, environment);
+    }
 }

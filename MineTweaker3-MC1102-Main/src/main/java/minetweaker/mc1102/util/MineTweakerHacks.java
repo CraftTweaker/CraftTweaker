@@ -1,41 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.util;
 
-import com.google.common.collect.BiMap;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.util.text.translation.LanguageMap;
+import net.minecraft.util.text.translation.*;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.*;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
@@ -45,6 +26,7 @@ import java.util.logging.Logger;
  * @author Stan Hebben
  */
 public class MineTweakerHacks {
+
     private static final Field NBTTAGLIST_TAGLIST;
     private static final Field OREDICTIONARY_IDTOSTACK;
     private static final Field OREDICTIONARY_IDTOSTACKUN;

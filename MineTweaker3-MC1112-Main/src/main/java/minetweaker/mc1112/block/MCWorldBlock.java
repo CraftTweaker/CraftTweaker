@@ -1,33 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112.block;
 
-import minetweaker.api.block.BlockPatternOr;
-import minetweaker.api.block.IBlock;
-import minetweaker.api.block.IBlockDefinition;
-import minetweaker.api.block.IBlockPattern;
+import minetweaker.api.block.*;
 import minetweaker.api.data.IData;
 import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Stan
  */
 public class MCWorldBlock implements IBlock {
+
     private final IBlockAccess blocks;
     private final int x;
     private final int y;

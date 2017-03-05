@@ -1,14 +1,12 @@
-import java.io.File
-
 apply plugin: 'java'
 apply from: new File('../configuration.gradle')
 
 repositories {
-	mavenCentral();
+    mavenCentral();
 }
 
 dependencies {
-	compile gradleApi()
-	compile 'org.ow2.asm:asm-debug-all:5.0.3'
-	compile files(javaToolsJar)
+    compile gradleApi()
+    compile 'org.ow2.asm:asm-debug-all:5.0.3'
+    compile files(javaToolsJar)
 }

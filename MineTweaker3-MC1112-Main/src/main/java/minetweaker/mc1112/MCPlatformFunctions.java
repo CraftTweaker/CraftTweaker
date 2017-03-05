@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112;
 
 import minetweaker.IPlatformFunctions;
@@ -20,24 +14,25 @@ import static minetweaker.mc1112.MineTweakerMod.NETWORK;
 /**
  * @author Stan
  */
-public class MCPlatformFunctions implements IPlatformFunctions{
+public class MCPlatformFunctions implements IPlatformFunctions {
+
     public static final MCPlatformFunctions INSTANCE = new MCPlatformFunctions();
 
-    private MCPlatformFunctions(){
+    private MCPlatformFunctions() {
     }
 
     @Override
-    public IChatMessage getMessage(String message){
+    public IChatMessage getMessage(String message) {
         return new MCChatMessage(message);
     }
 
     @Override
-    public void distributeScripts(byte[] data){
+    public void distributeScripts(byte[] data) {
         NETWORK.sendToAll(new MineTweakerLoadScriptsPacket(data));
     }
 
     @Override
-    public IItemDefinition getItemDefinition(int id){
+    public IItemDefinition getItemDefinition(int id) {
         Item item = Item.getItemById(id);
         if(item == null)
             return null;

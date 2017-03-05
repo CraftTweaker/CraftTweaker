@@ -1,8 +1,7 @@
 package com.blamejared.ctgui.client;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -27,12 +26,9 @@ public class InventoryFake implements IInventory {
         return size;
     }
     
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.items)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for(ItemStack itemstack : this.items) {
+            if(!itemstack.isEmpty()) {
                 return false;
             }
         }

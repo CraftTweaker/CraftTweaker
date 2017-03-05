@@ -11,8 +11,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ModOnly {
-	
-	String[] value();
-	
-	String version() default "";
+    
+    String[] value();
+    
+    String version() default "";
 }

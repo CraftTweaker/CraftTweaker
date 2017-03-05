@@ -9,7 +9,7 @@ import stanhebben.zenscript.annotations.ZenClass;
  */
 @ZenClass("minetweaker.recipes.IRecipeAction")
 public interface IRecipeAction {
-	
-	void process(IItemStack output, ICraftingInfo craftingInfo, IPlayer player);
-	
+    
+    void process(IItemStack output, ICraftingInfo craftingInfo, IPlayer player);
+    
 }

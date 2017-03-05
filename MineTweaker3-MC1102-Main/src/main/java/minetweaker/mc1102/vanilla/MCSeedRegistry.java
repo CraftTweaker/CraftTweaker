@@ -1,30 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.vanilla;
 
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.item.WeightedItemStack;
+import minetweaker.*;
+import minetweaker.api.item.*;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.vanilla.ISeedRegistry;
 import minetweaker.mc1102.util.MineTweakerHacks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Stan
  */
 public class MCSeedRegistry implements ISeedRegistry {
+
     private static final List SEEDS = MineTweakerHacks.getSeeds();
 
     @Override
@@ -49,6 +40,7 @@ public class MCSeedRegistry implements ISeedRegistry {
     // ######################
 
     private static class AddSeedAction implements IUndoableAction {
+
         private final IItemStack item;
         private final WeightedRandom.Item entry;
 
@@ -89,6 +81,7 @@ public class MCSeedRegistry implements ISeedRegistry {
     }
 
     private static class RemoveSeedAction implements IUndoableAction {
+
         private final IIngredient pattern;
         private final List<Object> removed;
 

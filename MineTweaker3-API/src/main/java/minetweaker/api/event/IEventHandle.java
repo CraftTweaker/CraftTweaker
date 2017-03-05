@@ -1,7 +1,6 @@
 package minetweaker.api.event;
 
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 import java.io.Closeable;
 
@@ -12,6 +11,7 @@ import java.io.Closeable;
  */
 @ZenClass("minetweaker.event.IEventHandler")
 public interface IEventHandle extends Closeable {
+
     /**
      * Closes the event listener (stops listening and unregisters the listener).
      */

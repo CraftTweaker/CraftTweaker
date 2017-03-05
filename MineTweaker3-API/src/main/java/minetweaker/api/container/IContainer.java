@@ -1,9 +1,7 @@
 package minetweaker.api.container;
 
 import minetweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Container interface.
@@ -12,6 +10,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenClass("minetweaker.container.IContainer")
 public interface IContainer extends Iterable<IItemStack> {
+
     /**
      * Gets the container size.
      *
@@ -25,6 +24,7 @@ public interface IContainer extends Iterable<IItemStack> {
      * stack at that position.
      *
      * @param i stack position
+     *
      * @return stack contents, or null
      */
     @ZenMethod

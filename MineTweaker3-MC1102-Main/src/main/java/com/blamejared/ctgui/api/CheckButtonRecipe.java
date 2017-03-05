@@ -20,12 +20,12 @@ public class CheckButtonRecipe extends CheckButton {
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        if (this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
+        if(this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
             setIsChecked(!isChecked());
             parent.selectedSlot.getPropertyMap().put(getPropertyKey(), isChecked());
-            if (isChecked()) {
-                for (Slider slider : parent.getMenu().getSliders(this)) {
-                    if (GuiBase.isBlock(parent.selectedSlot.getStack())) {
+            if(isChecked()) {
+                for(Slider slider : parent.getMenu().getSliders(this)) {
+                    if(GuiBase.isBlock(parent.selectedSlot.getStack())) {
                         Block b = Block.getBlockFromItem(parent.selectedSlot.getStack().getItem());
                         ArrayList<ItemStack> list = new ArrayList<>();
                         b.getSubBlocks(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
@@ -33,7 +33,7 @@ public class CheckButtonRecipe extends CheckButton {
                         slider.maxValue = list.size() - 1;
                         slider.updateSlider();
                     } else {
-                        if (parent.selectedSlot.getStack().getItem().getHasSubtypes()) {
+                        if(parent.selectedSlot.getStack().getItem().getHasSubtypes()) {
                             ArrayList<ItemStack> list = new ArrayList<>();
                             parent.selectedSlot.getStack().getItem().getSubItems(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
                             slider.setValue(parent.selectedSlot.getProperty(slider.getPropertyKey()));
@@ -48,7 +48,7 @@ public class CheckButtonRecipe extends CheckButton {
                     parent.getButtonList().add(slider);
                 }
             } else {
-                for (Slider slider : parent.getMenu().getSliders(this)) {
+                for(Slider slider : parent.getMenu().getSliders(this)) {
                     parent.getButtonList().remove(slider);
                 }
             }
@@ -60,9 +60,9 @@ public class CheckButtonRecipe extends CheckButton {
 
     public void setIsChecked(boolean isChecked) {
         super.setIsChecked(isChecked);
-        if (isChecked()) {
-            for (Slider slider : parent.getMenu().getSliders(this)) {
-                if (GuiBase.isBlock(parent.selectedSlot.getStack())) {
+        if(isChecked()) {
+            for(Slider slider : parent.getMenu().getSliders(this)) {
+                if(GuiBase.isBlock(parent.selectedSlot.getStack())) {
                     Block b = Block.getBlockFromItem(parent.selectedSlot.getStack().getItem());
                     ArrayList<ItemStack> list = new ArrayList<>();
                     b.getSubBlocks(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
@@ -70,7 +70,7 @@ public class CheckButtonRecipe extends CheckButton {
                     slider.maxValue = list.size() - 1;
                     slider.updateSlider();
                 } else {
-                    if (parent.selectedSlot.getStack().getItem().getHasSubtypes()) {
+                    if(parent.selectedSlot.getStack().getItem().getHasSubtypes()) {
                         ArrayList<ItemStack> list = new ArrayList<>();
                         parent.selectedSlot.getStack().getItem().getSubItems(parent.selectedSlot.getStack().getItem(), CreativeTabs.SEARCH, list);
                         slider.setValue(parent.selectedSlot.getProperty(slider.getPropertyKey()));
@@ -84,14 +84,14 @@ public class CheckButtonRecipe extends CheckButton {
                 }
                 parent.getButtonList().add(slider);
             }
-            for (GuiButton but : incompatible) {
+            for(GuiButton but : incompatible) {
                 but.enabled = false;
             }
         } else {
-            for (Slider slider : parent.getMenu().getSliders(this)) {
+            for(Slider slider : parent.getMenu().getSliders(this)) {
                 parent.getButtonList().remove(slider);
             }
-            for (GuiButton but : incompatible) {
+            for(GuiButton but : incompatible) {
                 but.enabled = true;
             }
         }

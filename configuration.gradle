@@ -6,13 +6,13 @@ import javax.tools.ToolProvider
 
 ext.mineTweakerVersion = "3.0.22"
 if (System.getenv('BUILD_NUMBER') != null)
-    project.mineTweakerVersion += "."+System.getenv('BUILD_NUMBER')
-else {}
+    project.mineTweakerVersion += "." + System.getenv('BUILD_NUMBER')
+else {
+}
 
 ext.mineTweakerDebug = "false"
 //Make sure JAVA_HOME is set as an environment variable
 ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
-
 
 // #######################
 // ### 1.10.2 settings ###
@@ -20,9 +20,9 @@ ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).ge
 
 ext.forgeVersion1102 = "1.10.2-12.18.3.2185"
 ext.projects1102 = [
-	'MineTweaker3-MC1102-Main',
-	'MineTweaker3-MC1102-Mod-JEI',
-	'MineTweaker3-MC1102-Mod-IC2'
+        'MineTweaker3-MC1102-Main',
+        'MineTweaker3-MC1102-Mod-JEI',
+        'MineTweaker3-MC1102-Mod-IC2'
 ]
 
 // #######################
@@ -31,7 +31,7 @@ ext.projects1102 = [
 
 ext.forgeVersion1112 = "1.11.2-13.20.0.2232"
 ext.projects1112 = [
-	'MineTweaker3-MC1112-Main',
-	'MineTweaker3-MC1112-Mod-JEI'
+        'MineTweaker3-MC1112-Main',
+        'MineTweaker3-MC1112-Mod-JEI'
 ]
 

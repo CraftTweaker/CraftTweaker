@@ -1,23 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.runtime.providers;
 
 import minetweaker.MineTweakerAPI;
-import minetweaker.runtime.IScriptIterator;
-import minetweaker.runtime.IScriptProvider;
+import minetweaker.runtime.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
  * @author Stan
  */
 public class ScriptProviderDirectory implements IScriptProvider {
+
     private final File directory;
 
     public ScriptProviderDirectory(File directory) {

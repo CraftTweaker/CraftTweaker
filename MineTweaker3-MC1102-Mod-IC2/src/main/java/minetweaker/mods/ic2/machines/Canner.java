@@ -1,23 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mods.ic2.machines;
 
-import ic2.api.recipe.RecipeInputFluidContainer;
-import ic2.api.recipe.Recipes;
-import minetweaker.MineTweakerAPI;
-import minetweaker.OneWayAction;
+import ic2.api.recipe.*;
+import minetweaker.*;
 import minetweaker.annotations.ModOnly;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemStack;
+import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.mods.ic2.IC2RecipeInput;
 import net.minecraftforge.fluids.FluidStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
@@ -27,6 +17,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 @ZenClass("mods.ic2.Canner")
 @ModOnly("IC2")
 public class Canner {
+
     @ZenMethod
     public static void addBottleRecipe(IItemStack output, IIngredient container, IIngredient fill) {
         MineTweakerAPI.apply(new AddBottleIngredientAction(container, fill, output));
@@ -48,6 +39,7 @@ public class Canner {
     }
 
     private static class AddBottleIngredientAction extends OneWayAction {
+
         private final IIngredient container;
         private final IIngredient fill;
         private final IItemStack output;
@@ -60,10 +52,7 @@ public class Canner {
 
         @Override
         public void apply() {
-            Recipes.cannerBottle.addRecipe(
-                    new IC2RecipeInput(container),
-                    new IC2RecipeInput(fill),
-                    getItemStack(output));
+            Recipes.cannerBottle.addRecipe(new IC2RecipeInput(container), new IC2RecipeInput(fill), getItemStack(output));
         }
 
         @Override
@@ -99,6 +88,7 @@ public class Canner {
     }
 
     private static class AddBottleLiquidAction extends OneWayAction {
+
         private final IIngredient container;
         private final ILiquidStack fill;
         private final IItemStack output;
@@ -111,12 +101,7 @@ public class Canner {
 
         @Override
         public void apply() {
-            Recipes.cannerBottle.addRecipe(
-                    new IC2RecipeInput(container),
-                    new RecipeInputFluidContainer(
-                            ((FluidStack) fill.getInternal()).getFluid(),
-                            fill.getAmount()),
-                    getItemStack(output));
+            Recipes.cannerBottle.addRecipe(new IC2RecipeInput(container), new RecipeInputFluidContainer(((FluidStack) fill.getInternal()).getFluid(), fill.getAmount()), getItemStack(output));
         }
 
         @Override
@@ -131,6 +116,7 @@ public class Canner {
     }
 
     private static class AddEnrichIngredientAction extends OneWayAction {
+
         private final ILiquidStack input;
         private final IIngredient additive;
         private final ILiquidStack output;
@@ -179,6 +165,7 @@ public class Canner {
     }
 
     private static class AddEnrichLiquidAction extends OneWayAction {
+
         private final ILiquidStack input;
         private final ILiquidStack additive;
         private final ILiquidStack output;
@@ -191,11 +178,7 @@ public class Canner {
 
         @Override
         public void apply() {
-            Recipes.cannerEnrich.addRecipe(
-                    (FluidStack) input.getInternal(), new RecipeInputFluidContainer(
-                            ((FluidStack) additive.getInternal()).getFluid(),
-                            additive.getAmount()),
-                    (FluidStack) output.getInternal());
+            Recipes.cannerEnrich.addRecipe((FluidStack) input.getInternal(), new RecipeInputFluidContainer(((FluidStack) additive.getInternal()).getFluid(), additive.getAmount()), (FluidStack) output.getInternal());
         }
 
         @Override

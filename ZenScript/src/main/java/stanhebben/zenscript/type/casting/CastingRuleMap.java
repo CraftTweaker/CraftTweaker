@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.type.casting;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAssociative;
+import stanhebben.zenscript.type.*;
 
 /**
  * @author Stan
  */
 public class CastingRuleMap implements ICastingRule {
+
     private final ICastingRule keyRule;
     private final ICastingRule valueRule;
     private final ZenTypeAssociative fromType;

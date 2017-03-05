@@ -5,48 +5,46 @@ import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.util.MethodOutput;
-import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.*;
 
 public class StatementIf extends Statement {
-	private final ParsedExpression condition;
-	private final Statement onThen;
-	private final Statement onElse;
 
-	public StatementIf(ZenPosition position, ParsedExpression condition, Statement onThen, Statement onElse) {
-		super(position);
+    private final ParsedExpression condition;
+    private final Statement onThen;
+    private final Statement onElse;
 
-		this.condition = condition;
-		this.onThen = onThen;
-		this.onElse = onElse;
-	}
+    public StatementIf(ZenPosition position, ParsedExpression condition, Statement onThen, Statement onElse) {
+        super(position);
 
-	@Override
-	public void compile(IEnvironmentMethod environment) {
-		environment.getOutput().position(getPosition());
+        this.condition = condition;
+        this.onThen = onThen;
+        this.onElse = onElse;
+    }
 
-		Expression cCondition = condition.compile(environment, ZenType.BOOL)
-			.eval(environment)
-			.cast(getPosition(), environment, ZenType.BOOL);
+    @Override
+    public void compile(IEnvironmentMethod environment) {
+        environment.getOutput().position(getPosition());
 
-		ZenType expressionType = cCondition.getType();
-		if (expressionType.canCastImplicit(ZenType.BOOL, environment)) {
-			Label labelEnd = new Label();
-			Label labelElse = onElse == null ? labelEnd : new Label();
+        Expression cCondition = condition.compile(environment, ZenType.BOOL).eval(environment).cast(getPosition(), environment, ZenType.BOOL);
 
-			cCondition.compileIf(labelElse, environment);
-			onThen.compile(environment);
+        ZenType expressionType = cCondition.getType();
+        if(expressionType.canCastImplicit(ZenType.BOOL, environment)) {
+            Label labelEnd = new Label();
+            Label labelElse = onElse == null ? labelEnd : new Label();
 
-			MethodOutput methodOutput = environment.getOutput();
-			if (onElse != null) {
-				methodOutput.goTo(labelEnd);
-				methodOutput.label(labelElse);
-				onElse.compile(environment);
-			}
+            cCondition.compileIf(labelElse, environment);
+            onThen.compile(environment);
 
-			methodOutput.label(labelEnd);
-		} else {
-			environment.error(getPosition(), "condition is not a boolean");
-		}
-	}
+            MethodOutput methodOutput = environment.getOutput();
+            if(onElse != null) {
+                methodOutput.goTo(labelEnd);
+                methodOutput.label(labelElse);
+                onElse.compile(environment);
+            }
+
+            methodOutput.label(labelEnd);
+        } else {
+            environment.error(getPosition(), "condition is not a boolean");
+        }
+    }
 }

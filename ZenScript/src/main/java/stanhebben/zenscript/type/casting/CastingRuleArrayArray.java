@@ -1,87 +1,79 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.type.casting;
 
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeArrayBasic;
+import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.util.MethodOutput;
 
 /**
- *
  * @author Stan
  */
 public class CastingRuleArrayArray implements ICastingRule {
-	private final ICastingRule base;
-	private final ZenTypeArrayBasic from;
-	private final ZenTypeArrayBasic to;
 
-	public CastingRuleArrayArray(ICastingRule base, ZenTypeArrayBasic from, ZenTypeArrayBasic to) {
-		this.base = base;
-		this.from = from;
-		this.to = to;
-	}
+    private final ICastingRule base;
+    private final ZenTypeArrayBasic from;
+    private final ZenTypeArrayBasic to;
 
-	@Override
-	public void compile(IEnvironmentMethod method) {
-		MethodOutput output = method.getOutput();
+    public CastingRuleArrayArray(ICastingRule base, ZenTypeArrayBasic from, ZenTypeArrayBasic to) {
+        this.base = base;
+        this.from = from;
+        this.to = to;
+    }
 
-		Type fromType = from.getBaseType().toASMType();
-		Type toType = to.getBaseType().toASMType();
+    @Override
+    public void compile(IEnvironmentMethod method) {
+        MethodOutput output = method.getOutput();
 
-		int result = output.local(to.toASMType());
+        Type fromType = from.getBaseType().toASMType();
+        Type toType = to.getBaseType().toASMType();
 
-		output.dup();
-		output.arrayLength();
-		output.newArray(toType);
-		output.storeObject(result);
+        int result = output.local(to.toASMType());
 
-		output.iConst0();
+        output.dup();
+        output.arrayLength();
+        output.newArray(toType);
+        output.storeObject(result);
 
-		Label lbl = new Label();
-		output.label(lbl);
+        output.iConst0();
 
-		// stack: original index
-		output.dupX1();
-		output.dupX1();
-		output.arrayLoad(fromType);
+        Label lbl = new Label();
+        output.label(lbl);
 
-		// stack: original index value
-		if (base != null)
-			base.compile(method);
+        // stack: original index
+        output.dupX1();
+        output.dupX1();
+        output.arrayLoad(fromType);
 
-		output.loadObject(result);
-		output.dupX2();
-		output.dupX2();
-		output.arrayStore(toType);
-		output.pop();
+        // stack: original index value
+        if(base != null)
+            base.compile(method);
 
-		// stack: original index
-		output.iConst1();
-		output.iAdd();
-		output.dupX1();
-		output.arrayLength();
-		output.ifICmpGE(lbl);
+        output.loadObject(result);
+        output.dupX2();
+        output.dupX2();
+        output.arrayStore(toType);
+        output.pop();
 
-		output.pop();
-		output.pop();
+        // stack: original index
+        output.iConst1();
+        output.iAdd();
+        output.dupX1();
+        output.arrayLength();
+        output.ifICmpGE(lbl);
 
-		output.loadObject(result);
-	}
+        output.pop();
+        output.pop();
 
-	@Override
-	public ZenType getInputType() {
-		return from;
-	}
+        output.loadObject(result);
+    }
 
-	@Override
-	public ZenType getResultingType() {
-		return to;
-	}
+    @Override
+    public ZenType getInputType() {
+        return from;
+    }
+
+    @Override
+    public ZenType getResultingType() {
+        return to;
+    }
 }

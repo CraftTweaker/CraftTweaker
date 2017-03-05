@@ -1,9 +1,6 @@
 package minetweaker.api.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Contains an int array.
@@ -11,6 +8,7 @@ import java.util.Map;
  * @author Stan Hebben
  */
 public class DataIntArray implements IData {
+
     private final int[] data;
     private final boolean immutable;
 

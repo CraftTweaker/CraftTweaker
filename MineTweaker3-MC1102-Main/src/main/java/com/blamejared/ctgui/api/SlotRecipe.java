@@ -2,15 +2,12 @@ package com.blamejared.ctgui.api;
 
 import minetweaker.mc1102.data.NBTConverter;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jared.
@@ -47,36 +44,43 @@ public class SlotRecipe extends Slot {
         boolean matchAny = getPropertyFromMap("matchNotEmpty");
         boolean metaWildcard = getPropertyFromMap("anyMetadata");
         boolean oreDict = getPropertyFromMap("oreDictionary");
-        if (getStack() == null) return "null";
+        if(getStack() == null)
+            return "null";
         String stackName = Item.REGISTRY.getNameForObject(getStack().getItem()).toString();
         StringBuilder builder = new StringBuilder("<");
-        if (oreDict) {
+        if(oreDict) {
             int[] ids = OreDictionary.getOreIDs(getStack());
-            if (ids.length != 0) {
+            if(ids.length != 0) {
                 stackName = "ore:" + OreDictionary.getOreName(ids[0]);
-            } else oreDict = false;
+            } else
+                oreDict = false;
         }
-        if (matchAny) {
+        if(matchAny) {
             stackName = "*";
         }
         builder.append(stackName);
-        if (!oreDict && !matchAny && (metaWildcard || getStack().getItemDamage() != 0))
+        if(!oreDict && !matchAny && (metaWildcard || getStack().getItemDamage() != 0))
             builder.append(':').append(metaWildcard || getStack().getItemDamage() == OreDictionary.WILDCARD_VALUE ? "*" : getStack().getItemDamage());
         builder.append('>');
-        if (getStack().stackSize > 1) builder.append(" * ").append(getStack().stackSize);
-        if (getPropertyFromMap("anyDamage")) builder.append(".anyDamage()");
-        if (getPropertyFromMap("onlyDamage")) builder.append(".onlyDamaged()");
-        if (getPropertyFromMap("gted"))
+        if(getStack().stackSize > 1)
+            builder.append(" * ").append(getStack().stackSize);
+        if(getPropertyFromMap("anyDamage"))
+            builder.append(".anyDamage()");
+        if(getPropertyFromMap("onlyDamage"))
+            builder.append(".onlyDamaged()");
+        if(getPropertyFromMap("gted"))
             builder.append(".onlyDamageAtLeast(").append("").append(getProperty("gted")).append(')');
-        if (getPropertyFromMap("ltd"))
+        if(getPropertyFromMap("ltd"))
             builder.append(".onlyDamageAtMost(").append("").append(getProperty("ltd")).append(')');
-        if (getPropertyFromMap("betweenDamage")) {
+        if(getPropertyFromMap("betweenDamage")) {
             builder.append(".onlyDamageBetween(").append("").append(getProperty("betweenDamageX")).append(", ").append("").append(getProperty("betweenDamageY")).append(')');
         }
-        if (getPropertyFromMap("reuse")) builder.append(".reuse()");
-        if (getPropertyFromMap("noreturn")) builder.append(".noReturn()");
-        if (getPropertyFromMap("nbt")) {
-            if (this instanceof SlotRecipeOutput)
+        if(getPropertyFromMap("reuse"))
+            builder.append(".reuse()");
+        if(getPropertyFromMap("noreturn"))
+            builder.append(".noReturn()");
+        if(getPropertyFromMap("nbt")) {
+            if(this instanceof SlotRecipeOutput)
                 builder.append(String.format(".withTag(%s)", NBTConverter.from(getStack().getTagCompound(), false).toString()));
             else
                 builder.append(String.format(".onlyWithTag(%s)", NBTConverter.from(getStack().getTagCompound(), false).toString()));
@@ -85,14 +89,14 @@ public class SlotRecipe extends Slot {
     }
 
     boolean getPropertyFromMap(String key) {
-        if (propertyMap.containsKey(key)) {
+        if(propertyMap.containsKey(key)) {
             return propertyMap.get(key);
         }
         return false;
     }
 
     int getProperty(String key) {
-        if (properties.containsKey(key)) {
+        if(properties.containsKey(key)) {
             return properties.get(key);
         }
         return 0;

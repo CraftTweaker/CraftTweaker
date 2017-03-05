@@ -1,49 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.type.expand;
 
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.expression.Expression;
-import stanhebben.zenscript.expression.ExpressionCallStatic;
+import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.casting.CastingRuleDelegateStaticMethod;
-import stanhebben.zenscript.type.casting.CastingRuleStaticMethod;
-import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.casting.*;
 import stanhebben.zenscript.type.natives.IJavaMethod;
-import stanhebben.zenscript.util.MethodOutput;
-import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.*;
 
 /**
- *
  * @author Stanneke
  */
 public class ZenExpandCaster {
-	private final IJavaMethod method;
 
-	public ZenExpandCaster(IJavaMethod method) {
-		this.method = method;
-	}
+    private final IJavaMethod method;
 
-	public ZenType getTarget() {
-		return method.getReturnType();
-	}
+    public ZenExpandCaster(IJavaMethod method) {
+        this.method = method;
+    }
 
-	public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules) {
-		ZenType type = method.getReturnType();
-		rules.registerCastingRule(type, new CastingRuleStaticMethod(method));
+    public ZenType getTarget() {
+        return method.getReturnType();
+    }
 
-		type.constructCastingRules(environment, new CastingRuleDelegateStaticMethod(rules, method), false);
-	}
+    public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules) {
+        ZenType type = method.getReturnType();
+        rules.registerCastingRule(type, new CastingRuleStaticMethod(method));
 
-	public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression expression) {
-		return new ExpressionCallStatic(position, environment, method, expression);
-	}
+        type.constructCastingRules(environment, new CastingRuleDelegateStaticMethod(rules, method), false);
+    }
 
-	public void compile(MethodOutput output) {
-		method.invokeStatic(output);
-	}
+    public Expression cast(ZenPosition position, IEnvironmentGlobal environment, Expression expression) {
+        return new ExpressionCallStatic(position, environment, method, expression);
+    }
+
+    public void compile(MethodOutput output) {
+        method.invokeStatic(output);
+    }
 }

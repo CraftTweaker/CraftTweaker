@@ -17,136 +17,140 @@ dependencies {
 }
 
 uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: "file://" + System.getenv("local_maven"))
-			pom {
-				groupId = project.group
-				version
-				artifactId = project.archivesBaseName
-				project {
-					name project.archivesBaseName
-					packaging 'jar'
-					description 'CraftTweaker'
-					url 'https://github.com/jaredlll08/CraftTweaker'
-					scm {
-						url 'https://github.com/jaredlll08/CraftTweaker.git'
-						connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-						developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-					}
-					issueManagement {
-						system 'github'
-						url 'https://github.com/jaredlll08/CraftTweaker/issues'
-					}
-					developers {
-						developer {
-							id 'Jared'
-							name 'Jared'
-							roles { role 'developer' }
-						}
-					}
-				}
-			}
-		}
-	}
+    repositories {
+        mavenDeployer {
+            repository(url: "file://" + System.getenv("local_maven"))
+            pom {
+                groupId = project.group
+                version
+                artifactId = project.archivesBaseName
+                project {
+                    name project.archivesBaseName
+                    packaging 'jar'
+                    description 'CraftTweaker'
+                    url 'https://github.com/jaredlll08/CraftTweaker'
+                    scm {
+                        url 'https://github.com/jaredlll08/CraftTweaker.git'
+                        connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+                        developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
+                    }
+                    issueManagement {
+                        system 'github'
+                        url 'https://github.com/jaredlll08/CraftTweaker/issues'
+                    }
+                    developers {
+                        developer {
+                            id 'Jared'
+                            name 'Jared'
+                            roles { role 'developer' }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
     gradleVersion = '2.6'
 }
 
-subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
+subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
-task setupDecompWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupDecompWorkspace'}+projects1112.collect { ':' + it + ':setupDecompWorkspace'}) {}
+task setupDecompWorkspaceAll(dependsOn: projects1102.collect {
+    ':' + it + ':setupDecompWorkspace'
+} + projects1112.collect { ':' + it + ':setupDecompWorkspace' }) {}
 
-task setupCIWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupCIWorkspace'}+projects1112.collect { ':' + it + ':setupCIWorkspace'}) {}
+task setupCIWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupCIWorkspace' } + projects1112.collect {
+    ':' + it + ':setupCIWorkspace'
+}) {}
 
 task assembleMC1102(type: Jar, dependsOn: [\
 		':ZenScript:build',
-		':MineTweaker3-API:build']
-		+ projects1102.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-1.10.2-${mineTweakerVersion}.jar"
+                                           ':MineTweaker3-API:build']
+        + projects1102.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-1.10.2-${mineTweakerVersion}.jar"
 
-	from zipTree(project(":ZenScript").jar.archivePath)
-	from zipTree(project(':MineTweaker3-API').jar.archivePath)
+    from zipTree(project(":ZenScript").jar.archivePath)
+    from zipTree(project(':MineTweaker3-API').jar.archivePath)
 
-	for (p in projects1102) {
-		from zipTree(project(p).jar.archivePath)
-	}
+    for (p in projects1102) {
+        from zipTree(project(p).jar.archivePath)
+    }
 }
 
 task assembleDevBase1102(type: Jar, dependsOn: [
-		':ZenScript:build',
-		':MineTweaker3-API:build',
-		':MineTweaker3-MC1102-Main:build']) {
-	archiveName="CraftTweaker-Dev-1.10.2-${mineTweakerVersion}.jar"
+        ':ZenScript:build',
+        ':MineTweaker3-API:build',
+        ':MineTweaker3-MC1102-Main:build']) {
+    archiveName = "CraftTweaker-Dev-1.10.2-${mineTweakerVersion}.jar"
 
-	from project(':ZenScript').sourceSets.main.output
-	from project(':MineTweaker3-API').sourceSets.main.output
-	from project(':MineTweaker3-MC1102-Main').sourceSets.main.output
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
+    from project(':MineTweaker3-MC1102-Main').sourceSets.main.output
 }
 
 task assembleDevFull1102(type: Jar, dependsOn: [
-		':ZenScript:build',
-		':MineTweaker3-API:build']
-		+ projects1102.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Dev-Full-1.10.2-${mineTweakerVersion}.jar"
+        ':ZenScript:build',
+        ':MineTweaker3-API:build']
+        + projects1102.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-Dev-Full-1.10.2-${mineTweakerVersion}.jar"
 
-	from project(':ZenScript').sourceSets.main.output
-	from project(':MineTweaker3-API').sourceSets.main.output
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
 
-	for (p in projects1102) {
-		from project(p).sourceSets.main.output
-	}
+    for (p in projects1102) {
+        from project(p).sourceSets.main.output
+    }
 }
 
 task assembleMC1112(type: Jar, dependsOn: [\
 		':ZenScript:build',
-		':MineTweaker3-API:build']
-		+ projects1112.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-1.11.2-${mineTweakerVersion}.jar"
+                                           ':MineTweaker3-API:build']
+        + projects1112.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-1.11.2-${mineTweakerVersion}.jar"
 
-	from zipTree(project(":ZenScript").jar.archivePath)
-	from zipTree(project(':MineTweaker3-API').jar.archivePath)
+    from zipTree(project(":ZenScript").jar.archivePath)
+    from zipTree(project(':MineTweaker3-API').jar.archivePath)
 
-	for (p in projects1112) {
-		from zipTree(project(p).jar.archivePath)
-	}
+    for (p in projects1112) {
+        from zipTree(project(p).jar.archivePath)
+    }
 }
 
 task assembleDevBase1112(type: Jar, dependsOn: [
-		':ZenScript:build',
-		':MineTweaker3-API:build',
-		':MineTweaker3-MC1112-Main:build']) {
-	archiveName="CraftTweaker-Dev-1.11.2-${mineTweakerVersion}.jar"
+        ':ZenScript:build',
+        ':MineTweaker3-API:build',
+        ':MineTweaker3-MC1112-Main:build']) {
+    archiveName = "CraftTweaker-Dev-1.11.2-${mineTweakerVersion}.jar"
 
-	from project(':ZenScript').sourceSets.main.output
-	from project(':MineTweaker3-API').sourceSets.main.output
-	from project(':MineTweaker3-MC1112-Main').sourceSets.main.output
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
+    from project(':MineTweaker3-MC1112-Main').sourceSets.main.output
 }
 
 task assembleDevFull1112(type: Jar, dependsOn: [
-		':ZenScript:build',
-		':MineTweaker3-API:build']
-		+ projects1112.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Dev-Full-1.11.2-${mineTweakerVersion}.jar"
+        ':ZenScript:build',
+        ':MineTweaker3-API:build']
+        + projects1112.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-Dev-Full-1.11.2-${mineTweakerVersion}.jar"
 
-	from project(':ZenScript').sourceSets.main.output
-	from project(':MineTweaker3-API').sourceSets.main.output
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
 
-	for (p in projects1112) {
-		from project(p).sourceSets.main.output
-	}
+    for (p in projects1112) {
+        from project(p).sourceSets.main.output
+    }
 }
 
 task assembleAll(dependsOn: [
-	assembleMC1102,
-	assembleDevBase1102,
-	assembleDevFull1102,
-	assembleMC1112,
-	assembleDevBase1112,
-	assembleDevFull1112
-	]) {
+        assembleMC1102,
+        assembleDevBase1102,
+        assembleDevFull1102,
+        assembleMC1112,
+        assembleDevBase1112,
+        assembleDevFull1112
+]) {
 }
 
 configurations {

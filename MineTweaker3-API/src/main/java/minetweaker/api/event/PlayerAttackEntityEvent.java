@@ -1,50 +1,42 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.event;
 
 import minetweaker.api.entity.IEntity;
 import minetweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
- *
  * @author Stan
  */
 @ZenClass("minetweaker.event.PlayerAttackEntityEvent")
 public class PlayerAttackEntityEvent {
-	private final IPlayer player;
-	private final IEntity entity;
-	private boolean canceled;
 
-	public PlayerAttackEntityEvent(IPlayer player, IEntity entity) {
-		this.player = player;
-		this.entity = entity;
-		canceled = false;
-	}
+    private final IPlayer player;
+    private final IEntity entity;
+    private boolean canceled;
 
-	@ZenMethod
-	public void cancel() {
-		canceled = true;
-	}
+    public PlayerAttackEntityEvent(IPlayer player, IEntity entity) {
+        this.player = player;
+        this.entity = entity;
+        canceled = false;
+    }
 
-	@ZenGetter("canceled")
-	public boolean isCanceled() {
-		return canceled;
-	}
+    @ZenMethod
+    public void cancel() {
+        canceled = true;
+    }
 
-	@ZenGetter("player")
-	public IPlayer getPlayer() {
-		return player;
-	}
+    @ZenGetter("canceled")
+    public boolean isCanceled() {
+        return canceled;
+    }
 
-	@ZenGetter("entity")
-	public IEntity getEntity() {
-		return entity;
-	}
+    @ZenGetter("player")
+    public IPlayer getPlayer() {
+        return player;
+    }
+
+    @ZenGetter("entity")
+    public IEntity getEntity() {
+        return entity;
+    }
 }

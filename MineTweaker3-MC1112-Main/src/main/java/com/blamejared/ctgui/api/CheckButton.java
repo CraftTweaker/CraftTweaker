@@ -3,8 +3,7 @@ package com.blamejared.ctgui.api;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.client.config.*;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -31,19 +30,19 @@ public class CheckButton extends GuiCheckBox {
         this.backgroundSize = backgroundSize;
     }
 
-    public void setIncompatible(List<GuiButton> incompatible) {
-        this.incompatible = incompatible;
-    }
-
     public List<GuiButton> getIncompatible() {
         return incompatible;
+    }
+
+    public void setIncompatible(List<GuiButton> incompatible) {
+        this.incompatible = incompatible;
     }
 
     /**
      * Draws this button to the screen.
      */
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        if (this.visible) {
+        if(this.visible) {
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + getButtonWidth() && mouseY < this.yPosition + this.height;
             GlStateManager.enableAlpha();
             GL11.glColor4d(1, 1, 1, 0);
@@ -53,13 +52,13 @@ public class CheckButton extends GuiCheckBox {
             this.mouseDragged(mc, mouseX, mouseY);
             int color = 14737632;
 
-            if (packedFGColour != 0) {
+            if(packedFGColour != 0) {
                 color = packedFGColour;
-            } else if (!this.enabled) {
+            } else if(!this.enabled) {
                 color = 10526880;
             }
 
-            if (this.isChecked()) {
+            if(this.isChecked()) {
                 this.drawGradientRect(this.xPosition + 2, this.yPosition + 2, this.xPosition + 11 - 2, this.yPosition + height - 2, Color.cyan.darker().getRGB(), Color.cyan.darker().getRGB());
             }
 
@@ -69,7 +68,7 @@ public class CheckButton extends GuiCheckBox {
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        if (this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
+        if(this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
             setIsChecked(!isChecked());
             return true;
         }
@@ -79,15 +78,15 @@ public class CheckButton extends GuiCheckBox {
 
     public void setIsChecked(boolean isChecked) {
         super.setIsChecked(isChecked);
-        if (isChecked()) {
-            for (GuiButton but : incompatible) {
+        if(isChecked()) {
+            for(GuiButton but : incompatible) {
                 but.enabled = false;
-                if (but instanceof CheckButton) {
+                if(but instanceof CheckButton) {
                     ((CheckButton) but).setIsChecked(false);
                 }
             }
         } else {
-            for (GuiButton but : incompatible) {
+            for(GuiButton but : incompatible) {
                 but.enabled = true;
             }
         }

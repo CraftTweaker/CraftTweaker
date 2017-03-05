@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.type.casting;
 
 import org.objectweb.asm.Label;
@@ -13,54 +7,54 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.util.MethodOutput;
 
 /**
- *
  * @author Stan
  */
 public class CastingRuleNullableStaticMethod implements ICastingRule {
-	private final IJavaMethod method;
-	private final ICastingRule base;
 
-	public CastingRuleNullableStaticMethod(IJavaMethod method) {
-		this.method = method;
-		base = null;
-	}
+    private final IJavaMethod method;
+    private final ICastingRule base;
 
-	public CastingRuleNullableStaticMethod(IJavaMethod method, ICastingRule base) {
-		this.method = method;
-		this.base = base;
-	}
+    public CastingRuleNullableStaticMethod(IJavaMethod method) {
+        this.method = method;
+        base = null;
+    }
 
-	@Override
-	public void compile(IEnvironmentMethod method) {
-		MethodOutput output = method.getOutput();
+    public CastingRuleNullableStaticMethod(IJavaMethod method, ICastingRule base) {
+        this.method = method;
+        this.base = base;
+    }
 
-		Label lblNotNull = new Label();
-		Label lblAfter = new Label();
+    @Override
+    public void compile(IEnvironmentMethod method) {
+        MethodOutput output = method.getOutput();
 
-		output.dup();
-		output.ifNonNull(lblNotNull);
-		output.pop();
-		output.aConstNull();
-		output.goTo(lblAfter);
+        Label lblNotNull = new Label();
+        Label lblAfter = new Label();
 
-		output.label(lblNotNull);
+        output.dup();
+        output.ifNonNull(lblNotNull);
+        output.pop();
+        output.aConstNull();
+        output.goTo(lblAfter);
 
-		if (base != null) {
-			base.compile(method);
-		}
+        output.label(lblNotNull);
 
-		this.method.invokeStatic(method.getOutput());
+        if(base != null) {
+            base.compile(method);
+        }
 
-		output.label(lblAfter);
-	}
+        this.method.invokeStatic(method.getOutput());
 
-	@Override
-	public ZenType getInputType() {
-		return method.getParameterTypes()[0];
-	}
+        output.label(lblAfter);
+    }
 
-	@Override
-	public ZenType getResultingType() {
-		return method.getReturnType();
-	}
+    @Override
+    public ZenType getInputType() {
+        return method.getParameterTypes()[0];
+    }
+
+    @Override
+    public ZenType getResultingType() {
+        return method.getReturnType();
+    }
 }

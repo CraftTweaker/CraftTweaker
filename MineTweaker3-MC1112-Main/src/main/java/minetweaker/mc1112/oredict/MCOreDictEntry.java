@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112.oredict;
 
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
+import minetweaker.*;
 import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import minetweaker.api.oredict.IOreDictEntry;
-import minetweaker.api.oredict.IngredientOreDict;
+import minetweaker.api.oredict.*;
 import minetweaker.api.player.IPlayer;
 import minetweaker.mc1112.util.MineTweakerHacks;
 import minetweaker.util.ArrayUtil;
@@ -20,14 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.*;
 
 /**
  * @author Stan
@@ -67,16 +55,16 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public void add(IItemStack item) {
         ItemStack stack = getItemStack(item);
-        if (!stack.isEmpty()) {
+        if(!stack.isEmpty()) {
             MineTweakerAPI.apply(new ActionAddItem(id, stack));
         }
     }
 
     @Override
     public void addItems(IItemStack[] items) {
-        for (IItemStack item : items) {
+        for(IItemStack item : items) {
             ItemStack stack = getItemStack(item);
-            if (!stack.isEmpty()) {
+            if(!stack.isEmpty()) {
                 MineTweakerAPI.apply(new ActionAddItem(id, stack));
             }
         }
@@ -84,7 +72,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public void addAll(IOreDictEntry entry) {
-        if (entry instanceof MCOreDictEntry) {
+        if(entry instanceof MCOreDictEntry) {
             MineTweakerAPI.apply(new ActionAddAll(id, ((MCOreDictEntry) entry).id));
         } else {
             MineTweakerAPI.logError("not a valid entry");
@@ -94,30 +82,30 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public void remove(IItemStack item) {
         ItemStack result = ItemStack.EMPTY;
-        for (ItemStack itemStack : OreDictionary.getOres(getName())) {
-            if (item.matches(getIItemStackWildcardSize(itemStack))) {
+        for(ItemStack itemStack : OreDictionary.getOres(getName())) {
+            if(item.matches(getIItemStackWildcardSize(itemStack))) {
                 result = itemStack;
                 break;
             }
         }
 
-        if (!result.isEmpty()) {
+        if(!result.isEmpty()) {
             MineTweakerAPI.apply(new ActionRemoveItem(id, result));
         }
     }
 
     @Override
     public void removeItems(IItemStack[] items) {
-        for (IItemStack item : items) {
+        for(IItemStack item : items) {
             ItemStack result = ItemStack.EMPTY;
-            for (ItemStack itemStack : OreDictionary.getOres(id)) {
-                if (item.matches(getIItemStackWildcardSize(itemStack))) {
+            for(ItemStack itemStack : OreDictionary.getOres(id)) {
+                if(item.matches(getIItemStackWildcardSize(itemStack))) {
                     result = itemStack;
                     break;
                 }
             }
-    
-            if (!result.isEmpty()) {
+
+            if(!result.isEmpty()) {
                 MineTweakerAPI.apply(new ActionRemoveItem(id, result));
             }
         }
@@ -125,8 +113,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public boolean contains(IItemStack item) {
-        for (ItemStack itemStack : OreDictionary.getOres(getName())) {
-            if (getIItemStackWildcardSize(itemStack).matches(item)) {
+        for(ItemStack itemStack : OreDictionary.getOres(getName())) {
+            if(getIItemStackWildcardSize(itemStack).matches(item)) {
                 return true;
             }
         }
@@ -136,7 +124,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public void mirror(IOreDictEntry other) {
-        if (other instanceof MCOreDictEntry) {
+        if(other instanceof MCOreDictEntry) {
             MineTweakerAPI.apply(new ActionMirror(id, ((MCOreDictEntry) other).id));
         } else {
             MineTweakerAPI.logError("not a valid oredict entry");
@@ -206,8 +194,8 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public boolean contains(IIngredient ingredient) {
         List<IItemStack> items = ingredient.getItems();
-        for (IItemStack item : items) {
-            if (!matches(item))
+        for(IItemStack item : items) {
+            if(!matches(item))
                 return false;
         }
 
@@ -253,6 +241,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     // ######################
 
     private static class ActionAddItem implements IUndoableAction {
+
         private final String id;
         private final ItemStack item;
 
@@ -295,6 +284,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     private static class ActionMirror implements IUndoableAction {
+
         private final String idTarget;
         private final String idSource;
 
@@ -347,6 +337,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     private static class ActionRemoveItem implements IUndoableAction {
+
         private final String id;
         private final ItemStack item;
 
@@ -389,6 +380,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     private static class ActionAddAll implements IUndoableAction {
+
         private final String idTarget;
         private final String idSource;
 
@@ -399,7 +391,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
         @Override
         public void apply() {
-            for (ItemStack stack : OreDictionary.getOres(idSource)) {
+            for(ItemStack stack : OreDictionary.getOres(idSource)) {
                 OreDictionary.registerOre(idTarget, stack);
             }
         }
@@ -412,7 +404,7 @@ public class MCOreDictEntry implements IOreDictEntry {
         @Override
         public void undo() {
             int targetOreId = OreDictionary.getOreID(idTarget);
-            for (ItemStack stack : OreDictionary.getOres(idSource)) {
+            for(ItemStack stack : OreDictionary.getOres(idSource)) {
                 OREDICT_CONTENTS.get(targetOreId).remove(stack);
             }
         }

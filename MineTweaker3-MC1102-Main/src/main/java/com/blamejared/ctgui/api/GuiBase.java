@@ -3,8 +3,7 @@ package com.blamejared.ctgui.api;
 import com.blamejared.ctgui.client.gui.GuiMenu;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -14,19 +13,17 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.*;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public abstract class GuiBase extends GuiContainer {
 
-    protected ContainerBase container;
     public SlotRecipe selectedSlot;
-    protected GuiMenu menu = new GuiMenu();
     public GuiTextField editingField;
-
     public GuiButton add;
     public GuiButton remove;
-
+    protected ContainerBase container;
+    protected GuiMenu menu = new GuiMenu();
     private boolean shouldOpenMenu;
 
     public GuiBase(ContainerBase container, int xSize, int ySize, boolean shouldOpenMenu) {
@@ -35,6 +32,11 @@ public abstract class GuiBase extends GuiContainer {
         this.xSize = xSize;
         this.ySize = ySize;
         this.shouldOpenMenu = shouldOpenMenu;
+    }
+
+    public static boolean isBlock(ItemStack stack) {
+        ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
+        return !(name != null && name.toString().equals("minecraft:air")) && Block.REGISTRY.containsKey(name);
     }
 
     @Override
@@ -169,7 +171,6 @@ public abstract class GuiBase extends GuiContainer {
 
     public abstract String getOutputRemove();
 
-
     protected void actionPerformed(GuiButton btn) {
         if(btn.equals(add)) {
             File scriptFile = new File(new File("scripts"), "/recipes.zs");
@@ -251,7 +252,6 @@ public abstract class GuiBase extends GuiContainer {
         }
     }
 
-
     public abstract ResourceLocation getTexture();
 
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -271,7 +271,6 @@ public abstract class GuiBase extends GuiContainer {
         return this.buttonList;
     }
 
-
     public int getGuiLeft() {
         return guiLeft;
     }
@@ -280,18 +279,12 @@ public abstract class GuiBase extends GuiContainer {
         return guiTop;
     }
 
-
     public int getXSize() {
         return xSize;
     }
 
     public int getYSize() {
         return ySize;
-    }
-
-    public static boolean isBlock(ItemStack stack) {
-        ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-        return !(name != null && name.toString().equals("minecraft:air")) && Block.REGISTRY.containsKey(name);
     }
 
     public GuiMenu getMenu() {

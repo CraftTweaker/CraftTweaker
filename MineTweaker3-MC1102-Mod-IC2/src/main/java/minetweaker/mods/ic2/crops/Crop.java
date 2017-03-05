@@ -1,80 +1,77 @@
 package minetweaker.mods.ic2.crops;
 
 import ic2.api.crops.CropCard;
-import stanhebben.zenscript.annotations.ZenCaster;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Read-only data accessor for crops
- * @author ben
  *
+ * @author ben
  */
 @ZenClass("mods.ic2.Crop")
 public class Crop {
-	private CropCard cc;
 
-	@ZenGetter("name")
-	public String name() {
-		return cc.getName();
-	}
+    private CropCard cc;
 
-	@ZenGetter("owner")
-	public String owner() {
-		return cc.getOwner();
-	}
+    public Crop(CropCard cc) {
+        super();
+        this.cc = cc;
+    }
 
-	@ZenGetter("displayName")
-	public String displayName() {
-		return cc.getDisplayName();
-	}
+    @ZenGetter("name")
+    public String name() {
+        return cc.getName();
+    }
 
-	@ZenGetter("hashCode")
-	public int hashCode() {
-		return cc.hashCode();
-	}
+    @ZenGetter("owner")
+    public String owner() {
+        return cc.getOwner();
+    }
 
-	@ZenGetter("discoveredBy")
-	public String discoveredBy() {
-		return cc.getDiscoveredBy();
-	}
+    @ZenGetter("displayName")
+    public String displayName() {
+        return cc.getDisplayName();
+    }
 
-	@ZenMethod
-	public String desc(int i) {
-		return cc.desc(i);
-	}
+    @ZenGetter("hashCode")
+    public int hashCode() {
+        return cc.hashCode();
+    }
 
-	@ZenGetter("tier")
-	public int tier() {
-		return cc.getProperties().getTier();
-	}
+    @ZenGetter("discoveredBy")
+    public String discoveredBy() {
+        return cc.getDiscoveredBy();
+    }
 
+    @ZenMethod
+    public String desc(int i) {
+        return cc.desc(i);
+    }
 
-	@ZenGetter("attributes")
-	public String[] attributes() {
-		return cc.getAttributes();
-	}
+    @ZenGetter("tier")
+    public int tier() {
+        return cc.getProperties().getTier();
+    }
 
-	@ZenGetter("maxSize")
-	public int maxSize() {
-		return cc.getMaxSize();
-	}
+    @ZenGetter("attributes")
+    public String[] attributes() {
+        return cc.getAttributes();
+    }
 
-	@ZenGetter("dropGainChance")
-	public double dropGainChance() {
-		return cc.dropGainChance();
-	}
+    @ZenGetter("maxSize")
+    public int maxSize() {
+        return cc.getMaxSize();
+    }
 
-	@ZenCaster
-	public String toString() {
-		return cc.toString();
-	}
+    @ZenGetter("dropGainChance")
+    public double dropGainChance() {
+        return cc.dropGainChance();
+    }
 
-	public Crop(CropCard cc) {
-		super();
-		this.cc = cc;
-	}
+    @ZenCaster
+    public String toString() {
+        return cc.toString();
+    }
 
 
 }

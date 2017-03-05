@@ -8,37 +8,38 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
 public class StatementReturn extends Statement {
-	private final ZenType returnType;
-	private final ParsedExpression expression;
 
-	public StatementReturn(ZenPosition position, ZenType returnType, ParsedExpression expression) {
-		super(position);
+    private final ZenType returnType;
+    private final ParsedExpression expression;
 
-		this.returnType = returnType;
-		this.expression = expression;
-	}
+    public StatementReturn(ZenPosition position, ZenType returnType, ParsedExpression expression) {
+        super(position);
 
-	public ParsedExpression getExpression() {
-		return expression;
-	}
+        this.returnType = returnType;
+        this.expression = expression;
+    }
 
-	@Override
-	public boolean isReturn() {
-		return false;
-	}
+    public ParsedExpression getExpression() {
+        return expression;
+    }
 
-	@Override
-	public void compile(IEnvironmentMethod environment) {
-		environment.getOutput().position(getPosition());
+    @Override
+    public boolean isReturn() {
+        return false;
+    }
 
-		if (expression == null) {
-			environment.getOutput().ret();
-		} else {
-			Expression cExpression = expression.compile(environment, returnType).eval(environment);
-			cExpression.compile(true, environment);
+    @Override
+    public void compile(IEnvironmentMethod environment) {
+        environment.getOutput().position(getPosition());
 
-			Type returnType = cExpression.getType().toASMType();
-			environment.getOutput().returnType(returnType);
-		}
-	}
+        if(expression == null) {
+            environment.getOutput().ret();
+        } else {
+            Expression cExpression = expression.compile(environment, returnType).eval(environment);
+            cExpression.compile(true, environment);
+
+            Type returnType = cExpression.getType().toASMType();
+            environment.getOutput().returnType(returnType);
+        }
+    }
 }

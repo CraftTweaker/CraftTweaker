@@ -2,9 +2,7 @@ package minetweaker.api.entity;
 
 import minetweaker.api.util.Position3f;
 import minetweaker.api.world.IDimension;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Entity interface. Used to obtain information about entities, and modify their
@@ -15,6 +13,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
  */
 @ZenClass("minetweaker.entity.IEntity")
 public interface IEntity {
+
     /**
      * Retrieves the dimension this entity is in.
      *

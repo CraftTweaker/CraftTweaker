@@ -1,38 +1,31 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.type.casting;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeArrayList;
+import stanhebben.zenscript.type.*;
 
 /**
- *
  * @author Stan
  */
 public class CastingRuleListList implements ICastingRule {
-	private final ICastingRule base;
-	private final ZenTypeArrayList from;
-	private final ZenTypeArrayList to;
 
-	public CastingRuleListList(ICastingRule base, ZenTypeArrayList from, ZenTypeArrayList to) {
-		this.base = base;
-		this.from = from;
-		this.to = to;
-	}
+    private final ICastingRule base;
+    private final ZenTypeArrayList from;
+    private final ZenTypeArrayList to;
 
-	@Override
-	public void compile(IEnvironmentMethod method) {
+    public CastingRuleListList(ICastingRule base, ZenTypeArrayList from, ZenTypeArrayList to) {
+        this.base = base;
+        this.from = from;
+        this.to = to;
+    }
 
-		// TODO: implement this
-		throw new UnsupportedOperationException("Not yet implemented");
+    @Override
+    public void compile(IEnvironmentMethod method) {
+
+        // TODO: implement this
+        throw new UnsupportedOperationException("Not yet implemented");
 
 		/*
-		 * Type fromType = componentFrom.toASMType(); Type toType =
+         * Type fromType = componentFrom.toASMType(); Type toType =
 		 * componentTo.toASMType();
 		 * 
 		 * int result = output.local(List.class); int iterator =
@@ -56,15 +49,15 @@ public class CastingRuleListList implements ICastingRule {
 		 * 
 		 * output.loadObject(result);
 		 */
-	}
+    }
 
-	@Override
-	public ZenType getInputType() {
-		return from;
-	}
+    @Override
+    public ZenType getInputType() {
+        return from;
+    }
 
-	@Override
-	public ZenType getResultingType() {
-		return to;
-	}
+    @Override
+    public ZenType getResultingType() {
+        return to;
+    }
 }

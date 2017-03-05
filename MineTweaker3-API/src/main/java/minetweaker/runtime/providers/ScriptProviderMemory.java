@@ -1,25 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.runtime.providers;
 
 import minetweaker.MineTweakerAPI;
-import minetweaker.runtime.IScriptIterator;
-import minetweaker.runtime.IScriptProvider;
+import minetweaker.runtime.*;
 import minetweaker.util.FileUtil;
 
 import java.io.*;
 import java.util.*;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
+import java.util.zip.*;
 
 /**
  * @author Stan
  */
 public class ScriptProviderMemory implements IScriptProvider {
+
+    private final Map<String, MemoryModule> modules;
+
+    public ScriptProviderMemory(byte[] scripts) {
+        modules = new HashMap<>();
+
+        try {
+            InflaterInputStream inflater = new InflaterInputStream(new ByteArrayInputStream(scripts));
+            DataInputStream inflaterData = new DataInputStream(inflater);
+
+            String moduleName = inflaterData.readUTF();
+            while(moduleName.length() > 0) {
+                List<MemoryFile> files = new ArrayList<>();
+
+                String fileName = inflaterData.readUTF();
+                while(fileName.length() > 0) {
+                    byte[] data = new byte[inflaterData.readInt()];
+                    inflaterData.readFully(data);
+                    files.add(new MemoryFile(fileName, data));
+
+                    fileName = inflaterData.readUTF();
+                }
+                modules.put(moduleName, new MemoryModule(moduleName, files));
+
+                moduleName = inflaterData.readUTF();
+            }
+
+            inflaterData.close();
+        } catch(IOException ex) {
+            MineTweakerAPI.logError("Could not load transmitted scripts: " + ex.getMessage());
+        }
+    }
+
     public static byte[] collect(IScriptProvider provider) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
@@ -60,44 +85,13 @@ public class ScriptProviderMemory implements IScriptProvider {
         return output.toByteArray();
     }
 
-    private final Map<String, MemoryModule> modules;
-
-    public ScriptProviderMemory(byte[] scripts) {
-        modules = new HashMap<>();
-
-        try {
-            InflaterInputStream inflater = new InflaterInputStream(new ByteArrayInputStream(scripts));
-            DataInputStream inflaterData = new DataInputStream(inflater);
-
-            String moduleName = inflaterData.readUTF();
-            while(moduleName.length() > 0) {
-                List<MemoryFile> files = new ArrayList<>();
-
-                String fileName = inflaterData.readUTF();
-                while(fileName.length() > 0) {
-                    byte[] data = new byte[inflaterData.readInt()];
-                    inflaterData.readFully(data);
-                    files.add(new MemoryFile(fileName, data));
-
-                    fileName = inflaterData.readUTF();
-                }
-                modules.put(moduleName, new MemoryModule(moduleName, files));
-
-                moduleName = inflaterData.readUTF();
-            }
-
-            inflaterData.close();
-        } catch(IOException ex) {
-            MineTweakerAPI.logError("Could not load transmitted scripts: " + ex.getMessage());
-        }
-    }
-
     @Override
     public Iterator<IScriptIterator> getScripts() {
         return new ProviderIterator();
     }
 
     private class ProviderIterator implements Iterator<IScriptIterator> {
+
         private final Iterator<MemoryModule> baseIterator = modules.values().iterator();
 
         @Override
@@ -117,6 +111,7 @@ public class ScriptProviderMemory implements IScriptProvider {
     }
 
     private class ScriptIterator implements IScriptIterator {
+
         private final MemoryModule module;
         private final Iterator<MemoryFile> files;
         private MemoryFile current;
@@ -154,6 +149,7 @@ public class ScriptProviderMemory implements IScriptProvider {
     }
 
     private class MemoryModule {
+
         private final String name;
         private final List<MemoryFile> data;
 
@@ -164,6 +160,7 @@ public class ScriptProviderMemory implements IScriptProvider {
     }
 
     private class MemoryFile {
+
         private final String name;
         private final byte[] data;
 

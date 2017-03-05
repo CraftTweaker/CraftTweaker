@@ -1,9 +1,6 @@
 package minetweaker.api.data;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Contains a map, mapping strings to data elements.
@@ -11,6 +8,7 @@ import java.util.Map;
  * @author Stan Hebben
  */
 public class DataMap implements IData {
+
     public static final DataMap EMPTY = new DataMap(new HashMap<>(), true);
 
     private final Map<String, IData> data;

@@ -1,9 +1,6 @@
 package minetweaker.api.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Contains a list.
@@ -11,6 +8,7 @@ import java.util.Map;
  * @author Stan Hebben
  */
 public class DataList implements IData {
+
     private final List<IData> values;
     private final boolean immutable;
 

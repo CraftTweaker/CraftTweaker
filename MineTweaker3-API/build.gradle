@@ -9,9 +9,9 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 task makeRegistry(type: RegisterZenClassesTask) {
-	inputDir = file('build/classes/main')
-	outputDir = file('build/classes/main')
-	className = 'minetweaker.ClassRegistry'
+    inputDir = file('build/classes/main')
+    outputDir = file('build/classes/main')
+    className = 'minetweaker.ClassRegistry'
 }
 
 tasks.jar.dependsOn(makeRegistry)

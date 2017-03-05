@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112.block;
 
 import minetweaker.api.block.IBlockDefinition;
@@ -12,24 +6,25 @@ import net.minecraft.block.Block;
 /**
  * @author Stan
  */
-public class MCBlockDefinition implements IBlockDefinition{
+public class MCBlockDefinition implements IBlockDefinition {
+    
     private final Block block;
-
-    public MCBlockDefinition(Block block){
+    
+    public MCBlockDefinition(Block block) {
         this.block = block;
     }
-
-    public Block getInternalBlock(){
+    
+    public Block getInternalBlock() {
         return block;
     }
-
+    
     @Override
-    public String getId(){
+    public String getId() {
         return Block.REGISTRY.getNameForObject(block).toString();
     }
-
+    
     @Override
-    public String getDisplayName(){
+    public String getDisplayName() {
         return block.getLocalizedName();
     }
 }

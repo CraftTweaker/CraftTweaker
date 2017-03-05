@@ -10,9 +10,9 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenExpansion("byte[]")
 public class ExpandByteArray {
-	
-	@ZenCaster
-	public static IData asData(byte[] values) {
-		return new DataByteArray(values, true);
-	}
+
+    @ZenCaster
+    public static IData asData(byte[] values) {
+        return new DataByteArray(values, true);
+    }
 }

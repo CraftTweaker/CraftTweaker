@@ -21,25 +21,25 @@ minecraft {
     version = forgeVersion1112
     runDir = "eclipse"
     mappings = "snapshot_20161220"
-	useDepAts = true
+    useDepAts = true
 }
 repositories {
-  maven {
-    url "http://dvs1.progwml6.com/files/maven"
-  }
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 }
 
 dependencies {
-	compile project(':ZenScript')
-	compile project(':MineTweaker3-API')
-	compile project(':MineTweaker3-MC1112-Main')
+    compile project(':ZenScript')
+    compile project(':MineTweaker3-API')
+    compile project(':MineTweaker3-MC1112-Main')
     deobfCompile "mezz.jei:jei_1.11.2:4.2.6.238"
 }
 
 task makeRegistry(type: RegisterZenClassesTask) {
-	inputDir = file('build/classes/main')
-	outputDir = file('build/classes/main')
-	className = 'minetweaker.mods.jei.ClassRegistry'
+    inputDir = file('build/classes/main')
+    outputDir = file('build/classes/main')
+    className = 'minetweaker.mods.jei.ClassRegistry'
 }
 
 tasks.jar.dependsOn(makeRegistry)

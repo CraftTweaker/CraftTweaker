@@ -1,58 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112.item;
 
 import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IItemDefinition;
-import minetweaker.api.item.IItemStack;
+import minetweaker.api.item.*;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Stan
  */
-public class MCItemDefinition implements IItemDefinition{
+public class MCItemDefinition implements IItemDefinition {
+
     private final String id;
     private final Item item;
 
-    public MCItemDefinition(String id, Item item){
+    public MCItemDefinition(String id, Item item) {
         this.id = id;
         this.item = item;
     }
 
     @Override
-    public String getId(){
+    public String getId() {
         return id;
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return item.getUnlocalizedName();
     }
 
     @Override
-    public IItemStack makeStack(@Optional int meta){
+    public IItemStack makeStack(@Optional int meta) {
         return MineTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
     }
 
     @Override
-    public List<IOreDictEntry> getOres(){
+    public List<IOreDictEntry> getOres() {
         List<IOreDictEntry> result = new ArrayList<>();
 
-        for(String key : OreDictionary.getOreNames()){
-            for(ItemStack is : OreDictionary.getOres(key)){
-                if(is.getItem() == item){
+        for(String key : OreDictionary.getOreNames()) {
+            for(ItemStack is : OreDictionary.getOres(key)) {
+                if(is.getItem() == item) {
                     result.add(MineTweakerAPI.oreDict.get(key));
                     break;
                 }
@@ -67,18 +59,18 @@ public class MCItemDefinition implements IItemDefinition{
     // #############################
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int hash = 7;
         hash = 37 * hash + (this.item != null ? this.item.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == null){
+    public boolean equals(Object obj) {
+        if(obj == null) {
             return false;
         }
-        if(getClass() != obj.getClass()){
+        if(getClass() != obj.getClass()) {
             return false;
         }
         final MCItemDefinition other = (MCItemDefinition) obj;

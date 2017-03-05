@@ -1,27 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package stanhebben.zenscript.util;
 
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.natives.IJavaMethod;
-import stanhebben.zenscript.type.natives.JavaMethod;
+import stanhebben.zenscript.type.natives.*;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Stanneke
  */
 public class StringUtil {
+    
     private StringUtil() {
     }
-
+    
     public static String join(String[] values, String separator) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
@@ -35,7 +28,7 @@ public class StringUtil {
         }
         return result.toString();
     }
-
+    
     public static String join(Iterable<String> values, String separator) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
@@ -49,13 +42,14 @@ public class StringUtil {
         }
         return result.toString();
     }
-
+    
     /**
      * If a set of methods is available and none matches, this method creates a
      * suitable message.
      *
      * @param methods   matching methods
      * @param arguments calling arguments
+     *
      * @return return value
      */
     public static String methodMatchingError(List<IJavaMethod> methods, Expression... arguments) {
@@ -83,14 +77,14 @@ public class StringUtil {
             methods.forEach(meth -> {
                 if(meth instanceof JavaMethod) {
                     JavaMethod m = (JavaMethod) meth;
-                    message.append("\n" + m.getMethod().getName() + "(");
+                    message.append("\n").append(m.getMethod().getName()).append("(");
                     for(int i = 0; i < m.getParameterTypes().length; i++) {
                         ZenType type = m.getParameterTypes()[i];
                         for(int i1 = 0; i1 < m.getMethod().getParameterAnnotations()[i].length; i1++) {
                             Annotation an = m.getMethod().getParameterAnnotations()[i][i1];
-                            message.append("\u00a7a" + an.annotationType().getSimpleName() + " ");
+                            message.append("\u00a7a").append(an.annotationType().getSimpleName()).append(" ");
                         }
-                        message.append("\u00a7r" +type.getClass().getSimpleName() + ", ");
+                        message.append("\u00a7r").append(type.getClass().getSimpleName()).append(", ");
                     }
                     message.deleteCharAt(message.lastIndexOf(", "));
                     message.append(")");
@@ -99,18 +93,19 @@ public class StringUtil {
             return message.toString();
         }
     }
-
+    
     /**
      * Splits a string in parts, given a specified delimiter.
      *
      * @param value     string to be split
      * @param delimiter delimiter
-     * @return
+     *
+     * @return split string
      */
     public static String[] split(String value, char delimiter) {
         if(value == null)
             return null;
-
+        
         ArrayList<String> result = new ArrayList<>();
         int start = 0;
         for(int i = 0; i < value.length(); i++) {
@@ -122,11 +117,12 @@ public class StringUtil {
         result.add(value.substring(start));
         return result.toArray(new String[result.size()]);
     }
-
+    
     /**
      * Processes a doc comment into paragraphs.
      *
      * @param value input value
+     *
      * @return output paragraphs
      */
     public static String[] splitParagraphs(String value) {
@@ -149,14 +145,14 @@ public class StringUtil {
         if(current.length() > 0) {
             output.add(current.toString());
         }
-
+        
         return output.toArray(new String[output.size()]);
     }
-
+    
     // ########################
     // ### String utilities ###
     // ########################
-
+    
     /**
      * unescape_perl_string()
      * <p>
@@ -207,11 +203,11 @@ public class StringUtil {
      * what about \[IDIOT JAVA PREPROCESSOR]u?
      *
      * @param oldstr
+     *
      * @return
      */
     public static String unescapeString(String oldstr) {
-        if((oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"')
-                && (oldstr.charAt(0) != '\'' || oldstr.charAt(oldstr.length() - 1) != '\'')) {
+        if((oldstr.charAt(0) != '"' || oldstr.charAt(oldstr.length() - 1) != '"') && (oldstr.charAt(0) != '\'' || oldstr.charAt(oldstr.length() - 1) != '\'')) {
             // TODO: error
             // throw new TweakerExecuteException("Not a valid string constant: "
             // + oldstr);
@@ -223,18 +219,18 @@ public class StringUtil {
 		 * be no bigger, as unescaping shrinks the string here, where in the
 		 * other one, it grows it.
 		 */
-
+        
         StringBuilder newstr = new StringBuilder(oldstr.length());
-
+        
         boolean saw_backslash = false;
-
+        
         for(int i = 0; i < oldstr.length(); i++) {
             int cp = oldstr.codePointAt(i);
             if(oldstr.codePointAt(i) > Character.MAX_VALUE) {
                 i++;
                 /* WE HATES UTF-16! WE HATES IT FOREVERSES!!! */
             }
-
+            
             if(!saw_backslash) {
                 if(cp == '\\') {
                     saw_backslash = true;
@@ -243,24 +239,24 @@ public class StringUtil {
                 }
                 continue; /* switch */
             }
-
+            
             if(cp == '\\') {
                 saw_backslash = false;
                 newstr.append('\\');
                 newstr.append('\\');
                 continue; /* switch */
             }
-
+            
             switch(cp) {
-
+                
                 case 'r':
                     newstr.append('\r');
                     break; /* switch */
-
+                
                 case 'n':
                     newstr.append('\n');
                     break; /* switch */
-
+                
                 case 'f':
                     newstr.append('\f');
                     break; /* switch */
@@ -269,15 +265,15 @@ public class StringUtil {
                 case 'b':
                     newstr.append("\\b");
                     break; /* switch */
-
+                
                 case 't':
                     newstr.append('\t');
                     break; /* switch */
-
+                
                 case 'a':
                     newstr.append('\007');
                     break; /* switch */
-
+                
                 case 'e':
                     newstr.append('\033');
                     break; /* switch */
@@ -306,7 +302,7 @@ public class StringUtil {
                     newstr.append(Character.toChars(cp ^ 64));
                     break; /* switch */
                 }
-
+                
                 case '8':
                 case '9':
                     // TODO: error
@@ -334,7 +330,7 @@ public class StringUtil {
 					 */
                 case '0': {
                     if(i + 1 == oldstr.length()) {
-						/* found \0 at end of string */
+                        /* found \0 at end of string */
                         newstr.append(Character.toChars(0));
                         break; /* switch */
                     }
@@ -359,8 +355,7 @@ public class StringUtil {
                     }
                     int value = 0;
                     try {
-                        value = Integer
-                                .parseInt(oldstr.substring(i, i + digits), 8);
+                        value = Integer.parseInt(oldstr.substring(i, i + digits), 8);
                     } catch(NumberFormatException nfe) {
                         // TODO: error
                         // throw new TweakerExecuteException(
@@ -370,7 +365,7 @@ public class StringUtil {
                     i += digits - 1;
                     break; /* switch */
                 } /* end case '0' */
-
+                
                 case 'x': {
                     if(i + 2 > oldstr.length()) {
                         // TODO: error
@@ -386,7 +381,7 @@ public class StringUtil {
                     }
                     int j;
                     for(j = 0; j < 8; j++) {
-
+                        
                         if(!saw_brace && j == 2) {
                             break; /* for */
                         }
@@ -400,17 +395,17 @@ public class StringUtil {
                             // throw new TweakerExecuteException(
                             // "illegal non-ASCII hex digit in \\x escape");
                         }
-
+                        
                         if(saw_brace && ch == '}') {
                             break; /* for */
                         }
-
+                        
                         if(!((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))) {
                             // TODO: error
                             // throw new TweakerExecuteException(String.format(
                             // "illegal hex digit #%d '%c' in \\x", ch, ch));
                         }
-
+                        
                     }
                     if(j == 0) {
                         // TODO: error
@@ -432,7 +427,7 @@ public class StringUtil {
                     i += j - 1;
                     break; /* switch */
                 }
-
+                
                 case 'u': {
                     if(i + 4 > oldstr.length()) {
                         // TODO: error
@@ -461,7 +456,7 @@ public class StringUtil {
                     i += j - 1;
                     break; /* switch */
                 }
-
+                
                 case 'U': {
                     if(i + 8 > oldstr.length()) {
                         // TODO: error
@@ -490,7 +485,7 @@ public class StringUtil {
                     i += j - 1;
                     break; /* switch */
                 }
-
+                
                 default:
                     newstr.append('\\');
                     newstr.append(Character.toChars(cp));
@@ -499,7 +494,7 @@ public class StringUtil {
 					 * "DEFAULT unrecognized escape %c passed through", cp));
 					 */
                     break; /* switch */
-
+                
             }
             saw_backslash = false;
         }
@@ -508,10 +503,10 @@ public class StringUtil {
         if(saw_backslash) {
             newstr.append('\\');
         }
-
+        
         return newstr.toString();
     }
-
+    
     /*
      * Return a string "U+XX.XXX.XXXX" etc, where each XX set is the xdigits of
      * the logical Unicode code point. No bloody brain-damaged UTF-16 surrogate

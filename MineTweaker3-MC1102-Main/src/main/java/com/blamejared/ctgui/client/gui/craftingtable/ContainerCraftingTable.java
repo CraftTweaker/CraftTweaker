@@ -1,13 +1,8 @@
 package com.blamejared.ctgui.client.gui.craftingtable;
 
-import com.blamejared.ctgui.api.ContainerBase;
-import com.blamejared.ctgui.api.SlotRecipe;
-import com.blamejared.ctgui.api.SlotRecipeOutput;
+import com.blamejared.ctgui.api.*;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 
 /**
  * Created by Jared.

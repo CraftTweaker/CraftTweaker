@@ -8,67 +8,69 @@ import java.util.List;
 /**
  * Contains a liquid definition. Liquid definitions provide additional
  * information about liquids.
- * 
+ *
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.liquid.ILiquidDefinition")
 public interface ILiquidDefinition {
-	/**
-	 * Converts this liquid into a liquid stack.
-	 * 
-	 * @param millibuckets item stack size
-	 * @return resulting item stack
-	 */
-	@ZenOperator(OperatorType.MUL)
+
+    /**
+     * Converts this liquid into a liquid stack.
+     *
+     * @param millibuckets item stack size
+     *
+     * @return resulting item stack
+     */
+    @ZenOperator(OperatorType.MUL)
     ILiquidStack asStack(int millibuckets);
 
-	/**
-	 * Gets the unlocalized name of this item.
-	 * 
-	 * @return unlocalized name
-	 */
-	@ZenGetter("name")
+    /**
+     * Gets the unlocalized name of this item.
+     *
+     * @return unlocalized name
+     */
+    @ZenGetter("name")
     String getName();
 
-	@ZenGetter("displayName")
+    @ZenGetter("displayName")
     String getDisplayName();
 
-	@ZenGetter("luminosity")
+    @ZenGetter("luminosity")
     int getLuminosity();
 
-	@ZenSetter("luminosity")
+    @ZenSetter("luminosity")
     void setLuminosity(int value);
 
-	@ZenGetter("density")
+    @ZenGetter("density")
     int getDensity();
 
-	@ZenSetter("density")
+    @ZenSetter("density")
     void setDensity(int density);
 
-	@ZenGetter("temperature")
+    @ZenGetter("temperature")
     int getTemperature();
 
-	@ZenSetter("temperature")
+    @ZenSetter("temperature")
     void setTemperature(int temperature);
 
-	@ZenGetter("viscosity")
+    @ZenGetter("viscosity")
     int getViscosity();
 
-	@ZenSetter("viscosity")
+    @ZenSetter("viscosity")
     void setViscosity(int viscosity);
 
-	@ZenGetter("gaseous")
+    @ZenGetter("gaseous")
     boolean isGaseous();
 
-	@ZenSetter("gaseous")
+    @ZenSetter("gaseous")
     void setGaseous(boolean gaseous);
 
-	@ZenGetter("containers")
+    @ZenGetter("containers")
     List<IItemStack> getContainers();
 
-	@ZenMethod
+    @ZenMethod
     void addContainer(IItemStack filled, IItemStack empty, int amount);
 
-	@ZenMethod
+    @ZenMethod
     void removeContainer(IItemStack filled);
 }

@@ -1,22 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.runtime.providers;
 
-import minetweaker.runtime.IScriptIterator;
-import minetweaker.runtime.IScriptProvider;
+import minetweaker.runtime.*;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Stan Hebben
  */
 public class ScriptProviderCascade implements IScriptProvider {
+
     private final IScriptProvider[] providers;
 
     public ScriptProviderCascade(IScriptProvider... providers) {
@@ -29,6 +21,7 @@ public class ScriptProviderCascade implements IScriptProvider {
     }
 
     private class MyScripterator implements Iterator<IScriptIterator> {
+
         private final Set<String> executed = new HashSet<String>();
 
         private int currentIndex = providers.length - 1;

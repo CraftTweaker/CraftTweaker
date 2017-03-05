@@ -3,20 +3,19 @@ package minetweaker.api.mods;
 import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
- * 
- * 
  * @author Stan Hebben
  */
 public interface IMod {
-	@ZenGetter("id")
+    
+    @ZenGetter("id")
     String getId();
-
-	@ZenGetter("name")
+    
+    @ZenGetter("name")
     String getName();
-
-	@ZenGetter("version")
+    
+    @ZenGetter("version")
     String getVersion();
-
-	@ZenGetter("decription")
+    
+    @ZenGetter("decription")
     String getDescription();
 }

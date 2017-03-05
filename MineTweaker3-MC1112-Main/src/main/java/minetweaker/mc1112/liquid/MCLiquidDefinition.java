@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1112.liquid;
 
 import minetweaker.*;
@@ -189,7 +183,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
     //    }
 
 	/*
-	 * private class RemoveContainerAction implements IUndoableAction { private
+     * private class RemoveContainerAction implements IUndoableAction { private
 	 * final IItemStack filled; private final IItemStack empty; private final
 	 * FluidStack amount;
 	 * 
