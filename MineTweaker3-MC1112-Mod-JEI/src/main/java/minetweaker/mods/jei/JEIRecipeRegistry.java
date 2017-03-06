@@ -31,7 +31,7 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
         input.forEach(in -> {
             inputs.add((ItemStack) in);
         });
-        //		recipeRegistry.addSmeltingRecipe(inputs, (ItemStack) output);
+        		recipeRegistry.addSmeltingRecipe(inputs, (ItemStack) output);
     }
 
 

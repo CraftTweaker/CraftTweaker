@@ -45,7 +45,7 @@ public class SlotRecipe extends Slot {
         boolean matchAny = getPropertyFromMap("matchNotEmpty");
         boolean metaWildcard = getPropertyFromMap("anyMetadata");
         boolean oreDict = getPropertyFromMap("oreDictionary");
-        if(getStack() == null)
+        if(getStack().isEmpty())
             return "null";
         String stackName = Item.REGISTRY.getNameForObject(getStack().getItem()).toString();
         StringBuilder builder = new StringBuilder("<");
