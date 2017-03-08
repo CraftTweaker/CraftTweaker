@@ -75,7 +75,7 @@ public class MineTweakerMC {
      */
     public static ItemStack getItemStack(IIngredient ingredient) {
         if(ingredient == null)
-            return null;
+            return ItemStack.EMPTY;
         
         List<IItemStack> items = ingredient.getItems();
         if(items.size() != 1) {
@@ -123,7 +123,6 @@ public class MineTweakerMC {
     public static IItemStack getIItemStackWildcardSize(Item item, int meta) {
         if(item == null)
             return null;
-        
         return new MCItemStack(new ItemStack(item, 1, meta), true);
     }
     
@@ -227,8 +226,9 @@ public class MineTweakerMC {
         
         IItemStack[] result = new IItemStack[items.length];
         for(int i = 0; i < items.length; i++) {
-            //TODO why doesn't this handle nulls in any way? O_o
-            result[i] = new MCItemStack(items[i]);
+            if(!items[i].isEmpty()){
+                result[i] = new MCItemStack(items[i]);
+            }
         }
         return result;
     }
@@ -247,7 +247,9 @@ public class MineTweakerMC {
         
         IItemStack[] result = new IItemStack[items.size()];
         for(int i = 0; i < result.length; i++) {
-            result[i] = new MCItemStack(items.get(i));
+            if(!items.get(i).isEmpty()) {
+                result[i] = new MCItemStack(items.get(i));
+            }
         }
         return result;
     }

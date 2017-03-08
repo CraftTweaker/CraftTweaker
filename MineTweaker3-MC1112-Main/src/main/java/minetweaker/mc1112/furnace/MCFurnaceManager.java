@@ -155,7 +155,6 @@ public class MCFurnaceManager implements IFurnaceManager {
         public void undo() {
             for(ItemStack inputStack : input) {
                 FurnaceRecipes.instance().getSmeltingList().remove(inputStack);
-                System.out.println(">>>removing");
                 MineTweakerAPI.getIjeiRecipeRegistry().removeFurnace(inputStack);
             }
         }
