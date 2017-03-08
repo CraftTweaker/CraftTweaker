@@ -20,7 +20,7 @@ public class ContainerBase extends Container {
     @Nullable
     @Override
     public ItemStack slotClick(int i, int mousebtn, ClickType clickTypeIn, EntityPlayer player) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
 
         if(i >= 0 && getSlot(i) != null && getSlot(i) instanceof SlotRecipe) // Fake slots
         {
