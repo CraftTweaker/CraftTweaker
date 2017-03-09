@@ -37,7 +37,7 @@ import java.util.*;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.22", name = MineTweakerMod.NAME, dependencies = "after:jei@[4.2.6.238,)")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.23", name = MineTweakerMod.NAME, dependencies = "after:jei@[4.2.6.238,)")
 public class MineTweakerMod {
     
     public static final String MODID = "crafttweaker";
@@ -94,30 +94,30 @@ public class MineTweakerMod {
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
-//        List<Class> apiClasses = new ArrayList<>();
-//        String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
-//        for(String name : classNames) {
-//            ev.getAsmData().getAll(name).forEach(clazz -> {
-//                boolean valid = true;
-//                try {
-//                    for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
-//                        if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
-//                            valid = false;
-//                        }
-//                    }
-//                    if(valid) {
-//                        Class<?> asmClass = Class.forName(clazz.getClassName());
-//                        apiClasses.add(asmClass);
-//                    }
-//                } catch(ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        }
-//        apiClasses.forEach(i -> {
-//            System.out.println(">>> " + i.getName());
-//            MineTweakerAPI.registerClass(i);
-//        });
+        List<Class> apiClasses = new ArrayList<>();
+        String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
+        for(String name : classNames) {
+            ev.getAsmData().getAll(name).forEach(clazz -> {
+                boolean valid = true;
+                try {
+                    for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
+                        if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
+                            valid = false;
+                        }
+                    }
+                    if(valid) {
+                        Class<?> asmClass = Class.forName(clazz.getClassName());
+                        apiClasses.add(asmClass);
+                    }
+                } catch(ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        apiClasses.forEach(i -> {
+            System.out.println(">>> " + i.getName());
+            MineTweakerAPI.registerClass(i);
+        });
     }
     
     @EventHandler
