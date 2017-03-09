@@ -33,7 +33,7 @@ public class ShapelessRecipeBasic extends ShapelessRecipes implements IMTRecipe 
         if(recipe.getCraftingResult(MCCraftingInventory.get(inventory)) != null) {
             return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
         }
-        return null;
+        return ItemStack.EMPTY;
     }
     
     @Override

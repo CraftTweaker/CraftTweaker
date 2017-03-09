@@ -36,6 +36,9 @@ public class MCRecipeManager implements IRecipeManager {
             return false;
         } else if(ingredient != null) {
             if(input instanceof ItemStack) {
+                if(((ItemStack)input).isEmpty() != (ingredient == null)) {
+                    return false;
+                }
                 if(!ingredient.matches(getIItemStack((ItemStack) input))) {
                     return false;
                 }
