@@ -34,7 +34,7 @@ public class JEIAddonPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
         recipeRegistry = iJeiRuntime.getRecipeRegistry();
         if(MineTweakerAPI.getIjeiRecipeRegistry() instanceof DummyJEIRecipeRegistry) {
-            MineTweakerAPI.setIjeiRecipeRegistry(new JEIRecipeRegistry(recipeRegistry));
+            MineTweakerAPI.setIjeiRecipeRegistry(new JEIRecipeRegistry(recipeRegistry, jeiHelpers));
         }
     }
 

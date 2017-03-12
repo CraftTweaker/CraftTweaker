@@ -1,6 +1,6 @@
 package minetweaker.api.compat;
 
-import java.util.List;
+import java.util.*;
 
 public class DummyJEIRecipeRegistry implements IJEIRecipeRegistry {
     
@@ -22,5 +22,15 @@ public class DummyJEIRecipeRegistry implements IJEIRecipeRegistry {
     @Override
     public void removeFurnace(Object object) {
         System.out.println("Removing Furnace" + object);
+    }
+    
+    @Override
+    public void addFuel(Collection<Object> input, int burnTime) {
+    
+    }
+    
+    @Override
+    public void removeFuel(Object object) {
+    
     }
 }

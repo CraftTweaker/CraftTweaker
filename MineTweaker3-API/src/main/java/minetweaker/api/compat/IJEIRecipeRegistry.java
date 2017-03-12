@@ -1,6 +1,6 @@
 package minetweaker.api.compat;
 
-import java.util.List;
+import java.util.*;
 
 public interface IJEIRecipeRegistry {
     
@@ -12,5 +12,7 @@ public interface IJEIRecipeRegistry {
     
     void removeFurnace(Object output);
     
+    void addFuel(Collection<Object> input, int burnTime);
     
+    void removeFuel(Object object);
 }

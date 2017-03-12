@@ -49,6 +49,8 @@ public class FuelTweaker {
             }
             quickList.get(mcItem).add(pattern);
         }
+        
+        MineTweakerAPI.getIjeiRecipeRegistry().addFuel(Arrays.asList(MineTweakerMC.getItemStacks(pattern.getPattern().getItems())), pattern.getValue());
     }
 
     public void removeFuelPattern(SetFuelPattern pattern) {
@@ -58,7 +60,9 @@ public class FuelTweaker {
             if(quickList.containsKey(mcItem)) {
                 quickList.get(mcItem).remove(pattern);
             }
+            MineTweakerAPI.getIjeiRecipeRegistry().removeFuel(itemStack);
         }
+       
     }
 
     private class OverridingFuelHandler implements IFuelHandler {

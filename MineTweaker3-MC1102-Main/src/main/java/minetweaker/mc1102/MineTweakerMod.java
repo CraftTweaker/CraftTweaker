@@ -25,10 +25,12 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import stanhebben.zenscript.annotations.*;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -127,7 +129,6 @@ public class MineTweakerMod {
         for(int i = 0; i < REGISTRIES.length; i++) {
             MineTweakerAPI.registerClassRegistry(REGISTRIES[i], REGISTRY_DESCRIPTIONS[i]);
         }
-        FuelTweaker.INSTANCE.register();
     }
     
     @EventHandler
