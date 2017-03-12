@@ -37,7 +37,7 @@ import java.util.*;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.23", name = MineTweakerMod.NAME, dependencies = "after:JEI@[3.14.2.398,)")
+@Mod(modid = MineTweakerMod.MODID, version = "3.0.24", name = MineTweakerMod.NAME, dependencies = "after:JEI@[3.14.2.398,)")
 public class MineTweakerMod {
     
     public static final String MODID = "MineTweaker3";
