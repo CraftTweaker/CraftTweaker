@@ -58,7 +58,6 @@ public class IngredientTransform {
     @ZenMethod
     public static IIngredient transformDamage(IIngredient ingredient, final int damage) {
         return ingredient.transform((item, byPlayer) -> {
-            System.out.println("Transform damage: " + item);
             int newDamage = item.getDamage() + damage;
             if(newDamage >= item.getMaxDamage()) {
                 return item.withAmount(item.getAmount()).withDamage(0);
@@ -129,11 +128,12 @@ public class IngredientTransform {
     public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {
         return ingredient.transform((item, byPlayer) -> {
             if(givenItem == null) {
-                byPlayer.give(item);
+                byPlayer.give(item.withAmount(1));
+                return item;
             } else {
                 byPlayer.give(givenItem);
+                return item;
             }
-            return null;
         });
     }
 }
