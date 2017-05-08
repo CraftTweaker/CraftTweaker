@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
-import java.util.List;
+import java.util.*;
 
 import static minetweaker.api.minecraft.MineTweakerMC.*;
 
@@ -18,8 +18,6 @@ import static minetweaker.api.minecraft.MineTweakerMC.*;
  */
 public class MCCraftingInventory implements ICraftingInventory {
 
-    private static final ThreadLocal<MCCraftingInventory> cache = new ThreadLocal<>();
-    private static final ThreadLocal<MCCraftingInventory> cache2 = new ThreadLocal<>();
     private final IInventory inventory;
     private final IPlayer player;
     private final EntityPlayer playerOrig;
@@ -67,27 +65,13 @@ public class MCCraftingInventory implements ICraftingInventory {
     }
 
     public static MCCraftingInventory get(InventoryCrafting inventory) {
-        if(cache.get() == null || cache.get().inventory != inventory) {
             MCCraftingInventory result = new MCCraftingInventory(inventory);
-            cache.set(result);
             return result;
-        } else {
-            MCCraftingInventory result = cache.get();
-            result.update();
-            return result;
-        }
     }
 
     public static MCCraftingInventory get(IInventory inventory, EntityPlayer player) {
-        if(cache2.get() == null || cache2.get().inventory != inventory || cache2.get().player != player) {
             MCCraftingInventory result = new MCCraftingInventory(inventory, player);
-            cache2.set(result);
             return result;
-        } else {
-            MCCraftingInventory result = cache2.get();
-            result.update();
-            return result;
-        }
     }
 
     private void update() {
@@ -192,6 +176,20 @@ public class MCCraftingInventory implements ICraftingInventory {
 
     private boolean changed(int i) {
         return original[i] != inventory.getStackInSlot(i) || original[i] != null && stacks[i].getAmount() != original[i].stackSize;
-
+    }
+    
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MCCraftingInventory{");
+        sb.append("inventory=").append(inventory);
+        sb.append(", player=").append(player);
+        sb.append(", playerOrig=").append(playerOrig);
+        sb.append(", width=").append(width);
+        sb.append(", height=").append(height);
+        sb.append(", stacks=").append(Arrays.toString(stacks));
+        sb.append(", original=").append(Arrays.toString(original));
+        sb.append(", stackCount=").append(stackCount);
+        sb.append('}');
+        return sb.toString();
     }
 }
