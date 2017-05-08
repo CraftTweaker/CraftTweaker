@@ -18,7 +18,7 @@ ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).ge
 // ### 1.10.2 settings ###
 // #######################
 
-ext.forgeVersion1102 = "1.10.2-12.18.3.2185"
+ext.forgeVersion1102 = "1.10.2-12.18.3.2254"
 ext.projects1102 = [
         'MineTweaker3-MC1102-Main',
         'MineTweaker3-MC1102-Mod-JEI',
