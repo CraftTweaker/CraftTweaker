@@ -3,7 +3,8 @@ package minetweaker.mc1112.brackets;
 import minetweaker.*;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.api.item.*;
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.ZenTokener;
@@ -27,6 +28,8 @@ import static minetweaker.api.minecraft.MineTweakerMC.getIItemStackWildcardSize;
 public class ItemBracketHandler implements IBracketHandler {
     
     private static final Map<String, Item> itemNames = new HashMap<>();
+    private static final Map<String, Block> blockNames = new HashMap<>();
+    
     private final IZenSymbol symbolAny;
     private final IJavaMethod method;
     
@@ -39,13 +42,21 @@ public class ItemBracketHandler implements IBracketHandler {
         return itemNames;
     }
     
+    public static Map<String, Block> getBlockNames() {
+        return blockNames;
+    }
+    
     @SuppressWarnings("unchecked")
     public static void rebuildItemRegistry() {
         itemNames.clear();
-        
+        blockNames.clear();
         for(ResourceLocation itemName : Item.REGISTRY.getKeys()) {
             String domain = itemName.toString().replace(" ", "").replace("'", "");
             itemNames.put(domain, Item.REGISTRY.getObject(itemName));
+        }
+        for(ResourceLocation blockName : Block.REGISTRY.getKeys()) {
+            String domain = blockName.toString().replace(" ", "").replace("'", "");
+            blockNames.put(domain, Block.REGISTRY.getObject(blockName));
         }
     }
     
@@ -54,6 +65,8 @@ public class ItemBracketHandler implements IBracketHandler {
         Item item = itemNames.get(name);
         if(item != null) {
             return getIItemStackWildcardSize(item, meta);
+        } else if(blockNames.containsKey(name)) {
+            return getIItemStackWildcardSize(new ItemStack(blockNames.get(name), 1, meta));
         } else {
             return null;
         }
@@ -98,7 +111,7 @@ public class ItemBracketHandler implements IBracketHandler {
         }
         
         String itemName = valueBuilder.toString();
-        if(itemNames.containsKey(itemName)) {
+        if(itemNames.containsKey(itemName) || blockNames.containsKey(itemName)) {
             return new ItemReferenceSymbol(environment, itemName, meta);
         }
         
