@@ -395,7 +395,9 @@ public class MCItemStack implements IItemStack {
             result.append(NBTConverter.from(stack.getTagCompound(), wildcardSize).toString());
             result.append(")");
         }
-        
+        if(!wildcardSize) {
+            result.append(" * ").append(stack.getCount());
+        }
         return result.toString();
     }
     
