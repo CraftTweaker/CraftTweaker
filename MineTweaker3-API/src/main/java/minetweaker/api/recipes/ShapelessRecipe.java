@@ -125,7 +125,11 @@ public class ShapelessRecipe implements ICraftingRecipe {
         StringBuilder result = new StringBuilder();
         
         result.append("recipes.addShapeless(");
-        result.append(output);
+        if(output != null){
+            result.append(output);
+        }else{
+            result.append("null");
+        }
         result.append(", [");
         
         for(int i = 0; i < ingredients.length; i++) {

@@ -240,7 +240,11 @@ public class ShapedRecipe implements ICraftingRecipe {
     public String toCommandString() {
         StringBuilder result = new StringBuilder();
         result.append("recipes.addShaped(");
-        result.append(output);
+        if(output != null) {
+            result.append(output);
+        } else {
+            result.append("null");
+        }
         result.append(", [");
         
         IIngredient[][] ingredientsArray = new IIngredient[height][width];
