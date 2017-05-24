@@ -2,12 +2,10 @@ package minetweaker.mods.jei;
 
 import minetweaker.*;
 import minetweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.*;
 
-import java.util.LinkedList;
-
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
-import static minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers;
 
 /**
  * MineTweaker JEI support.
@@ -21,100 +19,47 @@ import static minetweaker.mods.jei.JEIAddonPlugin.jeiHelpers;
  */
 @ZenClass("mods.jei.JEI")
 public class JEI {
-
-    /**
-     * Register callbacks otherwise the load order with JEI is all messed up.
-     */
-    //    @OnRegister
-    //    public static void onRegister() {
-    //        // discard all not yet applied actions before a reload
-    //        MineTweakerImplementationAPI.onReloadEvent(event -> apply.clear());
-    //
-    //        // after the reload JEI needs to be reloaded as well
-    //        MineTweakerImplementationAPI.onPostReload(event -> {
-    //            if (Loader.isModLoaded("JEI")) {
-    //                try {
-    //                    if (Class.forName("minetweaker.mods.jei.JEIAddonPlugin") != null) {
-    //                        System.out.println("class exists");
-    //                    }
-    //                } catch (ClassNotFoundException e) {
-    //                    e.printStackTrace();
-    //                }
-    //                if (JEIAddonPlugin.jeiHelpers != null)
-    //                    JEIAddonPlugin.jeiHelpers.reload();
-    //            }
-    //        });
-    //    }
-
-    // list of all hide actions that need to be applied after JEI is available
-    private static LinkedList<JEIHideItemAction> apply = new LinkedList<>();
-
-    /**
-     * Hides a specific item in JEI. Will take into account metadata values, if
-     * any.
-     *
-     * @param item item to be hidden
-     */
+    
     @ZenMethod
-    public static void hide(@NotNull IItemStack item) {
-        MineTweakerAPI.apply(new JEIHideItemAction(item));
+    public static void hide(IItemStack stack) {
+        MineTweakerAPI.apply(new Hide(getItemStack(stack)));
     }
-
-    /**
-     * JEI is available and the Hiding of the actions can now be applied.
-     */
-    public static void onJEIStarted() {
-        apply.forEach(JEIHideItemAction::doApply);
-        apply.clear();
-    }
-
-    private static class JEIHideItemAction implements IUndoableAction {
-
-        private final IItemStack stack;
-
-        public JEIHideItemAction(IItemStack stack) {
+    
+    private static class Hide implements IUndoableAction {
+        
+        private ItemStack stack;
+        
+        public Hide(ItemStack stack) {
             this.stack = stack;
         }
-
+        
         @Override
         public void apply() {
-            // just register until the JEI addon is registered, otherwise the jeiHelpers are null
-            apply.add(this);
+            if(!JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack))
+                JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
         }
-
-        /**
-         * Really adds the item to the blacklist when JEI is available
-         */
-        void doApply() {
-            if(jeiHelpers != null) {
-                jeiHelpers.getItemBlacklist().addItemToBlacklist(getItemStack(stack));
-            } else {
-                // Should not happen, but in case only log an error
-                MineTweakerImplementationAPI.logger.logError("JEI not initialized yet!");
-            }
-        }
-
+        
         @Override
         public boolean canUndo() {
             return true;
         }
-
+        
         @Override
         public void undo() {
-            // Doesn't need to be called since on reload of JEI the blacklist will be cleared anyway
-            // jeiHelpers.getItemBlacklist().removeItemFromBlacklist(getItemStack(stack));
+            if(JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack))
+                JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().removeIngredientFromBlacklist(stack);
         }
-
+        
         @Override
         public String describe() {
-            return "Hiding " + stack + " in JEI";
+            return "Hiding item in JEI: " + stack;
         }
-
+        
         @Override
         public String describeUndo() {
-            return "Displaying " + stack + " in JEI";
+            return "Displaying item in JEI: " + stack;
         }
-
+        
         @Override
         public Object getOverrideKey() {
             return null;
