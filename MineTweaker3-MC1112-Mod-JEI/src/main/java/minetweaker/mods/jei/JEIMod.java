@@ -1,6 +1,7 @@
 package minetweaker.mods.jei;
 
 import minetweaker.MineTweakerAPI;
+import minetweaker.MineTweakerImplementationAPI;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -9,7 +10,9 @@ public class JEIMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent ev) {
-        		if(Loader.isModLoaded("jei"))
-        			MineTweakerAPI.registerClass(JEI.class);
+        if(Loader.isModLoaded("jei")) {
+            MineTweakerAPI.registerClass(JEI.class);
+            MineTweakerImplementationAPI.onPostReload(new JEI.ReloadHandler());
+        }
     }
 }
