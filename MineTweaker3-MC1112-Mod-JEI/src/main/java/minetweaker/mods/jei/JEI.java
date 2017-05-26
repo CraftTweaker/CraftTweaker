@@ -2,12 +2,18 @@ package minetweaker.mods.jei;
 
 import mezz.jei.gui.overlay.ItemListOverlay;
 import minetweaker.*;
-import minetweaker.api.item.IItemStack;
+import minetweaker.api.item.*;
+import minetweaker.mc1112.recipes.MCRecipeManager;
 import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
 
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import java.util.*;
+
+import static minetweaker.api.minecraft.MineTweakerMC.*;
+import static minetweaker.mc1112.recipes.MCRecipeManager.recipes;
 
 /**
  * MineTweaker JEI support.
@@ -29,6 +35,24 @@ public class JEI {
         MineTweakerAPI.apply(new Hide(getItemStack(stack)));
     }
     
+    
+    @ZenMethod
+    public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
+        List<IRecipe> toRemove = new ArrayList<>();
+        List<Integer> removeIndex = new ArrayList<>();
+        for(int i = 0; i < recipes.size(); i++) {
+            IRecipe recipe = recipes.get(i);
+            if(!recipe.getRecipeOutput().isEmpty()) {
+                if(nbtMatch ? output.matchesExact(getIItemStack(recipe.getRecipeOutput())) : output.matches(getIItemStack(recipe.getRecipeOutput()))) {
+                    toRemove.add(recipe);
+                    removeIndex.add(i);
+                }
+            }
+        }
+        
+        MineTweakerAPI.apply(new MCRecipeManager.ActionRemoveRecipes(toRemove, removeIndex));
+        MineTweakerAPI.apply(new Hide(getItemStack(output)));
+    }
     private static class Hide implements IUndoableAction {
         
         private ItemStack stack;

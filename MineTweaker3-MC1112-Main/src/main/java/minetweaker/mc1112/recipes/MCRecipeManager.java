@@ -23,8 +23,8 @@ import static minetweaker.api.minecraft.MineTweakerMC.*;
  */
 public class MCRecipeManager implements IRecipeManager {
     
-    private final List<IRecipe> recipes;
-    private final List<ICraftingRecipe> transformerRecipes;
+    public static List<IRecipe> recipes;
+    private static List<ICraftingRecipe> transformerRecipes;
     
     public MCRecipeManager() {
         recipes = CraftingManager.getInstance().getRecipeList();
@@ -333,7 +333,7 @@ public class MCRecipeManager implements IRecipeManager {
         }
     }
     
-    private class ActionRemoveRecipes implements IUndoableAction {
+    public static class ActionRemoveRecipes implements IUndoableAction {
         
         private final List<Integer> removingIndices;
         private final List<IRecipe> removingRecipes;
