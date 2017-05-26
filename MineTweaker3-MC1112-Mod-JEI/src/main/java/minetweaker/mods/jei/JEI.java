@@ -1,7 +1,9 @@
 package minetweaker.mods.jei;
 
+import mezz.jei.gui.overlay.ItemListOverlay;
 import minetweaker.*;
 import minetweaker.api.item.IItemStack;
+import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.*;
 
@@ -19,7 +21,9 @@ import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
  */
 @ZenClass("mods.jei.JEI")
 public class JEI {
-    
+
+    private static boolean shouldReload = false;
+
     @ZenMethod
     public static void hide(IItemStack stack) {
         MineTweakerAPI.apply(new Hide(getItemStack(stack)));
@@ -35,8 +39,10 @@ public class JEI {
         
         @Override
         public void apply() {
-            if(!JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack))
+            if(!JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
                 JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
+                shouldReload = true;
+            }
         }
         
         @Override
@@ -46,8 +52,10 @@ public class JEI {
         
         @Override
         public void undo() {
-            if(JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack))
+            if(JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
                 JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().removeIngredientFromBlacklist(stack);
+                shouldReload = true;
+            }
         }
         
         @Override
@@ -63,6 +71,17 @@ public class JEI {
         @Override
         public Object getOverrideKey() {
             return null;
+        }
+    }
+
+    protected static class ReloadHandler implements IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
+
+        @Override
+        public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
+            if (shouldReload) {
+                shouldReload = false;
+                ((ItemListOverlay) JEIAddonPlugin.itemListOverlay).rebuildItemFilter();
+            }
         }
     }
 }

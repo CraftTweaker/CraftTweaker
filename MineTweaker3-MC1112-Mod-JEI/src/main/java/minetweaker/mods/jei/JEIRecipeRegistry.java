@@ -1,8 +1,9 @@
 package minetweaker.mods.jei;
 
+import mezz.jei.plugins.vanilla.furnace.FuelRecipe;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
-import mezz.jei.plugins.vanilla.furnace.FuelRecipe;
+import mezz.jei.plugins.vanilla.furnace.SmeltingRecipe;
 import minetweaker.api.compat.IJEIRecipeRegistry;
 import net.minecraft.item.ItemStack;
 
@@ -20,12 +21,12 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
     
     @Override
     public void addRecipe(Object object) {
-        recipeRegistry.addRecipe(object);
+        recipeRegistry.addRecipe(recipeRegistry.getRecipeWrapper(object, VanillaRecipeCategoryUid.CRAFTING), VanillaRecipeCategoryUid.CRAFTING);
     }
 
     @Override
     public void removeRecipe(Object object) {
-        recipeRegistry.removeRecipe(object);
+        recipeRegistry.removeRecipe(recipeRegistry.getRecipeWrapper(object, VanillaRecipeCategoryUid.CRAFTING), VanillaRecipeCategoryUid.CRAFTING);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
         input.forEach(in -> {
             inputs.add((ItemStack) in);
         });
-        		recipeRegistry.addSmeltingRecipe(inputs, (ItemStack) output);
+        recipeRegistry.addRecipe(new SmeltingRecipe(inputs, (ItemStack) output), VanillaRecipeCategoryUid.SMELTING);
     }
 
 
@@ -46,7 +47,7 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
             if(category.getUid().equals(VanillaRecipeCategoryUid.SMELTING)) {
                 List<IRecipeWrapper> wrappers = recipeRegistry.getRecipeWrappers(category, focus);
                 for(IRecipeWrapper wrapper : wrappers) {
-                    recipeRegistry.removeRecipe(wrapper);
+                    recipeRegistry.removeRecipe(wrapper, VanillaRecipeCategoryUid.SMELTING);
                 }
             }
         }
@@ -57,7 +58,7 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
         input.forEach(in -> {
             inputs.add((ItemStack) in);
         });
-        recipeRegistry.addRecipe(new FuelRecipe(jeiHelpers.getGuiHelper(), inputs, burnTime));
+        recipeRegistry.addRecipe(new FuelRecipe(jeiHelpers.getGuiHelper(), inputs, burnTime), VanillaRecipeCategoryUid.FUEL);
     }
     
     public void removeFuel(Object object){
@@ -67,7 +68,7 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
             if(category.getUid().equals(VanillaRecipeCategoryUid.FUEL)) {
                 List<IRecipeWrapper> wrappers = recipeRegistry.getRecipeWrappers(category, focus);
                 for(IRecipeWrapper wrapper : wrappers) {
-                    recipeRegistry.removeRecipe(wrapper);
+                    recipeRegistry.removeRecipe(wrapper, VanillaRecipeCategoryUid.SMELTING);
                 }
             }
         }
