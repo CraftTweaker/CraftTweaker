@@ -432,6 +432,7 @@ public class MineTweakerImplementationAPI {
      * provider in order to reload scripts.
      */
     public static void reload() {
+        ONRELOAD.publish(new ReloadEvent());
         blockInfoPlayers.clear();
         
         logger.clear();
@@ -502,7 +503,7 @@ public class MineTweakerImplementationAPI {
             }
         }
         
-        ONRELOAD.publish(new ReloadEvent());
+        
         
         MineTweakerAPI.tweaker.load();
         
