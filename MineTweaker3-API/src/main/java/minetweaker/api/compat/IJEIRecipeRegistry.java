@@ -6,7 +6,12 @@ public interface IJEIRecipeRegistry {
     
     void addRecipe(Object object);
     
+    void addRecipe(Object object, String category);
+    
     void removeRecipe(Object output);
+    
+    void removeRecipe(Object output, String category);
+    
     
     void addFurnace(List<Object> inputs, Object output);
     

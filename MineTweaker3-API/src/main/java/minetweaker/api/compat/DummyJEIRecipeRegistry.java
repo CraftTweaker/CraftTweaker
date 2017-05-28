@@ -9,7 +9,17 @@ public class DummyJEIRecipeRegistry implements IJEIRecipeRegistry {
     }
     
     @Override
+    public void addRecipe(Object object, String category) {
+    
+    }
+    
+    @Override
     public void removeRecipe(Object object) {
+    }
+    
+    @Override
+    public void removeRecipe(Object output, String category) {
+    
     }
     
     @Override

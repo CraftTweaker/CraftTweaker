@@ -23,9 +23,21 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
         recipeRegistry.addRecipe(object);
     }
     
+    @Deprecated
+    @Override
+    public void addRecipe(Object object, String category) {
+        recipeRegistry.addRecipe(object);
+    }
+    
     @Override
     public void removeRecipe(Object object) {
         recipeRegistry.removeRecipe(object);
+    }
+    
+    @Deprecated
+    @Override
+    public void removeRecipe(Object output, String category) {
+        recipeRegistry.removeRecipe(output);
     }
     
     @Override

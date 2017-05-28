@@ -1,9 +1,8 @@
 package minetweaker.mods.jei;
 
-import mezz.jei.plugins.vanilla.furnace.FuelRecipe;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
-import mezz.jei.plugins.vanilla.furnace.SmeltingRecipe;
+import mezz.jei.plugins.vanilla.furnace.*;
 import minetweaker.api.compat.IJEIRecipeRegistry;
 import net.minecraft.item.ItemStack;
 
@@ -21,14 +20,24 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
     
     @Override
     public void addRecipe(Object object) {
-        recipeRegistry.addRecipe(recipeRegistry.getRecipeWrapper(object, VanillaRecipeCategoryUid.CRAFTING), VanillaRecipeCategoryUid.CRAFTING);
+        recipeRegistry.addRecipe(object);
     }
-
+    
+    @Override
+    public void addRecipe(Object object, String category) {
+        recipeRegistry.addRecipe(recipeRegistry.getRecipeWrapper(object, category), category);
+    }
+    
     @Override
     public void removeRecipe(Object object) {
-        recipeRegistry.removeRecipe(recipeRegistry.getRecipeWrapper(object, VanillaRecipeCategoryUid.CRAFTING), VanillaRecipeCategoryUid.CRAFTING);
+        recipeRegistry.removeRecipe(object);
     }
-
+    
+    @Override
+    public void removeRecipe(Object output, String category) {
+        recipeRegistry.removeRecipe(recipeRegistry.getRecipeWrapper(output, category), category);
+    }
+    
     @Override
     public void addFurnace(List<Object> input, Object output) {
         List<ItemStack> inputs = new ArrayList<>();
