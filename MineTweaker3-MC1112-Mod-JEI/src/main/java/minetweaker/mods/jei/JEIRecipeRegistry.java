@@ -25,7 +25,8 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
     
     @Override
     public void addRecipe(Object object, String category) {
-        recipeRegistry.addRecipe(recipeRegistry.getRecipeWrapper(object, category), category);
+        if(recipeRegistry.getRecipeWrapper(object, category) != null)
+            recipeRegistry.addRecipe(recipeRegistry.getRecipeWrapper(object, category), category);
     }
     
     @Override
@@ -35,7 +36,8 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
     
     @Override
     public void removeRecipe(Object output, String category) {
-        recipeRegistry.removeRecipe(recipeRegistry.getRecipeWrapper(output, category), category);
+        if(recipeRegistry.getRecipeWrapper(output, category) != null)
+            recipeRegistry.removeRecipe(recipeRegistry.getRecipeWrapper(output, category), category);
     }
     
     @Override
