@@ -16,18 +16,16 @@ public class ScriptIteratorDirectory implements IScriptIterator {
 
     public ScriptIteratorDirectory(File directory) {
         this.directory = directory;
-
-        File scriptDir = new File(directory, "scripts");
         List<File> contentsList = new ArrayList<>();
-        if(scriptDir.exists()) {
-            iterate(scriptDir, contentsList);
+        if(directory.exists()) {
+            iterate(directory, contentsList);
         }
         contents = contentsList.iterator();
     }
 
     private static void iterate(File directory, List<File> contentsList) {
         for(File file : directory.listFiles()) {
-            if(file.isDirectory()) {
+        	if(file.isDirectory()) {
                 iterate(file, contentsList);
             } else if(file.isFile() && file.getName().endsWith(".zs")) {
                 contentsList.add(file);
@@ -55,7 +53,8 @@ public class ScriptIteratorDirectory implements IScriptIterator {
         if(current == null || directory == null) {
             return "zzNullzz";
         }
-        return current.getAbsolutePath().substring(directory.getAbsolutePath().length());
+        return current.getName();
+        //return current.getAbsolutePath().substring(directory.getAbsolutePath().length());
     }
 
     @Override
