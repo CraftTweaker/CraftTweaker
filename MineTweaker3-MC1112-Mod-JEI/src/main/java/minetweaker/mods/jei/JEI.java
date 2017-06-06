@@ -28,7 +28,6 @@ import static minetweaker.mc1112.recipes.MCRecipeManager.recipes;
 @ZenClass("mods.jei.JEI")
 public class JEI {
 
-    private static boolean shouldReload = false;
 
     @ZenMethod
     public static void hide(IItemStack stack) {
@@ -64,8 +63,7 @@ public class JEI {
         @Override
         public void apply() {
             if(!JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
-                JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
-                shouldReload = true;
+                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
             }
         }
         
@@ -77,8 +75,7 @@ public class JEI {
         @Override
         public void undo() {
             if(JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
-                JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().removeIngredientFromBlacklist(stack);
-                shouldReload = true;
+                JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
             }
         }
         
@@ -98,14 +95,4 @@ public class JEI {
         }
     }
 
-    protected static class ReloadHandler implements IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
-
-        @Override
-        public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
-            if (shouldReload) {
-                shouldReload = false;
-                ((ItemListOverlay) JEIAddonPlugin.itemListOverlay).rebuildItemFilter();
-            }
-        }
-    }
 }

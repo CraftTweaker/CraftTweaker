@@ -12,7 +12,6 @@ public class JEIMod {
     public void preInit(FMLPreInitializationEvent ev) {
         if(Loader.isModLoaded("jei")) {
             MineTweakerAPI.registerClass(JEI.class);
-            MineTweakerImplementationAPI.onPostReload(new JEI.ReloadHandler());
         }
     }
 }
