@@ -24,11 +24,10 @@ public class ScriptIteratorZip implements IScriptIterator {
         Enumeration<? extends ZipEntry> original = zipFile.entries();
         while(original.hasMoreElements()) {
             ZipEntry entry = original.nextElement();
-            if(entry.getName().startsWith("scripts/") && entry.getName().endsWith(".zs")) {
+            if (entry.getName().endsWith(".zs")) {
                 entriesList.add(entry);
             }
         }
-
         entries = entriesList.iterator();
     }
 
@@ -49,7 +48,10 @@ public class ScriptIteratorZip implements IScriptIterator {
 
     @Override
     public String getName() {
-        return current.getName().substring("scripts/".length());
+        if(current == null || zipFile == null) {
+            return "zzNullzz";
+        }
+    	return current.getName().split("/")[current.getName().split("/").length-1];
     }
 
     @Override
