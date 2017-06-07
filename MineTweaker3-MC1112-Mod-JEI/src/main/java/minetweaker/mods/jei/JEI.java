@@ -1,10 +1,8 @@
 package minetweaker.mods.jei;
 
-import mezz.jei.gui.overlay.ItemListOverlay;
 import minetweaker.*;
 import minetweaker.api.item.*;
 import minetweaker.mc1112.recipes.MCRecipeManager;
-import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import stanhebben.zenscript.annotations.Optional;
@@ -50,7 +48,10 @@ public class JEI {
         }
         
         MineTweakerAPI.apply(new MCRecipeManager.ActionRemoveRecipes(toRemove, removeIndex));
-        MineTweakerAPI.apply(new Hide(getItemStack(output)));
+        for(IItemStack stack : output.getItems()) {
+            MineTweakerAPI.apply(new Hide(getItemStack(stack)));
+        }
+       
     }
     private static class Hide implements IUndoableAction {
         
@@ -62,9 +63,7 @@ public class JEI {
         
         @Override
         public void apply() {
-            if(!JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
                 JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
-            }
         }
         
         @Override
@@ -74,9 +73,7 @@ public class JEI {
         
         @Override
         public void undo() {
-            if(JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
                 JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
-            }
         }
         
         @Override
