@@ -5,14 +5,13 @@ import minetweaker.MineTweakerImplementationAPI;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "1.0.1", dependencies = "required-before:crafttweaker;")
+@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "1.0.2", dependencies = "required-before:crafttweaker;")
 public class JEIMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent ev) {
         if(Loader.isModLoaded("jei")) {
             MineTweakerAPI.registerClass(JEI.class);
-            MineTweakerImplementationAPI.onPostReload(new JEI.ReloadHandler());
         }
     }
 }

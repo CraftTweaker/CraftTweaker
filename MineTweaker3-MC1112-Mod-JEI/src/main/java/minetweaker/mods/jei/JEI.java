@@ -1,10 +1,8 @@
 package minetweaker.mods.jei;
 
-import mezz.jei.gui.overlay.ItemListOverlay;
 import minetweaker.*;
 import minetweaker.api.item.*;
 import minetweaker.mc1112.recipes.MCRecipeManager;
-import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import stanhebben.zenscript.annotations.Optional;
@@ -28,7 +26,6 @@ import static minetweaker.mc1112.recipes.MCRecipeManager.recipes;
 @ZenClass("mods.jei.JEI")
 public class JEI {
 
-    private static boolean shouldReload = false;
 
     @ZenMethod
     public static void hide(IItemStack stack) {
@@ -51,7 +48,10 @@ public class JEI {
         }
         
         MineTweakerAPI.apply(new MCRecipeManager.ActionRemoveRecipes(toRemove, removeIndex));
-        MineTweakerAPI.apply(new Hide(getItemStack(output)));
+        for(IItemStack stack : output.getItems()) {
+            MineTweakerAPI.apply(new Hide(getItemStack(stack)));
+        }
+       
     }
     private static class Hide implements IUndoableAction {
         
@@ -63,10 +63,7 @@ public class JEI {
         
         @Override
         public void apply() {
-            if(!JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
-                JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
-                shouldReload = true;
-            }
+                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
         }
         
         @Override
@@ -76,10 +73,7 @@ public class JEI {
         
         @Override
         public void undo() {
-            if(JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().isIngredientBlacklisted(stack)) {
-                JEIAddonPlugin.jeiHelpers.getIngredientBlacklist().removeIngredientFromBlacklist(stack);
-                shouldReload = true;
-            }
+                JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
         }
         
         @Override
@@ -98,14 +92,4 @@ public class JEI {
         }
     }
 
-    protected static class ReloadHandler implements IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
-
-        @Override
-        public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
-            if (shouldReload) {
-                shouldReload = false;
-                ((ItemListOverlay) JEIAddonPlugin.itemListOverlay).rebuildItemFilter();
-            }
-        }
-    }
 }
