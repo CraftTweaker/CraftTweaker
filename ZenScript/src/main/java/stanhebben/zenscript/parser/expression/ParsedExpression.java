@@ -35,7 +35,7 @@ public abstract class ParsedExpression {
     private static ParsedExpression readAssignExpression(ZenTokener parser, IEnvironmentGlobal environment) {
         Token token = parser.peek();
         if(token == null) {
-            ZenPosition position = new ZenPosition(parser.getFile(), parser.getLine(), parser.getLineOffset());
+            ZenPosition position = new ZenPosition(parser.getFile(), parser.getLine(), parser.getLineOffset(), parser.getFile().getFileName());
             environment.error(position, "unexpected end of file; expression expected");
             return new ParsedExpressionInvalid(position);
         }
@@ -45,7 +45,7 @@ public abstract class ParsedExpression {
         ParsedExpression left = readConditionalExpression(position, parser, environment);
         
         if(parser.peek() == null) {
-            ZenPosition position2 = new ZenPosition(parser.getFile(), parser.getLine(), parser.getLineOffset());
+            ZenPosition position2 = new ZenPosition(parser.getFile(), parser.getLine(), parser.getLineOffset(), parser.getFile().getFileName());
             environment.error(position2, "unexpected end of file - ; expected");
             return new ParsedExpressionInvalid(position2);
         }

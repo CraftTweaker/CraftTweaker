@@ -17,7 +17,7 @@ import java.util.*;
 public class TokenStream implements Iterator<Token> {
     
     private ZenParsedFile file;
-    
+    private String fileNameFallback;
     private CountingReader reader;
     private CompiledDFA dfa;
     private Token next;
@@ -38,12 +38,12 @@ public class TokenStream implements Iterator<Token> {
      *
      * @throws IOException
      */
-    public TokenStream(Reader reader, CompiledDFA dfa) throws IOException {
+    public TokenStream(Reader reader, CompiledDFA dfa, String fileNameFallback) throws IOException {
         tokenMemoryOffset = 0;
         tokenMemoryCurrent = 0;
         tokenMemory = new LinkedList<>();
         marks = new Stack<>();
-        
+        this.fileNameFallback = fileNameFallback;
         this.reader = new CountingReader(reader);
         this.dfa = dfa;
         nextChar = this.reader.read();
@@ -61,7 +61,7 @@ public class TokenStream implements Iterator<Token> {
      * @throws IOException
      */
     public TokenStream(String data, CompiledDFA dfa) throws IOException {
-        this(new StringReader(data), dfa);
+        this(new StringReader(data), dfa, "");
     }
     
     public ZenParsedFile getFile() {
@@ -227,7 +227,7 @@ public class TokenStream implements Iterator<Token> {
             if(dfa.finals[state] != CompiledDFA.NOFINAL) {
                 if(state == 0)
                     throw new TokenException(file, line, lineOffset, (char) nextChar);
-                next = process(new Token(value.toString(), dfa.finals[state], new ZenPosition(file, tLine, tLineOffset)));
+                next = process(new Token(value.toString(), dfa.finals[state], new ZenPosition(file, tLine, tLineOffset, fileNameFallback)));
             } else {
                 if(nextChar < 0 && value.length() == 0) {
                     return; // happens on comments at the end of files

@@ -10,14 +10,15 @@ public class ZenPosition {
     private final ZenParsedFile file;
     private final int line;
     private final int offset;
-    
-    public ZenPosition(ZenParsedFile file, int line, int offset) {
+    private final String fileNameFallback;
+    public ZenPosition(ZenParsedFile file, int line, int offset, String fileNameFallback) {
         if(file != null && line <= 0)
             throw new IllegalArgumentException("Line must be positive");
         
         this.file = file;
         this.line = line;
         this.offset = offset;
+        this.fileNameFallback = fileNameFallback;
     }
     
     public ZenParsedFile getFile() {
@@ -34,6 +35,6 @@ public class ZenPosition {
     
     @Override
     public String toString() {
-        return (file == null ? "?" : file.getFileName()) + ":" + Integer.toString(line);
+        return (file == null ? (fileNameFallback == null ? "?" : fileNameFallback) : file.getFileName()) + ":" + Integer.toString(line);
     }
 }

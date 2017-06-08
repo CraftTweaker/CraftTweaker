@@ -179,7 +179,7 @@ public class ZenModule {
         
         FileInputStream input = new FileInputStream(single);
         Reader reader = new InputStreamReader(new BufferedInputStream(input));
-        ZenTokener parser = new ZenTokener(reader, environment);
+        ZenTokener parser = new ZenTokener(reader, environment, filename);
         ZenParsedFile file = new ZenParsedFile(filename, className, parser, environmentGlobal);
         reader.close();
         
@@ -212,7 +212,7 @@ public class ZenModule {
         String className = extractClassName(name);
         
         StringReader reader = new StringReader(script);
-        ZenTokener parser = new ZenTokener(reader, environment);
+        ZenTokener parser = new ZenTokener(reader, environment, name);
         ZenParsedFile file = new ZenParsedFile(name, className, parser, environmentGlobal);
         reader.close();
         
@@ -255,7 +255,7 @@ public class ZenModule {
                 String className = extractClassName(filename);
                 
                 Reader reader = new InputStreamReader(new BufferedInputStream(zipFile.getInputStream(entry)));
-                ZenTokener parser = new ZenTokener(reader, environment);
+                ZenTokener parser = new ZenTokener(reader, environment, filename);
                 ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                 files.add(pfile);
                 reader.close();

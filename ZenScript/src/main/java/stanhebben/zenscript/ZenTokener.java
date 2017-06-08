@@ -128,8 +128,8 @@ public class ZenTokener extends TokenStream {
      *
      * @throws IOException if the file could not be read properly
      */
-    public ZenTokener(Reader contents, IZenCompileEnvironment environment) throws IOException {
-        super(contents, DFA);
+    public ZenTokener(Reader contents, IZenCompileEnvironment environment, String fileNameFallback) throws IOException {
+        super(contents, DFA, fileNameFallback);
         
         this.environment = environment;
     }
@@ -142,8 +142,8 @@ public class ZenTokener extends TokenStream {
      *
      * @throws IOException shouldn't happen
      */
-    public ZenTokener(String contents, IZenCompileEnvironment environment) throws IOException {
-        super(new StringReader(contents), DFA);
+    public ZenTokener(String contents, IZenCompileEnvironment environment, String fileNameFallback) throws IOException {
+        super(new StringReader(contents), DFA, "");
         
         this.environment = environment;
     }

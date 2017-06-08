@@ -102,7 +102,7 @@ public abstract class ZenType {
     
     public static ZenType parse(String type, IEnvironmentGlobal environment) {
         try {
-            ZenTokener parser = new ZenTokener(type, environment.getEnvironment());
+            ZenTokener parser = new ZenTokener(type, environment.getEnvironment(), "");
             return read(parser, environment);
         } catch(IOException ex) {
             return null;

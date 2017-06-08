@@ -117,7 +117,7 @@ public class MTTweaker implements ITweaker {
                         String filename = script.getName();
                         String className = extractClassName(filename);
                         
-                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
+                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename);
                         ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                         files.add(pfile);
                     } catch(IOException ex) {
