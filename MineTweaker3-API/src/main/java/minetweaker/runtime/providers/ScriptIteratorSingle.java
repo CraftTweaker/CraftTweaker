@@ -10,15 +10,27 @@ import java.io.*;
 public class ScriptIteratorSingle implements IScriptIterator {
 
     private final File file;
+    private File directory;
     private boolean first = true;
 
     public ScriptIteratorSingle(File file) {
         this.file = file;
     }
+    
+    public ScriptIteratorSingle(File file, File directory){
+    	this.file = file;
+    	this.directory = directory;
+    }
 
     @Override
     public String getGroupName() {
-        return file.getName();
+    	if(file != null && directory != null){
+    		return file.getAbsolutePath().substring(directory.getAbsolutePath().length()+1);
+    	}else if(file.getAbsolutePath().contains("scripts")){
+    		return file.getAbsolutePath().split("scripts")[1];
+    	} else {
+    		return file.getAbsolutePath();
+    	}
     }
 
     @Override

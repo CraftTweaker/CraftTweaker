@@ -68,6 +68,9 @@ public class ScriptProviderCustom implements IScriptProvider {
 
         @Override
         public String getName() {
+        	if(current==null){
+        		return "zzNullzz";
+        	}
             return current.name;
         }
 

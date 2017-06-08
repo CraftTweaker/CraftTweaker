@@ -15,9 +15,27 @@ public class ScriptIteratorZip implements IScriptIterator {
     private final ZipFile zipFile;
     private final Iterator<ZipEntry> entries;
     private ZipEntry current;
+    private final File directory;
 
     public ScriptIteratorZip(File file) throws IOException {
         this.file = file;
+        this.directory = null;
+
+        zipFile = new ZipFile(file);
+        List<ZipEntry> entriesList = new ArrayList<ZipEntry>();
+        Enumeration<? extends ZipEntry> original = zipFile.entries();
+        while(original.hasMoreElements()) {
+            ZipEntry entry = original.nextElement();
+            if (entry.getName().endsWith(".zs")) {
+                entriesList.add(entry);
+            }
+        }
+        entries = entriesList.iterator();
+    }
+    
+    public ScriptIteratorZip(File file, File directory) throws IOException {
+        this.file = file;
+        this.directory = directory;
 
         zipFile = new ZipFile(file);
         List<ZipEntry> entriesList = new ArrayList<ZipEntry>();
@@ -54,7 +72,7 @@ public class ScriptIteratorZip implements IScriptIterator {
         if(current == null || zipFile == null) {
             return "zzNullzz";
         }
-    	return current.getName().split("/")[current.getName().split("/").length-1];
+    	return current.getName();
     }
 
     @Override
