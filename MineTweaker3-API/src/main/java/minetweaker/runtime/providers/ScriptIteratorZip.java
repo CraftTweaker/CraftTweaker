@@ -72,7 +72,7 @@ public class ScriptIteratorZip implements IScriptIterator {
         if(current == null || zipFile == null) {
             return "zzNullzz";
         }
-    	return current.getName();
+    	return current.getName().split("/")[current.getName().split("/").length-1];
     }
 
     @Override
