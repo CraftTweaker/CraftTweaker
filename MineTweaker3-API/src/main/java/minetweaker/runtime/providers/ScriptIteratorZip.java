@@ -33,7 +33,10 @@ public class ScriptIteratorZip implements IScriptIterator {
 
     @Override
     public String getGroupName() {
-        return file.getName().substring(0, file.getName().lastIndexOf('.'));
+        if (file!=null && directory != null){
+        	return file.getAbsolutePath().substring(directory.getAbsolutePath().length()+1);
+        }
+    	return file.getName();
     }
 
     @Override
