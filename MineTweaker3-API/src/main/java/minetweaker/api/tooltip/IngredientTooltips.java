@@ -56,6 +56,7 @@ public class IngredientTooltips {
         @Override
         public void apply() {
             entry = (shift ? SHIFT_TOOLTIPS : TOOLTIPS).register(ingredient, tooltip);
+            MineTweakerAPI.getIjeiRecipeRegistry().invalidateTooltips(ingredient);
         }
         
         @Override
@@ -70,6 +71,7 @@ public class IngredientTooltips {
             } else {
                 TOOLTIPS.unregister(entry);
             }
+            MineTweakerAPI.getIjeiRecipeRegistry().invalidateTooltips(ingredient);
         }
         
         @Override

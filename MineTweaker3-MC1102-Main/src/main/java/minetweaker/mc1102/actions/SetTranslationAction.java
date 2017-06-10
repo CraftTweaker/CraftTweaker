@@ -1,6 +1,7 @@
 package minetweaker.mc1102.actions;
 
 import minetweaker.IUndoableAction;
+import minetweaker.MineTweakerAPI;
 import minetweaker.mc1102.util.MineTweakerHacks;
 import net.minecraft.util.text.translation.LanguageMap;
 
@@ -30,6 +31,7 @@ public class SetTranslationAction implements IUndoableAction {
             value = value.replace("\\\"", "\"");
         }
         LanguageMap.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
+        MineTweakerAPI.getIjeiRecipeRegistry().reloadItemList();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package minetweaker.mc1112.actions;
 
 import minetweaker.IUndoableAction;
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IItemStack;
 import minetweaker.mc1112.util.MineTweakerHacks;
 import net.minecraft.util.text.translation.LanguageMap;
 
@@ -15,26 +17,30 @@ public class SetTranslationAction implements IUndoableAction {
     private static final LanguageMap INSTANCE = MineTweakerHacks.getStringTranslateInstance();
     private static final Charset UTF8 = Charset.forName("utf-8");
 
+    private final IItemStack stack;
     private final String key;
     private final String newValue;
     private final String oldValue;
 
-    public SetTranslationAction(String key, String value) {
+    public SetTranslationAction(IItemStack stack, String key, String value) {
+        this.stack = stack;
         this.key = key;
         newValue = value;
         oldValue = INSTANCE.translateKey(key);
     }
 
-    private static void set(String key, String value) {
+    private static void set(IItemStack stack, String key, String value) {
         if(value.contains("\\\"")) {
             value = value.replace("\\\"", "\"");
         }
+        MineTweakerAPI.getIjeiRecipeRegistry().removeItem(stack.getInternal());
         LanguageMap.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
+        MineTweakerAPI.getIjeiRecipeRegistry().addItem(stack.getInternal());
     }
 
     @Override
     public void apply() {
-        set(key, newValue);
+        set(stack, key, newValue);
     }
 
     @Override
@@ -44,7 +50,7 @@ public class SetTranslationAction implements IUndoableAction {
 
     @Override
     public void undo() {
-        set(key, oldValue);
+        set(stack, key, oldValue);
     }
 
     @Override

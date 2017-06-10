@@ -1,9 +1,15 @@
 package minetweaker.mods.jei;
 
+import mezz.jei.IngredientInformation;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
+import mezz.jei.gui.ItemListOverlay;
 import mezz.jei.plugins.vanilla.furnace.FuelRecipe;
+import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.compat.IJEIRecipeRegistry;
+import minetweaker.api.item.IIngredient;
+import minetweaker.mc1102.util.MineTweakerHacks;
+import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
 
 import java.util.*;
@@ -12,10 +18,14 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
     
     private IRecipeRegistry recipeRegistry;
     private IJeiHelpers jeiHelpers;
-    
+    private boolean shouldReloadItemList = false;
+
+    private static Map<Object, String> TOOLTIP_CACHE;
+
     public JEIRecipeRegistry(IRecipeRegistry recipeRegistry, IJeiHelpers jeiHelpers) {
         this.recipeRegistry = recipeRegistry;
         this.jeiHelpers = jeiHelpers;
+        MineTweakerImplementationAPI.onPostReload(new ReloadHandler());
     }
     
     @Override
@@ -63,7 +73,7 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
             }
         }
     }
-    
+
     public void addFuel(Collection<Object> input, int burnTime){
         List<ItemStack> inputs = new ArrayList<>();
         input.forEach(in -> {
@@ -81,6 +91,41 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
                 for(IRecipeWrapper wrapper : wrappers) {
                     recipeRegistry.removeRecipe(wrapper);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void reloadItemList() {
+        shouldReloadItemList = true;
+    }
+
+    //Unused in 1.10.2
+    @Override
+    public void removeItem(Object stack) {}
+
+    //Unused in 1.10.2
+    @Override
+    public void addItem(Object stack) {}
+
+    @Override
+    public void invalidateTooltips(IIngredient unused) {
+        if (TOOLTIP_CACHE == null)
+            TOOLTIP_CACHE = MineTweakerHacks.getPrivateStaticObject(IngredientInformation.class, "tooltipCache");
+
+        if (TOOLTIP_CACHE != null) {
+            TOOLTIP_CACHE.clear();
+            reloadItemList();
+        }
+    }
+
+    private class ReloadHandler implements IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
+
+        @Override
+        public void handle(MineTweakerImplementationAPI.ReloadEvent event) {
+            if (shouldReloadItemList) {
+                shouldReloadItemList = false;
+                ((ItemListOverlay) JEIAddonPlugin.itemListOverlay).rebuildItemFilter();
             }
         }
     }
