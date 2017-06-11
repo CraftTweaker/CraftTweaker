@@ -66,7 +66,7 @@ public class GuiCraftingTable extends GuiBase {
         }
         return ret.isEmpty() ? ret : ret;
     }
-
+    
     @Override
     public String getOutputRemove() {
         boolean hasrecipe = false;
@@ -76,20 +76,12 @@ public class GuiCraftingTable extends GuiBase {
                 hasrecipe = true;
             }
         }
-
-        String type = "remove";
-        boolean shapel = false;
-        if(hasrecipe)
-            if(shapeless.isChecked()) {
-                type += "Shapeless";
-                shapel = true;
-            } else if(shaped.isChecked()) {
-                type += "Shaped";
-            }
+        
+        boolean shapel = shapeless.isChecked();
         if(shapel) {
-            return String.format("recipes.%s(%s, [%s%s%s%s%s%s%s%s%s]);", type, container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), false), getShapelessItem(container.getRecipeSlots().get(3), false), getShapelessItem(container.getRecipeSlots().get(4), false), getShapelessItem(container.getRecipeSlots().get(5), false), getShapelessItem(container.getRecipeSlots().get(6), false), getShapelessItem(container.getRecipeSlots().get(7), false), getShapelessItem(container.getRecipeSlots().get(8), false), getShapelessItem(container.getRecipeSlots().get(9), false));
+            return String.format("recipes.removeShapeless(%s, [%s%s%s%s%s%s%s%s%s]);", container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), false), getShapelessItem(container.getRecipeSlots().get(3), false), getShapelessItem(container.getRecipeSlots().get(4), false), getShapelessItem(container.getRecipeSlots().get(5), false), getShapelessItem(container.getRecipeSlots().get(6), false), getShapelessItem(container.getRecipeSlots().get(7), false), getShapelessItem(container.getRecipeSlots().get(8), false), getShapelessItem(container.getRecipeSlots().get(9), false));
         }
-        return hasrecipe ? String.format("recipes.%s(%s, [[%s, %s, %s],[%s, %s, %s], [%s, %s, %s]]);", type, container.getRecipeSlots().get(0).getItemString(), container.getRecipeSlots().get(1).getItemString(), container.getRecipeSlots().get(2).getItemString(), container.getRecipeSlots().get(3).getItemString(), container.getRecipeSlots().get(4).getItemString(), container.getRecipeSlots().get(5).getItemString(), container.getRecipeSlots().get(6).getItemString(), container.getRecipeSlots().get(7).getItemString(), container.getRecipeSlots().get(8).getItemString(), container.getRecipeSlots().get(9).getItemString()) : String.format("recipes.removeShaped(%s);", container.getRecipeSlots().get(0).getItemString());
+        return hasrecipe ? String.format("recipes.removeShaped(%s, [[%s, %s, %s],[%s, %s, %s], [%s, %s, %s]]);", container.getRecipeSlots().get(0).getItemString(), container.getRecipeSlots().get(1).getItemString(), container.getRecipeSlots().get(2).getItemString(), container.getRecipeSlots().get(3).getItemString(), container.getRecipeSlots().get(4).getItemString(), container.getRecipeSlots().get(5).getItemString(), container.getRecipeSlots().get(6).getItemString(), container.getRecipeSlots().get(7).getItemString(), container.getRecipeSlots().get(8).getItemString(), container.getRecipeSlots().get(9).getItemString()) : String.format("recipes.remove(%s);", container.getRecipeSlots().get(0).getItemString());
     }
 
     @Override
