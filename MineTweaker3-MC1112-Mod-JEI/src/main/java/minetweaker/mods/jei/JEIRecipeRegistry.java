@@ -2,8 +2,11 @@ package minetweaker.mods.jei;
 
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
+import mezz.jei.ingredients.IngredientInformation;
 import mezz.jei.plugins.vanilla.furnace.*;
 import minetweaker.api.compat.IJEIRecipeRegistry;
+import minetweaker.api.item.IIngredient;
+import minetweaker.mc1112.util.MineTweakerHacks;
 import net.minecraft.item.ItemStack;
 
 import java.util.*;
@@ -12,7 +15,8 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
 
     private IRecipeRegistry recipeRegistry;
     private IJeiHelpers jeiHelpers;
-    
+    private static Map<String, List<String>> TOOLTIP_CACHE;
+
     public JEIRecipeRegistry(IRecipeRegistry recipeRegistry, IJeiHelpers jeiHelpers) {
         this.recipeRegistry = recipeRegistry;
         this.jeiHelpers = jeiHelpers;
@@ -82,6 +86,32 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
                     recipeRegistry.removeRecipe(wrapper, VanillaRecipeCategoryUid.SMELTING);
                 }
             }
+        }
+    }
+
+    // Unused in 1.11.2
+    @Override
+    public void reloadItemList() {}
+
+    @Override
+    public void removeItem(Object stack) {
+        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList((ItemStack) stack));
+    }
+
+    @Override
+    public void addItem(Object stack) {
+        JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList((ItemStack) stack));
+    }
+
+    @Override
+    public void invalidateTooltips(IIngredient ingredient) {
+        if (TOOLTIP_CACHE == null)
+            TOOLTIP_CACHE = MineTweakerHacks.getPrivateStaticObject(IngredientInformation.class, "TOOLTIP_CACHE");
+
+        if (TOOLTIP_CACHE != null) {
+            TOOLTIP_CACHE.clear();
+            removeItem(ingredient.getInternal());
+            addItem(ingredient.getInternal());
         }
     }
 }

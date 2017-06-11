@@ -83,7 +83,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public void setDisplayName(String name) {
-        MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
+        MineTweakerAPI.apply(new SetTranslationAction(this, getName() + ".name", name));
     }
     
     @Override

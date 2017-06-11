@@ -1,5 +1,7 @@
 package minetweaker.api.compat;
 
+import minetweaker.api.item.IIngredient;
+
 import java.util.*;
 
 public class DummyJEIRecipeRegistry implements IJEIRecipeRegistry {
@@ -38,5 +40,25 @@ public class DummyJEIRecipeRegistry implements IJEIRecipeRegistry {
     @Override
     public void removeFuel(Object object) {
     
+    }
+
+    @Override
+    public void reloadItemList() {
+
+    }
+
+    @Override
+    public void removeItem(Object stack) {
+
+    }
+
+    @Override
+    public void addItem(Object stack) {
+
+    }
+
+    @Override
+    public void invalidateTooltips(IIngredient ingredient) {
+
     }
 }
