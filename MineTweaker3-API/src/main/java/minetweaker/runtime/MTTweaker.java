@@ -139,7 +139,13 @@ public class MTTweaker implements ITweaker {
                 
                 try {
                     String filename = script.getGroupName();
-                    System.out.println("MineTweaker: Loading " + filename);
+                    if (filename.endsWith(".zs")){
+                    	System.out.println("MineTweaker: Loading file " + filename);
+                    } else if (filename.endsWith(".zip")){
+                    	System.out.println("MineTweaker: Loading zip " + filename);
+                    } else{
+                    	System.out.println("MineTweaker: Loading group " + filename);
+                    }
                     compileScripts(filename, files, environmentGlobal, DEBUG);
                     
                     // execute scripts

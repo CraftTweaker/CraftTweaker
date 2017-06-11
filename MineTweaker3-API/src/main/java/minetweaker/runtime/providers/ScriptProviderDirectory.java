@@ -24,19 +24,7 @@ public class ScriptProviderDirectory implements IScriptProvider {
     public Iterator<IScriptIterator> getScripts() {
         List<IScriptIterator> scripts = new ArrayList<>();
         if(directory.exists()) {
-            for(File file : directory.listFiles()) {
-                if(file.isDirectory()) {
-                    scripts.add(new ScriptIteratorDirectory(file));
-                } else if(file.getName().endsWith(".zs")) {
-                    scripts.add(new ScriptIteratorSingle(file));
-                } else if(file.getName().endsWith(".zip")) {
-                    try {
-                        scripts.add(new ScriptIteratorZip(file));
-                    } catch(IOException ex) {
-                        MineTweakerAPI.logError("Could not load " + file.getName() + ": " + ex.getMessage());
-                    }
-                }
-            }
+        	iterate(directory,scripts);
         }
         if(scripts.size() > 1)
             scripts.sort((sc, sc1) -> {
@@ -46,5 +34,21 @@ public class ScriptProviderDirectory implements IScriptProvider {
                 return sc.getName().compareTo(sc1.getName());
             });
         return scripts.iterator();
+    }
+    
+    private void iterate(File directoryIterated, List<IScriptIterator> scripts) {
+        for(File file : directoryIterated.listFiles()) {
+        	if(file.isDirectory()) {
+                iterate(file, scripts);
+            } else if(file.isFile() && file.getName().endsWith(".zs")) {
+                scripts.add(new ScriptIteratorSingle(file, directory));
+            } else if(file.isFile() && file.getName().endsWith(".zip")) {
+            	try {
+            		scripts.add(new ScriptIteratorZip(file, directory));
+            	} catch(IOException ex) {
+            		MineTweakerAPI.logError("Could not load " + file.getName() + ": " + ex.getMessage());
+            	}
+            }
+        }
     }
 }
