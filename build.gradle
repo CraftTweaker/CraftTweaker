@@ -59,11 +59,11 @@ subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
 task setupDecompWorkspaceAll(dependsOn: projects1102.collect {
     ':' + it + ':setupDecompWorkspace'
-} + projects1112.collect { ':' + it + ':setupDecompWorkspace' }) {}
+} + projects1112.collect { ':' + it + ':setupDecompWorkspace' } +projects1120.collect { ':' + it + ':setupDecompWorkspace' } ) {}
 
 task setupCIWorkspaceAll(dependsOn: projects1102.collect { ':' + it + ':setupCIWorkspace' } + projects1112.collect {
     ':' + it + ':setupCIWorkspace'
-}) {}
+} + projects1120.collect { ':' + it + ':setupCIWorkspace' }) {}
 
 task assembleMC1102(type: Jar, dependsOn: [\
 		':ZenScript:build',
@@ -143,13 +143,58 @@ task assembleDevFull1112(type: Jar, dependsOn: [
     }
 }
 
+
+task assembleMC1120(type: Jar, dependsOn: [\
+		':ZenScript:build',
+                                           ':MineTweaker3-API:build']
+        + projects1120.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-1.12-${mineTweakerVersion}.jar"
+
+    from zipTree(project(":ZenScript").jar.archivePath)
+    from zipTree(project(':MineTweaker3-API').jar.archivePath)
+
+    for (p in projects1120) {
+        from zipTree(project(p).jar.archivePath)
+    }
+}
+
+task assembleDevBase1120(type: Jar, dependsOn: [
+        ':ZenScript:build',
+        ':MineTweaker3-API:build',
+        ':MineTweaker3-MC1120-Main:build']) {
+    archiveName = "CraftTweaker-Dev-1.12-${mineTweakerVersion}.jar"
+
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
+    from project(':MineTweaker3-MC1120-Main').sourceSets.main.output
+}
+
+task assembleDevFull1120(type: Jar, dependsOn: [
+        ':ZenScript:build',
+        ':MineTweaker3-API:build']
+        + projects1120.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-Dev-Full-1.12-${mineTweakerVersion}.jar"
+
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
+
+    for (p in projects1120) {
+        from project(p).sourceSets.main.output
+    }
+}
+
+
 task assembleAll(dependsOn: [
         assembleMC1102,
         assembleDevBase1102,
         assembleDevFull1102,
         assembleMC1112,
         assembleDevBase1112,
-        assembleDevFull1112
+        assembleDevFull1112,
+		assembleMC1120,
+        assembleDevBase1120,
+        assembleDevFull1120
+		
 ]) {
 }
 

@@ -284,7 +284,6 @@ public class ShapedRecipe implements ICraftingRecipe {
                 }
             }
             
-            // TODO: supply dimension
             output = function.process(output, tagged, new CraftingInfo(inventory, null));
             System.out.println("Ouput: " + output);
         }

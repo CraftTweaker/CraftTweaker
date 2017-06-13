@@ -1,4 +1,4 @@
-package minetweaker.mc1112;
+package minetweaker.mc1120;
 
 import minetweaker.*;
 import minetweaker.api.entity.IEntityDefinition;
@@ -6,8 +6,8 @@ import minetweaker.api.formatting.IFormattedText;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.tooltip.IngredientTooltips;
-import minetweaker.mc1112.formatting.IMCFormattedString;
-import minetweaker.mc1112.item.MCItemStack;
+import minetweaker.mc1120.formatting.IMCFormattedString;
+import minetweaker.mc1120.item.MCItemStack;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,13 +23,13 @@ import java.util.*;
  * @author Stan
  */
 public class ForgeEventHandler {
-
+    
     @SubscribeEvent
     public void onPlayerInteract(PlayerInteractEvent ev) {
         minetweaker.api.event.PlayerInteractEvent event = new minetweaker.api.event.PlayerInteractEvent(MineTweakerMC.getIPlayer(ev.getEntityPlayer()), MineTweakerMC.getDimension(ev.getWorld()), ev.getPos() == null ? 0 : ev.getPos().getX(), ev.getPos() == null ? 0 : ev.getPos().getY(), ev.getPos() == null ? 0 : ev.getPos().getZ());
         MineTweakerImplementationAPI.events.publishPlayerInteract(event);
     }
-
+    
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent ev) {
         if(!ev.getItemStack().isEmpty()) {
@@ -47,7 +47,7 @@ public class ForgeEventHandler {
             }
         }
     }
-
+    
     @SubscribeEvent
     public void mobDrop(LivingDropsEvent ev) {
         Entity entity = ev.getEntity();
@@ -64,7 +64,7 @@ public class ForgeEventHandler {
                     ev.getDrops().add(item);
                 });
             }
-            if(ev.getSource().getEntity() instanceof EntityPlayer) {
+            if(ev.getSource().getTrueSource() instanceof EntityPlayer) {
                 if(!entityDefinition.getDropsToAddPlayerOnly().isEmpty()) {
                     entityDefinition.getDropsToAddPlayerOnly().forEach((key, val) -> {
                         EntityItem item;
@@ -80,9 +80,8 @@ public class ForgeEventHandler {
             if(!entityDefinition.getDropsToRemove().isEmpty()) {
                 List<EntityItem> removedDrops = new ArrayList<>();
                 entityDefinition.getDropsToRemove().forEach(drop -> {
-                    //				if(drop.matches(new MCItemStack()))
                     ev.getDrops().forEach(drops -> {
-                        if(drop.matches(new MCItemStack(drops.getEntityItem()))) {
+                        if(drop.matches(new MCItemStack(drops.getItem()))) {
                             removedDrops.add(drops);
                         }
                     });

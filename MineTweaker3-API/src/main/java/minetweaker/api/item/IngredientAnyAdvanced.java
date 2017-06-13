@@ -91,7 +91,6 @@ public class IngredientAnyAdvanced implements IIngredient {
 
     @Override
     public boolean matches(ILiquidStack liquid) {
-        // TODO: conditions on liquids?
         return true;
     }
 
