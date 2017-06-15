@@ -6,13 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
 /**
  * @author Stan
  */
-public class ShapelessRecipeAdvanced implements IRecipe, IMTRecipe {
+public class ShapelessRecipeAdvanced extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IMTRecipe {
     
     private final ShapelessRecipe recipe;
     
@@ -31,7 +32,7 @@ public class ShapelessRecipeAdvanced implements IRecipe, IMTRecipe {
     }
     
     @Override
-    public boolean func_194133_a(int x, int y) {
+    public boolean canFit(int x, int y) {
         return x+y >= recipe.getSize();
     }
     

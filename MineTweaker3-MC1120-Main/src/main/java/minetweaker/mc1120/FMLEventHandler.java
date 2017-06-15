@@ -38,8 +38,8 @@ public class FMLEventHandler {
             MineTweakerMod.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(ev.craftMatrix, ev.player), iPlayer);
         }
         if(ev.craftMatrix instanceof InventoryCrafting) {
-            CraftingManager.field_193380_a.getKeys().stream().filter(key -> CraftingManager.field_193380_a.getObject(key) instanceof IMTRecipe && CraftingManager.field_193380_a.getObject(key).getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {
-                IRecipe recipe = CraftingManager.field_193380_a.getObject(i);
+            CraftingManager.REGISTRY.getKeys().stream().filter(key -> CraftingManager.REGISTRY.getObject(key) instanceof IMTRecipe && CraftingManager.REGISTRY.getObject(key).getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {
+                IRecipe recipe = CraftingManager.REGISTRY.getObject(i);
                 IMTRecipe rec = (IMTRecipe) recipe;
                 if(rec.getRecipe() instanceof ShapedRecipe) {
                     ShapedRecipe r = (ShapedRecipe) rec.getRecipe();

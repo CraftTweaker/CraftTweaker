@@ -19,4 +19,6 @@ public interface ICraftingRecipe {
     void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
     
     String toCommandString();
+    
+    String getName();
 }

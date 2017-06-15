@@ -50,7 +50,7 @@ public interface IRecipeManager {
      * @param function    recipe function (optional)
      */
     @ZenMethod
-    void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
      * Adds a mirrored shaped recipe.
@@ -60,7 +60,7 @@ public interface IRecipeManager {
      * @param function    recipe function (optional)
      */
     @ZenMethod
-    void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    void addShapedMirrored(String name,IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
      * Adds a shapeless recipe.
@@ -70,7 +70,7 @@ public interface IRecipeManager {
      * @param function    recipe function (optional)
      */
     @ZenMethod
-    void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    void addShapeless(String name,IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
      * Removes shaped recipes.

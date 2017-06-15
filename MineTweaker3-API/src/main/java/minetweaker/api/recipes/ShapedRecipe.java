@@ -21,8 +21,9 @@ public class ShapedRecipe implements ICraftingRecipe {
     
     private final IItemStack output;
     private final IIngredient[] ingredients;
+    private final String name;
     
-    public ShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
+    public ShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
         int numIngredients = 0;
         for(int i = 0; i < ingredients.length; i++) {
             IIngredient[] ingredient = ingredients[i];
@@ -45,6 +46,7 @@ public class ShapedRecipe implements ICraftingRecipe {
         this.ingredients = new IIngredient[numIngredients];
         this.function = function;
         this.action = action;
+        this.name = name;
         
         int width1 = 0;
         int height1 = ingredients.length;
@@ -95,6 +97,10 @@ public class ShapedRecipe implements ICraftingRecipe {
     
     public IItemStack getOutput() {
         return output;
+    }
+    
+    public String getName() {
+        return name;
     }
     
     @Override

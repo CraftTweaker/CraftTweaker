@@ -38,4 +38,9 @@ public class UnknownRecipe implements ICraftingRecipe {
     public String toCommandString() {
         return "// unknown recipe type for " + output;
     }
+    
+    @Override
+    public String getName() {
+        return "unknown";
+    }
 }

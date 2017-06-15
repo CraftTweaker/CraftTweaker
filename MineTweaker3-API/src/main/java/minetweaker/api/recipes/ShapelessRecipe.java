@@ -14,12 +14,13 @@ public class ShapelessRecipe implements ICraftingRecipe {
     private final IRecipeFunction function;
     private final IRecipeAction action;
     private final IIngredient[] ingredients;
-    
-    public ShapelessRecipe(IItemStack output, IIngredient[] ingredients, IRecipeFunction function, IRecipeAction action) {
+    private final String name;
+    public ShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, IRecipeFunction function, IRecipeAction action) {
         this.output = output;
         this.function = function;
         this.ingredients = ingredients;
         this.action = action;
+        this.name = name;
     }
     
     /**
@@ -168,5 +169,9 @@ public class ShapelessRecipe implements ICraftingRecipe {
             this.inputs = inputs;
             this.indices = indices;
         }
+    }
+    
+    public String getName() {
+        return name;
     }
 }

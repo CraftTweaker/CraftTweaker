@@ -87,20 +87,20 @@ public class MCLiquidDefinition implements ILiquidDefinition {
     public List<IItemStack> getContainers() {
         List<IItemStack> result = new ArrayList<>();
         //TODO I need updating!
-        MineTweakerAPI.logError("getContainers not supported in 1.11!");
+        MineTweakerAPI.logError("getContainers not supported in 1.12!");
         return result;
     }
     
     @Override
     public void addContainer(IItemStack filled, IItemStack empty, int amount) {
-        MineTweakerAPI.logError("addContainer not supported in 1.11!");
+        MineTweakerAPI.logError("addContainer not supported in 1.12!");
         //        MineTweakerAPI.apply(new AddContainerAction(filled, empty, amount));
     }
     
     @Override
     public void removeContainer(IItemStack filled) {
         // MineTweakerAPI.apply(new RemoveContainerAction(filled));
-        MineTweakerAPI.logError("removeContainer not supported in 1.11!");
+        MineTweakerAPI.logError("removeContainer not supported in 1.12!");
         
     }
     

@@ -40,7 +40,7 @@ ext.projects1112 = [
 // ### 1.12.0 settings ###
 // #######################
 
-ext.forgeVersion1120 = "1.12-14.21.0.2322"
+ext.forgeVersion1120 = "1.12-14.21.0.2324"
 ext.projects1120 = [
         'MineTweaker3-MC1120-Main'
 ]
