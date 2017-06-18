@@ -18,7 +18,7 @@ public abstract class Expression implements IPartialExpression {
         this.position = position;
     }
     
-    public static final Expression parse(ZenTokener parser, IEnvironmentMethod environment, ZenType predictedType) {
+    public static Expression parse(ZenTokener parser, IEnvironmentMethod environment, ZenType predictedType) {
         return ParsedExpression.read(parser, environment).compile(environment, predictedType).eval(environment);
     }
     

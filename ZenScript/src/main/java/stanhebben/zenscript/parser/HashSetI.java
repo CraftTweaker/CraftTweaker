@@ -139,12 +139,11 @@ public class HashSetI {
             if(value == Integer.MIN_VALUE) {
                 continue;
             }
-            
-            int key = value;
-            int index = key & newMask;
+    
+            int index = value & newMask;
             
             if(newKeys[index] == Integer.MIN_VALUE) {
-                newKeys[index] = key;
+                newKeys[index] = value;
             } else {
                 while(newNext[index] != 0) {
                     index = newNext[index] - 1;
@@ -155,7 +154,7 @@ public class HashSetI {
                 }
                 newNext[ref] = index + 1;
                 
-                newKeys[index] = key;
+                newKeys[index] = value;
             }
         }
 

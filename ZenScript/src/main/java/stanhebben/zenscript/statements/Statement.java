@@ -24,7 +24,7 @@ public abstract class Statement {
         switch(next.getType()) {
             case T_AOPEN: {
                 Token t = parser.next();
-                ArrayList<Statement> statements = new ArrayList<Statement>();
+                ArrayList<Statement> statements = new ArrayList<>();
                 while(parser.optional(T_ACLOSE) == null) {
                     statements.add(read(parser, environment, returnType));
                 }
@@ -83,8 +83,6 @@ public abstract class Statement {
             case T_VERSION: {
                 Token t = parser.next();
                 parser.required(T_INTVALUE, "integer expected");
-
-                // MineTweaker.logWarning("The version statement is no longer necessary");
 
                 parser.required(T_SEMICOLON, "; expected");
                 return new StatementNull(t.getPosition());

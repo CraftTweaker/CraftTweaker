@@ -454,8 +454,7 @@ public class NFA {
                     }
                 }
                 closure = new ArrayList<>();
-                for(NFAState node : tmp)
-                    closure.add(node);
+                closure.addAll(tmp);
             }
             return closure;
         }

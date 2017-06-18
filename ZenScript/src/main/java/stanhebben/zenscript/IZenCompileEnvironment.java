@@ -15,8 +15,6 @@ public interface IZenCompileEnvironment {
     
     IZenSymbol getGlobal(String name);
     
-    IZenSymbol getDollar(String name);
-    
     IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens);
     
     TypeRegistry getTypeRegistry();
