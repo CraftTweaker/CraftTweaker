@@ -1,4 +1,4 @@
-package minetweaker.tasks;
+package crafttweaker.tasks;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.*;
@@ -137,14 +137,13 @@ public class JMorph extends DefaultTask {
     }
 
     private static String getIdentifier(String line, int offset) {
-        int from = offset;
         int to = offset;
         if(!Character.isJavaIdentifierStart(line.charAt(to)))
             return null;
         to++;
         while(to < line.length() && Character.isJavaIdentifierPart(line.charAt(to)))
             to++;
-        return line.substring(from, to);
+        return line.substring(offset, to);
     }
 
     @TaskAction

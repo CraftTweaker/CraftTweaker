@@ -1,4 +1,4 @@
-package minetweaker.tasks;
+package crafttweaker.tasks;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.*;
