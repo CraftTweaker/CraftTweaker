@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "crafttweaker",
+    "name": "CraftTweaker2",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "description": "Customize your minecraft experience!",
+    "credits": "Created By StanHebben and Jaredlll08",
+    "logoFile": "assets/crafttweaker/logo.png",
+    "url": "http://minetweaker3.powerofbytes.com",
+    "authorList": [
+      "StanHebben",
+      "Jaredlll08"
+    ],
+    "parent": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
