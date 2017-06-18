@@ -12,24 +12,23 @@ Want to contribute? That's great! Contact me if you want to propose or discuss n
 
 ## Project structure and building
 
-The MineTweaker 3 source is setup as a multi-project Gradle project:
+The CraftTweaker 2 source is setup as a multi-project Gradle project:
 
 - ZenScript is the custom scripting engine
-- MineTweaker3-API is the shared API for all MineTweaker versions
-- MineTweaker3-MCXYZ-Main are the main MineTweaker implementations for Minecraft X.Y.Z
-- MineTweaker3-MCXYZ-Mod-XXX are the mod support projects. They are compiled and obfuscated independently and then assembled later
+- CraftTweaker2-API is the shared API for all CraftTweaker versions
+- CraftTweaker2-MCXYZ-Main are the main CraftTweaker implementations for Minecraft X.Y.Z
+- CraftTweaker2-MCXYZ-Mod-XXX are the mod support projects. They are compiled and obfuscated independently and then assembled later
 
-### Developing and running MineTweaker from source
+### Developing and running CraftTweaker from source
 
 Configuration settings are stored in configuration.gradle.
 
-In order to use the project, you have to execute the setupDecompWorkspaceAll. It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in MineTweaker3-XYZ-Main project, which will run MineTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run MineTweaker with only the mod support for that specific mod.
+In order to use the project, you have to execute the setupDecompWorkspaceAll. It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in CraftTweaker2-XYZ-Main project, which will run CraftTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run CraftTweaker with only the mod support for that specific mod.
 
 The following global tasks are available:
 
 - setupDecompWorkspaceAll: sets up all workspaces in all subprojects
-- assembleMC1102: builds MineTweaker for Minecraft 1.10.2
-- assembleAll: builds all versions of MineTweaker
+- assembleAll: builds all versions of CraftTweaker
 
 ### Adding mod support
 
@@ -41,4 +40,4 @@ Use the assembleAll task to build all versions, or assembleMCxxx tasks to build 
 
 ## Customized builds
 
-You may modify and redistribute your own customized version of MineTweaker as long as you mark your own version of MineTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name) and as long as you make the modified source code publicly available. Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (Stan) ;)
+You may modify and redistribute your own customized version of CraftTweaker as long as you mark your own version of CraftTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name) and as long as you make the modified source code publicly available. Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (Stan) ;)

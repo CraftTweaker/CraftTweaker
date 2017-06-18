@@ -1,5 +1,5 @@
 #### Intro:
-Please note, you will be treated exactly like any other person who submits a bug report, saying this, if you decide to delete this template entirely, your issue will be closed. If you do not provide relevant information when reporting an issue (for example having a script issue and not providing the scripts or the minetweaker.log file) this issue will be closed. you may now delete this section and continue on with the report.
+Please note, you will be treated exactly like any other person who submits a bug report, saying this, if you decide to delete this template entirely, your issue will be closed. If you do not provide relevant information when reporting an issue (for example having a script issue and not providing the scripts or the crafttweaker.log file) this issue will be closed. you may now delete this section and continue on with the report.
 
 
 #### Issue Description:
