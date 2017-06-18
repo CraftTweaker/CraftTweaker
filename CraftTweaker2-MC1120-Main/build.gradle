@@ -1,5 +1,3 @@
-import minetweaker.tasks.RegisterZenClassesTask;
-
 buildscript {
     repositories {
         jcenter()
@@ -15,7 +13,7 @@ apply plugin: 'maven'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-version = "1.12-" + ext.mineTweakerVersion
+version = "1.12-" + ext.craftTweakerVersion
 archivesBaseName = project.projectDir.name
 
 minecraft {
@@ -26,16 +24,8 @@ minecraft {
 
 dependencies {
     compile project(':ZenScript')
-    compile project(':MineTweaker3-API')
+    compile project(':CraftTweaker2-API')
 }
-
-task makeRegistry(type: RegisterZenClassesTask) {
-    inputDir = file('build/classes/main')
-    outputDir = file('build/classes/main')
-    className = 'minetweaker.mc1112.MineTweakerRegistry'
-}
-
-tasks.jar.dependsOn(makeRegistry)
 
 processResources
         {
