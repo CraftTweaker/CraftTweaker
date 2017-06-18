@@ -24,3 +24,7 @@ usernamecache.json
 *.log
 */.settings
 */build
+
+*.launch
+
+*.db
