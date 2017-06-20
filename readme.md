@@ -1,6 +1,6 @@
 # CraftTweaker
 
-Welcome to the Crafttwaeker source! Crafttweaker is the official continuation of Minetweaker 3 and plans on staying updated for the latest Minecraft versions.
+Welcome to the Crafttweaker source! Crafttweaker is the official continuation of Minetweaker 3 and plans on staying updated for the latest Minecraft versions.
 
 ## License and contributions
 

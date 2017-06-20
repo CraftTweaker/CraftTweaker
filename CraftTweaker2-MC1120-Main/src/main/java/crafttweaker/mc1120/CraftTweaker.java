@@ -89,14 +89,14 @@ public class CraftTweaker {
             }
         });
         CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
-        ItemBracketHandler.rebuildItemRegistry();
-        LiquidBracketHandler.rebuildLiquidRegistry();
-        EntityBracketHandler.rebuildEntityRegistry();
+        BracketHandlerItem.rebuildItemRegistry();
+        BracketHandlerLiquid.rebuildLiquidRegistry();
+        BracketHandlerEntity.rebuildEntityRegistry();
         CraftTweakerAPI.logInfo("CraftTweaker: Sucessfully built item registry");
-        GlobalRegistry.registerBracketHandler(new ItemBracketHandler());
-        GlobalRegistry.registerBracketHandler(new LiquidBracketHandler());
-        GlobalRegistry.registerBracketHandler(new OreBracketHandler());
-        GlobalRegistry.registerBracketHandler(new EntityBracketHandler());
+        GlobalRegistry.registerBracketHandler(new BracketHandlerItem());
+        GlobalRegistry.registerBracketHandler(new BracketHandlerLiquid());
+        GlobalRegistry.registerBracketHandler(new BracketHandlerOre());
+        GlobalRegistry.registerBracketHandler(new BracketHandlerEntity());
         
         if(CraftTweakerPlatformUtils.isClient()) {
             CraftTweakerAPI.client = new MCClient();

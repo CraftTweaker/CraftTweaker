@@ -19,13 +19,13 @@ import java.util.*;
  */
 @BracketHandler(priority = 100)
 @ZenRegister
-public class EntityBracketHandler implements IBracketHandler {
+public class BracketHandlerEntity implements IBracketHandler {
     
     private static final Map<String, IEntityDefinition> entityNames = new HashMap<>();
     private final IJavaMethod method;
     
-    public EntityBracketHandler() {
-        method = CraftTweakerAPI.getJavaMethod(EntityBracketHandler.class, "getEntity", String.class);
+    public BracketHandlerEntity() {
+        method = CraftTweakerAPI.getJavaMethod(BracketHandlerEntity.class, "getEntity", String.class);
     }
     
     public static void rebuildEntityRegistry() {
@@ -54,23 +54,7 @@ public class EntityBracketHandler implements IBracketHandler {
             Token token = tokens.get(i);
             valueBuilder.append(token.getValue());
         }
-        
-        return new EntityReferenceSymbol(environment, valueBuilder.toString());
+        return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, valueBuilder.toString()));
     }
     
-    private class EntityReferenceSymbol implements IZenSymbol {
-        
-        private final IEnvironmentGlobal environment;
-        private final String name;
-        
-        public EntityReferenceSymbol(IEnvironmentGlobal environment, String name) {
-            this.environment = environment;
-            this.name = name;
-        }
-        
-        @Override
-        public IPartialExpression instance(ZenPosition position) {
-            return new ExpressionCallStatic(position, environment, method, new ExpressionString(position, name));
-        }
-    }
 }

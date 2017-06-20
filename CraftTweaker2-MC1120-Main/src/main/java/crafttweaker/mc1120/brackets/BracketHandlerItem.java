@@ -27,7 +27,7 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStackWildcardSiz
  */
 @BracketHandler(priority = 100)
 @ZenRegister
-public class ItemBracketHandler implements IBracketHandler {
+public class BracketHandlerItem implements IBracketHandler {
     
     private static final Map<String, Item> itemNames = new HashMap<>();
     private static final Map<String, Block> blockNames = new HashMap<>();
@@ -35,9 +35,9 @@ public class ItemBracketHandler implements IBracketHandler {
     private final IZenSymbol symbolAny;
     private final IJavaMethod method;
     
-    public ItemBracketHandler() {
+    public BracketHandlerItem() {
         symbolAny = CraftTweakerAPI.getJavaStaticFieldSymbol(IngredientAny.class, "INSTANCE");
-        method = CraftTweakerAPI.getJavaMethod(ItemBracketHandler.class, "getItem", String.class, int.class);
+        method = CraftTweakerAPI.getJavaMethod(BracketHandlerItem.class, "getItem", String.class, int.class);
     }
     
     public static Map<String, Item> getItemNames() {
@@ -114,27 +114,10 @@ public class ItemBracketHandler implements IBracketHandler {
         
         String itemName = valueBuilder.toString();
         if(itemNames.containsKey(itemName) || blockNames.containsKey(itemName)) {
-            return new ItemReferenceSymbol(environment, itemName, meta);
+            return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, valueBuilder.toString()), new ExpressionInt(position, meta, ZenType.INT));
         }
         
         return null;
     }
     
-    private class ItemReferenceSymbol implements IZenSymbol {
-        
-        private final IEnvironmentGlobal environment;
-        private final String name;
-        private final int meta;
-        
-        public ItemReferenceSymbol(IEnvironmentGlobal environment, String name, int meta) {
-            this.environment = environment;
-            this.name = name;
-            this.meta = meta;
-        }
-        
-        @Override
-        public IPartialExpression instance(ZenPosition position) {
-            return new ExpressionCallStatic(position, environment, method, new ExpressionString(position, name), new ExpressionInt(position, meta, ZenType.INT));
-        }
-    }
 }
