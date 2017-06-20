@@ -56,10 +56,11 @@ public class CraftTweaker {
         NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, 2, Side.CLIENT);
     }
     
-    public final MCRecipeManager recipes;
-    private final IScriptProvider scriptsGlobal;
+    public MCRecipeManager recipes;
+    private IScriptProvider scriptsGlobal;
     
-    public CraftTweaker() {
+    @EventHandler
+    public void onConstruction(FMLConstructionEvent event) {
         CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla());
         CrafttweakerImplementationAPI.logger.addLogger(new MCLogger(new File("crafttweaker.log")));
         CrafttweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
@@ -69,11 +70,6 @@ public class CraftTweaker {
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
         CrafttweakerImplementationAPI.setScriptProvider(scriptsGlobal);
     }
-    
-    
-    // ##########################
-    // ### FML Event Handlers ###
-    // ##########################
     
     @EventHandler
     public void onLoad(FMLPreInitializationEvent ev) {
