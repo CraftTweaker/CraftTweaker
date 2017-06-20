@@ -32,8 +32,6 @@ import java.io.File;
 /**
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
- *
- * @author Stan Hebben
  */
 @Mod(modid = CraftTweaker.MODID, version = "3.0.26", name = CraftTweaker.NAME)
 public class CraftTweaker {
@@ -52,8 +50,9 @@ public class CraftTweaker {
     public static CommonProxy PROXY;
     
     static {
-        NETWORK.registerMessage(MessageOpenBrowser.class, MessageOpenBrowser.class, 1, Side.CLIENT);
-        NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, 2, Side.CLIENT);
+        int ID = 0;
+        NETWORK.registerMessage(MessageOpenBrowser.class, MessageOpenBrowser.class, ID++, Side.CLIENT);
+        NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, ID++, Side.CLIENT);
     }
     
     public MCRecipeManager recipes;
