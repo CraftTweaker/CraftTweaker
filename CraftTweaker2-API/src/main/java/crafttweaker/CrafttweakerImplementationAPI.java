@@ -198,9 +198,9 @@ public class CrafttweakerImplementationAPI {
                 IItemStack stack = player.getInventoryStack(i);
                 if(stack != null) {
                     CraftTweakerAPI.logCommand(stack.toString());
-                    player.sendChat("Recipe list generated; see crafttweaker.log in your minecraft dir");
                 }
             }
+            player.sendChat("Recipe list generated; see crafttweaker.log in your minecraft dir");
         }));
         
         crafttweakerCommands.put("hand", new CraftTweakerCommand("hand", new String[]{"/crafttweaker hand", "§a-§rOutputs the name of the item in your hand", "§a-§rAlso copies the name to clipboard and prints", "§a-§roredict entries"}, (arguments, player) -> {
