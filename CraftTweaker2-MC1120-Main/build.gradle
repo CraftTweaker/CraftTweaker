@@ -18,7 +18,7 @@ archivesBaseName = project.projectDir.name
 
 minecraft {
     version = forgeVersion1120
-    runDir = "eclipse"
+    runDir = "CraftTweaker2-MC1120-Main/eclipse"
     mappings = "snapshot_20170614"
 }
 
