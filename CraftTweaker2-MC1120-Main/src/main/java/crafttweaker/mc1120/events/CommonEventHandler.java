@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import java.util.*;
 
 public class CommonEventHandler {
+    
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {
         CrafttweakerImplementationAPI.events.publishPlayerLoggedIn(new PlayerLoggedInEvent(CraftTweakerMC.getIPlayer(ev.player)));
@@ -72,8 +73,10 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent ev) {
-        crafttweaker.api.event.PlayerInteractEvent event = new crafttweaker.api.event.PlayerInteractEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getDimension(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
-        CrafttweakerImplementationAPI.events.publishPlayerInteract(event);
+        if(!ev.getWorld().isRemote) {
+            PlayerInteractEvent event = new PlayerInteractEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getDimension(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
+            CrafttweakerImplementationAPI.events.publishPlayerInteract(event);
+        }
     }
     
     @SubscribeEvent
