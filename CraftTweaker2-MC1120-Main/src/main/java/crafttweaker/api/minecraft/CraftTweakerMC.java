@@ -18,6 +18,7 @@ import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
@@ -92,7 +93,7 @@ public class CraftTweakerMC {
      * @return crafttweaker item stack
      */
     public static IItemStack getIItemStack(ItemStack item) {
-        if(item.isEmpty())
+        if(item == null || item.isEmpty())
             return null;
         
         return new MCItemStack(item);
@@ -226,7 +227,7 @@ public class CraftTweakerMC {
         
         IItemStack[] result = new IItemStack[items.length];
         for(int i = 0; i < items.length; i++) {
-            if(!items[i].isEmpty()){
+            if(!items[i].isEmpty()) {
                 result[i] = new MCItemStack(items[i]);
             }
         }
@@ -504,6 +505,8 @@ public class CraftTweakerMC {
             return entry;
         } else if(ingredient instanceof FluidStack) {
             return new MCLiquidStack((FluidStack) ingredient);
+        } else if(ingredient instanceof Ingredient) {
+            return getIItemStack(((Ingredient)ingredient).getMatchingStacks()[0]);
         } else {
             throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
         }

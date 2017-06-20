@@ -5,6 +5,7 @@ import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
+import crafttweaker.mc1120.CraftTweaker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -126,7 +127,7 @@ public class MCRecipeManager implements IRecipeManager {
     public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
         throw new UnsupportedOperationException("Recipes are not implemented yet!");
 //        ShapelessRecipe recipe = new ShapelessRecipe(name, output, ingredients, function, action);
-//        IRecipe irecipe = RecipeConverter.convert(recipe);
+//        IRecipe irecipe = RecipeConverter.convert(recipe, new ResourceLocation(CraftTweaker.MODID, name));
 //        CraftTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
     }
     
@@ -320,7 +321,7 @@ public class MCRecipeManager implements IRecipeManager {
     
     private void addShaped(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
         ShapedRecipe recipe = new ShapedRecipe(name, output, ingredients, function, action, mirrored);
-        IRecipe irecipe = RecipeConverter.convert(recipe);
+        IRecipe irecipe = RecipeConverter.convert(recipe, new ResourceLocation(CraftTweaker.MODID, name));
         CraftTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
     }
     
