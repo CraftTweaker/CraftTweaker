@@ -2,7 +2,6 @@ package crafttweaker;
 
 import crafttweaker.annotations.BracketHandler;
 import crafttweaker.api.client.IClient;
-import crafttweaker.api.compat.*;
 import crafttweaker.api.event.IEventManager;
 import crafttweaker.api.formatting.IFormatter;
 import crafttweaker.api.game.IGame;
@@ -32,7 +31,6 @@ import java.util.logging.*;
  * crafttweaker, oreDict, logger, as well as the official set of functions) -
  * Register native classes using the GlobalRegistry - Register bracket handlers
  * to resolve block/item/... references using the bracket syntax
- *
  */
 public class CraftTweakerAPI {
     
@@ -83,10 +81,6 @@ public class CraftTweakerAPI {
      * Access point to the vanilla functions and data.
      */
     public static IVanilla vanilla = null;
-    /**
-     * Access to the JEI recipeRegistry
-     */
-    public static IJEIRecipeRegistry ijeiRecipeRegistry = new DummyJEIRecipeRegistry();
     static {
         registerGlobalSymbol("logger", getJavaStaticGetterSymbol(CraftTweakerAPI.class, "getLogger"));
         registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "recipes"));
@@ -293,13 +287,5 @@ public class CraftTweakerAPI {
      */
     public static IJavaMethod getJavaMethod(Class<? extends IBracketHandler> cls, String name, Class... arguments) {
         return JavaMethod.get(GlobalRegistry.getTypes(), cls, name, arguments);
-    }
-    
-    public static IJEIRecipeRegistry getIjeiRecipeRegistry() {
-        return ijeiRecipeRegistry;
-    }
-    
-    public static void setIjeiRecipeRegistry(IJEIRecipeRegistry ijeiRecipeRegistry) {
-        CraftTweakerAPI.ijeiRecipeRegistry = ijeiRecipeRegistry;
     }
 }

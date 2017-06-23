@@ -18,7 +18,6 @@ public class ActionRemoveFurnaceRecipe implements IAction {
     public void apply() {
         for(Map.Entry<ItemStack, ItemStack> entry : smeltingMap.entrySet()) {
             FurnaceRecipes.instance().getSmeltingList().remove(entry.getKey(), entry.getValue());
-            CraftTweakerAPI.getIjeiRecipeRegistry().removeFurnace(entry.getKey());
         }
         
     }

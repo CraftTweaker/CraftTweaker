@@ -30,9 +30,7 @@ public class ActionSetStackTranslation implements IAction {
         if(value.contains("\\\"")) {
             value = value.replace("\\\"", "\"");
         }
-        CraftTweakerAPI.getIjeiRecipeRegistry().removeItem(stack.getInternal());
         LanguageMap.inject(new ByteArrayInputStream((key + "=" + value).getBytes(UTF8)));
-        CraftTweakerAPI.getIjeiRecipeRegistry().addItem(stack.getInternal());
     }
 
     @Override

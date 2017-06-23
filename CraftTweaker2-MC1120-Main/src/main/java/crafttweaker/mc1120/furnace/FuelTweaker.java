@@ -50,7 +50,6 @@ public class FuelTweaker {
             quickList.get(mcItem).add(pattern);
         }
         
-        CraftTweakerAPI.getIjeiRecipeRegistry().addFuel(Arrays.asList(CraftTweakerMC.getItemStacks(pattern.getPattern().getItems())), pattern.getValue());
     }
 
     public void removeFuelPattern(SetFuelPattern pattern) {
@@ -60,7 +59,6 @@ public class FuelTweaker {
             if(quickList.containsKey(mcItem)) {
                 quickList.get(mcItem).remove(pattern);
             }
-            CraftTweakerAPI.getIjeiRecipeRegistry().removeFuel(itemStack);
         }
        
     }

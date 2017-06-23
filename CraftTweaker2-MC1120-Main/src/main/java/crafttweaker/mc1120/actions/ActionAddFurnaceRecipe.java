@@ -26,7 +26,6 @@ public class ActionAddFurnaceRecipe implements IAction {
         for(ItemStack inputStack : input) {
             FurnaceRecipes.instance().addSmeltingRecipe(inputStack, output, (float) xp);
         }
-        CraftTweakerAPI.getIjeiRecipeRegistry().addFurnace(Arrays.asList(input), output);
     }
     
     @Override

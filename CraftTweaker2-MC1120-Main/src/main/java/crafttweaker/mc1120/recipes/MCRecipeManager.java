@@ -347,8 +347,6 @@ public class MCRecipeManager implements IRecipeManager {
         public void apply() {
             for(int i = removingIndices.size() - 1; i >= 0; i--) {
                 recipes.remove(removingIndices.get(i));
-                if(removingRecipes.get(i) != null)
-                    CraftTweakerAPI.getIjeiRecipeRegistry().removeRecipe(removingRecipes.get(i), "minecraft.crafting");
             }
         }
         
@@ -375,7 +373,6 @@ public class MCRecipeManager implements IRecipeManager {
             if(craftingRecipe.hasTransformers()) {
                 transformerRecipes.add(craftingRecipe);
             }
-            CraftTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "minecraft.crafting");
         }
         
         @Override

@@ -58,7 +58,6 @@ public class IngredientTooltips {
         @Override
         public void apply() {
             entry = (shift ? SHIFT_TOOLTIPS : TOOLTIPS).register(ingredient, tooltip);
-            CraftTweakerAPI.getIjeiRecipeRegistry().invalidateTooltips(ingredient);
         }
         
         
