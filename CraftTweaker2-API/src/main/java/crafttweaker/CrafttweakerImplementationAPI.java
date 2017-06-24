@@ -269,7 +269,7 @@ public class CrafttweakerImplementationAPI {
         
         crafttweakerCommands.put("bugs", new CraftTweakerCommand("bugs", new String[]{"/crafttweaker bugs", "§a-§rOpens your browser with the GitHub bug tracker"}, (arguments, player) -> player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues")));
         
-        crafttweakerCommands.put("forum", new CraftTweakerCommand("forum", new String[]{"/crafttweaker forum", "§a-§rOpens your browser with the forum"}, (arguments, player) -> player.openBrowser("http://minetweaker3.powerofbytes.com/forum")));
+        crafttweakerCommands.put("discord", new CraftTweakerCommand("discord", new String[]{"/crafttweaker discord", "§a-§rOpens your browser with a link to the Discord server"}, (arguments, player) -> player.openBrowser("https://discord.gg/3VBK9ar")));
         
         crafttweakerCommands.put("biomes", new CraftTweakerCommand("biomes", new String[]{"/crafttweaker biomes", "§a-§rLists all the biomes in the game"}, (arguments, player) -> {
             CraftTweakerAPI.logCommand("Biomes:");
@@ -296,7 +296,7 @@ public class CrafttweakerImplementationAPI {
                 blockEventHandler.close();
             }
         }));
-        
+     
     }
     
     /**
