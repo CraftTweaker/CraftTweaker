@@ -21,7 +21,6 @@ public class GuiMenu {
     public Pair<CheckButtonRecipe, Slider[]> nbt;
     //    public Pair<CheckButtonRecipe, Slider[]> transformDamage;
     //    public Pair<CheckButtonRecipe, Slider[]> transformReplace;
-    public Pair<CheckButtonRecipe, Slider[]> reuse;
     public Pair<CheckButtonRecipe, Slider[]> noReturn;
     private GuiBase parent;
     private int x;
@@ -65,7 +64,6 @@ public class GuiMenu {
 
         nbt = new MutablePair<>(new CheckButtonRecipe(parent, 8, x, y + (15 * buttonCount++), "NBT", false, "nbt"), new Slider[]{});
 
-        reuse = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount++), "Reuse", false, "reuse"), new Slider[]{});
         noReturn = new MutablePair<>(new CheckButtonRecipe(parent, 0, x, y + (15 * buttonCount), "No Return", false, "noreturn"), new Slider[]{});
 
 
@@ -80,7 +78,6 @@ public class GuiMenu {
         this.buttons.add(nbt);
 
 
-        this.buttons.add(reuse);
         this.buttons.add(noReturn);
 
         for(Pair<CheckButtonRecipe, Slider[]> but : this.buttons) {
@@ -97,8 +94,6 @@ public class GuiMenu {
         betweenDamage.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft(), matchAnyMetadata.getLeft(), anyDamage.getLeft(), onlyDamage.getLeft(), greaterThanEqualDamage.getLeft(), lessThanDamage.getLeft()}));
 
         nbt.getLeft().setIncompatible(Arrays.asList(new CheckButtonRecipe[]{useOreDict.getLeft()}));
-        noReturn.getLeft().setIncompatible(Collections.singletonList(reuse.getLeft()));
-        reuse.getLeft().setIncompatible(Collections.singletonList(noReturn.getLeft()));
 
 
     }
@@ -114,7 +109,6 @@ public class GuiMenu {
             this.parent.getButtonList().remove(lessThanDamage.getLeft());
             this.parent.getButtonList().remove(betweenDamage.getLeft());
 
-            this.parent.getButtonList().remove(reuse.getLeft());
             this.parent.getButtonList().remove(noReturn.getLeft());
 
         }
@@ -130,7 +124,6 @@ public class GuiMenu {
         greaterThanEqualDamage.getLeft().setIsChecked(active);
         lessThanDamage.getLeft().setIsChecked(active);
         betweenDamage.getLeft().setIsChecked(active);
-        reuse.getLeft().setIsChecked(active);
         noReturn.getLeft().setIsChecked(active);
         nbt.getLeft().setIsChecked(active);
 
@@ -144,7 +137,6 @@ public class GuiMenu {
         greaterThanEqualDamage.getLeft().enabled = active;
         lessThanDamage.getLeft().enabled = active;
         betweenDamage.getLeft().enabled = active;
-        reuse.getLeft().enabled = active;
         noReturn.getLeft().enabled = active;
         nbt.getLeft().enabled = active;
 
@@ -159,7 +151,6 @@ public class GuiMenu {
         greaterThanEqualDamage.getLeft().setIsChecked(getPropertyFromMap(propertyMap, greaterThanEqualDamage.getLeft().getPropertyKey()));
         lessThanDamage.getLeft().setIsChecked(getPropertyFromMap(propertyMap, lessThanDamage.getLeft().getPropertyKey()));
         betweenDamage.getLeft().setIsChecked(getPropertyFromMap(propertyMap, betweenDamage.getLeft().getPropertyKey()));
-        reuse.getLeft().setIsChecked(getPropertyFromMap(propertyMap, reuse.getLeft().getPropertyKey()));
         noReturn.getLeft().setIsChecked(getPropertyFromMap(propertyMap, noReturn.getLeft().getPropertyKey()));
         nbt.getLeft().setIsChecked(getPropertyFromMap(propertyMap, nbt.getLeft().getPropertyKey()));
     }

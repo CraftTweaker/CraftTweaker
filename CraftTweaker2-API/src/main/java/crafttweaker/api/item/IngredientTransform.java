@@ -15,18 +15,6 @@ import stanhebben.zenscript.annotations.*;
 public class IngredientTransform {
     
     /**
-     * Makes the item reusable. Prevents consumption of the item upon crafting.
-     *
-     * @param ingredient target value
-     *
-     * @return reuse transformer
-     */
-    @ZenMethod
-    public static IIngredient reuse(IIngredient ingredient) {
-        return ingredient.transform((item, byPlayer) -> item.withAmount(item.getAmount() + 1));
-    }
-    
-    /**
      * Damages the item. Also makes the item reusable. Will damage the item for
      * 1 point upon crafting and consume it when broken.
      *
@@ -39,9 +27,11 @@ public class IngredientTransform {
         return ingredient.transform((item, byPlayer) -> {
             int newDamage = item.getDamage() + 1;
             if(newDamage >= item.getMaxDamage()) {
-                return item.withAmount(item.getAmount()).withDamage(0);
+                byPlayer.give(item.withDamage(0));
+                return item;
             } else {
-                return item.withAmount(item.getAmount() + 1).withDamage(newDamage);
+                byPlayer.give(item.withDamage(newDamage));
+                return item;
             }
         });
     }
@@ -62,9 +52,11 @@ public class IngredientTransform {
         return ingredient.transform((item, byPlayer) -> {
             int newDamage = item.getDamage() + damage;
             if(newDamage >= item.getMaxDamage()) {
-                return item.withAmount(item.getAmount()).withDamage(0);
+                byPlayer.give(item.withDamage(0));
+                return item;
             } else {
-                return item.withAmount(item.getAmount()).withDamage(newDamage);
+                byPlayer.give(item.withDamage(newDamage));
+                return item;
             }
         });
     }
@@ -85,7 +77,8 @@ public class IngredientTransform {
                 byPlayer.give(withItem);
                 return item;
             } else {
-                return withItem.withAmount(withItem.getAmount());
+                byPlayer.give(withItem.withAmount(withItem.getAmount()));
+                return item;
             }
         });
     }
@@ -102,7 +95,10 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformConsume(IIngredient ingredient, final int amount) {
-        return ingredient.transform((item, byPlayer) -> item.withAmount(Math.max(item.getAmount() - amount, 0) + 1));
+        return ingredient.transform((item, byPlayer) -> {
+            byPlayer.give(item.withAmount(Math.max(item.getAmount() - amount, 0)));
+            return item;
+        });
     }
     
     /**

@@ -76,8 +76,6 @@ public class SlotRecipe extends Slot {
         if(getPropertyFromMap("betweenDamage")) {
             builder.append(".onlyDamageBetween(").append("").append(getProperty("betweenDamageX")).append(", ").append("").append(getProperty("betweenDamageY")).append(')');
         }
-        if(getPropertyFromMap("reuse"))
-            builder.append(".reuse()");
         if(getPropertyFromMap("noreturn"))
             builder.append(".noReturn()");
         if(getPropertyFromMap("nbt")) {
