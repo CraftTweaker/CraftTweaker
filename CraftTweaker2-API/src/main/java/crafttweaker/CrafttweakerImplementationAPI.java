@@ -465,7 +465,7 @@ public class CrafttweakerImplementationAPI {
         public void handle(PlayerInteractEvent event) {
             if(blockInfoPlayers.contains(event.getPlayer())) {
                 IBlock block = event.getBlock();
-                event.getPlayer().sendChat("Block ID: " + block.getDefinition().getId());
+                event.getPlayer().sendChat("Block Name: " + block.getDefinition().getId());
                 event.getPlayer().sendChat("Meta value: " + block.getMeta());
                 IData data = block.getTileData();
                 if(data != null) {
