@@ -19,6 +19,7 @@ import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.*;
 import crafttweaker.runtime.providers.*;
 import crafttweaker.zenscript.GlobalRegistry;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.registries.ForgeRegistry;
 
 import java.io.File;
 
@@ -57,6 +59,8 @@ public class CraftTweaker {
     
     public MCRecipeManager recipes;
     private IScriptProvider scriptsGlobal;
+    
+    
     
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
@@ -104,7 +108,6 @@ public class CraftTweaker {
         
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
-        CrafttweakerImplementationAPI.load();
     }
     
     @EventHandler

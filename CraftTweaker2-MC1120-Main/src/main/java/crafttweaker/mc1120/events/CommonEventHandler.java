@@ -9,7 +9,7 @@ import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.recipes.MCCraftingInventory;
+import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCDimension;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -17,13 +17,22 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.util.*;
 
+import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
+
 public class CommonEventHandler {
+    
+    @SubscribeEvent(priority = LOWEST)
+    public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
+        CrafttweakerImplementationAPI.load();
+        MCRecipeManager.recipesToAdd.forEach(recipe -> ev.getRegistry().register(recipe));
+    }
     
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {
