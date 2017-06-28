@@ -2,6 +2,8 @@ package minetweaker.mc1112;
 
 import minetweaker.*;
 import minetweaker.annotations.BracketHandler;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.mc1112.brackets.*;
 import minetweaker.mc1112.client.MCClient;
 import minetweaker.mc1112.formatting.MCFormatter;
@@ -17,6 +19,7 @@ import minetweaker.mc1112.util.*;
 import minetweaker.mc1112.vanilla.MCVanilla;
 import minetweaker.runtime.*;
 import minetweaker.runtime.providers.*;
+import net.minecraft.item.crafting.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -94,31 +97,31 @@ public class MineTweakerMod {
     public void onLoad(FMLPreInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
         MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
-//        List<Class> apiClasses = new ArrayList<>();
-//        String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
-//        for(String name : classNames) {
-//            ev.getAsmData().getAll(name).forEach(clazz -> {
-//                boolean valid = true;
-//                try {
-//                    for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
-//                        if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
-//                            valid = false;
-//                        }
-//                    }
-//                    if(valid) {
-//                        Class<?> asmClass = Class.forName(clazz.getClassName());
-//                        apiClasses.add(asmClass);
-//                    }
-//                } catch(ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        }
-//        apiClasses.forEach(i -> {
-//            MineTweakerAPI.registerClass(i);
-//        });
+        //        List<Class> apiClasses = new ArrayList<>();
+        //        String[] classNames = new String[]{ZenExpansion.class.getCanonicalName(), ZenClass.class.getCanonicalName(), BracketHandler.class.getCanonicalName()};
+        //        for(String name : classNames) {
+        //            ev.getAsmData().getAll(name).forEach(clazz -> {
+        //                boolean valid = true;
+        //                try {
+        //                    for(ModContainer mod : clazz.getCandidate().getContainedMods()) {
+        //                        if(!mod.getName().equals("MineTweaker 3") || !mod.getName().equals("CT-GUI")) {
+        //                            valid = false;
+        //                        }
+        //                    }
+        //                    if(valid) {
+        //                        Class<?> asmClass = Class.forName(clazz.getClassName());
+        //                        apiClasses.add(asmClass);
+        //                    }
+        //                } catch(ClassNotFoundException e) {
+        //                    e.printStackTrace();
+        //                }
+        //            });
+        //        }
+        //        apiClasses.forEach(i -> {
+        //            MineTweakerAPI.registerClass(i);
+        //        });
     }
-
+    
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
         MineTweakerAPI.registerClassRegistry(MineTweakerRegistry.class);
@@ -153,7 +156,18 @@ public class MineTweakerMod {
         server = ev.getServer();
         // starts before loading worlds
         // perfect place to start MineTweaker!
+        MineTweakerImplementationAPI.addMineTweakerCommand("itemrecipes", new String[]{"Logs items that have a crafting table recipe"}, (arguments, player) -> {
+            List<IItemStack> stacks = new ArrayList<>();
+            for(IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
+                stacks.add(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()));
+            }
+            for(IItemStack stack : stacks) {
+                if(stack != null)
+                    MineTweakerAPI.logCommand(stack.toString());
+            }
+            player.sendChat("Recipe list generated; see minetweaker.log in your minecraft dir");
         
+        });
         if(MineTweakerPlatformUtils.isClient()) {
             MineTweakerAPI.client = new MCClient();
         }

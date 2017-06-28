@@ -2,6 +2,8 @@ package minetweaker.mc1102;
 
 import minetweaker.*;
 import minetweaker.annotations.BracketHandler;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.mc1102.brackets.*;
 import minetweaker.mc1102.client.MCClient;
 import minetweaker.mc1102.formatting.MCFormatter;
@@ -17,6 +19,7 @@ import minetweaker.mc1102.util.*;
 import minetweaker.mc1102.vanilla.MCVanilla;
 import minetweaker.runtime.*;
 import minetweaker.runtime.providers.*;
+import net.minecraft.item.crafting.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -155,7 +158,18 @@ public class MineTweakerMod {
         server = ev.getServer();
         // starts before loading worlds
         // perfect place to start MineTweaker!
+        MineTweakerImplementationAPI.addMineTweakerCommand("itemrecipes", new String[]{"Logs items that have a crafting table recipe"}, (arguments, player) -> {
+            List<IItemStack> stacks = new ArrayList<>();
+            for(IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
+                stacks.add(MineTweakerMC.getIItemStack(recipe.getRecipeOutput()));
+            }
+            for(IItemStack stack : stacks) {
+                if(stack != null)
+                    MineTweakerAPI.logCommand(stack.toString());
+            }
+            player.sendChat("Recipe list generated; see minetweaker.log in your minecraft dir");
         
+        });
         if(MineTweakerPlatformUtils.isClient()) {
             MineTweakerAPI.client = new MCClient();
         }
