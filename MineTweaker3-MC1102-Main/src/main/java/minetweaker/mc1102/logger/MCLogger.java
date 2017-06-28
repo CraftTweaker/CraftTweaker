@@ -26,7 +26,7 @@ public class MCLogger implements ILogger {
     @Override
     public void logCommand(String message) {
         try {
-            writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "]" + stripMessage(message) + "\n");
+            writer.write(stripMessage(message) + "\n");
             writer.flush();
         } catch(IOException ex) {
             throw new RuntimeException(ex);
