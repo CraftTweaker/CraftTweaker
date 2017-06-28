@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.registry.*;
 import net.minecraftforge.oredict.*;
+import net.minecraftforge.registries.*;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
@@ -24,14 +25,13 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
  */
 public class MCRecipeManager implements IRecipeManager {
     
-    private static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
-    
+    public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     public static List<IRecipe> recipesToAdd = new LinkedList<>();
+    public static List<ResourceLocation> recipesToRemove = new LinkedList<>();
+    
     private static List<ICraftingRecipe> transformerRecipes;
     
     public MCRecipeManager() {
-        // TODO change this back
-        recipes = new HashSet<>();
         transformerRecipes = new ArrayList<>();
     }
     
@@ -94,21 +94,17 @@ public class MCRecipeManager implements IRecipeManager {
     
     @Override
     public int remove(IIngredient output, @Optional boolean nbtMatch) {
-        
-        List<IRecipe> toRemove = new ArrayList<>();
-        List<Integer> removeIndex = new ArrayList<>();
+        List<ResourceLocation> toRemove = new ArrayList<>();
         for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
             
-            int counter = 0;
             if(!recipe.getValue().getRecipeOutput().isEmpty()) {
                 if(nbtMatch ? output.matchesExact(getIItemStack(recipe.getValue().getRecipeOutput())) : output.matches(getIItemStack(recipe.getValue().getRecipeOutput()))) {
-                    toRemove.add(recipe.getValue());
-                    removeIndex.add(counter);
+                    toRemove.add(recipe.getKey());
                 }
             }
         }
         
-        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove));
         return toRemove.size();
     }
     
@@ -142,8 +138,7 @@ public class MCRecipeManager implements IRecipeManager {
             }
         }
         
-        List<IRecipe> toRemove = new ArrayList<>();
-        List<Integer> removeIndex = new ArrayList<>();
+        List<ResourceLocation> toRemove = new ArrayList<>();
         outer:
         for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
             if(recipe.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStack(recipe.getValue().getRecipeOutput()))) {
@@ -201,19 +196,16 @@ public class MCRecipeManager implements IRecipeManager {
                 }
             }
             
-            toRemove.add(recipe.getValue());
-            // TODO fix this
-            // removeIndex.add(i);
+            toRemove.add(recipe.getKey());
         }
         
-        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove));
         return toRemove.size();
     }
     
     @Override
     public int removeShapeless(IIngredient output, IIngredient[] ingredients, boolean wildcard) {
-        List<IRecipe> toRemove = new ArrayList<>();
-        List<Integer> removeIndex = new ArrayList<>();
+        List<ResourceLocation> toRemove = new ArrayList<>();
         outer:
         for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
             
@@ -275,12 +267,10 @@ public class MCRecipeManager implements IRecipeManager {
                     continue;
                 }
             }
-            toRemove.add(recipe.getValue());
-            // TODO fix this
-            // removeIndex.add(i);
+            toRemove.add(recipe.getKey());
         }
         
-        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove, removeIndex));
+        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove));
         return toRemove.size();
     }
     
@@ -331,24 +321,20 @@ public class MCRecipeManager implements IRecipeManager {
     
     public static class ActionRemoveRecipes implements IAction {
         
-        private final List<Integer> removingIndices;
-        private final List<IRecipe> removingRecipes;
+        private final List<ResourceLocation> removingRecipes;
         
-        public ActionRemoveRecipes(List<IRecipe> recipes, List<Integer> indices) {
-            this.removingIndices = indices;
+        public ActionRemoveRecipes(List<ResourceLocation> recipes) {
             this.removingRecipes = recipes;
         }
         
         @Override
         public void apply() {
-            for(int i = removingIndices.size() - 1; i >= 0; i--) {
-                recipes.remove(removingIndices.get(i));
-            }
+            recipesToRemove.addAll(removingRecipes);
         }
         
         @Override
         public String describe() {
-            return "Removing " + removingIndices.size() + " recipes";
+            return "Removing " + removingRecipes.size() + " recipes";
         }
         
     }

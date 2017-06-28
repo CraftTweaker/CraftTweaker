@@ -17,10 +17,12 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.registries.*;
 
 import java.util.*;
 
@@ -30,7 +32,9 @@ public class CommonEventHandler {
     
     @SubscribeEvent(priority = LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
+        MCRecipeManager.recipes = ev.getRegistry().getEntries();
         CrafttweakerImplementationAPI.load();
+        MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         MCRecipeManager.recipesToAdd.forEach(recipe -> ev.getRegistry().register(recipe));
     }
     
