@@ -67,12 +67,4 @@ public interface ILiquidDefinition {
     @ZenSetter("gaseous")
     void setGaseous(boolean gaseous);
     
-    @ZenGetter("containers")
-    List<IItemStack> getContainers();
-    
-    @ZenMethod
-    void addContainer(IItemStack filled, IItemStack empty, int amount);
-    
-    @ZenMethod
-    void removeContainer(IItemStack filled);
 }

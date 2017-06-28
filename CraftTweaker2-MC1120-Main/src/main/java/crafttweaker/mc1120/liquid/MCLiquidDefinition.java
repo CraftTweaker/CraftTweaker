@@ -83,25 +83,6 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         CraftTweakerAPI.apply(new ActionSetGaseous(gaseous));
     }
     
-    @Override
-    public List<IItemStack> getContainers() {
-        List<IItemStack> result = new ArrayList<>();
-        //TODO I need updating!
-        CraftTweakerAPI.logError("getContainers not supported in 1.12!");
-        return result;
-    }
-    
-    @Override
-    public void addContainer(IItemStack filled, IItemStack empty, int amount) {
-        CraftTweakerAPI.logError("addContainer not supported in 1.12!");
-    }
-    
-    @Override
-    public void removeContainer(IItemStack filled) {
-        CraftTweakerAPI.logError("removeContainer not supported in 1.12!");
-        
-    }
-    
     private class ActionSetLuminosity implements IAction {
         
         private final int oldValue;
