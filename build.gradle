@@ -57,7 +57,7 @@ task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
-task setupDecompWorkspaceAll(dependsOn: projects1120.collect { ':' + it + ':setupDecompWorkspace' } ) {}
+task setupDecompWorkspaceAll(dependsOn: projects1120.collect { ':' + it + ':setupDecompWorkspace' }) {}
 
 task setupCIWorkspaceAll(dependsOn: projects1120.collect { ':' + it + ':setupCIWorkspace' }) {}
 
@@ -69,7 +69,9 @@ task assembleMC1120(type: Jar, dependsOn: [\
 
     from zipTree(project(":ZenScript").jar.archivePath)
     from zipTree(project(':CraftTweaker2-API').jar.archivePath)
-
+    manifest {
+        attributes 'FMLAT': 'crafttweaker_at.cfg'
+    }
     for (p in projects1120) {
         from zipTree(project(p).jar.archivePath)
     }
@@ -80,7 +82,9 @@ task assembleDevBase1120(type: Jar, dependsOn: [
         ':CraftTweaker2-API:build',
         ':CraftTweaker2-MC1120-Main:build']) {
     archiveName = "CraftTweaker2-Dev-1.12-${craftTweakerVersion}.jar"
-
+    manifest {
+        attributes 'FMLAT': 'crafttweaker_at.cfg'
+    }
     from project(':ZenScript').sourceSets.main.output
     from project(':CraftTweaker2-API').sourceSets.main.output
     from project(':CraftTweaker2-MC1120-Main').sourceSets.main.output
@@ -94,7 +98,9 @@ task assembleDevFull1120(type: Jar, dependsOn: [
 
     from project(':ZenScript').sourceSets.main.output
     from project(':CraftTweaker2-API').sourceSets.main.output
-
+    manifest {
+        attributes 'FMLAT': 'crafttweaker_at.cfg'
+    }
     for (p in projects1120) {
         from project(p).sourceSets.main.output
     }
@@ -102,10 +108,10 @@ task assembleDevFull1120(type: Jar, dependsOn: [
 
 
 task assembleAll(dependsOn: [
-		assembleMC1120,
+        assembleMC1120,
         assembleDevBase1120,
         assembleDevFull1120
-		
+
 ]) {
 }
 
