@@ -17,7 +17,7 @@ ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).ge
 // ### 1.12.0 settings ###
 // #######################
 
-ext.forgeVersion1120 = "1.12-14.21.0.2327"
+ext.forgeVersion1120 = "1.12-14.21.0.2379"
 ext.projects1120 = [
         'CraftTweaker2-MC1120-Main'
 ]
