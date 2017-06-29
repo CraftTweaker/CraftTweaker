@@ -56,13 +56,16 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
 
     @Override
     public void removeFurnace(Object object) {
-        IFocus<ItemStack> focus = recipeRegistry.createFocus(IFocus.Mode.INPUT, (ItemStack) object);
-        List<IRecipeCategory> categories = recipeRegistry.getRecipeCategories(focus);
-        for(IRecipeCategory category : categories) {
-            if(category.getUid().equals(VanillaRecipeCategoryUid.SMELTING)) {
-                List<IRecipeWrapper> wrappers = recipeRegistry.getRecipeWrappers(category, focus);
-                for(IRecipeWrapper wrapper : wrappers) {
-                    recipeRegistry.removeRecipe(wrapper, VanillaRecipeCategoryUid.SMELTING);
+        List<ItemStack> stacks = JEIAddonPlugin.getSubTypes((ItemStack) object);
+        for (ItemStack itemStack : stacks) {
+            IFocus<ItemStack> focus = recipeRegistry.createFocus(IFocus.Mode.INPUT, itemStack);
+            List<IRecipeCategory> categories = recipeRegistry.getRecipeCategories(Collections.singletonList(VanillaRecipeCategoryUid.SMELTING));
+            for(IRecipeCategory category : categories) {
+                if(category.getUid().equals(VanillaRecipeCategoryUid.SMELTING)) {
+                    List<IRecipeWrapper> wrappers = recipeRegistry.getRecipeWrappers(category, focus);
+                    for(IRecipeWrapper wrapper : wrappers) {
+                        recipeRegistry.removeRecipe(wrapper, VanillaRecipeCategoryUid.SMELTING);
+                    }
                 }
             }
         }
