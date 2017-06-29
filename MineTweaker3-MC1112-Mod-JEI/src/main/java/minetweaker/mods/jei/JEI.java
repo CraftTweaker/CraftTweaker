@@ -63,7 +63,7 @@ public class JEI {
         
         @Override
         public void apply() {
-                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
+            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
         }
         
         @Override
@@ -73,7 +73,7 @@ public class JEI {
         
         @Override
         public void undo() {
-                JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
+            JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
         }
         
         @Override
