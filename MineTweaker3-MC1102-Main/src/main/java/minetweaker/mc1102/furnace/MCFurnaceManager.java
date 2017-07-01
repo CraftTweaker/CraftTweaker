@@ -27,16 +27,27 @@ public class MCFurnaceManager implements IFurnaceManager {
     public void remove(IIngredient output, @Optional IIngredient input) {
         if(output == null)
             throw new IllegalArgumentException("output cannot be null");
-        
+    
         Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.instance().getSmeltingList();
-        
+    
         List<ItemStack> toRemove = new ArrayList<>();
         List<ItemStack> toRemoveValues = new ArrayList<>();
-        smeltingList.entrySet().stream().filter(entry -> output.matches(new MCItemStack(entry.getValue())) && (input == null || input.matches(new MCItemStack(entry.getKey())))).forEach(entry -> {
-            toRemove.add(entry.getKey());
-            toRemoveValues.add(entry.getValue());
-        });
-        
+    
+        if(input == null) {
+            for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
+                if(output.matches(getIItemStack(entry.getValue()))) {
+                    toRemove.add(entry.getKey());
+                    toRemoveValues.add(entry.getValue());
+                }
+            }
+        } else {
+            for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
+                if(output.matches(getIItemStack(entry.getValue())) && input.matches(getIItemStack(entry.getKey()))) {
+                    toRemove.add(entry.getKey());
+                    toRemoveValues.add(entry.getValue());
+                }
+            }
+        }
         if(toRemove.isEmpty()) {
             MineTweakerAPI.logWarning("No furnace recipes for " + output.toString());
         } else {
