@@ -1,10 +1,14 @@
 package minetweaker.mods.jei;
 
+import io.netty.handler.codec.socks.SocksInitRequestDecoder;
 import minetweaker.*;
 import minetweaker.api.item.*;
 import minetweaker.mc1112.recipes.MCRecipeManager;
+import minetweaker.mods.jei.network.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
 
@@ -25,8 +29,8 @@ import static minetweaker.mc1112.recipes.MCRecipeManager.recipes;
  */
 @ZenClass("mods.jei.JEI")
 public class JEI {
-
-
+    
+    
     @ZenMethod
     public static void hide(IItemStack stack) {
         MineTweakerAPI.apply(new Hide(getItemStack(stack)));
@@ -51,8 +55,9 @@ public class JEI {
         for(IItemStack stack : output.getItems()) {
             MineTweakerAPI.apply(new Hide(getItemStack(stack)));
         }
-       
+        
     }
+    
     private static class Hide implements IUndoableAction {
         
         private ItemStack stack;
@@ -63,7 +68,11 @@ public class JEI {
         
         @Override
         public void apply() {
-            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
+            System.out.println("Side: " + FMLCommonHandler.instance().getEffectiveSide());
+            if(FMLCommonHandler.instance().getSide() == Side.SERVER)
+                PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(true, stack));
+            else
+                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
         }
         
         @Override
@@ -73,7 +82,10 @@ public class JEI {
         
         @Override
         public void undo() {
-            JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
+            if(FMLCommonHandler.instance().getSide() == Side.SERVER)
+                PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(false, stack));
+            else
+                JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
         }
         
         @Override
@@ -91,5 +103,5 @@ public class JEI {
             return null;
         }
     }
-
+    
 }
