@@ -63,7 +63,7 @@ public class CrafttweakerImplementationAPI {
     static {
         crafttweakerCommands = new TreeMap<>();
         
-        crafttweakerCommands.put("names", new CraftTweakerCommand("names", new String[]{"/crafttweaker names", "§a-§rOutputs a list of all item names in the game to the crafttweaker log"}, (arguments, player) -> {
+        crafttweakerCommands.put("names", new CraftTweakerCommand("names", new String[]{"/crafttweaker names", "-Outputs a list of all item names in the game to the crafttweaker log"}, (arguments, player) -> {
             List<IItemDefinition> items = CraftTweakerAPI.game.getItems();
             items.sort(ITEM_COMPARATOR);
             for(IItemDefinition item : items) {
@@ -83,7 +83,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("liquids", new CraftTweakerCommand("liquids", new String[]{"/crafttweaker liquids", "§a-§rOutputs a list of all liquid names in the game to the crafttweaker log"}, (arguments, player) -> {
+        crafttweakerCommands.put("liquids", new CraftTweakerCommand("liquids", new String[]{"/crafttweaker liquids", "-Outputs a list of all liquid names in the game to the crafttweaker log"}, (arguments, player) -> {
             List<ILiquidDefinition> liquids = CraftTweakerAPI.game.getLiquids();
             liquids.sort(LIQUID_COMPARATOR);
             
@@ -97,7 +97,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("blocks", new CraftTweakerCommand("blocks", new String[]{"/crafttweaker blocks", "§a-§rOutputs a list of all blocks in the game to the crafttweaker log"}, (arguments, player) -> {
+        crafttweakerCommands.put("blocks", new CraftTweakerCommand("blocks", new String[]{"/crafttweaker blocks", "-Outputs a list of all blocks in the game to the crafttweaker log"}, (arguments, player) -> {
             List<IBlockDefinition> blocks = CraftTweakerAPI.game.getBlocks();
             blocks.sort(BLOCK_COMPARATOR);
             
@@ -111,7 +111,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("entities", new CraftTweakerCommand("entities", new String[]{"/crafttweaker entities", "§a-§rOutputs a list of all entity definitions in the game to the crafttweaker log"}, (arguments, player) -> {
+        crafttweakerCommands.put("entities", new CraftTweakerCommand("entities", new String[]{"/crafttweaker entities", "-Outputs a list of all entity definitions in the game to the crafttweaker log"}, (arguments, player) -> {
             List<IEntityDefinition> entities = CraftTweakerAPI.game.getEntities();
             entities.sort(ENTITY_COMPARATOR);
             
@@ -125,7 +125,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("recipes", new CraftTweakerCommand("recipes", new String[]{"/crafttweaker recipes", "§a-§rLists all crafting recipes in the game", "/crafttweaker recipes hand", "§a-§rLists all crafting recipes for the item in your hand", "§a-§rAlso copies the recipes to clipboard", "/crafttweaker recipes furnace", "§a-§rlists all furnace recipes in the game"}, (arguments, player) -> {
+        crafttweakerCommands.put("recipes", new CraftTweakerCommand("recipes", new String[]{"/crafttweaker recipes", "-Lists all crafting recipes in the game", "/crafttweaker recipes hand", "-Lists all crafting recipes for the item in your hand", "-Also copies the recipes to clipboard", "/crafttweaker recipes furnace", "-lists all furnace recipes in the game"}, (arguments, player) -> {
             if(arguments.length == 0) {
                 if(player != null) {
                     player.sendChat("Generating recipe list, this could take a while...");
@@ -193,7 +193,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("inventory", new CraftTweakerCommand("inventory", new String[]{"/crafttweaker inventory", "§a-§rLists all items in your inventory"}, (arguments, player) -> {
+        crafttweakerCommands.put("inventory", new CraftTweakerCommand("inventory", new String[]{"/crafttweaker inventory", "-Lists all items in your inventory"}, (arguments, player) -> {
             for(int i = 0; i < player.getInventorySize(); i++) {
                 IItemStack stack = player.getInventoryStack(i);
                 if(stack != null) {
@@ -203,7 +203,7 @@ public class CrafttweakerImplementationAPI {
             player.sendChat("Recipe list generated; see crafttweaker.log in your minecraft dir");
         }));
         
-        crafttweakerCommands.put("hand", new CraftTweakerCommand("hand", new String[]{"/crafttweaker hand", "§a-§rOutputs the name of the item in your hand", "§a-§rAlso copies the name to clipboard and prints", "§a-§roredict entries"}, (arguments, player) -> {
+        crafttweakerCommands.put("hand", new CraftTweakerCommand("hand", new String[]{"/crafttweaker hand", "-Outputs the name of the item in your hand", "-Also copies the name to clipboard and prints", "-oredict entries"}, (arguments, player) -> {
             IItemStack hand = player.getCurrentItem();
             if(hand != null) {
                 String value = hand.toString();
@@ -221,7 +221,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("oredict", new CraftTweakerCommand("oredict", new String[]{"/crafttweaker oredict", "§a-§rOutputs all ore dictionary entries in the game to the crafttweaker log", "/crafttweaker oredict <name>", "§a-§rOutputs all items in the given ore dictionary entry to the crafttweaker log"}, (arguments, player) -> {
+        crafttweakerCommands.put("oredict", new CraftTweakerCommand("oredict", new String[]{"/crafttweaker oredict", "-Outputs all ore dictionary entries in the game to the crafttweaker log", "/crafttweaker oredict <name>", "-Outputs all items in the given ore dictionary entry to the crafttweaker log"}, (arguments, player) -> {
             if(arguments.length > 0) {
                 String entryName = arguments[0];
                 IOreDictEntry entry = CraftTweakerAPI.oreDict.get(entryName);
@@ -231,7 +231,7 @@ public class CrafttweakerImplementationAPI {
                 } else {
                     CraftTweakerAPI.logCommand("Ore entries for " + entryName + ":");
                     for(IItemStack ore : entry.getItems()) {
-                        CraftTweakerAPI.logCommand("§a-§r" + ore);
+                        CraftTweakerAPI.logCommand("-" + ore);
                     }
                 }
             } else {
@@ -239,7 +239,7 @@ public class CrafttweakerImplementationAPI {
                     if(!entry.isEmpty()) {
                         CraftTweakerAPI.logCommand("Ore entries for <ore:" + entry.getName() + "> :");
                         for(IItemStack ore : entry.getItems()) {
-                            CraftTweakerAPI.logCommand("§a-§r" + ore);
+                            CraftTweakerAPI.logCommand("-" + ore);
                         }
                     }
                 }
@@ -247,7 +247,7 @@ public class CrafttweakerImplementationAPI {
             player.sendChat("List generated; see crafttweaker.log in your minecraft dir");
         }));
         
-        crafttweakerCommands.put("mods", new CraftTweakerCommand("mods", new String[]{"/crafttweaker mods", "§a-§rOutputs all active mod IDs and versions in the game"}, (arguments, player) -> {
+        crafttweakerCommands.put("mods", new CraftTweakerCommand("mods", new String[]{"/crafttweaker mods", "-Outputs all active mod IDs and versions in the game"}, (arguments, player) -> {
             CraftTweakerAPI.logCommand("Mods list:");
             for(IMod mod : CraftTweakerAPI.loadedMods) {
                 String message = mod.getId() + " - " + mod.getName() + " - " + mod.getVersion();
@@ -256,7 +256,7 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("seeds", new CraftTweakerCommand("seeds", new String[]{"/crafttweaker seeds", "§a-§rPrints all seeds registered", "§a-§rfor tall grass"}, (arguments, player) -> {
+        crafttweakerCommands.put("seeds", new CraftTweakerCommand("seeds", new String[]{"/crafttweaker seeds", "-Prints all seeds registered", "-for tall grass"}, (arguments, player) -> {
             CraftTweakerAPI.logCommand("Seeds:");
             for(WeightedItemStack seed : CraftTweakerAPI.vanilla.getSeeds().getSeeds()) {
                 String message = seed.getStack() + " - " + (int) seed.getChance();
@@ -265,21 +265,21 @@ public class CrafttweakerImplementationAPI {
             }
         }));
         
-        crafttweakerCommands.put("wiki", new CraftTweakerCommand("wiki", new String[]{"/crafttweaker wiki", "§a-§rOpens your browser with the wiki"}, (arguments, player) -> player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/")));
+        crafttweakerCommands.put("wiki", new CraftTweakerCommand("wiki", new String[]{"/crafttweaker wiki", "-Opens your browser with the wiki"}, (arguments, player) -> player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/")));
         
-        crafttweakerCommands.put("bugs", new CraftTweakerCommand("bugs", new String[]{"/crafttweaker bugs", "§a-§rOpens your browser with the GitHub bug tracker"}, (arguments, player) -> player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues")));
+        crafttweakerCommands.put("bugs", new CraftTweakerCommand("bugs", new String[]{"/crafttweaker bugs", "-Opens your browser with the GitHub bug tracker"}, (arguments, player) -> player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues")));
         
-        crafttweakerCommands.put("discord", new CraftTweakerCommand("discord", new String[]{"/crafttweaker discord", "§a-§rOpens your browser with a link to the Discord server"}, (arguments, player) -> player.openBrowser("https://discord.gg/3VBK9ar")));
+        crafttweakerCommands.put("discord", new CraftTweakerCommand("discord", new String[]{"/crafttweaker discord", "-Opens your browser with a link to the Discord server"}, (arguments, player) -> player.openBrowser("https://discord.gg/3VBK9ar")));
         
-        crafttweakerCommands.put("biomes", new CraftTweakerCommand("biomes", new String[]{"/crafttweaker biomes", "§a-§rLists all the biomes in the game"}, (arguments, player) -> {
+        crafttweakerCommands.put("biomes", new CraftTweakerCommand("biomes", new String[]{"/crafttweaker biomes", "-Lists all the biomes in the game"}, (arguments, player) -> {
             CraftTweakerAPI.logCommand("Biomes:");
             for(IBiome biome : CraftTweakerAPI.game.getBiomes()) {
-                CraftTweakerAPI.logCommand("§a-§r" + biome.getName());
+                CraftTweakerAPI.logCommand("-" + biome.getName());
             }
             player.sendChat("Biome list generated; see crafttweaker.log in your minecraft dir");
         }));
         
-        crafttweakerCommands.put("blockinfo", new CraftTweakerCommand("blockinfo", new String[]{"/crafttweaker blockinfo", "§a-§rActivates or deactivates block reader. In block info mode,", "§a-§rright-click a block to see ID, meta and tile entity data"}, (arguments, player) -> {
+        crafttweakerCommands.put("blockinfo", new CraftTweakerCommand("blockinfo", new String[]{"/crafttweaker blockinfo", "-Activates or deactivates block reader. In block info mode,", "-right-click a block to see ID, meta and tile entity data"}, (arguments, player) -> {
             if(blockInfoPlayers.isEmpty()) {
                 blockEventHandler = events.onPlayerInteract(LISTEN_BLOCK_INFO);
             }
