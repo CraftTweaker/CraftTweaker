@@ -7,7 +7,11 @@ import mezz.jei.plugins.vanilla.furnace.*;
 import minetweaker.api.compat.IJEIRecipeRegistry;
 import minetweaker.api.item.IIngredient;
 import minetweaker.mc1112.util.MineTweakerHacks;
+import minetweaker.mods.jei.network.MessageJEIHide;
+import minetweaker.mods.jei.network.PacketHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.*;
 
@@ -98,12 +102,18 @@ public class JEIRecipeRegistry implements IJEIRecipeRegistry {
 
     @Override
     public void removeItem(Object stack) {
-        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList((ItemStack) stack));
+        if (FMLCommonHandler.instance().getSide() == Side.SERVER)
+            PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(true, (ItemStack) stack));
+        else
+            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes((ItemStack) stack));
     }
 
     @Override
     public void addItem(Object stack) {
-        JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList((ItemStack) stack));
+        if (FMLCommonHandler.instance().getSide() == Side.SERVER)
+            PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(false, (ItemStack) stack));
+        else
+            JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes((ItemStack) stack));
     }
 
     @Override

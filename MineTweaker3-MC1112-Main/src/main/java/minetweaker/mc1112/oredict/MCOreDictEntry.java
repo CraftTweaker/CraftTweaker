@@ -32,6 +32,10 @@ public class MCOreDictEntry implements IOreDictEntry {
         this.id = id;
     }
 
+    private static void reloadJEIItem(ItemStack stack) {
+        MineTweakerAPI.getIjeiRecipeRegistry().removeItem(stack);
+        MineTweakerAPI.getIjeiRecipeRegistry().addItem(stack);
+    }
 
     // ####################################
     // ### IOreDictEntry implementation ###
@@ -253,6 +257,7 @@ public class MCOreDictEntry implements IOreDictEntry {
         @Override
         public void apply() {
             OreDictionary.registerOre(id, item);
+            reloadJEIItem(item);
         }
 
         @Override
@@ -263,7 +268,16 @@ public class MCOreDictEntry implements IOreDictEntry {
         @Override
         public void undo() {
             int oreId = OreDictionary.getOreID(id);
-            OREDICT_CONTENTS.get(oreId).remove(item);
+            ItemStack removeStack = item;
+            for (ItemStack stack: OreDictionary.getOres(id)) {
+                if (ItemStack.areItemStacksEqual(item, stack)) {
+                    removeStack = stack;
+                    break;
+                }
+            }
+            OREDICT_CONTENTS.get(oreId).remove(removeStack);
+            OreDictionary.rebakeMap();
+            reloadJEIItem(removeStack);
         }
 
         @Override
@@ -306,6 +320,9 @@ public class MCOreDictEntry implements IOreDictEntry {
             int targetOreId = OreDictionary.getOreID(idTarget);
             OREDICT_CONTENTS.set(targetOreId, OREDICT_CONTENTS.get(sourceOreId));
             OREDICT_CONTENTS_UN.set(targetOreId, OREDICT_CONTENTS_UN.get(sourceOreId));
+            OreDictionary.rebakeMap();
+            targetCopy.forEach(MCOreDictEntry::reloadJEIItem);
+            targetCopyUn.forEach(MCOreDictEntry::reloadJEIItem);
         }
 
         @Override
@@ -318,6 +335,9 @@ public class MCOreDictEntry implements IOreDictEntry {
             int targetOreId = OreDictionary.getOreID(idTarget);
             OREDICT_CONTENTS.set(targetOreId, targetCopy);
             OREDICT_CONTENTS_UN.set(targetOreId, targetCopyUn);
+            OreDictionary.rebakeMap();
+            targetCopy.forEach(MCOreDictEntry::reloadJEIItem);
+            targetCopyUn.forEach(MCOreDictEntry::reloadJEIItem);
         }
 
         @Override
@@ -350,6 +370,8 @@ public class MCOreDictEntry implements IOreDictEntry {
         public void apply() {
             int oreId = OreDictionary.getOreID(id);
             OREDICT_CONTENTS.get(oreId).remove(item);
+            OreDictionary.rebakeMap();
+            reloadJEIItem(item);
         }
 
         @Override
@@ -361,6 +383,8 @@ public class MCOreDictEntry implements IOreDictEntry {
         public void undo() {
             int oreId = OreDictionary.getOreID(id);
             OREDICT_CONTENTS.get(oreId).add(item);
+            OreDictionary.rebakeMap();
+            reloadJEIItem(item);
         }
 
         @Override
@@ -394,6 +418,7 @@ public class MCOreDictEntry implements IOreDictEntry {
             for(ItemStack stack : OreDictionary.getOres(idSource)) {
                 OreDictionary.registerOre(idTarget, stack);
             }
+            OreDictionary.getOres(idSource).forEach(MCOreDictEntry::reloadJEIItem);
         }
 
         @Override
@@ -404,9 +429,21 @@ public class MCOreDictEntry implements IOreDictEntry {
         @Override
         public void undo() {
             int targetOreId = OreDictionary.getOreID(idTarget);
-            for(ItemStack stack : OreDictionary.getOres(idSource)) {
+            NonNullList<ItemStack> targetOres = OreDictionary.getOres(idTarget);
+            List<ItemStack> removeStacks = new ArrayList<>();
+            for (ItemStack stack: OreDictionary.getOres(idSource)) {
+                for (ItemStack target: targetOres) {
+                    if (ItemStack.areItemStacksEqual(target, stack)) {
+                        removeStacks.add(target);
+                        break;
+                    }
+                }
+            }
+            for(ItemStack stack : removeStacks) {
                 OREDICT_CONTENTS.get(targetOreId).remove(stack);
             }
+            OreDictionary.rebakeMap();
+            removeStacks.forEach(MCOreDictEntry::reloadJEIItem);
         }
 
         @Override
