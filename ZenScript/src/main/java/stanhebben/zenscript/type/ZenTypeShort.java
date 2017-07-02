@@ -44,6 +44,8 @@ public class ZenTypeShort extends ZenType {
         rules.registerCastingRule(FLOATOBJECT, new CastingRuleStaticMethod(FLOAT_VALUEOF, new CastingRuleI2F(null)));
         rules.registerCastingRule(DOUBLE, new CastingRuleI2D(null));
         rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleStaticMethod(DOUBLE_VALUEOF, new CastingRuleI2D(null)));
+    
+        rules.registerCastingRule(STRING, new CastingRuleStaticMethod(SHORT_TOSTRING_STATIC));
         rules.registerCastingRule(ANY, new CastingRuleStaticMethod(JavaMethod.getStatic(getAnyClassName(environment), "valueOf", ANY, BYTE)));
         
         if(followCasters) {
