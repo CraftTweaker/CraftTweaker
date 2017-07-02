@@ -74,7 +74,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public void addAll(IOreDictEntry entry) {
         if(entry instanceof MCOreDictEntry) {
-            CraftTweakerAPI.apply(new ActionOreDictMirror(id, ((MCOreDictEntry) entry).id));
+            CraftTweakerAPI.apply(new ActionOreDictAddAll(id, ((MCOreDictEntry) entry).id));
         } else {
             CraftTweakerAPI.logError("not a valid entry");
         }
