@@ -1,5 +1,7 @@
 package crafttweaker.mc1120;
 
+import atm.bloodworkxgaming.CTChatCommand;
+import atm.bloodworkxgaming.CraftTweakerCommand;
 import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.mc1120.brackets.*;
@@ -134,6 +136,9 @@ public class CraftTweaker {
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
         CrafttweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
+
+        // registering the CraftTweaker command
+        CTChatCommand.register(ev);
     }
     
     @EventHandler

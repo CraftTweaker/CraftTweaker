@@ -7,6 +7,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 /**
  * @author Stan
  */
+//TODO: Obsolete --> Delete
 @ZenClass("crafttweaker.server.ICommandFunction")
 @ZenRegister
 public interface ICommandFunction {

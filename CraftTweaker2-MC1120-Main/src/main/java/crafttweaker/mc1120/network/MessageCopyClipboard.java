@@ -3,6 +3,8 @@ package crafttweaker.mc1120.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
@@ -39,6 +41,7 @@ public class MessageCopyClipboard implements IMessage, IMessageHandler<MessageCo
     }
     
     @Override
+    @SideOnly(Side.CLIENT)
     public IMessage onMessage(MessageCopyClipboard message, MessageContext ctx) {
         Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
         return null;
