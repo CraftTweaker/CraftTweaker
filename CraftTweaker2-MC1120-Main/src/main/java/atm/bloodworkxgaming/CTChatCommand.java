@@ -1,30 +1,24 @@
 package atm.bloodworkxgaming;
 
-import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jonas on 03.07.2017.
  */
 public class CTChatCommand extends CommandBase{
 
-    public static Map<String, CraftTweakerCommand> craftTweakerCommands = new HashMap<>();
+    public static Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
 
     public static final List<String> aliases = new ArrayList<>();
     static {
@@ -32,7 +26,7 @@ public class CTChatCommand extends CommandBase{
     }
 
     public static void register(FMLServerStartingEvent ev){
-        Commands.registerCommands(craftTweakerCommands);
+        Commands.registerCommands();
         ev.registerServerCommand(new CTChatCommand());
     }
 
@@ -43,13 +37,30 @@ public class CTChatCommand extends CommandBase{
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return null;
+        return getUsageStatic();
     }
+
+    public static String getUsageStatic() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
+            for (String s : entry.getValue().getDescription()) {
+                sb.append(s);
+                sb.append("\n");
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length <= 0){
             sender.sendMessage(new TextComponentString(getUsage(sender)));
+            return;
         }
 
         if (craftTweakerCommands.containsKey(args[0])){
@@ -70,6 +81,48 @@ public class CTChatCommand extends CommandBase{
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return super.getTabCompletions(server, sender, args, targetPos);
+        Set<String> keys = craftTweakerCommands.keySet();
+        List<String> currentPossibleCommands = new ArrayList<>();
+
+        if (args.length <= 0){
+            return new ArrayList<>(keys);
+        }
+
+        // First sub-command
+        if (args.length == 1){
+            for (String cmd: keys) {
+                if (cmd.startsWith(args[0])){
+                    currentPossibleCommands.add(cmd);
+                }
+            }
+            return currentPossibleCommands;
+        }
+        // gives subcommands of the subcommand
+        if (args.length == 2){
+            CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
+            if (subCommand != null && subCommand.subSubCommands.length > 0){
+
+                for (String cmd: subCommand.subSubCommands) {
+                    System.out.println("Trying " + cmd);
+
+                    if (cmd.startsWith(args[1])){
+                        currentPossibleCommands.add(cmd);
+                    }
+                }
+                return currentPossibleCommands;
+            }
+        }
+
+        // returns empty by default
+        return currentPossibleCommands;
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 4;
+    }
+
+    public static void registerCommand(CraftTweakerCommand command){
+        craftTweakerCommands.put(command.getSubCommandName(), command);
     }
 }

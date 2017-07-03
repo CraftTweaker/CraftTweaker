@@ -52,13 +52,13 @@ public class CrafttweakerImplementationAPI {
     
     private static final ListenPlayerLoggedIn LISTEN_LOGIN = new ListenPlayerLoggedIn();
     private static final ListenPlayerLoggedOut LISTEN_LOGOUT = new ListenPlayerLoggedOut();
-    private static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
+    public static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
     /**
      * Access point to general platform functions.
      */
     public static IPlatformFunctions platform = null;
-    private static Set<IPlayer> blockInfoPlayers = new HashSet<>();
-    private static IEventHandle blockEventHandler = null;
+    public static Set<IPlayer> blockInfoPlayers = new HashSet<>();
+    public static IEventHandle blockEventHandler = null;
 
     
     /**

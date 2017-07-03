@@ -11,26 +11,46 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public abstract class CraftTweakerCommand {
 
-    public final String subCommandName;
-    public final String[] description;
+    public final static String[] NO_DESCRIPTION = new String[]{"No Description provided"};
+    protected final String subCommandName;
+    private String[] description;
     // private final ICommandFunction function;
-    public final String[] subSubCommands;
+    public String[] subSubCommands = new String[0];
 
 
-    public CraftTweakerCommand(String subCommandName, String[] description) {
-        this(subCommandName, description, ArrayUtils.EMPTY_STRING_ARRAY);
-    }
-
-    public CraftTweakerCommand(String subCommandName, String[] description, String[] subSubCommands) {
+    public CraftTweakerCommand(String subCommandName) {
         this.subCommandName = subCommandName;
-        this.description = description;
-        this.description[0] = "\u00A79" + this.description[0];
-        // this.function = function;
-        this.subSubCommands = subSubCommands;
+        init();
     }
 
     /**
-     *
+     * Has to be overwritten
+     * Used to set the description and all other values
+     * Better for viability, as the constructor is not that full then
+     */
+    protected abstract void init();
+
+    public String[] getDescription() {
+        return description == null ? NO_DESCRIPTION : description;
+    }
+
+    public void setDescription(String... descriptionIn){
+        for (int i = 0; i < descriptionIn.length; i++) {
+            descriptionIn[i] = descriptionIn[i].replace("§", "\u00A7");
+        }
+        this.description = descriptionIn;
+    }
+
+    public void setSubSubCommands(String... subSubCommands){
+        this.subSubCommands = subSubCommands;
+    }
+
+    public String getSubCommandName() {
+        return subCommandName;
+    }
+
+    /**
+     * Has to be overwritten by the commands
      * @param server
      * @param sender
      * @param args: Has only the args after this original event
