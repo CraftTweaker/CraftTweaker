@@ -1,8 +1,11 @@
 package atm.bloodworkxgaming;
 
+import crafttweaker.mc1120.CraftTweaker;
+import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
@@ -46,8 +49,9 @@ public class ClipboardHelper {
 
         StringBuilder message = new StringBuilder();
 
-        for (int i = 1; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             message.append(args[i]);
+            if (i != args.length - 1) message.append(" ");
         }
 
         if (sender.getCommandSenderEntity() instanceof EntityPlayer){
@@ -61,4 +65,9 @@ public class ClipboardHelper {
         sender.sendMessage(new TextComponentString("Copied [§6" + message.toString() + "§r] to the clipboard"));
     }
 
+    static void copyStringPlayer(EntityPlayer player, String s){
+        if(player instanceof EntityPlayerMP) {
+            CraftTweaker.NETWORK.sendTo(new MessageCopyClipboard(s), (EntityPlayerMP) player);
+        }
+    }
 }

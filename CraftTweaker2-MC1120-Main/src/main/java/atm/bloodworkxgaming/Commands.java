@@ -15,11 +15,14 @@ import crafttweaker.api.recipes.ShapedRecipe;
 import crafttweaker.api.recipes.ShapelessRecipe;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.player.MCPlayer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
@@ -89,7 +92,7 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker liquids", "-Outputs a list of all liquid names in the game to the crafttweaker log");
+                setDescription("§2/ct liquids", " §3Outputs a list of all liquid names in the game to the crafttweaker log");
             }
         });
 
@@ -110,7 +113,7 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker blocks", "-Outputs a list of all blocks in the game to the crafttweaker log");
+                setDescription("§2/ct blocks", " §3Outputs a list of all blocks in the game to the crafttweaker log");
             }
         });
 
@@ -118,7 +121,7 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker entities", "-Outputs a list of all entity definitions in the game to the crafttweaker log");
+                setDescription("§2/ct entities", " §3Outputs a list of all entity definitions in the game to the crafttweaker log");
             }
 
             @Override
@@ -142,7 +145,13 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker recipes", "-Lists all crafting recipes in the game", "/crafttweaker recipes hand", "-Lists all crafting recipes for the item in your hand", "-Also copies the recipes to clipboard", "/crafttweaker recipes furnace", "-lists all furnace recipes in the game");
+                setDescription("§2/crafttweaker recipes",
+                        " §3Lists all crafting recipes in the game",
+                        " §a/ct recipes hand",
+                        "  §bLists all crafting recipes for the item in your hand",
+                        "  §bAlso copies the recipes to clipboard",
+                        " §a/ct recipes furnace",
+                        "  §blists all furnace recipes in the game");
             }
 
             @Override
@@ -233,7 +242,7 @@ public class Commands {
         CTChatCommand.registerCommand(new CraftTweakerCommand("inventory") {
             @Override
             protected void init() {
-                setDescription("/crafttweaker inventory", "-Lists all items in your inventory");
+                setDescription("§2/ct inventory", " §3Lists all items in your inventory");
             }
 
             @Override
@@ -260,29 +269,78 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker hand", "-Outputs the name of the item in your hand", "-Also copies the name to clipboard and prints", "-oredict entries");
+                setDescription("§2/ct hand",
+                        " §3Outputs the name of the item in your hand",
+                        " §3Also copies the name to clipboard and prints",
+                        " §3oredict entries");
             }
 
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                //TODO: Replace with mine
-                sender.sendMessage(new TextComponentString("TOBEREPLACED"));
-                /*
-                IItemStack hand = player.getCurrentItem();
-                if(hand != null) {
-                    String value = hand.toString();
-                    player.sendChat(value);
-                    CraftTweakerAPI.logCommand(value);
-                    copyToClipboard(value);
 
-                    List<IOreDictEntry> entries = hand.getOres();
-                    for(IOreDictEntry entry : entries) {
-                        player.sendChat("Is in <ore:" + entry.getName() + ">");
-                        CraftTweakerAPI.logCommand("Is in <ore:" + entry.getName() + ">");
+                // Gets player and held item
+                EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
+                ItemStack heldItem = player.getHeldItemMainhand();
 
+
+
+                // Tries to get name of held item first
+                if (!heldItem.isEmpty()){
+                    List<String> oreDictNames = BloodUtils.getOreDictOfItem(heldItem);
+
+                    String itemName = "<" + heldItem.getItem().getRegistryName() + ":" + heldItem.getMetadata() + ">";
+                    ClipboardHelper.copyStringPlayer(player, itemName);
+
+                    ClipboardHelper.sendMessageWithCopy(player, "Item §2" + itemName, itemName);
+
+                    // adds the oredict names if it has some
+                    if (oreDictNames.size() > 0){
+                        sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
+                        for (String oreName : oreDictNames) {
+                            ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
+                        }
+                    }else {
+                        sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
                     }
 
-                } */
+
+                }else {
+                    // if hand is empty, tries to get oreDict of block
+                    RayTraceResult rayTraceResult = BloodUtils.getPlayerLookat(player, 100);
+
+                    if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK){
+                        BlockPos blockPos = rayTraceResult.getBlockPos();
+                        IBlockState block = server.getEntityWorld().getBlockState(blockPos);
+
+                        String blockName = "<" + block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block) + ">";
+                        ClipboardHelper.copyStringPlayer(player, blockName);
+
+                        ClipboardHelper.sendMessageWithCopy(player, "Block §2" + blockName +
+                                        " §rat §9[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]§r", blockName );
+
+                        // adds the oreDict names if it has some
+                        try{
+
+                            List<String> oreDictNames = BloodUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
+                            if (oreDictNames.size() > 0){
+                                sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
+
+                                for (String oreName :
+                                        oreDictNames) {
+                                    ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
+                                }
+                            }else {
+                                sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                            }
+                            // catches if it couldn't create a valid ItemStack for the Block
+                        }catch (IllegalArgumentException e){
+                            sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                        }
+
+                    } else {
+                        sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
+                    }
+                }
             }
 
 
@@ -292,7 +350,7 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker mods", "-Outputs all active mod IDs and versions in the game");
+                setDescription("§2/ct mods", " §3Outputs all active mod IDs and versions in the game");
             }
 
             @Override
@@ -310,7 +368,10 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker oredict", "-Outputs all ore dictionary entries in the game to the crafttweaker log", "/crafttweaker oredict <name>", "-Outputs all items in the given ore dictionary entry to the crafttweaker log");
+                setDescription("§2/ct oredict",
+                        " §3Outputs all ore dictionary entries in the game to the crafttweaker log",
+                        " §a/ct oredict <name>",
+                        "  §bOutputs all items in the given ore dictionary entry to the crafttweaker log");
             }
 
             @Override
@@ -346,7 +407,7 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker seeds", "-Prints all seeds registered", "-for tall grass");
+                setDescription("§2/ct seeds", " §3Prints all seeds registered", " §3for tall grass");
             }
 
             @Override
@@ -363,7 +424,7 @@ public class Commands {
         CTChatCommand.registerCommand(new CraftTweakerCommand("wiki") {
             @Override
             protected void init() {
-                setDescription("/crafttweaker wiki", "-Opens your browser with the wiki");
+                setDescription("§2/ct wiki", " §3Opens your browser with the wiki");
             }
 
             @Override
@@ -380,7 +441,7 @@ public class Commands {
         CTChatCommand.registerCommand(new CraftTweakerCommand("bugs") {
             @Override
             protected void init() {
-                setDescription("/crafttweaker bugs", "-Opens your browser with the GitHub bug tracker");
+                setDescription("§2/ct bugs", " §3Opens your browser with the GitHub bug tracker");
             }
 
             @Override
@@ -397,7 +458,7 @@ public class Commands {
         CTChatCommand.registerCommand(new CraftTweakerCommand("discord") {
             @Override
             protected void init() {
-                setDescription("/crafttweaker discord", "-Opens your browser with a link to the Discord server");
+                setDescription("§2/ct discord", " §3Opens your browser with a link to the Discord server");
             }
 
             @Override
@@ -415,7 +476,7 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker biomes", "-Lists all the biomes in the game");
+                setDescription("§2/ct biomes", " §3Lists all the biomes in the game");
             }
 
             @Override
@@ -432,7 +493,9 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription("/crafttweaker blockinfo", "-Activates or deactivates block reader. In block info mode,", "-right-click a block to see ID, meta and tile entity data");
+                setDescription("§2/ct blockinfo",
+                        " §3Activates or deactivates block reader. In block info mode,",
+                        " §3right-click a block to see ID, meta and tile entity data");
             }
 
             @Override
@@ -460,6 +523,21 @@ public class Commands {
                 }
             }
         });
+
+        CTChatCommand.registerCommand(new CraftTweakerCommand("copy") {
+
+            @Override
+            protected void init() {
+                setDescription("§2/ct copy",
+                        " §3Copies the string behind it");
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                ClipboardHelper.copyCommandRun(sender, args);
+            }
+        });
+
 
     }
 
