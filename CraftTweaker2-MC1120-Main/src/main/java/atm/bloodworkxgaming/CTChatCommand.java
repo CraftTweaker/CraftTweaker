@@ -43,6 +43,8 @@ public class CTChatCommand extends CommandBase{
     public static String getUsageStatic() {
         StringBuilder sb = new StringBuilder();
 
+        sb.append("\n");
+
         for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
             for (String s : entry.getValue().getDescription()) {
                 sb.append(s);
@@ -66,10 +68,10 @@ public class CTChatCommand extends CommandBase{
         if (craftTweakerCommands.containsKey(args[0])){
             if (sender.getCommandSenderEntity() instanceof EntityPlayer){
                 craftTweakerCommands.get(args[0]).executeCommand(
-                        server, sender, ArrayUtils.subarray(args, 1, args.length - 1));
+                        server, sender, ArrayUtils.subarray(args, 1, args.length));
             }else {
                 craftTweakerCommands.get(args[0]).executeCommand(
-                        server, sender, ArrayUtils.subarray(args, 1, args.length - 1));
+                        server, sender, ArrayUtils.subarray(args, 1, args.length));
             }
         }
     }
@@ -97,19 +99,15 @@ public class CTChatCommand extends CommandBase{
             }
             return currentPossibleCommands;
         }
+
         // gives subcommands of the subcommand
-        if (args.length == 2){
+        // each has to implement on it's own for special requirements
+        if (args.length >= 2){
             CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
-            if (subCommand != null && subCommand.subSubCommands.length > 0){
+            if (subCommand != null){
+                System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
+                return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
 
-                for (String cmd: subCommand.subSubCommands) {
-                    System.out.println("Trying " + cmd);
-
-                    if (cmd.startsWith(args[1])){
-                        currentPossibleCommands.add(cmd);
-                    }
-                }
-                return currentPossibleCommands;
             }
         }
 

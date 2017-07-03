@@ -19,8 +19,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static crafttweaker.CraftTweakerAPI.furnace;
@@ -140,7 +143,6 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription("/crafttweaker recipes", "-Lists all crafting recipes in the game", "/crafttweaker recipes hand", "-Lists all crafting recipes for the item in your hand", "-Also copies the recipes to clipboard", "/crafttweaker recipes furnace", "-lists all furnace recipes in the game");
-                setSubSubCommands("hand", "furnace");
             }
 
             @Override
@@ -209,6 +211,22 @@ public class Commands {
                     sender.sendMessage(new TextComponentString("Invalid arguments for recipes command"));
 
                 }
+            }
+
+            @Override
+            public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+
+                String[] subCommands = new String[]{"hand", "furnace"};
+                ArrayList<String> currentPossibleCommands = new ArrayList<>();
+
+                for (String cmd: subCommands) {
+                    System.out.println("Trying " + cmd);
+
+                    if (cmd.startsWith(args[0])){
+                        currentPossibleCommands.add(cmd);
+                    }
+                }
+                return currentPossibleCommands;
             }
         });
 

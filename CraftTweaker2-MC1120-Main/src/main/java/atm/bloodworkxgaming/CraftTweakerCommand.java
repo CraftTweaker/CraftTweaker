@@ -4,7 +4,12 @@ import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.ArrayUtils;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jonas on 03.07.2017.
@@ -12,11 +17,10 @@ import org.apache.commons.lang3.ArrayUtils;
 public abstract class CraftTweakerCommand {
 
     public final static String[] NO_DESCRIPTION = new String[]{"No Description provided"};
+    public final static List<String> EMPTY_LIST = new ArrayList<>(0);
+
     protected final String subCommandName;
     private String[] description;
-    // private final ICommandFunction function;
-    public String[] subSubCommands = new String[0];
-
 
     public CraftTweakerCommand(String subCommandName) {
         this.subCommandName = subCommandName;
@@ -41,9 +45,10 @@ public abstract class CraftTweakerCommand {
         this.description = descriptionIn;
     }
 
-    public void setSubSubCommands(String... subSubCommands){
-        this.subSubCommands = subSubCommands;
+    public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos){
+        return EMPTY_LIST;
     }
+
 
     public String getSubCommandName() {
         return subCommandName;
