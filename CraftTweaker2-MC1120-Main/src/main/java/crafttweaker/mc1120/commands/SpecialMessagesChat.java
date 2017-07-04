@@ -1,7 +1,6 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;

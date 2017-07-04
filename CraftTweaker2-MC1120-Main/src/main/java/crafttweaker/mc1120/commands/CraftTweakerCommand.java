@@ -1,4 +1,4 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -9,14 +9,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static atm.bloodworkxgaming.SpecialMessagesChat.getNormalMessage;
-
 /**
  * @author BloodWorkXGaming
  */
 public abstract class CraftTweakerCommand {
 
-    public final static ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{getNormalMessage("No Description provided")};
+    public final static ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{SpecialMessagesChat.getNormalMessage("No Description provided")};
     public final static List<String> EMPTY_LIST = new ArrayList<>(0);
 
     protected final String subCommandName;
@@ -42,6 +40,14 @@ public abstract class CraftTweakerCommand {
         this.description = descriptionIn;
     }
 
+    /**
+     * Has to be overwritten by the Commands when they need subcommands below the first one
+     * @param server
+     * @param sender
+     * @param args
+     * @param targetPos
+     * @return Returns an empty List by default
+     */
     public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos){
         return EMPTY_LIST;
     }

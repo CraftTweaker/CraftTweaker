@@ -1,4 +1,4 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
@@ -31,7 +31,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static atm.bloodworkxgaming.SpecialMessagesChat.*;
 import static crafttweaker.CraftTweakerAPI.furnace;
 import static crafttweaker.CrafttweakerImplementationAPI.*;
 
@@ -59,15 +58,15 @@ public class Commands {
                     CraftTweakerAPI.logCommand("<" + item.getId() + ">" + displayName);
                 }
 
-                sender.sendMessage(getLinkToCraftTweakerLog("List generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List generated", sender));
 
             }
 
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct names", "/ct names", true),
-                        getNormalMessage(" §3Outputs a list of all item names in the game to the CraftTweaker log"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct names", "/ct names", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all item names in the game to the CraftTweaker log"));
             }
         });
 
@@ -80,8 +79,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct help","/ct help", true),
-                        getNormalMessage(" §3Prints out the this help page"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct help","/ct help", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Prints out the this help page"));
             }
         });
 
@@ -96,14 +95,14 @@ public class Commands {
                 for (ILiquidDefinition liquid : liquids) {
                     CraftTweakerAPI.logCommand("<liquid:" + liquid.getName() + ">, " + liquid.getDisplayName());
                 }
-                sender.sendMessage(getLinkToCraftTweakerLog("List of liquids generated;", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of liquids generated;", sender));
             }
 
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct liquids", "/ct liquids", true),
-                        getNormalMessage(" §3Outputs a list of all liquid names in the game to the crafttweaker.log"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct liquids", "/ct liquids", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all liquid names in the game to the crafttweaker.log"));
             }
         });
 
@@ -118,15 +117,15 @@ public class Commands {
                     CraftTweakerAPI.logCommand("<block:" + block.getId() + ">, " + block.getDisplayName());
                 }
 
-                sender.sendMessage(getLinkToCraftTweakerLog("List of blocks generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of blocks generated", sender));
 
             }
 
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct blocks", "/ct blocks", true),
-                        getNormalMessage(" §3Outputs a list of all blocks in the game to the crafttweaker log"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct blocks", "/ct blocks", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all blocks in the game to the crafttweaker log"));
             }
         });
 
@@ -135,8 +134,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct entities", "/ct entities", true),
-                        getNormalMessage(" §3Outputs a list of all entity definitions in the game to the crafttweaker log"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct entities", "/ct entities", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all entity definitions in the game to the crafttweaker log"));
             }
 
             @Override
@@ -150,7 +149,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand(entity.getId() + " -- " + entity.getName());
                 }
 
-                sender.sendMessage(getLinkToCraftTweakerLog("List of Entities generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of Entities generated", sender));
             }
         });
 
@@ -159,13 +158,13 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct recipes", "/ct recipes", true),
-                        getNormalMessage(" §3Lists all crafting recipes in the game"),
-                        getClickableCommandText(" §a/ct recipes hand", "/ct recipes hand", true),
-                        getNormalMessage("  §bLists all crafting recipes for the item in your hand"),
-                        getNormalMessage("  §bAlso copies the recipes to clipboard"),
-                        getClickableCommandText(" §a/ct recipes furnace", "/ct recipes furnace", true),
-                        getNormalMessage("  §blists all furnace recipes in the game"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct recipes", "/ct recipes", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Lists all crafting recipes in the game"),
+                        SpecialMessagesChat.getClickableCommandText(" §a/ct recipes hand", "/ct recipes hand", true),
+                        SpecialMessagesChat.getNormalMessage("  §bLists all crafting recipes for the item in your hand"),
+                        SpecialMessagesChat.getNormalMessage("  §bAlso copies the recipes to clipboard"),
+                        SpecialMessagesChat.getClickableCommandText(" §a/ct recipes furnace", "/ct recipes furnace", true),
+                        SpecialMessagesChat.getNormalMessage("  §blists all furnace recipes in the game"));
             }
 
             @Override
@@ -193,7 +192,7 @@ public class Commands {
                         }
                     }
 
-                    sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
+                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Recipe list generated", sender));
 
                 } else if (args[0].equals("hand") && sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
@@ -227,7 +226,7 @@ public class Commands {
                             CraftTweakerAPI.logError("Could not dump furnace recipe", ex);
                         }
                     }
-                    sender.sendMessage(getLinkToCraftTweakerLog("Furnace Recipe list generated", sender));
+                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Furnace Recipe list generated", sender));
 
                 } else {
 
@@ -257,8 +256,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct inventory", "/ct inventory", true),
-                        getNormalMessage(" §3Lists all items in your inventory"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct inventory", "/ct inventory", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Lists all items in your inventory"));
             }
 
             @Override
@@ -274,7 +273,7 @@ public class Commands {
                             CraftTweakerAPI.logCommand(stack.toString());
                         }
                     }
-                    sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
+                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Recipe list generated", sender));
                 } else {
                     sender.sendMessage(new TextComponentString("This command can only be used as a Player (inGame)"));
                 }
@@ -286,10 +285,10 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct hand","/ct hand" , true),
-                        getNormalMessage(" §3Outputs the name of the item in your hand"),
-                        getNormalMessage(" §3Also copies the name to clipboard and prints"),
-                        getNormalMessage(" §3OreDict entries"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct hand","/ct hand" , true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs the name of the item in your hand"),
+                        SpecialMessagesChat.getNormalMessage(" §3Also copies the name to clipboard and prints"),
+                        SpecialMessagesChat.getNormalMessage(" §3OreDict entries"));
             }
 
             @Override
@@ -379,8 +378,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct mods", "/ct mods", true),
-                        getNormalMessage(" §3Outputs all active mod IDs and versions in the game"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct mods", "/ct mods", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs all active mod IDs and versions in the game"));
             }
 
             @Override
@@ -392,7 +391,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand("Mod: " + message);
                 }
 
-                sender.sendMessage(getLinkToCraftTweakerLog("List of Mods generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of Mods generated", sender));
             }
         });
 
@@ -401,10 +400,10 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct oredict", "/ct oredict", true),
-                        getNormalMessage(" §3Outputs all ore dictionary entries in the game to the crafttweaker log"),
-                        getClickableCommandText("§a/ct oredict <name>", "/ct oredict ", false),
-                        getNormalMessage("  §bOutputs all items in the given ore dictionary entry to the crafttweaker log")
+                        SpecialMessagesChat.getClickableCommandText("§2/ct oredict", "/ct oredict", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Outputs all ore dictionary entries in the game to the crafttweaker log"),
+                        SpecialMessagesChat.getClickableCommandText("§a/ct oredict <name>", "/ct oredict ", false),
+                        SpecialMessagesChat.getNormalMessage("  §bOutputs all items in the given ore dictionary entry to the crafttweaker log")
                 );
             }
 
@@ -433,7 +432,7 @@ public class Commands {
                         }
                     }
                 }
-                sender.sendMessage(getLinkToCraftTweakerLog("OreDict list generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("OreDict list generated", sender));
             }
         });
 
@@ -442,9 +441,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct seeds", "/ct seeds", true),
-                        getNormalMessage(" §3Prints all seeds registered"),
-                        getNormalMessage(" §3for tall grass")
+                        SpecialMessagesChat.getClickableCommandText("§2/ct seeds", "/ct seeds", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Prints all seeds registered"),
+                        SpecialMessagesChat.getNormalMessage(" §3for tall grass")
                 );
             }
 
@@ -457,7 +456,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand("Seed: " + message);
                 }
 
-                sender.sendMessage(getLinkToCraftTweakerLog("Seed list generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Seed list generated", sender));
             }
         });
 
@@ -465,8 +464,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct wiki", "/ct wiki", true),
-                        getNormalMessage(" §3Opens your browser with the wiki"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct wiki", "/ct wiki", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with the wiki"));
             }
 
             @Override
@@ -474,7 +473,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/");
-                    sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
+                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
                 } else {
                         sender.sendMessage(new TextComponentString("http://minetweaker3.powerofbytes.com/wiki/"));
                 }
@@ -485,8 +484,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct bugs", "/ct bugs", true),
-                        getNormalMessage(" §3Opens your browser with the GitHub bug tracker"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct bugs", "/ct bugs", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with the GitHub bug tracker"));
             }
 
             @Override
@@ -494,7 +493,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues");
-                    sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
+                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
 
                 } else {
                     sender.sendMessage(new TextComponentString("https://github.com/jaredlll08/CraftTweaker/issues"));
@@ -506,8 +505,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct discord", "/ct discord", true),
-                        getNormalMessage(" §3Opens your browser with a link to the Discord server"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct discord", "/ct discord", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with a link to the Discord server"));
             }
 
             @Override
@@ -515,7 +514,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("https://discord.gg/3VBK9ar");
-                    sender.sendMessage(getClickableBrowserLinkText("https://discord.gg/3VBK9ar", "https://discord.gg/3VBK9ar"));
+                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("https://discord.gg/3VBK9ar", "https://discord.gg/3VBK9ar"));
 
                 } else {
                     sender.sendMessage(new TextComponentString("https://discord.gg/3VBK9ar"));
@@ -527,8 +526,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct docs", "/ct docs", true),
-                        getNormalMessage(" §3Opens your browser with the docs"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct docs", "/ct docs", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with the docs"));
             }
 
             @Override
@@ -536,7 +535,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("http://crafttweaker.readthedocs.io/en/latest/");
-                    sender.sendMessage(getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
+                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
 
                 } else {
                     sender.sendMessage(new TextComponentString("http://crafttweaker.readthedocs.io/en/latest/"));
@@ -549,8 +548,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct biomes", "/ct biomes", true),
-                        getNormalMessage(" §3Lists all the biomes in the game"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct biomes", "/ct biomes", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Lists all the biomes in the game"));
 
             }
 
@@ -561,7 +560,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand("-" + biome.getName());
                 }
 
-                sender.sendMessage(getLinkToCraftTweakerLog("Biome list generated", sender));
+                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Biome list generated", sender));
             }
         });
 
@@ -570,9 +569,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct blockinfo", "/ct blockinfo", true),
-                        getNormalMessage(" §3Activates or deactivates block reader. In block info mode,"),
-                        getNormalMessage(" §3right-click a block to see ID, meta and tile entity data"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct blockinfo", "/ct blockinfo", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Activates or deactivates block reader. In block info mode,"),
+                        SpecialMessagesChat.getNormalMessage(" §3right-click a block to see ID, meta and tile entity data"));
             }
 
             @Override
@@ -606,8 +605,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct copy", "/ct copy", false),
-                        getNormalMessage(" §3Copies the provided string behind it"));
+                        SpecialMessagesChat.getClickableCommandText("§2/ct copy", "/ct copy", false),
+                        SpecialMessagesChat.getNormalMessage(" §3Copies the provided string behind it"));
             }
 
             @Override
@@ -621,9 +620,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/ct nbt", "/ct nbt", true),
-                        getNormalMessage(" §3Shows the NBT of the block you are looking at"),
-                        getNormalMessage(" §3or the item you are holding")
+                        SpecialMessagesChat.getClickableCommandText("§2/ct nbt", "/ct nbt", true),
+                        SpecialMessagesChat.getNormalMessage(" §3Shows the NBT of the block you are looking at"),
+                        SpecialMessagesChat.getNormalMessage(" §3or the item you are holding")
                 );
             }
 

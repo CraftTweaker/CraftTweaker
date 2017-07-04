@@ -1,4 +1,4 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

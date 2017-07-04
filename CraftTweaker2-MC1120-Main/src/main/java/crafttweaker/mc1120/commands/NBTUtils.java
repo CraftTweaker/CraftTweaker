@@ -1,4 +1,4 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
 import crafttweaker.CraftTweakerAPI;
 

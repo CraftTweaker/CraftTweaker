@@ -1,6 +1,5 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -15,8 +14,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
-
-import static atm.bloodworkxgaming.SpecialMessagesChat.EMPTY_TEXTMESSAGE;
 
 /**
  * @author BloodWorkXGaming
@@ -61,13 +58,13 @@ public class CTChatCommand extends CommandBase{
     }
 
     public static void sendUsage(ICommandSender sender) {
-        sender.sendMessage(EMPTY_TEXTMESSAGE);
+        sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
 
         for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
             for (ITextComponent s : entry.getValue().getDescription()) {
                 sender.sendMessage(s);
             }
-            sender.sendMessage(EMPTY_TEXTMESSAGE);
+            sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
         }
     }
 

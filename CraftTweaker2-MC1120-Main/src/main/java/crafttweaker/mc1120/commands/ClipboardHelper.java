@@ -1,4 +1,4 @@
-package atm.bloodworkxgaming;
+package crafttweaker.mc1120.commands;
 
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
