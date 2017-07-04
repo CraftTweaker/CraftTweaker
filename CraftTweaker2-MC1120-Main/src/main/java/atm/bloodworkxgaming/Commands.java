@@ -2,6 +2,7 @@ package atm.bloodworkxgaming;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.item.IItemStack;
@@ -14,13 +15,16 @@ import crafttweaker.api.recipes.IFurnaceRecipe;
 import crafttweaker.api.recipes.ShapedRecipe;
 import crafttweaker.api.recipes.ShapelessRecipe;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
@@ -278,69 +282,80 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
 
-                // Gets player and held item
-                EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
-                ItemStack heldItem = player.getHeldItemMainhand();
+                if (sender.getCommandSenderEntity() instanceof EntityPlayer){
+                    // Gets player and held item
+                    EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
+                    ItemStack heldItem = player.getHeldItemMainhand();
 
 
 
-                // Tries to get name of held item first
-                if (!heldItem.isEmpty()){
-                    List<String> oreDictNames = BloodUtils.getOreDictOfItem(heldItem);
+                    // Tries to get name of held item first
+                    if (!heldItem.isEmpty()){
+                        List<String> oreDictNames = BloodUtils.getOreDictOfItem(heldItem);
 
-                    String itemName = "<" + heldItem.getItem().getRegistryName() + ":" + heldItem.getMetadata() + ">";
-                    ClipboardHelper.copyStringPlayer(player, itemName);
+                        String itemName = "<" + heldItem.getItem().getRegistryName() + ":" + heldItem.getMetadata() + ">";
 
-                    ClipboardHelper.sendMessageWithCopy(player, "Item §2" + itemName, itemName);
-
-                    // adds the oredict names if it has some
-                    if (oreDictNames.size() > 0){
-                        sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
-                        for (String oreName : oreDictNames) {
-                            ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
+                        String withNBT = "";
+                        if (heldItem.serializeNBT().hasKey("tag")){
+                            String nbt = NBTConverter.from(heldItem.serializeNBT().getTag("tag"), false).toString();
+                            if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
                         }
-                    }else {
-                        sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
-                    }
 
+                        ClipboardHelper.copyStringPlayer(player, itemName + withNBT);
+                        ClipboardHelper.sendMessageWithCopy(player, "Item §2" + itemName, itemName + withNBT);
 
-                }else {
-                    // if hand is empty, tries to get oreDict of block
-                    RayTraceResult rayTraceResult = BloodUtils.getPlayerLookat(player, 100);
-
-                    if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK){
-                        BlockPos blockPos = rayTraceResult.getBlockPos();
-                        IBlockState block = server.getEntityWorld().getBlockState(blockPos);
-
-                        String blockName = "<" + block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block) + ">";
-                        ClipboardHelper.copyStringPlayer(player, blockName);
-
-                        ClipboardHelper.sendMessageWithCopy(player, "Block §2" + blockName +
-                                        " §rat §9[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]§r", blockName );
-
-                        // adds the oreDict names if it has some
-                        try{
-
-                            List<String> oreDictNames = BloodUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
-                            if (oreDictNames.size() > 0){
-                                sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
-
-                                for (String oreName :
-                                        oreDictNames) {
-                                    ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
-                                }
-                            }else {
-                                sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                        // adds the oredict names if it has some
+                        if (oreDictNames.size() > 0){
+                            sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
+                            for (String oreName : oreDictNames) {
+                                ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
                             }
-                            // catches if it couldn't create a valid ItemStack for the Block
-                        }catch (IllegalArgumentException e){
+                        }else {
                             sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
                         }
 
-                    } else {
-                        sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
+
+                    }else {
+                        // if hand is empty, tries to get oreDict of block
+                        RayTraceResult rayTraceResult = BloodUtils.getPlayerLookat(player, 100);
+
+                        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK){
+                            BlockPos blockPos = rayTraceResult.getBlockPos();
+                            IBlockState block = server.getEntityWorld().getBlockState(blockPos);
+
+                            String blockName = "<" + block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block) + ">";
+                            ClipboardHelper.copyStringPlayer(player, blockName);
+
+                            ClipboardHelper.sendMessageWithCopy(player, "Block §2" + blockName +
+                                    " §rat §9[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]§r", blockName );
+
+                            // adds the oreDict names if it has some
+                            try{
+
+                                List<String> oreDictNames = BloodUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
+                                if (oreDictNames.size() > 0){
+                                    sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
+
+                                    for (String oreName :
+                                            oreDictNames) {
+                                        ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
+                                    }
+                                }else {
+                                    sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                                }
+                                // catches if it couldn't create a valid ItemStack for the Block
+                            }catch (IllegalArgumentException e){
+                                sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                            }
+
+                        } else {
+                            sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
+                        }
                     }
+                }else {
+                    sender.sendMessage(new TextComponentString("This command can only be casted by a player inGame"));
                 }
+
             }
 
 
@@ -535,6 +550,88 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 ClipboardHelper.copyCommandRun(sender, args);
+            }
+        });
+
+        CTChatCommand.registerCommand(new CraftTweakerCommand("nbt") {
+
+            @Override
+            protected void init() {
+                setDescription("§2/ct nbt",
+                        " §3Shows the NBT of the block you are looking at",
+                        " §3or the item you are holding");
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+
+                if (sender.getCommandSenderEntity() instanceof EntityPlayer){
+
+                    // Gets player and held item
+                    EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
+                    ItemStack heldItem = player.getHeldItemMainhand();
+
+
+                    // Tries to get name of held item first
+                    if (heldItem != ItemStack.EMPTY){
+
+                        String itemName = "<" + heldItem.getItem().getRegistryName() + ":" + heldItem.getMetadata() + ">";
+
+                        String nbt = "";
+                        if (heldItem.serializeNBT().hasKey("tag")){
+                            nbt = NBTConverter.from(heldItem.serializeNBT().getTag("tag"), false).toString();
+                        }
+                        String withNBT = "";
+                        if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
+
+                        ClipboardHelper.copyStringPlayer(player, itemName + withNBT);
+
+                        ClipboardHelper.sendMessageWithCopy(player, "Item §2" + itemName,
+                                itemName + withNBT);
+
+
+                        // adds the oredict names if it has some
+                        if (nbt.length() > 0){
+                            sender.sendMessage(new TextComponentString("§3NBT-Data:"));
+                            ClipboardHelper.sendMessageWithCopy(player, NBTUtils.getAppealingString(nbt), nbt);
+
+                        }else {
+                            sender.sendMessage(new TextComponentString("§3No NBT Data"));
+                        }
+
+
+                        // if hand is empty, tries to get oreDict of block
+                    }else {
+                        RayTraceResult rayTraceResult = BloodUtils.getPlayerLookat(player, 100);
+
+                        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK){
+                            BlockPos blockPos = rayTraceResult.getBlockPos();
+                            IBlockState block = server.getEntityWorld().getBlockState(blockPos);
+
+                            ClipboardHelper.sendMessageWithCopy(player, "Block §2[" + block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block) +
+                                            "] §rat §9[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]§r",
+                                    block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block));
+
+                            TileEntity te = server.getEntityWorld().getTileEntity(blockPos);
+                            if (te != null){
+
+                                sender.sendMessage(new TextComponentString("§3NBT-Data:"));
+
+                                String nbt = NBTConverter.from(te.serializeNBT(), false).toString();
+
+                                ClipboardHelper.sendMessageWithCopy(player, NBTUtils.getAppealingString(nbt), nbt);
+                            }else {
+                                sender.sendMessage(new TextComponentString("§3Block is no TileEntity and has no NBT"));
+                            }
+                        } else {
+                            sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
+                        }
+                    }
+
+
+                }
+
+
             }
         });
 
