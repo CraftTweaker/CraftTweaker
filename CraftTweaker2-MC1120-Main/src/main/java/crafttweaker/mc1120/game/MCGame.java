@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.game;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.annotations.BracketHandler;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.game.IGame;
@@ -9,6 +10,7 @@ import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.actions.ActionSetTranslation;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.entity.MCEntityDefinition;
 import crafttweaker.mc1120.item.MCItemDefinition;
 import crafttweaker.mc1120.liquid.MCLiquidDefinition;
@@ -36,7 +38,7 @@ public class MCGame implements IGame {
     
     @Override
     public List<IItemDefinition> getItems() {
-        return Item.REGISTRY.getKeys().stream().map(item -> new MCItemDefinition(item.toString(), Item.REGISTRY.getObject(item))).collect(Collectors.toList());
+        return BracketHandlerItem.getItemNames().keySet().stream().map(item -> new MCItemDefinition(item, BracketHandlerItem.getItemNames().get(item))).collect(Collectors.toList());
     }
     
     @Override
