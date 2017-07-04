@@ -5,6 +5,8 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
+import static crafttweaker.mc1120.commands.ClipboardHelper.copyCommandBase;
+
 
 /**
  * Created by jonas on 04.07.2017.
@@ -19,7 +21,7 @@ public class SpecialMessagesChat {
         ClickEvent click = new ClickEvent(runDirectly ? ClickEvent.Action.RUN_COMMAND : ClickEvent.Action.SUGGEST_COMMAND, command);
         style.setClickEvent(click);
 
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to execute [§6" + command + "§r]"));
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to execute [\u00A76" + command + "\u00A7r]"));
         style.setHoverEvent(hoverEvent);
 
         return new TextComponentString(message).setStyle(style);
@@ -33,7 +35,7 @@ public class SpecialMessagesChat {
         style.setColor(TextFormatting.AQUA);
         style.setUnderlined(true);
 
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to Open [§6" + url + "§r]"));
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to Open [\u00A76" + url + "\u00A7r]"));
         style.setHoverEvent(hoverEvent);
 
         return new TextComponentString(message).setStyle(style);
@@ -45,7 +47,7 @@ public class SpecialMessagesChat {
         ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_FILE, filepath);
         style.setClickEvent(click);
 
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to open [§6" + filepath + "§r]"));
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to open [\u00A76" + filepath + "\u00A7r]"));
         style.setHoverEvent(hoverEvent);
 
         return new TextComponentString(message).setStyle(style);
@@ -57,9 +59,21 @@ public class SpecialMessagesChat {
 
     public static ITextComponent getLinkToCraftTweakerLog(String message, ICommandSender sender){
         if (sender.getEntityWorld().isRemote){
-            return getNormalMessage(message + "\nSee §acrafttweaker.log §rin your minecraft dir");
+            return getNormalMessage(message + "\nSee \u00A7acrafttweaker.log \u00A7rin your minecraft dir");
         }else {
-            return getFileOpenText(message + "\nSee §acrafttweaker.log §r[§6Click here to open§r]", CTChatCommand.CRAFTTWEAKER_LOG_PATH);
+            return getFileOpenText(message + "\nSee \u00A7acrafttweaker.log \u00A7r[\u00A76Click here to open\u00A7r]", CTChatCommand.CRAFTTWEAKER_LOG_PATH);
         }
+    }
+
+
+    public static ITextComponent getCopyMessage(String message, String copyMessage){
+        Style style = new Style();
+        ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, copyCommandBase + copyMessage);
+        style.setClickEvent(click);
+
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to copy [\u00A76" + copyMessage + "\u00A7r]"));
+        style.setHoverEvent(hoverEvent);
+
+        return new TextComponentString(message).setStyle(style);
     }
 }

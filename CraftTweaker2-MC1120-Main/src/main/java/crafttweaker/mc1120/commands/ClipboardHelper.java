@@ -33,7 +33,7 @@ public class ClipboardHelper {
         ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, copyCommandBase + copyMessage);
         style.setClickEvent(click);
 
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to copy [§6" + copyMessage + "§r]"));
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to copy [\u00A76" + copyMessage + "\u00A7r]"));
         style.setHoverEvent(hoverEvent);
 
         player.sendMessage(new TextComponentString(holeMessage).setStyle(style));
@@ -62,7 +62,7 @@ public class ClipboardHelper {
         // Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
         // clpbrd.setContents(new StringSelection(message.toString()), null);
 
-        sender.sendMessage(new TextComponentString("Copied [§6" + message.toString() + "§r] to the clipboard"));
+        sender.sendMessage(new TextComponentString("Copied [\u00A76" + message.toString() + "\u00A7r] to the clipboard"));
     }
 
 

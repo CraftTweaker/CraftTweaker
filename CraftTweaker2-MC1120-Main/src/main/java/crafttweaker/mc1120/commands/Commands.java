@@ -65,8 +65,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct names", "/ct names", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all item names in the game to the CraftTweaker log"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct names", "/ct names", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"));
             }
         });
 
@@ -79,8 +79,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct help","/ct help", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Prints out the this help page"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct help","/ct help", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Prints out the this help page"));
             }
         });
 
@@ -101,8 +101,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct liquids", "/ct liquids", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all liquid names in the game to the crafttweaker.log"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct liquids", "/ct liquids", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all liquid names in the game to the crafttweaker.log"));
             }
         });
 
@@ -124,8 +124,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct blocks", "/ct blocks", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all blocks in the game to the crafttweaker log"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct blocks", "/ct blocks", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all blocks in the game to the crafttweaker log"));
             }
         });
 
@@ -134,8 +134,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct entities", "/ct entities", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs a list of all entity definitions in the game to the crafttweaker log"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct entities", "/ct entities", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all entity definitions in the game to the crafttweaker log"));
             }
 
             @Override
@@ -158,13 +158,13 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct recipes", "/ct recipes", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Lists all crafting recipes in the game"),
-                        SpecialMessagesChat.getClickableCommandText(" §a/ct recipes hand", "/ct recipes hand", true),
-                        SpecialMessagesChat.getNormalMessage("  §bLists all crafting recipes for the item in your hand"),
-                        SpecialMessagesChat.getNormalMessage("  §bAlso copies the recipes to clipboard"),
-                        SpecialMessagesChat.getClickableCommandText(" §a/ct recipes furnace", "/ct recipes furnace", true),
-                        SpecialMessagesChat.getNormalMessage("  §blists all furnace recipes in the game"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct recipes", "/ct recipes", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Lists all crafting recipes in the game"),
+                        SpecialMessagesChat.getClickableCommandText(" \u00A7a/ct recipes hand", "/ct recipes hand", true),
+                        SpecialMessagesChat.getNormalMessage("  \u00A7bLists all crafting recipes for the item in your hand"),
+                        SpecialMessagesChat.getNormalMessage("  \u00A7bAlso copies the recipes to clipboard"),
+                        SpecialMessagesChat.getClickableCommandText(" \u00A7a/ct recipes furnace", "/ct recipes furnace", true),
+                        SpecialMessagesChat.getNormalMessage("  \u00A7blists all furnace recipes in the game"));
             }
 
             @Override
@@ -256,8 +256,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct inventory", "/ct inventory", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Lists all items in your inventory"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct inventory", "/ct inventory", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Lists all items in your inventory"));
             }
 
             @Override
@@ -285,10 +285,10 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct hand","/ct hand" , true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs the name of the item in your hand"),
-                        SpecialMessagesChat.getNormalMessage(" §3Also copies the name to clipboard and prints"),
-                        SpecialMessagesChat.getNormalMessage(" §3OreDict entries"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct hand","/ct hand" , true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs the name of the item in your hand"),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Also copies the name to clipboard and prints"),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73OreDict entries"));
             }
 
             @Override
@@ -314,16 +314,16 @@ public class Commands {
                         }
 
                         ClipboardHelper.copyStringPlayer(player, itemName + withNBT);
-                        ClipboardHelper.sendMessageWithCopy(player, "Item §2" + itemName, itemName + withNBT);
+                        ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName, itemName + withNBT);
 
                         // adds the oredict names if it has some
                         if (oreDictNames.size() > 0){
-                            sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
+                            sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
                             for (String oreName : oreDictNames) {
-                                ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
+                                ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e├ \u00A7b" + oreName, "<ore:" + oreName + ">");
                             }
                         }else {
-                            sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                            sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
                         }
 
 
@@ -338,30 +338,30 @@ public class Commands {
                             String blockName = "<" + block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block) + ">";
                             ClipboardHelper.copyStringPlayer(player, blockName);
 
-                            ClipboardHelper.sendMessageWithCopy(player, "Block §2" + blockName +
-                                    " §rat §9[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]§r", blockName );
+                            ClipboardHelper.sendMessageWithCopy(player, "Block \u00A72" + blockName +
+                                    " \u00A7rat \u00A79[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]\u00A7r", blockName );
 
                             // adds the oreDict names if it has some
                             try{
 
                                 List<String> oreDictNames = BloodUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
                                 if (oreDictNames.size() > 0){
-                                    sender.sendMessage(new TextComponentString("§3OreDict Entries:"));
+                                    sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
 
                                     for (String oreName :
                                             oreDictNames) {
-                                        ClipboardHelper.sendMessageWithCopy(player, "    §e├ §b" + oreName, "<ore:" + oreName + ">");
+                                        ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e├ \u00A7b" + oreName, "<ore:" + oreName + ">");
                                     }
                                 }else {
-                                    sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                                    sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
                                 }
                                 // catches if it couldn't create a valid ItemStack for the Block
                             }catch (IllegalArgumentException e){
-                                sender.sendMessage(new TextComponentString("§3No OreDict Entries"));
+                                sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
                             }
 
                         } else {
-                            sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
+                            sender.sendMessage(new TextComponentString("\u00A74Please hold an Item in your hand or look at a Block."));
                         }
                     }
                 }else {
@@ -378,15 +378,15 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct mods", "/ct mods", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs all active mod IDs and versions in the game"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct mods", "/ct mods", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs all active mod IDs and versions in the game"));
             }
 
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 CraftTweakerAPI.logCommand("Mods list:");
                 for (IMod mod : CraftTweakerAPI.loadedMods) {
-                    String message = mod.getId() + " - " + mod.getName() + " - " + mod.getVersion();
+                    String message = "\u00A75" + mod.getId() + "\u00A7r - \u00A7d" + mod.getName() + "\u00A7 - " + mod.getVersion();
                     sender.sendMessage(new TextComponentString(message));
                     CraftTweakerAPI.logCommand("Mod: " + message);
                 }
@@ -400,10 +400,10 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct oredict", "/ct oredict", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Outputs all ore dictionary entries in the game to the crafttweaker log"),
-                        SpecialMessagesChat.getClickableCommandText("§a/ct oredict <name>", "/ct oredict ", false),
-                        SpecialMessagesChat.getNormalMessage("  §bOutputs all items in the given ore dictionary entry to the crafttweaker log")
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct oredict", "/ct oredict", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs all ore dictionary entries in the game to the crafttweaker log"),
+                        SpecialMessagesChat.getClickableCommandText("\u00A7a/ct oredict <name>", "/ct oredict ", false),
+                        SpecialMessagesChat.getNormalMessage("  \u00A7bOutputs all items in the given ore dictionary entry to the crafttweaker log")
                 );
             }
 
@@ -441,9 +441,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct seeds", "/ct seeds", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Prints all seeds registered"),
-                        SpecialMessagesChat.getNormalMessage(" §3for tall grass")
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct seeds", "/ct seeds", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Prints all seeds registered"),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73for tall grass")
                 );
             }
 
@@ -451,8 +451,9 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 CraftTweakerAPI.logCommand("Seeds:");
                 for (WeightedItemStack seed : CraftTweakerAPI.vanilla.getSeeds().getSeeds()) {
-                    String message = seed.getStack() + " - " + (int) seed.getChance();
-                    sender.sendMessage(new TextComponentString(message));
+                    String itemname = "<" + seed.getStack().getName() + ":" + seed.getStack().getDamage() + ">";
+                    String message = "\u00A72" + itemname + "\u00A7r - \u00A7e" + (int) seed.getChance();
+                    sender.sendMessage(SpecialMessagesChat.getCopyMessage(message, itemname));
                     CraftTweakerAPI.logCommand("Seed: " + message);
                 }
 
@@ -464,8 +465,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct wiki", "/ct wiki", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with the wiki"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct wiki", "/ct wiki", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with the wiki"));
             }
 
             @Override
@@ -484,8 +485,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct bugs", "/ct bugs", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with the GitHub bug tracker"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct bugs", "/ct bugs", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with the GitHub bug tracker"));
             }
 
             @Override
@@ -505,8 +506,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct discord", "/ct discord", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with a link to the Discord server"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct discord", "/ct discord", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with a link to the Discord server"));
             }
 
             @Override
@@ -526,8 +527,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct docs", "/ct docs", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Opens your browser with the docs"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct docs", "/ct docs", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with the docs"));
             }
 
             @Override
@@ -548,8 +549,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct biomes", "/ct biomes", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Lists all the biomes in the game"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct biomes", "/ct biomes", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Lists all the biomes in the game"));
 
             }
 
@@ -569,9 +570,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct blockinfo", "/ct blockinfo", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Activates or deactivates block reader. In block info mode,"),
-                        SpecialMessagesChat.getNormalMessage(" §3right-click a block to see ID, meta and tile entity data"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct blockinfo", "/ct blockinfo", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Activates or deactivates block reader. In block info mode,"),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73right-click a block to see ID, meta and tile entity data"));
             }
 
             @Override
@@ -605,8 +606,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct copy", "/ct copy", false),
-                        SpecialMessagesChat.getNormalMessage(" §3Copies the provided string behind it"));
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct copy", "/ct copy", false),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Copies the provided string behind it"));
             }
 
             @Override
@@ -620,9 +621,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("§2/ct nbt", "/ct nbt", true),
-                        SpecialMessagesChat.getNormalMessage(" §3Shows the NBT of the block you are looking at"),
-                        SpecialMessagesChat.getNormalMessage(" §3or the item you are holding")
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct nbt", "/ct nbt", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Shows the NBT of the block you are looking at"),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73or the item you are holding")
                 );
             }
 
@@ -650,17 +651,17 @@ public class Commands {
 
                         ClipboardHelper.copyStringPlayer(player, itemName + withNBT);
 
-                        ClipboardHelper.sendMessageWithCopy(player, "Item §2" + itemName,
+                        ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName,
                                 itemName + withNBT);
 
 
                         // adds the oredict names if it has some
                         if (nbt.length() > 0){
-                            sender.sendMessage(new TextComponentString("§3NBT-Data:"));
+                            sender.sendMessage(new TextComponentString("\u00A73NBT-Data:"));
                             ClipboardHelper.sendMessageWithCopy(player, NBTUtils.getAppealingString(nbt), nbt);
 
                         }else {
-                            sender.sendMessage(new TextComponentString("§3No NBT Data"));
+                            sender.sendMessage(new TextComponentString("\u00A73No NBT Data"));
                         }
 
 
@@ -672,23 +673,23 @@ public class Commands {
                             BlockPos blockPos = rayTraceResult.getBlockPos();
                             IBlockState block = server.getEntityWorld().getBlockState(blockPos);
 
-                            ClipboardHelper.sendMessageWithCopy(player, "Block §2[" + block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block) +
-                                            "] §rat §9[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]§r",
+                            ClipboardHelper.sendMessageWithCopy(player, "Block \u00A72[" + block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block) +
+                                            "] \u00A7rat \u00A79[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]\u00A7r",
                                     block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block));
 
                             TileEntity te = server.getEntityWorld().getTileEntity(blockPos);
                             if (te != null){
 
-                                sender.sendMessage(new TextComponentString("§3NBT-Data:"));
+                                sender.sendMessage(new TextComponentString("\u00A73NBT-Data:"));
 
                                 String nbt = NBTConverter.from(te.serializeNBT(), false).toString();
 
                                 ClipboardHelper.sendMessageWithCopy(player, NBTUtils.getAppealingString(nbt), nbt);
                             }else {
-                                sender.sendMessage(new TextComponentString("§3Block is no TileEntity and has no NBT"));
+                                sender.sendMessage(new TextComponentString("\u00A73Block is no TileEntity and has no NBT"));
                             }
                         } else {
-                            sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
+                            sender.sendMessage(new TextComponentString("\u00A74Please hold an Item in your hand or look at a Block."));
                         }
                     }
                 }
