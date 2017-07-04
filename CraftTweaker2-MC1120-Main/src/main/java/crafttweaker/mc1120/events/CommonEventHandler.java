@@ -7,6 +7,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
+import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.*;
@@ -32,6 +33,11 @@ public class CommonEventHandler {
     
     @SubscribeEvent(priority = LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
+        CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
+        BracketHandlerItem.rebuildItemRegistry();
+        BracketHandlerLiquid.rebuildLiquidRegistry();
+        BracketHandlerEntity.rebuildEntityRegistry();
+        CraftTweakerAPI.logInfo("CraftTweaker: Sucessfully built item registry");
         MCRecipeManager.recipes = ev.getRegistry().getEntries();
         CrafttweakerImplementationAPI.load();
         MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));

@@ -92,11 +92,6 @@ public class CraftTweaker {
                 e.printStackTrace();
             }
         });
-        CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
-        BracketHandlerItem.rebuildItemRegistry();
-        BracketHandlerLiquid.rebuildLiquidRegistry();
-        BracketHandlerEntity.rebuildEntityRegistry();
-        CraftTweakerAPI.logInfo("CraftTweaker: Sucessfully built item registry");
         GlobalRegistry.registerBracketHandler(new BracketHandlerItem());
         GlobalRegistry.registerBracketHandler(new BracketHandlerLiquid());
         GlobalRegistry.registerBracketHandler(new BracketHandlerOre());
