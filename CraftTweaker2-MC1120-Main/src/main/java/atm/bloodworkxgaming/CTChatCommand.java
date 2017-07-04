@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Created by jonas on 03.07.2017.
+ * @author BloodWorkXGaming
  */
 public class CTChatCommand extends CommandBase{
 

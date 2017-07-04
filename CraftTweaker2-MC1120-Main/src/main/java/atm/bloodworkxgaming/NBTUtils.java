@@ -1,24 +1,11 @@
 package atm.bloodworkxgaming;
 
 import crafttweaker.CraftTweakerAPI;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Created by Jonas on 28.05.2017.
+ * @author BloodWorkXGaming
  */
 public class NBTUtils {
-
-
-    public static String getSerilaizedNBTString(ItemStack stack){
-        if (stack.serializeNBT().hasKey("tag")){
-            return stack.serializeNBT().getTag("tag").toString();
-        }else {
-            return "";
-        }
-    }
 
     public static String getAppealingString(String string){
 
@@ -144,18 +131,4 @@ public class NBTUtils {
             s.append("    ");
         }
     }
-
-    public static NBTTagCompound StringToNBTCompound(String string){
-        NBTTagCompound nbt = new NBTTagCompound();
-        try {
-             nbt = JsonToNBT.getTagFromJson(string);
-        } catch (NBTException e) {
-            System.out.println("The NBT-Tag " + string + " is not correct!");
-            e.printStackTrace();
-        }
-
-        return nbt;
-    }
-
-
 }

@@ -16,7 +16,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
 /**
- * Created by Jonas on 27.05.2017.
+ * @author BloodWorkXGaming
  */
 public class ClipboardHelper {
 

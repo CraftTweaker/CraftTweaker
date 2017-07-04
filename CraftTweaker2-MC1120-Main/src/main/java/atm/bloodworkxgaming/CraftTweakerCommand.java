@@ -1,18 +1,15 @@
 package atm.bloodworkxgaming;
 
-import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jonas on 03.07.2017.
+ * @author BloodWorkXGaming
  */
 public abstract class CraftTweakerCommand {
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jonas on 04.07.2017.
+ * @author BloodWorkXGaming
  */
 public class BloodUtils {
 
@@ -30,7 +30,4 @@ public class BloodUtils {
         Vec3d eyes = player.getPositionEyes(1.0F);
         return player.getEntityWorld().rayTraceBlocks(eyes, eyes.add( player.getLookVec().scale(range)));
     }
-
-
-
 }

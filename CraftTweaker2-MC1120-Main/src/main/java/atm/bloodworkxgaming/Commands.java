@@ -2,7 +2,6 @@ package atm.bloodworkxgaming;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
-import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.item.IItemStack;
@@ -22,7 +21,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +35,7 @@ import static crafttweaker.CraftTweakerAPI.furnace;
 import static crafttweaker.CrafttweakerImplementationAPI.*;
 
 /**
- * @author BloodWorkXGaming
+ * @author BloodWorkXGaming, Stan, Jared
  */
 public class Commands {
 
@@ -627,11 +625,7 @@ public class Commands {
                             sender.sendMessage(new TextComponentString("§4Please hold an Item in your hand or look at a Block."));
                         }
                     }
-
-
                 }
-
-
             }
         });
 
