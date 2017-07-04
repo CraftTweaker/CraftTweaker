@@ -65,7 +65,6 @@ public class SpecialMessagesChat {
         }
     }
 
-
     public static ITextComponent getCopyMessage(String message, String copyMessage){
         Style style = new Style();
         ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, copyCommandBase + copyMessage);

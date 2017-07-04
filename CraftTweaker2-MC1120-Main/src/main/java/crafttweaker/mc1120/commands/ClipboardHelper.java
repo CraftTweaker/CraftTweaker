@@ -29,14 +29,7 @@ public class ClipboardHelper {
      * @param copyMessage: String that is being copied when the player clicks on it
      */
     public static void sendMessageWithCopy(EntityPlayer player, String holeMessage, String copyMessage) {
-        Style style = new Style();
-        ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, copyCommandBase + copyMessage);
-        style.setClickEvent(click);
-
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click to copy [\u00A76" + copyMessage + "\u00A7r]"));
-        style.setHoverEvent(hoverEvent);
-
-        player.sendMessage(new TextComponentString(holeMessage).setStyle(style));
+        player.sendMessage(SpecialMessagesChat.getCopyMessage(holeMessage,  copyMessage));
     }
 
     /**
@@ -55,14 +48,11 @@ public class ClipboardHelper {
         }
 
         if (sender.getCommandSenderEntity() instanceof EntityPlayer){
-            MCPlayer player = new MCPlayer((EntityPlayer) sender);
-            player.copyToClipboard(message.toString());
+            copyStringPlayer((EntityPlayer) sender.getCommandSenderEntity(), message.toString());
+            sender.sendMessage(new TextComponentString("Copied [\u00A76" + message.toString() + "\u00A7r] to the clipboard"));
+        }else {
+            sender.sendMessage(new TextComponentString("This command can only be executed as a Player (InGame)"));
         }
-
-        // Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-        // clpbrd.setContents(new StringSelection(message.toString()), null);
-
-        sender.sendMessage(new TextComponentString("Copied [\u00A76" + message.toString() + "\u00A7r] to the clipboard"));
     }
 
 

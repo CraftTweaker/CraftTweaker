@@ -320,7 +320,7 @@ public class Commands {
                         if (oreDictNames.size() > 0){
                             sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
                             for (String oreName : oreDictNames) {
-                                ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e├ \u00A7b" + oreName, "<ore:" + oreName + ">");
+                                ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e- \u00A7b" + oreName, "<ore:" + oreName + ">");
                             }
                         }else {
                             sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
@@ -350,7 +350,7 @@ public class Commands {
 
                                     for (String oreName :
                                             oreDictNames) {
-                                        ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e├ \u00A7b" + oreName, "<ore:" + oreName + ">");
+                                        ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e- \u00A7b" + oreName, "<ore:" + oreName + ">");
                                     }
                                 }else {
                                     sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
@@ -696,6 +696,24 @@ public class Commands {
             }
         });
 
+        CTChatCommand.registerCommand(new CraftTweakerCommand("log") {
+            @Override
+            protected void init() {
+                setDescription(
+                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct log", "/ct log", true),
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens the crafttweaker.log file"));
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+
+                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("", sender));
+                } else {
+                    sender.sendMessage(SpecialMessagesChat.getNormalMessage("Command must be executed as a Player (inGame)"));
+                }
+            }
+        });
 
     }
 
