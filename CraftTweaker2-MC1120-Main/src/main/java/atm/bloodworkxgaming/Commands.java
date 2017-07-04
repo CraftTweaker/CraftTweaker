@@ -159,7 +159,7 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("§2/crafttweaker recipes", "/crafttweaker recipes", true),
+                        getClickableCommandText("§2/ct recipes", "/ct recipes", true),
                         getNormalMessage(" §3Lists all crafting recipes in the game"),
                         getClickableCommandText(" §a/ct recipes hand", "/ct recipes hand", true),
                         getNormalMessage("  §bLists all crafting recipes for the item in your hand"),
