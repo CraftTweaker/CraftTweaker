@@ -701,7 +701,7 @@ public class Commands {
             protected void init() {
                 setDescription(
                         SpecialMessagesChat.getClickableCommandText("\u00A72/ct log", "/ct log", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens the crafttweaker.log file"));
+                        SpecialMessagesChat.getNormalMessage(" \u00A73Sends a clickable link to open the crafttweaker.log"));
             }
 
             @Override
