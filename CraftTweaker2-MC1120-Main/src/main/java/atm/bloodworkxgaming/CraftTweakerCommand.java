@@ -3,21 +3,24 @@ package atm.bloodworkxgaming;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static atm.bloodworkxgaming.SpecialMessagesChat.getNormalMessage;
 
 /**
  * @author BloodWorkXGaming
  */
 public abstract class CraftTweakerCommand {
 
-    public final static String[] NO_DESCRIPTION = new String[]{"No Description provided"};
+    public final static ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{getNormalMessage("No Description provided")};
     public final static List<String> EMPTY_LIST = new ArrayList<>(0);
 
     protected final String subCommandName;
-    private String[] description;
+    private ITextComponent[] description;
 
     public CraftTweakerCommand(String subCommandName) {
         this.subCommandName = subCommandName;
@@ -31,14 +34,11 @@ public abstract class CraftTweakerCommand {
      */
     protected abstract void init();
 
-    public String[] getDescription() {
+    public ITextComponent[] getDescription() {
         return description == null ? NO_DESCRIPTION : description;
     }
 
-    public void setDescription(String... descriptionIn){
-        for (int i = 0; i < descriptionIn.length; i++) {
-            descriptionIn[i] = descriptionIn[i].replace("§", "\u00A7");
-        }
+    public void setDescription(ITextComponent... descriptionIn){
         this.description = descriptionIn;
     }
 

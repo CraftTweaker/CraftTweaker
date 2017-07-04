@@ -1,17 +1,22 @@
 package atm.bloodworkxgaming;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.*;
+
+import static atm.bloodworkxgaming.SpecialMessagesChat.EMPTY_TEXTMESSAGE;
 
 /**
  * @author BloodWorkXGaming
@@ -19,6 +24,8 @@ import java.util.*;
 public class CTChatCommand extends CommandBase{
 
     public static Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
+
+    public static final String CRAFTTWEAKER_LOG_PATH = new File("crafttweaker.log").getAbsolutePath();
 
     public static final List<String> aliases = new ArrayList<>();
     static {
@@ -37,23 +44,31 @@ public class CTChatCommand extends CommandBase{
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return getUsageStatic();
-    }
-
-    public static String getUsageStatic() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("\n");
+        sb.append("/crafttweaker ");
 
-        for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
-            for (String s : entry.getValue().getDescription()) {
-                sb.append(s);
-                sb.append("\n");
-            }
-            sb.append("\n");
+        String[] commands = new String[craftTweakerCommands.keySet().size()];
+        craftTweakerCommands.keySet().toArray(commands);
+
+        for (int i = 0; i < commands.length; i++) {
+            sb.append(commands[i]);
+            if (i != commands.length - 1) sb.append(" | ");
+
         }
 
         return sb.toString();
+    }
+
+    public static void sendUsage(ICommandSender sender) {
+        sender.sendMessage(EMPTY_TEXTMESSAGE);
+
+        for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
+            for (ITextComponent s : entry.getValue().getDescription()) {
+                sender.sendMessage(s);
+            }
+            sender.sendMessage(EMPTY_TEXTMESSAGE);
+        }
     }
 
 

@@ -91,32 +91,6 @@ public class CrafttweakerImplementationAPI {
         CraftTweakerAPI.server = server;
         events.onPlayerLoggedIn(LISTEN_LOGIN);
         events.onPlayerLoggedOut(LISTEN_LOGOUT);
-
-        //TODO: remove this
-
-        /*if(!CraftTweakerAPI.server.isCommandAdded("crafttweaker")) {
-            server.addCommand("crafttweaker", "", new String[]{"ct"}, (arguments, player) -> {
-                if(arguments.length == 0) {
-                    player.sendChat("Please provide a command. Use /ct help for more info.");
-                } else if(arguments[0].equals("help")) {
-                    String[] keys = crafttweakerCommands.keySet().toArray(new String[crafttweakerCommands.size()]);
-                    Arrays.sort(keys);
-                    for(String key : keys) {
-                        for(String helpMessage : crafttweakerCommands.get(key).description) {
-                            player.sendChat(helpMessage);
-                        }
-                    }
-                } else {
-                    CraftTweakerCommand command = crafttweakerCommands.get(arguments[0]);
-                    if(command == null) {
-                        player.sendChat("No such crafttweaker command available");
-                    } else {
-                        command.function.execute(Arrays.copyOfRange(arguments, 1, arguments.length), player);
-                    }
-                }
-            }, server::isOp, null);
-        }*/
-        
     }
     
     /**

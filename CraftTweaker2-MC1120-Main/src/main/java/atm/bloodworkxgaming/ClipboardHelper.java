@@ -65,6 +65,12 @@ public class ClipboardHelper {
         sender.sendMessage(new TextComponentString("Copied [§6" + message.toString() + "§r] to the clipboard"));
     }
 
+
+    /**
+     * Makes the player copy the sent String
+     * @param player: Player which should copy the string
+     * @param s: String to copy
+     */
     static void copyStringPlayer(EntityPlayer player, String s){
         if(player instanceof EntityPlayerMP) {
             CraftTweaker.NETWORK.sendTo(new MessageCopyClipboard(s), (EntityPlayerMP) player);
