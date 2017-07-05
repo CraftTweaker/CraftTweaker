@@ -41,7 +41,6 @@ public class MessageJEIHide implements IMessage, IMessageHandler<MessageJEIHide,
     }
     
     private void handle(MessageJEIHide message, MessageContext ctx) {
-        System.out.println("hiding!");
         if(message.hide) {
             JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(message.subTypes));
         } else {

@@ -68,7 +68,6 @@ public class JEI {
         
         @Override
         public void apply() {
-            System.out.println("Side: " + FMLCommonHandler.instance().getEffectiveSide());
             if(FMLCommonHandler.instance().getSide() == Side.SERVER)
                 PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(true, stack));
             else
