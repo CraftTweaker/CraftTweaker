@@ -2,6 +2,7 @@ package crafttweaker.mc1120.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,12 +33,12 @@ public class MessageCopyClipboard implements IMessage, IMessageHandler<MessageCo
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        data = UTF_8.decode(ByteBuffer.wrap(buf.array())).toString().trim();
+        data = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBytes(UTF_8.encode(data).array());
+        ByteBufUtils.writeUTF8String(buf, data);
     }
     
     @Override
