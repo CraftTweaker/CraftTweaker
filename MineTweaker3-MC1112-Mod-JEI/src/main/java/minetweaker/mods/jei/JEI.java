@@ -68,8 +68,7 @@ public class JEI {
         
         @Override
         public void apply() {
-            System.out.println("Side: " + FMLCommonHandler.instance().getEffectiveSide());
-            if(FMLCommonHandler.instance().getSide() == Side.SERVER)
+            if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(true, stack));
             else
                 JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));
@@ -82,7 +81,7 @@ public class JEI {
         
         @Override
         public void undo() {
-            if(FMLCommonHandler.instance().getSide() == Side.SERVER)
+            if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 PacketHandler.INSTANCE.sendToAll(new MessageJEIHide(false, stack));
             else
                 JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack));

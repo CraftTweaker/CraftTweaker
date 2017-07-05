@@ -189,7 +189,7 @@ public class MineTweakerMod {
         MineTweakerImplementationAPI.onServerStop();
         MineTweakerImplementationAPI.setScriptProvider(scriptsGlobal);
         MineTweakerAPI.logInfo("Server stopping, Scripts are being rolled back!");
-        MineTweakerAPI.tweaker.rollback();
+//        MineTweakerAPI.tweaker.rollback();
         server = null;
     }
 }
