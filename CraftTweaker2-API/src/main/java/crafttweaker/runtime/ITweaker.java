@@ -34,7 +34,14 @@ public interface ITweaker {
      * Executes all scripts provided by the script provider.
      */
     void load();
-    
+
+    /**
+     * Loads all scripts, choose whether to execute or not.
+     * @return Whether it was successful at loading or not
+     */
+    boolean loadScript(boolean executeScripts);
+
+
     /**
      * Retrieves all actions that have been performed.
      *
