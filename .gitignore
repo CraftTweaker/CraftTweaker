@@ -28,3 +28,4 @@ usernamecache.json
 *.launch
 
 *.db
+/classes/

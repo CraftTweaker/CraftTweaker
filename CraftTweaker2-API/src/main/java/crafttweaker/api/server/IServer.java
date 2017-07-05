@@ -12,10 +12,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.server.IServer")
 @ZenRegister
 public interface IServer {
-    
-    @ZenMethod
-    void addCommand(String name, String usage, String[] aliases, ICommandFunction function, @Optional ICommandValidator validator, @Optional ICommandTabCompletion completion);
-    
+
     @ZenMethod
     boolean isOp(IPlayer player);
     
@@ -24,7 +21,4 @@ public interface IServer {
     
     @ZenMethod
     IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
-    
-    @ZenMethod
-    boolean isCommandAdded(String name);
 }

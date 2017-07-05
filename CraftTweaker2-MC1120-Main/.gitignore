@@ -24,3 +24,4 @@ usernamecache.json
 *.log
 */.settings
 */build
+/CraftTweaker2-MC1120-Main/eclipse/
