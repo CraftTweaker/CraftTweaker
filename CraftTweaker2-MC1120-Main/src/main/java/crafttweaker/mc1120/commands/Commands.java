@@ -750,7 +750,8 @@ public class Commands {
         });
 
         CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
-            Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
+            final Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
+            final ArrayList<String> subCommands = new ArrayList<>(1);
 
             @Override
             protected void init() {
@@ -760,6 +761,7 @@ public class Commands {
                         getClickableCommandText(" \u00A7a/ct names desc", "/ct names desc", true),
                         getNormalMessage("  \u00A7bAdds the Display name of the Item to the output")
                 );
+                subCommands.add("desc");
             }
 
             @Override
@@ -810,9 +812,8 @@ public class Commands {
 
             @Override
             public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-                ArrayList<String> subcommands = new ArrayList<>(1);
-                subcommands.add("desc");
-                return subcommands;
+
+                return subCommands;
             }
 
 
