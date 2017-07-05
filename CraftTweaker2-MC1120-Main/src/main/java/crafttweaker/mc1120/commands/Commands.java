@@ -3,7 +3,6 @@ package crafttweaker.mc1120.commands;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.liquid.ILiquidDefinition;
@@ -14,11 +13,10 @@ import crafttweaker.api.recipes.IFurnaceRecipe;
 import crafttweaker.api.recipes.ShapedRecipe;
 import crafttweaker.api.recipes.ShapelessRecipe;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.runtime.CrTTweaker;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -31,18 +29,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.registries.GameData;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static crafttweaker.CraftTweakerAPI.furnace;
 import static crafttweaker.CrafttweakerImplementationAPI.*;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
-import static crafttweaker.mc1120.commands.SpecialMessagesChat.getLinkToCraftTweakerLog;
 
 /**
  * @author BloodWorkXGaming, Stan, Jared
@@ -754,6 +750,8 @@ public class Commands {
         });
 
         CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
+            Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
+
             @Override
             protected void init() {
                 setDescription(
@@ -771,17 +769,19 @@ public class Commands {
                     addDesc = args[0].startsWith("desc");
                 }
 
-                List<IItemDefinition> items = CraftTweakerAPI.game.getItems();
+                // List<IItemDefinition> items = CraftTweakerAPI.game.getItems();
+                List<Item> items = new ArrayList<>(BracketHandlerItem.getItemNames().values());
                 items.sort(ITEM_COMPARATOR);
-                for (IItemDefinition item : items) {
+                CraftTweakerAPI.logCommand("List of all registered Items:");
 
-                    // gets the item in a broken way
-                    Item i = Item.getByNameOrId(item.getId());
-                    if (i != null){
+                int totalAmount =  0;
+
+                for (Item item : items) {
+                    if (item != null){
+
                         // gets list of subitems
-
                         NonNullList<ItemStack> list = NonNullList.create();
-                        i.getSubItems(CreativeTabs.SEARCH, list);
+                        item.getSubItems(CreativeTabs.SEARCH, list);
 
                         for (ItemStack stack :list) {
 
@@ -798,10 +798,13 @@ public class Commands {
                                 if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
                             }
 
-                            CraftTweakerAPI.logCommand("<" + item.getId() + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata() ) + ">" + withNBT + (addDesc ? displayName : ""));
+                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata() ) + ">" + withNBT + (addDesc ? displayName : ""));
+                            totalAmount++;
                         }
                     }
                 }
+                CraftTweakerAPI.logCommand("A total of " + items.size() + " unique Items registered by CraftTweaker.");
+                CraftTweakerAPI.logCommand("A total of " + totalAmount + " effective Items registered by CraftTweaker.");
                 sender.sendMessage(getLinkToCraftTweakerLog("List generated", sender));
             }
 
@@ -810,6 +813,14 @@ public class Commands {
                 ArrayList<String> subcommands = new ArrayList<>(1);
                 subcommands.add("desc");
                 return subcommands;
+            }
+
+
+            class ItemComparator implements Comparator<Item> {
+                @Override
+                public int compare(Item o1, Item o2) {
+                    return o1.getRegistryName().toString().compareTo(o2.getRegistryName().toString());
+                }
             }
         });
 
