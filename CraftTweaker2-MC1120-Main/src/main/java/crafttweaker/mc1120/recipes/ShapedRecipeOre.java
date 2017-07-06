@@ -36,20 +36,9 @@ public class ShapedRecipeOre extends ShapedOreRecipe implements IMTRecipe {
         }
         return ItemStack.EMPTY;
     }
-    
-    @Override
-    public boolean canFit(int x, int y) {
-        return x>= recipe.getWidth() && y >= recipe.getHeight();
-    }
-    
     @Override
     public ItemStack getRecipeOutput() {
         return CraftTweakerMC.getItemStack(recipe.getOutput());
-    }
-    
-    @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-        return NonNullList.create();
     }
     
     @Override
