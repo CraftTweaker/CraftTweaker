@@ -3,7 +3,6 @@ package crafttweaker.mc1120.commands;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.liquid.ILiquidDefinition;
@@ -14,25 +13,32 @@ import crafttweaker.api.recipes.IFurnaceRecipe;
 import crafttweaker.api.recipes.ShapedRecipe;
 import crafttweaker.api.recipes.ShapelessRecipe;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static crafttweaker.CraftTweakerAPI.furnace;
 import static crafttweaker.CrafttweakerImplementationAPI.*;
+import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 
 /**
  * @author BloodWorkXGaming, Stan, Jared
@@ -40,35 +46,6 @@ import static crafttweaker.CrafttweakerImplementationAPI.*;
 public class Commands {
 
     static void registerCommands() {
-
-        CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
-            @Override
-            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                List<IItemDefinition> items = CraftTweakerAPI.game.getItems();
-                items.sort(ITEM_COMPARATOR);
-                for (IItemDefinition item : items) {
-                    String displayName;
-
-                    try {
-                        displayName = ", " + item.makeStack(0).getDisplayName();
-                    } catch (Throwable ex) {
-                        displayName = " -- Name could not be retrieved due to an error: " + ex;
-                    }
-
-                    CraftTweakerAPI.logCommand("<" + item.getId() + ">" + displayName);
-                }
-
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List generated", sender));
-
-            }
-
-            @Override
-            protected void init() {
-                setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct names", "/ct names", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"));
-            }
-        });
 
         CTChatCommand.registerCommand(new CraftTweakerCommand("help") {
             @Override
@@ -79,8 +56,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct help","/ct help", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Prints out the this help page"));
+                        getClickableCommandText("\u00A72/ct help","/ct help", true),
+                        getNormalMessage(" \u00A73Prints out the this help page"));
             }
         });
 
@@ -95,14 +72,14 @@ public class Commands {
                 for (ILiquidDefinition liquid : liquids) {
                     CraftTweakerAPI.logCommand("<liquid:" + liquid.getName() + ">, " + liquid.getDisplayName());
                 }
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of liquids generated;", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("List of liquids generated;", sender));
             }
 
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct liquids", "/ct liquids", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all liquid names in the game to the crafttweaker.log"));
+                        getClickableCommandText("\u00A72/ct liquids", "/ct liquids", true),
+                        getNormalMessage(" \u00A73Outputs a list of all liquid names in the game to the crafttweaker.log"));
             }
         });
 
@@ -117,15 +94,15 @@ public class Commands {
                     CraftTweakerAPI.logCommand("<block:" + block.getId() + ">, " + block.getDisplayName());
                 }
 
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of blocks generated", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("List of blocks generated", sender));
 
             }
 
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct blocks", "/ct blocks", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all blocks in the game to the crafttweaker log"));
+                        getClickableCommandText("\u00A72/ct blocks", "/ct blocks", true),
+                        getNormalMessage(" \u00A73Outputs a list of all blocks in the game to the crafttweaker log"));
             }
         });
 
@@ -134,8 +111,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct entities", "/ct entities", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs a list of all entity definitions in the game to the crafttweaker log"));
+                        getClickableCommandText("\u00A72/ct entities", "/ct entities", true),
+                        getNormalMessage(" \u00A73Outputs a list of all entity definitions in the game to the crafttweaker log"));
             }
 
             @Override
@@ -149,7 +126,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand(entity.getId() + " -- " + entity.getName());
                 }
 
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of Entities generated", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("List of Entities generated", sender));
             }
         });
 
@@ -158,13 +135,13 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct recipes", "/ct recipes", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Lists all crafting recipes in the game"),
-                        SpecialMessagesChat.getClickableCommandText(" \u00A7a/ct recipes hand", "/ct recipes hand", true),
-                        SpecialMessagesChat.getNormalMessage("  \u00A7bLists all crafting recipes for the item in your hand"),
-                        SpecialMessagesChat.getNormalMessage("  \u00A7bAlso copies the recipes to clipboard"),
-                        SpecialMessagesChat.getClickableCommandText(" \u00A7a/ct recipes furnace", "/ct recipes furnace", true),
-                        SpecialMessagesChat.getNormalMessage("  \u00A7blists all furnace recipes in the game"));
+                        getClickableCommandText("\u00A72/ct recipes", "/ct recipes", true),
+                        getNormalMessage(" \u00A73Lists all crafting recipes in the game"),
+                        getClickableCommandText(" \u00A7a/ct recipes hand", "/ct recipes hand", true),
+                        getNormalMessage("  \u00A7bLists all crafting recipes for the item in your hand"),
+                        getNormalMessage("  \u00A7bAlso copies the recipes to clipboard"),
+                        getClickableCommandText(" \u00A7a/ct recipes furnace", "/ct recipes furnace", true),
+                        getNormalMessage("  \u00A7blists all furnace recipes in the game"));
             }
 
             @Override
@@ -192,7 +169,7 @@ public class Commands {
                         }
                     }
 
-                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Recipe list generated", sender));
+                    sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
 
                 } else if (args[0].equals("hand") && sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
@@ -226,7 +203,7 @@ public class Commands {
                             CraftTweakerAPI.logError("Could not dump furnace recipe", ex);
                         }
                     }
-                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Furnace Recipe list generated", sender));
+                    sender.sendMessage(getLinkToCraftTweakerLog("Furnace Recipe list generated", sender));
 
                 } else {
 
@@ -256,8 +233,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct inventory", "/ct inventory", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Lists all items in your inventory"));
+                        getClickableCommandText("\u00A72/ct inventory", "/ct inventory", true),
+                        getNormalMessage(" \u00A73Lists all items in your inventory"));
             }
 
             @Override
@@ -273,7 +250,7 @@ public class Commands {
                             CraftTweakerAPI.logCommand(stack.toString());
                         }
                     }
-                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Recipe list generated", sender));
+                    sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
                 } else {
                     sender.sendMessage(new TextComponentString("This command can only be used as a Player (inGame)"));
                 }
@@ -285,10 +262,10 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct hand","/ct hand" , true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs the name of the item in your hand"),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Also copies the name to clipboard and prints"),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73OreDict entries"));
+                        getClickableCommandText("\u00A72/ct hand","/ct hand" , true),
+                        getNormalMessage(" \u00A73Outputs the name of the item in your hand"),
+                        getNormalMessage(" \u00A73Also copies the name to clipboard and prints"),
+                        getNormalMessage(" \u00A73OreDict entries"));
             }
 
             @Override
@@ -305,7 +282,8 @@ public class Commands {
                     if (!heldItem.isEmpty()){
                         List<String> oreDictNames = BloodUtils.getOreDictOfItem(heldItem);
 
-                        String itemName = "<" + heldItem.getItem().getRegistryName() + ":" + heldItem.getMetadata() + ">";
+                        int meta = heldItem.getMetadata();
+                        String itemName = "<" + heldItem.getItem().getRegistryName() + (meta == 0 ? "": ":" + meta) + ">";
 
                         String withNBT = "";
                         if (heldItem.serializeNBT().hasKey("tag")){
@@ -335,7 +313,9 @@ public class Commands {
                             BlockPos blockPos = rayTraceResult.getBlockPos();
                             IBlockState block = server.getEntityWorld().getBlockState(blockPos);
 
-                            String blockName = "<" + block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block) + ">";
+
+                            int meta = block.getBlock().getMetaFromState(block);
+                            String blockName = "<" + block.getBlock().getRegistryName() + (meta == 0 ? "": ":" + meta) + ">";
                             ClipboardHelper.copyStringPlayer(player, blockName);
 
                             ClipboardHelper.sendMessageWithCopy(player, "Block \u00A72" + blockName +
@@ -378,8 +358,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct mods", "/ct mods", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs all active mod IDs and versions in the game"));
+                        getClickableCommandText("\u00A72/ct mods", "/ct mods", true),
+                        getNormalMessage(" \u00A73Outputs all active mod IDs and versions in the game"));
             }
 
             @Override
@@ -391,7 +371,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand("Mod: " + message);
                 }
 
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("List of Mods generated", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("List of Mods generated", sender));
             }
         });
 
@@ -400,10 +380,10 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct oredict", "/ct oredict", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Outputs all ore dictionary entries in the game to the crafttweaker log"),
-                        SpecialMessagesChat.getClickableCommandText("\u00A7a/ct oredict <name>", "/ct oredict ", false),
-                        SpecialMessagesChat.getNormalMessage("  \u00A7bOutputs all items in the given ore dictionary entry to the crafttweaker log")
+                        getClickableCommandText("\u00A72/ct oredict", "/ct oredict", true),
+                        getNormalMessage(" \u00A73Outputs all ore dictionary entries in the game to the crafttweaker log"),
+                        getClickableCommandText("\u00A7a/ct oredict <name>", "/ct oredict ", false),
+                        getNormalMessage("  \u00A7bOutputs all items in the given ore dictionary entry to the crafttweaker log")
                 );
             }
 
@@ -432,7 +412,7 @@ public class Commands {
                         }
                     }
                 }
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("OreDict list generated", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("OreDict list generated", sender));
             }
         });
 
@@ -441,9 +421,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct seeds", "/ct seeds", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Prints all seeds registered"),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73for tall grass")
+                        getClickableCommandText("\u00A72/ct seeds", "/ct seeds", true),
+                        getNormalMessage(" \u00A73Prints all seeds registered"),
+                        getNormalMessage(" \u00A73for tall grass")
                 );
             }
 
@@ -453,11 +433,11 @@ public class Commands {
                 for (WeightedItemStack seed : CraftTweakerAPI.vanilla.getSeeds().getSeeds()) {
                     String itemname = "<" + seed.getStack().getName() + ":" + seed.getStack().getDamage() + ">";
                     String message = "\u00A72" + itemname + "\u00A7r - \u00A7e" + (int) seed.getChance();
-                    sender.sendMessage(SpecialMessagesChat.getCopyMessage(message, itemname));
+                    sender.sendMessage(getCopyMessage(message, itemname));
                     CraftTweakerAPI.logCommand("Seed: " + message);
                 }
 
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Seed list generated", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("Seed list generated", sender));
             }
         });
 
@@ -465,8 +445,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct wiki", "/ct wiki", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with the wiki"));
+                        getClickableCommandText("\u00A72/ct wiki", "/ct wiki", true),
+                        getNormalMessage(" \u00A73Opens your browser with the wiki"));
             }
 
             @Override
@@ -474,7 +454,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/");
-                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
+                    sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
                 } else {
                         sender.sendMessage(new TextComponentString("http://minetweaker3.powerofbytes.com/wiki/"));
                 }
@@ -485,8 +465,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct bugs", "/ct bugs", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with the GitHub bug tracker"));
+                        getClickableCommandText("\u00A72/ct bugs", "/ct bugs", true),
+                        getNormalMessage(" \u00A73Opens your browser with the GitHub bug tracker"));
             }
 
             @Override
@@ -494,7 +474,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues");
-                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
+                    sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
 
                 } else {
                     sender.sendMessage(new TextComponentString("https://github.com/jaredlll08/CraftTweaker/issues"));
@@ -506,8 +486,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct discord", "/ct discord", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with a link to the Discord server"));
+                        getClickableCommandText("\u00A72/ct discord", "/ct discord", true),
+                        getNormalMessage(" \u00A73Opens your browser with a link to the Discord server"));
             }
 
             @Override
@@ -515,7 +495,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("https://discord.gg/3VBK9ar");
-                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("https://discord.gg/3VBK9ar", "https://discord.gg/3VBK9ar"));
+                    sender.sendMessage(getClickableBrowserLinkText("https://discord.gg/3VBK9ar", "https://discord.gg/3VBK9ar"));
 
                 } else {
                     sender.sendMessage(new TextComponentString("https://discord.gg/3VBK9ar"));
@@ -527,8 +507,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct docs", "/ct docs", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Opens your browser with the docs"));
+                        getClickableCommandText("\u00A72/ct docs", "/ct docs", true),
+                        getNormalMessage(" \u00A73Opens your browser with the docs"));
             }
 
             @Override
@@ -536,7 +516,7 @@ public class Commands {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("http://crafttweaker.readthedocs.io/en/latest/");
-                    sender.sendMessage(SpecialMessagesChat.getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
+                    sender.sendMessage(getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
 
                 } else {
                     sender.sendMessage(new TextComponentString("http://crafttweaker.readthedocs.io/en/latest/"));
@@ -549,8 +529,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct biomes", "/ct biomes", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Lists all the biomes in the game"));
+                        getClickableCommandText("\u00A72/ct biomes", "/ct biomes", true),
+                        getNormalMessage(" \u00A73Lists all the biomes in the game"));
 
             }
 
@@ -561,7 +541,7 @@ public class Commands {
                     CraftTweakerAPI.logCommand("-" + biome.getName());
                 }
 
-                sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("Biome list generated", sender));
+                sender.sendMessage(getLinkToCraftTweakerLog("Biome list generated", sender));
             }
         });
 
@@ -570,9 +550,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct blockinfo", "/ct blockinfo", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Activates or deactivates block reader. In block info mode,"),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73right-click a block to see ID, meta and tile entity data"));
+                        getClickableCommandText("\u00A72/ct blockinfo", "/ct blockinfo", true),
+                        getNormalMessage(" \u00A73Activates or deactivates block reader. In block info mode,"),
+                        getNormalMessage(" \u00A73right-click a block to see ID, meta and tile entity data"));
             }
 
             @Override
@@ -606,8 +586,8 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct copy", "/ct copy", false),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Copies the provided string behind it"));
+                        getClickableCommandText("\u00A72/ct copy", "/ct copy", false),
+                        getNormalMessage(" \u00A73Copies the provided string behind it"));
             }
 
             @Override
@@ -621,9 +601,9 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct nbt", "/ct nbt", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Shows the NBT of the block you are looking at"),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73or the item you are holding")
+                        getClickableCommandText("\u00A72/ct nbt", "/ct nbt", true),
+                        getNormalMessage(" \u00A73Shows the NBT of the block you are looking at"),
+                        getNormalMessage(" \u00A73or the item you are holding")
                 );
             }
 
@@ -700,21 +680,153 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        SpecialMessagesChat.getClickableCommandText("\u00A72/ct log", "/ct log", true),
-                        SpecialMessagesChat.getNormalMessage(" \u00A73Sends a clickable link to open the crafttweaker.log"));
+                        getClickableCommandText("\u00A72/ct log", "/ct log", true),
+                        getNormalMessage(" \u00A73Sends a clickable link to open the crafttweaker.log"));
             }
 
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
 
-                    sender.sendMessage(SpecialMessagesChat.getLinkToCraftTweakerLog("", sender));
+                    sender.sendMessage(getLinkToCraftTweakerLog("", sender));
                 } else {
-                    sender.sendMessage(SpecialMessagesChat.getNormalMessage("Command must be executed as a Player (inGame)"));
+                    sender.sendMessage(getNormalMessage("Command must be executed as a Player (inGame)"));
                 }
             }
         });
 
+        CTChatCommand.registerCommand(new CraftTweakerCommand("scripts") {
+            @Override
+            protected void init() {
+                setDescription(
+                        getClickableCommandText("\u00A72/ct scripts", "/ct scripts", true),
+                        getNormalMessage(" \u00A73Sends a clickable link to open the scripts directory"));
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+
+                    sender.sendMessage(getFileOpenText("Click to open the \u00A7a/scripts/ \u00A7rDirectory [\u00A76Click here to open\u00A7r]", new File("scripts/").getAbsolutePath()));
+                } else {
+                    sender.sendMessage(getNormalMessage("Path to the scripts: " + new File("scripts/").getAbsolutePath()));
+                    sender.sendMessage(getNormalMessage("Command must be executed as a Player (inGame) to be clickable"));
+                }
+            }
+        });
+
+        CTChatCommand.registerCommand(new CraftTweakerCommand("syntax") {
+            @Override
+            protected void init() {
+                setDescription(
+                        getClickableCommandText("\u00A72/ct syntax", "/ct syntax", true),
+                        getNormalMessage(" \u00A73Checks the Syntax of the scripts"),
+                        getNormalMessage(" \u00A73To see the effect you have to restart the game"),
+                        getNormalMessage(" \u00A73Will print errors of the Bracket Handler"));
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                if (args.length > 0 && args[0].equals("debug")){
+                    CraftTweakerAPI.tweaker.enableDebug();
+                }
+                boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(false);
+
+                if (loadSuccessful){
+                    sender.sendMessage(getNormalMessage("Syntax of scripts is \u00A7acorrect\u00A7r, to see the effect \u00A7erestart the game"));
+                    sender.sendMessage(getNormalMessage("Please be advised that \u00A7bbrackets (<>) \u00A7rmay have \u00A74errored, see above."));
+                    sender.sendMessage(getNormalMessage("If no errors appeared above everything was fine."));
+                }else {
+                    sender.sendMessage(getLinkToCraftTweakerLog("\u00A74Syntax of the scripts is incorrect!", sender));
+                }
+            }
+
+            @Override
+            public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+                List<String> commands = new ArrayList<>(1);
+                commands.add("debug");
+                return commands;
+            }
+        });
+
+        CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
+            final Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
+            final ArrayList<String> subCommands = new ArrayList<>(1);
+
+            @Override
+            protected void init() {
+                setDescription(
+                        getClickableCommandText("\u00A72/ct names", "/ct names", true),
+                        getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"),
+                        getClickableCommandText(" \u00A7a/ct names desc", "/ct names desc", true),
+                        getNormalMessage("  \u00A7bAdds the Display name of the Item to the output")
+                );
+                subCommands.add("desc");
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                boolean addDesc = false;
+                if (args.length > 0){
+                    addDesc = args[0].startsWith("desc");
+                }
+
+                // List<IItemDefinition> items = CraftTweakerAPI.game.getItems();
+                List<Item> items = new ArrayList<>(BracketHandlerItem.getItemNames().values());
+                items.sort(ITEM_COMPARATOR);
+                CraftTweakerAPI.logCommand("List of all registered Items:");
+
+                int totalAmount =  0;
+
+                for (Item item : items) {
+                    if (item != null){
+
+                        // gets list of subitems
+                        NonNullList<ItemStack> list = NonNullList.create();
+                        item.getSubItems(CreativeTabs.SEARCH, list);
+
+                        for (ItemStack stack :list) {
+
+                            String displayName;
+                            try {
+                                displayName = ", " + stack.getDisplayName();
+                            } catch (Throwable ex) {
+                                displayName = " -- Name could not be retrieved due to an error: " + ex;
+                            }
+
+                            String withNBT = "";
+                            if (stack.serializeNBT().hasKey("tag")){
+                                String nbt = NBTConverter.from(stack.serializeNBT().getTag("tag"), false).toString();
+                                if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
+                            }
+
+                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata() ) + ">" + withNBT + (addDesc ? displayName : ""));
+                            totalAmount++;
+                        }
+                    }
+                }
+                CraftTweakerAPI.logCommand("A total of " + items.size() + " unique Items registered by CraftTweaker.");
+                CraftTweakerAPI.logCommand("A total of " + totalAmount + " effective Items registered by CraftTweaker.");
+                sender.sendMessage(getLinkToCraftTweakerLog("List generated", sender));
+            }
+
+            @Override
+            public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+
+                return subCommands;
+            }
+
+
+
+        });
+
+    }
+
+    private static class ItemComparator implements Comparator<Item> {
+        @Override
+        public int compare(Item o1, Item o2) {
+            return o1.getRegistryName().toString().compareTo(o2.getRegistryName().toString());
+        }
     }
 
 }

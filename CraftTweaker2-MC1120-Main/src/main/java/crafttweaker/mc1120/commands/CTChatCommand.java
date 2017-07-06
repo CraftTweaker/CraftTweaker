@@ -27,8 +27,6 @@ public class CTChatCommand extends CommandBase{
     public static final List<String> aliases = new ArrayList<>();
     static {
         aliases.add("ct");
-        aliases.add("mt");
-        aliases.add("minetweaker");
     }
 
     public static void register(FMLServerStartingEvent ev){
@@ -87,6 +85,8 @@ public class CTChatCommand extends CommandBase{
                 craftTweakerCommands.get(args[0]).executeCommand(
                         server, sender, ArrayUtils.subarray(args, 1, args.length));
             }
+        }else {
+            sender.sendMessage(SpecialMessagesChat.getClickableCommandText("\u00A7cNo such command! \u00A76[Click to show help]", "/ct help", true));
         }
     }
 
