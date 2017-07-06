@@ -7,12 +7,13 @@ import net.minecraftforge.fml.client.config.*;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 public class CheckButton extends GuiCheckBox {
 
     protected GuiBase parent;
-    protected List<GuiButton> incompatible;
+    protected List<GuiButton> incompatible = new ArrayList<>();
 
     protected int backgroundSize = 100;
 
