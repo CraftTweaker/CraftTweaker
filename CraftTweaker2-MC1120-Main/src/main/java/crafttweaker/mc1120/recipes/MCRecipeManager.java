@@ -93,6 +93,17 @@ public class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
+    public int removeAll() {
+        List<ResourceLocation> toRemove = new ArrayList<>();
+        for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
+            toRemove.add(recipe.getKey());
+        }
+        
+        CraftTweakerAPI.apply(new ActionRemoveRecipes(toRemove));
+        return toRemove.size();
+    }
+    
+    @Override
     public int remove(IIngredient output, @Optional boolean nbtMatch) {
         List<ResourceLocation> toRemove = new ArrayList<>();
         for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {

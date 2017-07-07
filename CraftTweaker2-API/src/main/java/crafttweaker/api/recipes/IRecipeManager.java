@@ -24,6 +24,15 @@ public interface IRecipeManager {
     @ZenGetter("all")
     List<ICraftingRecipe> getAll();
     
+    
+    /**
+     * Removes all crafting recipes in the game
+     *
+     * @return amount of recipes removed.
+     */
+    @ZenMethod
+    int removeAll();
+    
     /**
      * Returns all crafting recipes resulting in the given ingredient.
      *
