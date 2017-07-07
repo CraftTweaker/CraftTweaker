@@ -110,7 +110,6 @@ public class CraftTweaker {
     
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
-        FuelTweaker.INSTANCE.register();
     }
     
     @EventHandler

@@ -20,6 +20,9 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
  */
 public class MCFurnaceManager implements IFurnaceManager {
     
+    
+    public static final Map<IItemStack, Integer> fuelMap = new HashMap<>();
+    
     public MCFurnaceManager() {
     
     }

@@ -3,11 +3,13 @@ package crafttweaker.mc1120.events;
 import crafttweaker.*;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.event.*;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
+import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.*;
@@ -18,9 +20,9 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.registries.*;
@@ -42,6 +44,19 @@ public class CommonEventHandler {
         CrafttweakerImplementationAPI.load();
         MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         MCRecipeManager.recipesToAdd.forEach(recipe -> ev.getRegistry().register(recipe));
+    }
+    
+    @SubscribeEvent
+    public void onFurnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
+        if(!MCFurnaceManager.fuelMap.isEmpty()) {
+            if(!event.getItemStack().isEmpty()){
+                for(Map.Entry<IItemStack, Integer> entry : MCFurnaceManager.fuelMap.entrySet()) {
+                    if(entry.getKey().matches(CraftTweakerMC.getIItemStack(event.getItemStack()))){
+                        event.setBurnTime(entry.getValue());
+                    }
+                }
+            }
+        }
     }
     
     @SubscribeEvent
