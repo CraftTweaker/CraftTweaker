@@ -751,10 +751,11 @@ public class Commands {
 
         CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
             final Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
-            final ArrayList<String> subCommands = new ArrayList<>(1);
+            ArrayList<String> subCommands;
 
             @Override
             protected void init() {
+                subCommands = new ArrayList<>(1);
                 setDescription(
                         getClickableCommandText("\u00A72/ct names", "/ct names", true),
                         getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"),
