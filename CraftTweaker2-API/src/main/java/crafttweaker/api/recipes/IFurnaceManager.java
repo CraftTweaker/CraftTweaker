@@ -17,6 +17,9 @@ public interface IFurnaceManager {
     void remove(IIngredient output, @Optional IIngredient input);
     
     @ZenMethod
+    void removeAll();
+    
+    @ZenMethod
     void addRecipe(IItemStack output, IIngredient input, @Optional double xp);
     
     @ZenMethod
