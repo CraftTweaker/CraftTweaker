@@ -25,7 +25,7 @@ jar {
 minecraft {
     version = forgeVersion1120
     runDir = "CraftTweaker2-MC1120-Main/eclipse"
-    mappings = "snapshot_20170624"
+    mappings = mappings1120
 }
 
 dependencies {
