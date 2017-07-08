@@ -762,6 +762,7 @@ public class Commands {
                         getClickableCommandText(" \u00A7a/ct names desc", "/ct names desc", true),
                         getNormalMessage("  \u00A7bAdds the Display name of the Item to the output")
                 );
+                subCommands  = new ArrayList<>(1);
                 subCommands.add("desc");
             }
 
@@ -786,24 +787,38 @@ public class Commands {
                         NonNullList<ItemStack> list = NonNullList.create();
                         item.getSubItems(CreativeTabs.SEARCH, list);
 
-                        for (ItemStack stack :list) {
+                        if (list.size() > 0){
+                            for (ItemStack stack :list) {
 
+                                String displayName;
+                                try {
+                                    displayName = ", " + stack.getDisplayName();
+                                } catch (Throwable ex) {
+                                    displayName = " -- Name could not be retrieved due to an error: " + ex;
+                                }
+
+                                String withNBT = "";
+                                if (stack.serializeNBT().hasKey("tag")){
+                                    String nbt = NBTConverter.from(stack.serializeNBT().getTag("tag"), false).toString();
+                                    if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
+                                }
+
+                                CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata() ) + ">" + withNBT + (addDesc ? displayName : ""));
+                                totalAmount++;
+                            }
+                        }else {
+                            // gets ItemName when it is not in any creative window
+                            ItemStack stack = new ItemStack(item, 1, 0);
                             String displayName;
                             try {
                                 displayName = ", " + stack.getDisplayName();
                             } catch (Throwable ex) {
                                 displayName = " -- Name could not be retrieved due to an error: " + ex;
                             }
+                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + ">"  + (addDesc ? displayName : ""));
 
-                            String withNBT = "";
-                            if (stack.serializeNBT().hasKey("tag")){
-                                String nbt = NBTConverter.from(stack.serializeNBT().getTag("tag"), false).toString();
-                                if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
-                            }
-
-                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata() ) + ">" + withNBT + (addDesc ? displayName : ""));
-                            totalAmount++;
                         }
+
                     }
                 }
                 CraftTweakerAPI.logCommand("A total of " + items.size() + " unique Items registered by CraftTweaker.");
