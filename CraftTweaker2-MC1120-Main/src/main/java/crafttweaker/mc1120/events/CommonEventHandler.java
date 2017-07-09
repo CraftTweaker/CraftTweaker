@@ -12,12 +12,11 @@ import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.recipebook.RecipeBookCustom;
+import crafttweaker.mc1120.recipebook.RecipeBookCustomClient;
 import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCDimension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
@@ -33,9 +32,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 import static javax.swing.UIManager.get;
@@ -72,85 +69,19 @@ public class CommonEventHandler {
         }
     }
 
-
-    @SubscribeEvent(priority = LOW)
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        /*
-        if (event.getWorld().isRemote){
-            System.out.println("Called in the client");
-            if (Minecraft.getMinecraft().player == null){
-                System.out.println("Player is null");
-            }
-        }
-
-        if(event.getEntity() instanceof EntityPlayer) {
-            MCRecipeManager.recipesToRemove.forEach(recipe -> {
-                IRecipe value = RegistryManager.ACTIVE.getRegistry(IRecipe.class).getValue(recipe);
-                Minecraft minecraft = Minecraft.getMinecraft();
-                EntityPlayerSP player = (EntityPlayerSP) event.getEntity();
-                RecipeBook recipeBook = player.getRecipeBook();
-                recipeBook.removeRecipe(value);
-            });
-        }*/
-    }
-
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiOpenEvent(GuiOpenEvent ev){
 
         if (Minecraft.getMinecraft().player != null && !alreadyChangedThePlayer){
             alreadyChangedThePlayer = true;
-            System.out.println("Player has to be changed");
 
             EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
-            Field recipeBook = FieldUtils.getField(playerSP.getClass(), "recipeBook", true);
-            recipeBook.setAccessible(true);
-            FieldUtils.removeFinalModifier(recipeBook);
+            playerSP.recipeBook = new RecipeBookCustomClient();
 
-
-            try {
-                FieldUtils.writeField(recipeBook, playerSP, new RecipeBookCustom(), true);
-
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    /*
-    @SubscribeEvent
-    public void onEntityConstructing(EntityEvent.EntityConstructing	ev){
-        if (ev.getEntity().getEntityWorld().isRemote && ev.getEntity() instanceof EntityPlayer) {
-            System.out.println("Called in the client");
-            if (Minecraft.getMinecraft().player == null){
-                System.out.println("Player is null");
-            }
+            CraftTweakerAPI.logInfo("Replaced the RecipeBook");
         }
     }
-
-
-    @SubscribeEvent
-    public void onClientConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent ev){
-        System.out.println("This is getting called on the client");
-
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT){
-            System.out.println("This is getting called on the client");
-        }
-
-        MCRecipeManager.recipesToRemove.forEach(recipe -> {
-            IRecipe value = RegistryManager.ACTIVE.getRegistry(IRecipe.class).getValue(recipe);
-
-            if ( Minecraft.getMinecraft().player != null){
-                Minecraft.getMinecraft().player.getRecipeBook().removeRecipe(value);
-            }else {
-                System.out.println("Player is null");
-            }
-
-        });
-
-    }
-*/
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {

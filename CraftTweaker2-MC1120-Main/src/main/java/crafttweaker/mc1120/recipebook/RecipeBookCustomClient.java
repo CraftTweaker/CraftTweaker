@@ -1,14 +1,12 @@
 package crafttweaker.mc1120.recipebook;
 
 import net.minecraft.client.util.RecipeBookClient;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.stats.RecipeBook;
 
 /**
- * Created by jonas on 09.07.2017.
+ * @author BloodWorkXGaming
  */
-public class RecipeBookCustom extends RecipeBookClient {
+public class RecipeBookCustomClient extends RecipeBookClient {
 
     @Override
     public boolean containsRecipe(IRecipe recipe)
