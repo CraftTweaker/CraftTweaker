@@ -20,13 +20,18 @@ import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.*;
 import crafttweaker.runtime.providers.*;
 import crafttweaker.zenscript.GlobalRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.io.File;
 
@@ -108,14 +113,26 @@ public class CraftTweaker {
     public void onFMLInitialization(FMLInitializationEvent ev) {
     }
     
+    @SuppressWarnings("MethodCallSideOnly")
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
+
+        MCRecipeManager.recipesToRemove.forEach(recipe -> {
+                    IRecipe value = RegistryManager.ACTIVE.getRegistry(IRecipe.class).getValue(recipe);
+
+                    RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe);
+                    if (ev.getSide() == Side.CLIENT && Minecraft.getMinecraft().player != null){
+                        Minecraft.getMinecraft().player.getRecipeBook().removeRecipe(value);
+                    }
+
+        });
+        MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
+
     }
     
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
         server = ev.getServer();
-        
     }
     
     @EventHandler
