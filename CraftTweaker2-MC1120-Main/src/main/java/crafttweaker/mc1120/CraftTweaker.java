@@ -112,20 +112,11 @@ public class CraftTweaker {
     @EventHandler
     public void onFMLInitialization(FMLInitializationEvent ev) {
     }
-    
-    @SuppressWarnings("MethodCallSideOnly")
+
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
 
-        MCRecipeManager.recipesToRemove.forEach(recipe -> {
-                    IRecipe value = RegistryManager.ACTIVE.getRegistry(IRecipe.class).getValue(recipe);
-
-                    RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe);
-                    if (ev.getSide() == Side.CLIENT && Minecraft.getMinecraft().player != null){
-                        Minecraft.getMinecraft().player.getRecipeBook().removeRecipe(value);
-                    }
-
-        });
+        MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
 
     }
