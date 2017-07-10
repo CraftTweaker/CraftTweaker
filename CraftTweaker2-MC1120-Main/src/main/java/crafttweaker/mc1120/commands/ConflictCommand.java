@@ -1,9 +1,6 @@
 package crafttweaker.mc1120.commands;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import crafttweaker.CraftTweakerAPI;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -16,7 +13,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
