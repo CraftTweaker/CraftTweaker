@@ -12,26 +12,36 @@ import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.recipebook.RecipeBookCustomClient;
 import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCDimension;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
+import static javax.swing.UIManager.get;
+import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOW;
 import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
 public class CommonEventHandler {
+
+    private static boolean alreadyChangedThePlayer = false;
     
     @SubscribeEvent(priority = LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
@@ -42,8 +52,8 @@ public class CommonEventHandler {
         CraftTweakerAPI.logInfo("CraftTweaker: Sucessfully built item registry");
         MCRecipeManager.recipes = ev.getRegistry().getEntries();
         CrafttweakerImplementationAPI.load();
-        MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
-        MCRecipeManager.recipesToAdd.forEach(recipe -> ev.getRegistry().register(recipe));
+
+
     }
     
     @SubscribeEvent
@@ -58,7 +68,21 @@ public class CommonEventHandler {
             }
         }
     }
-    
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onGuiOpenEvent(GuiOpenEvent ev){
+
+        if (Minecraft.getMinecraft().player != null && !alreadyChangedThePlayer){
+            alreadyChangedThePlayer = true;
+
+            EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
+            playerSP.recipeBook = new RecipeBookCustomClient();
+
+            CraftTweakerAPI.logInfo("Replaced the RecipeBook");
+        }
+    }
+
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {
         CrafttweakerImplementationAPI.events.publishPlayerLoggedIn(new PlayerLoggedInEvent(CraftTweakerMC.getIPlayer(ev.player)));
