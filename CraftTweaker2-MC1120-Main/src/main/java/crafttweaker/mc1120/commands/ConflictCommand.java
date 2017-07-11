@@ -60,7 +60,6 @@ public class ConflictCommand  extends CraftTweakerCommand{
     }
 
 
-
     public void runConflictScan(){
         if (CrTJEIPlugin.JEI_RUNTIME == null){
             CraftTweakerAPI.logWarning("JEI plugin not loaded yet!");
@@ -124,7 +123,6 @@ public class ConflictCommand  extends CraftTweakerCommand{
         return rangeMap;
     }
 
-
     /**
      * Collects all recipes, converts them to the own class and adds them to the List
      */
@@ -176,6 +174,10 @@ public class ConflictCommand  extends CraftTweakerCommand{
         }
     }
 
+    /**
+     * Own class for keeping track of the recipes
+     * Makes it easier to compare
+     */
     public class CraftingRecipeEntry{
         List<List<ItemStack>> inputs;
         ItemStack output;
@@ -184,8 +186,9 @@ public class ConflictCommand  extends CraftTweakerCommand{
         String recipeName;
         int recipeSize;
 
-
-        // Shaped recipes
+        /**
+         * Shaped recipes
+         */
         CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int width, int height, String recipeName){
             this.inputs = inputs;
             this.output = output;
@@ -196,7 +199,9 @@ public class ConflictCommand  extends CraftTweakerCommand{
             this.shapedRecipe = true;
         }
 
-        // Shapeless recipes
+        /**
+         * Shapeless recipes
+         */
         CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int recipeSize, String recipeName){
             this.inputs = inputs;
             this.output = output;
@@ -234,9 +239,8 @@ public class ConflictCommand  extends CraftTweakerCommand{
 
                 if (this.checkConflict(otherEntry)){
                     // checks whether it is already in the list
-                    // System.out.println("checking "  + output.toString() + " and "+ otherEntry.output.toString());
                     if (!(entryList.contains(new AbstractMap.SimpleEntry<>(this, otherEntry))
-                            || entryList.contains(new AbstractMap.SimpleEntry<>(otherEntry, this)))){
+                            || entryList.contains(new AbstractMap.SimpleEntry<>(otherEntry, this)))) {
                         entryList.add(new AbstractMap.SimpleEntry<>(this, otherEntry));
                     }
                 }
@@ -293,7 +297,6 @@ public class ConflictCommand  extends CraftTweakerCommand{
                     }
                     //endregion
 
-
                     // has one item which is the same
                     boolean hasOneConflict = false;
                     for (ItemStack stack :inputThis) {
@@ -302,25 +305,19 @@ public class ConflictCommand  extends CraftTweakerCommand{
 
                             if (compareItemStack(stack, otherStack)){
                                 hasOneConflict = true;
-                                // System.out.println(stack.toString() + " conflicts with " + otherStack.toString()+ ";");
                             }
                         }
                     }
 
-                    // says it has a conflict
+                    // Counts as overlap when it has at least one conflict
                     if (hasOneConflict) {
-                        // System.out.println(this.toString() + " has a Conflict with " + other.toString());
                         overlapping++;
                     }
 
                 }
 
                 // check whether all items are overlapping
-                // CraftTweakerAPI.logInfo(this.toString() + " has a Conflict with " + other.toString() + " with " + overlapping);
-
                 if (overlapping == recipeSize){
-                    // System.out.println("overlapping = " + overlapping);
-                    // System.out.println(this.output.toString() + " has a Conflict with " + other.output.toString());
                     return !compareItemStack(this.output, other.output);
                 }
             }
@@ -328,7 +325,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
         }
 
         /**
-         * Comapres the two itemstacks stacks and even checks for nbt
+         * Compares the two {@link ItemStack} and checks for nbt
          */
         boolean compareItemStack(ItemStack stack1, ItemStack stack2){
             boolean itemsAreSame = stack1.getItem() == stack2.getItem() && stack1.getMetadata() == stack2.getMetadata();
@@ -355,8 +352,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
     }
 
     /**
-     * Sorter for sorting the recipes according to size of the recipe
-     * Sortetness of the list is not really used yet
+     * Comparator for sorting the recipes according to size of the recipe
      */
     private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry> {
 
