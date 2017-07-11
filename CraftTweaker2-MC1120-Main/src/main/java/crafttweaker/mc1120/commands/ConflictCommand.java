@@ -67,6 +67,9 @@ public class ConflictCommand  extends CraftTweakerCommand{
             CraftTweakerAPI.logWarning("This command can only be used on a client and with JEI installed");
             return;
         }
+        // cleansup before
+        craftingRecipeEntries.clear();
+        if (rangeMap != null) rangeMap.clear();
 
         // prepares data needed for conflict scan
         gatherRecipes();
@@ -174,16 +177,16 @@ public class ConflictCommand  extends CraftTweakerCommand{
     }
 
     public class CraftingRecipeEntry{
-        public List<List<ItemStack>> inputs;
-        public ItemStack output;
-        public int width, height;
-        public boolean shapedRecipe;
-        public String recipeName;
-        public int recipeSize;
+        List<List<ItemStack>> inputs;
+        ItemStack output;
+        int width, height;
+        boolean shapedRecipe;
+        String recipeName;
+        int recipeSize;
 
 
         // Shaped recipes
-        public CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int width, int height, String recipeName){
+        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int width, int height, String recipeName){
             this.inputs = inputs;
             this.output = output;
             this.width = width;
@@ -194,7 +197,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
         }
 
         // Shapeless recipes
-        public CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int recipeSize, String recipeName){
+        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int recipeSize, String recipeName){
             this.inputs = inputs;
             this.output = output;
             this.recipeName = recipeName;
@@ -219,12 +222,13 @@ public class ConflictCommand  extends CraftTweakerCommand{
             return sb.toString();
         }
 
-        public void checkAllConflicting(List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> entryList){
+        void checkAllConflicting(List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> entryList){
 
             // gets the range where it has to search
             Range<Integer> range = rangeMap.get(this.recipeSize);
             for(int index : ContiguousSet.create(range, DiscreteDomain.integers())) {
                 CraftingRecipeEntry otherEntry = craftingRecipeEntries.get(index);
+
                 // skips comparison with self
                 if (otherEntry == this) continue;
 
@@ -239,7 +243,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
             }
         }
 
-        public boolean checkConflict(CraftingRecipeEntry other){
+        boolean checkConflict(CraftingRecipeEntry other){
 
             if (shapedRecipe && other.shapedRecipe){
                 if(width != other.width || height != other.height) return false;
@@ -326,7 +330,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
         /**
          * Comapres the two itemstacks stacks and even checks for nbt
          */
-        public boolean compareItemStack(ItemStack stack1, ItemStack stack2){
+        boolean compareItemStack(ItemStack stack1, ItemStack stack2){
             boolean itemsAreSame = stack1.getItem() == stack2.getItem() && stack1.getMetadata() == stack2.getMetadata();
             if (!itemsAreSame) return false;
 
@@ -361,17 +365,4 @@ public class ConflictCommand  extends CraftTweakerCommand{
             return o1.recipeSize > o2.recipeSize ? +1 : o1.recipeSize < o2.recipeSize ? -1 : 0;
         }
     }
-
-    public static class ConflictingSet{
-        public CraftingRecipeEntry entry1;
-        public CraftingRecipeEntry entry2;
-
-
-        public ConflictingSet(){
-
-        }
-
-
-    }
-
 }
