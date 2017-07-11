@@ -1,6 +1,11 @@
 package crafttweaker.mc1120.commands;
 
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
+import com.google.common.collect.Range;
 import crafttweaker.CraftTweakerAPI;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -23,6 +28,7 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 public class ConflictCommand  extends CraftTweakerCommand{
 
     private List<CraftingRecipeEntry> craftingRecipeEntries = new ArrayList<>();
+    private TIntObjectMap<Range<Integer>> rangeMap;
 
     public ConflictCommand() {
         super("conflict");
@@ -62,14 +68,21 @@ public class ConflictCommand  extends CraftTweakerCommand{
             return;
         }
 
+        // prepares data needed for conflict scan
         gatherRecipes();
-
         craftingRecipeEntries.sort(new CraftRecipeEntryComparator());
+        rangeMap = getRangeForSize();
 
+        rangeMap.forEachEntry((k, v) -> {
+            System.out.println(k + ": " + v);
+            return true;
+        });
+
+        // scans for conflicts
         List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> conflictingRecipes = new ArrayList<>();
-
         craftingRecipeEntries.forEach(it -> it.checkAllConflicting(conflictingRecipes));
 
+        // prints conflicts
         CraftTweakerAPI.logInfo("Conflicting: " + conflictingRecipes.size());
         conflictingRecipes.forEach(it -> {
             String name1 = "<" + it.getKey().output.getItem().getRegistryName().toString() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
@@ -77,6 +90,35 @@ public class ConflictCommand  extends CraftTweakerCommand{
 
             CraftTweakerAPI.logInfo(name1 + " conflicts with " + name2);
         });
+    }
+
+    /**
+     * Collects all the ranges for the recipe Size so it doesn't have to check every Recipe
+     * Has to be sorted beforehand
+     */
+    private TIntObjectMap<Range<Integer>> getRangeForSize(){
+        TIntObjectMap<Range<Integer>> rangeMap = new TIntObjectHashMap<>();
+
+        int recipeSize = 0;
+        int recipeCount = 0;
+        for (int i = 0; i < craftingRecipeEntries.size(); i++) {
+            CraftingRecipeEntry current = craftingRecipeEntries.get(i);
+
+
+            if (recipeSize == current.recipeSize){
+                recipeCount++;
+            }
+
+            if (current.recipeSize > recipeSize){
+                rangeMap.put(recipeSize, Range.closedOpen(i - recipeCount, i));
+                recipeSize = current.recipeSize;
+                recipeCount = 1;
+            }
+
+        }
+
+        rangeMap.put(recipeSize, Range.closedOpen(craftingRecipeEntries.size() - recipeCount, craftingRecipeEntries.size()));
+        return rangeMap;
     }
 
 
@@ -178,15 +220,20 @@ public class ConflictCommand  extends CraftTweakerCommand{
         }
 
         public void checkAllConflicting(List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> entryList){
-            for (CraftingRecipeEntry oneEntry :craftingRecipeEntries) {
-                if (oneEntry == this) continue;
 
-                if (this.checkConflict(oneEntry)){
+            // gets the range where it has to search
+            Range<Integer> range = rangeMap.get(this.recipeSize);
+            for(int index : ContiguousSet.create(range, DiscreteDomain.integers())) {
+                CraftingRecipeEntry otherEntry = craftingRecipeEntries.get(index);
+                // skips comparison with self
+                if (otherEntry == this) continue;
 
-                    if (entryList.contains(new AbstractMap.SimpleEntry<>(this, oneEntry)) || entryList.contains(new AbstractMap.SimpleEntry<>(oneEntry, this))){
-                        //already in the list
-                    }else {
-                        entryList.add(new AbstractMap.SimpleEntry<>(this, oneEntry));
+                if (this.checkConflict(otherEntry)){
+                    // checks whether it is already in the list
+                    // System.out.println("checking "  + output.toString() + " and "+ otherEntry.output.toString());
+                    if (!(entryList.contains(new AbstractMap.SimpleEntry<>(this, otherEntry))
+                            || entryList.contains(new AbstractMap.SimpleEntry<>(otherEntry, this)))){
+                        entryList.add(new AbstractMap.SimpleEntry<>(this, otherEntry));
                     }
                 }
             }
@@ -198,7 +245,11 @@ public class ConflictCommand  extends CraftTweakerCommand{
                 if(width != other.width || height != other.height) return false;
 
                 int overlapping = 0;
+                // loops over all slots in the crafting table
                 for (int i = 0; i < recipeSize; i++) {
+                    // when it has one non conflict it is done for the recipe
+                    if (overlapping != i) break;
+
                     List<ItemStack> inputThis = inputs.get(i);
                     List<ItemStack> inputOther = other.inputs.get(i);
 
@@ -251,6 +302,8 @@ public class ConflictCommand  extends CraftTweakerCommand{
                             }
                         }
                     }
+
+                    // says it has a conflict
                     if (hasOneConflict) {
                         // System.out.println(this.toString() + " has a Conflict with " + other.toString());
                         overlapping++;
