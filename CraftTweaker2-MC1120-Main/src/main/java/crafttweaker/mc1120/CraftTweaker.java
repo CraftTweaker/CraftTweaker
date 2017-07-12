@@ -58,12 +58,11 @@ public class CraftTweaker {
     static {
         int ID = 0;
         NETWORK.registerMessage(MessageOpenBrowser.class, MessageOpenBrowser.class, ID++, Side.CLIENT);
-        NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, ID++, Side.CLIENT);
+        NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, ID, Side.CLIENT);
     }
     
     public MCRecipeManager recipes;
     private IScriptProvider scriptsGlobal;
-    
     
     
     @EventHandler
@@ -112,22 +111,13 @@ public class CraftTweaker {
     @EventHandler
     public void onFMLInitialization(FMLInitializationEvent ev) {
     }
-    
-    @SuppressWarnings("MethodCallSideOnly")
+
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
 
-        MCRecipeManager.recipesToRemove.forEach(recipe -> {
-                    IRecipe value = RegistryManager.ACTIVE.getRegistry(IRecipe.class).getValue(recipe);
-
-                    RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe);
-                    if (ev.getSide() == Side.CLIENT && Minecraft.getMinecraft().player != null){
-                        Minecraft.getMinecraft().player.getRecipeBook().removeRecipe(value);
-                    }
-
-        });
+        MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
-
+        
     }
     
     @EventHandler
@@ -144,7 +134,7 @@ public class CraftTweaker {
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
         CrafttweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
-
+        
         // registering the CraftTweaker command
         CTChatCommand.register(ev);
     }

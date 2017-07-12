@@ -16,6 +16,8 @@ import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
+import mezz.jei.api.JEIPlugin;
+import mezz.jei.plugins.jei.JEIInternalPlugin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
@@ -730,6 +732,8 @@ public class Commands {
                 if (args.length > 0 && args[0].equals("debug")){
                     CraftTweakerAPI.tweaker.enableDebug();
                 }
+
+                sender.sendMessage(getNormalMessage("\u00A7bBeginning load of the scripts"));
                 boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(false);
 
                 if (loadSuccessful){
@@ -835,6 +839,9 @@ public class Commands {
 
 
         });
+
+        CTChatCommand.registerCommand(new ConflictCommand());
+
 
     }
 
