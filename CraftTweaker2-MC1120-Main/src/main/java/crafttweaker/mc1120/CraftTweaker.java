@@ -58,12 +58,11 @@ public class CraftTweaker {
     static {
         int ID = 0;
         NETWORK.registerMessage(MessageOpenBrowser.class, MessageOpenBrowser.class, ID++, Side.CLIENT);
-        NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, ID++, Side.CLIENT);
+        NETWORK.registerMessage(MessageCopyClipboard.class, MessageCopyClipboard.class, ID, Side.CLIENT);
     }
     
     public MCRecipeManager recipes;
     private IScriptProvider scriptsGlobal;
-    
     
     
     @EventHandler
@@ -118,7 +117,7 @@ public class CraftTweaker {
 
         MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
-
+        
     }
     
     @EventHandler
@@ -135,7 +134,7 @@ public class CraftTweaker {
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
         CrafttweakerImplementationAPI.onServerStart(new MCServer(ev.getServer()));
-
+        
         // registering the CraftTweaker command
         CTChatCommand.register(ev);
     }
