@@ -249,10 +249,9 @@ public class ConflictCommand  extends CraftTweakerCommand{
 
         boolean checkConflict(CraftingRecipeEntry other){
 
-            if (shapedRecipe && other.shapedRecipe){
-                if(width != other.width || height != other.height) return false;
+            int overlapping = 0;
+            if ((shapedRecipe && other.shapedRecipe && width == other.width && height == other.height)){
 
-                int overlapping = 0;
                 // loops over all slots in the crafting table
                 for (int i = 0; i < recipeSize; i++) {
                     // when it has one non conflict it is done for the recipe
@@ -315,12 +314,22 @@ public class ConflictCommand  extends CraftTweakerCommand{
                     }
 
                 }
+            }
 
-                // check whether all items are overlapping
-                if (overlapping == recipeSize){
-                    return !compareItemStack(this.output, other.output);
+            // shapeless <-> shapeless comparisons
+            if (!shapedRecipe && !other.shapedRecipe){
+                for (List<ItemStack> input : inputs) {
+
+
                 }
             }
+
+
+            // check whether all items are overlapping
+            if (overlapping == recipeSize){
+                return !compareItemStack(this.output, other.output);
+            }
+
             return false;
         }
 
