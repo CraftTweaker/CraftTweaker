@@ -50,7 +50,7 @@ public class BracketHandlerLiquid implements IBracketHandler {
     @Override
     public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
         if(tokens.size() > 2) {
-            if(tokens.get(0).getValue().equals("liquid") && tokens.get(1).getValue().equals(":")) {
+            if((tokens.get(0).getValue().equals("liquid") || tokens.get(0).getValue().equals("fluid")) && tokens.get(1).getValue().equals(":")) {
                 return find(environment, tokens, 2, tokens.size());
             }
         }
