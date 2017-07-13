@@ -50,7 +50,6 @@ public class CommonEventHandler {
         BracketHandlerLiquid.rebuildLiquidRegistry();
         BracketHandlerEntity.rebuildEntityRegistry();
         CraftTweakerAPI.logInfo("CraftTweaker: Sucessfully built item registry");
-        MCRecipeManager.recipes = ev.getRegistry().getEntries();
         CrafttweakerImplementationAPI.load();
 
 

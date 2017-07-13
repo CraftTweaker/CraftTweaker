@@ -115,6 +115,8 @@ public class CraftTweaker {
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
 
+        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+
         MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
         MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
         
