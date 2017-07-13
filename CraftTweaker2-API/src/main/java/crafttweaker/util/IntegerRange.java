@@ -1,5 +1,7 @@
 package crafttweaker.util;
 
+import stanhebben.zenscript.value.IntRange;
+
 import java.util.Random;
 
 public class IntegerRange {
@@ -11,6 +13,12 @@ public class IntegerRange {
     public IntegerRange(int min, int max) {
         this.min = Math.min(min, max);
         this.max = Math.max(min, max);
+        rand = new Random(2906);
+    }
+    
+    public IntegerRange(IntRange range) {
+        this.min = Math.min(range.getFrom(), range.getTo());
+        this.max = Math.max(range.getFrom(), range.getTo());
         rand = new Random(2906);
     }
     
