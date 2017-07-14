@@ -17,6 +17,7 @@ import mezz.jei.plugins.vanilla.crafting.TippedArrowRecipeWrapper;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.*;
 
@@ -46,59 +47,58 @@ public class ConflictCommand  extends CraftTweakerCommand{
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
 
-        if (CrTJEIPlugin.JEI_RUNTIME == null){
+        if (CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")){
             sender.sendMessage(getNormalMessage("\u00A74This command can only be executed on the Client and with JEI installed"));
             CraftTweakerAPI.logWarning("JEI plugin not loaded!");
-            return;
+        }else {
+
+            sender.sendMessage(getNormalMessage("\u00A76Running Conflict scan. This might take a while"));
+
+            runConflictScan();
+
+            sender.sendMessage(getLinkToCraftTweakerLog("Conflicting Recipe list generated", sender));
         }
-
-        sender.sendMessage(getNormalMessage("\u00A76Running Conflict scan. This might take a while"));
-
-        runConflictScan();
-
-        sender.sendMessage(getLinkToCraftTweakerLog("Conflicting Recipe list generated", sender));
     }
 
 
-    public void runConflictScan(){
-        if (CrTJEIPlugin.JEI_RUNTIME == null){
+    private void runConflictScan(){
+        if (CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")){
             CraftTweakerAPI.logWarning("JEI plugin not loaded yet!");
             CraftTweakerAPI.logWarning("This command can only be used on a client and with JEI installed");
-            return;
+        }else {
+            // cleans up before running the command
+            craftingRecipeEntries.clear();
+            if (rangeMap != null) rangeMap.clear();
+
+            // prepares data needed for conflict scan
+            gatherRecipes();
+            craftingRecipeEntries.sort(new CraftRecipeEntryComparator());
+            rangeMap = getRangeForSize();
+
+            rangeMap.forEachEntry((k, v) -> {
+                System.out.println(k + ": " + v);
+                return true;
+            });
+
+            // scans for conflicts
+            List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> conflictingRecipes = new ArrayList<>();
+            craftingRecipeEntries.forEach(it -> it.checkAllConflicting(conflictingRecipes));
+
+            // prints conflicts
+            CraftTweakerAPI.logInfo("Conflicting: " + conflictingRecipes.size());
+            conflictingRecipes.forEach(it -> {
+                String shape1 = it.getKey().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
+                String shape2 = it.getValue().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
+
+                String name1 = "<" + it.getKey().output.getItem().getRegistryName().toString() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
+                String name2 = "<" + it.getValue().output.getItem().getRegistryName().toString() + ":" + it.getValue().output.getMetadata() + "> * " + it.getValue().output.getCount();
+
+                String name1dp = "(" + it.getKey().output.getDisplayName() + ") ";
+                String name2dp = "(" + it.getValue().output.getDisplayName() + ") ";
+
+                CraftTweakerAPI.logInfo(shape1 + name1dp + name1 + " conflicts with " + shape2 + name2dp + name2);
+            });
         }
-
-        // cleans up before running the command
-        craftingRecipeEntries.clear();
-        if (rangeMap != null) rangeMap.clear();
-
-        // prepares data needed for conflict scan
-        gatherRecipes();
-        craftingRecipeEntries.sort(new CraftRecipeEntryComparator());
-        rangeMap = getRangeForSize();
-
-        rangeMap.forEachEntry((k, v) -> {
-            System.out.println(k + ": " + v);
-            return true;
-        });
-
-        // scans for conflicts
-        List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> conflictingRecipes = new ArrayList<>();
-        craftingRecipeEntries.forEach(it -> it.checkAllConflicting(conflictingRecipes));
-
-        // prints conflicts
-        CraftTweakerAPI.logInfo("Conflicting: " + conflictingRecipes.size());
-        conflictingRecipes.forEach(it -> {
-            String shape1 = it.getKey().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
-            String shape2 = it.getValue().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
-
-            String name1 = "<" + it.getKey().output.getItem().getRegistryName().toString() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
-            String name2 = "<" + it.getValue().output.getItem().getRegistryName().toString() + ":" + it.getValue().output.getMetadata() + "> * " + it.getValue().output.getCount();
-
-            String name1dp = "(" + it.getKey().output.getDisplayName() + ") ";
-            String name2dp = "(" + it.getValue().output.getDisplayName() + ") ";
-
-            CraftTweakerAPI.logInfo(shape1 + name1dp + name1 + " conflicts with " + shape2 + name2dp + name2);
-        });
     }
 
     /**
@@ -163,7 +163,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
                         if (wrapper instanceof IShapedCraftingRecipeWrapper){
                             craftingRecipeEntries.add(new CraftingRecipeEntry(inputs, output, ((IShapedCraftingRecipeWrapper) wrapper).getWidth(), ((IShapedCraftingRecipeWrapper) wrapper).getHeight(), "noname"));
                         }else {
-                            craftingRecipeEntries.add(new CraftingRecipeEntry(inputs, output, inputs.size(), "noname"));
+                            craftingRecipeEntries.add(new CraftingRecipeEntry(inputs, output, "noname"));
                         }
                     }
                 }
@@ -202,18 +202,18 @@ public class ConflictCommand  extends CraftTweakerCommand{
             this.width = width;
             this.height = height;
             this.recipeName = recipeName;
-            this.recipeSize = height * width;
+            this.recipeSize = inputs.size();
             this.shapedRecipe = true;
         }
 
         /**
          * Shapeless recipes
          */
-        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int recipeSize, String recipeName){
+        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, String recipeName){
             this.inputs = inputs;
             this.output = output;
             this.recipeName = recipeName;
-            this.recipeSize = recipeSize;
+            this.recipeSize = inputs.size();
             this.shapedRecipe = false;
         }
 
