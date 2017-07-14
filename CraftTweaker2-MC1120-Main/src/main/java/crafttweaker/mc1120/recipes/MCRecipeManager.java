@@ -1,26 +1,24 @@
 package crafttweaker.mc1120.recipes;
 
-import crafttweaker.*;
-import crafttweaker.api.item.*;
+import crafttweaker.IAction;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.*;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
 import stanhebben.zenscript.annotations.Optional;
@@ -419,18 +417,9 @@ public class MCRecipeManager implements IRecipeManager {
      */
     public static abstract class ActionBaseAddRecipe implements IAction{
 
-        @SuppressWarnings({"MethodCallSideOnly", "LocalVariableDeclarationSideOnly"})
         public void registerRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe){
             recipe.setRegistryName(new ResourceLocation("crafttweaker", calculateHashBasedName()));
             ForgeRegistries.RECIPES.register(recipe);
-
-            // Registers recipes back into the Recipe book because we are adding them too late
-            if (FMLCommonHandler.instance().getSide() == Side.CLIENT){
-                EntityPlayerSP player = Minecraft.getMinecraft().player;
-                if (player != null){
-                    player.getRecipeBook().addDisplayedRecipe(recipe);
-                }
-            }
 
             if(craftingRecipe.hasTransformers()) {
                 transformerRecipes.add(craftingRecipe);
