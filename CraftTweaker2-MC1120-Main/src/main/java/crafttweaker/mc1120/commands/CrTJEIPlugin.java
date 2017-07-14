@@ -1,8 +1,8 @@
 package crafttweaker.mc1120.commands;
 
-import mezz.jei.api.*;
-import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
-import mezz.jei.runtime.JeiRuntime;
+import mezz.jei.api.IJeiRuntime;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JEIPlugin;
 
 /**
  * @author BloodWorkXGaming

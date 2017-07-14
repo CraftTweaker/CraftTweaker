@@ -36,16 +36,17 @@ public abstract class CraftTweakerCommand {
         return description == null ? NO_DESCRIPTION : description;
     }
 
-    public void setDescription(ITextComponent... descriptionIn){
+    public void setDescription(ITextComponent... descriptionIn) {
         this.description = descriptionIn;
     }
 
     /**
      * Has to be overwritten by the Commands when they need subcommands below the first one
+     *
      * @param args: Args are only from past the initial command
      * @return Returns an empty List by default
      */
-    public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos){
+    public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         return EMPTY_LIST;
     }
 
@@ -56,6 +57,7 @@ public abstract class CraftTweakerCommand {
 
     /**
      * Has to be overwritten by the commands
+     *
      * @param args: Has only the args after this original event
      */
     public abstract void executeCommand(MinecraftServer server, ICommandSender sender, String[] args);

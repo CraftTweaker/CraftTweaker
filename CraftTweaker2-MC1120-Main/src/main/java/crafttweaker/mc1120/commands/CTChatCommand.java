@@ -18,20 +18,34 @@ import java.util.*;
 /**
  * @author BloodWorkXGaming
  */
-public class CTChatCommand extends CommandBase{
-
-    public static Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
+public class CTChatCommand extends CommandBase {
 
     public static final String CRAFTTWEAKER_LOG_PATH = new File("crafttweaker.log").getAbsolutePath();
-
     public static final List<String> aliases = new ArrayList<>();
+    public static Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
+
     static {
         aliases.add("ct");
     }
 
-    public static void register(FMLServerStartingEvent ev){
+    public static void register(FMLServerStartingEvent ev) {
         Commands.registerCommands();
         ev.registerServerCommand(new CTChatCommand());
+    }
+
+    public static void sendUsage(ICommandSender sender) {
+        sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
+
+        for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
+            for (ITextComponent s : entry.getValue().getDescription()) {
+                sender.sendMessage(s);
+            }
+            sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
+        }
+    }
+
+    public static void registerCommand(CraftTweakerCommand command) {
+        craftTweakerCommands.put(command.getSubCommandName(), command);
     }
 
     @Override
@@ -57,35 +71,22 @@ public class CTChatCommand extends CommandBase{
         return sb.toString();
     }
 
-    public static void sendUsage(ICommandSender sender) {
-        sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
-
-        for (Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
-            for (ITextComponent s : entry.getValue().getDescription()) {
-                sender.sendMessage(s);
-            }
-            sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
-        }
-    }
-
-
-
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length <= 0){
+        if (args.length <= 0) {
             sender.sendMessage(new TextComponentString(getUsage(sender)));
             return;
         }
 
-        if (craftTweakerCommands.containsKey(args[0])){
-            if (sender.getCommandSenderEntity() instanceof EntityPlayer){
+        if (craftTweakerCommands.containsKey(args[0])) {
+            if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                 craftTweakerCommands.get(args[0]).executeCommand(
                         server, sender, ArrayUtils.subarray(args, 1, args.length));
-            }else {
+            } else {
                 craftTweakerCommands.get(args[0]).executeCommand(
                         server, sender, ArrayUtils.subarray(args, 1, args.length));
             }
-        }else {
+        } else {
             sender.sendMessage(SpecialMessagesChat.getClickableCommandText("\u00A7cNo such command! \u00A76[Click to show help]", "/ct help", true));
         }
     }
@@ -100,14 +101,14 @@ public class CTChatCommand extends CommandBase{
         Set<String> keys = craftTweakerCommands.keySet();
         List<String> currentPossibleCommands = new ArrayList<>();
 
-        if (args.length <= 0){
+        if (args.length <= 0) {
             return new ArrayList<>(keys);
         }
 
         // First sub-command
-        if (args.length == 1){
-            for (String cmd: keys) {
-                if (cmd.startsWith(args[0])){
+        if (args.length == 1) {
+            for (String cmd : keys) {
+                if (cmd.startsWith(args[0])) {
                     currentPossibleCommands.add(cmd);
                 }
             }
@@ -116,9 +117,9 @@ public class CTChatCommand extends CommandBase{
 
         // gives subcommands of the subcommand
         // each has to implement on it's own for special requirements
-        if (args.length >= 2){
+        if (args.length >= 2) {
             CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
-            if (subCommand != null){
+            if (subCommand != null) {
                 System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
                 return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
 
@@ -132,9 +133,5 @@ public class CTChatCommand extends CommandBase{
     @Override
     public int getRequiredPermissionLevel() {
         return 4;
-    }
-
-    public static void registerCommand(CraftTweakerCommand command){
-        craftTweakerCommands.put(command.getSubCommandName(), command);
     }
 }

@@ -1,37 +1,42 @@
 package crafttweaker.mc1120;
 
-import crafttweaker.mc1120.commands.CTChatCommand;
-import crafttweaker.*;
-import crafttweaker.annotations.*;
-import crafttweaker.mc1120.brackets.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.CrafttweakerImplementationAPI;
+import crafttweaker.annotations.ModOnly;
+import crafttweaker.annotations.ZenRegister;
+import crafttweaker.mc1120.brackets.BracketHandlerEntity;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
+import crafttweaker.mc1120.brackets.BracketHandlerLiquid;
+import crafttweaker.mc1120.brackets.BracketHandlerOre;
 import crafttweaker.mc1120.client.MCClient;
+import crafttweaker.mc1120.commands.CTChatCommand;
 import crafttweaker.mc1120.formatting.MCFormatter;
-import crafttweaker.mc1120.furnace.*;
+import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.game.MCGame;
 import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
-import crafttweaker.mc1120.network.*;
+import crafttweaker.mc1120.network.MessageCopyClipboard;
+import crafttweaker.mc1120.network.MessageOpenBrowser;
 import crafttweaker.mc1120.oredict.MCOreDict;
 import crafttweaker.mc1120.proxies.CommonProxy;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
-import crafttweaker.runtime.*;
-import crafttweaker.runtime.providers.*;
+import crafttweaker.runtime.IScriptProvider;
+import crafttweaker.runtime.providers.ScriptProviderCascade;
+import crafttweaker.runtime.providers.ScriptProviderDirectory;
 import crafttweaker.zenscript.GlobalRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.registries.GameData;
-import net.minecraftforge.registries.RegistryManager;
 
 import java.io.File;
 
@@ -115,9 +120,10 @@ public class CraftTweaker {
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
 
-        MCRecipeManager.recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
-        MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
-        
+        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+
+        MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
+        MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
     }
     
     @EventHandler

@@ -26,8 +26,8 @@ public class BloodUtils {
     }
 
 
-    public static RayTraceResult getPlayerLookat(EntityPlayer player, double range){
+    public static RayTraceResult getPlayerLookat(EntityPlayer player, double range) {
         Vec3d eyes = player.getPositionEyes(1.0F);
-        return player.getEntityWorld().rayTraceBlocks(eyes, eyes.add( player.getLookVec().scale(range)));
+        return player.getEntityWorld().rayTraceBlocks(eyes, eyes.add(player.getLookVec().scale(range)));
     }
 }

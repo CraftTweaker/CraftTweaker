@@ -1,7 +1,10 @@
 package crafttweaker.mc1120.commands;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
@@ -15,7 +18,7 @@ public class SpecialMessagesChat {
 
     public static final ITextComponent EMPTY_TEXTMESSAGE = new TextComponentString("");
 
-    public static ITextComponent getClickableCommandText(String message, String command, boolean runDirectly){
+    public static ITextComponent getClickableCommandText(String message, String command, boolean runDirectly) {
 
         Style style = new Style();
         ClickEvent click = new ClickEvent(runDirectly ? ClickEvent.Action.RUN_COMMAND : ClickEvent.Action.SUGGEST_COMMAND, command);
@@ -27,7 +30,7 @@ public class SpecialMessagesChat {
         return new TextComponentString(message).setStyle(style);
     }
 
-    public static ITextComponent getClickableBrowserLinkText(String message, String url){
+    public static ITextComponent getClickableBrowserLinkText(String message, String url) {
 
         Style style = new Style();
         ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
@@ -41,7 +44,7 @@ public class SpecialMessagesChat {
         return new TextComponentString(message).setStyle(style);
     }
 
-    public static ITextComponent getFileOpenText(String message, String filepath){
+    public static ITextComponent getFileOpenText(String message, String filepath) {
 
         Style style = new Style();
         ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_FILE, filepath);
@@ -53,19 +56,19 @@ public class SpecialMessagesChat {
         return new TextComponentString(message).setStyle(style);
     }
 
-    public static ITextComponent getNormalMessage(String message){
+    public static ITextComponent getNormalMessage(String message) {
         return new TextComponentString(message);
     }
 
-    public static ITextComponent getLinkToCraftTweakerLog(String message, ICommandSender sender){
-        if (sender.getEntityWorld().isRemote){
+    public static ITextComponent getLinkToCraftTweakerLog(String message, ICommandSender sender) {
+        if (sender.getEntityWorld().isRemote) {
             return getNormalMessage(message + "\nSee \u00A7acrafttweaker.log \u00A7rin your minecraft dir");
-        }else {
+        } else {
             return getFileOpenText(message + "\nSee \u00A7acrafttweaker.log \u00A7r[\u00A76Click here to open\u00A7r]", CTChatCommand.CRAFTTWEAKER_LOG_PATH);
         }
     }
 
-    public static ITextComponent getCopyMessage(String message, String copyMessage){
+    public static ITextComponent getCopyMessage(String message, String copyMessage) {
         Style style = new Style();
         ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, copyCommandBase + copyMessage);
         style.setClickEvent(click);

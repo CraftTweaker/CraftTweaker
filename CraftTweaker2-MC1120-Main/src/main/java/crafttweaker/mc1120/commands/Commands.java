@@ -16,8 +16,6 @@ import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
-import mezz.jei.api.JEIPlugin;
-import mezz.jei.plugins.jei.JEIInternalPlugin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,6 +29,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -58,7 +57,7 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("\u00A72/ct help","/ct help", true),
+                        getClickableCommandText("\u00A72/ct help", "/ct help", true),
                         getNormalMessage(" \u00A73Prints out the this help page"));
             }
         });
@@ -220,10 +219,10 @@ public class Commands {
                 String[] subCommands = new String[]{"hand", "furnace"};
                 ArrayList<String> currentPossibleCommands = new ArrayList<>();
 
-                for (String cmd: subCommands) {
+                for (String cmd : subCommands) {
                     System.out.println("Trying " + cmd);
 
-                    if (cmd.startsWith(args[0])){
+                    if (cmd.startsWith(args[0])) {
                         currentPossibleCommands.add(cmd);
                     }
                 }
@@ -264,7 +263,7 @@ public class Commands {
             @Override
             protected void init() {
                 setDescription(
-                        getClickableCommandText("\u00A72/ct hand","/ct hand" , true),
+                        getClickableCommandText("\u00A72/ct hand", "/ct hand", true),
                         getNormalMessage(" \u00A73Outputs the name of the item in your hand"),
                         getNormalMessage(" \u00A73Also copies the name to clipboard and prints"),
                         getNormalMessage(" \u00A73OreDict entries"));
@@ -273,22 +272,21 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
 
-                if (sender.getCommandSenderEntity() instanceof EntityPlayer){
+                if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     // Gets player and held item
-                    EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
+                    EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
                     ItemStack heldItem = player.getHeldItemMainhand();
 
 
-
                     // Tries to get name of held item first
-                    if (!heldItem.isEmpty()){
+                    if (!heldItem.isEmpty()) {
                         List<String> oreDictNames = BloodUtils.getOreDictOfItem(heldItem);
 
                         int meta = heldItem.getMetadata();
-                        String itemName = "<" + heldItem.getItem().getRegistryName() + (meta == 0 ? "": ":" + meta) + ">";
+                        String itemName = "<" + heldItem.getItem().getRegistryName() + (meta == 0 ? "" : ":" + meta) + ">";
 
                         String withNBT = "";
-                        if (heldItem.serializeNBT().hasKey("tag")){
+                        if (heldItem.serializeNBT().hasKey("tag")) {
                             String nbt = NBTConverter.from(heldItem.serializeNBT().getTag("tag"), false).toString();
                             if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
                         }
@@ -297,48 +295,48 @@ public class Commands {
                         ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName, itemName + withNBT);
 
                         // adds the oredict names if it has some
-                        if (oreDictNames.size() > 0){
+                        if (oreDictNames.size() > 0) {
                             sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
                             for (String oreName : oreDictNames) {
                                 ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e- \u00A7b" + oreName, "<ore:" + oreName + ">");
                             }
-                        }else {
+                        } else {
                             sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
                         }
 
 
-                    }else {
+                    } else {
                         // if hand is empty, tries to get oreDict of block
                         RayTraceResult rayTraceResult = BloodUtils.getPlayerLookat(player, 100);
 
-                        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK){
+                        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK) {
                             BlockPos blockPos = rayTraceResult.getBlockPos();
                             IBlockState block = server.getEntityWorld().getBlockState(blockPos);
 
 
                             int meta = block.getBlock().getMetaFromState(block);
-                            String blockName = "<" + block.getBlock().getRegistryName() + (meta == 0 ? "": ":" + meta) + ">";
+                            String blockName = "<" + block.getBlock().getRegistryName() + (meta == 0 ? "" : ":" + meta) + ">";
                             ClipboardHelper.copyStringPlayer(player, blockName);
 
                             ClipboardHelper.sendMessageWithCopy(player, "Block \u00A72" + blockName +
-                                    " \u00A7rat \u00A79[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]\u00A7r", blockName );
+                                    " \u00A7rat \u00A79[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]\u00A7r", blockName);
 
                             // adds the oreDict names if it has some
-                            try{
+                            try {
 
                                 List<String> oreDictNames = BloodUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
-                                if (oreDictNames.size() > 0){
+                                if (oreDictNames.size() > 0) {
                                     sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
 
                                     for (String oreName :
                                             oreDictNames) {
                                         ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e- \u00A7b" + oreName, "<ore:" + oreName + ">");
                                     }
-                                }else {
+                                } else {
                                     sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
                                 }
                                 // catches if it couldn't create a valid ItemStack for the Block
-                            }catch (IllegalArgumentException e){
+                            } catch (IllegalArgumentException e) {
                                 sender.sendMessage(new TextComponentString("\u00A73No OreDict Entries"));
                             }
 
@@ -346,7 +344,7 @@ public class Commands {
                             sender.sendMessage(new TextComponentString("\u00A74Please hold an Item in your hand or look at a Block."));
                         }
                     }
-                }else {
+                } else {
                     sender.sendMessage(new TextComponentString("This command can only be casted by a player inGame"));
                 }
 
@@ -458,7 +456,7 @@ public class Commands {
                     player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/");
                     sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
                 } else {
-                        sender.sendMessage(new TextComponentString("http://minetweaker3.powerofbytes.com/wiki/"));
+                    sender.sendMessage(new TextComponentString("http://minetweaker3.powerofbytes.com/wiki/"));
                 }
             }
         });
@@ -612,20 +610,20 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
 
-                if (sender.getCommandSenderEntity() instanceof EntityPlayer){
+                if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
 
                     // Gets player and held item
-                    EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
+                    EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
                     ItemStack heldItem = player.getHeldItemMainhand();
 
 
                     // Tries to get name of held item first
-                    if (heldItem != ItemStack.EMPTY){
+                    if (heldItem != ItemStack.EMPTY) {
 
                         String itemName = "<" + heldItem.getItem().getRegistryName() + ":" + heldItem.getMetadata() + ">";
 
                         String nbt = "";
-                        if (heldItem.serializeNBT().hasKey("tag")){
+                        if (heldItem.serializeNBT().hasKey("tag")) {
                             nbt = NBTConverter.from(heldItem.serializeNBT().getTag("tag"), false).toString();
                         }
                         String withNBT = "";
@@ -638,36 +636,36 @@ public class Commands {
 
 
                         // adds the oredict names if it has some
-                        if (nbt.length() > 0){
+                        if (nbt.length() > 0) {
                             sender.sendMessage(new TextComponentString("\u00A73NBT-Data:"));
                             ClipboardHelper.sendMessageWithCopy(player, NBTUtils.getAppealingString(nbt), nbt);
 
-                        }else {
+                        } else {
                             sender.sendMessage(new TextComponentString("\u00A73No NBT Data"));
                         }
 
 
                         // if hand is empty, tries to get oreDict of block
-                    }else {
+                    } else {
                         RayTraceResult rayTraceResult = BloodUtils.getPlayerLookat(player, 100);
 
-                        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK){
+                        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK) {
                             BlockPos blockPos = rayTraceResult.getBlockPos();
                             IBlockState block = server.getEntityWorld().getBlockState(blockPos);
 
-                            ClipboardHelper.sendMessageWithCopy(player, "Block \u00A72[" + block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block) +
+                            ClipboardHelper.sendMessageWithCopy(player, "Block \u00A72[" + block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block) +
                                             "] \u00A7rat \u00A79[" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + "]\u00A7r",
-                                    block.getBlock().getRegistryName() +":" + block.getBlock().getMetaFromState(block));
+                                    block.getBlock().getRegistryName() + ":" + block.getBlock().getMetaFromState(block));
 
                             TileEntity te = server.getEntityWorld().getTileEntity(blockPos);
-                            if (te != null){
+                            if (te != null) {
 
                                 sender.sendMessage(new TextComponentString("\u00A73NBT-Data:"));
 
                                 String nbt = NBTConverter.from(te.serializeNBT(), false).toString();
 
                                 ClipboardHelper.sendMessageWithCopy(player, NBTUtils.getAppealingString(nbt), nbt);
-                            }else {
+                            } else {
                                 sender.sendMessage(new TextComponentString("\u00A73Block is no TileEntity and has no NBT"));
                             }
                         } else {
@@ -729,18 +727,18 @@ public class Commands {
 
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                if (args.length > 0 && args[0].equals("debug")){
+                if (args.length > 0 && args[0].equals("debug")) {
                     CraftTweakerAPI.tweaker.enableDebug();
                 }
 
                 sender.sendMessage(getNormalMessage("\u00A7bBeginning load of the scripts"));
                 boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(false);
 
-                if (loadSuccessful){
+                if (loadSuccessful) {
                     sender.sendMessage(getNormalMessage("Syntax of scripts is \u00A7acorrect\u00A7r, to see the effect \u00A7erestart the game"));
                     sender.sendMessage(getNormalMessage("Please be advised that \u00A7bbrackets (<>) \u00A7rmay have \u00A74errored, see above."));
                     sender.sendMessage(getNormalMessage("If no errors appeared above everything was fine."));
-                }else {
+                } else {
                     sender.sendMessage(getLinkToCraftTweakerLog("\u00A74Syntax of the scripts is incorrect!", sender));
                 }
             }
@@ -766,14 +764,14 @@ public class Commands {
                         getClickableCommandText(" \u00A7a/ct names desc", "/ct names desc", true),
                         getNormalMessage("  \u00A7bAdds the Display name of the Item to the output")
                 );
-                subCommands  = new ArrayList<>(1);
+                subCommands = new ArrayList<>(1);
                 subCommands.add("desc");
             }
 
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 boolean addDesc = false;
-                if (args.length > 0){
+                if (args.length > 0) {
                     addDesc = args[0].startsWith("desc");
                 }
 
@@ -782,17 +780,17 @@ public class Commands {
                 items.sort(ITEM_COMPARATOR);
                 CraftTweakerAPI.logCommand("List of all registered Items:");
 
-                int totalAmount =  0;
+                int totalAmount = 0;
 
                 for (Item item : items) {
-                    if (item != null){
+                    if (item != null) {
 
                         // gets list of subitems
                         NonNullList<ItemStack> list = NonNullList.create();
                         item.getSubItems(CreativeTabs.SEARCH, list);
 
-                        if (list.size() > 0){
-                            for (ItemStack stack :list) {
+                        if (list.size() > 0) {
+                            for (ItemStack stack : list) {
 
                                 String displayName;
                                 try {
@@ -802,15 +800,15 @@ public class Commands {
                                 }
 
                                 String withNBT = "";
-                                if (stack.serializeNBT().hasKey("tag")){
+                                if (stack.serializeNBT().hasKey("tag")) {
                                     String nbt = NBTConverter.from(stack.serializeNBT().getTag("tag"), false).toString();
                                     if (nbt.length() > 0) withNBT = ".withTag(" + nbt + ")";
                                 }
 
-                                CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata() ) + ">" + withNBT + (addDesc ? displayName : ""));
+                                CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata()) + ">" + withNBT + (addDesc ? displayName : ""));
                                 totalAmount++;
                             }
-                        }else {
+                        } else {
                             // gets ItemName when it is not in any creative window
                             ItemStack stack = new ItemStack(item, 1, 0);
                             String displayName;
@@ -819,7 +817,7 @@ public class Commands {
                             } catch (Throwable ex) {
                                 displayName = " -- Name could not be retrieved due to an error: " + ex;
                             }
-                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + ">"  + (addDesc ? displayName : ""));
+                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + ">" + (addDesc ? displayName : ""));
 
                         }
 
@@ -837,10 +835,28 @@ public class Commands {
             }
 
 
-
         });
 
-        CTChatCommand.registerCommand(new ConflictCommand());
+        if (Loader.isModLoaded("jei")) {
+            CTChatCommand.registerCommand(new ConflictCommand());
+        } else {
+            CTChatCommand.registerCommand(new CraftTweakerCommand("conflict") {
+                @Override
+                protected void init() {
+                    setDescription(
+                            getClickableCommandText("\u00A72/ct conflict", "/ct conflict", true),
+                            getNormalMessage(" \u00A73Lists all conflicting crafting recipes in the game"),
+                            getNormalMessage(" \u00A73Might take a bit of time depending on the size of the pack"),
+                            getNormalMessage(" \u00A73This needs to be run on a client and with JEI installed")
+                    );
+                }
+
+                @Override
+                public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                    sender.sendMessage(getNormalMessage("\u00A74This Command needs to be run with JEI installed"));
+                }
+            });
+        }
 
 
     }
