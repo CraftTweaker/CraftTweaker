@@ -49,9 +49,9 @@ public class CommonEventHandler {
         BracketHandlerItem.rebuildItemRegistry();
         BracketHandlerLiquid.rebuildLiquidRegistry();
         BracketHandlerEntity.rebuildEntityRegistry();
-        CraftTweakerAPI.logInfo("CraftTweaker: Sucessfully built item registry");
-        CrafttweakerImplementationAPI.load();
 
+        CraftTweakerAPI.logInfo("CraftTweaker: Successfully built item registry");
+        CrafttweakerImplementationAPI.load();
 
     }
     
