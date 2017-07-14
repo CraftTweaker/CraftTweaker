@@ -118,8 +118,7 @@ public class CraftTweaker {
         MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
 
         MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
-        MCRecipeManager.recipesToAdd.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(IRecipe.class).register(recipe));
-        
+        MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
     }
     
     @EventHandler
