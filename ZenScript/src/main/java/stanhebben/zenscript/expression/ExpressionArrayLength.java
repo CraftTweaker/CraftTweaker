@@ -24,6 +24,9 @@ public class ExpressionArrayLength extends Expression {
     
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        environment.getOutput().arrayLength();
+        if(result) {
+            value.compile(true, environment);
+            environment.getOutput().arrayLength();
+        }
     }
 }
