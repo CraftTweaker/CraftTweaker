@@ -26,7 +26,7 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 /**
  * @author BloodWorkXGaming
  */
-public class ConflictCommand  extends CraftTweakerCommand{
+public class ConflictCommand extends CraftTweakerCommand {
 
     private List<CraftingRecipeEntry> craftingRecipeEntries = new ArrayList<>();
     private TIntObjectMap<Range<Integer>> rangeMap;
@@ -48,10 +48,10 @@ public class ConflictCommand  extends CraftTweakerCommand{
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
 
-        if (CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")){
+        if (CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")) {
             sender.sendMessage(getNormalMessage("\u00A74This command can only be executed on the Client and with JEI installed"));
             CraftTweakerAPI.logWarning("JEI plugin not loaded!");
-        }else {
+        } else {
 
             sender.sendMessage(getNormalMessage("\u00A76Running Conflict scan. This might take a while"));
 
@@ -62,11 +62,11 @@ public class ConflictCommand  extends CraftTweakerCommand{
     }
 
 
-    private void runConflictScan(){
-        if (CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")){
+    private void runConflictScan() {
+        if (CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")) {
             CraftTweakerAPI.logWarning("JEI plugin not loaded yet!");
             CraftTweakerAPI.logWarning("This command can only be used on a client and with JEI installed");
-        }else {
+        } else {
             // cleans up before running the command
             craftingRecipeEntries.clear();
             if (rangeMap != null) rangeMap.clear();
@@ -106,7 +106,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
      * Collects all the ranges for the recipe Size so it doesn't have to check every Recipe
      * Has to be sorted beforehand
      */
-    private TIntObjectMap<Range<Integer>> getRangeForSize(){
+    private TIntObjectMap<Range<Integer>> getRangeForSize() {
         TIntObjectMap<Range<Integer>> rangeMap = new TIntObjectHashMap<>();
 
         int recipeSize = 0;
@@ -115,11 +115,11 @@ public class ConflictCommand  extends CraftTweakerCommand{
             CraftingRecipeEntry current = craftingRecipeEntries.get(i);
 
 
-            if (recipeSize == current.recipeSize){
+            if (recipeSize == current.recipeSize) {
                 recipeCount++;
             }
 
-            if (current.recipeSize > recipeSize){
+            if (current.recipeSize > recipeSize) {
                 rangeMap.put(recipeSize, Range.closedOpen(i - recipeCount, i));
                 recipeSize = current.recipeSize;
                 recipeCount = 1;
@@ -134,16 +134,16 @@ public class ConflictCommand  extends CraftTweakerCommand{
     /**
      * Collects all recipes, converts them to the own class and adds them to the List
      */
-    private void gatherRecipes(){
+    private void gatherRecipes() {
         IRecipeRegistry reg = CrTJEIPlugin.JEI_RUNTIME.getRecipeRegistry();
 
-        for (IRecipeCategory category :reg.getRecipeCategories()) {
-            if (category instanceof CraftingRecipeCategory){
+        for (IRecipeCategory category : reg.getRecipeCategories()) {
+            if (category instanceof CraftingRecipeCategory) {
 
                 List wrappers = reg.getRecipeWrappers(category);
-                for (Object wrapper: wrappers) {
+                for (Object wrapper : wrappers) {
 
-                    if (wrapper instanceof IRecipeWrapper && !(wrapper instanceof TippedArrowRecipeWrapper)){
+                    if (wrapper instanceof IRecipeWrapper && !(wrapper instanceof TippedArrowRecipeWrapper)) {
 
                         IRecipeWrapper wrap = ((IRecipeWrapper) wrapper);
                         IIngredients ing = new Ingredients();
@@ -156,14 +156,14 @@ public class ConflictCommand  extends CraftTweakerCommand{
                         List<List<ItemStack>> outputs = ing.getOutputs(ItemStack.class);
                         ItemStack output = outputs.get(0) == null ? null : outputs.get(0).get(0);
                         // prevent checking recipes with "null" output
-                        if (output == null){
+                        if (output == null) {
                             continue;
                         }
 
                         // differs shaped an shapeless recipes
-                        if (wrapper instanceof IShapedCraftingRecipeWrapper){
+                        if (wrapper instanceof IShapedCraftingRecipeWrapper) {
                             craftingRecipeEntries.add(new CraftingRecipeEntry(inputs, output, ((IShapedCraftingRecipeWrapper) wrapper).getWidth(), ((IShapedCraftingRecipeWrapper) wrapper).getHeight(), "noname"));
-                        }else {
+                        } else {
                             craftingRecipeEntries.add(new CraftingRecipeEntry(inputs, output, "noname"));
                         }
                     }
@@ -175,10 +175,21 @@ public class ConflictCommand  extends CraftTweakerCommand{
     /**
      * Dumps all recipe to the log
      */
-    public void dumpRecipes(){
-        for (CraftingRecipeEntry entry :craftingRecipeEntries) {
+    public void dumpRecipes() {
+        for (CraftingRecipeEntry entry : craftingRecipeEntries) {
             String s = entry.toString();
             CraftTweakerAPI.logInfo(s);
+        }
+    }
+
+    /**
+     * Comparator for sorting the recipes according to size of the recipe
+     */
+    private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry> {
+
+        @Override
+        public int compare(CraftingRecipeEntry o1, CraftingRecipeEntry o2) {
+            return o1.recipeSize > o2.recipeSize ? +1 : o1.recipeSize < o2.recipeSize ? -1 : 0;
         }
     }
 
@@ -186,7 +197,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
      * Own class for keeping track of the recipes
      * Makes it easier to compare
      */
-    public class CraftingRecipeEntry{
+    public class CraftingRecipeEntry {
         List<List<ItemStack>> inputs;
         ItemStack output;
         int width, height;
@@ -197,7 +208,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
         /**
          * Shaped recipes
          */
-        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int width, int height, String recipeName){
+        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, int width, int height, String recipeName) {
             this.inputs = inputs;
             this.output = output;
             this.width = width;
@@ -210,7 +221,7 @@ public class ConflictCommand  extends CraftTweakerCommand{
         /**
          * Shapeless recipes
          */
-        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, String recipeName){
+        CraftingRecipeEntry(List<List<ItemStack>> inputs, ItemStack output, String recipeName) {
             this.inputs = inputs;
             this.output = output;
             this.recipeName = recipeName;
@@ -225,9 +236,9 @@ public class ConflictCommand  extends CraftTweakerCommand{
             sb.append(output.toString());
             sb.append(" > ");
             int i = 0;
-            for (List<ItemStack> list :inputs) {
+            for (List<ItemStack> list : inputs) {
                 sb.append("\nList ").append(i++).append(" ").append("[").append(list.size()).append("]: ");
-                for (ItemStack stack: list) {
+                for (ItemStack stack : list) {
                     sb.append(stack.toString()).append(" | ");
                 }
             }
@@ -235,17 +246,17 @@ public class ConflictCommand  extends CraftTweakerCommand{
             return sb.toString();
         }
 
-        void checkAllConflicting(List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> entryList){
+        void checkAllConflicting(List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> entryList) {
 
             // gets the range where it has to search
             Range<Integer> range = rangeMap.get(this.recipeSize);
-            for(int index : ContiguousSet.create(range, DiscreteDomain.integers())) {
+            for (int index : ContiguousSet.create(range, DiscreteDomain.integers())) {
                 CraftingRecipeEntry otherEntry = craftingRecipeEntries.get(index);
 
                 // skips comparison with self
                 if (otherEntry == this) continue;
 
-                if (this.checkConflict(otherEntry)){
+                if (this.checkConflict(otherEntry)) {
                     // checks whether it is already in the list
                     if (!(entryList.contains(new AbstractMap.SimpleEntry<>(this, otherEntry))
                             || entryList.contains(new AbstractMap.SimpleEntry<>(otherEntry, this)))) {
@@ -400,13 +411,13 @@ public class ConflictCommand  extends CraftTweakerCommand{
         /**
          * Compares the two {@link ItemStack} and checks for nbt
          */
-        boolean compareItemStack(ItemStack stack1, ItemStack stack2){
+        boolean compareItemStack(ItemStack stack1, ItemStack stack2) {
             boolean itemsAreSame = stack1.getItem() == stack2.getItem() && stack1.getMetadata() == stack2.getMetadata();
             if (!itemsAreSame) return false;
 
             if (stack1.hasTagCompound() || stack2.hasTagCompound()) {
                 return stack1.hasTagCompound() && stack2.hasTagCompound() && stack1.getTagCompound().equals(stack2.getTagCompound());
-            }else {
+            } else {
                 return true;
             }
         }
@@ -421,17 +432,6 @@ public class ConflictCommand  extends CraftTweakerCommand{
                     && shapedRecipe == ((CraftingRecipeEntry) obj).shapedRecipe
                     && recipeName.equals(((CraftingRecipeEntry) obj).recipeName)
                     && recipeSize == ((CraftingRecipeEntry) obj).recipeSize;
-        }
-    }
-
-    /**
-     * Comparator for sorting the recipes according to size of the recipe
-     */
-    private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry> {
-
-        @Override
-        public int compare(CraftingRecipeEntry o1, CraftingRecipeEntry o2) {
-            return o1.recipeSize > o2.recipeSize ? +1 : o1.recipeSize < o2.recipeSize ? -1 : 0;
         }
     }
 }
