@@ -28,7 +28,7 @@ import java.util.*;
 import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 
 /**
- * @author Stan
+ * @author Stan, BloodWorkXGaming
  */
 public class MCRecipeManager implements IRecipeManager {
 
@@ -408,14 +408,22 @@ public class MCRecipeManager implements IRecipeManager {
      * Classes for all addRecipe Actions
      */
     public static abstract class ActionBaseAddRecipe implements IAction {
+        // this is != null only _after_ it has been applied and is actually registered
+        protected IRecipe recipe;
 
         public void registerRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
             recipe.setRegistryName(new ResourceLocation("crafttweaker", calculateHashBasedName()));
             ForgeRegistries.RECIPES.register(recipe);
 
+            this.recipe = recipe;
+
             if (craftingRecipe.hasTransformers()) {
                 transformerRecipes.add(craftingRecipe);
             }
+        }
+
+        public IRecipe getRecipe() {
+            return recipe;
         }
 
         public abstract String calculateHashBasedName();
