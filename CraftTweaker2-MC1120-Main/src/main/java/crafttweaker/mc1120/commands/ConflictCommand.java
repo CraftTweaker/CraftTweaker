@@ -40,7 +40,8 @@ public class ConflictCommand  extends CraftTweakerCommand{
         setDescription(
                 getClickableCommandText("\u00A72/ct conflict", "/ct conflict", true),
                 getNormalMessage(" \u00A73Lists all conflicting crafting recipes in the game"),
-                getNormalMessage(" \u00A73Might take a bit of time depending on the size of the pack")
+                getNormalMessage(" \u00A73Might take a bit of time depending on the size of the pack"),
+                getNormalMessage(" \u00A73This needs to be run on a client and with JEI installed")
         );
     }
 
