@@ -17,11 +17,10 @@ import static stanhebben.zenscript.ZenModule.*;
  */
 public class CrTTweaker implements ITweaker {
     
-    private static boolean DEBUG = false;
+    private static boolean DEBUG = true;
     
     private final List<IAction> actions = new ArrayList<>();
     private IScriptProvider scriptProvider;
-    private byte[] scriptData;
     
     @Override
     public void apply(IAction action) {
@@ -43,7 +42,6 @@ public class CrTTweaker implements ITweaker {
     @Override
     public boolean loadScript(boolean executeScripts){
         System.out.println("Loading scripts");
-        scriptData = ScriptProviderMemory.collect(scriptProvider);
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
 
