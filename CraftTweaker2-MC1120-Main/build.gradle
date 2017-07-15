@@ -27,10 +27,16 @@ minecraft {
     runDir = "CraftTweaker2-MC1120-Main/eclipse"
     mappings = mappings1120
 }
+repositories {
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+}
 
 dependencies {
     compile project(':ZenScript')
     compile project(':CraftTweaker2-API')
+    deobfCompile "mezz.jei:jei_1.12:4.7.2.76"
 }
 
 processResources
