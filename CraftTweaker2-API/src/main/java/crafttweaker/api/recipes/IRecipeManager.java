@@ -64,6 +64,16 @@ public interface IRecipeManager {
     void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
+     * Adds a shaped recipe.
+     *
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     */
+    @ZenMethod
+    void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    
+    /**
      * Adds a mirrored shaped recipe.
      *
      * @param output      recipe output
@@ -74,6 +84,16 @@ public interface IRecipeManager {
     void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
+     * Adds a mirrored shaped recipe.
+     *
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     */
+    @ZenMethod
+    void addShapedMirrored(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    
+    /**
      * Adds a shapeless recipe.
      *
      * @param output      recipe output
@@ -82,6 +102,16 @@ public interface IRecipeManager {
      */
     @ZenMethod
     void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    
+    /**
+     * Adds a shapeless recipe.
+     *
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     */
+    @ZenMethod
+    void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
      * Removes shaped recipes.
