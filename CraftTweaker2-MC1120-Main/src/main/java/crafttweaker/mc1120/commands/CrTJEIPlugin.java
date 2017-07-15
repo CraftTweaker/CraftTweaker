@@ -9,9 +9,9 @@ import mezz.jei.api.JEIPlugin;
  */
 @JEIPlugin
 public class CrTJEIPlugin implements IModPlugin {
-
+    
     public static IJeiRuntime JEI_RUNTIME;
-
+    
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         System.out.println("JEI Plugin loaded");
