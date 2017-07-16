@@ -16,6 +16,7 @@ import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.api.potions.IPotion;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,6 +24,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
@@ -30,6 +32,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.*;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -45,6 +49,7 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
  * @author BloodWorkXGaming, Stan, Jared
  */
 public class Commands {
+    public final static PotionComparator POTION_COMPARATOR = new PotionComparator();
     
     static void registerCommands() {
         
@@ -120,6 +125,28 @@ public class Commands {
                 }
                 
                 sender.sendMessage(getLinkToCraftTweakerLog("List of Entities generated", sender));
+            }
+        });
+        
+        CTChatCommand.registerCommand(new CraftTweakerCommand("potions") {
+            
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct potions", "/ct potions", true), getNormalMessage(" \u00A73Outputs a list of all potions to the crafttweaker.log"));
+            }
+            
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                
+                List<IPotion> potions = CraftTweakerAPI.game.getPotions();
+                potions.sort(POTION_COMPARATOR);
+                
+                CraftTweakerAPI.logCommand("Potions:");
+                for(IPotion potion : potions) {
+                    CraftTweakerAPI.logCommand(potion.name() + " -- c: " + potion.getLiquidColor() + (potion.isBadEffect() ? " -- is bad effect" : " -- is good effect"));
+                }
+                
+                sender.sendMessage(getLinkToCraftTweakerLog("List of Potions generated", sender));
             }
         });
         
@@ -795,6 +822,13 @@ public class Commands {
         @Override
         public int compare(Item o1, Item o2) {
             return o1.getRegistryName().toString().compareTo(o2.getRegistryName().toString());
+        }
+    }
+    
+    private static class PotionComparator implements Comparator<IPotion> {
+        @Override
+        public int compare(IPotion o1, IPotion o2) {
+            return o1.name().compareTo(o2.name());
         }
     }
     

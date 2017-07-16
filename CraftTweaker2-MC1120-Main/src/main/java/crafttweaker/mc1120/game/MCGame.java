@@ -1,22 +1,22 @@
 package crafttweaker.mc1120.game;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.annotations.BracketHandler;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.game.IGame;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.actions.ActionSetTranslation;
-import crafttweaker.mc1120.brackets.BracketHandlerItem;
+import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.entity.MCEntityDefinition;
 import crafttweaker.mc1120.item.MCItemDefinition;
 import crafttweaker.mc1120.liquid.MCLiquidDefinition;
+import crafttweaker.mc1120.potions.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -60,6 +60,13 @@ public class MCGame implements IGame {
             }
         }
         return result;
+    }
+    
+    @Override
+    public List<IPotion> getPotions() {
+        ArrayList<IPotion> potions = new ArrayList<>();
+        BracketHandlerPotion.getPotionNames().forEach((s, potion) -> potions.add(new MCPotion(potion)));
+        return potions;
     }
     
     @Override
