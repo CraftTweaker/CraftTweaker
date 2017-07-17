@@ -41,12 +41,11 @@ import java.io.File;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "3.0.26", name = CraftTweaker.NAME)
+@Mod(modid = CraftTweaker.MODID, version = "4.0.1", name = CraftTweaker.NAME)
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
     public static final String NAME = "Crafttweaker";
-    public static final String MCVERSION = "1.12";
     
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
     
@@ -114,12 +113,12 @@ public class CraftTweaker {
     @EventHandler
     public void onFMLInitialization(FMLInitializationEvent ev) {
     }
-
+    
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
-
+        
         MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-
+        
         MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
         MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
     }
