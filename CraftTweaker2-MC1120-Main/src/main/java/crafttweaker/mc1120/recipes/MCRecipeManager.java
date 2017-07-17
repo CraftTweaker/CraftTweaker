@@ -35,7 +35,7 @@ public class MCRecipeManager implements IRecipeManager {
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     public static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
     public static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
-    private static HashSet<String> usedNames = new HashSet<>();
+    private static TIntSet usedHashes = new TIntHashSet();
     
     private static List<ICraftingRecipe> transformerRecipes;
     
@@ -487,24 +487,24 @@ public class MCRecipeManager implements IRecipeManager {
             
             super.registerRecipe(irecipe, recipe);
         }
-        
-        public String calculateName() {
+    
+    
+        String calculateName() {
             StringBuilder sb = new StringBuilder();
-            sb.append("ct_shaped");
-            sb.append(shortNameConverter(output));
-            
+            sb.append(saveToString(output));
+        
             for(IIngredient[] ingredient : ingredients) {
                 for(IIngredient iIngredient : ingredient) {
-                    sb.append(shortNameConverter(iIngredient));
+                    sb.append(saveToString(iIngredient));
                 }
             }
-            String name = sb.toString();
-            while(usedNames.contains(name)) {
-                sb.append("_");
-                name = sb.toString();
-            }
-            usedNames.add(name);
-            return name;
+        
+            int hash = sb.toString().hashCode();
+            while(usedHashes.contains(hash))
+                ++hash;
+            usedHashes.add(hash);
+        
+            return "ct_shaped" + hash;
         }
         
         @Override
@@ -546,19 +546,18 @@ public class MCRecipeManager implements IRecipeManager {
     
         public String calculateName() {
             StringBuilder sb = new StringBuilder();
-            sb.append(shortNameConverter(output));
+            sb.append(saveToString(output));
     
             for(IIngredient ingredient : ingredients) {
-                sb.append(shortNameConverter(ingredient));
+                sb.append(saveToString(ingredient));
             }
             
-            String name = sb.toString();
-            while(usedNames.contains(name)) {
-                sb.append("_");
-                name = sb.toString();
-            }
-            usedNames.add(name);
-            return "ct_shapeless" + name;
+            int hash = sb.toString().hashCode();
+            while(usedHashes.contains(hash))
+                ++hash;
+            usedHashes.add(hash);
+            
+            return "ct_shapeless" + hash;
         }
         
         @Override
@@ -575,12 +574,11 @@ public class MCRecipeManager implements IRecipeManager {
         }
     }
     
-    public static String shortNameConverter(IIngredient ingredient){
-        if (ingredient == null) return "_";
-        if (ingredient instanceof IItemStack){
-            IItemStack stack = (IItemStack) ingredient;
-            return stack.getDefinition().getId() + ":" + stack.getDamage() + "*" + stack.getAmount();
-        } else {
+    
+    public static String saveToString(IIngredient ingredient){
+        if (ingredient == null) {
+            return "_";
+        }else {
             return ingredient.toString();
         }
     }
