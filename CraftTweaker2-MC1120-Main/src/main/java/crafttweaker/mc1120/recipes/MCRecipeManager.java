@@ -4,6 +4,7 @@ import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.oredict.*;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
@@ -14,8 +15,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -431,9 +431,11 @@ public class MCRecipeManager implements IRecipeManager {
         
         // this is != null only _after_ it has been applied and is actually registered
         protected IRecipe recipe;
+        protected String name;
+        
         
         public void registerRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
-            recipe.setRegistryName(new ResourceLocation("crafttweaker", calculateHashBasedName()));
+            recipe.setRegistryName(new ResourceLocation("crafttweaker", name));
             ForgeRegistries.RECIPES.register(recipe);
             
             this.recipe = recipe;
@@ -446,13 +448,14 @@ public class MCRecipeManager implements IRecipeManager {
         public IRecipe getRecipe() {
             return recipe;
         }
-        
-        public abstract String calculateHashBasedName();
+    
+        public String getName() {
+            return name;
+        }
     }
     
     public static class ActionAddShapedRecipe extends ActionBaseAddRecipe {
         
-        String name;
         IItemStack output;
         IIngredient[][] ingredients;
         IRecipeFunction function;
@@ -460,12 +463,12 @@ public class MCRecipeManager implements IRecipeManager {
         boolean mirrored;
         
         public ActionAddShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            this.name = calculateHashBasedName();
             this.output = output;
             this.ingredients = ingredients;
             this.function = function;
             this.action = action;
             this.mirrored = mirrored;
+            this.name = calculateName();
         }
         
         public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
@@ -484,13 +487,23 @@ public class MCRecipeManager implements IRecipeManager {
             
             super.registerRecipe(irecipe, recipe);
         }
+    
+    
+        String calculateName() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(saveToString(output));
         
-        @Override
-        public String calculateHashBasedName() {
-            int hash = Arrays.deepHashCode(new Object[]{output, ingredients});
+            for(IIngredient[] ingredient : ingredients) {
+                for(IIngredient iIngredient : ingredient) {
+                    sb.append(saveToString(iIngredient));
+                }
+            }
+        
+            int hash = sb.toString().hashCode();
             while(usedHashes.contains(hash))
                 ++hash;
             usedHashes.add(hash);
+        
             return "ct_shaped" + hash;
         }
         
@@ -502,18 +515,17 @@ public class MCRecipeManager implements IRecipeManager {
     
     public static class ActionAddShapelessRecipe extends ActionBaseAddRecipe {
         
-        String name;
         IItemStack output;
         IIngredient[] ingredients;
         IRecipeFunction function;
         IRecipeAction action;
         
         public ActionAddShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            this.name = calculateHashBasedName();
             this.output = output;
             this.ingredients = ingredients;
             this.function = function;
             this.action = action;
+            this.name = calculateName();
         }
         
         public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
@@ -531,13 +543,20 @@ public class MCRecipeManager implements IRecipeManager {
             
             super.registerRecipe(irecipe, recipe);
         }
-        
-        @Override
-        public String calculateHashBasedName() {
-            int hash = Arrays.deepHashCode(new Object[]{output, ingredients});
+    
+        public String calculateName() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(saveToString(output));
+    
+            for(IIngredient ingredient : ingredients) {
+                sb.append(saveToString(ingredient));
+            }
+            
+            int hash = sb.toString().hashCode();
             while(usedHashes.contains(hash))
                 ++hash;
             usedHashes.add(hash);
+            
             return "ct_shapeless" + hash;
         }
         
@@ -552,6 +571,15 @@ public class MCRecipeManager implements IRecipeManager {
         @Override
         public boolean canInteractWith(EntityPlayer var1) {
             return false;
+        }
+    }
+    
+    
+    public static String saveToString(IIngredient ingredient){
+        if (ingredient == null) {
+            return "_";
+        }else {
+            return ingredient.toString();
         }
     }
 }

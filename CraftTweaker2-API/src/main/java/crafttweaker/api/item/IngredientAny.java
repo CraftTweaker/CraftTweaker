@@ -106,4 +106,9 @@ public class IngredientAny implements IIngredient {
     public String toString() {
         return "<*>";
     }
+    
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

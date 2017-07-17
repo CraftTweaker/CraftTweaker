@@ -5,10 +5,11 @@ import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.world.IBiome;
 import stanhebben.zenscript.annotations.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Game interface. Used to obtain general game information.
@@ -50,6 +51,14 @@ public interface IGame {
      */
     @ZenGetter("biomes")
     List<IBiome> getBiomes();
+    
+    /**
+     * Retrieves the potions in this game.
+     *
+     * @return game potions
+     */
+    @ZenGetter("potions")
+    List<IPotion> getPotions();
     
     /**
      * Retrieves the entities in this game.

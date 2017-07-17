@@ -4,10 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.mc1120.brackets.BracketHandlerEntity;
-import crafttweaker.mc1120.brackets.BracketHandlerItem;
-import crafttweaker.mc1120.brackets.BracketHandlerLiquid;
-import crafttweaker.mc1120.brackets.BracketHandlerOre;
+import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.client.MCClient;
 import crafttweaker.mc1120.commands.CTChatCommand;
 import crafttweaker.mc1120.formatting.MCFormatter;
@@ -104,6 +101,7 @@ public class CraftTweaker {
         GlobalRegistry.registerBracketHandler(new BracketHandlerLiquid());
         GlobalRegistry.registerBracketHandler(new BracketHandlerOre());
         GlobalRegistry.registerBracketHandler(new BracketHandlerEntity());
+        GlobalRegistry.registerBracketHandler(new BracketHandlerPotion());
         
         if(CraftTweakerPlatformUtils.isClient()) {
             CraftTweakerAPI.client = new MCClient();
