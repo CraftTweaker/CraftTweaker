@@ -1,5 +1,6 @@
 package crafttweaker.api.mods;
 
+import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
@@ -18,4 +19,7 @@ public interface IMod {
     
     @ZenGetter("decription")
     String getDescription();
+    
+    @ZenGetter("items")
+    IItemStack[] getItems();
 }
