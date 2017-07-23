@@ -4,12 +4,11 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.craftTweakerVersion = "4.0.0"
+ext.craftTweakerVersion = "4.0.1"
 if (System.getenv('BUILD_NUMBER') != null) {
     project.craftTweakerVersion += "." + System.getenv('BUILD_NUMBER')
 }
 
-ext.mineTweakerDebug = "false"
 //Make sure JAVA_HOME is set as an environment variable
 ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
 
