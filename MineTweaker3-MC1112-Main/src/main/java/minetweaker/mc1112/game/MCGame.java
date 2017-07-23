@@ -1,5 +1,6 @@
 package minetweaker.mc1112.game;
 
+import com.google.common.collect.Iterables;
 import minetweaker.*;
 import minetweaker.api.block.IBlockDefinition;
 import minetweaker.api.entity.IEntityDefinition;
@@ -66,7 +67,8 @@ public class MCGame implements IGame {
     
     @Override
     public List<IEntityDefinition> getEntities() {
-        if(ENTITY_DEFINITIONS.isEmpty()) {
+        if(Iterables.size(ForgeRegistries.ENTITIES) != ENTITY_DEFINITIONS.size()) {
+            ENTITY_DEFINITIONS.clear();
             ForgeRegistries.ENTITIES.forEach((entry) -> {
                 ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry.getEntityClass(), entry.getName()));
             });
