@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.recipes;
 
-import crafttweaker.IAction;
+import crafttweaker.*;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -24,6 +24,7 @@ import net.minecraftforge.registries.RegistryManager;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
+import java.util.regex.*;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 
@@ -138,6 +139,16 @@ public class MCRecipeManager implements IRecipeManager {
     @Override
     public void remove(IIngredient output, @Optional boolean nbtMatch) {
         recipesToRemove.add(new ActionRemoveRecipesNoIngredients(output, nbtMatch));
+    }
+    
+    @Override
+    public void removeByRecipeName(String recipeName) {
+        recipesToRemove.add(new ActionRemoveRecipeByRecipeName(recipeName));
+    }
+    
+    @Override
+    public void removeByRegex(String regexString) {
+        recipesToRemove.add(new ActionRemoveRecipeByRegex(regexString));
     }
     
     @Override
@@ -282,7 +293,11 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            return "Removing Shaped recipes for " + output.toString();
+            if (output != null){
+                return "Removing Shaped recipes for " + output.toString();
+            }else {
+                return "Trying to remove recipes for invalid output";
+            }
         }
     }
     
@@ -371,7 +386,11 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            return "Removing Shapeless recipes for " + output.toString();
+            if (output != null){
+                return "Removing Shapeless recipes for " + output.toString();
+            }else {
+                return "Trying to remove recipes for invalid output";
+            }
         }
     }
     
@@ -402,7 +421,76 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            return "Removing all recipes for " + output.toString();
+            if (output != null){
+                return "Removing all recipes for " + output.toString();
+            }else {
+                return "Trying to remove recipes for invalid output";
+            }
+        }
+    }
+    
+    public static class ActionRemoveRecipeByRecipeName extends ActionBaseRemoveRecipes {
+        String recipeName;
+        
+        public ActionRemoveRecipeByRecipeName(String recipeName) {
+            this.recipeName = recipeName;
+        }
+        
+        @Override
+        public void apply() {
+            List<ResourceLocation> toRemove = new ArrayList<>();
+            
+            for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
+                if (recipe.getKey().toString().equals(recipeName)){
+                    toRemove.add(recipe.getKey());
+                    
+                    super.removeRecipes(toRemove);
+                }
+            }
+            
+            super.removeRecipes(toRemove);
+        }
+        
+        @Override
+        public String describe() {
+            if (recipeName != null){
+                return "Removing recipe with name \"" + recipeName + "\"";
+            }else {
+                return "No name for the recipe to remove was given.";
+            }
+        }
+    }
+    
+    public static class ActionRemoveRecipeByRegex extends ActionBaseRemoveRecipes {
+        String regexCheck;
+        
+        public ActionRemoveRecipeByRegex(String regexCheck) {
+            this.regexCheck = regexCheck;
+        }
+        
+        @Override
+        public void apply() {
+            List<ResourceLocation> toRemove = new ArrayList<>();
+            Pattern p = Pattern.compile(regexCheck);
+            
+            for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
+                ResourceLocation resourceLocation = recipe.getKey();
+                Matcher m = p.matcher(resourceLocation.toString());
+                if (m.matches()){
+                    toRemove.add(resourceLocation);
+                }
+            }
+            
+            super.removeRecipes(toRemove);
+        }
+        
+        @Override
+        public String describe() {
+            if (regexCheck != null){
+                return "Removing all recipes matching this regex: \"" + regexCheck + "\"";
+            }else {
+                return "No regex String for the recipe to remove was given.";
+            }
         }
     }
     
@@ -472,7 +560,7 @@ public class MCRecipeManager implements IRecipeManager {
         }
         
         public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            this.name = name;
+            this.name = cleanRecipeName(name);
             this.output = output;
             this.ingredients = ingredients;
             this.function = function;
@@ -509,7 +597,11 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            return "Adding shaped recipe for " + output.getDisplayName() + " with name " + name;
+            if (output != null){
+                return "Adding shaped recipe for " + output.getDisplayName() + " with name " + name;
+            }else {
+                return "Trying to add shaped recipe without correct output";
+            }
         }
     }
     
@@ -529,7 +621,7 @@ public class MCRecipeManager implements IRecipeManager {
         }
         
         public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            this.name = name;
+            this.name = cleanRecipeName(name);
             this.output = output;
             this.ingredients = ingredients;
             this.function = function;
@@ -562,7 +654,12 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            return "Adding shapeless recipe for " + output.getDisplayName() + " with name " + name;
+            if (output != null){
+                return "Adding shapeless recipe for " + output.getDisplayName() + " with name " + name;
+            }else {
+                return "Trying to add shapeless recipe without correct output";
+            }
+            
         }
     }
     
@@ -581,5 +678,11 @@ public class MCRecipeManager implements IRecipeManager {
         }else {
             return ingredient.toString();
         }
+    }
+    
+    public static String cleanRecipeName(String s){
+        if (s.contains(":"))
+            CraftTweakerAPI.logWarning("String may not contain a \":\"");
+        return s.replace(":", "_");
     }
 }
