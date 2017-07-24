@@ -49,7 +49,9 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
  * @author BloodWorkXGaming, Stan, Jared
  */
 public class Commands {
-    public final static PotionComparator POTION_COMPARATOR = new PotionComparator();
+    public static final PotionComparator POTION_COMPARATOR = new PotionComparator();
+    public static final Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
+    
     
     static void registerCommands() {
         
@@ -718,7 +720,6 @@ public class Commands {
         });
         
         CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
-            final Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
             ArrayList<String> subCommands;
             
             @Override

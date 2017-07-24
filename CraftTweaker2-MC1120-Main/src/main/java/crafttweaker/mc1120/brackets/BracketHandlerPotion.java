@@ -39,6 +39,7 @@ public class BracketHandlerPotion implements IBracketHandler {
     
     @SuppressWarnings("unused")
     public static IPotion getPotion(String name) {
+        potionNames.forEach((k, v) -> System.out.println("k = " + k));
         Potion pot = potionNames.get(name);
         if(pot == null){
             return null;

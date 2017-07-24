@@ -2,14 +2,46 @@ package crafttweaker.mc1120.item;
 
 import crafttweaker.api.item.*;
 import crafttweaker.api.potions.IPotion;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
+import crafttweaker.mc1120.commands.Commands;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.*;
+import net.minecraft.util.NonNullList;
 
 import java.util.*;
+import java.util.regex.*;
 
 public class MCItemUtils implements IItemUtils{
+    
+    public static ArrayList<ItemStack> ITEMLIST;
+    
+    public static void createItemList() {
+        ArrayList<ItemStack> itemList = new ArrayList<>();
+        
+        List<Item> items = new ArrayList<>(BracketHandlerItem.getItemNames().values());
+        items.sort(Commands.ITEM_COMPARATOR);
+        
+        for(Item item : items) {
+            if(item != null) {
+                // gets list of subitems
+                NonNullList<ItemStack> list = NonNullList.create();
+                item.getSubItems(CreativeTabs.SEARCH, list);
+                
+                if(list.size() > 0) {
+                    itemList.addAll(list);
+                } else {
+                    ItemStack stack = new ItemStack(item, 1, 0);
+                    itemList.add(stack);
+                }
+            }
+        }
+        
+        ITEMLIST = itemList;
+    }
+    
     
     /**
      *
@@ -17,8 +49,8 @@ public class MCItemUtils implements IItemUtils{
      *               [<effect1>, strength, time], [<effect2>, strength, time], ...
      * @return returns the {@link IItemStack} of the potion
      */
-    public IItemStack createPotion(int count, Object[]... params){
-        NBTTagCompound tag = new NBTTagCompound();
+    public IItemStack createPotion(Object[]... params){
+        ItemStack item = new ItemStack(Items.POTIONITEM,1, 0);
     
         List<PotionEffect> potionEffects = new ArrayList<>();
         
@@ -45,14 +77,74 @@ public class MCItemUtils implements IItemUtils{
                 }else{
                     continue;
                 }
-                potionEffects.add(new PotionEffect(((Potion) iPotion.getInternal()), duration, amplifier));
+                PotionEffect effect = new PotionEffect(((Potion) iPotion.getInternal()), duration, amplifier);
+                potionEffects.add(effect);
             
             }
         }
-        PotionUtils.addCustomPotionEffectToList(tag, potionEffects);
         
-        return new MCItemStack(new ItemStack(Items.POTIONITEM, count, 0, tag));
+        potionEffects.forEach(it -> System.out.println(it.toString()));
+        PotionUtils.appendEffects(item, potionEffects);
+        
+        return new MCItemStack(item);
     }
 
+    
+    public IItemStack[] getItemsByRegexRegistryName(String regex){
+        ArrayList<ItemStack> matchedItems = new ArrayList<>();
+        HashSet<String> alreadyChecked = new HashSet<>();
+        Pattern p = Pattern.compile(regex);
+        
+        for(ItemStack stack : ITEMLIST) {
+            String currentRegName = stack.getItem().getRegistryName().toString() + ":" + stack.getMetadata();
+            // prevent duplicate checks on items with different NBT(which I ignore here)
+            if (alreadyChecked.contains(currentRegName)){
+                continue;
+            }
+            alreadyChecked.add(currentRegName);
+            
+            Matcher m = p.matcher(currentRegName);
+            if (m.matches()){
+                // clears away meta if it has
+                if (stack.hasTagCompound()){
+                    matchedItems.add(new ItemStack(stack.getItem(), 1, stack.getMetadata()));
+                }else {
+                    matchedItems.add(stack);
+                }
+                System.out.println("Matched regName: " + currentRegName);
+            }
+        }
+    
+        IItemStack[] iItemStacks = new IItemStack[matchedItems.size()];
+        for(int i = 0; i < matchedItems.size(); i++) {
+            iItemStacks[i] = new MCItemStack(matchedItems.get(i));
+        }
+    
+        return iItemStacks;
+    }
+    
+    
+    public IItemStack[] getItemsByRegexUnlocalizedName(String regex){
+        ArrayList<ItemStack> matchedItems = new ArrayList<>();
+        Pattern p = Pattern.compile(regex);
+    
+        for(ItemStack stack : ITEMLIST) {
+            String currentUnlocalizedName = stack.getUnlocalizedName();
+        
+            Matcher m = p.matcher(currentUnlocalizedName);
+            if (m.matches()){
+                matchedItems.add(stack);
+                String currentRegName = stack.getItem().getRegistryName().toString() + ":" + stack.getMetadata();
+                System.out.println("Matched unlocalized: " + currentUnlocalizedName + " [" + currentRegName + "]");
+            }
+        }
+        
+        IItemStack[] iItemStacks = new IItemStack[matchedItems.size()];
+        for(int i = 0; i < matchedItems.size(); i++) {
+            iItemStacks[i] = new MCItemStack(matchedItems.get(i));
+        }
+        
+        return iItemStacks;
+    }
 
 }
