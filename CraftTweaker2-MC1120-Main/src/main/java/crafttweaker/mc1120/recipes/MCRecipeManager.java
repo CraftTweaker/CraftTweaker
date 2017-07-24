@@ -663,7 +663,7 @@ public class MCRecipeManager implements IRecipeManager {
         }
     }
     
-    private class ContainerVirtual extends Container {
+    private static class ContainerVirtual extends Container {
         
         @Override
         public boolean canInteractWith(EntityPlayer var1) {

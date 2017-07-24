@@ -37,7 +37,9 @@ public class ScriptProviderDirectory implements IScriptProvider {
     }
     
     private void iterate(File directoryIterated, List<IScriptIterator> scripts) {
-        for(File file : directoryIterated.listFiles()) {
+        File[] files = directoryIterated.listFiles();
+        if (files == null) return;
+        for(File file : files) {
             if(file.isDirectory()) {
                 iterate(file, scripts);
             } else if(file.isFile() && file.getName().endsWith(".zs")) {

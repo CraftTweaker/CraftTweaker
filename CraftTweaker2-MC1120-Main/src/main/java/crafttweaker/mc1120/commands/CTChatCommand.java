@@ -116,15 +116,13 @@ public class CTChatCommand extends CommandBase {
         
         // gives subcommands of the subcommand
         // each has to implement on it's own for special requirements
-        if(args.length >= 2) {
-            CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
-            if(subCommand != null) {
-                System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
-                return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
-                
-            }
+        CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
+        if(subCommand != null) {
+            System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
+            return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
+            
         }
-        
+    
         // returns empty by default
         return currentPossibleCommands;
     }

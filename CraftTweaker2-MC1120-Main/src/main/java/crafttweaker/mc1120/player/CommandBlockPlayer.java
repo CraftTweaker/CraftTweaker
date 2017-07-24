@@ -8,6 +8,8 @@ import crafttweaker.api.player.IPlayer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.*;
 
+import java.util.Objects;
+
 /**
  * @author Jared
  */
@@ -118,8 +120,7 @@ public class CommandBlockPlayer implements IPlayer {
 
     @Override
     public boolean equals(Object other) {
-        return other.getClass() == this.getClass() && ((CommandBlockPlayer) other).sender.equals(sender);
-
+        return (other != null) && other.getClass() == this.getClass() && Objects.equals(((CommandBlockPlayer) other).sender, sender);
     }
 
     @Override

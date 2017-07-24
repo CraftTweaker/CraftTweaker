@@ -10,6 +10,8 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
+import java.util.Objects;
+
 public abstract class Expression implements IPartialExpression {
     
     private final ZenPosition position;
@@ -29,6 +31,19 @@ public abstract class Expression implements IPartialExpression {
     public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
         if(getType().equals(type)) {
             return this;
+        } else if(Objects.equals(type.toJavaClass(),Object.class)) {
+            System.out.println("Casting something to object");
+            // allows anything to cast to Object
+            if (this.getType().toJavaClass().isPrimitive()){
+                if (this.getType().toJavaClass().equals(int.class)){
+                    // Cast to non primitive type should be here
+                }
+                
+                environment.error(position, "Cannot cast primitive" + this.getType() + " to " + type);
+                return new ExpressionInvalid(position, type);
+            }else {
+                return this;
+            }
         } else {
             ICastingRule castingRule = getType().getCastingRule(type, environment);
             if(castingRule == null) {

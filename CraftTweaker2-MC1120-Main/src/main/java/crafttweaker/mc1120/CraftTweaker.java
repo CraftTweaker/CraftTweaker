@@ -10,6 +10,7 @@ import crafttweaker.mc1120.commands.CTChatCommand;
 import crafttweaker.mc1120.formatting.MCFormatter;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.game.MCGame;
+import crafttweaker.mc1120.item.MCItemUtils;
 import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
@@ -68,7 +69,7 @@ public class CraftTweaker {
     
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
-        CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla());
+        CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCItemUtils());
         CrafttweakerImplementationAPI.logger.addLogger(new MCLogger(new File("crafttweaker.log")));
         CrafttweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
         File globalDir = new File("scripts");
