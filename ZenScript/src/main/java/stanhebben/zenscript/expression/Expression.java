@@ -6,7 +6,7 @@ import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
-import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -32,14 +32,35 @@ public abstract class Expression implements IPartialExpression {
         if(getType().equals(type)) {
             return this;
         } else if(Objects.equals(type.toJavaClass(),Object.class)) {
-            System.out.println("Casting something to object");
+            
             // allows anything to cast to Object
             if (this.getType().toJavaClass().isPrimitive()){
+                // primitive int to Object
                 if (this.getType().toJavaClass().equals(int.class)){
                     // Cast to non primitive type should be here
+                    ICastingRule castingRule = getType().getCastingRule(ZenType.INTOBJECT, environment);
+                    if (castingRule != null){
+                        return new ExpressionAs(position, this, castingRule);
+                    }
+                }
+                // primitive double to Object
+                if (this.getType().toJavaClass().equals(double.class)){
+                    // Cast to non primitive type should be here
+                    ICastingRule castingRule = getType().getCastingRule(ZenType.DOUBLEOBJECT, environment);
+                    if (castingRule != null){
+                        return new ExpressionAs(position, this, castingRule);
+                    }
+                }
+                // primitive bool to Object
+                if (this.getType().toJavaClass().equals(boolean.class)){
+                    // Cast to non primitive type should be here
+                    ICastingRule castingRule = getType().getCastingRule(ZenType.BOOLOBJECT, environment);
+                    if (castingRule != null){
+                        return new ExpressionAs(position, this, castingRule);
+                    }
                 }
                 
-                environment.error(position, "Cannot cast primitive" + this.getType() + " to " + type);
+                environment.error(position, "Cannot cast primitive " + this.getType() + " to " + type);
                 return new ExpressionInvalid(position, type);
             }else {
                 return this;
