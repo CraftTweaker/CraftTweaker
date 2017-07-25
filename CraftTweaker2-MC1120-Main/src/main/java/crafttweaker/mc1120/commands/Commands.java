@@ -3,43 +3,32 @@ package crafttweaker.mc1120.commands;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.item.WeightedItemStack;
+import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.mods.IMod;
 import crafttweaker.api.oredict.IOreDictEntry;
-import crafttweaker.api.recipes.ICraftingRecipe;
-import crafttweaker.api.recipes.IFurnaceRecipe;
-import crafttweaker.api.recipes.ShapedRecipe;
-import crafttweaker.api.recipes.ShapelessRecipe;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.api.potions.IPotion;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
+import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.registries.*;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import static crafttweaker.CraftTweakerAPI.furnace;
 import static crafttweaker.CrafttweakerImplementationAPI.*;
@@ -130,6 +119,7 @@ public class Commands {
             }
         });
         
+        //TODO: Change potion command to output the correct name and make brackethandler use the full name
         CTChatCommand.registerCommand(new CraftTweakerCommand("potions") {
             
             @Override
@@ -719,87 +709,9 @@ public class Commands {
             }
         });
         
-        CTChatCommand.registerCommand(new CraftTweakerCommand("names") {
-            ArrayList<String> subCommands;
-            
-            @Override
-            protected void init() {
-                subCommands = new ArrayList<>(1);
-                setDescription(getClickableCommandText("\u00A72/ct names", "/ct names", true), getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"), getClickableCommandText(" \u00A7a/ct names desc", "/ct names desc", true), getNormalMessage("  \u00A7bAdds the Display name of the Item to the output"));
-                subCommands = new ArrayList<>(1);
-                subCommands.add("desc");
-            }
-            
-            @Override
-            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                boolean addDesc = false;
-                if(args.length > 0) {
-                    addDesc = args[0].startsWith("desc");
-                }
-                
-                // List<IItemDefinition> items = CraftTweakerAPI.game.getItems();
-                List<Item> items = new ArrayList<>(BracketHandlerItem.getItemNames().values());
-                items.sort(ITEM_COMPARATOR);
-                CraftTweakerAPI.logCommand("List of all registered Items:");
-                
-                int totalAmount = 0;
-                
-                for(Item item : items) {
-                    if(item != null) {
-                        
-                        // gets list of subitems
-                        NonNullList<ItemStack> list = NonNullList.create();
-                        item.getSubItems(CreativeTabs.SEARCH, list);
-                        
-                        if(list.size() > 0) {
-                            for(ItemStack stack : list) {
-                                
-                                String displayName;
-                                try {
-                                    displayName = ", " + stack.getDisplayName();
-                                } catch(Throwable ex) {
-                                    displayName = " -- Name could not be retrieved due to an error: " + ex;
-                                }
-                                
-                                String withNBT = "";
-                                if(stack.serializeNBT().hasKey("tag")) {
-                                    String nbt = NBTConverter.from(stack.serializeNBT().getTag("tag"), false).toString();
-                                    if(nbt.length() > 0)
-                                        withNBT = ".withTag(" + nbt + ")";
-                                }
-                                
-                                CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + (stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata()) + ">" + withNBT + (addDesc ? displayName : ""));
-                                totalAmount++;
-                            }
-                        } else {
-                            // gets ItemName when it is not in any creative window
-                            ItemStack stack = new ItemStack(item, 1, 0);
-                            String displayName;
-                            try {
-                                displayName = ", " + stack.getDisplayName();
-                            } catch(Throwable ex) {
-                                displayName = " -- Name could not be retrieved due to an error: " + ex;
-                            }
-                            CraftTweakerAPI.logCommand("<" + (item.getRegistryName() != null ? item.getRegistryName().toString() : "[Item has no registry Name]") + ">" + (addDesc ? displayName : ""));
-                            
-                        }
-                        
-                    }
-                }
-                CraftTweakerAPI.logCommand("A total of " + items.size() + " unique Items registered by CraftTweaker.");
-                CraftTweakerAPI.logCommand("A total of " + totalAmount + " effective Items registered by CraftTweaker.");
-                sender.sendMessage(getLinkToCraftTweakerLog("List generated", sender));
-            }
-            
-            @Override
-            public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-                
-                return subCommands;
-            }
-            
-            
-        });
-        
+        CTChatCommand.registerCommand(new NamesCommand());
+    
+        //region >>> JEI Command
         if(Loader.isModLoaded("jei")) {
             CTChatCommand.registerCommand(new ConflictCommand());
         } else {
@@ -815,11 +727,12 @@ public class Commands {
                 }
             });
         }
+        //endregion
         
         
     }
     
-    private static class ItemComparator implements Comparator<Item> {
+    private static class ItemComparator implements Comparator<Item>, Serializable {
         
         @Override
         public int compare(Item o1, Item o2) {
@@ -827,11 +740,13 @@ public class Commands {
         }
     }
     
-    private static class PotionComparator implements Comparator<IPotion> {
+    private static class PotionComparator implements Comparator<IPotion>, Serializable {
         @Override
         public int compare(IPotion o1, IPotion o2) {
             return o1.name().compareTo(o2.name());
         }
     }
+    
+
     
 }

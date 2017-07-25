@@ -1,8 +1,6 @@
 package crafttweaker.mc1120.commands;
 
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 
 /**
  * @author BloodWorkXGaming
@@ -10,7 +8,7 @@ import mezz.jei.api.JEIPlugin;
 @JEIPlugin
 public class CrTJEIPlugin implements IModPlugin {
     
-    public static IJeiRuntime JEI_RUNTIME;
+    static IJeiRuntime JEI_RUNTIME;
     
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {

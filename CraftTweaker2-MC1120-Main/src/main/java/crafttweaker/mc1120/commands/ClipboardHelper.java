@@ -3,8 +3,7 @@ package crafttweaker.mc1120.commands;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.*;
 import net.minecraft.util.text.TextComponentString;
 
 /**

@@ -1,24 +1,21 @@
 package crafttweaker.mc1120.commands;
 
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.Range;
+import com.google.common.collect.*;
 import crafttweaker.CraftTweakerAPI;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.*;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import mezz.jei.ingredients.Ingredients;
-import mezz.jei.plugins.vanilla.crafting.CraftingRecipeCategory;
-import mezz.jei.plugins.vanilla.crafting.TippedArrowRecipeWrapper;
+import mezz.jei.plugins.vanilla.crafting.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
@@ -181,11 +178,11 @@ public class ConflictCommand extends CraftTweakerCommand {
     /**
      * Comparator for sorting the recipes according to size of the recipe
      */
-    private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry> {
+    private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry>, Serializable{
         
         @Override
         public int compare(CraftingRecipeEntry o1, CraftingRecipeEntry o2) {
-            return o1.recipeSize > o2.recipeSize ? +1 : o1.recipeSize < o2.recipeSize ? -1 : 0;
+            return Integer.compare(o1.recipeSize, o2.recipeSize);
         }
     }
     
@@ -426,6 +423,11 @@ public class ConflictCommand extends CraftTweakerCommand {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof CraftingRecipeEntry && inputs.equals(((CraftingRecipeEntry) obj).inputs) && output.equals(((CraftingRecipeEntry) obj).output) && width == ((CraftingRecipeEntry) obj).width && height == ((CraftingRecipeEntry) obj).height && shapedRecipe == ((CraftingRecipeEntry) obj).shapedRecipe && recipeName.equals(((CraftingRecipeEntry) obj).recipeName) && recipeSize == ((CraftingRecipeEntry) obj).recipeSize;
+        }
+    
+        @Override
+        public int hashCode() {
+            return Arrays.deepHashCode(new Object[]{inputs, output , recipeName, recipeSize, shapedRecipe});
         }
     }
 }

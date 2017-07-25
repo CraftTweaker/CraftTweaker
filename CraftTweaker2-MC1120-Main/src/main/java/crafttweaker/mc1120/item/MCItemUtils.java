@@ -7,7 +7,6 @@ import crafttweaker.mc1120.commands.Commands;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.*;
 import net.minecraft.util.NonNullList;
 
@@ -16,7 +15,7 @@ import java.util.regex.*;
 
 public class MCItemUtils implements IItemUtils{
     
-    public static ArrayList<ItemStack> ITEMLIST;
+    static ArrayList<ItemStack> ITEMLIST;
     
     public static void createItemList() {
         ArrayList<ItemStack> itemList = new ArrayList<>();
@@ -111,7 +110,7 @@ public class MCItemUtils implements IItemUtils{
                 }else {
                     matchedItems.add(stack);
                 }
-                System.out.println("Matched regName: " + currentRegName);
+                // System.out.println("Matched regName: " + currentRegName);
             }
         }
     
@@ -134,8 +133,8 @@ public class MCItemUtils implements IItemUtils{
             Matcher m = p.matcher(currentUnlocalizedName);
             if (m.matches()){
                 matchedItems.add(stack);
-                String currentRegName = stack.getItem().getRegistryName().toString() + ":" + stack.getMetadata();
-                System.out.println("Matched unlocalized: " + currentUnlocalizedName + " [" + currentRegName + "]");
+                // String currentRegName = stack.getItem().getRegistryName().toString() + ":" + stack.getMetadata();
+                // System.out.println("Matched unlocalized: " + currentUnlocalizedName + " [" + currentRegName + "]");
             }
         }
         

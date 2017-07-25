@@ -31,11 +31,11 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 /**
  * @author Stan, BloodWorkXGaming
  */
-public class MCRecipeManager implements IRecipeManager {
+public final class MCRecipeManager implements IRecipeManager {
     
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
-    public static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
-    public static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
+    public final static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
+    public final static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
     private static TIntSet usedHashes = new TIntHashSet();
     
     private static List<ICraftingRecipe> transformerRecipes;

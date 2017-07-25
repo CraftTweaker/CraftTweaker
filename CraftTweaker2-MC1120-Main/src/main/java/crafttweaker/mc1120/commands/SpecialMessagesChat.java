@@ -1,12 +1,8 @@
 package crafttweaker.mc1120.commands;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.*;
 
 import static crafttweaker.mc1120.commands.ClipboardHelper.copyCommandBase;
 
