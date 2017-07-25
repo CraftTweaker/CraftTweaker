@@ -153,9 +153,13 @@ public class NamesCommand extends CraftTweakerCommand {
         return sb.toString();
     }
     
-    
+    /**
+     * For easy copy paste of the command
+     * /ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs
+     */
     @SuppressWarnings("unused")
     private enum NameCommandParams {
+        
         
         REGISTRY_NAME("23498z9384z9283z49", stack -> {
             StringBuilder sb = new StringBuilder();
@@ -178,9 +182,30 @@ public class NamesCommand extends CraftTweakerCommand {
         
         MAX_ITEM_USE_DURATION("maxuse", stack -> Integer.toString(stack.getMaxItemUseDuration())),
         
-        MAX_ITEM_DAMAGE("maxdamage", stack -> Integer.toString(stack.getMaxDamage()));
-
-
+        MAX_ITEM_DAMAGE("maxdamage", stack -> Integer.toString(stack.getMaxDamage())),
+    
+        RARITY("rarity", stack -> stack.getRarity().rarityName),
+        
+        REPAIR_COST("repaircost", stack -> Integer.toString(stack.getRepairCost())),
+        
+        DAMAGEABLE("damageable", stack -> Boolean.toString(stack.getItem().isDamageable())),
+        
+        REPAIRABLE("repairable", stack -> Boolean.toString(stack.getItem().isRepairable())),
+        
+        CREATIVE_TABS("creativetabs", stack -> {
+            StringBuilder tabString = new StringBuilder();
+            
+            tabString.append("[");
+            for(CreativeTabs creativeTabs : stack.getItem().getCreativeTabs()) {
+                if (tabString.length() != 1) tabString.append(", ");
+                if (creativeTabs != null)tabString.append(creativeTabs.getTabLabel());
+            }
+            tabString.append("]");
+            
+            return tabString.toString();
+        });
+    
+    
         /**
          * Stuff to make this enum work
          */
