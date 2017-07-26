@@ -121,6 +121,9 @@ public class CraftTweaker {
         
         MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
         MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
+        MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
+        MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
+    
     }
     
     @EventHandler
