@@ -24,15 +24,6 @@ public interface IRecipeManager {
     @ZenGetter("all")
     List<ICraftingRecipe> getAll();
     
-    
-    /**
-     * Removes all crafting recipes in the game
-     *
-     * @return amount of recipes removed.
-     */
-    @ZenMethod
-    void removeAll();
-    
     /**
      * Returns all crafting recipes resulting in the given ingredient.
      *
@@ -42,17 +33,7 @@ public interface IRecipeManager {
      */
     @ZenMethod
     List<ICraftingRecipe> getRecipesFor(IIngredient ingredient);
-    
-    /**
-     * Removes all crafting recipes crafting the specified item.
-     *
-     * @param output recipe output pattern
-     *
-     * @return number of removed recipes
-     */
-    @ZenMethod
-    void remove(IIngredient output, @Optional boolean nbtMatch);
-    
+        
     /**
      * Adds a shaped recipe.
      *
@@ -114,12 +95,44 @@ public interface IRecipeManager {
     void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
+     * Removes all crafting recipes in the game
+     *
+     * @return amount of recipes removed.
+     */
+    @ZenMethod
+    void removeAll();
+    
+    /**
+     * Removes all crafting recipes crafting the specified item.
+     *
+     * @param output recipe output pattern
+     *
+     */
+    @ZenMethod
+    void remove(IIngredient output, @Optional boolean nbtMatch);
+    
+    /**
+     * Removes the recipe with the given registry name
+     *
+     * @param recipeName: RegistryName of the recipe
+     */
+    @ZenMethod
+    void removeByRecipeName(String recipeName);
+    
+    /**
+     * Removes all recipe which match the given regex String
+     *
+     * @param regexString: Regex String to match to
+     */
+    @ZenMethod
+    void removeByRegex(String regexString);
+    
+    /**
      * Removes shaped recipes.
      *
      * @param output      recipe output
      * @param ingredients recipe ingredients
      *
-     * @return number of removed recipes
      */
     @ZenMethod
     void removeShaped(IIngredient output, @Optional IIngredient[][] ingredients);
@@ -132,7 +145,6 @@ public interface IRecipeManager {
      * @param wildcard    if the recipe may contain other ingredients too, besides
      *                    the ones specified
      *
-     * @return number of removed recipes
      */
     @ZenMethod
     void removeShapeless(IIngredient output, @Optional IIngredient[] ingredients, @Optional boolean wildcard);

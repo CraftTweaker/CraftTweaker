@@ -370,8 +370,9 @@ public class Commands {
                 CraftTweakerAPI.logCommand("Mods list:");
                 for(IMod mod : CraftTweakerAPI.loadedMods) {
                     String message = "\u00A75" + mod.getId() + "\u00A7r - \u00A7d" + mod.getName() + "\u00A7 - " + mod.getVersion();
+                    String messageWithoutColor = mod.getId() + " - " + mod.getName() + " - " + mod.getVersion();
                     sender.sendMessage(new TextComponentString(message));
-                    CraftTweakerAPI.logCommand("Mod: " + message);
+                    CraftTweakerAPI.logCommand(messageWithoutColor);
                 }
                 
                 sender.sendMessage(getLinkToCraftTweakerLog("List of Mods generated", sender));
