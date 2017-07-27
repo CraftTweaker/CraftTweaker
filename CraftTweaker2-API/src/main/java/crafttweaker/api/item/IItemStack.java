@@ -261,4 +261,12 @@ public interface IItemStack extends IIngredient {
      */
     @ZenGetter("ores")
     List<IOreDictEntry> getOres();
+    
+    
+    @ZenMethod
+    IItemStack withDisplayName(String name);
+    
+    @ZenMethod
+    IItemStack withLore(String[] lore);
+    
 }

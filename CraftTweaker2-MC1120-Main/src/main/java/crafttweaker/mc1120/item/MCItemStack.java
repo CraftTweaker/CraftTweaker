@@ -14,7 +14,7 @@ import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -348,6 +348,71 @@ public class MCItemStack implements IItemStack {
         
         return result;
     }
+    
+    @Override
+    public IItemStack withDisplayName(String name){
+        NBTTagCompound tagComp;
+        
+        if (!this.stack.hasTagCompound() || this.stack.getTagCompound() == null){
+            tagComp = new NBTTagCompound();
+        }else {
+            tagComp = this.stack.getTagCompound();
+        }
+    
+        NBTTagCompound display;
+        if (!tagComp.hasKey("display") || !(tagComp.getTag("display") instanceof NBTTagCompound)){
+            display = new NBTTagCompound();
+        }else {
+            display = (NBTTagCompound) tagComp.getTag("display");
+        }
+        
+        display.setString("Name", name);
+        tagComp.setTag("display", display);
+        
+        ItemStack newStack = stack.copy();
+        newStack.setTagCompound(tagComp);
+        
+        return new MCItemStack(newStack);
+    }
+    
+    
+    @Override
+    public IItemStack withLore(String[] lore){
+        NBTTagCompound tagComp;
+        
+        if (!this.stack.hasTagCompound() || this.stack.getTagCompound() == null){
+            tagComp = new NBTTagCompound();
+        }else {
+            tagComp = this.stack.getTagCompound();
+        }
+        
+        NBTTagCompound display;
+        if (!tagComp.hasKey("display") || !(tagComp.getTag("display") instanceof NBTTagCompound)){
+            display = new NBTTagCompound();
+        }else {
+            display = (NBTTagCompound) tagComp.getTag("display");
+        }
+    
+        NBTTagList loreList;
+        if (!tagComp.hasKey("Lore") || !(tagComp.getTag("Lore") instanceof NBTTagList)){
+            loreList = new NBTTagList();
+        }else {
+            loreList = (NBTTagList) tagComp.getTag("Lore");
+        }
+    
+        for(String s : lore) {
+            loreList.appendTag(new NBTTagString(s));
+        }
+    
+        display.setTag("Lore", loreList);
+        tagComp.setTag("display", display);
+        
+        ItemStack newStack = stack.copy();
+        newStack.setTagCompound(tagComp);
+        
+        return new MCItemStack(newStack);
+    }
+    
     
     // #############################
     // ### Object implementation ###

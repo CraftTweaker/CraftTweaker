@@ -34,12 +34,13 @@ public class BracketHandlerPotion implements IBracketHandler {
     
     public static void rebuildRegistry() {
         potionNames.clear();
-        Potion.REGISTRY.getKeys().forEach(key -> potionNames.put(key.getResourcePath(), Potion.getPotionFromResourceLocation(key.toString())));
+        for(Potion potion : Potion.REGISTRY) {
+            potionNames.put(potion.getRegistryName().toString(), potion);
+        }
     }
     
     @SuppressWarnings("unused")
     public static IPotion getPotion(String name) {
-        potionNames.forEach((k, v) -> System.out.println("k = " + k));
         Potion pot = potionNames.get(name);
         if(pot == null){
             return null;

@@ -10,7 +10,7 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
-import crafttweaker.mc1120.brackets.BracketHandlerItem;
+import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.block.state.IBlockState;
@@ -119,7 +119,6 @@ public class Commands {
             }
         });
         
-        //TODO: Change potion command to output the correct name and make brackethandler use the full name
         CTChatCommand.registerCommand(new CraftTweakerCommand("potions") {
             
             @Override
@@ -134,9 +133,8 @@ public class Commands {
                 potions.sort(POTION_COMPARATOR);
                 
                 CraftTweakerAPI.logCommand("Potions:");
-                for(IPotion potion : potions) {
-                    CraftTweakerAPI.logCommand(potion.name() + " -- c: " + potion.getLiquidColor() + (potion.isBadEffect() ? " -- is bad effect" : " -- is good effect"));
-                }
+                BracketHandlerPotion.getPotionNames().forEach((k, v) ->
+                        CraftTweakerAPI.logCommand(k + " -- color: " + v.getLiquidColor() + (v.isBadEffect() ? " -- is bad effect" : " -- is good effect")));
                 
                 sender.sendMessage(getLinkToCraftTweakerLog("List of Potions generated", sender));
             }

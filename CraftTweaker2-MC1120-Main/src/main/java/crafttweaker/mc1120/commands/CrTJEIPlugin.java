@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.commands;
 
+import crafttweaker.CraftTweakerAPI;
 import mezz.jei.api.*;
 
 /**
@@ -12,7 +13,7 @@ public class CrTJEIPlugin implements IModPlugin {
     
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-        System.out.println("JEI Plugin loaded");
+        CraftTweakerAPI.logInfo("JEI Plugin loaded");
         JEI_RUNTIME = jeiRuntime;
     }
 }
