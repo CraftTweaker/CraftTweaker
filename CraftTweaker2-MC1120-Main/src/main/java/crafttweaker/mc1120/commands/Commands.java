@@ -19,6 +19,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
@@ -133,8 +134,10 @@ public class Commands {
                 potions.sort(POTION_COMPARATOR);
                 
                 CraftTweakerAPI.logCommand("Potions:");
-                BracketHandlerPotion.getPotionNames().forEach((k, v) ->
-                        CraftTweakerAPI.logCommand(k + " -- color: " + v.getLiquidColor() + (v.isBadEffect() ? " -- is bad effect" : " -- is good effect")));
+                BracketHandlerPotion.getPotionNames().forEach((k, v) ->{
+                    int id = Potion.REGISTRY.getIDForObject(v);
+                    CraftTweakerAPI.logCommand(k + " -- color: " + v.getLiquidColor() + (v.isBadEffect() ? " -- is bad effect" : " -- is good effect") + " -- PotionID: " + id);
+                });
                 
                 sender.sendMessage(getLinkToCraftTweakerLog("List of Potions generated", sender));
             }
