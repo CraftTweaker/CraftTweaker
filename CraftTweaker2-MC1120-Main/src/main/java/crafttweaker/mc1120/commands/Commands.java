@@ -289,7 +289,7 @@ public class Commands {
                         }
                         
                         ClipboardHelper.copyStringPlayer(player, itemName + withNBT);
-                        ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName, itemName + withNBT);
+                        ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName + "\u00A7a" + withNBT, itemName + withNBT);
                         
                         // adds the oredict names if it has some
                         if(oreDictNames.size() > 0) {

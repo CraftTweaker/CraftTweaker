@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
@@ -164,7 +164,7 @@ public class NamesCommand extends CraftTweakerCommand {
         REGISTRY_NAME("23498z9384z9283z49", stack -> {
             StringBuilder sb = new StringBuilder();
             
-            sb.append("<").append(stack.getItem().getRegistryName() != null ? stack.getItem().getRegistryName().toString() : "[Item has no registry Name]").append(stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata()).append(">");
+            sb.append("<").append(stack.getItem().getRegistryName() != null ? stack.getItem().getRegistryName().toString() : "[NO REGISTRY NAME] {" + stack.getItem().getClass().toString() + "}").append(stack.getMetadata() == 0 ? "" : ":" + stack.getMetadata()).append(">");
             if(stack.serializeNBT().hasKey("tag")) {
                 String nbt = NBTConverter.from(stack.serializeNBT().getTag("tag"), false).toString();
                 if(nbt.length() > 0)
@@ -175,6 +175,11 @@ public class NamesCommand extends CraftTweakerCommand {
         }),
         
         DISPLAY_NAME("display", ItemStack::getDisplayName),
+        
+        MOD_ID("modid", stack -> {
+            ResourceLocation resLoc = stack.getItem().getRegistryName();
+            return resLoc != null ? stack.getItem().getRegistryName().getResourceDomain() : "[NO REGISTRY NAME] {" + stack.getItem().getClass().toString() + "}";
+        }),
         
         UNLOCALIZED("unloc", ItemStack::getUnlocalizedName),
         
