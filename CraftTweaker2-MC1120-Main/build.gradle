@@ -32,14 +32,12 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
 }
-
 def jei_version = ext.jei_version
 dependencies {
     compile project(':ZenScript')
     compile project(':CraftTweaker2-API')
-    deobfProvided "mezz.jei:jei_1.12:${jei_version}:api"
-    // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.12:${jei_version}"
+
+    deobfCompile "mezz.jei:jei_1.12:$jei_version"
 }
 
 processResources
