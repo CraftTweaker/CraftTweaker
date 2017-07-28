@@ -13,6 +13,9 @@ import net.minecraft.util.NonNullList;
 import java.util.*;
 import java.util.regex.*;
 
+/**
+ * @author BloodWorkXGaming
+ */
 public class MCItemUtils implements IItemUtils{
     
     static ArrayList<ItemStack> ITEMLIST;

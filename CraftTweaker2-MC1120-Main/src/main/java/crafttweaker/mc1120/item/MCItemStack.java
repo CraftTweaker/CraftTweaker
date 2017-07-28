@@ -375,7 +375,6 @@ public class MCItemStack implements IItemStack {
         return new MCItemStack(newStack);
     }
     
-    
     @Override
     public IItemStack withLore(String[] lore){
         NBTTagCompound tagComp;
