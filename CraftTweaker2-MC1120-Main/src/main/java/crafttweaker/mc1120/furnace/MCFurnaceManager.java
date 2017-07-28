@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.furnace;
 
-import crafttweaker.CraftTweakerAPI;
+import crafttweaker.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.actions.*;
@@ -8,6 +8,7 @@ import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import stanhebben.zenscript.annotations.*;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
@@ -23,6 +24,9 @@ public class MCFurnaceManager implements IFurnaceManager {
     
     public static final Map<IItemStack, Integer> fuelMap = new HashMap<>();
     
+    public static List<ActionAddFurnaceRecipe> recipesToAdd = new ArrayList<>();
+    public static List<ActionFurnaceRemoveRecipe> recipesToRemove = new ArrayList<>();
+    
     public MCFurnaceManager() {
     
     }
@@ -32,38 +36,15 @@ public class MCFurnaceManager implements IFurnaceManager {
         if(output == null)
             throw new IllegalArgumentException("output cannot be null");
         
-        Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.instance().getSmeltingList();
-        
-        Map<ItemStack, ItemStack> smeltingMap = new HashMap<>();
-        if(input == null) {
-            for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-                if(output.matches(getIItemStack(entry.getValue()))) {
-                    smeltingMap.put(entry.getKey(), entry.getValue());
-                }
-            }
-        } else {
-            for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-                if(output.matches(getIItemStack(entry.getValue())) && input.matches(getIItemStack(entry.getKey()))) {
-                    smeltingMap.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-        if(smeltingMap.isEmpty()) {
-            CraftTweakerAPI.logWarning("No furnace recipes for " + output.toString());
-        } else {
-            CraftTweakerAPI.apply(new ActionRemoveFurnaceRecipe(smeltingMap));
-        }
+        recipesToRemove.add(new ActionFurnaceRemoveRecipe(output, input));
     }
     
     @Override
     public void removeAll() {
         Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.instance().getSmeltingList();
-        
-        Map<ItemStack, ItemStack> smeltingMap = new HashMap<>();
         for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-            smeltingMap.put(entry.getKey(), entry.getValue());
+            recipesToRemove.add(new ActionFurnaceRemoveRecipe(getIItemStack(entry.getKey()), getIItemStack(entry.getValue())));
         }
-        CraftTweakerAPI.apply(new ActionRemoveFurnaceRecipe(smeltingMap));
     }
     
     @Override
@@ -72,10 +53,9 @@ public class MCFurnaceManager implements IFurnaceManager {
         if(items == null) {
             CraftTweakerAPI.logError("Cannot turn " + input.toString() + " into a furnace recipe");
         }
-        
         ItemStack[] items2 = getItemStacks(items);
         ItemStack output2 = getItemStack(output);
-        CraftTweakerAPI.apply(new ActionAddFurnaceRecipe(input, items2, output2, xp));
+        recipesToAdd.add(new ActionAddFurnaceRecipe(input, items2, output2, xp));
     }
     
     @Override

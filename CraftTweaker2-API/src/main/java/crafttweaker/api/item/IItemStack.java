@@ -270,7 +270,6 @@ public interface IItemStack extends IIngredient {
     @ZenMethod
     IItemStack withDisplayName(String name);
     
-    
     /**
      * Adds a Lore to the Item, even if it already has nbt
      * @param lore supports color codes with "§"
