@@ -17,7 +17,7 @@ import static stanhebben.zenscript.ZenModule.*;
  */
 public class CrTTweaker implements ITweaker {
     
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     
     private final List<IAction> actions = new ArrayList<>();
     private IScriptProvider scriptProvider;
