@@ -1,14 +1,20 @@
 package crafttweaker.mc1120.item;
 
+import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.commands.Commands;
+import crafttweaker.mc1120.data.NBTConverter;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.*;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.common.registry.*;
+import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
 import java.util.regex.*;
@@ -148,5 +154,30 @@ public class MCItemUtils implements IItemUtils{
         
         return iItemStacks;
     }
+    
 
+    public IItemStack createSpawnEgg(IEntityDefinition entity, @Optional IData customNBT){
+        ItemStack item = new ItemStack(Items.SPAWN_EGG,1, 0);
+        NBTTagCompound baseTag;
+        if (customNBT != null){
+            baseTag = (NBTTagCompound) NBTConverter.from(customNBT);
+        }else {
+            baseTag = new NBTTagCompound();
+        }
+    
+        NBTTagCompound entityTag;
+        if (baseTag.hasKey("EntityTag")){
+            entityTag = baseTag.getCompoundTag("EntityTag");
+        }else {
+            entityTag = new NBTTagCompound();
+        }
+        
+        entityTag.setString("id", entity.getId());
+        baseTag.setTag("EntityTag", entityTag);
+        item.setTagCompound(baseTag);
+        
+        return new MCItemStack(item);
+    }
+    
+    
 }

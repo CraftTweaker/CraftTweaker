@@ -37,4 +37,6 @@ public interface IEntityDefinition {
     
     List<IItemStack> getDropsToRemove();
     
+    Object getInternal();
+    
 }

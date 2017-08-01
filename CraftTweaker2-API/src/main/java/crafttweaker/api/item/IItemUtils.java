@@ -1,6 +1,8 @@
 package crafttweaker.api.item;
 
-import stanhebben.zenscript.annotations.ZenMethod;
+import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.IEntityDefinition;
+import stanhebben.zenscript.annotations.*;
 
 /**
  *
@@ -41,5 +43,16 @@ public interface IItemUtils {
      */
     @ZenMethod
     IItemStack[] getItemsByRegexUnlocalizedName(String regex);
+    
+    
+    /**
+     * Creates a Spawnegg of the given entity
+     * @param entity
+     * @param customNBT NBT that the Item should have, entity gets overwritten by function
+     * example: itemUtils.createSpawnEgg(<entity:minecraft:sheep>, {EntityTag:{id:"minecraft:creeper",NoAI:1 as byte,PersistenceRequired:1 as byte}})
+     */
+    @ZenMethod
+    IItemStack createSpawnEgg(IEntityDefinition entity, @Optional IData customNBT);
+    
     
 }

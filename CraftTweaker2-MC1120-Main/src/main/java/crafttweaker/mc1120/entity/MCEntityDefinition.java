@@ -3,7 +3,7 @@ package crafttweaker.mc1120.entity;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.util.IntegerRange;
-import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import java.util.*;
 
@@ -12,27 +12,25 @@ import java.util.*;
  */
 public class MCEntityDefinition implements IEntityDefinition {
 
-    private final Class<? extends Entity> entityClass;
-    private final String entityName;
+    private final EntityEntry entityEntry;
 
     private final Map<IItemStack, IntegerRange> dropsToAdd = new HashMap<>();
     private final Map<IItemStack, IntegerRange> dropsToAddPlayerOnly = new HashMap<>();
     private final List<IItemStack> dropsToRemove = new ArrayList<>();
 
-    public MCEntityDefinition(Class<? extends Entity> entityClass, String entityName) {
-        this.entityClass = entityClass;
-        this.entityName = entityName;
+    public MCEntityDefinition(EntityEntry entityEntry) {
+        this.entityEntry = entityEntry;
     }
 
 
     @Override
     public String getId() {
-        return entityClass.getName();
+        return entityEntry.getRegistryName().toString();
     }
 
     @Override
     public String getName() {
-        return entityName;
+        return entityEntry.getName();
     }
 
     @Override
@@ -63,5 +61,9 @@ public class MCEntityDefinition implements IEntityDefinition {
     @Override
     public List<IItemStack> getDropsToRemove() {
         return dropsToRemove;
+    }
+    
+    public Object getInternal() {
+        return entityEntry;
     }
 }
