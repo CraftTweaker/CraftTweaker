@@ -1,5 +1,8 @@
 package crafttweaker.preprocessor;
 
+/**
+ * @author BloodWorkXGaming
+ */
 public abstract class PreprocessorActionBase {
     protected String preprocessorLine;
     protected String fileName;

@@ -5,6 +5,9 @@ import crafttweaker.CraftTweakerAPI;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author BloodWorkXGaming
+ */
 public class PreprocessorManager {
     
     /**
