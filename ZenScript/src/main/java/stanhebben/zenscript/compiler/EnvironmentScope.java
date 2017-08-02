@@ -103,6 +103,11 @@ public class EnvironmentScope implements IEnvironmentMethod {
     }
     
     @Override
+    public void info(ZenPosition position, String message) {
+        outer.info(position, message);
+    }
+    
+    @Override
     public Set<String> getClassNames() {
         return outer.getClassNames();
     }

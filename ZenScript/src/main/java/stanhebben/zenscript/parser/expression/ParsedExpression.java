@@ -356,7 +356,6 @@ public abstract class ParsedExpression {
                 }
                 IZenSymbol resolved = parser.getEnvironment().getBracketed(environment, tokens);
                 if(resolved == null) {
-                    if (!parser.ignoreBracketErrors){
                         StringBuilder builder = new StringBuilder();
                         builder.append('<');
                         Token last = null;
@@ -367,7 +366,10 @@ public abstract class ParsedExpression {
                             last = token;
                         }
                         builder.append('>');
+                    if (!parser.ignoreBracketErrors){
                         parser.getEnvironment().getErrorLogger().error(start.getPosition(), "Could not resolve " + builder.toString());
+                    }else {
+                        parser.getEnvironment().getErrorLogger().info(start.getPosition(), "Could not resolve " + builder.toString());
                     }
                     return new ParsedExpressionInvalid(start.getPosition());
                 } else {

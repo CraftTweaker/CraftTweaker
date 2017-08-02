@@ -1,5 +1,7 @@
 package crafttweaker.preprocessor;
 
+import crafttweaker.CraftTweakerAPI;
+
 import java.io.*;
 import java.util.*;
 
@@ -66,12 +68,12 @@ public class PreprocessorManager {
      * Checks the given inputstream for preprocessors
      * @param filename name of the file that is being checked
      * @param inputStream stream to check
-     * @throws UnsupportedEncodingException
      */
-    public void checkFileForPreprocessors(String filename, InputStream inputStream) throws UnsupportedEncodingException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        
+    public void checkFileForPreprocessors(String filename, InputStream inputStream) {
+        BufferedReader reader;
         try {
+            reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+
             String line;
             int lineIndex = -1;
             
@@ -80,11 +82,12 @@ public class PreprocessorManager {
                 checkLine(filename, line, lineIndex);
             }
             
-            // reader.reset();
+            reader.close();
         } catch(IOException e) {
+            CraftTweakerAPI.logError("Could not read preprocessor functions in " + filename);
             e.printStackTrace();
         }
-    
+        
         executePostActions();
     }
     

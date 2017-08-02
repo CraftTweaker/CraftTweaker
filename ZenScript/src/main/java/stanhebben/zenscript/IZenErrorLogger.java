@@ -25,4 +25,12 @@ public interface IZenErrorLogger {
      * @param message  warning message
      */
     void warning(ZenPosition position, String message);
+    
+    /**
+     * Called to generate a info during compilation.
+     *
+     * @param position info position
+     * @param message  info message
+     */
+    void info(ZenPosition position, String message);
 }

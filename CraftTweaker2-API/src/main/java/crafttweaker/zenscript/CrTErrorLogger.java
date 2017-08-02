@@ -23,4 +23,13 @@ public class CrTErrorLogger implements IZenErrorLogger {
             CraftTweakerAPI.logWarning(position + ": " + message);
         }
     }
+    
+    @Override
+    public void info(ZenPosition position, String message) {
+        if(position == null) {
+            CraftTweakerAPI.logInfo("system: " + message);
+        } else {
+            CraftTweakerAPI.logInfo(position + ": " + message);
+        }
+    }
 }

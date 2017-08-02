@@ -70,6 +70,11 @@ public class EnvironmentGlobal implements IEnvironmentGlobal {
     }
     
     @Override
+    public void info(ZenPosition position, String message) {
+        errors.info(position, message);
+    }
+    
+    @Override
     public IZenCompileEnvironment getEnvironment() {
         return environment;
     }

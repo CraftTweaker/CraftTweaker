@@ -2,12 +2,10 @@ package crafttweaker.runtime;
 
 import crafttweaker.*;
 import crafttweaker.preprocessor.*;
-import crafttweaker.runtime.providers.ScriptProviderMemory;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.ParseException;
-import stanhebben.zenscript.type.natives.JavaMethod;
 
 import java.io.*;
 import java.util.*;
@@ -25,7 +23,7 @@ public class CrTTweaker implements ITweaker {
     private PreprocessorManager preprocessorManager = new PreprocessorManager();
     
     private static boolean DEBUG = false;
-    private static HashSet<String> scriptsToIngoreBracketErrors = new HashSet<>();
+    public static HashSet<String> scriptsToIgnoreBracketErrors = new HashSet<>();
     
     private final List<IAction> actions = new ArrayList<>();
     private IScriptProvider scriptProvider;
@@ -82,7 +80,7 @@ public class CrTTweaker implements ITweaker {
                         //checking for stuff in this file
                         preprocessorManager.checkFileForPreprocessors(filename,  script.open());
                         
-                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptsToIngoreBracketErrors.contains(filename));
+                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptsToIgnoreBracketErrors.contains(filename));
                         ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                         files.add(pfile);
                     } catch(IOException ex) {
@@ -113,7 +111,7 @@ public class CrTTweaker implements ITweaker {
                     } else {
                         System.out.println("CraftTweaker: Loading group " + filename);
                     }
-                    CraftTweakerAPI.logInfo("when are you erroring?");
+                    
                     compileScripts(filename, files, environmentGlobal, DEBUG);
 
                     if (executeScripts){
@@ -142,7 +140,7 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public void addFileToIgnoreBracketErrors(String filename){
-        scriptsToIngoreBracketErrors.add(filename);
+        scriptsToIgnoreBracketErrors.add(filename);
     }
     
     @Override
