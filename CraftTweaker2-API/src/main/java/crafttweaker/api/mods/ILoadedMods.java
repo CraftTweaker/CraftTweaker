@@ -12,6 +12,7 @@ import stanhebben.zenscript.annotations.*;
 public interface ILoadedMods extends Iterable<IMod> {
     
     @ZenOperator(OperatorType.CONTAINS)
+    @ZenMethod
     boolean contains(String name);
     
     @ZenOperator(OperatorType.INDEXGET)
