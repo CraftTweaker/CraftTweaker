@@ -356,18 +356,19 @@ public abstract class ParsedExpression {
                 }
                 IZenSymbol resolved = parser.getEnvironment().getBracketed(environment, tokens);
                 if(resolved == null) {
-                    StringBuilder builder = new StringBuilder();
-                    builder.append('<');
-                    Token last = null;
-                    for(Token token : tokens) {
-                        if(last != null)
-                            builder.append(' ');
-                        builder.append(token.getValue());
-                        last = token;
+                    if (!parser.ignoreBracketErrors){
+                        StringBuilder builder = new StringBuilder();
+                        builder.append('<');
+                        Token last = null;
+                        for(Token token : tokens) {
+                            if(last != null)
+                                builder.append(' ');
+                            builder.append(token.getValue());
+                            last = token;
+                        }
+                        builder.append('>');
+                        parser.getEnvironment().getErrorLogger().error(start.getPosition(), "Could not resolve " + builder.toString());
                     }
-                    builder.append('>');
-                    
-                    parser.getEnvironment().getErrorLogger().error(start.getPosition(), "Could not resolve " + builder.toString());
                     return new ParsedExpressionInvalid(start.getPosition());
                 } else {
                     return new ParsedExpressionValue(start.getPosition(), parser.getEnvironment().getBracketed(environment, tokens).instance(start.getPosition()));

@@ -3,6 +3,7 @@ package crafttweaker.runtime;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
+import crafttweaker.preprocessor.PreprocessorManager;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.List;
 @ZenClass("crafttweaker.ICraftTweaker")
 @ZenRegister
 public interface ITweaker {
-    
     /**
      * Executes a specified CraftTweaker action. Will print a log message and
      * adds the action to the undo list.
@@ -53,4 +53,12 @@ public interface ITweaker {
      * Enables debug class generations
      */
     void enableDebug();
+    
+    /**
+     * No errors will be created for brackethandlers in these files
+     * @param filename
+     */
+    void addFileToIgnoreBracketErrors(String filename);
+    
+    PreprocessorManager getPreprocessorManager();
 }
