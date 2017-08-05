@@ -8,7 +8,7 @@ import crafttweaker.api.util.IngredientMap;
 import crafttweaker.api.util.IngredientMap.IngredientMapEntry;
 import stanhebben.zenscript.annotations.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Stan
@@ -19,6 +19,8 @@ public class IngredientTooltips {
     
     private static final IngredientMap<IFormattedText> TOOLTIPS = new IngredientMap<>();
     private static final IngredientMap<IFormattedText> SHIFT_TOOLTIPS = new IngredientMap<>();
+    private static final List<IItemDefinition> CLEARED_TOOLTIPS = new LinkedList<>();
+    
     
     @ZenMethod
     public static void addTooltip(IIngredient ingredient, IFormattedText tooltip) {
@@ -30,12 +32,21 @@ public class IngredientTooltips {
         CraftTweakerAPI.apply(new AddTooltipAction(ingredient, tooltip, true));
     }
     
+    @ZenMethod
+    public static void clearTooltip(IIngredient ingredient){
+        CraftTweakerAPI.apply(new ClearTooltipAction(ingredient));
+    }
+    
     public static List<IFormattedText> getTooltips(IItemStack item) {
         return TOOLTIPS.getEntries(item);
     }
     
     public static List<IFormattedText> getShiftTooltips(IItemStack item) {
         return SHIFT_TOOLTIPS.getEntries(item);
+    }
+    
+    public static boolean shouldClearToolTip(IItemStack item){
+        return CLEARED_TOOLTIPS.contains(item.getDefinition());
     }
     
     // ######################
@@ -64,6 +75,27 @@ public class IngredientTooltips {
         @Override
         public String describe() {
             return "Adding tooltip for " + ingredient + ": " + tooltip;
+        }
+        
+    }
+    
+    private static class ClearTooltipAction implements IAction {
+        
+        private final IIngredient ingredient;
+        
+        public ClearTooltipAction(IIngredient ingredient) {
+            this.ingredient = ingredient;
+        }
+        
+        @Override
+        public void apply() {
+            ingredient.getItems().forEach(item -> CLEARED_TOOLTIPS.add(item.getDefinition()));
+        }
+        
+        
+        @Override
+        public String describe() {
+            return "Clearing tooltip for " + ingredient;
         }
         
     }
