@@ -215,7 +215,9 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            
+            if(output == null){
+                return;
+            }
             int ingredientsWidth = 0;
             int ingredientsHeight = 0;
             
@@ -315,7 +317,9 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            
+            if(output == null){
+                return;
+            }
             List<ResourceLocation> toRemove = new ArrayList<>();
             outer:
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
@@ -406,6 +410,9 @@ public class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
+            if(output == null){
+                return;
+            }
             List<ResourceLocation> toRemove = new ArrayList<>();
             
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {

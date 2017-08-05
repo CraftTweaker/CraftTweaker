@@ -24,6 +24,8 @@ import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.ScriptProviderCascade;
 import crafttweaker.runtime.providers.ScriptProviderDirectory;
 import crafttweaker.zenscript.GlobalRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -41,7 +43,7 @@ import java.io.File;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.0.1", name = CraftTweaker.NAME)
+@Mod(modid = CraftTweaker.MODID, version = "4.0.3", name = CraftTweaker.NAME)
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
@@ -116,15 +118,18 @@ public class CraftTweaker {
     
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
+        try {
+            MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+            MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
+            MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
+            MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
+            MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         
-        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-        
-        MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
-        MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
-        MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
-        MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
-    
     }
+    
     
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {
