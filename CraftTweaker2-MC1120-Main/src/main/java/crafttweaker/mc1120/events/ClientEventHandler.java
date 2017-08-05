@@ -38,4 +38,15 @@ public class ClientEventHandler {
             }
         }
     }
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onGuiOpenEvent(GuiOpenEvent ev){
+        
+        if (Minecraft.getMinecraft().player != null && !alreadyChangedThePlayer){
+            alreadyChangedThePlayer = true;
+            
+            RecipeBookClient.rebuildTable();
+            CraftTweakerAPI.logInfo("Fixed the RecipeBook");
+        }
+    }
 }

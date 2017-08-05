@@ -17,6 +17,7 @@ import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCDimension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
@@ -41,8 +42,6 @@ import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
 public class CommonEventHandler {
 
-    private static boolean alreadyChangedThePlayer = false;
-    
     @SubscribeEvent(priority = LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
         CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
@@ -69,19 +68,7 @@ public class CommonEventHandler {
         }
     }
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onGuiOpenEvent(GuiOpenEvent ev){
-
-        if (Minecraft.getMinecraft().player != null && !alreadyChangedThePlayer){
-            alreadyChangedThePlayer = true;
-
-            EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
-            playerSP.recipeBook = new RecipeBookCustomClient();
-
-            CraftTweakerAPI.logInfo("Replaced the RecipeBook");
-        }
-    }
+    
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {
