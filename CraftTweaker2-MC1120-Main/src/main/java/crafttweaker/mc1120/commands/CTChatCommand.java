@@ -26,6 +26,8 @@ public class CTChatCommand extends CommandBase {
     
     static {
         aliases.add("ct");
+        aliases.add("mt");
+        aliases.add("minetweaker");
     }
     
     public static void register(FMLServerStartingEvent ev) {
