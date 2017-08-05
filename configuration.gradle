@@ -4,7 +4,7 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.craftTweakerVersion = "4.0.1"
+ext.craftTweakerVersion = "4.0.3"
 if (System.getenv('BUILD_NUMBER') != null) {
     project.craftTweakerVersion += "." + System.getenv('BUILD_NUMBER')
 }
@@ -19,5 +19,6 @@ ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).ge
 ext.forgeVersion1120 = "1.12-14.21.1.2413"
 ext.mappings1120 = "snapshot_20170624"
 ext.projects1120 = [
-        'CraftTweaker2-MC1120-Main'
+        'CraftTweaker2-MC1120-Main',
+        'CraftTweaker2-MC1120-Mod-JEI'
 ]
