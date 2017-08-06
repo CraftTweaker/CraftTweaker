@@ -34,6 +34,7 @@ public interface IEntityDefinition {
     @ZenMethod
     void clearDrops();
 
+    @ZenGetter("drops")
     List<IEntityDrop> getDrops();
 
     @Deprecated
