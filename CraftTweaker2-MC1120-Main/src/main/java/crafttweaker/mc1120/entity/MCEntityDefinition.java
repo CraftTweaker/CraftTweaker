@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.entity.IEntityDrop;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.util.IntegerRange;
 import net.minecraft.entity.Entity;
 
@@ -46,6 +47,13 @@ public class MCEntityDefinition implements IEntityDefinition {
         }
         drops.add(new EntityDrop(stack, min, max, chance));
     }
+    
+    @Override
+    public void addDrop(WeightedItemStack stack, int min, int max){
+    	this.addDrop(stack.getStack(), min, max, stack.getChance());
+    }
+    
+
 
     @Override
     public void addPlayerOnlyDrop(IItemStack stack, int min, int max, float chance) {
@@ -54,6 +62,12 @@ public class MCEntityDefinition implements IEntityDefinition {
             return;
         }
         drops.add(new EntityDrop(stack, min, max, chance, true));
+    }
+    
+    @Override
+    public void addPlayerOnlyDrop(WeightedItemStack stack, int min, int max) {
+    	this.addPlayerOnlyDrop(stack.getStack(), min, max, stack.getChance());
+    	
     }
 
     @Override

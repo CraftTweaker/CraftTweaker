@@ -2,6 +2,7 @@ package crafttweaker.api.entity;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.util.IntegerRange;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
@@ -26,7 +27,13 @@ public interface IEntityDefinition {
     void addDrop(IItemStack stack, @Optional int min, @Optional int max, @Optional float chance);
     
     @ZenMethod
+    void addDrop(WeightedItemStack stack, @Optional int min, @Optional int max);
+    
+    @ZenMethod
     void addPlayerOnlyDrop(IItemStack stack, @Optional int min, @Optional int max, @Optional float chance);
+    
+    @ZenMethod
+    void addPlayerOnlyDrop(WeightedItemStack stack, @Optional int min, @Optional int max);
     
     @ZenMethod
     void removeDrop(IItemStack stack);
