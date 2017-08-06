@@ -23,18 +23,26 @@ public interface IEntityDefinition {
     String getName();
     
     @ZenMethod
-    void addDrop(IItemStack stack, @Optional int min, @Optional int max);
+    void addDrop(IItemStack stack, @Optional int min, @Optional int max, @Optional float chance);
     
     @ZenMethod
-    void addPlayerOnlyDrop(IItemStack stack, @Optional int min, @Optional int max);
+    void addPlayerOnlyDrop(IItemStack stack, @Optional int min, @Optional int max, @Optional float chance);
     
     @ZenMethod
     void removeDrop(IItemStack stack);
-    
+
+    @ZenMethod
+    void clearDrops();
+
+    List<IEntityDrop> getDrops();
+
+    @Deprecated
     Map<IItemStack, IntegerRange> getDropsToAdd();
-    
+
+    @Deprecated
     Map<IItemStack, IntegerRange> getDropsToAddPlayerOnly();
     
     List<IItemStack> getDropsToRemove();
-    
+
+    boolean isClearDrops();
 }

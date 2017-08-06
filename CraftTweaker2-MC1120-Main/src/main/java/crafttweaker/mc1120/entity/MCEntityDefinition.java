@@ -1,11 +1,14 @@
 package crafttweaker.mc1120.entity;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.entity.IEntityDrop;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.util.IntegerRange;
 import net.minecraft.entity.Entity;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Stan
@@ -15,9 +18,9 @@ public class MCEntityDefinition implements IEntityDefinition {
     private final Class<? extends Entity> entityClass;
     private final String entityName;
 
-    private final Map<IItemStack, IntegerRange> dropsToAdd = new HashMap<>();
-    private final Map<IItemStack, IntegerRange> dropsToAddPlayerOnly = new HashMap<>();
+    private final List<IEntityDrop> drops = new ArrayList<>();
     private final List<IItemStack> dropsToRemove = new ArrayList<>();
+    private boolean clearDrops = false;
 
     public MCEntityDefinition(Class<? extends Entity> entityClass, String entityName) {
         this.entityClass = entityClass;
@@ -36,13 +39,21 @@ public class MCEntityDefinition implements IEntityDefinition {
     }
 
     @Override
-    public void addDrop(IItemStack stack, int min, int max) {
-        dropsToAdd.put(stack, new IntegerRange(min, max));
+    public void addDrop(IItemStack stack, int min, int max, float chance) {
+        if (min < 0 || max < 0 || chance < 0 || chance > 1) {
+            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s).", entityName, stack, min, max, Float.toString(chance)));
+            return;
+        }
+        drops.add(new EntityDrop(stack, min, max, chance));
     }
 
     @Override
-    public void addPlayerOnlyDrop(IItemStack stack, int min, int max) {
-        dropsToAddPlayerOnly.put(stack, new IntegerRange(min, max));
+    public void addPlayerOnlyDrop(IItemStack stack, int min, int max, float chance) {
+        if (min < 0 || max < 0 || chance < 0 || chance > 1) {
+            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addPlayerOnlyDrop(%s, %d, %d, %s).", entityName, stack, min, max, Float.toString(chance)));
+            return;
+        }
+        drops.add(new EntityDrop(stack, min, max, chance, true));
     }
 
     @Override
@@ -51,17 +62,32 @@ public class MCEntityDefinition implements IEntityDefinition {
     }
 
     @Override
+    public void clearDrops() {
+        clearDrops = true;
+    }
+
+    @Override
+    public List<IEntityDrop> getDrops() {
+        return drops;
+    }
+
+    @Override
     public Map<IItemStack, IntegerRange> getDropsToAdd() {
-        return dropsToAdd;
+        return drops.stream().filter(drop -> !drop.isPlayerOnly()).collect(Collectors.toMap(IEntityDrop::getItemStack, IEntityDrop::getRange));
     }
 
     @Override
     public Map<IItemStack, IntegerRange> getDropsToAddPlayerOnly() {
-        return dropsToAddPlayerOnly;
+        return drops.stream().filter(IEntityDrop::isPlayerOnly).collect(Collectors.toMap(IEntityDrop::getItemStack, IEntityDrop::getRange));
     }
 
     @Override
     public List<IItemStack> getDropsToRemove() {
         return dropsToRemove;
+    }
+
+    @Override
+    public boolean isClearDrops() {
+        return clearDrops;
     }
 }
