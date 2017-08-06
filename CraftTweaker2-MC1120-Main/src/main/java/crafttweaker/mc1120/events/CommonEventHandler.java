@@ -12,32 +12,23 @@ import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.recipebook.RecipeBookCustomClient;
 import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCDimension;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
 import static javax.swing.UIManager.get;
-import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOW;
 import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
 public class CommonEventHandler {
@@ -127,7 +118,7 @@ public class CommonEventHandler {
         Entity entity = ev.getEntity();
         IEntityDefinition entityDefinition = CraftTweakerAPI.game.getEntity(EntityList.getEntityString(ev.getEntity()));
         if(entityDefinition != null) {
-            if (entityDefinition.isClearDrops()) {
+            if (entityDefinition.shouldClearDrops()) {
                 ev.getDrops().clear();
             } else if(!entityDefinition.getDropsToRemove().isEmpty()) {
                 List<EntityItem> removedDrops = new ArrayList<>();

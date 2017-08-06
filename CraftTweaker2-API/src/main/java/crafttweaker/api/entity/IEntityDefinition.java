@@ -44,5 +44,5 @@ public interface IEntityDefinition {
     
     List<IItemStack> getDropsToRemove();
 
-    boolean isClearDrops();
+    boolean shouldClearDrops();
 }

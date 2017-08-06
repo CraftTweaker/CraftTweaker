@@ -87,7 +87,7 @@ public class MCEntityDefinition implements IEntityDefinition {
     }
 
     @Override
-    public boolean isClearDrops() {
+    public boolean shouldClearDrops() {
         return clearDrops;
     }
 }
