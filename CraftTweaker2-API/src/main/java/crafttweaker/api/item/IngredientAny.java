@@ -36,6 +36,12 @@ public class IngredientAny implements IIngredient {
         return null;
     }
     
+
+	@Override
+	public IItemStack[] getItemArray() {
+		return new IItemStack[]{};
+	}
+    
     @Override
     public List<ILiquidStack> getLiquids() {
         return null;
