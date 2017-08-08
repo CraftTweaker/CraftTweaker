@@ -27,6 +27,11 @@ public class MCPotion implements IPotion {
     }
     
     @Override
+    public int getLiquidColour() {
+        return potion.getLiquidColor();
+    }
+    
+    @Override
     public Object getInternal() {
         return potion;
     }

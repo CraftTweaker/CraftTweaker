@@ -53,6 +53,18 @@ public interface IIngredient {
     List<IItemStack> getItems();
     
     /**
+     * Gets all possible items for this ingredient as Array.
+     * <p>
+     * If there is no item list (for example, it is the &lt;*&gt; wildcard item)
+     * an empty Array should be returned
+     * 
+     * @return the items for this ingredient as array, or null
+     */
+    
+    @ZenGetter("itemArray")
+    IItemStack[] getItemArray();
+    
+    /**
      * Gets all possible liquids for this ingredient.
      * <p>
      * If there is no liquid list (for example, it is the &lt;*&ft; wildcard

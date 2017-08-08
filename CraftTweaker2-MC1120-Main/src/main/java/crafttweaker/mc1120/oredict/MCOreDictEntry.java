@@ -146,6 +146,12 @@ public class MCOreDictEntry implements IOreDictEntry {
     public List<IItemStack> getItems() {
         return OreDictionary.getOres(getName()).stream().map(CraftTweakerMC::getIItemStackWildcardSize).collect(Collectors.toList());
     }
+    
+    @Override
+    public IItemStack[] getItemArray() {
+    	List<IItemStack> items = getItems();
+    	return items.toArray(new IItemStack[items.size()]);
+    }
 
     @Override
     public List<ILiquidStack> getLiquids() {

@@ -227,6 +227,11 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public IItemStack[] getItemArray() {
+    	return items.toArray(new IItemStack[items.size()]);
+    }
+    
+    @Override
     public List<ILiquidStack> getLiquids() {
         return Collections.emptyList();
     }
