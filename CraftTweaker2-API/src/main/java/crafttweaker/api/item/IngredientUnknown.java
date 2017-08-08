@@ -34,6 +34,11 @@ public class IngredientUnknown implements IIngredient {
     }
     
     @Override
+    public IItemStack[] getItemArray() {
+    	return new IItemStack[]{};
+    }
+    
+    @Override
     public List<ILiquidStack> getLiquids() {
         return Collections.emptyList();
     }

@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+version = "1.12-" + ext.craftTweakerVersion
+archivesBaseName = project.projectDir.name
+
+minecraft {
+    version = forgeVersion1120
+    runDir = "eclipse"
+    mappings = mappings1120
+    useDepAts = true
+}
+repositories {
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+}
+
+dependencies {
+    compile project(':ZenScript')
+    compile project(':CraftTweaker2-API')
+    compile project(':CraftTweaker2-MC1120-Main')
+	deobfCompile "mezz.jei:jei_1.12:4.7.2.76"
+}

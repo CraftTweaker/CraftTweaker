@@ -12,37 +12,27 @@ import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.recipebook.RecipeBookCustomClient;
 import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCDimension;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
 import static javax.swing.UIManager.get;
-import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOW;
 import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
 public class CommonEventHandler {
 
-    private static boolean alreadyChangedThePlayer = false;
-    
     @SubscribeEvent(priority = LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
         CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
@@ -66,20 +56,6 @@ public class CommonEventHandler {
                     }
                 }
             }
-        }
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onGuiOpenEvent(GuiOpenEvent ev){
-
-        if (Minecraft.getMinecraft().player != null && !alreadyChangedThePlayer){
-            alreadyChangedThePlayer = true;
-
-            EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
-            playerSP.recipeBook = new RecipeBookCustomClient();
-
-            CraftTweakerAPI.logInfo("Replaced the RecipeBook");
         }
     }
 
@@ -142,31 +118,9 @@ public class CommonEventHandler {
         Entity entity = ev.getEntity();
         IEntityDefinition entityDefinition = CraftTweakerAPI.game.getEntity(EntityList.getEntityString(ev.getEntity()));
         if(entityDefinition != null) {
-            if(!entityDefinition.getDropsToAdd().isEmpty()) {
-                entityDefinition.getDropsToAdd().forEach((key, val) -> {
-                    EntityItem item;
-                    if(val.getMin() == 0 && val.getMax() == 0) {
-                        item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
-                    } else {
-                        item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
-                    }
-                    ev.getDrops().add(item);
-                });
-            }
-            if(ev.getSource().getTrueSource() instanceof EntityPlayer) {
-                if(!entityDefinition.getDropsToAddPlayerOnly().isEmpty()) {
-                    entityDefinition.getDropsToAddPlayerOnly().forEach((key, val) -> {
-                        EntityItem item;
-                        if(val.getMin() == 0 && val.getMax() == 0) {
-                            item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.getInternal()).copy());
-                        } else {
-                            item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) key.withAmount(val.getRandom()).getInternal()).copy());
-                        }
-                        ev.getDrops().add(item);
-                    });
-                }
-            }
-            if(!entityDefinition.getDropsToRemove().isEmpty()) {
+            if (entityDefinition.shouldClearDrops()) {
+                ev.getDrops().clear();
+            } else if(!entityDefinition.getDropsToRemove().isEmpty()) {
                 List<EntityItem> removedDrops = new ArrayList<>();
                 entityDefinition.getDropsToRemove().forEach(drop -> ev.getDrops().forEach(drops -> {
                     if(drop.matches(new MCItemStack(drops.getItem()))) {
@@ -174,6 +128,20 @@ public class CommonEventHandler {
                     }
                 }));
                 ev.getDrops().removeAll(removedDrops);
+            }
+            if (!entityDefinition.getDrops().isEmpty()) {
+                Random rand = entity.world.rand;
+                entityDefinition.getDrops().forEach(drop -> {
+                    if (drop.isPlayerOnly() && !(ev.getSource().getTrueSource() instanceof EntityPlayer)) return;
+                    if (drop.getChance() > 0 && drop.getChance() < 1 && rand.nextFloat() > drop.getChance()) return;
+                    EntityItem item;
+                    if(drop.getMin() == 0 && drop.getMax() == 0) {
+                        item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) drop.getItemStack().getInternal()).copy());
+                    } else {
+                        item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) drop.getItemStack().withAmount(drop.getRange().getRandom(rand)).getInternal()).copy());
+                    }
+                    ev.getDrops().add(item);
+                });
             }
         }
     }
