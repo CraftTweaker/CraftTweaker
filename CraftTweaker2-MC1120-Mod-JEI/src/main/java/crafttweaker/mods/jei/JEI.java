@@ -55,6 +55,10 @@ public class JEI {
         
         @Override
         public void apply() {
+            if(stack == null){
+                CraftTweakerAPI.logError("Cannot hide null item!");
+                return;
+            }
             JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
         }
         
