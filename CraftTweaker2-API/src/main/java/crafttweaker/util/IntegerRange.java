@@ -23,9 +23,13 @@ public class IntegerRange {
     }
     
     public int getRandom() {
+        return getRandom(rand);
+    }
+
+    public int getRandom(Random rand) {
         return rand.nextInt((max - min) + 1) + min;
     }
-    
+
     public int getMin() {
         return min;
     }

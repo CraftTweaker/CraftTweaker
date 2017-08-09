@@ -117,6 +117,11 @@ public class MCLiquidStack implements ILiquidStack {
     public List<IItemStack> getItems() {
         return Collections.emptyList();
     }
+    
+    @Override
+    public IItemStack[] getItemArray() {
+    	return new IItemStack[]{};
+    }
 
     @Override
     public List<ILiquidStack> getLiquids() {

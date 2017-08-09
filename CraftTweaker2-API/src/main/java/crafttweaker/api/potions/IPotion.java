@@ -14,5 +14,8 @@ public interface IPotion {
     @ZenGetter("liquidColor")
     int getLiquidColor();
     
+    @ZenGetter("liquidColour")
+    int getLiquidColour();
+    
     Object getInternal();
 }

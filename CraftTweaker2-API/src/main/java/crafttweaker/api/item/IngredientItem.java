@@ -43,6 +43,11 @@ public class IngredientItem implements IIngredient {
         return items;
     }
     
+	@Override
+	public IItemStack[] getItemArray() {
+		return items.toArray(new IItemStack[items.size()]);
+	}
+    
     @Override
     public List<ILiquidStack> getLiquids() {
         return Collections.emptyList();

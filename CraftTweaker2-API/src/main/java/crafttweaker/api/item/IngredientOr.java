@@ -53,6 +53,12 @@ public class IngredientOr implements IIngredient {
         return result;
     }
     
+	@Override
+	public IItemStack[] getItemArray() {
+		List<IItemStack> items = getItems();
+		return items.toArray(new IItemStack[items.size()]);
+	}
+    
     @Override
     public List<ILiquidStack> getLiquids() {
         List<ILiquidStack> result = new ArrayList<>();
