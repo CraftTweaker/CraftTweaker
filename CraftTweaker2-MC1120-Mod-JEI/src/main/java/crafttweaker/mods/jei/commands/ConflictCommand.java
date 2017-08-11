@@ -1,7 +1,9 @@
-package crafttweaker.mc1120.commands;
+package crafttweaker.mods.jei.commands;
 
 import com.google.common.collect.*;
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.mc1120.commands.*;
+import crafttweaker.mods.jei.JEIAddonPlugin;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import mezz.jei.api.IRecipeRegistry;
@@ -40,7 +42,7 @@ public class ConflictCommand extends CraftTweakerCommand {
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         
-        if(CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")) {
+        if(JEIAddonPlugin.recipeRegistry == null || !Loader.isModLoaded("jei")) {
             sender.sendMessage(getNormalMessage("\u00A74This command can only be executed on the Client and with JEI installed"));
             CraftTweakerAPI.logWarning("JEI plugin not loaded!");
         } else {
@@ -55,7 +57,7 @@ public class ConflictCommand extends CraftTweakerCommand {
     
     
     private void runConflictScan() {
-        if(CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")) {
+        if(JEIAddonPlugin.recipeRegistry == null || !Loader.isModLoaded("jei")) {
             CraftTweakerAPI.logWarning("JEI plugin not loaded yet!");
             CraftTweakerAPI.logWarning("This command can only be used on a client and with JEI installed");
         } else {
@@ -128,7 +130,7 @@ public class ConflictCommand extends CraftTweakerCommand {
      * Collects all recipes, converts them to the own class and adds them to the List
      */
     private void gatherRecipes() {
-        IRecipeRegistry reg = CrTJEIPlugin.JEI_RUNTIME.getRecipeRegistry();
+        IRecipeRegistry reg = JEIAddonPlugin.recipeRegistry;
         
         for(IRecipeCategory category : reg.getRecipeCategories()) {
             if(category instanceof CraftingRecipeCategory) {

@@ -711,25 +711,6 @@ public class Commands {
         });
         
         CTChatCommand.registerCommand(new NamesCommand());
-    
-        //region >>> JEI Command
-        if(Loader.isModLoaded("jei")) {
-            CTChatCommand.registerCommand(new ConflictCommand());
-        } else {
-            CTChatCommand.registerCommand(new CraftTweakerCommand("conflict") {
-                @Override
-                protected void init() {
-                    setDescription(getClickableCommandText("\u00A72/ct conflict", "/ct conflict", true), getNormalMessage(" \u00A73Lists all conflicting crafting recipes in the game"), getNormalMessage(" \u00A73Might take a bit of time depending on the size of the pack"), getNormalMessage(" \u00A73This needs to be run on a client and with JEI installed"));
-                }
-                
-                @Override
-                public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                    sender.sendMessage(getNormalMessage("\u00A74This Command needs to be run with JEI installed"));
-                }
-            });
-        }
-        //endregion
-        
         
     }
     
