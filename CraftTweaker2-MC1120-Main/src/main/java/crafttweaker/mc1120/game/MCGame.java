@@ -72,7 +72,7 @@ public class MCGame implements IGame {
     @Override
     public List<IEntityDefinition> getEntities() {
         if(ENTITY_DEFINITIONS.isEmpty()) {
-            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
+            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry.getEntityClass(), entry.getName())));
         }
         return ENTITY_DEFINITIONS;
     }
@@ -93,7 +93,7 @@ public class MCGame implements IGame {
         }
         if(needsReloading) {
             ENTITY_DEFINITIONS.clear();
-            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
+            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry.getEntityClass(), entry.getName())));
         }
         return getEntities().stream().filter(ent -> ent.getName().equals(entityName)).findFirst().orElse(null);
     }
