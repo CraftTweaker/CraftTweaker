@@ -15,4 +15,6 @@ public interface IFormattedText {
     
     @ZenOperator(OperatorType.CAT)
     IFormattedText cat(IFormattedText other);
+    
+    String getText();
 }

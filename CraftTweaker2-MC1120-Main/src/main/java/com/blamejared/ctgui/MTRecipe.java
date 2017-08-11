@@ -11,7 +11,7 @@ import java.util.*;
 
 import static com.blamejared.ctgui.reference.Reference.*;
 
-@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, clientSideOnly = true, dependencies = "required-after:crafttweaker;")
+@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, clientSideOnly = true, dependencies = "required-after:crafttweaker;", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class MTRecipe {
 
     @Mod.Instance(MOD_ID)

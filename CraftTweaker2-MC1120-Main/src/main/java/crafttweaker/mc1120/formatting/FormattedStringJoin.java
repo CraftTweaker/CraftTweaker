@@ -59,4 +59,9 @@ public class FormattedStringJoin implements IMCFormattedString {
         newValues[values.length] = (IMCFormattedString) other;
         return new FormattedStringJoin(newValues);
     }
+    
+    @Override
+    public String getText() {
+        return getTooltipString();
+    }
 }

@@ -12,7 +12,7 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.getClickableComma
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.getNormalMessage;
 import static crafttweaker.mods.jei.JEI.LATE_HIDING;
 
-@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.0", dependencies = "after:jei;")
+@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.0", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class JEIMod {
     
     
@@ -30,7 +30,8 @@ public class JEIMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         
-        //region >>> JEI Command
+        
+        //region >>> conflict Command
         if(Loader.isModLoaded("jei")) {
             CTChatCommand.registerCommand(new ConflictCommand());
         } else {
