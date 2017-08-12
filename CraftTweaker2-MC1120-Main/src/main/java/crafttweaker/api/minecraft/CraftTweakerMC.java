@@ -506,9 +506,13 @@ public class CraftTweakerMC {
         } else if(ingredient instanceof FluidStack) {
             return new MCLiquidStack((FluidStack) ingredient);
         } else if(ingredient instanceof Ingredient) {
-            if(ingredient == Ingredient.EMPTY || ((Ingredient)ingredient).getMatchingStacks().length<=0 || ((Ingredient)ingredient).apply(ItemStack.EMPTY))
+            ItemStack[] matchingStacks = ((Ingredient) ingredient).getMatchingStacks();
+            
+            if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient)ingredient).apply(ItemStack.EMPTY)) {
                 return null;
-            return getIItemStack(((Ingredient)ingredient).getMatchingStacks()[0]);
+            }else {
+                return getIItemStack(matchingStacks[0]);
+            }
         } else {
             throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
         }

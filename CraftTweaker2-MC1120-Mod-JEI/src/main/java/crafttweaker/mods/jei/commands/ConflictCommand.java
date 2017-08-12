@@ -96,10 +96,11 @@ public class ConflictCommand extends CraftTweakerCommand {
         for(int i = 0; i < maxCount; i++) {
             craftingRecipeEntries.get(i).checkAllConflicting(conflictingRecipes);
             
-            float progress = i / maxCount ;
+            float progress = (float) i / (float)maxCount ;
             
-            if (progress - lastProgress > 0.1){
-                System.out.println("Current Progress on the scan: " + progress);
+            if (progress - lastProgress > 0.05){
+                int percentage = (int) ((progress) * 100);
+                System.out.println("Current Progress on the scan: " + percentage + "%");
                 lastProgress = progress;
             }
         }
@@ -171,8 +172,6 @@ public class ConflictCommand extends CraftTweakerCommand {
                         
                         
                         List<List<ItemStack>> inputs = ing.getInputs(ItemStack.class);
-                        
-                        
                         List<List<ItemStack>> outputs = ing.getOutputs(ItemStack.class);
                         
                         // checks for having no outputs or having a "null" output
@@ -369,15 +368,15 @@ public class ConflictCommand extends CraftTweakerCommand {
         boolean checkConflictingItemStacks(List<ItemStack> stackListThis, List<ItemStack> stackListOther){
             // has one item which is the same
             boolean hasOneConflict = false;
-            
-            for(ItemStack stack : stackListThis) {
-                for(ItemStack otherStack : stackListOther) {
-                    if(compareItemStack(stack, otherStack)) {
+    
+            for(ItemStack stackListThi : stackListThis) {
+                for(ItemStack aStackListOther : stackListOther) {
+                    if(compareItemStack(stackListThi, aStackListOther)) {
                         hasOneConflict = true;
                     }
                 }
             }
-    
+            
             return hasOneConflict;
         }
         
