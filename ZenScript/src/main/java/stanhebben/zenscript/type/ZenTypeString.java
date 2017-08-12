@@ -85,9 +85,13 @@ public class ZenTypeString extends ZenType {
     
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
-        IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
+    	if(name.equals("length")){
+        	return new ExpressionStringLength(position, value.eval(environment));
+        }
+    	
+    	IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
         if(result == null) {
-            environment.error(position, "bool value has no members");
+            environment.error(position, "string value has no such member: " + name);
             return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
         } else {
             return result;
