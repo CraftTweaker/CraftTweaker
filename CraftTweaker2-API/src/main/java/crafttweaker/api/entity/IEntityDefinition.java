@@ -54,4 +54,6 @@ public interface IEntityDefinition {
     
     boolean shouldClearDrops();
     
+    Object getInternal();
+    
 }
