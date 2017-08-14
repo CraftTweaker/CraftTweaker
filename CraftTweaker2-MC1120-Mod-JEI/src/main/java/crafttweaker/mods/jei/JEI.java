@@ -31,6 +31,7 @@ public class JEI {
     
     public static List<IAction> LATE_HIDING = new LinkedList<>();
     public static List<IAction> DESCRIPTIONS = new LinkedList<>();
+    public static List<IAction> LATE_ADDITION = new LinkedList<>();
     
     @ZenMethod
     public static void hide(IItemStack stack) {
@@ -54,6 +55,11 @@ public class JEI {
     @ZenMethod
     public static void addDescription(IItemStack stack, String[] description){
     	DESCRIPTIONS.add(new Describe(stack, description));
+    }
+    
+    @ZenMethod
+    public static void addItem(IItemStack stack){
+    	LATE_ADDITION.add(new AddItem(stack));
     }
     
     private static class Hide implements IAction {
@@ -81,8 +87,8 @@ public class JEI {
     }
     
     private static class Describe implements IAction{
-    	private IItemStack stack;
-    	private String[] description;
+    	private final IItemStack stack;
+    	private final String[] description;
     	
     	public Describe(IItemStack stack, String[] description){
     		this.stack = stack;
@@ -102,6 +108,26 @@ public class JEI {
 		public String describe() {
 			return "Adding description in JEI for: " + stack;
 		}
+    }
+    
+    private static class AddItem implements IAction{
+
+    	private final IItemStack stack;
+    	
+		public AddItem(IItemStack stack){
+			this.stack = stack;
+		}
+		
+    	@Override
+		public void apply() {
+    		JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(getItemStack(stack)));		
+		}
+
+		@Override
+		public String describe() {
+			return String.format("Adding %s to JEI", stack);
+		}
+    	
     }
     
 }
