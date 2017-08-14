@@ -30,26 +30,37 @@ import static crafttweaker.mc1120.recipes.MCRecipeManager.recipesToRemove;
 public class JEI {
     
     public static List<IAction> LATE_HIDING = new LinkedList<>();
+    public static List<IAction> DESCRIPTIONS = new LinkedList<>();
     
     @ZenMethod
     public static void hide(IItemStack stack) {
-        LATE_HIDING.add(new Hide(getItemStack(stack)));
+        LATE_HIDING.add(new Hide(stack));
     }
     
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
         recipesToRemove.add(new MCRecipeManager.ActionRemoveRecipesNoIngredients(output, nbtMatch));
         for(IItemStack stack : output.getItems()) {
-            LATE_HIDING.add(new Hide(getItemStack(stack)));
+            LATE_HIDING.add(new Hide(stack));
         }
         
     }
     
+    @ZenMethod
+    public static void addDescription(IItemStack stack, String description){
+    	DESCRIPTIONS.add(new Describe(stack, new String[]{description}));
+    }
+    
+    @ZenMethod
+    public static void addDescription(IItemStack stack, String[] description){
+    	DESCRIPTIONS.add(new Describe(stack, description));
+    }
+    
     private static class Hide implements IAction {
         
-        private ItemStack stack;
+        private IItemStack stack;
         
-        public Hide(ItemStack stack) {
+        public Hide(IItemStack stack) {
             this.stack = stack;
         }
         
@@ -59,7 +70,7 @@ public class JEI {
                 CraftTweakerAPI.logError("Cannot hide null item!");
                 return;
             }
-            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
+            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(getItemStack(stack)));
         }
         
         @Override
@@ -67,6 +78,30 @@ public class JEI {
             return "Hiding item in JEI: " + stack;
         }
         
+    }
+    
+    private static class Describe implements IAction{
+    	private IItemStack stack;
+    	private String[] description;
+    	
+    	public Describe(IItemStack stack, String[] description){
+    		this.stack = stack;
+    		this.description = description;
+    	}
+
+		@Override
+		public void apply() {
+			if (stack == null){
+				CraftTweakerAPI.logError("Cannot describe a null item!");
+				return;
+			}
+			JEIAddonPlugin.modRegistry.addIngredientInfo(getItemStack(stack), ItemStack.class, description);
+		}
+
+		@Override
+		public String describe() {
+			return "Adding description in JEI for: " + stack;
+		}
     }
     
 }
