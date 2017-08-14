@@ -4,13 +4,12 @@ import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
-import net.minecraft.item.ItemStack;
+import crafttweaker.mods.jei.Classes.*;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.*;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 import static crafttweaker.mc1120.recipes.MCRecipeManager.recipesToRemove;
 
 
@@ -62,72 +61,5 @@ public class JEI {
     	LATE_ADDITION.add(new AddItem(stack));
     }
     
-    private static class Hide implements IAction {
-        
-        private IItemStack stack;
-        
-        public Hide(IItemStack stack) {
-            this.stack = stack;
-        }
-        
-        @Override
-        public void apply() {
-            if(stack == null){
-                CraftTweakerAPI.logError("Cannot hide null item!");
-                return;
-            }
-            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(getItemStack(stack)));
-        }
-        
-        @Override
-        public String describe() {
-            return "Hiding item in JEI: " + stack;
-        }
-        
-    }
-    
-    private static class Describe implements IAction{
-    	private final IItemStack stack;
-    	private final String[] description;
-    	
-    	public Describe(IItemStack stack, String[] description){
-    		this.stack = stack;
-    		this.description = description;
-    	}
-
-		@Override
-		public void apply() {
-			if (stack == null){
-				CraftTweakerAPI.logError("Cannot describe a null item!");
-				return;
-			}
-			JEIAddonPlugin.modRegistry.addIngredientInfo(getItemStack(stack), ItemStack.class, description);
-		}
-
-		@Override
-		public String describe() {
-			return "Adding description in JEI for: " + stack;
-		}
-    }
-    
-    private static class AddItem implements IAction{
-
-    	private final IItemStack stack;
-    	
-		public AddItem(IItemStack stack){
-			this.stack = stack;
-		}
-		
-    	@Override
-		public void apply() {
-    		JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(getItemStack(stack)));		
-		}
-
-		@Override
-		public String describe() {
-			return String.format("Adding %s to JEI", stack);
-		}
-    	
-    }
     
 }
