@@ -28,20 +28,19 @@ import static crafttweaker.mc1120.recipes.MCRecipeManager.recipesToRemove;
 @ModOnly("jei")
 public class JEI {
     
-    public static List<IAction> LATE_HIDING = new LinkedList<>();
+    public static List<IAction> LATE_ACTIONS = new LinkedList<>();
     public static List<IAction> DESCRIPTIONS = new LinkedList<>();
-    public static List<IAction> LATE_ADDITION = new LinkedList<>();
     
     @ZenMethod
     public static void hide(IItemStack stack) {
-        LATE_HIDING.add(new Hide(stack));
+        LATE_ACTIONS.add(new Hide(stack));
     }
     
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
         recipesToRemove.add(new MCRecipeManager.ActionRemoveRecipesNoIngredients(output, nbtMatch));
         for(IItemStack stack : output.getItems()) {
-            LATE_HIDING.add(new Hide(stack));
+            LATE_ACTIONS.add(new Hide(stack));
         }
         
     }
@@ -58,7 +57,7 @@ public class JEI {
     
     @ZenMethod
     public static void addItem(IItemStack stack){
-    	LATE_ADDITION.add(new AddItem(stack));
+    	LATE_ACTIONS.add(new AddItem(stack));
     }
     
     

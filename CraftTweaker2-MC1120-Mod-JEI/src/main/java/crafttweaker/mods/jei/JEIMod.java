@@ -12,8 +12,7 @@ public class JEIMod {
     public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
         if(Loader.isModLoaded("jei")) {
             try {
-                LATE_HIDING.forEach(CraftTweakerAPI::apply);
-                LATE_ADDITION.forEach(CraftTweakerAPI::apply);
+                LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
             } catch(Exception e) {
                 e.printStackTrace();
             }
