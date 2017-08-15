@@ -20,6 +20,7 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
@@ -42,7 +43,9 @@ public class CommonEventHandler {
         BracketHandlerPotion.rebuildRegistry();
 
         CraftTweakerAPI.logInfo("CraftTweaker: Successfully built item registry");
+        MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Pre());
         CrafttweakerImplementationAPI.load();
+        MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Post());
 
     }
     
