@@ -4,13 +4,12 @@ import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
-import net.minecraft.item.ItemStack;
+import crafttweaker.mods.jei.Classes.*;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.*;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 import static crafttweaker.mc1120.recipes.MCRecipeManager.recipesToRemove;
 
 
@@ -29,44 +28,37 @@ import static crafttweaker.mc1120.recipes.MCRecipeManager.recipesToRemove;
 @ModOnly("jei")
 public class JEI {
     
-    public static List<IAction> LATE_HIDING = new LinkedList<>();
+    public static List<IAction> LATE_ACTIONS = new LinkedList<>();
+    public static List<IAction> DESCRIPTIONS = new LinkedList<>();
     
     @ZenMethod
     public static void hide(IItemStack stack) {
-        LATE_HIDING.add(new Hide(getItemStack(stack)));
+        LATE_ACTIONS.add(new Hide(stack));
     }
     
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
         recipesToRemove.add(new MCRecipeManager.ActionRemoveRecipesNoIngredients(output, nbtMatch));
         for(IItemStack stack : output.getItems()) {
-            LATE_HIDING.add(new Hide(getItemStack(stack)));
+            LATE_ACTIONS.add(new Hide(stack));
         }
         
     }
     
-    private static class Hide implements IAction {
-        
-        private ItemStack stack;
-        
-        public Hide(ItemStack stack) {
-            this.stack = stack;
-        }
-        
-        @Override
-        public void apply() {
-            if(stack == null){
-                CraftTweakerAPI.logError("Cannot hide null item!");
-                return;
-            }
-            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(stack));
-        }
-        
-        @Override
-        public String describe() {
-            return "Hiding item in JEI: " + stack;
-        }
-        
+    @ZenMethod
+    public static void addDescription(IItemStack stack, String description){
+    	DESCRIPTIONS.add(new Describe(stack, new String[]{description}));
     }
+    
+    @ZenMethod
+    public static void addDescription(IItemStack stack, String[] description){
+    	DESCRIPTIONS.add(new Describe(stack, description));
+    }
+    
+    @ZenMethod
+    public static void addItem(IItemStack stack){
+    	LATE_ACTIONS.add(new AddItem(stack));
+    }
+    
     
 }

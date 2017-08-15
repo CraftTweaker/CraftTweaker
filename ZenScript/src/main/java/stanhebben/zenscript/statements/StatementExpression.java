@@ -17,6 +17,7 @@ public class StatementExpression extends Statement {
     @Override
     public void compile(IEnvironmentMethod environment) {
         environment.getOutput().position(getPosition());
-        expression.compile(environment, null).eval(environment).compile(false, environment);
+        boolean shouldCompile = expression.getClass().getName().equals("stanhebben.zenscript.parser.expression.ParsedExpressionIndexSet");
+        expression.compile(environment, null).eval(environment).compile(shouldCompile, environment);
     }
 }

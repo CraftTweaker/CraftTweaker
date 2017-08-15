@@ -16,6 +16,7 @@ public class JEIAddonPlugin implements IModPlugin {
     public static IIngredientRegistry itemRegistry;
     public static IRecipeRegistry recipeRegistry;
     public static IIngredientHelper<ItemStack> ingredientHelper;
+    public static IModRegistry modRegistry;
     
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -37,6 +38,9 @@ public class JEIAddonPlugin implements IModPlugin {
         jeiHelpers = registry.getJeiHelpers();
         itemRegistry = registry.getIngredientRegistry();
         ingredientHelper = itemRegistry.getIngredientHelper(ItemStack.class);
+        modRegistry = registry;
+        
+        JEIMod.onRegistered();
     }
     
     @Override
