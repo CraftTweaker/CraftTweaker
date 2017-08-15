@@ -271,8 +271,13 @@ public abstract class ParsedExpression {
                 return new ParsedExpressionBinary(position, base, to, OperatorType.RANGE);
             } else if(parser.optional(T_SQBROPEN) != null) {
                 ParsedExpression index = readAssignExpression(parser, environment);
-                base = new ParsedExpressionIndex(position, base, index);
                 parser.required(T_SQBRCLOSE, "] expected");
+                if(parser.optional(T_ASSIGN)!=null){
+                	ParsedExpression newVal = readAssignExpression(parser,environment);
+                	base = new ParsedExpressionIndexSet(position, base, index, newVal);
+                } else {
+                	 base = new ParsedExpressionIndex(position, base, index);
+                }
             } else if(parser.optional(T_BROPEN) != null) {
                 ArrayList<ParsedExpression> arguments = new ArrayList<>();
                 if(parser.optional(T_BRCLOSE) == null) {

@@ -7,20 +7,18 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
-
+import static crafttweaker.mods.jei.JEI.*;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.getClickableCommandText;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.getNormalMessage;
-import static crafttweaker.mods.jei.JEI.LATE_HIDING;
 
 @Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.0", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class JEIMod {
     
-    
-    @Mod.EventHandler
+	@Mod.EventHandler
     public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
         if(Loader.isModLoaded("jei")) {
             try {
-                LATE_HIDING.forEach(CraftTweakerAPI::apply);
+                LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -49,4 +47,8 @@ public class JEIMod {
         }
         //endregion
     }
+	
+	public static void onRegistered(){
+		DESCRIPTIONS.forEach(CraftTweakerAPI::apply);
+	}
 }
