@@ -34,6 +34,11 @@ public class FormattedString implements IMCFormattedString {
     }
     
     @Override
+    public String getText() {
+        return getTooltipString();
+    }
+    
+    @Override
     public String toString() {
         return getTooltipString();
     }

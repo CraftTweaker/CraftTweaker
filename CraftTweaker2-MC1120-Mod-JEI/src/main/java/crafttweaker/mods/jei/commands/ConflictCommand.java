@@ -1,24 +1,23 @@
-package crafttweaker.mc1120.commands;
+package crafttweaker.mods.jei.commands;
 
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.Range;
+import com.google.common.collect.*;
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.mc1120.commands.CraftTweakerCommand;
+import crafttweaker.mods.jei.JEIAddonPlugin;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.*;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import mezz.jei.ingredients.Ingredients;
-import mezz.jei.plugins.vanilla.crafting.CraftingRecipeCategory;
-import mezz.jei.plugins.vanilla.crafting.TippedArrowRecipeWrapper;
+import mezz.jei.plugins.vanilla.crafting.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
@@ -27,6 +26,8 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
  * @author BloodWorkXGaming
  */
 public class ConflictCommand extends CraftTweakerCommand {
+    public static final CraftRecipeEntryComparator CRAFT_RECIPE_ENTRY_COMPARATOR =  new CraftRecipeEntryComparator();
+    
     
     private List<CraftingRecipeEntry> craftingRecipeEntries = new ArrayList<>();
     private TIntObjectMap<Range<Integer>> rangeMap;
@@ -43,59 +44,83 @@ public class ConflictCommand extends CraftTweakerCommand {
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         
-        if(CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")) {
+        if(JEIAddonPlugin.recipeRegistry == null || !Loader.isModLoaded("jei")) {
             sender.sendMessage(getNormalMessage("\u00A74This command can only be executed on the Client and with JEI installed"));
             CraftTweakerAPI.logWarning("JEI plugin not loaded!");
         } else {
             
             sender.sendMessage(getNormalMessage("\u00A76Running Conflict scan. This might take a while"));
             
-            runConflictScan();
-            
-            sender.sendMessage(getLinkToCraftTweakerLog("Conflicting Recipe list generated", sender));
+            new Thread("ConflictScan_mc_thread") {
+                @Override
+                public void run() {
+                    try {
+                        runConflictScan();
+                        sender.sendMessage(getLinkToCraftTweakerLog("Conflicting Recipe list generated", sender));
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
         }
     }
     
     
     private void runConflictScan() {
-        if(CrTJEIPlugin.JEI_RUNTIME == null || !Loader.isModLoaded("jei")) {
+        if(JEIAddonPlugin.recipeRegistry == null || !Loader.isModLoaded("jei")) {
             CraftTweakerAPI.logWarning("JEI plugin not loaded yet!");
             CraftTweakerAPI.logWarning("This command can only be used on a client and with JEI installed");
-        } else {
-            // cleans up before running the command
-            craftingRecipeEntries.clear();
-            if(rangeMap != null)
-                rangeMap.clear();
-            
-            // prepares data needed for conflict scan
-            gatherRecipes();
-            craftingRecipeEntries.sort(new CraftRecipeEntryComparator());
-            rangeMap = getRangeForSize();
-            
-            rangeMap.forEachEntry((k, v) -> {
-                System.out.println(k + ": " + v);
-                return true;
-            });
-            
-            // scans for conflicts
-            List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> conflictingRecipes = new ArrayList<>();
-            craftingRecipeEntries.forEach(it -> it.checkAllConflicting(conflictingRecipes));
-            
-            // prints conflicts
-            CraftTweakerAPI.logInfo("Conflicting: " + conflictingRecipes.size());
-            conflictingRecipes.forEach(it -> {
-                String shape1 = it.getKey().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
-                String shape2 = it.getValue().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
-                
-                String name1 = "<" + it.getKey().output.getItem().getRegistryName().toString() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
-                String name2 = "<" + it.getValue().output.getItem().getRegistryName().toString() + ":" + it.getValue().output.getMetadata() + "> * " + it.getValue().output.getCount();
-                
-                String name1dp = "(" + it.getKey().output.getDisplayName() + ") ";
-                String name2dp = "(" + it.getValue().output.getDisplayName() + ") ";
-                
-                CraftTweakerAPI.logInfo(shape1 + name1dp + name1 + " conflicts with " + shape2 + name2dp + name2);
-            });
+            return;
         }
+        
+        // cleans up before running the command
+        craftingRecipeEntries.clear();
+        if(rangeMap != null)
+            rangeMap.clear();
+        
+        // prepares data needed for conflict scan
+        gatherRecipes();
+        craftingRecipeEntries.sort(CRAFT_RECIPE_ENTRY_COMPARATOR);
+        rangeMap = getRangeForSize();
+        
+        rangeMap.forEachEntry((k, v) -> {
+            System.out.println(k + ": " + v);
+            return true;
+        });
+        
+        // scans for conflicts
+        List<Map.Entry<CraftingRecipeEntry, CraftingRecipeEntry>> conflictingRecipes = new ArrayList<>();
+        int maxCount = craftingRecipeEntries.size();
+        float lastProgress = 0;
+        
+        for(int i = 0; i < maxCount; i++) {
+            craftingRecipeEntries.get(i).checkAllConflicting(conflictingRecipes);
+            
+            float progress = (float) i / (float)maxCount ;
+            
+            if (progress - lastProgress > 0.05){
+                int percentage = (int) ((progress) * 100);
+                System.out.println("Current Progress on the scan: " + percentage + "%");
+                lastProgress = progress;
+            }
+        }
+        
+        
+        // prints conflicts
+        CraftTweakerAPI.logInfo("Conflicting: " + conflictingRecipes.size());
+        conflictingRecipes.forEach(it -> {
+            String shape1 = it.getKey().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
+            String shape2 = it.getValue().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
+            
+            String name1 = "<" + it.getKey().output.getItem().getRegistryName().toString() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
+            String name2 = "<" + it.getValue().output.getItem().getRegistryName().toString() + ":" + it.getValue().output.getMetadata() + "> * " + it.getValue().output.getCount();
+            
+            String name1dp = "(" + it.getKey().output.getDisplayName() + ") ";
+            String name2dp = "(" + it.getValue().output.getDisplayName() + ") ";
+            
+            CraftTweakerAPI.logInfo(shape1 + name1dp + name1 + " conflicts with " + shape2 + name2dp + name2);
+        });
+        
     }
     
     /**
@@ -131,7 +156,7 @@ public class ConflictCommand extends CraftTweakerCommand {
      * Collects all recipes, converts them to the own class and adds them to the List
      */
     private void gatherRecipes() {
-        IRecipeRegistry reg = CrTJEIPlugin.JEI_RUNTIME.getRecipeRegistry();
+        IRecipeRegistry reg = JEIAddonPlugin.recipeRegistry;
         
         for(IRecipeCategory category : reg.getRecipeCategories()) {
             if(category instanceof CraftingRecipeCategory) {
@@ -147,10 +172,11 @@ public class ConflictCommand extends CraftTweakerCommand {
                         
                         
                         List<List<ItemStack>> inputs = ing.getInputs(ItemStack.class);
-                        
-                        
                         List<List<ItemStack>> outputs = ing.getOutputs(ItemStack.class);
-                        ItemStack output = outputs.get(0) == null ? null : outputs.get(0).get(0);
+                        
+                        // checks for having no outputs or having a "null" output
+                        ItemStack output = outputs.size() > 0 ? outputs.get(0) != null ? outputs.get(0).size() > 0 ? outputs.get(0).get(0) : null  : null : null;
+                        
                         // prevent checking recipes with "null" output
                         if(output == null) {
                             continue;
@@ -181,11 +207,11 @@ public class ConflictCommand extends CraftTweakerCommand {
     /**
      * Comparator for sorting the recipes according to size of the recipe
      */
-    private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry> {
+    private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry>, Serializable {
         
         @Override
         public int compare(CraftingRecipeEntry o1, CraftingRecipeEntry o2) {
-            return o1.recipeSize > o2.recipeSize ? +1 : o1.recipeSize < o2.recipeSize ? -1 : 0;
+            return Integer.compare(o1.recipeSize, o2.recipeSize);
         }
     }
     
@@ -264,128 +290,154 @@ public class ConflictCommand extends CraftTweakerCommand {
         }
         
         boolean checkConflict(CraftingRecipeEntry other) {
+            if(shapedRecipe && other.shapedRecipe) {
+                return checkShapedShaped(other);
+            }
+    
+            if(!shapedRecipe && !other.shapedRecipe) {
+                return checkShapelessShapeless(other);
+            }
+    
+            return shapedRecipe && checkShapedShapeless(other);
+        }
+        
+        boolean checkForEmptySlots(List<ItemStack> inputThis, List<ItemStack> inputOther){
             
+            //region >>> Checks whether both have empty slots
+            // both really empty
+            if(inputThis.isEmpty() && inputOther.isEmpty()) {
+                return true;
+            }
+    
+            // both ItemStack.Empty
+            if(inputThis.size() == 1 && inputOther.size() == 1) {
+                if(inputThis.get(0).isEmpty() && inputOther.get(0).isEmpty()) {
+                    return true;
+                }
+            }
+    
+            // other == ItemStack.Empty
+            if(inputThis.isEmpty() && inputOther.size() == 1) {
+                if(inputOther.get(0).isEmpty()) {
+                    return true;
+                }
+            }
+    
+            // this == ItemStack.Empty
+            if(inputOther.isEmpty() && inputThis.size() == 1) {
+                if(inputThis.get(0).isEmpty()) {
+                    return true;
+                }
+            }
+            //endregion
+            
+            
+            return false;
+        }
+        
+        boolean checkShapedShaped(CraftingRecipeEntry other){
             int overlapping = 0;
             
-            //region >>> shaped <-> shaped comparison
-            if((shapedRecipe && other.shapedRecipe && width == other.width && height == other.height)) {
-                
+            if(width == other.width && height == other.height) {
+        
                 // loops over all slots in the crafting table
                 for(int i = 0; i < recipeSize; i++) {
                     // when it has one non conflict it is done for the recipe
                     if(overlapping != i)
                         break;
-                    
+            
                     List<ItemStack> inputThis = inputs.get(i);
                     List<ItemStack> inputOther = other.inputs.get(i);
-                    
-                    //region >>> Checks whether both have empty slots
-                    // both really empty
-                    if(inputThis.isEmpty() && inputOther.isEmpty()) {
-                        // CraftTweakerAPI.logInfo("[1]" + this.output.toString() + " has a empty with " + other.output.toString() + " at " + i);
+            
+                    if (checkForEmptySlots(inputThis, inputOther)) {
                         overlapping++;
                         continue;
                     }
-                    
-                    // both ItemStack.Empty
-                    if(inputThis.size() == 1 && inputOther.size() == 1) {
-                        if(inputThis.get(0).isEmpty() && inputOther.get(0).isEmpty()) {
-                            // CraftTweakerAPI.logInfo("[2]" +this.output.toString() + " has a empty with " + other.output.toString() + " at " + i);
-                            overlapping++;
-                            continue;
-                        }
-                    }
-                    
-                    // other == ItemStack.Empty
-                    if(inputThis.isEmpty() && inputOther.size() == 1) {
-                        if(inputOther.get(0).isEmpty()) {
-                            // CraftTweakerAPI.logInfo("[3]" +this.output.toString() + " has a empty with " + other.output.toString() + " at " + i);
-                            overlapping++;
-                            continue;
-                        }
-                    }
-                    
-                    // this == ItemStack.Empty
-                    if(inputOther.isEmpty() && inputThis.size() == 1) {
-                        if(inputThis.get(0).isEmpty()) {
-                            // CraftTweakerAPI.logInfo("[4]" +this.output.toString() + " has a empty with " + other.output.toString() + " at " + i);
-                            overlapping++;
-                            continue;
-                        }
-                    }
-                    //endregion
-                    
-                    // has one item which is the same
-                    boolean hasOneConflict = false;
-                    for(ItemStack stack : inputThis) {
-                        
-                        for(ItemStack otherStack : inputOther) {
-                            
-                            if(compareItemStack(stack, otherStack)) {
-                                hasOneConflict = true;
-                            }
-                        }
-                    }
-                    
-                    // Counts as overlap when it has at least one conflict
-                    if(hasOneConflict) {
+            
+                    if (checkConflictingItemStacks(inputThis, inputOther)){
                         overlapping++;
                     }
-                    
+                }
+            } else {
+                return false;
+            }
+            
+            return overlapping == recipeSize && !compareItemStack(this.output, other.output);
+        }
+        
+        boolean checkConflictingItemStacks(List<ItemStack> stackListThis, List<ItemStack> stackListOther){
+            // has one item which is the same
+            boolean hasOneConflict = false;
+    
+            for(ItemStack stackListThi : stackListThis) {
+                for(ItemStack aStackListOther : stackListOther) {
+                    if(compareItemStack(stackListThi, aStackListOther)) {
+                        hasOneConflict = true;
+                    }
                 }
             }
-            //endregion
             
-            //region >>>  shapeless <-> shapeless comparisons
-            if((!shapedRecipe && !other.shapedRecipe) && recipeSize == other.recipeSize) {
-                
+            return hasOneConflict;
+        }
+        
+        boolean checkShapelessShapeless(CraftingRecipeEntry other){
+            int overlapping = 0;
+            
+            if(recipeSize == other.recipeSize) {
+        
                 for(int i = 0; i < recipeSize; i++) {
                     // when it has one non conflict it is done for the recipe
                     if(overlapping != i)
                         break;
-                    
+            
                     List<ItemStack> inputThis = inputs.get(i);
                     List<ItemStack> inputOther = other.inputs.get(i);
-                    
+            
                     // has one item which is the same
                     boolean hasOneConflict = false;
                     for(ItemStack stack : inputThis) {
-                        
+                
                         for(ItemStack otherStack : inputOther) {
-                            
+                    
                             if(compareItemStack(stack, otherStack)) {
                                 hasOneConflict = true;
                             }
                         }
                     }
-                    
+            
                     // Counts as overlap when it has at least one conflict
                     if(hasOneConflict) {
                         overlapping++;
                     }
                 }
+            }else {
+                return false;
             }
-            //endregion
+    
+            return overlapping == recipeSize && !compareItemStack(this.output, other.output);
+        }
+        
+        boolean checkShapedShapeless(CraftingRecipeEntry other){
+            int overlapping = 0;
             
-            //region >>> shaped <-> shapeless comparison (only 3x3s)
             // As shaped > shapeless only 3x3 recipes could conflict
-            if((shapedRecipe && !other.shapedRecipe && recipeSize == 9 && other.recipeSize == 9)) {
-                
+            if((recipeSize == 9 && other.recipeSize == 9)) {
+        
                 // loops over all slots in the crafting table
                 for(int i = 0; i < recipeSize; i++) {
-                    
+            
                     // when it has one non conflict it is done for the recipe
                     if(overlapping != i)
                         break;
-                    
+            
                     List<ItemStack> inputThis = inputs.get(i);
                     List<ItemStack> inputOther = other.inputs.get(i);
-                    
+            
                     // shaped recipe is empty, shapeless recipes can't be empty though
                     if(inputThis.isEmpty()) {
                         continue;
                     }
-                    
+            
                     // has one item which is the same
                     boolean hasOneConflict = false;
                     for(ItemStack stack : inputThis) {
@@ -395,16 +447,14 @@ public class ConflictCommand extends CraftTweakerCommand {
                             }
                         }
                     }
-                    
+            
                     // Counts as overlap when it has at least one conflict
                     if(hasOneConflict) {
                         overlapping++;
                     }
                 }
             }
-            //endregion
             
-            // check whether all items are overlapping
             return overlapping == recipeSize && !compareItemStack(this.output, other.output);
         }
         
@@ -426,6 +476,11 @@ public class ConflictCommand extends CraftTweakerCommand {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof CraftingRecipeEntry && inputs.equals(((CraftingRecipeEntry) obj).inputs) && output.equals(((CraftingRecipeEntry) obj).output) && width == ((CraftingRecipeEntry) obj).width && height == ((CraftingRecipeEntry) obj).height && shapedRecipe == ((CraftingRecipeEntry) obj).shapedRecipe && recipeName.equals(((CraftingRecipeEntry) obj).recipeName) && recipeSize == ((CraftingRecipeEntry) obj).recipeSize;
+        }
+        
+        @Override
+        public int hashCode() {
+            return Arrays.deepHashCode(new Object[]{inputs, output, recipeName, recipeSize, shapedRecipe});
         }
     }
 }

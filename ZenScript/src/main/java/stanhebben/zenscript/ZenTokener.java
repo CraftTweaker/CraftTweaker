@@ -87,6 +87,8 @@ public class ZenTokener extends TokenStream {
     private static final int[] FINALS = {-1, -1, -1, -1, T_ID, T_FLOATVALUE, T_INTVALUE, T_STRINGVALUE, T_STRINGVALUE, T_AOPEN, T_ACLOSE, T_SQBROPEN, T_SQBRCLOSE, T_DOT2, T_DOT, T_COMMA, T_PLUSASSIGN, T_PLUS, T_MINUSASSIGN, T_MINUS, T_MULASSIGN, T_MUL, T_DIVASSIGN, T_DIV, T_MODASSIGN, T_MOD, T_ORASSIGN, T_OR2, T_OR, T_ANDASSIGN, T_AND2, T_AND, T_XORASSIGN, T_XOR, T_QUEST, T_COLON, T_BROPEN, T_BRCLOSE, T_TILDEASSIGN, T_TILDE, T_SEMICOLON, T_LTEQ, T_LT, T_GTEQ, T_GT, T_EQ, T_ASSIGN, T_NOTEQ, T_NOT, T_DOLLAR};
     private static final CompiledDFA DFA = new NFA(REGEXPS, FINALS).toDFA().optimize().compile();
     
+    public final boolean ignoreBracketErrors;
+    
     static {
         KEYWORDS = new HashMap<>();
         KEYWORDS.put("any", T_ANY);
@@ -128,9 +130,10 @@ public class ZenTokener extends TokenStream {
      *
      * @throws IOException if the file could not be read properly
      */
-    public ZenTokener(Reader contents, IZenCompileEnvironment environment, String fileNameFallback) throws IOException {
+    public ZenTokener(Reader contents, IZenCompileEnvironment environment, String fileNameFallback, boolean ignoreBracketErrors) throws IOException {
         super(contents, DFA, fileNameFallback);
         
+        this.ignoreBracketErrors = ignoreBracketErrors;
         this.environment = environment;
     }
     
@@ -142,9 +145,10 @@ public class ZenTokener extends TokenStream {
      *
      * @throws IOException shouldn't happen
      */
-    public ZenTokener(String contents, IZenCompileEnvironment environment, String fileNameFallback) throws IOException {
+    public ZenTokener(String contents, IZenCompileEnvironment environment, String fileNameFallback, boolean ignoreBracketErrors) throws IOException {
         super(new StringReader(contents), DFA, "");
         
+        this.ignoreBracketErrors = ignoreBracketErrors;
         this.environment = environment;
     }
     

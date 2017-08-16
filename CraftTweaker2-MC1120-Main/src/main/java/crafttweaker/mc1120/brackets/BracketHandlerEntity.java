@@ -1,16 +1,14 @@
 package crafttweaker.mc1120.brackets;
 
-import crafttweaker.*;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.*;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.zenscript.IBracketHandler;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.natives.IJavaMethod;
-import stanhebben.zenscript.util.ZenPosition;
 
 import java.util.*;
 
@@ -30,11 +28,12 @@ public class BracketHandlerEntity implements IBracketHandler {
     
     public static void rebuildEntityRegistry() {
         entityNames.clear();
-        CraftTweakerAPI.game.getEntities().forEach(ent -> entityNames.put(ent.getName().toLowerCase(), ent));
+        CraftTweakerAPI.game.getEntities().forEach(ent -> entityNames.put(ent.getId(), ent));
     }
     
+    @SuppressWarnings("unused")
     public static IEntityDefinition getEntity(String name) {
-        return entityNames.get(name.toLowerCase());
+        return entityNames.get(name);
     }
     
     @Override

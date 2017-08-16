@@ -1,13 +1,10 @@
 package crafttweaker.mc1120.commands;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.*;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -21,8 +18,8 @@ import java.util.*;
 public class CTChatCommand extends CommandBase {
     
     public static final String CRAFTTWEAKER_LOG_PATH = new File("crafttweaker.log").getAbsolutePath();
-    public static final List<String> aliases = new ArrayList<>();
-    public static Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
+    private static final List<String> aliases = new ArrayList<>();
+    private static final Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
     
     static {
         aliases.add("ct");
@@ -118,13 +115,11 @@ public class CTChatCommand extends CommandBase {
         
         // gives subcommands of the subcommand
         // each has to implement on it's own for special requirements
-        if(args.length >= 2) {
-            CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
-            if(subCommand != null) {
-                System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
-                return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
-                
-            }
+        CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
+        if(subCommand != null) {
+            System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
+            return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
+            
         }
         
         // returns empty by default

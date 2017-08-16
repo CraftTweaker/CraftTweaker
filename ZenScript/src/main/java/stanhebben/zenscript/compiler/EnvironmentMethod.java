@@ -61,6 +61,11 @@ public class EnvironmentMethod implements IEnvironmentMethod {
     }
     
     @Override
+    public void info(ZenPosition position, String message) {
+        environment.info(position, message);
+    }
+    
+    @Override
     public IZenCompileEnvironment getEnvironment() {
         return environment.getEnvironment();
     }

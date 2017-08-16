@@ -6,16 +6,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author BloodWorkXGaming
  */
 public abstract class CraftTweakerCommand {
     
-    public final static ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{SpecialMessagesChat.getNormalMessage("No Description provided")};
-    public final static List<String> EMPTY_LIST = new ArrayList<>(0);
+    private final static ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{SpecialMessagesChat.getNormalMessage("No Description provided")};
     
     protected final String subCommandName;
     private ITextComponent[] description;
@@ -47,8 +45,9 @@ public abstract class CraftTweakerCommand {
      *
      * @return Returns an empty List by default
      */
+    @SuppressWarnings("unchecked")
     public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return EMPTY_LIST;
+        return Collections.EMPTY_LIST;
     }
     
     

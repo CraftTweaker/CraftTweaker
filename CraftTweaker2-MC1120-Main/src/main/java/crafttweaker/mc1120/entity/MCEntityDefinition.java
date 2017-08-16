@@ -7,6 +7,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.util.IntegerRange;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,22 +17,22 @@ import java.util.stream.Collectors;
  */
 public class MCEntityDefinition implements IEntityDefinition {
 
-    private final Class<? extends Entity> entityClass;
+    private final EntityEntry entityEntry;
     private final String entityName;
 
     private final List<IEntityDrop> drops = new ArrayList<>();
     private final List<IItemStack> dropsToRemove = new ArrayList<>();
     private boolean clearDrops = false;
 
-    public MCEntityDefinition(Class<? extends Entity> entityClass, String entityName) {
-        this.entityClass = entityClass;
-        this.entityName = entityName;
+    public MCEntityDefinition(EntityEntry entityEntry) {
+        this.entityEntry = entityEntry;
+        this.entityName = entityEntry.getName();
     }
 
 
     @Override
     public String getId() {
-        return entityClass.getName();
+        return entityEntry.getRegistryName() != null ? entityEntry.getRegistryName().toString() : "no_registry_name";
     }
 
     @Override
@@ -103,5 +104,10 @@ public class MCEntityDefinition implements IEntityDefinition {
     @Override
     public boolean shouldClearDrops() {
         return clearDrops;
+    }
+    
+    @Override
+    public Object getInternal() {
+        return entityEntry;
     }
 }

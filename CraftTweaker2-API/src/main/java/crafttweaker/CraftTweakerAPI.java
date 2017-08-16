@@ -5,6 +5,7 @@ import crafttweaker.api.client.IClient;
 import crafttweaker.api.event.IEventManager;
 import crafttweaker.api.formatting.IFormatter;
 import crafttweaker.api.game.IGame;
+import crafttweaker.api.item.IItemUtils;
 import crafttweaker.api.mods.ILoadedMods;
 import crafttweaker.api.oredict.IOreDict;
 import crafttweaker.api.recipes.*;
@@ -81,6 +82,12 @@ public class CraftTweakerAPI {
      * Access point to the vanilla functions and data.
      */
     public static IVanilla vanilla = null;
+    /**
+     * Access point to the ItemUtils for performing various useful actions on items.
+     */
+    public static IItemUtils itemUtils = null;
+    
+    
     static {
         registerGlobalSymbol("logger", getJavaStaticGetterSymbol(CraftTweakerAPI.class, "getLogger"));
         registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "recipes"));
@@ -93,6 +100,7 @@ public class CraftTweakerAPI {
         registerGlobalSymbol("loadedMods", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "loadedMods"));
         registerGlobalSymbol("format", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "format"));
         registerGlobalSymbol("vanilla", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "vanilla"));
+        registerGlobalSymbol("itemUtils", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "itemUtils"));
     }
     
     private CraftTweakerAPI() {

@@ -1,7 +1,7 @@
 package crafttweaker.runtime;
 
 import crafttweaker.*;
-import crafttweaker.runtime.providers.ScriptProviderMemory;
+import crafttweaker.preprocessor.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -17,10 +17,20 @@ import static stanhebben.zenscript.ZenModule.*;
  */
 public class CrTTweaker implements ITweaker {
     
+    /**
+     * PreprocessorManager, deals with all preprocessor Actions
+     */
+    private PreprocessorManager preprocessorManager = new PreprocessorManager();
+    
     private static boolean DEBUG = false;
+    public static HashSet<String> scriptsToIgnoreBracketErrors = new HashSet<>();
     
     private final List<IAction> actions = new ArrayList<>();
     private IScriptProvider scriptProvider;
+    
+    public CrTTweaker(){
+        PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
+    }
     
     @Override
     public void apply(IAction action) {
@@ -40,11 +50,30 @@ public class CrTTweaker implements ITweaker {
     }
 
     @Override
-    public boolean loadScript(boolean executeScripts){
+    public boolean loadScript(boolean executeScripts) {
         System.out.println("Loading scripts");
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
-
+    
+        // preprocessor magic
+        // Doing ZS magic with the scripts
+        Iterator<IScriptIterator> scriptsPreprocessor = scriptProvider.getScripts();
+        while(scriptsPreprocessor.hasNext()) {
+            IScriptIterator script = scriptsPreprocessor.next();
+                while(script.next()) {
+                    try {
+                        String filename = script.getName();
+                        preprocessorManager.checkFileForPreprocessors(filename, script.open());
+                    
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
+        
+    
+        
+        // Doing ZS magic with the scripts
         Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
         while(scripts.hasNext()) {
             IScriptIterator script = scripts.next();
@@ -61,11 +90,11 @@ public class CrTTweaker implements ITweaker {
                     Reader reader = null;
                     try {
                         reader = new InputStreamReader(new BufferedInputStream(script.open()), "UTF-8");
-
+                        
                         String filename = script.getName();
                         String className = extractClassName(filename);
 
-                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename);
+                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptsToIgnoreBracketErrors.contains(filename));
                         ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                         files.add(pfile);
                     } catch(IOException ex) {
@@ -96,6 +125,7 @@ public class CrTTweaker implements ITweaker {
                     } else {
                         System.out.println("CraftTweaker: Loading group " + filename);
                     }
+                    
                     compileScripts(filename, files, environmentGlobal, DEBUG);
 
                     if (executeScripts){
@@ -111,7 +141,7 @@ public class CrTTweaker implements ITweaker {
         }
         return loadSuccessful;
     }
-
+    
     @Override
     public List<IAction> getActions() {
         return actions;
@@ -120,5 +150,15 @@ public class CrTTweaker implements ITweaker {
     @Override
     public void enableDebug() {
         DEBUG = true;
+    }
+    
+    @Override
+    public void addFileToIgnoreBracketErrors(String filename){
+        scriptsToIgnoreBracketErrors.add(filename);
+    }
+    
+    @Override
+    public PreprocessorManager getPreprocessorManager() {
+        return preprocessorManager;
     }
 }

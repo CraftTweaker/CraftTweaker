@@ -3,6 +3,7 @@ package crafttweaker.mc1120.brackets;
 import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
+import crafttweaker.mc1120.item.MCItemUtils;
 import crafttweaker.zenscript.IBracketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
@@ -60,6 +61,8 @@ public class BracketHandlerItem implements IBracketHandler {
             String domain = blockName.toString().replace(" ", "").replace("'", "");
             blockNames.put(domain, Block.REGISTRY.getObject(blockName));
         }
+    
+        MCItemUtils.createItemList();
     }
     
     public static IItemStack getItem(String name, int meta) {

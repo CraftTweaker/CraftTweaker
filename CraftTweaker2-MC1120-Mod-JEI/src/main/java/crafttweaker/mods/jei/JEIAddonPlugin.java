@@ -17,6 +17,7 @@ public class JEIAddonPlugin implements IModPlugin {
     public static IRecipeRegistry recipeRegistry;
     public static IIngredientHelper<ItemStack> ingredientHelper;
     public static IModRegistry modRegistry;
+    public static IJeiRuntime jeiRuntime;
     
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -46,6 +47,7 @@ public class JEIAddonPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
         recipeRegistry = iJeiRuntime.getRecipeRegistry();
+        jeiRuntime = iJeiRuntime;
     }
     
     public static List<ItemStack> getSubTypes(ItemStack stack) {

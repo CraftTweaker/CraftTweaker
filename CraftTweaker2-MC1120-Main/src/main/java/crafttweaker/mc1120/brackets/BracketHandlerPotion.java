@@ -34,7 +34,9 @@ public class BracketHandlerPotion implements IBracketHandler {
     
     public static void rebuildRegistry() {
         potionNames.clear();
-        Potion.REGISTRY.getKeys().forEach(key -> potionNames.put(key.getResourcePath(), Potion.getPotionFromResourceLocation(key.toString())));
+        for(Potion potion : Potion.REGISTRY) {
+            potionNames.put(potion.getRegistryName().toString(), potion);
+        }
     }
     
     @SuppressWarnings("unused")

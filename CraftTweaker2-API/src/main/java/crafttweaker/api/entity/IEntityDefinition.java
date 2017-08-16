@@ -51,6 +51,9 @@ public interface IEntityDefinition {
     Map<IItemStack, IntegerRange> getDropsToAddPlayerOnly();
     
     List<IItemStack> getDropsToRemove();
-
+    
     boolean shouldClearDrops();
+    
+    Object getInternal();
+    
 }

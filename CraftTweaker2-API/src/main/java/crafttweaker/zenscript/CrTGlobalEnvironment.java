@@ -89,6 +89,11 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     }
     
     @Override
+    public void info(ZenPosition position, String message) {
+        CraftTweakerAPI.logInfo(position.toString() + " > " + message);
+    }
+    
+    @Override
     public Set<String> getClassNames() {
         return classes.keySet();
     }

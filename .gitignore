@@ -19,7 +19,6 @@
 /.metadata/*
 *.eml
 /run
-usernamecache.json
 *.stackdump
 *.log
 */.settings
@@ -30,5 +29,3 @@ usernamecache.json
 *.db
 /classes/
 /CraftTweaker2-MC1120-Main/CraftTweaker2-MC1120-Main/
-!/CraftTweaker2-MC1120-Main/CraftTweaker2-MC1120-Main/server/eula.txt
-CraftTweaker2-MC1120-Main/CraftTweaker2-MC1120-Main/server/server.properties

@@ -74,7 +74,7 @@ public class IngredientTooltips {
         
         @Override
         public String describe() {
-            return "Adding tooltip for " + ingredient + ": " + tooltip;
+            return "Adding tooltip for " + ingredient + ": " + tooltip.getText();
         }
         
     }

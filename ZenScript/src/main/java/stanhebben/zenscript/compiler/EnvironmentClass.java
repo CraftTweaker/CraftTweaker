@@ -89,6 +89,11 @@ public class EnvironmentClass implements IEnvironmentClass {
     }
     
     @Override
+    public void info(ZenPosition position, String message) {
+        global.info(position, message);
+    }
+    
+    @Override
     public Set<String> getClassNames() {
         return global.getClassNames();
     }

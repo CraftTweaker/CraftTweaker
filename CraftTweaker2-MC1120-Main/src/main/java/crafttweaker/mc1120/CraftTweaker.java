@@ -10,6 +10,7 @@ import crafttweaker.mc1120.commands.CTChatCommand;
 import crafttweaker.mc1120.formatting.MCFormatter;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.game.MCGame;
+import crafttweaker.mc1120.item.MCItemUtils;
 import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
@@ -43,7 +44,7 @@ import java.io.File;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.0.3", name = CraftTweaker.NAME)
+@Mod(modid = CraftTweaker.MODID, version = "4.0.3", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
@@ -70,7 +71,7 @@ public class CraftTweaker {
     
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
-        CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla());
+        CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCItemUtils());
         CrafttweakerImplementationAPI.logger.addLogger(new MCLogger(new File("crafttweaker.log")));
         CrafttweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
         File globalDir = new File("scripts");

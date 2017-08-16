@@ -20,6 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class MCGame implements IGame {
     @Override
     public List<IEntityDefinition> getEntities() {
         if(ENTITY_DEFINITIONS.isEmpty()) {
-            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry.getEntityClass(), entry.getName())));
+            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
         }
         return ENTITY_DEFINITIONS;
     }
@@ -91,9 +92,10 @@ public class MCGame implements IGame {
                 break;
             }
         }
+        
         if(needsReloading) {
             ENTITY_DEFINITIONS.clear();
-            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry.getEntityClass(), entry.getName())));
+            ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
         }
         return getEntities().stream().filter(ent -> ent.getName().equals(entityName)).findFirst().orElse(null);
     }
@@ -109,11 +111,13 @@ public class MCGame implements IGame {
     }
     
     @Override
+    @SideOnly(Side.CLIENT)
     public String localize(String key) {
         return I18n.format(key);
     }
     
     @Override
+    @SideOnly(Side.CLIENT)
     public String localize(String key, String lang) {
         return I18n.format(key);
     }

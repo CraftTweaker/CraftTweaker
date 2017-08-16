@@ -87,6 +87,11 @@ public class EnvironmentScript implements IEnvironmentGlobal {
     }
     
     @Override
+    public void info(ZenPosition position, String message) {
+        parent.info(position, message);
+    }
+    
+    @Override
     public Set<String> getClassNames() {
         return parent.getClassNames();
     }
