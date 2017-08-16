@@ -86,7 +86,7 @@ public class ZenTypeLong extends ZenType {
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
         IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
         if(result == null) {
-            environment.error(position, "bool value has no members");
+            environment.error(position, "long value has no members");
             return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
         } else {
             return result;
