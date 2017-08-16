@@ -31,9 +31,8 @@ public class Hide implements IAction {
         }
         
         
-        // TODO make it work for OreDictionary.WILDCARD meta values
         ItemStack IStack = getItemStack(stack);
-        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, Collections.singletonList(IStack));
+        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(IStack));
 
     }
     
