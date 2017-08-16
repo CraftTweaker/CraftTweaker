@@ -126,6 +126,10 @@ public class NamesCommand extends CraftTweakerCommand {
         
     }
     
+    public static String prepareForCSV(String string){
+        return string.replace("\"", "\"\"");
+    }
+    
     /**
      * Creates the output for the given
      *
@@ -150,7 +154,7 @@ public class NamesCommand extends CraftTweakerCommand {
         }
         
         
-        return sb.toString();
+        return prepareForCSV(sb.toString());
     }
     
     /**
