@@ -107,7 +107,7 @@ public class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void addShaped(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action) {
+    public void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
         recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, false));
     }
     
@@ -117,7 +117,7 @@ public class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void addShapedMirrored(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action) {
+    public void addShapedMirrored(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
         recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, true));
     }
     
@@ -127,7 +127,7 @@ public class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, IRecipeFunction function, IRecipeAction action) {
+    public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
         recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action));
     }
     
