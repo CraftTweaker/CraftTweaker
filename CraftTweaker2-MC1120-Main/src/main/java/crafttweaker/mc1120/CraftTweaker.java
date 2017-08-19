@@ -1,7 +1,6 @@
 package crafttweaker.mc1120;
 
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.CrafttweakerImplementationAPI;
+import crafttweaker.*;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.mc1120.brackets.*;
@@ -39,6 +38,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
+import java.util.*;
 
 /**
  * Main mod class. Performs some general logic, initialization of the API and
@@ -59,6 +59,8 @@ public class CraftTweaker {
     @SidedProxy(clientSide = "crafttweaker.mc1120.proxies.ClientProxy", serverSide = "crafttweaker.mc1120.proxies.CommonProxy")
     public static CommonProxy PROXY;
     
+    
+    public static List<IAction> LATE_ACTIONS = new LinkedList<>();
     static {
         int ID = 0;
         NETWORK.registerMessage(MessageOpenBrowser.class, MessageOpenBrowser.class, ID++, Side.CLIENT);
@@ -125,6 +127,7 @@ public class CraftTweaker {
             MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
+            LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
         } catch(Exception e) {
             e.printStackTrace();
         }
