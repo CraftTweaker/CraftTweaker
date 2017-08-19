@@ -150,11 +150,12 @@ public class NamesCommand extends CraftTweakerCommand {
                 sb.append(",\"");
             }
             
-            sb.append(type.getInformation(stack)).append("\"");
+            sb.append(prepareForCSV(type.getInformation(stack)));
+            sb.append("\"");
         }
         
         
-        return prepareForCSV(sb.toString());
+        return sb.toString();
     }
     
     /**
