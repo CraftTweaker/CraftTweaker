@@ -37,6 +37,7 @@ public final class MCRecipeManager implements IRecipeManager {
     public final static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
     public final static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
     private static TIntSet usedHashes = new TIntHashSet();
+    private static HashSet<String> usedRecipeNames = new HashSet<>();
     
     private static List<ICraftingRecipe> transformerRecipes;
     
@@ -527,6 +528,21 @@ public final class MCRecipeManager implements IRecipeManager {
         // this is != null only _after_ it has been applied and is actually registered
         protected IRecipe recipe;
         protected String name;
+    
+        protected void setName(String name){
+            if (name != null){
+                String proposedName = cleanRecipeName(name);
+                if (usedRecipeNames.contains(proposedName)){
+                    this.name = calculateName();
+                    CraftTweakerAPI.logWarning("Recipe name [" + name + "] has duplicate uses, defaulting to calculated hash!");
+                }else {
+                    this.name = proposedName;
+                }
+            }else {
+                this.name = calculateName();
+            }
+            usedRecipeNames.add(this.name); //TODO: FINISH THIS and replace stuff in constructor call.
+        }
         
         
         public void registerRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
@@ -539,8 +555,10 @@ public final class MCRecipeManager implements IRecipeManager {
                 transformerRecipes.add(craftingRecipe);
             }
         }
+    
+        protected abstract String calculateName();
         
-        public IRecipe getRecipe() {
+            public IRecipe getRecipe() {
             return recipe;
         }
     
@@ -563,16 +581,16 @@ public final class MCRecipeManager implements IRecipeManager {
             this.function = function;
             this.action = action;
             this.mirrored = mirrored;
-            this.name = calculateName();
+            setName(null);
         }
         
         public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            this.name = cleanRecipeName(name);
             this.output = output;
             this.ingredients = ingredients;
             this.function = function;
             this.action = action;
             this.mirrored = mirrored;
+            setName(name);
         }
         
         @Override
@@ -584,7 +602,7 @@ public final class MCRecipeManager implements IRecipeManager {
         }
     
     
-        String calculateName() {
+        protected String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(saveToString(output));
         
@@ -624,15 +642,15 @@ public final class MCRecipeManager implements IRecipeManager {
             this.ingredients = ingredients;
             this.function = function;
             this.action = action;
-            this.name = calculateName();
+            setName(null);
         }
         
         public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            this.name = cleanRecipeName(name);
             this.output = output;
             this.ingredients = ingredients;
             this.function = function;
             this.action = action;
+            setName(name);
         }
         
         @Override
@@ -678,7 +696,6 @@ public final class MCRecipeManager implements IRecipeManager {
         }
     }
     
-    
     public static String saveToString(IIngredient ingredient){
         if (ingredient == null) {
             return "_";
@@ -689,7 +706,7 @@ public final class MCRecipeManager implements IRecipeManager {
     
     public static String cleanRecipeName(String s){
         if (s.contains(":"))
-            CraftTweakerAPI.logWarning("String may not contain a \":\"");
+            CraftTweakerAPI.logWarning("Recipe name [" + s + "] may not contain a ':', replacing with '_'!");
         return s.replace(":", "_");
     }
 }
