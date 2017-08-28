@@ -33,5 +33,5 @@ public interface IChatMessage {
     
     // TODO: REMVOE AGAIN
     @ZenSetter
-    int getBblabla(int num, int num2);
+    int getBblabla(int num);
 }

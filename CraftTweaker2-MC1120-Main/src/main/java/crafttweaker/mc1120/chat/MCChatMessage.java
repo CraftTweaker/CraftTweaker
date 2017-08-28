@@ -31,7 +31,7 @@ public class MCChatMessage implements IChatMessage {
     // TODO: REMVOE AGAIN
     
     @Override
-    public int getBblabla(int num, int nm2) {
+    public int getBblabla(int num) {
         return 0;
     }
 }

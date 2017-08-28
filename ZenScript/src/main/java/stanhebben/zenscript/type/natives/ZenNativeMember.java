@@ -2,7 +2,7 @@ package stanhebben.zenscript.type.natives;
 
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.expression.partial.*;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
@@ -73,6 +73,7 @@ public class ZenNativeMember {
         
         @Override
         public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
+            // return new ExpressionJavaStaticField(position, ); TODO: do stuff
             return new ExpressionCallVirtual(position, environment, setter, value.eval(environment), other);
         }
         

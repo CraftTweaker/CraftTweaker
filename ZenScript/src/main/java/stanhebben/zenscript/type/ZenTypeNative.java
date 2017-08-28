@@ -121,11 +121,11 @@ public class ZenTypeNative extends ZenType {
                     JavaMethodGenerated generated = new JavaMethodGenerated(false, false, false, field.getDeclaringClass().getName(), fieldName, new ZenTypeNative(field.getDeclaringClass()), new ZenType[0], new boolean[0]){
                         @Override
                         public void invokeVirtual(MethodOutput output) {
-                            output.
+                            // output.putField();
                             super.invokeVirtual(output);
                         }
                     };
-                    members.get(fieldName).setGetter(new JavaMethod(new JavaMethod( ,types), types));
+                    members.get(fieldName).setGetter(generated);
                 }
             }
         }
@@ -150,14 +150,14 @@ public class ZenTypeNative extends ZenType {
                     if (method.getParameterCount() > 0){
                         throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
                     }
-    
-    
+                    
                     String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
                     
                     if(!members.containsKey(name)) {
                         members.put(name, new ZenNativeMember());
                     }
-                    members.get(name).setGetter(new JavaMethod(method, types));
+                    JavaMethod javaMethod = new JavaMethod(method, types);
+                    members.get(name).setGetter(javaMethod);
                     isMethod = false;
                 } else if(annotation instanceof ZenSetter) {
                     ZenSetter setterAnnotation = (ZenSetter) annotation;

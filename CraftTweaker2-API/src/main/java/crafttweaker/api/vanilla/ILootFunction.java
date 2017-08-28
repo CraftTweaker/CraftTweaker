@@ -10,8 +10,8 @@ public interface ILootFunction {
     @ZenMethod
     String getName();
     
-    @ZenSetter
-    void setName();
+    @ZenSetter("name")
+    void setName(String name);
     
     
 }
