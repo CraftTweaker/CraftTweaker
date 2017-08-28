@@ -108,6 +108,28 @@ public class ZenTypeNative extends ZenType {
                 }
             }
         }
+        
+        // Iterate over all fields and check for
+        for(Field field : cls.getFields()) {
+            for(Annotation annotation : field.getAnnotations()) {
+                String fieldName = field.getName();
+                
+                if (annotation instanceof ZenProperty){
+                    if(!members.containsKey(fieldName)) {
+                        members.put(fieldName, new ZenNativeMember());
+                    }
+                    JavaMethodGenerated generated = new JavaMethodGenerated(false, false, false, field.getDeclaringClass().getName(), fieldName, new ZenTypeNative(field.getDeclaringClass()), new ZenType[0], new boolean[0]){
+                        @Override
+                        public void invokeVirtual(MethodOutput output) {
+                            output.
+                            super.invokeVirtual(output);
+                        }
+                    };
+                    members.get(fieldName).setGetter(new JavaMethod(new JavaMethod( ,types), types));
+                }
+            }
+        }
+        
         //TODO check this
         for(Method method : cls.getMethods()) {
             boolean isMethod = fully;
@@ -119,6 +141,17 @@ public class ZenTypeNative extends ZenType {
                     isMethod = false;
                 } else if(annotation instanceof ZenGetter) {
                     ZenGetter getterAnnotation = (ZenGetter) annotation;
+    
+                    // error checking for faulty @ZenGetter annotations
+                    if (method.getReturnType().equals(Void.TYPE)){
+                        throw new RuntimeException("ZenGetter needs a non Void returntype - " + cls.getName() + "." + method.getName());
+                    }
+    
+                    if (method.getParameterCount() > 0){
+                        throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
+                    }
+    
+    
                     String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
                     
                     if(!members.containsKey(name)) {
@@ -128,6 +161,12 @@ public class ZenTypeNative extends ZenType {
                     isMethod = false;
                 } else if(annotation instanceof ZenSetter) {
                     ZenSetter setterAnnotation = (ZenSetter) annotation;
+                    
+                    // error checking for faulty @ZenSetter annotations
+                    if (method.getParameterCount() != 1){
+                        throw new RuntimeException("ZenSetter must have exactly one parameter - " + cls.getName() + "." + method.getName());
+                    }
+                    
                     String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
                     
                     if(!members.containsKey(name)) {
