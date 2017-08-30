@@ -110,6 +110,7 @@ public class ZenTypeNative extends ZenType {
         }
         
         // Iterate over all fields and check for
+        /* TODO: Propertry Annotation, this iterates over all the fields and does stuff with the affected ones.
         for(Field field : cls.getFields()) {
             for(Annotation annotation : field.getAnnotations()) {
                 String fieldName = field.getName();
@@ -128,7 +129,7 @@ public class ZenTypeNative extends ZenType {
                     members.get(fieldName).setGetter(generated);
                 }
             }
-        }
+        } */
         
         //TODO check this
         for(Method method : cls.getMethods()) {

@@ -27,11 +27,4 @@ public class MCChatMessage implements IChatMessage {
     public Object getInternal() {
         return data;
     }
-    
-    // TODO: REMVOE AGAIN
-    
-    @Override
-    public int getBblabla(int num) {
-        return 0;
-    }
 }

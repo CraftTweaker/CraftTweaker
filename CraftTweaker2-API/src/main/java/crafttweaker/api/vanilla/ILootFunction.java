@@ -12,6 +12,4 @@ public interface ILootFunction {
     
     @ZenSetter("name")
     void setName(String name);
-    
-    
 }

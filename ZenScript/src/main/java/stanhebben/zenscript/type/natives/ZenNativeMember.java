@@ -73,7 +73,6 @@ public class ZenNativeMember {
         
         @Override
         public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
-            // return new ExpressionJavaStaticField(position, ); TODO: do stuff
             return new ExpressionCallVirtual(position, environment, setter, value.eval(environment), other);
         }
         

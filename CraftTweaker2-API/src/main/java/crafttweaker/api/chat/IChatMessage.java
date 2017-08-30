@@ -30,8 +30,4 @@ public interface IChatMessage {
      * @return internal object
      */
     Object getInternal();
-    
-    // TODO: REMVOE AGAIN
-    @ZenSetter
-    int getBblabla(int num);
 }
