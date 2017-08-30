@@ -56,22 +56,21 @@ public class CrTTweaker implements ITweaker {
         boolean loadSuccessful = true;
     
         // preprocessor magic
-        // Doing ZS magic with the scripts
         Iterator<IScriptIterator> scriptsPreprocessor = scriptProvider.getScripts();
         while(scriptsPreprocessor.hasNext()) {
             IScriptIterator script = scriptsPreprocessor.next();
-                while(script.next()) {
-                    try {
-                        String filename = script.getName();
-                        preprocessorManager.checkFileForPreprocessors(filename, script.open());
+            while(script.next()) {
+                try {
+                    String filename = script.getName();
+                    preprocessorManager.checkFileForPreprocessors(filename, script.open());
                     
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch(IOException e) {
+                    e.printStackTrace();
                 }
+            }
         }
         
-    
+        
         
         // Doing ZS magic with the scripts
         Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
@@ -85,7 +84,7 @@ public class CrTTweaker implements ITweaker {
                 IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
 
                 List<ZenParsedFile> files = new ArrayList<>();
-
+                
                 while(script.next()) {
                     Reader reader = null;
                     try {
@@ -94,6 +93,12 @@ public class CrTTweaker implements ITweaker {
                         String filename = script.getName();
                         String className = extractClassName(filename);
 
+                        CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(executeScripts, filename, className,this, preprocessorManager.preprocessorActionsPerFile.get(filename));
+                        preprocessorManager.postLoadEvent(loadEvent);
+                        preprocessorManager.handleLoadEvents(loadEvent);
+                        
+                        if (loadEvent.isParsingCanceled) continue;
+                        
                         ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptsToIgnoreBracketErrors.contains(filename));
                         ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                         files.add(pfile);
@@ -119,19 +124,36 @@ public class CrTTweaker implements ITweaker {
                 try {
                     String filename = script.getGroupName();
                     if(filename.toLowerCase().endsWith(".zs")) {
-                        System.out.println("CraftTweaker: Loading file " + filename);
+                        CraftTweakerAPI.logInfo("CraftTweaker: Loading file " + filename);
                     } else if(filename.toLowerCase().endsWith(".zip")) {
-                        System.out.println("CraftTweaker: Loading zip " + filename);
+                        CraftTweakerAPI.logInfo("CraftTweaker: Loading zip " + filename);
                     } else {
-                        System.out.println("CraftTweaker: Loading group " + filename);
+                        CraftTweakerAPI.logInfo("CraftTweaker: Loading group " + filename);
                     }
-                    
-                    compileScripts(filename, files, environmentGlobal, DEBUG);
+    
+                    List<ZenParsedFile> filesToExecute = new ArrayList<>();
+                    for(ZenParsedFile file : files) {
+                        if (!preprocessorManager.fileIgnoreExecuteList.contains(file.getFileName())){
+                            filesToExecute.add(file);
+                        }
+                    }
+    
+                    compileScripts(filename, filesToExecute, environmentGlobal, DEBUG);
 
                     if (executeScripts){
                         // execute scripts
-                        ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
-                        module.getMain().run();
+    
+                        Map<String, byte[]> classesToExecute = new HashMap<>();
+                        classes.forEach((s, bytes) -> {
+                            if (!preprocessorManager.classIgnoreExecuteList.contains(s)){
+                                classesToExecute.put(s, bytes);
+                            }
+                        });
+                        
+    
+                        ZenModule module = new ZenModule(classesToExecute, CraftTweakerAPI.class.getClassLoader());
+                        Runnable runnable = module.getMain();
+                        if (runnable != null) runnable.run();
                     }
 
                 } catch(Throwable ex) {

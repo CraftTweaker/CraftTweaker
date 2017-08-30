@@ -1,6 +1,7 @@
 package crafttweaker.preprocessor;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -10,13 +11,21 @@ import java.util.*;
  */
 public class PreprocessorManager {
     
+    /** List of all event subscribers*/
+    private final EventList<CrTScriptLoadEvent> SCRIPT_LOAD_EVENT_EVENT_LIST = new EventList<>();
+    
     /**
      * This registry is filled with dummy events that are callable
      */
     private HashMap<String, PreprocessorActionBase> registeredPreprocessorActions = new HashMap<>();
+    /**
+     * List of files that should Ignore the execution
+     */
+    public Set<String> fileIgnoreExecuteList = new HashSet<>();
+    public Set<String> classIgnoreExecuteList = new HashSet<>();
     
     // file > action event
-    private HashMap<String, List<PreprocessorActionBase>> preprocessorActionsPerFile = new HashMap<>();
+    public HashMap<String, List<PreprocessorActionBase>> preprocessorActionsPerFile = new HashMap<>();
     
     public void registerPreprocessorAction(String name, PreprocessorActionBase preprocessorClass){
         registeredPreprocessorActions.put(name, preprocessorClass);
@@ -106,8 +115,35 @@ public class PreprocessorManager {
     }
     
     public static void registerOwnPreprocessors(PreprocessorManager manager){
+        manager.registerLoadEventHandler(event -> {
+            if (event.affectingPreprocessorsList != null){
+                for(PreprocessorActionBase preprocessorActionBase : event.affectingPreprocessorsList) {
+                    System.out.println(event.fileName + ": " + preprocessorActionBase);
+                    if (preprocessorActionBase instanceof NoRunPreprocessor){
+                        event.isExecuteCanceled = true;
+                        event.isParsingCanceled = true;
+                    }
+                }
+            }
+        });
+        
         manager.registerPreprocessorAction("debug", new DebugPreprocessor("", "", -1));
         manager.registerPreprocessorAction("ignoreBracketErrors", new IgnoreBracketErrorPreprocessor("", "", -1));
+        manager.registerPreprocessorAction("norun", new NoRunPreprocessor("", "", -1));
     
+    }
+
+    public void registerLoadEventHandler(IEventHandler<CrTScriptLoadEvent> handler){
+        SCRIPT_LOAD_EVENT_EVENT_LIST.add(handler);
+    }
+    
+    public boolean postLoadEvent(CrTScriptLoadEvent event){
+        SCRIPT_LOAD_EVENT_EVENT_LIST.publish(event);
+        return event.isExecuteCanceled;
+    }
+    
+    public void handleLoadEvents(CrTScriptLoadEvent event){
+        if (event.isExecuteCanceled) fileIgnoreExecuteList.add(event.fileName);
+        if (event.isExecuteCanceled) classIgnoreExecuteList.add(event.className);
     }
 }
