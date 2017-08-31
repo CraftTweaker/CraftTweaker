@@ -84,7 +84,7 @@ public class CraftTweaker {
     }
     
     @EventHandler
-    public void onLoad(FMLPreInitializationEvent ev) {
+    public void onPreInitialization(FMLPreInitializationEvent ev) {
         PROXY.registerEvents();
         ev.getAsmData().getAll(ZenRegister.class.getCanonicalName()).forEach(clazz -> {
             try {
