@@ -94,4 +94,8 @@ public class TypeRegistry implements ITypeRegistry {
         
         return null;
     }
+    
+    public Map<Class, ZenType> getTypeMap() {
+        return types;
+    }
 }

@@ -72,4 +72,9 @@ public class SymbolPackage implements IZenSymbol {
     public IPartialExpression instance(ZenPosition position) {
         return new PartialPackage(position, this);
     }
+    
+    @Override
+    public String toString() {
+        return "SymbolPackage: " + name;
+    }
 }

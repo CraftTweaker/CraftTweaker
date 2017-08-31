@@ -10,9 +10,11 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.zenscript.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,10 +24,12 @@ import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Loader;
+import org.apache.commons.lang3.StringUtils;
+import stanhebben.zenscript.symbols.*;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -709,10 +713,74 @@ public class Commands {
                 return commands;
             }
         });
+    
+        CTChatCommand.registerCommand(new CraftTweakerCommand("dumpzs") {
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                
+                CraftTweakerAPI.logCommand("\nBracket Handlers:");
+                for(IBracketHandler iBracketHandler : GlobalRegistry.getBracketHandlers()) {
+                    CraftTweakerAPI.logCommand(iBracketHandler.getClass().getName());
+                }
+    
+                CraftTweakerAPI.logCommand("\nTypes:");
+                GlobalRegistry.getTypes().getTypeMap().forEach((aClass, zenType) -> CraftTweakerAPI.logCommand(aClass.getName() + ": " + zenType.getName()));
+    
+                CraftTweakerAPI.logCommand("\nGlobals:");
+                GlobalRegistry.getGlobals().forEach((s, iZenSymbol) -> CraftTweakerAPI.logCommand(s + ": " + iZenSymbol.toString()));
+                
+                CraftTweakerAPI.logCommand("\nExpansions:");
+                GlobalRegistry.getExpansions().forEach((s, typeExpansion) -> CraftTweakerAPI.logCommand(s + ": " + typeExpansion.toString()));
+    
+                CraftTweakerAPI.logCommand("\nRoot (Symbol Package):");
+                GlobalRegistry.getRoot().getPackages().forEach(this::printZenSymbol);
+            
+                sender.sendMessage(getLinkToCraftTweakerLog("Dumped content of the GlobalRegistry", sender));
+            
+            }
         
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct blocks", "/ct blocks", true), getNormalMessage(" \u00A73Outputs a list of all blocks in the game to the crafttweaker log"));
+            }
+    
+            
+            /**
+             * Recursivly prints all zenSymbols if they are Symbol Packages
+             */
+            private void printZenSymbol(String s, IZenSymbol zenSymbol){
+                if (zenSymbol instanceof SymbolPackage){
+                    printZenSymbolHelper(zenSymbol, 0);
+                } else {
+                    CraftTweakerAPI.logCommand(s + ": " + zenSymbol.toString());
+                }
+            }
+    
+            /**
+             * Helper functions for printing the zenSymbols
+             * @param zenSymbol
+             * @param depth
+             */
+            private void printZenSymbolHelper(IZenSymbol zenSymbol, final int depth){
+                int finalDepth = depth + 1;
+                
+                if (zenSymbol instanceof SymbolPackage){
+                    SymbolPackage symbolPackage = (SymbolPackage) zenSymbol;
+            
+                    symbolPackage.getPackages().forEach((s1, symbol) -> {
+                        CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s1 + ": " + symbol.toString());
+                        printZenSymbolHelper(symbol, finalDepth);
+                    });
+                }
+            }
+        });
+    
+    
         CTChatCommand.registerCommand(new NamesCommand());
         
     }
+    
+
     
     private static class ItemComparator implements Comparator<Item>, Serializable {
         

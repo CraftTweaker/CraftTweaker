@@ -317,4 +317,9 @@ public class JavaMethod implements IJavaMethod {
             output.invokeStatic(method.getDeclaringClass(), method.getName(), method.getReturnType(), method.getParameterTypes());
         }
     }
+    
+    @Override
+    public String toString() {
+        return "JavaMethod: " + method.toString();
+    }
 }

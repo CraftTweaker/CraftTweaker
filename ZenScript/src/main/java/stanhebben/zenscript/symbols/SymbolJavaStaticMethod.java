@@ -19,4 +19,9 @@ public class SymbolJavaStaticMethod implements IZenSymbol {
     public IPartialExpression instance(ZenPosition position) {
         return new PartialStaticMethod(position, method);
     }
+    
+    @Override
+    public String toString() {
+        return "SymbolJavaStaticMethod: " + method.toString();
+    }
 }

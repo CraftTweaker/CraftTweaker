@@ -25,4 +25,9 @@ public class SymbolJavaStaticField implements IZenSymbol {
     public IPartialExpression instance(ZenPosition position) {
         return new ExpressionJavaStaticField(position, cls, field, types);
     }
+    
+    @Override
+    public String toString() {
+        return "SymbolJavaStaticField: " + field.toString();
+    }
 }
