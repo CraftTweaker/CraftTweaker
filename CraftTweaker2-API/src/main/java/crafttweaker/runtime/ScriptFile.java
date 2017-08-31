@@ -141,7 +141,7 @@ public class ScriptFile {
     
     @Override
     public String toString() {
-        return "[" + priority + ":" + loaderName + "]: " + getName() + (getName().equals(getGroupName()) ? "" : " at " + getGroupName());
+        return "{[" + priority + ":" + loaderName + "]: " + getName() + (getName().equals(getGroupName()) ? "" : " at " + getGroupName()) + "}";
     }
     
     /**

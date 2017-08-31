@@ -54,7 +54,7 @@ public class ScriptIteratorZip implements IScriptIterator {
         if(file != null && directory != null) {
             return file.getAbsolutePath().substring(directory.getAbsolutePath().length() + 1);
         }
-        return file.getName();
+        return file != null ? file.getName() : "invalid_group_name";
     }
     
     @Override

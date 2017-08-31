@@ -35,7 +35,7 @@ public class ScriptProviderCustom implements IScriptProvider {
         return Collections.<IScriptIterator> singleton(new CustomScriptIterator()).iterator();
     }
     
-    private class CustomScript {
+    private static class CustomScript {
         
         private final String name;
         private final byte[] content;

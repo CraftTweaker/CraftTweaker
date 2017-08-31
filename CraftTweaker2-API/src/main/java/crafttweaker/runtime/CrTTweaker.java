@@ -111,14 +111,16 @@ public class CrTTweaker implements ITweaker {
                 } catch(Exception ex) {
                     CraftTweakerAPI.logError("[" +loaderName + "]: Error loading " + scriptFile.getName() + ": " + ex.toString(), ex);
                     loadSuccessful = false;
-                }
-                
-                if(reader != null) {
-                    try {
-                        reader.close();
-                    } catch(IOException ignored) {
+                } finally {
+                    if(reader != null) {
+                        try {
+                            reader.close();
+                        } catch(IOException ignored) {
+                        }
                     }
                 }
+                
+                
                 
                 
                 try {

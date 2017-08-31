@@ -26,10 +26,12 @@ public class ScriptIteratorSingle implements IScriptIterator {
     public String getGroupName() {
         if(file != null && directory != null) {
             return file.getAbsolutePath().substring(directory.getAbsolutePath().length() + 1);
-        } else if(file.getAbsolutePath().contains("scripts")) {
+        } else if(file != null && file.getAbsolutePath().contains("scripts")) {
             return file.getAbsolutePath().split("scripts")[1];
-        } else {
+        } else if (file != null){
             return file.getAbsolutePath();
+        } else {
+            return "invalid_group_name";
         }
     }
     

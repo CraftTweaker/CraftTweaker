@@ -110,7 +110,7 @@ public class ScriptProviderMemory implements IScriptProvider {
         }
     }
     
-    private class ScriptIterator implements IScriptIterator {
+    private static class ScriptIterator implements IScriptIterator {
         
         private final MemoryModule module;
         private final Iterator<MemoryFile> files;
@@ -148,7 +148,7 @@ public class ScriptProviderMemory implements IScriptProvider {
         }
     }
     
-    private class MemoryModule {
+    private static class MemoryModule {
         
         private final String name;
         private final List<MemoryFile> data;
@@ -159,7 +159,7 @@ public class ScriptProviderMemory implements IScriptProvider {
         }
     }
     
-    private class MemoryFile {
+    private static class MemoryFile {
         
         private final String name;
         private final byte[] data;
