@@ -30,6 +30,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.commons.lang3.StringUtils;
 import stanhebben.zenscript.symbols.*;
+import stanhebben.zenscript.type.*;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -771,6 +772,22 @@ public class Commands {
                         CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s1 + ": " + symbol.toString());
                         printZenSymbolHelper(symbol, finalDepth);
                     });
+                } else if (zenSymbol instanceof SymbolType || zenSymbol instanceof ZenTypeNative){
+                    ZenTypeNative typeNative = null;
+                    if (zenSymbol instanceof SymbolType){
+                        ZenType type = ((SymbolType) zenSymbol).getType();
+                        if (type instanceof ZenTypeNative){
+                            typeNative = (ZenTypeNative) type;
+                        }
+                    }else {
+                        typeNative = (ZenTypeNative) zenSymbol;
+                    }
+                    
+                    if (typeNative != null){
+                        for(String s : typeNative.dumpTypeInfo()) {
+                            CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s);
+                        }
+                    }
                 }
             }
         });

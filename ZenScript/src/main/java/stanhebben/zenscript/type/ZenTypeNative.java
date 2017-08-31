@@ -574,6 +574,50 @@ public class ZenTypeNative extends ZenType {
     }
     
     @Override
+    public String toString() {
+        return "ZenTypeNative: " + getName();
+    }
+    
+    /**
+     * Function that dumps all info about the current ZenType
+     * @return
+     */
+    public List<String> dumpTypeInfo(){
+        List<String> stringList = new ArrayList<>();
+        
+        // goes over all non static members
+        members.forEach((s, zenNativeMember) -> {
+            if (zenNativeMember.getGetter() != null){
+                stringList.add("Getter: " + zenNativeMember.getGetter().toString());
+            }
+            if (zenNativeMember.getSetter() != null){
+                stringList.add("Setter: " + zenNativeMember.getSetter().toString());
+            }
+            
+            stringList.add("Members: " + s);
+            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
+                stringList.add("\t" + iJavaMethod.toString());
+            }
+        });
+    
+        staticMembers.forEach((s, zenNativeMember) -> {
+            if (zenNativeMember.getGetter() != null){
+                stringList.add("Static Getter: " + zenNativeMember.getGetter().toString());
+            }
+            if (zenNativeMember.getSetter() != null){
+                stringList.add("Static Setter: " + zenNativeMember.getSetter().toString());
+            }
+            
+            stringList.add("Static Members: " + s);
+            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
+                stringList.add("\t" + iJavaMethod.toString());
+            }
+        });
+        
+        return stringList;
+    }
+    
+    @Override
     public Expression defaultValue(ZenPosition position) {
         return new ExpressionNull(position);
     }

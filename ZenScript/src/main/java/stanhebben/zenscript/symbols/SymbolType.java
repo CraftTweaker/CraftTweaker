@@ -24,4 +24,8 @@ public class SymbolType implements IZenSymbol {
     public String toString() {
         return "SymbolType: " + type.toString();
     }
+    
+    public ZenType getType() {
+        return type;
+    }
 }

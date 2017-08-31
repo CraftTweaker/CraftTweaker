@@ -56,6 +56,15 @@ public class ZenNativeMember {
         methods.add(method);
     }
     
+    public List<IJavaMethod> getMethods() {
+        return methods;
+    }
+    
+    @Override
+    public String toString() {
+        return Arrays.toString(methods.toArray());
+    }
+    
     private class InstanceGetValue implements IPartialExpression {
         
         private final ZenPosition position;
