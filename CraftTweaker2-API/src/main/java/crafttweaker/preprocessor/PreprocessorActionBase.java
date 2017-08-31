@@ -16,12 +16,6 @@ public abstract class PreprocessorActionBase {
     }
     
     /**
-     * The only function that is called on the dummy Preprocessor Action,
-     * must work without having to access the variables, mostly just a clean pass into the constructor
-     */
-    public abstract PreprocessorActionBase createPreprocessor(String fileName, String preprocessorLine, int lineIndex);
-    
-    /**
      * Gets executed directly on find
      */
     public void executeActionOnFind(){}

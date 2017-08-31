@@ -17,7 +17,7 @@ public class PreprocessorManager {
     /**
      * This registry is filled with dummy events that are callable
      */
-    private HashMap<String, PreprocessorActionBase> registeredPreprocessorActions = new HashMap<>();
+    private HashMap<String, PreprocessorFactory> registeredPreprocessorActions = new HashMap<>();
     /**
      * List of files that should Ignore the execution
      */
@@ -27,8 +27,8 @@ public class PreprocessorManager {
     // file > action event
     public HashMap<String, List<PreprocessorActionBase>> preprocessorActionsPerFile = new HashMap<>();
     
-    public void registerPreprocessorAction(String name, PreprocessorActionBase preprocessorClass){
-        registeredPreprocessorActions.put(name, preprocessorClass);
+    public void registerPreprocessorAction(String name, PreprocessorFactory preprocessorFactory){
+        registeredPreprocessorActions.put(name, preprocessorFactory);
     }
     
     /**
@@ -45,11 +45,11 @@ public class PreprocessorManager {
             s = s.substring(1);
             String[] splits = s.split(" ");
             if (splits.length > 0){
-                PreprocessorActionBase dummyAction = registeredPreprocessorActions.get(splits[0]);
+                PreprocessorFactory preprocessorFactory = registeredPreprocessorActions.get(splits[0]);
                 
-                if (dummyAction != null){
+                if (preprocessorFactory != null){
                     
-                    PreprocessorActionBase actionBase = dummyAction.createPreprocessor(filename, line, lineIndex);
+                    PreprocessorActionBase actionBase = preprocessorFactory.createPreprocessor(filename, line, lineIndex);
     
                     actionBase.executeActionOnFind();
                     addPreprocessorToFileMap(filename, actionBase);
@@ -127,9 +127,9 @@ public class PreprocessorManager {
             }
         });
         
-        manager.registerPreprocessorAction("debug", new DebugPreprocessor("", "", -1));
-        manager.registerPreprocessorAction("ignoreBracketErrors", new IgnoreBracketErrorPreprocessor("", "", -1));
-        manager.registerPreprocessorAction("norun", new NoRunPreprocessor("", "", -1));
+        manager.registerPreprocessorAction("debug", DebugPreprocessor::new);
+        manager.registerPreprocessorAction("ignoreBracketErrors", IgnoreBracketErrorPreprocessor::new);
+        manager.registerPreprocessorAction("norun", NoRunPreprocessor::new);
     
     }
 

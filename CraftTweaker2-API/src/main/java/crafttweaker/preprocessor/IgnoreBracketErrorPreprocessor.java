@@ -11,11 +11,6 @@ public class IgnoreBracketErrorPreprocessor extends PreprocessorActionBase{
     }
     
     @Override
-    public PreprocessorActionBase createPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
-        return new IgnoreBracketErrorPreprocessor(fileName, preprocessorLine, lineIndex);
-    }
-    
-    @Override
     public void executeActionOnFind() {
         CraftTweakerAPI.logInfo("IgnoreBracketErrorPreprocessor found in " + fileName + ", ignoring errors in that file");
         CraftTweakerAPI.tweaker.addFileToIgnoreBracketErrors(fileName);
