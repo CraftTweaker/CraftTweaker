@@ -1,9 +1,11 @@
 package crafttweaker.preprocessor;
 
+import crafttweaker.runtime.ScriptFile;
+
 /**
  * @author BloodWorkXGaming
  */
-public abstract class PreprocessorActionBase {
+public abstract class PreprocessorActionBase implements IPreprocessor {
     protected String preprocessorLine;
     protected String fileName;
     protected int lineIndex;
@@ -18,12 +20,27 @@ public abstract class PreprocessorActionBase {
     /**
      * Gets executed directly on find
      */
-    public void executeActionOnFind(){}
+    @Override
+    public void executeActionOnFind(ScriptFile scriptFile){}
     
     /**
      * Gets executed after all preprocessor actions have been collected
      */
-    public void executeActionOnFinish(){}
+    @Override
+    public void executeActionOnFinish(ScriptFile scriptFile){}
     
+    @Override
+    public String getPreprocessorLine() {
+        return preprocessorLine;
+    }
     
+    @Override
+    public String getFileName() {
+        return fileName;
+    }
+    
+    @Override
+    public int getLineIndex() {
+        return lineIndex;
+    }
 }

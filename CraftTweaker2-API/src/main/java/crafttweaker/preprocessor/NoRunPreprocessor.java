@@ -1,7 +1,5 @@
 package crafttweaker.preprocessor;
 
-import crafttweaker.CraftTweakerAPI;
-
 /**
  * @author BloodWorkXGaming
  */

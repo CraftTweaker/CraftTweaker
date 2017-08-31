@@ -1,6 +1,7 @@
 package crafttweaker.preprocessor;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.runtime.ScriptFile;
 
 /**
  * @author BloodWorkXGaming
@@ -11,7 +12,7 @@ public class DebugPreprocessor extends PreprocessorActionBase{
     }
     
     @Override
-    public void executeActionOnFind() {
+    public void executeActionOnFind(ScriptFile scriptFile) {
         CraftTweakerAPI.logInfo("Debug Preprocessor found in " + fileName + ", enabling debugmode");
         CraftTweakerAPI.tweaker.enableDebug();
     }

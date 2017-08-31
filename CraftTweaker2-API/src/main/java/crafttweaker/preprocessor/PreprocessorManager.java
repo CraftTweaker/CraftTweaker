@@ -1,6 +1,7 @@
 package crafttweaker.preprocessor;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.runtime.ScriptFile;
 import crafttweaker.util.*;
 
 import java.io.*;
@@ -14,18 +15,15 @@ public class PreprocessorManager {
     /** List of all event subscribers*/
     private final EventList<CrTScriptLoadEvent> SCRIPT_LOAD_EVENT_EVENT_LIST = new EventList<>();
     
-    /**
-     * This registry is filled with dummy events that are callable
-     */
+    /** This registry is filled with dummy events that are callable */
     private HashMap<String, PreprocessorFactory> registeredPreprocessorActions = new HashMap<>();
-    /**
-     * List of files that should Ignore the execution
-     */
+    
+    /** List of files that should Ignore the execution */
     public Set<String> fileIgnoreExecuteList = new HashSet<>();
     public Set<String> classIgnoreExecuteList = new HashSet<>();
     
     // file > action event
-    public HashMap<String, List<PreprocessorActionBase>> preprocessorActionsPerFile = new HashMap<>();
+    public HashMap<String, List<IPreprocessor>> preprocessorActionsPerFile = new HashMap<>();
     
     public void registerPreprocessorAction(String name, PreprocessorFactory preprocessorFactory){
         registeredPreprocessorActions.put(name, preprocessorFactory);
@@ -33,12 +31,12 @@ public class PreprocessorManager {
     
     /**
      * Checks the given line for preprocessors
-     * @param filename Name of the file
+     * @param scriptFile file which is being checked
      * @param line Line to check
      * @param lineIndex index of the file in the current line
      * @return returns whether it found a preprocessor or not
      */
-    private boolean checkLine(String filename, String line, int lineIndex){
+    private IPreprocessor checkLine(ScriptFile scriptFile, String line, int lineIndex){
         String s = line.trim();
         
         if (s.toCharArray().length > 0 && s.toCharArray()[0] == '#'){
@@ -48,50 +46,57 @@ public class PreprocessorManager {
                 PreprocessorFactory preprocessorFactory = registeredPreprocessorActions.get(splits[0]);
                 
                 if (preprocessorFactory != null){
-                    
-                    PreprocessorActionBase actionBase = preprocessorFactory.createPreprocessor(filename, line, lineIndex);
     
-                    actionBase.executeActionOnFind();
-                    addPreprocessorToFileMap(filename, actionBase);
+                    IPreprocessor preprocessor = preprocessorFactory.createPreprocessor(scriptFile.getName(), line, lineIndex);
     
-                    return true;
+                    preprocessor.executeActionOnFind(scriptFile);
+                    addPreprocessorToFileMap(scriptFile.getName(), preprocessor);
+                    return preprocessor;
                 }
             }
         }
-        return false;
+        
+        return null;
     }
     
     /**
      * Adds the preprocessor Command to the map
      * @param filename Key for map
-     * @param actionBase Value to add to map
+     * @param preprocessor Value to add to map
      */
-    private void addPreprocessorToFileMap(String filename, PreprocessorActionBase actionBase){
+    private void addPreprocessorToFileMap(String filename, IPreprocessor preprocessor){
         if (preprocessorActionsPerFile.containsKey(filename)){
-            preprocessorActionsPerFile.get(filename).add(actionBase);
+            preprocessorActionsPerFile.get(filename).add(preprocessor);
         }else {
-            List<PreprocessorActionBase> l = new ArrayList<>();
-            l.add(actionBase);
+            List<IPreprocessor> l = new ArrayList<>();
+            l.add(preprocessor);
             preprocessorActionsPerFile.put(filename, l);
         }
     }
     
     /**
      * Checks the given inputstream for preprocessors
-     * @param filename name of the file that is being checked
-     * @param inputStream stream to check
+     * @param scriptFile ScriptFile object of file to check,
+     *                   contains all important information about streams and names
      */
-    public void checkFileForPreprocessors(String filename, InputStream inputStream) {
+    public List<IPreprocessor> checkFileForPreprocessors(ScriptFile scriptFile) {
+        List<IPreprocessor> preprocessorList = new ArrayList<>();
+        
+        String filename = scriptFile.getName();
+        
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(scriptFile.open(), "UTF-8"));
 
             String line;
             int lineIndex = -1;
             
             while ((line = reader.readLine()) != null) {
                 lineIndex++;
-                checkLine(filename, line, lineIndex);
+                IPreprocessor preprocessor = checkLine(scriptFile, line, lineIndex);
+                if (preprocessor != null){
+                    preprocessorList.add(preprocessor);
+                }
             }
             
             reader.close();
@@ -100,16 +105,19 @@ public class PreprocessorManager {
             e.printStackTrace();
         }
         
-        executePostActions();
+        executePostActions(scriptFile);
+        return preprocessorList;
     }
     
     /**
      * Actions which are getting called after all preprocessor lines have been collected
+     * @param scriptFile scriptFile which is being affected.
+     *                   Changing this will affect the way script are getting loaded
      */
-    public void executePostActions(){
-        for(Map.Entry<String, List<PreprocessorActionBase>> stringListEntry : preprocessorActionsPerFile.entrySet()) {
-            for(PreprocessorActionBase preprocessorActionBase : stringListEntry.getValue()) {
-                preprocessorActionBase.executeActionOnFinish();
+    private void executePostActions(ScriptFile scriptFile){
+        for(Map.Entry<String, List<IPreprocessor>> stringListEntry : preprocessorActionsPerFile.entrySet()) {
+            for(IPreprocessor preprocessor : stringListEntry.getValue()) {
+                preprocessor.executeActionOnFinish(scriptFile);
             }
         }
     }
@@ -117,7 +125,7 @@ public class PreprocessorManager {
     public static void registerOwnPreprocessors(PreprocessorManager manager){
         manager.registerLoadEventHandler(event -> {
             if (event.affectingPreprocessorsList != null){
-                for(PreprocessorActionBase preprocessorActionBase : event.affectingPreprocessorsList) {
+                for(IPreprocessor preprocessorActionBase : event.affectingPreprocessorsList) {
                     System.out.println(event.fileName + ": " + preprocessorActionBase);
                     if (preprocessorActionBase instanceof NoRunPreprocessor){
                         event.isExecuteCanceled = true;

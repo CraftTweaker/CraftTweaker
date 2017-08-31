@@ -29,9 +29,9 @@ public class CrTScriptLoadEvent {
     public String fileName;
     public String className;
     public ITweaker tweaker;
-    public List<PreprocessorActionBase> affectingPreprocessorsList;
+    public List<IPreprocessor> affectingPreprocessorsList;
     
-    public CrTScriptLoadEvent(boolean isActuallyLoading, String fileName, String className, ITweaker tweaker, List<PreprocessorActionBase> affectingPreprocessorsList) {
+    public CrTScriptLoadEvent(boolean isActuallyLoading, String fileName, String className, ITweaker tweaker, List<IPreprocessor> affectingPreprocessorsList) {
         this.isActuallyLoading = isActuallyLoading;
         this.fileName = fileName;
         this.tweaker = tweaker;

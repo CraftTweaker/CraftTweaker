@@ -37,9 +37,10 @@ public interface ITweaker {
 
     /**
      * Loads all scripts, choose whether to execute or not.
+     * @param loaderName Name of the loader, affects whether a file gets loaded or not
      * @return Whether it was successful at loading or not
      */
-    boolean loadScript(boolean executeScripts);
+    boolean loadScript(boolean executeScripts, String loaderName);
 
 
     /**
