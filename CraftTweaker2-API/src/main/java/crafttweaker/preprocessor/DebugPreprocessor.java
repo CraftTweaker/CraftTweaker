@@ -4,6 +4,10 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.runtime.ScriptFile;
 
 /**
+ * Adding the
+ * #debug
+ * Preprocessor will make this script generate the .class file which it normally just has under the hood
+ *
  * @author BloodWorkXGaming
  */
 public class DebugPreprocessor extends PreprocessorActionBase{

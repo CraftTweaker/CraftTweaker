@@ -3,6 +3,11 @@ package crafttweaker.preprocessor;
 import crafttweaker.runtime.ScriptFile;
 
 /**
+ * Scripts with the
+ * #norun
+ * Preprocessor are getting totally ignored and are not being run
+ * Syntax command bypasses the not loading of the script
+ *
  * @author BloodWorkXGaming
  */
 public class NoRunPreprocessor extends PreprocessorActionBase{

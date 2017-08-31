@@ -8,6 +8,12 @@ import net.minecraftforge.fml.common.Loader;
 import java.util.*;
 
 /**
+ * Preprocessor can be used as follows
+ * #modloaded modid1 modid2 modid3
+ * example:
+ * #modloaded minecraft tconstruct
+ * only gets loaded when tconstruct AND minecraft (which is always :P) are loaded
+ *
  * @author BloodWorkXGaming
  */
 public class ModLoadedPreprocessor extends PreprocessorActionBase {

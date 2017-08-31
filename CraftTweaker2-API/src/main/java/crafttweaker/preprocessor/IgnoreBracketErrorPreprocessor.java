@@ -4,6 +4,10 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.runtime.ScriptFile;
 
 /**
+ * Adding the
+ * #ignoreBracketError
+ * will make the script ignore any bracket errors which happen at compile time
+ *
  * @author BloodWorkXGaming
  */
 public class IgnoreBracketErrorPreprocessor extends PreprocessorActionBase{

@@ -3,6 +3,15 @@ package crafttweaker.preprocessor;
 import crafttweaker.runtime.ScriptFile;
 
 /**
+ * Preprocessor can be used as follows:
+ * #loader loadername
+ * Example:
+ * #loader contenttweaker
+ * This will make scripts only being loaded when the loader is specified to load
+ * contenttweaker scripts
+ *
+ * this defaults to being "crafttweaker" which is being called by CraftTweaker
+ *
  * @author BloodWorkXGaming
  */
 public class LoaderPreprocessor extends PreprocessorActionBase{
