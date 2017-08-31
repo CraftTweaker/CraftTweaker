@@ -19,15 +19,18 @@ public class PreprocessorManager {
     /** This registry is filled with dummy events that are callable */
     private HashMap<String, PreprocessorFactory> registeredPreprocessorActions = new HashMap<>();
     
-    /** List of files that should Ignore the execution */
-    public Set<String> fileIgnoreExecuteList = new HashSet<>();
-    public Set<String> classIgnoreExecuteList = new HashSet<>();
-    
     // file > action event
     public HashMap<String, List<IPreprocessor>> preprocessorActionsPerFile = new HashMap<>();
     
     public void registerPreprocessorAction(String name, PreprocessorFactory preprocessorFactory){
         registeredPreprocessorActions.put(name, preprocessorFactory);
+    }
+    
+    /**
+     * Cleans up before being able to run again
+     */
+    public void clean(){
+        preprocessorActionsPerFile.clear();
     }
     
     /**

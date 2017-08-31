@@ -17,7 +17,6 @@ import static stanhebben.zenscript.ZenModule.*;
  */
 public class CrTTweaker implements ITweaker {
     
-    public static HashSet<String> scriptsToIgnoreBracketErrors = new HashSet<>();
     private static boolean DEBUG = false;
     private final List<IAction> actions = new ArrayList<>();
     /**
@@ -44,16 +43,19 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public void load() {
-        loadScript(true, "crafttweaker");
+        loadScript(false, "crafttweaker");
     }
     
     @Override
-    public boolean loadScript(boolean executeScripts, String loaderName) {
+    public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
         CraftTweakerAPI.logInfo("Loading scripts");
+        
+        preprocessorManager.clean();
+        
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
-        
-        List<ScriptFile> scriptFiles = collectScriptFiles(!executeScripts);
+    
+        List<ScriptFile> scriptFiles = collectScriptFiles(isSyntaxCommand);
         
         // preprocessor magic
         for(ScriptFile scriptFile : scriptFiles) {
@@ -64,7 +66,7 @@ public class CrTTweaker implements ITweaker {
         
         // ZS magic
         for(ScriptFile scriptFile : scriptFiles) {
-            if (!scriptFile.getLoaderName().equals(loaderName)) {
+            if (!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
                 CraftTweakerAPI.logInfo("[" +loaderName + "]: Skipping file " + scriptFile);
                 continue;
             }
@@ -124,10 +126,10 @@ public class CrTTweaker implements ITweaker {
                     
                     // Stops if the compile is disabled
                     if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
-                    compileScripts(filename, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled());
+                    compileScripts(filename, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
                     
                     // stops if the execution is disabled
-                    if (scriptFile.isExecutionBlocked() && !executeScripts) continue;
+                    if (scriptFile.isExecutionBlocked() || isSyntaxCommand) continue;
                     
                     
                     ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
@@ -173,11 +175,6 @@ public class CrTTweaker implements ITweaker {
     @Override
     public void enableDebug() {
         DEBUG = true;
-    }
-    
-    @Override
-    public void addFileToIgnoreBracketErrors(String filename) {
-        scriptsToIgnoreBracketErrors.add(filename);
     }
     
     @Override
