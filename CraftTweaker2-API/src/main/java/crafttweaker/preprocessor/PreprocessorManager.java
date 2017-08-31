@@ -11,6 +11,7 @@ import java.util.*;
  * @author BloodWorkXGaming
  */
 public class PreprocessorManager {
+    public static final ScriptFileComparator SCRIPT_FILE_COMPARATOR = new ScriptFileComparator();
     
     /** List of all event subscribers*/
     private final EventList<CrTScriptLoadEvent> SCRIPT_LOAD_EVENT_EVENT_LIST = new EventList<>();
@@ -123,35 +124,26 @@ public class PreprocessorManager {
     }
     
     public static void registerOwnPreprocessors(PreprocessorManager manager){
-        manager.registerLoadEventHandler(event -> {
-            if (event.affectingPreprocessorsList != null){
-                for(IPreprocessor preprocessorActionBase : event.affectingPreprocessorsList) {
-                    System.out.println(event.fileName + ": " + preprocessorActionBase);
-                    if (preprocessorActionBase instanceof NoRunPreprocessor){
-                        event.isExecuteCanceled = true;
-                        event.isParsingCanceled = true;
-                    }
-                }
-            }
-        });
-        
         manager.registerPreprocessorAction("debug", DebugPreprocessor::new);
         manager.registerPreprocessorAction("ignoreBracketErrors", IgnoreBracketErrorPreprocessor::new);
         manager.registerPreprocessorAction("norun", NoRunPreprocessor::new);
-    
+        manager.registerPreprocessorAction("loader", LoaderPreprocessor::new);
+        manager.registerPreprocessorAction("priority", PriorityPreprocessor::new);
     }
 
     public void registerLoadEventHandler(IEventHandler<CrTScriptLoadEvent> handler){
         SCRIPT_LOAD_EVENT_EVENT_LIST.add(handler);
     }
     
-    public boolean postLoadEvent(CrTScriptLoadEvent event){
+    public void postLoadEvent(CrTScriptLoadEvent event){
         SCRIPT_LOAD_EVENT_EVENT_LIST.publish(event);
-        return event.isExecuteCanceled;
     }
     
-    public void handleLoadEvents(CrTScriptLoadEvent event){
-        if (event.isExecuteCanceled) fileIgnoreExecuteList.add(event.fileName);
-        if (event.isExecuteCanceled) classIgnoreExecuteList.add(event.className);
+    public static class ScriptFileComparator implements Comparator<ScriptFile>, Serializable {
+        @Override
+        public int compare(ScriptFile o1, ScriptFile o2) {
+            int compare = Integer.compare(o2.getPriority(), o1.getPriority());
+            return compare == 0 ? o1.getGroupName().compareToIgnoreCase(o2.getGroupName()) : compare;
+        }
     }
 }

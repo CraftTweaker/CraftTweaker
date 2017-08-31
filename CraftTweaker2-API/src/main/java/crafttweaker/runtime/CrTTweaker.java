@@ -49,27 +49,40 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public boolean loadScript(boolean executeScripts, String loaderName) {
-        System.out.println("Loading scripts");
+        CraftTweakerAPI.logInfo("Loading scripts");
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
         
-        List<ScriptFile> scriptFiles = collectScriptFiles();
+        List<ScriptFile> scriptFiles = collectScriptFiles(!executeScripts);
         
         // preprocessor magic
         for(ScriptFile scriptFile : scriptFiles) {
             scriptFile.addAll(preprocessorManager.checkFileForPreprocessors(scriptFile));
         }
         
+        scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
+        
+        // ZS magic
         for(ScriptFile scriptFile : scriptFiles) {
+            if (!scriptFile.getLoaderName().equals(loaderName)) {
+                CraftTweakerAPI.logInfo("[" +loaderName + "]: Skipping file " + scriptFile);
+                continue;
+            }
             
             if(!executed.contains(scriptFile.getGroupName())) {
                 executed.add(scriptFile.getGroupName());
+    
+                String groupName = scriptFile.getGroupName();
+                if(groupName.toLowerCase().endsWith(".zip")) {
+                    CraftTweakerAPI.logInfo("[" +loaderName + "]: Loading zip " + groupName);
+                }
+    
+                CraftTweakerAPI.logInfo("[" +loaderName + "]: Loading Script: " + scriptFile);
                 
                 Map<String, byte[]> classes = new HashMap<>();
                 IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
                 
-                List<ZenParsedFile> files = new ArrayList<>();
-                
+                ZenParsedFile zenParsedFile = null;
                 
                 Reader reader = null;
                 try {
@@ -78,24 +91,23 @@ public class CrTTweaker implements ITweaker {
                     String filename = scriptFile.getName();
                     String className = extractClassName(filename);
                     
-                    CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(executeScripts, filename, className, this, preprocessorManager.preprocessorActionsPerFile.get(filename));
+                    CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(scriptFile);
                     preprocessorManager.postLoadEvent(loadEvent);
-                    preprocessorManager.handleLoadEvents(loadEvent);
                     
-                    if(loadEvent.isParsingCanceled)
-                        continue;
+                    // blocks the parsing of the script
+                    if(scriptFile.isParsingBlocked()) continue;
                     
-                    ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptsToIgnoreBracketErrors.contains(filename));
-                    ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-                    files.add(pfile);
+                    ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
+                    zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
+                    
                 } catch(IOException ex) {
-                    CraftTweakerAPI.logError("Could not load script " + scriptFile.getName() + ": " + ex.getMessage());
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Could not load script " + scriptFile.getName() + ": " + ex.getMessage());
                     loadSuccessful = false;
                 } catch(ParseException ex) {
-                    CraftTweakerAPI.logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
                     loadSuccessful = false;
                 } catch(Exception ex) {
-                    CraftTweakerAPI.logError("Error loading " + scriptFile.getName() + ": " + ex.toString(), ex);
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error loading " + scriptFile.getName() + ": " + ex.toString(), ex);
                     loadSuccessful = false;
                 }
                 
@@ -109,42 +121,23 @@ public class CrTTweaker implements ITweaker {
                 
                 try {
                     String filename = scriptFile.getGroupName();
-                    if(filename.toLowerCase().endsWith(".zs")) {
-                        CraftTweakerAPI.logInfo("CraftTweaker: Loading file " + filename);
-                    } else if(filename.toLowerCase().endsWith(".zip")) {
-                        CraftTweakerAPI.logInfo("CraftTweaker: Loading zip " + filename);
-                    } else {
-                        CraftTweakerAPI.logInfo("CraftTweaker: Loading group " + filename);
-                    }
                     
-                    List<ZenParsedFile> filesToExecute = new ArrayList<>();
-                    for(ZenParsedFile file : files) {
-                        if(!preprocessorManager.fileIgnoreExecuteList.contains(file.getFileName())) {
-                            filesToExecute.add(file);
-                        }
-                    }
+                    // Stops if the compile is disabled
+                    if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
+                    compileScripts(filename, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled());
                     
-                    compileScripts(filename, filesToExecute, environmentGlobal, DEBUG);
+                    // stops if the execution is disabled
+                    if (scriptFile.isExecutionBlocked() && !executeScripts) continue;
                     
-                    if(executeScripts) {
-                        // execute scripts
-                        
-                        Map<String, byte[]> classesToExecute = new HashMap<>();
-                        classes.forEach((s, bytes) -> {
-                            if(!preprocessorManager.classIgnoreExecuteList.contains(s)) {
-                                classesToExecute.put(s, bytes);
-                            }
-                        });
-                        
-                        
-                        ZenModule module = new ZenModule(classesToExecute, CraftTweakerAPI.class.getClassLoader());
-                        Runnable runnable = module.getMain();
-                        if(runnable != null)
-                            runnable.run();
-                    }
+                    
+                    ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
+                    Runnable runnable = module.getMain();
+                    if(runnable != null)
+                        runnable.run();
+                    
                     
                 } catch(Throwable ex) {
-                    CraftTweakerAPI.logError("Error executing " + scriptFile.getGroupName() + ": " + ex.getMessage(), ex);
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
                 }
             }
         }
@@ -152,7 +145,7 @@ public class CrTTweaker implements ITweaker {
         return loadSuccessful;
     }
     
-    protected List<ScriptFile> collectScriptFiles() {
+    protected List<ScriptFile> collectScriptFiles(boolean isSyntaxCommand) {
         List<ScriptFile> fileList = new ArrayList<>();
         HashSet<String> collected = new HashSet<>();
         
@@ -165,7 +158,7 @@ public class CrTTweaker implements ITweaker {
                 collected.add(script.getGroupName());
                 
                 while(script.next()) {
-                    fileList.add(new ScriptFile(this, script));
+                    fileList.add(new ScriptFile(this, script, isSyntaxCommand));
                 }
             }
         }

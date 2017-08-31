@@ -1,6 +1,6 @@
 package crafttweaker.preprocessor;
 
-import crafttweaker.runtime.ITweaker;
+import crafttweaker.runtime.*;
 
 import java.util.List;
 
@@ -11,34 +11,13 @@ import java.util.List;
  * @author BloodWorkXGaming
  */
 public class CrTScriptLoadEvent {
-    /**
-     * Optional Settings
-     */
-    public boolean isExecuteCanceled = false;
-    public boolean enableDebug = false;
-    public boolean isParsingCanceled;
+    private ScriptFile scriptFile;
     
-    /**
-     * Individual settings
-     */
-    private boolean isActuallyLoading;
-    
-    /**
-     * Statics
-     */
-    public String fileName;
-    public String className;
-    public ITweaker tweaker;
-    public List<IPreprocessor> affectingPreprocessorsList;
-    
-    public CrTScriptLoadEvent(boolean isActuallyLoading, String fileName, String className, ITweaker tweaker, List<IPreprocessor> affectingPreprocessorsList) {
-        this.isActuallyLoading = isActuallyLoading;
-        this.fileName = fileName;
-        this.tweaker = tweaker;
-        this.affectingPreprocessorsList = affectingPreprocessorsList;
+    public CrTScriptLoadEvent(ScriptFile scriptFile){
+        this.scriptFile = scriptFile;
     }
     
-    public boolean isActuallyLoading() {
-        return isActuallyLoading;
+    public ScriptFile getScriptFile() {
+        return scriptFile;
     }
 }

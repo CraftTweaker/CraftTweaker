@@ -17,19 +17,35 @@ public class ScriptFile {
     /** Loader name gets provided so that it can only load specifc scripts, not all of them*/
     private String loaderName = "crafttweaker";
     
-    public ScriptFile(ITweaker tweaker, IScriptIterator script) {
+    private boolean isExecutionBlocked = false;
+    private boolean isParsingBlocked = false;
+    private boolean isCompileBlocked = false;
+    
+    private boolean isDebugEnabled = false;
+    private boolean ignoreBracketErrors = false;
+    
+    private boolean isSyntaxCommand;
+    
+    public ScriptFile(ITweaker tweaker, IScriptIterator script, boolean isSyntaxCommand) {
         this.tweaker = tweaker;
         this.script = script;
+        this.isSyntaxCommand = isSyntaxCommand;
     }
     
     public IScriptIterator getScript() {
         return script;
     }
     
+    /**
+     * Group name is with relative path to the file or ZIP file name
+     */
     public String getGroupName() {
         return script.getGroupName();
     }
     
+    /**
+     * Actual name of the zs file
+     */
     public String getName() {
         return script.getName();
     }
@@ -83,9 +99,70 @@ public class ScriptFile {
     
     /**
      * Gets the tweaker which handles the loading of the current file
-     * @return
+     * @return ITweaker instance of the current tweaker
      */
     public ITweaker getTweaker() {
         return tweaker;
+    }
+    
+    /**
+     * Getters and setters which alter the loading of the code
+     */
+    public boolean isExecutionBlocked() {
+        return isExecutionBlocked;
+    }
+    
+    public void setExecutionBlocked(boolean executionBlocked) {
+        isExecutionBlocked = executionBlocked;
+    }
+    
+    public boolean isParsingBlocked() {
+        return isParsingBlocked;
+    }
+    
+    public void setParsingBlocked(boolean parsingBlocked) {
+        isParsingBlocked = parsingBlocked;
+    }
+    
+    public boolean isCompileBlocked() {
+        return isCompileBlocked;
+    }
+    
+    public void setCompileBlocked(boolean compileBlocked) {
+        isCompileBlocked = compileBlocked;
+    }
+    
+    /**
+     * Whether it is a by syntax command. Syntax commands only load the script, but don't execute it
+     */
+    public boolean isSyntaxCommand() {
+        return isSyntaxCommand;
+    }
+    
+    @Override
+    public String toString() {
+        return "[" + priority + ":" + loaderName + "]: " + getName() + (getName().equals(getGroupName()) ? "" : " at " + getGroupName());
+    }
+    
+    /**
+     * Change whether you want to have bracket errors show up for the specified file
+     */
+    public boolean areBracketErrorsIgnored() {
+        return ignoreBracketErrors;
+    }
+    
+    public void setIgnoreBracketErrors(boolean ignoreBracketErrors) {
+        this.ignoreBracketErrors = ignoreBracketErrors;
+    }
+    
+    /**
+     * Change whether you want to enable debug mode for the specified file
+     */
+    public boolean isDebugEnabled() {
+        return isDebugEnabled;
+    }
+    
+    public void setDebugEnabled(boolean debugEnabled) {
+        isDebugEnabled = debugEnabled;
     }
 }

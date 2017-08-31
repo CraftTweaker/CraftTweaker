@@ -7,13 +7,20 @@ import crafttweaker.runtime.ScriptFile;
  * @author BloodWorkXGaming
  */
 public class DebugPreprocessor extends PreprocessorActionBase{
+    public static final String PREPROCESSOR_NAME = "debug";
+    
     public DebugPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
         super(fileName, preprocessorLine, lineIndex);
     }
     
     @Override
     public void executeActionOnFind(ScriptFile scriptFile) {
-        CraftTweakerAPI.logInfo("Debug Preprocessor found in " + fileName + ", enabling debugmode");
-        CraftTweakerAPI.tweaker.enableDebug();
+        CraftTweakerAPI.logInfo("Debug Preprocessor found in " + scriptFile + ", enabling debugmode");
+        scriptFile.setDebugEnabled(true);
+    }
+    
+    @Override
+    public String getPreprocessorName() {
+        return PREPROCESSOR_NAME;
     }
 }

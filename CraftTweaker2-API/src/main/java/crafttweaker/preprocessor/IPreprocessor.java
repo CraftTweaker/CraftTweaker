@@ -3,6 +3,8 @@ package crafttweaker.preprocessor;
 import crafttweaker.runtime.ScriptFile;
 
 public interface IPreprocessor {
+    String getPreprocessorName();
+
     /**
      * Gets executed directly on find
      */
