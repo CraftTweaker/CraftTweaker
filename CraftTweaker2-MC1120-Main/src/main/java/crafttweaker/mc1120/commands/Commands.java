@@ -742,7 +742,8 @@ public class Commands {
         
             @Override
             protected void init() {
-                setDescription(getClickableCommandText("\u00A72/ct blocks", "/ct blocks", true), getNormalMessage(" \u00A73Outputs a list of all blocks in the game to the crafttweaker log"));
+                setDescription(getClickableCommandText("\u00A72/ct dumpzs", "/ct dumpzs", true),
+                        getNormalMessage(" \u00A73Dumps the whole ZenScript Registry to the crafttweaker log"));
             }
     
             
