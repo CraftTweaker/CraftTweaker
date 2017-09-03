@@ -16,6 +16,7 @@ import static stanhebben.zenscript.ZenModule.*;
  * @author Stan Hebben
  */
 public class CrTTweaker implements ITweaker {
+    public static String defaultLoaderName = "crafttweaker";
     
     private static boolean DEBUG = false;
     private final List<IAction> actions = new ArrayList<>();
@@ -43,7 +44,7 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public void load() {
-        loadScript(false, "crafttweaker");
+        loadScript(false, defaultLoaderName);
     }
     
     @Override
