@@ -121,7 +121,13 @@ public class ScriptProviderMemory implements IScriptProvider {
             files = module.data.iterator();
             current = null;
         }
-        
+    
+        private ScriptIterator(MemoryModule module, Iterator<MemoryFile> files, MemoryFile current) {
+            this.module = module;
+            this.files = files;
+            this.current = current;
+        }
+    
         @Override
         public String getGroupName() {
             return module.name;
@@ -145,6 +151,11 @@ public class ScriptProviderMemory implements IScriptProvider {
         @Override
         public InputStream open() throws IOException {
             return new ByteArrayInputStream(current.data);
+        }
+    
+        @Override
+        public IScriptIterator copyCurrent() {
+            return new ScriptIterator(module, files, current);
         }
     }
     

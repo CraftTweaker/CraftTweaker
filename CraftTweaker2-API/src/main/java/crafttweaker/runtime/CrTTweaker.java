@@ -64,6 +64,9 @@ public class CrTTweaker implements ITweaker {
         }
         
         scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
+        for(ScriptFile scriptFile : scriptFiles) {
+            System.out.println("scriptFile = " + scriptFile);
+        }
         
         // ZS magic
         for(ScriptFile scriptFile : scriptFiles) {
@@ -72,8 +75,8 @@ public class CrTTweaker implements ITweaker {
                 continue;
             }
             
-            if(!executed.contains(scriptFile.getGroupName())) {
-                executed.add(scriptFile.getGroupName());
+            if(!executed.contains(scriptFile.getEffectiveName())) {
+                executed.add(scriptFile.getEffectiveName());
     
                 String groupName = scriptFile.getGroupName();
                 if(groupName.toLowerCase().endsWith(".zip")) {
@@ -125,7 +128,7 @@ public class CrTTweaker implements ITweaker {
                 
                 
                 try {
-                    String filename = scriptFile.getGroupName();
+                    String filename = scriptFile.getEffectiveName();
                     
                     // Stops if the compile is disabled
                     if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
@@ -163,7 +166,7 @@ public class CrTTweaker implements ITweaker {
                 collected.add(script.getGroupName());
                 
                 while(script.next()) {
-                    fileList.add(new ScriptFile(this, script, isSyntaxCommand));
+                    fileList.add(new ScriptFile(this, script.copyCurrent(), isSyntaxCommand));
                 }
             }
         }

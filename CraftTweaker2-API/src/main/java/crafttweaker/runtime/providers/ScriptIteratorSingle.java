@@ -54,4 +54,9 @@ public class ScriptIteratorSingle implements IScriptIterator {
     public InputStream open() throws IOException {
         return new BufferedInputStream(new FileInputStream(file));
     }
+    
+    @Override
+    public IScriptIterator copyCurrent() {
+        return new ScriptIteratorSingle(file, directory);
+    }
 }

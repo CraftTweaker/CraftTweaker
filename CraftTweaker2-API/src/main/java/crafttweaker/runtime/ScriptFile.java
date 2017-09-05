@@ -51,6 +51,17 @@ public class ScriptFile {
     }
     
     /**
+     * Gets the effective name that has every info in it that it can, like zip files don't use only the zip file name
+     */
+    public String getEffectiveName(){
+        if (script.getGroupName().endsWith(".zip")) {
+            return getGroupName() + "$" + getName();
+        }else {
+            return getGroupName();
+        }
+    }
+    
+    /**
      * Gives InputStream of the script,
      * must be closed again or might cause problems down the line
      * @return Input stream of the file
@@ -141,7 +152,7 @@ public class ScriptFile {
     
     @Override
     public String toString() {
-        return "{[" + priority + ":" + loaderName + "]: " + getName() + (getName().equals(getGroupName()) ? "" : " at " + getGroupName()) + "}";
+        return "{[" + priority + ":" + loaderName + "]: " + getEffectiveName() + "}";
     }
     
     /**

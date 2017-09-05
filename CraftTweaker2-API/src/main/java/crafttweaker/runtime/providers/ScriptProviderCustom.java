@@ -50,7 +50,13 @@ public class ScriptProviderCustom implements IScriptProvider {
         
         private final Iterator<CustomScript> iterator = scripts.iterator();
         private CustomScript current;
+    
+        public CustomScriptIterator() {}
         
+        private CustomScriptIterator(CustomScript current) {
+            this.current = current;
+        }
+    
         @Override
         public String getGroupName() {
             return moduleName;
@@ -77,6 +83,11 @@ public class ScriptProviderCustom implements IScriptProvider {
         @Override
         public InputStream open() throws IOException {
             return new ByteArrayInputStream(current.content);
+        }
+    
+        @Override
+        public IScriptIterator copyCurrent() {
+            return new CustomScriptIterator(current);
         }
     }
 }
