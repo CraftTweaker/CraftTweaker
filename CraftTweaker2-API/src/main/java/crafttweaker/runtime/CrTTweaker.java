@@ -16,19 +16,17 @@ import static stanhebben.zenscript.ZenModule.*;
  * @author Stan Hebben
  */
 public class CrTTweaker implements ITweaker {
+    public static String defaultLoaderName = "crafttweaker";
     
+    private static boolean DEBUG = false;
+    private final List<IAction> actions = new ArrayList<>();
     /**
      * PreprocessorManager, deals with all preprocessor Actions
      */
     private PreprocessorManager preprocessorManager = new PreprocessorManager();
-    
-    private static boolean DEBUG = false;
-    public static HashSet<String> scriptsToIgnoreBracketErrors = new HashSet<>();
-    
-    private final List<IAction> actions = new ArrayList<>();
     private IScriptProvider scriptProvider;
     
-    public CrTTweaker(){
+    public CrTTweaker() {
         PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
     }
     
@@ -46,68 +44,70 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public void load() {
-        loadScript(true);
+        loadScript(false, defaultLoaderName);
     }
-
+    
     @Override
-    public boolean loadScript(boolean executeScripts) {
-        System.out.println("Loading scripts");
+    public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
+        CraftTweakerAPI.logInfo("Loading scripts");
+        
+        preprocessorManager.clean();
+        
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
     
+        List<ScriptFile> scriptFiles = collectScriptFiles(isSyntaxCommand);
+        
         // preprocessor magic
-        // Doing ZS magic with the scripts
-        Iterator<IScriptIterator> scriptsPreprocessor = scriptProvider.getScripts();
-        while(scriptsPreprocessor.hasNext()) {
-            IScriptIterator script = scriptsPreprocessor.next();
-                while(script.next()) {
-                    try {
-                        String filename = script.getName();
-                        preprocessorManager.checkFileForPreprocessors(filename, script.open());
-                    
-                    } catch(IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        for(ScriptFile scriptFile : scriptFiles) {
+            scriptFile.addAll(preprocessorManager.checkFileForPreprocessors(scriptFile));
         }
         
-    
+        scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
         
-        // Doing ZS magic with the scripts
-        Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
-        while(scripts.hasNext()) {
-            IScriptIterator script = scripts.next();
-
-            if(!executed.contains(script.getGroupName())) {
-                executed.add(script.getGroupName());
-
+        // ZS magic
+        for(ScriptFile scriptFile : scriptFiles) {
+            if (!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
+                CraftTweakerAPI.logInfo("[" +loaderName + "]: Skipping file " + scriptFile);
+                continue;
+            }
+            
+            if(!executed.contains(scriptFile.getEffectiveName())) {
+                executed.add(scriptFile.getEffectiveName());
+                
+                CraftTweakerAPI.logInfo("[" +loaderName + "]: Loading Script: " + scriptFile);
+                
                 Map<String, byte[]> classes = new HashMap<>();
                 IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
-
-                List<ZenParsedFile> files = new ArrayList<>();
-
-                while(script.next()) {
-                    Reader reader = null;
-                    try {
-                        reader = new InputStreamReader(new BufferedInputStream(script.open()), "UTF-8");
-                        
-                        String filename = script.getName();
-                        String className = extractClassName(filename);
-
-                        ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptsToIgnoreBracketErrors.contains(filename));
-                        ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-                        files.add(pfile);
-                    } catch(IOException ex) {
-                        CraftTweakerAPI.logError("Could not load script " + script.getName() + ": " + ex.getMessage());
-                        loadSuccessful = false;
-                    } catch(ParseException ex) {
-                        CraftTweakerAPI.logError("Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
-                        loadSuccessful = false;
-                    } catch(Exception ex) {
-                        CraftTweakerAPI.logError("Error loading " + script.getName() + ": " + ex.toString(), ex);
-                        loadSuccessful = false;
-                    }
-
+                
+                ZenParsedFile zenParsedFile = null;
+                
+                Reader reader = null;
+                try {
+                    reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8");
+                    
+                    String filename = scriptFile.getEffectiveName();
+                    String className = extractClassName(filename);
+                    
+                    CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(scriptFile);
+                    preprocessorManager.postLoadEvent(loadEvent);
+                    
+                    // blocks the parsing of the script
+                    if(scriptFile.isParsingBlocked()) continue;
+                    
+                    ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
+                    zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
+                    
+                } catch(IOException ex) {
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Could not load script " + scriptFile + ": " + ex.getMessage());
+                    loadSuccessful = false;
+                } catch(ParseException ex) {
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
+                    loadSuccessful = false;
+                } catch(Exception ex) {
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error loading " + scriptFile + ": " + ex.toString(), ex);
+                    loadSuccessful = false;
+                } finally {
                     if(reader != null) {
                         try {
                             reader.close();
@@ -115,31 +115,54 @@ public class CrTTweaker implements ITweaker {
                         }
                     }
                 }
-
+                
+                
+                
+                
                 try {
-                    String filename = script.getGroupName();
-                    if(filename.toLowerCase().endsWith(".zs")) {
-                        System.out.println("CraftTweaker: Loading file " + filename);
-                    } else if(filename.toLowerCase().endsWith(".zip")) {
-                        System.out.println("CraftTweaker: Loading zip " + filename);
-                    } else {
-                        System.out.println("CraftTweaker: Loading group " + filename);
-                    }
+                    String filename = scriptFile.getEffectiveName();
                     
-                    compileScripts(filename, files, environmentGlobal, DEBUG);
-
-                    if (executeScripts){
-                        // execute scripts
-                        ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
-                        module.getMain().run();
-                    }
-
+                    // Stops if the compile is disabled
+                    if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
+                    compileScripts(filename, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
+                    
+                    // stops if the execution is disabled
+                    if (scriptFile.isExecutionBlocked() || isSyntaxCommand) continue;
+                    
+                    
+                    ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
+                    Runnable runnable = module.getMain();
+                    if(runnable != null)
+                        runnable.run();
+                    
+                    
                 } catch(Throwable ex) {
-                    CraftTweakerAPI.logError("Error executing " + script.getGroupName() + ": " + ex.getMessage(), ex);
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
                 }
             }
         }
+        
         return loadSuccessful;
+    }
+    
+    protected List<ScriptFile> collectScriptFiles(boolean isSyntaxCommand) {
+        List<ScriptFile> fileList = new ArrayList<>();
+        HashSet<String> collected = new HashSet<>();
+        
+        // Collecting all scripts
+        Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
+        while(scripts.hasNext()) {
+            IScriptIterator script = scripts.next();
+            
+            if(!collected.contains(script.getGroupName())) {
+                collected.add(script.getGroupName());
+                
+                while(script.next()) {
+                    fileList.add(new ScriptFile(this, script.copyCurrent(), isSyntaxCommand));
+                }
+            }
+        }
+        return fileList;
     }
     
     @Override
@@ -150,11 +173,6 @@ public class CrTTweaker implements ITweaker {
     @Override
     public void enableDebug() {
         DEBUG = true;
-    }
-    
-    @Override
-    public void addFileToIgnoreBracketErrors(String filename){
-        scriptsToIgnoreBracketErrors.add(filename);
     }
     
     @Override

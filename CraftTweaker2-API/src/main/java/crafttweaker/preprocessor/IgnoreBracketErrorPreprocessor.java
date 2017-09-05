@@ -1,23 +1,31 @@
 package crafttweaker.preprocessor;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.runtime.ScriptFile;
 
 /**
+ * Adding the
+ * #ignoreBracketError
+ * will make the script ignore any bracket errors which happen at compile time
+ *
  * @author BloodWorkXGaming
  */
 public class IgnoreBracketErrorPreprocessor extends PreprocessorActionBase{
+    public static final String PREPROCESSOR_NAME = "ignoreBracketError";
+    
+    
     public IgnoreBracketErrorPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
         super(fileName, preprocessorLine, lineIndex);
     }
     
     @Override
-    public PreprocessorActionBase createPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
-        return new IgnoreBracketErrorPreprocessor(fileName, preprocessorLine, lineIndex);
+    public void executeActionOnFind(ScriptFile scriptFile) {
+        CraftTweakerAPI.logInfo("IgnoreBracketErrorPreprocessor found in " + scriptFile + ", ignoring errors in that file");
+        scriptFile.setIgnoreBracketErrors(true);
     }
     
     @Override
-    public void executeActionOnFind() {
-        CraftTweakerAPI.logInfo("IgnoreBracketErrorPreprocessor found in " + fileName + ", ignoring errors in that file");
-        CraftTweakerAPI.tweaker.addFileToIgnoreBracketErrors(fileName);
+    public String getPreprocessorName() {
+        return PREPROCESSOR_NAME;
     }
 }

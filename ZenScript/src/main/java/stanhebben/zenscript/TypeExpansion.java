@@ -72,6 +72,14 @@ public class TypeExpansion {
                     ZenGetter getterAnnotation = (ZenGetter) annotation;
                     String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
                     
+                    // error checking for faulty @ZenGetter annotations TODO: Confirm working
+                    if (method.getReturnType().equals(Void.TYPE)){
+                        throw new RuntimeException("ZenGetter needs a non Void returntype - " + cls.getName() + "." + method.getName());
+                    }
+                    if (method.getParameterCount() > 0){
+                        throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
+                    }
+                    
                     if(!members.containsKey(name)) {
                         members.put(name, new ZenExpandMember(type, name));
                     }
@@ -79,6 +87,11 @@ public class TypeExpansion {
                 } else if(annotation instanceof ZenSetter) {
                     checkStatic(method);
                     ZenSetter setterAnnotation = (ZenSetter) annotation;
+                    // error checking for faulty @ZenSetter annotations
+                    if (method.getParameterCount() != 1){
+                        throw new RuntimeException("ZenSetter must have exactly one parameter - " + cls.getName() + "." + method.getName());
+                    }
+                    
                     String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
                     
                     if(!members.containsKey(name)) {

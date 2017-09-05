@@ -14,4 +14,6 @@ public interface IScriptIterator {
     String getName();
     
     InputStream open() throws IOException;
+    
+    IScriptIterator copyCurrent();
 }

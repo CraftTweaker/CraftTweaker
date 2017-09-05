@@ -17,6 +17,14 @@ public class ScriptIteratorZip implements IScriptIterator {
     private final File directory;
     private ZipEntry current;
     
+    private ScriptIteratorZip(File file, ZipFile zipFile, Iterator<ZipEntry> entries, File directory, ZipEntry current) {
+        this.file = file;
+        this.zipFile = zipFile;
+        this.entries = entries;
+        this.directory = directory;
+        this.current = current;
+    }
+    
     public ScriptIteratorZip(File file) throws IOException {
         this.file = file;
         this.directory = null;
@@ -54,7 +62,7 @@ public class ScriptIteratorZip implements IScriptIterator {
         if(file != null && directory != null) {
             return file.getAbsolutePath().substring(directory.getAbsolutePath().length() + 1);
         }
-        return file.getName();
+        return file != null ? file.getName() : "invalid_group_name";
     }
     
     @Override
@@ -78,5 +86,10 @@ public class ScriptIteratorZip implements IScriptIterator {
     @Override
     public InputStream open() throws IOException {
         return zipFile.getInputStream(current);
+    }
+    
+    @Override
+    public IScriptIterator copyCurrent() {
+        return new ScriptIteratorZip(file, zipFile, entries, directory, current);
     }
 }

@@ -15,11 +15,13 @@ import crafttweaker.mc1120.mods.MCLoadedMods;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.network.MessageOpenBrowser;
 import crafttweaker.mc1120.oredict.MCOreDict;
+import crafttweaker.mc1120.preprocessors.ModLoadedPreprocessor;
 import crafttweaker.mc1120.proxies.CommonProxy;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
+import crafttweaker.preprocessor.PriorityPreprocessor;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.ScriptProviderCascade;
 import crafttweaker.runtime.providers.ScriptProviderDirectory;
@@ -76,15 +78,20 @@ public class CraftTweaker {
         CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCItemUtils());
         CrafttweakerImplementationAPI.logger.addLogger(new MCLogger(new File("crafttweaker.log")));
         CrafttweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
+        
         File globalDir = new File("scripts");
         if(!globalDir.exists())
             globalDir.mkdirs();
+        
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
         CrafttweakerImplementationAPI.setScriptProvider(scriptsGlobal);
+
+        // register the modloaded preprocessor which can't be in the API package as it needs access to MC
+        CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("modloaded", ModLoadedPreprocessor::new);
     }
     
     @EventHandler
-    public void onLoad(FMLPreInitializationEvent ev) {
+    public void onPreInitialization(FMLPreInitializationEvent ev) {
         PROXY.registerEvents();
         ev.getAsmData().getAll(ZenRegister.class.getCanonicalName()).forEach(clazz -> {
             try {
@@ -101,6 +108,7 @@ public class CraftTweaker {
                 e.printStackTrace();
             }
         });
+        
         GlobalRegistry.registerBracketHandler(new BracketHandlerItem());
         GlobalRegistry.registerBracketHandler(new BracketHandlerLiquid());
         GlobalRegistry.registerBracketHandler(new BracketHandlerOre());

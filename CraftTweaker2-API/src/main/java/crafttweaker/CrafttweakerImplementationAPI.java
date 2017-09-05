@@ -22,6 +22,7 @@ import sun.awt.HeadlessToolkit;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
@@ -138,7 +139,7 @@ public class CrafttweakerImplementationAPI {
     // #############################
     
 
-    private static class ItemComparator implements Comparator<IItemDefinition> {
+    private static class ItemComparator implements Comparator<IItemDefinition>, Serializable {
         
         @Override
         public int compare(IItemDefinition o1, IItemDefinition o2) {
@@ -146,7 +147,7 @@ public class CrafttweakerImplementationAPI {
         }
     }
     
-    private static class LiquidComparator implements Comparator<ILiquidDefinition> {
+    private static class LiquidComparator implements Comparator<ILiquidDefinition>, Serializable {
         
         @Override
         public int compare(ILiquidDefinition o1, ILiquidDefinition o2) {
@@ -154,7 +155,7 @@ public class CrafttweakerImplementationAPI {
         }
     }
     
-    private static class BlockComparator implements Comparator<IBlockDefinition> {
+    private static class BlockComparator implements Comparator<IBlockDefinition>, Serializable {
         
         @Override
         public int compare(IBlockDefinition o1, IBlockDefinition o2) {
@@ -162,7 +163,7 @@ public class CrafttweakerImplementationAPI {
         }
     }
     
-    private static class EntityComparator implements Comparator<IEntityDefinition> {
+    private static class EntityComparator implements Comparator<IEntityDefinition>, Serializable {
         
         @Override
         public int compare(IEntityDefinition o1, IEntityDefinition o2) {

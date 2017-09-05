@@ -20,4 +20,9 @@ public class SymbolJavaClass implements IZenSymbol {
     public IPartialExpression instance(ZenPosition position) {
         return new PartialJavaClass(position, cls);
     }
+    
+    @Override
+    public String toString() {
+        return "SymbolJavaClass: " + cls.toString();
+    }
 }

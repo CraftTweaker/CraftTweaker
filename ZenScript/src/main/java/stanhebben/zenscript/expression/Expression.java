@@ -34,30 +34,30 @@ public abstract class Expression implements IPartialExpression {
         } else if(Objects.equals(type.toJavaClass(),Object.class)) {
             
             // allows anything to cast to Object
+            // This casts any primitive type to the object variation of it.
             if (this.getType().toJavaClass().isPrimitive()){
+                Class clazz = this.getType().toJavaClass();
+                ICastingRule castingRule = null;
+                
                 // primitive int to Object
-                if (this.getType().toJavaClass().equals(int.class)){
-                    // Cast to non primitive type should be here
-                    ICastingRule castingRule = getType().getCastingRule(ZenType.INTOBJECT, environment);
-                    if (castingRule != null){
-                        return new ExpressionAs(position, this, castingRule);
-                    }
+                if (clazz.equals(int.class)){
+                    castingRule = getType().getCastingRule(ZenType.INTOBJECT, environment);
+                }else if (clazz.equals(double.class)){
+                    castingRule = getType().getCastingRule(ZenType.DOUBLEOBJECT, environment);
+                }else if (clazz.equals(boolean.class)){
+                    castingRule = getType().getCastingRule(ZenType.BOOLOBJECT, environment);
+                }else if (clazz.equals(short.class)){
+                    castingRule = getType().getCastingRule(ZenType.SHORTOBJECT, environment);
+                }else if (clazz.equals(float.class)){
+                    castingRule = getType().getCastingRule(ZenType.FLOATOBJECT, environment);
+                }else if (clazz.equals(byte.class)){
+                    castingRule = getType().getCastingRule(ZenType.BYTEOBJECT, environment);
+                }else if (clazz.equals(long.class)){
+                    castingRule = getType().getCastingRule(ZenType.LONGOBJECT, environment);
                 }
-                // primitive double to Object
-                if (this.getType().toJavaClass().equals(double.class)){
-                    // Cast to non primitive type should be here
-                    ICastingRule castingRule = getType().getCastingRule(ZenType.DOUBLEOBJECT, environment);
-                    if (castingRule != null){
-                        return new ExpressionAs(position, this, castingRule);
-                    }
-                }
-                // primitive bool to Object
-                if (this.getType().toJavaClass().equals(boolean.class)){
-                    // Cast to non primitive type should be here
-                    ICastingRule castingRule = getType().getCastingRule(ZenType.BOOLOBJECT, environment);
-                    if (castingRule != null){
-                        return new ExpressionAs(position, this, castingRule);
-                    }
+    
+                if (castingRule != null){
+                    return new ExpressionAs(position, this, castingRule);
                 }
                 
                 environment.error(position, "Cannot cast primitive " + this.getType() + " to " + type);

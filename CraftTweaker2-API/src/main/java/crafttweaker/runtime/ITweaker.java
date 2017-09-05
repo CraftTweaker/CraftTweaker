@@ -37,9 +37,11 @@ public interface ITweaker {
 
     /**
      * Loads all scripts, choose whether to execute or not.
+     * @param isSyntaxCommand if it is a syntax command it will ignore stuff like the loader group and not execute it
+     * @param loaderName Name of the loader, affects whether a file gets loaded or not
      * @return Whether it was successful at loading or not
      */
-    boolean loadScript(boolean executeScripts);
+    boolean loadScript(boolean isSyntaxCommand, String loaderName);
 
 
     /**
@@ -53,12 +55,6 @@ public interface ITweaker {
      * Enables debug class generations
      */
     void enableDebug();
-    
-    /**
-     * No errors will be created for brackethandlers in these files
-     * @param filename
-     */
-    void addFileToIgnoreBracketErrors(String filename);
     
     PreprocessorManager getPreprocessorManager();
 }

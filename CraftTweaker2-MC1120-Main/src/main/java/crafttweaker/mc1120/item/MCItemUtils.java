@@ -91,7 +91,7 @@ public class MCItemUtils implements IItemUtils{
             }
         }
         
-        potionEffects.forEach(it -> System.out.println(it.toString()));
+        // potionEffects.forEach(it -> System.out.println(it.toString()));
         PotionUtils.appendEffects(item, potionEffects);
         
         return new MCItemStack(item);

@@ -67,6 +67,10 @@ public class GlobalRegistry {
         bracketHandlers.add(handler);
     }
     
+    public static void removeBracketHandler(IBracketHandler handler){
+        bracketHandlers.remove(handler);
+    }
+    
     public static void registerNativeClass(Class<?> cls) {
         try {
             ZenTypeNative type = new ZenTypeNative(cls);

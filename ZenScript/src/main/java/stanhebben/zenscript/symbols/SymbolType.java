@@ -19,4 +19,13 @@ public class SymbolType implements IZenSymbol {
     public IPartialExpression instance(ZenPosition position) {
         return new PartialType(position, type);
     }
+    
+    @Override
+    public String toString() {
+        return "SymbolType: " + type.toString();
+    }
+    
+    public ZenType getType() {
+        return type;
+    }
 }

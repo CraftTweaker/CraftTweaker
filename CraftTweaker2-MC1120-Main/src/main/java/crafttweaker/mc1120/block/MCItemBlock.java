@@ -60,4 +60,5 @@ public class MCItemBlock implements IBlock {
     public IBlockPattern or(IBlockPattern pattern) {
         return new BlockPatternOr(this, pattern);
     }
+    
 }

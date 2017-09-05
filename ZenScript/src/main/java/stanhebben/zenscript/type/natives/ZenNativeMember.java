@@ -2,7 +2,7 @@ package stanhebben.zenscript.type.natives;
 
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
+import stanhebben.zenscript.expression.partial.*;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
@@ -54,6 +54,15 @@ public class ZenNativeMember {
     
     public void addMethod(JavaMethod method) {
         methods.add(method);
+    }
+    
+    public List<IJavaMethod> getMethods() {
+        return methods;
+    }
+    
+    @Override
+    public String toString() {
+        return Arrays.toString(methods.toArray());
     }
     
     private class InstanceGetValue implements IPartialExpression {
