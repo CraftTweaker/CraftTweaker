@@ -64,9 +64,6 @@ public class CrTTweaker implements ITweaker {
         }
         
         scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
-        for(ScriptFile scriptFile : scriptFiles) {
-            System.out.println("scriptFile = " + scriptFile);
-        }
         
         // ZS magic
         for(ScriptFile scriptFile : scriptFiles) {
@@ -77,12 +74,7 @@ public class CrTTweaker implements ITweaker {
             
             if(!executed.contains(scriptFile.getEffectiveName())) {
                 executed.add(scriptFile.getEffectiveName());
-    
-                String groupName = scriptFile.getGroupName();
-                if(groupName.toLowerCase().endsWith(".zip")) {
-                    CraftTweakerAPI.logInfo("[" +loaderName + "]: Loading zip " + groupName);
-                }
-    
+                
                 CraftTweakerAPI.logInfo("[" +loaderName + "]: Loading Script: " + scriptFile);
                 
                 Map<String, byte[]> classes = new HashMap<>();
@@ -94,7 +86,7 @@ public class CrTTweaker implements ITweaker {
                 try {
                     reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8");
                     
-                    String filename = scriptFile.getName();
+                    String filename = scriptFile.getEffectiveName();
                     String className = extractClassName(filename);
                     
                     CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(scriptFile);
@@ -107,13 +99,13 @@ public class CrTTweaker implements ITweaker {
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                     
                 } catch(IOException ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Could not load script " + scriptFile.getName() + ": " + ex.getMessage());
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Could not load script " + scriptFile + ": " + ex.getMessage());
                     loadSuccessful = false;
                 } catch(ParseException ex) {
                     CraftTweakerAPI.logError("[" +loaderName + "]: Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
                     loadSuccessful = false;
                 } catch(Exception ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Error loading " + scriptFile.getName() + ": " + ex.toString(), ex);
+                    CraftTweakerAPI.logError("[" +loaderName + "]: Error loading " + scriptFile + ": " + ex.toString(), ex);
                     loadSuccessful = false;
                 } finally {
                     if(reader != null) {
