@@ -59,7 +59,7 @@ public class TypeExpansion {
      * @param cls   expanding class
      * @param types type registry
      */
-    public void expand(Class cls, ITypeRegistry types) {
+    public void expand(Class<?> cls, ITypeRegistry types) {
         for(Method method : cls.getMethods()) {
             String methodName = method.getName();
             
@@ -73,12 +73,7 @@ public class TypeExpansion {
                     String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
                     
                     // error checking for faulty @ZenGetter annotations TODO: Confirm working
-                    if (method.getReturnType().equals(Void.TYPE)){
-                        throw new RuntimeException("ZenGetter needs a non Void returntype - " + cls.getName() + "." + method.getName());
-                    }
-                    if (method.getParameterCount() > 0){
-                        throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
-                    }
+                    checkGetter(method, cls);
                     
                     if(!members.containsKey(name)) {
                         members.put(name, new ZenExpandMember(type, name));
@@ -88,9 +83,7 @@ public class TypeExpansion {
                     checkStatic(method);
                     ZenSetter setterAnnotation = (ZenSetter) annotation;
                     // error checking for faulty @ZenSetter annotations
-                    if (method.getParameterCount() != 1){
-                        throw new RuntimeException("ZenSetter must have exactly one parameter - " + cls.getName() + "." + method.getName());
-                    }
+                    checkSetter(method, cls);
                     
                     String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
                     
@@ -159,6 +152,63 @@ public class TypeExpansion {
                     staticMembers.get(methodName).addMethod(new JavaMethod(method, types));
                 }
             }
+        }
+
+        for (Field field: cls.getFields()) {
+            for (Annotation annotation : field.getAnnotations()) {
+                if (annotation instanceof ZenProperty) {
+                    ZenProperty zenProperty = (ZenProperty) annotation;
+                    String propertyName = zenProperty.value();
+                    if (propertyName.isEmpty()) {
+                        propertyName = field.getName();
+                    }
+                    
+                    String methodEnding = propertyName.substring(0, 1).toUpperCase(Locale.US) + propertyName.substring(1);
+                    String getterName = zenProperty.getter();
+                    if (getterName.isEmpty()) {
+                        getterName = "get" + methodEnding;
+                    }
+
+                    String setterName = zenProperty.setter();
+                    if (setterName.isEmpty()) {
+                        setterName = "set" + methodEnding;
+                    }
+
+                    members.putIfAbsent(propertyName, new ZenExpandMember(type, propertyName));
+
+                    try {
+                        Method getterMethod = cls.getMethod(getterName);
+                        members.get(propertyName).setGetter(new JavaMethod(getterMethod, types));
+                    } catch (NoSuchMethodException e) {
+                        throw new RuntimeException("Couldn't find getter for property " + propertyName + " on " + cls.getName());
+                    }
+
+                    try {
+                        Method setterMethod = cls.getMethod(setterName, field.getType());
+                        members.get(propertyName).setSetter(new JavaMethod(setterMethod, types));
+                    } catch (NoSuchMethodException e) {
+                        throw new RuntimeException("Couldn't find setter for property " + propertyName + " on " + cls.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkGetter(Method method, Class cls) {
+        if (method.getReturnType().equals(Void.TYPE)){
+            throw new RuntimeException("ZenGetter needs a non Void returntype - " + cls.getName() + "." + method.getName());
+        }
+        if (method.getParameterCount() > 0){
+            throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
+        }
+    }
+
+    private void checkSetter(Method method, Class cls) {
+        if (method.getParameterCount() != 1){
+            throw new RuntimeException("ZenSetter must have exactly one parameter - " + cls.getName() + "." + method.getName());
+        }
+        if (!method.getReturnType().equals(Void.TYPE)) {
+            throw new RuntimeException("ZenSetter must have a void return type");
         }
     }
     
