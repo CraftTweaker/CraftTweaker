@@ -95,7 +95,7 @@ public class CraftTweaker {
         PROXY.registerEvents();
         ev.getAsmData().getAll(ZenRegister.class.getCanonicalName()).forEach(clazz -> {
             try {
-                Class claz = Class.forName(clazz.getClassName());
+                Class claz = Class.forName(clazz.getClassName(), false, CraftTweaker.class.getClassLoader());
                 if(claz.isAnnotationPresent(ModOnly.class)) {
                     if(Loader.isModLoaded(((ModOnly) claz.getAnnotation(ModOnly.class)).value())) {
                         CraftTweakerAPI.registerClass(claz);
