@@ -4,7 +4,7 @@ import javax.tools.ToolProvider
 // ### Global settings ###
 // #######################
 
-ext.craftTweakerVersion = "4.0.5"
+ext.craftTweakerVersion = "4.0.6"
 if (System.getenv('BUILD_NUMBER') != null) {
     project.craftTweakerVersion += "." + System.getenv('BUILD_NUMBER')
 }
