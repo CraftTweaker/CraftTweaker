@@ -14,6 +14,10 @@ public class GlobalFunctions {
         CraftTweakerAPI.logInfo(message);
     }
     
+    // public static void print(Object object) {
+    //     CraftTweakerAPI.logInfo(String.valueOf(object));
+    // }
+    
     public static int totalActions() {
         return CraftTweakerAPI.tweaker.getActions().size();
     }

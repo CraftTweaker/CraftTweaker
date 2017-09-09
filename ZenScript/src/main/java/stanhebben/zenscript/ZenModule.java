@@ -1,12 +1,13 @@
 package stanhebben.zenscript;
 
+import com.sun.deploy.util.StringUtils;
 import org.objectweb.asm.*;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.*;
 import stanhebben.zenscript.statements.*;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -296,19 +297,30 @@ public class ZenModule {
         if(filename.startsWith("/"))
             filename = filename.substring(1);
         
-        int lastSlash = filename.lastIndexOf('/');
+        // trim extension
         int lastDot = filename.lastIndexOf('.');
+        if (lastDot > 0) filename = filename.substring(0, lastDot);
         
-        if(lastDot > lastSlash) {
-            filename = filename.substring(0, lastDot);
-        }
+        
+        filename = filename.replace(".", "_");
+        filename = filename.replace(" ", "_");
+    
+        
+        String dir;
+        String name;
+        
+        // get file name vs folder path
+        int lastSlash = filename.lastIndexOf('/');
         if(lastSlash > 0) {
-            String dir = filename.substring(0, lastSlash);
-            String name = filename.substring(lastSlash + 1, lastSlash + 2).toUpperCase() + filename.substring(lastSlash + 2);
-            return dir + '.' + name;
+            dir = filename.substring(0, lastSlash);
+            name = filename.substring(lastSlash + 1);
         } else {
-            return filename.substring(0, 1).toUpperCase() + filename.substring(1);
+            name = filename;
+            dir = "";
         }
+        
+        return dir.replace("/", ".") + "." + StringUtil.capitalize(name);
+        
     }
     
     // ######################

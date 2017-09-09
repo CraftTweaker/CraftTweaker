@@ -24,7 +24,7 @@ import java.util.regex.*;
  */
 public class MCItemUtils implements IItemUtils{
     
-    static ArrayList<ItemStack> ITEMLIST;
+    private static ArrayList<ItemStack> ITEMLIST;
     
     public static void createItemList() {
         ArrayList<ItemStack> itemList = new ArrayList<>();

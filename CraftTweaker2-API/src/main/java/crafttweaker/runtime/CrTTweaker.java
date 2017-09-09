@@ -81,13 +81,13 @@ public class CrTTweaker implements ITweaker {
                 IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
                 
                 ZenParsedFile zenParsedFile = null;
-                
+                String filename = scriptFile.getEffectiveName();
+                String className = extractClassName(filename);
+    
                 Reader reader = null;
                 try {
                     reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8");
                     
-                    String filename = scriptFile.getEffectiveName();
-                    String className = extractClassName(filename);
                     
                     CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(scriptFile);
                     preprocessorManager.postLoadEvent(loadEvent);
@@ -120,11 +120,9 @@ public class CrTTweaker implements ITweaker {
                 
                 
                 try {
-                    String filename = scriptFile.getEffectiveName();
-                    
                     // Stops if the compile is disabled
                     if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
-                    compileScripts(filename, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
+                    compileScripts(className, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
                     
                     // stops if the execution is disabled
                     if (scriptFile.isExecutionBlocked() || isSyntaxCommand) continue;
