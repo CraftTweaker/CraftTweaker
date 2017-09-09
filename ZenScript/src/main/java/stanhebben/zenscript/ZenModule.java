@@ -297,11 +297,14 @@ public class ZenModule {
         if(filename.startsWith("/"))
             filename = filename.substring(1);
         
-        filename = filename.replace(" ", "_");
-        
         // trim extension
         int lastDot = filename.lastIndexOf('.');
         if (lastDot > 0) filename = filename.substring(0, lastDot);
+        
+        
+        filename = filename.replace(".", "_");
+        filename = filename.replace(" ", "_");
+    
         
         String dir;
         String name;
