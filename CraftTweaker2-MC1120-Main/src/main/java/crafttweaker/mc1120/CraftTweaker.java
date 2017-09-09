@@ -46,7 +46,7 @@ import java.util.*;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.0.4", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = CraftTweaker.MODID, version = "4.0.6", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
@@ -95,7 +95,7 @@ public class CraftTweaker {
         PROXY.registerEvents();
         ev.getAsmData().getAll(ZenRegister.class.getCanonicalName()).forEach(clazz -> {
             try {
-                Class claz = Class.forName(clazz.getClassName());
+                Class claz = Class.forName(clazz.getClassName(), false, CraftTweaker.class.getClassLoader());
                 if(claz.isAnnotationPresent(ModOnly.class)) {
                     if(Loader.isModLoaded(((ModOnly) claz.getAnnotation(ModOnly.class)).value())) {
                         CraftTweakerAPI.registerClass(claz);

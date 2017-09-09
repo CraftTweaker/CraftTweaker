@@ -51,13 +51,16 @@ public class GuiCraftingTable extends GuiBase {
             type += "Mirrored";
         }
         if(shapel) {
-            return String.format("recipes.%s(%s, [%s%s%s%s%s%s%s%s%s]);", type, container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), false), getShapelessItem(container.getRecipeSlots().get(3), false), getShapelessItem(container.getRecipeSlots().get(4), false), getShapelessItem(container.getRecipeSlots().get(5), false), getShapelessItem(container.getRecipeSlots().get(6), false), getShapelessItem(container.getRecipeSlots().get(7), false), getShapelessItem(container.getRecipeSlots().get(8), false), getShapelessItem(container.getRecipeSlots().get(9), false));
+            return String.format("recipes.%s(%s, [%s%s%s%s%s%s%s%s%s]);", type, container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), container.getRecipeSlots().get(1).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(3), container.getRecipeSlots().get(2).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(4), container.getRecipeSlots().get(3).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(5), container.getRecipeSlots().get(4).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(6), container.getRecipeSlots().get(5).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(7), container.getRecipeSlots().get(7).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(8), container.getRecipeSlots().get(7).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(9), container.getRecipeSlots().get(8).getStack().isEmpty()));
         }
         return String.format("recipes.%s(%s, [[%s, %s, %s],[%s, %s, %s], [%s, %s, %s]]);", type, container.getRecipeSlots().get(0).getItemString(), container.getRecipeSlots().get(1).getItemString(), container.getRecipeSlots().get(2).getItemString(), container.getRecipeSlots().get(3).getItemString(), container.getRecipeSlots().get(4).getItemString(), container.getRecipeSlots().get(5).getItemString(), container.getRecipeSlots().get(6).getItemString(), container.getRecipeSlots().get(7).getItemString(), container.getRecipeSlots().get(8).getItemString(), container.getRecipeSlots().get(9).getItemString());
     }
 
     private String getShapelessItem(SlotRecipe slot, boolean first) {
         String ret = "";
+        if(slot.getStack().isEmpty()){
+            return "";
+        }
         if(slot.getHasStack()) {
             if(!first) {
                 ret += ", ";

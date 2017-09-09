@@ -1,13 +1,15 @@
 package stanhebben.zenscript.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Used to annotate Properties. Will make the given method accessible as setter, TODO: CHANGE DESCRIPTION
- * that is, it's called when value.name is being assinged a value.
- * <p>
- * For a native class, a single argument with the assinged value is provided.
- * For an expansion, the target object and assigned value are provided.
+ * Used to annotate Properties. Will find and set the setter and getter methods,
+ * that is, it will set up the methods for calling foo.property and for foo.property = bar.
+ * </b>
+ * Will error if it can't find the setter and getter methods
  *
  * @author Stan Hebben
  */
@@ -16,9 +18,25 @@ import java.lang.annotation.*;
 public @interface ZenProperty {
     
     /**
-     * Setter name. If omitted, the method name is used as property name.
+     * Property name. If omitted, the field name is used.
      *
-     * @return setter name
+     * @return property name
      */
     String value() default "";
+
+    /**
+     * returns the method name used to get the setter, an empty string will use set plus the variable name,
+     * if null, will not try to grab a setter.
+     *
+     * @return setter method name
+     */
+    String setter() default "";
+
+    /**
+     * returns the method name used to get the getter, an empty string will use get plus the variable name,
+     * if null, will not try to grab a getter.
+     *
+     * @return getter method name
+     */
+    String getter() default "";
 }
