@@ -8,6 +8,7 @@ import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.*;
+import stanhebben.zenscript.type.expand.ZenExpandMember;
 import stanhebben.zenscript.type.iterator.*;
 import stanhebben.zenscript.type.natives.*;
 import stanhebben.zenscript.util.*;
@@ -30,7 +31,7 @@ public class ZenTypeNative extends ZenType {
     private static final int ITERATOR_LIST = 2;
     private static final int ITERATOR_MAP = 3;
     
-    private final Class cls;
+    private final Class<?> cls;
     private final String anyName;
     private final String anyName2;
     private final List<ZenTypeNative> implementing;
@@ -48,7 +49,7 @@ public class ZenTypeNative extends ZenType {
     private ZenType iteratorKeyType;
     private ZenType iteratorValueType;
     
-    public ZenTypeNative(Class cls) {
+    public ZenTypeNative(Class<?> cls) {
         this.cls = cls;
         members = new HashMap<>();
         staticMembers = new HashMap<>();
@@ -109,28 +110,6 @@ public class ZenTypeNative extends ZenType {
             }
         }
         
-        // Iterate over all fields and check for
-        /* TODO: Propertry Annotation, this iterates over all the fields and does stuff with the affected ones.
-        for(Field field : cls.getFields()) {
-            for(Annotation annotation : field.getAnnotations()) {
-                String fieldName = field.getName();
-                
-                if (annotation instanceof ZenProperty){
-                    if(!members.containsKey(fieldName)) {
-                        members.put(fieldName, new ZenNativeMember());
-                    }
-                    JavaMethodGenerated generated = new JavaMethodGenerated(false, false, false, field.getDeclaringClass().getName(), fieldName, new ZenTypeNative(field.getDeclaringClass()), new ZenType[0], new boolean[0]){
-                        @Override
-                        public void invokeVirtual(MethodOutput output) {
-                            // output.putField();
-                            super.invokeVirtual(output);
-                        }
-                    };
-                    members.get(fieldName).setGetter(generated);
-                }
-            }
-        } */
-        
         //TODO check this
         for(Method method : cls.getMethods()) {
             boolean isMethod = fully;
@@ -143,15 +122,7 @@ public class ZenTypeNative extends ZenType {
                 } else if(annotation instanceof ZenGetter) {
                     ZenGetter getterAnnotation = (ZenGetter) annotation;
     
-                    // error checking for faulty @ZenGetter annotations
-                    if (method.getReturnType().equals(Void.TYPE)){
-                        throw new RuntimeException("ZenGetter needs a non Void returntype - " + cls.getName() + "." + method.getName());
-                    }
-    
-                    if (method.getParameterCount() > 0){
-                        throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
-                    }
-                    
+                    checkGetter(method, cls);
                     String name = getterAnnotation.value().length() == 0 ? method.getName() : getterAnnotation.value();
                     
                     if(!members.containsKey(name)) {
@@ -163,11 +134,7 @@ public class ZenTypeNative extends ZenType {
                 } else if(annotation instanceof ZenSetter) {
                     ZenSetter setterAnnotation = (ZenSetter) annotation;
                     
-                    // error checking for faulty @ZenSetter annotations
-                    if (method.getParameterCount() != 1){
-                        throw new RuntimeException("ZenSetter must have exactly one parameter - " + cls.getName() + "." + method.getName());
-                    }
-                    
+                    checkSetter(method, cls);
                     String name = setterAnnotation.value().length() == 0 ? method.getName() : setterAnnotation.value();
                     
                     if(!members.containsKey(name)) {
@@ -242,11 +209,74 @@ public class ZenTypeNative extends ZenType {
                 }
             }
         }
+
+        for (Field field: cls.getFields()) {
+            for (Annotation annotation : field.getAnnotations()) {
+                if (annotation instanceof ZenProperty) {
+                    ZenProperty zenProperty = (ZenProperty) annotation;
+                    String propertyName = zenProperty.value();
+                    if (propertyName.isEmpty()) {
+                        propertyName = field.getName();
+                    }
+
+                    String methodEnding = propertyName.substring(0, 1).toUpperCase(Locale.US) + propertyName.substring(1);
+                    String getterName = zenProperty.getter();
+                    if (getterName.isEmpty()) {
+                        if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class)) {
+                            getterName = "is" + methodEnding;
+                        } else {
+                            getterName = "get" + methodEnding;
+                        }
+                    }
+
+                    String setterName = zenProperty.setter();
+                    if (setterName.isEmpty()) {
+                        setterName = "set" + methodEnding;
+                    }
+
+                    members.putIfAbsent(propertyName, new ZenNativeMember());
+
+                    try {
+                        Method getterMethod = cls.getMethod(getterName);
+                        checkGetter(getterMethod, cls);
+                        members.get(propertyName).setGetter(new JavaMethod(getterMethod, types));
+                    } catch (NoSuchMethodException e) {
+                        throw new RuntimeException("Couldn't find getter for property " + propertyName + " on " + cls.getName());
+                    }
+
+                    try {
+                        Method setterMethod = cls.getMethod(setterName, field.getType());
+                        checkSetter(setterMethod, cls);
+                        members.get(propertyName).setSetter(new JavaMethod(setterMethod, types));
+                    } catch (NoSuchMethodException e) {
+                        throw new RuntimeException("Couldn't find setter for property " + propertyName + " on " + cls.getName());
+                    }
+                }
+            }
+        }
         
         this.iteratorType = iterator;
         this.iteratorAnnotation = _iteratorAnnotation;
         this.classPkg = _classPkg;
         this.className = _className;
+    }
+
+    private void checkGetter(Method method, Class cls) {
+        if (method.getReturnType().equals(Void.TYPE)){
+            throw new RuntimeException("ZenGetter needs a non Void returntype - " + cls.getName() + "." + method.getName());
+        }
+        if (method.getParameterCount() > 0){
+            throw new RuntimeException("ZenGetter may not have any parameters - " + cls.getName() + "." + method.getName());
+        }
+    }
+
+    private void checkSetter(Method method, Class cls) {
+        if (method.getParameterCount() != 1){
+            throw new RuntimeException("ZenSetter must have exactly one parameter - " + cls.getName() + "." + method.getName());
+        }
+        if (!method.getReturnType().equals(Void.TYPE)) {
+            throw new RuntimeException("ZenSetter must have a void return type");
+        }
     }
     
     public Class getNativeClass() {

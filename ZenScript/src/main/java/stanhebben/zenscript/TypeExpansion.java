@@ -166,7 +166,11 @@ public class TypeExpansion {
                     String methodEnding = propertyName.substring(0, 1).toUpperCase(Locale.US) + propertyName.substring(1);
                     String getterName = zenProperty.getter();
                     if (getterName.isEmpty()) {
-                        getterName = "get" + methodEnding;
+                        if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class)) {
+                            getterName = "is" + methodEnding;
+                        } else {
+                            getterName = "get" + methodEnding;
+                        }
                     }
 
                     String setterName = zenProperty.setter();
@@ -178,6 +182,7 @@ public class TypeExpansion {
 
                     try {
                         Method getterMethod = cls.getMethod(getterName);
+                        checkGetter(getterMethod, cls);
                         members.get(propertyName).setGetter(new JavaMethod(getterMethod, types));
                     } catch (NoSuchMethodException e) {
                         throw new RuntimeException("Couldn't find getter for property " + propertyName + " on " + cls.getName());
@@ -185,6 +190,7 @@ public class TypeExpansion {
 
                     try {
                         Method setterMethod = cls.getMethod(setterName, field.getType());
+                        checkSetter(setterMethod, cls);
                         members.get(propertyName).setSetter(new JavaMethod(setterMethod, types));
                     } catch (NoSuchMethodException e) {
                         throw new RuntimeException("Couldn't find setter for property " + propertyName + " on " + cls.getName());
