@@ -1,7 +1,5 @@
 package crafttweaker.api.util;
 
-import java.util.Random;
-
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.*;
 
