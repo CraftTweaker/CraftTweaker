@@ -6,14 +6,13 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.network.*;
-import net.minecraft.command.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.*;
@@ -187,4 +186,14 @@ public class MCPlayer implements IPlayer {
     public double getZ() {
         return player.posZ;
     }
+
+	@Override
+	public Position3f getPosition() {
+		return new Position3f((float) getX(), (float) getY(), (float) getZ());
+	}
+
+	@Override
+	public void teleport(Position3f pos) {
+		player.setPosition(pos.getX(), pos.getY(), pos.getZ());
+	}
 }
