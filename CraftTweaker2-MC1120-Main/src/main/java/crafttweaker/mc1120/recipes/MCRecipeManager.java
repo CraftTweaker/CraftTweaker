@@ -124,11 +124,31 @@ public final class MCRecipeManager implements IRecipeManager {
     
     @Override
     public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+        boolean valid = output != null;
+        for(IIngredient ing : ingredients) {
+            if(ing == null) {
+                valid = false;
+            }
+        }
+        if(!valid) {
+            CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
+            return;
+        }
         recipesToAdd.add(new ActionAddShapelessRecipe(output, ingredients, function, action));
     }
     
     @Override
     public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+        boolean valid = output != null;
+        for(IIngredient ing : ingredients) {
+            if(ing == null) {
+                valid = false;
+            }
+        }
+        if(!valid) {
+            CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
+            return;
+        }
         recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action));
     }
     
@@ -216,7 +236,7 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            if(output == null){
+            if(output == null) {
                 return;
             }
             int ingredientsWidth = 0;
@@ -296,9 +316,9 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            if (output != null){
+            if(output != null) {
                 return "Removing Shaped recipes for " + output.toString();
-            }else {
+            } else {
                 return "Trying to remove recipes for invalid output";
             }
         }
@@ -318,7 +338,7 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            if(output == null){
+            if(output == null) {
                 return;
             }
             List<ResourceLocation> toRemove = new ArrayList<>();
@@ -391,9 +411,9 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            if (output != null){
+            if(output != null) {
                 return "Removing Shapeless recipes for " + output.toString();
-            }else {
+            } else {
                 return "Trying to remove recipes for invalid output";
             }
         }
@@ -411,7 +431,7 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            if(output == null){
+            if(output == null) {
                 return;
             }
             List<ResourceLocation> toRemove = new ArrayList<>();
@@ -429,15 +449,16 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            if (output != null){
+            if(output != null) {
                 return "Removing all recipes for " + output.toString();
-            }else {
+            } else {
                 return "Trying to remove recipes for invalid output";
             }
         }
     }
     
     public static class ActionRemoveRecipeByRecipeName extends ActionBaseRemoveRecipes {
+        
         String recipeName;
         
         public ActionRemoveRecipeByRecipeName(String recipeName) {
@@ -449,7 +470,7 @@ public final class MCRecipeManager implements IRecipeManager {
             List<ResourceLocation> toRemove = new ArrayList<>();
             
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-                if (recipe.getKey().toString().equals(recipeName)){
+                if(recipe.getKey().toString().equals(recipeName)) {
                     toRemove.add(recipe.getKey());
                     
                     super.removeRecipes(toRemove);
@@ -461,15 +482,16 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            if (recipeName != null){
+            if(recipeName != null) {
                 return "Removing recipe with name \"" + recipeName + "\"";
-            }else {
+            } else {
                 return "No name for the recipe to remove was given.";
             }
         }
     }
     
     public static class ActionRemoveRecipeByRegex extends ActionBaseRemoveRecipes {
+        
         String regexCheck;
         
         public ActionRemoveRecipeByRegex(String regexCheck) {
@@ -484,7 +506,7 @@ public final class MCRecipeManager implements IRecipeManager {
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
                 ResourceLocation resourceLocation = recipe.getKey();
                 Matcher m = p.matcher(resourceLocation.toString());
-                if (m.matches()){
+                if(m.matches()) {
                     toRemove.add(resourceLocation);
                 }
             }
@@ -494,9 +516,9 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            if (regexCheck != null){
+            if(regexCheck != null) {
                 return "Removing all recipes matching this regex: \"" + regexCheck + "\"";
-            }else {
+            } else {
                 return "No regex String for the recipe to remove was given.";
             }
         }
@@ -528,17 +550,17 @@ public final class MCRecipeManager implements IRecipeManager {
         // this is != null only _after_ it has been applied and is actually registered
         protected IRecipe recipe;
         protected String name;
-    
-        protected void setName(String name){
-            if (name != null){
+        
+        protected void setName(String name) {
+            if(name != null) {
                 String proposedName = cleanRecipeName(name);
-                if (usedRecipeNames.contains(proposedName)){
+                if(usedRecipeNames.contains(proposedName)) {
                     this.name = calculateName();
                     CraftTweakerAPI.logWarning("Recipe name [" + name + "] has duplicate uses, defaulting to calculated hash!");
-                }else {
+                } else {
                     this.name = proposedName;
                 }
-            }else {
+            } else {
                 this.name = calculateName();
             }
             usedRecipeNames.add(this.name); //TODO: FINISH THIS and replace stuff in constructor call.
@@ -555,13 +577,13 @@ public final class MCRecipeManager implements IRecipeManager {
                 transformerRecipes.add(craftingRecipe);
             }
         }
-    
+        
         protected abstract String calculateName();
         
-            public IRecipe getRecipe() {
+        public IRecipe getRecipe() {
             return recipe;
         }
-    
+        
         public String getName() {
             return name;
         }
@@ -600,31 +622,31 @@ public final class MCRecipeManager implements IRecipeManager {
             
             super.registerRecipe(irecipe, recipe);
         }
-    
-    
+        
+        
         protected String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(saveToString(output));
-        
+            
             for(IIngredient[] ingredient : ingredients) {
                 for(IIngredient iIngredient : ingredient) {
                     sb.append(saveToString(iIngredient));
                 }
             }
-        
+            
             int hash = sb.toString().hashCode();
             while(usedHashes.contains(hash))
                 ++hash;
             usedHashes.add(hash);
-        
+            
             return "ct_shaped" + hash;
         }
         
         @Override
         public String describe() {
-            if (output != null){
+            if(output != null) {
                 return "Adding shaped recipe for " + output.getDisplayName() + " with name " + name;
-            }else {
+            } else {
                 return "Trying to add shaped recipe without correct output";
             }
         }
@@ -660,11 +682,11 @@ public final class MCRecipeManager implements IRecipeManager {
             
             super.registerRecipe(irecipe, recipe);
         }
-    
+        
         public String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(saveToString(output));
-    
+            
             for(IIngredient ingredient : ingredients) {
                 sb.append(saveToString(ingredient));
             }
@@ -679,9 +701,9 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public String describe() {
-            if (output != null){
+            if(output != null) {
                 return "Adding shapeless recipe for " + output.getDisplayName() + " with name " + name;
-            }else {
+            } else {
                 return "Trying to add shapeless recipe without correct output";
             }
             
@@ -696,16 +718,16 @@ public final class MCRecipeManager implements IRecipeManager {
         }
     }
     
-    public static String saveToString(IIngredient ingredient){
-        if (ingredient == null) {
+    public static String saveToString(IIngredient ingredient) {
+        if(ingredient == null) {
             return "_";
-        }else {
+        } else {
             return ingredient.toString();
         }
     }
     
-    public static String cleanRecipeName(String s){
-        if (s.contains(":"))
+    public static String cleanRecipeName(String s) {
+        if(s.contains(":"))
             CraftTweakerAPI.logWarning("Recipe name [" + s + "] may not contain a ':', replacing with '_'!");
         return s.replace(":", "_");
     }

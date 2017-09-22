@@ -22,7 +22,6 @@ public class ClientEventHandler {
         if(!ev.getItemStack().isEmpty()) {
             IItemStack itemStack = CraftTweakerMC.getIItemStack(ev.getItemStack());
             if(IngredientTooltips.shouldClearToolTip(itemStack)) {
-                System.out.println(ev.getToolTip());
                 ev.getToolTip().clear();
             }
             for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {

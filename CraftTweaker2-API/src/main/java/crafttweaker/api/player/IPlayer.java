@@ -4,6 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -94,4 +95,11 @@ public interface IPlayer {
     
     // not an exposed method, so far. would it be useful?
     void copyToClipboard(String value);
+    
+    @ZenGetter("position")
+    Position3f getPosition();
+    
+    @ZenSetter("position")
+    @ZenMethod
+    void teleport(Position3f pos);
 }
