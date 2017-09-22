@@ -132,6 +132,7 @@ public class PreprocessorManager {
         manager.registerPreprocessorAction("norun", NoRunPreprocessor::new);
         manager.registerPreprocessorAction("loader", LoaderPreprocessor::new);
         manager.registerPreprocessorAction("priority", PriorityPreprocessor::new);
+        manager.registerPreprocessorAction(SideOnlyPreprocessor.PREPROCESSOR_NAME, SideOnlyPreprocessor::new);
     }
 
     public void registerLoadEventHandler(IEventHandler<CrTScriptLoadEvent> handler){

@@ -3,6 +3,7 @@ package crafttweaker.mc1120;
 import crafttweaker.*;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.network.NetworkSide;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.client.MCClient;
 import crafttweaker.mc1120.commands.CTChatCommand;
@@ -85,6 +86,12 @@ public class CraftTweaker {
         
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
         CrafttweakerImplementationAPI.setScriptProvider(scriptsGlobal);
+        
+        if (event.getSide().isServer()){
+            CraftTweakerAPI.tweaker.setNetworkSide(NetworkSide.SIDE_SERVER);
+        } else {
+            CraftTweakerAPI.tweaker.setNetworkSide(NetworkSide.SIDE_CLIENT);
+        }
 
         // register the modloaded preprocessor which can't be in the API package as it needs access to MC
         CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("modloaded", ModLoadedPreprocessor::new);

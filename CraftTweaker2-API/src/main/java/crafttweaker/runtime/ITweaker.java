@@ -3,6 +3,7 @@ package crafttweaker.runtime;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.PreprocessorManager;
 import stanhebben.zenscript.annotations.*;
 
@@ -56,5 +57,18 @@ public interface ITweaker {
      */
     void enableDebug();
     
+    /**
+     * Gets the preprocessor manager which deals with adding and removing preprocessors
+     */
     PreprocessorManager getPreprocessorManager();
+    
+    /**
+     * Gets the network side on which the game is currently running on
+     */
+    NetworkSide getNetworkSide();
+    
+    /**
+     * Used to set the side the game is running on, is set in the construction event of the Main package
+     */
+    void setNetworkSide(NetworkSide networkSide);
 }
