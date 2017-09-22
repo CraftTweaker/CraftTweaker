@@ -6,6 +6,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.network.*;
@@ -187,4 +188,14 @@ public class MCPlayer implements IPlayer {
     public double getZ() {
         return player.posZ;
     }
+
+	@Override
+	public Position3f getPosition() {
+		return new Position3f((float) getX(), (float) getY(), (float) getZ());
+	}
+
+	@Override
+	public void teleport(Position3f pos) {
+		player.setPosition(pos.getX(), pos.getY(), pos.getZ());
+	}
 }

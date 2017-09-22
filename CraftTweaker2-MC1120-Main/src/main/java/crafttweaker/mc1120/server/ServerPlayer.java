@@ -4,6 +4,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.util.Position3f;
 import net.minecraft.util.text.*;
 import net.minecraftforge.fml.server.FMLServerHandler;
 
@@ -142,4 +143,13 @@ public class ServerPlayer implements IPlayer {
     public double getZ() {
         return 0;
     }
+    
+	@Override
+	public Position3f getPosition() {
+		return new Position3f((float)getX(), (float) getY(), (float) getZ());
+	}
+
+	@Override
+	public void teleport(Position3f pos) {		
+	}
 }
