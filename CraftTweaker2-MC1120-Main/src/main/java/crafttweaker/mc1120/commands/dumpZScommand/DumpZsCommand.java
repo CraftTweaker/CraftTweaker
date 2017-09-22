@@ -1,9 +1,11 @@
-package crafttweaker.mc1120.commands;
+package crafttweaker.mc1120.commands.dumpZScommand;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
@@ -18,7 +20,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
     
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-        
+               
         CraftTweakerAPI.logCommand("\nBracket Handlers:");
         for(IBracketHandler iBracketHandler : GlobalRegistry.getBracketHandlers()) {
             CraftTweakerAPI.logCommand(iBracketHandler.getClass().getName());
