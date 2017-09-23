@@ -1,15 +1,12 @@
 package crafttweaker.mc1120.commands.dumpZScommand;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.StringUtil;
 
 import java.io.*;
 import java.net.URL;
@@ -21,7 +18,9 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 
 public class DumpZsCommand extends CraftTweakerCommand {
     private final String HTML_HEADER = "<!DOCTYPE html>\n"
-            + "<head><link rel=\"stylesheet\" href=\"tree3.css\"></head>";
+            + "<head><link rel=\"stylesheet\" href=\"tree3.css\">" +
+            " <title>CraftTweaker: ZenScript Language Dump</title>" +
+            "</head>";
     
     private final String HTML_BODY_START = "<p>CraftTweaker ZenScript language, refer to <a href=\"http://crafttweaker.readthedocs.io/\" target=\"_blank\">this page</a> for more help.</p>";
     
@@ -66,17 +65,24 @@ public class DumpZsCommand extends CraftTweakerCommand {
         
         TreeNode<String> types = root.addChild("Types");
         GlobalRegistry.getTypes().getTypeMap().forEach((aClass, zenType) -> {
-            types.addChild(aClass.getName() + ": " + zenType.getName());
+            TreeNode<String> zsType = types.addChild( zenType.getName());
+            zsType.addChild(aClass.getName());
         });
     
         TreeNode<String> globals = root.addChild("Globals");
-        GlobalRegistry.getGlobals().forEach((s, iZenSymbol) -> globals.addChild(s + ": " + iZenSymbol.toString()));
+        GlobalRegistry.getGlobals().forEach((s, iZenSymbol) -> {
+            TreeNode<String> globalName = globals.addChild(s);
+            globalName.addChild(iZenSymbol.toString());
+        });
         
-        TreeNode<String> expansions = root.addChild("Expansions:");
-        GlobalRegistry.getExpansions().forEach((s, typeExpansion) -> expansions.addChild(s + ": " + typeExpansion.toString()));
-        
-        CraftTweakerAPI.logCommand("\nRoot (Symbol Package):");
-        GlobalRegistry.getRoot().getPackages().forEach(this::printZenSymbol);
+        TreeNode<String> expansions = root.addChild("Expansions");
+        GlobalRegistry.getExpansions().forEach((s, typeExpansion) -> {
+            TreeNode<String> exp = expansions.addChild(s);
+            exp.addChild(typeExpansion.getClass().getName());
+        });
+    
+        TreeNode<String> symbols = root.addChild("Root (Symbol Package)");
+        GlobalRegistry.getRoot().getPackages().forEach((s, zenSymbol) -> printZenSymbol(s, zenSymbol, symbols));
     
     
     
@@ -150,29 +156,30 @@ public class DumpZsCommand extends CraftTweakerCommand {
     /**
      * Recursivly prints all zenSymbols if they are Symbol Packages
      */
-    private void printZenSymbol(String s, IZenSymbol zenSymbol){
+    private void printZenSymbol(String s, IZenSymbol zenSymbol, TreeNode<String> node){
         if (zenSymbol instanceof SymbolPackage){
-            printZenSymbolHelper(zenSymbol, 0);
+            printZenSymbolHelper(zenSymbol, node);
         } else {
-            CraftTweakerAPI.logCommand(s + ": " + zenSymbol.toString());
+            TreeNode<String> n = node.addChild(s);
+            n.addChild(zenSymbol.toString());
         }
     }
     
     /**
      * Helper functions for printing the zenSymbols
      * @param zenSymbol
-     * @param depth
      */
-    private void printZenSymbolHelper(IZenSymbol zenSymbol, final int depth){
-        int finalDepth = depth + 1;
-        
+    private void printZenSymbolHelper(IZenSymbol zenSymbol, TreeNode<String> node){
         if (zenSymbol instanceof SymbolPackage){
             SymbolPackage symbolPackage = (SymbolPackage) zenSymbol;
             
             symbolPackage.getPackages().forEach((s1, symbol) -> {
-                CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s1 + ": " + symbol.toString());
-                printZenSymbolHelper(symbol, finalDepth);
+                
+                TreeNode<String> childNode = addToTree(symbol, node);
+                printZenSymbolHelper(symbol, childNode);
+                
             });
+            
         } else if (zenSymbol instanceof SymbolType || zenSymbol instanceof ZenTypeNative){
             ZenTypeNative typeNative = null;
             if (zenSymbol instanceof SymbolType){
@@ -185,11 +192,57 @@ public class DumpZsCommand extends CraftTweakerCommand {
             }
             
             if (typeNative != null){
+                TreeNode<String> childNode = null;
                 for(String s : typeNative.dumpTypeInfo()) {
-                    CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s);
+                    String mem = "Members: ";
+                    if (s.startsWith(mem)){
+                        childNode = node.addChild(s.substring(mem.length()));
+                        continue;
+                    }
+                    
+                    String stMem = "Static Members: ";
+                    if (s.startsWith(stMem)){
+                        childNode = node.addChild("[STATIC] " + s.substring(stMem.length()));
+                        continue;
+                    }
+                    
+                    TreeNode<String> effectiveNode;
+                    if (childNode != null){
+                        effectiveNode = childNode;
+                    } else {
+                        effectiveNode = node;
+                    }
+                    
+                    effectiveNode.addChild(s);
                 }
             }
         }
+    }
+    
+    private TreeNode<String> addToTree(IZenSymbol symbol, TreeNode<String> node){
+        String name;
+        if (symbol instanceof SymbolPackage){
+            // name = "(SP) " + ((SymbolPackage) symbol).getName();
+            name = null; // ignoring SymbolPackages as only Symbol Types are what we want
+        } else if (symbol instanceof  SymbolType){
+            name = ((SymbolType) symbol).getType().getName();
+        }else {
+            name = symbol.toString();
+        }
+    
+        if (name != null) {
+            String[] split = name.split("\\.");
+    
+            for(String s : split) {
+                TreeNode<String> childNode = node.findTreeNode(s);
+                if (childNode == null) {
+                    childNode = node.addChild(s);
+                }
+        
+                node = childNode;
+            }
+        }
+        return node;
     }
 
 }
