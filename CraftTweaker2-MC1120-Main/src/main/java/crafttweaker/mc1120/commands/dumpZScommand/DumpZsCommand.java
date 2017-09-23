@@ -1,14 +1,19 @@
 package crafttweaker.mc1120.commands.dumpZScommand;
 
+import crafttweaker.annotations.ZenDoc;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.natives.*;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.*;
@@ -17,19 +22,21 @@ import java.util.*;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 
 public class DumpZsCommand extends CraftTweakerCommand {
-    private final String HTML_HEADER = "<!DOCTYPE html>\n"
+    
+    public static final String HTML_HEADER = "<!DOCTYPE html>\n"
             + "<head><link rel=\"stylesheet\" href=\"tree3.css\">" +
             " <title>CraftTweaker: ZenScript Language Dump</title>" +
             "</head>";
     
-    private final String HTML_BODY_START = "<p>CraftTweaker ZenScript language, refer to <a href=\"http://crafttweaker.readthedocs.io/\" target=\"_blank\">this page</a> for more help.</p>";
+    public static final String HTML_BODY_START = "<p>CraftTweaker ZenScript language, refer to <a href=\"http://crafttweaker.readthedocs.io/\" target=\"_blank\">this page</a> for more help.</p>";
     
-    private final String HTML_DIV_START = "<div class=\"css-treeview\"><ul>";
+    public static final String HTML_DIV_START = "<div class=\"css-treeview\"><ul>";
     
-    private final String HTML_DIV_END = "</ul></div>";
+    public static final String HTML_DIV_END = "</ul></div>";
     
-    private final String HTML_BODY_END = "<p>This File was created using the dumpzs command.</p>";
+    public static final String HTML_BODY_END = "<p>This File was created using the dumpzs command.</p>";
     
+    public static final Comparator<TreeNode<String>> STRING_TREE_COMPARATOR = (o1, o2) -> o1.data.compareToIgnoreCase(o2.data);
     
     public DumpZsCommand() {
         super("dumpzs");
@@ -68,24 +75,28 @@ public class DumpZsCommand extends CraftTweakerCommand {
             TreeNode<String> zsType = types.addChild( zenType.getName());
             zsType.addChild(aClass.getName());
         });
+        types.children.sort(STRING_TREE_COMPARATOR);
     
         TreeNode<String> globals = root.addChild("Globals");
         GlobalRegistry.getGlobals().forEach((s, iZenSymbol) -> {
             TreeNode<String> globalName = globals.addChild(s);
             globalName.addChild(iZenSymbol.toString());
         });
+        globals.children.sort(STRING_TREE_COMPARATOR);
+
         
         TreeNode<String> expansions = root.addChild("Expansions");
         GlobalRegistry.getExpansions().forEach((s, typeExpansion) -> {
             TreeNode<String> exp = expansions.addChild(s);
             exp.addChild(typeExpansion.getClass().getName());
         });
-    
+        expansions.children.sort(STRING_TREE_COMPARATOR);
+        
         TreeNode<String> symbols = root.addChild("Root (Symbol Package)");
         GlobalRegistry.getRoot().getPackages().forEach((s, zenSymbol) -> printZenSymbol(s, zenSymbol, symbols));
-    
-    
-    
+        sortTreeNodes(symbols);
+        
+        
         try {
             List<String> lines = Arrays.asList(
                     HTML_HEADER,
@@ -109,11 +120,21 @@ public class DumpZsCommand extends CraftTweakerCommand {
         
     }
     
+    private void sortTreeNodes(TreeNode<String> parentNode){
+        if (parentNode.isLeaf()) return;
+        parentNode.children.sort(STRING_TREE_COMPARATOR);
+    
+        for(TreeNode<String> child : parentNode.children) {
+            sortTreeNodes(child);
+        }
+    }
+    
     @Override
     protected void init() {
         setDescription(getClickableCommandText("\u00A72/ct dumpzs", "/ct dumpzs", true),
                 getNormalMessage(" \u00A73Dumps the whole ZenScript Registry to the crafttweaker log"));
     }
+    
     
     private int itemCounter = 0;
     private String convertToFlatHTMLStrings(TreeNode<String> root){
@@ -192,31 +213,118 @@ public class DumpZsCommand extends CraftTweakerCommand {
             }
             
             if (typeNative != null){
-                TreeNode<String> childNode = null;
-                for(String s : typeNative.dumpTypeInfo()) {
-                    String mem = "Members: ";
-                    if (s.startsWith(mem)){
-                        childNode = node.addChild(s.substring(mem.length()));
-                        continue;
-                    }
-                    
-                    String stMem = "Static Members: ";
-                    if (s.startsWith(stMem)){
-                        childNode = node.addChild("[STATIC] " + s.substring(stMem.length()));
-                        continue;
-                    }
-                    
-                    TreeNode<String> effectiveNode;
-                    if (childNode != null){
-                        effectiveNode = childNode;
-                    } else {
-                        effectiveNode = node;
-                    }
-                    
-                    effectiveNode.addChild(s);
-                }
+                addTypeNativeToTree(typeNative, node);
             }
         }
+    }
+    
+    public void addTypeNativeToTree(ZenTypeNative typeNative, TreeNode<String> node){
+        typeNative.getMembers().forEach((s, zenNativeMember) -> {
+            TreeNode<String> chNode = node.addChild(s);
+            
+            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
+                TreeNode<String> n = chNode.addChild("Java Method");
+                n.addChild(methodToString(iJavaMethod));
+            }
+    
+            if (zenNativeMember.getGetter() != null){
+                TreeNode<String> n = chNode.addChild("Getter");
+                n.addChild(methodToString(zenNativeMember.getGetter()));
+            }
+            if (zenNativeMember.getSetter() != null){
+                TreeNode<String> n = chNode.addChild("Setter");
+                n.addChild(methodToString(zenNativeMember.getSetter()));
+            }
+        });
+        
+        typeNative.getStaticMembers().forEach((s, zenNativeMember) -> {
+            TreeNode<String> chNode = node.addChild("[STATIC] " + s);
+            
+            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
+                TreeNode<String> n = chNode.addChild("Java Method");
+                n.addChild(methodToString(iJavaMethod));
+            }
+    
+            if (zenNativeMember.getGetter() != null){
+                TreeNode<String> n = chNode.addChild("Getter");
+                n.addChild(methodToString(zenNativeMember.getGetter()));
+            }
+            if (zenNativeMember.getSetter() != null){
+                TreeNode<String> n = chNode.addChild("Setter");
+                n.addChild(methodToString(zenNativeMember.getSetter()));
+            }
+        });
+    }
+    
+    
+
+    private String methodToString(IJavaMethod javaMethod){
+        if (javaMethod == null) return "";
+        
+        if (javaMethod instanceof JavaMethod){
+            Method jm = ((JavaMethod) javaMethod).getMethod();
+            StringBuilder sb = new StringBuilder();
+    
+            ZenDoc[] doc = jm.getAnnotationsByType(ZenDoc.class);
+            if (doc.length > 0){
+                sb.append(encaplseInSpan("########", "green"));
+        
+                for(ZenDoc zenDoc : doc) {
+                    sb.append("<br/>");
+                    sb.append(encaplseInSpan(zenDoc.value(), "green"));
+                }
+        
+                sb.append(encaplseInSpan("<br/>########<br/>", "green"));
+            }
+            
+            sb.append(Modifier.toString(jm.getModifiers()));
+            
+            sb.append(" ");
+            sb.append(createHoverText(jm.getReturnType().getName(), jm.getReturnType().getSimpleName()));
+            
+            sb.append(" ");
+            sb.append(encaplseInSpan(jm.getName(), "red"));
+            sb.append("(");
+    
+            Class<?>[] paras = jm.getParameterTypes();
+            Annotation[][] annos = jm.getParameterAnnotations();
+            for(int i = 0; i < paras.length; i++) {
+                
+                for(int j = 0; j < annos[i].length; j++) {
+                    sb.append(encaplseInSpan("@" + annos[i][j].annotationType().getSimpleName() + " ", "gold"));
+                }
+                
+                sb.append(createHoverText(paras[i].getName(), paras[i].getSimpleName()));
+                if (i != paras.length - 1){
+                    sb.append(", ");
+                }
+            }
+            
+            sb.append(")");
+            
+            return sb.toString();
+        }else {
+            return javaMethod.toString();
+        }
+        
+    }
+    
+    private String colorClassName(String name){
+        int lastDot = name.lastIndexOf(".");
+        if (lastDot > 0){
+            return name.substring(0, lastDot + 1) + encaplseInSpan(name.substring(lastDot + 1, name.length()), "DarkOrange");
+        }else {
+            return encaplseInSpan(name, "DarkOrange");
+        }
+        
+    }
+    
+    private String encaplseInSpan(String value, String color){
+        return "<span style=\"color:"+ color + "\">" + value + "</span>";
+    }
+    
+    private String createHoverText(String hoverText, String mainText){
+        return "<span title=\"" + hoverText + "\">" + mainText + "</span>";
     }
     
     private TreeNode<String> addToTree(IZenSymbol symbol, TreeNode<String> node){

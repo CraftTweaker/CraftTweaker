@@ -647,6 +647,15 @@ public class ZenTypeNative extends ZenType {
         return stringList;
     }
     
+    
+    public Map<String, ZenNativeMember> getMembers() {
+        return members;
+    }
+    
+    public Map<String, ZenNativeMember> getStaticMembers() {
+        return staticMembers;
+    }
+    
     @Override
     public Expression defaultValue(ZenPosition position) {
         return new ExpressionNull(position);

@@ -1,6 +1,6 @@
 package crafttweaker.api.recipes;
 
-import crafttweaker.annotations.ZenRegister;
+import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -51,6 +51,7 @@ public interface IRecipeManager {
      * @param ingredients recipe ingredients
      * @param function    recipe function (optional)
      */
+    @ZenDoc("Adds a shaped recipe.")
     @ZenMethod
     void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
