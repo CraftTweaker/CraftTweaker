@@ -3,6 +3,7 @@ package crafttweaker.runtime;
 import crafttweaker.*;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.*;
+import crafttweaker.util.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -28,6 +29,10 @@ public class CrTTweaker implements ITweaker {
     private PreprocessorManager preprocessorManager = new PreprocessorManager();
     private IScriptProvider scriptProvider;
     
+    /** List of all event subscribers*/
+     private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
+    
+    
     public CrTTweaker() {
         PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
     }
@@ -52,6 +57,7 @@ public class CrTTweaker implements ITweaker {
     @Override
     public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
         CraftTweakerAPI.logInfo("Loading scripts");
+        CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand));
         
         preprocessorManager.clean();
         
@@ -195,5 +201,9 @@ public class CrTTweaker implements ITweaker {
     
     public void setNetworkSide(NetworkSide networkSide) {
         this.networkSide = networkSide;
+    }
+    
+    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler){
+        CRT_LOADING_STARTED_EVENT_EVENT_LIST.add(eventHandler);
     }
 }
