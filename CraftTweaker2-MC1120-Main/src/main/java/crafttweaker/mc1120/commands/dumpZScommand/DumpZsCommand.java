@@ -3,6 +3,7 @@ package crafttweaker.mc1120.commands.dumpZScommand;
 import crafttweaker.annotations.ZenDoc;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.*;
+import joptsimple.internal.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
@@ -45,22 +46,28 @@ public class DumpZsCommand extends CraftTweakerCommand {
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         TreeNode<String> root = new TreeNode<>("root");
+        File zsDataFolder;
+        System.out.println("args = " + Arrays.toString(args));
+        if (args == null || args.length <= 0){
+            zsDataFolder = new File("crtdata");
+        }else {
+            zsDataFolder = new File(Strings.join(args, " "));
+        }
         
-        File zsDataFolder = new File("crtdata");
         if(!zsDataFolder.exists()) {
             zsDataFolder.mkdirs();
         }
         
         URL inputUrlPNG = getClass().getResource("/assets/crafttweaker/icons.png");
         try {
-            FileUtils.copyURLToFile(inputUrlPNG, new File("crtdata/icons.png"));
+            FileUtils.copyURLToFile(inputUrlPNG, new File(zsDataFolder, "icons.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }
         
         URL inputUrlCSS = getClass().getResource("/assets/crafttweaker/tree3.css");
         try {
-            FileUtils.copyURLToFile(inputUrlCSS, new File("crtdata/tree3.css"));
+            FileUtils.copyURLToFile(inputUrlCSS, new File(zsDataFolder, "tree3.css"));
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -107,7 +114,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
                     HTML_BODY_END
             );
             
-            Path file = Paths.get("crtdata/tree3.html");
+            Path file = Paths.get(zsDataFolder.getAbsolutePath() + "/tree3.html");
             Files.write(file, lines, Charset.forName("UTF-8"));
         } catch(IOException e) {
             e.printStackTrace();
@@ -115,9 +122,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
         //Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
         
         
-        
-        sender.sendMessage(getLinkToCraftTweakerLog("Dumped content of the GlobalRegistry", sender));
-        
+        sender.sendMessage(getFileOpenText("Dumped content of the GlobalRegistry to a html file \u00A7r[\u00A76Click here to open\u00A7r]", zsDataFolder.getAbsolutePath() + "/tree3.html"));
     }
     
     private void sortTreeNodes(TreeNode<String> parentNode){
