@@ -57,7 +57,7 @@ public class CrTTweaker implements ITweaker {
     @Override
     public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
         CraftTweakerAPI.logInfo("Loading scripts");
-        CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand));
+        CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
         
         preprocessorManager.clean();
         
