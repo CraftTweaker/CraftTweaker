@@ -617,34 +617,43 @@ public class ZenTypeNative extends ZenType {
         
         // goes over all non static members
         members.forEach((s, zenNativeMember) -> {
+            stringList.add("Members: " + s);
+            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
+                stringList.add("\t" + iJavaMethod.toString());
+            }
+            
             if (zenNativeMember.getGetter() != null){
                 stringList.add("Getter: " + zenNativeMember.getGetter().toString());
             }
             if (zenNativeMember.getSetter() != null){
                 stringList.add("Setter: " + zenNativeMember.getSetter().toString());
             }
-            
-            stringList.add("Members: " + s);
-            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
-                stringList.add("\t" + iJavaMethod.toString());
-            }
         });
     
         staticMembers.forEach((s, zenNativeMember) -> {
+            stringList.add("Static Members: " + s);
+            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
+                stringList.add("\t" + iJavaMethod.toString());
+            }
+            
             if (zenNativeMember.getGetter() != null){
                 stringList.add("Static Getter: " + zenNativeMember.getGetter().toString());
             }
             if (zenNativeMember.getSetter() != null){
                 stringList.add("Static Setter: " + zenNativeMember.getSetter().toString());
             }
-            
-            stringList.add("Static Members: " + s);
-            for(IJavaMethod iJavaMethod : zenNativeMember.getMethods()) {
-                stringList.add("\t" + iJavaMethod.toString());
-            }
         });
         
         return stringList;
+    }
+    
+    
+    public Map<String, ZenNativeMember> getMembers() {
+        return members;
+    }
+    
+    public Map<String, ZenNativeMember> getStaticMembers() {
+        return staticMembers;
     }
     
     @Override
