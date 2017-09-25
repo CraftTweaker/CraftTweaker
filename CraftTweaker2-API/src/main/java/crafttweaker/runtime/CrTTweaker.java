@@ -1,7 +1,9 @@
 package crafttweaker.runtime;
 
 import crafttweaker.*;
+import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.*;
+import crafttweaker.util.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -17,6 +19,7 @@ import static stanhebben.zenscript.ZenModule.*;
  */
 public class CrTTweaker implements ITweaker {
     public static String defaultLoaderName = "crafttweaker";
+    private NetworkSide networkSide = NetworkSide.INVALID_SIDE;
     
     private static boolean DEBUG = false;
     private final List<IAction> actions = new ArrayList<>();
@@ -25,6 +28,10 @@ public class CrTTweaker implements ITweaker {
      */
     private PreprocessorManager preprocessorManager = new PreprocessorManager();
     private IScriptProvider scriptProvider;
+    
+    /** List of all event subscribers*/
+     private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
+    
     
     public CrTTweaker() {
         PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
@@ -50,6 +57,7 @@ public class CrTTweaker implements ITweaker {
     @Override
     public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
         CraftTweakerAPI.logInfo("Loading scripts");
+        CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
         
         preprocessorManager.clean();
         
@@ -68,14 +76,19 @@ public class CrTTweaker implements ITweaker {
         // ZS magic
         for(ScriptFile scriptFile : scriptFiles) {
             if (!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
-                CraftTweakerAPI.logInfo("[" +loaderName + "]: Skipping file " + scriptFile);
+                CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
+                continue;
+            }
+            
+            if (!scriptFile.shouldBeLoadedOn(networkSide)){
+                CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");
                 continue;
             }
             
             if(!executed.contains(scriptFile.getEffectiveName())) {
                 executed.add(scriptFile.getEffectiveName());
                 
-                CraftTweakerAPI.logInfo("[" +loaderName + "]: Loading Script: " + scriptFile);
+                CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
                 
                 Map<String, byte[]> classes = new HashMap<>();
                 IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
@@ -99,13 +112,13 @@ public class CrTTweaker implements ITweaker {
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                     
                 } catch(IOException ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Could not load script " + scriptFile + ": " + ex.getMessage());
+                    CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Could not load script " + scriptFile + ": " + ex.getMessage());
                     loadSuccessful = false;
                 } catch(ParseException ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
+                    CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
                     loadSuccessful = false;
                 } catch(Exception ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Error loading " + scriptFile + ": " + ex.toString(), ex);
+                    CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error loading " + scriptFile + ": " + ex.toString(), ex);
                     loadSuccessful = false;
                 } finally {
                     if(reader != null) {
@@ -163,6 +176,10 @@ public class CrTTweaker implements ITweaker {
         return fileList;
     }
     
+    private String getTweakerDescriptor(String loaderName){
+        return "[" + loaderName + " | " + networkSide + "]";
+    }
+    
     @Override
     public List<IAction> getActions() {
         return actions;
@@ -176,5 +193,17 @@ public class CrTTweaker implements ITweaker {
     @Override
     public PreprocessorManager getPreprocessorManager() {
         return preprocessorManager;
+    }
+    
+    public NetworkSide getNetworkSide() {
+        return networkSide;
+    }
+    
+    public void setNetworkSide(NetworkSide networkSide) {
+        this.networkSide = networkSide;
+    }
+    
+    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler){
+        CRT_LOADING_STARTED_EVENT_EVENT_LIST.add(eventHandler);
     }
 }

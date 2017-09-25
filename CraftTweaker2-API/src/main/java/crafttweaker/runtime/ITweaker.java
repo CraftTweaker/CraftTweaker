@@ -3,7 +3,9 @@ package crafttweaker.runtime;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.PreprocessorManager;
+import crafttweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -56,5 +58,23 @@ public interface ITweaker {
      */
     void enableDebug();
     
+    /**
+     * Gets the preprocessor manager which deals with adding and removing preprocessors
+     */
     PreprocessorManager getPreprocessorManager();
+    
+    /**
+     * Gets the network side on which the game is currently running on
+     */
+    NetworkSide getNetworkSide();
+    
+    /**
+     * Used to set the side the game is running on, is set in the construction event of the Main package
+     */
+    void setNetworkSide(NetworkSide networkSide);
+    
+    /**
+     * Gets called as soon as the script start getting loaded (before the zs files are getting loaded)
+     */
+    void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler);
 }

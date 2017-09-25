@@ -1,5 +1,6 @@
 package stanhebben.zenscript;
 
+import com.sun.deploy.util.StringUtils;
 import org.objectweb.asm.*;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.*;
@@ -318,7 +319,7 @@ public class ZenModule {
             dir = "";
         }
         
-        return dir.replace("/", ".") + "." + StringUtil.capitalize(name);
+        return dir.length() > 0 ? (dir.replace("/", "_") + "_") : "" + StringUtil.capitalize(name);
         
     }
     

@@ -1,5 +1,6 @@
 package crafttweaker.runtime;
 
+import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.IPreprocessor;
 
 import java.io.*;
@@ -25,6 +26,8 @@ public class ScriptFile {
     private boolean ignoreBracketErrors = false;
     
     private boolean isSyntaxCommand;
+    
+    private NetworkSide networkSide;
     
     public ScriptFile(ITweaker tweaker, IScriptIterator script, boolean isSyntaxCommand) {
         this.tweaker = tweaker;
@@ -152,7 +155,7 @@ public class ScriptFile {
     
     @Override
     public String toString() {
-        return "{[" + priority + ":" + loaderName + "]: " + getEffectiveName() + "}";
+        return "{[" + priority + ":" + loaderName + "]: " + getEffectiveName() + (networkSide == null ? "" : "[Side: " + networkSide + "]")+ "}";
     }
     
     /**
@@ -176,4 +179,20 @@ public class ScriptFile {
     public void setDebugEnabled(boolean debugEnabled) {
         isDebugEnabled = debugEnabled;
     }
+    
+    /**
+     * Registers the file to be only loaded on this network side
+     */
+    public void setNetworkSide(NetworkSide networkSide){
+        this.networkSide = networkSide;
+    }
+    
+    /**
+     * Returns whether it should be loaded on the side it was asked to be loaded on
+     */
+    public boolean shouldBeLoadedOn(NetworkSide proposedSide) {
+        return networkSide == null || networkSide.equals(proposedSide);
+    }
+    
+    
 }
