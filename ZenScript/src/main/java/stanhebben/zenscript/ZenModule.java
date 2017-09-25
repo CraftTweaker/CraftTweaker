@@ -1,5 +1,6 @@
 package stanhebben.zenscript;
 
+import com.sun.deploy.util.StringUtils;
 import org.objectweb.asm.*;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.*;
