@@ -49,7 +49,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
         File zsDataFolder;
         System.out.println("args = " + Arrays.toString(args));
         if (args == null || args.length <= 0){
-            zsDataFolder = new File("crtdata");
+            zsDataFolder = new File("crafttweaker_dump");
         }else {
             zsDataFolder = new File(Strings.join(args, " "));
         }
