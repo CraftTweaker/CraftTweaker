@@ -24,7 +24,6 @@ public class MTLogger implements ILogger {
     
     public void addPlayer(IPlayer player) {
         players.add(player);
-        System.out.println(unprocessed);
         if(!unprocessed.isEmpty()) {
             unprocessed.forEach(player::sendChat);
         }
