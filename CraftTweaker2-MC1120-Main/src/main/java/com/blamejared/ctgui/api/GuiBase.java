@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.List;
 
 public abstract class GuiBase extends GuiContainer {
-
+    
     public SlotRecipe selectedSlot;
     public GuiTextField editingField;
     public GuiButton add;
@@ -25,7 +25,7 @@ public abstract class GuiBase extends GuiContainer {
     protected ContainerBase container;
     private GuiMenu menu = new GuiMenu();
     private boolean shouldOpenMenu;
-
+    
     public GuiBase(ContainerBase container, int xSize, int ySize, boolean shouldOpenMenu) {
         super(container);
         this.container = container;
@@ -33,12 +33,12 @@ public abstract class GuiBase extends GuiContainer {
         this.ySize = ySize;
         this.shouldOpenMenu = shouldOpenMenu;
     }
-
+    
     public static boolean isBlock(ItemStack stack) {
         ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
         return !(name.toString().equals("minecraft:air")) && Block.REGISTRY.containsKey(name);
     }
-
+    
     @Override
     public void initGui() {
         super.initGui();
@@ -52,13 +52,14 @@ public abstract class GuiBase extends GuiContainer {
         getButtonList().add(add);
         remove = new GuiButton(2907, getGuiLeft() + 86 + 2 + fontRenderer.getStringWidth("Add") + 4, getGuiTop() + 8, fontRenderer.getStringWidth("Remove") + 4, 20, "Remove");
         getButtonList().add(remove);
-
+        
     }
-
+    
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         editingField.drawTextBox();
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
     
     private void clearMenu() {
@@ -75,6 +76,7 @@ public abstract class GuiBase extends GuiContainer {
             }
         }
     }
+    
     @Override
     public void updateScreen() {
         super.updateScreen();
@@ -108,7 +110,7 @@ public abstract class GuiBase extends GuiContainer {
             }
         }
     }
-
+    
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         final boolean[] clickedSlot = new boolean[]{false};
@@ -149,17 +151,17 @@ public abstract class GuiBase extends GuiContainer {
                         break;
                 }
             }
-
+            
         }
         if(!clickedSlot[0]) {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }
-
+    
     public abstract String getOutputAdd();
-
+    
     public abstract String getOutputRemove();
-
+    
     protected void actionPerformed(GuiButton btn) {
         if(btn.equals(add)) {
             File scriptFile = new File(new File("scripts"), "/recipes.zs");
@@ -185,7 +187,7 @@ public abstract class GuiBase extends GuiContainer {
                     String beforeLine = "";
                     if(i > 0)
                         beforeLine = lines.get(i - 1);
-
+                    
                     String lined = lines.get(i);
                     if(beforeLine.trim().equals("//#Add")) {
                         writer.println(getOutputAdd());
@@ -193,7 +195,7 @@ public abstract class GuiBase extends GuiContainer {
                     if(!lined.isEmpty()) {
                         writer.println(lined);
                     }
-
+                    
                 }
                 writer.close();
             } catch(IOException e) {
@@ -205,7 +207,7 @@ public abstract class GuiBase extends GuiContainer {
             if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
-
+            
             try {
                 List<String> lines = new LinkedList<>();
                 BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
@@ -225,7 +227,7 @@ public abstract class GuiBase extends GuiContainer {
                     String beforeLine = "";
                     if(i > 0)
                         beforeLine = lines.get(i - 1);
-
+                    
                     String lined = lines.get(i);
                     if(beforeLine.trim().equals("//#Remove")) {
                         writer.println(getOutputRemove());
@@ -240,9 +242,9 @@ public abstract class GuiBase extends GuiContainer {
             }
         }
     }
-
+    
     public abstract ResourceLocation getTexture();
-
+    
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.pushAttrib();
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -255,32 +257,32 @@ public abstract class GuiBase extends GuiContainer {
             GlStateManager.colorMask(true, true, true, true);
         }
     }
-
+    
     public List<GuiButton> getButtonList() {
         return this.buttonList;
     }
-
+    
     public int getGuiLeft() {
         return guiLeft;
     }
-
+    
     public int getGuiTop() {
         return guiTop;
     }
-
+    
     public int getXSize() {
         return xSize;
     }
-
+    
     public int getYSize() {
         return ySize;
     }
-
+    
     public GuiMenu getMenu() {
         return menu;
     }
-
-
+    
+    
     public void generateFile(File f) {
         try {
             f.createNewFile();
@@ -298,5 +300,5 @@ public abstract class GuiBase extends GuiContainer {
             e.printStackTrace();
         }
     }
-
+    
 }
