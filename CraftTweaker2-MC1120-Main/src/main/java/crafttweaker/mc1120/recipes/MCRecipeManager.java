@@ -236,9 +236,6 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            if(output == null) {
-                return;
-            }
             int ingredientsWidth = 0;
             int ingredientsHeight = 0;
             
@@ -258,8 +255,8 @@ public final class MCRecipeManager implements IRecipeManager {
                 }
                 
                 if(ingredients != null) {
-                    if(recipe instanceof ShapedRecipes) {
-                        ShapedRecipes srecipe = (ShapedRecipes) recipe;
+                    if(recipe.getValue() instanceof ShapedRecipes) {
+                        ShapedRecipes srecipe = (ShapedRecipes) recipe.getValue();
                         if(ingredientsWidth != srecipe.recipeWidth || ingredientsHeight != srecipe.recipeHeight) {
                             continue;
                         }
@@ -275,8 +272,8 @@ public final class MCRecipeManager implements IRecipeManager {
                                 }
                             }
                         }
-                    } else if(recipe instanceof ShapedOreRecipe) {
-                        ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe;
+                    } else if(recipe.getValue() instanceof ShapedOreRecipe) {
+                        ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe.getValue();
                         int recipeWidth = srecipe.getWidth();
                         int recipeHeight = srecipe.getHeight();
                         if(ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
@@ -294,20 +291,19 @@ public final class MCRecipeManager implements IRecipeManager {
                             }
                         }
                     } else {
-                        if(recipe instanceof ShapelessRecipes) {
+                        if(recipe.getValue() instanceof ShapelessRecipes) {
                             continue;
-                        } else if(recipe instanceof ShapelessOreRecipe) {
+                        } else if(recipe.getValue() instanceof ShapelessOreRecipe) {
                             continue;
                         }
                     }
                 } else {
-                    if(recipe instanceof ShapelessRecipes) {
+                    if(recipe.getValue() instanceof ShapelessRecipes) {
                         continue;
-                    } else if(recipe instanceof ShapelessOreRecipe) {
+                    } else if(recipe.getValue() instanceof ShapelessOreRecipe) {
                         continue;
                     }
                 }
-                
                 toRemove.add(recipe.getKey());
             }
             
@@ -343,9 +339,9 @@ public final class MCRecipeManager implements IRecipeManager {
             }
             List<ResourceLocation> toRemove = new ArrayList<>();
             outer:
-            for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-                
-                if(recipe.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStack(recipe.getValue().getRecipeOutput()))) {
+            for(Map.Entry<ResourceLocation, IRecipe> entry : recipes) {
+                IRecipe recipe = entry.getValue();
+                if(entry.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStack(entry.getValue().getRecipeOutput()))) {
                     continue;
                 }
                 
@@ -403,7 +399,7 @@ public final class MCRecipeManager implements IRecipeManager {
                         continue;
                     }
                 }
-                toRemove.add(recipe.getKey());
+                toRemove.add(entry.getKey());
             }
             
             super.removeRecipes(toRemove);
