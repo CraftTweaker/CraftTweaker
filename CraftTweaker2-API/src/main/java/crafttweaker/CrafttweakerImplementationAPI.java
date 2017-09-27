@@ -15,18 +15,11 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.server.*;
 import crafttweaker.api.vanilla.IVanilla;
-import crafttweaker.api.world.IBiome;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.util.IEventHandler;
-import sun.awt.HeadlessToolkit;
-
-import java.awt.*;
-import java.awt.datatransfer.*;
 import java.io.Serializable;
 import java.util.*;
-import java.util.List;
 
-import static crafttweaker.CraftTweakerAPI.*;
 
 
 /**
@@ -119,20 +112,6 @@ public class CrafttweakerImplementationAPI {
     public static void load() {
         CraftTweakerAPI.tweaker.load();
     }
-    
-    
-    // ##############################
-    // ### Private static methods ###
-    // ##############################
-    
-    private static void copyToClipboard(String value) {
-        StringSelection stringSelection = new StringSelection(value);
-        if(!(Toolkit.getDefaultToolkit() instanceof HeadlessToolkit)) {
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        }
-    }
-    
     
     // #############################
     // ### Private inner classes ###
