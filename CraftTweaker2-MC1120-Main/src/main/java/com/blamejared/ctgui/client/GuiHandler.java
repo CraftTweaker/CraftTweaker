@@ -2,9 +2,14 @@ package com.blamejared.ctgui.client;
 
 import com.blamejared.ctgui.MTRecipe;
 import com.blamejared.ctgui.api.GuiRegistry;
+import com.blamejared.ctgui.client.gui.craftingtable.*;
+import com.blamejared.ctgui.client.gui.furnace.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.*;
+
+import static com.blamejared.ctgui.reference.Reference.GUI_NAME_CRAFTING;
+import static com.blamejared.ctgui.reference.Reference.GUI_NAME_FURNACE;
 
 /**
  * Created by Jared.
@@ -17,17 +22,23 @@ public class GuiHandler implements IGuiHandler {
     
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if(GuiRegistry.getHandlerForID(ID) == null) {
-            return null;
+        switch(GuiRegistry.getName(ID)) {
+            case GUI_NAME_CRAFTING:
+                return new ContainerCraftingTable(player.inventory);
+            case GUI_NAME_FURNACE:
+                return new ContainerFurnace(player.inventory);
         }
-        return GuiRegistry.getHandlerForID(ID).getServerGuiElement(ID, player, world, x, y, z);
+        return null;
     }
     
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if(GuiRegistry.getHandlerForID(ID) == null) {
-            return null;
+        switch(GuiRegistry.getName(ID)) {
+            case GUI_NAME_CRAFTING:
+                return new GuiCraftingTable(new ContainerCraftingTable(player.inventory));
+            case GUI_NAME_FURNACE:
+                return new GuiFurnace(new ContainerFurnace(player.inventory));
         }
-        return GuiRegistry.getHandlerForID(ID).getClientGuiElement(ID, player, world, x, y, z);
+        return null;
     }
 }
