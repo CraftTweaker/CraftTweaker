@@ -24,7 +24,7 @@ public class MTRecipe {
     public void preInit(FMLPreInitializationEvent event) {
         PROXY.registerGuis();
         PROXY.registerEvents();
-        GuiRegistry.registerGuis(Reference.GUI_NAME_CRAFTING, Reference.GUI_NAME_FURNACE);
+        GuiRegistry.registerGuis(GUI_HANDLED.toArray(new String[0]));
         
     }
     

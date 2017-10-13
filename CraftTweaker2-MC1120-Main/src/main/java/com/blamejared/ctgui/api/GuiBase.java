@@ -162,9 +162,15 @@ public abstract class GuiBase extends GuiContainer {
     
     public abstract String getOutputRemove();
     
+    
+    public String getFileName() {
+        return "recipes";
+    }
+    
     protected void actionPerformed(GuiButton btn) {
+        
         if(btn.equals(add)) {
-            File scriptFile = new File(new File("scripts"), "/recipes.zs");
+            File scriptFile = new File(new File("scripts"), String.format("/%s.zs", getFileName()));
             if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
@@ -203,11 +209,10 @@ public abstract class GuiBase extends GuiContainer {
             }
         }
         if(btn.equals(remove)) {
-            File scriptFile = new File(new File("scripts"), "/recipes.zs");
+            File scriptFile = new File(new File("scripts"), String.format("/%s.zs", getFileName()));
             if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
-            
             try {
                 List<String> lines = new LinkedList<>();
                 BufferedReader reader = new BufferedReader(new FileReader(scriptFile));

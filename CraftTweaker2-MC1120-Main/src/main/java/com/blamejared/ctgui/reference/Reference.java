@@ -16,5 +16,4 @@ public class Reference {
     
     public static final List<String> GUI_HANDLED = Arrays.asList(new String[]{GUI_NAME_CRAFTING, GUI_NAME_FURNACE});
     
-    
 }
