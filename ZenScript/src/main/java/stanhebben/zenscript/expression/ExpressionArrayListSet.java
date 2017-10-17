@@ -2,10 +2,8 @@ package stanhebben.zenscript.expression;
 
 import java.util.List;
 
-import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeArrayList;
 import stanhebben.zenscript.type.ZenTypeVoid;
 import stanhebben.zenscript.util.ZenPosition;
 

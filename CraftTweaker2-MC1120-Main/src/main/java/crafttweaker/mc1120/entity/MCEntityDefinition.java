@@ -6,7 +6,6 @@ import crafttweaker.api.entity.IEntityDrop;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.util.IntegerRange;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import java.util.*;

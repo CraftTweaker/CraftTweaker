@@ -1,19 +1,7 @@
 package crafttweaker.mc1120.world;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.world.IBiome;
-import crafttweaker.mc1120.entity.MCEntityDefinition;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * @author Stan

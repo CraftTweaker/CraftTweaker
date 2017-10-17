@@ -1,7 +1,6 @@
 package com.blamejared.ctgui.api;
 
 import com.google.common.collect.*;
-import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import java.util.*;
 

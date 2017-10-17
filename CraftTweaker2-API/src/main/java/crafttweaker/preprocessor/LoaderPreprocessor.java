@@ -15,7 +15,7 @@ import crafttweaker.runtime.ScriptFile;
  * @author BloodWorkXGaming
  */
 public class LoaderPreprocessor extends PreprocessorActionBase{
-    public static final String PREPROCESSOR_NAME = "loader";
+    private static final String PREPROCESSOR_NAME = "loader";
     private String loaderName;
     
     public LoaderPreprocessor(String fileName, String preprocessorLine, int lineIndex) {

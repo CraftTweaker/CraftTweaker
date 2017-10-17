@@ -12,8 +12,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static crafttweaker.CrafttweakerImplementationAPI.ITEM_COMPARATOR;
-
 /**
  * @author Stan
  */

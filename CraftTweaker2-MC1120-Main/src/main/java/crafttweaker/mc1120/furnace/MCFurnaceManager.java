@@ -8,7 +8,6 @@ import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import stanhebben.zenscript.annotations.*;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;

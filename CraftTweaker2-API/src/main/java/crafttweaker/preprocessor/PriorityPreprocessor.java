@@ -11,7 +11,7 @@ import crafttweaker.runtime.ScriptFile;
  * @author BloodWorkXGaming
  */
 public class PriorityPreprocessor extends PreprocessorActionBase{
-    public static final String PREPROCESSOR_NAME = "priority";
+    private static final String PREPROCESSOR_NAME = "priority";
     private Integer priority;
     
     public PriorityPreprocessor(String fileName, String preprocessorLine, int lineIndex) {

@@ -29,7 +29,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.util.*;
 
-import static javax.swing.UIManager.get;
 import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
 public class CommonEventHandler {

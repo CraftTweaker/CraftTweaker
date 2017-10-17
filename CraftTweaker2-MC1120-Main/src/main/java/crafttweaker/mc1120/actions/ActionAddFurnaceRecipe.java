@@ -5,8 +5,6 @@ import crafttweaker.api.item.IIngredient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
-import java.util.Arrays;
-
 public class ActionAddFurnaceRecipe implements IAction {
     
     private final IIngredient ingredient;

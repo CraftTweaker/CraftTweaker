@@ -8,7 +8,6 @@ import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.*;
-import stanhebben.zenscript.type.expand.ZenExpandMember;
 import stanhebben.zenscript.type.iterator.*;
 import stanhebben.zenscript.type.natives.*;
 import stanhebben.zenscript.util.*;

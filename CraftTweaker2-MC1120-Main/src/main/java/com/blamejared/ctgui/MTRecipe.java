@@ -3,11 +3,8 @@ package com.blamejared.ctgui;
 import com.blamejared.ctgui.api.GuiRegistry;
 import com.blamejared.ctgui.commands.CommandCTGUI;
 import com.blamejared.ctgui.proxy.CommonProxy;
-import com.blamejared.ctgui.reference.Reference;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
-
-import java.util.*;
 
 import static com.blamejared.ctgui.reference.Reference.*;
 

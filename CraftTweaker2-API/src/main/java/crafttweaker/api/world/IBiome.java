@@ -1,9 +1,6 @@
 package crafttweaker.api.world;
 
-import java.util.List;
-
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.entity.IEntityDefinition;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 

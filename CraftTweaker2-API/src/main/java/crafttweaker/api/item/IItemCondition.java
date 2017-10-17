@@ -24,4 +24,5 @@ public interface IItemCondition {
      * @return true if the condition applies to this stack
      */
     boolean matches(IItemStack stack);
+    
 }

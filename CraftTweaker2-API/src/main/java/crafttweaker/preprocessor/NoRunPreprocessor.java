@@ -11,7 +11,7 @@ import crafttweaker.runtime.ScriptFile;
  * @author BloodWorkXGaming
  */
 public class NoRunPreprocessor extends PreprocessorActionBase{
-    public static final String PREPROCESSOR_NAME = "norun";
+    private static final String PREPROCESSOR_NAME = "norun";
     
     public NoRunPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
         super(fileName, preprocessorLine, lineIndex);

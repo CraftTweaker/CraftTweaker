@@ -22,13 +22,10 @@ import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
-import crafttweaker.preprocessor.PriorityPreprocessor;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.ScriptProviderCascade;
 import crafttweaker.runtime.providers.ScriptProviderDirectory;
 import crafttweaker.zenscript.GlobalRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -128,10 +125,6 @@ public class CraftTweaker {
         
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
-    }
-    
-    @EventHandler
-    public void onFMLInitialization(FMLInitializationEvent ev) {
     }
     
     @EventHandler

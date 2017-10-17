@@ -17,7 +17,7 @@ import java.util.*;
  * @author BloodWorkXGaming
  */
 public class ModLoadedPreprocessor extends PreprocessorActionBase {
-    public static final String PREPROCESSOR_NAME = "modloaded";
+    private static final String PREPROCESSOR_NAME = "modloaded";
     
     private List<String> modNames = new ArrayList<>();
     

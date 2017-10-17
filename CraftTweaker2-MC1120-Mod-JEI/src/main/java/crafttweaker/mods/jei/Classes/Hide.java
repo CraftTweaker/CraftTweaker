@@ -2,17 +2,11 @@ package crafttweaker.mods.jei.Classes;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.world.GetCollisionBoxesEvent;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class Hide implements IAction {
     

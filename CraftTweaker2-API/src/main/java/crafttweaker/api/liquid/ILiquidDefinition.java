@@ -1,10 +1,7 @@
 package crafttweaker.api.liquid;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.*;
-
-import java.util.List;
 
 /**
  * Contains a liquid definition. Liquid definitions provide additional

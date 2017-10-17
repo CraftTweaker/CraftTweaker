@@ -8,11 +8,9 @@ import crafttweaker.zenscript.GlobalRegistry;
 import net.minecraftforge.fluids.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.natives.*;
-import stanhebben.zenscript.util.ZenPosition;
 
 import java.util.*;
 

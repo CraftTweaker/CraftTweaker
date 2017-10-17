@@ -2,7 +2,6 @@ package crafttweaker.runtime;
 
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.PreprocessorManager;
 import crafttweaker.util.IEventHandler;

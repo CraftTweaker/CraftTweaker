@@ -9,9 +9,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.nio.ByteBuffer;
-
-import static com.google.common.base.Charsets.UTF_8;
 
 /**
  * @author Stan

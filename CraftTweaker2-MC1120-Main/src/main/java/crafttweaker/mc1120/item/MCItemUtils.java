@@ -13,7 +13,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.*;
 import net.minecraft.util.*;
-import net.minecraftforge.fml.common.registry.*;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;

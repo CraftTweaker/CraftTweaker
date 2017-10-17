@@ -4,7 +4,6 @@ import crafttweaker.*;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.oredict.*;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;

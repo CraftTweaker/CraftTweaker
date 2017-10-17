@@ -113,8 +113,4 @@ public class IngredientAny implements IIngredient {
         return "<*>";
     }
     
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

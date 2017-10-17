@@ -275,7 +275,7 @@ public class CraftTweakerAPI {
      *
      * @return corresponding symbol
      */
-    public static IZenSymbol getJavaStaticFieldSymbol(Class<? extends Object> cls, String name) {
+    public static IZenSymbol getJavaStaticFieldSymbol(Class<?> cls, String name) {
         try {
             Field field = cls.getField(name);
             return new SymbolJavaStaticField(cls, field, GlobalRegistry.getTypes());

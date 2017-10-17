@@ -1,11 +1,8 @@
 package crafttweaker.mc1120.liquid;
 
 import crafttweaker.*;
-import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.liquid.*;
 import net.minecraftforge.fluids.*;
-
-import java.util.*;
 
 /**
  * @author Stan

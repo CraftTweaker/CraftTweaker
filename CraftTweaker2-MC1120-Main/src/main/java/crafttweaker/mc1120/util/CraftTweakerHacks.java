@@ -32,7 +32,7 @@ public class CraftTweakerHacks {
         Class<? extends WeightedRandom.Item> forgeSeedEntry = null;
         try {
             forgeSeedEntry = (Class<? extends WeightedRandom.Item>) Class.forName("net.minecraftforge.common.ForgeHooks$SeedEntry");
-        } catch(ClassNotFoundException ex) {
+        } catch(ClassNotFoundException ignored) {
         }
         
         SEEDENTRY_SEED = getField(forgeSeedEntry, "seed");

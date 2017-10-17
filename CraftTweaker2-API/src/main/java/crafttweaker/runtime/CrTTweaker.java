@@ -18,7 +18,7 @@ import static stanhebben.zenscript.ZenModule.*;
  * @author Stan Hebben
  */
 public class CrTTweaker implements ITweaker {
-    public static String defaultLoaderName = "crafttweaker";
+    private static String defaultLoaderName = "crafttweaker";
     private NetworkSide networkSide = NetworkSide.INVALID_SIDE;
     
     private static boolean DEBUG = false;

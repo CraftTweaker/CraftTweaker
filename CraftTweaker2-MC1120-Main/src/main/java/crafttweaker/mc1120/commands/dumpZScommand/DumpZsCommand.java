@@ -7,7 +7,6 @@ import joptsimple.internal.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
-import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.type.natives.*;
@@ -24,20 +23,20 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 
 public class DumpZsCommand extends CraftTweakerCommand {
     
-    public static final String HTML_HEADER = "<!DOCTYPE html>\n"
+    private static final String HTML_HEADER = "<!DOCTYPE html>\n"
             + "<head><link rel=\"stylesheet\" href=\"tree3.css\">" +
             " <title>CraftTweaker: ZenScript Language Dump</title>" +
             "</head>";
     
-    public static final String HTML_BODY_START = "<p>CraftTweaker ZenScript language, refer to <a href=\"http://crafttweaker.readthedocs.io/\" target=\"_blank\">this page</a> for more help.</p>";
+    private static final String HTML_BODY_START = "<p>CraftTweaker ZenScript language, refer to <a href=\"http://crafttweaker.readthedocs.io/\" target=\"_blank\">this page</a> for more help.</p>";
     
-    public static final String HTML_DIV_START = "<div class=\"css-treeview\"><ul>";
+    private static final String HTML_DIV_START = "<div class=\"css-treeview\"><ul>";
     
-    public static final String HTML_DIV_END = "</ul></div>";
+    private static final String HTML_DIV_END = "</ul></div>";
     
-    public static final String HTML_BODY_END = "<p>This File was created using the dumpzs command.</p>";
+    private static final String HTML_BODY_END = "<p>This File was created using the dumpzs command.</p>";
     
-    public static final Comparator<TreeNode<String>> STRING_TREE_COMPARATOR = (o1, o2) -> o1.data.compareToIgnoreCase(o2.data);
+    private static final Comparator<TreeNode<String>> STRING_TREE_COMPARATOR = (o1, o2) -> o1.data.compareToIgnoreCase(o2.data);
     
     public DumpZsCommand() {
         super("dumpzs");

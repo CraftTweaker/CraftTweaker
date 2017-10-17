@@ -1,10 +1,7 @@
 package crafttweaker.mc1120.actions;
 
 import crafttweaker.IAction;
-import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ActionOreDictAddItem implements IAction {

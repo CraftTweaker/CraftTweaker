@@ -27,13 +27,13 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
     
     public TreeNode(T data) {
         this.data = data;
-        this.children = new LinkedList<TreeNode<T>>();
-        this.elementsIndex = new LinkedList<TreeNode<T>>();
+        this.children = new LinkedList<>();
+        this.elementsIndex = new LinkedList<>();
         this.elementsIndex.add(this);
     }
     
     public TreeNode<T> addChild(T child) {
-        TreeNode<T> childNode = new TreeNode<T>(child);
+        TreeNode<T> childNode = new TreeNode<>(child);
         childNode.parent = this;
         this.children.add(childNode);
         this.registerChildForSearch(childNode);
@@ -70,8 +70,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
     
     @Override
     public Iterator<TreeNode<T>> iterator() {
-        TreeNodeIter<T> iter = new TreeNodeIter<T>(this);
-        return iter;
+        return new TreeNodeIter<>(this);
     }
     
 }

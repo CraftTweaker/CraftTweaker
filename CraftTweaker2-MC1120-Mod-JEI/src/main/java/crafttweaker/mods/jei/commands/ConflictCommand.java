@@ -463,14 +463,8 @@ public class ConflictCommand extends CraftTweakerCommand {
          */
         boolean compareItemStack(ItemStack stack1, ItemStack stack2) {
             boolean itemsAreSame = stack1.getItem() == stack2.getItem() && stack1.getMetadata() == stack2.getMetadata();
-            if(!itemsAreSame)
-                return false;
-            
-            if(stack1.hasTagCompound() || stack2.hasTagCompound()) {
-                return stack1.hasTagCompound() && stack2.hasTagCompound() && stack1.getTagCompound().equals(stack2.getTagCompound());
-            } else {
-                return true;
-            }
+            return itemsAreSame && (!stack1.hasTagCompound() && !stack2.hasTagCompound() || stack1.hasTagCompound() && stack2.hasTagCompound() && stack1.getTagCompound().equals(stack2.getTagCompound()));
+    
         }
         
         @Override

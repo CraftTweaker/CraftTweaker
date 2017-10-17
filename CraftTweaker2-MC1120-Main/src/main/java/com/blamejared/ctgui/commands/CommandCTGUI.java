@@ -1,6 +1,5 @@
 package com.blamejared.ctgui.commands;
 
-import com.blamejared.ctgui.MTRecipe;
 import com.blamejared.ctgui.api.GuiRegistry;
 import com.blamejared.ctgui.api.events.CTGUIEvent;
 import net.minecraft.command.*;
@@ -9,7 +8,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
-import scala.Char;
 
 import javax.annotation.Nullable;
 import java.util.*;
