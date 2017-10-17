@@ -65,7 +65,7 @@ public class MCFurnaceManager implements IFurnaceManager {
     
     @Override
     public int getFuel(IItemStack item) {
-        return GameRegistry.getFuelValue(getItemStack(item));
+        return ((ItemStack)item.getInternal()).getItem().getItemBurnTime(((ItemStack)item.getInternal()));
     }
     
     @Override

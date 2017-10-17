@@ -150,8 +150,8 @@ public class RecipeConverter {
         } else if(recipe instanceof ShapedOreRecipe) {
             ShapedOreRecipe shaped = (ShapedOreRecipe) recipe;
             
-            int width = ((ShapedOreRecipe) recipe).getWidth();
-            int height = ((ShapedOreRecipe) recipe).getHeight();
+            int width = ((ShapedOreRecipe) recipe).getRecipeWidth();
+            int height = ((ShapedOreRecipe) recipe).getRecipeHeight();
             
             IIngredient[][] recipeIngredients = new IIngredient[height][width];
             for(int i = 0; i < height; i++) {

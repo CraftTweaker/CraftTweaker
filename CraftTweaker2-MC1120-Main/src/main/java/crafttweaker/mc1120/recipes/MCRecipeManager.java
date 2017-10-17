@@ -274,8 +274,8 @@ public final class MCRecipeManager implements IRecipeManager {
                         }
                     } else if(recipe.getValue() instanceof ShapedOreRecipe) {
                         ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe.getValue();
-                        int recipeWidth = srecipe.getWidth();
-                        int recipeHeight = srecipe.getHeight();
+                        int recipeWidth = srecipe.getRecipeWidth();
+                        int recipeHeight = srecipe.getRecipeHeight();
                         if(ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
                             continue;
                         }
