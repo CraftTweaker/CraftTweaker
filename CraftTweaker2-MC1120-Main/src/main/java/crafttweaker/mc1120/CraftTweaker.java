@@ -138,6 +138,7 @@ public class CraftTweaker {
             LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
         } catch(Exception e) {
             e.printStackTrace();
+            CraftTweakerAPI.logError("Error while applying actions", e);
         }
         
     }
