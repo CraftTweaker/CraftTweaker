@@ -1,8 +1,6 @@
 package com.blamejared.ctgui.reference;
 
-import scala.actors.threadpool.Arrays;
-
-import java.util.List;
+import java.util.*;
 
 public class Reference {
     
@@ -14,6 +12,6 @@ public class Reference {
     public static final String GUI_NAME_CRAFTING = "craftingtable";
     public static final String GUI_NAME_FURNACE = "furnace";
     
-    public static final List<String> GUI_HANDLED = Arrays.asList(new String[]{GUI_NAME_CRAFTING, GUI_NAME_FURNACE});
+    public static final List<String> GUI_HANDLED = Arrays.asList(GUI_NAME_CRAFTING, GUI_NAME_FURNACE);
     
 }
