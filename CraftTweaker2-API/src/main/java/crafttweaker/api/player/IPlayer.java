@@ -3,6 +3,7 @@ package crafttweaker.api.player;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
@@ -12,7 +13,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.player.IPlayer")
 @ZenRegister
-public interface IPlayer {
+public interface IPlayer extends IEntityLivingBase {
     
     @ZenGetter("id")
     String getId();
@@ -65,31 +66,6 @@ public interface IPlayer {
     @ZenMethod
     void give(IItemStack stack);
     
-    /**
-     * Retrieves the x position of this entity.
-     *
-     * @return entity x position
-     */
-    @ZenGetter("x")
-    double getX();
-    
-    /**
-     * Retrieves the y position of this entity.
-     *
-     * @return entity y position
-     */
-    @ZenGetter("y")
-    double getY();
-    
-    /**
-     * Retrieves the z position of this entity.
-     *
-     * @return entity z position
-     */
-    @ZenGetter("z")
-    double getZ();
-    
-    
     // not an exposed method. risks abuse
     void openBrowser(String url);
     
@@ -102,4 +78,8 @@ public interface IPlayer {
     @ZenSetter("position")
     @ZenMethod
     void teleport(Position3f pos);
+    
+    int getScore();
+    
+    void addScore(int amount);
 }
