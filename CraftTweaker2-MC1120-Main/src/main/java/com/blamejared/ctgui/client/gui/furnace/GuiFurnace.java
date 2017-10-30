@@ -24,7 +24,7 @@ public class GuiFurnace extends GuiBase {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if(!container.getRecipeSlots().get(1).getHasStack()) {
+        if(!container.getRecipeSlots().get(0).getHasStack()) {
             add.enabled = false;
             remove.enabled = false;
         }
