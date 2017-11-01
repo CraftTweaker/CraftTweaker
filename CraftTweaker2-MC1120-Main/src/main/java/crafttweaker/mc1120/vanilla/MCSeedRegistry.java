@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.vanilla.ISeedRegistry;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.util.CraftTweakerHacks;
 import net.minecraft.util.WeightedRandom;
@@ -20,12 +21,12 @@ public class MCSeedRegistry implements ISeedRegistry {
     
     @Override
     public void addSeed(WeightedItemStack item) {
-        CraftTweakerAPI.apply(new ActionAddSeed(item));
+        CraftTweaker.LATE_ACTIONS.add(new ActionAddSeed(item));
     }
     
     @Override
     public void removeSeed(IIngredient pattern) {
-        CraftTweakerAPI.apply(new ActionRemoveSeed(pattern));
+        CraftTweaker.LATE_ACTIONS.add(new ActionRemoveSeed(pattern));
     }
     
     @Override
