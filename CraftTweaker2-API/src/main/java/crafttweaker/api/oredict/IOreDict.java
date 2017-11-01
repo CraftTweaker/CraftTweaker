@@ -12,7 +12,8 @@ import java.util.List;
 @ZenRegister
 public interface IOreDict {
     
-    @ZenMemberGetter
+	@ZenMethod
+	@ZenMemberGetter
     IOreDictEntry get(String name);
     
     @ZenGetter("entries")

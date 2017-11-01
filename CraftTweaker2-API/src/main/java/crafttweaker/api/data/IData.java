@@ -124,9 +124,11 @@ public interface IData {
     @ZenOperator(OperatorType.INDEXSET)
     void setAt(int i, IData value);
     
+    @ZenMethod
     @ZenMemberGetter
     IData memberGet(String name);
     
+    @ZenMethod
     @ZenMemberSetter
     void memberSet(String name, IData data);
     
