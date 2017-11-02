@@ -39,6 +39,7 @@ public class ExpressionMapIndexSet extends Expression {
         if(result) {
             map.compile(result, environment);
             index.compile(result, environment);
+            value.compile(result, environment);
             environment.getOutput().invokeInterface(internal(Map.class), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
         }
     }
