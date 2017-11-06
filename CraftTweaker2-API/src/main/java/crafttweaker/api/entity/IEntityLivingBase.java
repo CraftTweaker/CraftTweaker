@@ -16,7 +16,7 @@ public interface IEntityLivingBase extends IEntity {
     boolean canBreatheUnderwater();
 
     @ZenMethod
-    boolean isPotionAction(IPotion potion);
+    boolean isPotionActive(IPotion potion);
 
     @ZenMethod
     @ZenGetter("health")

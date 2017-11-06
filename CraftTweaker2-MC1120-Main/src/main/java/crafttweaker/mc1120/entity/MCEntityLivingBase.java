@@ -22,7 +22,7 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     }
 
     @Override
-    public boolean isPotionAction(IPotion potion) {
+    public boolean isPotionActive(IPotion potion) {
         return entityLivingBase.isPotionActive((Potion) potion.getInternal());
     }
 

@@ -85,4 +85,8 @@ public interface IPlayer extends IEntityLivingBase {
 
     @ZenMethod
     void addScore(int amount);
+
+    @ZenMethod
+    @ZenSetter("score")
+    void setScore(int amount);
 }
