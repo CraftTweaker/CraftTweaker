@@ -78,8 +78,11 @@ public interface IPlayer extends IEntityLivingBase {
     @ZenSetter("position")
     @ZenMethod
     void teleport(Position3f pos);
-    
+
+    @ZenMethod
+    @ZenGetter("score")
     int getScore();
-    
+
+    @ZenMethod
     void addScore(int amount);
 }

@@ -156,4 +156,34 @@ public interface IEntity {
     @ZenMethod
     @ZenGetter("immuneToFire")
     boolean isImmuneToFire();
+
+    /**
+     * @param seconds amount of air in seconds to add.
+     */
+    @ZenMethod
+    @ZenSetter("air")
+    void setAir(int seconds);
+
+    /**
+     * @return amount of air in seconds
+     */
+    @ZenMethod
+    @ZenGetter("air")
+    int getAir();
+
+    /**
+     * @return The Actual Entity, MUST EXTEND ENTITY.
+     */
+    Object getInternal();
+
+    /*
+     * TODO: Add Methods as Adding Objects from ContentTweaker
+     * IWorld getWorld();
+     *
+     * boolean isInsideOfMaterial(IBlockMaterial blockMaterial)
+     *
+     * boolean canTrample(IBlock block, IBlockPos pos, float fall);
+     *
+     * IBlockPos getBlockPos();
+     */
 }
