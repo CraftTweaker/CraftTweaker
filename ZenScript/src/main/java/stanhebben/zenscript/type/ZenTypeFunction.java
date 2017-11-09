@@ -50,8 +50,14 @@ public class ZenTypeFunction extends ZenType {
         
         StringBuilder nameBuilder = new StringBuilder();
         nameBuilder.append("function(");
+        boolean first = true;
         for(ZenType type : argumentTypes) {
-            nameBuilder.append(type.getName());
+            if(first) {
+                first = false;
+            } else {
+                nameBuilder.append(',');
+            }
+        	nameBuilder.append(type.getName());
         }
         nameBuilder.append(')');
         nameBuilder.append(returnType.getName());
