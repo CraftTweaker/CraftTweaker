@@ -147,7 +147,7 @@ public class ZenTypeIntRange extends ZenType {
     
     @Override
     public String getName() {
-        return "int..";
+        return "stanhebben.zenscript.value.IntRange";
     }
     
     @Override
