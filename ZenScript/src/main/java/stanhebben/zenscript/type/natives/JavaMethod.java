@@ -42,9 +42,11 @@ public class JavaMethod implements IJavaMethod {
             }
         }
         
+        /*
         if(method.isVarArgs()) {
             optional[parameterTypes.length - 1] = true;
         }
+        */
     }
     
     public static IJavaMethod get(ITypeRegistry types, Class cls, String name, Class... parameterTypes) {
@@ -143,7 +145,7 @@ public class JavaMethod implements IJavaMethod {
         
         int doUntil = parameterTypes.length;
         if(method.isVarargs()) {
-            doUntil = arguments.length - 1;
+            doUntil = parameterTypes.length - 1;
             ZenType paramType = parameterTypes[parameterTypes.length - 1];
             ZenType baseType = ((ZenTypeArray) paramType).getBaseType();
             
@@ -165,7 +167,7 @@ public class JavaMethod implements IJavaMethod {
                 for(int i = 0; i < values.length; i++) {
                     values[i] = arguments[offset + i].cast(position, environment, baseType);
                 }
-                result[arguments.length - 1] = new ExpressionArray(position, (ZenTypeArrayBasic) paramType, values);
+                result[offset] = new ExpressionArray(position, (ZenTypeArrayBasic) paramType, values);
             }
         }
         
@@ -253,7 +255,7 @@ public class JavaMethod implements IJavaMethod {
             
             int checkUntil = parameterTypes.length;
             if(method.isVarArgs()) {
-                checkUntil--;
+                //checkUntil--;
             }
             for(int i = arguments.length; i < checkUntil; i++) {
                 if(!optional[i]) {
@@ -263,6 +265,7 @@ public class JavaMethod implements IJavaMethod {
         }
         
         int checkUntil = arguments.length;
+        if (method.isVarArgs()) checkUntil = parameterTypes.length - 1;
         if(arguments.length == parameterTypes.length && method.isVarArgs()) {
             ZenType arrayType = parameterTypes[method.getParameterTypes().length - 1];
             ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();
