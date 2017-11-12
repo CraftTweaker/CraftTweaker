@@ -350,6 +350,6 @@ public abstract class ZenType {
     
     @Override
     public boolean equals(Object other) {
-        return other instanceof ZenType && getName().equals(((ZenType) other).getName());
+        return other instanceof ZenType && (getName().equals(((ZenType) other).getName()) || toJavaClass().equals(((ZenType) other).toJavaClass()));
     }
 }
