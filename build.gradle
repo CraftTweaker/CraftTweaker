@@ -119,7 +119,16 @@ configurations {
     deployerJars
 }
 
+def CrtBuildGroup = "CraftTweaker Build"
+def CrtSetupGroup = "CraftTweaker Setup"
+setupDecompWorkspaceAll.group = CrtSetupGroup
+setupCIWorkspaceAll.group = CrtSetupGroup
 
+assembleAll.group = CrtBuildGroup
+
+assembleMC1120.group = CrtBuildGroup
+assembleDevBase1120.group = CrtBuildGroup
+assembleDevFull1120.group = CrtBuildGroup
 
 
 
