@@ -8,6 +8,7 @@ import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.value.IAny;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -31,6 +32,7 @@ public class GlobalRegistry {
         registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
         registerGlobal("totalActions", getStaticFunction(GlobalFunctions.class, "totalActions"));
         registerGlobal("enableDebug", getStaticFunction(GlobalFunctions.class, "enableDebug"));
+        registerGlobal("isNull", getStaticFunction(GlobalFunctions.class, "isNull", Object.class));
         registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
         registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
     }
