@@ -251,6 +251,7 @@ public interface IItemStack extends IIngredient {
      * @return block, or null if this item is not a block
      */
     @ZenCaster
+    @ZenMethod
     IBlock asBlock();
     
     /**

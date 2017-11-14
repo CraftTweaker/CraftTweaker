@@ -2,6 +2,7 @@ package stanhebben.zenscript.util;
 
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
 
 import java.lang.annotation.Annotation;
@@ -84,9 +85,12 @@ public class StringUtil {
                             Annotation an = m.getMethod().getParameterAnnotations()[i][i1];
                             message.append("\u00a7a").append(an.annotationType().getSimpleName()).append(" ");
                         }
-                        message.append("\u00a7r").append(type.getClass().getSimpleName()).append(", ");
+                        message.append("\u00a7r").append(type.toString()).append(", ");
                     }
-                    message.deleteCharAt(message.lastIndexOf(", "));
+                    
+                    //Removes last ', ' and closes the bracket
+                    message.deleteCharAt(message.length()-1);
+                    message.deleteCharAt(message.length()-1);
                     message.append(")");
                 }
             });

@@ -47,27 +47,35 @@ public interface IData {
     IData not();
     
     @ZenCaster
+    @ZenMethod
     boolean asBool();
     
     @ZenCaster
+    @ZenMethod
     byte asByte();
     
     @ZenCaster
+    @ZenMethod
     short asShort();
     
     @ZenCaster
+    @ZenMethod
     int asInt();
     
     @ZenCaster
+    @ZenMethod
     long asLong();
     
     @ZenCaster
+    @ZenMethod
     float asFloat();
     
     @ZenCaster
+    @ZenMethod
     double asDouble();
     
     @ZenCaster
+    @ZenMethod
     String asString();
     
     /**
@@ -77,6 +85,7 @@ public interface IData {
      * @return list data of this value, if any
      */
     @ZenCaster
+    @ZenMethod
     List<IData> asList();
     
     /**
@@ -86,6 +95,7 @@ public interface IData {
      * @return map data of this value, if any
      */
     @ZenCaster
+    @ZenMethod
     Map<String, IData> asMap();
     
     /**
@@ -95,6 +105,7 @@ public interface IData {
      * @return byte array data of this value, if any
      */
     @ZenCaster
+    @ZenMethod
     byte[] asByteArray();
     
     /**
@@ -104,6 +115,7 @@ public interface IData {
      * @return int array data of this value, if any
      */
     @ZenCaster
+    @ZenMethod
     int[] asIntArray();
     
     @ZenOperator(OperatorType.INDEXGET)
@@ -112,9 +124,11 @@ public interface IData {
     @ZenOperator(OperatorType.INDEXSET)
     void setAt(int i, IData value);
     
+    @ZenMethod
     @ZenMemberGetter
     IData memberGet(String name);
     
+    @ZenMethod
     @ZenMemberSetter
     void memberSet(String name, IData data);
     

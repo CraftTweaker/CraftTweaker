@@ -364,6 +364,14 @@ public class MethodOutput {
         visitor.visitInsn(IXOR);
     }
     
+    public void iXorVs1() {
+    	if(debug)
+            System.out.println("iXor against '1'");
+        
+        visitor.visitInsn(ICONST_1);
+        visitor.visitInsn(IXOR);   
+    }
+    
     public void iShr() {
         if(debug)
             System.out.println("iShr");
