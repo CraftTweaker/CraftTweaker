@@ -190,4 +190,9 @@ public class MCLiquidStack implements ILiquidStack {
     public boolean hasTransformers() {
         return false;
     }
+    
+    @Override
+    public String toString() {
+    	return "<liquid:" + getName() + ">";
+    }
 }
