@@ -1,4 +1,4 @@
-package crafttweaker.mods.jei.classes;
+package crafttweaker.mods.jei.actions;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 
@@ -9,11 +9,11 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import net.minecraft.item.ItemStack;
 
-public class AddItem implements IAction{
+public class AddItemAction implements IAction{
 
 	private final IItemStack stack;
 	
-	public AddItem(IItemStack stack){
+	public AddItemAction(IItemStack stack){
 		this.stack = stack;
 	}
 	

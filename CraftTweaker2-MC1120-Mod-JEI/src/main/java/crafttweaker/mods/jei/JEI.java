@@ -6,7 +6,7 @@ import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
-import crafttweaker.mods.jei.classes.*;
+import crafttweaker.mods.jei.actions.*;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
 
@@ -35,7 +35,7 @@ public class JEI {
 
     @ZenMethod
     public static void hide(IItemStack stack) {
-        LATE_ACTIONS.add(new Hide(stack));
+        LATE_ACTIONS.add(new HideAction(stack));
     }
 
 
@@ -43,38 +43,38 @@ public class JEI {
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
         recipesToRemove.add(new MCRecipeManager.ActionRemoveRecipesNoIngredients(output, nbtMatch));
         for (IItemStack stack : output.getItems()) {
-            LATE_ACTIONS.add(new Hide(stack));
+            LATE_ACTIONS.add(new HideAction(stack));
         }
 
     }
 
     @ZenMethod
     public static void addDescription(IItemStack stack, String... description) {
-        DESCRIPTIONS.add(new Describe(Collections.singletonList(stack), description, stack.toString()));
+        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack), description, stack.toString()));
     }
 
 
     @ZenMethod
     public static void addDescription(IItemStack[] stack, String... description) {
-        DESCRIPTIONS.add(new Describe(Arrays.asList(stack), description, "IItemStack[]"));
+        DESCRIPTIONS.add(new DescribeAction(Arrays.asList(stack), description, "IItemStack[]"));
     }
 
 
     @ZenMethod
     public static void addDescription(IOreDictEntry dict, String... description) {
-        DESCRIPTIONS.add(new Describe(dict.getItems(), description, dict.toString()));
+        DESCRIPTIONS.add(new DescribeAction(dict.getItems(), description, dict.toString()));
     }
 
 
     @ZenMethod
     public static void addDescription(ILiquidStack stack, String... description) {
-        DESCRIPTIONS.add(new Describe(Collections.singletonList(stack), description, stack.toString()));
+        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack), description, stack.toString()));
     }
 
 
     @ZenMethod
     public static void addItem(IItemStack stack) {
-        LATE_ACTIONS.add(new AddItem(stack));
+        LATE_ACTIONS.add(new AddItemAction(stack));
     }
 
 }

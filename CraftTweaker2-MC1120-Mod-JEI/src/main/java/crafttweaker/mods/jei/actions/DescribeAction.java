@@ -1,4 +1,4 @@
-package crafttweaker.mods.jei.classes;
+package crafttweaker.mods.jei.actions;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,13 +10,13 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 
-public class Describe implements IAction {
+public class DescribeAction implements IAction {
 	private final List<Object> stack;
 	private final String[] description;
 	private final String name;
 	
 	@Deprecated
-	public Describe(IItemStack stack, String[] description) {
+	public DescribeAction(IItemStack stack, String[] description) {
 		this(Collections.singletonList(stack), description, stack.toString());
 	}
 	/**
@@ -30,7 +30,7 @@ public class Describe implements IAction {
 	 * @param description The Description: one or more lines per item, auto wrap if lines are too long
 	 * @param name Solely for the User output, should be a representation of stack 
 	 */
-	public Describe(List<? extends IIngredient> stack, String[] description, String name) {
+	public DescribeAction(List<? extends IIngredient> stack, String[] description, String name) {
 		this.stack = stack.stream().map(item -> item.getInternal()).collect(Collectors.toList());
 		this.description = description;
 		this.name = name;
