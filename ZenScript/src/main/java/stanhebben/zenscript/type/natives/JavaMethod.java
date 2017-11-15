@@ -41,12 +41,6 @@ public class JavaMethod implements IJavaMethod {
                 }
             }
         }
-        
-        /*
-        if(method.isVarArgs()) {
-            optional[parameterTypes.length - 1] = true;
-        }
-        */
     }
     
     public static IJavaMethod get(ITypeRegistry types, Class cls, String name, Class... parameterTypes) {
@@ -254,9 +248,6 @@ public class JavaMethod implements IJavaMethod {
             result = PRIORITY_MEDIUM;
             
             int checkUntil = parameterTypes.length;
-            if(method.isVarArgs()) {
-                //checkUntil--;
-            }
             for(int i = arguments.length; i < checkUntil; i++) {
                 if(!optional[i]) {
                     return PRIORITY_INVALID;
