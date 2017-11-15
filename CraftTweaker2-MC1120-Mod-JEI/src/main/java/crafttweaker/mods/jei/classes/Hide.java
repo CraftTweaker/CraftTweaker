@@ -1,4 +1,4 @@
-package crafttweaker.mods.jei.Classes;
+package crafttweaker.mods.jei.classes;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 
