@@ -283,7 +283,14 @@ public final class MCRecipeManager implements IRecipeManager {
                             IIngredient[] row = ingredients[j];
                             for(int k = 0; k < ingredientsWidth; k++) {
                                 IIngredient ingredient = k > row.length ? null : row[k];
-                                Object input = srecipe.getIngredients().get(j * recipeWidth + k).getMatchingStacks()[0];
+                                Object input;
+                                Ingredient ing = srecipe.getIngredients().get(j * recipeWidth + k);
+                                if(ing == Ingredient.EMPTY || ing.test(ItemStack.EMPTY) || ing.getMatchingStacks().length > 0) {
+                                    input = ItemStack.EMPTY;
+                                } else {
+                                    input = ing.getMatchingStacks()[0];
+                                }
+                                
                                 if(!matches(input, ingredient)) {
                                     continue outer;
                                 }

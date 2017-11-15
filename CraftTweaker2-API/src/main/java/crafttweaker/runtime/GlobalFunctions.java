@@ -27,4 +27,10 @@ public class GlobalFunctions {
     }
     
     
+    public static boolean isNull(Object any){
+        return any == null;
+    }
+    
+    
+    
 }
