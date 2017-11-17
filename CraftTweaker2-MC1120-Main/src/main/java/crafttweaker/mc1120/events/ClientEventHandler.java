@@ -7,6 +7,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.tooltip.IngredientTooltips;
 import crafttweaker.mc1120.formatting.IMCFormattedString;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.*;
 import net.minecraft.client.util.RecipeBookClient;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -27,10 +28,7 @@ public class ClientEventHandler {
             for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
                 ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
             }
-            if(!Keyboard.isCreated()) {
-                return;
-            }
-            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+            if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak)) {
                 for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
                     ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
                 }
