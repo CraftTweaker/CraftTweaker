@@ -12,19 +12,19 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenRegister
 @ZenClass("crafttweaker.mods.IMod")
 public interface IMod {
-    
+
     @ZenGetter("id")
     String getId();
-    
+
     @ZenGetter("name")
     String getName();
-    
+
     @ZenGetter("version")
     String getVersion();
-    
+
     @ZenGetter("decription")
     String getDescription();
-    
+
     @ZenGetter("items")
     IItemStack[] getItems();
 }
