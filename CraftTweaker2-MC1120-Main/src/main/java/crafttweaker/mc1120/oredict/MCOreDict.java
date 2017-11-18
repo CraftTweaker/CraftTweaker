@@ -28,4 +28,22 @@ public class MCOreDict implements IOreDict {
         }
         return entries;
     }
+
+	@Override
+	public boolean contains(String name) {
+		for (String id : OreDictionary.getOreNames()) {
+			if (id == name) 
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Iterator<IOreDictEntry> iterator() {
+		return Arrays.asList(OreDictionary.getOreNames())
+				.stream()
+				.map(CraftTweakerMC::getOreDict)
+				.iterator();
+		
+	}
 }
