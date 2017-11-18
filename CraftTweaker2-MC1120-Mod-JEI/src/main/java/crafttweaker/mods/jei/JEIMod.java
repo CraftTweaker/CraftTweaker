@@ -50,6 +50,11 @@ public class JEIMod {
     }
 
     public static void onRegistered() {
-        DESCRIPTIONS.forEach(CraftTweakerAPI::apply);
+        try {
+        	DESCRIPTIONS.forEach(CraftTweakerAPI::apply);
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+    	
     }
 }
