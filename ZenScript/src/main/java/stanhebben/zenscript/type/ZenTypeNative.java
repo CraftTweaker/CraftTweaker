@@ -282,7 +282,7 @@ public class ZenTypeNative extends ZenType {
         return cls;
     }
     
-    public void complete(IEnvironmentGlobal environment) {
+    public void completeIterators(IEnvironmentGlobal environment) {
         if(iteratorAnnotation instanceof IterableSimple) {
             IterableSimple annotation = (IterableSimple) iteratorAnnotation;
             iteratorValueType = ZenType.parse(annotation.value(), environment);
@@ -380,7 +380,8 @@ public class ZenTypeNative extends ZenType {
     
     @Override
     public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
-        switch(iteratorType) {
+        completeIterators(methodOutput);
+    	switch(iteratorType) {
             case ITERATOR_NONE:
                 break;
             case ITERATOR_ITERABLE:
