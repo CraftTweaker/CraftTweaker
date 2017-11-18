@@ -110,6 +110,7 @@ public class CrTTweaker implements ITweaker {
                     
                     ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
+                    ZenModule.globals.putAll(zenParsedFile.getGlobals());
                     
                 } catch(IOException ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Could not load script " + scriptFile + ": " + ex.getMessage());

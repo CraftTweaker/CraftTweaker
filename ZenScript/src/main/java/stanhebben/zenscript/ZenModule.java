@@ -30,6 +30,9 @@ public class ZenModule {
     private final MyClassLoader classLoader;
     
     
+    public static final Map<String, ParsedGlobalValue> globals = new HashMap<>();
+    
+    
     /**
      * Constructs a module for the given set of classes. Mostly intended for
      * internal use.
@@ -57,13 +60,22 @@ public class ZenModule {
         clsMain.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[]{internal(Runnable.class)});
         MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
         mainRun.start();
+       
+        
         
         for(ZenParsedFile script : scripts) {
+        	
             for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
                 ParsedFunction fn = function.getValue();
                 environmentGlobal.putValue(function.getKey(), new SymbolZenStaticMethod(script.getClassName(), fn.getName(), fn.getSignature(), fn.getArgumentTypes(), fn.getReturnType()), fn.getPosition());
             }
+            for(Map.Entry<String, ParsedGlobalValue> entry : globals.entrySet()) {
+            	if (debug) System.out.println(String.format("Adding %s to file %s", entry.getKey(), script.getFileName()));
+            	ParsedGlobalValue value = entry.getValue();
+            	environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(value), value.getPosition());
+            }
         }
+        
         
         for(ZenParsedFile script : scripts) {
             ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
