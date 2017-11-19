@@ -7,6 +7,7 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mods.jei.actions.*;
+import net.minecraftforge.fluids.Fluid;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
 
@@ -68,6 +69,9 @@ public class JEI {
 
     @ZenMethod
     public static void addDescription(ILiquidStack stack, String... description) {
+    	if(stack.getAmount() == 1) {
+    		stack = stack.withAmount(Fluid.BUCKET_VOLUME);
+    	}
         DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack), description, stack.toString()));
     }
 
