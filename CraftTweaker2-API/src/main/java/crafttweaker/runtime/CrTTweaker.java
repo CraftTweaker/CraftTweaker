@@ -7,7 +7,9 @@ import crafttweaker.util.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.definitions.ParsedGlobalValue;
 import stanhebben.zenscript.parser.ParseException;
+import stanhebben.zenscript.symbols.SymbolGlobalValue;
 
 import java.io.*;
 import java.util.*;
@@ -73,6 +75,9 @@ public class CrTTweaker implements ITweaker {
         
         scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
         
+        Map<String, byte[]> classes = new HashMap<>();
+        IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
+        
         // ZS magic
         for(ScriptFile scriptFile : scriptFiles) {
             if (!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
@@ -89,9 +94,6 @@ public class CrTTweaker implements ITweaker {
                 executed.add(scriptFile.getEffectiveName());
                 
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
-                
-                Map<String, byte[]> classes = new HashMap<>();
-                IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
                 
                 ZenParsedFile zenParsedFile = null;
                 String filename = scriptFile.getEffectiveName();
@@ -110,7 +112,6 @@ public class CrTTweaker implements ITweaker {
                     
                     ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-                    ZenModule.globals.putAll(zenParsedFile.getGlobals());
                     
                 } catch(IOException ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Could not load script " + scriptFile + ": " + ex.getMessage());

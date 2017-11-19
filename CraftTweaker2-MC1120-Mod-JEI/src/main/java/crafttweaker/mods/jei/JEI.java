@@ -69,10 +69,7 @@ public class JEI {
 
     @ZenMethod
     public static void addDescription(ILiquidStack stack, String... description) {
-    	if(stack.getAmount() == 1) {
-    		stack = stack.withAmount(Fluid.BUCKET_VOLUME);
-    	}
-        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack), description, stack.toString()));
+        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack.withAmount(Fluid.BUCKET_VOLUME)), description, stack.toString()));
     }
 
 
