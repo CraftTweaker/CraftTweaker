@@ -35,6 +35,7 @@ public class GlobalRegistry {
         registerGlobal("isNull", getStaticFunction(GlobalFunctions.class, "isNull", Object.class));
         registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
         registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
+        registerGlobal("pow", getStaticFunction(Math.class, "pow", double.class, double.class));
     }
     
     private GlobalRegistry() {
