@@ -31,11 +31,7 @@ public class MCOreDict implements IOreDict {
 
     @Override
     public boolean contains(String name) {
-        for (String id : OreDictionary.getOreNames()) {
-            if (id == name)
-                return true;
-        }
-        return false;
+    	return OreDictionary.doesOreNameExist(name);
     }
 
     @Override
