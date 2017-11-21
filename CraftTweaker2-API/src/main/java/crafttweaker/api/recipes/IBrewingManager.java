@@ -13,7 +13,14 @@ public interface IBrewingManager {
 	
 	@ZenMethod
 	void addBrew(IItemStack input, IOreDictEntry ingredient, IItemStack output, @Optional boolean useInputNBT);
+	
+	@ZenMethod
+	void addBrew(IItemStack input, IIngredient ingredient, IItemStack output, @Optional boolean useInputNBT);
 
 	@ZenMethod
-	void addMultiBrew(IIngredient input, IIngredient ingredient, IItemStack output);
+	void addBrew(IItemStack input, IItemStack[] ingredients, IItemStack output, @Optional boolean useInputNBT);
+	
+	@ZenMethod
+	void addHiddenBrew(IIngredient input, IIngredient ingredient, IItemStack output);
+
 }

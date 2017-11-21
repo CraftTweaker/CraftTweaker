@@ -15,11 +15,9 @@ public class MultiBrewingRecipe implements IBrewingRecipe {
 	private final ItemStack output;
 
 	public MultiBrewingRecipe(IIngredient input, IIngredient ingredient, IItemStack output) {
-		
 		this.input = input;
 		this.ingredient = ingredient;
 		this.output = CraftTweakerMC.getItemStack(output);
-		
 	}
 
 	@Override
