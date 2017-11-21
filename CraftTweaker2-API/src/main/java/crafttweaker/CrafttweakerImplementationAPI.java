@@ -66,8 +66,9 @@ public class CrafttweakerImplementationAPI {
      * @param formatter formatter interface
      * @param vanilla   vanilla interface
      * @param itemUtils itemUtils interface
+     * @param brewing 	brewing interface
      */
-    public static void init(IOreDict oreDict, IRecipeManager recipes, IFurnaceManager furnace, IGame game, ILoadedMods mods, IFormatter formatter, IVanilla vanilla, IItemUtils itemUtils) {
+    public static void init(IOreDict oreDict, IRecipeManager recipes, IFurnaceManager furnace, IGame game, ILoadedMods mods, IFormatter formatter, IVanilla vanilla, IItemUtils itemUtils, IBrewingManager brewing) {
         CraftTweakerAPI.oreDict = oreDict;
         CraftTweakerAPI.recipes = recipes;
         CraftTweakerAPI.furnace = furnace;
@@ -76,6 +77,7 @@ public class CrafttweakerImplementationAPI {
         CraftTweakerAPI.format = formatter;
         CraftTweakerAPI.vanilla = vanilla;
         CraftTweakerAPI.itemUtils = itemUtils;
+        CraftTweakerAPI.brewingManager = brewing;
     }
     
     /**

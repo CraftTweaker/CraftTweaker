@@ -86,6 +86,10 @@ public class CraftTweakerAPI {
      * Access point to the ItemUtils for performing various useful actions on items.
      */
     public static IItemUtils itemUtils = null;
+    /**
+     * Access point to the brewing handler
+     */
+    public static IBrewingManager brewingManager = null;
     
     
     static {
@@ -101,6 +105,7 @@ public class CraftTweakerAPI {
         registerGlobalSymbol("format", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "format"));
         registerGlobalSymbol("vanilla", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "vanilla"));
         registerGlobalSymbol("itemUtils", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "itemUtils"));
+        registerGlobalSymbol("brewing", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "brewingManager"));
     }
     
     private CraftTweakerAPI() {

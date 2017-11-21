@@ -5,6 +5,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.mc1120.brackets.*;
+import crafttweaker.mc1120.brewing.MCBrewing;
 import crafttweaker.mc1120.client.MCClient;
 import crafttweaker.mc1120.commands.CTChatCommand;
 import crafttweaker.mc1120.formatting.MCFormatter;
@@ -73,7 +74,7 @@ public class CraftTweaker {
     
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
-        CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCItemUtils());
+        CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCItemUtils(), new MCBrewing());
         CrafttweakerImplementationAPI.logger.addLogger(new MCLogger(new File("crafttweaker.log")));
         CrafttweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
         
