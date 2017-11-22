@@ -2,6 +2,7 @@ package crafttweaker.api.entity;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.damage.IDamageSource;
+import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.potions.IPotion;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -52,6 +53,9 @@ public interface IEntityLivingBase extends IEntity {
     @ZenMethod
     @ZenGetter("offHandHeldItem")
     IItemStack getHeldItemOffHand();
+
+    @ZenMethod
+    IEntityAttributeInstance getAttribute(String name);
 
     /* TODO: When Adding New Objects from ContentTweaker
      * void addPotion(IPotion potion);

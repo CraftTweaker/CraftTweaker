@@ -2,8 +2,10 @@ package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.potions.IPotion;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
@@ -74,5 +76,10 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     @Override
     public IItemStack getHeldItemOffHand() {
         return new MCItemStack(entityLivingBase.getHeldItemOffhand());
+    }
+
+    @Override
+    public IEntityAttributeInstance getAttribute(String name) {
+        return new MCEntityAttributeInstance(entityLivingBase.getAttributeMap().getAttributeInstanceByName(name));
     }
 }
