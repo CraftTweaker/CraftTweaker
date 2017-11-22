@@ -17,8 +17,8 @@ public class MCBrewing implements IBrewingManager{
 	}
 
 	@Override
-	public void addHiddenBrew(IIngredient input, IIngredient ingredient, IItemStack output) {
-		CraftTweakerAPI.apply(new ActionAddBrewingRecipe(input, ingredient, output));		
+	public void addMultiBrew(IIngredient input, IIngredient ingredient, IItemStack output, boolean hidden) {
+		CraftTweakerAPI.apply(new ActionAddBrewingRecipe(input, ingredient, output, hidden));		
 	}
 	
 	@Override
@@ -48,10 +48,12 @@ public class MCBrewing implements IBrewingManager{
 		private final IBrewingRecipe recipe;
 		private final String type;
 		private final String outName;
+		private final boolean valid;
 		
 		public ActionAddBrewingRecipe(IItemStack input, IItemStack ingredient, IItemStack output, boolean useInputNBT) {
 			this.type = "Item"; 
 			this.outName = output.toString();
+			this.valid = true;
 			if (useInputNBT) {
 				this.recipe = new NBTBrewingRecipeSingle(CraftTweakerMC.getItemStack(input), CraftTweakerMC.getItemStack(ingredient), CraftTweakerMC.getItemStack(output));
 			} else {
@@ -60,6 +62,7 @@ public class MCBrewing implements IBrewingManager{
 		}
 		
 		public ActionAddBrewingRecipe(IItemStack input, IOreDictEntry ingredient, IItemStack output, boolean useInputNBT) {
+			this.valid = true;
 			this.outName = output.toString();
 			this.type = "OreDict";
 			this.recipe = new NBTBrewingRecipeOre(input, ingredient.getName(), output, useInputNBT);
@@ -69,24 +72,31 @@ public class MCBrewing implements IBrewingManager{
 			this.outName = output.toString();
 			this.type = "Ingredients";
 			this.recipe = new NBTBrewingRecipeOre(input, ingredient, output, useInputNBT);
+			this.valid = true;
 		}
 		
 		public ActionAddBrewingRecipe(IItemStack input, IItemStack[] ingredient, IItemStack output, boolean useInputNBT) {
 			this.outName = output.toString();
 			this.type = "IItemStack[]";
 			this.recipe = new NBTBrewingRecipeOre(input, Arrays.asList(ingredient), output, useInputNBT);
+			this.valid = true;
 		}
 		
-		public ActionAddBrewingRecipe(IIngredient input, IIngredient ingredient, IItemStack output) {
+		public ActionAddBrewingRecipe(IIngredient input, IIngredient ingredient, IItemStack output, boolean hidden) {
 			this.outName = output.toString();
 			this.type = "Multi-Inputs";
-			this.recipe = new MultiBrewingRecipe(input, ingredient, output);
+			this.recipe = new MultiBrewingRecipe(input, ingredient, output, !hidden);
+			this.valid = ((MultiBrewingRecipe)recipe).isValid();
 		}
 
 		
 		
 		@Override
 		public void apply() {
+			if(!valid) {
+				CraftTweakerAPI.logError(String.format("Brewing recipe of type %s for %s is invalid", type, outName));
+				return;
+			}
 			BrewingRecipeRegistry.addRecipe(recipe);
 		}
 

@@ -21,6 +21,6 @@ public interface IBrewingManager {
 	void addBrew(IItemStack input, IItemStack[] ingredients, IItemStack output, @Optional boolean useInputNBT);
 	
 	@ZenMethod
-	void addHiddenBrew(IIngredient input, IIngredient ingredient, IItemStack output);
+	void addMultiBrew(IIngredient input, IIngredient ingredient, IItemStack output, @Optional boolean hidden);
 
 }

@@ -13,11 +13,13 @@ public class MultiBrewingRecipe implements IBrewingRecipe {
 	
 	private final IIngredient input, ingredient;
 	private final ItemStack output;
+	private final boolean visible;
 
-	public MultiBrewingRecipe(IIngredient input, IIngredient ingredient, IItemStack output) {
+	public MultiBrewingRecipe(IIngredient input, IIngredient ingredient, IItemStack output, boolean visible) {
 		this.input = input;
 		this.ingredient = ingredient;
 		this.output = CraftTweakerMC.getItemStack(output);
+		this.visible = visible;
 	}
 
 	@Override
@@ -51,6 +53,14 @@ public class MultiBrewingRecipe implements IBrewingRecipe {
 		System.out.println("Brewing recipe for " + output.getDisplayName());
 		System.out.println("\t\tAccepts input: " + input.toString());
 		System.out.println("\t\tAccepts ingredient: " + ingredient.toString());
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public boolean isValid() {
+		return !input.getItems().isEmpty() && !ingredient.getItems().isEmpty() && output != ItemStack.EMPTY;
 	}
 
 }
