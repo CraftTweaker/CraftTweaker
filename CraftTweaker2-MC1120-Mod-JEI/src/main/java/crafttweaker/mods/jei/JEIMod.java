@@ -1,22 +1,15 @@
 package crafttweaker.mods.jei;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.mc1120.brewing.MultiBrewingRecipe;
 import crafttweaker.mc1120.commands.*;
-import crafttweaker.mods.jei.actions.BrewingRecipeCWrapper;
 import crafttweaker.mods.jei.commands.ConflictCommand;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import crafttweaker.mods.jei.recipeWrappers.BrewingRecipeCWrapper;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
 
 import static crafttweaker.mods.jei.JEI.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.getClickableCommandText;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.getNormalMessage;
@@ -64,17 +57,6 @@ public class JEIMod {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JEIAddonPlugin.modRegistry.addRecipes(createBrewingRecipes(), VanillaRecipeCategoryUid.BREWING);
-    }
-    
-    
-    public static List<IRecipeWrapper> createBrewingRecipes() {
-    	return BrewingRecipeRegistry.getRecipes()
-    					.stream()
-    					.filter(MultiBrewingRecipe.class::isInstance)
-    					.map(MultiBrewingRecipe.class::cast)
-    					.filter(MultiBrewingRecipe::isVisible)
-    					.map(BrewingRecipeCWrapper::new)
-    					.collect(Collectors.toList());
+        BrewingRecipeCWrapper.registerBrewingRecipe();
     }
 }
