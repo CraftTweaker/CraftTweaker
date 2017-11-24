@@ -7,31 +7,32 @@ public class MCEntityAttribute implements IEntityAttribute {
     private IAttribute attribute;
 
     public MCEntityAttribute(IAttribute attribute) {
+        this.attribute = attribute;
     }
 
     @Override
     public String getName() {
-        return null;
+        return attribute.getName();
     }
 
     @Override
     public double clampValue(double value) {
-        return 0;
+        return attribute.clampValue(value);
     }
 
     @Override
     public double getDefaultValue() {
-        return 0;
+        return attribute.getDefaultValue();
     }
 
     @Override
     public boolean getShouldWatch() {
-        return false;
+        return attribute.getShouldWatch();
     }
 
     @Override
     public IEntityAttribute getParent() {
-        return null;
+        return new MCEntityAttribute(attribute.getParent());
     }
 
     @Override
