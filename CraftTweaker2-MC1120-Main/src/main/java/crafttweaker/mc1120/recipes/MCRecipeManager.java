@@ -38,7 +38,7 @@ public final class MCRecipeManager implements IRecipeManager {
     private static TIntSet usedHashes = new TIntHashSet();
     private static HashSet<String> usedRecipeNames = new HashSet<>();
     
-    private static List<ICraftingRecipe> transformerRecipes;
+    public static List<ICraftingRecipe> transformerRecipes;
     
     public MCRecipeManager() {
         transformerRecipes = new ArrayList<>();
