@@ -9,7 +9,6 @@ import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
-import javafx.util.Pair;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -21,6 +20,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
+import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
@@ -433,7 +433,7 @@ public final class MCRecipeManager implements IRecipeManager {
         private final List<Pair<IIngredient, Boolean>> outputs = new ArrayList<>();
 
         public void addOutput(IIngredient output, @Optional boolean nbtMatch) {
-            outputs.add(new Pair<>(output, nbtMatch));
+            outputs.add(Pair.of(output, nbtMatch));
         }
         
         @Override
