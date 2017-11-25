@@ -1,13 +1,24 @@
 package crafttweaker.mc1120.brewing;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.recipes.IBrewingManager;
+import crafttweaker.mc1120.util.CraftTweakerHacks;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
 
 public class MCBrewing implements IBrewingManager{	
+	private static List<Tuple<IItemStack, IItemStack>> removedRecipes = new ArrayList<>();
+	
 	public MCBrewing() {
 	}
 
@@ -21,6 +32,10 @@ public class MCBrewing implements IBrewingManager{
 		CraftTweakerAPI.apply(new ActionAddBrewingRecipe(input, ingredients, output, hidden));
 	}
 	
+	@Override
+	public void removeRecipe(IItemStack input, IItemStack ingredient) {
+		removedRecipes.add(new Tuple<IItemStack, IItemStack>(input, ingredient));
+	}
 	
 	
 	private class ActionAddBrewingRecipe implements IAction{
@@ -49,5 +64,17 @@ public class MCBrewing implements IBrewingManager{
 		public String describe() {
 			return "Adding brewing recipe for " + outName + ", Registry size now: " + BrewingRecipeRegistry.getRecipes().size();
 		}
+	}
+
+
+
+	public static void hackMe() {
+		if (removedRecipes.isEmpty()) {
+			return;
+		}
+		
+		List <IBrewingRecipe> brewings = CraftTweakerHacks.getPrivateStaticObject(BrewingRecipeRegistry.class, "recipes");
+        brewings.removeIf(VanillaBrewingRecipe.class::isInstance);
+        brewings.add(new VanillaBrewingPlus(removedRecipes));
 	}
 }

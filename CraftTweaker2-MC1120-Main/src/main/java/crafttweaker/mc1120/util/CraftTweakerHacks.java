@@ -114,7 +114,7 @@ public class CraftTweakerHacks {
         return null;
     }
     
-    private static <T> T getPrivateStaticObject(Class<?> cls, String... names) {
+    public static <T> T getPrivateStaticObject(Class<?> cls, String... names) {
         for(String name : names) {
             try {
                 Field field = cls.getDeclaredField(name);

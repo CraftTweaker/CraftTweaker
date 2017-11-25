@@ -12,4 +12,7 @@ public interface IBrewingManager {
 
 	@ZenMethod
 	void addBrew(IIngredient input, IIngredient[] ingredients, IItemStack output, @Optional boolean hidden);
+	
+	@ZenMethod
+	void removeRecipe(IItemStack input, IItemStack ingredient);
 }

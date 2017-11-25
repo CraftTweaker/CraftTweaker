@@ -144,6 +144,11 @@ public class CraftTweaker {
         
     }
     
+    @EventHandler
+    public void onInit(FMLInitializationEvent ev) {
+        MCBrewing.hackMe();
+    }
+    
     
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent ev) {

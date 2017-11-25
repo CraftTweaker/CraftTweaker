@@ -48,7 +48,6 @@ public class ExpressionInt extends Expression {
         if(!result)
             return;
 
-        System.out.println("ExpressionIntCompile123");
         MethodOutput output = environment.getOutput();
         if(type == ZenTypeByte.INSTANCE) {
             output.biPush((byte) value);

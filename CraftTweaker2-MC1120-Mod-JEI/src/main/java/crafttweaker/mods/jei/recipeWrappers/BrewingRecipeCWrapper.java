@@ -1,16 +1,22 @@
 package crafttweaker.mods.jei.recipeWrappers;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.mc1120.brewing.MultiBrewingRecipe;
+import crafttweaker.mc1120.brewing.VanillaBrewingPlus;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import mezz.jei.plugins.vanilla.VanillaPlugin;
 import mezz.jei.plugins.vanilla.brewing.BrewingRecipeWrapper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
 public class BrewingRecipeCWrapper extends BrewingRecipeWrapper  {
@@ -54,6 +60,20 @@ public class BrewingRecipeCWrapper extends BrewingRecipeWrapper  {
     
     public static void registerBrewingRecipe() {
     	JEIAddonPlugin.modRegistry.addRecipes(createBrewingRecipes(), VanillaRecipeCategoryUid.BREWING);
+    }
+    
+    public static void unRegisterBrewingRecipes() {
+    	List <VanillaBrewingPlus> l = BrewingRecipeRegistry.getRecipes().stream().filter(VanillaBrewingPlus.class::isInstance).map(VanillaBrewingPlus.class::cast).collect(Collectors.toList());
+    	VanillaBrewingPlus instance = l.get(0);
+    	
+    	for (Tuple<IItemStack, IItemStack> tuple : instance.getRemovedRecipes()) {
+    		ItemStack input = CraftTweakerMC.getItemStack(tuple.getFirst());
+    		ItemStack ingredient = CraftTweakerMC.getItemStack(tuple.getSecond());
+    		ItemStack output = instance.getRealOutput(input, ingredient);
+    		
+    		//DOESNT WORK AS ITS A NEW OBJECT (MAYBE?)
+    		JEIAddonPlugin.recipeRegistry.hideRecipe(new BrewingRecipeWrapper(Collections.singletonList(ingredient), input, output));
+    	}
     }
 	
 }
