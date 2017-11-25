@@ -2,7 +2,9 @@ package stanhebben.zenscript.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.ZenTypeUtil;
 
 /**
  * @author Stanneke
@@ -29,10 +31,17 @@ public class ExpressionFloat extends Expression {
         if(!result)
             return;
 
+        MethodOutput output = environment.getOutput();
         if(type == ZenTypeFloat.INSTANCE) {
-            environment.getOutput().constant((float) value);
+            output.constant((float) value);
         } else if(type == ZenTypeDouble.INSTANCE) {
-            environment.getOutput().constant(value);
+            output.constant(value);
+        } else if(type == ZenTypeFloatObject.INSTANCE) {
+        	output.constant((float)value);
+        	output.invokeStatic(ZenTypeUtil.internal(Float.class), "valueOf", "(F)Ljava/lang/Float;");
+        } else if(type == ZenTypeDoubleObject.INSTANCE) {
+        	output.constant(value);
+        	output.invokeSpecial(ZenTypeUtil.internal(Double.class), "valueOf", "(D)Ljava/lang/Double;");
         } else {
             throw new RuntimeException("Internal compiler error: source type is not a floating point type");
         }

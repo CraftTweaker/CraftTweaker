@@ -85,6 +85,9 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
     @Override
     public Class toJavaClass() {
         try {
+        	if (getBaseType().toJavaClass().isArray() || getBaseType().toJavaClass().isPrimitive()) {
+        		return Class.forName("[" + getBaseType().toJavaClass().getName());
+        	} 
             return Class.forName("[L" + getBaseType().toJavaClass().getName() + ";");
         } catch(ClassNotFoundException ex) {
             throw new RuntimeException(ex);

@@ -13,9 +13,10 @@ import java.util.List;
 @ZenRegister
 public interface IOreDict extends Iterable<IOreDictEntry> {
 
-    @ZenMethod
+    
     @ZenMemberGetter
     @ZenOperator(OperatorType.INDEXGET)
+    @ZenMethod
     IOreDictEntry get(String name);
 
     @ZenGetter("entries")
