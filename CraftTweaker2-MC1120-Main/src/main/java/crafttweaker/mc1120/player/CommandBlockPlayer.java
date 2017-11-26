@@ -5,6 +5,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.IPotion;
@@ -317,6 +318,11 @@ public class CommandBlockPlayer implements IPlayer {
 
     @Override
     public IItemStack getHeldItemOffHand() {
+        return null;
+    }
+    
+    @Override
+    public IEntityAttributeInstance getAttribute(String name) {
         return null;
     }
 }
