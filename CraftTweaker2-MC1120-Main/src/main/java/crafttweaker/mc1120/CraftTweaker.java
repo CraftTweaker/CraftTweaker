@@ -133,6 +133,7 @@ public class CraftTweaker {
         try {
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
             MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
+            MCRecipeManager.actionRemoveRecipesNoIngredients.apply();
             MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);

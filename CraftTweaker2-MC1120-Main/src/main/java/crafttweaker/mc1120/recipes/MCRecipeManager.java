@@ -20,6 +20,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
+import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
@@ -35,10 +36,11 @@ public final class MCRecipeManager implements IRecipeManager {
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     public final static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
     public final static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
+    public final static ActionRemoveRecipesNoIngredients actionRemoveRecipesNoIngredients = new ActionRemoveRecipesNoIngredients();
     private static TIntSet usedHashes = new TIntHashSet();
     private static HashSet<String> usedRecipeNames = new HashSet<>();
     
-    private static List<ICraftingRecipe> transformerRecipes;
+    public static List<ICraftingRecipe> transformerRecipes;
     
     public MCRecipeManager() {
         transformerRecipes = new ArrayList<>();
@@ -158,7 +160,7 @@ public final class MCRecipeManager implements IRecipeManager {
     
     @Override
     public void remove(IIngredient output, @Optional boolean nbtMatch) {
-        recipesToRemove.add(new ActionRemoveRecipesNoIngredients(output, nbtMatch));
+        actionRemoveRecipesNoIngredients.addOutput(output, nbtMatch);
     }
     
     @Override
@@ -427,40 +429,42 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     public static class ActionRemoveRecipesNoIngredients extends ActionBaseRemoveRecipes {
-        
-        IIngredient output;
-        boolean nbtMatch;
-        
-        public ActionRemoveRecipesNoIngredients(IIngredient output, @Optional boolean nbtMatch) {
-            this.output = output;
-            this.nbtMatch = nbtMatch;
+        // pair of output, nbtMatch
+        private final List<Pair<IIngredient, Boolean>> outputs = new ArrayList<>();
+
+        public void addOutput(IIngredient output, @Optional boolean nbtMatch) {
+            outputs.add(Pair.of(output, nbtMatch));
         }
         
         @Override
         public void apply() {
-            if(output == null) {
-                return;
-            }
             List<ResourceLocation> toRemove = new ArrayList<>();
             
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-                if(!recipe.getValue().getRecipeOutput().isEmpty()) {
-                    if(nbtMatch ? output.matchesExact(getIItemStack(recipe.getValue().getRecipeOutput())) : output.matches(getIItemStack(recipe.getValue().getRecipeOutput()))) {
-                        toRemove.add(recipe.getKey());
-                    }
+                ItemStack recipeOutput = recipe.getValue().getRecipeOutput();
+                IItemStack stack = getIItemStack(recipeOutput);
+                if(stack != null && matches(stack)) {
+                    toRemove.add(recipe.getKey());
                 }
             }
             
             super.removeRecipes(toRemove);
         }
+
+        private boolean matches(IItemStack stack) {
+            for(Pair<IIngredient, Boolean> entry : outputs) {
+                IIngredient output = entry.getKey();
+                Boolean nbtMatch = entry.getValue();
+                if(nbtMatch ? output.matchesExact(stack) : output.matches(stack)) {
+                    return true;
+                }
+            }
+            return false;
+        }
         
         @Override
         public String describe() {
-            if(output != null) {
-                return "Removing all recipes for " + output.toString();
-            } else {
-                return "Trying to remove recipes for invalid output";
-            }
+            return "Removing recipes for various outputs";
         }
     }
     

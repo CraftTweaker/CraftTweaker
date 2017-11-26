@@ -13,9 +13,6 @@ import stanhebben.zenscript.annotations.*;
 
 import java.util.*;
 
-import static crafttweaker.mc1120.recipes.MCRecipeManager.recipesToRemove;
-
-
 /**
  * MineTweaker JEI support.
  * <p>
@@ -42,8 +39,8 @@ public class JEI {
 
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
-        recipesToRemove.add(new MCRecipeManager.ActionRemoveRecipesNoIngredients(output, nbtMatch));
-        for (IItemStack stack : output.getItems()) {
+        MCRecipeManager.actionRemoveRecipesNoIngredients.addOutput(output, nbtMatch);
+        for(IItemStack stack : output.getItems()) {
             LATE_ACTIONS.add(new HideAction(stack));
         }
 
