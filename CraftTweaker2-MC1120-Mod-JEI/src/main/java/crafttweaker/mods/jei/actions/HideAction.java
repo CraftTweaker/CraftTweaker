@@ -1,4 +1,4 @@
-package crafttweaker.mods.jei.Classes;
+package crafttweaker.mods.jei.actions;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 
@@ -8,11 +8,11 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import net.minecraft.item.ItemStack;
 
-public class Hide implements IAction {
+public class HideAction implements IAction {
     
     private final IItemStack stack;
     
-    public Hide(IItemStack stack) {
+    public HideAction(IItemStack stack) {
         this.stack = stack;
     }
     

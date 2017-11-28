@@ -36,7 +36,7 @@ public class ExpressionMapIndexGet extends Expression {
     public void compile(boolean result, IEnvironmentMethod environment) {
         if(result) {
             map.compile(result, environment);
-            index.compile(result, environment);
+            index.cast(getPosition(), environment, ((ZenTypeAssociative) map.getType()).getKeyType()).compile(result, environment);
             environment.getOutput().invokeInterface(internal(Map.class), "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
             environment.getOutput().checkCast(type.toASMType().getInternalName());
         }

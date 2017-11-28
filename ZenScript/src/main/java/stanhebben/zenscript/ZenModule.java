@@ -30,6 +30,8 @@ public class ZenModule {
     private final MyClassLoader classLoader;
     
     
+       
+    
     /**
      * Constructs a module for the given set of classes. Mostly intended for
      * internal use.
@@ -57,13 +59,15 @@ public class ZenModule {
         clsMain.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[]{internal(Runnable.class)});
         MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
         mainRun.start();
+       
+        
         
         for(ZenParsedFile script : scripts) {
-            for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
-                ParsedFunction fn = function.getValue();
-                environmentGlobal.putValue(function.getKey(), new SymbolZenStaticMethod(script.getClassName(), fn.getName(), fn.getSignature(), fn.getArgumentTypes(), fn.getReturnType()), fn.getPosition());
+            for (Map.Entry<String, ParsedGlobalValue> entry : script.getGlobals().entrySet()) {
+            	environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(entry.getValue()), entry.getValue().getPosition());
             }
         }
+        
         
         for(ZenParsedFile script : scripts) {
             ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -72,6 +76,10 @@ public class ZenModule {
             
             clsScript.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[]{internal(Runnable.class)});
             
+        	for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
+                ParsedFunction fn = function.getValue();
+                environmentScript.putValue(function.getKey(), new SymbolZenStaticMethod(script.getClassName(), fn.getName(), fn.getSignature(), fn.getArgumentTypes(), fn.getReturnType()), fn.getPosition());
+            }
             for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
                 ParsedFunction fn = function.getValue();
                 

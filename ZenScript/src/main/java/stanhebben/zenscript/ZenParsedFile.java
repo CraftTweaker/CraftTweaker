@@ -33,6 +33,7 @@ public class ZenParsedFile {
     private final String classname;
     private final List<Import> imports;
     private final Map<String, ParsedFunction> functions;
+    private final Map<String, ParsedGlobalValue> globals = new HashMap<>();
     private final List<Statement> statements;
     private final IEnvironmentGlobal environmentScript;
     
@@ -116,7 +117,13 @@ public class ZenParsedFile {
         
         while(tokener.hasNext()) {
             Token next = tokener.peek();
-            if(next.getType() == T_FUNCTION) {
+            if (next.getType() == T_GLOBAL) {
+            	ParsedGlobalValue value = ParsedGlobalValue.parse(tokener, environmentScript);
+            	if(globals.containsKey(value.getName())) {
+            		environment.warning(value.getPosition(), "Global already defined: " + value.getName());
+            	}
+            	globals.put(value.getName(), value);
+            } else if(next.getType() == T_FUNCTION) {
                 ParsedFunction function = ParsedFunction.parse(tokener, environmentScript);
                 if(functions.containsKey(function.getName())) {
                     environment.error(function.getPosition(), "function " + function.getName() + " already exists");
@@ -175,6 +182,10 @@ public class ZenParsedFile {
      */
     public Map<String, ParsedFunction> getFunctions() {
         return functions;
+    }
+    
+    public Map<String, ParsedGlobalValue> getGlobals() {
+    	return globals;
     }
     
     @Override

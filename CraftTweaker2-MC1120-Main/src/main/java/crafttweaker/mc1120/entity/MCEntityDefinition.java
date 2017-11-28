@@ -109,4 +109,9 @@ public class MCEntityDefinition implements IEntityDefinition {
     public Object getInternal() {
         return entityEntry;
     }
+    
+    @Override
+    public String toString() {
+    	return "<entity:" + entityName + ">";
+    }
 }

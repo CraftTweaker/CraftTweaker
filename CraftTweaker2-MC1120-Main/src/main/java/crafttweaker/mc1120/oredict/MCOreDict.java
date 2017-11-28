@@ -21,11 +21,25 @@ public class MCOreDict implements IOreDict {
     @Override
     public List<IOreDictEntry> getEntries() {
         List<IOreDictEntry> entries = new ArrayList<>();
-        for(String key : OreDictionary.getOreNames()) {
-            if(!OreDictionary.getOres(key).isEmpty()) {
+        for (String key : OreDictionary.getOreNames()) {
+            if (!OreDictionary.getOres(key).isEmpty()) {
                 entries.add(CraftTweakerMC.getOreDict(key));
             }
         }
         return entries;
+    }
+
+    @Override
+    public boolean contains(String name) {
+    	return OreDictionary.doesOreNameExist(name);
+    }
+
+    @Override
+    public Iterator<IOreDictEntry> iterator() {
+        return Arrays.asList(OreDictionary.getOreNames())
+                .stream()
+                .map(CraftTweakerMC::getOreDict)
+                .iterator();
+
     }
 }

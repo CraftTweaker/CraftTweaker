@@ -82,6 +82,7 @@ public class ZenTokener extends TokenStream {
     public static final int T_TRUE = 141;
     public static final int T_FALSE = 142;
     public static final int T_IMPORT = 160;
+    public static final int T_GLOBAL = 666;
     private static final HashMap<String, Integer> KEYWORDS;
     private static final String[] REGEXPS = {"#[^\n]*[\n\\e]", "//[^\n]*[\n\\e]", "/\\*[^\\*]*(\\*|\\*[^/\\*][^\\*]*)*\\*/", "[ \t\r\n]*", "[a-zA-Z_][a-zA-Z_0-9]*", "\\-?(0|[1-9][0-9]*)\\.[0-9]+([eE][\\+\\-]?[0-9]+)?", "\\-?(0|[1-9][0-9]*)", "\"([^\"\\\\]|\\\\([\'\"\\\\/bfnrt]|u[0-9a-fA-F]{4}))*\"", "\'([^\'\\\\]|\\\\([\'\"\\\\/bfnrt]|u[0-9a-fA-F]{4}))*\'", "\\{", "\\}", "\\[", "\\]", "\\.\\.", "\\.", ",", "\\+=", "\\+", "\\-=", "\\-", "\\*=", "\\*", "/=", "/", "%=", "%", "\\|=", "\\|\\|", "\\|", "&=", "&&", "&", "\\^=", "\\^", "\\?", ":", "\\(", "\\)", "~=", "~", ";", "<=", "<", ">=", ">", "==", "=", "!=", "!", "$"};
     private static final int[] FINALS = {-1, -1, -1, -1, T_ID, T_FLOATVALUE, T_INTVALUE, T_STRINGVALUE, T_STRINGVALUE, T_AOPEN, T_ACLOSE, T_SQBROPEN, T_SQBRCLOSE, T_DOT2, T_DOT, T_COMMA, T_PLUSASSIGN, T_PLUS, T_MINUSASSIGN, T_MINUS, T_MULASSIGN, T_MUL, T_DIVASSIGN, T_DIV, T_MODASSIGN, T_MOD, T_ORASSIGN, T_OR2, T_OR, T_ANDASSIGN, T_AND2, T_AND, T_XORASSIGN, T_XOR, T_QUEST, T_COLON, T_BROPEN, T_BRCLOSE, T_TILDEASSIGN, T_TILDE, T_SEMICOLON, T_LTEQ, T_LT, T_GTEQ, T_GT, T_EQ, T_ASSIGN, T_NOTEQ, T_NOT, T_DOLLAR};
@@ -112,6 +113,7 @@ public class ZenTokener extends TokenStream {
         KEYWORDS.put("return", T_RETURN);
         KEYWORDS.put("var", T_VAR);
         KEYWORDS.put("val", T_VAL);
+        KEYWORDS.put("global", T_GLOBAL);
         
         KEYWORDS.put("null", T_NULL);
         KEYWORDS.put("true", T_TRUE);

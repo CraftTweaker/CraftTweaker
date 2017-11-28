@@ -10,11 +10,11 @@ import stanhebben.zenscript.annotations.*;
 @IterableSimple("crafttweaker.mods.IMod")
 @ZenRegister
 public interface ILoadedMods extends Iterable<IMod> {
-    
+
     @ZenOperator(OperatorType.CONTAINS)
     @ZenMethod
     boolean contains(String name);
-    
+
     @ZenOperator(OperatorType.INDEXGET)
     IMod get(String name);
 }

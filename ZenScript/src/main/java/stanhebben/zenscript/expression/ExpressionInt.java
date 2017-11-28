@@ -57,6 +57,20 @@ public class ExpressionInt extends Expression {
             output.constant((int) value);
         } else if(type == ZenTypeLong.INSTANCE) {
             output.constant(value);
+            
+            //Objects
+        } else if(type == ZenTypeIntObject.INSTANCE) {
+        	output.constant((int)value);
+        	output.invokeStatic(ZenTypeUtil.internal(Integer.class), "valueOf", "(I)Ljava/lang/Integer;");
+        } else if(type == ZenTypeByteObject.INSTANCE) {
+        	output.biPush((byte) value);
+        	output.invokeStatic(ZenTypeUtil.internal(Byte.class), "valueOf", "(B)Ljava/lang/Byte;");        	
+        } else if(type == ZenTypeLongObject.INSTANCE) {
+        	output.constant(value);
+        	output.invokeStatic(ZenTypeUtil.internal(Long.class), "valueOf", "(J)Ljava/lang/Long;");
+        } else if(type == ZenTypeShortObject.INSTANCE) {
+        	output.siPush((short) value);
+        	output.invokeStatic(ZenTypeUtil.internal(Short.class), "valueOf", "(S)Ljava/lang/Short;");
         } else {
             throw new RuntimeException("Internal compiler error: int constant type is not an int");
         }

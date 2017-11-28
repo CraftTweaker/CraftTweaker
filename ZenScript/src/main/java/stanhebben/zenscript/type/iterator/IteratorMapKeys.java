@@ -3,6 +3,7 @@ package stanhebben.zenscript.type.iterator;
 import org.objectweb.asm.*;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenTypeUtil;
 
 import java.util.*;
 
@@ -37,6 +38,7 @@ public class IteratorMapKeys implements IZenIterator {
 
         methodOutput.loadObject(iterator);
         methodOutput.invokeInterface(Iterator.class, "next", Object.class);
+        methodOutput.checkCast(ZenTypeUtil.internal(type.getKeyType().toJavaClass()));
         methodOutput.store(type.getKeyType().toASMType(), locals[0]);
     }
 
