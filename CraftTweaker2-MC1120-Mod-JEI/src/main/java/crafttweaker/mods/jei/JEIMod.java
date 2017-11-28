@@ -58,6 +58,5 @@ public class JEIMod {
             e.printStackTrace();
         }
         BrewingRecipeCWrapper.registerBrewingRecipe();
-        BrewingRecipeCWrapper.unRegisterBrewingRecipes();
     }
 }

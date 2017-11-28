@@ -59,21 +59,8 @@ public class BrewingRecipeCWrapper extends BrewingRecipeWrapper  {
     }
     
     public static void registerBrewingRecipe() {
-    	JEIAddonPlugin.modRegistry.addRecipes(createBrewingRecipes(), VanillaRecipeCategoryUid.BREWING);
-    }
-    
-    public static void unRegisterBrewingRecipes() {
-    	List <VanillaBrewingPlus> l = BrewingRecipeRegistry.getRecipes().stream().filter(VanillaBrewingPlus.class::isInstance).map(VanillaBrewingPlus.class::cast).collect(Collectors.toList());
-    	VanillaBrewingPlus instance = l.get(0);
-    	
-    	for (Tuple<IItemStack, IItemStack> tuple : instance.getRemovedRecipes()) {
-    		ItemStack input = CraftTweakerMC.getItemStack(tuple.getFirst());
-    		ItemStack ingredient = CraftTweakerMC.getItemStack(tuple.getSecond());
-    		ItemStack output = instance.getRealOutput(input, ingredient);
-    		
-    		//DOESNT WORK AS ITS A NEW OBJECT (MAYBE?)
-    		JEIAddonPlugin.recipeRegistry.hideRecipe(new BrewingRecipeWrapper(Collections.singletonList(ingredient), input, output));
-    	}
-    }
-	
+    	List<IRecipeWrapper> recipes = createBrewingRecipes();
+    	if (recipes.isEmpty()) return;    	
+    	JEIAddonPlugin.modRegistry.addRecipes(recipes, VanillaRecipeCategoryUid.BREWING);
+    }	
 }
