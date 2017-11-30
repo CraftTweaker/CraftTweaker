@@ -14,12 +14,14 @@ public class ParsedGlobalValue {
 	private final String name;
 	private final ZenType type;
 	private final ParsedExpression value;
+	private final String owner;
 	
-	ParsedGlobalValue(ZenPosition position, String name, ZenType type, ParsedExpression value){
+	ParsedGlobalValue(ZenPosition position, String name, ZenType type, ParsedExpression value, String owner){
 		this.position = position;
 		this.name = name;
 		this.type = type;
 		this.value = value;
+		this.owner = owner;
 		
 	}
 
@@ -39,7 +41,11 @@ public class ParsedGlobalValue {
 		return value;
 	}
 	
-	public static ParsedGlobalValue parse(ZenTokener parser, IEnvironmentGlobal environment) {
+	public String getOwner() {
+		return owner;
+	}
+	
+	public static ParsedGlobalValue parse(ZenTokener parser, IEnvironmentGlobal environment, String owner) {
 		//Start ("GLOBAL")
 		Token startingPoint = parser.next();
 		
@@ -63,6 +69,6 @@ public class ParsedGlobalValue {
 		parser.required(T_SEMICOLON, "; expected");
 		
 		//throw it together
-		return new ParsedGlobalValue(startingPoint.getPosition(), name, type, value);
+		return new ParsedGlobalValue(startingPoint.getPosition(), name, type, value, owner);
 	}
 }

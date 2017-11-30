@@ -118,7 +118,7 @@ public class ZenParsedFile {
         while(tokener.hasNext()) {
             Token next = tokener.peek();
             if (next.getType() == T_GLOBAL) {
-            	ParsedGlobalValue value = ParsedGlobalValue.parse(tokener, environmentScript);
+            	ParsedGlobalValue value = ParsedGlobalValue.parse(tokener, environmentScript, classname);
             	if(globals.containsKey(value.getName())) {
             		environment.warning(value.getPosition(), "Global already defined: " + value.getName());
             	}

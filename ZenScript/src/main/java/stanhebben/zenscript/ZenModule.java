@@ -63,20 +63,27 @@ public class ZenModule {
         
         
         for(ZenParsedFile script : scripts) {
-            for (Map.Entry<String, ParsedGlobalValue> entry : script.getGlobals().entrySet()) {
-            	environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(entry.getValue()), entry.getValue().getPosition());
-            }
-        }
-        
-        
-        for(ZenParsedFile script : scripts) {
             ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
             clsScript.visitSource(script.getFileName(), null);
             EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
             
             clsScript.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[]{internal(Runnable.class)});
             
-        	for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
+        	
+            if(!script.getGlobals().isEmpty()) {
+            	MethodOutput clinit = new MethodOutput(clsScript, Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+            	EnvironmentMethod clinitEnvironment = new EnvironmentMethod(clinit, environmentScript);
+            	clinit.start();
+            	
+	            for (Map.Entry<String, ParsedGlobalValue> entry : script.getGlobals().entrySet()) {
+	            	environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(entry.getValue(), clinitEnvironment), entry.getValue().getPosition());
+	            }
+	            
+	            clinit.ret();
+	            clinit.end();
+            }
+            
+            for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
                 ParsedFunction fn = function.getValue();
                 environmentScript.putValue(function.getKey(), new SymbolZenStaticMethod(script.getClassName(), fn.getName(), fn.getSignature(), fn.getArgumentTypes(), fn.getReturnType()), fn.getPosition());
             }

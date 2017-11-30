@@ -1,18 +1,21 @@
 package stanhebben.zenscript.expression.partial;
 
+import java.util.ArrayList;
+import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionGlobalGet;
 import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.symbols.SymbolGlobalValue;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.ZenPosition;
 
 public class PartialGlobalValue implements IPartialExpression {
 
 	private final SymbolGlobalValue value;
+	
 	
 	public PartialGlobalValue(SymbolGlobalValue symbolGlobalValue) {
 		this.value = symbolGlobalValue;
@@ -20,7 +23,8 @@ public class PartialGlobalValue implements IPartialExpression {
 
 	@Override
 	public Expression eval(IEnvironmentGlobal environment) {
-		return value.getValue().getValue().compile((IEnvironmentMethod) environment, getType()).eval(environment);
+		return new ExpressionGlobalGet(value, environment);
+		//return value.getValue().getValue().compile((IEnvironmentMethod) environment, getType()).eval(environment);
 	}
 
 	@Override
