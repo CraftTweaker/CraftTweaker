@@ -279,6 +279,8 @@ public class ShapedRecipe implements ICraftingRecipe {
         }
         
         result.append("]);");
+        
+        result.append(" - ").append(name);
         return result.toString();
     }
     
