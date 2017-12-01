@@ -24,7 +24,6 @@ public class PartialGlobalValue implements IPartialExpression {
 	@Override
 	public Expression eval(IEnvironmentGlobal environment) {
 		return new ExpressionGlobalGet(value, environment);
-		//return value.getValue().getValue().compile((IEnvironmentMethod) environment, getType()).eval(environment);
 	}
 
 	@Override
