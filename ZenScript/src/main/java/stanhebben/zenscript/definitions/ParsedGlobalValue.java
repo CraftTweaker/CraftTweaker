@@ -45,6 +45,7 @@ public class ParsedGlobalValue {
 		return owner;
 	}
 	
+
 	public static ParsedGlobalValue parse(ZenTokener parser, IEnvironmentGlobal environment, String owner) {
 		//Start ("GLOBAL")
 		Token startingPoint = parser.next();
@@ -60,7 +61,7 @@ public class ParsedGlobalValue {
 		}
 		
 		//"="
-		parser.required(T_ASSIGN, "Global has to be initialized!");
+		parser.required(T_ASSIGN, "Global values have to be initialized!");
 		
 		//"value, <minecraft:dirt>"
 		ParsedExpression value = ParsedExpression.read(parser, environment);

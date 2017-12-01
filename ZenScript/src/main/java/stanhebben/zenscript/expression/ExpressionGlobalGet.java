@@ -1,41 +1,38 @@
 package stanhebben.zenscript.expression;
 
-import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.symbols.SymbolGlobalValue;
 import stanhebben.zenscript.type.ZenType;
 
 public class ExpressionGlobalGet extends Expression {
 
-	private final SymbolGlobalValue value;
+	private final SymbolGlobalValue global;
 
-	public ExpressionGlobalGet(SymbolGlobalValue value, IEnvironmentGlobal environment) {
+	public ExpressionGlobalGet(SymbolGlobalValue value) {
 		super(value.getPosition());
-		this.value = value;
-		
+		this.global = value;
 	}
 
 	@Override
 	public ZenType getType() {
-		return value.getType();
+		return global.getType();
 	}
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
-		environment.getOutput().getStaticField(getOwner(), getName(), getDescriptor());
-
+		environment.getOutput().getStaticField(getOwner(), getName(), getASMDescriptor());
 	}
 	
 	public String getOwner() {
-		return value.getOwner();
+		return global.getOwner();
 	}
 	
 	public String getName() {
-		return value.getName();
+		return global.getName();
 	}
 	
-	public String getDescriptor() {
-		return getType().toASMType().getDescriptor();
+	public String getASMDescriptor() {
+		return global.getASMDescriptor();
 	}
 
 }

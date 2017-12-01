@@ -3,13 +3,10 @@ package stanhebben.zenscript.symbols;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
 
-import stanhebben.zenscript.compiler.EnvironmentClass;
-import stanhebben.zenscript.compiler.IEnvironmentClass;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.definitions.ParsedGlobalValue;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.expression.partial.PartialGlobalValue;
-import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -17,12 +14,13 @@ public class SymbolGlobalValue implements IZenSymbol {
 
 	private final ParsedGlobalValue value;
 	private final PartialGlobalValue instance;
+	
 
 	public SymbolGlobalValue(ParsedGlobalValue value, IEnvironmentMethod environmentClass) {
 		this.value = value;
 		this.instance = new PartialGlobalValue(this);
 		
-		initField(environmentClass.getClassOutput(), getName(), getDescriptor());
+		initField(environmentClass.getClassOutput());
 		compileGlobal(environmentClass);
 	}
 
@@ -48,17 +46,33 @@ public class SymbolGlobalValue implements IZenSymbol {
 		return value.getOwner();
 	}
 	
-	public String getDescriptor() {
+	public String getASMDescriptor() {
 		return getType().toASMType().getDescriptor();
 	}
-	
-	
-	private void compileGlobal(IEnvironmentMethod envo) {
-		value.getValue().compile(envo, getType()).eval(envo).compile(true, envo);
-		envo.getOutput().putStaticField(getOwner(), getName(), getDescriptor());
+
+	public ZenPosition getPosition() {
+		return value.getPosition();
 	}
 	
-	private static void initField(ClassVisitor classOutput, String name, String description) {
-		classOutput.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL, name, description, null, null).visitEnd();;
+	
+	/**
+	 * Initializes the Public Static Final field `name`
+	 * Does not give any value to it.
+	 * Needs to be run before compileGlobal!
+	 * @param visitor class visitor visiting the generated script class 
+	 */
+	
+	private void initField(ClassVisitor visitor) {
+		visitor.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL, getName(), getASMDescriptor(), null, null).visitEnd();
 	}
+	
+	/**
+	 * Sets the Public Static Final field `name`'s initial value.
+	 * @param clinitMethodEnvironment a method environment that refers to the generated script class' {@code<clinit>} method!
+	 */
+	private void compileGlobal(IEnvironmentMethod clinitMethodEnvironment) {
+		value.getValue().compile(clinitMethodEnvironment, getType()).eval(clinitMethodEnvironment).compile(true, clinitMethodEnvironment);
+		clinitMethodEnvironment.getOutput().putStaticField(getOwner(), getName(), getASMDescriptor());
+	}
+
 }

@@ -1,7 +1,5 @@
 package stanhebben.zenscript.expression.partial;
 
-import java.util.ArrayList;
-import java.util.List;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
@@ -23,7 +21,7 @@ public class PartialGlobalValue implements IPartialExpression {
 
 	@Override
 	public Expression eval(IEnvironmentGlobal environment) {
-		return new ExpressionGlobalGet(value, environment);
+		return new ExpressionGlobalGet(value);
 	}
 
 	@Override
