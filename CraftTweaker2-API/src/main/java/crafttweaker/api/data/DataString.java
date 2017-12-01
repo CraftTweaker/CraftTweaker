@@ -62,7 +62,7 @@ public class DataString implements IData {
     
     @Override
     public Map<String, IData> asMap() {
-        return null;
+        return Collections.singletonMap(value,this);
     }
     
     @Override
