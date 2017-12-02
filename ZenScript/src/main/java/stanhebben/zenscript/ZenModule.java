@@ -59,8 +59,6 @@ public class ZenModule {
         clsMain.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "__ZenMain__", null, internal(Object.class), new String[]{internal(Runnable.class)});
         MethodOutput mainRun = new MethodOutput(clsMain, Opcodes.ACC_PUBLIC, "run", "()V", null, null);
         mainRun.start();
-       
-        
         
         for(ZenParsedFile script : scripts) {
             ClassWriter clsScript = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -68,8 +66,7 @@ public class ZenModule {
             EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
             
             clsScript.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[]{internal(Runnable.class)});
-            
-        	
+                   	
             if(!script.getGlobals().isEmpty()) {
             	MethodOutput clinit = new MethodOutput(clsScript, Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
             	EnvironmentMethod clinitEnvironment = new EnvironmentMethod(clinit, environmentScript);

@@ -74,5 +74,4 @@ public class SymbolGlobalValue implements IZenSymbol {
 		value.getValue().compile(clinitMethodEnvironment, getType()).eval(clinitMethodEnvironment).compile(true, clinitMethodEnvironment);
 		clinitMethodEnvironment.getOutput().putStaticField(getOwner(), getName(), getASMDescriptor());
 	}
-
 }
