@@ -28,7 +28,12 @@ public class DataMap implements IData {
             result.put(entry.getKey(), entry.getValue());
         }
         for(Map.Entry<String, IData> entry : otherMap.entrySet()) {
-            result.put(entry.getKey(), entry.getValue());
+            if((result.containsKey(entry.getKey())) && (entry.getValue() instanceof DataMap) && (result.get(entry.getKey()) instanceof DataMap)) {
+            	result.put(entry.getKey(),result.get(entry.getKey()).add(entry.getValue()));
+            } else {
+            	result.put(entry.getKey(), entry.getValue());
+            }
+        	
         }
         
         return new DataMap(result, immutable);
@@ -42,8 +47,12 @@ public class DataMap implements IData {
         for(Map.Entry<String, IData> entry : data.entrySet()) {
             result.put(entry.getKey(), entry.getValue());
         }
-        for(String key : otherMap.keySet()) {
-            result.remove(key);
+        for(Map.Entry<String, IData> entry : otherMap.entrySet()) {
+            if(entry.getValue() instanceof DataMap && result.get(entry.getKey()) instanceof DataMap) {
+                result.put(entry.getKey(), result.get(entry.getKey()).sub(entry.getValue()));
+            } else {
+                result.remove(entry.getKey());
+            }
         }
         
         return new DataMap(result, immutable);
