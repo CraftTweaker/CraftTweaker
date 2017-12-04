@@ -19,11 +19,14 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -140,7 +143,27 @@ public class Commands {
                 sender.sendMessage(getLinkToCraftTweakerLog("List of Potions generated", sender));
             }
         });
-        
+        CTChatCommand.registerCommand(new CraftTweakerCommand("recipeNames") {
+            
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct recipeNames", "/ct recipeNames", true),  getNormalMessage(" \u00A73A modid can be provided to filter results"), getNormalMessage(" \u00A73/ct recipeNames <modid>"), getNormalMessage(" \u00A73Lists all crafting recipe names in the game"));
+            }
+    
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                CraftTweakerAPI.logCommand("Recipe names:");
+                String filter = args.length == 0 ? "" : args[0];
+                
+                for(Map.Entry<ResourceLocation, IRecipe> entry : ForgeRegistries.RECIPES.getEntries()) {
+                    if(!filter.isEmpty() && !entry.getKey().getResourceDomain().equalsIgnoreCase(filter)){
+                        continue;
+                    }
+                    CraftTweakerAPI.logCommand(entry.getKey().toString() + " - " + entry.getValue().getRecipeOutput());
+                }
+                sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
+            }
+        });
         CTChatCommand.registerCommand(new CraftTweakerCommand("recipes") {
             
             @Override
