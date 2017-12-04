@@ -36,6 +36,14 @@ public interface IItemDefinition {
     String getName();
     
     /**
+     * Gets the owner of the item.
+     *
+     * @return modid of the mod that adds the item
+     */
+    @ZenGetter("owner")
+    String getOwner();
+    
+    /**
      * Makes an item stack from this definition.
      *
      * @param meta meta value

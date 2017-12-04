@@ -14,34 +14,40 @@ import java.util.*;
  * @author Stan
  */
 public class MCItemDefinition implements IItemDefinition {
-
+    
     private final String id;
     private final Item item;
-
+    
     public MCItemDefinition(String id, Item item) {
         this.id = id;
         this.item = item;
+        
     }
-
+    
     @Override
     public String getId() {
         return id;
     }
-
+    
     @Override
     public String getName() {
         return item.getUnlocalizedName();
     }
-
+    
+    @Override
+    public String getOwner() {
+        return getId().split(":")[0];
+    }
+    
     @Override
     public IItemStack makeStack(@Optional int meta) {
         return CraftTweakerMC.getIItemStackWildcardSize(new ItemStack(item, 1, meta));
     }
-
+    
     @Override
     public List<IOreDictEntry> getOres() {
         List<IOreDictEntry> result = new ArrayList<>();
-
+        
         for(String key : OreDictionary.getOreNames()) {
             for(ItemStack is : OreDictionary.getOres(key)) {
                 if(is.getItem() == item) {
@@ -50,21 +56,21 @@ public class MCItemDefinition implements IItemDefinition {
                 }
             }
         }
-
+        
         return result;
     }
-
+    
     // #############################
     // ### Object implementation ###
     // #############################
-
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + (this.item != null ? this.item.hashCode() : 0);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if(obj == null) {
