@@ -18,7 +18,7 @@ public class BracketWiki implements IBracketHandler{
 	
 	@Override
 	public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
-		if((tokens.size() < 3)) return null; 
+		if ((tokens.size() < 3)) return null; 
 		if (!tokens.get(0).getValue().equalsIgnoreCase("devBracket")) return null;
 		if (!tokens.get(1).getValue().equals(":")) return null;
 		
