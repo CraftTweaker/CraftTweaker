@@ -1,18 +1,22 @@
-package crafttweaker.tests.TEST;
+package crafttweaker.tests.wiki;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+
+//What can be imported, what will be the prefix if calling the static methods
 @ZenClass(value = "crafttweaker.tests.devWikiTest")
+
+//Telling ZS to automatically register at the appropriate time
 @ZenRegister
-public class DevWikiTest {
+public class DevWikiMethod {
 	
-	//statics which will be called using crafttweaker.tests.methods.methodName(arguments)
+	//statics which will be called using crafttweaker.tests.devWikiTest.methodName(arguments)
 	@ZenMethod
-	public static DevWikiTest staticMethod(int arg1) {
-		return new DevWikiTest(arg1);
+	public static DevWikiMethod staticMethod(int arg1) {
+		return new DevWikiMethod(arg1);
 	}
 	
 	@ZenMethod
@@ -46,7 +50,7 @@ public class DevWikiTest {
 	
 	private final int value;
 	
-	public DevWikiTest(int value) {
+	public DevWikiMethod(int value) {
 		this.value = value;
 	}
 }
