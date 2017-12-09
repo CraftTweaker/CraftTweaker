@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenExpansion("crafttweaker.item.IItemStack")
+@ZenExpansion("crafttweaker.item.WeightedItemStack")
 @ZenRegister
 public class Expansion {
     @ZenMethod
