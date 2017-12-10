@@ -116,6 +116,11 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
         return new ExpressionArraySet(position, array, index.cast(position, environment, INT), value.cast(position, environment, getBaseType()));
     }
     
+	@Override
+	public Expression add(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression val) {
+		return new ExpressionArrayAdd(position, environment, array, val);
+	}
+    
     private class ValueIterator implements IZenIterator {
         
         private final MethodOutput methodOutput;

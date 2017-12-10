@@ -29,6 +29,8 @@ public abstract class ZenTypeArray extends ZenType {
     
     public abstract Expression indexSet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index, Expression value);
     
+    public abstract Expression add(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression val);
+    
     @Override
     public final String getName() {
         return name;
@@ -90,6 +92,8 @@ public abstract class ZenTypeArray extends ZenType {
     public final Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
         if(operator == OperatorType.INDEXGET) {
             return indexGet(position, environment, left, right);
+        } else if (operator == OperatorType.ADD) {
+        	return add(position, environment, left, right);
         } else {
             Expression result = binaryExpansion(position, environment, left, right, operator);
             if(result == null) {
