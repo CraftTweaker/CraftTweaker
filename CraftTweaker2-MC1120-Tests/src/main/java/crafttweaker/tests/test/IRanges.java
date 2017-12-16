@@ -1,4 +1,4 @@
-package crafttweaker.tests.TEST;
+package crafttweaker.tests.test;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;

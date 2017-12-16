@@ -1,4 +1,4 @@
-package crafttweaker.tests.TEST;
+package crafttweaker.tests.test;
 
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.OperatorType;
