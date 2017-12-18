@@ -3,6 +3,7 @@ package stanhebben.zenscript.type;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionArrayListAdd;
 import stanhebben.zenscript.expression.ExpressionArrayListGet;
 import stanhebben.zenscript.expression.ExpressionArrayListSet;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -82,6 +83,11 @@ public class ZenTypeArrayList extends ZenTypeArray {
     public Expression indexSet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index, Expression value) {
     	return new ExpressionArrayListSet(position, array, index, value);
     }
+    
+	@Override
+	public Expression add(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression val) {
+		return new ExpressionArrayListAdd(position, environment, array, val);
+	}
     
     private class ExpressionListLength extends Expression {
         

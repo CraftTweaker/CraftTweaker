@@ -103,6 +103,7 @@ public class ZenTokener extends TokenStream {
         KEYWORDS.put("string", T_STRING);
         KEYWORDS.put("function", T_FUNCTION);
         KEYWORDS.put("in", T_IN);
+        KEYWORDS.put("has", T_IN);
         KEYWORDS.put("void", T_VOID);
         
         KEYWORDS.put("as", T_AS);

@@ -1,6 +1,7 @@
 package stanhebben.zenscript.util;
 
 import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.type.ZenType;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -51,5 +52,18 @@ public class ZenTypeUtil {
         }
         output.append(')').append(signature(method.getReturnType()));
         return output.toString();
+    }
+    
+    public static ZenType checkPrimitive(ZenType type) {
+    	if (type.toJavaClass().isPrimitive()) {
+    		if(type == ZenType.INT) return ZenType.INTOBJECT;
+    		else if(type == ZenType.BOOL) return ZenType.BOOLOBJECT;
+    		else if(type == ZenType.BYTE) return ZenType.BYTEOBJECT;
+    		else if(type == ZenType.SHORT) return ZenType.SHORTOBJECT;
+    		else if(type == ZenType.DOUBLE) return ZenType.DOUBLEOBJECT;
+    		else if(type == ZenType.FLOAT) return ZenType.FLOATOBJECT;
+    		else if(type == ZenType.LONG) return ZenType.LONGOBJECT;
+    	}
+    	return type;
     }
 }

@@ -85,8 +85,10 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
     @Override
     public Class toJavaClass() {
         try {
-        	if (getBaseType().toJavaClass().isArray() || getBaseType().toJavaClass().isPrimitive()) {
+        	if (getBaseType().toJavaClass().isArray()) {
         		return Class.forName("[" + getBaseType().toJavaClass().getName());
+        	} else if (getBaseType().toJavaClass().isPrimitive()) {
+        		return Class.forName("[" + ZenTypeUtil.signature(getBaseType().toJavaClass()));
         	} 
             return Class.forName("[L" + getBaseType().toJavaClass().getName() + ";");
         } catch(ClassNotFoundException ex) {
@@ -113,6 +115,11 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
     public Expression indexSet(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression index, Expression value) {
         return new ExpressionArraySet(position, array, index.cast(position, environment, INT), value.cast(position, environment, getBaseType()));
     }
+    
+	@Override
+	public Expression add(ZenPosition position, IEnvironmentGlobal environment, Expression array, Expression val) {
+		return new ExpressionArrayAdd(position, environment, array, val);
+	}
     
     private class ValueIterator implements IZenIterator {
         

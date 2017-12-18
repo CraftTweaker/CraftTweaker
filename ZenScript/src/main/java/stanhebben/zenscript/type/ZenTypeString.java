@@ -85,9 +85,9 @@ public class ZenTypeString extends ZenType {
     
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
-    	if(name.equals("length")){
-        	return new ExpressionStringLength(position, value.eval(environment));
-        }
+    	if(ExpressionStringMethod.hasMethod(name)) {
+    		return new ExpressionStringMethod(position, value.eval(environment), name, environment);
+    	}
     	
     	IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
         if(result == null) {

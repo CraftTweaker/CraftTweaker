@@ -8,6 +8,7 @@ import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.*;
 import stanhebben.zenscript.type.iterator.*;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.ZenTypeUtil;
 
 import java.util.Map;
 
@@ -31,24 +32,11 @@ public class ZenTypeAssociative extends ZenType {
     }
     
     public ZenType getValueType() {
-        return checkPrimitive(valueType);
+        return ZenTypeUtil.checkPrimitive(valueType);
     }
     
     public ZenType getKeyType() {
-        return checkPrimitive(keyType);
-    }
-    
-    private ZenType checkPrimitive(ZenType type) {
-    	if (type.toJavaClass().isPrimitive()) {
-    		if(type == ZenType.INT) return ZenType.INTOBJECT;
-    		else if(type == ZenType.BOOL) return ZenType.BOOLOBJECT;
-    		else if(type == ZenType.BYTE) return ZenType.BYTEOBJECT;
-    		else if(type == ZenType.SHORT) return ZenType.SHORTOBJECT;
-    		else if(type == ZenType.DOUBLE) return ZenType.DOUBLEOBJECT;
-    		else if(type == ZenType.FLOAT) return ZenType.FLOATOBJECT;
-    		else if(type == ZenType.LONG) return ZenType.LONGOBJECT;
-    	}
-    	return type;
+    	return ZenTypeUtil.checkPrimitive(keyType);
     }
     
     @Override
