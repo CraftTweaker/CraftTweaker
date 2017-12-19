@@ -32,7 +32,9 @@ public class ExpressionArrayAdd extends Expression {
 
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
+		
 		MethodOutput output = environment.getOutput();
+		/*
 		output.newObject(ArrayList.class);
 		output.dup();
 		array.compile(true, environment);
@@ -44,6 +46,32 @@ public class ExpressionArrayAdd extends Expression {
 		output.invokeInterface(List.class, "add", boolean.class, Object.class);
 		output.pop();
 		output.invokeInterface(List.class, "toArray", Object[].class, new Class<?>[]{});
+		*/
+		
+		
+		//Old Array
+		array.compile(true, environment);
+		output.dup();
+		output.arrayLength();
+		output.iConst1();
+		output.iAdd();
+
+
+		if (type.getBaseType().toJavaClass().isPrimitive()) {
+			Class<?> arrayType = getType().toJavaClass();
+			output.invokeStatic(Arrays.class, "copyOf", arrayType, arrayType, int.class);
+		} else {
+			output.invokeStatic(Arrays.class, "copyOf", Object[].class, Object[].class, int.class);
+		}
+
+		output.dup();
+		output.dup();
+		output.arrayLength();
+		output.iConst1();
+		output.iSub();
+		value.cast(getPosition(), environment, type.getBaseType()).compile(true, environment);
+		output.arrayStore(type.getBaseType().toASMType());
+		output.checkCast(type.getSignature());
 	}
 
 }

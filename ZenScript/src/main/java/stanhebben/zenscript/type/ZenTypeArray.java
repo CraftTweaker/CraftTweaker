@@ -93,8 +93,6 @@ public abstract class ZenTypeArray extends ZenType {
         if(operator == OperatorType.INDEXGET) {
             return indexGet(position, environment, left, right);
         } else if (operator == OperatorType.ADD) {
-        	if (getBaseType().toJavaClass().isArray()) throw new UnsupportedOperationException("You cannot add to nested arrays!");
-        	if (getBaseType().toJavaClass().isPrimitive()) throw new UnsupportedOperationException("You cannot add to primitive arrays!");
         	if (!getBaseType().equals(right.getType()) && !right.getType().canCastExplicit(getBaseType(), environment)) throw new IllegalArgumentException(String.format("Cannot add %s to %s", right.getType().toString(), toString()));
         	
         	return add(position, environment, left, right);
