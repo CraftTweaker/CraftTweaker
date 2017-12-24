@@ -1,24 +1,40 @@
 package stanhebben.zenscript.type;
 
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import stanhebben.zenscript.TypeExpansion;
 import stanhebben.zenscript.annotations.*;
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.compiler.ITypeRegistry;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.type.casting.*;
-import stanhebben.zenscript.type.iterator.*;
+import stanhebben.zenscript.type.casting.CastingNotNull;
+import stanhebben.zenscript.type.casting.CastingRuleNone;
+import stanhebben.zenscript.type.casting.CastingRuleNullableStaticMethod;
+import stanhebben.zenscript.type.casting.ICastingRuleDelegate;
+import stanhebben.zenscript.type.iterator.IteratorIterable;
+import stanhebben.zenscript.type.iterator.IteratorList;
+import stanhebben.zenscript.type.iterator.IteratorMap;
+import stanhebben.zenscript.type.iterator.IteratorMapKeys;
 import stanhebben.zenscript.type.natives.*;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.IAnyDefinition;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 import stanhebben.zenscript.value.IAny;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
-import static stanhebben.zenscript.util.AnyClassWriter.*;
-import static stanhebben.zenscript.util.ZenTypeUtil.*;
+import static stanhebben.zenscript.util.AnyClassWriter.throwCastException;
+import static stanhebben.zenscript.util.AnyClassWriter.throwUnsupportedException;
+import static stanhebben.zenscript.util.ZenTypeUtil.internal;
+import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 
 /**
  * @author Stanneke
@@ -430,7 +446,7 @@ public class ZenTypeNative extends ZenType {
 
         if (followCasters) {
             for (ZenNativeCaster caster : casters) {
-                // TODO: implement
+                caster.constructCastingRule(rules);
             }
 
             TypeExpansion expansion = environment.getExpansion(getName());
@@ -549,54 +565,54 @@ public class ZenTypeNative extends ZenType {
         return false;
     }
 
-	/*
+    /*
      * private void compileAnyUnary(String anySignature, OperatorType operator,
-	 * IEnvironmentMethod environment) { List<ZenNativeOperator> operators = new
-	 * ArrayList<ZenNativeOperator>(); for (ZenNativeOperator unary :
-	 * this.unaryOperators) { if (unary.getOperator() == operator) {
-	 * operators.add(unary); } }
-	 * 
-	 * MethodOutput output = environment.getOutput(); if (operators.isEmpty()) {
-	 * output.newObject(ZenRuntimeException.class); output.dup();
-	 * output.constant("Cannot " + operator + " " + classPkg + '.' + className);
-	 * output.construct(ZenRuntimeException.class, String.class);
-	 * output.aThrow(); } else { if (operators.size() > 1) {
-	 * environment.error(null, "Multiple " + operator + " operators for " +
-	 * cls); }
-	 * 
-	 * ZenNativeOperator unary = operators.get(0);
-	 * 
-	 * output.loadObject(0); output.getField(anySignature, "value",
-	 * signature(cls));
-	 * 
-	 * output.invoke(unary.getMethod());
-	 * environment.getType(unary.getClass()).compileCast(null, environment,
-	 * ANY); output.returnObject(); } }
-	 * 
-	 * private void compileAnyBinary(String anySignature, OperatorType operator,
-	 * IEnvironmentMethod environment) { List<ZenNativeOperator> operators = new
-	 * ArrayList<ZenNativeOperator>(); for (ZenNativeOperator binary :
-	 * binaryOperators) { if (binary.getOperator() == operator) {
-	 * operators.add(binary); } }
-	 * 
-	 * MethodOutput output = environment.getOutput(); if (operators.isEmpty()) {
-	 * output.newObject(ZenRuntimeException.class); output.dup();
-	 * output.constant("Cannot " + operator + " on " + classPkg + '.' +
-	 * className); output.construct(ZenRuntimeException.class, String.class);
-	 * output.aThrow(); } else if (operators.size() == 1) { ZenNativeOperator
-	 * binary = operators.get(0);
-	 * 
-	 * output.loadObject(0); output.getField(anySignature, "value",
-	 * signature(cls)); output.loadObject(1); output.invoke(binary.getMethod());
-	 * environment.getType(binary.getClass()).compileCast(null, environment,
-	 * ANY); output.returnObject(); } else { environment.error(null, "Multiple "
-	 * + operator + " operators for " + cls + " (which is not yet supported)");
-	 * } }
-	 * 
-	 * public void compileAnyMember(String anySignature, EnvironmentMethod
-	 * environment) { // TODO: complete MethodOutput output =
-	 * environment.getOutput(); output.aConstNull(); output.returnObject(); }
-	 */
+     * IEnvironmentMethod environment) { List<ZenNativeOperator> operators = new
+     * ArrayList<ZenNativeOperator>(); for (ZenNativeOperator unary :
+     * this.unaryOperators) { if (unary.getOperator() == operator) {
+     * operators.add(unary); } }
+     *
+     * MethodOutput output = environment.getOutput(); if (operators.isEmpty()) {
+     * output.newObject(ZenRuntimeException.class); output.dup();
+     * output.constant("Cannot " + operator + " " + classPkg + '.' + className);
+     * output.construct(ZenRuntimeException.class, String.class);
+     * output.aThrow(); } else { if (operators.size() > 1) {
+     * environment.error(null, "Multiple " + operator + " operators for " +
+     * cls); }
+     *
+     * ZenNativeOperator unary = operators.get(0);
+     *
+     * output.loadObject(0); output.getField(anySignature, "value",
+     * signature(cls));
+     *
+     * output.invoke(unary.getMethod());
+     * environment.getType(unary.getClass()).compileCast(null, environment,
+     * ANY); output.returnObject(); } }
+     *
+     * private void compileAnyBinary(String anySignature, OperatorType operator,
+     * IEnvironmentMethod environment) { List<ZenNativeOperator> operators = new
+     * ArrayList<ZenNativeOperator>(); for (ZenNativeOperator binary :
+     * binaryOperators) { if (binary.getOperator() == operator) {
+     * operators.add(binary); } }
+     *
+     * MethodOutput output = environment.getOutput(); if (operators.isEmpty()) {
+     * output.newObject(ZenRuntimeException.class); output.dup();
+     * output.constant("Cannot " + operator + " on " + classPkg + '.' +
+     * className); output.construct(ZenRuntimeException.class, String.class);
+     * output.aThrow(); } else if (operators.size() == 1) { ZenNativeOperator
+     * binary = operators.get(0);
+     *
+     * output.loadObject(0); output.getField(anySignature, "value",
+     * signature(cls)); output.loadObject(1); output.invoke(binary.getMethod());
+     * environment.getType(binary.getClass()).compileCast(null, environment,
+     * ANY); output.returnObject(); } else { environment.error(null, "Multiple "
+     * + operator + " operators for " + cls + " (which is not yet supported)");
+     * } }
+     *
+     * public void compileAnyMember(String anySignature, EnvironmentMethod
+     * environment) { // TODO: complete MethodOutput output =
+     * environment.getOutput(); output.aConstNull(); output.returnObject(); }
+     */
 
     @Override
     public String getName() {
@@ -775,16 +791,16 @@ public class ZenTypeNative extends ZenType {
             throwUnsupportedException(output, getName(), "not");
             /*
              * for (ZenNativeOperator unaryOperator : unaryOperators) { if
-			 * (unaryOperator.getOperator() == OperatorType.NOT) {
-			 * 
-			 * } }
-			 * 
-			 * TypeExpansion expansion = environment.getExpansion(getName()); if
-			 * (expansion != null) { if (expansion.compileAnyUnary(output,
-			 * OperatorType.NOT)) {
-			 * 
-			 * } }
-			 */
+             * (unaryOperator.getOperator() == OperatorType.NOT) {
+             *
+             * } }
+             *
+             * TypeExpansion expansion = environment.getExpansion(getName()); if
+             * (expansion != null) { if (expansion.compileAnyUnary(output,
+             * OperatorType.NOT)) {
+             *
+             * } }
+             */
         }
 
         @Override
