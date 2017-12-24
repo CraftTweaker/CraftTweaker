@@ -1,38 +1,24 @@
 package crafttweaker.mc1120.actions;
 
-import crafttweaker.*;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.IAction;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStackWildcardSize;
-
 public class ActionOreDictRemoveItem implements IAction {
     
     private final String id;
-    private final IItemStack item;
+    private final ItemStack item;
     
-    public ActionOreDictRemoveItem(String id, IItemStack item) {
+    public ActionOreDictRemoveItem(String id, ItemStack item) {
         this.id = id;
         this.item = item;
     }
     
     @Override
     public void apply() {
-        ItemStack result = ItemStack.EMPTY;
-        for(ItemStack itemStack : OreDictionary.getOres(id)) {
-            if(item.matches(getIItemStackWildcardSize(itemStack))) {
-                result = itemStack;
-                break;
-            }
-        }
         int oreId = OreDictionary.getOreID(id);
-        if(result.isEmpty()) {
-            CraftTweakerAPI.logError(item + " does not exist in oredict: " + id);
-            return;
-        }
-        MCOreDictEntry.getOredictContents().get(oreId).remove(result);
+        MCOreDictEntry.getOredictContents().get(oreId).remove(item);
     }
     
     
