@@ -16,7 +16,7 @@ import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.network.MessageOpenBrowser;
-import crafttweaker.mc1120.oredict.MCOreDict;
+import crafttweaker.mc1120.oredict.*;
 import crafttweaker.mc1120.preprocessors.ModLoadedPreprocessor;
 import crafttweaker.mc1120.proxies.CommonProxy;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
@@ -45,7 +45,7 @@ import java.util.*;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.0.10", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = CraftTweaker.MODID, version = "4.0.11", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
@@ -131,6 +131,8 @@ public class CraftTweaker {
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
         try {
+            MCOreDictEntry.oredictToRemove.forEach(CraftTweakerAPI::apply);
+            MCOreDictEntry.oredictToAdd.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
             MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.actionRemoveRecipesNoIngredients.apply();
