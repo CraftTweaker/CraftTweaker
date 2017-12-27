@@ -1,6 +1,9 @@
 package crafttweaker.api.event;
 
+import crafttweaker.annotations.ZenRegister;
 import crafttweaker.util.IEventHandler;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * 37 kinds of event handlers!
@@ -9,12 +12,19 @@ import crafttweaker.util.IEventHandler;
  *
  * @author Stan
  */
+@ZenClass("crafttweaker.events.IEventManager")
+@ZenRegister
 public interface IEventManager {
     
+	@ZenMethod
+	IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
+	
     // implemented
+	@ZenMethod
     IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
     
     // implemented
+	@ZenMethod
     IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev);
     
     IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev);

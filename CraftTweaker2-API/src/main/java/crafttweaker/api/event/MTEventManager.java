@@ -122,6 +122,7 @@ public class MTEventManager implements IEventManager {
         elPlayerChangedDimension.publish(event);
     }
     
+    @Override
     public IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev) {
         return elPlayerLoggedIn.add(ev);
     }

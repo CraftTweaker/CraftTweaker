@@ -9,7 +9,7 @@ import stanhebben.zenscript.annotations.*;
 /**
  * @author Stan Hebben
  */
-@ZenClass("crafttweaker.event.PlayerCraftingEvent")
+@ZenClass("crafttweaker.event.PlayerCraftedEvent")
 @ZenRegister
 public class PlayerCraftedEvent {
     

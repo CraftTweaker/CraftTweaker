@@ -9,6 +9,7 @@ import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.util.ZenPosition;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class ParsedExpressionFunction extends ParsedExpression {
     public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
         if(predictedType != null && predictedType instanceof ZenTypeNative) {
             System.out.println("Known predicted function type: " + predictedType);
-            
+
             ZenTypeNative nativeType = (ZenTypeNative) predictedType;
             Class nativeClass = nativeType.getNativeClass();
             if(nativeClass.isInterface() && nativeClass.getMethods().length == 1) {
@@ -47,14 +48,13 @@ public class ParsedExpressionFunction extends ParsedExpression {
                     return new ExpressionInvalid(getPosition());
                 }
                 for(int i = 0; i < arguments.size(); i++) {
-                    ZenType argumentType = environment.getType(method.getGenericParameterTypes()[i]);
+                    ZenType argumentType = environment.getType(method.getParameterTypes()[i]);
                     if(arguments.get(i).getType() != ZenTypeAny.INSTANCE && !argumentType.canCastImplicit(arguments.get(i).getType(), environment)) {
                         environment.error(getPosition(), "argument " + i + " doesn't match");
                         return new ExpressionInvalid(getPosition());
                     }
                 }
-                
-                return new ExpressionJavaLambda(getPosition(), nativeClass, arguments, statements, environment.getType(nativeClass));
+                return isGeneric(method) ? new ExpressionJavaLambdaSimpleGeneric(getPosition(), nativeClass, arguments, statements, environment.getType(nativeClass)) : new ExpressionJavaLambda(getPosition(), nativeClass, arguments, statements, environment.getType(nativeClass));
             } else {
                 environment.error(getPosition(), predictedType.toString() + " is not a functional interface");
                 return new ExpressionInvalid(getPosition());
@@ -63,5 +63,13 @@ public class ParsedExpressionFunction extends ParsedExpression {
             System.out.println("No known predicted type");
             return new ExpressionFunction(getPosition(), arguments, returnType, statements);
         }
+    }
+
+    private boolean isGeneric(Method method) {
+        for (Type type : method.getGenericParameterTypes()) {
+            if(type.getTypeName().equals("T")) return true;
+        }
+        return false;
+
     }
 }

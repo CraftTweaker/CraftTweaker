@@ -2,6 +2,8 @@ package crafttweaker.util;
 
 import crafttweaker.api.event.IEventHandle;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @author Stan
  */
@@ -46,8 +48,13 @@ public class EventList<T> {
         }
         
         while(current != null) {
-            current.handler.handle(event);
-            
+            //current.handler.handle(event);
+            try {
+                current.handler.getClass().getDeclaredMethods()[0].invoke(current.handler, event);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
             synchronized(this) {
                 current = current.next;
             }
