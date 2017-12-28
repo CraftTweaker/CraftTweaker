@@ -35,7 +35,7 @@ public class ExpressionStringMethod extends Expression{
 
 	private static Method getMethod(String name) {
 		try {
-			return String.class.getMethod(name, null);
+			return String.class.getMethod(name, new Class[0]);
 		} catch (NoSuchMethodException e) {
 			return null;
 		}

@@ -25,6 +25,14 @@ public class MethodOutput {
         MethodVisitor methodVisitor = cls.visitMethod(access, name, descriptor, signature, exceptions);
         visitor = new LocalVariablesSorter(access, descriptor, methodVisitor);
     }
+
+    public MethodOutput(ClassVisitor cls, int access, String name, String descriptor, String signature, String[] exceptions, String[] annotations) {
+        MethodVisitor methodVisitor = cls.visitMethod(access, name, descriptor, signature, exceptions);
+        for (String annotation : annotations) {
+            methodVisitor.visitAnnotation(annotation, true);
+        }
+        visitor = new LocalVariablesSorter(access, descriptor, methodVisitor);
+    }
     
     public MethodOutput(LocalVariablesSorter visitor) {
         this.visitor = visitor;
@@ -33,7 +41,11 @@ public class MethodOutput {
     public void enableDebug() {
         debug = true;
     }
-    
+
+    public LocalVariablesSorter getVisitor() {
+        return visitor;
+    }
+
     public void start() {
         if(debug)
             System.out.println("--start--");

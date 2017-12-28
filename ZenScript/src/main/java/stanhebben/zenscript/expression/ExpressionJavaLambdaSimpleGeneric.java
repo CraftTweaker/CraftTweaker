@@ -13,10 +13,11 @@ import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.ZenTypeUtil;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 import static stanhebben.zenscript.util.ZenTypeUtil.signature;
@@ -47,7 +48,15 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
 
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        arguments.stream().map(ParsedFunctionArgument::getType).forEach(argument -> sb.append(argument.equals(ZenTypeAny.INSTANCE) ? signature(Object.class) : argument.getSignature()));
+        //arguments.stream().map(ParsedFunctionArgument::getType).forEach(argument -> sb.append(argument.equals(ZenTypeAny.INSTANCE) ? signature(Object.class) : argument.getSignature()));
+        for (int i = 0; i < arguments.size(); i++) {
+            ZenType t = arguments.get(i).getType();
+            if(t.equals(ZenTypeAny.INSTANCE)) {
+                sb.append(signature(interfaceClass.getMethods()[0].getParameterTypes()[i]));
+            } else {
+                sb.append(t.getSignature());
+            }
+        }
         sb.append(")").append(signature(interfaceClass.getDeclaredMethods()[0].getReturnType()));
         this.descriptor = sb.toString();
     }
@@ -68,7 +77,7 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
         String clsName = environment.makeClassName();
 
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, clsName, sign(), "java/lang/Object", new String[]{internal(interfaceClass)});
+        cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, clsName, createMethodSignature(), "java/lang/Object", new String[]{internal(interfaceClass)});
 
 
         MethodOutput constructor = new MethodOutput(cw, Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
@@ -79,12 +88,14 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
         constructor.end();
 
         MethodOutput output = new MethodOutput(cw, Opcodes.ACC_PUBLIC, method.getName(), descriptor, null, null);
-
         IEnvironmentClass environmentClass = new EnvironmentClass(cw, environment);
         IEnvironmentMethod environmentMethod = new EnvironmentMethod(output, environmentClass);
 
         for(int i = 0; i < arguments.size(); i++) {
-            environmentMethod.putValue(arguments.get(i).getName(), new SymbolArgument(i + 1, arguments.get(i).getType()), getPosition());
+            ZenType typeToPut = arguments.get(i).getType();
+            if(typeToPut.equals(ZenType.ANY)) typeToPut = environment.getType(method.getParameterTypes()[i]);
+
+            environmentMethod.putValue(arguments.get(i).getName(), new SymbolArgument(i + 1, typeToPut), getPosition());
         }
 
         output.start();
@@ -94,6 +105,22 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
         output.ret();
         output.end();
 
+        if (!Objects.equals(genericClass, Object.class)) {
+            MethodOutput bridge = new MethodOutput(cw, Opcodes.ACC_PUBLIC | Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE, method.getName(), ZenTypeUtil.descriptor(method), null, null);
+            bridge.loadObject(0);
+            bridge.loadObject(1);
+            bridge.checkCast(internal(genericClass));
+            if(arguments.size() > 1) {
+                for (int i = 1; i < arguments.size();) {
+                    bridge.load(org.objectweb.asm.Type.getType(method.getParameterTypes()[i]), ++i);
+                }
+            }
+
+            bridge.invokeVirtual(clsName, method.getName(), descriptor);
+            bridge.returnType(org.objectweb.asm.Type.getReturnType(method));
+            bridge.end();
+        }
+
         environment.putClass(clsName, cw.toByteArray());
 
         // make class instance
@@ -102,7 +129,7 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
         environment.getOutput().construct(clsName);
     }
 
-    private String sign() {
+    private String createMethodSignature() {
         StringBuilder sb = new StringBuilder();
         sb.append("Ljava/lang/Object;");
         sb.append(signature(interfaceClass));
