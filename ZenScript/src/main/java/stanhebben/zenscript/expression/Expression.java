@@ -7,6 +7,7 @@ import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.casting.CastingAnySubtype;
 import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -68,6 +69,9 @@ public abstract class Expression implements IPartialExpression {
         } else {
             ICastingRule castingRule = getType().getCastingRule(type, environment);
             if(castingRule == null) {
+                if(getType().canCastImplicit(type, environment)) {
+                    return new ExpressionAs(position, this, new CastingAnySubtype(getType(), type));
+                }
                 environment.error(position, "Cannot cast " + this.getType() + " to " + type);
                 return new ExpressionInvalid(position, type);
             } else {

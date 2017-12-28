@@ -48,11 +48,15 @@ public class EventList<T> {
         }
         
         while(current != null) {
-            //current.handler.handle(event);
             try {
-                current.handler.getClass().getDeclaredMethods()[0].invoke(current.handler, event);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                current.handler.handle(event);
+            } catch (AbstractMethodError ignored) {
+                try {
+                    current.handler.getClass().getDeclaredMethods()[0].invoke(current.handler, event);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             synchronized(this) {
