@@ -54,21 +54,18 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
-    public void add(IItemStack item) {
-        ItemStack stack = getItemStack(item);
-        if(!stack.isEmpty()) {
-            CraftTweakerAPI.apply(new ActionOreDictAddItem(id, stack));
-        }
+    public void add(IItemStack... items) {
+    	 for(IItemStack item : items) {
+             ItemStack stack = getItemStack(item);
+             if(!stack.isEmpty()) {
+                 CraftTweakerAPI.apply(new ActionOreDictAddItem(id, stack));
+             }
+         }
     }
 
     @Override
     public void addItems(IItemStack[] items) {
-        for(IItemStack item : items) {
-            ItemStack stack = getItemStack(item);
-            if(!stack.isEmpty()) {
-                CraftTweakerAPI.apply(new ActionOreDictAddItem(id, stack));
-            }
-        }
+       add(items);
     }
 
     @Override
@@ -81,22 +78,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
-    public void remove(IItemStack item) {
-        ItemStack result = ItemStack.EMPTY;
-        for(ItemStack itemStack : OreDictionary.getOres(getName())) {
-            if(item.matches(getIItemStackWildcardSize(itemStack))) {
-                result = itemStack;
-                break;
-            }
-        }
-
-        if(!result.isEmpty()) {
-            CraftTweakerAPI.apply(new ActionOreDictRemoveItem(id, result));
-        }
-    }
-
-    @Override
-    public void removeItems(IItemStack[] items) {
+    public void remove(IItemStack... items) {
         for(IItemStack item : items) {
             ItemStack result = ItemStack.EMPTY;
             for(ItemStack itemStack : OreDictionary.getOres(id)) {
@@ -110,6 +92,11 @@ public class MCOreDictEntry implements IOreDictEntry {
                 CraftTweakerAPI.apply(new ActionOreDictRemoveItem(id, result));
             }
         }
+    }
+
+    @Override
+    public void removeItems(IItemStack[] items) {
+        remove(items);
     }
 
     @Override
