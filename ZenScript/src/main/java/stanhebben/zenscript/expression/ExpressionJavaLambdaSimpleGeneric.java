@@ -48,10 +48,9 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
 
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        //arguments.stream().map(ParsedFunctionArgument::getType).forEach(argument -> sb.append(argument.equals(ZenTypeAny.INSTANCE) ? signature(Object.class) : argument.getSignature()));
         for (int i = 0; i < arguments.size(); i++) {
             ZenType t = arguments.get(i).getType();
-            if(t.equals(ZenTypeAny.INSTANCE)) {
+            if(t.equals(ZenType.ANY)) {
                 sb.append(signature(interfaceClass.getMethods()[0].getParameterTypes()[i]));
             } else {
                 sb.append(t.getSignature());
@@ -93,7 +92,8 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
 
         for(int i = 0; i < arguments.size(); i++) {
             ZenType typeToPut = arguments.get(i).getType();
-            if(typeToPut.equals(ZenType.ANY)) typeToPut = environment.getType(method.getParameterTypes()[i]);
+            if(typeToPut.equals(ZenType.ANY)) typeToPut = environment.getType(method.getGenericParameterTypes()[i]);
+            if(typeToPut == null) typeToPut = environment.getType(method.getParameterTypes()[i]);
 
             environmentMethod.putValue(arguments.get(i).getName(), new SymbolArgument(i + 1, typeToPut), getPosition());
         }
