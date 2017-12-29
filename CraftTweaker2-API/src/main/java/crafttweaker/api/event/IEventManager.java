@@ -17,6 +17,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface IEventManager {
     
 	@ZenMethod
+	IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
+	
+	@ZenMethod
 	IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
 	
     // implemented

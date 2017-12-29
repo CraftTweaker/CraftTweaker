@@ -10,6 +10,7 @@ import stanhebben.zenscript.annotations.*;
  * @author Stan Hebben
  */
 @ZenClass("crafttweaker.container.IContainer")
+@IterableSimple("crafttweaker.item.IItemStack")
 @ZenRegister
 public interface IContainer extends Iterable<IItemStack> {
     
