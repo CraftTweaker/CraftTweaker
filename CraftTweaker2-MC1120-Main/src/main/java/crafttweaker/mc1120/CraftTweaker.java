@@ -113,13 +113,6 @@ public class CraftTweaker {
                 e.printStackTrace();
             }
         });
-        
-        GlobalRegistry.registerBracketHandler(new BracketHandlerItem());
-        GlobalRegistry.registerBracketHandler(new BracketHandlerLiquid());
-        GlobalRegistry.registerBracketHandler(new BracketHandlerOre());
-        GlobalRegistry.registerBracketHandler(new BracketHandlerEntity());
-        GlobalRegistry.registerBracketHandler(new BracketHandlerPotion());
-        
         if(CraftTweakerPlatformUtils.isClient()) {
             CraftTweakerAPI.client = new MCClient();
         }
