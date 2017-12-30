@@ -10,7 +10,8 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public interface IDimension extends IBlockGroup {
     
-    @ZenGetter
+    @ZenGetter("day")
+    @ZenMethod
     boolean isDay();
     
     @ZenMethod

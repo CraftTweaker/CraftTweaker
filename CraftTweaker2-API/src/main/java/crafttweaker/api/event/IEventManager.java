@@ -22,16 +22,15 @@ public interface IEventManager {
 	@ZenMethod
 	IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
 	
-    // implemented
 	@ZenMethod
     IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
     
-    // implemented
 	@ZenMethod
     IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev);
     
     IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev);
     
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
@@ -42,12 +41,14 @@ public interface IEventManager {
     
     IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
     
     IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev);
     
     IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev);
     
     IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);

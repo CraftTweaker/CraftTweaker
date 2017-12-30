@@ -67,6 +67,17 @@ public class CommonEventHandler {
     }
     
     @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent ev) {
+    	CrafttweakerImplementationAPI.events.publishPlayerRespawn(new PlayerRespawnEvent(CraftTweakerMC.getIPlayer(ev.player)));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerPickupItem(PlayerEvent.ItemPickupEvent ev) {
+    	PlayerPickupItemEvent event = new PlayerPickupItemEvent(CraftTweakerMC.getIPlayer(ev.player), CraftTweakerMC.getIItemStack(ev.pickedUp.getItem()));
+    	CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event);    	
+    }
+    
+    @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
         if(CraftTweaker.INSTANCE.recipes.hasTransformerRecipes()) {
