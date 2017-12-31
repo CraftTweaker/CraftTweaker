@@ -31,8 +31,8 @@ public class ExpressionMapContains extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
-        	ZenTypeAssociative mapType = (ZenTypeAssociative) map.getType();
+        if (result) {
+            ZenTypeAssociative mapType = (ZenTypeAssociative) map.getType();
             map.compile(result, environment);
             key.cast(getPosition(), environment, mapType.getKeyType()).compile(result, environment);
 

@@ -8,8 +8,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.recipes.IFurnaceRecipe")
 @ZenRegister
 public interface IFurnaceRecipe {
-    
-	@ZenMethod
-	@ZenGetter("commandString")
+
+    @ZenMethod
+    @ZenGetter("commandString")
     String toCommandString();
 }

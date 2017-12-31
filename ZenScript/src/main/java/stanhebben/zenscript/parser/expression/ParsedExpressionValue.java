@@ -15,7 +15,7 @@ public class ParsedExpressionValue extends ParsedExpression {
     public ParsedExpressionValue(ZenPosition position, IPartialExpression value) {
         super(position);
 
-        if(value == null)
+        if (value == null)
             throw new IllegalArgumentException("value cannot be null");
 
         this.value = value;

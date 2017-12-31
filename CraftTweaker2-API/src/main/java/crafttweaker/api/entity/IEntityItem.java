@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  * @author Stan Hebben
  */
 public interface IEntityItem extends IEntity {
-    
+
     /**
      * Gets the entity item.
      *

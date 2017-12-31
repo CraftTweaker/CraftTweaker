@@ -4,7 +4,6 @@ package stanhebben.zenscript.parser;
  * A HashMap implementation which is optimized for integer keys.
  *
  * @param <T>
- *
  * @author Stan Hebben
  */
 public class HashMapI<T> {
@@ -25,7 +24,7 @@ public class HashMapI<T> {
         mask = 15;
         size = 0;
 
-        for(int i = 0; i < keys.length; i++) {
+        for (int i = 0; i < keys.length; i++) {
             keys[i] = Integer.MIN_VALUE;
         }
     }
@@ -39,31 +38,31 @@ public class HashMapI<T> {
      * @param value value to be associated with the specified key
      */
     public void put(int key, T value) {
-        if(size > (keys.length * 3) >> 2) {
+        if (size > (keys.length * 3) >> 2) {
             expand();
         }
 
         int index = key & mask;
 
-        if(keys[index] == Integer.MIN_VALUE) {
+        if (keys[index] == Integer.MIN_VALUE) {
             keys[index] = key;
             values[index] = value;
         } else {
-            if(keys[index] == key) {
+            if (keys[index] == key) {
                 values[index] = value;
                 return;
             }
-            while(next[index] != 0) {
+            while (next[index] != 0) {
                 index = next[index] - 1;
-                if(keys[index] == key) {
+                if (keys[index] == key) {
                     values[index] = value;
                     return;
                 }
             }
             int ref = index;
-            while(keys[index] != Integer.MIN_VALUE) {
+            while (keys[index] != Integer.MIN_VALUE) {
                 index++;
-                if(index == keys.length)
+                if (index == keys.length)
                     index = 0;
             }
             next[ref] = index + 1;
@@ -80,14 +79,13 @@ public class HashMapI<T> {
      * map contains no mapping for the key.
      *
      * @param key the key whose associated value is to be returned
-     *
      * @return the value to which the specified key is mapped, or null if this
      * map contains no mapping for the key
      */
     public T get(int key) {
         int index = key & mask;
-        while(keys[index] != key) {
-            if(next[index] == 0) {
+        while (keys[index] != key) {
+            if (next[index] == 0) {
                 return null;
             }
             index = next[index] - 1;
@@ -99,13 +97,12 @@ public class HashMapI<T> {
      * Returns true if this map contains a mapping for the specified key.
      *
      * @param key The key whose presence in this map is to be tested
-     *
      * @return true if this map contains a mapping for the specified key.
      */
     public boolean containsKey(int key) {
         int index = key & mask;
-        while(keys[index] != key) {
-            if(next[index] == 0) {
+        while (keys[index] != key) {
+            if (next[index] == 0) {
                 return false;
             }
             index = next[index] - 1;
@@ -132,8 +129,8 @@ public class HashMapI<T> {
     public int[] keysArray() {
         int[] result = new int[size];
         int ix = 0;
-        for(int key : keys) {
-            if(key != Integer.MIN_VALUE)
+        for (int key : keys) {
+            if (key != Integer.MIN_VALUE)
                 result[ix++] = key;
         }
         return result;
@@ -152,12 +149,12 @@ public class HashMapI<T> {
         int[] newNext = new int[next.length * 2];
         int newMask = newKeys.length - 1;
 
-        for(int i = 0; i < newKeys.length; i++) {
+        for (int i = 0; i < newKeys.length; i++) {
             newKeys[i] = Integer.MIN_VALUE;
         }
 
-        for(int i = 0; i < keys.length; i++) {
-            if(keys[i] == Integer.MIN_VALUE) {
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i] == Integer.MIN_VALUE) {
                 continue;
             }
 
@@ -165,15 +162,15 @@ public class HashMapI<T> {
             T value = values[i];
             int index = key & newMask;
 
-            if(newKeys[index] == Integer.MIN_VALUE) {
+            if (newKeys[index] == Integer.MIN_VALUE) {
                 newKeys[index] = key;
                 newValues[index] = value;
             } else {
-                while(newNext[index] != 0) {
+                while (newNext[index] != 0) {
                     index = newNext[index] - 1;
                 }
                 int ref = index;
-                while(newKeys[index] != Integer.MIN_VALUE) {
+                while (newKeys[index] != Integer.MIN_VALUE) {
                     index = (index + 1) & newMask;
                 }
                 newNext[ref] = index + 1;
@@ -215,7 +212,7 @@ public class HashMapI<T> {
         }
 
         private void skip() {
-            while(i < keys.length && keys[i] == Integer.MIN_VALUE)
+            while (i < keys.length && keys[i] == Integer.MIN_VALUE)
                 i++;
         }
     }

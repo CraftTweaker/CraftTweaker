@@ -1,7 +1,8 @@
 package stanhebben.zenscript.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeString;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -24,7 +25,7 @@ public class ExpressionString extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
+        if (result) {
             environment.getOutput().constant(value);
         }
     }

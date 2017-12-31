@@ -115,15 +115,14 @@ public class MCEntity implements IEntity {
     }
 
     @Override
-    public void setAir(int amount) {
-        entity.setAir(amount);
-    }
-
-    @Override
     public int getAir() {
         return entity.getAir();
     }
 
+    @Override
+    public void setAir(int amount) {
+        entity.setAir(amount);
+    }
 
     @Override
     public Object getInternal() {
@@ -135,13 +134,13 @@ public class MCEntity implements IEntity {
         return entity.toString();
     }
 
-	@Override
-	public IWorld getWorld() {
-		return new MCWorld(entity.world);
-	}
+    @Override
+    public IWorld getWorld() {
+        return new MCWorld(entity.world);
+    }
 
-	@Override
-	public IBlockPos getBlockPos() {
-		return new MCBlockPos(entity.getPosition());
-	}
+    @Override
+    public IBlockPos getBlockPos() {
+        return new MCBlockPos(entity.getPosition());
+    }
 }

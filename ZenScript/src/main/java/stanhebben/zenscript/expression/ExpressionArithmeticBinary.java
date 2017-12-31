@@ -3,7 +3,8 @@ package stanhebben.zenscript.expression;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 /**
  * @author Stanneke
@@ -29,15 +30,15 @@ public class ExpressionArithmeticBinary extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
+        if (result) {
             a.compile(result, environment);
             b.compile(result, environment);
 
             ZenType type = a.getType();
             MethodOutput output = environment.getOutput();
 
-            if(type == ZenType.BOOL) {
-                switch(operator) {
+            if (type == ZenType.BOOL) {
+                switch (operator) {
                     case AND:
                         output.iAnd();
                         break;
@@ -50,8 +51,8 @@ public class ExpressionArithmeticBinary extends Expression {
                     default:
                         throw new RuntimeException("Unsupported operator on " + type + ": " + operator);
                 }
-            } else if(type == ZenTypeByte.INSTANCE || type == ZenTypeShort.INSTANCE || type == ZenTypeInt.INSTANCE) {
-                switch(operator) {
+            } else if (type == ZenTypeByte.INSTANCE || type == ZenTypeShort.INSTANCE || type == ZenTypeInt.INSTANCE) {
+                switch (operator) {
                     case ADD:
                         output.iAdd();
                         break;
@@ -79,8 +80,8 @@ public class ExpressionArithmeticBinary extends Expression {
                     default:
                         throw new RuntimeException("Unsupported operator on " + type + ": " + operator);
                 }
-            } else if(type == ZenTypeLong.INSTANCE) {
-                switch(operator) {
+            } else if (type == ZenTypeLong.INSTANCE) {
+                switch (operator) {
                     case ADD:
                         output.lAdd();
                         break;
@@ -108,8 +109,8 @@ public class ExpressionArithmeticBinary extends Expression {
                     default:
                         throw new RuntimeException("Unsupported operator on " + type + ": " + operator);
                 }
-            } else if(type == ZenTypeFloat.INSTANCE) {
-                switch(operator) {
+            } else if (type == ZenTypeFloat.INSTANCE) {
+                switch (operator) {
                     case ADD:
                         output.fAdd();
                         break;
@@ -128,8 +129,8 @@ public class ExpressionArithmeticBinary extends Expression {
                     default:
                         throw new RuntimeException("Unsupported operator on " + type + ": " + operator);
                 }
-            } else if(type == ZenTypeDouble.INSTANCE) {
-                switch(operator) {
+            } else if (type == ZenTypeDouble.INSTANCE) {
+                switch (operator) {
                     case ADD:
                         output.dAdd();
                         break;

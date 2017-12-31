@@ -8,7 +8,7 @@ package stanhebben.zenscript;
  * @author Stan Hebben
  */
 public class ZenRuntimeException extends RuntimeException {
-    
+
     public ZenRuntimeException(String message) {
         super(message);
     }

@@ -4,7 +4,8 @@ import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.symbols.SymbolLocal;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.ZenPosition;
 
 /**
@@ -36,7 +37,7 @@ public class StatementVar extends Statement {
 
         environment.putValue(name, symbol, getPosition());
 
-        if(cInitializer != null) {
+        if (cInitializer != null) {
             cInitializer.compile(true, environment);
             environment.getOutput().store(symbol.getType().toASMType(), environment.getLocal(symbol));
         }

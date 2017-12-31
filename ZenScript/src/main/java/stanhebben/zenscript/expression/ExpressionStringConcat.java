@@ -1,8 +1,10 @@
 package stanhebben.zenscript.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeString;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class ExpressionStringConcat extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
+        if (result) {
             MethodOutput output = environment.getOutput();
 
             // Step 1: construct StringBuilder
@@ -39,7 +41,7 @@ public class ExpressionStringConcat extends Expression {
             output.construct(StringBuilder.class);
 
             // Step 2: concatenate Strings
-            for(Expression value : values) {
+            for (Expression value : values) {
                 value.compile(true, environment);
                 output.invoke(StringBuilder.class, "append", StringBuilder.class, String.class);
             }
@@ -47,7 +49,7 @@ public class ExpressionStringConcat extends Expression {
             // Step 3: return String
             output.invoke(StringBuilder.class, "toString", String.class);
         } else {
-            for(Expression value : values) {
+            for (Expression value : values) {
                 value.compile(false, environment);
             }
         }

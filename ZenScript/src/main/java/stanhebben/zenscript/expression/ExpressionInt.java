@@ -1,8 +1,11 @@
 package stanhebben.zenscript.expression;
 
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.ZenTypeUtil;
 
 /**
  * @author Stanneke
@@ -21,10 +24,10 @@ public class ExpressionInt extends Expression {
 
     @Override
     public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-        if(type == this.type)
+        if (type == this.type)
             return this;
 
-        switch(type.getNumberType()) {
+        switch (type.getNumberType()) {
             case ZenType.NUM_BYTE:
             case ZenType.NUM_SHORT:
             case ZenType.NUM_INT:
@@ -45,32 +48,32 @@ public class ExpressionInt extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(!result)
+        if (!result)
             return;
 
         MethodOutput output = environment.getOutput();
-        if(type == ZenTypeByte.INSTANCE) {
+        if (type == ZenTypeByte.INSTANCE) {
             output.biPush((byte) value);
-        } else if(type == ZenTypeShort.INSTANCE) {
+        } else if (type == ZenTypeShort.INSTANCE) {
             output.siPush((short) value);
-        } else if(type == ZenTypeInt.INSTANCE) {
+        } else if (type == ZenTypeInt.INSTANCE) {
             output.constant((int) value);
-        } else if(type == ZenTypeLong.INSTANCE) {
+        } else if (type == ZenTypeLong.INSTANCE) {
             output.constant(value);
-            
+
             //Objects
-        } else if(type == ZenTypeIntObject.INSTANCE) {
-        	output.constant((int)value);
-        	output.invokeStatic(ZenTypeUtil.internal(Integer.class), "valueOf", "(I)Ljava/lang/Integer;");
-        } else if(type == ZenTypeByteObject.INSTANCE) {
-        	output.biPush((byte) value);
-        	output.invokeStatic(ZenTypeUtil.internal(Byte.class), "valueOf", "(B)Ljava/lang/Byte;");        	
-        } else if(type == ZenTypeLongObject.INSTANCE) {
-        	output.constant(value);
-        	output.invokeStatic(ZenTypeUtil.internal(Long.class), "valueOf", "(J)Ljava/lang/Long;");
-        } else if(type == ZenTypeShortObject.INSTANCE) {
-        	output.siPush((short) value);
-        	output.invokeStatic(ZenTypeUtil.internal(Short.class), "valueOf", "(S)Ljava/lang/Short;");
+        } else if (type == ZenTypeIntObject.INSTANCE) {
+            output.constant((int) value);
+            output.invokeStatic(ZenTypeUtil.internal(Integer.class), "valueOf", "(I)Ljava/lang/Integer;");
+        } else if (type == ZenTypeByteObject.INSTANCE) {
+            output.biPush((byte) value);
+            output.invokeStatic(ZenTypeUtil.internal(Byte.class), "valueOf", "(B)Ljava/lang/Byte;");
+        } else if (type == ZenTypeLongObject.INSTANCE) {
+            output.constant(value);
+            output.invokeStatic(ZenTypeUtil.internal(Long.class), "valueOf", "(J)Ljava/lang/Long;");
+        } else if (type == ZenTypeShortObject.INSTANCE) {
+            output.siPush((short) value);
+            output.invokeStatic(ZenTypeUtil.internal(Short.class), "valueOf", "(S)Ljava/lang/Short;");
         } else {
             throw new RuntimeException("Internal compiler error: int constant type is not an int");
         }

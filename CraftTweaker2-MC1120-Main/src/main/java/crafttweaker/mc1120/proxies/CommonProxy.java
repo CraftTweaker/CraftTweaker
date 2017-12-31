@@ -4,8 +4,8 @@ import crafttweaker.mc1120.events.CommonEventHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy {
-    
-    public void registerEvents(){
+
+    public void registerEvents() {
         MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
     }
 }

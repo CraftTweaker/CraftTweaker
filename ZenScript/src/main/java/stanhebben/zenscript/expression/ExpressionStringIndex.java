@@ -29,7 +29,7 @@ public class ExpressionStringIndex extends Expression {
         source.compile(result, environment);
         index.compile(result, environment);
 
-        if(result) {
+        if (result) {
             environment.getOutput().dup();
             environment.getOutput().iConst1();
             environment.getOutput().iAdd();

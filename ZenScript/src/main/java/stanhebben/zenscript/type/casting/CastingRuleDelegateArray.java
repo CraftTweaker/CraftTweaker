@@ -1,6 +1,8 @@
 package stanhebben.zenscript.type.casting;
 
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeArrayBasic;
+import stanhebben.zenscript.type.ZenTypeArrayList;
 
 /**
  * @author Stan

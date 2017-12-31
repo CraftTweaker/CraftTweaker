@@ -7,9 +7,11 @@ import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.world.IBiome;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Game interface. Used to obtain general game information.
@@ -19,7 +21,7 @@ import java.util.*;
 @ZenClass("crafttweaker.game.IGame")
 @ZenRegister
 public interface IGame {
-    
+
     /**
      * Retrieves the item definitions in this game.
      *
@@ -27,7 +29,7 @@ public interface IGame {
      */
     @ZenGetter("items")
     List<IItemDefinition> getItems();
-    
+
     /**
      * Retrieves the block definitions in this game.
      *
@@ -35,7 +37,7 @@ public interface IGame {
      */
     @ZenGetter("blocks")
     List<IBlockDefinition> getBlocks();
-    
+
     /**
      * Retrieves the liquids in this game.
      *
@@ -43,7 +45,7 @@ public interface IGame {
      */
     @ZenGetter("liquids")
     List<ILiquidDefinition> getLiquids();
-    
+
     /**
      * Retrieves the biomes in this game.
      *
@@ -51,7 +53,7 @@ public interface IGame {
      */
     @ZenGetter("biomes")
     List<IBiome> getBiomes();
-    
+
     /**
      * Retrieves the potions in this game.
      *
@@ -59,7 +61,7 @@ public interface IGame {
      */
     @ZenGetter("potions")
     List<IPotion> getPotions();
-    
+
     /**
      * Retrieves the entities in this game.
      *
@@ -67,10 +69,10 @@ public interface IGame {
      */
     @ZenGetter("entities")
     List<IEntityDefinition> getEntities();
-    
+
     @ZenMethod()
     IEntityDefinition getEntity(String entityName);
-    
+
     /**
      * Sets a localization value.
      *
@@ -79,7 +81,7 @@ public interface IGame {
      */
     @ZenMethod
     void setLocalization(String key, String value);
-    
+
     /**
      * Sets a localization value.
      *
@@ -89,26 +91,24 @@ public interface IGame {
      */
     @ZenMethod
     void setLocalization(String lang, String key, String value);
-    
+
     /**
      * Gets a localized string.
      *
      * @param key localization key
-     *
      * @return localized value
      */
     @ZenMethod
     String localize(String key);
-    
+
     /**
      * Gets a localized string.
      *
      * @param key  localization key
      * @param lang language
-     *
      * @return localized value
      */
     @ZenMethod
     String localize(String key, String lang);
-    
+
 }

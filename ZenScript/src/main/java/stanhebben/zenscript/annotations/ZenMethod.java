@@ -1,6 +1,9 @@
 package stanhebben.zenscript.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Used to indicate an exposed method.
@@ -14,7 +17,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ZenMethod {
-    
+
     /**
      * Method name. If omitted, the original method name will be used.
      *

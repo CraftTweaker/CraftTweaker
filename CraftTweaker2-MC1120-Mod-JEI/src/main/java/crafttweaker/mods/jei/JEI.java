@@ -1,17 +1,25 @@
 package crafttweaker.mods.jei;
 
-import crafttweaker.*;
-import crafttweaker.annotations.*;
-import crafttweaker.api.item.*;
+import crafttweaker.IAction;
+import crafttweaker.annotations.ModOnly;
+import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
-import crafttweaker.mods.jei.actions.*;
+import crafttweaker.mods.jei.actions.AddItemAction;
+import crafttweaker.mods.jei.actions.DescribeAction;
+import crafttweaker.mods.jei.actions.HideAction;
 import net.minecraftforge.fluids.Fluid;
 import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * MineTweaker JEI support.
@@ -40,7 +48,7 @@ public class JEI {
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
         MCRecipeManager.actionRemoveRecipesNoIngredients.addOutput(output, nbtMatch);
-        for(IItemStack stack : output.getItems()) {
+        for (IItemStack stack : output.getItems()) {
             LATE_ACTIONS.add(new HideAction(stack));
         }
 

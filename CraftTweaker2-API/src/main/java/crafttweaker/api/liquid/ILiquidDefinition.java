@@ -12,17 +12,16 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.liquid.ILiquidDefinition")
 @ZenRegister
 public interface ILiquidDefinition {
-    
+
     /**
      * Converts this liquid into a liquid stack.
      *
      * @param millibuckets item stack size
-     *
      * @return resulting item stack
      */
     @ZenOperator(OperatorType.MUL)
     ILiquidStack asStack(int millibuckets);
-    
+
     /**
      * Gets the unlocalized name of this item.
      *
@@ -30,38 +29,38 @@ public interface ILiquidDefinition {
      */
     @ZenGetter("name")
     String getName();
-    
+
     @ZenGetter("displayName")
     String getDisplayName();
-    
+
     @ZenGetter("luminosity")
     int getLuminosity();
-    
+
     @ZenSetter("luminosity")
     void setLuminosity(int value);
-    
+
     @ZenGetter("density")
     int getDensity();
-    
+
     @ZenSetter("density")
     void setDensity(int density);
-    
+
     @ZenGetter("temperature")
     int getTemperature();
-    
+
     @ZenSetter("temperature")
     void setTemperature(int temperature);
-    
+
     @ZenGetter("viscosity")
     int getViscosity();
-    
+
     @ZenSetter("viscosity")
     void setViscosity(int viscosity);
-    
+
     @ZenGetter("gaseous")
     boolean isGaseous();
-    
+
     @ZenSetter("gaseous")
     void setGaseous(boolean gaseous);
-    
+
 }

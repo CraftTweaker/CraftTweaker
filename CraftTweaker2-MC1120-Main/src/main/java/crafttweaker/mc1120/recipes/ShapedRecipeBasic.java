@@ -1,10 +1,13 @@
 package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.recipes.*;
+import crafttweaker.api.recipes.ICraftingRecipe;
+import crafttweaker.api.recipes.IMTRecipe;
+import crafttweaker.api.recipes.ShapedRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
@@ -31,7 +34,7 @@ public class ShapedRecipeBasic extends ShapedRecipes implements IMTRecipe {
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
         IItemStack result = recipe.getCraftingResult(MCCraftingInventory.get(inventory));
-        if(result == null) {
+        if (result == null) {
             return ItemStack.EMPTY;
         } else {
             return getItemStack(result).copy();

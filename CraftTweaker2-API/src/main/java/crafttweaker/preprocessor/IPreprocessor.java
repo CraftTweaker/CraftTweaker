@@ -9,15 +9,15 @@ public interface IPreprocessor {
      * Gets executed directly on find
      */
     void executeActionOnFind(ScriptFile scriptFile);
-    
+
     /**
      * Gets executed after all preprocessor actions have been collected
      */
     void executeActionOnFinish(ScriptFile scriptFile);
-    
+
     String getPreprocessorLine();
-    
+
     String getFileName();
-    
+
     int getLineIndex();
 }

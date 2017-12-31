@@ -1,7 +1,8 @@
 package crafttweaker.api.entity;
 
 import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * Represents an xp orb.
@@ -11,7 +12,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.entity.IEntityXp")
 @ZenRegister
 public interface IEntityXp extends IEntity {
-    
+
     /**
      * Gets the amount of xp in this orb.
      *

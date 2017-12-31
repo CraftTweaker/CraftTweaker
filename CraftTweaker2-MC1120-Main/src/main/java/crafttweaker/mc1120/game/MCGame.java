@@ -10,119 +10,123 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.actions.ActionSetTranslation;
-import crafttweaker.mc1120.brackets.*;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
+import crafttweaker.mc1120.brackets.BracketHandlerPotion;
 import crafttweaker.mc1120.entity.MCEntityDefinition;
 import crafttweaker.mc1120.item.MCItemDefinition;
 import crafttweaker.mc1120.liquid.MCLiquidDefinition;
-import crafttweaker.mc1120.potions.*;
+import crafttweaker.mc1120.potions.MCPotion;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * @author Stan
  */
 public class MCGame implements IGame {
-    
+
     public static final MCGame INSTANCE = new MCGame();
     private static final Map<String, String> TRANSLATIONS = net.minecraft.util.text.translation.I18n.localizedName.languageList;
     private static final List<IEntityDefinition> ENTITY_DEFINITIONS = new ArrayList<>();
-    
+
     private MCGame() {
     }
-    
+
+    public static Map<String, String> getTRANSLATIONS() {
+        return TRANSLATIONS;
+    }
+
     @Override
     public List<IItemDefinition> getItems() {
         return BracketHandlerItem.getItemNames().keySet().stream().map(item -> new MCItemDefinition(item, BracketHandlerItem.getItemNames().get(item))).collect(Collectors.toList());
     }
-    
+
     @Override
     public List<IBlockDefinition> getBlocks() {
         return Block.REGISTRY.getKeys().stream().map(block -> CraftTweakerMC.getBlockDefinition(Block.REGISTRY.getObject(block))).collect(Collectors.toList());
     }
-    
+
     @Override
     public List<ILiquidDefinition> getLiquids() {
         return FluidRegistry.getRegisteredFluids().entrySet().stream().map(entry -> new MCLiquidDefinition(entry.getValue())).collect(Collectors.toList());
     }
-    
+
     @Override
     public List<IBiome> getBiomes() {
         List<IBiome> result = new ArrayList<>();
-        for(IBiome biome : CraftTweakerMC.biomes) {
-            if(biome != null) {
+        for (IBiome biome : CraftTweakerMC.biomes) {
+            if (biome != null) {
                 result.add(biome);
             }
         }
         return result;
     }
-    
+
     @Override
     public List<IPotion> getPotions() {
         ArrayList<IPotion> potions = new ArrayList<>();
         BracketHandlerPotion.getPotionNames().forEach((s, potion) -> potions.add(new MCPotion(potion)));
         return potions;
     }
-    
+
     @Override
     public List<IEntityDefinition> getEntities() {
-        if(ENTITY_DEFINITIONS.isEmpty()) {
+        if (ENTITY_DEFINITIONS.isEmpty()) {
             ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
         }
         return ENTITY_DEFINITIONS;
     }
-    
+
     @Override
     public IEntityDefinition getEntity(String entityName) {
-        for(IEntityDefinition ent : getEntities()) {
-            if(ent.getName().equalsIgnoreCase(entityName)) {
+        for (IEntityDefinition ent : getEntities()) {
+            if (ent.getName().equalsIgnoreCase(entityName)) {
                 return ent;
             }
         }
         boolean needsReloading = false;
-        for(ResourceLocation res : ForgeRegistries.ENTITIES.getKeys()) {
-            if(res.getResourcePath().equalsIgnoreCase(entityName)) {
+        for (ResourceLocation res : ForgeRegistries.ENTITIES.getKeys()) {
+            if (res.getResourcePath().equalsIgnoreCase(entityName)) {
                 needsReloading = true;
                 break;
             }
         }
-        
-        if(needsReloading) {
+
+        if (needsReloading) {
             ENTITY_DEFINITIONS.clear();
             ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
         }
         return getEntities().stream().filter(ent -> ent.getName().equals(entityName)).findFirst().orElse(null);
     }
-    
+
     @Override
     public void setLocalization(String key, String value) {
         CraftTweakerAPI.apply(new ActionSetTranslation(null, key, value));
     }
-    
+
     @Override
     public void setLocalization(String lang, String key, String value) {
         CraftTweakerAPI.apply(new ActionSetTranslation(lang, key, value));
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public String localize(String key) {
         return I18n.format(key);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public String localize(String key, String lang) {
         return I18n.format(key);
-    }
-    
-    public static Map<String, String> getTRANSLATIONS() {
-        return TRANSLATIONS;
     }
 }

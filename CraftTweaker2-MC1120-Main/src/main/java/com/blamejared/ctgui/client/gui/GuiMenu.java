@@ -1,10 +1,17 @@
 package com.blamejared.ctgui.client.gui;
 
-import com.blamejared.ctgui.api.*;
-import net.minecraftforge.fml.relauncher.*;
-import org.apache.commons.lang3.tuple.*;
+import com.blamejared.ctgui.api.CheckButtonRecipe;
+import com.blamejared.ctgui.api.GuiBase;
+import com.blamejared.ctgui.api.Slider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class GuiMenu {
@@ -43,21 +50,21 @@ public class GuiMenu {
         anyDamage = new MutablePair<>(new CheckButtonRecipe(parent, 3, x, y + (15 * buttonCount++), "Any Damage", false, "anyDamage"), new Slider[]{});
         onlyDamage = new MutablePair<>(new CheckButtonRecipe(parent, 4, x, y + (15 * buttonCount++), "Only Damage", false, "onlyDamage"), new Slider[]{});
         greaterThanEqualDamage = new MutablePair<>(new CheckButtonRecipe(parent, 6, x, y + (15 * buttonCount++), "X>=Damage", false, "gted"), new Slider[]{new Slider("gted", 10, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, slider -> {
-            if(parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
+            if (parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
                 parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
             }
         })});
         lessThanDamage = new MutablePair<>(new CheckButtonRecipe(parent, 7, x, y + (15 * buttonCount++), "Damage<X", false, "ltd"), new Slider[]{new Slider("ltd", 11, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, slider -> {
-            if(parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
+            if (parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
                 parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
             }
         })});
         betweenDamage = new MutablePair<>(new CheckButtonRecipe(parent, 8, x, y + (15 * buttonCount++), "X<Damage<Y", false, "betweenDamage"), new Slider[]{new Slider("betweenDamageX", 12, x - 2, parent.getGuiTop() + parent.getYSize() + 20, parent.getXSize() + 102, 20, "X= ", "", 0, 0, 0, false, true, slider -> {
-            if(parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
+            if (parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
                 parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
             }
         }), new Slider("betweenDamageY", 13, x - 2, parent.getGuiTop() + parent.getYSize() + 44, parent.getXSize() + 102, 20, "Y= ", "", 0, 0, 0, false, true, slider -> {
-            if(parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
+            if (parent.selectedSlot != null && !parent.selectedSlot.getStack().isEmpty()) {
                 parent.selectedSlot.getProperties().put(((Slider) slider).getPropertyKey(), slider.getValueInt());
             }
         })});
@@ -80,7 +87,7 @@ public class GuiMenu {
 
         this.buttons.add(noReturn);
 
-        for(Pair<CheckButtonRecipe, Slider[]> but : this.buttons) {
+        for (Pair<CheckButtonRecipe, Slider[]> but : this.buttons) {
             parent.getButtonList().add(but.getLeft());
         }
 
@@ -100,7 +107,7 @@ public class GuiMenu {
 
     public void close(GuiBase parent) {
         this.parent = parent;
-        if(!parent.getButtonList().isEmpty()) {
+        if (!parent.getButtonList().isEmpty()) {
             this.parent.getButtonList().remove(useOreDict.getLeft());
             this.parent.getButtonList().remove(matchAnyMetadata.getLeft());
             this.parent.getButtonList().remove(anyDamage.getLeft());
@@ -156,14 +163,14 @@ public class GuiMenu {
     }
 
     boolean getPropertyFromMap(Map<String, Boolean> propertyMap, String key) {
-        if(propertyMap.containsKey(key)) {
+        if (propertyMap.containsKey(key)) {
             return propertyMap.get(key);
         }
         return false;
     }
 
     Object getProperty(Map<String, Integer> propertyMap, String key) {
-        if(propertyMap.containsKey(key)) {
+        if (propertyMap.containsKey(key)) {
             return propertyMap.get(key);
         }
         return false;
@@ -178,8 +185,8 @@ public class GuiMenu {
     }
 
     public Slider[] getSliders(CheckButtonRecipe check) {
-        for(Pair<CheckButtonRecipe, Slider[]> pair : this.buttons) {
-            if(pair.getLeft().getPropertyKey().equals(check.getPropertyKey())) {
+        for (Pair<CheckButtonRecipe, Slider[]> pair : this.buttons) {
+            if (pair.getLeft().getPropertyKey().equals(check.getPropertyKey())) {
                 return pair.getValue();
             }
         }

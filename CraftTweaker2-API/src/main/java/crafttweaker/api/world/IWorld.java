@@ -11,23 +11,23 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.world.IWorld")
 @ZenRegister
 public interface IWorld {
-    
-	@ZenMethod
-	int getBrightness(IBlockPos position);
-	
+
+    @ZenMethod
+    int getBrightness(IBlockPos position);
+
     @ZenMethod
     int getBrightness(int x, int y, int z);
-    
+
     @ZenMethod
     IBiome getBiome(IPosition3f position);
-    
+
     @ZenMethod
     IBiome getBiome(IBlockPos position);
-    
+
     @ZenGetter("worldInfo")
     @ZenMethod
     IWorldInfo getWorldInfo();
-    
+
     @ZenGetter("remote")
     @ZenMethod
     boolean isRemote();
@@ -39,7 +39,7 @@ public interface IWorld {
     @ZenGetter("dayTime")
     @ZenMethod
     boolean isDayTime();
-    
+
     @ZenGetter("time")
     @ZenMethod
     long getWorldTime();
@@ -51,30 +51,30 @@ public interface IWorld {
     @ZenGetter("moonPhase")
     @ZenMethod
     int getMoonPhase();
-    
+
     @ZenGetter("dimension")
     @ZenMethod
     int getDimension();
-    
+
     @ZenGetter("dimensionType")
     @ZenMethod
     String getDimensionType();
 
     @ZenMethod
-	IBlock getBlock(int x, int y, int z);
-    
+    IBlock getBlock(int x, int y, int z);
+
     @ZenMethod
     IBlock getBlock(IBlockPos pos);
-    
+
     @ZenGetter("worldType")
     @ZenMethod
     String getWorldType();
-    
+
     @ZenMethod
     IBlockState getBlockState(IBlockPos pos);
-    
+
     @ZenMethod
     boolean setBlockState(IBlockState state, IBlockPos pos);
-    
+
     Object getInternal();
 }

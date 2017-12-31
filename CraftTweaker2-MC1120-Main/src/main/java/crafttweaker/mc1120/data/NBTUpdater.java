@@ -1,7 +1,9 @@
 package crafttweaker.mc1120.data;
 
-import crafttweaker.api.data.*;
-import net.minecraft.nbt.*;
+import crafttweaker.api.data.IData;
+import crafttweaker.api.data.IDataConverter;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Map;
 
@@ -18,18 +20,18 @@ public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> 
 
     @Override
     public NBTBase fromMap(Map<String, IData> map) {
-        for(Map.Entry<String, IData> entry : map.entrySet()) {
-            if(nbt.hasKey(entry.getKey())) {
-                if(entry.getValue() == null) {
+        for (Map.Entry<String, IData> entry : map.entrySet()) {
+            if (nbt.hasKey(entry.getKey())) {
+                if (entry.getValue() == null) {
                     nbt.removeTag(entry.getKey());
                 } else {
-                    if(nbt.getTag(entry.getKey()).getId() == 10) {
+                    if (nbt.getTag(entry.getKey()).getId() == 10) {
                         nbt.setTag(entry.getKey(), entry.getValue().convert(new NBTUpdater(nbt)));
                     } else {
                         nbt.setTag(entry.getKey(), from(entry.getValue()));
                     }
                 }
-            } else if(entry.getValue() != null) {
+            } else if (entry.getValue() != null) {
                 nbt.setTag(entry.getKey(), from(entry.getValue()));
             }
         }

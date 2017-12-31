@@ -38,9 +38,9 @@ public class MCDimension implements IDimension {
     public IBlock getBlock(int x, int y, int z) {
         return CraftTweakerMC.getBlock(world, x, y, z);
     }
-    
+
     @Override
     public IBiome getBiome(IPosition3f position) {
-    	return new MCBiome(world.getBiome(new BlockPos(position.getX(), position.getY(), position.getZ())));
+        return new MCBiome(world.getBiome(new BlockPos(position.getX(), position.getY(), position.getZ())));
     }
 }

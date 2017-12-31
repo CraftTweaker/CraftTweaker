@@ -15,9 +15,9 @@ public class Expansion {
     public static void print(IItemStack stack) {
         CraftTweakerAPI.logInfo("STACKKKKK: " + stack.getDisplayName());
     }
-    
+
     @ZenCaster
     public static IOreDictEntry asOreDict(IItemStack stack) {
-    	return stack.getOres().get(0);
+        return stack.getOres().get(0);
     }
 }

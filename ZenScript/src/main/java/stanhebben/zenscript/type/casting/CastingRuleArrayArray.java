@@ -1,8 +1,10 @@
 package stanhebben.zenscript.type.casting;
 
-import org.objectweb.asm.*;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Type;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeArrayBasic;
 import stanhebben.zenscript.util.MethodOutput;
 
 /**
@@ -45,7 +47,7 @@ public class CastingRuleArrayArray implements ICastingRule {
         output.arrayLoad(fromType);
 
         // stack: original index value
-        if(base != null)
+        if (base != null)
             base.compile(method);
 
         output.loadObject(result);

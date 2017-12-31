@@ -1,17 +1,22 @@
 package crafttweaker.mc1120.block;
 
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.BlockPatternOr;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockPattern;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.block.Block;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Stan
@@ -40,7 +45,7 @@ public class MCWorldBlock implements IBlock {
     public IData getTileData() {
         TileEntity tileEntity = blocks.getTileEntity(pos);
 
-        if(tileEntity == null)
+        if (tileEntity == null)
             return null;
 
         NBTTagCompound nbt = new NBTTagCompound();

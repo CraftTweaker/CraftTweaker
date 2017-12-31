@@ -15,14 +15,13 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenClass("crafttweaker.item.IItemCondition")
 @ZenRegister
 public interface IItemCondition {
-    
+
     /**
      * Returns true if the given stack matches the required conditions.
      *
      * @param stack item stack to check
-     *
      * @return true if the condition applies to this stack
      */
     boolean matches(IItemStack stack);
-    
+
 }

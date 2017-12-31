@@ -1,6 +1,9 @@
 package stanhebben.zenscript.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Implements a DFA.
@@ -33,19 +36,19 @@ public class DFA {
         nodes.put(initial, 0);
         nodeList.add(initial);
 
-		/* Find all reachable nodes in the dfs */
+        /* Find all reachable nodes in the dfs */
         int counter = 1;
         Queue<DFAState> todo = new LinkedList<>();
         todo.add(initial);
 
-        while(!todo.isEmpty()) {
+        while (!todo.isEmpty()) {
             DFAState current = todo.poll();
 
             IteratorI it = current.transitions.keys();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 int k = it.next();
                 DFAState next = current.transitions.get(k);
-                if(!nodes.containsKey(next)) {
+                if (!nodes.containsKey(next)) {
                     todo.add(next);
                     nodes.put(next, counter++);
                     nodeList.add(next);
@@ -53,17 +56,17 @@ public class DFA {
             }
         }
 
-		/* Compile */
+        /* Compile */
         HashMapII[] transitions = new HashMapII[counter];
         int[] finals2 = new int[counter];
 
-        for(DFAState node : nodeList) {
+        for (DFAState node : nodeList) {
             int index = nodes.get(node);
             finals2[index] = node.finalCode;
 
             transitions[index] = new HashMapII();
             IteratorI it = node.transitions.keys();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 int k = it.next();
                 DFAState next = node.transitions.get(k);
                 transitions[index].put(k, nodes.get(next));
@@ -83,60 +86,60 @@ public class DFA {
         HashMapII[] transitions = compiled.transitions;
         int size = transitions.length;
 
-		/* Collect all edges and determine alphabet */
+        /* Collect all edges and determine alphabet */
         HashSetI alphabet = new HashSetI();
-        for(HashMapII transition : transitions) {
+        for (HashMapII transition : transitions) {
             IteratorI it = transition.keys();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 int k = it.next();
                 alphabet.add(k);
             }
         }
 
-		/* Initialize distinguishing array */
+        /* Initialize distinguishing array */
         boolean[][] distinguishable = new boolean[size + 1][size + 1];
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; j < size; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 distinguishable[i][j] = compiled.finals[i] != compiled.finals[j];
             }
         }
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             distinguishable[i][size] = true;
             distinguishable[size][i] = true;
         }
 
-		/* Minimization algorithm implementation */
+        /* Minimization algorithm implementation */
         boolean changed;
         do {
             changed = false;
             IteratorI ita = alphabet.iterator();
-            while(ita.hasNext()) {
+            while (ita.hasNext()) {
                 int x = ita.next();
-                for(int i = 0; i < size; i++) {
+                for (int i = 0; i < size; i++) {
                     int ti = transitions[i].get(x, size);
-                    for(int j = 0; j < size; j++) {
-                        if(distinguishable[i][j])
+                    for (int j = 0; j < size; j++) {
+                        if (distinguishable[i][j])
                             continue;
 
                         int tj = transitions[j].get(x, size);
-                        if(distinguishable[ti][tj]) {
+                        if (distinguishable[ti][tj]) {
                             distinguishable[i][j] = true;
                             changed = true;
                         }
                     }
                 }
             }
-        } while(changed);
+        } while (changed);
 
-		/* Group nodes */
+        /* Group nodes */
         HashMapI<DFAState> nodeMap = new HashMapI<>();
         outer:
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; j < size; j++) {
-                if(!distinguishable[i][j] && nodeMap.containsKey(j)) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (!distinguishable[i][j] && nodeMap.containsKey(j)) {
                     nodeMap.put(i, nodeMap.get(j));
-                    if(compiled.finals[i] != NOFINAL) {
-                        if(nodeMap.get(j).getFinal() != NOFINAL && nodeMap.get(j).getFinal() != compiled.finals[i]) {
+                    if (compiled.finals[i] != NOFINAL) {
+                        if (nodeMap.get(j).getFinal() != NOFINAL && nodeMap.get(j).getFinal() != compiled.finals[i]) {
                             throw new RuntimeException("Eh?");
                         }
                     }
@@ -148,9 +151,9 @@ public class DFA {
             nodeMap.put(i, node);
         }
 
-        for(int i = 0; i < compiled.transitions.length; i++) {
+        for (int i = 0; i < compiled.transitions.length; i++) {
             IteratorI iter = transitions[i].keys();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 int k = iter.next();
 
                 nodeMap.get(i).addTransition(k, nodeMap.get(transitions[i].get(k)));
@@ -164,11 +167,11 @@ public class DFA {
     public String toString() {
         StringBuilder result = new StringBuilder();
         CompiledDFA dfs = compile();
-        for(int i = 0; i < dfs.transitions.length; i++) {
+        for (int i = 0; i < dfs.transitions.length; i++) {
             HashMapII map = dfs.transitions[i];
 
             IteratorI it = map.keys();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 int v = it.next();
                 result.append("edge(");
                 result.append(i);
@@ -179,8 +182,8 @@ public class DFA {
                 result.append("\r\n");
             }
         }
-        for(int i = 0; i < dfs.finals.length; i++) {
-            if(dfs.finals[i] != NOFINAL) {
+        for (int i = 0; i < dfs.finals.length; i++) {
+            if (dfs.finals[i] != NOFINAL) {
                 result.append("final(");
                 result.append(i);
                 result.append("): ");

@@ -1,10 +1,13 @@
 package stanhebben.zenscript.expression;
 
 import org.objectweb.asm.Type;
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeArrayBasic;
 import stanhebben.zenscript.type.casting.ICastingRule;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 public class ExpressionArray extends Expression {
 
@@ -20,21 +23,21 @@ public class ExpressionArray extends Expression {
 
     @Override
     public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-        if(this.type.equals(type)) {
+        if (this.type.equals(type)) {
             return this;
         }
 
-        if(type instanceof ZenTypeArrayBasic) {
+        if (type instanceof ZenTypeArrayBasic) {
             ZenTypeArrayBasic arrayType = (ZenTypeArrayBasic) type;
             Expression[] newContents = new Expression[contents.length];
-            for(int i = 0; i < contents.length; i++) {
+            for (int i = 0; i < contents.length; i++) {
                 newContents[i] = contents[i].cast(position, environment, arrayType.getBaseType());
             }
 
             return new ExpressionArray(getPosition(), arrayType, newContents);
         } else {
             ICastingRule castingRule = this.type.getCastingRule(type, environment);
-            if(castingRule == null) {
+            if (castingRule == null) {
                 environment.error(position, "cannot cast " + this.type + " to " + type);
                 return new ExpressionInvalid(position, type);
             } else {
@@ -57,7 +60,7 @@ public class ExpressionArray extends Expression {
         output.constant(contents.length);
         output.newArray(asmBaseType);
 
-        for(int i = 0; i < contents.length; i++) {
+        for (int i = 0; i < contents.length; i++) {
             output.dup();
             output.constant(i);
             contents[i].cast(this.getPosition(), environment, baseType).compile(result, environment);

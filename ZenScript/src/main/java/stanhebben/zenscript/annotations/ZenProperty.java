@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ZenProperty {
-    
+
     /**
      * Property name. If omitted, the field name is used.
      *

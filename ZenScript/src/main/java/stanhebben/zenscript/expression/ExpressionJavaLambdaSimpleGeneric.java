@@ -10,7 +10,6 @@ import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 import stanhebben.zenscript.util.ZenTypeUtil;
@@ -50,7 +49,7 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
         sb.append("(");
         for (int i = 0; i < arguments.size(); i++) {
             ZenType t = arguments.get(i).getType();
-            if(t.equals(ZenType.ANY)) {
+            if (t.equals(ZenType.ANY)) {
                 sb.append(signature(interfaceClass.getMethods()[0].getParameterTypes()[i]));
             } else {
                 sb.append(t.getSignature());
@@ -67,7 +66,7 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(!result)
+        if (!result)
             return;
 
         Method method = interfaceClass.getMethods()[0];
@@ -90,16 +89,16 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
         IEnvironmentClass environmentClass = new EnvironmentClass(cw, environment);
         IEnvironmentMethod environmentMethod = new EnvironmentMethod(output, environmentClass);
 
-        for(int i = 0; i < arguments.size(); i++) {
+        for (int i = 0; i < arguments.size(); i++) {
             ZenType typeToPut = arguments.get(i).getType();
-            if(typeToPut.equals(ZenType.ANY)) typeToPut = environment.getType(method.getGenericParameterTypes()[i]);
-            if(typeToPut == null) typeToPut = environment.getType(method.getParameterTypes()[i]);
+            if (typeToPut.equals(ZenType.ANY)) typeToPut = environment.getType(method.getGenericParameterTypes()[i]);
+            if (typeToPut == null) typeToPut = environment.getType(method.getParameterTypes()[i]);
 
             environmentMethod.putValue(arguments.get(i).getName(), new SymbolArgument(i + 1, typeToPut), getPosition());
         }
 
         output.start();
-        for(Statement statement : statements) {
+        for (Statement statement : statements) {
             statement.compile(environmentMethod);
         }
         output.ret();
@@ -110,8 +109,8 @@ public class ExpressionJavaLambdaSimpleGeneric extends Expression {
             bridge.loadObject(0);
             bridge.loadObject(1);
             bridge.checkCast(internal(genericClass));
-            if(arguments.size() > 1) {
-                for (int i = 1; i < arguments.size();) {
+            if (arguments.size() > 1) {
+                for (int i = 1; i < arguments.size(); ) {
                     bridge.load(org.objectweb.asm.Type.getType(method.getParameterTypes()[i]), ++i);
                 }
             }

@@ -1,11 +1,15 @@
 package crafttweaker.tasks;
 
 import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.TaskAction;
 
 import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import java.util.Properties;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Java preprocessor. Enables conditional modification of Java source files.
@@ -21,12 +25,12 @@ public class JMorph extends DefaultTask {
     public File propertiesFile;
 
     private static void processDirectory(File dir, Properties properties) throws IOException {
-        for(File file : dir.listFiles()) {
-            if(file.isFile()) {
-                if(file.getName().endsWith(".java") || file.getName().endsWith(".java.d")) {
+        for (File file : dir.listFiles()) {
+            if (file.isFile()) {
+                if (file.getName().endsWith(".java") || file.getName().endsWith(".java.d")) {
                     processJavaFile(file, properties);
                 }
-            } else if(file.isDirectory()) {
+            } else if (file.isDirectory()) {
                 processDirectory(file, properties);
             }
         }
@@ -37,81 +41,81 @@ public class JMorph extends DefaultTask {
 
         File outputFile = file.getName().endsWith(".java.d") ? new File(file.getParentFile(), file.getName().substring(0, file.getName().length() - 2)) : file;
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
-            if(line == null)
+            if (line == null)
                 return;
 
             Stack<Boolean> conditions = new Stack<>();
             conditions.push(Boolean.TRUE);
             do {
                 String trimmed = line.trim();
-                if(trimmed.startsWith("//#fileifdef")) {
+                if (trimmed.startsWith("//#fileifdef")) {
                     String id = getIdentifier(trimmed, 13);
-                    if(properties.containsKey(id)) {
-                        if(file.getName().endsWith(".java.d")) {
+                    if (properties.containsKey(id)) {
+                        if (file.getName().endsWith(".java.d")) {
                             outputFile = new File(file.getParentFile(), file.getName().substring(0, file.getName().length() - 2));
                         } else {
                             outputFile = file;
                         }
                     } else {
-                        if(file.getName().endsWith(".java")) {
+                        if (file.getName().endsWith(".java")) {
                             outputFile = new File(file.getParentFile(), file.getName() + ".d");
                         } else {
                             outputFile = file;
                         }
                     }
-                } else if(trimmed.startsWith("//#fileifndef")) {
+                } else if (trimmed.startsWith("//#fileifndef")) {
                     String id = getIdentifier(trimmed, 14);
-                    if(!properties.containsKey(id)) {
+                    if (!properties.containsKey(id)) {
                         outputFile = file.getName().endsWith(".java.d") ? new File(file.getParentFile(), file.getName().substring(0, file.getName().length() - 2)) : file;
                     } else {
                         outputFile = file.getName().endsWith(".java") ? new File(file.getParentFile(), file.getName() + ".d") : file;
                     }
-                } else if(trimmed.startsWith("//#ifdef")) {
+                } else if (trimmed.startsWith("//#ifdef")) {
                     String id = getIdentifier(trimmed, 9);
                     conditions.push(properties.containsKey(id));
-                } else if(trimmed.startsWith("//#ifndef")) {
+                } else if (trimmed.startsWith("//#ifndef")) {
                     String id = getIdentifier(trimmed, 10);
                     conditions.push(!properties.containsKey(id));
-                } else if(trimmed.startsWith("//#else")) {
+                } else if (trimmed.startsWith("//#else")) {
                     conditions.push(!conditions.pop());
-                } else if(trimmed.startsWith("//#elseif")) {
+                } else if (trimmed.startsWith("//#elseif")) {
                     conditions.pop();
                     String id = getIdentifier(trimmed, 10);
                     conditions.push(properties.containsKey(id));
-                } else if(trimmed.startsWith("//#endif")) {
+                } else if (trimmed.startsWith("//#endif")) {
                     conditions.pop();
-                    if(conditions.isEmpty()) {
+                    if (conditions.isEmpty()) {
                         System.err.println("Error: too many #endifs in " + file.getName());
                         return;
                     }
-                } else if(trimmed.startsWith("//+")) {
-                    if(conditions.peek())
+                } else if (trimmed.startsWith("//+")) {
+                    if (conditions.peek())
                         line = uncomment(line).toString();
-                } else if(trimmed.length() != 0) {
-                    if(!conditions.peek())
+                } else if (trimmed.length() != 0) {
+                    if (!conditions.peek())
                         line = comment(line).toString();
                 }
 
                 output.append(line).append('\n');
 
                 line = reader.readLine();
-            } while(line != null);
+            } while (line != null);
         }
 
-        if(outputFile != file)
+        if (outputFile != file)
             file.delete();
 
-        try(FileWriter writer = new FileWriter(outputFile)) {
+        try (FileWriter writer = new FileWriter(outputFile)) {
             writer.append(output);
         }
     }
 
     private static CharSequence comment(String line) {
         StringBuilder output = new StringBuilder();
-        for(int i = 0; i < line.length(); i++) {
-            if(line.charAt(i) == ' ' || line.charAt(i) == '\t') {
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == ' ' || line.charAt(i) == '\t') {
                 output.append(line.charAt(i));
                 continue;
             }
@@ -123,10 +127,10 @@ public class JMorph extends DefaultTask {
 
     private static CharSequence uncomment(String line) {
         StringBuilder output = new StringBuilder();
-        for(int i = 0; i < line.length(); i++) {
-            if(line.charAt(i) == ' ' || line.charAt(i) == '\t') {
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == ' ' || line.charAt(i) == '\t') {
                 output.append(line.charAt(i));
-            } else if(line.charAt(i) == '/' && line.charAt(i + 1) == '/' && line.charAt(i + 2) == '+') {
+            } else if (line.charAt(i) == '/' && line.charAt(i + 1) == '/' && line.charAt(i + 2) == '+') {
                 output.append(line.substring(i + 3));
                 break;
             } else {
@@ -138,10 +142,10 @@ public class JMorph extends DefaultTask {
 
     private static String getIdentifier(String line, int offset) {
         int to = offset;
-        if(!Character.isJavaIdentifierStart(line.charAt(to)))
+        if (!Character.isJavaIdentifierStart(line.charAt(to)))
             return null;
         to++;
-        while(to < line.length() && Character.isJavaIdentifierPart(line.charAt(to)))
+        while (to < line.length() && Character.isJavaIdentifierPart(line.charAt(to)))
             to++;
         return line.substring(offset, to);
     }
@@ -155,7 +159,7 @@ public class JMorph extends DefaultTask {
             reader.close();
 
             processDirectory(inputDir, properties);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(JMorph.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

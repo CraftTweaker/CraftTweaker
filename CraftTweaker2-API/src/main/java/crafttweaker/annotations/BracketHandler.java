@@ -1,6 +1,9 @@
 package crafttweaker.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Marks a bracket handler. Bracket handlers are automatically registered. The
@@ -11,7 +14,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface BracketHandler {
-    
+
     /**
      * Indicates priority. A lower value means a higher priority. Only change if
      * you have issues, default value is 10. Internal crafttweaker handlers have

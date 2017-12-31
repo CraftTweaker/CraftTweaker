@@ -1,8 +1,12 @@
 package stanhebben.zenscript.expression.partial;
 
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.symbols.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
+import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.SymbolZenStaticMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
@@ -50,13 +54,13 @@ public class PartialStaticGenerated implements IPartialExpression {
 
     @Override
     public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
-        if(values.length != argumentTypes.length) {
+        if (values.length != argumentTypes.length) {
             environment.error(position, "invalid number of arguments");
             return new ExpressionInvalid(position);
         }
 
         Expression[] arguments = new Expression[argumentTypes.length];
-        for(int i = 0; i < arguments.length; i++) {
+        for (int i = 0; i < arguments.length; i++) {
             arguments[i] = values[i].cast(position, environment, argumentTypes[i]);
         }
 

@@ -10,20 +10,20 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenRegister
 public interface IEntityDrop {
 
-	@ZenGetter("stack")
-	IItemStack getItemStack();
+    @ZenGetter("stack")
+    IItemStack getItemStack();
 
-	@ZenGetter("min")
-	int getMin();
+    @ZenGetter("min")
+    int getMin();
 
-	@ZenGetter("max")
-	int getMax();
+    @ZenGetter("max")
+    int getMax();
 
-	IntegerRange getRange();
+    IntegerRange getRange();
 
-	@ZenGetter("chance")
-	float getChance();
+    @ZenGetter("chance")
+    float getChance();
 
-	@ZenGetter("playerOnly")
-	boolean isPlayerOnly();
+    @ZenGetter("playerOnly")
+    boolean isPlayerOnly();
 }

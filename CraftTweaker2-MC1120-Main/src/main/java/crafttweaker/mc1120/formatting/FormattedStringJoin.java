@@ -23,7 +23,7 @@ public class FormattedStringJoin implements IMCFormattedString {
     @Override
     public String getTooltipString() {
         StringBuilder result = new StringBuilder();
-        for(IMCFormattedString value : values) {
+        for (IMCFormattedString value : values) {
             result.append(value.getTooltipString());
         }
         return result.toString();
@@ -34,8 +34,8 @@ public class FormattedStringJoin implements IMCFormattedString {
         boolean first = true;
 
         StringBuilder result = new StringBuilder();
-        for(IMCFormattedString value : values) {
-            if(first) {
+        for (IMCFormattedString value : values) {
+            if (first) {
                 first = false;
             } else {
                 result.append(context);
@@ -59,7 +59,7 @@ public class FormattedStringJoin implements IMCFormattedString {
         newValues[values.length] = (IMCFormattedString) other;
         return new FormattedStringJoin(newValues);
     }
-    
+
     @Override
     public String getText() {
         return getTooltipString();

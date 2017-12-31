@@ -1,6 +1,9 @@
 package stanhebben.zenscript.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Indicates a getter. Will make the given method accessible as getter, that is,
@@ -14,7 +17,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ZenGetter {
-    
+
     /**
      * Getter name. If omitted, the method name will be used as value name.
      *

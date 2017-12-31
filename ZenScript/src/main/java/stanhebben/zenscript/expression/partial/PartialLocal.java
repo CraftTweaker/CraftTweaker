@@ -1,8 +1,13 @@
 package stanhebben.zenscript.expression.partial;
 
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.symbols.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.expression.ExpressionLocalGet;
+import stanhebben.zenscript.expression.ExpressionLocalSet;
+import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.SymbolLocal;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -31,7 +36,7 @@ public class PartialLocal implements IPartialExpression {
 
     @Override
     public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
-        if(variable.isFinal()) {
+        if (variable.isFinal()) {
             environment.error(position, "value cannot be changed");
             return new ExpressionInvalid(position);
         } else {

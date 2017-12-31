@@ -20,7 +20,7 @@ import java.util.List;
  * @author Stan Hebben
  */
 public interface IBracketHandler {
-    
+
     /**
      * Resolves a set of tokens.
      * <p>
@@ -28,7 +28,6 @@ public interface IBracketHandler {
      *
      * @param environment global compilation environment
      * @param tokens      token stream to be detected
-     *
      * @return the resolved symbol, or null
      */
     IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens);

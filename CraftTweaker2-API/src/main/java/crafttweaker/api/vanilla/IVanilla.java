@@ -1,7 +1,8 @@
 package crafttweaker.api.vanilla;
 
 import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * @author Stan
@@ -9,7 +10,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("vanilla.IVanilla")
 @ZenRegister
 public interface IVanilla {
-    
+
     @ZenGetter("seeds")
     ISeedRegistry getSeeds();
 }

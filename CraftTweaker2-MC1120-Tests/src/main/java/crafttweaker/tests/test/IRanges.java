@@ -10,8 +10,8 @@ import stanhebben.zenscript.value.IntRange;
 @ZenRegister
 public class IRanges {
 
-	@ZenMethod
-	public static void printRange(IntRange ir) {
-		CraftTweakerAPI.logWarning(ir.getFrom() + "~" + ir.getTo());
-	}
+    @ZenMethod
+    public static void printRange(IntRange ir) {
+        CraftTweakerAPI.logWarning(ir.getFrom() + "~" + ir.getTo());
+    }
 }

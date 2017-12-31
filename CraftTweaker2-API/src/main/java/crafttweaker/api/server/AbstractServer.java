@@ -1,7 +1,9 @@
 package crafttweaker.api.server;
 
 import crafttweaker.CrafttweakerImplementationAPI;
-import crafttweaker.api.event.*;
+import crafttweaker.api.event.IEventHandle;
+import crafttweaker.api.event.PlayerLoggedInEvent;
+import crafttweaker.api.event.PlayerLoggedOutEvent;
 import crafttweaker.util.IEventHandler;
 
 /**
@@ -11,12 +13,12 @@ import crafttweaker.util.IEventHandler;
  * @author Stan Hebben
  */
 public abstract class AbstractServer implements IServer {
-    
+
     @Override
     public final IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev) {
         return CrafttweakerImplementationAPI.events.onPlayerLoggedIn(ev);
     }
-    
+
     @Override
     public final IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev) {
         return CrafttweakerImplementationAPI.events.onPlayerLoggedOut(ev);

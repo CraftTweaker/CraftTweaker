@@ -1,15 +1,5 @@
 package crafttweaker.mc1120.server;
 
-import java.awt.Desktop;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
@@ -28,6 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.server.FMLServerHandler;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Stan
@@ -235,13 +234,13 @@ public class ServerPlayer implements IPlayer {
     }
 
     @Override
-    public void setAir(int seconds) {
-
+    public int getAir() {
+        return 0;
     }
 
     @Override
-    public int getAir() {
-        return 0;
+    public void setAir(int seconds) {
+
     }
 
     @Override
@@ -259,12 +258,12 @@ public class ServerPlayer implements IPlayer {
     }
 
     @Override
-    public void addScore(int amount) {
+    public void setScore(int amount) {
 
     }
 
     @Override
-    public void setScore(int amount) {
+    public void addScore(int amount) {
 
     }
 
@@ -327,19 +326,19 @@ public class ServerPlayer implements IPlayer {
     public IItemStack getHeldItemOffHand() {
         return null;
     }
-    
+
     @Override
     public IEntityAttributeInstance getAttribute(String name) {
         return null;
     }
 
-	@Override
-	public IWorld getWorld() {
-		return null;
-	}
+    @Override
+    public IWorld getWorld() {
+        return null;
+    }
 
-	@Override
-	public IBlockPos getBlockPos() {
-		return new MCBlockPos(new BlockPos(0, 0, 0));
-	}
+    @Override
+    public IBlockPos getBlockPos() {
+        return new MCBlockPos(new BlockPos(0, 0, 0));
+    }
 }

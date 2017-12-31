@@ -8,6 +8,6 @@ import java.lang.reflect.Type;
  * @author Stan
  */
 public interface ITypeRegistry {
-    
+
     ZenType getType(Type type);
 }

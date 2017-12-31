@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author BloodWorkXGaming
- *         The whole reason for this class is to make it survive checks on removed recipes
+ * The whole reason for this class is to make it survive checks on removed recipes
  */
 public class RecipeBookCustomClient extends RecipeBookClient {
 

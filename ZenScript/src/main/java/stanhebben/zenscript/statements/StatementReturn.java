@@ -32,7 +32,7 @@ public class StatementReturn extends Statement {
     public void compile(IEnvironmentMethod environment) {
         environment.getOutput().position(getPosition());
 
-        if(expression == null) {
+        if (expression == null) {
             environment.getOutput().ret();
         } else {
             Expression cExpression = expression.compile(environment, returnType).eval(environment);

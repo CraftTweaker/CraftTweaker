@@ -1,13 +1,17 @@
 package crafttweaker.mc1120.block;
 
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.BlockPatternOr;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockPattern;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Stan
@@ -32,10 +36,10 @@ public class MCItemBlock implements IBlock {
 
     @Override
     public IData getTileData() {
-        if(!item.isEmpty()) {
+        if (!item.isEmpty()) {
             return null;
         }
-        if(item.getTagCompound() == null)
+        if (item.getTagCompound() == null)
             return null;
 
         return CraftTweakerMC.getIData(item.getTagCompound());
@@ -60,5 +64,5 @@ public class MCItemBlock implements IBlock {
     public IBlockPattern or(IBlockPattern pattern) {
         return new BlockPatternOr(this, pattern);
     }
-    
+
 }

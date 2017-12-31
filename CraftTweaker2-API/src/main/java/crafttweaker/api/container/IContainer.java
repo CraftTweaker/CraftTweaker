@@ -2,7 +2,10 @@ package crafttweaker.api.container;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.IterableSimple;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * Container interface.
@@ -13,7 +16,7 @@ import stanhebben.zenscript.annotations.*;
 @IterableSimple("crafttweaker.item.IItemStack")
 @ZenRegister
 public interface IContainer extends Iterable<IItemStack> {
-    
+
     /**
      * Gets the container size.
      *
@@ -21,18 +24,17 @@ public interface IContainer extends Iterable<IItemStack> {
      */
     @ZenGetter("containerSize")
     int getContainerSize();
-    
+
     /**
      * Gets the item stack at the given position. Returns null if there is no
      * stack at that position.
      *
      * @param i stack position
-     *
      * @return stack contents, or null
      */
     @ZenMethod
     IItemStack getStack(int i);
-    
+
     /**
      * Sets the item stack at the given position.
      *

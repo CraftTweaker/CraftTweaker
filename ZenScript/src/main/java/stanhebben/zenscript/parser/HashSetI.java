@@ -23,7 +23,7 @@ public class HashSetI {
         mask = 15;
         size = 0;
 
-        for(int i = 0; i < values.length; i++) {
+        for (int i = 0; i < values.length; i++) {
             values[i] = Integer.MIN_VALUE;
         }
     }
@@ -42,28 +42,28 @@ public class HashSetI {
      * @param value value to be added to the HashSet
      */
     public void add(int value) {
-        if(size > (values.length * 3) >> 2) {
+        if (size > (values.length * 3) >> 2) {
             expand();
         }
 
         int index = value & mask;
 
-        if(values[index] == Integer.MIN_VALUE) {
+        if (values[index] == Integer.MIN_VALUE) {
             values[index] = value;
         } else {
-            if(values[index] == value) {
+            if (values[index] == value) {
                 return;
             }
-            while(next[index] != 0) {
+            while (next[index] != 0) {
                 index = next[index] - 1;
-                if(values[index] == value) {
+                if (values[index] == value) {
                     return;
                 }
             }
             int ref = index;
-            while(values[index] != Integer.MIN_VALUE) {
+            while (values[index] != Integer.MIN_VALUE) {
                 index++;
-                if(index == values.length)
+                if (index == values.length)
                     index = 0;
             }
             next[ref] = index + 1;
@@ -78,13 +78,12 @@ public class HashSetI {
      * Checks if this HashSet contains the specified value.
      *
      * @param value integer value to add
-     *
      * @return true if this HashSet contains the specified value
      */
     public boolean contains(int value) {
         int index = value & mask;
-        while(values[index] != value) {
-            if(next[index] == 0) {
+        while (values[index] != value) {
+            if (next[index] == 0) {
                 return false;
             }
             index = next[index] - 1;
@@ -111,8 +110,8 @@ public class HashSetI {
     public int[] toArray() {
         int[] result = new int[size];
         int ix = 0;
-        for(int value : values) {
-            if(value != Integer.MIN_VALUE) {
+        for (int value : values) {
+            if (value != Integer.MIN_VALUE) {
                 result[ix++] = value;
             }
         }
@@ -131,29 +130,29 @@ public class HashSetI {
         int[] newNext = new int[next.length * 2];
         int newMask = newKeys.length - 1;
 
-        for(int i = 0; i < newKeys.length; i++) {
+        for (int i = 0; i < newKeys.length; i++) {
             newKeys[i] = Integer.MIN_VALUE;
         }
-        
-        for(int value : values) {
-            if(value == Integer.MIN_VALUE) {
+
+        for (int value : values) {
+            if (value == Integer.MIN_VALUE) {
                 continue;
             }
-    
+
             int index = value & newMask;
-            
-            if(newKeys[index] == Integer.MIN_VALUE) {
+
+            if (newKeys[index] == Integer.MIN_VALUE) {
                 newKeys[index] = value;
             } else {
-                while(newNext[index] != 0) {
+                while (newNext[index] != 0) {
                     index = newNext[index] - 1;
                 }
                 int ref = index;
-                while(newKeys[index] != Integer.MIN_VALUE) {
+                while (newKeys[index] != Integer.MIN_VALUE) {
                     index = (index + 1) & newMask;
                 }
                 newNext[ref] = index + 1;
-                
+
                 newKeys[index] = value;
             }
         }
@@ -189,7 +188,7 @@ public class HashSetI {
         }
 
         private void skip() {
-            while(i < values.length && values[i] == Integer.MIN_VALUE)
+            while (i < values.length && values[i] == Integer.MIN_VALUE)
                 i++;
         }
     }

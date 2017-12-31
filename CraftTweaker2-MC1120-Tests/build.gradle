@@ -33,5 +33,5 @@ dependencies {
     compile project(':ZenScript')
     compile project(':CraftTweaker2-API')
     compile project(':CraftTweaker2-MC1120-Main')
-	compile project(':CraftTweaker2-MC1120-Mod-JEI')
+    compile project(':CraftTweaker2-MC1120-Mod-JEI')
 }

@@ -17,16 +17,16 @@ public class ExpressionAs extends Expression {
         this.castingRule = castingRule;
     }
 
-	/*
+    /*
      * @Override public Expression cast(ZenPosition position, IEnvironmentGlobal
-	 * environment, ZenType type) { if
-	 * (castingRule.getResultingType().equals(type)) { return this; }
-	 * 
-	 * ICastingRule newCastingRule = type.getCastingRule(type, environment); if
-	 * (newCastingRule == null) { environment.error(position, "Cannot cast " +
-	 * getType() + " to " + type); return new ExpressionInvalid(position, type);
-	 * } else { return new ExpressionAs(position, this, newCastingRule); } }
-	 */
+     * environment, ZenType type) { if
+     * (castingRule.getResultingType().equals(type)) { return this; }
+     *
+     * ICastingRule newCastingRule = type.getCastingRule(type, environment); if
+     * (newCastingRule == null) { environment.error(position, "Cannot cast " +
+     * getType() + " to " + type); return new ExpressionInvalid(position, type);
+     * } else { return new ExpressionAs(position, this, newCastingRule); } }
+     */
 
     @Override
     public ZenType getType() {
@@ -37,7 +37,7 @@ public class ExpressionAs extends Expression {
     public void compile(boolean result, IEnvironmentMethod environment) {
         value.compile(result, environment);
 
-        if(result) {
+        if (result) {
             castingRule.compile(environment);
         }
     }

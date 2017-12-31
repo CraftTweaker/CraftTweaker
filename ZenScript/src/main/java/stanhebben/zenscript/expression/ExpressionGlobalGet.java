@@ -6,33 +6,33 @@ import stanhebben.zenscript.type.ZenType;
 
 public class ExpressionGlobalGet extends Expression {
 
-	private final SymbolGlobalValue global;
+    private final SymbolGlobalValue global;
 
-	public ExpressionGlobalGet(SymbolGlobalValue value) {
-		super(value.getPosition());
-		this.global = value;
-	}
+    public ExpressionGlobalGet(SymbolGlobalValue value) {
+        super(value.getPosition());
+        this.global = value;
+    }
 
-	@Override
-	public ZenType getType() {
-		return global.getType();
-	}
+    @Override
+    public ZenType getType() {
+        return global.getType();
+    }
 
-	@Override
-	public void compile(boolean result, IEnvironmentMethod environment) {
-		environment.getOutput().getStaticField(getOwner(), getName(), getASMDescriptor());
-	}
-	
-	public String getOwner() {
-		return global.getOwner();
-	}
-	
-	public String getName() {
-		return global.getName();
-	}
-	
-	public String getASMDescriptor() {
-		return global.getASMDescriptor();
-	}
+    @Override
+    public void compile(boolean result, IEnvironmentMethod environment) {
+        environment.getOutput().getStaticField(getOwner(), getName(), getASMDescriptor());
+    }
+
+    public String getOwner() {
+        return global.getOwner();
+    }
+
+    public String getName() {
+        return global.getName();
+    }
+
+    public String getASMDescriptor() {
+        return global.getASMDescriptor();
+    }
 
 }

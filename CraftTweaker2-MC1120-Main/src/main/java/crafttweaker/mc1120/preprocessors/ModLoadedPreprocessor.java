@@ -5,7 +5,9 @@ import crafttweaker.preprocessor.PreprocessorActionBase;
 import crafttweaker.runtime.ScriptFile;
 import net.minecraftforge.fml.common.Loader;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Preprocessor can be used as follows
@@ -18,44 +20,44 @@ import java.util.*;
  */
 public class ModLoadedPreprocessor extends PreprocessorActionBase {
     private static final String PREPROCESSOR_NAME = "modloaded";
-    
+
     private List<String> modNames = new ArrayList<>();
-    
-    
+
+
     public ModLoadedPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
         super(fileName, preprocessorLine, lineIndex);
         String s = preprocessorLine.substring(10);
         String[] names = s.split(" ");
-        
-        for(String name : names) {
+
+        for (String name : names) {
             String n = name.trim();
             if (n.length() > 0)
                 modNames.add(name.trim());
         }
     }
-    
+
     @Override
     public void executeActionOnFind(ScriptFile scriptFile) {
-        if (!checkAreLoaded(modNames)){
+        if (!checkAreLoaded(modNames)) {
             CraftTweakerAPI.logInfo("Ignoring script " + scriptFile + " as the following mods weren't loaded " + Arrays.toString(modNames.toArray()));
-            
+
             scriptFile.setParsingBlocked(true);
             scriptFile.setCompileBlocked(true);
             scriptFile.setExecutionBlocked(true);
-    
+
         }
     }
-    
+
     @Override
     public String getPreprocessorName() {
         return PREPROCESSOR_NAME;
     }
-    
-    private boolean checkAreLoaded(List<String> modNames){
-        for(String modName : modNames) {
+
+    private boolean checkAreLoaded(List<String> modNames) {
+        for (String modName : modNames) {
             if (!Loader.isModLoaded(modName)) return false;
         }
-        
+
         return true;
     }
 }

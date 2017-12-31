@@ -1,12 +1,15 @@
 package stanhebben.zenscript.expression;
 
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeFunction;
 import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Stanneke
@@ -22,7 +25,7 @@ public class ExpressionJavaMethodStatic extends Expression {
         this.method = method;
 
         List<ParsedFunctionArgument> arguments = new ArrayList<>();
-        for(int i = 0; i < method.getParameterTypes().length; i++) {
+        for (int i = 0; i < method.getParameterTypes().length; i++) {
             arguments.add(new ParsedFunctionArgument("p" + i, environment.getType(method.getMethod().getGenericParameterTypes()[i])));
         }
 

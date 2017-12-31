@@ -10,20 +10,20 @@ import crafttweaker.runtime.ScriptFile;
  *
  * @author BloodWorkXGaming
  */
-public class IgnoreBracketErrorPreprocessor extends PreprocessorActionBase{
+public class IgnoreBracketErrorPreprocessor extends PreprocessorActionBase {
     public static final String PREPROCESSOR_NAME = "ignoreBracketError";
-    
-    
+
+
     public IgnoreBracketErrorPreprocessor(String fileName, String preprocessorLine, int lineIndex) {
         super(fileName, preprocessorLine, lineIndex);
     }
-    
+
     @Override
     public void executeActionOnFind(ScriptFile scriptFile) {
         CraftTweakerAPI.logInfo("IgnoreBracketErrorPreprocessor found in " + scriptFile + ", ignoring errors in that file");
         scriptFile.setIgnoreBracketErrors(true);
     }
-    
+
     @Override
     public String getPreprocessorName() {
         return PREPROCESSOR_NAME;

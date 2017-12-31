@@ -1,10 +1,13 @@
 package crafttweaker.mc1120.mods;
 
-import crafttweaker.api.mods.*;
-import net.minecraftforge.fml.common.*;
+import crafttweaker.api.mods.ILoadedMods;
+import crafttweaker.api.mods.IMod;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import stanhebben.zenscript.util.MappingIterator;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Stan
@@ -21,8 +24,8 @@ public class MCLoadedMods implements ILoadedMods {
 
     @Override
     public IMod get(String name) {
-        for(ModContainer mod : Loader.instance().getActiveModList()) {
-            if(mod.getModId().equals(name)) {
+        for (ModContainer mod : Loader.instance().getActiveModList()) {
+            if (mod.getModId().equals(name)) {
                 return new MCMod(mod);
             }
         }

@@ -1,211 +1,216 @@
 package crafttweaker.runtime;
 
-import crafttweaker.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.IAction;
 import crafttweaker.api.network.NetworkSide;
-import crafttweaker.preprocessor.*;
-import crafttweaker.util.*;
+import crafttweaker.preprocessor.CrTScriptLoadEvent;
+import crafttweaker.preprocessor.PreprocessorManager;
+import crafttweaker.util.EventList;
+import crafttweaker.util.IEventHandler;
 import crafttweaker.zenscript.GlobalRegistry;
-import stanhebben.zenscript.*;
+import stanhebben.zenscript.ZenModule;
+import stanhebben.zenscript.ZenParsedFile;
+import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.definitions.ParsedGlobalValue;
 import stanhebben.zenscript.parser.ParseException;
-import stanhebben.zenscript.symbols.SymbolGlobalValue;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 
-import static stanhebben.zenscript.ZenModule.*;
+import static stanhebben.zenscript.ZenModule.compileScripts;
+import static stanhebben.zenscript.ZenModule.extractClassName;
 
 /**
  * @author Stan Hebben
  */
 public class CrTTweaker implements ITweaker {
     private static String defaultLoaderName = "crafttweaker";
-    private NetworkSide networkSide = NetworkSide.INVALID_SIDE;
-    
     private static boolean DEBUG = false;
     private final List<IAction> actions = new ArrayList<>();
+    /**
+     * List of all event subscribers
+     */
+    private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
+    private NetworkSide networkSide = NetworkSide.INVALID_SIDE;
     /**
      * PreprocessorManager, deals with all preprocessor Actions
      */
     private PreprocessorManager preprocessorManager = new PreprocessorManager();
     private IScriptProvider scriptProvider;
-    
-    /** List of all event subscribers*/
-     private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
-    
-    
+
+
     public CrTTweaker() {
         PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
     }
-    
+
     @Override
     public void apply(IAction action) {
         CraftTweakerAPI.logInfo(action.describe());
         action.apply();
         actions.add(action);
     }
-    
+
     @Override
     public void setScriptProvider(IScriptProvider provider) {
         scriptProvider = provider;
     }
-    
+
     @Override
     public void load() {
         loadScript(false, defaultLoaderName);
     }
-    
+
     @Override
     public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
         CraftTweakerAPI.logInfo("Loading scripts");
         CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
-        
+
         preprocessorManager.clean();
-        
+
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
-    
+
         List<ScriptFile> scriptFiles = collectScriptFiles(isSyntaxCommand);
-        
+
         // preprocessor magic
-        for(ScriptFile scriptFile : scriptFiles) {
+        for (ScriptFile scriptFile : scriptFiles) {
             scriptFile.addAll(preprocessorManager.checkFileForPreprocessors(scriptFile));
         }
-        
+
         scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
-        
+
         Map<String, byte[]> classes = new HashMap<>();
         IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
-        
+
         // ZS magic
-        for(ScriptFile scriptFile : scriptFiles) {
+        for (ScriptFile scriptFile : scriptFiles) {
             if (!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
                 continue;
             }
-            
-            if (!scriptFile.shouldBeLoadedOn(networkSide)){
+
+            if (!scriptFile.shouldBeLoadedOn(networkSide)) {
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");
                 continue;
             }
-            
-            if(!executed.contains(scriptFile.getEffectiveName())) {
+
+            if (!executed.contains(scriptFile.getEffectiveName())) {
                 executed.add(scriptFile.getEffectiveName());
-                
+
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
-                
+
                 ZenParsedFile zenParsedFile = null;
                 String filename = scriptFile.getEffectiveName();
                 String className = extractClassName(filename);
-    
+
                 Reader reader = null;
                 try {
                     reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8");
-                    
-                    
+
+
                     CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(scriptFile);
                     preprocessorManager.postLoadEvent(loadEvent);
-                    
+
                     // blocks the parsing of the script
-                    if(scriptFile.isParsingBlocked()) continue;
-                    
+                    if (scriptFile.isParsingBlocked()) continue;
+
                     ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-                    
-                } catch(IOException ex) {
+
+                } catch (IOException ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Could not load script " + scriptFile + ": " + ex.getMessage());
                     loadSuccessful = false;
-                } catch(ParseException ex) {
+                } catch (ParseException ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
                     loadSuccessful = false;
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error loading " + scriptFile + ": " + ex.toString(), ex);
                     loadSuccessful = false;
                 } finally {
-                    if(reader != null) {
+                    if (reader != null) {
                         try {
                             reader.close();
-                        } catch(IOException ignored) {
+                        } catch (IOException ignored) {
                         }
                     }
                 }
-                
-                
-                
-                
+
+
                 try {
                     // Stops if the compile is disabled
                     if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
                     compileScripts(className, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
-                    
+
                     // stops if the execution is disabled
                     if (scriptFile.isExecutionBlocked() || isSyntaxCommand) continue;
-                    
-                    
+
+
                     ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
                     Runnable runnable = module.getMain();
-                    if(runnable != null)
+                    if (runnable != null)
                         runnable.run();
-                    
-                    
-                } catch(Throwable ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
+
+
+                } catch (Throwable ex) {
+                    CraftTweakerAPI.logError("[" + loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
                 }
             }
         }
-        
+
         return loadSuccessful;
     }
-    
+
     protected List<ScriptFile> collectScriptFiles(boolean isSyntaxCommand) {
         List<ScriptFile> fileList = new ArrayList<>();
         HashSet<String> collected = new HashSet<>();
-        
+
         // Collecting all scripts
         Iterator<IScriptIterator> scripts = scriptProvider.getScripts();
-        while(scripts.hasNext()) {
+        while (scripts.hasNext()) {
             IScriptIterator script = scripts.next();
-            
-            if(!collected.contains(script.getGroupName())) {
+
+            if (!collected.contains(script.getGroupName())) {
                 collected.add(script.getGroupName());
-                
-                while(script.next()) {
+
+                while (script.next()) {
                     fileList.add(new ScriptFile(this, script.copyCurrent(), isSyntaxCommand));
                 }
             }
         }
         return fileList;
     }
-    
-    private String getTweakerDescriptor(String loaderName){
+
+    private String getTweakerDescriptor(String loaderName) {
         return "[" + loaderName + " | " + networkSide + "]";
     }
-    
+
     @Override
     public List<IAction> getActions() {
         return actions;
     }
-    
+
     @Override
     public void enableDebug() {
         DEBUG = true;
     }
-    
+
     @Override
     public PreprocessorManager getPreprocessorManager() {
         return preprocessorManager;
     }
-    
+
     public NetworkSide getNetworkSide() {
         return networkSide;
     }
-    
+
     public void setNetworkSide(NetworkSide networkSide) {
         this.networkSide = networkSide;
     }
-    
-    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler){
+
+    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler) {
         CRT_LOADING_STARTED_EVENT_EVENT_LIST.add(eventHandler);
     }
 }

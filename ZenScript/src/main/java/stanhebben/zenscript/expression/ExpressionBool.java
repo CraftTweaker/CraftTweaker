@@ -1,7 +1,8 @@
 package stanhebben.zenscript.expression;
 
 import org.objectweb.asm.Label;
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -20,7 +21,7 @@ public class ExpressionBool extends Expression {
 
     @Override
     public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-        if(type == ZenType.BOOL) {
+        if (type == ZenType.BOOL) {
             return this;
         } else {
             return super.cast(position, environment, type);
@@ -40,8 +41,8 @@ public class ExpressionBool extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
-            if(value) {
+        if (result) {
+            if (value) {
                 environment.getOutput().iConst1();
             } else {
                 environment.getOutput().iConst0();
@@ -51,7 +52,7 @@ public class ExpressionBool extends Expression {
 
     @Override
     public void compileIf(Label onElse, IEnvironmentMethod environment) {
-        if(!value) {
+        if (!value) {
             environment.getOutput().goTo(onElse);
         }
     }

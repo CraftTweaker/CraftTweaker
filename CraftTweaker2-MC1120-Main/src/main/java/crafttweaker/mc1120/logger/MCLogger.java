@@ -2,7 +2,8 @@ package crafttweaker.mc1120.logger;
 
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.runtime.ILogger;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 
 import java.io.*;
 import java.util.regex.Pattern;
@@ -17,9 +18,9 @@ public class MCLogger implements ILogger {
         try {
             writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
             printWriter = new PrintWriter(writer);
-        } catch(UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException("What the heck?");
-        } catch(FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             throw new RuntimeException("Could not open log file " + output);
         }
     }
@@ -29,7 +30,7 @@ public class MCLogger implements ILogger {
         try {
             writer.write(stripMessage(message) + "\n");
             writer.flush();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -39,7 +40,7 @@ public class MCLogger implements ILogger {
         try {
             writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][INFO] " + stripMessage(message) + "\n");
             writer.flush();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -49,7 +50,7 @@ public class MCLogger implements ILogger {
         try {
             writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][WARNING] " + stripMessage(message) + "\n");
             writer.flush();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -63,20 +64,20 @@ public class MCLogger implements ILogger {
     public void logError(String message, Throwable exception) {
         try {
             writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][ERROR] " + stripMessage(message) + "\n");
-            if(exception != null) {
+            if (exception != null) {
                 exception.printStackTrace(printWriter);
             }
             writer.flush();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
+
     @Override
     public void logPlayer(IPlayer player) {
         //no-op
     }
-    
+
     /**
      * Returns a copy of the given string, with formatting codes stripped away.
      */

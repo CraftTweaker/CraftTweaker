@@ -1,11 +1,15 @@
 package com.blamejared.ctgui.api;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.inventory.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ContainerBase extends Container {
 
@@ -22,41 +26,41 @@ public class ContainerBase extends Container {
     public ItemStack slotClick(int i, int mousebtn, ClickType clickTypeIn, EntityPlayer player) {
         ItemStack stack = ItemStack.EMPTY;
 
-        if(i >= 0 && getSlot(i) instanceof SlotRecipe) // Fake slots
+        if (i >= 0 && getSlot(i) instanceof SlotRecipe) // Fake slots
         {
-            if(mousebtn == 2) {
+            if (mousebtn == 2) {
                 getSlot(i).putStack(ItemStack.EMPTY);
-            } else if(mousebtn == 0) {
+            } else if (mousebtn == 0) {
                 InventoryPlayer playerInv = player.inventory;
                 getSlot(i).onSlotChanged();
                 ItemStack stackSlot = getSlot(i).getStack();
                 ItemStack stackHeld = playerInv.getItemStack();
 
-                if(!stackSlot.isEmpty())
+                if (!stackSlot.isEmpty())
                     stack = stackSlot.copy();
 
-                if(!stackHeld.isEmpty()) {
+                if (!stackHeld.isEmpty()) {
                     ItemStack newStack = stackHeld.copy();
-                    if(!(getSlot(i) instanceof SlotRecipeOutput))
+                    if (!(getSlot(i) instanceof SlotRecipeOutput))
                         newStack.setCount(1);
                     getSlot(i).putStack(newStack);
                 } else
                     getSlot(i).putStack(ItemStack.EMPTY);
-            } else if(mousebtn == 1) {
+            } else if (mousebtn == 1) {
                 InventoryPlayer playerInv = player.inventory;
                 getSlot(i).onSlotChanged();
                 ItemStack stackSlot = getSlot(i).getStack();
                 ItemStack stackHeld = playerInv.getItemStack();
 
-                if(!stackSlot.isEmpty())
+                if (!stackSlot.isEmpty())
                     stack = stackSlot.copy();
 
-                if(!stackHeld.isEmpty()) {
+                if (!stackHeld.isEmpty()) {
                     stackHeld = stackHeld.copy();
-                    if(!stackSlot.isEmpty() && stackHeld.isItemEqual(stackSlot) && i == 0) {
+                    if (!stackSlot.isEmpty() && stackHeld.isItemEqual(stackSlot) && i == 0) {
                         int max = stackSlot.getMaxStackSize();
                         stackSlot.setCount(stackSlot.getCount() + 1);
-                        if(stackSlot.getCount() > max)
+                        if (stackSlot.getCount() > max)
                             stackSlot.setCount(max);
                         getSlot(i).putStack(stackSlot);
                     } else {
@@ -64,9 +68,9 @@ public class ContainerBase extends Container {
                         getSlot(i).putStack(stackHeld);
                     }
                 } else {
-                    if(!stackSlot.isEmpty()) {
+                    if (!stackSlot.isEmpty()) {
                         stackSlot.setCount(stackSlot.getCount() - 1);
-                        if(stackSlot.getCount() == 0)
+                        if (stackSlot.getCount() == 0)
                             getSlot(i).putStack(ItemStack.EMPTY);
                     }
                 }
@@ -89,7 +93,7 @@ public class ContainerBase extends Container {
 
     @Override
     protected Slot addSlotToContainer(Slot slotIn) {
-        if(slotIn instanceof SlotRecipe) {
+        if (slotIn instanceof SlotRecipe) {
             getRecipeSlots().add((SlotRecipe) slotIn);
         }
         return super.addSlotToContainer(slotIn);

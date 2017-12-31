@@ -24,7 +24,7 @@ public class CastingRuleStaticMethod implements ICastingRule {
 
     @Override
     public void compile(IEnvironmentMethod method) {
-        if(base != null)
+        if (base != null)
             base.compile(method);
 
         this.method.invokeStatic(method.getOutput());

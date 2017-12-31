@@ -4,10 +4,12 @@ import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.statements.Statement;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.ZenPosition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static stanhebben.zenscript.ZenTokener.*;
 
@@ -32,7 +34,7 @@ public class ParsedFunction {
 
         StringBuilder sig = new StringBuilder();
         sig.append("(");
-        for(ParsedFunctionArgument argument : arguments) {
+        for (ParsedFunctionArgument argument : arguments) {
             sig.append(argument.getType().getSignature());
         }
         sig.append(")");
@@ -49,19 +51,19 @@ public class ParsedFunction {
         parser.required(T_BROPEN, "( expected");
 
         List<ParsedFunctionArgument> arguments = new ArrayList<>();
-        if(parser.optional(T_BRCLOSE) == null) {
+        if (parser.optional(T_BRCLOSE) == null) {
             Token argName = parser.required(T_ID, "identifier expected");
             ZenType type = ZenTypeAny.INSTANCE;
-            if(parser.optional(T_AS) != null) {
+            if (parser.optional(T_AS) != null) {
                 type = ZenType.read(parser, environment);
             }
 
             arguments.add(new ParsedFunctionArgument(argName.getValue(), type));
 
-            while(parser.optional(T_COMMA) != null) {
+            while (parser.optional(T_COMMA) != null) {
                 Token argName2 = parser.required(T_ID, "identifier expected");
                 ZenType type2 = ZenTypeAny.INSTANCE;
-                if(parser.optional(T_AS) != null) {
+                if (parser.optional(T_AS) != null) {
                     type2 = ZenType.read(parser, environment);
                 }
 
@@ -72,19 +74,19 @@ public class ParsedFunction {
         }
 
         ZenType type = ZenTypeAny.INSTANCE;
-        if(parser.optional(T_AS) != null) {
+        if (parser.optional(T_AS) != null) {
             type = ZenType.read(parser, environment);
         }
 
         parser.required(T_AOPEN, "{ expected");
 
         Statement[] statements;
-        if(parser.optional(T_ACLOSE) != null) {
+        if (parser.optional(T_ACLOSE) != null) {
             statements = new Statement[0];
         } else {
             ArrayList<Statement> statementsAL = new ArrayList<>();
 
-            while(parser.optional(T_ACLOSE) == null) {
+            while (parser.optional(T_ACLOSE) == null) {
                 statementsAL.add(Statement.read(parser, environment, type));
             }
             statements = statementsAL.toArray(new Statement[statementsAL.size()]);
@@ -115,7 +117,7 @@ public class ParsedFunction {
 
     public ZenType[] getArgumentTypes() {
         ZenType[] result = new ZenType[arguments.size()];
-        for(int i = 0; i < arguments.size(); i++) {
+        for (int i = 0; i < arguments.size(); i++) {
             result[i] = arguments.get(i).getType();
         }
         return result;

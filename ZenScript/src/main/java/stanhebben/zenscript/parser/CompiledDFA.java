@@ -47,22 +47,22 @@ public class CompiledDFA {
         transitions = new HashMapII[numStates];
         finals = new int[numStates];
 
-        for(int i = 0; i < numStates; i++) {
+        for (int i = 0; i < numStates; i++) {
             transitions[i] = new HashMapII();
             finals[i] = definition[ix++];
 
             int numRanges = definition[ix++];
-            for(int j = 0; j < numRanges; j++) {
+            for (int j = 0; j < numRanges; j++) {
                 int from = definition[ix++];
                 int to = definition[ix++];
                 int state = definition[ix++];
-                for(int k = from; k <= to; k++) {
+                for (int k = from; k <= to; k++) {
                     transitions[i].put(k, state);
                 }
             }
 
             int numSingles = definition[ix++];
-            for(int j = 0; j < numSingles; j++) {
+            for (int j = 0; j < numSingles; j++) {
                 int label = definition[ix++];
                 int state = definition[ix++];
                 transitions[i].put(label, state);
@@ -79,7 +79,7 @@ public class CompiledDFA {
         ArrayListI result = new ArrayListI();
         result.add(finals.length);
 
-        for(int i = 0; i < finals.length; i++) {
+        for (int i = 0; i < finals.length; i++) {
             result.add(finals[i]);
 
             ArrayListI singles = new ArrayListI();
@@ -88,12 +88,12 @@ public class CompiledDFA {
 
             int[] keys = transitions[i].keysArray();
             sort(keys);
-            for(int j = 0; j < keys.length; j++) {
+            for (int j = 0; j < keys.length; j++) {
                 int from = j;
                 int state = transitions[i].get(j);
-                while(j + 1 < keys.length && keys[j + 1] == keys[j] + 1 && transitions[i].get(j + 1) == state)
+                while (j + 1 < keys.length && keys[j + 1] == keys[j] + 1 && transitions[i].get(j + 1) == state)
                     j++;
-                if(j == from) {
+                if (j == from) {
                     singles.add(keys[j]);
                 } else {
                     rangeFrom.add(keys[from]);
@@ -102,13 +102,13 @@ public class CompiledDFA {
             }
 
             result.add(rangeFrom.size());
-            for(int j = 0; j < rangeFrom.size(); j++) {
+            for (int j = 0; j < rangeFrom.size(); j++) {
                 result.add(rangeFrom.get(j));
                 result.add(rangeTo.get(j));
                 result.add(transitions[i].get(rangeFrom.get(j)));
             }
             result.add(singles.size());
-            for(int j = 0; j < singles.size(); j++) {
+            for (int j = 0; j < singles.size(); j++) {
                 result.add(singles.get(j));
                 result.add(transitions[i].get(singles.get(j)));
             }
@@ -120,11 +120,11 @@ public class CompiledDFA {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for(int i = 0; i < transitions.length; i++) {
+        for (int i = 0; i < transitions.length; i++) {
             HashMapII map = transitions[i];
 
             IteratorI it = map.keys();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 int v = it.next();
                 result.append("edge(");
                 result.append(i);
@@ -135,8 +135,8 @@ public class CompiledDFA {
                 result.append("\r\n");
             }
         }
-        for(int i = 0; i < finals.length; i++) {
-            if(finals[i] != DFA.NOFINAL) {
+        for (int i = 0; i < finals.length; i++) {
+            if (finals[i] != DFA.NOFINAL) {
                 result.append("final(");
                 result.append(i);
                 result.append("): ");

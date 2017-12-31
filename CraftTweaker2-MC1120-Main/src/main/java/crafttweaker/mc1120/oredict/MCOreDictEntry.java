@@ -4,19 +4,26 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.oredict.*;
+import crafttweaker.api.oredict.IOreDictEntry;
+import crafttweaker.api.oredict.IngredientOreDict;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.mc1120.actions.*;
+import crafttweaker.mc1120.actions.ActionOreDictAddAll;
+import crafttweaker.mc1120.actions.ActionOreDictAddItem;
+import crafttweaker.mc1120.actions.ActionOreDictMirror;
+import crafttweaker.mc1120.actions.ActionOreDictRemoveItem;
 import crafttweaker.mc1120.util.CraftTweakerHacks;
 import crafttweaker.util.ArrayUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.*;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStackWildcardSize;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 
 /**
  * @author Stan
@@ -38,6 +45,14 @@ public class MCOreDictEntry implements IOreDictEntry {
     // ### IOreDictEntry implementation ###
     // ####################################
 
+    public static List<NonNullList<ItemStack>> getOredictContents() {
+        return OREDICT_CONTENTS;
+    }
+
+    public static List<NonNullList<ItemStack>> getOredictContentsUn() {
+        return OREDICT_CONTENTS_UN;
+    }
+
     @Override
     public String getName() {
         return id;
@@ -55,22 +70,22 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public void add(IItemStack... items) {
-    	 for(IItemStack item : items) {
-             ItemStack stack = getItemStack(item);
-             if(!stack.isEmpty()) {
-                 CraftTweakerAPI.apply(new ActionOreDictAddItem(id, stack));
-             }
-         }
+        for (IItemStack item : items) {
+            ItemStack stack = getItemStack(item);
+            if (!stack.isEmpty()) {
+                CraftTweakerAPI.apply(new ActionOreDictAddItem(id, stack));
+            }
+        }
     }
 
     @Override
     public void addItems(IItemStack[] items) {
-       add(items);
+        add(items);
     }
 
     @Override
     public void addAll(IOreDictEntry entry) {
-        if(entry instanceof MCOreDictEntry) {
+        if (entry instanceof MCOreDictEntry) {
             CraftTweakerAPI.apply(new ActionOreDictAddAll(id, ((MCOreDictEntry) entry).id));
         } else {
             CraftTweakerAPI.logError("not a valid entry");
@@ -79,16 +94,16 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public void remove(IItemStack... items) {
-        for(IItemStack item : items) {
+        for (IItemStack item : items) {
             ItemStack result = ItemStack.EMPTY;
-            for(ItemStack itemStack : OreDictionary.getOres(id)) {
-                if(item.matches(getIItemStackWildcardSize(itemStack))) {
+            for (ItemStack itemStack : OreDictionary.getOres(id)) {
+                if (item.matches(getIItemStackWildcardSize(itemStack))) {
                     result = itemStack;
                     break;
                 }
             }
 
-            if(!result.isEmpty()) {
+            if (!result.isEmpty()) {
                 CraftTweakerAPI.apply(new ActionOreDictRemoveItem(id, result));
             }
         }
@@ -101,8 +116,8 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public boolean contains(IItemStack item) {
-        for(ItemStack itemStack : OreDictionary.getOres(getName())) {
-            if(getIItemStackWildcardSize(itemStack).matches(item)) {
+        for (ItemStack itemStack : OreDictionary.getOres(getName())) {
+            if (getIItemStackWildcardSize(itemStack).matches(item)) {
                 return true;
             }
         }
@@ -112,7 +127,7 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public void mirror(IOreDictEntry other) {
-        if(other instanceof MCOreDictEntry) {
+        if (other instanceof MCOreDictEntry) {
             CraftTweakerAPI.apply(new ActionOreDictMirror(id, ((MCOreDictEntry) other).id));
         } else {
             CraftTweakerAPI.logError("not a valid oredict entry");
@@ -133,11 +148,11 @@ public class MCOreDictEntry implements IOreDictEntry {
     public List<IItemStack> getItems() {
         return OreDictionary.getOres(getName()).stream().map(CraftTweakerMC::getIItemStackWildcardSize).collect(Collectors.toList());
     }
-    
+
     @Override
     public IItemStack[] getItemArray() {
-    	List<IItemStack> items = getItems();
-    	return items.toArray(new IItemStack[items.size()]);
+        List<IItemStack> items = getItems();
+        return items.toArray(new IItemStack[items.size()]);
     }
 
     @Override
@@ -188,8 +203,8 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public boolean contains(IIngredient ingredient) {
         List<IItemStack> items = ingredient.getItems();
-        for(IItemStack item : items) {
-            if(!matches(item))
+        for (IItemStack item : items) {
+            if (!matches(item))
                 return false;
         }
 
@@ -201,6 +216,10 @@ public class MCOreDictEntry implements IOreDictEntry {
         return item;
     }
 
+    // #############################
+    // ### Object implementation ###
+    // #############################
+
     @Override
     public boolean hasTransformers() {
         return false;
@@ -210,10 +229,6 @@ public class MCOreDictEntry implements IOreDictEntry {
     public Object getInternal() {
         return id;
     }
-
-    // #############################
-    // ### Object implementation ###
-    // #############################
 
     @Override
     public String toString() {
@@ -229,15 +244,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     public boolean equals(Object other) {
         return other instanceof MCOreDictEntry && Objects.equals(((MCOreDictEntry) other).id, id);
     }
-    
-    public static List<NonNullList<ItemStack>> getOredictContents() {
-        return OREDICT_CONTENTS;
-    }
-    
-    public static List<NonNullList<ItemStack>> getOredictContentsUn() {
-        return OREDICT_CONTENTS_UN;
-    }
-    
+
     public String getId() {
         return id;
     }

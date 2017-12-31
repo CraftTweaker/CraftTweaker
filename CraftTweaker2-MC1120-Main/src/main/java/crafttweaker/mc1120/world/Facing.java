@@ -20,21 +20,21 @@ public class Facing {
 
     @ZenMethod
     public static String getsouth() {
-    	return EnumFacing.SOUTH.name();
+        return EnumFacing.SOUTH.name();
     }
 
     @ZenMethod
     public static String west() {
-    	return EnumFacing.WEST.name();
+        return EnumFacing.WEST.name();
     }
 
     @ZenMethod
     public static String up() {
-    	return EnumFacing.UP.name();
+        return EnumFacing.UP.name();
     }
 
     @ZenMethod
     public static String down() {
-    	return EnumFacing.DOWN.name();
+        return EnumFacing.DOWN.name();
     }
 }

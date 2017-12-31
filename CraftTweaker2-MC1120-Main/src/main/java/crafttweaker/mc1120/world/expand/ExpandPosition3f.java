@@ -10,8 +10,8 @@ import stanhebben.zenscript.annotations.ZenMethodStatic;
 @ZenRegister
 public class ExpandPosition3f {
 
-	@ZenMethodStatic
-	public static IPosition3f create(float x, float y, float z) {
-		return new Position3f(x, y, z);
-	}
+    @ZenMethodStatic
+    public static IPosition3f create(float x, float y, float z) {
+        return new Position3f(x, y, z);
+    }
 }

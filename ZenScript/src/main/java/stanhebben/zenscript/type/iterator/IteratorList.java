@@ -1,7 +1,9 @@
 package stanhebben.zenscript.type.iterator;
 
-import org.objectweb.asm.*;
-import stanhebben.zenscript.type.*;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Type;
+import stanhebben.zenscript.type.IZenIterator;
+import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.MethodOutput;
 
 import java.util.Iterator;

@@ -3,7 +3,10 @@ package crafttweaker.mc1120.data;
 import crafttweaker.api.data.*;
 import net.minecraft.nbt.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -21,10 +24,10 @@ public class NBTConverter implements IDataConverter<NBTBase> {
     }
 
     public static IData from(NBTBase nbt, boolean immutable) {
-        if(nbt == null)
+        if (nbt == null)
             return null;
 
-        switch(nbt.getId()) {
+        switch (nbt.getId()) {
             case 1: // byte
                 return new DataByte(((NBTPrimitive) nbt).getByte());
             case 2: // short
@@ -50,7 +53,7 @@ public class NBTConverter implements IDataConverter<NBTBase> {
             case 10: { // compound
                 Map<String, IData> values = new HashMap<>();
                 NBTTagCompound original = (NBTTagCompound) nbt;
-                for(String key : original.getKeySet()) {
+                for (String key : original.getKeySet()) {
                     values.put(key, from(original.getTag(key), immutable));
                 }
                 return new DataMap(values, immutable);
@@ -110,7 +113,7 @@ public class NBTConverter implements IDataConverter<NBTBase> {
     @Override
     public NBTBase fromList(List<IData> values) {
         NBTTagList result = new NBTTagList();
-        for(IData value : values) {
+        for (IData value : values) {
             result.appendTag(from(value));
         }
         return result;
@@ -119,7 +122,7 @@ public class NBTConverter implements IDataConverter<NBTBase> {
     @Override
     public NBTBase fromMap(Map<String, IData> values) {
         NBTTagCompound result = new NBTTagCompound();
-        for(Map.Entry<String, IData> entry : values.entrySet()) {
+        for (Map.Entry<String, IData> entry : values.entrySet()) {
             result.setTag(entry.getKey(), from(entry.getValue()));
         }
         return result;

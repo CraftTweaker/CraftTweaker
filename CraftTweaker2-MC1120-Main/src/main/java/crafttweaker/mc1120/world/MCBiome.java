@@ -20,55 +20,54 @@ public class MCBiome implements IBiome {
         return biome.getBiomeName();
     }
 
-	@Override
-	public boolean getCanRain() {
-		return biome.canRain();
-	}
+    @Override
+    public boolean getCanRain() {
+        return biome.canRain();
+    }
 
-	@Override
-	public boolean isSnowyBiome() {
-		return biome.isSnowyBiome();
-	}
+    @Override
+    public boolean isSnowyBiome() {
+        return biome.isSnowyBiome();
+    }
 
-	@Override
-	public boolean getIsHighHumidity() {
-		return biome.isHighHumidity();
-	}
+    @Override
+    public boolean getIsHighHumidity() {
+        return biome.isHighHumidity();
+    }
 
-	@Override
-	public float getSpawningChance() {
-		return biome.getSpawningChance();
-	}
+    @Override
+    public float getSpawningChance() {
+        return biome.getSpawningChance();
+    }
 
-	@Override
-	public float getBaseHeight() {
-		return biome.getBaseHeight();
-	}
+    @Override
+    public float getBaseHeight() {
+        return biome.getBaseHeight();
+    }
 
-	@Override
-	public float getRainfall() {
-		return biome.getRainfall();
-	}
+    @Override
+    public float getRainfall() {
+        return biome.getRainfall();
+    }
 
-	@Override
-	public int getWaterColorMultiplier() {
-		return biome.getWaterColorMultiplier();
-	}
+    @Override
+    public int getWaterColorMultiplier() {
+        return biome.getWaterColorMultiplier();
+    }
 
-	@Override
-	public boolean getIgnorePlayerSpawnSuitability() {
-		return biome.ignorePlayerSpawnSuitability();
-	}
+    @Override
+    public boolean getIgnorePlayerSpawnSuitability() {
+        return biome.ignorePlayerSpawnSuitability();
+    }
 
-	
-	
-	@Override
-	public float getHeightVariation() {
-		return biome.getHeightVariation();
-	}
 
-	@Override
-	public float getTemperature() {
-		return biome.getTemperature();
-	}
+    @Override
+    public float getHeightVariation() {
+        return biome.getHeightVariation();
+    }
+
+    @Override
+    public float getTemperature() {
+        return biome.getTemperature();
+    }
 }

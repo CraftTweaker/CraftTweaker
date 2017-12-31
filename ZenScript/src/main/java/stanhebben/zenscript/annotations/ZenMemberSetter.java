@@ -1,6 +1,9 @@
 package stanhebben.zenscript.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Used to indicate a member setter. Companion to member getters, but allow
@@ -16,5 +19,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ZenMemberSetter {
-    
+
 }

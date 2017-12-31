@@ -9,7 +9,7 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan Hebben
  */
 public interface IZenErrorLogger {
-    
+
     /**
      * Called when an error is detected during compilation.
      *
@@ -17,7 +17,7 @@ public interface IZenErrorLogger {
      * @param message  error message
      */
     void error(ZenPosition position, String message);
-    
+
     /**
      * Called when a warning is generated during compilation.
      *
@@ -25,7 +25,7 @@ public interface IZenErrorLogger {
      * @param message  warning message
      */
     void warning(ZenPosition position, String message);
-    
+
     /**
      * Called to generate a info during compilation.
      *

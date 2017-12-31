@@ -6,7 +6,8 @@ package stanhebben.zenscript.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 import stanhebben.zenscript.value.IntRange;
 
 /**

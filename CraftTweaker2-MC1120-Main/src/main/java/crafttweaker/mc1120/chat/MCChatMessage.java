@@ -1,7 +1,8 @@
 package crafttweaker.mc1120.chat;
 
 import crafttweaker.api.chat.IChatMessage;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author Stan

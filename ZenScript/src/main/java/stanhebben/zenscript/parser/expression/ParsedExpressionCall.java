@@ -29,7 +29,7 @@ public class ParsedExpressionCall extends ParsedExpression {
         ZenType[] predictedTypes = cReceiver.predictCallTypes(arguments.size());
 
         Expression[] cArguments = new Expression[arguments.size()];
-        for(int i = 0; i < cArguments.length; i++) {
+        for (int i = 0; i < cArguments.length; i++) {
             IPartialExpression cArgument = arguments.get(i).compile(environment, predictedTypes[i]);
             cArguments[i] = cArgument.eval(environment);
         }

@@ -11,25 +11,25 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public interface IBlockPos {
 
-	@ZenMethod
-	@ZenGetter("x")
-	int getX();
-	
-	@ZenMethod
-	@ZenGetter("y")
-	int getY();
-	
-	@ZenMethod
-	@ZenGetter("z")
-	int getZ();
+    @ZenMethod
+    @ZenGetter("x")
+    int getX();
 
-	@ZenMethod
-	IBlockPos getOffset(String directionName, int offset);
+    @ZenMethod
+    @ZenGetter("y")
+    int getY();
 
-	@ZenCaster
-	@ZenMethod
-	IPosition3f asPosition3f();
+    @ZenMethod
+    @ZenGetter("z")
+    int getZ();
 
-	Object getInternal();
+    @ZenMethod
+    IBlockPos getOffset(String directionName, int offset);
+
+    @ZenCaster
+    @ZenMethod
+    IPosition3f asPosition3f();
+
+    Object getInternal();
 
 }

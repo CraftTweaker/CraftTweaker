@@ -13,7 +13,7 @@ import java.util.List;
 @ZenRegister
 public interface IOreDict extends Iterable<IOreDictEntry> {
 
-    
+
     @ZenMemberGetter
     @ZenOperator(OperatorType.INDEXGET)
     @ZenMethod

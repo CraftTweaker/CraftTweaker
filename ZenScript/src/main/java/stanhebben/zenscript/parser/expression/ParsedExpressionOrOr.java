@@ -1,7 +1,8 @@
 package stanhebben.zenscript.parser.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.expression.*;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionOrOr;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
@@ -27,9 +28,9 @@ public class ParsedExpressionOrOr extends ParsedExpression {
         Expression cRight = right.compile(environment, predictedType).eval(environment);
 
         ZenType type;
-        if(cRight.getType().canCastImplicit(cLeft.getType(), environment)) {
+        if (cRight.getType().canCastImplicit(cLeft.getType(), environment)) {
             type = cLeft.getType();
-        } else if(cLeft.getType().canCastImplicit(cRight.getType(), environment)) {
+        } else if (cLeft.getType().canCastImplicit(cRight.getType(), environment)) {
             type = cRight.getType();
         } else {
             environment.error(getPosition(), "These types could not be unified: " + cLeft.getType() + " and " + cRight.getType());

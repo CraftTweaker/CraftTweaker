@@ -8,5 +8,5 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenClass("crafttweaker.entity.IEntityDropFunction")
 @ZenRegister
 public interface IEntityDropFunction {
-	IItemStack handle(IEntity entity, IDamageSource dmgSource);
+    IItemStack handle(IEntity entity, IDamageSource dmgSource);
 }

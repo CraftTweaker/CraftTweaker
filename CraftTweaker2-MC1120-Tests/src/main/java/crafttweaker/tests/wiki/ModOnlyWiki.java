@@ -10,8 +10,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass(value = "crafttweaker.tests.modOnly")
 @ZenRegister
 public class ModOnlyWiki {
-	@ZenMethod
-	public static void print() {
-		CraftTweakerAPI.logInfo("print issued");
-	}
+    @ZenMethod
+    public static void print() {
+        CraftTweakerAPI.logInfo("print issued");
+    }
 }

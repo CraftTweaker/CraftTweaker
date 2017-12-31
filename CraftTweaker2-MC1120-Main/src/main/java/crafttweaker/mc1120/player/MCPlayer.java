@@ -208,12 +208,12 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
 
     @Override
-    public void addScore(int amount) {
-        player.addScore(amount);
+    public void setScore(int amount) {
+        player.setScore(amount);
     }
 
     @Override
-    public void setScore(int amount) {
-        player.setScore(amount);
+    public void addScore(int amount) {
+        player.addScore(amount);
     }
 }

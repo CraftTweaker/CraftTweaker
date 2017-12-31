@@ -1,8 +1,11 @@
 package stanhebben.zenscript.expression.partial;
 
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.symbols.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.SymbolType;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 

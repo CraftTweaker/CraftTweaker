@@ -16,7 +16,7 @@ public abstract class BaseCastingRule implements ICastingRule {
 
     @Override
     public final void compile(IEnvironmentMethod method) {
-        if(baseRule != null)
+        if (baseRule != null)
             baseRule.compile(method);
 
         compileInner(method);

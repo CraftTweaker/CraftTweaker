@@ -10,8 +10,8 @@ import stanhebben.zenscript.annotations.ZenMethodStatic;
 @ZenRegister
 public class ExpandBlockPos {
 
-	@ZenMethodStatic
-	public static IBlockPos create(int x, int  y, int z) {
-		return new MCBlockPos(x, y, z);
-	}
+    @ZenMethodStatic
+    public static IBlockPos create(int x, int y, int z) {
+        return new MCBlockPos(x, y, z);
+    }
 }

@@ -32,12 +32,12 @@ public class FormattedString implements IMCFormattedString {
     public IFormattedText cat(IFormattedText other) {
         return new FormattedStringJoin(this, (IMCFormattedString) other);
     }
-    
+
     @Override
     public String getText() {
         return getTooltipString();
     }
-    
+
     @Override
     public String toString() {
         return getTooltipString();

@@ -12,56 +12,56 @@ import stanhebben.zenscript.util.ZenPosition;
 
 public class PartialGlobalValue implements IPartialExpression {
 
-	private final SymbolGlobalValue value;
-	
-	
-	public PartialGlobalValue(SymbolGlobalValue symbolGlobalValue) {
-		this.value = symbolGlobalValue;
-	}
+    private final SymbolGlobalValue value;
 
-	@Override
-	public Expression eval(IEnvironmentGlobal environment) {
-		return new ExpressionGlobalGet(value);
-	}
 
-	@Override
-	public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
-		environment.error(position, "cannot assign to a global value");
-		return new ExpressionInvalid(position);
-	}
+    public PartialGlobalValue(SymbolGlobalValue symbolGlobalValue) {
+        this.value = symbolGlobalValue;
+    }
 
-	@Override
-	public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
-		return value.getType().getMember(position, environment, this, name);
-	}
+    @Override
+    public Expression eval(IEnvironmentGlobal environment) {
+        return new ExpressionGlobalGet(value);
+    }
 
-	@Override
-	public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
-		return value.getType().call(position, environment, eval(environment), values);
-	}
+    @Override
+    public Expression assign(ZenPosition position, IEnvironmentGlobal environment, Expression other) {
+        environment.error(position, "cannot assign to a global value");
+        return new ExpressionInvalid(position);
+    }
 
-	@Override
-	public ZenType[] predictCallTypes(int numArguments) {
-		return value.getType().predictCallTypes(numArguments);
-	}
+    @Override
+    public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
+        return value.getType().getMember(position, environment, this, name);
+    }
 
-	@Override
-	public IZenSymbol toSymbol() {
-		return value;
-	}
+    @Override
+    public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
+        return value.getType().call(position, environment, eval(environment), values);
+    }
 
-	@Override
-	public ZenType getType() {
-		return value.getType();
-	}
+    @Override
+    public ZenType[] predictCallTypes(int numArguments) {
+        return value.getType().predictCallTypes(numArguments);
+    }
 
-	@Override
-	public ZenType toType(IEnvironmentGlobal environment) {
-		return value.getType();
-	}
+    @Override
+    public IZenSymbol toSymbol() {
+        return value;
+    }
 
-	public String getName() {
-		return value.getName();
-	}
+    @Override
+    public ZenType getType() {
+        return value.getType();
+    }
+
+    @Override
+    public ZenType toType(IEnvironmentGlobal environment) {
+        return value.getType();
+    }
+
+    public String getName() {
+        return value.getName();
+    }
 
 }

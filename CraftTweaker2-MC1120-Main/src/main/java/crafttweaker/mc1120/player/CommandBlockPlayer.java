@@ -238,13 +238,13 @@ public class CommandBlockPlayer implements IPlayer {
     }
 
     @Override
-    public void setAir(int seconds) {
-
+    public int getAir() {
+        return 0;
     }
 
     @Override
-    public int getAir() {
-        return 0;
+    public void setAir(int seconds) {
+
     }
 
     @Override
@@ -257,12 +257,12 @@ public class CommandBlockPlayer implements IPlayer {
     }
 
     @Override
-    public void addScore(int amount) {
+    public void setScore(int amount) {
 
     }
 
     @Override
-    public void setScore(int amount) {
+    public void addScore(int amount) {
 
     }
 
@@ -325,22 +325,22 @@ public class CommandBlockPlayer implements IPlayer {
     public IItemStack getHeldItemOffHand() {
         return null;
     }
-    
+
     @Override
     public IEntityAttributeInstance getAttribute(String name) {
         return null;
     }
 
-	@Override
-	public IWorld getWorld() {
-		if(sender.getEntityWorld() != null) {
-			return new MCWorld(sender.getEntityWorld());
-		}
-		return null;
-	}
+    @Override
+    public IWorld getWorld() {
+        if (sender.getEntityWorld() != null) {
+            return new MCWorld(sender.getEntityWorld());
+        }
+        return null;
+    }
 
-	@Override
-	public IBlockPos getBlockPos() {
-		return new MCBlockPos(sender.getPosition());
-	}
+    @Override
+    public IBlockPos getBlockPos() {
+        return new MCBlockPos(sender.getPosition());
+    }
 }

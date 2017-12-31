@@ -1,7 +1,8 @@
 package crafttweaker.api.oredict;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.*;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.*;
 
 /**

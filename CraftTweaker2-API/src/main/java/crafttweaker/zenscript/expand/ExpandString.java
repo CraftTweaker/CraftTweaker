@@ -1,14 +1,16 @@
 package crafttweaker.zenscript.expand;
 
-import crafttweaker.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
-import crafttweaker.api.data.*;
+import crafttweaker.api.data.DataString;
+import crafttweaker.api.data.IData;
 import crafttweaker.api.formatting.IFormattedText;
 import stanhebben.zenscript.annotations.*;
-import stanhebben.zenscript.annotations.Optional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Stanneke
@@ -48,15 +50,15 @@ public class ExpandString {
         int minIndex = 0;
         int numSplits = 0;
 
-        while(minIndex + separator.length() <= value.length()) {
+        while (minIndex + separator.length() <= value.length()) {
             int index = value.indexOf(separator, minIndex);
-            if(index < 0)
+            if (index < 0)
                 break;
             result.add(value.substring(minIndex, index));
             minIndex = index + separator.length();
 
             numSplits++;
-            if(maximum > 0 && numSplits >= maximum)
+            if (maximum > 0 && numSplits >= maximum)
                 break;
         }
 

@@ -39,7 +39,7 @@ public class CastingRuleNullableStaticMethod implements ICastingRule {
 
         output.label(lblNotNull);
 
-        if(base != null) {
+        if (base != null) {
             base.compile(method);
         }
 

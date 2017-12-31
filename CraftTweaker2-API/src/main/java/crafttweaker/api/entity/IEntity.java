@@ -6,7 +6,10 @@ import crafttweaker.api.util.IPosition3f;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IDimension;
 import crafttweaker.api.world.IWorld;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
 
 import java.util.List;
 
@@ -20,16 +23,16 @@ import java.util.List;
 @ZenClass("crafttweaker.entity.IEntity")
 @ZenRegister
 public interface IEntity {
-	
-	/**
-	 * Retrieves the world this entity is in.
-	 * 
-	 * @return the current world of this entity 
-	 */
-	@ZenGetter("world")
-	@ZenMethod
-	IWorld getWorld();
-    
+
+    /**
+     * Retrieves the world this entity is in.
+     *
+     * @return the current world of this entity
+     */
+    @ZenGetter("world")
+    @ZenMethod
+    IWorld getWorld();
+
     /**
      * Retrieves the dimension this entity is in.
      *
@@ -38,7 +41,7 @@ public interface IEntity {
     @ZenGetter("dimension")
     @ZenMethod
     IDimension getDimension();
-    
+
     /**
      * Retrieves the x position of this entity.
      *
@@ -47,7 +50,7 @@ public interface IEntity {
     @ZenMethod
     @ZenGetter("x")
     double getX();
-    
+
     /**
      * Retrieves the y position of this entity.
      *
@@ -56,7 +59,7 @@ public interface IEntity {
     @ZenMethod
     @ZenGetter("y")
     double getY();
-    
+
     /**
      * Retrieves the z position of this entity.
      *
@@ -65,7 +68,7 @@ public interface IEntity {
     @ZenMethod
     @ZenGetter("z")
     double getZ();
-    
+
     /**
      * Retrieves the position of this entity.
      *
@@ -74,7 +77,7 @@ public interface IEntity {
     @ZenMethod
     @ZenGetter("position")
     IPosition3f getPosition();
-    
+
     /**
      * Sets the position of this entity. Instantly moves (teleports) the entity
      * to that position.
@@ -84,13 +87,13 @@ public interface IEntity {
     @ZenMethod
     @ZenSetter("position")
     void setPosition(IPosition3f position);
-    
+
     /**
      * Set an entity to dead, will be removed during the next tick.
      */
     @ZenMethod
     void setDead();
-    
+
     /**
      * Lights an entity on fire.
      *
@@ -99,82 +102,74 @@ public interface IEntity {
     @ZenMethod
     @ZenSetter("fire")
     void setFire(int seconds);
-    
+
     /**
      * Sets an entity to no longer be on fire.
      */
     @ZenMethod
     void extinguish();
-    
+
     /**
      * @return whether an entity is in water or being rained on.
      */
     @ZenMethod
     @ZenGetter("wet")
     boolean isWet();
-    
+
     /**
      * @return a list of all entities riding this entity.
      */
     @ZenMethod
     @ZenGetter("passengers")
     List<IEntity> getPassengers();
-    
+
     /**
      * @param entity the entity to check distance to.
-     *
      * @return the distance between this entity and that entity.
      */
     @ZenMethod
     double getDistanceSqToEntity(IEntity entity);
-    
+
     /**
      * @return whether the entity is alive or not.
      */
     @ZenMethod
     @ZenGetter("alive")
     boolean isAlive();
-    
+
     /**
      * @return the entity this entity is riding.
      */
     @ZenMethod
     @ZenGetter("ridingEntity")
     IEntity getRidingEntity();
-    
+
     /**
      * @return an ItemStack Representation of this Entity. (EX. Item Minecart coming from a minecart)
      */
     @ZenMethod
     IItemStack getPickedResult();
-    
+
     /**
      * @return The custom name tag this entity has.
      */
     @ZenMethod
     @ZenGetter("customName")
     String getCustomName();
-    
+
     /**
      * @param name the custom name to set to this entity.
      */
     @ZenMethod
     @ZenSetter("customName")
     void setCustomName(String name);
-    
+
     /**
      * @return Is entity immune to fire
      */
     @ZenMethod
     @ZenGetter("immuneToFire")
     boolean isImmuneToFire();
-
-    /**
-     * @param seconds amount of air in seconds to add.
-     */
-    @ZenMethod
-    @ZenSetter("air")
-    void setAir(int seconds);
 
     /**
      * @return amount of air in seconds
@@ -184,18 +179,25 @@ public interface IEntity {
     int getAir();
 
     /**
+     * @param seconds amount of air in seconds to add.
+     */
+    @ZenMethod
+    @ZenSetter("air")
+    void setAir(int seconds);
+
+    /**
      * @return The Actual Entity, MUST EXTEND ENTITY.
      */
     Object getInternal();
 
     /*
      * TODO: Add Methods as Adding Objects from ContentTweaker
-     * 
+     *
      * boolean isInsideOfMaterial(IBlockMaterial blockMaterial)
      *
      * boolean canTrample(IBlock block, IBlockPos pos, float fall);
      */
-    
+
     @ZenMethod
     @ZenGetter("blockPos")
     IBlockPos getBlockPos();

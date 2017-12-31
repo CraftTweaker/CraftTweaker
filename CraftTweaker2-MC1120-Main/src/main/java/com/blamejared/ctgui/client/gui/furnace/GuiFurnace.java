@@ -1,6 +1,8 @@
 package com.blamejared.ctgui.client.gui.furnace;
 
-import com.blamejared.ctgui.api.*;
+import com.blamejared.ctgui.api.ContainerBase;
+import com.blamejared.ctgui.api.GuiBase;
+import com.blamejared.ctgui.api.Slider;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -24,7 +26,7 @@ public class GuiFurnace extends GuiBase {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if(!container.getRecipeSlots().get(0).getHasStack()) {
+        if (!container.getRecipeSlots().get(0).getHasStack()) {
             add.enabled = false;
             remove.enabled = false;
         }

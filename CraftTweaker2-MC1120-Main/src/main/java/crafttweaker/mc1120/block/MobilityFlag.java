@@ -8,28 +8,28 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.block.MobilityFlag")
 @ZenRegister
 public class MobilityFlag {
-	@ZenMethod
-	public static String normal() {
-		return EnumPushReaction.NORMAL.name();
-	}
-	
-	@ZenMethod
-	public static String destroy() {
-		return EnumPushReaction.DESTROY.name();
-	}
-	
-	@ZenMethod
-	public static String block() {
-		return EnumPushReaction.BLOCK.name();
-	}
-	
-	@ZenMethod
-	public static String ignore() {
-		return EnumPushReaction.IGNORE.name();
-	}
-	
-	@ZenMethod
-	public static String pushOnly() {
-		return EnumPushReaction.PUSH_ONLY.name();
-	}
+    @ZenMethod
+    public static String normal() {
+        return EnumPushReaction.NORMAL.name();
+    }
+
+    @ZenMethod
+    public static String destroy() {
+        return EnumPushReaction.DESTROY.name();
+    }
+
+    @ZenMethod
+    public static String block() {
+        return EnumPushReaction.BLOCK.name();
+    }
+
+    @ZenMethod
+    public static String ignore() {
+        return EnumPushReaction.IGNORE.name();
+    }
+
+    @ZenMethod
+    public static String pushOnly() {
+        return EnumPushReaction.PUSH_ONLY.name();
+    }
 }

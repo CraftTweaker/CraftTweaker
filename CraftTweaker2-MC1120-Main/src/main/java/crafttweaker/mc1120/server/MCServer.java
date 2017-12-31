@@ -25,13 +25,13 @@ public class MCServer extends AbstractServer {
     }
 
     private static IPlayer getPlayer(ICommandSender commandSender) {
-        if(commandSender instanceof EntityPlayer) {
+        if (commandSender instanceof EntityPlayer) {
             return CraftTweakerMC.getIPlayer((EntityPlayer) commandSender);
-        } else if(commandSender instanceof RConConsoleSource) {
+        } else if (commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
-        } else if(commandSender instanceof CommandBlockBaseLogic) {
+        } else if (commandSender instanceof CommandBlockBaseLogic) {
             return new CommandBlockPlayer(commandSender);
-        } else if(commandSender.getName().equals("Server")) {
+        } else if (commandSender.getName().equals("Server")) {
             return ServerPlayer.INSTANCE;
         } else {
             System.out.println("Unsupported command sender: " + commandSender + " defaulting to server player!");
@@ -44,9 +44,9 @@ public class MCServer extends AbstractServer {
     @SuppressWarnings("MethodCallSideOnly")
     @Override
     public boolean isOp(IPlayer player) {
-        if(player == ServerPlayer.INSTANCE)
+        if (player == ServerPlayer.INSTANCE)
             return true;
-    
+
         UserListOps ops = CraftTweaker.server.getPlayerList().getOppedPlayers();
         return !(server != null && server.isDedicatedServer()) || ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
     }

@@ -1,12 +1,16 @@
 package crafttweaker.mc1120.block;
 
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.BlockPatternOr;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockPattern;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.block.Block;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Stan

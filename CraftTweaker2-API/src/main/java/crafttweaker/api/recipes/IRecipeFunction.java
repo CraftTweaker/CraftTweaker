@@ -12,6 +12,6 @@ import java.util.Map;
 @ZenClass("crafttweaker.recipes.IRecipeFunction")
 @ZenRegister
 public interface IRecipeFunction {
-    
+
     IItemStack process(IItemStack output, Map<String, IItemStack> inputs, ICraftingInfo craftingInfo);
 }

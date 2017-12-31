@@ -18,14 +18,14 @@ package crafttweaker;
  * @author Stan Hebben
  */
 public interface IAction {
-    
+
     /**
      * Executes what the action is supposed to do. This method can be called
      * again if undo() has been called in between.
      */
     void apply();
-    
-    
+
+
     /**
      * Describes, in a single human-readable sentence, what this specific action
      * is doing. Used in logging messages, lists, ...

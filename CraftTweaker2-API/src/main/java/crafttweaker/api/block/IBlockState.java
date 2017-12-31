@@ -3,16 +3,12 @@ package crafttweaker.api.block;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenOperator;
+import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.block.IBlockState")
 @ZenRegister
 public interface IBlockState {
-	@ZenMethod
+    @ZenMethod
     @ZenGetter("block")
     IBlock getBlock();
 
@@ -44,5 +40,5 @@ public interface IBlockState {
     @ZenOperator(OperatorType.COMPARE)
     int compare(IBlockState other);
 
-	Object getInternal();
+    Object getInternal();
 }

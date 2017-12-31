@@ -11,19 +11,19 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stanneke
  */
 public class ParsedExpressionIndexSet extends ParsedExpression {
-    
+
     private final ParsedExpression value;
     private final ParsedExpression index;
     private final ParsedExpression setValue;
-    
+
     public ParsedExpressionIndexSet(ZenPosition position, ParsedExpression value, ParsedExpression index, ParsedExpression setValue) {
         super(position);
-        
+
         this.value = value;
         this.index = index;
         this.setValue = setValue;
     }
-    
+
     @Override
     public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
         // TODO: improve prediction in this expression

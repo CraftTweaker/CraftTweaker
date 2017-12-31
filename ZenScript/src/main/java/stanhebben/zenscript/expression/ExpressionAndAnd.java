@@ -3,7 +3,8 @@ package stanhebben.zenscript.expression;
 import org.objectweb.asm.Label;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 public class ExpressionAndAnd extends Expression {
 
@@ -38,7 +39,7 @@ public class ExpressionAndAnd extends Expression {
         output.iConst1();
         output.label(skip);
 
-        if(!result) {
+        if (!result) {
             output.pop();
         }
     }

@@ -1,7 +1,8 @@
 package crafttweaker.api.block;
 
 import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * Blocks definitions provide additional information about blocks.
@@ -11,11 +12,11 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.block.IBlockDefinition")
 @ZenRegister
 public interface IBlockDefinition {
-    
+
     @ZenGetter("id")
     String getId();
-    
+
     @ZenGetter("displayName")
     String getDisplayName();
-    
+
 }

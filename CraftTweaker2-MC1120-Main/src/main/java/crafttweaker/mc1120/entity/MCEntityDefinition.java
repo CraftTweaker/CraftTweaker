@@ -9,7 +9,9 @@ import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.util.IntegerRange;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -49,12 +51,11 @@ public class MCEntityDefinition implements IEntityDefinition {
         }
         drops.add(new EntityDrop(stack, min, max, chance));
     }
-    
+
     @Override
-    public void addDrop(WeightedItemStack stack, int min, int max){
-    	this.addDrop(stack.getStack(), min, max, stack.getChance());
+    public void addDrop(WeightedItemStack stack, int min, int max) {
+        this.addDrop(stack.getStack(), min, max, stack.getChance());
     }
-    
 
 
     @Override
@@ -65,11 +66,11 @@ public class MCEntityDefinition implements IEntityDefinition {
         }
         drops.add(new EntityDrop(stack, min, max, chance, true));
     }
-    
+
     @Override
     public void addPlayerOnlyDrop(WeightedItemStack stack, int min, int max) {
-    	this.addPlayerOnlyDrop(stack.getStack(), min, max, stack.getChance());
-    	
+        this.addPlayerOnlyDrop(stack.getStack(), min, max, stack.getChance());
+
     }
 
     @Override
@@ -106,26 +107,26 @@ public class MCEntityDefinition implements IEntityDefinition {
     public boolean shouldClearDrops() {
         return clearDrops;
     }
-    
+
     @Override
     public Object getInternal() {
         return entityEntry;
     }
-    
+
     @Override
     public String toString() {
-    	return "<entity:" + entityName + ">";
+        return "<entity:" + entityName + ">";
     }
 
 
-	@Override
-	public void addDropFunction(IEntityDropFunction function) {
-		dropFunctions.add(function);
-	}
+    @Override
+    public void addDropFunction(IEntityDropFunction function) {
+        dropFunctions.add(function);
+    }
 
 
-	@Override
-	public List<IEntityDropFunction> getDropFunctions() {
-		return dropFunctions ;
-	}
+    @Override
+    public List<IEntityDropFunction> getDropFunctions() {
+        return dropFunctions;
+    }
 }

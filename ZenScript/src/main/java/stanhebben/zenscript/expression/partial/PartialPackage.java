@@ -1,8 +1,11 @@
 package stanhebben.zenscript.expression.partial;
 
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.symbols.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionInvalid;
+import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.SymbolPackage;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -34,7 +37,7 @@ public class PartialPackage implements IPartialExpression {
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
         IZenSymbol member = contents.get(name);
-        if(member == null) {
+        if (member == null) {
             environment.error(position, "No such member: " + name);
             return new ExpressionInvalid(position);
         } else {

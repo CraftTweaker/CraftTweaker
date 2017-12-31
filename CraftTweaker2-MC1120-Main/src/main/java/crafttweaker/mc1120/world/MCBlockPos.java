@@ -7,48 +7,48 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 
-public class MCBlockPos implements IBlockPos{
-	
-	private BlockPos blockPos;
+public class MCBlockPos implements IBlockPos {
+
+    private BlockPos blockPos;
 
     public MCBlockPos(BlockPos blockPos) {
         this.blockPos = blockPos;
     }
-    
+
     public MCBlockPos(int x, int y, int z) {
-    	this.blockPos = new BlockPos(x, y, z);
+        this.blockPos = new BlockPos(x, y, z);
     }
 
     @Override
     public int getX() {
-		return blockPos.getX();
-	}
+        return blockPos.getX();
+    }
 
     @Override
-	public int getY() {
-		return blockPos.getY();
-	}
+    public int getY() {
+        return blockPos.getY();
+    }
 
     @Override
-	public int getZ() {
-		return blockPos.getZ();
-	}
+    public int getZ() {
+        return blockPos.getZ();
+    }
 
     @Override
-	public IBlockPos getOffset(String directionName, int offset) {
-		return new MCBlockPos(blockPos.offset(EnumFacing.valueOf(directionName), offset));
-	}
-	
+    public IBlockPos getOffset(String directionName, int offset) {
+        return new MCBlockPos(blockPos.offset(EnumFacing.valueOf(directionName), offset));
+    }
+
 
     @Override
-	public IPosition3f asPosition3f() {
-		return new Position3f(getX(), getY(), getZ());
-	}
+    public IPosition3f asPosition3f() {
+        return new Position3f(getX(), getY(), getZ());
+    }
 
-	@Override
-	public Object getInternal() {
-		return blockPos;
-	}
-	
+    @Override
+    public Object getInternal() {
+        return blockPos;
+    }
+
 
 }

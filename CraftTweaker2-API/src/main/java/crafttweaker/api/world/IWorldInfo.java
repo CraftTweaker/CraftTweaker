@@ -130,7 +130,7 @@ public interface IWorldInfo {
     @ZenMethod
     @ZenGetter("boderLerpTime")
     long getBoderLerpTime();
-    
+
     @ZenMethod
     @ZenGetter("difficultyLocked")
     boolean isDifficultyLocked();
@@ -154,7 +154,7 @@ public interface IWorldInfo {
     @ZenMethod
     @ZenGetter("versionSnapshot")
     boolean isVersionSnapshot();
-    
+
     Object getInternal();
 
 }

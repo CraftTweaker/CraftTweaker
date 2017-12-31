@@ -1,6 +1,9 @@
 package stanhebben.zenscript.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Used to annotate setters. Will make the given method accessible as setter,
@@ -14,7 +17,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ZenSetter {
-    
+
     /**
      * Setter name. If omitted, the method name is used as property name.
      *

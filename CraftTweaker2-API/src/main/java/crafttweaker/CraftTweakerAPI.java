@@ -8,18 +8,29 @@ import crafttweaker.api.game.IGame;
 import crafttweaker.api.item.IItemUtils;
 import crafttweaker.api.mods.ILoadedMods;
 import crafttweaker.api.oredict.IOreDict;
-import crafttweaker.api.recipes.*;
+import crafttweaker.api.recipes.IBrewingManager;
+import crafttweaker.api.recipes.IFurnaceManager;
+import crafttweaker.api.recipes.IRecipeManager;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.vanilla.IVanilla;
-import crafttweaker.runtime.*;
-import crafttweaker.zenscript.*;
-import stanhebben.zenscript.annotations.*;
-import stanhebben.zenscript.symbols.*;
-import stanhebben.zenscript.type.natives.*;
+import crafttweaker.runtime.CrTTweaker;
+import crafttweaker.runtime.ILogger;
+import crafttweaker.runtime.ITweaker;
+import crafttweaker.zenscript.GlobalRegistry;
+import crafttweaker.zenscript.IBracketHandler;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenExpansion;
+import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.SymbolJavaStaticField;
+import stanhebben.zenscript.symbols.SymbolJavaStaticGetter;
+import stanhebben.zenscript.symbols.SymbolJavaStaticMethod;
+import stanhebben.zenscript.type.natives.IJavaMethod;
+import stanhebben.zenscript.type.natives.JavaMethod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Provides access to the CraftTweaker API.
@@ -34,13 +45,13 @@ import java.util.logging.*;
  * to resolve block/item/... references using the bracket syntax
  */
 public class CraftTweakerAPI {
-    
+
     /**
      * The Tweaker is where you apply undoable actions. Any kind of action that
      * reloads with the scripts should always be submitted to the tweaker.
      */
     public static final ITweaker tweaker = new CrTTweaker();
-    
+
     /**
      * Access point to the events manager.s
      */
@@ -61,7 +72,7 @@ public class CraftTweakerAPI {
      * Access point to the server, if any.
      */
     public static IServer server = null;
-    
+
     /**
      * Access point to the client, if any.
      */
@@ -90,8 +101,8 @@ public class CraftTweakerAPI {
      * Access point to the brewing handler
      */
     public static IBrewingManager brewingManager = null;
-    
-    
+
+
     static {
         registerGlobalSymbol("logger", getJavaStaticGetterSymbol(CraftTweakerAPI.class, "getLogger"));
         registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "recipes"));
@@ -107,11 +118,11 @@ public class CraftTweakerAPI {
         registerGlobalSymbol("itemUtils", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "itemUtils"));
         registerGlobalSymbol("brewing", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "brewingManager"));
     }
-    
+
     private CraftTweakerAPI() {
-        
+
     }
-    
+
     /**
      * The logger can be used to write logging messages to the client. Error and
      * warning messages should be relayed to admins for further handling.
@@ -121,7 +132,7 @@ public class CraftTweakerAPI {
     public static ILogger getLogger() {
         return CrafttweakerImplementationAPI.logger;
     }
-    
+
     /**
      * Applies this given action.
      *
@@ -130,7 +141,7 @@ public class CraftTweakerAPI {
     public static void apply(IAction action) {
         tweaker.apply(action);
     }
-    
+
     /**
      * Logs a command message. Commands messages are those generated as output
      * in response to a command.
@@ -140,7 +151,7 @@ public class CraftTweakerAPI {
     public static void logCommand(String message) {
         getLogger().logCommand(message);
     }
-    
+
     /**
      * Logs an info message. Info messages have low priority and will only be
      * displayed in the log files, but not directly to players in-game.
@@ -150,7 +161,7 @@ public class CraftTweakerAPI {
     public static void logInfo(String message) {
         getLogger().logInfo(message);
     }
-    
+
     /**
      * Logs a warning message. Warning messages are displayed to admins and
      * indicate that there is an issue. However, the issue is not a large
@@ -162,7 +173,7 @@ public class CraftTweakerAPI {
     public static void logWarning(String message) {
         getLogger().logWarning(message);
     }
-    
+
     /**
      * Logs an error message. Error messages indicate a real problem and
      * indicate that things won't run properly. The scripting system will still
@@ -174,7 +185,7 @@ public class CraftTweakerAPI {
     public static void logError(String message) {
         getLogger().logError(message);
     }
-    
+
     /**
      * Logs an error message. Error messages indicate a real problem and
      * indicate that things won't run properly. The scripting system will still
@@ -187,11 +198,11 @@ public class CraftTweakerAPI {
     public static void logError(String message, Throwable exception) {
         getLogger().logError(message, exception);
     }
-    
+
     // ###################################
     // ### Plugin registration methods ###
     // ###################################
-    
+
     /**
      * Registers an annotated class. A class is annotated with either @ZenClass
      * or @ZenExpansion. Classes not annotated with either of these will be
@@ -200,25 +211,25 @@ public class CraftTweakerAPI {
      * @param annotatedClass class that is annotated
      */
     public static void registerClass(Class annotatedClass) {
-        for(Annotation annotation : annotatedClass.getAnnotations()) {
-            if(annotation instanceof ZenExpansion) {
+        for (Annotation annotation : annotatedClass.getAnnotations()) {
+            if (annotation instanceof ZenExpansion) {
                 GlobalRegistry.registerExpansion(annotatedClass);
             }
-            
-            if(annotation instanceof ZenClass) {
+
+            if (annotation instanceof ZenClass) {
                 GlobalRegistry.registerNativeClass(annotatedClass);
             }
-            if((annotation instanceof BracketHandler) && IBracketHandler.class.isAssignableFrom(annotatedClass)) {
+            if ((annotation instanceof BracketHandler) && IBracketHandler.class.isAssignableFrom(annotatedClass)) {
                 try {
                     IBracketHandler bracketHandler = (IBracketHandler) annotatedClass.newInstance();
                     registerBracketHandler(bracketHandler);
-                } catch(InstantiationException | IllegalAccessException ex) {
+                } catch (InstantiationException | IllegalAccessException ex) {
                     Logger.getLogger(CraftTweakerAPI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    
+
     /**
      * Registers a global symbol. Global symbols are immediately accessible from
      * anywhere in the scripts.
@@ -229,7 +240,7 @@ public class CraftTweakerAPI {
     public static void registerGlobalSymbol(String name, IZenSymbol symbol) {
         GlobalRegistry.registerGlobal(name, symbol);
     }
-    
+
     /**
      * Registers a bracket handler. Is capable of converting the bracket syntax
      * to an actual value. This new handler will be added last - it can thus not
@@ -240,21 +251,20 @@ public class CraftTweakerAPI {
     public static void registerBracketHandler(IBracketHandler handler) {
         GlobalRegistry.registerBracketHandler(handler);
     }
-    
+
     /**
      * Creates a symbol that refers to a java method.
      *
      * @param cls       class that contains the method
      * @param name      method name
      * @param arguments method argument types
-     *
      * @return corresponding symbol
      */
     public static IZenSymbol getJavaStaticMethodSymbol(Class cls, String name, Class... arguments) {
         IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypes(), cls, name, arguments);
         return new SymbolJavaStaticMethod(method);
     }
-    
+
     /**
      * Creates a symbol that refers to a java getter. The getter must be a
      * method with no arguments. The given symbol will act as a variable of
@@ -262,14 +272,13 @@ public class CraftTweakerAPI {
      *
      * @param cls  class that contains the getter method
      * @param name name of the method
-     *
      * @return corresponding symbol
      */
     public static IZenSymbol getJavaStaticGetterSymbol(Class<? extends CraftTweakerAPI> cls, String name) {
         IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypes(), cls, name);
         return new SymbolJavaStaticGetter(method);
     }
-    
+
     /**
      * Creates a symbol that refers to a static field. The field must be an
      * existing public field in the given class. The field will act as a
@@ -277,25 +286,23 @@ public class CraftTweakerAPI {
      *
      * @param cls  class that contains the field
      * @param name field name (must be public)
-     *
      * @return corresponding symbol
      */
     public static IZenSymbol getJavaStaticFieldSymbol(Class<?> cls, String name) {
         try {
             Field field = cls.getField(name);
             return new SymbolJavaStaticField(cls, field, GlobalRegistry.getTypes());
-        } catch(NoSuchFieldException | SecurityException ex) {
+        } catch (NoSuchFieldException | SecurityException ex) {
             return null;
         }
     }
-    
+
     /**
      * Loads a Java method from an existing class.
      *
      * @param cls       method class
      * @param name      method name
      * @param arguments argument types
-     *
      * @return java method
      */
     public static IJavaMethod getJavaMethod(Class<? extends IBracketHandler> cls, String name, Class... arguments) {

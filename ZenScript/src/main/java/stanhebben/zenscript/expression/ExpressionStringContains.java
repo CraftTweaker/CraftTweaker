@@ -29,7 +29,7 @@ public class ExpressionStringContains extends Expression {
         haystack.compile(result, environment);
         needle.compile(result, environment);
 
-        if(result) {
+        if (result) {
             environment.getOutput().invokeVirtual(String.class, "contains", CharSequence.class);
         }
     }

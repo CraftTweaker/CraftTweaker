@@ -9,17 +9,17 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stanneke
  */
 public class ParsedExpressionAssign extends ParsedExpression {
-    
+
     private final ParsedExpression left;
     private final ParsedExpression right;
-    
+
     public ParsedExpressionAssign(ZenPosition position, ParsedExpression left, ParsedExpression right) {
         super(position);
-        
+
         this.left = left;
         this.right = right;
     }
-    
+
     @Override
     public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
         IPartialExpression cLeft = left.compile(environment, predictedType);

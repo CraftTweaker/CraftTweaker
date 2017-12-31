@@ -2,7 +2,10 @@ package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.oredict.IOreDictEntry;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ import java.util.List;
 @ZenClass("crafttweaker.item.IItemDefinition")
 @ZenRegister
 public interface IItemDefinition {
-    
+
     /**
      * Gets the item ID.
      *
@@ -26,7 +29,7 @@ public interface IItemDefinition {
      */
     @ZenGetter("id")
     String getId();
-    
+
     /**
      * Gets the unlocalized item name.
      *
@@ -34,7 +37,7 @@ public interface IItemDefinition {
      */
     @ZenGetter("name")
     String getName();
-    
+
     /**
      * Gets the owner of the item.
      *
@@ -42,17 +45,16 @@ public interface IItemDefinition {
      */
     @ZenGetter("owner")
     String getOwner();
-    
+
     /**
      * Makes an item stack from this definition.
      *
      * @param meta meta value
-     *
      * @return item stack
      */
     @ZenMethod
     IItemStack makeStack(@Optional int meta);
-    
+
     /**
      * Returns all ore entries containing this item. Also contains ore entries
      * that refer to a specific sub-item.

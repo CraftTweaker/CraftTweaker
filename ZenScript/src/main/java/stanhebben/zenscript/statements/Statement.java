@@ -1,13 +1,15 @@
 package stanhebben.zenscript.statements;
 
 import stanhebben.zenscript.ZenTokener;
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static stanhebben.zenscript.ZenTokener.*;
 
@@ -21,11 +23,11 @@ public abstract class Statement {
 
     public static Statement read(ZenTokener parser, IEnvironmentGlobal environment, ZenType returnType) {
         Token next = parser.peek();
-        switch(next.getType()) {
+        switch (next.getType()) {
             case T_AOPEN: {
                 Token t = parser.next();
                 ArrayList<Statement> statements = new ArrayList<>();
-                while(parser.optional(T_ACLOSE) == null) {
+                while (parser.optional(T_ACLOSE) == null) {
                     statements.add(read(parser, environment, returnType));
                 }
                 return new StatementBlock(t.getPosition(), statements);
@@ -33,7 +35,7 @@ public abstract class Statement {
             case T_RETURN: {
                 parser.next();
                 ParsedExpression expression = null;
-                if(parser.peek() != null && !parser.isNext(T_SEMICOLON)) {
+                if (parser.peek() != null && !parser.isNext(T_SEMICOLON)) {
                     expression = ParsedExpression.read(parser, environment);
                 }
                 parser.required(T_SEMICOLON, "; expected");
@@ -46,10 +48,10 @@ public abstract class Statement {
 
                 ZenType type = null;
                 ParsedExpression initializer = null;
-                if(parser.optional(T_AS) != null) {
+                if (parser.optional(T_AS) != null) {
                     type = ZenType.read(parser, environment);
                 }
-                if(parser.optional(T_ASSIGN) != null) {
+                if (parser.optional(T_ASSIGN) != null) {
                     initializer = ParsedExpression.read(parser, environment);
                 }
                 parser.required(T_SEMICOLON, "; expected");
@@ -60,7 +62,7 @@ public abstract class Statement {
                 ParsedExpression expression = ParsedExpression.read(parser, environment);
                 Statement onIf = read(parser, environment, returnType);
                 Statement onElse = null;
-                if(parser.optional(T_ELSE) != null) {
+                if (parser.optional(T_ELSE) != null) {
                     onElse = read(parser, environment, returnType);
                 }
                 return new StatementIf(t.getPosition(), expression, onIf, onElse);
@@ -71,7 +73,7 @@ public abstract class Statement {
                 List<String> names = new ArrayList<>();
                 names.add(name);
 
-                while(parser.optional(T_COMMA) != null) {
+                while (parser.optional(T_COMMA) != null) {
                     names.add(parser.required(T_ID, "identifier expected").getValue());
                 }
 

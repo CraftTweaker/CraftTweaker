@@ -2,13 +2,16 @@ package crafttweaker.mc1120.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
@@ -42,20 +45,20 @@ public class MessageOpenBrowser implements IMessage, IMessageHandler<MessageOpen
     public void toBytes(ByteBuf buf) {
         buf.writeBytes(UTF8.encode(url).array());
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public IMessage onMessage(MessageOpenBrowser message, MessageContext ctx) {
         Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
         return null;
     }
-    
+
     private void handle(MessageOpenBrowser message, MessageContext ctx) {
-        if(Desktop.isDesktopSupported()) {
+        if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             try {
                 desktop.browse(new URI(message.getUrl()));
-            } catch(IOException | URISyntaxException ignored) {
+            } catch (IOException | URISyntaxException ignored) {
             }
         } else {
             System.out.println("Desktop not supported");

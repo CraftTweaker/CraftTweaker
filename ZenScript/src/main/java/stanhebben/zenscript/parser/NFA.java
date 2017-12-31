@@ -58,7 +58,7 @@ public class NFA {
         initial = new NFAState();
 
         Partial[] partials = new Partial[regexp.length];
-        for(int i = 0; i < regexp.length; i++) {
+        for (int i = 0; i < regexp.length; i++) {
             partials[i] = processRegExp(new CharStream(regexp[i]));
             partials[i].head.setFinal(finals[i]);
             initial.addTransition(partials[i].tailLabel, partials[i].tail);
@@ -86,26 +86,26 @@ public class NFA {
 
     /* Converts a set of possible states to a DFA state. */
     private DFA.DFAState convert(NodeSet nodes) {
-        if(!converted.containsKey(nodes)) {
+        if (!converted.containsKey(nodes)) {
             DFA.DFAState node = new DFA.DFAState();
             converted.put(nodes, node);
 
             HashSet<Integer> edgeSet = new HashSet<>();
-            for(NFAState n : nodes.nodes) {
+            for (NFAState n : nodes.nodes) {
                 n.alphabet(edgeSet);
             }
-            for(int i : edgeSet) {
+            for (int i : edgeSet) {
                 HashSet<NFAState> edge = new HashSet<>();
-                for(NFAState n : nodes.nodes) {
+                for (NFAState n : nodes.nodes) {
                     n.edge(i, edge);
                 }
                 NodeSet set = new NodeSet(edge);
                 node.addTransition(i, convert(set));
             }
             int finalCode = DFA.NOFINAL;
-            for(NFAState n : nodes.nodes) {
-                if(n.finalCode != NOFINAL) {
-                    if(finalCode != DFA.NOFINAL) {
+            for (NFAState n : nodes.nodes) {
+                if (n.finalCode != NOFINAL) {
+                    if (finalCode != DFA.NOFINAL) {
                         finalCode = Math.min(n.finalCode, finalCode);
                     } else {
                         finalCode = n.finalCode;
@@ -122,16 +122,16 @@ public class NFA {
     /* Processes a regular expression */
     private Partial processRegExp(CharStream stream) {
         Partial partial = processRegExp0(stream);
-        if(stream.optional('|')) {
+        if (stream.optional('|')) {
             ArrayList<Partial> partials = new ArrayList<>();
             partials.add(partial);
             partials.add(processRegExp0(stream));
-            while(stream.optional('|')) {
+            while (stream.optional('|')) {
                 partials.add(processRegExp0(stream));
             }
             NFAState head = new NFAState();
             NFAState tail = new NFAState();
-            for(Partial p : partials) {
+            for (Partial p : partials) {
                 tail.addTransition(p.tailLabel, p.tail);
                 p.head.addTransition(EPSILON, head);
             }
@@ -144,7 +144,7 @@ public class NFA {
     /* Processes an element of an alternation clause */
     private Partial processRegExp0(CharStream stream) {
         Partial partial = processRegExp1(stream);
-        while(!stream.peek(')') && !stream.peek('|') && stream.hasMore()) {
+        while (!stream.peek(')') && !stream.peek('|') && stream.hasMore()) {
             Partial partial2 = processRegExp1(stream);
             partial.head.addTransition(partial2.tailLabel, partial2.tail);
             partial = new Partial(partial.tailLabel, partial.tail, partial2.head);
@@ -155,55 +155,55 @@ public class NFA {
     /* Processes a partial with optional repetition */
     private Partial processRegExp1(CharStream stream) {
         Partial partial = processPartial(stream);
-        if(stream.optional('*')) {
+        if (stream.optional('*')) {
             NFAState node = new NFAState();
             partial.head.addTransition(EPSILON, node);
             node.addTransition(partial.tailLabel, partial.tail);
             return new Partial(EPSILON, node, node);
-        } else if(stream.optional('+')) {
+        } else if (stream.optional('+')) {
             NFAState node = new NFAState();
             partial.head.addTransition(EPSILON, node);
             node.addTransition(partial.tailLabel, partial.tail);
             return new Partial(partial.tailLabel, partial.tail, node);
-        } else if(stream.optional('?')) {
+        } else if (stream.optional('?')) {
             NFAState node = new NFAState();
             node.addTransition(EPSILON, partial.head);
             node.addTransition(partial.tailLabel, partial.tail);
             return new Partial(EPSILON, node, partial.head);
-        } else if(stream.optional('{')) {
+        } else if (stream.optional('{')) {
             int amount = processInt(stream);
-            if(amount < 0)
+            if (amount < 0)
                 throw new IllegalArgumentException("Repitition count expected");
-            if(stream.optional(',')) {
+            if (stream.optional(',')) {
                 int amount2 = processInt(stream);
                 stream.required('}');
-                if(amount2 < 0) {
+                if (amount2 < 0) {
                     // unbounded
                     Partial[] duplicates = new Partial[amount];
-                    for(int i = 0; i < duplicates.length - 1; i++) {
+                    for (int i = 0; i < duplicates.length - 1; i++) {
                         duplicates[i] = partial.duplicate();
                     }
                     duplicates[amount - 1] = partial;
-                    for(int i = 0; i < duplicates.length - 1; i++) {
+                    for (int i = 0; i < duplicates.length - 1; i++) {
                         duplicates[i].head.addTransition(duplicates[i + 1].tailLabel, duplicates[i + 1].tail);
                     }
                     duplicates[amount - 1].head.addTransition(duplicates[amount - 1].tailLabel, duplicates[amount - 1].tail);
                     return new Partial(duplicates[0].tailLabel, duplicates[0].tail, duplicates[amount - 1].head);
                 } else {
                     Partial[] duplicates = new Partial[amount2];
-                    for(int i = 0; i < duplicates.length - 1; i++) {
+                    for (int i = 0; i < duplicates.length - 1; i++) {
                         duplicates[i] = partial.duplicate();
                     }
                     duplicates[amount2 - 1] = partial;
-                    for(int i = 0; i < duplicates.length - 1; i++) {
+                    for (int i = 0; i < duplicates.length - 1; i++) {
                         duplicates[i].head.addTransition(duplicates[i + 1].tailLabel, duplicates[i + 1].tail);
                     }
-                    for(int i = amount; i < amount2; i++) {
-                        if(i == 0) {
+                    for (int i = amount; i < amount2; i++) {
+                        if (i == 0) {
                             /*
-							 * insert additional node before the chain because
-							 * minimal repeat is 0
-							 */
+                             * insert additional node before the chain because
+                             * minimal repeat is 0
+                             */
                             NFAState additional = new NFAState();
                             additional.addTransition(duplicates[0].tailLabel, duplicates[0].tail);
                             additional.addTransition(EPSILON, duplicates[amount2 - 1].head);
@@ -219,11 +219,11 @@ public class NFA {
                 stream.required('}');
 
                 Partial[] duplicates = new Partial[amount];
-                for(int i = 0; i < duplicates.length - 1; i++) {
+                for (int i = 0; i < duplicates.length - 1; i++) {
                     duplicates[i] = partial.duplicate();
                 }
                 duplicates[amount - 1] = partial;
-                for(int i = 0; i < duplicates.length - 1; i++) {
+                for (int i = 0; i < duplicates.length - 1; i++) {
                     duplicates[i].head.addTransition(duplicates[i + 1].tailLabel, duplicates[i + 1].tail);
                 }
                 return new Partial(duplicates[0].tailLabel, duplicates[0].tail, duplicates[amount - 1].head);
@@ -238,25 +238,25 @@ public class NFA {
      * expression between brackets, a dot or a character list
      */
     private Partial processPartial(CharStream stream) {
-        if(stream.optional('(')) {
+        if (stream.optional('(')) {
             Partial result = processRegExp(stream);
             stream.required(')');
             return result;
-        } else if(stream.optional('[')) {
+        } else if (stream.optional('[')) {
             NFAState head = new NFAState();
             NFAState tail = new NFAState();
 
             IteratorI iter = processCharList(stream).iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 tail.addTransition(iter.next(), head);
             }
             stream.required(']');
             return new Partial(EPSILON, tail, head);
-        } else if(stream.optional('.')) {
+        } else if (stream.optional('.')) {
             NFAState head = new NFAState();
             NFAState tail = new NFAState();
 
-            for(int i = 0; i <= 256; i++) {
+            for (int i = 0; i <= 256; i++) {
                 tail.addTransition(i, head);
             }
             return new Partial(EPSILON, tail, head);
@@ -272,11 +272,11 @@ public class NFA {
         HashSetI base = new HashSetI();
         do {
             processCharPartial(base, stream);
-        } while(!stream.peek(']'));
-        if(invert) {
+        } while (!stream.peek(']'));
+        if (invert) {
             HashSetI result = new HashSetI();
-            for(int i = 0; i <= 256; i++) {
-                if(!base.contains(i))
+            for (int i = 0; i <= 256; i++) {
+                if (!base.contains(i))
                     result.add(i);
             }
             return result;
@@ -290,15 +290,15 @@ public class NFA {
      * of characters.
      */
     private void processCharPartial(HashSetI out, CharStream stream) {
-        if(stream.optional('.')) {
-            for(int i = 0; i <= 256; i++) {
+        if (stream.optional('.')) {
+            for (int i = 0; i <= 256; i++) {
                 out.add(i);
             }
         } else {
             int from = processChar(stream);
-            if(stream.optional('-')) {
+            if (stream.optional('-')) {
                 int to = processChar(stream);
-                for(int i = from; i <= to; i++) {
+                for (int i = from; i <= to; i++) {
                     out.add(i);
                 }
             } else {
@@ -309,50 +309,50 @@ public class NFA {
 
     /* Processes a single character */
     private int processChar(CharStream stream) {
-        if(stream.optional('\\')) {
-            if(stream.optional('u'))
+        if (stream.optional('\\')) {
+            if (stream.optional('u'))
                 return UNICODE_ESCAPE;
-            if(stream.optional('e'))
+            if (stream.optional('e'))
                 return -1;
-            if(stream.optional('r'))
+            if (stream.optional('r'))
                 return '\r';
-            if(stream.optional('n'))
+            if (stream.optional('n'))
                 return '\n';
-            if(stream.optional('t'))
+            if (stream.optional('t'))
                 return '\t';
-            if(stream.optional('['))
+            if (stream.optional('['))
                 return '[';
-            if(stream.optional(']'))
+            if (stream.optional(']'))
                 return ']';
-            if(stream.optional('('))
+            if (stream.optional('('))
                 return '(';
-            if(stream.optional(')'))
+            if (stream.optional(')'))
                 return ')';
-            if(stream.optional('.'))
+            if (stream.optional('.'))
                 return '.';
-            if(stream.optional('+'))
+            if (stream.optional('+'))
                 return '+';
-            if(stream.optional('-'))
+            if (stream.optional('-'))
                 return '-';
-            if(stream.optional('\\'))
+            if (stream.optional('\\'))
                 return '\\';
-            if(stream.optional('{'))
+            if (stream.optional('{'))
                 return '{';
-            if(stream.optional('}'))
+            if (stream.optional('}'))
                 return '}';
-            if(stream.optional('?'))
+            if (stream.optional('?'))
                 return '?';
-            if(stream.optional('*'))
+            if (stream.optional('*'))
                 return '*';
-            if(stream.optional('~'))
+            if (stream.optional('~'))
                 return '~';
-            if(stream.optional('|'))
+            if (stream.optional('|'))
                 return '|';
-            if(stream.optional('^'))
+            if (stream.optional('^'))
                 return '^';
             throw new IllegalArgumentException("Invalid character: " + stream.next());
         } else {
-            if(stream.peek('[') || stream.peek(']') || stream.peek('(') || stream.peek(')') || stream.peek('{') || stream.peek('}') || stream.peek('.') || stream.peek('-') || stream.peek('+') || stream.peek('?') || stream.peek('*')) {
+            if (stream.peek('[') || stream.peek(']') || stream.peek('(') || stream.peek(')') || stream.peek('{') || stream.peek('}') || stream.peek('.') || stream.peek('-') || stream.peek('+') || stream.peek('?') || stream.peek('*')) {
                 throw new IllegalArgumentException("Invalid character: " + stream.next());
             } else {
                 return stream.next();
@@ -366,10 +366,10 @@ public class NFA {
      */
     private int processInt(CharStream stream) {
         int data = stream.optional('0', '9') - '0';
-        if(data < 0)
+        if (data < 0)
             return -1;
         char ch = stream.optional('0', '9');
-        while(ch != 0) {
+        while (ch != 0) {
             data = data * 10 + (ch - '0');
             ch = stream.optional('0', '9');
         }
@@ -416,7 +416,7 @@ public class NFA {
          * @param finalCode
          */
         public void setFinal(int finalCode) {
-            if(this.finalCode == finalCode)
+            if (this.finalCode == finalCode)
                 return;
             this.finalCode = finalCode;
 
@@ -442,12 +442,12 @@ public class NFA {
          * @return this state's closure
          */
         private ArrayList<NFAState> closure() {
-            if(closure == null) {
+            if (closure == null) {
                 HashSet<NFAState> tmp = new HashSet<>();
                 tmp.add(this);
-                for(Transition transition : transitions) {
-                    if(transition.label == EPSILON) {
-                        if(!tmp.contains(transition.next)) {
+                for (Transition transition : transitions) {
+                    if (transition.label == EPSILON) {
+                        if (!tmp.contains(transition.next)) {
                             tmp.add(transition.next);
                             transition.next.closure(tmp);
                         }
@@ -479,9 +479,9 @@ public class NFA {
          * @param output alphabet (out)
          */
         private void alphabet(HashSet<Integer> output) {
-            for(NFAState node : closure()) {
-                for(Transition t : node.transitions) {
-                    if(t.label != EPSILON) {
+            for (NFAState node : closure()) {
+                for (Transition t : node.transitions) {
+                    if (t.label != EPSILON) {
                         output.add(t.label);
                     }
                 }
@@ -541,10 +541,10 @@ public class NFA {
             Queue<NFAState> todo = new LinkedList<>();
             todo.add(tail);
             nodes.put(tail, new NFAState());
-            while(!todo.isEmpty()) {
+            while (!todo.isEmpty()) {
                 NFAState node = todo.poll();
-                for(NFAState.Transition t : node.transitions) {
-                    if(!nodes.containsKey(t.next)) {
+                for (NFAState.Transition t : node.transitions) {
+                    if (!nodes.containsKey(t.next)) {
                         nodes.put(t.next, new NFAState());
                         todo.add(t.next);
                     }
@@ -564,7 +564,7 @@ public class NFA {
         public NodeSet(HashSet<NFAState> nodes) {
             this.nodes = new NFAState[nodes.size()];
             int i = 0;
-            for(NFAState node : nodes)
+            for (NFAState node : nodes)
                 this.nodes[i++] = node;
             Arrays.sort(this.nodes, Comparator.comparingInt(o -> o.index));
         }

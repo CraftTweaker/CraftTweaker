@@ -1,9 +1,12 @@
 package stanhebben.zenscript.parser.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.expression.*;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionAs;
+import stanhebben.zenscript.expression.ExpressionMap;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAssociative;
 import stanhebben.zenscript.type.casting.ICastingRule;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -31,15 +34,15 @@ public class ParsedExpressionMap extends ParsedExpression {
         ICastingRule castingRule = null;
         ZenTypeAssociative mapType = ZenType.ANYMAP;
 
-        if(predictedType instanceof ZenTypeAssociative) {
+        if (predictedType instanceof ZenTypeAssociative) {
             ZenTypeAssociative inputType = (ZenTypeAssociative) predictedType;
             predictedKeyType = inputType.getKeyType();
             predictedValueType = inputType.getValueType();
             mapType = inputType;
         } else {
             castingRule = ZenType.ANYMAP.getCastingRule(predictedType, environment);
-            if(castingRule != null) {
-                if(castingRule.getInputType() instanceof ZenTypeAssociative) {
+            if (castingRule != null) {
+                if (castingRule.getInputType() instanceof ZenTypeAssociative) {
                     ZenTypeAssociative inputType = (ZenTypeAssociative) castingRule.getInputType();
                     predictedKeyType = inputType.getKeyType();
                     predictedValueType = inputType.getValueType();
@@ -53,13 +56,13 @@ public class ParsedExpressionMap extends ParsedExpression {
         Expression[] cKeys = new Expression[keys.size()];
         Expression[] cValues = new Expression[values.size()];
 
-        for(int i = 0; i < keys.size(); i++) {
+        for (int i = 0; i < keys.size(); i++) {
             cKeys[i] = keys.get(i).compileKey(environment, predictedKeyType);
             cValues[i] = values.get(i).compile(environment, predictedValueType).eval(environment);
         }
 
         Expression result = new ExpressionMap(getPosition(), cKeys, cValues, mapType);
-        if(castingRule != null) {
+        if (castingRule != null) {
             return new ExpressionAs(getPosition(), result, castingRule);
         } else {
             return result;

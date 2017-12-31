@@ -2,7 +2,8 @@ package crafttweaker.api.block;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.data.IData;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * Block interface. Used to interact with blocks in the world.
@@ -12,7 +13,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.block.IBlock")
 @ZenRegister
 public interface IBlock extends IBlockPattern {
-    
+
     /**
      * Gets the block definition.
      *
@@ -20,11 +21,11 @@ public interface IBlock extends IBlockPattern {
      */
     @ZenGetter("definition")
     IBlockDefinition getDefinition();
-    
+
     @ZenGetter("meta")
     int getMeta();
-    
+
     @ZenGetter("data")
     IData getTileData();
-    
+
 }

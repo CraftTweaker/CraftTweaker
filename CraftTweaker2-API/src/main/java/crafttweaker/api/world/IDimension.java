@@ -12,14 +12,14 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.world.IDimension")
 @ZenRegister
 public interface IDimension extends IBlockGroup {
-    
+
     @ZenGetter("day")
     @ZenMethod
     boolean isDay();
-    
+
     @ZenMethod
     int getBrightness(int x, int y, int z);
 
     @ZenMethod
-	IBiome getBiome(IPosition3f position);
+    IBiome getBiome(IPosition3f position);
 }

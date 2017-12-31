@@ -1,25 +1,31 @@
 package crafttweaker;
 
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.event.*;
 import crafttweaker.api.formatting.IFormatter;
 import crafttweaker.api.game.IGame;
-import crafttweaker.api.item.*;
+import crafttweaker.api.item.IItemDefinition;
+import crafttweaker.api.item.IItemUtils;
 import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.logger.MTLogger;
-import crafttweaker.api.mods.*;
-import crafttweaker.api.oredict.*;
+import crafttweaker.api.mods.ILoadedMods;
+import crafttweaker.api.oredict.IOreDict;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.recipes.*;
-import crafttweaker.api.server.*;
+import crafttweaker.api.recipes.IBrewingManager;
+import crafttweaker.api.recipes.IFurnaceManager;
+import crafttweaker.api.recipes.IRecipeManager;
+import crafttweaker.api.server.IServer;
 import crafttweaker.api.vanilla.IVanilla;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.util.IEventHandler;
-import java.io.Serializable;
-import java.util.*;
 
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -29,7 +35,7 @@ import java.util.*;
  * @author Stan Hebben
  */
 public class CrafttweakerImplementationAPI {
-    
+
     /**
      * Access point to the event handler implementation.
      */
@@ -43,10 +49,9 @@ public class CrafttweakerImplementationAPI {
     public static final Comparator<ILiquidDefinition> LIQUID_COMPARATOR = new LiquidComparator();
     public static final Comparator<IBlockDefinition> BLOCK_COMPARATOR = new BlockComparator();
     public static final Comparator<IEntityDefinition> ENTITY_COMPARATOR = new EntityComparator();
-    
+    public static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
     private static final ListenPlayerLoggedIn LISTEN_LOGIN = new ListenPlayerLoggedIn();
     private static final ListenPlayerLoggedOut LISTEN_LOGOUT = new ListenPlayerLoggedOut();
-    public static final ListenBlockInfo LISTEN_BLOCK_INFO = new ListenBlockInfo();
     /**
      * Access point to general platform functions.
      */
@@ -54,7 +59,7 @@ public class CrafttweakerImplementationAPI {
     public static Set<IPlayer> blockInfoPlayers = new HashSet<>();
     public static IEventHandle blockEventHandler = null;
 
-    
+
     /**
      * Initializes the CraftTweaker API.
      *
@@ -66,7 +71,7 @@ public class CrafttweakerImplementationAPI {
      * @param formatter formatter interface
      * @param vanilla   vanilla interface
      * @param itemUtils itemUtils interface
-     * @param brewing 	brewing interface
+     * @param brewing   brewing interface
      */
     public static void init(IOreDict oreDict, IRecipeManager recipes, IFurnaceManager furnace, IGame game, ILoadedMods mods, IFormatter formatter, IVanilla vanilla, IItemUtils itemUtils, IBrewingManager brewing) {
         CraftTweakerAPI.oreDict = oreDict;
@@ -79,7 +84,7 @@ public class CrafttweakerImplementationAPI {
         CraftTweakerAPI.itemUtils = itemUtils;
         CraftTweakerAPI.brewingManager = brewing;
     }
-    
+
     /**
      * Must be called upon server start.
      *
@@ -90,14 +95,14 @@ public class CrafttweakerImplementationAPI {
         events.onPlayerLoggedIn(LISTEN_LOGIN);
         events.onPlayerLoggedOut(LISTEN_LOGOUT);
     }
-    
+
     /**
      * Must be called upon server stop.
      */
     public static void onServerStop() {
         CraftTweakerAPI.server = null;
     }
-    
+
     /**
      * Sets the script provider.
      *
@@ -106,7 +111,7 @@ public class CrafttweakerImplementationAPI {
     public static void setScriptProvider(IScriptProvider provider) {
         CraftTweakerAPI.tweaker.setScriptProvider(provider);
     }
-    
+
     /**
      * Called to reload scripts. Must be called after setting a new script
      * provider in order to reload scripts.
@@ -114,72 +119,72 @@ public class CrafttweakerImplementationAPI {
     public static void load() {
         CraftTweakerAPI.tweaker.load();
     }
-    
+
     // #############################
     // ### Private inner classes ###
     // #############################
-    
+
 
     private static class ItemComparator implements Comparator<IItemDefinition>, Serializable {
-        
+
         @Override
         public int compare(IItemDefinition o1, IItemDefinition o2) {
             return o1.getId().compareTo(o2.getId());
         }
     }
-    
+
     private static class LiquidComparator implements Comparator<ILiquidDefinition>, Serializable {
-        
+
         @Override
         public int compare(ILiquidDefinition o1, ILiquidDefinition o2) {
             return o1.getName().compareTo(o2.getName());
         }
     }
-    
+
     private static class BlockComparator implements Comparator<IBlockDefinition>, Serializable {
-        
+
         @Override
         public int compare(IBlockDefinition o1, IBlockDefinition o2) {
             return o1.getId().compareTo(o2.getId());
         }
     }
-    
+
     private static class EntityComparator implements Comparator<IEntityDefinition>, Serializable {
-        
+
         @Override
         public int compare(IEntityDefinition o1, IEntityDefinition o2) {
             return o1.getId().compareTo(o2.getId());
         }
     }
-    
+
     private static class ListenPlayerLoggedIn implements IEventHandler<PlayerLoggedInEvent> {
-        
+
         @Override
         public void handle(PlayerLoggedInEvent event) {
-            if(CraftTweakerAPI.server != null && CraftTweakerAPI.server.isOp(event.getPlayer())) {
+            if (CraftTweakerAPI.server != null && CraftTweakerAPI.server.isOp(event.getPlayer())) {
                 logger.addPlayer(event.getPlayer());
             }
         }
     }
-    
+
     private static class ListenPlayerLoggedOut implements IEventHandler<PlayerLoggedOutEvent> {
-        
+
         @Override
         public void handle(PlayerLoggedOutEvent event) {
             logger.removePlayer(event.getPlayer());
         }
     }
-    
+
     private static class ListenBlockInfo implements IEventHandler<PlayerInteractEvent> {
-        
+
         @Override
         public void handle(PlayerInteractEvent event) {
-            if(blockInfoPlayers.contains(event.getPlayer())) {
+            if (blockInfoPlayers.contains(event.getPlayer())) {
                 IBlock block = event.getBlock();
                 event.getPlayer().sendChat("Block Name: " + block.getDefinition().getId());
                 event.getPlayer().sendChat("Meta value: " + block.getMeta());
                 IData data = block.getTileData();
-                if(data != null) {
+                if (data != null) {
                     event.getPlayer().sendChat("Tile entity data: " + data.asString());
                 }
             }

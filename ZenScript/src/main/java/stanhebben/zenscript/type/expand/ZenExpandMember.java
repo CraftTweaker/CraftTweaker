@@ -1,14 +1,19 @@
 package stanhebben.zenscript.type.expand;
 
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.expression.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
+import stanhebben.zenscript.expression.ExpressionInvalid;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.type.natives.IJavaMethod;
+import stanhebben.zenscript.type.natives.JavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static stanhebben.zenscript.util.StringUtil.methodMatchingError;
 
@@ -37,7 +42,7 @@ public class ZenExpandMember {
     }
 
     public void setGetter(IJavaMethod getter) {
-        if(this.getter != null) {
+        if (this.getter != null) {
             throw new RuntimeException(type + "." + name + " already has a getter");
         } else {
             this.getter = getter;
@@ -45,7 +50,7 @@ public class ZenExpandMember {
     }
 
     public void setSetter(IJavaMethod setter) {
-        if(this.setter != null) {
+        if (this.setter != null) {
             throw new RuntimeException(type + "." + name + " already has a setter");
         } else {
             this.setter = setter;
@@ -87,7 +92,7 @@ public class ZenExpandMember {
             newValues[0] = value.eval(environment);
             System.arraycopy(values, 0, newValues, 1, values.length);
             IJavaMethod method = JavaMethod.select(true, methods, environment, newValues);
-            if(method == null) {
+            if (method == null) {
                 environment.error(position, methodMatchingError(methods, values));
                 return new ExpressionInvalid(position);
             } else {
@@ -147,7 +152,7 @@ public class ZenExpandMember {
         @Override
         public Expression call(ZenPosition position, IEnvironmentMethod environment, Expression... values) {
             IJavaMethod method = JavaMethod.select(true, methods, environment, values);
-            if(method == null) {
+            if (method == null) {
                 environment.error(position, methodMatchingError(methods, values));
                 return new ExpressionInvalid(position);
             } else {

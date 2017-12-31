@@ -13,17 +13,17 @@ import net.minecraft.util.ResourceLocation;
  * @author Stan
  */
 public class MCPlatformFunctions implements IPlatformFunctions {
-    
+
     public static final MCPlatformFunctions INSTANCE = new MCPlatformFunctions();
-    
+
     private MCPlatformFunctions() {
     }
-    
+
     @Override
     public IChatMessage getMessage(String message) {
         return new MCChatMessage(message);
     }
-    
+
     @Override
     public IItemDefinition getItemDefinition(int id) {
         Item item = Item.getItemById(id);

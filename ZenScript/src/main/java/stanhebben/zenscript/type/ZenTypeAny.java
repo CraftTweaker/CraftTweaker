@@ -1,8 +1,10 @@
 package stanhebben.zenscript.type;
 
 import org.objectweb.asm.Type;
-import stanhebben.zenscript.annotations.*;
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.annotations.CompareType;
+import stanhebben.zenscript.annotations.OperatorType;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.type.casting.*;
@@ -17,39 +19,39 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
  * @author Stanneke
  */
 public class ZenTypeAny extends ZenType {
-    
+
     public static final ZenTypeAny INSTANCE = new ZenTypeAny();
-    
+
     private ZenTypeAny() {
     }
-    
+
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
         environment.error(position, "any values not yet supported");
         return new ExpressionInvalid(position);
     }
-    
+
     @Override
     public IPartialExpression getStaticMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
         environment.error(position, "any values not yet supported");
         return new ExpressionInvalid(position);
     }
-    
+
     @Override
     public IZenIterator makeIterator(int numValues, IEnvironmentMethod methodOutput) {
         return null; // TODO: handle iteration on any-values
     }
-    
+
     @Override
     public ICastingRule getCastingRule(ZenType type, IEnvironmentGlobal environment) {
         ICastingRule base = super.getCastingRule(type, environment);
-        if(base == null) {
+        if (base == null) {
             return new CastingRuleAnyAs(type);
         } else {
             return base;
         }
     }
-    
+
     @Override
     public void constructCastingRules(IEnvironmentGlobal environment, ICastingRuleDelegate rules, boolean followCasters) {
         rules.registerCastingRule(BOOL, CastingAnyBool.INSTANCE);
@@ -67,45 +69,45 @@ public class ZenTypeAny extends ZenType {
         rules.registerCastingRule(DOUBLE, CastingAnyDouble.INSTANCE);
         rules.registerCastingRule(DOUBLEOBJECT, new CastingRuleNullableStaticMethod(DOUBLE_VALUEOF, CastingAnyDouble.INSTANCE));
         rules.registerCastingRule(STRING, CastingAnyString.INSTANCE);
-        
-        if(followCasters) {
+
+        if (followCasters) {
             constructExpansionCastingRules(environment, rules);
         }
     }
-    
+
     @Override
     public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
         return true;
     }
-    
+
     @Override
     public Class toJavaClass() {
         return IAny.class;
     }
-    
+
     @Override
     public Type toASMType() {
         return Type.getType(IAny.class);
     }
-    
+
     @Override
     public int getNumberType() {
         return 0;
     }
-    
+
     @Override
     public String getSignature() {
         return signature(IAny.class);
     }
-    
+
     @Override
     public boolean isPointer() {
         return true;
     }
-    
+
     @Override
     public Expression unary(ZenPosition position, IEnvironmentGlobal environment, Expression value, OperatorType operator) {
-        switch(operator) {
+        switch (operator) {
             case NEG:
                 return new ExpressionCallVirtual(position, environment, METHOD_NEG, value);
             case NOT:
@@ -114,10 +116,10 @@ public class ZenTypeAny extends ZenType {
                 return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);
         }
     }
-    
+
     @Override
     public Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
-        switch(operator) {
+        switch (operator) {
             case ADD:
                 return new ExpressionCallVirtual(position, environment, METHOD_ADD, left, right.cast(position, environment, ANY));
             case CAT:
@@ -150,10 +152,10 @@ public class ZenTypeAny extends ZenType {
                 return new ExpressionInvalid(position, ANY);
         }
     }
-    
+
     @Override
     public Expression trinary(ZenPosition position, IEnvironmentGlobal environment, Expression first, Expression second, Expression third, OperatorType operator) {
-        switch(operator) {
+        switch (operator) {
             case INDEXSET:
                 return new ExpressionCallVirtual(position, environment, METHOD_INDEXSET, first, second.cast(position, environment, ANY), third.cast(position, environment, ANY));
             case MEMBERSETTER:
@@ -162,38 +164,38 @@ public class ZenTypeAny extends ZenType {
                 return new ExpressionInvalid(position, ANY);
         }
     }
-    
+
     @Override
     public Expression compare(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, CompareType type) {
         Expression comparator = new ExpressionCallVirtual(position, environment, JavaMethod.get(environment, IAny.class, "compareTo", IAny.class), left, right);
-        
+
         return new ExpressionCompareGeneric(position, comparator, type);
     }
-    
+
     @Override
     public Expression call(ZenPosition position, IEnvironmentGlobal environment, Expression receiver, Expression... arguments) {
         return new ExpressionCallVirtual(position, environment, JavaMethod.get(environment, IAny.class, "call", IAny[].class), receiver, arguments);
     }
-    
+
     @Override
     public ZenType[] predictCallTypes(int numArguments) {
         ZenType[] result = new ZenType[numArguments];
-        for(int i = 0; i < result.length; i++) {
+        for (int i = 0; i < result.length; i++) {
             result[i] = ANY;
         }
         return result;
     }
-    
+
     @Override
     public String getName() {
         return "any";
     }
-    
+
     @Override
     public String getAnyClassName(IEnvironmentGlobal environment) {
         throw new UnsupportedOperationException("Cannot get any class name from the any type. That's like trying to stuff a freezer into a freezer.");
     }
-    
+
     @Override
     public Expression defaultValue(ZenPosition position) {
         return new ExpressionNull(position);

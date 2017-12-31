@@ -8,11 +8,11 @@ import stanhebben.zenscript.util.ZenPosition;
  * @author Stan Hebben
  */
 public class Token {
-    
+
     private final ZenPosition position;
     private final String value;
     private final int type;
-    
+
     /**
      * Constructs a new token.
      *
@@ -25,11 +25,11 @@ public class Token {
         this.type = type;
         this.position = position;
     }
-    
+
     public ZenPosition getPosition() {
         return position;
     }
-    
+
     /**
      * Returns the string value of this token.
      *
@@ -38,7 +38,7 @@ public class Token {
     public String getValue() {
         return value;
     }
-    
+
     /**
      * Returns the token type of this token.
      *
@@ -47,7 +47,7 @@ public class Token {
     public int getType() {
         return type;
     }
-    
+
     @Override
     public String toString() {
         return position.getLine() + ":" + position.getLineOffset() + " (" + type + ") " + value;

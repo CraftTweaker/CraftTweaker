@@ -4,7 +4,8 @@ import org.objectweb.asm.Label;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 /**
  * @author Stanneke
@@ -29,12 +30,12 @@ public class ExpressionCompareGeneric extends Expression {
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
         value.compile(result, environment);
-        if(result) {
+        if (result) {
             MethodOutput output = environment.getOutput();
             Label lblThen = new Label();
             Label lblEnd = new Label();
 
-            switch(type) {
+            switch (type) {
                 case LT:
                     output.ifLT(lblThen);
                     break;

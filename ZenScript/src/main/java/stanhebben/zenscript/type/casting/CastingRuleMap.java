@@ -1,7 +1,8 @@
 package stanhebben.zenscript.type.casting;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAssociative;
 
 /**
  * @author Stan

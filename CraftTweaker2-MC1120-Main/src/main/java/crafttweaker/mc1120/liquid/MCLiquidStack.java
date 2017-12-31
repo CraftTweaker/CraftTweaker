@@ -2,13 +2,15 @@ package crafttweaker.mc1120.liquid;
 
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
-import crafttweaker.api.liquid.*;
+import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.data.NBTConverter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Stan
@@ -49,8 +51,8 @@ public class MCLiquidStack implements ILiquidStack {
 
     @Override
     public IData getTag() {
-        if(tag == null) {
-            if(stack.tag == null) {
+        if (tag == null) {
+            if (stack.tag == null) {
                 return null;
             }
 
@@ -117,10 +119,10 @@ public class MCLiquidStack implements ILiquidStack {
     public List<IItemStack> getItems() {
         return Collections.emptyList();
     }
-    
+
     @Override
     public IItemStack[] getItemArray() {
-    	return new IItemStack[]{};
+        return new IItemStack[]{};
     }
 
     @Override
@@ -170,11 +172,11 @@ public class MCLiquidStack implements ILiquidStack {
 
     @Override
     public boolean contains(IIngredient ingredient) {
-        if(!ingredient.getItems().isEmpty())
+        if (!ingredient.getItems().isEmpty())
             return false;
 
-        for(ILiquidStack liquid : ingredient.getLiquids()) {
-            if(!matches(liquid))
+        for (ILiquidStack liquid : ingredient.getLiquids()) {
+            if (!matches(liquid))
                 return false;
         }
 
@@ -190,9 +192,9 @@ public class MCLiquidStack implements ILiquidStack {
     public boolean hasTransformers() {
         return false;
     }
-    
+
     @Override
     public String toString() {
-    	return "<liquid:" + getName() + ">";
+        return "<liquid:" + getName() + ">";
     }
 }

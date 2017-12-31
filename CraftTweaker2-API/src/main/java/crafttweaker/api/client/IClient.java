@@ -2,7 +2,8 @@ package crafttweaker.api.client;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * Interface for client interaction. Only available on clients.
@@ -12,7 +13,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.api.IClient")
 @ZenRegister
 public interface IClient {
-    
+
     /**
      * Gets the current player.
      *
@@ -20,7 +21,7 @@ public interface IClient {
      */
     @ZenGetter("player")
     IPlayer getPlayer();
-    
+
     @ZenGetter("language")
     String getLanguage();
 }

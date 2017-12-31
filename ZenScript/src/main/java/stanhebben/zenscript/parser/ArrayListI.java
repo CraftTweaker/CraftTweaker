@@ -23,7 +23,7 @@ public class ArrayListI {
      * @param value integer value
      */
     public void add(int value) {
-        if(size == data.length)
+        if (size == data.length)
             expand();
         data[size++] = value;
     }
@@ -32,11 +32,10 @@ public class ArrayListI {
      * Gets the value at the specified position.
      *
      * @param index position
-     *
      * @return value at this position
      */
     public int get(int index) {
-        if(index >= size)
+        if (index >= size)
             throw new ArrayIndexOutOfBoundsException();
         return data[index];
     }

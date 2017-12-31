@@ -1,12 +1,15 @@
 package stanhebben.zenscript.statements;
 
 import org.objectweb.asm.Label;
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.EnvironmentScope;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.parser.expression.ParsedExpression;
 import stanhebben.zenscript.symbols.SymbolLocal;
-import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.type.IZenIterator;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 public class StatementForeach extends Statement {
 
@@ -28,7 +31,7 @@ public class StatementForeach extends Statement {
         ZenType listType = cList.getType();
 
         IZenIterator iterator = listType.makeIterator(varnames.length, environment);
-        if(iterator == null) {
+        if (iterator == null) {
             environment.error(getPosition(), "No iterator with " + varnames.length + " variables");
             return;
         }
@@ -38,7 +41,7 @@ public class StatementForeach extends Statement {
 
         IEnvironmentMethod local = new EnvironmentScope(environment);
         int[] localVariables = new int[varnames.length];
-        for(int i = 0; i < localVariables.length; i++) {
+        for (int i = 0; i < localVariables.length; i++) {
             SymbolLocal localVar = new SymbolLocal(iterator.getType(i), true);
             local.putValue(varnames[i], localVar, getPosition());
             localVariables[i] = local.getLocal(localVar);

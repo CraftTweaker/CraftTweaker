@@ -11,17 +11,17 @@ import java.util.List;
 @ZenClass("crafttweaker.block.IBlockPattern")
 @ZenRegister
 public interface IBlockPattern {
-    
+
     @ZenMethod("blocks")
     List<IBlock> getBlocks();
-    
+
     @ZenOperator(OperatorType.CONTAINS)
     boolean matches(IBlock block);
-    
+
     @ZenOperator(OperatorType.OR)
     IBlockPattern or(IBlockPattern pattern);
-    
+
     @ZenGetter("displayName")
     String getDisplayName();
-    
+
 }

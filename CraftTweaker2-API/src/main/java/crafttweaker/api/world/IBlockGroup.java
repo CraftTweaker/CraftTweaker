@@ -2,7 +2,9 @@ package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlock;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * @author Stan
@@ -10,10 +12,10 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.world.IBlockGroup")
 @ZenRegister
 public interface IBlockGroup {
-    
+
     @ZenGetter("dimension")
     IDimension getDimension();
-    
+
     @ZenMethod
     IBlock getBlock(int x, int y, int z);
 }

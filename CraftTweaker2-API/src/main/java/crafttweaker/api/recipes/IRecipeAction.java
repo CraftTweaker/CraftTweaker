@@ -11,7 +11,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenClass("crafttweaker.recipes.IRecipeAction")
 @ZenRegister
 public interface IRecipeAction {
-    
+
     void process(IItemStack output, ICraftingInfo craftingInfo, IPlayer player);
-    
+
 }

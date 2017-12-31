@@ -1,10 +1,12 @@
 package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.recipes.*;
+import crafttweaker.api.recipes.ICraftingRecipe;
+import crafttweaker.api.recipes.IMTRecipe;
+import crafttweaker.api.recipes.ShapedRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -29,18 +31,19 @@ public class ShapedRecipeOre extends ShapedOreRecipe implements IMTRecipe {
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
-        if(recipe != null) {
-            if(recipe.getCraftingResult(MCCraftingInventory.get(inventory)) != null) {
+        if (recipe != null) {
+            if (recipe.getCraftingResult(MCCraftingInventory.get(inventory)) != null) {
                 return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
             }
         }
         return ItemStack.EMPTY;
     }
+
     @Override
     public ItemStack getRecipeOutput() {
         return CraftTweakerMC.getItemStack(recipe.getOutput());
     }
-    
+
     @Override
     public ICraftingRecipe getRecipe() {
         return recipe;

@@ -27,7 +27,6 @@ public class CharStream {
      * character.
      *
      * @param ch checked character
-     *
      * @return true if the next character equals the specified character
      */
     public boolean peek(char ch) {
@@ -39,13 +38,12 @@ public class CharStream {
      * specified character, nothing will happen.
      *
      * @param ch checked character
-     *
      * @return true if the next character equals the specified character
      */
     public boolean optional(char ch) {
-        if(index == data.length)
+        if (index == data.length)
             return false;
-        if(data[index] == ch) {
+        if (data[index] == ch) {
             index++;
             return true;
         } else {
@@ -59,13 +57,12 @@ public class CharStream {
      *
      * @param from lower character value bound, inclusive
      * @param to   upper character value bound, inclusive
-     *
      * @return the processed character
      */
     public char optional(char from, char to) {
-        if(index == data.length)
+        if (index == data.length)
             return 0;
-        if(data[index] >= from && data[index] <= to) {
+        if (data[index] >= from && data[index] <= to) {
             return data[index++];
         } else {
             return 0;
@@ -79,7 +76,7 @@ public class CharStream {
      * @param ch required character
      */
     public void required(char ch) {
-        if(data[index] != ch) {
+        if (data[index] != ch) {
             throw new IllegalArgumentException("Unexpected character: " + data[index]);
         }
         index++;
@@ -91,11 +88,10 @@ public class CharStream {
      *
      * @param from lower character value bound, inclusive
      * @param to   upper character value bound, inclusive
-     *
      * @return the processed character
      */
     public char required(char from, char to) {
-        if(data[index] < from || data[index] > to) {
+        if (data[index] < from || data[index] > to) {
             throw new IllegalArgumentException("Unexpected character: " + data[index]);
         }
         return data[index++];

@@ -1,7 +1,9 @@
 package crafttweaker.mods.jei;
 
 import mezz.jei.api.*;
-import mezz.jei.api.ingredients.*;
+import mezz.jei.api.ingredients.IIngredientHelper;
+import mezz.jei.api.ingredients.IIngredientRegistry;
+import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 
@@ -18,6 +20,10 @@ public class JEIAddonPlugin implements IModPlugin {
     public static IIngredientHelper<ItemStack> ingredientHelper;
     public static IModRegistry modRegistry;
     public static IJeiRuntime jeiRuntime;
+
+    public static List<ItemStack> getSubTypes(ItemStack stack) {
+        return JEIAddonPlugin.ingredientHelper.expandSubtypes(Collections.singletonList(stack));
+    }
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -48,9 +54,5 @@ public class JEIAddonPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
         recipeRegistry = iJeiRuntime.getRecipeRegistry();
         jeiRuntime = iJeiRuntime;
-    }
-
-    public static List<ItemStack> getSubTypes(ItemStack stack) {
-        return JEIAddonPlugin.ingredientHelper.expandSubtypes(Collections.singletonList(stack));
     }
 }

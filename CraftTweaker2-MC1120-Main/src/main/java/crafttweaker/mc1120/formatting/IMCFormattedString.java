@@ -10,5 +10,5 @@ public interface IMCFormattedString extends IFormattedText {
     String getTooltipString();
 
     String getTooltipString(String context);
-    
+
 }

@@ -1,11 +1,15 @@
 package stanhebben.zenscript.expression;
 
-import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAssociative;
 import stanhebben.zenscript.type.casting.ICastingRule;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 
@@ -31,7 +35,7 @@ public class ExpressionMap extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
+        if (result) {
             ZenType keyType = type.getKeyType();
             ZenType valueType = type.getValueType();
 
@@ -40,7 +44,7 @@ public class ExpressionMap extends Expression {
             output.dup();
             output.invokeSpecial(internal(HashMap.class), "<init>", "()V");
 
-            for(int i = 0; i < keys.length; i++) {
+            for (int i = 0; i < keys.length; i++) {
                 output.dup();
                 keys[i].cast(getPosition(), environment, keyType).compile(true, environment);
                 values[i].cast(getPosition(), environment, valueType).compile(true, environment);
@@ -48,10 +52,10 @@ public class ExpressionMap extends Expression {
                 output.pop();
             }
         } else {
-            for(Expression key : keys) {
+            for (Expression key : keys) {
                 key.compile(false, environment);
             }
-            for(Expression value : values) {
+            for (Expression value : values) {
                 value.compile(false, environment);
             }
         }
@@ -59,16 +63,16 @@ public class ExpressionMap extends Expression {
 
     @Override
     public Expression cast(ZenPosition position, IEnvironmentGlobal environment, ZenType type) {
-        if(this.type.equals(type)) {
+        if (this.type.equals(type)) {
             return this;
         }
 
-        if(type instanceof ZenTypeAssociative) {
+        if (type instanceof ZenTypeAssociative) {
             ZenTypeAssociative associativeType = (ZenTypeAssociative) type;
             Expression[] newKeys = new Expression[keys.length];
             Expression[] newValues = new Expression[values.length];
 
-            for(int i = 0; i < keys.length; i++) {
+            for (int i = 0; i < keys.length; i++) {
                 newKeys[i] = keys[i].cast(position, environment, associativeType.getKeyType());
                 newValues[i] = values[i].cast(position, environment, associativeType.getValueType());
             }
@@ -76,7 +80,7 @@ public class ExpressionMap extends Expression {
             return new ExpressionMap(getPosition(), newKeys, newValues, associativeType);
         } else {
             ICastingRule castingRule = this.type.getCastingRule(type, environment);
-            if(castingRule == null) {
+            if (castingRule == null) {
                 environment.error(position, "cannot cast " + this.type + " to " + type);
                 return new ExpressionInvalid(position, type);
             } else {

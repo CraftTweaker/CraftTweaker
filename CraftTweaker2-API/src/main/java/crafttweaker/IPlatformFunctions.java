@@ -10,21 +10,19 @@ import crafttweaker.api.item.IItemDefinition;
  * @author Stan Hebben
  */
 public interface IPlatformFunctions {
-    
+
     /**
      * Converts a string into a chat message.
      *
      * @param message message string
-     *
      * @return chat message
      */
     IChatMessage getMessage(String message);
-    
+
     /**
      * Finds the item definition with the given ID.
      *
      * @param id item ID
-     *
      * @return resulting item definition
      */
     IItemDefinition getItemDefinition(int id);

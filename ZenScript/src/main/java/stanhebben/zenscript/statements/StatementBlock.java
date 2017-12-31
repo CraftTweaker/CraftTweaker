@@ -1,6 +1,7 @@
 package stanhebben.zenscript.statements;
 
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.compiler.EnvironmentScope;
+import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public class StatementBlock extends Statement {
     @Override
     public void compile(IEnvironmentMethod environment) {
         IEnvironmentMethod local = new EnvironmentScope(environment);
-        for(Statement statement : statements) {
+        for (Statement statement : statements) {
             statement.compile(local);
-            if(statement.isReturn()) {
+            if (statement.isReturn()) {
                 return;
             }
         }

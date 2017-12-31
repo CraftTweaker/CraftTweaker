@@ -4,7 +4,8 @@ import org.objectweb.asm.Label;
 import stanhebben.zenscript.annotations.CompareType;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.*;
+import stanhebben.zenscript.util.MethodOutput;
+import stanhebben.zenscript.util.ZenPosition;
 
 public class ExpressionArithmeticCompare extends Expression {
 
@@ -30,10 +31,10 @@ public class ExpressionArithmeticCompare extends Expression {
         a.compile(result, environment);
         b.compile(result, environment);
 
-        if(result) {
+        if (result) {
             MethodOutput output = environment.getOutput();
-            if(a.getType() == ZenType.BOOL) {
-                if(type == CompareType.EQ) {
+            if (a.getType() == ZenType.BOOL) {
+                if (type == CompareType.EQ) {
                     Label onThen = new Label();
                     Label onEnd = new Label();
 
@@ -43,7 +44,7 @@ public class ExpressionArithmeticCompare extends Expression {
                     output.label(onThen);
                     output.iConst1();
                     output.label(onEnd);
-                } else if(type == CompareType.NE) {
+                } else if (type == CompareType.NE) {
                     Label onThen = new Label();
                     Label onEnd = new Label();
 
@@ -60,22 +61,22 @@ public class ExpressionArithmeticCompare extends Expression {
                 Label onThen = new Label();
                 Label onEnd = new Label();
 
-                if(a.getType() == ZenTypeLong.INSTANCE) {
+                if (a.getType() == ZenTypeLong.INSTANCE) {
                     output.lCmp();
                     output.iConst0();
-                } else if(a.getType() == ZenTypeFloat.INSTANCE) {
+                } else if (a.getType() == ZenTypeFloat.INSTANCE) {
                     output.fCmp();
                     output.iConst0();
-                } else if(a.getType() == ZenTypeDouble.INSTANCE) {
+                } else if (a.getType() == ZenTypeDouble.INSTANCE) {
                     output.dCmp();
                     output.iConst0();
-                } else if(a.getType() == ZenTypeByte.INSTANCE || a.getType() == ZenTypeShort.INSTANCE || a.getType() == ZenTypeInt.INSTANCE) {
+                } else if (a.getType() == ZenTypeByte.INSTANCE || a.getType() == ZenTypeShort.INSTANCE || a.getType() == ZenTypeInt.INSTANCE) {
                     // nothing to do
                 } else {
                     throw new RuntimeException("Unsupported type for arithmetic compare");
                 }
 
-                switch(type) {
+                switch (type) {
                     case EQ:
                         output.ifICmpEQ(onThen);
                         break;

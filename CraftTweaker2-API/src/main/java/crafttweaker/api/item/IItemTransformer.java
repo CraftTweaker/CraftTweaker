@@ -2,7 +2,8 @@ package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * An item transformer modifies an item stack after crafting. Used to apply
@@ -14,14 +15,13 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.item.IItemTransformer")
 @ZenRegister
 public interface IItemTransformer {
-    
+
     /**
      * Transforms the specified item. May modify this item (and return it) or
      * return an entirely new one.
      *
      * @param item     input item
      * @param byPlayer player that performs the crafting
-     *
      * @return output item
      */
     @ZenMethod

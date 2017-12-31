@@ -1,6 +1,8 @@
 package crafttweaker.mc1120.recipes;
 
-import crafttweaker.api.recipes.*;
+import crafttweaker.api.recipes.ICraftingRecipe;
+import crafttweaker.api.recipes.IMTRecipe;
+import crafttweaker.api.recipes.ShapelessRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +33,7 @@ public class ShapelessRecipeOre extends ShapelessOreRecipe implements IMTRecipe 
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
         return getItemStack(recipe.getCraftingResult(MCCraftingInventory.get(inventory))).copy();
     }
-    
+
     @Override
     public ICraftingRecipe getRecipe() {
         return recipe;

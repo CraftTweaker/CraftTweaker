@@ -1,9 +1,12 @@
 package crafttweaker.api.liquid;
 
 import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Contains a weighted item stack. Weighted item stacks simply contain a stack
@@ -14,46 +17,46 @@ import java.util.*;
 @ZenClass("crafttweaker.item.WeightedLiquidStack")
 @ZenRegister
 public final class WeightedLiquidStack {
-    
+
     private final ILiquidStack stack;
     private final float p;
-    
+
     public WeightedLiquidStack(ILiquidStack stack, float p) {
         this.stack = stack;
         this.p = p;
     }
-    
+
     public static List<ILiquidStack> pickRandomDrops(Random random, WeightedLiquidStack[] items) {
         ArrayList<ILiquidStack> result = new ArrayList<>();
-        
-        for(WeightedLiquidStack item : items) {
-            if(random.nextFloat() <= item.getChance()) {
+
+        for (WeightedLiquidStack item : items) {
+            if (random.nextFloat() <= item.getChance()) {
                 result.add(item.getStack());
             }
         }
-        
+
         return result;
     }
-    
+
     @ZenGetter("stack")
     public ILiquidStack getStack() {
         return stack;
     }
-    
+
     @ZenGetter("chance")
     public float getChance() {
         return p;
     }
-    
+
     @ZenGetter("percent")
     public float getPercent() {
         return p * 100;
     }
-    
+
     // #############################
     // ### Object implementation ###
     // #############################
-    
+
     @Override
     public int hashCode() {
         int hash = 17;
@@ -61,13 +64,13 @@ public final class WeightedLiquidStack {
         hash = 29 * hash + Float.floatToIntBits(this.p);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if(obj == null) {
+        if (obj == null) {
             return false;
         }
-        if(getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
         final WeightedLiquidStack other = (WeightedLiquidStack) obj;

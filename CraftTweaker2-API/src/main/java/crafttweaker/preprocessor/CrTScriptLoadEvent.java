@@ -1,6 +1,6 @@
 package crafttweaker.preprocessor;
 
-import crafttweaker.runtime.*;
+import crafttweaker.runtime.ScriptFile;
 
 /**
  * Event that is getting called each time a script gets loaded.
@@ -10,11 +10,11 @@ import crafttweaker.runtime.*;
  */
 public class CrTScriptLoadEvent {
     private ScriptFile scriptFile;
-    
-    public CrTScriptLoadEvent(ScriptFile scriptFile){
+
+    public CrTScriptLoadEvent(ScriptFile scriptFile) {
         this.scriptFile = scriptFile;
     }
-    
+
     public ScriptFile getScriptFile() {
         return scriptFile;
     }

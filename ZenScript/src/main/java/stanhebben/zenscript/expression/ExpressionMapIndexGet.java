@@ -1,7 +1,8 @@
 package stanhebben.zenscript.expression;
 
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
-import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.ZenTypeAssociative;
 import stanhebben.zenscript.util.ZenPosition;
 
 import java.util.Map;
@@ -34,7 +35,7 @@ public class ExpressionMapIndexGet extends Expression {
 
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        if(result) {
+        if (result) {
             map.compile(result, environment);
             index.cast(getPosition(), environment, ((ZenTypeAssociative) map.getType()).getKeyType()).compile(result, environment);
             environment.getOutput().invokeInterface(internal(Map.class), "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
