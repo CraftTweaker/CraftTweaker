@@ -10,31 +10,31 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class Facing {
     @ZenMethod
     public static String north() {
-        return EnumFacing.NORTH.getName();
+        return EnumFacing.NORTH.name();
     }
 
     @ZenMethod
     public static String east() {
-        return EnumFacing.EAST.getName();
+        return EnumFacing.EAST.name();
     }
 
     @ZenMethod
     public static String getsouth() {
-    	return EnumFacing.SOUTH.getName();
+    	return EnumFacing.SOUTH.name();
     }
 
     @ZenMethod
     public static String west() {
-    	return EnumFacing.WEST.getName();
+    	return EnumFacing.WEST.name();
     }
 
     @ZenMethod
     public static String up() {
-    	return EnumFacing.UP.getName();
+    	return EnumFacing.UP.name();
     }
 
     @ZenMethod
     public static String down() {
-    	return EnumFacing.DOWN.getName();
+    	return EnumFacing.DOWN.name();
     }
 }
