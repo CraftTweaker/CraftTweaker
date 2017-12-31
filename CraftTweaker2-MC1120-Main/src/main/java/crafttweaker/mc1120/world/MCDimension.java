@@ -2,6 +2,8 @@ package crafttweaker.mc1120.world;
 
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.world.IBiome;
 import crafttweaker.api.world.IDimension;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -35,5 +37,10 @@ public class MCDimension implements IDimension {
     @Override
     public IBlock getBlock(int x, int y, int z) {
         return CraftTweakerMC.getBlock(world, x, y, z);
+    }
+    
+    @Override
+    public IBiome getBiome(IPosition3f position) {
+    	return new MCBiome(world.getBiome(new BlockPos(position.getX(), position.getY(), position.getZ())));
     }
 }

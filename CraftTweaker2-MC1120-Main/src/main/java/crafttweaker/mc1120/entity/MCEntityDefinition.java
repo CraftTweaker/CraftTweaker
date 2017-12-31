@@ -3,6 +3,7 @@ package crafttweaker.mc1120.entity;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.entity.IEntityDrop;
+import crafttweaker.api.entity.IEntityDropFunction;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.util.IntegerRange;
@@ -21,6 +22,7 @@ public class MCEntityDefinition implements IEntityDefinition {
 
     private final List<IEntityDrop> drops = new ArrayList<>();
     private final List<IItemStack> dropsToRemove = new ArrayList<>();
+    private List<IEntityDropFunction> dropFunctions = new ArrayList<>();
     private boolean clearDrops = false;
 
     public MCEntityDefinition(EntityEntry entityEntry) {
@@ -114,4 +116,16 @@ public class MCEntityDefinition implements IEntityDefinition {
     public String toString() {
     	return "<entity:" + entityName + ">";
     }
+
+
+	@Override
+	public void addDropFunction(IEntityDropFunction function) {
+		dropFunctions.add(function);
+	}
+
+
+	@Override
+	public List<IEntityDropFunction> getDropFunctions() {
+		return dropFunctions ;
+	}
 }

@@ -30,6 +30,9 @@ public interface IEntityDefinition {
     void addDrop(WeightedItemStack stack, @Optional int min, @Optional int max);
     
     @ZenMethod
+    void addDropFunction(IEntityDropFunction function);
+    
+    @ZenMethod
     void addPlayerOnlyDrop(IItemStack stack, @Optional int min, @Optional int max, @Optional float chance);
     
     @ZenMethod
@@ -55,5 +58,7 @@ public interface IEntityDefinition {
     boolean shouldClearDrops();
     
     Object getInternal();
+
+	List<IEntityDropFunction> getDropFunctions();
     
 }

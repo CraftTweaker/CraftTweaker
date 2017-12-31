@@ -1,7 +1,9 @@
 package crafttweaker.mc1120.events;
 
 import crafttweaker.*;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.entity.IEntityDropFunction;
 import crafttweaker.api.event.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -9,6 +11,7 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
+import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.player.MCPlayer;
@@ -153,8 +156,22 @@ public class CommonEventHandler {
                     } else {
                         item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) drop.getItemStack().withAmount(drop.getRange().getRandom(rand)).getInternal()).copy());
                     }
-                    ev.getDrops().add(item);
+                    if (item.getItem().getCount() != 0) {
+                    	ev.getDrops().add(item);
+                    }
                 });
+            }
+            
+            if(!entityDefinition.getDropFunctions().isEmpty()) {
+            	IEntity ent = new MCEntity(ev.getEntity());
+            	entityDefinition.getDropFunctions()
+            	.stream()
+            	.map((fun) -> fun.handle(ent))
+            	.filter(Objects::nonNull)
+            	.filter((item) -> item.getAmount() > 0)
+            	.map(CraftTweakerMC::getItemStack)
+            	.map((ItemStack item) -> new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, item))
+            	.forEach(ev.getDrops()::add);
             }
         }
     }

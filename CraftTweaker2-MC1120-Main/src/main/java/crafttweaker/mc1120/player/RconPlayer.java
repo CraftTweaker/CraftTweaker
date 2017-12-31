@@ -9,8 +9,11 @@ import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.IPotion;
-import crafttweaker.api.util.Position3f;
+import crafttweaker.api.util.IPosition3f;
 import crafttweaker.api.world.IDimension;
+import crafttweaker.api.world.IWorld;
+import crafttweaker.mc1120.util.Position3f;
+import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -163,12 +166,12 @@ public class RconPlayer implements IPlayer {
     }
 
     @Override
-    public Position3f getPosition() {
+    public IPosition3f getPosition() {
         return new Position3f((float) getX(), (float) getY(), (float) getZ());
     }
 
     @Override
-    public void setPosition(Position3f position) {
+    public void setPosition(IPosition3f position) {
 
     }
 
@@ -243,7 +246,7 @@ public class RconPlayer implements IPlayer {
     }
 
     @Override
-    public void teleport(Position3f pos) {
+    public void teleport(IPosition3f pos) {
     }
 
     @Override
@@ -325,4 +328,13 @@ public class RconPlayer implements IPlayer {
     public IEntityAttributeInstance getAttribute(String name) {
         return null;
     }
+    
+
+	@Override
+	public IWorld getWorld() {
+		if(sender.getEntityWorld() != null) {
+			return new MCWorld(sender.getEntityWorld());
+		}
+		return null;
+	}
 }

@@ -6,12 +6,13 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.util.Position3f;
+import crafttweaker.api.util.IPosition3f;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.network.MessageOpenBrowser;
+import crafttweaker.mc1120.util.Position3f;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -197,7 +198,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
 
     @Override
-    public void teleport(Position3f pos) {
+    public void teleport(IPosition3f pos) {
         player.setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 

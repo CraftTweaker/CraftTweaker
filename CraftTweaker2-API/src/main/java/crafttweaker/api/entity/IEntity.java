@@ -2,8 +2,9 @@ package crafttweaker.api.entity;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.util.Position3f;
+import crafttweaker.api.util.IPosition3f;
 import crafttweaker.api.world.IDimension;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -18,6 +19,15 @@ import java.util.List;
 @ZenClass("crafttweaker.entity.IEntity")
 @ZenRegister
 public interface IEntity {
+	
+	/**
+	 * Retrieves the world this entity is in.
+	 * 
+	 * @return the current world of this entity 
+	 */
+	@ZenGetter("world")
+	@ZenMethod
+	IWorld getWorld();
     
     /**
      * Retrieves the dimension this entity is in.
@@ -25,6 +35,7 @@ public interface IEntity {
      * @return current dimension of this entity
      */
     @ZenGetter("dimension")
+    @ZenMethod
     IDimension getDimension();
     
     /**
@@ -61,7 +72,7 @@ public interface IEntity {
      */
     @ZenMethod
     @ZenGetter("position")
-    Position3f getPosition();
+    IPosition3f getPosition();
     
     /**
      * Sets the position of this entity. Instantly moves (teleports) the entity
@@ -71,7 +82,7 @@ public interface IEntity {
      */
     @ZenMethod
     @ZenSetter("position")
-    void setPosition(Position3f position);
+    void setPosition(IPosition3f position);
     
     /**
      * Set an entity to dead, will be removed during the next tick.
