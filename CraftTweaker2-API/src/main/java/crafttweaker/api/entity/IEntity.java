@@ -3,6 +3,7 @@ package crafttweaker.api.entity;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IDimension;
 import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
@@ -189,12 +190,13 @@ public interface IEntity {
 
     /*
      * TODO: Add Methods as Adding Objects from ContentTweaker
-     * IWorld getWorld();
-     *
+     * 
      * boolean isInsideOfMaterial(IBlockMaterial blockMaterial)
      *
      * boolean canTrample(IBlock block, IBlockPos pos, float fall);
-     *
-     * IBlockPos getBlockPos();
      */
+    
+    @ZenMethod
+    @ZenGetter("blockPos")
+    IBlockPos getBlockPos();
 }

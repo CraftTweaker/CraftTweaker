@@ -3,10 +3,12 @@ package crafttweaker.mc1120.entity;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IDimension;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.util.Position3f;
+import crafttweaker.mc1120.world.MCBlockPos;
 import crafttweaker.mc1120.world.MCDimension;
 import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.entity.Entity;
@@ -136,5 +138,10 @@ public class MCEntity implements IEntity {
 	@Override
 	public IWorld getWorld() {
 		return new MCWorld(entity.world);
+	}
+
+	@Override
+	public IBlockPos getBlockPos() {
+		return new MCBlockPos(entity.getPosition());
 	}
 }

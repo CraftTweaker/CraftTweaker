@@ -2,6 +2,7 @@ package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.util.IPosition3f;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -11,15 +12,17 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public interface IWorld {
     
-    @ZenGetter("day")
-    @ZenMethod
-    boolean isDay();
-    
+	@ZenMethod
+	int getBrightness(IBlockPos position);
+	
     @ZenMethod
     int getBrightness(int x, int y, int z);
     
     @ZenMethod
     IBiome getBiome(IPosition3f position);
+    
+    @ZenMethod
+    IBiome getBiome(IBlockPos position);
     
     @ZenGetter("worldInfo")
     @ZenMethod
@@ -60,9 +63,18 @@ public interface IWorld {
     @ZenMethod
 	IBlock getBlock(int x, int y, int z);
     
+    @ZenMethod
+    IBlock getBlock(IBlockPos pos);
+    
     @ZenGetter("worldType")
     @ZenMethod
     String getWorldType();
+    
+    @ZenMethod
+    IBlockState getBlockState(IBlockPos pos);
+    
+    @ZenMethod
+    boolean setBlockState(IBlockState state, IBlockPos pos);
     
     Object getInternal();
 }

@@ -1,41 +1,40 @@
-package crafttweaker.api.world;
+package crafttweaker.mc1120.world;
 
 import crafttweaker.annotations.ZenRegister;
+import net.minecraft.util.EnumFacing;
 import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenMethodStatic;
 
 @ZenClass("crafttweaker.world.Facing")
 @ZenRegister
 public class Facing {
     @ZenMethod
     public static String north() {
-        return "NORTH";
+        return EnumFacing.NORTH.getName();
     }
 
     @ZenMethod
     public static String east() {
-        return "EAST";
+        return EnumFacing.EAST.getName();
     }
 
     @ZenMethod
     public static String getsouth() {
-        return "SOUTH";
+    	return EnumFacing.SOUTH.getName();
     }
 
     @ZenMethod
     public static String west() {
-        return "WEST";
+    	return EnumFacing.WEST.getName();
     }
 
     @ZenMethod
     public static String up() {
-        return "UP";
+    	return EnumFacing.UP.getName();
     }
 
     @ZenMethod
     public static String down() {
-        return "DOWN";
+    	return EnumFacing.DOWN.getName();
     }
 }

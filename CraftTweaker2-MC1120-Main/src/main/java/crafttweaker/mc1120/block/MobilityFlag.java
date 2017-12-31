@@ -1,6 +1,7 @@
-package crafttweaker.api.block;
+package crafttweaker.mc1120.block;
 
 import crafttweaker.annotations.ZenRegister;
+import net.minecraft.block.material.EnumPushReaction;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -9,26 +10,26 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class MobilityFlag {
 	@ZenMethod
 	public static String normal() {
-		return "NORMAL";
+		return EnumPushReaction.NORMAL.name();
 	}
 	
 	@ZenMethod
 	public static String destroy() {
-		return "DESTROY";
+		return EnumPushReaction.DESTROY.name();
 	}
 	
 	@ZenMethod
 	public static String block() {
-		return "BLOCK";
+		return EnumPushReaction.BLOCK.name();
 	}
 	
 	@ZenMethod
 	public static String ignore() {
-		return "IGNORE";
+		return EnumPushReaction.IGNORE.name();
 	}
 	
 	@ZenMethod
 	public static String pushOnly() {
-		return "PUSH_ONLY";
+		return EnumPushReaction.PUSH_ONLY.name();
 	}
 }

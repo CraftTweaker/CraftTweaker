@@ -1,11 +1,14 @@
 package crafttweaker.mc1120.world;
 
 import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.util.IPosition3f;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.api.world.IWorldInfo;
+import crafttweaker.mc1120.block.MCBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,13 +24,13 @@ public class MCWorld implements IWorld {
     }
 
     @Override
-    public boolean isDay() {
-        return world.isDaytime();
-    }
-
-    @Override
     public int getBrightness(int x, int y, int z) {
         return world.getLight(new BlockPos(x, y, z));
+    }
+    
+    @Override
+    public int getBrightness(IBlockPos pos) {
+        return world.getLight((BlockPos)pos.getInternal());
     }
 
     @Override
@@ -36,8 +39,18 @@ public class MCWorld implements IWorld {
     }
     
     @Override
+    public IBlock getBlock(IBlockPos pos) {
+        return CraftTweakerMC.getBlock(world, pos.getX(), pos.getY(), pos.getZ());
+    }
+    
+    @Override
     public IBiome getBiome(IPosition3f position) {
-    	return new MCBiome(world.getBiome(new BlockPos(position.getX(), position.getY(), position.getZ())));
+    	return getBiome(position.asBlockPos());
+    }
+    
+    @Override
+    public IBiome getBiome(IBlockPos position) {
+    	return new MCBiome(world.getBiome((BlockPos) position.getInternal()));
     }
 
 	@Override
@@ -93,5 +106,15 @@ public class MCWorld implements IWorld {
 	@Override
 	public Object getInternal() {
 		return world;
+	}
+
+	@Override
+	public IBlockState getBlockState(IBlockPos pos) {
+		return new MCBlockState(world.getBlockState((BlockPos)pos.getInternal()));
+	}
+
+	@Override
+	public boolean setBlockState(IBlockState state, IBlockPos pos) {
+		return world.setBlockState((BlockPos)pos.getInternal(), (net.minecraft.block.state.IBlockState)state.getInternal());
 	}
 }

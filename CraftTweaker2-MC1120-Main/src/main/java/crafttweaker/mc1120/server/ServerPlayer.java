@@ -19,9 +19,12 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IDimension;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.util.Position3f;
+import crafttweaker.mc1120.world.MCBlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.server.FMLServerHandler;
@@ -333,5 +336,10 @@ public class ServerPlayer implements IPlayer {
 	@Override
 	public IWorld getWorld() {
 		return null;
+	}
+
+	@Override
+	public IBlockPos getBlockPos() {
+		return new MCBlockPos(new BlockPos(0, 0, 0));
 	}
 }

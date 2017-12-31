@@ -10,9 +10,11 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IDimension;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.util.Position3f;
+import crafttweaker.mc1120.world.MCBlockPos;
 import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
@@ -336,5 +338,10 @@ public class RconPlayer implements IPlayer {
 			return new MCWorld(sender.getEntityWorld());
 		}
 		return null;
+	}
+
+	@Override
+	public IBlockPos getBlockPos() {
+		return new MCBlockPos(sender.getPosition());
 	}
 }
