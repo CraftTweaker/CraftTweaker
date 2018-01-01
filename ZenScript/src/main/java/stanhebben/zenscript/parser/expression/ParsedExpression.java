@@ -272,11 +272,11 @@ public abstract class ParsedExpression {
             } else if(parser.optional(T_SQBROPEN) != null) {
                 ParsedExpression index = readAssignExpression(parser, environment);
                 parser.required(T_SQBRCLOSE, "] expected");
-                if(parser.optional(T_ASSIGN)!=null){
-                	ParsedExpression newVal = readAssignExpression(parser,environment);
-                	base = new ParsedExpressionIndexSet(position, base, index, newVal);
+                if(parser.optional(T_ASSIGN) != null) {
+                    ParsedExpression newVal = readAssignExpression(parser, environment);
+                    base = new ParsedExpressionIndexSet(position, base, index, newVal);
                 } else {
-                	 base = new ParsedExpressionIndex(position, base, index);
+                    base = new ParsedExpressionIndex(position, base, index);
                 }
             } else if(parser.optional(T_BROPEN) != null) {
                 ArrayList<ParsedExpression> arguments = new ArrayList<>();
@@ -307,12 +307,12 @@ public abstract class ParsedExpression {
                 return new ParsedExpressionValue(position, new ExpressionFloat(position, Double.parseDouble(parser.next().getValue()), ZenTypeDouble.INSTANCE));
             case T_STRINGVALUE:
                 return new ParsedExpressionValue(position, new ExpressionString(position, unescapeString(parser.next().getValue())));
-                /*
-				 * case T_DOLLAR: { Expression result = new
-				 * ExpressionDollar(position); if (parser.isNext(T_STRINGVALUE))
-				 * { return new ExpressionIndexString(position, result,
-				 * unescapeString(parser.next().getValue())); } return result; }
-				 */
+            /*
+             * case T_DOLLAR: { Expression result = new
+             * ExpressionDollar(position); if (parser.isNext(T_STRINGVALUE))
+             * { return new ExpressionIndexString(position, result,
+             * unescapeString(parser.next().getValue())); } return result; }
+             */
             case T_ID:
                 return new ParsedExpressionVariable(position, parser.next().getValue());
             case T_FUNCTION:
@@ -361,19 +361,19 @@ public abstract class ParsedExpression {
                 }
                 IZenSymbol resolved = parser.getEnvironment().getBracketed(environment, tokens);
                 if(resolved == null) {
-                        StringBuilder builder = new StringBuilder();
-                        builder.append('<');
-                        Token last = null;
-                        for(Token token : tokens) {
-                            if(last != null)
-                                builder.append(' ');
-                            builder.append(token.getValue());
-                            last = token;
-                        }
-                        builder.append('>');
-                    if (!parser.ignoreBracketErrors){
+                    StringBuilder builder = new StringBuilder();
+                    builder.append('<');
+                    Token last = null;
+                    for(Token token : tokens) {
+                        if(last != null)
+                            builder.append(' ');
+                        builder.append(token.getValue());
+                        last = token;
+                    }
+                    builder.append('>');
+                    if(!parser.ignoreBracketErrors) {
                         parser.getEnvironment().getErrorLogger().error(start.getPosition(), "Could not resolve " + builder.toString());
-                    }else {
+                    } else {
                         parser.getEnvironment().getErrorLogger().info(start.getPosition(), "Could not resolve " + builder.toString());
                     }
                     return new ParsedExpressionInvalid(start.getPosition());
@@ -411,9 +411,8 @@ public abstract class ParsedExpression {
                             break;
                         }
                     }
-                    
-                    return new ParsedExpressionMap(position, keys, values);
                 }
+                return new ParsedExpressionMap(position, keys, values);
             }
             case T_TRUE:
                 parser.next();
