@@ -22,6 +22,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -517,4 +518,8 @@ public class CraftTweakerMC {
             throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
         }
     }
+
+	public static IWorld getWorldByID(int id) {
+		return new MCWorld(DimensionManager.getWorld(id));
+	}
 }

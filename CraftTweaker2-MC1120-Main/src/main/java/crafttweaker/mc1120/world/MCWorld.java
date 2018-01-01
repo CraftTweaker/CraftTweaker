@@ -8,6 +8,7 @@ import crafttweaker.api.world.IBiome;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.api.world.IWorldInfo;
+import crafttweaker.api.world.IWorldProvider;
 import crafttweaker.mc1120.block.MCBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -116,5 +117,10 @@ public class MCWorld implements IWorld {
 	@Override
 	public boolean setBlockState(IBlockState state, IBlockPos pos) {
 		return world.setBlockState((BlockPos)pos.getInternal(), (net.minecraft.block.state.IBlockState)state.getInternal());
+	}
+
+	@Override
+	public IWorldProvider getProvider() {
+		return new MCWorldProvider(world.provider);
 	}
 }

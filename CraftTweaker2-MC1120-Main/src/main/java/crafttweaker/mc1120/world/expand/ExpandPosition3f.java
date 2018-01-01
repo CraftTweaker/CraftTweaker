@@ -6,7 +6,7 @@ import crafttweaker.mc1120.util.Position3f;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethodStatic;
 
-@ZenExpansion("crafttweaker.world.IPosition3f")
+@ZenExpansion("crafttweaker.util.IPosition3f")
 @ZenRegister
 public class ExpandPosition3f {
 
