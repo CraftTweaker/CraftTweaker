@@ -4,7 +4,6 @@ import crafttweaker.*;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.network.NetworkSide;
-import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.brewing.MCBrewing;
 import crafttweaker.mc1120.client.MCClient;
 import crafttweaker.mc1120.commands.CTChatCommand;
@@ -26,7 +25,6 @@ import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.ScriptProviderCascade;
 import crafttweaker.runtime.providers.ScriptProviderDirectory;
-import crafttweaker.zenscript.GlobalRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -140,7 +138,7 @@ public class CraftTweaker {
     
     @EventHandler
     public void onInit(FMLInitializationEvent ev) {
-        MCBrewing.hackMe();
+        MCBrewing.fixBrewingRecipes();
     }
     
     

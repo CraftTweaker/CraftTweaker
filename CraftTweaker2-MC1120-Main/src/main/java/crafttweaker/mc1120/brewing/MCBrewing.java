@@ -68,7 +68,7 @@ public class MCBrewing implements IBrewingManager{
 
 
 
-	public static void hackMe() {
+	public static void fixBrewingRecipes() {
 		if (removedRecipes.isEmpty()) {
 			return;
 		}
