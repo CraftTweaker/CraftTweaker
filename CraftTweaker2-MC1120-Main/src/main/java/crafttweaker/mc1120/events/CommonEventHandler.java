@@ -26,6 +26,7 @@ import net.minecraft.item.crafting.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -75,12 +76,9 @@ public class CommonEventHandler {
     }
     
     @SubscribeEvent
-    public void onPlayerPickupItem(PlayerEvent.ItemPickupEvent ev) {
-        ItemStack item = ev.pickedUp.getItem();
-        item.setCount(item.getCount() + 1);
-        PlayerPickupItemEvent event = new PlayerPickupItemEvent(CraftTweakerMC.getIPlayer(ev.player), CraftTweakerMC.getIItemStack(item));
+    public void onEntityItemPickup(EntityItemPickupEvent ev) {
+        PlayerPickupItemEvent event = new PlayerPickupItemEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getIItemStack(ev.getItem().getItem()));
         CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event);
-        item.setCount(item.getCount() - 1);
     }
     
     @SubscribeEvent
