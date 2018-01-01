@@ -28,6 +28,7 @@ public interface IEventManager {
 	@ZenMethod
     IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev);
     
+	@ZenMethod
     IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev);
     
     @ZenMethod

@@ -1,5 +1,6 @@
 package crafttweaker.util;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.event.IEventHandle;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +49,11 @@ public class EventList<T> {
         }
         
         while(current != null) {
-           current.handler.handle(event);
-
+            try {
+                current.handler.handle(event);
+            } catch(Throwable ex) {
+                CraftTweakerAPI.logError(ex.getMessage(), ex);
+            }
             synchronized(this) {
                 current = current.next;
             }
