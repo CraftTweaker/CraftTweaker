@@ -20,4 +20,9 @@ public class MCFacing implements IFacing{
 	public Object getInternal() {
 		return facing;
 	}
+
+	@Override
+	public String getName() {
+		return facing.name();
+	}
 }

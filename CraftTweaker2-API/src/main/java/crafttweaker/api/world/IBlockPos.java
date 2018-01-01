@@ -24,7 +24,7 @@ public interface IBlockPos {
 	int getZ();
 
 	@ZenMethod
-	IBlockPos getOffset(String directionName, int offset);
+	IBlockPos getOffset(IFacing direction, int offset);
 
 	@ZenCaster
 	@ZenMethod

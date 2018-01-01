@@ -509,17 +509,17 @@ public class CraftTweakerMC {
         } else if(ingredient instanceof Ingredient) {
             ItemStack[] matchingStacks = ((Ingredient) ingredient).getMatchingStacks();
             
-            if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient)ingredient).apply(ItemStack.EMPTY)) {
+            if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient) ingredient).apply(ItemStack.EMPTY)) {
                 return null;
-            }else {
+            } else {
                 return getIItemStack(matchingStacks[0]);
             }
         } else {
             throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
         }
     }
-
-	public static IWorld getWorldByID(int id) {
-		return new MCWorld(DimensionManager.getWorld(id));
-	}
+    
+    public static IWorld getWorldByID(int id) {
+        return new MCWorld(DimensionManager.getWorld(id));
+    }
 }

@@ -2,9 +2,7 @@ package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.util.IPosition3f;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * @author Stan
@@ -22,4 +20,8 @@ public interface IDimension extends IBlockGroup {
 
     @ZenMethod
 	IBiome getBiome(IPosition3f position);
+    
+    @ZenCaster
+    @ZenMethod
+    IWorld asWorld();
 }
