@@ -2,6 +2,7 @@ package crafttweaker.mc1120.block;
 
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IFacing;
 import crafttweaker.api.world.IWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -49,8 +50,8 @@ public class MCBlockState implements crafttweaker.api.block.IBlockState {
 	}
 
 	@Override
-	public int getWeakPower(IWorld world, IBlockPos blockPos, String facing) {
-		return blockState.getWeakPower((World)world.getInternal(), (BlockPos)blockPos.getInternal(), EnumFacing.valueOf(facing));
+	public int getWeakPower(IWorld world, IBlockPos blockPos, IFacing facing) {
+		return blockState.getWeakPower((World)world.getInternal(), (BlockPos)blockPos.getInternal(), (EnumFacing) facing.getInternal());
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package crafttweaker.api.block;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IFacing;
 import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -29,9 +30,9 @@ public interface IBlockState {
     @ZenMethod
     @ZenGetter("canProvidePower")
     boolean canProvidePower();
-
+    
     @ZenMethod
-    int getWeakPower(IWorld world, IBlockPos blockPos, String facing);
+    int getWeakPower(IWorld world, IBlockPos blockPos, IFacing facing);
 
     @ZenMethod
     int getComparatorInputOverride(IWorld world, IBlockPos blockPos);
