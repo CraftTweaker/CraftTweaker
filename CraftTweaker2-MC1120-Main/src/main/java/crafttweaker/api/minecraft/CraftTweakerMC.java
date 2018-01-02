@@ -2,6 +2,7 @@ package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
+import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
@@ -9,6 +10,7 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
+import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
@@ -16,6 +18,7 @@ import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -36,6 +39,7 @@ import java.util.*;
 public class CraftTweakerMC {
     
     public static final IBiome[] biomes;
+    public static final ICreativeTab[] creativeTabs;
     private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<>();
     private static final HashMap<List, IOreDictEntry> oreDictArrays = new HashMap<>();
     static {
@@ -43,6 +47,11 @@ public class CraftTweakerMC {
         for(int i = 0; i < Biome.REGISTRY.getKeys().size(); i++) {
             if(Biome.REGISTRY.getObjectById(i) != null)
                 biomes[i] = new MCBiome(Biome.REGISTRY.getObjectById(i));
+        }
+        
+        creativeTabs = new ICreativeTab[CreativeTabs.CREATIVE_TAB_ARRAY.length];
+        for(int i = 0; i < creativeTabs.length; i++) {
+            creativeTabs[i] = new MCCreativeTab(CreativeTabs.CREATIVE_TAB_ARRAY[i]);
         }
     }
     

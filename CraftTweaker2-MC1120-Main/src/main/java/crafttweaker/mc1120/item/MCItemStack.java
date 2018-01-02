@@ -37,7 +37,6 @@ public class MCItemStack implements IItemStack {
     public MCItemStack(ItemStack itemStack) {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
-        
         stack = itemStack.copy();
         items = Collections.singletonList(this);
     }
