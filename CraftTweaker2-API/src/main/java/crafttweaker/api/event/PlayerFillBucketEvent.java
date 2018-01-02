@@ -12,7 +12,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerFillBucketEvent")
 @ZenRegister
-public class PlayerFillBucketEvent {
+public class PlayerFillBucketEvent implements IEventCancelable {
     
     private final IPlayer player;
     private final IBlockGroup blocks;
@@ -33,12 +33,12 @@ public class PlayerFillBucketEvent {
         result = null;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }

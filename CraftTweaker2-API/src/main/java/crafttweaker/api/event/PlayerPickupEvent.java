@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerPickupEvent")
 @ZenRegister
-public class PlayerPickupEvent {
+public class PlayerPickupEvent implements IEventCancelable {
     
     private final IPlayer player;
     private final IEntity entity;
@@ -25,7 +25,7 @@ public class PlayerPickupEvent {
         processed = false;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
@@ -38,7 +38,7 @@ public class PlayerPickupEvent {
         processed = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }

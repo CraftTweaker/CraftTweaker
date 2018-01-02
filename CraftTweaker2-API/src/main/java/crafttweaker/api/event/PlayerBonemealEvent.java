@@ -11,7 +11,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerBonemealEvent")
 @ZenRegister
-public class PlayerBonemealEvent {
+public class PlayerBonemealEvent implements IEventCancelable {
     
     private final IPlayer player;
     private final IBlockGroup blocks;
@@ -32,7 +32,7 @@ public class PlayerBonemealEvent {
         processed = false;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
@@ -42,7 +42,7 @@ public class PlayerBonemealEvent {
         processed = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }

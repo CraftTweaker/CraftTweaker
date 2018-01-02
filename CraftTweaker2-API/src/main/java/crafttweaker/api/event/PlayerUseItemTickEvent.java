@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerUseItemTickEvent")
 @ZenRegister
-public class PlayerUseItemTickEvent {
+public class PlayerUseItemTickEvent implements IEventCancelable {
     
     private final IPlayer player;
     private final IItemStack item;
@@ -25,12 +25,12 @@ public class PlayerUseItemTickEvent {
         canceled = false;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }

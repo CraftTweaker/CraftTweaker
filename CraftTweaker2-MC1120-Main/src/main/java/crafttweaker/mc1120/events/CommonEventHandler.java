@@ -78,7 +78,8 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent ev) {
         PlayerPickupItemEvent event = new PlayerPickupItemEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getIItemStack(ev.getItem().getItem()));
-        CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event);
+        if(CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event))
+            ev.setCanceled(true);
     }
     
     @SubscribeEvent
@@ -126,7 +127,8 @@ public class CommonEventHandler {
     public void onPlayerInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent ev) {
         if(!ev.getWorld().isRemote) {
             PlayerInteractEvent event = new PlayerInteractEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getDimension(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
-            CrafttweakerImplementationAPI.events.publishPlayerInteract(event);
+            if(CrafttweakerImplementationAPI.events.publishPlayerInteract(event))
+                ev.setCanceled(true);
         }
     }
     
