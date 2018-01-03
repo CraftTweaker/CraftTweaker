@@ -3,6 +3,7 @@ package crafttweaker.mc1120.item;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.*;
+import crafttweaker.api.enchantments.*;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
@@ -11,9 +12,11 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.block.MCItemBlock;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.enchantments.MCEnchantment;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -496,6 +499,29 @@ public class MCItemStack implements IItemStack {
     @Override
     public boolean isStackable() {
         return stack.isStackable();
+    }
+    
+    @Override
+    public void addEnchantment(IEnchantment enchantment) {
+        stack.addEnchantment((Enchantment) enchantment.getDefinition().getInternal(), enchantment.getLevel());
+    }
+    
+    @Override
+    public boolean canApplyAtEnchantingTable(IEnchantmentDefinition enchantment) {
+        return stack.getItem().canApplyAtEnchantingTable(stack, (Enchantment) enchantment.getInternal());
+    }
+    
+    @Override
+    public List<IEnchantment> getEnchantments() {
+        ArrayList<IEnchantment> output = new ArrayList<>();
+        if(stack.isEmpty() || !stack.hasTagCompound())
+            return output;
+        IData tag = NBTConverter.from(stack.getTagCompound(), false);
+        if(tag.contains(new DataString("ench"))) {
+            List<IData> enchantmentList = tag.memberGet("ench").asList();
+            enchantmentList.stream().filter(ench -> ench.contains(new DataString("id")) && ench.contains(new DataString("lvl"))).forEach(ench -> output.add(new MCEnchantment(ench.memberGet("id").asInt(), ench.memberGet("lvl").asInt())));
+        }
+        return output;
     }
     
     @Override

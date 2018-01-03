@@ -3,6 +3,8 @@ package crafttweaker.api.item;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
@@ -344,12 +346,14 @@ public interface IItemStack extends IIngredient {
     @ZenGetter("isStackable")
     boolean isStackable();
     
-    //NYI
-    //@ZenMethod
-    //void addEnchantment(IEnchantment enchantment, int level);
+    @ZenMethod
+    void addEnchantment(IEnchantment enchantment);
     
-    //@ZenMethod
-    //boolean canApplyAtEnchantingTable(IEnchantment enchantment);
+    @ZenMethod
+    boolean canApplyAtEnchantingTable(IEnchantmentDefinition enchantment);
+    
+    @ZenGetter("enchantments")
+    List<IEnchantment> getEnchantments();
     
     @ZenGetter("isEnchantable")
     boolean isItemEnchantable();
