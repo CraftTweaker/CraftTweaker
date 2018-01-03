@@ -13,6 +13,18 @@ task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper
     gradleVersion = '2.6'
 }
 
+//Shuts up javadoc failures
+if (JavaVersion.current().isJava8Compatible()) {
+
+    allprojects {
+
+        tasks.withType(Javadoc) {
+
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
 task setupDecompWorkspaceAll(dependsOn: projects1120.collect { ':' + it + ':setupDecompWorkspace' }) {}

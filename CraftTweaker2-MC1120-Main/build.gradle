@@ -62,7 +62,12 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
     classifier = 'sources'
 }
+task javadocJar(type: Jar, dependsOn: javadoc) {
 
+    description = 'Creates a JAR containing the JavaDocs.'
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
 task deobfJar(type: Jar) {
 
     description = 'Creates a JAR containing the non-obfuscated compiled code.'
@@ -73,6 +78,7 @@ task deobfJar(type: Jar) {
 //Adds the artifact types added by this script to the actual artifacts list.
 artifacts {
     archives sourcesJar
+    archives javadocJar
     archives deobfJar
 }
 
@@ -92,7 +98,10 @@ publishing {
 
                 classifier 'sources'
             }
+            artifact javadocJar {
 
+                classifier 'javadoc'
+            }
             artifact deobfJar {
 
                 classifier 'deobf'
