@@ -27,4 +27,9 @@ public class MCBlockDefinition implements IBlockDefinition {
     public String getDisplayName() {
         return block.getLocalizedName();
     }
+    
+    @Override
+    public Object getInternal() {
+        return block;
+    }
 }

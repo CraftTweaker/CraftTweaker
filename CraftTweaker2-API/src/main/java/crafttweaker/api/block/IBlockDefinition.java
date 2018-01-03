@@ -18,4 +18,5 @@ public interface IBlockDefinition {
     @ZenGetter("displayName")
     String getDisplayName();
     
+    Object getInternal();
 }

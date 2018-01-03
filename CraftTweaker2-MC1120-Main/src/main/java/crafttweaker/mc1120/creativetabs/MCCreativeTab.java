@@ -24,6 +24,11 @@ public class MCCreativeTab implements ICreativeTab {
     }
     
     @Override
+    public void setBackgroundImageName(String backgroundImage) {
+        tab.setBackgroundImageName(backgroundImage);
+    }
+    
+    @Override
     public IItemStack getIconItemStack() {
         return CraftTweakerMC.getIItemStack(tab.getIconItemStack());
     }
@@ -79,23 +84,23 @@ public class MCCreativeTab implements ICreativeTab {
     }
     
     @Override
-    public ICreativeTab setBackgroundImageName(String backgroundImage) {
-        return new MCCreativeTab(tab.setBackgroundImageName(backgroundImage));
+    public void setNoScrollBar() {
+        tab.setNoScrollbar();
     }
     
     @Override
-    public ICreativeTab setNoScrollBar() {
-        return new MCCreativeTab(tab.setNoScrollbar());
-    }
-    
-    @Override
-    public ICreativeTab setNoTitle() {
-        return new MCCreativeTab(tab.setNoTitle());
+    public void setNoTitle() {
+        tab.setNoTitle();
     }
     
     @Override
     public boolean shouldHidePlayerInventory() {
         return tab.shouldHidePlayerInventory();
+    }
+    
+    @Override
+    public Object getInternal() {
+        return tab;
     }
     
     

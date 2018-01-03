@@ -1,8 +1,9 @@
 package crafttweaker.mc1120.item;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.*;
 import crafttweaker.api.data.*;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
@@ -13,6 +14,7 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
@@ -139,16 +141,16 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IIngredient anyDamage() {
-            ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), OreDictionary.WILDCARD_VALUE);
-            result.setTagCompound(stack.getTagCompound());
-            return new MCItemStack(result, tag);
+        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), OreDictionary.WILDCARD_VALUE);
+        result.setTagCompound(stack.getTagCompound());
+        return new MCItemStack(result, tag);
     }
     
     @Override
     public IItemStack withDamage(int damage) {
-            ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), damage);
-            result.setTagCompound(stack.getTagCompound());
-            return new MCItemStack(result, tag);
+        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), damage);
+        result.setTagCompound(stack.getTagCompound());
+        return new MCItemStack(result, tag);
     }
     
     @Override
@@ -227,7 +229,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack[] getItemArray() {
-    	return items.toArray(new IItemStack[items.size()]);
+        return items.toArray(new IItemStack[items.size()]);
     }
     
     @Override
@@ -354,19 +356,19 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack withDisplayName(String name){
+    public IItemStack withDisplayName(String name) {
         NBTTagCompound tagComp;
         
-        if (!this.stack.hasTagCompound() || this.stack.getTagCompound() == null){
+        if(!this.stack.hasTagCompound() || this.stack.getTagCompound() == null) {
             tagComp = new NBTTagCompound();
-        }else {
+        } else {
             tagComp = this.stack.getTagCompound();
         }
-    
+        
         NBTTagCompound display;
-        if (!tagComp.hasKey("display") || !(tagComp.getTag("display") instanceof NBTTagCompound)){
+        if(!tagComp.hasKey("display") || !(tagComp.getTag("display") instanceof NBTTagCompound)) {
             display = new NBTTagCompound();
-        }else {
+        } else {
             display = (NBTTagCompound) tagComp.getTag("display");
         }
         
@@ -380,33 +382,33 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack withLore(String[] lore){
+    public IItemStack withLore(String[] lore) {
         NBTTagCompound tagComp;
         
-        if (!this.stack.hasTagCompound() || this.stack.getTagCompound() == null){
+        if(!this.stack.hasTagCompound() || this.stack.getTagCompound() == null) {
             tagComp = new NBTTagCompound();
-        }else {
+        } else {
             tagComp = this.stack.getTagCompound();
         }
         
         NBTTagCompound display;
-        if (!tagComp.hasKey("display") || !(tagComp.getTag("display") instanceof NBTTagCompound)){
+        if(!tagComp.hasKey("display") || !(tagComp.getTag("display") instanceof NBTTagCompound)) {
             display = new NBTTagCompound();
-        }else {
+        } else {
             display = (NBTTagCompound) tagComp.getTag("display");
         }
-    
+        
         NBTTagList loreList;
-        if (!tagComp.hasKey("Lore") || !(tagComp.getTag("Lore") instanceof NBTTagList)){
+        if(!tagComp.hasKey("Lore") || !(tagComp.getTag("Lore") instanceof NBTTagList)) {
             loreList = new NBTTagList();
-        }else {
+        } else {
             loreList = (NBTTagList) tagComp.getTag("Lore");
         }
-    
+        
         for(String s : lore) {
             loreList.appendTag(new NBTTagString(s));
         }
-    
+        
         display.setTag("Lore", loreList);
         tagComp.setTag("display", display);
         
@@ -414,6 +416,157 @@ public class MCItemStack implements IItemStack {
         newStack.setTagCompound(tagComp);
         
         return new MCItemStack(newStack);
+    }
+    
+    @Override
+    public List<String> getToolClasses() {
+        return new ArrayList<>(stack.getItem().getToolClasses(stack));
+    }
+    
+    @Override
+    public int getItemEnchantability() {
+        return stack.getItem().getItemEnchantability(stack);
+    }
+    
+    @Override
+    public IItemStack getContainerItem() {
+        return new MCItemStack(stack.getItem().getContainerItem(stack));
+    }
+    
+    @Override
+    public boolean hasContainerItem() {
+        return stack.getItem().hasContainerItem(stack);
+    }
+    
+    @Override
+    public boolean isBeaconPayment() {
+        return stack.getItem().isBeaconPayment(stack);
+    }
+    
+    @Override
+    public boolean canPlaceOn(IBlockDefinition block) {
+        return stack.canPlaceOn((Block) block.getInternal());
+    }
+    
+    @Override
+    public boolean canDestroy(IBlockDefinition block) {
+        return stack.canDestroy((Block) block.getInternal());
+    }
+    
+    @Override
+    public boolean canHarvestBlock(IBlockState block) {
+        return stack.canHarvestBlock((net.minecraft.block.state.IBlockState) block.getInternal());
+    }
+    
+    @Override
+    public int getRepairCost() {
+        return stack.getRepairCost();
+    }
+    
+    @Override
+    public void setRepairCost(int repairCost) {
+        stack.setRepairCost(repairCost);
+    }
+    
+    @Override
+    public boolean canEditBlocks() {
+        return false;
+    }
+    
+    @Override
+    public boolean isOnItemFrame() {
+        return stack.isOnItemFrame();
+    }
+    
+    @Override
+    public boolean isItemEnchanted() {
+        return stack.isItemEnchanted();
+    }
+    
+    @Override
+    public boolean isItemDamaged() {
+        return stack.isItemDamaged();
+    }
+    
+    @Override
+    public boolean isDamageable() {
+        return stack.isItemStackDamageable();
+    }
+    
+    @Override
+    public boolean isStackable() {
+        return stack.isStackable();
+    }
+    
+    @Override
+    public boolean isItemEnchantable() {
+        return stack.isItemEnchantable();
+    }
+    
+    @Override
+    public boolean hasEffect() {
+        return stack.hasEffect();
+    }
+    
+    @Override
+    public boolean hasDisplayName() {
+        return stack.hasDisplayName();
+    }
+    
+    @Override
+    public void clearCustomName() {
+        stack.clearCustomName();
+    }
+    
+    @Override
+    public boolean hasTag() {
+        return stack.hasTagCompound();
+    }
+    
+    @Override
+    public void damageItem(int amount, IEntity entity) {
+        if(entity.getInternal() instanceof EntityLivingBase)
+            stack.damageItem(amount, (EntityLivingBase) entity.getInternal());
+    }
+    
+    @Override
+    public int getMetadata() {
+        return stack.getMetadata();
+    }
+    
+    @Override
+    public boolean getHasSubtypes() {
+        return stack.getHasSubtypes();
+    }
+    
+    @Override
+    public float getStrengthAgainstBlock(IBlockState blockState) {
+        return stack.getStrVsBlock((net.minecraft.block.state.IBlockState) blockState.getInternal());
+    }
+    
+    @Override
+    public IItemStack splitStack(int amount) {
+        return new MCItemStack(stack.splitStack(amount));
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        return stack.isEmpty();
+    }
+    
+    @Override
+    public int getItemBurnTime() {
+        return 0;
+    }
+    
+    @Override
+    public boolean showsDurabilityBar() {
+        return false;
+    }
+    
+    @Override
+    public boolean hasCustomEntity() {
+        return false;
     }
     
     

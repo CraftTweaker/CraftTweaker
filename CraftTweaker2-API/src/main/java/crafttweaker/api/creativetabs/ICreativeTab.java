@@ -8,68 +8,56 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public interface ICreativeTab {
     
-    @ZenMethod
     @ZenGetter("drawInForegroundOfTab")
     boolean drawInForegroundOfTab();
     
-    @ZenMethod
     @ZenGetter("backgroundImageName")
     String getBackgroundImageName();
     
-    @ZenMethod
-    ICreativeTab setBackgroundImageName(String backgroundImage);
+    @ZenSetter("backgroundImageName")
+    void setBackgroundImageName(String backgroundImage);
     
-    @ZenMethod
     @ZenGetter("iconItemStack")
     IItemStack getIconItemStack();
     
-    @ZenMethod
     @ZenGetter("searchBarWidth")
     int getSearchBarWidth();
     
-    @ZenMethod
     @ZenGetter("tabColumn")
     int getTabColumn();
     
-    @ZenMethod
     @ZenGetter("tabIconItem")
     IItemStack getTabIconItem();
     
-    @ZenMethod
     @ZenGetter("tabIndex")
     int getTabIndex();
     
-    @ZenMethod
     @ZenGetter("tabLabel")
     String getTabLabel();
     
-    @ZenMethod
     @ZenGetter("tabPage")
     int getTabPage();
     
-    @ZenMethod
     @ZenGetter("translatedTabLabel")
     String getTranslatedTabLabel();
     
-    @ZenMethod
-    @ZenGetter("searchBar")
+    @ZenGetter("hasSearchBar")
     boolean hasSearchBar();
     
-    @ZenMethod
     @ZenGetter("alignedRight")
     boolean isAlighnedRight();
     
-    @ZenMethod
-    @ZenGetter("tabInFirstRow")
+    @ZenGetter("isTabInFirstRow")
     boolean isTabInFirstRow();
     
     @ZenMethod
-    ICreativeTab setNoScrollBar();
+    void setNoScrollBar();
     
     @ZenMethod
-    ICreativeTab setNoTitle();
+    void setNoTitle();
     
-    @ZenMethod
-    @ZenGetter("hidePlayerInventory")
+    @ZenGetter("shouldHidePlayerInventory")
     boolean shouldHidePlayerInventory();
+    
+    Object getInternal();
 }
