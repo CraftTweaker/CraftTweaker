@@ -1,5 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 version = ext.craftTweakerVersion
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -11,37 +11,65 @@ dependencies {
     //compile files("libs/tools.jar")
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file://" + System.getenv("local_maven"))
-            pom {
-                groupId = project.group
-                version
-                artifactId = project.archivesBaseName
-                project {
-                    name project.archivesBaseName
-                    packaging 'jar'
-                    description 'CraftTweaker'
-                    url 'https://github.com/jaredlll08/CraftTweaker'
-                    scm {
-                        url 'https://github.com/jaredlll08/CraftTweaker.git'
-                        connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-                        developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-                    }
-                    issueManagement {
-                        system 'github'
-                        url 'https://github.com/jaredlll08/CraftTweaker/issues'
-                    }
-                    developers {
-                        developer {
-                            id 'Jared'
-                            name 'Jared'
-                            roles { role 'developer' }
-                        }
-                    }
-                }
+task sourcesJar(type: Jar, dependsOn: classes) {
+
+    description = 'Creates a JAR containing the source code.'
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+
+    description = 'Creates a JAR containing the JavaDocs.'
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+task deobfJar(type: Jar) {
+
+    description = 'Creates a JAR containing the non-obfuscated compiled code.'
+    from sourceSets.main.output
+    classifier = "deobf"
+}
+
+//Adds the artifact types added by this script to the actual artifacts list.
+artifacts {
+
+    archives sourcesJar
+    archives javadocJar
+    archives deobfJar
+}
+
+publishing {
+
+    publications {
+
+        mavenJava(MavenPublication) {
+
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+
+            // Adds the various artifacts
+            artifact sourcesJar {
+
+                classifier 'sources'
             }
+            artifact javadocJar {
+
+                classifier 'javadoc'
+            }
+            artifact deobfJar {
+
+                classifier 'deobf'
+            }
+        }
+    }
+
+    repositories {
+
+        maven {
+
+            url "file://" + System.getenv("local_maven")
         }
     }
 }

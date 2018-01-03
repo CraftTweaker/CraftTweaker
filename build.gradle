@@ -1,6 +1,5 @@
 apply plugin: 'base' // To add "clean" task to the root project.
 apply from: 'configuration.gradle'
-apply plugin: "maven"
 
 subprojects {
     apply from: rootProject.file('common.gradle')
@@ -9,50 +8,21 @@ repositories {
     mavenLocal()
     mavenCentral()
 }
-configurations {
-    deployerJars
-}
-dependencies {
-    deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file://" + System.getenv("local_maven"))
-            pom {
-                groupId = project.group
-                version
-                artifactId = project.archivesBaseName
-                project {
-                    name project.archivesBaseName
-                    packaging 'jar'
-                    description 'CraftTweaker'
-                    url 'https://github.com/jaredlll08/CraftTweaker'
-                    scm {
-                        url 'https://github.com/jaredlll08/CraftTweaker.git'
-                        connection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-                        developerConnection 'scm:git:git@github.com:jaredlll08/CraftTweaker.git'
-                    }
-                    issueManagement {
-                        system 'github'
-                        url 'https://github.com/jaredlll08/CraftTweaker/issues'
-                    }
-                    developers {
-                        developer {
-                            id 'Jared'
-                            name 'Jared'
-                            roles { role 'developer' }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
     gradleVersion = '2.6'
+}
+
+//Shuts up javadoc failures
+if (JavaVersion.current().isJava8Compatible()) {
+
+    allprojects {
+
+        tasks.withType(Javadoc) {
+
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
 }
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
@@ -113,10 +83,6 @@ task assembleAll(dependsOn: [
         assembleDevFull1120
 
 ]) {
-}
-
-configurations {
-    deployerJars
 }
 
 def CrtBuildGroup = "CraftTweaker Build"
