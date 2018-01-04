@@ -5,7 +5,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.*;
 import crafttweaker.api.util.IPosition3f;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -215,5 +215,10 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     @Override
     public void setScore(int amount) {
         player.setScore(amount);
+    }
+    
+    @Override
+    public IFoodStats getFoodStats() {
+        return new MCFoodStats(player.getFoodStats());
     }
 }

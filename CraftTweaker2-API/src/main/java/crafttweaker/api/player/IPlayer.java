@@ -88,4 +88,7 @@ public interface IPlayer extends IEntityLivingBase {
     @ZenMethod
     @ZenSetter("score")
     void setScore(int amount);
+    
+    @ZenGetter("foodStats")
+    IFoodStats getFoodStats();
 }
