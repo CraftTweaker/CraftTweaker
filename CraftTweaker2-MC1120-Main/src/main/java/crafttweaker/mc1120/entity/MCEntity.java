@@ -308,11 +308,6 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
-    public void performHurtAnimation() {
-        entity.performHurtAnimation();
-    }
-    
-    @Override
     public boolean isSprinting() {
         return entity.isSprinting();
     }
