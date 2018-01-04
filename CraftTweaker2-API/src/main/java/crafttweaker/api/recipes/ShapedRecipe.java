@@ -1,7 +1,7 @@
 package crafttweaker.api.recipes;
 
 import crafttweaker.api.item.*;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 
 import java.util.*;
 
@@ -203,7 +203,7 @@ public class ShapedRecipe implements ICraftingRecipe {
     }
     
     @Override
-    public void applyTransformers(ICraftingInventory inventory, IEntityPlayer byPlayer) {
+    public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
         IItemStack[] stacks = new IItemStack[ingredients.length];
         
         for(int i = 0; i <= inventory.getWidth() - width; i++) {
@@ -314,7 +314,7 @@ public class ShapedRecipe implements ICraftingRecipe {
         return output;
     }
     
-    private void doRecipeTransformers(ICraftingInventory inventory, IItemStack[] stacks, int offx, int offy, boolean mirrored, IEntityPlayer byPlayer) {
+    private void doRecipeTransformers(ICraftingInventory inventory, IItemStack[] stacks, int offx, int offy, boolean mirrored, IPlayer byPlayer) {
         for(int i = 0; i < ingredients.length; i++) {
             IItemStack transformed = ingredients[i].applyTransform(stacks[i], byPlayer);
             if(transformed != stacks[i]) {

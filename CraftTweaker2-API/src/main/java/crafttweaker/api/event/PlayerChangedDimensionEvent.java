@@ -1,7 +1,7 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
 
@@ -12,18 +12,18 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerChangedDimensionEvent {
     
-    private final IEntityPlayer player;
+    private final IPlayer player;
     private final IWorld from;
     private final IWorld to;
     
-    public PlayerChangedDimensionEvent(IEntityPlayer player, IWorld from, IWorld to) {
+    public PlayerChangedDimensionEvent(IPlayer player, IWorld from, IWorld to) {
         this.player = player;
         this.from = from;
         this.to = to;
     }
     
     @ZenGetter("player")
-    public IEntityPlayer getPlayer() {
+    public IPlayer getPlayer() {
         return player;
     }
     

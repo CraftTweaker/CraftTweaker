@@ -6,7 +6,7 @@ import crafttweaker.api.entity.*;
 import crafttweaker.api.event.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
@@ -14,7 +14,7 @@ import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
-import crafttweaker.mc1120.player.MCEntityPlayer;
+import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.MCCraftingInventory;
 import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.entity.*;
@@ -84,7 +84,7 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
-        IEntityPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
+        IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
         if(CraftTweaker.INSTANCE.recipes.hasTransformerRecipes()) {
             CraftTweaker.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(ev.craftMatrix, ev.player), iPlayer);
         }
@@ -95,12 +95,12 @@ public class CommonEventHandler {
                 if(rec.getRecipe() instanceof ShapedRecipe) {
                     ShapedRecipe r = (ShapedRecipe) rec.getRecipe();
                     if(r.getAction() != null) {
-                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCEntityPlayer(ev.player));
+                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCPlayer(ev.player));
                     }
                 } else if(rec.getRecipe() instanceof ShapelessRecipe) {
                     ShapelessRecipe r = (ShapelessRecipe) rec.getRecipe();
                     if(r.getAction() != null) {
-                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCEntityPlayer(ev.player));
+                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCPlayer(ev.player));
                     }
                 }
             });

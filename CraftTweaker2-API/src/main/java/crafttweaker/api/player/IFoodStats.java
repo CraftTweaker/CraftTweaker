@@ -12,7 +12,7 @@ public interface IFoodStats {
     void addStats(int foodValue, float saturationLevel);
     
     @ZenMethod
-    void onUpdate(IEntityPlayer player);
+    void onUpdate(IPlayer player);
     
     @ZenCaster
     @ZenMethod

@@ -1,6 +1,6 @@
 package crafttweaker.api.logger;
 
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.runtime.ILogger;
 
 import java.io.*;
@@ -76,7 +76,7 @@ public class FileLogger implements ILogger {
     }
     
     @Override
-    public void logPlayer(IEntityPlayer player) {
+    public void logPlayer(IPlayer player) {
         //no-op
     }
     

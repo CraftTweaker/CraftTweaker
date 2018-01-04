@@ -11,7 +11,7 @@ import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.logger.MTLogger;
 import crafttweaker.api.mods.*;
 import crafttweaker.api.oredict.*;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.server.*;
 import crafttweaker.api.vanilla.IVanilla;
@@ -51,7 +51,7 @@ public class CrafttweakerImplementationAPI {
      * Access point to general platform functions.
      */
     public static IPlatformFunctions platform = null;
-    public static Set<IEntityPlayer> blockInfoPlayers = new HashSet<>();
+    public static Set<IPlayer> blockInfoPlayers = new HashSet<>();
     public static IEventHandle blockEventHandler = null;
 
     

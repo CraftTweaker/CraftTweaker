@@ -12,7 +12,6 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.network.MessageOpenBrowser;
-import crafttweaker.mc1120.util.Position3f;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,10 +24,10 @@ import net.minecraft.util.text.TextComponentString;
 /**
  * @author Stan
  */
-public class MCEntityPlayer extends MCEntityLivingBase implements IEntityPlayer {
+public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     private final EntityPlayer player;
 
-    public MCEntityPlayer(EntityPlayer player) {
+    public MCPlayer(EntityPlayer player) {
         super(player);
         this.player = player;
     }
@@ -134,7 +133,7 @@ public class MCEntityPlayer extends MCEntityLivingBase implements IEntityPlayer 
 
     @Override
     public boolean equals(Object other) {
-        return other.getClass() == this.getClass() && ((MCEntityPlayer) other).player == player;
+        return other.getClass() == this.getClass() && ((MCPlayer) other).player == player;
 
     }
 

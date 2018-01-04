@@ -1,9 +1,9 @@
 package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.ICraftingInventory;
-import crafttweaker.mc1120.player.MCEntityPlayer;
+import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 public class MCCraftingInventory implements ICraftingInventory {
     
     private final IInventory inventory;
-    private final IEntityPlayer player;
+    private final IPlayer player;
     private final EntityPlayer playerOrig;
     private int width;
     private int height;
@@ -60,7 +60,7 @@ public class MCCraftingInventory implements ICraftingInventory {
         update();
         
         playerOrig = player;
-        this.player = player == null ? null : new MCEntityPlayer(player);
+        this.player = player == null ? null : new MCPlayer(player);
     }
     
     public static MCCraftingInventory get(InventoryCrafting inventory) {
@@ -98,7 +98,7 @@ public class MCCraftingInventory implements ICraftingInventory {
     }
     
     @Override
-    public IEntityPlayer getPlayer() {
+    public IPlayer getPlayer() {
         return player;
     }
     

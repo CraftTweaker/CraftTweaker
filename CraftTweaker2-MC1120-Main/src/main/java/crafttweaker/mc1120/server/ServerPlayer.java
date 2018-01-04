@@ -1,9 +1,8 @@
 package crafttweaker.mc1120.server;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.formatting.IFormattedText;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.world.MCBlockPos;
@@ -12,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author Stan
  */
-public class ServerPlayer implements IPlayer {
+public class ServerPlayer implements IUser {
     
     public static final ServerPlayer INSTANCE = new ServerPlayer();
     

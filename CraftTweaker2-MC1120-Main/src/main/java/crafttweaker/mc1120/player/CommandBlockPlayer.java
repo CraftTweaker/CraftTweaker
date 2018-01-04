@@ -1,7 +1,7 @@
 package crafttweaker.mc1120.player;
 
 import crafttweaker.api.formatting.IFormattedText;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.server.MCServer;
@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 /**
  * @author Jared
  */
-public class CommandBlockPlayer implements IPlayer {
+public class CommandBlockPlayer implements IUser {
     
     private final ICommandSender sender;
     

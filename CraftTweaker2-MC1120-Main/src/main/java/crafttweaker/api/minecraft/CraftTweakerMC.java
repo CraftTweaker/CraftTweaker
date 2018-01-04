@@ -7,7 +7,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
@@ -15,7 +15,7 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
-import crafttweaker.mc1120.player.MCEntityPlayer;
+import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -284,11 +284,11 @@ public class CraftTweakerMC {
      *
      * @return crafttweaker player
      */
-    public static IEntityPlayer getIPlayer(EntityPlayer player) {
+    public static IPlayer getIPlayer(EntityPlayer player) {
         if(player == null)
             return null;
         
-        return new MCEntityPlayer(player);
+        return new MCPlayer(player);
     }
     
     /**
@@ -298,15 +298,15 @@ public class CraftTweakerMC {
      *
      * @return minecraft player
      */
-    public static EntityPlayer getPlayer(IEntityPlayer player) {
+    public static EntityPlayer getPlayer(IPlayer player) {
         if(player == null)
             return null;
         
-        if(!(player instanceof MCEntityPlayer)) {
+        if(!(player instanceof MCPlayer)) {
             CraftTweakerAPI.logError("Invalid player: " + player);
         }
         
-        return ((MCEntityPlayer) player).getInternal();
+        return ((MCPlayer) player).getInternal();
     }
     
     /**

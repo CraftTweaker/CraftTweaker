@@ -1,6 +1,6 @@
 package crafttweaker.api.logger;
 
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.runtime.ILogger;
 
 import java.util.*;
@@ -11,7 +11,7 @@ import java.util.*;
 public class MTLogger implements ILogger {
     
     private final List<ILogger> loggers = new ArrayList<>();
-    private final List<IEntityPlayer> players = new ArrayList<>();
+    private final List<IPlayer> players = new ArrayList<>();
     private final List<String> unprocessed = new ArrayList<>();
     
     public void addLogger(ILogger logger) {
@@ -22,14 +22,14 @@ public class MTLogger implements ILogger {
         loggers.remove(logger);
     }
     
-    public void addPlayer(IEntityPlayer player) {
+    public void addPlayer(IPlayer player) {
         players.add(player);
         if(!unprocessed.isEmpty()) {
             unprocessed.forEach(player::sendChat);
         }
     }
     
-    public void removePlayer(IEntityPlayer player) {
+    public void removePlayer(IPlayer player) {
         players.remove(player);
     }
     
@@ -61,7 +61,7 @@ public class MTLogger implements ILogger {
         if(players.isEmpty()) {
             unprocessed.add(message2);
         } else {
-            for(IEntityPlayer player : players) {
+            for(IPlayer player : players) {
                 player.sendChat(message2);
             }
         }
@@ -82,14 +82,14 @@ public class MTLogger implements ILogger {
         if(players.isEmpty()) {
             unprocessed.add(message2);
         } else {
-            for(IEntityPlayer player : players) {
+            for(IPlayer player : players) {
                 player.sendChat(message2);
             }
         }
     }
     
     @Override
-    public void logPlayer(IEntityPlayer player) {
+    public void logPlayer(IPlayer player) {
     
     }
 }

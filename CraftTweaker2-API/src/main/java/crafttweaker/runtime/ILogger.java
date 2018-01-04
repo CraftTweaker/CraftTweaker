@@ -1,6 +1,6 @@
 package crafttweaker.runtime;
 
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
@@ -24,5 +24,5 @@ public interface ILogger {
     void logError(String message, Throwable exception);
     
     @ZenMethod
-    void logPlayer(IEntityPlayer player);
+    void logPlayer(IPlayer player);
 }

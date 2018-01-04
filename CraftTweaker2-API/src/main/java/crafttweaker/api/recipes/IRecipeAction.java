@@ -2,7 +2,7 @@ package crafttweaker.api.recipes;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 
 /**
@@ -12,6 +12,6 @@ import stanhebben.zenscript.annotations.ZenClass;
 @ZenRegister
 public interface IRecipeAction {
     
-    void process(IItemStack output, ICraftingInfo craftingInfo, IEntityPlayer player);
+    void process(IItemStack output, ICraftingInfo craftingInfo, IPlayer player);
     
 }

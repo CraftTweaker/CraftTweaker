@@ -2,7 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.ICraftingInventory;
 import stanhebben.zenscript.annotations.*;
 
@@ -13,18 +13,18 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerCraftedEvent {
     
-    private final IEntityPlayer player;
+    private final IPlayer player;
     private final IItemStack output;
     private final ICraftingInventory inventory;
     
-    public PlayerCraftedEvent(IEntityPlayer player, IItemStack output, ICraftingInventory inventory) {
+    public PlayerCraftedEvent(IPlayer player, IItemStack output, ICraftingInventory inventory) {
         this.player = player;
         this.output = output;
         this.inventory = inventory;
     }
     
     @ZenGetter("player")
-    public IEntityPlayer getPlayer() {
+    public IPlayer getPlayer() {
         return player;
     }
     

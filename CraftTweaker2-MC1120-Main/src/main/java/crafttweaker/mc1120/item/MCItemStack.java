@@ -8,7 +8,7 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.block.MCItemBlock;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -318,7 +318,7 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack applyTransform(IItemStack item, IEntityPlayer byPlayer) {
+    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
         return item;
     }
     

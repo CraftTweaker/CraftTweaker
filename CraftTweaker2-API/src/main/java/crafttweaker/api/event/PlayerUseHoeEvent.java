@@ -3,7 +3,7 @@ package crafttweaker.api.event;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -14,7 +14,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerUseHoeEvent implements IEventCancelable {
     
-    private final IEntityPlayer player;
+    private final IPlayer player;
     private final IItemStack item;
     private final IWorld world;
     private final int x;
@@ -23,7 +23,7 @@ public class PlayerUseHoeEvent implements IEventCancelable {
     private boolean canceled;
     private boolean processed;
     
-    public PlayerUseHoeEvent(IEntityPlayer player, IItemStack item, IWorld blocks, int x, int y, int z) {
+    public PlayerUseHoeEvent(IPlayer player, IItemStack item, IWorld blocks, int x, int y, int z) {
         this.player = player;
         this.item = item;
         this.world = blocks;
@@ -56,7 +56,7 @@ public class PlayerUseHoeEvent implements IEventCancelable {
     }
     
     @ZenGetter("player")
-    public IEntityPlayer getPlayer() {
+    public IPlayer getPlayer() {
         return player;
     }
     

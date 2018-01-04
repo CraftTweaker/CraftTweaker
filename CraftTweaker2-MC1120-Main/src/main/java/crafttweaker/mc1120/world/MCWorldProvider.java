@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.world;
 
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
@@ -80,7 +80,7 @@ public class MCWorldProvider implements IWorldProvider {
     }
     
     @Override
-    public IWorldProvider getRespawnDimension(IEntityPlayer player) {
+    public IWorldProvider getRespawnDimension(IPlayer player) {
         if(!(player.getInternal() instanceof EntityPlayerMP))
             return null;
         return new MCWorldProvider(provider.getRespawnDimension((EntityPlayerMP) player.getInternal()));

@@ -1,7 +1,7 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -11,14 +11,14 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerLoggedInEvent {
     
-    private final IEntityPlayer player;
+    private final IPlayer player;
     
-    public PlayerLoggedInEvent(IEntityPlayer player) {
+    public PlayerLoggedInEvent(IPlayer player) {
         this.player = player;
     }
     
     @ZenGetter("player")
-    public IEntityPlayer getPlayer() {
+    public IPlayer getPlayer() {
         return player;
     }
 }

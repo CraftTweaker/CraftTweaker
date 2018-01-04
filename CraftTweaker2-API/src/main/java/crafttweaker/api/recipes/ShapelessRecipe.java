@@ -1,7 +1,7 @@
 package crafttweaker.api.recipes;
 
 import crafttweaker.api.item.*;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 
 import java.util.*;
 
@@ -114,7 +114,7 @@ public class ShapelessRecipe implements ICraftingRecipe {
     }
     
     @Override
-    public void applyTransformers(ICraftingInventory inventory, IEntityPlayer byPlayer) {
+    public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
         RecipeMatching matching = matchShapeless(ingredients, inventory);
         
         for(int i = 0; i < ingredients.length; i++) {

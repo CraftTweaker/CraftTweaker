@@ -24,7 +24,7 @@ public class MCServer extends AbstractServer {
         this.server = server;
     }
 
-    private static IPlayer getPlayer(ICommandSender commandSender) {
+    private static IUser getPlayer(ICommandSender commandSender) {
         if(commandSender instanceof EntityPlayer) {
             return CraftTweakerMC.getIPlayer((EntityPlayer) commandSender);
         } else if(commandSender instanceof RConConsoleSource) {
@@ -43,7 +43,7 @@ public class MCServer extends AbstractServer {
 
     @SuppressWarnings("MethodCallSideOnly")
     @Override
-    public boolean isOp(IEntityPlayer player) {
+    public boolean isOp(IPlayer player) {
         if(player == ServerPlayer.INSTANCE)
             return true;
     

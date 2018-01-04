@@ -1,6 +1,6 @@
 package crafttweaker.api.recipes;
 
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IWorld;
 
 /**
@@ -22,7 +22,7 @@ public class CraftingInfo implements ICraftingInfo {
     }
     
     @Override
-    public IEntityPlayer getPlayer() {
+    public IPlayer getPlayer() {
         return inventory.getPlayer();
     }
     

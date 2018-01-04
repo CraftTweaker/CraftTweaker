@@ -2,7 +2,7 @@ package crafttweaker.api.server;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.event.*;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.*;
 
@@ -14,7 +14,7 @@ import stanhebben.zenscript.annotations.*;
 public interface IServer {
 
     @ZenMethod
-    boolean isOp(IEntityPlayer player);
+    boolean isOp(IPlayer player);
     
     @ZenMethod
     IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);

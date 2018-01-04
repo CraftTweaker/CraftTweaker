@@ -2,7 +2,7 @@ package crafttweaker.api.recipes;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -28,7 +28,7 @@ public interface ICraftingRecipe {
     boolean hasTransformers();
     
 	@ZenMethod
-    void applyTransformers(ICraftingInventory inventory, IEntityPlayer byPlayer);
+    void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
     
 	@ZenMethod
 	@ZenGetter("commandString")

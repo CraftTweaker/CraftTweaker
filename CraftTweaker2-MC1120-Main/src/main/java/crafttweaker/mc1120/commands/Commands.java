@@ -13,7 +13,7 @@ import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
-import crafttweaker.mc1120.player.MCEntityPlayer;
+import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -199,7 +199,7 @@ public class Commands {
                     sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
                     
                 } else if(args[0].equals("hand") && sender.getCommandSenderEntity() instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) sender.getCommandSenderEntity());
+                    MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     IItemStack item = player.getCurrentItem();
                     if(item != null) {
                         List<ICraftingRecipe> recipes = CraftTweakerAPI.recipes.getRecipesFor(item.anyAmount());
@@ -267,7 +267,7 @@ public class Commands {
                 Entity entity = sender.getCommandSenderEntity();
                 
                 if(entity instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) entity);
+                    MCPlayer player = new MCPlayer((EntityPlayer) entity);
                     
                     for(int i = 0; i < player.getInventorySize(); i++) {
                         IItemStack stack = player.getInventoryStack(i);
@@ -459,7 +459,7 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) sender.getCommandSenderEntity());
+                    MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/");
                     sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
                 } else {
@@ -477,7 +477,7 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) sender.getCommandSenderEntity());
+                    MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues");
                     sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
                     
@@ -496,7 +496,7 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) sender.getCommandSenderEntity());
+                    MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("https://discord.gg/3VBK9ar");
                     sender.sendMessage(getClickableBrowserLinkText("https://discord.gg/3VBK9ar", "https://discord.gg/3VBK9ar"));
                     
@@ -515,7 +515,7 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) sender.getCommandSenderEntity());
+                    MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     player.openBrowser("http://crafttweaker.readthedocs.io/en/latest/");
                     sender.sendMessage(getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
                     
@@ -554,7 +554,7 @@ public class Commands {
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
-                    MCEntityPlayer player = new MCEntityPlayer((EntityPlayer) sender.getCommandSenderEntity());
+                    MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
                     
                     if(blockInfoPlayers.isEmpty()) {
                         blockEventHandler = events.onPlayerInteract(LISTEN_BLOCK_INFO);

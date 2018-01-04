@@ -2,7 +2,7 @@ package crafttweaker.api.block;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -87,7 +87,7 @@ public interface IBlockState {
     int getPackedLightMapCoords(IWorld world, IBlockPos pos);
     
     @ZenMethod
-    float getPlayerRelativeBlockHardness(IEntityPlayer player, IWorld world, IBlockPos pos);
+    float getPlayerRelativeBlockHardness(IPlayer player, IWorld world, IBlockPos pos);
     
     //@ZenMethod
     //IAxisAlignedBB getSelectedBoundingBox(IWorld world, IBlockPos pos);
