@@ -16,21 +16,18 @@ import java.util.stream.Collectors;
 
 @BracketHandler
 @ZenRegister
-public class BracketHandlerCreativetab implements IBracketHandler {
+public class BracketHandlerCreativeTab implements IBracketHandler {
     
     private final IJavaMethod method;
     
-    public BracketHandlerCreativetab() {
-        method = CraftTweakerAPI.getJavaMethod(BracketHandlerCreativetab.class, "getTabFromString", String.class);
+    public BracketHandlerCreativeTab() {
+        method = CraftTweakerAPI.getJavaMethod(BracketHandlerCreativeTab.class, "getTabFromString", String.class);
     }
     
     public static ICreativeTab getTabFromString(String name) {
-        for(ICreativeTab tab : CraftTweakerMC.creativeTabs) {
-            if(tab.getTabLabel().equalsIgnoreCase(name))
-                return tab;
-        }
-        CraftTweakerAPI.logError("Couldn't find creative tab with name " + name);
-        return null;
+        ICreativeTab tab = CraftTweakerMC.creativeTabs.get(name);
+        if (tab == null) CraftTweakerAPI.logError("Couldn't find creative tab with name " + name);
+        return tab;
     }
     
     @Override

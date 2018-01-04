@@ -3,24 +3,22 @@ package crafttweaker.mc1120.creativetabs;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class MCCreativeTab implements ICreativeTab {
     
     public final CreativeTabs tab;
+    private final String label;
     
-    public MCCreativeTab(CreativeTabs tab) {
+    public MCCreativeTab(CreativeTabs tab, String label) {
         this.tab = tab;
+        this.label = label;
     }
     
-    @Override
-    public boolean drawInForegroundOfTab() {
-        return tab.drawInForegroundOfTab();
-    }
-    
-    @Override
-    public String getBackgroundImageName() {
-        return tab.getBackgroundImageName();
+    public static ICreativeTab getICreativeTab(CreativeTabs tab) {
+        return CraftTweakerMC.creativeTabs.values().stream().filter(ta -> ta.getInternal().equals(tab)).findFirst().orElse(null);
     }
     
     @Override
@@ -28,10 +26,6 @@ public class MCCreativeTab implements ICreativeTab {
         tab.setBackgroundImageName(backgroundImage);
     }
     
-    @Override
-    public IItemStack getIconItemStack() {
-        return CraftTweakerMC.getIItemStack(tab.getIconItemStack());
-    }
     
     @Override
     public int getSearchBarWidth() {
@@ -39,48 +33,8 @@ public class MCCreativeTab implements ICreativeTab {
     }
     
     @Override
-    public int getTabColumn() {
-        return tab.getTabColumn();
-    }
-    
-    @Override
-    public IItemStack getTabIconItem() {
-        return CraftTweakerMC.getIItemStack(tab.getTabIconItem());
-    }
-    
-    @Override
-    public int getTabIndex() {
-        return tab.getTabIndex();
-    }
-    
-    @Override
     public String getTabLabel() {
-        return tab.getTabLabel();
-    }
-    
-    @Override
-    public int getTabPage() {
-        return tab.getTabPage();
-    }
-    
-    @Override
-    public String getTranslatedTabLabel() {
-        return tab.getTranslatedTabLabel();
-    }
-    
-    @Override
-    public boolean hasSearchBar() {
-        return tab.hasSearchBar();
-    }
-    
-    @Override
-    public boolean isAlighnedRight() {
-        return tab.isAlignedRight();
-    }
-    
-    @Override
-    public boolean isTabInFirstRow() {
-        return tab.isTabInFirstRow();
+        return label;
     }
     
     @Override
@@ -94,12 +48,7 @@ public class MCCreativeTab implements ICreativeTab {
     }
     
     @Override
-    public boolean shouldHidePlayerInventory() {
-        return tab.shouldHidePlayerInventory();
-    }
-    
-    @Override
-    public Object getInternal() {
+    public CreativeTabs getInternal() {
         return tab;
     }
     

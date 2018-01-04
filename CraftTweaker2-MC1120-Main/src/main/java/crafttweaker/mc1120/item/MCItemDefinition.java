@@ -74,7 +74,7 @@ public class MCItemDefinition implements IItemDefinition {
     
     @Override
     public ICreativeTab getCreativeTab() {
-        return new MCCreativeTab(item.getCreativeTab());
+        return MCCreativeTab.getICreativeTab(item.getCreativeTab());
     }
     
     @Override
@@ -87,7 +87,7 @@ public class MCItemDefinition implements IItemDefinition {
         CreativeTabs[] mcTabs = item.getCreativeTabs();
         ICreativeTab[] output = new ICreativeTab[mcTabs.length];
         for(int i = 0; i < output.length; i++) {
-            output[i] = new MCCreativeTab(mcTabs[i]);
+            output[i] = MCCreativeTab.getICreativeTab(mcTabs[i]);
         }
         return output;
     }

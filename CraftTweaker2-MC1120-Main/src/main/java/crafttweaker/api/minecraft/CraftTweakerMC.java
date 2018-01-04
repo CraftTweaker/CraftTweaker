@@ -27,6 +27,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -39,7 +40,7 @@ import java.util.*;
 public class CraftTweakerMC {
     
     public static final IBiome[] biomes;
-    public static final ICreativeTab[] creativeTabs;
+    public static final Map<String, ICreativeTab> creativeTabs = new HashMap<>();
     private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<>();
     private static final HashMap<List, IOreDictEntry> oreDictArrays = new HashMap<>();
     static {
@@ -49,13 +50,15 @@ public class CraftTweakerMC {
                 biomes[i] = new MCBiome(Biome.REGISTRY.getObjectById(i));
         }
         
-        creativeTabs = new ICreativeTab[CreativeTabs.CREATIVE_TAB_ARRAY.length];
-        for(int i = 0; i < creativeTabs.length; i++) {
-            creativeTabs[i] = new MCCreativeTab(CreativeTabs.CREATIVE_TAB_ARRAY[i]);
+        for(CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY) {
+            String label;
+            label = ReflectionHelper.getPrivateValue(CreativeTabs.class, tab, "tabLabel", "field_78034_o");
+            creativeTabs.put(label, new MCCreativeTab(tab, label));
         }
     }
     
     private CraftTweakerMC() {
+    
     }
     
     /**
