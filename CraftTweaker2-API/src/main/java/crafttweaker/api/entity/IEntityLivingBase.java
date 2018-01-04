@@ -12,47 +12,44 @@ import java.util.List;
 @ZenClass("crafttweaker.entity.IEntityLivingBase")
 @ZenRegister
 public interface IEntityLivingBase extends IEntity {
-    @ZenMethod
+    
+    @ZenGetter
     boolean canBreatheUnderwater();
-
+    
     @ZenMethod
     boolean isPotionActive(IPotion potion);
-
-    @ZenMethod
+    
     @ZenGetter("health")
     float getHealth();
-
-    @ZenMethod
+    
     @ZenSetter("health")
     void setHealth(float amount);
-
-    @ZenMethod
+    
+    @ZenGetter
     boolean isChild();
-
+    
     @ZenMethod
     void clearActivePotions();
-
-    @ZenMethod
+    
+    @ZenGetter
     boolean isUndead();
-
+    
     @ZenMethod
     void heal(float amount);
-
-    @ZenMethod
+    
     @ZenGetter("maxHealth")
     float getMaxHealth();
-
-    @ZenMethod
+    
     @ZenGetter("mainHandHeldItem")
     IItemStack getHeldItemMainHand();
-
+    
     @ZenMethod
     @ZenGetter("offHandHeldItem")
     IItemStack getHeldItemOffHand();
-
+    
     @ZenMethod
     IEntityAttributeInstance getAttribute(String name);
-
+    
     /* TODO: When Adding New Objects from ContentTweaker
      * void addPotion(IPotion potion);
      *

@@ -41,6 +41,9 @@ public interface IEntity extends ICommandSender {
     @ZenMethod
     int getDimension();
     
+    @ZenSetter("dimension")
+    void setDimension(int dimensionID);
+    
     /**
      * Retrieves the x position of this entity.
      *
@@ -85,7 +88,7 @@ public interface IEntity extends ICommandSender {
      */
     @ZenMethod
     @ZenSetter("position")
-    void setPosition(IPosition3f position);
+    void setPosition(IBlockPos position);
     
     /**
      * Set an entity to dead, will be removed during the next tick.
@@ -191,20 +194,13 @@ public interface IEntity extends ICommandSender {
     Object getInternal();
     
     @ZenMethod
-    boolean canTrample(IWorld world, IBlock block, IBlockPos pos, float fall);
-    
-    @ZenMethod
-    @ZenGetter("blockPos")
-    IBlockPos getBlockPos();
+    boolean canTrample(IWorld world, IBlockDefinition block, IBlockPos pos, float fall);
     
     @ZenMethod
     void onEntityUpdate();
     
     @ZenMethod
     void onUpdate();
-    
-    @ZenMethod
-    void performHurtAnimation();
     
     @ZenGetter
     boolean isSprinting();
@@ -239,11 +235,11 @@ public interface IEntity extends ICommandSender {
     @ZenGetter("maxInPortalTime")
     int getMaxInPortalTime();
     
-    @ZenGetter("portalCooldown")
-    int getPortalCooldown();
-    
     //@ZenMethod
     //void playSound(ISoundEvent sound, float arg1, float arg2);
+    
+    @ZenGetter("portalCooldown")
+    int getPortalCooldown();
     
     @ZenGetter
     boolean isSilent();
@@ -254,9 +250,6 @@ public interface IEntity extends ICommandSender {
     @ZenGetter
     boolean hasNoGravity();
     
-    @ZenSetter("hasNoGravity")
-    void setNoGravity(boolean noGravity);
-    
     //@ZenGetter("collisionBoundingBox")
     //IAxisAlignedBB getCollisionBoundingBox();
     
@@ -265,6 +258,9 @@ public interface IEntity extends ICommandSender {
     
     //@ZenSetter("entityBoundingBox")
     //void setEntityBoundingBox(IAxisAlignedBB boundingBox);
+    
+    @ZenSetter("hasNoGravity")
+    void setNoGravity(boolean noGravity);
     
     @ZenGetter
     boolean isInWater();
@@ -290,7 +286,6 @@ public interface IEntity extends ICommandSender {
     @ZenGetter
     boolean canBePushed();
     
-    @ZenCaster
     @ZenMethod
     IData getNBT();
     
@@ -333,11 +328,11 @@ public interface IEntity extends ICommandSender {
     @ZenGetter
     boolean isInvisible();
     
-    @ZenSetter("isInvisible")
-    void setInvisible(boolean invisible);
-    
     //@ZenGetter("team")
     //ITeam getTeam();
+    
+    @ZenSetter("isInvisible")
+    void setInvisible(boolean invisible);
     
     @ZenMethod
     boolean isOnSameTeam(IEntity other);
@@ -366,9 +361,6 @@ public interface IEntity extends ICommandSender {
     @ZenMethod
     void setToLocationFrom(IEntity other);
     
-    @ZenMethod
-    IEntity changeDimension(int dimensionID);
-    
     @ZenGetter
     boolean isBoss();
     
@@ -396,7 +388,7 @@ public interface IEntity extends ICommandSender {
     @ZenGetter
     boolean isOutsideBorder();
     
-    @ZenSetter("outsideBorder")
+    @ZenSetter("isOutsideBorder")
     void setOutsideBorder(boolean outsideBorder);
     
     @ZenGetter

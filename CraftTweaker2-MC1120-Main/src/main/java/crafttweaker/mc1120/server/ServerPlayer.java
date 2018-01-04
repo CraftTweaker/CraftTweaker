@@ -1,7 +1,6 @@
 package crafttweaker.mc1120.server;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
@@ -41,9 +40,5 @@ public class ServerPlayer implements IUser {
     
     @Override
     public void sendMessage(String text) {
-    }
-    
-    @Override
-    public void sendMessage(IFormattedText text) {
     }
 }

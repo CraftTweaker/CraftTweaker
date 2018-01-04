@@ -1,6 +1,5 @@
 package crafttweaker.mc1120.player;
 
-import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
@@ -45,8 +44,4 @@ public class CommandBlockPlayer implements IUser {
         sender.sendMessage(new TextComponentString(text));
     }
     
-    @Override
-    public void sendMessage(IFormattedText text) {
-        sendMessage(text.getText());
-    }
 }

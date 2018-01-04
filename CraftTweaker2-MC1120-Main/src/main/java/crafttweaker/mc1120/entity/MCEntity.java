@@ -41,6 +41,11 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
+    public void setDimension(int dimensionID) {
+        entity = entity.changeDimension(dimensionID);
+    }
+    
+    @Override
     public double getX() {
         return entity.posX;
     }
@@ -61,7 +66,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
-    public void setPosition(IPosition3f position) {
+    public void setPosition(IBlockPos position) {
         entity.setPosition(position.getX(), position.getY(), position.getZ());
     }
     
@@ -141,8 +146,8 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
-    public boolean canTrample(IWorld world, IBlock block, IBlockPos pos, float fall) {
-        return entity.canTrample((World) world.getInternal(), (Block) block.getDefinition().getInternal(), (BlockPos) pos.getInternal(), fall);
+    public boolean canTrample(IWorld world, IBlockDefinition block, IBlockPos pos, float fall) {
+        return entity.canTrample((World) world.getInternal(), (Block) block.getInternal(), (BlockPos) pos.getInternal(), fall);
     }
     
     @Override
@@ -168,12 +173,6 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public void setToLocationFrom(IEntity other) {
         entity.copyLocationAndAnglesFrom((Entity) other.getInternal());
-    }
-    
-    @Override
-    public IEntity changeDimension(int dimensionID) {
-        Entity ret = entity.changeDimension(dimensionID);
-        return ret == null ? null : new MCEntity(ret);
     }
     
     @Override
@@ -296,11 +295,6 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public void setWorld(IWorld world) {
         entity.setWorld((World) world.getInternal());
-    }
-    
-    @Override
-    public IBlockPos getBlockPos() {
-        return new MCBlockPos(entity.getPosition());
     }
     
     @Override

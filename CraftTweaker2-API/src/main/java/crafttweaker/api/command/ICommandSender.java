@@ -1,7 +1,6 @@
 package crafttweaker.api.command;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
@@ -24,7 +23,4 @@ public interface ICommandSender {
     
     @ZenMethod
     void sendMessage(String text);
-    
-    @ZenMethod
-    void sendMessage(IFormattedText text);
 }
