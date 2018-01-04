@@ -2,7 +2,7 @@ package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.liquid.ILiquidStack;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -181,7 +181,7 @@ public interface IIngredient {
      * @return transformed item
      */
     @ZenMethod
-    IItemStack applyTransform(IItemStack item, IPlayer byPlayer);
+    IItemStack applyTransform(IItemStack item, IEntityPlayer byPlayer);
     
     /**
      * Checks if this ingredient has (or could have) any transformatiosns.

@@ -1,7 +1,7 @@
 package crafttweaker.mc1120.server;
 
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.*;
 import crafttweaker.api.server.AbstractServer;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.player.CommandBlockPlayer;
@@ -43,7 +43,7 @@ public class MCServer extends AbstractServer {
 
     @SuppressWarnings("MethodCallSideOnly")
     @Override
-    public boolean isOp(IPlayer player) {
+    public boolean isOp(IEntityPlayer player) {
         if(player == ServerPlayer.INSTANCE)
             return true;
     

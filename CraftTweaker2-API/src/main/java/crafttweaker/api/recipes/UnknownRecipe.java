@@ -1,7 +1,7 @@
 package crafttweaker.api.recipes;
 
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 
 /**
  * @author Stan
@@ -30,7 +30,7 @@ public class UnknownRecipe implements ICraftingRecipe {
     }
     
     @Override
-    public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
+    public void applyTransformers(ICraftingInventory inventory, IEntityPlayer byPlayer) {
         
     }
     

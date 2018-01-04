@@ -87,6 +87,7 @@ public interface IDamageSource {
 	
 	@ZenMethod
 	IDamageSource setProjectile();
-	
-	
+    
+    
+    Object getInternal();
 }

@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.logger;
 
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.runtime.ILogger;
 import net.minecraftforge.fml.common.*;
 
@@ -73,7 +73,7 @@ public class MCLogger implements ILogger {
     }
     
     @Override
-    public void logPlayer(IPlayer player) {
+    public void logPlayer(IEntityPlayer player) {
         //no-op
     }
     

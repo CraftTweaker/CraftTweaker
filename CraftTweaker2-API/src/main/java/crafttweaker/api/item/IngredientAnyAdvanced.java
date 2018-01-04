@@ -1,7 +1,7 @@
 package crafttweaker.api.item;
 
 import crafttweaker.api.liquid.ILiquidStack;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.util.ArrayUtil;
 
 import java.util.List;
@@ -111,7 +111,7 @@ public class IngredientAnyAdvanced implements IIngredient {
     }
     
     @Override
-    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
+    public IItemStack applyTransform(IItemStack item, IEntityPlayer byPlayer) {
         for(IItemTransformer transform : transformers) {
             item = transform.transform(item, byPlayer);
         }

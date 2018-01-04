@@ -22,7 +22,7 @@ public class MCFoodStats implements IFoodStats {
     }
     
     @Override
-    public void onUpdate(IPlayer player) {
+    public void onUpdate(IEntityPlayer player) {
         foodStats.onUpdate((EntityPlayer) player.getInternal());
     }
     

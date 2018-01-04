@@ -1,7 +1,7 @@
 package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.world.IWorldProvider")
@@ -55,7 +55,7 @@ public interface IWorldProvider {
     IBlockPos getRandomizedSpawnPoint();
     
     @ZenMethod
-    IWorldProvider getRespawnDimension(IPlayer player);
+    IWorldProvider getRespawnDimension(IEntityPlayer player);
     
     @ZenGetter("saveFolder")
     @ZenMethod

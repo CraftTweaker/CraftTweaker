@@ -1,7 +1,7 @@
 package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -25,5 +25,5 @@ public interface IItemTransformer {
      * @return output item
      */
     @ZenMethod
-    IItemStack transform(IItemStack item, IPlayer byPlayer);
+    IItemStack transform(IItemStack item, IEntityPlayer byPlayer);
 }

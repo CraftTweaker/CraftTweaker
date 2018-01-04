@@ -3,7 +3,7 @@ package crafttweaker.mc1120.block;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.api.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -145,7 +145,7 @@ public class MCBlockState implements crafttweaker.api.block.IBlockState {
     }
     
     @Override
-    public float getPlayerRelativeBlockHardness(IPlayer player, IWorld world, IBlockPos pos) {
+    public float getPlayerRelativeBlockHardness(IEntityPlayer player, IWorld world, IBlockPos pos) {
         if(!(player.getInternal() instanceof EntityPlayer))
             return 0;
         return blockState.getPlayerRelativeBlockHardness((EntityPlayer) player.getInternal(), (World) world.getInternal(), (BlockPos) pos.getInternal());

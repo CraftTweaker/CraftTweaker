@@ -2,7 +2,7 @@ package crafttweaker.api.recipes;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -21,7 +21,7 @@ public interface ICraftingInventory {
      * @return inventory player
      */
     @ZenGetter("player")
-    IPlayer getPlayer();
+    IEntityPlayer getPlayer();
     
     /**
      * Gets the size of this inventory.

@@ -26,5 +26,4 @@ public interface IBlock extends IBlockPattern {
     
     @ZenGetter("data")
     IData getTileData();
-    
 }

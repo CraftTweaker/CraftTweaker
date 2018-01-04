@@ -6,7 +6,7 @@ import crafttweaker.api.entity.*;
 import crafttweaker.api.event.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
@@ -14,9 +14,9 @@ import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
-import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.player.MCEntityPlayer;
 import crafttweaker.mc1120.recipes.MCCraftingInventory;
-import crafttweaker.mc1120.world.MCDimension;
+import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +84,7 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
-        IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
+        IEntityPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
         if(CraftTweaker.INSTANCE.recipes.hasTransformerRecipes()) {
             CraftTweaker.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(ev.craftMatrix, ev.player), iPlayer);
         }
@@ -95,12 +95,12 @@ public class CommonEventHandler {
                 if(rec.getRecipe() instanceof ShapedRecipe) {
                     ShapedRecipe r = (ShapedRecipe) rec.getRecipe();
                     if(r.getAction() != null) {
-                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.world)), new MCPlayer(ev.player));
+                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCEntityPlayer(ev.player));
                     }
                 } else if(rec.getRecipe() instanceof ShapelessRecipe) {
                     ShapelessRecipe r = (ShapelessRecipe) rec.getRecipe();
                     if(r.getAction() != null) {
-                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCDimension(ev.player.world)), new MCPlayer(ev.player));
+                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCEntityPlayer(ev.player));
                     }
                 }
             });
@@ -126,7 +126,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent ev) {
         if(!ev.getWorld().isRemote) {
-            PlayerInteractEvent event = new PlayerInteractEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getDimension(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
+            PlayerInteractEvent event = new PlayerInteractEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), new MCWorld(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
             if(CrafttweakerImplementationAPI.events.publishPlayerInteract(event))
                 ev.setCanceled(true);
         }
@@ -134,7 +134,7 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent ev) {
-        PlayerChangedDimensionEvent event = new PlayerChangedDimensionEvent(CraftTweakerMC.getIPlayer(ev.player), new MCDimension(DimensionManager.getWorld(ev.fromDim)), new MCDimension(DimensionManager.getWorld(ev.toDim)));
+        PlayerChangedDimensionEvent event = new PlayerChangedDimensionEvent(CraftTweakerMC.getIPlayer(ev.player), new MCWorld(DimensionManager.getWorld(ev.fromDim)), new MCWorld(DimensionManager.getWorld(ev.toDim)));
         CrafttweakerImplementationAPI.events.publishPlayerChangedDimension(event);
     }
     

@@ -3,7 +3,7 @@ package crafttweaker.mc1120.liquid;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.*;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.mc1120.data.NBTConverter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -182,7 +182,7 @@ public class MCLiquidStack implements ILiquidStack {
     }
 
     @Override
-    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
+    public IItemStack applyTransform(IItemStack item, IEntityPlayer byPlayer) {
         return item;
     }
 

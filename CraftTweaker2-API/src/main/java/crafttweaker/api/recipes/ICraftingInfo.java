@@ -1,8 +1,8 @@
 package crafttweaker.api.recipes;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.IDimension;
+import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -16,8 +16,11 @@ public interface ICraftingInfo {
     ICraftingInventory getInventory();
     
     @ZenGetter("player")
-    IPlayer getPlayer();
+    IEntityPlayer getPlayer();
     
-    @ZenGetter("dimension")
-    IDimension getDimension();
+    @ZenGetter("dimensionID")
+    int getDimension();
+    
+    @ZenGetter("world")
+    IWorld getWorld();
 }

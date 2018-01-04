@@ -1,7 +1,7 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -11,12 +11,12 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerSleepInBedEvent {
     
-    private final IPlayer player;
+    private final IEntityPlayer player;
     private final int x;
     private final int y;
     private final int z;
     
-    public PlayerSleepInBedEvent(IPlayer player, int x, int y, int z) {
+    public PlayerSleepInBedEvent(IEntityPlayer player, int x, int y, int z) {
         this.player = player;
         this.x = x;
         this.y = y;
@@ -24,7 +24,7 @@ public class PlayerSleepInBedEvent {
     }
     
     @ZenGetter("player")
-    public IPlayer getPlayer() {
+    public IEntityPlayer getPlayer() {
         return player;
     }
     

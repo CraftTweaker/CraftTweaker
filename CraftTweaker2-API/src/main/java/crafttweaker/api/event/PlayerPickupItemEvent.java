@@ -2,7 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -12,16 +12,16 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerPickupItemEvent {
     
-    private final IPlayer player;
+    private final IEntityPlayer player;
     private final IItemStack item;
     
-    public PlayerPickupItemEvent(IPlayer player, IItemStack item) {
+    public PlayerPickupItemEvent(IEntityPlayer player, IItemStack item) {
         this.player = player;
         this.item = item;
     }
     
     @ZenGetter("player")
-    public IPlayer getPlayer() {
+    public IEntityPlayer getPlayer() {
         return player;
     }
     

@@ -2,7 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -12,11 +12,11 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public class PlayerAttackEntityEvent implements IEventCancelable {
     
-    private final IPlayer player;
+    private final IEntityPlayer player;
     private final IEntity entity;
     private boolean canceled;
     
-    public PlayerAttackEntityEvent(IPlayer player, IEntity entity) {
+    public PlayerAttackEntityEvent(IEntityPlayer player, IEntity entity) {
         this.player = player;
         this.entity = entity;
         canceled = false;
@@ -33,7 +33,7 @@ public class PlayerAttackEntityEvent implements IEventCancelable {
     }
     
     @ZenGetter("player")
-    public IPlayer getPlayer() {
+    public IEntityPlayer getPlayer() {
         return player;
     }
     

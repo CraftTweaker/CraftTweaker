@@ -4,7 +4,7 @@ import crafttweaker.*;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import gnu.trove.set.TIntSet;
@@ -71,7 +71,7 @@ public final class MCRecipeManager implements IRecipeManager {
         return transformerRecipes.size() > 0;
     }
     
-    public void applyTransformations(ICraftingInventory inventory, IPlayer byPlayer) {
+    public void applyTransformations(ICraftingInventory inventory, IEntityPlayer byPlayer) {
         for(ICraftingRecipe recipe : transformerRecipes) {
             if(recipe.matches(inventory)) {
                 recipe.applyTransformers(inventory, byPlayer);

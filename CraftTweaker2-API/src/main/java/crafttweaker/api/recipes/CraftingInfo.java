@@ -1,7 +1,7 @@
 package crafttweaker.api.recipes;
 
-import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.IDimension;
+import crafttweaker.api.player.IEntityPlayer;
+import crafttweaker.api.world.IWorld;
 
 /**
  * @author Stan
@@ -9,11 +9,11 @@ import crafttweaker.api.world.IDimension;
 public class CraftingInfo implements ICraftingInfo {
     
     private final ICraftingInventory inventory;
-    private final IDimension dimension;
+    private final IWorld world;
     
-    public CraftingInfo(ICraftingInventory inventory, IDimension dimension) {
+    public CraftingInfo(ICraftingInventory inventory, IWorld world) {
         this.inventory = inventory;
-        this.dimension = dimension;
+        this.world = world;
     }
     
     @Override
@@ -22,12 +22,17 @@ public class CraftingInfo implements ICraftingInfo {
     }
     
     @Override
-    public IPlayer getPlayer() {
+    public IEntityPlayer getPlayer() {
         return inventory.getPlayer();
     }
     
     @Override
-    public IDimension getDimension() {
-        return dimension;
+    public int getDimension() {
+        return world.getDimension();
+    }
+    
+    @Override
+    public IWorld getWorld() {
+        return null;
     }
 }

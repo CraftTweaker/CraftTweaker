@@ -1,7 +1,7 @@
 package crafttweaker.api.item;
 
 import crafttweaker.api.liquid.ILiquidStack;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 
 import java.util.*;
 
@@ -90,7 +90,7 @@ public class IngredientUnknown implements IIngredient {
     }
     
     @Override
-    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
+    public IItemStack applyTransform(IItemStack item, IEntityPlayer byPlayer) {
         return item;
     }
     

@@ -5,7 +5,7 @@ import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.*;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.util.CraftTweakerHacks;
 import crafttweaker.util.ArrayUtil;
@@ -197,7 +197,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
-    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
+    public IItemStack applyTransform(IItemStack item, IEntityPlayer byPlayer) {
         return item;
     }
 

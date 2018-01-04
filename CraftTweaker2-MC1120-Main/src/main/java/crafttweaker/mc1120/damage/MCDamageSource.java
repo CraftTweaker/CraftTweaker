@@ -4,7 +4,7 @@ import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
-import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.player.MCEntityPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,14 +35,14 @@ public class MCDamageSource implements IDamageSource {
 	@Override
 	public IEntity getImmediateSource() {
 		Entity ent = source.getImmediateSource();
-		if (ent instanceof EntityPlayer) return new MCPlayer((EntityPlayer) ent);
+		if (ent instanceof EntityPlayer) return new MCEntityPlayer((EntityPlayer) ent);
 		if (ent instanceof EntityLivingBase) return new MCEntityLivingBase((EntityLivingBase) ent);
 		return new MCEntity(ent);
 	}
 	@Override
 	public IEntity getTrueSource() {
 		Entity ent = source.getTrueSource();
-		if (ent instanceof EntityPlayer) return new MCPlayer((EntityPlayer) ent);
+		if (ent instanceof EntityPlayer) return new MCEntityPlayer((EntityPlayer) ent);
 		if (ent instanceof EntityLivingBase) return new MCEntityLivingBase((EntityLivingBase) ent);
 		return new MCEntity(ent);
 	}
@@ -106,4 +106,9 @@ public class MCDamageSource implements IDamageSource {
 	public IDamageSource setProjectile() {
 		return new MCDamageSource(source.setProjectile());
 	}
+    
+    @Override
+    public Object getInternal() {
+        return source;
+    }
 }

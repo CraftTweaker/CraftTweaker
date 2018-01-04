@@ -1,7 +1,7 @@
 package crafttweaker.api.client;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -19,7 +19,7 @@ public interface IClient {
      * @return current player
      */
     @ZenGetter("player")
-    IPlayer getPlayer();
+    IEntityPlayer getPlayer();
     
     @ZenGetter("language")
     String getLanguage();

@@ -7,7 +7,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.IEntityPlayer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
@@ -15,7 +15,7 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
-import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.player.MCEntityPlayer;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,7 +23,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
-import net.minecraft.world.*;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
@@ -284,11 +284,11 @@ public class CraftTweakerMC {
      *
      * @return crafttweaker player
      */
-    public static IPlayer getIPlayer(EntityPlayer player) {
+    public static IEntityPlayer getIPlayer(EntityPlayer player) {
         if(player == null)
             return null;
         
-        return new MCPlayer(player);
+        return new MCEntityPlayer(player);
     }
     
     /**
@@ -298,15 +298,15 @@ public class CraftTweakerMC {
      *
      * @return minecraft player
      */
-    public static EntityPlayer getPlayer(IPlayer player) {
+    public static EntityPlayer getPlayer(IEntityPlayer player) {
         if(player == null)
             return null;
         
-        if(!(player instanceof MCPlayer)) {
+        if(!(player instanceof MCEntityPlayer)) {
             CraftTweakerAPI.logError("Invalid player: " + player);
         }
         
-        return ((MCPlayer) player).getInternal();
+        return ((MCEntityPlayer) player).getInternal();
     }
     
     /**
@@ -392,20 +392,6 @@ public class CraftTweakerMC {
             blockDefinitions.put(block, new MCBlockDefinition(block));
         }
         return blockDefinitions.get(block);
-    }
-    
-    /**
-     * Retrieves the dimension instance for a given world.
-     *
-     * @param world world
-     *
-     * @return dimension
-     */
-    public static IDimension getDimension(World world) {
-        if(world == null)
-            return null;
-        
-        return new MCDimension(world);
     }
     
     /**
