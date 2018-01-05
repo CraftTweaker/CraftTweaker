@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.block;
 
-import crafttweaker.api.block.IMaterial;
+import crafttweaker.api.block.*;
 import net.minecraft.block.material.Material;
 
 public class MCMaterial implements IMaterial {
@@ -27,8 +27,8 @@ public class MCMaterial implements IMaterial {
     }
     
     @Override
-    public String getMobilityFlag() {
-        return material.getMobilityFlag().name();
+    public IMobilityFlag getMobilityFlag() {
+        return new MCMobilityFlag(material.getMobilityFlag());
     }
     
     @Override

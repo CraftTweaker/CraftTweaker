@@ -63,8 +63,8 @@ public class MCBlockState implements crafttweaker.api.block.IBlockState {
     }
     
     @Override
-    public String getMobilityFlag() {
-        return blockState.getMobilityFlag().toString();
+    public IMobilityFlag getMobilityFlag() {
+        return new MCMobilityFlag(blockState.getMobilityFlag());
     }
     
     @Override

@@ -36,7 +36,7 @@ public interface IBlockState {
     
     @ZenMethod
     @ZenGetter("mobilityFlag")
-    String getMobilityFlag();
+    IMobilityFlag getMobilityFlag();
     
     @ZenMethod
     @ZenOperator(OperatorType.COMPARE)

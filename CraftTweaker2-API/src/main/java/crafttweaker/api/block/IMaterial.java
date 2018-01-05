@@ -21,7 +21,7 @@ public interface IMaterial {
     
     @ZenMethod
     @ZenGetter("mobilityFlag")
-    String getMobilityFlag();
+    IMobilityFlag getMobilityFlag();
     
     @ZenMethod
     @ZenGetter("liquid")
