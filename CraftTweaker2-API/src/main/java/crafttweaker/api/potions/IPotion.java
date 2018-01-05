@@ -1,11 +1,13 @@
 package crafttweaker.api.potions;
 
+import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
 
 @ZenClass("crafttweaker.potions.IPotion")
+@ZenRegister
 public interface IPotion {
     
     @ZenGetter("name")

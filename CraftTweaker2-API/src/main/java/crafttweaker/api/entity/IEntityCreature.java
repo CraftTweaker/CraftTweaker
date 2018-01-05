@@ -1,8 +1,10 @@
 package crafttweaker.api.entity;
 
+import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.entity.IEntityCreature")
+@ZenRegister
 public interface IEntityCreature extends IEntityLivingBase {
 
     @ZenGetter

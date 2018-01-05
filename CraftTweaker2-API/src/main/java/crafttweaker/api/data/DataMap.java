@@ -29,11 +29,13 @@ public class DataMap implements IData {
         }
         for(Map.Entry<String, IData> entry : otherMap.entrySet()) {
             if((result.containsKey(entry.getKey())) && (entry.getValue() instanceof DataMap) && (result.get(entry.getKey()) instanceof DataMap)) {
-            	result.put(entry.getKey(),result.get(entry.getKey()).add(entry.getValue()));
+                result.put(entry.getKey(), result.get(entry.getKey()).add(entry.getValue()));
+            } else if((result.containsKey(entry.getKey())) && (entry.getValue() instanceof DataList) && (result.get(entry.getKey()) instanceof DataList)) {
+                result.put(entry.getKey(), result.get(entry.getKey()).add(entry.getValue()));
             } else {
-            	result.put(entry.getKey(), entry.getValue());
+                result.put(entry.getKey(), entry.getValue());
             }
-        	
+            
         }
         
         return new DataMap(result, immutable);

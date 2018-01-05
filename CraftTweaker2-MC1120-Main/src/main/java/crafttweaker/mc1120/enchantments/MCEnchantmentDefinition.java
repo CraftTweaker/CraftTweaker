@@ -9,11 +9,11 @@ public class MCEnchantmentDefinition implements IEnchantmentDefinition {
     
     public final Enchantment enchantment;
     
-    MCEnchantmentDefinition(Enchantment enchantment) {
+    public MCEnchantmentDefinition(Enchantment enchantment) {
         this.enchantment = enchantment;
     }
     
-    MCEnchantmentDefinition(int id) {
+    public MCEnchantmentDefinition(int id) {
         this(Enchantment.getEnchantmentByID(id));
     }
     

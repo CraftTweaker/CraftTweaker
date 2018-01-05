@@ -10,6 +10,8 @@ import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.potions.MCPotionEfect;
 import net.minecraft.entity.*;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.*;
 import net.minecraft.util.DamageSource;
 
@@ -192,5 +194,21 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     @Override
     public void addPotionEffect(IPotionEffect potionEffect) {
         entityLivingBase.addPotionEffect((PotionEffect) potionEffect.getInternal());
+    }
+    
+    @Override
+    public void setItemToSlot(IEntityEquipmentSlot slot, IItemStack itemStack) {
+        entityLivingBase.setItemStackToSlot((EntityEquipmentSlot) slot.getInternal(), (ItemStack) itemStack.getInternal());
+    }
+    
+    @Override
+    public boolean hasItemInSlot(IEntityEquipmentSlot slot) {
+        return entityLivingBase.hasItemInSlot((EntityEquipmentSlot) slot.getInternal());
+    }
+    
+    @Override
+    public IItemStack getItemInSlot(IEntityEquipmentSlot slot) {
+        ItemStack stack = entityLivingBase.getItemStackFromSlot((EntityEquipmentSlot) slot.getInternal());
+        return null == null ? null : new MCItemStack(stack);
     }
 }

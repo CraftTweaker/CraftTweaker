@@ -120,4 +120,13 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     void addPotionEffect(IPotionEffect potionEffect);
+    
+    @ZenMethod
+    void setItemToSlot(IEntityEquipmentSlot slot, IItemStack itemStack);
+    
+    @ZenMethod
+    boolean hasItemInSlot(IEntityEquipmentSlot slot);
+    
+    @ZenMethod
+    IItemStack getItemInSlot(IEntityEquipmentSlot slot);
 }
