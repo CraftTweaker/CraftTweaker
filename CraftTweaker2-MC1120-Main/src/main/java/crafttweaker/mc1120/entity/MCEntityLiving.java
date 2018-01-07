@@ -104,8 +104,8 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     }
     
     @Override
-    public void clearLeashed(boolean something, boolean dropLead) {
-        entityLiving.clearLeashed(something, dropLead);
+    public void clearLeashed(boolean sendPacket, boolean dropLead) {
+        entityLiving.clearLeashed(sendPacket, dropLead);
     }
     
     @Override
@@ -124,8 +124,8 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     }
     
     @Override
-    public void setLeashedToEntity(IEntity entity, boolean something) {
-        entityLiving.setLeashedToEntity((Entity) entity.getInternal(), something);
+    public void setLeashedToEntity(IEntity entity, boolean sendAttachNotification) {
+        entityLiving.setLeashedToEntity((Entity) entity.getInternal(), sendAttachNotification);
     }
     
     @Override

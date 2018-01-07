@@ -63,8 +63,7 @@ public interface IEntityLiving extends IEntityLivingBase {
     boolean isNoDespawnRequired();
     
     @ZenMethod
-        //TODO what is something?
-    void clearLeashed(boolean something, boolean dropLead);
+    void clearLeashed(boolean sendPacket, boolean dropLead);
     
     @ZenMethod
     boolean canBeLeashedTo(IPlayer player);
@@ -76,8 +75,7 @@ public interface IEntityLiving extends IEntityLivingBase {
     IEntity getLeashedToEntity();
     
     @ZenMethod
-        //TODO what is something?
-    void setLeashedToEntity(IEntity entity, boolean something);
+    void setLeashedToEntity(IEntity entity, boolean sendAttachNotification);
     
     @ZenGetter
     boolean isAIDisabled();
