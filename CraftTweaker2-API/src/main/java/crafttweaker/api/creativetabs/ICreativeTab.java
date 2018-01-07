@@ -4,7 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.*;
 
-@ZenClass("crafttweaker.creative_tabs.ICreativeTab")
+@ZenClass("crafttweaker.creativetabs.ICreativeTab")
 @ZenRegister
 public interface ICreativeTab {
     

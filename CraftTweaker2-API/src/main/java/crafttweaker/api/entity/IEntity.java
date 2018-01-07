@@ -6,7 +6,7 @@ import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -78,7 +78,7 @@ public interface IEntity extends ICommandSender {
      */
     @ZenMethod
     @ZenGetter("position3f")
-    IPosition3f getPosition3f();
+    Position3f getPosition3f();
     
     /**
      * Sets the position of this entity. Instantly moves (teleports) the entity

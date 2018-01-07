@@ -6,7 +6,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
@@ -172,7 +172,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
 
     @Override
-    public void teleport(IPosition3f pos) {
+    public void teleport(Position3f pos) {
         player.setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 

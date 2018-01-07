@@ -2,7 +2,7 @@ package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.world.IWorld")
@@ -16,7 +16,7 @@ public interface IWorld {
     int getBrightness(int x, int y, int z);
     
     @ZenMethod
-    IBiome getBiome(IPosition3f position);
+    IBiome getBiome(Position3f position);
     
     @ZenMethod
     IBiome getBiome(IBlockPos position);

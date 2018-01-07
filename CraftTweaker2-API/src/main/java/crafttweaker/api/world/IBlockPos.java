@@ -1,7 +1,7 @@
 package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.ZenCaster;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -28,7 +28,7 @@ public interface IBlockPos {
 
 	@ZenCaster
 	@ZenMethod
-	IPosition3f asPosition3f();
+    Position3f asPosition3f();
 
 	Object getInternal();
 

@@ -5,7 +5,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -70,7 +70,7 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     void copyToClipboard(String value);
     
     @ZenMethod
-    void teleport(IPosition3f pos);
+    void teleport(Position3f pos);
 
     @ZenMethod
     @ZenGetter("score")

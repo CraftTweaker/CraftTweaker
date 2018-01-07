@@ -3,7 +3,7 @@ package crafttweaker.mc1120.world;
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
@@ -45,7 +45,7 @@ public class MCWorld implements IWorld {
     }
     
     @Override
-    public IBiome getBiome(IPosition3f position) {
+    public IBiome getBiome(Position3f position) {
     	return getBiome(position.asBlockPos());
     }
     
