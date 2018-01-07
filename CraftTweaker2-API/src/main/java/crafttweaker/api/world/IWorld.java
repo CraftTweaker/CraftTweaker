@@ -7,7 +7,7 @@ import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.world.IWorld")
 @ZenRegister
-public interface IWorld {
+public interface IWorld extends IBlockAccess {
     
     @ZenMethod
     int getBrightness(IBlockPos position);
@@ -66,9 +66,6 @@ public interface IWorld {
     @ZenGetter("worldType")
     @ZenMethod
     String getWorldType();
-    
-    @ZenMethod
-    IBlockState getBlockState(IBlockPos pos);
     
     @ZenMethod
     boolean setBlockState(IBlockState state, IBlockPos pos);
