@@ -50,14 +50,6 @@ public interface IEntityLivingBase extends IEntity {
     @ZenMethod
     IEntityAttributeInstance getAttribute(String name);
     
-    /* TODO: When Adding New Objects from ContentTweaker
-     * void addPotion(IPotion potion);
-     *
-     * void removePotion(IPotion potion);
-     *
-     * IItemStack getHeldItem(Hand hand);
-     */
-    
     @ZenGetter("revengeTarget")
     IEntityLivingBase getRevengeTarget();
     

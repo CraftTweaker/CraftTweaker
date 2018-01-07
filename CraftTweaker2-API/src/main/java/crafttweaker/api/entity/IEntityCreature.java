@@ -1,33 +1,34 @@
 package crafttweaker.api.entity;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.world.IBlockPos;
 import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.entity.IEntityCreature")
 @ZenRegister
-public interface IEntityCreature extends IEntityLivingBase {
+public interface IEntityCreature extends IEntityLiving {
 
     @ZenGetter
     boolean hasPath();
     
-    @ZenMethod
-    boolean canSee(IEntity entity);
-    
-    @ZenGetter("attackTarget")
-    IEntityLivingBase getAttackTarget();
-    
-    @ZenSetter("attackTarget")
-    void setAttackTarget();
-    
-    @ZenGetter("talkInterval")
-    int getTalkInterval();
+    @ZenGetter
+    boolean isWithinHomeDistance();
     
     @ZenMethod
-    void playLivingSound();
+    boolean isPositionWithinHomeDistance(IBlockPos pos);
     
-
+    @ZenMethod
+    void setHomePositionAndDistance(IBlockPos pos, int distance);
     
+    @ZenGetter("homePosition")
+    IBlockPos getHomePosition();
     
+    @ZenGetter("maximumHomeDistance")
+    float getMaximumHomeDistance();
     
+    @ZenMethod
+    void detachHome();
     
+    @ZenGetter
+    boolean hasHome();
 }
