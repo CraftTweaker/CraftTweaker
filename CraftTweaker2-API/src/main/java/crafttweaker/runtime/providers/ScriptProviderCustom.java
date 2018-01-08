@@ -81,7 +81,7 @@ public class ScriptProviderCustom implements IScriptProvider {
         }
         
         @Override
-        public InputStream open() throws IOException {
+        public InputStream open() {
             return new ByteArrayInputStream(current.content);
         }
     

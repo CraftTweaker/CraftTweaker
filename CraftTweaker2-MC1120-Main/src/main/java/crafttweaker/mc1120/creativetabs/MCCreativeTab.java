@@ -1,11 +1,8 @@
 package crafttweaker.mc1120.creativetabs;
 
 import crafttweaker.api.creativetabs.ICreativeTab;
-import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class MCCreativeTab implements ICreativeTab {
     

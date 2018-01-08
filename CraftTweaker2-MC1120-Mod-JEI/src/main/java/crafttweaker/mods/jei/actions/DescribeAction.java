@@ -31,7 +31,7 @@ public class DescribeAction implements IAction {
 	 * @param name Solely for the User output, should be a representation of stack 
 	 */
 	public DescribeAction(List<? extends IIngredient> stack, String[] description, String name) {
-		this.stack = stack.stream().map(item -> item.getInternal()).collect(Collectors.toList());
+		this.stack = stack.stream().map(IIngredient::getInternal).collect(Collectors.toList());
 		this.description = description;
 		this.name = name;
 	}
@@ -56,6 +56,6 @@ public class DescribeAction implements IAction {
 	
 	public boolean checkClasses() {
 		Class<?> clazz = stack.get(0).getClass();
-		return stack.stream().map(item -> item.getClass()).allMatch(i -> i == clazz);
+		return stack.stream().map(Object::getClass).allMatch(i -> i == clazz);
 	}
 }

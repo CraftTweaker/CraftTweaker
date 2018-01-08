@@ -42,9 +42,8 @@ public class NBTConverter implements IDataConverter<NBTBase> {
             case 8: // string
                 return new DataString(((NBTTagString) nbt).getString());
             case 9: { // list
-                List<IData> values = new ArrayList<>();
                 List<NBTBase> original = ((NBTTagList) nbt).tagList;
-                values.addAll(original.stream().map(value -> from(value, immutable)).collect(Collectors.toList()));
+                List<IData> values = new ArrayList<>(original.stream().map(value -> from(value, immutable)).collect(Collectors.toList()));
                 return new DataList(values, immutable);
             }
             case 10: { // compound

@@ -51,16 +51,9 @@ public final class MCRecipeManager implements IRecipeManager {
             return false;
         } else if(ingredient != null) {
             if(input instanceof ItemStack) {
-                if(((ItemStack) input).isEmpty()) {
-                    return false;
-                }
-                if(!ingredient.matches(getIItemStack((ItemStack) input))) {
-                    return false;
-                }
+                return !((ItemStack) input).isEmpty() && ingredient.matches(getIItemStack((ItemStack) input));
             } else if(input instanceof String) {
-                if(!ingredient.contains(getOreDict((String) input))) {
-                    return false;
-                }
+                return ingredient.contains(getOreDict((String) input));
             }
         }
         

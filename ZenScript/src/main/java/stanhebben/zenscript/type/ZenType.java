@@ -322,9 +322,7 @@ public abstract class ZenType {
         TypeExpansion expansion = environment.getExpansion(name);
         if(expansion != null) {
             ZenExpandCaster caster = expansion.getCaster(toType, environment);
-            if(caster != null) {
-                return true;
-            }
+            return caster != null;
         }
         
         return false;

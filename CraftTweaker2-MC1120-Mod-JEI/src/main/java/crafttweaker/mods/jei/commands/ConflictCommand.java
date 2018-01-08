@@ -325,9 +325,7 @@ public class ConflictCommand extends CraftTweakerCommand {
     
             // this == ItemStack.Empty
             if(inputOther.isEmpty() && inputThis.size() == 1) {
-                if(inputThis.get(0).isEmpty()) {
-                    return true;
-                }
+                return inputThis.get(0).isEmpty();
             }
             //endregion
             

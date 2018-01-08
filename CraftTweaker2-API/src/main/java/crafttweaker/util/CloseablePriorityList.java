@@ -68,7 +68,7 @@ public class CloseablePriorityList<T> implements Iterable<T> {
         }
         
         @Override
-        public void close() throws IOException {
+        public void close() {
             if(next != null) {
                 next.prev = prev;
             }

@@ -1,6 +1,5 @@
 package crafttweaker.mc1120.vanilla;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.vanilla.ISeedRegistry;

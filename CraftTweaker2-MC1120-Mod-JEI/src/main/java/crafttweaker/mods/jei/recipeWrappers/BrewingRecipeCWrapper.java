@@ -1,22 +1,16 @@
 package crafttweaker.mods.jei.recipeWrappers;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.mc1120.brewing.MultiBrewingRecipe;
-import crafttweaker.mc1120.brewing.VanillaBrewingPlus;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
-import mezz.jei.plugins.vanilla.VanillaPlugin;
 import mezz.jei.plugins.vanilla.brewing.BrewingRecipeWrapper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Tuple;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
 public class BrewingRecipeCWrapper extends BrewingRecipeWrapper  {

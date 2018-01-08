@@ -9,7 +9,7 @@ public interface IWorldInfo {
     
     @ZenMethod
     @ZenGetter("commandsAllowed")
-    public boolean isCommandsAllowed();
+    boolean isCommandsAllowed();
     
     @ZenMethod
     @ZenGetter("borderCenterX")

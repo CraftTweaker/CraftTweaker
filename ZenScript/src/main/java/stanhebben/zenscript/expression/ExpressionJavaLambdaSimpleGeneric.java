@@ -10,7 +10,6 @@ import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeAny;
 import stanhebben.zenscript.util.MethodOutput;
 import stanhebben.zenscript.util.ZenPosition;
 import stanhebben.zenscript.util.ZenTypeUtil;

@@ -1,7 +1,6 @@
 package crafttweaker.api.creativetabs;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.creativetabs.ICreativeTab")

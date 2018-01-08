@@ -7,9 +7,7 @@ import crafttweaker.util.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.definitions.ParsedGlobalValue;
 import stanhebben.zenscript.parser.ParseException;
-import stanhebben.zenscript.symbols.SymbolGlobalValue;
 
 import java.io.*;
 import java.util.*;

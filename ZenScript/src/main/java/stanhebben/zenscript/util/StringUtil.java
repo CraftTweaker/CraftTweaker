@@ -2,7 +2,6 @@ package stanhebben.zenscript.util;
 
 import stanhebben.zenscript.expression.Expression;
 import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
 
 import java.lang.annotation.Annotation;

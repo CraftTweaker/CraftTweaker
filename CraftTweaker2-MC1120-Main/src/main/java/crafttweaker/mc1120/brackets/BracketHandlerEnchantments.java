@@ -23,7 +23,7 @@ public class BracketHandlerEnchantments implements IBracketHandler {
     private final IJavaMethod method;
     
     public BracketHandlerEnchantments() {
-        Enchantment.REGISTRY.getKeys().stream().forEach(key -> enchantments.put(key.toString(), new MCEnchantmentDefinition(Enchantment.REGISTRY.getObject(key))));
+        Enchantment.REGISTRY.getKeys().forEach(key -> enchantments.put(key.toString(), new MCEnchantmentDefinition(Enchantment.REGISTRY.getObject(key))));
         method = CraftTweakerAPI.getJavaMethod(BracketHandlerEnchantments.class, "getEnchantment", String.class);
     }
     

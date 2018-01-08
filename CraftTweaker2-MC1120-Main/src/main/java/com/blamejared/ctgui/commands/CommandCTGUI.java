@@ -24,7 +24,7 @@ public class CommandCTGUI extends CommandBase {
     
     @Override
     public List<String> getAliases() {
-        return Arrays.asList(getName().toLowerCase());
+        return Collections.singletonList(getName().toLowerCase());
     }
     
     @Override
@@ -46,7 +46,7 @@ public class CommandCTGUI extends CommandBase {
     }
     
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         if(args.length == 0 || GuiRegistry.getID(args[0]) == Integer.MIN_VALUE) {
             sender.sendMessage(new TextComponentString("Invalid ID!"));
             return;

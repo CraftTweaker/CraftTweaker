@@ -36,8 +36,7 @@ public class MCOreDict implements IOreDict {
 
     @Override
     public Iterator<IOreDictEntry> iterator() {
-        return Arrays.asList(OreDictionary.getOreNames())
-                .stream()
+        return Arrays.stream(OreDictionary.getOreNames())
                 .map(CraftTweakerMC::getOreDict)
                 .iterator();
 

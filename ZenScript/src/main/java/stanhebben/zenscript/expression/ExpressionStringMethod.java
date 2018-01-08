@@ -30,12 +30,12 @@ public class ExpressionStringMethod extends Expression{
 	@Override
 	public void compile(boolean result, IEnvironmentMethod environment) {
 		source.compile(result, environment);
-		environment.getOutput().invokeVirtual(String.class, methodName, returnClass, new Class[]{});
+		environment.getOutput().invokeVirtual(String.class, methodName, returnClass);
 	}
 
 	private static Method getMethod(String name) {
 		try {
-			return String.class.getMethod(name, new Class[0]);
+			return String.class.getMethod(name);
 		} catch (NoSuchMethodException e) {
 			return null;
 		}

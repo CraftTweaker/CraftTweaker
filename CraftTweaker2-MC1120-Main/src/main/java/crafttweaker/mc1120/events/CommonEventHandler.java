@@ -38,7 +38,7 @@ import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 public class CommonEventHandler {
     
     @SubscribeEvent(priority = LOWEST)
-    public void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
+    public void registerRecipes(RegistryEvent.Register<IRecipe> ev) {
         CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
         BracketHandlerItem.rebuildItemRegistry();
         BracketHandlerLiquid.rebuildLiquidRegistry();

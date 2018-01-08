@@ -1,15 +1,9 @@
 package crafttweaker.mc1120.block;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
-import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;

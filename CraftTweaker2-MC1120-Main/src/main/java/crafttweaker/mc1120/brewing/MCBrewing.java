@@ -1,9 +1,7 @@
 package crafttweaker.mc1120.brewing;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
@@ -34,7 +32,7 @@ public class MCBrewing implements IBrewingManager{
 	
 	@Override
 	public void removeRecipe(IItemStack input, IItemStack ingredient) {
-		removedRecipes.add(new Tuple<IItemStack, IItemStack>(input, ingredient));
+		removedRecipes.add(new Tuple<>(input, ingredient));
 	}
 	
 	
