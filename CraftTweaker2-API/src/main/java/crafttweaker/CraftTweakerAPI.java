@@ -1,6 +1,6 @@
 package crafttweaker;
 
-import crafttweaker.annotations.BracketHandler;
+import crafttweaker.annotations.*;
 import crafttweaker.api.client.IClient;
 import crafttweaker.api.event.IEventManager;
 import crafttweaker.api.formatting.IFormatter;
@@ -18,7 +18,7 @@ import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.natives.*;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 import java.util.logging.*;
 
 /**
@@ -200,13 +200,16 @@ public class CraftTweakerAPI {
      * @param annotatedClass class that is annotated
      */
     public static void registerClass(Class annotatedClass) {
+        boolean registered = false;
         for(Annotation annotation : annotatedClass.getAnnotations()) {
             if(annotation instanceof ZenExpansion) {
                 GlobalRegistry.registerExpansion(annotatedClass);
+                registered = true;
             }
             
             if(annotation instanceof ZenClass) {
                 GlobalRegistry.registerNativeClass(annotatedClass);
+                registered = true;
             }
             if((annotation instanceof BracketHandler) && IBracketHandler.class.isAssignableFrom(annotatedClass)) {
                 try {
@@ -214,6 +217,21 @@ public class CraftTweakerAPI {
                     registerBracketHandler(bracketHandler);
                 } catch(InstantiationException | IllegalAccessException ex) {
                     Logger.getLogger(CraftTweakerAPI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                registered = true;
+            }
+        }
+        if(registered) {
+            for(Method method : annotatedClass.getDeclaredMethods()) {
+                if(!Modifier.isStatic(method.getModifiers()) || !Modifier.isPublic(method.getModifiers())) {
+                    continue;
+                }
+                if(method.isAnnotationPresent(OnRegister.class)) {
+                    try {
+                        method.invoke(null);
+                    } catch(IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
