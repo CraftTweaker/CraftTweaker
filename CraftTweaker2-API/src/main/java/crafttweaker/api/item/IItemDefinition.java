@@ -1,6 +1,7 @@
 package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.oredict.IOreDictEntry;
 import stanhebben.zenscript.annotations.*;
 
@@ -61,4 +62,33 @@ public interface IItemDefinition {
      */
     @ZenGetter("ores")
     List<IOreDictEntry> getOres();
+    
+    @ZenGetter("defaultInstance")
+    IItemStack getDefaultInstance();
+    
+    @ZenMethod
+    void setHarvestLevel(String type, int level);
+    
+    @ZenGetter("creativeTab")
+    ICreativeTab getCreativeTab();
+    
+    @ZenSetter("creativeTab")
+    void setCreativeTab(ICreativeTab tab);
+    
+    @ZenGetter("creativeTabs")
+    ICreativeTab[] getCreativeTabs();
+    
+    @ZenMethod
+    void setNoRepair();
+    
+    @ZenGetter("canItemEditBlocks")
+    boolean canItemEditBlocks();
+    
+    @ZenGetter("itemEnchantability")
+    int getItemEnchantability();
+    
+    @ZenMethod
+    void setContainerItem(IItemDefinition item);
+    
+    Object getInternal();
 }

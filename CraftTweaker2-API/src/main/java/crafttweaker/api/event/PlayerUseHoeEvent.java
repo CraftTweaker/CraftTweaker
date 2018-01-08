@@ -12,21 +12,21 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerUseHoeEvent")
 @ZenRegister
-public class PlayerUseHoeEvent {
+public class PlayerUseHoeEvent implements IEventCancelable {
     
     private final IPlayer player;
     private final IItemStack item;
-    private final IBlockGroup blocks;
+    private final IWorld world;
     private final int x;
     private final int y;
     private final int z;
     private boolean canceled;
     private boolean processed;
     
-    public PlayerUseHoeEvent(IPlayer player, IItemStack item, IBlockGroup blocks, int x, int y, int z) {
+    public PlayerUseHoeEvent(IPlayer player, IItemStack item, IWorld blocks, int x, int y, int z) {
         this.player = player;
         this.item = item;
-        this.blocks = blocks;
+        this.world = blocks;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -35,7 +35,7 @@ public class PlayerUseHoeEvent {
         processed = false;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
@@ -45,7 +45,7 @@ public class PlayerUseHoeEvent {
         processed = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }
@@ -65,9 +65,9 @@ public class PlayerUseHoeEvent {
         return item;
     }
     
-    @ZenGetter("blocks")
-    public IBlockGroup getBlocks() {
-        return blocks;
+    @ZenGetter("world")
+    public IWorld getBlocks() {
+        return world;
     }
     
     @ZenGetter("x")
@@ -86,12 +86,12 @@ public class PlayerUseHoeEvent {
     }
     
     @ZenGetter("dimension")
-    public IDimension getDimension() {
-        return blocks.getDimension();
+    public int getDimension() {
+        return world.getDimension();
     }
     
     @ZenGetter("block")
     public IBlock getBlock() {
-        return blocks.getBlock(x, y, z);
+        return world.getBlock(x, y, z);
     }
 }

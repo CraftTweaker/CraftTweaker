@@ -1,8 +1,11 @@
 package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import stanhebben.zenscript.annotations.*;
@@ -265,7 +268,9 @@ public interface IItemStack extends IIngredient {
     
     /**
      * Adds a display name to the Item, even if it already has nbt
+     *
      * @param name supports color codes with "§"
+     *
      * @return Item with new Name
      */
     @ZenMethod
@@ -273,10 +278,137 @@ public interface IItemStack extends IIngredient {
     
     /**
      * Adds a Lore to the Item, even if it already has nbt
+     *
      * @param lore supports color codes with "§"
+     *
      * @return Item with new Lore
      */
     @ZenMethod
     IItemStack withLore(String[] lore);
     
+    @ZenGetter("toolClasses")
+    List<String> getToolClasses();
+    
+    @ZenGetter("itemEnchantability")
+    int getItemEnchantability();
+    
+    /**
+     * Gets the item's container ItemStack.
+     * Use the IItemDefinition if you want to set it.
+     *
+     * @return
+     */
+    @ZenGetter("containerItem")
+    IItemStack getContainerItem();
+    
+    @ZenGetter("isBeaconPayment")
+    boolean isBeaconPayment();
+    
+    @ZenMethod
+    boolean canPlaceOn(IBlockDefinition block);
+    
+    @ZenMethod
+    boolean canDestroy(IBlockDefinition block);
+    
+    @ZenMethod
+    boolean canHarvestBlock(IBlockState block);
+    
+    /**
+     * Checks the NBT-Tag for the repairCost and returns it as int.
+     */
+    @ZenGetter("repairCost")
+    int getRepairCost();
+    
+    
+    /**
+     * Writes the repairCost to the NBT-Tag
+     *
+     * @param repairCost
+     */
+    @ZenSetter("repairCost")
+    void setRepairCost(int repairCost);
+    
+    @ZenGetter("canEditBlocks")
+    boolean canEditBlocks();
+    
+    @ZenGetter("isOnItemFrame")
+    boolean isOnItemFrame();
+    
+    @ZenGetter("isEnchanted")
+    boolean isItemEnchanted();
+    
+    @ZenGetter("isDamaged")
+    boolean isItemDamaged();
+    
+    @ZenGetter("isDamageable")
+    boolean isDamageable();
+    
+    @ZenGetter("isStackable")
+    boolean isStackable();
+    
+    @ZenMethod
+    void addEnchantment(IEnchantment enchantment);
+    
+    @ZenMethod
+    boolean canApplyAtEnchantingTable(IEnchantmentDefinition enchantment);
+    
+    @ZenGetter("enchantments")
+    List<IEnchantment> getEnchantments();
+    
+    @ZenGetter("isEnchantable")
+    boolean isItemEnchantable();
+    
+    @ZenGetter("hasEffect")
+    boolean hasEffect();
+    
+    @ZenGetter("hasDisplayName")
+    boolean hasDisplayName();
+    
+    @ZenMethod
+    void clearCustomName();
+    
+    @ZenGetter("hasTag")
+    boolean hasTag();
+    
+    @ZenMethod
+    void damageItem(int amount, IEntity entity);
+    
+    @ZenGetter("metadata")
+    int getMetadata();
+    
+    @ZenGetter("hasSubtypes")
+    boolean getHasSubtypes();
+    
+    @ZenMethod
+    float getStrengthAgainstBlock(IBlockState blockState);
+    
+    /**
+     * Splits the current itemStack and returns the new one.
+     *
+     * @param amount amount to split
+     *
+     * @return new IItemStack, the only being reduced by amount or with amount 0
+     */
+    @ZenMethod
+    IItemStack splitStack(int amount);
+    
+    /**
+     * Checks if the IItemStack either has an amount of 0 or represents the AIR item.
+     *
+     * @return
+     */
+    @ZenGetter("isEmpty")
+    boolean isEmpty();
+    
+    @ZenGetter("burnTime")
+    int getItemBurnTime();
+    
+    @ZenGetter("showsDurabilityBar")
+    boolean showsDurabilityBar();
+    
+    @ZenGetter("hasCustomEntity")
+    boolean hasCustomEntity();
+    
+    @ZenGetter("hasContainerItem")
+    boolean hasContainerItem();
 }

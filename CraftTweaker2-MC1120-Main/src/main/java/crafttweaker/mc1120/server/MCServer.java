@@ -1,7 +1,7 @@
 package crafttweaker.mc1120.server;
 
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.player.*;
 import crafttweaker.api.server.AbstractServer;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.player.CommandBlockPlayer;
@@ -24,7 +24,7 @@ public class MCServer extends AbstractServer {
         this.server = server;
     }
 
-    private static IPlayer getPlayer(ICommandSender commandSender) {
+    private static IUser getPlayer(ICommandSender commandSender) {
         if(commandSender instanceof EntityPlayer) {
             return CraftTweakerMC.getIPlayer((EntityPlayer) commandSender);
         } else if(commandSender instanceof RConConsoleSource) {

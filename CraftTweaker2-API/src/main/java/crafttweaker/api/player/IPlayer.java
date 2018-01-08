@@ -5,7 +5,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -13,11 +13,8 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.player.IPlayer")
 @ZenRegister
-public interface IPlayer extends IEntityLivingBase {
-    
-    @ZenGetter("id")
-    String getId();
-    
+public interface IPlayer extends IEntityLivingBase, IUser {
+
     @ZenGetter("name")
     String getName();
     
@@ -72,11 +69,8 @@ public interface IPlayer extends IEntityLivingBase {
     // not an exposed method, so far. would it be useful?
     void copyToClipboard(String value);
     
-    @ZenGetter("position")
-    IPosition3f getPosition();
-    
     @ZenMethod
-    void teleport(IPosition3f pos);
+    void teleport(Position3f pos);
 
     @ZenMethod
     @ZenGetter("score")
@@ -88,4 +82,7 @@ public interface IPlayer extends IEntityLivingBase {
     @ZenMethod
     @ZenSetter("score")
     void setScore(int amount);
+    
+    @ZenGetter("foodStats")
+    IFoodStats getFoodStats();
 }

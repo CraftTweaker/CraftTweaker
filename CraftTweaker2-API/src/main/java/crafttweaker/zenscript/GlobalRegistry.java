@@ -8,7 +8,6 @@ import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
-import stanhebben.zenscript.value.IAny;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -70,7 +69,7 @@ public class GlobalRegistry {
         bracketHandlers.add(handler);
     }
     
-    public static void removeBracketHandler(IBracketHandler handler){
+    public static void removeBracketHandler(IBracketHandler handler) {
         bracketHandlers.remove(handler);
     }
     

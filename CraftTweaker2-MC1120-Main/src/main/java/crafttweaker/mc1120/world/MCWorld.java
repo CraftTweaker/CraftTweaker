@@ -1,25 +1,21 @@
 package crafttweaker.mc1120.world;
 
-import crafttweaker.api.block.IBlock;
-import crafttweaker.api.block.IBlockState;
+import crafttweaker.api.block.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.util.IPosition3f;
-import crafttweaker.api.world.IBiome;
-import crafttweaker.api.world.IBlockPos;
-import crafttweaker.api.world.IWorld;
-import crafttweaker.api.world.IWorldInfo;
-import crafttweaker.mc1120.block.MCBlockState;
+import crafttweaker.api.util.Position3f;
+import crafttweaker.api.world.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
  * @author Stan
  */
-public class MCWorld implements IWorld {
+public class MCWorld extends MCBlockAccess implements IWorld {
 
     private final World world;
 
     public MCWorld(World world) {
+        super(world);
         this.world = world;
     }
 
@@ -44,7 +40,7 @@ public class MCWorld implements IWorld {
     }
     
     @Override
-    public IBiome getBiome(IPosition3f position) {
+    public IBiome getBiome(Position3f position) {
     	return getBiome(position.asBlockPos());
     }
     
@@ -107,14 +103,14 @@ public class MCWorld implements IWorld {
 	public Object getInternal() {
 		return world;
 	}
-
-	@Override
-	public IBlockState getBlockState(IBlockPos pos) {
-		return new MCBlockState(world.getBlockState((BlockPos)pos.getInternal()));
+    
+    @Override
+	public boolean setBlockState(IBlockState state, IBlockPos pos) {
+		return world.setBlockState((BlockPos)pos.getInternal(), (net.minecraft.block.state.IBlockState)state.getInternal());
 	}
 
 	@Override
-	public boolean setBlockState(IBlockState state, IBlockPos pos) {
-		return world.setBlockState((BlockPos)pos.getInternal(), (net.minecraft.block.state.IBlockState)state.getInternal());
+	public IWorldProvider getProvider() {
+		return new MCWorldProvider(world.provider);
 	}
 }

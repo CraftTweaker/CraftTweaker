@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
 
 @ZenClass("crafttweaker.util.Position3f")
 @ZenRegister
-public interface IPosition3f {
+public interface Position3f {
 	
 	@ZenGetter("x")
 	@ZenMethod

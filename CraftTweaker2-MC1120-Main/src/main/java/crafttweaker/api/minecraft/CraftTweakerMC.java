@@ -2,6 +2,7 @@ package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
+import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
@@ -9,6 +10,7 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
+import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
@@ -16,13 +18,16 @@ import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
-import net.minecraft.world.*;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -35,6 +40,7 @@ import java.util.*;
 public class CraftTweakerMC {
     
     public static final IBiome[] biomes;
+    public static final Map<String, ICreativeTab> creativeTabs = new HashMap<>();
     private static final Map<Block, MCBlockDefinition> blockDefinitions = new HashMap<>();
     private static final HashMap<List, IOreDictEntry> oreDictArrays = new HashMap<>();
     static {
@@ -43,9 +49,16 @@ public class CraftTweakerMC {
             if(Biome.REGISTRY.getObjectById(i) != null)
                 biomes[i] = new MCBiome(Biome.REGISTRY.getObjectById(i));
         }
+        
+        for(CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY) {
+            String label;
+            label = ReflectionHelper.getPrivateValue(CreativeTabs.class, tab, "tabLabel", "field_78034_o");
+            creativeTabs.put(label, new MCCreativeTab(tab, label));
+        }
     }
     
     private CraftTweakerMC() {
+    
     }
     
     /**
@@ -385,20 +398,6 @@ public class CraftTweakerMC {
     }
     
     /**
-     * Retrieves the dimension instance for a given world.
-     *
-     * @param world world
-     *
-     * @return dimension
-     */
-    public static IDimension getDimension(World world) {
-        if(world == null)
-            return null;
-        
-        return new MCDimension(world);
-    }
-    
-    /**
      * Returns an instance of the given block.
      *
      * @param block MC block definition
@@ -508,13 +507,17 @@ public class CraftTweakerMC {
         } else if(ingredient instanceof Ingredient) {
             ItemStack[] matchingStacks = ((Ingredient) ingredient).getMatchingStacks();
             
-            if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient)ingredient).apply(ItemStack.EMPTY)) {
+            if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient) ingredient).apply(ItemStack.EMPTY)) {
                 return null;
-            }else {
+            } else {
                 return getIItemStack(matchingStacks[0]);
             }
         } else {
             throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
         }
+    }
+    
+    public static IWorld getWorldByID(int id) {
+        return new MCWorld(DimensionManager.getWorld(id));
     }
 }

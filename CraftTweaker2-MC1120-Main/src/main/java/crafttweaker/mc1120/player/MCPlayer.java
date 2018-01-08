@@ -5,14 +5,13 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.player.*;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.network.MessageOpenBrowser;
-import crafttweaker.mc1120.util.Position3f;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,11 +34,6 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
 
     public EntityPlayer getInternal() {
         return player;
-    }
-
-    @Override
-    public String getId() {
-        return player.getUniqueID().toString();
     }
 
     @Override
@@ -154,23 +148,23 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     public void give(IItemStack stack) {
         ItemStack itemstack = CraftTweakerMC.getItemStack(stack).copy();
         boolean flag = player.inventory.addItemStackToInventory(itemstack);
-
-        if (flag) {
+    
+        if(flag) {
             player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
             player.inventoryContainer.detectAndSendChanges();
         }
-
-        if (flag && itemstack.isEmpty()) {
+    
+        if(flag && itemstack.isEmpty()) {
             itemstack.setCount(1);
             EntityItem entityitem1 = player.dropItem(itemstack, false);
-
-            if (entityitem1 != null) {
+        
+            if(entityitem1 != null) {
                 entityitem1.makeFakeItem();
             }
         } else {
             EntityItem entityitem = player.dropItem(itemstack, false);
-
-            if (entityitem != null) {
+        
+            if(entityitem != null) {
                 entityitem.setNoPickupDelay();
                 entityitem.setOwner(player.getName());
             }
@@ -178,27 +172,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
 
     @Override
-    public double getX() {
-        return player.posX;
-    }
-
-    @Override
-    public double getY() {
-        return player.posY;
-    }
-
-    @Override
-    public double getZ() {
-        return player.posZ;
-    }
-
-    @Override
-    public Position3f getPosition() {
-        return new Position3f((float) getX(), (float) getY(), (float) getZ());
-    }
-
-    @Override
-    public void teleport(IPosition3f pos) {
+    public void teleport(Position3f pos) {
         player.setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 
@@ -215,5 +189,10 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     @Override
     public void setScore(int amount) {
         player.setScore(amount);
+    }
+    
+    @Override
+    public IFoodStats getFoodStats() {
+        return new MCFoodStats(player.getFoodStats());
     }
 }

@@ -1,11 +1,13 @@
 package crafttweaker.api.entity;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.block.*;
+import crafttweaker.api.command.ICommandSender;
+import crafttweaker.api.damage.IDamageSource;
+import crafttweaker.api.data.IData;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.util.IPosition3f;
-import crafttweaker.api.world.IBlockPos;
-import crafttweaker.api.world.IDimension;
-import crafttweaker.api.world.IWorld;
+import crafttweaker.api.util.Position3f;
+import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -19,25 +21,28 @@ import java.util.List;
  */
 @ZenClass("crafttweaker.entity.IEntity")
 @ZenRegister
-public interface IEntity {
-	
-	/**
-	 * Retrieves the world this entity is in.
-	 * 
-	 * @return the current world of this entity 
-	 */
-	@ZenGetter("world")
-	@ZenMethod
-	IWorld getWorld();
+public interface IEntity extends ICommandSender {
     
     /**
-     * Retrieves the dimension this entity is in.
+     * Retrieves the world this entity is in.
+     *
+     * @return the current world of this entity
+     */
+    
+    @ZenSetter("world")
+    void setWorld(IWorld world);
+    
+    /**
+     * Retrieves the dimension id this entity is in.
      *
      * @return current dimension of this entity
      */
     @ZenGetter("dimension")
     @ZenMethod
-    IDimension getDimension();
+    int getDimension();
+    
+    @ZenSetter("dimension")
+    void setDimension(int dimensionID);
     
     /**
      * Retrieves the x position of this entity.
@@ -72,8 +77,8 @@ public interface IEntity {
      * @return entity position
      */
     @ZenMethod
-    @ZenGetter("position")
-    IPosition3f getPosition();
+    @ZenGetter("position3f")
+    Position3f getPosition3f();
     
     /**
      * Sets the position of this entity. Instantly moves (teleports) the entity
@@ -83,7 +88,7 @@ public interface IEntity {
      */
     @ZenMethod
     @ZenSetter("position")
-    void setPosition(IPosition3f position);
+    void setPosition(IBlockPos position);
     
     /**
      * Set an entity to dead, will be removed during the next tick.
@@ -168,35 +173,254 @@ public interface IEntity {
     @ZenMethod
     @ZenGetter("immuneToFire")
     boolean isImmuneToFire();
-
-    /**
-     * @param seconds amount of air in seconds to add.
-     */
-    @ZenMethod
-    @ZenSetter("air")
-    void setAir(int seconds);
-
+    
     /**
      * @return amount of air in seconds
      */
     @ZenMethod
     @ZenGetter("air")
     int getAir();
-
+    
+    /**
+     * @param seconds amount of air in seconds to add.
+     */
+    @ZenMethod
+    @ZenSetter("air")
+    void setAir(int seconds);
+    
     /**
      * @return The Actual Entity, MUST EXTEND ENTITY.
      */
     Object getInternal();
-
-    /*
-     * TODO: Add Methods as Adding Objects from ContentTweaker
-     * 
-     * boolean isInsideOfMaterial(IBlockMaterial blockMaterial)
-     *
-     * boolean canTrample(IBlock block, IBlockPos pos, float fall);
-     */
     
     @ZenMethod
-    @ZenGetter("blockPos")
-    IBlockPos getBlockPos();
+    boolean canTrample(IWorld world, IBlockDefinition block, IBlockPos pos, float fall);
+    
+    @ZenMethod
+    void onEntityUpdate();
+    
+    @ZenMethod
+    void onUpdate();
+    
+    @ZenGetter
+    boolean isSprinting();
+    
+    @ZenSetter("isSprinting")
+    void setSprinting(boolean sprinting);
+    
+    @ZenGetter
+    boolean isGlowing();
+    
+    @ZenSetter("isGlowing")
+    void setGlowing(boolean glowing);
+    
+    @ZenGetter("id")
+    int getID();
+    
+    @ZenSetter("id")
+    void setID(int id);
+    
+    @ZenGetter("tags")
+    List<String> getTags();
+    
+    @ZenMethod
+    void addTag(String tag);
+    
+    @ZenMethod
+    void removeTag(String tag);
+    
+    @ZenMethod
+    void onKillCommand();
+    
+    @ZenGetter("maxInPortalTime")
+    int getMaxInPortalTime();
+    
+    //@ZenMethod
+    //void playSound(ISoundEvent sound, float arg1, float arg2);
+    
+    @ZenGetter("portalCooldown")
+    int getPortalCooldown();
+    
+    @ZenGetter
+    boolean isSilent();
+    
+    @ZenSetter("isSilent")
+    void setSilent(boolean silent);
+    
+    @ZenGetter
+    boolean hasNoGravity();
+    
+    //@ZenGetter("collisionBoundingBox")
+    //IAxisAlignedBB getCollisionBoundingBox();
+    
+    //@ZenGetter("entityBoundingBox")
+    //IAxisAlignedBB getEnityBoundingBox();
+    
+    //@ZenSetter("entityBoundingBox")
+    //void setEntityBoundingBox(IAxisAlignedBB boundingBox);
+    
+    @ZenSetter("hasNoGravity")
+    void setNoGravity(boolean noGravity);
+    
+    @ZenGetter
+    boolean isInWater();
+    
+    @ZenGetter
+    boolean isOverWater();
+    
+    @ZenMethod
+    void spawnRunningParticles();
+    
+    @ZenMethod
+    boolean isInsideOfMaterial(IMaterial material);
+    
+    @ZenGetter
+    boolean isInLava();
+    
+    @ZenMethod
+    boolean attackEntityFrom(IDamageSource source, float amount);
+    
+    @ZenGetter
+    boolean canBeCollidedWith();
+    
+    @ZenGetter
+    boolean canBePushed();
+    
+    @ZenMethod
+    IData getNBT();
+    
+    @ZenMethod
+    IEntityItem dropItem(IItemStack itemStack, @Optional float offset);
+    
+    @ZenGetter
+    boolean isInsideOpaqueBlock();
+    
+    @ZenMethod
+    void removePassengers();
+    
+    @ZenMethod
+    void dismountRidingEntity();
+    
+    @ZenGetter("heldEquipment")
+    List<IItemStack> getHeldEquipment();
+    
+    @ZenGetter("armorInventory")
+    List<IItemStack> getArmorInventoryList();
+    
+    @ZenGetter("equipmentAndArmor")
+    List<IItemStack> getEquipmentAndArmor();
+    
+    @ZenGetter
+    boolean isBurning();
+    
+    @ZenGetter
+    boolean isRiding();
+    
+    @ZenGetter
+    boolean isBeingRidden();
+    
+    @ZenGetter
+    boolean isSneaking();
+    
+    @ZenSetter("isSneaking")
+    void setSneaking(boolean sneaking);
+    
+    @ZenGetter
+    boolean isInvisible();
+    
+    //@ZenGetter("team")
+    //ITeam getTeam();
+    
+    @ZenSetter("isInvisible")
+    void setInvisible(boolean invisible);
+    
+    @ZenMethod
+    boolean isOnSameTeam(IEntity other);
+    
+    @ZenMethod
+    void setInWeb();
+    
+    @ZenMethod("parts")
+    IEntity[] getParts();
+    
+    @ZenMethod
+    boolean isEntityEqual(IEntity other);
+    
+    @ZenGetter
+    boolean canBeAttackedWithItem();
+    
+    @ZenMethod
+    boolean isInvulnerableTo(IDamageSource source);
+    
+    @ZenGetter
+    boolean isInvulnerable();
+    
+    @ZenSetter("isInvulnerable")
+    void setInvulnerable(boolean invulnerable);
+    
+    @ZenMethod
+    void setToLocationFrom(IEntity other);
+    
+    @ZenGetter
+    boolean isBoss();
+    
+    @ZenGetter("maxFallHeight")
+    int getMaxFallHeight();
+    
+    @ZenGetter
+    boolean doesTriggerPressurePlate();
+    
+    @ZenGetter
+    boolean isPushedByWater();
+    
+    @ZenGetter
+    boolean hasCustomName();
+    
+    @ZenGetter("alwaysRenderNameTag")
+    boolean alwaysRenderNameTag();
+    
+    @ZenSetter("alwaysRenderNameTag")
+    void setAlwaysRenderNameTag(boolean alwaysRenderNameTag);
+    
+    @ZenGetter("eyeHeight")
+    float getEyeHight();
+    
+    @ZenGetter
+    boolean isOutsideBorder();
+    
+    @ZenSetter("isOutsideBorder")
+    void setOutsideBorder(boolean outsideBorder);
+    
+    @ZenGetter
+    boolean isImmuneToExplosions();
+    
+    @ZenGetter
+    boolean shouldRiderSit();
+    
+    @ZenGetter
+    boolean canRiderInteract();
+    
+    @ZenMethod
+    boolean shouldRiderDismountInWater(IEntity rider);
+    
+    @ZenGetter("controllingPassenger")
+    IEntity getControllingPassenger();
+    
+    @ZenMethod
+    boolean isPassenger(IEntity entity);
+    
+    @ZenGetter("passengersRecursive")
+    List<IEntity> getPassengersRecursive();
+    
+    @ZenGetter("lowestRidingEntity")
+    IEntity getLowestRidingEntity();
+    
+    @ZenMethod
+    boolean isRidingSameEntity(IEntity other);
+    
+    @ZenGetter
+    boolean canPassengerSteer();
+    
+    //@ZenGetter("soundCategory")
+    //ISoundCategory getSoundCategory();
 }

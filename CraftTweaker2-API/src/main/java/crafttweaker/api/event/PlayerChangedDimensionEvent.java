@@ -2,7 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.IDimension;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -13,10 +13,10 @@ import stanhebben.zenscript.annotations.*;
 public class PlayerChangedDimensionEvent {
     
     private final IPlayer player;
-    private final IDimension from;
-    private final IDimension to;
+    private final IWorld from;
+    private final IWorld to;
     
-    public PlayerChangedDimensionEvent(IPlayer player, IDimension from, IDimension to) {
+    public PlayerChangedDimensionEvent(IPlayer player, IWorld from, IWorld to) {
         this.player = player;
         this.from = from;
         this.to = to;
@@ -28,12 +28,22 @@ public class PlayerChangedDimensionEvent {
     }
     
     @ZenGetter("from")
-    public IDimension getFrom() {
-        return from;
+    public int getFrom() {
+        return from.getDimension();
     }
     
     @ZenGetter("to")
-    public IDimension getTo() {
+    public int getTo() {
+        return to.getDimension();
+    }
+    
+    @ZenGetter("fromWorld")
+    public IWorld getFromWorld() {
+        return from;
+    }
+    
+    @ZenGetter("toWorld")
+    public IWorld getToWorld() {
         return to;
     }
 }

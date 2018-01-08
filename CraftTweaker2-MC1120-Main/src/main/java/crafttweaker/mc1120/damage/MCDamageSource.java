@@ -106,4 +106,9 @@ public class MCDamageSource implements IDamageSource {
 	public IDamageSource setProjectile() {
 		return new MCDamageSource(source.setProjectile());
 	}
+    
+    @Override
+    public Object getInternal() {
+        return source;
+    }
 }

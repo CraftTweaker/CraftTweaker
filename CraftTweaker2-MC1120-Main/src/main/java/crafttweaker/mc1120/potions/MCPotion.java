@@ -1,7 +1,12 @@
 package crafttweaker.mc1120.potions;
 
-import crafttweaker.api.potions.IPotion;
-import net.minecraft.potion.Potion;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.potions.*;
+import crafttweaker.mc1120.item.MCItemStack;
+import net.minecraft.potion.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MCPotion implements IPotion {
     
@@ -29,6 +34,36 @@ public class MCPotion implements IPotion {
     @Override
     public int getLiquidColour() {
         return potion.getLiquidColor();
+    }
+    
+    @Override
+    public IPotionEffect makePotionEffect(int duration, int amplifier) {
+        return new MCPotionEfect(new PotionEffect(potion, duration, amplifier));
+    }
+    
+    @Override
+    public IPotionEffect makePotionEffect(int duration, int amplifier, boolean ambient, boolean showParticles) {
+        return new MCPotionEfect((new PotionEffect(potion, duration, amplifier, ambient, showParticles)));
+    }
+    
+    @Override
+    public List<IItemStack> getCurativeItems() {
+        return potion.getCurativeItems().stream().map(MCItemStack::new).collect(Collectors.toList());
+    }
+    
+    @Override
+    public boolean hasStatusIcon() {
+        return potion.hasStatusIcon();
+    }
+    
+    @Override
+    public boolean isBeneficial() {
+        return potion.isBeneficial();
+    }
+    
+    @Override
+    public boolean isInstant() {
+        return potion.isInstant();
     }
     
     @Override

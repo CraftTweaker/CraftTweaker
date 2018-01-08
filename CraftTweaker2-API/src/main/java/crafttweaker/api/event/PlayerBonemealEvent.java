@@ -11,19 +11,19 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerBonemealEvent")
 @ZenRegister
-public class PlayerBonemealEvent {
+public class PlayerBonemealEvent implements IEventCancelable {
     
     private final IPlayer player;
-    private final IBlockGroup blocks;
+    private final IWorld world;
     private final int x;
     private final int y;
     private final int z;
     private boolean canceled;
     private boolean processed;
     
-    public PlayerBonemealEvent(IPlayer player, IBlockGroup blocks, int x, int y, int z) {
+    public PlayerBonemealEvent(IPlayer player, IWorld world, int x, int y, int z) {
         this.player = player;
-        this.blocks = blocks;
+        this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -32,7 +32,7 @@ public class PlayerBonemealEvent {
         processed = false;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
@@ -42,7 +42,7 @@ public class PlayerBonemealEvent {
         processed = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }
@@ -57,9 +57,9 @@ public class PlayerBonemealEvent {
         return player;
     }
     
-    @ZenGetter("blocks")
-    public IBlockGroup getBlocks() {
-        return blocks;
+    @ZenGetter("world")
+    public IWorld getBlocks() {
+        return world;
     }
     
     @ZenGetter("x")
@@ -79,11 +79,11 @@ public class PlayerBonemealEvent {
     
     @ZenGetter("block")
     public IBlock getBlock() {
-        return blocks.getBlock(x, y, z);
+        return world.getBlock(x, y, z);
     }
     
     @ZenGetter("dimension")
-    public IDimension getDimension() {
-        return blocks.getDimension();
+    public int getDimension() {
+        return world.getDimension();
     }
 }

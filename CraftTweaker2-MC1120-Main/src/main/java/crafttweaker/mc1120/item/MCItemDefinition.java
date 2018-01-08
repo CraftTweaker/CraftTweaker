@@ -1,9 +1,12 @@
 package crafttweaker.mc1120.item;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
+import crafttweaker.mc1120.creativetabs.MCCreativeTab;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
@@ -21,7 +24,6 @@ public class MCItemDefinition implements IItemDefinition {
     public MCItemDefinition(String id, Item item) {
         this.id = id;
         this.item = item;
-        
     }
     
     @Override
@@ -58,6 +60,61 @@ public class MCItemDefinition implements IItemDefinition {
         }
         
         return result;
+    }
+    
+    @Override
+    public IItemStack getDefaultInstance() {
+        return new MCItemStack(item.getDefaultInstance());
+    }
+    
+    @Override
+    public void setHarvestLevel(String type, int level) {
+        item.setHarvestLevel(type, level);
+    }
+    
+    @Override
+    public ICreativeTab getCreativeTab() {
+        return MCCreativeTab.getICreativeTab(item.getCreativeTab());
+    }
+    
+    @Override
+    public void setCreativeTab(ICreativeTab tab) {
+        item.setCreativeTab((CreativeTabs) tab.getInternal());
+    }
+    
+    @Override
+    public ICreativeTab[] getCreativeTabs() {
+        CreativeTabs[] mcTabs = item.getCreativeTabs();
+        ICreativeTab[] output = new ICreativeTab[mcTabs.length];
+        for(int i = 0; i < output.length; i++) {
+            output[i] = MCCreativeTab.getICreativeTab(mcTabs[i]);
+        }
+        return output;
+    }
+    
+    @Override
+    public void setNoRepair() {
+        item.setNoRepair();
+    }
+    
+    @Override
+    public boolean canItemEditBlocks() {
+        return item.canItemEditBlocks();
+    }
+    
+    @Override
+    public int getItemEnchantability() {
+        return item.getItemEnchantability();
+    }
+    
+    @Override
+    public void setContainerItem(IItemDefinition itemDef) {
+        item.setContainerItem((Item) itemDef.getInternal());
+    }
+    
+    @Override
+    public Object getInternal() {
+        return item;
     }
     
     // #############################

@@ -1,8 +1,7 @@
 package crafttweaker.util;
 
-import crafttweaker.api.event.IEventHandle;
-
-import java.lang.reflect.InvocationTargetException;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.api.event.*;
 
 /**
  * @author Stan
@@ -40,7 +39,7 @@ public class EventList<T> {
         return first == null;
     }
     
-    public void publish(T event) {
+    public boolean publish(T event) {
         EventNode current;
         
         synchronized(this) {
@@ -48,12 +47,18 @@ public class EventList<T> {
         }
         
         while(current != null) {
-           current.handler.handle(event);
-
+            try {
+                current.handler.handle(event);
+                if(event instanceof IEventCancelable && ((IEventCancelable) event).isCanceled())
+                    return true;
+            } catch(Throwable ex) {
+                CraftTweakerAPI.logError(ex.getMessage(), ex);
+            }
             synchronized(this) {
                 current = current.next;
             }
         }
+        return false;
     }
     
     private class EventNode implements IEventHandle {

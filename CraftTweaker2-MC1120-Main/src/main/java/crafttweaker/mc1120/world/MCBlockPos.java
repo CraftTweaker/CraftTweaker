@@ -1,8 +1,9 @@
 package crafttweaker.mc1120.world;
 
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.IBlockPos;
-import crafttweaker.mc1120.util.Position3f;
+import crafttweaker.api.world.IFacing;
+import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -35,14 +36,14 @@ public class MCBlockPos implements IBlockPos{
 	}
 
     @Override
-	public IBlockPos getOffset(String directionName, int offset) {
-		return new MCBlockPos(blockPos.offset(EnumFacing.valueOf(directionName), offset));
+	public IBlockPos getOffset(IFacing direction, int offset) {
+		return new MCBlockPos(blockPos.offset((EnumFacing) direction.getInternal(), offset));
 	}
 	
 
     @Override
-	public IPosition3f asPosition3f() {
-		return new Position3f(getX(), getY(), getZ());
+	public Position3f asPosition3f() {
+		return new MCPosition3f(getX(), getY(), getZ());
 	}
 
 	@Override

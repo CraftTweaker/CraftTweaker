@@ -12,19 +12,19 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerFillBucketEvent")
 @ZenRegister
-public class PlayerFillBucketEvent {
+public class PlayerFillBucketEvent implements IEventCancelable {
     
     private final IPlayer player;
-    private final IBlockGroup blocks;
+    private final IWorld world;
     private final int x;
     private final int y;
     private final int z;
     private boolean canceled;
     private IItemStack result;
     
-    public PlayerFillBucketEvent(IPlayer player, IBlockGroup blocks, int x, int y, int z) {
+    public PlayerFillBucketEvent(IPlayer player, IWorld world, int x, int y, int z) {
         this.player = player;
-        this.blocks = blocks;
+        this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -33,12 +33,12 @@ public class PlayerFillBucketEvent {
         result = null;
     }
     
-    @ZenMethod
+    @Override
     public void cancel() {
         canceled = true;
     }
     
-    @ZenGetter("canceled")
+    @Override
     public boolean isCanceled() {
         return canceled;
     }
@@ -63,9 +63,9 @@ public class PlayerFillBucketEvent {
         return player;
     }
     
-    @ZenGetter("blocks")
-    public IBlockGroup getBlocks() {
-        return blocks;
+    @ZenGetter("world")
+    public IWorld getWorld() {
+        return world;
     }
     
     @ZenGetter("x")
@@ -85,11 +85,11 @@ public class PlayerFillBucketEvent {
     
     @ZenGetter("block")
     public IBlock getBlock() {
-        return blocks.getBlock(x, y, z);
+        return world.getBlock(x, y, z);
     }
     
     @ZenGetter("dimension")
-    public IDimension getDimension() {
-        return blocks.getDimension();
+    public int getDimension() {
+        return world.getDimension();
     }
 }

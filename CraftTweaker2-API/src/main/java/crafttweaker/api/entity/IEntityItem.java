@@ -1,7 +1,8 @@
 package crafttweaker.api.entity;
 
+import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Represents an item entity. Item entities are entities representing an item
@@ -9,6 +10,9 @@ import stanhebben.zenscript.annotations.ZenGetter;
  *
  * @author Stan Hebben
  */
+
+@ZenClass("crafttweaker.entity.IEntityItem")
+@ZenRegister
 public interface IEntityItem extends IEntity {
     
     /**
