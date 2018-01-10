@@ -23,8 +23,8 @@ public interface IBlockDefinition {
     
     Object getInternal();
     
-    @ZenSetter("lightOpacy")
-    void setLightOpacy(int lightOpacy);
+    @ZenSetter("lightOpacity")
+    void setLightOpacity(int lightOpacity);
     
     @ZenSetter("lightLevel")
     void setLightLevel(float lightLevel);
