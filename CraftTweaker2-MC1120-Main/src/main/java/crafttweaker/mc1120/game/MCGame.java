@@ -14,13 +14,12 @@ import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.entity.MCEntityDefinition;
 import crafttweaker.mc1120.item.MCItemDefinition;
 import crafttweaker.mc1120.liquid.MCLiquidDefinition;
-import crafttweaker.mc1120.potions.*;
+import crafttweaker.mc1120.potions.MCPotion;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -111,15 +110,13 @@ public class MCGame implements IGame {
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
     public String localize(String key) {
-        return I18n.format(key);
+        return net.minecraft.util.text.translation.I18n.translateToLocal(key);
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
     public String localize(String key, String lang) {
-        return I18n.format(key);
+        return I18n.translateToLocal(key);
     }
     
     public static Map<String, String> getTRANSLATIONS() {
