@@ -79,7 +79,7 @@ public class MCBlockProperties implements IBlockProperties {
     }
     
     @Override
-    public int getLightOpacy(IBlockAccess access, IBlockPos pos) {
+    public int getLightOpacity(IBlockAccess access, IBlockPos pos) {
         return properties.getLightOpacity((net.minecraft.world.IBlockAccess) access.getInternal(), (BlockPos) pos.getInternal());
     }
     

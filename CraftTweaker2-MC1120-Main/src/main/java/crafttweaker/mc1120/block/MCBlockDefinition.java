@@ -43,8 +43,8 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
-    public void setLightOpacy(int lightOpacy) {
-        block.setLightOpacity(lightOpacy);
+    public void setLightOpacity(int lightOpacity) {
+        block.setLightOpacity(lightOpacity);
     }
     
     @Override

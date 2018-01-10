@@ -11,16 +11,15 @@ import stanhebben.zenscript.annotations.*;
 public interface IBlockProperties {
     
     @ZenMethod
-    int getLightValue(IBlockAccess access, IBlockPos blockPos);
+    int getLightValue(IBlockAccess access, IBlockPos pos);
     
     @ZenGetter("canProvidePower")
     boolean canProvidePower();
     
     @ZenMethod
-    int getWeakPower(IBlockAccess access, IBlockPos blockPos, IFacing facing);
-    
+    int getWeakPower(IBlockAccess access, IBlockPos pos, IFacing facing);
     @ZenMethod
-    int getComparatorInputOverride(IWorld world, IBlockPos blockPos);
+    int getComparatorInputOverride(IWorld world, IBlockPos pos);
     
     @ZenGetter("mobilityFlag")
     IMobilityFlag getMobilityFlag();
@@ -50,8 +49,7 @@ public interface IBlockProperties {
     //IAxisAlignedBB getCollosionBoundingBox(IWorld world, IBlockPos pos);
     
     @ZenMethod
-    int getLightOpacy(IBlockAccess access, IBlockPos pos);
-    
+    int getLightOpacity(IBlockAccess access, IBlockPos pos);
     @ZenMethod
     float getPlayerRelativeBlockHardness(IPlayer player, IWorld world, IBlockPos pos);
     
