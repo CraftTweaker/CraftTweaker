@@ -103,11 +103,6 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
-    public void setUnlocalizedName(String unlocalizedName) {
-        block.setUnlocalizedName(unlocalizedName);
-    }
-    
-    @Override
     public ICreativeTab getCreativeTabToDisplayOn() {
         return MCCreativeTab.getICreativeTab(block.getCreativeTabToDisplayOn());
     }
