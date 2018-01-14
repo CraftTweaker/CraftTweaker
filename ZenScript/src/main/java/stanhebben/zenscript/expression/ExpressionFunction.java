@@ -1,10 +1,12 @@
 package stanhebben.zenscript.expression;
 
+import org.objectweb.asm.*;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.statements.Statement;
+import stanhebben.zenscript.symbols.SymbolArgument;
 import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.util.*;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -17,10 +19,12 @@ public class ExpressionFunction extends Expression {
     private final List<ParsedFunctionArgument> arguments;
     private final ZenType returnType;
     private final List<Statement> statements;
+    private final String descriptor;
     
     private final ZenTypeFunction functionType;
+    private final String className;
     
-    public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements) {
+    public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements, IEnvironmentMethod environment, String className) {
         super(position);
         
         System.out.println("Function expression: " + arguments.size() + " arguments");
@@ -33,7 +37,10 @@ public class ExpressionFunction extends Expression {
         for(int i = 0; i < arguments.size(); i++) {
             argumentTypes[i] = arguments.get(i).getType();
         }
-        functionType = new ZenTypeFunction(returnType, argumentTypes);
+        //className = environment.makeClassName();
+        this.className = className;
+        descriptor = makeDescriptor();
+        functionType = new ZenTypeFunctionCallable(returnType, argumentTypes, className, descriptor);
     }
     
     @Override
@@ -78,8 +85,54 @@ public class ExpressionFunction extends Expression {
     
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
-        // TODO: implement
-        // TODO: make sure the function is compiled properly
-        throw new UnsupportedOperationException("not yet implemented");
+        if(!result)
+            return;
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, className, null, "java/lang/Object", new String[0]);
+        
+        MethodOutput constructor = new MethodOutput(cw, Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+        constructor.start();
+        constructor.loadObject(0);
+        constructor.invokeSpecial("java/lang/Object", "<init>", "()V");
+        constructor.ret();
+        constructor.end();
+        
+        MethodOutput output = new MethodOutput(cw, Opcodes.ACC_PUBLIC, "accept", makeDescriptor(), null, null);
+        
+        IEnvironmentClass environmentClass = new EnvironmentClass(cw, environment);
+        IEnvironmentMethod environmentMethod = new EnvironmentMethod(output, environmentClass);
+        
+        for(int i = 0; i < arguments.size(); i++) {
+            environmentMethod.putValue(arguments.get(i).getName(), new SymbolArgument(i + 1, arguments.get(i).getType()), getPosition());
+        }
+        
+        output.start();
+        for(Statement statement : statements) {
+            statement.compile(environmentMethod);
+        }
+        output.ret();
+        output.end();
+        
+        environment.putClass(className, cw.toByteArray());
+        
+        // make class instance
+        environment.getOutput().newObject(className);
+        environment.getOutput().dup();
+        environment.getOutput().construct(className);
+    }
+    
+    private String makeDescriptor() {
+        StringBuilder sb = new StringBuilder("(");
+        arguments.stream().map(ParsedFunctionArgument::getType).map(ZenType::getSignature).forEach(sb::append);
+        sb.append(")").append(returnType.getSignature());
+        return sb.toString();
+    }
+    
+    public String getClassName() {
+        return className;
+    }
+    
+    public String getDescriptor() {
+        return descriptor;
     }
 }

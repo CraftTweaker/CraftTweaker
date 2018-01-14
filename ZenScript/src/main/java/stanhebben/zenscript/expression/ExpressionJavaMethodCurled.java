@@ -1,5 +1,6 @@
 package stanhebben.zenscript.expression;
 
+import org.objectweb.asm.Type;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.ParsedFunctionArgument;
 import stanhebben.zenscript.type.*;
@@ -11,6 +12,7 @@ import java.util.*;
 /**
  * @author Stanneke
  */
+
 public class ExpressionJavaMethodCurled extends Expression {
 
     private final JavaMethod method;

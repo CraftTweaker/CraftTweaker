@@ -166,6 +166,21 @@ public abstract class ZenType {
                     base = partial.toType(environment);
                 }
                 break;
+            case ZenTokener.T_FUNCTION:
+                List<ZenType> argumentTypes = new ArrayList<>();
+                ZenType returnType;
+                
+                parser.required(ZenTokener.T_BROPEN, "( required");
+                if(parser.optional(ZenTokener.T_BRCLOSE) == null) {
+                    argumentTypes.add(read(parser, environment));
+                    while(parser.optional(ZenTokener.T_COMMA) != null) {
+                        argumentTypes.add(read(parser, environment));
+                    }
+                    parser.required(ZenTokener.T_BRCLOSE, ") required");
+                }
+                returnType = read(parser, environment);
+                base = new ZenTypeFunctionCallable(returnType, argumentTypes.toArray(new ZenType[0]), environment.makeClassName());
+                break;
             default:
                 throw new ParseException(next, "Unknown type: " + next.getValue());
         }

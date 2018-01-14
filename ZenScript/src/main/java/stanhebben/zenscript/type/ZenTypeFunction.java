@@ -17,8 +17,8 @@ import java.util.*;
  */
 public class ZenTypeFunction extends ZenType {
     
-    private final ZenType returnType;
-    private final ZenType[] argumentTypes;
+    protected final ZenType returnType;
+    protected final ZenType[] argumentTypes;
     private final String name;
     private final Map<ZenType, CastingRuleMatchedFunction> implementedInterfaces = new HashMap<>();
     
@@ -57,7 +57,7 @@ public class ZenTypeFunction extends ZenType {
             } else {
                 nameBuilder.append(',');
             }
-        	nameBuilder.append(type.getName());
+            nameBuilder.append(type.getName());
         }
         nameBuilder.append(')');
         nameBuilder.append(returnType.getName());
@@ -147,7 +147,7 @@ public class ZenTypeFunction extends ZenType {
     
     @Override
     public Type toASMType() {
-        return null; // TODO: NEXT: expand
+        return Type.getType(Object.class); // TODO: NEXT: expand
     }
     
     @Override
@@ -157,7 +157,7 @@ public class ZenTypeFunction extends ZenType {
     
     @Override
     public String getSignature() {
-        return null; // TODO: NEXT: expand
+        return "Ljava/lang/Object;"; // TODO: NEXT: expand
     }
     
     @Override

@@ -2,7 +2,7 @@ package stanhebben.zenscript.type.natives;
 
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.expression.partial.*;
+import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
@@ -52,7 +52,7 @@ public class ZenNativeMember {
         return new StaticGetValue(position);
     }
     
-    public void addMethod(JavaMethod method) {
+    public void addMethod(IJavaMethod method) {
         methods.add(method);
     }
     

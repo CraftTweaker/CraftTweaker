@@ -59,9 +59,6 @@ public interface IBlockDefinition {
     @ZenGetter("unlocalizedName")
     String getUnlocalizedName();
     
-    @ZenSetter("unlocalizedName")
-    void setUnlocalizedName(String unlocalizedName);
-    
     @ZenGetter("creativeTab")
     ICreativeTab getCreativeTabToDisplayOn();
     
