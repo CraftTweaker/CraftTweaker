@@ -8,8 +8,7 @@ import stanhebben.zenscript.statements.Statement;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.util.ZenPosition;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public class ParsedExpressionFunction extends ParsedExpression {
     public IPartialExpression compile(IEnvironmentMethod environment, ZenType predictedType) {
         if(predictedType != null && predictedType instanceof ZenTypeNative) {
             System.out.println("Known predicted function type: " + predictedType);
-
+            
             ZenTypeNative nativeType = (ZenTypeNative) predictedType;
             Class nativeClass = nativeType.getNativeClass();
             if(nativeClass.isInterface() && nativeClass.getMethods().length == 1) {
@@ -60,19 +59,20 @@ public class ParsedExpressionFunction extends ParsedExpression {
                 return new ExpressionInvalid(getPosition());
             }
         } else {
-            if (predictedType != null && predictedType instanceof ZenTypeFunctionCallable) {
+            if(predictedType != null && predictedType instanceof ZenTypeFunctionCallable) {
                 return new ExpressionFunction(getPosition(), arguments, returnType, statements, environment, ((ZenTypeFunctionCallable) predictedType).getClassName());
             }
             System.out.println("No known predicted type");
             return new ExpressionFunction(getPosition(), arguments, returnType, statements, environment, environment.makeClassName());
         }
     }
-
+    
     private boolean isGeneric(Method method) {
-        for (Type type : method.getGenericParameterTypes()) {
-            if(type.getTypeName().equals("T")) return true;
+        for(Type type : method.getGenericParameterTypes()) {
+            if(type.getTypeName().equals("T"))
+                return true;
         }
         return false;
-
+        
     }
 }
