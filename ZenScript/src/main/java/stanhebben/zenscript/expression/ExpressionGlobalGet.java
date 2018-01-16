@@ -1,8 +1,9 @@
 package stanhebben.zenscript.expression;
 
+import org.objectweb.asm.Type;
 import stanhebben.zenscript.compiler.IEnvironmentMethod;
 import stanhebben.zenscript.symbols.SymbolGlobalValue;
-import stanhebben.zenscript.type.ZenType;
+import stanhebben.zenscript.type.*;
 
 public class ExpressionGlobalGet extends Expression {
     
@@ -21,7 +22,8 @@ public class ExpressionGlobalGet extends Expression {
     @Override
     public void compile(boolean result, IEnvironmentMethod environment) {
         environment.getOutput().getStaticField(getOwner(), getName(), getASMDescriptor());
-        environment.getOutput().checkCast(global.getType().getSignature());
+        if(getType().toASMType().equals(Type.getType(Object.class)))
+            environment.getOutput().checkCast(getType().getSignature());
     }
     
     public String getOwner() {

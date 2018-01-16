@@ -24,7 +24,7 @@ public class ExpressionFunction extends Expression {
     private final ZenTypeFunction functionType;
     private final String className;
     
-    public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements, IEnvironmentMethod environment, String className) {
+    public ExpressionFunction(ZenPosition position, List<ParsedFunctionArgument> arguments, ZenType returnType, List<Statement> statements, String className) {
         super(position);
         
         System.out.println("Function expression: " + arguments.size() + " arguments");
@@ -72,6 +72,19 @@ public class ExpressionFunction extends Expression {
                 environment.error(position, type.toString() + " is not a functional interface");
                 return new ExpressionInvalid(position);
             }
+        } else if(type instanceof ZenTypeFunction) {
+            boolean matches = returnType.equals(((ZenTypeFunction) type).getReturnType());
+            ZenType[] args = ((ZenTypeFunction) type).getArgumentTypes();
+            if(matches) {
+                for(int i = 0; i < arguments.size(); i++) {
+                    matches &= arguments.get(i).getType().equals(args[i]);
+                }
+            }
+            if(matches)
+                return this;
+            environment.error(position, "Cannot cast a function literal to " + type.toString());
+            return new ExpressionInvalid(position);
+            
         } else {
             environment.error(position, "Cannot cast a function literal to " + type.toString());
             return new ExpressionInvalid(position);

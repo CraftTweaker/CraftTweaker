@@ -70,7 +70,7 @@ public class SymbolGlobalValue implements IZenSymbol {
      * @param clinitMethodEnvironment a method environment that refers to the generated script class' {@code<clinit>} method!
      */
     private void compileGlobal(IEnvironmentMethod clinitMethodEnvironment) {
-        value.getValue().compile(clinitMethodEnvironment, getType()).eval(clinitMethodEnvironment)/*.cast(getPosition(), clinitMethodEnvironment, getType())*/.compile(true, clinitMethodEnvironment);
+        value.getValue().compile(clinitMethodEnvironment, getType()).eval(clinitMethodEnvironment).cast(getPosition(), clinitMethodEnvironment, getType()).compile(true, clinitMethodEnvironment);
         clinitMethodEnvironment.getOutput().putStaticField(getOwner(), getName(), getASMDescriptor());
     }
 }

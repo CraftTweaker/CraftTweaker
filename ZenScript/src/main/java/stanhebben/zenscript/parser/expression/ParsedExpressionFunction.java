@@ -60,10 +60,10 @@ public class ParsedExpressionFunction extends ParsedExpression {
             }
         } else {
             if(predictedType != null && predictedType instanceof ZenTypeFunctionCallable) {
-                return new ExpressionFunction(getPosition(), arguments, returnType, statements, environment, ((ZenTypeFunctionCallable) predictedType).getClassName());
+                return new ExpressionFunction(getPosition(), arguments, returnType, statements, ((ZenTypeFunctionCallable) predictedType).getClassName());
             }
             System.out.println("No known predicted type");
-            return new ExpressionFunction(getPosition(), arguments, returnType, statements, environment, environment.makeClassName());
+            return new ExpressionFunction(getPosition(), arguments, returnType, statements, environment.makeClassName());
         }
     }
     

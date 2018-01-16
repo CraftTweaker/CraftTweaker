@@ -214,4 +214,12 @@ public class ZenTypeFunction extends ZenType {
     public Expression defaultValue(ZenPosition position) {
         return new ExpressionNull(position);
     }
+    
+    public ZenType getReturnType() {
+        return returnType;
+    }
+    
+    public ZenType[] getArgumentTypes() {
+        return argumentTypes;
+    }
 }
