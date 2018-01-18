@@ -80,6 +80,11 @@ public class ZenModule {
 	            clinit.end();
             }
             
+            if(!script.getFunctions().isEmpty() || !script.getGlobals().isEmpty()) {
+                String name = script.getFileName();
+                SymbolScriptReference.addSymbol(environmentScript, environmentGlobal, name.substring(0, name.length() - 3).split("\\.|\\\\"));
+            }
+            
             for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
                 ParsedFunction fn = function.getValue();
                 environmentScript.putValue(function.getKey(), new SymbolZenStaticMethod(script.getClassName(), fn.getName(), fn.getSignature(), fn.getArgumentTypes(), fn.getReturnType()), fn.getPosition());
