@@ -304,7 +304,13 @@ public abstract class ParsedExpression {
             case T_INTVALUE:
                 return new ParsedExpressionValue(position, new ExpressionInt(position, Long.parseLong(parser.next().getValue()), ZenTypeInt.INSTANCE));
             case T_FLOATVALUE:
-                return new ParsedExpressionValue(position, new ExpressionFloat(position, Double.parseDouble(parser.next().getValue()), ZenTypeDouble.INSTANCE));
+                String value = parser.next().getValue();
+                ZenType zenType = ZenTypeDouble.INSTANCE;
+                if (value.endsWith("f") || value.endsWith("F")) {
+                    zenType = ZenTypeFloat.INSTANCE;
+                    value = value.substring(0, value.length() - 1);
+                }
+                return new ParsedExpressionValue(position, new ExpressionFloat(position, Double.parseDouble(value), zenType));
             case T_STRINGVALUE:
                 return new ParsedExpressionValue(position, new ExpressionString(position, unescapeString(parser.next().getValue())));
             /*
