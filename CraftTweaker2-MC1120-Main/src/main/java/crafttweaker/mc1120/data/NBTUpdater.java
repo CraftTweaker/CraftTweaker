@@ -9,13 +9,13 @@ import java.util.Map;
  * @author Stan
  */
 public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> {
-
+    
     private final NBTTagCompound nbt;
-
+    
     public NBTUpdater(NBTTagCompound compound) {
         this.nbt = compound;
     }
-
+    
     @Override
     public NBTBase fromMap(Map<String, IData> map) {
         for(Map.Entry<String, IData> entry : map.entrySet()) {
@@ -24,7 +24,7 @@ public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> 
                     nbt.removeTag(entry.getKey());
                 } else {
                     if(nbt.getTag(entry.getKey()).getId() == 10) {
-                        nbt.setTag(entry.getKey(), entry.getValue().convert(new NBTUpdater(nbt)));
+                        nbt.setTag(entry.getKey(), entry.getValue().convert(new NBTUpdater(nbt.getCompoundTag(entry.getKey()))));
                     } else {
                         nbt.setTag(entry.getKey(), from(entry.getValue()));
                     }
@@ -33,7 +33,7 @@ public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> 
                 nbt.setTag(entry.getKey(), from(entry.getValue()));
             }
         }
-
+        
         return nbt;
     }
 }
