@@ -306,7 +306,7 @@ public abstract class ParsedExpression {
             case T_FLOATVALUE:
                 String value = parser.next().getValue();
                 ZenType zenType = ZenTypeDouble.INSTANCE;
-                if (value.endsWith("f") || value.endsWith("F")) {
+                if(value.endsWith("f") || value.endsWith("F")) {
                     zenType = ZenTypeFloat.INSTANCE;
                     value = value.substring(0, value.length() - 1);
                 }
