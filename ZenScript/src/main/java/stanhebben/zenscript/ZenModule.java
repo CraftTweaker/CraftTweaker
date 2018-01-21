@@ -73,7 +73,11 @@ public class ZenModule {
             	clinit.start();
             	
 	            for (Map.Entry<String, ParsedGlobalValue> entry : script.getGlobals().entrySet()) {
-	            	environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(entry.getValue(), clinitEnvironment), entry.getValue().getPosition());
+	                ParsedGlobalValue value = entry.getValue();
+	                if (value.isGlobal())
+	            	    environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(value, clinitEnvironment), value.getPosition());
+	                else
+	                    environmentScript.putValue(entry.getKey(), new SymbolGlobalValue(value, clinitEnvironment), value.getPosition());
 	            }
 	            
 	            clinit.ret();
