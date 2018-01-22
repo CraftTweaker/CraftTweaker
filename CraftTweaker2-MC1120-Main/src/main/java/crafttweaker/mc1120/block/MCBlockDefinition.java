@@ -78,6 +78,21 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
+    public void setHarvestLevel(String toolclass, int level) {
+        block.setHarvestLevel(toolclass, level);
+    }
+    
+    @Override
+    public int getHarvestLevel() {
+        return block.getHarvestLevel(block.getDefaultState());
+    }
+    
+    @Override
+    public String getHarvestTool() {
+        return block.getHarvestTool(block.getDefaultState());
+    }
+    
+    @Override
     public int tickRate(IWorld world) {
         return block.tickRate((World) world.getInternal());
     }
@@ -119,7 +134,7 @@ public class MCBlockDefinition implements IBlockDefinition {
     
     @Override
     public float getSlipperiness(IBlockState state, IBlockAccess access, IBlockPos pos, IEntity entity) {
-        return block.getSlipperiness((net.minecraft.block.state.IBlockState) state.getInternal(), (net.minecraft.world.IBlockAccess) access.getInternal(), (BlockPos) pos.getInternal(),(Entity)entity.getInternal());
+        return block.getSlipperiness((net.minecraft.block.state.IBlockState) state.getInternal(), (net.minecraft.world.IBlockAccess) access.getInternal(), (BlockPos) pos.getInternal(), (Entity) entity.getInternal());
     }
     
     @Override

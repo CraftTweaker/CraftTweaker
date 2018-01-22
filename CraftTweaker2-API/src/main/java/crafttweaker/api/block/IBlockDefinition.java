@@ -45,6 +45,15 @@ public interface IBlockDefinition {
     void setTickRandomly(boolean tickRandomly);
     
     @ZenMethod
+    void setHarvestLevel(String toolclass, int level);
+    
+    @ZenGetter("harvestLevel")
+    int getHarvestLevel();
+    
+    @ZenGetter("harvestTool")
+    String getHarvestTool();
+    
+    @ZenMethod
     int tickRate(IWorld world);
     
     @ZenMethod
