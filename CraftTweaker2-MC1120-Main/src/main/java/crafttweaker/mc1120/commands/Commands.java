@@ -10,7 +10,7 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
-import crafttweaker.mc1120.brackets.*;
+import crafttweaker.mc1120.brackets.BracketHandlerPotion;
 import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
@@ -40,6 +40,7 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
  * @author BloodWorkXGaming, Stan, Jared
  */
 public class Commands {
+    
     public static final PotionComparator POTION_COMPARATOR = new PotionComparator();
     public static final Comparator<Item> ITEM_COMPARATOR = new ItemComparator();
     
@@ -77,6 +78,7 @@ public class Commands {
                 setDescription(getClickableCommandText("\u00A72/ct liquids", "/ct liquids", true), getNormalMessage(" \u00A73Outputs a list of all liquid names in the game to the crafttweaker.log"));
             }
         });
+        
         
         CTChatCommand.registerCommand(new CraftTweakerCommand("blocks") {
             @Override
@@ -135,7 +137,7 @@ public class Commands {
                 potions.sort(POTION_COMPARATOR);
                 
                 CraftTweakerAPI.logCommand("Potions:");
-                BracketHandlerPotion.getPotionNames().forEach((k, v) ->{
+                BracketHandlerPotion.getPotionNames().forEach((k, v) -> {
                     int id = Potion.REGISTRY.getIDForObject(v);
                     CraftTweakerAPI.logCommand(k + " -- color: " + v.getLiquidColor() + (v.isBadEffect() ? " -- is bad effect" : " -- is good effect") + " -- PotionID: " + id);
                 });
@@ -147,21 +149,35 @@ public class Commands {
             
             @Override
             protected void init() {
-                setDescription(getClickableCommandText("\u00A72/ct recipeNames", "/ct recipeNames", true),  getNormalMessage(" \u00A73A modid can be provided to filter results"), getNormalMessage(" \u00A73/ct recipeNames <modid>"), getNormalMessage(" \u00A73Lists all crafting recipe names in the game"));
+                setDescription(getClickableCommandText("\u00A72/ct recipeNames", "/ct recipeNames", true), getNormalMessage(" \u00A73A modid can be provided to filter results"), getNormalMessage(" \u00A73/ct recipeNames <modid>"), getNormalMessage(" \u00A73Lists all crafting recipe names in the game"));
             }
-    
+            
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 CraftTweakerAPI.logCommand("Recipe names:");
                 String filter = args.length == 0 ? "" : args[0];
                 
                 for(Map.Entry<ResourceLocation, IRecipe> entry : ForgeRegistries.RECIPES.getEntries()) {
-                    if(!filter.isEmpty() && !entry.getKey().getResourceDomain().equalsIgnoreCase(filter)){
+                    if(!filter.isEmpty() && !entry.getKey().getResourceDomain().equalsIgnoreCase(filter)) {
                         continue;
                     }
                     CraftTweakerAPI.logCommand(entry.getKey().toString() + " - " + entry.getValue().getRecipeOutput());
                 }
                 sender.sendMessage(getLinkToCraftTweakerLog("Recipe list generated", sender));
+            }
+        });
+        
+        CTChatCommand.registerCommand(new CraftTweakerCommand("reload") {
+            
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct reload", "/ct reload", true), getNormalMessage(" \u00A73Gives information as to why reloading is not possible"));
+            }
+            
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                sender.sendMessage(getNormalMessage("Unfortunately reloading is not possible due to a forge change."));
+                sender.sendMessage(getClickableBrowserLinkText("Please read this", "https://www.reddit.com/r/feedthebeast/comments/6oxjtd/lets_talk_crafttweaker_reload/"));
             }
         });
         CTChatCommand.registerCommand(new CraftTweakerCommand("recipes") {
@@ -730,15 +746,14 @@ public class Commands {
                 return commands;
             }
         });
-    
+        
         
         CTChatCommand.registerCommand(new DumpZsCommand());
-    
+        
         CTChatCommand.registerCommand(new NamesCommand());
         
     }
     
-
     
     private static class ItemComparator implements Comparator<Item>, Serializable {
         
@@ -749,12 +764,12 @@ public class Commands {
     }
     
     private static class PotionComparator implements Comparator<IPotion>, Serializable {
+        
         @Override
         public int compare(IPotion o1, IPotion o2) {
             return o1.name().compareTo(o2.name());
         }
     }
     
-
     
 }
