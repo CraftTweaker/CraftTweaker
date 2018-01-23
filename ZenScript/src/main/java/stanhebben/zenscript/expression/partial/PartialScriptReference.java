@@ -6,12 +6,23 @@ import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
-public class PartialScriptFile implements IPartialExpression {
+import java.util.*;
+
+public class PartialScriptReference implements IPartialExpression {
     
-    private final EnvironmentClass environmentScript;
+    private EnvironmentClass environmentScript = null;
+    private final HashMap<String, PartialScriptReference> subs = new HashMap<>();
     
-    public PartialScriptFile(EnvironmentClass environmentScript) {
-        this.environmentScript = environmentScript;
+    public PartialScriptReference() {}
+    
+    public void addScriptOrDirectory(EnvironmentClass environmentScript, String[] names) {
+        if (names.length == 0) {
+            this.environmentScript = environmentScript;
+            return;
+        }
+        String name = names[0];
+        subs.putIfAbsent(name, new PartialScriptReference());
+        subs.get(name).addScriptOrDirectory(environmentScript, Arrays.copyOfRange(names, 1, names.length));
     }
     
     @Override
@@ -26,7 +37,8 @@ public class PartialScriptFile implements IPartialExpression {
     
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
-        return environmentScript.getValue(name, position);
+        IPartialExpression out = subs.get(name);
+        return out != null ? out : (environmentScript != null ? environmentScript.getValue(name, position) : null);
     }
     
     @Override

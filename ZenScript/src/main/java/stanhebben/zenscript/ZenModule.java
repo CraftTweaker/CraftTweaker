@@ -3,6 +3,7 @@ package stanhebben.zenscript;
 import org.objectweb.asm.*;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.definitions.*;
+import stanhebben.zenscript.expression.partial.PartialScriptReference;
 import stanhebben.zenscript.statements.*;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenType;
@@ -86,7 +87,10 @@ public class ZenModule {
             
             if(!script.getFunctions().isEmpty() || !script.getGlobals().isEmpty()) {
                 String name = script.getFileName();
-                SymbolScriptReference.addSymbol(environmentScript, environmentGlobal, name.substring(0, name.length() - 3).split("\\.|\\\\"));
+                String[] splitName = name.substring(0, name.length() - ".zs".length()).split("\\.|\\\\");
+                PartialScriptReference reference = SymbolScriptReference.getOrCreateReference(splitName[0], environmentGlobal);
+                splitName = Arrays.copyOfRange(splitName, 1, splitName.length);
+                reference.addScriptOrDirectory(environmentScript, splitName);
             }
             
             for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
