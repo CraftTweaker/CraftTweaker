@@ -88,8 +88,7 @@ public class ZenModule {
             if(!script.getFunctions().isEmpty() || !script.getGlobals().isEmpty()) {
                 String name = script.getFileName();
                 String[] splitName = name.substring(0, name.length() - ".zs".length()).split("\\.|\\\\");
-                PartialScriptReference reference = SymbolScriptReference.getOrCreateReference(splitName[0], environmentGlobal);
-                splitName = Arrays.copyOfRange(splitName, 1, splitName.length);
+                PartialScriptReference reference = SymbolScriptReference.getOrCreateReference(environmentGlobal);
                 reference.addScriptOrDirectory(environmentScript, splitName);
             }
             

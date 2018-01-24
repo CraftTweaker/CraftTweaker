@@ -19,12 +19,12 @@ public class SymbolScriptReference implements IZenSymbol {
         return instance;
     }
     
-    public static PartialScriptReference getOrCreateReference(String name, IEnvironmentGlobal environmentGlobal) {
-        IPartialExpression reference = environmentGlobal.getValue(name, null);
+    public static PartialScriptReference getOrCreateReference(IEnvironmentGlobal environmentGlobal) {
+        IPartialExpression reference = environmentGlobal.getValue("scripts", null);
         if (reference == null) {
-            environmentGlobal.putValue(name, new SymbolScriptReference(), null);
-            reference = environmentGlobal.getValue(name, null);
+            environmentGlobal.putValue("scripts", new SymbolScriptReference(), null);
+            reference = environmentGlobal.getValue("scripts", null);
         }
-        return reference instanceof PartialScriptReference ? (PartialScriptReference) reference : null;
+        return (PartialScriptReference) reference;
     }
 }
