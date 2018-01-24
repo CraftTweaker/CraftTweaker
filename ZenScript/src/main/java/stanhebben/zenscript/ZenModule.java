@@ -31,8 +31,6 @@ public class ZenModule {
     private final MyClassLoader classLoader;
     
     
-       
-    
     /**
      * Constructs a module for the given set of classes. Mostly intended for
      * internal use.
@@ -67,29 +65,29 @@ public class ZenModule {
             EnvironmentClass environmentScript = new EnvironmentClass(clsScript, script.getEnvironment());
             
             clsScript.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, script.getClassName().replace('.', '/'), null, internal(Object.class), new String[]{internal(Runnable.class)});
-                   	
+            
             if(!script.getGlobals().isEmpty()) {
-            	MethodOutput clinit = new MethodOutput(clsScript, Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
-            	EnvironmentMethod clinitEnvironment = new EnvironmentMethod(clinit, environmentScript);
-            	clinit.start();
-            	
-	            for (Map.Entry<String, ParsedGlobalValue> entry : script.getGlobals().entrySet()) {
-	                ParsedGlobalValue value = entry.getValue();
-	                if (value.isGlobal())
-	            	    environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(value, clinitEnvironment), value.getPosition());
-	                else
-	                    environmentScript.putValue(entry.getKey(), new SymbolGlobalValue(value, clinitEnvironment), value.getPosition());
-	            }
-	            
-	            clinit.ret();
-	            clinit.end();
+                MethodOutput clinit = new MethodOutput(clsScript, Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+                EnvironmentMethod clinitEnvironment = new EnvironmentMethod(clinit, environmentScript);
+                clinit.start();
+                
+                for(Map.Entry<String, ParsedGlobalValue> entry : script.getGlobals().entrySet()) {
+                    ParsedGlobalValue value = entry.getValue();
+                    if(value.isGlobal())
+                        environmentGlobal.putValue(entry.getKey(), new SymbolGlobalValue(value, clinitEnvironment), value.getPosition());
+                    else
+                        environmentScript.putValue(entry.getKey(), new SymbolGlobalValue(value, clinitEnvironment), value.getPosition());
+                }
+                
+                clinit.ret();
+                clinit.end();
             }
             
             if(!script.getFunctions().isEmpty() || !script.getGlobals().isEmpty()) {
-                String name = script.getFileName();
-                String[] splitName = name.substring(0, name.length() - ".zs".length()).split("\\.|\\\\");
+                String[] splitName = script.getFileName().split("\\.|\\\\");
                 PartialScriptReference reference = SymbolScriptReference.getOrCreateReference(environmentGlobal);
-                reference.addScriptOrDirectory(environmentScript, splitName);
+                if(splitName.length != 0)
+                    reference.addScriptOrDirectory(environmentScript, Arrays.copyOfRange(splitName, 0, splitName.length - 1));
             }
             
             for(Map.Entry<String, ParsedFunction> function : script.getFunctions().entrySet()) {
@@ -250,7 +248,7 @@ public class ZenModule {
         
         return new ZenModule(classes, baseClassLoader);
     }
-
+    
     /**
      * Compiles a zip file as module. All containing files (inside the given
      * subdirectory) will be compiled.
@@ -322,12 +320,13 @@ public class ZenModule {
         
         // trim extension
         int lastDot = filename.lastIndexOf('.');
-        if (lastDot > 0) filename = filename.substring(0, lastDot);
+        if(lastDot > 0)
+            filename = filename.substring(0, lastDot);
         
         
         filename = filename.replace(".", "_");
         filename = filename.replace(" ", "_");
-    
+        
         
         String dir;
         String name;
