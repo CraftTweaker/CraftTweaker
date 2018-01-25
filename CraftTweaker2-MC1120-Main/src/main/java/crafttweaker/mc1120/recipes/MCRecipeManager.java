@@ -477,7 +477,6 @@ public final class MCRecipeManager implements IRecipeManager {
                 if(recipe.getKey().toString().equals(recipeName)) {
                     toRemove.add(recipe.getKey());
                     
-                    super.removeRecipes(toRemove);
                 }
             }
             
