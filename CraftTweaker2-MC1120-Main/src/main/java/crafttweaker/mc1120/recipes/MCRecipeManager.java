@@ -1,8 +1,7 @@
 package crafttweaker.mc1120.recipes;
 
 import crafttweaker.*;
-import crafttweaker.api.item.IIngredient;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
@@ -10,16 +9,13 @@ import crafttweaker.mc1120.CraftTweaker;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import net.minecraftforge.registries.GameData;
-import net.minecraftforge.registries.RegistryManager;
+import net.minecraftforge.oredict.*;
+import net.minecraftforge.registries.*;
 import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.Optional;
 
@@ -46,15 +42,21 @@ public final class MCRecipeManager implements IRecipeManager {
         transformerRecipes = new ArrayList<>();
     }
     
-    private static boolean matches(Object input, IIngredient ingredient) {
-        if((input == null) != (ingredient == null)) {
-            return false;
+    private static boolean matchesItem(ItemStack input, IIngredient ingredient) {
+        if((input.isEmpty()) == (ingredient == null)) {
+            return true;
         } else if(ingredient != null) {
-            if(input instanceof ItemStack) {
-                return !((ItemStack) input).isEmpty() && ingredient.matches(getIItemStack((ItemStack) input));
-            } else if(input instanceof String) {
-                return ingredient.contains(getOreDict((String) input));
-            }
+            return !input.isEmpty() && ingredient.matches(getIItemStack(input));
+        }
+        return true;
+    }
+    
+    
+    private static boolean matches(Object input, IIngredient ingredient) {
+        if(input instanceof String) {
+            return ingredient.contains(getOreDict((String) input));
+        } else if(input instanceof ItemStack) {
+            return matchesItem((ItemStack) input, ingredient);
         }
         
         return true;
@@ -213,6 +215,7 @@ public final class MCRecipeManager implements IRecipeManager {
     public static abstract class ActionBaseRemoveRecipes implements IAction {
         
         public void removeRecipes(List<ResourceLocation> removingRecipes) {
+            CraftTweakerAPI.logInfo(removingRecipes.size() + " really removed");
             removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         }
     }
@@ -261,11 +264,12 @@ public final class MCRecipeManager implements IRecipeManager {
                                 IIngredient ingredient = k > row.length ? null : row[k];
                                 ItemStack input;
                                 Ingredient ing = srecipe.getIngredients().get(j * srecipe.recipeWidth + k);
-                                if(ing == Ingredient.EMPTY || ing.test(ItemStack.EMPTY) || ing.getMatchingStacks().length > 0) {
+                                if(ing == Ingredient.EMPTY || ing.test(ItemStack.EMPTY) || ing.getMatchingStacks().length == 0) {
                                     input = ItemStack.EMPTY;
                                 } else {
                                     input = ing.getMatchingStacks()[0];
                                 }
+                                System.out.println(input + " : " + ingredient + " : " + !matches(input, ingredient));
                                 if(!matches(input, ingredient)) {
                                     continue outer;
                                 }
@@ -312,7 +316,7 @@ public final class MCRecipeManager implements IRecipeManager {
                 }
                 toRemove.add(recipe.getKey());
             }
-            
+            CraftTweakerAPI.logInfo(toRemove.size() + " removed");
             super.removeRecipes(toRemove);
         }
         
@@ -422,9 +426,10 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     public static class ActionRemoveRecipesNoIngredients extends ActionBaseRemoveRecipes {
+        
         // pair of output, nbtMatch
         private final List<Pair<IIngredient, Boolean>> outputs = new ArrayList<>();
-
+        
         public void addOutput(IIngredient output, @Optional boolean nbtMatch) {
             outputs.add(Pair.of(output, nbtMatch));
         }
@@ -443,7 +448,7 @@ public final class MCRecipeManager implements IRecipeManager {
             
             super.removeRecipes(toRemove);
         }
-
+        
         private boolean matches(IItemStack stack) {
             for(Pair<IIngredient, Boolean> entry : outputs) {
                 IIngredient output = entry.getKey();
