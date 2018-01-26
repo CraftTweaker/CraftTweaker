@@ -51,7 +51,6 @@ public final class MCRecipeManager implements IRecipeManager {
         return true;
     }
     
-    
     private static boolean matches(Object input, IIngredient ingredient) {
         if(input instanceof String) {
             return ingredient.contains(getOreDict((String) input));
@@ -269,7 +268,6 @@ public final class MCRecipeManager implements IRecipeManager {
                                 } else {
                                     input = ing.getMatchingStacks()[0];
                                 }
-                                System.out.println(input + " : " + ingredient + " : " + !matches(input, ingredient));
                                 if(!matches(input, ingredient)) {
                                     continue outer;
                                 }
