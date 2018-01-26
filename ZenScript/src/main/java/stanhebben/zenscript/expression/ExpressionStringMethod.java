@@ -33,14 +33,7 @@ public class ExpressionStringMethod implements IPartialExpression {
     
     public static boolean hasMethod(String name, ITypeRegistry typeRegistry) {
         if(!initialised) {
-            for(Method method : String.class.getMethods()) {
-                if(checkMethod(method)) {
-                    String methodName = method.getName();
-                    members.putIfAbsent(methodName, new ZenNativeMember());
-                    members.get(methodName).addMethod(new JavaMethod(method, typeRegistry));
-                }
-            }
-            initialised = true;
+            initialise(typeRegistry);
         }
         return members.containsKey(name);
     }
@@ -52,6 +45,17 @@ public class ExpressionStringMethod implements IPartialExpression {
                 return false;
         }
         return (method.getReturnType().isAssignableFrom(char.class) || method.getReturnType().isAssignableFrom(char[].class)) ? false : (method.getModifiers() & Opcodes.ACC_STATIC) == 0;
+    }
+    
+    private static void initialise(ITypeRegistry typeRegistry) {
+        for(Method method : String.class.getMethods()) {
+            if(checkMethod(method)) {
+                String methodName = method.getName();
+                members.putIfAbsent(methodName, new ZenNativeMember());
+                members.get(methodName).addMethod(new JavaMethod(method, typeRegistry));
+            }
+        }
+        initialised = true;
     }
     
     @Override
