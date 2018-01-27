@@ -8,10 +8,12 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Stan
@@ -110,6 +112,13 @@ public class MCItemDefinition implements IItemDefinition {
     @Override
     public void setContainerItem(IItemDefinition itemDef) {
         item.setContainerItem((Item) itemDef.getInternal());
+    }
+    
+    @Override
+    public List<IItemStack> getSubItems () {
+        NonNullList<ItemStack> list = NonNullList.create();
+        item.getSubItems(item.getCreativeTab(), list);
+        return list.stream().map(MCItemStack::new).collect(Collectors.toList());
     }
     
     @Override
