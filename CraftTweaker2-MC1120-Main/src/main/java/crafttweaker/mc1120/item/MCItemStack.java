@@ -102,7 +102,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public float getBlockHardness() {
-        return ReflectionHelper.getPrivateValue(Block.class, Block.getBlockFromItem(stack.getItem()), "blockHardness");
+        return ReflectionHelper.getPrivateValue(Block.class, Block.getBlockFromItem(stack.getItem()), "blockHardness", "field_149782_v");
     }
     
     @Override
