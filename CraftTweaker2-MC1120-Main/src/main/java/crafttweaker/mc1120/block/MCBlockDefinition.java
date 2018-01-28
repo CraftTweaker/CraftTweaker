@@ -63,6 +63,11 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
+    public float getHardness() {
+        return block.blockHardness;
+    }
+    
+    @Override
     public void setUnbreakable() {
         block.setBlockUnbreakable();
     }
@@ -78,8 +83,8 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
-    public void setHarvestLevel(String toolclass, int level) {
-        block.setHarvestLevel(toolclass, level);
+    public void setHarvestLevel(String toolClass, int level) {
+        block.setHarvestLevel(toolClass, level);
     }
     
     @Override

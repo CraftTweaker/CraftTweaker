@@ -35,6 +35,9 @@ public interface IBlockDefinition {
     @ZenSetter("hardness")
     void setHardness(float hardness);
     
+    @ZenGetter("hardness")
+    float getHardness();
+    
     @ZenMethod
     void setUnbreakable();
     
@@ -45,7 +48,7 @@ public interface IBlockDefinition {
     void setTickRandomly(boolean tickRandomly);
     
     @ZenMethod
-    void setHarvestLevel(String toolclass, int level);
+    void setHarvestLevel(String toolClass, int level);
     
     @ZenGetter("harvestLevel")
     int getHarvestLevel();
