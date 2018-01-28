@@ -93,5 +93,8 @@ public interface IItemDefinition {
     @ZenGetter("subItems")
     List<IItemStack> getSubItems();
     
+    @ZenMethod
+    List<IItemStack> getSubItems(ICreativeTab tab);
+    
     Object getInternal();
 }

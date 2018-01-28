@@ -116,8 +116,13 @@ public class MCItemDefinition implements IItemDefinition {
     
     @Override
     public List<IItemStack> getSubItems () {
+        return getSubItems(getCreativeTab());
+    }
+    
+    @Override
+    public List<IItemStack> getSubItems(ICreativeTab tab) {
         NonNullList<ItemStack> list = NonNullList.create();
-        item.getSubItems(item.getCreativeTab(), list);
+        item.getSubItems((CreativeTabs) tab.getInternal(), list);
         return list.stream().map(MCItemStack::new).collect(Collectors.toList());
     }
     
