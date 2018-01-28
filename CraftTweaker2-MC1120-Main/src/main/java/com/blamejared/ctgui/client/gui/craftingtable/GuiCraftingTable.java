@@ -9,14 +9,15 @@ import java.util.*;
  * Created by Jared.
  */
 public class GuiCraftingTable extends GuiBase {
-
+    
     private CheckButton shaped;
     private CheckButton shapeless;
     private CheckButton mirror;
+    
     public GuiCraftingTable(ContainerBase container) {
         super(container, 176, 166, true);
     }
-
+    
     @Override
     public void initGui() {
         super.initGui();
@@ -26,7 +27,7 @@ public class GuiCraftingTable extends GuiBase {
         shaped.setBackgroundSize(50);
         shapeless.setBackgroundSize(70);
         mirror.setBackgroundSize(50);
-
+        
         getButtonList().add(shapeless);
         getButtonList().add(shaped);
         getButtonList().add(mirror);
@@ -34,9 +35,9 @@ public class GuiCraftingTable extends GuiBase {
         shapeless.setIncompatible(Arrays.asList(shaped, mirror));
         mirror.setIncompatible(Collections.singletonList(remove));
         shaped.setIsChecked(true);
-
+        
     }
-
+    
     @Override
     public String getOutputAdd() {
         String type = "add";
@@ -51,14 +52,21 @@ public class GuiCraftingTable extends GuiBase {
             type += "Mirrored";
         }
         if(shapel) {
-            return String.format("recipes.%s(%s, [%s%s%s%s%s%s%s%s%s]);", type, container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), container.getRecipeSlots().get(1).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(3), container.getRecipeSlots().get(2).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(4), container.getRecipeSlots().get(3).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(5), container.getRecipeSlots().get(4).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(6), container.getRecipeSlots().get(5).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(7), container.getRecipeSlots().get(7).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(8), container.getRecipeSlots().get(7).getStack().isEmpty()), getShapelessItem(container.getRecipeSlots().get(9), container.getRecipeSlots().get(8).getStack().isEmpty()));
+            List<String> stacks = new ArrayList<>();
+            for(int i = 1; i < container.getRecipeSlots().size(); i++) {
+                SlotRecipe slot = container.getRecipeSlots().get(i);
+                if(slot.getHasStack()) {
+                    stacks.add(slot.getItemString());
+                }
+            }
+            return String.format("recipes.%s(%s, [%s]);", type, container.getRecipeSlots().get(0).getItemString(), String.join(",", stacks));
         }
         return String.format("recipes.%s(%s, [[%s, %s, %s],[%s, %s, %s], [%s, %s, %s]]);", type, container.getRecipeSlots().get(0).getItemString(), container.getRecipeSlots().get(1).getItemString(), container.getRecipeSlots().get(2).getItemString(), container.getRecipeSlots().get(3).getItemString(), container.getRecipeSlots().get(4).getItemString(), container.getRecipeSlots().get(5).getItemString(), container.getRecipeSlots().get(6).getItemString(), container.getRecipeSlots().get(7).getItemString(), container.getRecipeSlots().get(8).getItemString(), container.getRecipeSlots().get(9).getItemString());
     }
-
+    
     private String getShapelessItem(SlotRecipe slot, boolean first) {
         String ret = "";
-        if(slot.getStack().isEmpty()){
+        if(slot.getStack().isEmpty()) {
             return "";
         }
         if(slot.getHasStack()) {
@@ -69,7 +77,7 @@ public class GuiCraftingTable extends GuiBase {
         }
         return ret.isEmpty() ? ret : ret;
     }
-
+    
     @Override
     public String getOutputRemove() {
         boolean hasrecipe = false;
@@ -79,18 +87,18 @@ public class GuiCraftingTable extends GuiBase {
                 hasrecipe = true;
             }
         }
-    
+        
         boolean shapel = shapeless.isChecked();
         if(shapel) {
-            return String.format("recipes.removeShapeless(%s, [%s%s%s%s%s%s%s%s%s]);", container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), false), getShapelessItem(container.getRecipeSlots().get(3), false), getShapelessItem(container.getRecipeSlots().get(4), false), getShapelessItem(container.getRecipeSlots().get(5), false), getShapelessItem(container.getRecipeSlots().get(6), false), getShapelessItem(container.getRecipeSlots().get(7), false), getShapelessItem(container.getRecipeSlots().get(8), false), getShapelessItem(container.getRecipeSlots().get(9), false));
+            return String.format("recipes.removeShapeless(%s, [%s%s%s%s%s%s%s%s%s]);", container.getRecipeSlots().get(0).getItemString(), getShapelessItem(container.getRecipeSlots().get(1), true), getShapelessItem(container.getRecipeSlots().get(2), false), getShapelessItem(container.getRecipeSlots().get(3), false), getShapelessItem(container.getRecipeSlots().get(4), false), getShapelessItem(container.getRecipeSlots().get(5), false), getShapelessItem(container.getRecipeSlots().get(6), false), getShapelessItem(container.getRecipeSlots().get(7), false), getShapelessItem(container.getRecipeSlots().get(8), false), getShapelessItem(container.getRecipeSlots().get(9), false)).replace("[,", "[");
         }
         return hasrecipe ? String.format("recipes.removeShaped(%s, [[%s, %s, %s],[%s, %s, %s], [%s, %s, %s]]);", container.getRecipeSlots().get(0).getItemString(), container.getRecipeSlots().get(1).getItemString(), container.getRecipeSlots().get(2).getItemString(), container.getRecipeSlots().get(3).getItemString(), container.getRecipeSlots().get(4).getItemString(), container.getRecipeSlots().get(5).getItemString(), container.getRecipeSlots().get(6).getItemString(), container.getRecipeSlots().get(7).getItemString(), container.getRecipeSlots().get(8).getItemString(), container.getRecipeSlots().get(9).getItemString()) : String.format("recipes.remove(%s);", container.getRecipeSlots().get(0).getItemString());
     }
-
+    
     @Override
     public ResourceLocation getTexture() {
         return new ResourceLocation("textures/gui/container/crafting_table.png");
     }
-
-
+    
+    
 }
