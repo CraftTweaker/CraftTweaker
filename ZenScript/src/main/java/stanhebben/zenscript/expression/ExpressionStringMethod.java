@@ -70,6 +70,12 @@ public class ExpressionStringMethod implements IPartialExpression {
     
     @Override
     public Expression eval(IEnvironmentGlobal environment) {
+        for (IJavaMethod method : methods) {
+            if (method.accepts(0)) {
+                return new ExpressionCallVirtual(position, environment, method, source.eval(environment), new Expression[0]);
+            }
+        }
+        
         environment.error(position, "Cannot evaluate a StringMethod");
         return new ExpressionInvalid(position);
     }
