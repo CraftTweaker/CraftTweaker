@@ -122,6 +122,8 @@ public class ZenModule {
                         fn.getReturnType().defaultValue(fn.getPosition()).compile(true, methodEnvironment);
                         methodOutput.returnType(fn.getReturnType().toASMType());
                     }
+                } else if(!(statements[statements.length - 1] instanceof StatementReturn)) {
+                    methodOutput.ret();
                 }
                 methodOutput.end();
             }
