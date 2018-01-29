@@ -57,6 +57,10 @@ public class ScriptIteratorZip implements IScriptIterator {
         entries = entriesList.iterator();
     }
     
+    public String getCurrentName() {
+        return current.getName();
+    }
+    
     @Override
     public String getGroupName() {
         if(file != null && directory != null) {

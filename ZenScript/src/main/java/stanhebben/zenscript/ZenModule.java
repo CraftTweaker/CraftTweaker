@@ -343,7 +343,7 @@ public class ZenModule {
             dir = "";
         }
         
-        return dir.length() > 0 ? (dir.replace("/", "_") + "_") : "" + StringUtil.capitalize(name);
+        return (dir.length() > 0 ? dir.replace('/', '\\') + "\\" : "") + StringUtil.capitalize(name);
         
     }
     
