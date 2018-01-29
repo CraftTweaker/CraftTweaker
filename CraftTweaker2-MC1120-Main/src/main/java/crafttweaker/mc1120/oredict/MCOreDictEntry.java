@@ -102,7 +102,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public boolean contains(IItemStack item) {
         for(ItemStack itemStack : OreDictionary.getOres(getName())) {
-            if(getIItemStackWildcardSize(itemStack).matches(item)) {
+            if(CraftTweakerMC.matches(item, itemStack)) {
                 return true;
             }
         }
