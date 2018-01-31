@@ -1,7 +1,7 @@
 package stanhebben.zenscript.expression.partial;
 
 import stanhebben.zenscript.compiler.*;
-import stanhebben.zenscript.expression.Expression;
+import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
@@ -10,19 +10,21 @@ import java.util.*;
 
 public class PartialScriptReference implements IPartialExpression {
     
-    private EnvironmentClass environmentScript = null;
     private final HashMap<String, PartialScriptReference> subs = new HashMap<>();
+    private EnvironmentClass environmentScript = null;
     
-    public PartialScriptReference() {}
+    public PartialScriptReference() {
+    }
     
     public void addScriptOrDirectory(EnvironmentClass environmentScript, String[] names) {
-        if (names.length == 0) {
+        if(names.length == 0) {
             this.environmentScript = environmentScript;
             return;
         }
         String name = names[0];
         subs.putIfAbsent(name, new PartialScriptReference());
         subs.get(name).addScriptOrDirectory(environmentScript, Arrays.copyOfRange(names, 1, names.length));
+        
     }
     
     @Override
@@ -38,7 +40,16 @@ public class PartialScriptReference implements IPartialExpression {
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, String name) {
         IPartialExpression out = subs.get(name);
-        return out != null ? out : (environmentScript != null ? environmentScript.getValue(name, position) : null);
+        if(out == null && environmentScript != null) {
+            out = environmentScript.getValue(name, position);
+        }
+        
+        if(out != null) {
+            return out;
+        }
+        
+        environment.error(position, "Could not get Reference: " + name);
+        return new ExpressionInvalid(position);
     }
     
     @Override

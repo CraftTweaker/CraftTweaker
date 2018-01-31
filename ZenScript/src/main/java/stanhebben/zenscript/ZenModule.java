@@ -84,7 +84,11 @@ public class ZenModule {
             }
             
             if(!script.getFunctions().isEmpty() || !script.getGlobals().isEmpty()) {
-                String[] splitName = script.getFileName().split("\\.|\\\\");
+                String fileName = script.getFileName();
+                if (fileName.startsWith("scripts.zip\\"))
+                    fileName = fileName.substring(12);
+                
+                String[] splitName = fileName.replaceAll("\\.zip", "").split("\\.|\\\\");
                 PartialScriptReference reference = SymbolScriptReference.getOrCreateReference(environmentGlobal);
                 if(splitName.length != 0)
                     reference.addScriptOrDirectory(environmentScript, Arrays.copyOfRange(splitName, 0, splitName.length - 1));
