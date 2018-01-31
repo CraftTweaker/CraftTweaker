@@ -50,7 +50,12 @@ public class MCOreDictEntry implements IOreDictEntry {
 
     @Override
     public IItemStack getFirstItem() {
-        return getItems().get(0);
+        List<IItemStack> items = getItems();
+        if (items.isEmpty()) {
+            CraftTweakerAPI.logInfo("No first item found for oredict " + getName() + "replacing with null reference");
+            return null;
+        }
+        return items.get(0);
     }
 
     @Override
