@@ -520,4 +520,37 @@ public class CraftTweakerMC {
     public static IWorld getWorldByID(int id) {
         return new MCWorld(DimensionManager.getWorld(id));
     }
+    
+    public static boolean matches(IItemStack iitem, ItemStack stack, boolean wildcardsize) {
+        ItemStack internal = stack;
+        if(stack.hasTagCompound()) {
+            return matchesExact(iitem, stack);
+        }
+        return !internal.isEmpty() && !stack.isEmpty() && internal.getItem() == stack.getItem() && (wildcardsize || internal.getCount() >= stack.getCount()) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+    }
+    
+    public static boolean matches(IItemStack iitem, ItemStack stack) {
+        return matches(iitem, stack, true);
+    }
+    
+    public static boolean matchesExact(IItemStack item, ItemStack stack) {
+        ItemStack internal = (ItemStack) item.getInternal();
+        if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
+            return false;
+        }
+        if(internal.getTagCompound() == null && stack.getTagCompound() != null) {
+            return false;
+        }
+        if(internal.getTagCompound() == null && stack.getTagCompound() == null) {
+            return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
+        }
+        if(internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
+            for(String s : internal.getTagCompound().getKeySet()) {
+                if(!internal.getTagCompound().getTag(s).equals(stack.getTagCompound().getTag(s))) {
+                    return false;
+                }
+            }
+        }
+        return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
+    }
 }
