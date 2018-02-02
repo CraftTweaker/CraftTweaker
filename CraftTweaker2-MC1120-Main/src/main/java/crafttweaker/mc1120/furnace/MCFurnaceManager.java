@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.furnace;
 
-import crafttweaker.*;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.*;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.actions.*;
@@ -23,7 +23,7 @@ public class MCFurnaceManager implements IFurnaceManager {
     public static final Map<IItemStack, Integer> fuelMap = new HashMap<>();
     
     public static List<ActionAddFurnaceRecipe> recipesToAdd = new ArrayList<>();
-    public static List<ActionFurnaceRemoveRecipe> recipesToRemove = new ArrayList<>();
+    public static List<IActionFurnaceRemoval> recipesToRemove = new ArrayList<>();
     
     public MCFurnaceManager() {
     
@@ -39,10 +39,7 @@ public class MCFurnaceManager implements IFurnaceManager {
     
     @Override
     public void removeAll() {
-        Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.instance().getSmeltingList();
-        for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-            recipesToRemove.add(new ActionFurnaceRemoveRecipe(getIItemStack(entry.getKey()), getIItemStack(entry.getValue())));
-        }
+        recipesToRemove.add(new ActionFurnaceRemoveAllRecipes());
     }
     
     @Override
@@ -50,6 +47,7 @@ public class MCFurnaceManager implements IFurnaceManager {
         List<IItemStack> items = input.getItems();
         if(items == null) {
             CraftTweakerAPI.logError("Cannot turn " + input.toString() + " into a furnace recipe");
+            return;
         }
         ItemStack[] items2 = getItemStacks(items);
         ItemStack output2 = getItemStack(output);
@@ -63,7 +61,7 @@ public class MCFurnaceManager implements IFurnaceManager {
     
     @Override
     public int getFuel(IItemStack item) {
-        return ((ItemStack)item.getInternal()).getItem().getItemBurnTime(((ItemStack)item.getInternal()));
+        return ((ItemStack) item.getInternal()).getItem().getItemBurnTime(((ItemStack) item.getInternal()));
     }
     
     @Override
