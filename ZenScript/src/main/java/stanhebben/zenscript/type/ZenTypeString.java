@@ -20,6 +20,7 @@ public class ZenTypeString extends ZenType {
     
     public static final ZenTypeString INSTANCE = new ZenTypeString();
     
+    
     private static final String ANY_NAME = "any/AnyString";
     private static final String ANY_NAME_2 = "any.AnyString";
     
@@ -85,11 +86,11 @@ public class ZenTypeString extends ZenType {
     
     @Override
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
-    	if(ExpressionStringMethod.hasMethod(name)) {
-    		return new ExpressionStringMethod(position, value.eval(environment), name, environment);
-    	}
-    	
-    	IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
+        if(ExpressionStringMethod.hasMethod(name, environment.getEnvironment().getTypeRegistry())) {
+            return new ExpressionStringMethod(position, value.eval(environment), name);
+        }
+        
+        IPartialExpression result = memberExpansion(position, environment, value.eval(environment), name);
         if(result == null) {
             environment.error(position, "string value has no such member: " + name);
             return new ExpressionInvalid(position, ZenTypeAny.INSTANCE);

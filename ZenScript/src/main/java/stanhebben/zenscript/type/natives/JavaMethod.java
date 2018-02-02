@@ -60,11 +60,11 @@ public class JavaMethod implements IJavaMethod {
     public static IJavaMethod getStatic(String owner, String name, ZenType returnType, ZenType... arguments) {
         return new JavaMethodGenerated(true, false, false, owner, name, returnType, arguments, new boolean[arguments.length]);
     }
-
+    
     public static IJavaMethod get(ITypeRegistry types, Method method) {
         return new JavaMethod(method, types);
     }
-
+    
     public static IJavaMethod select(boolean doStatic, List<IJavaMethod> methods, IEnvironmentGlobal environment, Expression... arguments) {
         int bestPriority = PRIORITY_INVALID;
         IJavaMethod bestMethod = null;
@@ -86,7 +86,7 @@ public class JavaMethod implements IJavaMethod {
         
         return isValid ? bestMethod : null;
     }
-
+    
     public static ZenType[] predict(List<IJavaMethod> methods, int numArguments) {
         ZenType[] results = new ZenType[numArguments];
         boolean[] ambiguous = new boolean[numArguments];
@@ -256,7 +256,8 @@ public class JavaMethod implements IJavaMethod {
         }
         
         int checkUntil = arguments.length;
-        if (method.isVarArgs()) checkUntil = parameterTypes.length - 1;
+        if(method.isVarArgs())
+            checkUntil = parameterTypes.length - 1;
         if(arguments.length == parameterTypes.length && method.isVarArgs()) {
             ZenType arrayType = parameterTypes[method.getParameterTypes().length - 1];
             ZenType baseType = ((ZenTypeArray) arrayType).getBaseType();

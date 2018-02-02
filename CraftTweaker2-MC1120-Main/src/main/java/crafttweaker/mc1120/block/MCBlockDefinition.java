@@ -12,6 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 /**
  * @author Stan
  */
@@ -63,6 +65,11 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
+    public float getHardness() {
+        return block.blockHardness;
+    }
+    
+    @Override
     public void setUnbreakable() {
         block.setBlockUnbreakable();
     }
@@ -78,8 +85,8 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
-    public void setHarvestLevel(String toolclass, int level) {
-        block.setHarvestLevel(toolclass, level);
+    public void setHarvestLevel(String toolClass, int level) {
+        block.setHarvestLevel(toolClass, level);
     }
     
     @Override
@@ -89,7 +96,7 @@ public class MCBlockDefinition implements IBlockDefinition {
     
     @Override
     public String getHarvestTool() {
-        return block.getHarvestTool(block.getDefaultState());
+        return Optional.ofNullable(block.getHarvestTool(block.getDefaultState())).orElse("");
     }
     
     @Override

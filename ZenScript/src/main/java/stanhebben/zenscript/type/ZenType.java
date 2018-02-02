@@ -229,7 +229,7 @@ public abstract class ZenType {
     }
     
     public final boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-        return equals(type) || getCastingRule(type, environment) != null || toJavaClass().isInstance(type.toJavaClass());
+        return this.equals(type) || this.getCastingRule(type, environment) != null || type.toJavaClass().isAssignableFrom(this.toJavaClass());
         
     }
     

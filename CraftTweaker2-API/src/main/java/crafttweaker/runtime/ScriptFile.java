@@ -2,6 +2,7 @@ package crafttweaker.runtime;
 
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.IPreprocessor;
+import crafttweaker.runtime.providers.ScriptIteratorZip;
 
 import java.io.*;
 import java.util.*;
@@ -57,8 +58,9 @@ public class ScriptFile {
      * Gets the effective name that has every info in it that it can, like zip files don't use only the zip file name
      */
     public String getEffectiveName(){
-        if (script.getGroupName().endsWith(".zip")) {
-            return getGroupName() + "$" + getName();
+        if (script instanceof ScriptIteratorZip) {
+            ScriptIteratorZip scriptIterator = (ScriptIteratorZip) script;
+            return getGroupName() + "\\" + scriptIterator.getCurrentName().replace('/', '\\');
         }else {
             return getGroupName();
         }

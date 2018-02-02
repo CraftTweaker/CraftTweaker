@@ -84,7 +84,11 @@ public class ZenModule {
             }
             
             if(!script.getFunctions().isEmpty() || !script.getGlobals().isEmpty()) {
-                String[] splitName = script.getFileName().split("\\.|\\\\");
+                String fileName = script.getFileName();
+                if (fileName.startsWith("scripts.zip\\"))
+                    fileName = fileName.substring(12);
+                
+                String[] splitName = fileName.replaceAll("\\.zip", "").split("\\.|\\\\");
                 PartialScriptReference reference = SymbolScriptReference.getOrCreateReference(environmentGlobal);
                 if(splitName.length != 0)
                     reference.addScriptOrDirectory(environmentScript, Arrays.copyOfRange(splitName, 0, splitName.length - 1));
@@ -122,6 +126,8 @@ public class ZenModule {
                         fn.getReturnType().defaultValue(fn.getPosition()).compile(true, methodEnvironment);
                         methodOutput.returnType(fn.getReturnType().toASMType());
                     }
+                } else if(!(statements[statements.length - 1] instanceof StatementReturn)) {
+                    methodOutput.ret();
                 }
                 methodOutput.end();
             }
@@ -341,7 +347,7 @@ public class ZenModule {
             dir = "";
         }
         
-        return dir.length() > 0 ? (dir.replace("/", "_") + "_") : "" + StringUtil.capitalize(name);
+        return (dir.length() > 0 ? dir.replace('/', '\\') + "\\" : "") + StringUtil.capitalize(name);
         
     }
     
