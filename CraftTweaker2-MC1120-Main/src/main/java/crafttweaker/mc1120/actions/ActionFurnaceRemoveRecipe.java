@@ -9,7 +9,7 @@ import java.util.*;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStack;
 
-public class ActionFurnaceRemoveRecipe implements IAction {
+public class ActionFurnaceRemoveRecipe implements IActionFurnaceRemoval {
     
     private IIngredient output;
     private IIngredient input;

@@ -522,7 +522,7 @@ public class CraftTweakerMC {
     }
     
     public static boolean matches(IItemStack iitem, ItemStack stack, boolean wildcardsize) {
-        ItemStack internal = stack;
+        ItemStack internal = (ItemStack) iitem.getInternal();
         if(stack.hasTagCompound()) {
             return matchesExact(iitem, stack);
         }
