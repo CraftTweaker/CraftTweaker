@@ -14,17 +14,17 @@ import static stanhebben.zenscript.util.ZenTypeUtil.signature;
 
 public class ZenTypeEntry extends ZenType {
     
-    private final ZenType valueType;
-    private final ZenType keyType;
     
-    public ZenTypeEntry(ZenType valueType, ZenType keyType) {
-        this.valueType = valueType;
+    private final ZenType keyType, valueType;
+    
+    public ZenTypeEntry(ZenType keyType, ZenType valueType) {
         this.keyType = keyType;
+        this.valueType = valueType;
     }
     
     public ZenTypeEntry(ZenTypeAssociative mapType) {
-        this.valueType = mapType.getValueType();
         this.keyType = mapType.getKeyType();
+        this.valueType = mapType.getValueType();
     }
     
     @Override

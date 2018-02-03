@@ -8,13 +8,13 @@ import java.util.*;
 
 import static stanhebben.zenscript.util.ZenTypeUtil.internal;
 
-public class ExpressionMapSet extends Expression {
+public class ExpressionMapEntrySet extends Expression {
     
     private final Expression map;
     private final SetType setType;
     private final ZenTypeArrayBasic type;
     
-    public ExpressionMapSet(ZenPosition position, Expression map, String whichSet) {
+    public ExpressionMapEntrySet(ZenPosition position, Expression map, String whichSet) {
         super(position);
         this.map = map;
         if(whichSet.contains("value"))
@@ -56,8 +56,9 @@ public class ExpressionMapSet extends Expression {
         ZenTypeAssociative mapType = (ZenTypeAssociative) map.getType();
         switch(setType) {
             case KEYS:
+                return new ZenTypeArrayBasic(mapType.getKeyType());
             case VALUES:
-                return new ZenTypeArrayBasic(setType == SetType.KEYS ? mapType.getKeyType() : mapType.getValueType());
+                return new ZenTypeArrayBasic(mapType.getValueType());
             default:
                 return new ZenTypeArrayBasic(new ZenTypeEntry(mapType));
         }
