@@ -4,12 +4,14 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.MCPosition3f;
@@ -503,6 +505,11 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public boolean isInvisible() {
         return entity.isInvisible();
+    }
+    
+    @Override
+    public ITeam getTeam() {
+        return new MCTeam(entity.getTeam());
     }
     
     @Override
