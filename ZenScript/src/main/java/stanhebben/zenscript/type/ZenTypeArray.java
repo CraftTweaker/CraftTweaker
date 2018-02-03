@@ -90,20 +90,24 @@ public abstract class ZenTypeArray extends ZenType {
     
     @Override
     public final Expression binary(ZenPosition position, IEnvironmentGlobal environment, Expression left, Expression right, OperatorType operator) {
-        if(operator == OperatorType.INDEXGET) {
-            return indexGet(position, environment, left, right);
-        } else if (operator == OperatorType.ADD) {
-        	if (!getBaseType().equals(right.getType()) && !right.getType().canCastExplicit(getBaseType(), environment)) throw new IllegalArgumentException(String.format("Cannot add %s to %s", right.getType().toString(), toString()));
-        	
-        	return add(position, environment, left, right);
-        } else {
-            Expression result = binaryExpansion(position, environment, left, right, operator);
-            if(result == null) {
-                environment.error(position, getName() + " doesn't have such operator");
-                return new ExpressionInvalid(position);
-            } else {
-                return result;
-            }
+        switch(operator) {
+            case INDEXGET:
+                return indexGet(position, environment, left, right);
+            case ADD:
+                if(!getBaseType().equals(right.getType()) && !right.getType().canCastExplicit(getBaseType(), environment))
+                    throw new IllegalArgumentException(String.format("Cannot add %s to %s", right.getType().toString(), toString()));
+            
+                return add(position, environment, left, right);
+            case CONTAINS:
+                return new ExpressionArrayContains(position, environment, left, right);
+            default:
+                Expression result = binaryExpansion(position, environment, left, right, operator);
+                if(result == null) {
+                    environment.error(position, getName() + " doesn't have such operator");
+                    return new ExpressionInvalid(position);
+                } else {
+                    return result;
+                }
         }
     }
     
