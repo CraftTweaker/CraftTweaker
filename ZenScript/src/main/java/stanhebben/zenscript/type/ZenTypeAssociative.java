@@ -113,6 +113,8 @@ public class ZenTypeAssociative extends ZenType {
     public IPartialExpression getMember(ZenPosition position, IEnvironmentGlobal environment, IPartialExpression value, String name) {
         if(name.equals("length")) {
             return new ExpressionMapSize(position, value.eval(environment));
+        }else if(name.equals("keySet") || name.equals("values") || name.equals("keys") || name.equals("valueSet") || name.equals("entrySet")) {
+            return new ExpressionMapSet(position, value.eval(environment), name);
         } else if(STRING.canCastImplicit(keyType, environment)) {
             return new ExpressionMapIndexGet(position, value.eval(environment), new ExpressionString(position, name).cast(position, environment, keyType));
         } else {
