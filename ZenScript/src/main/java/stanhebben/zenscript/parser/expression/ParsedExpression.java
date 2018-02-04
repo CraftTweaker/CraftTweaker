@@ -291,6 +291,9 @@ public abstract class ParsedExpression {
             } else if(parser.optional(T_AS) != null) {
                 ZenType type = ZenType.read(parser, environment);
                 base = new ParsedExpressionCast(position, base, type);
+            } else if(parser.optional(T_INSTANCEOF) != null) {
+                ZenType type = ZenType.read(parser, environment);
+                base = new ParsedExpressionInstanceOf(position, base, type);
             } else {
                 break;
             }
