@@ -2,7 +2,7 @@ package stanhebben.zenscript.expression.partial;
 
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.*;
-import stanhebben.zenscript.symbols.IZenSymbol;
+import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenType;
 import stanhebben.zenscript.util.ZenPosition;
 
@@ -64,7 +64,7 @@ public class PartialScriptReference implements IPartialExpression {
     
     @Override
     public IZenSymbol toSymbol() {
-        throw new UnsupportedOperationException("Cannot make a script file a symbol!");
+        return new SymbolScriptReference(this);
     }
     
     @Override

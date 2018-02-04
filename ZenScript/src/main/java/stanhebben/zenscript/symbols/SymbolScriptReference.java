@@ -10,8 +10,12 @@ public class SymbolScriptReference implements IZenSymbol {
     private final PartialScriptReference instance;
     
     
-    SymbolScriptReference() {
+    private SymbolScriptReference() {
         this.instance = new PartialScriptReference();
+    }
+    
+    public SymbolScriptReference(PartialScriptReference instance) {
+        this.instance = instance;
     }
     
     @Override
