@@ -15,7 +15,7 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@BracketHandler
+@BracketHandler(priority = 100)
 @ZenRegister
 public class BracketHandlerEnchantments implements IBracketHandler {
     

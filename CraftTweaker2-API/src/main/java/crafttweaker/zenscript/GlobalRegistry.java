@@ -26,7 +26,8 @@ public class GlobalRegistry {
     private static final Set<Pair<Integer, IBracketHandler>> bracketHandlers = new TreeSet<>(new Comparator<Pair<Integer, IBracketHandler>>() {
         @Override
         public int compare(Pair<Integer, IBracketHandler> o1, Pair<Integer, IBracketHandler> o2) {
-            return o1.getKey().compareTo(o2.getKey());
+            int i = o1.getKey().compareTo(o2.getKey());
+            return i == 0 ? o1.getValue().getClass().getName().compareTo(o2.getValue().getClass().getName()) : i;
         }
     });
     private static final TypeRegistry types = new TypeRegistry();
@@ -77,7 +78,7 @@ public class GlobalRegistry {
         int prio = 10;
         if(handler.getClass().getAnnotation(BracketHandler.class) != null) {
             prio = handler.getClass().getAnnotation(BracketHandler.class).priority();
-        }else{
+        } else {
             CraftTweakerAPI.logError(handler.getClass().getName() + " is missing a BracketHandler annotation, setting the priority to " + prio);
         }
         bracketHandlers.add(new Pair<>(prio, handler));

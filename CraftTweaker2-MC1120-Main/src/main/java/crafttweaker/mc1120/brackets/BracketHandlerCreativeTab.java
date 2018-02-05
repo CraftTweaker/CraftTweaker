@@ -14,7 +14,7 @@ import stanhebben.zenscript.type.natives.IJavaMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@BracketHandler
+@BracketHandler(priority = 100)
 @ZenRegister
 public class BracketHandlerCreativeTab implements IBracketHandler {
     
