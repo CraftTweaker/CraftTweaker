@@ -1,5 +1,6 @@
 package crafttweaker.zenscript;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.BracketHandler;
 import crafttweaker.runtime.GlobalFunctions;
 import javafx.util.Pair;
@@ -73,13 +74,19 @@ public class GlobalRegistry {
     
     
     public static void registerBracketHandler(IBracketHandler handler) {
-        bracketHandlers.add(new Pair<>(handler.getClass().getAnnotation(BracketHandler.class).priority(), handler));
+        int prio = 10;
+        if(handler.getClass().getAnnotation(BracketHandler.class) != null) {
+            prio = handler.getClass().getAnnotation(BracketHandler.class).priority();
+        }else{
+            CraftTweakerAPI.logError(handler.getClass().getName() + " is missing a BracketHandler annotation, setting the priority to " + prio);
+        }
+        bracketHandlers.add(new Pair<>(prio, handler));
     }
     
     public static void removeBracketHandler(IBracketHandler handler) {
         Pair<Integer, IBracketHandler> prioPair = null;
         for(Pair<Integer, IBracketHandler> pair : bracketHandlers) {
-            if(pair.getValue().equals(handler)){
+            if(pair.getValue().equals(handler)) {
                 prioPair = pair;
             }
         }
