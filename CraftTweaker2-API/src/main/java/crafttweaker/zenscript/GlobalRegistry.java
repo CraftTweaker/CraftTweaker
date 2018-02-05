@@ -77,7 +77,13 @@ public class GlobalRegistry {
     }
     
     public static void removeBracketHandler(IBracketHandler handler) {
-        bracketHandlers.remove(handler);
+        Pair<Integer, IBracketHandler> prioPair = null;
+        for(Pair<Integer, IBracketHandler> pair : bracketHandlers) {
+            if(pair.getValue().equals(handler)){
+                prioPair = pair;
+            }
+        }
+        bracketHandlers.remove(prioPair);
     }
     
     public static void registerNativeClass(Class<?> cls) {
