@@ -65,6 +65,8 @@ public class TypeRegistry implements ITypeRegistry {
                     return getListType(pType);
                 } else if(Map.class.isAssignableFrom(rawClass)) {
                     return getMapType(pType);
+                } else if(Map.Entry.class.isAssignableFrom(rawClass)) {
+                    return getMapEntryType(pType);
                 } else {
                     return getClassType(rawClass);
                 }
@@ -90,6 +92,14 @@ public class TypeRegistry implements ITypeRegistry {
     private ZenType getMapType(ParameterizedType type) {
         if(type.getRawType() == Map.class) {
             return new ZenTypeAssociative(getType(type.getActualTypeArguments()[1]), getType(type.getActualTypeArguments()[0]));
+        }
+        
+        return null;
+    }
+    
+    private ZenTypeEntry getMapEntryType(ParameterizedType type) {
+        if(type.getRawType() == Map.Entry.class) {
+            return new ZenTypeEntry(getType(type.getActualTypeArguments()[0]), getType(type.getActualTypeArguments()[1]));
         }
         
         return null;
