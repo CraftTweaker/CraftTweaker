@@ -280,7 +280,10 @@ public class StringUtil {
                 case 'e':
                     newstr.append('\033');
                     break; /* switch */
-
+                case '\'':
+                case '"':
+                    newstr.append(Character.toChars(cp));
+                    break;
 				/*
                  * A "control" character is what you get when you xor its
 				 * codepoint with '@'==64. This only makes sense for ASCII, and
