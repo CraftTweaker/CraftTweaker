@@ -7,6 +7,9 @@ import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
@@ -61,7 +64,7 @@ public class MCFurnaceManager implements IFurnaceManager {
     
     @Override
     public int getFuel(IItemStack item) {
-        return ((ItemStack) item.getInternal()).getItem().getItemBurnTime(((ItemStack) item.getInternal()));
+        return ForgeEventFactory.getItemBurnTime((ItemStack) item.getInternal());
     }
     
     @Override

@@ -3,6 +3,7 @@ package crafttweaker.mc1120.commands.dumpZScommand;
 import crafttweaker.annotations.ZenDoc;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.*;
+import javafx.util.Pair;
 import joptsimple.internal.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -72,8 +73,8 @@ public class DumpZsCommand extends CraftTweakerCommand {
         }
         
         TreeNode<String> bracketNode = root.addChild("Bracket Handlers");
-        for(IBracketHandler iBracketHandler : GlobalRegistry.getBracketHandlers()) {
-            bracketNode.addChild(iBracketHandler.getClass().getName());
+        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getBracketHandlers()) {
+            bracketNode.addChild(pair.getClass().getName() + ", priority: " + pair.getKey());
         }
         
         TreeNode<String> types = root.addChild("Types");

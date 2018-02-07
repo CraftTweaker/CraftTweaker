@@ -1,6 +1,9 @@
 package crafttweaker.zenscript;
 
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.annotations.BracketHandler;
 import crafttweaker.runtime.GlobalFunctions;
+import javafx.util.Pair;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.compiler.*;
@@ -20,7 +23,13 @@ import java.util.logging.*;
 public class GlobalRegistry {
     
     private static final Map<String, IZenSymbol> globals = new HashMap<>();
-    private static final List<IBracketHandler> bracketHandlers = new ArrayList<>();
+    private static final Set<Pair<Integer, IBracketHandler>> bracketHandlers = new TreeSet<>(new Comparator<Pair<Integer, IBracketHandler>>() {
+        @Override
+        public int compare(Pair<Integer, IBracketHandler> o1, Pair<Integer, IBracketHandler> o2) {
+            int i = o1.getKey().compareTo(o2.getKey());
+            return i == 0 ? o1.getValue().getClass().getName().compareTo(o2.getValue().getClass().getName()) : i;
+        }
+    });
     private static final TypeRegistry types = new TypeRegistry();
     private static final SymbolPackage root = new SymbolPackage("<root>");
     private static final IZenErrorLogger errors = new CrTErrorLogger();
@@ -66,11 +75,23 @@ public class GlobalRegistry {
     
     
     public static void registerBracketHandler(IBracketHandler handler) {
-        bracketHandlers.add(handler);
+        int prio = 10;
+        if(handler.getClass().getAnnotation(BracketHandler.class) != null) {
+            prio = handler.getClass().getAnnotation(BracketHandler.class).priority();
+        } else {
+            CraftTweakerAPI.logError(handler.getClass().getName() + " is missing a BracketHandler annotation, setting the priority to " + prio);
+        }
+        bracketHandlers.add(new Pair<>(prio, handler));
     }
     
     public static void removeBracketHandler(IBracketHandler handler) {
-        bracketHandlers.remove(handler);
+        Pair<Integer, IBracketHandler> prioPair = null;
+        for(Pair<Integer, IBracketHandler> pair : bracketHandlers) {
+            if(pair.getValue().equals(handler)) {
+                prioPair = pair;
+            }
+        }
+        bracketHandlers.remove(prioPair);
     }
     
     public static void registerNativeClass(Class<?> cls) {
@@ -84,8 +105,8 @@ public class GlobalRegistry {
     }
     
     public static IZenSymbol resolveBracket(IEnvironmentGlobal environment, List<Token> tokens) {
-        for(IBracketHandler handler : bracketHandlers) {
-            IZenSymbol symbol = handler.resolve(environment, tokens);
+        for(Pair<Integer, IBracketHandler> pair : bracketHandlers) {
+            IZenSymbol symbol = pair.getValue().resolve(environment, tokens);
             if(symbol != null) {
                 return symbol;
             }
@@ -117,7 +138,7 @@ public class GlobalRegistry {
         return globals;
     }
     
-    public static List<IBracketHandler> getBracketHandlers() {
+    public static Set<Pair<Integer, IBracketHandler>> getBracketHandlers() {
         return bracketHandlers;
     }
     
