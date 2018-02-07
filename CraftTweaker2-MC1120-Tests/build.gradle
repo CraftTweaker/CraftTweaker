@@ -15,12 +15,6 @@ targetCompatibility = JavaVersion.VERSION_1_8
 version = "1.12-" + ext.craftTweakerVersion
 archivesBaseName = project.projectDir.name
 
-jar {
-    manifest {
-        attributes 'FMLAT': 'crafttweaker_at.cfg'
-    }
-}
-
 minecraft {
     version = forgeVersion1120
     runDir = "run"
