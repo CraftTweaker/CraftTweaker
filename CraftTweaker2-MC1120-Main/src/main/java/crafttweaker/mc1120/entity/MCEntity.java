@@ -21,6 +21,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -109,7 +110,8 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public IEntity getRidingEntity() {
-        return new MCEntity(entity.getRidingEntity());
+        Entity result = entity.getRidingEntity();
+        return result == null ? null : new MCEntity(result);
     }
     
     @Override
@@ -509,7 +511,8 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public ITeam getTeam() {
-        return new MCTeam(entity.getTeam());
+        Team result = entity.getTeam();
+        return result == null ? null : new MCTeam(result);
     }
     
     @Override
