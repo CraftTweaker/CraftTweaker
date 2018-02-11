@@ -214,7 +214,6 @@ public final class MCRecipeManager implements IRecipeManager {
     public static abstract class ActionBaseRemoveRecipes implements IAction {
         
         public void removeRecipes(List<ResourceLocation> removingRecipes) {
-            CraftTweakerAPI.logInfo(removingRecipes.size() + " really removed");
             removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         }
     }
