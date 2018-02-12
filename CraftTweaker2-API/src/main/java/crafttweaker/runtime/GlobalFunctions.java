@@ -10,8 +10,8 @@ public class GlobalFunctions {
     private GlobalFunctions() {
     }
     
-    public static void print(String message) {
-        CraftTweakerAPI.logInfo(message);
+    public static void print(Object message) {
+        CraftTweakerAPI.logInfo(message.toString());
     }
     
     // public static void print(Object object) {
