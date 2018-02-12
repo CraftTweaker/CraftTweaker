@@ -3,7 +3,6 @@ package crafttweaker.zenscript;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.BracketHandler;
 import crafttweaker.runtime.GlobalFunctions;
-import javafx.util.Pair;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.compiler.*;
@@ -15,6 +14,7 @@ import stanhebben.zenscript.type.natives.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.ToIntFunction;
 import java.util.logging.*;
 
 /**
@@ -23,13 +23,7 @@ import java.util.logging.*;
 public class GlobalRegistry {
     
     private static final Map<String, IZenSymbol> globals = new HashMap<>();
-    private static final Set<Pair<Integer, IBracketHandler>> bracketHandlers = new TreeSet<>(new Comparator<Pair<Integer, IBracketHandler>>() {
-        @Override
-        public int compare(Pair<Integer, IBracketHandler> o1, Pair<Integer, IBracketHandler> o2) {
-            int i = o1.getKey().compareTo(o2.getKey());
-            return i == 0 ? o1.getValue().getClass().getName().compareTo(o2.getValue().getClass().getName()) : i;
-        }
-    });
+    private static final Set<Pair<Integer, IBracketHandler>> bracketHandlers = new TreeSet<>(Comparator.comparingInt((ToIntFunction<Pair<Integer, IBracketHandler>>) Pair::getKey).thenComparing(o -> o.getValue().getClass().getName()));
     private static final TypeRegistry types = new TypeRegistry();
     private static final SymbolPackage root = new SymbolPackage("<root>");
     private static final IZenErrorLogger errors = new CrTErrorLogger();
@@ -37,7 +31,7 @@ public class GlobalRegistry {
     private static final Map<String, TypeExpansion> expansions = new HashMap<>();
     
     static {
-        registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
+        registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", Object.class));
         registerGlobal("totalActions", getStaticFunction(GlobalFunctions.class, "totalActions"));
         registerGlobal("enableDebug", getStaticFunction(GlobalFunctions.class, "enableDebug"));
         registerGlobal("isNull", getStaticFunction(GlobalFunctions.class, "isNull", Object.class));
@@ -169,5 +163,41 @@ public class GlobalRegistry {
     
     public static Map<String, TypeExpansion> getExpansions() {
         return expansions;
+    }
+    
+    public static class Pair<K, V> {
+        
+        private final K key;
+        private final V value;
+        
+        public Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+        
+        public K getKey() {
+            return key;
+        }
+        
+        public V getValue() {
+            return value;
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if(this == o)
+                return true;
+            if(o == null || getClass() != o.getClass())
+                return false;
+            Pair<?, ?> pair = (Pair<?, ?>) o;
+            return Objects.equals(key, pair.key) && Objects.equals(value, pair.value);
+        }
+        
+        @Override
+        public int hashCode() {
+            
+            return Objects.hash(key, value);
+        }
+        
     }
 }
