@@ -138,8 +138,17 @@ public class GlobalRegistry {
         return globals;
     }
     
-    public static Set<Pair<Integer, IBracketHandler>> getBracketHandlers() {
+    public static Set<Pair<Integer, IBracketHandler>> getPrioritizedBracketHandlers() {
         return bracketHandlers;
+    }
+    @Deprecated
+    public static List<IBracketHandler> getBracketHandlers() {
+        List<IBracketHandler> handlers = new LinkedList<>();
+        
+        for(Pair<Integer, IBracketHandler> pair : getPrioritizedBracketHandlers()) {
+            handlers.add(pair.getValue());
+        }
+        return handlers;
     }
     
     public static TypeRegistry getTypes() {

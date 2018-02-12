@@ -73,7 +73,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
         }
         
         TreeNode<String> bracketNode = root.addChild("Bracket Handlers");
-        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getBracketHandlers()) {
+        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
             bracketNode.addChild(pair.getClass().getName() + ", priority: " + pair.getKey());
         }
         

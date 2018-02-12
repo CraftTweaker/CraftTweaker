@@ -21,7 +21,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         
         CraftTweakerAPI.logCommand("\nBracket Handlers:");
-        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getBracketHandlers()) {
+        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
             CraftTweakerAPI.logCommand(pair.getValue().getClass().getName() + ", priority: "  + pair.getKey());
         }
         
