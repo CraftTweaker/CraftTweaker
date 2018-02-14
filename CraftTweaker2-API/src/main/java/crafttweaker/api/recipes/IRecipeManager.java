@@ -129,6 +129,14 @@ public interface IRecipeManager {
     void removeByRegex(String regexString, @Optional IItemStack outputFilter);
     
     /**
+     * Removes all recipe which match the given modid
+     *
+     * @param modid: modid of recipes to remove
+     */
+    @ZenMethod
+    void removeByMod(String modid);
+    
+    /**
      * Removes shaped recipes.
      *
      * @param output      recipe output
