@@ -158,13 +158,13 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void removeByRecipeName(String recipeName) {
-        recipesToRemove.add(new ActionRemoveRecipeByRecipeName(recipeName));
+    public void removeByRecipeName(String recipeName, @Optional IItemStack outputFilter) {
+        recipesToRemove.add(new ActionRemoveRecipeByRecipeName(recipeName, outputFilter));
     }
     
     @Override
-    public void removeByRegex(String regexString) {
-        recipesToRemove.add(new ActionRemoveRecipeByRegex(regexString));
+    public void removeByRegex(String regexString, @Optional IItemStack outputFilter) {
+        recipesToRemove.add(new ActionRemoveRecipeByRegex(regexString, outputFilter));
     }
     
     @Override
@@ -466,9 +466,12 @@ public final class MCRecipeManager implements IRecipeManager {
     public static class ActionRemoveRecipeByRecipeName extends ActionBaseRemoveRecipes {
         
         String recipeName;
+        IItemStack filter;
         
-        public ActionRemoveRecipeByRecipeName(String recipeName) {
+        
+        public ActionRemoveRecipeByRecipeName(String recipeName, IItemStack filter) {
             this.recipeName = recipeName;
+            this.filter = filter;
         }
         
         @Override
@@ -477,8 +480,12 @@ public final class MCRecipeManager implements IRecipeManager {
             
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
                 if(recipe.getKey().toString().equals(recipeName)) {
-                    toRemove.add(recipe.getKey());
-                    
+                    if(filter != null) {
+                        if(filter.matches(getIItemStack(recipe.getValue().getRecipeOutput())))
+                            toRemove.add(recipe.getKey());
+                    } else {
+                        toRemove.add(recipe.getKey());
+                    }
                 }
             }
             
@@ -488,6 +495,9 @@ public final class MCRecipeManager implements IRecipeManager {
         @Override
         public String describe() {
             if(recipeName != null) {
+                if(filter != null) {
+                    return "Removing recipe with name \"" + recipeName + "\", Matching filter: " + filter.getDisplayName();
+                }
                 return "Removing recipe with name \"" + recipeName + "\"";
             } else {
                 return "No name for the recipe to remove was given.";
@@ -498,9 +508,11 @@ public final class MCRecipeManager implements IRecipeManager {
     public static class ActionRemoveRecipeByRegex extends ActionBaseRemoveRecipes {
         
         String regexCheck;
+        IItemStack filter;
         
-        public ActionRemoveRecipeByRegex(String regexCheck) {
+        public ActionRemoveRecipeByRegex(String regexCheck, IItemStack filter) {
             this.regexCheck = regexCheck;
+            this.filter = filter;
         }
         
         @Override
@@ -512,7 +524,12 @@ public final class MCRecipeManager implements IRecipeManager {
                 ResourceLocation resourceLocation = recipe.getKey();
                 Matcher m = p.matcher(resourceLocation.toString());
                 if(m.matches()) {
-                    toRemove.add(resourceLocation);
+                    if(filter != null) {
+                        if(filter.matches(getIItemStack(recipe.getValue().getRecipeOutput())))
+                            toRemove.add(recipe.getKey());
+                    } else {
+                        toRemove.add(resourceLocation);
+                    }
                 }
             }
             
@@ -522,6 +539,9 @@ public final class MCRecipeManager implements IRecipeManager {
         @Override
         public String describe() {
             if(regexCheck != null) {
+                if(filter != null) {
+                    return "Removing all recipes matching this regex: \"" + regexCheck + "\", Matching filter: " + filter.getDisplayName();
+                }
                 return "Removing all recipes matching this regex: \"" + regexCheck + "\"";
             } else {
                 return "No regex String for the recipe to remove was given.";
