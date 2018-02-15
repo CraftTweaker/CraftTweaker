@@ -73,7 +73,7 @@ public class GlobalRegistry {
         if(handler.getClass().getAnnotation(BracketHandler.class) != null) {
             prio = handler.getClass().getAnnotation(BracketHandler.class).priority();
         } else {
-            CraftTweakerAPI.logError(handler.getClass().getName() + " is missing a BracketHandler annotation, setting the priority to " + prio);
+            CraftTweakerAPI.logInfo(handler.getClass().getName() + " is missing a BracketHandler annotation, setting the priority to " + prio);
         }
         bracketHandlers.add(new Pair<>(prio, handler));
     }
