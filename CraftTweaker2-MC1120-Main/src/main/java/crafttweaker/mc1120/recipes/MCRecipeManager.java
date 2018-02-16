@@ -18,6 +18,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
+import java.util.regex.*;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 
@@ -551,8 +552,18 @@ public final class MCRecipeManager implements IRecipeManager {
         @Override
         public void apply() {
             List<ResourceLocation> toRemove = new ArrayList<>();
+            Pattern p = Pattern.compile(regexCheck);
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-                toRemove.add(recipe.getKey());
+                ResourceLocation resourceLocation = recipe.getKey();
+                Matcher m = p.matcher(resourceLocation.toString());
+                if(m.matches()) {
+                    if(filter != null) {
+                        if(filter.matches(getIItemStack(recipe.getValue().getRecipeOutput())))
+                            toRemove.add(recipe.getKey());
+                    } else {
+                        toRemove.add(resourceLocation);
+                    }
+                }
             }
             
             super.removeRecipes(toRemove);
