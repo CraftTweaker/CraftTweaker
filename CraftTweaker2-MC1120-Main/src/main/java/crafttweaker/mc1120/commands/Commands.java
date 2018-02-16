@@ -725,7 +725,7 @@ public class Commands {
                 }
                 
                 sender.sendMessage(getNormalMessage("\u00A7bBeginning load of the scripts"));
-                boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(false, "crafttweaker");
+                boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(true, "crafttweaker");
                 
                 if(loadSuccessful) {
                     sender.sendMessage(getNormalMessage("Syntax of scripts is \u00A7acorrect\u00A7r, to see the effect \u00A7erestart the game"));
