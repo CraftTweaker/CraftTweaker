@@ -16,8 +16,8 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
     private final IIngredient ingredients[];
     
     
-    public MCRecipeShapeless(IIngredient[] ingredients, IItemStack output, IRecipeFunction recipeFunction, IRecipeAction recipeAction) {
-        super(output, createIngredientList(ingredients), recipeFunction, recipeAction);
+    public MCRecipeShapeless(IIngredient[] ingredients, IItemStack output, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean isHidden) {
+        super(output, createIngredientList(ingredients), recipeFunction, recipeAction, isHidden);
         this.ingredients = ingredients;
     }
     

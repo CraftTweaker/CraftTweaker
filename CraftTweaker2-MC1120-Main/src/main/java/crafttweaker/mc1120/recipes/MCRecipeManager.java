@@ -100,27 +100,27 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-        recipesToAdd.add(new ActionAddShapedRecipe(output, ingredients, function, action, false));
+    public void addShaped(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
+        recipesToAdd.add(new ActionAddShapedRecipe(output, ingredients, function, action, false, hidden));
     }
     
     @Override
-    public void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-        recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, false));
+    public void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
+        recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, false, hidden));
     }
     
     @Override
-    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-        recipesToAdd.add(new ActionAddShapedRecipe(output, ingredients, function, action, true));
+    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
+        recipesToAdd.add(new ActionAddShapedRecipe(output, ingredients, function, action, true, hidden));
     }
     
     @Override
-    public void addShapedMirrored(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-        recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, true));
+    public void addShapedMirrored(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
+        recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, true,hidden));
     }
     
     @Override
-    public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+    public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
         boolean valid = output != null;
         for(IIngredient ing : ingredients) {
             if(ing == null) {
@@ -131,11 +131,11 @@ public final class MCRecipeManager implements IRecipeManager {
             CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
             return;
         }
-        recipesToAdd.add(new ActionAddShapelessRecipe(output, ingredients, function, action));
+        recipesToAdd.add(new ActionAddShapelessRecipe(output, ingredients, function, action, hidden));
     }
     
     @Override
-    public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+    public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
         boolean valid = output != null;
         for(IIngredient ing : ingredients) {
             if(ing == null) {
@@ -146,7 +146,7 @@ public final class MCRecipeManager implements IRecipeManager {
             CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
             return;
         }
-        recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action));
+        recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action, hidden));
     }
     
     @Override
@@ -606,12 +606,12 @@ public final class MCRecipeManager implements IRecipeManager {
     public static class ActionBaseAddRecipe implements IAction {
         
         // this is != null only _after_ it has been applied and is actually registered
-        protected final IRecipe recipe;
+        protected final MCRecipeBase recipe;
         protected final IItemStack output;
         protected final boolean isShaped;
         protected String name;
         
-        private ActionBaseAddRecipe(IRecipe recipe, IItemStack output, boolean isShaped) {
+        private ActionBaseAddRecipe(MCRecipeBase recipe, IItemStack output, boolean isShaped) {
             this.recipe = recipe;
             this.output = output;
             this.isShaped = isShaped;
@@ -665,28 +665,32 @@ public final class MCRecipeManager implements IRecipeManager {
                 return "Trying to add " + (isShaped ? "shaped" : "shapeless") + "recipe without correct output";
             }
         }
+    
+        public MCRecipeBase getRecipe() {
+            return recipe;
+        }
     }
     
     private static class ActionAddShapedRecipe extends ActionBaseAddRecipe {
         
-        public ActionAddShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            this(null, output, ingredients, function, action, mirrored);
+        public ActionAddShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored, boolean hidden) {
+            this(null, output, ingredients, function, action, mirrored, hidden);
         }
         
-        public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            super(new MCRecipeShaped(ingredients, output, function, action, mirrored), output, true);
+        public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored, boolean hidden) {
+            super(new MCRecipeShaped(ingredients, output, function, action, mirrored, hidden), output, true);
             setName(name);
         }
     }
     
     private static class ActionAddShapelessRecipe extends ActionBaseAddRecipe {
         
-        public ActionAddShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            this(null, output, ingredients, function, action);
+        public ActionAddShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean hidden) {
+            this(null, output, ingredients, function, action, hidden);
         }
         
-        public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            super(new MCRecipeShapeless(ingredients, output, function, action), output, false);
+        public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, boolean hidden) {
+            super(new MCRecipeShapeless(ingredients, output, function, action, hidden), output, false);
             setName(name);
         }
     }

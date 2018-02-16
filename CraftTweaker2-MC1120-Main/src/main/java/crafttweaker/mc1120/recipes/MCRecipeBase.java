@@ -17,14 +17,16 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     protected final NonNullList<Ingredient> ingredientList;
     protected final IRecipeFunction recipeFunction;
     protected final IRecipeAction recipeAction;
+    private final boolean hidden;
     protected ResourceLocation recipeNameLocation = new ResourceLocation("crafttweaker", "unInitializedRecipeName");
     
-    MCRecipeBase(IItemStack output, NonNullList<Ingredient> ingredientList, IRecipeFunction recipeFunction, IRecipeAction recipeAction) {
+    MCRecipeBase(IItemStack output, NonNullList<Ingredient> ingredientList, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean hidden) {
         this.output = output;
         this.outputStack = CraftTweakerMC.getItemStack(output);
         this.ingredientList = ingredientList;
         this.recipeFunction = recipeFunction;
         this.recipeAction = recipeAction;
+        this.hidden = hidden;
     }
     
     @Override
@@ -39,7 +41,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     @Override
     public boolean isHidden() {
-        return false;
+        return hidden;
     }
     
     @Override
@@ -79,5 +81,9 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     public IItemStack getOutput() {
         return output;
+    }
+    
+    public boolean isVisible() {
+        return !isHidden();
     }
 }

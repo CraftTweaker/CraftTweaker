@@ -16,7 +16,7 @@ public class MCRecipeWrapper extends MCRecipeBase {
     private final IRecipe recipe;
     
     MCRecipeWrapper(IRecipe recipe) {
-        super(CraftTweakerMC.getIItemStack(recipe.getRecipeOutput()), recipe.getIngredients(), null, null);
+        super(CraftTweakerMC.getIItemStack(recipe.getRecipeOutput()), recipe.getIngredients(), null, null, recipe.isHidden());
         this.recipe = recipe;
     }
     

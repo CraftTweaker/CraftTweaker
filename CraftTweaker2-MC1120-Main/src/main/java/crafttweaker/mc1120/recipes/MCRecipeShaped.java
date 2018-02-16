@@ -22,8 +22,8 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     private final int width, height;
     private final boolean isMirrored;
     
-    public MCRecipeShaped(IIngredient[][] ingredients, IItemStack output, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean isMirrored) {
-        super(output, createIngredientList(ingredients), recipeFunction, recipeAction);
+    public MCRecipeShaped(IIngredient[][] ingredients, IItemStack output, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean isMirrored, boolean isHidden) {
+        super(output, createIngredientList(ingredients), recipeFunction, recipeAction, isHidden);
         
         this.height = ingredients.length;
         this.isMirrored = isMirrored;
