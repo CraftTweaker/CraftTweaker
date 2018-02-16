@@ -19,6 +19,7 @@ public class ZenTypeArrayBasic extends ZenTypeArray {
     
     @Override
     public boolean equals(Object other) {
+        if(other == null) return false;
         if(other instanceof ZenTypeArrayBasic) {
             ZenTypeArrayBasic o = (ZenTypeArrayBasic) other;
             return o.getBaseType().equals(getBaseType());

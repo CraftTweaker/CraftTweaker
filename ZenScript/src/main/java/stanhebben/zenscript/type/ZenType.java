@@ -229,8 +229,11 @@ public abstract class ZenType {
     }
     
     public final boolean canCastImplicit(ZenType type, IEnvironmentGlobal environment) {
-        return this.equals(type) || this.getCastingRule(type, environment) != null || type.toJavaClass().isAssignableFrom(this.toJavaClass());
-        
+        if(this.equals(type) || this.getCastingRule(type, environment) != null)
+            return true;
+        else if(type.toJavaClass() != null && this.toJavaClass() != null)
+            return type.toJavaClass().isAssignableFrom(this.toJavaClass());
+        return false;
     }
     
     public boolean canCastExplicit(ZenType type, IEnvironmentGlobal environment) {
@@ -363,6 +366,8 @@ public abstract class ZenType {
     
     @Override
     public boolean equals(Object other) {
-        return other instanceof ZenType && (getName().equals(((ZenType) other).getName()) || toJavaClass().equals(((ZenType) other).toJavaClass()));
+        if(other == null)
+            return false;
+        return other instanceof ZenType && (Objects.equals(this.getName(), ((ZenType) other).getName()) || Objects.equals(this.toJavaClass(), ((ZenType) other).toJavaClass()));
     }
 }
