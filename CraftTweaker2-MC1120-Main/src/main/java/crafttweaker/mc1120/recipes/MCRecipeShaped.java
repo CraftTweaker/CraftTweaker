@@ -58,38 +58,11 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
-        //ICraftingInventory inventory = MCCraftingInventorySquared.get(inv);
-        /*
-        boolean[] visited = new boolean[inv.getSizeInventory()];
-        for(int rowOffset = 0; rowOffset <= inv.getHeight() - height; rowOffset++) {
-            outer:
-            for(int columnOffset = 0; columnOffset <= inv.getWidth() - width; columnOffset++) {
-                for(int row = 0; row < ingredients.length; row++) {
-                    for(int column = 0; column < ingredients[row].length; column++) {
-                        ItemStack itemStack = inv.getStackInRowAndColumn(column + columnOffset, row + rowOffset);
-                        if(itemStack.isEmpty() || !ingredients[row][column].matches(CraftTweakerMC.getIItemStack(itemStack)))
-                            continue outer;
-                        visited[(column + columnOffset) + (row + rowOffset) * inv.getWidth()] = true;
-                    }
-                    for(int slot = 0; slot < visited.length; slot++) {
-                        if(visited[slot])
-                            continue;
-                        if(!inv.getStackInSlot(slot).isEmpty())
-                            return false;
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
-        */
         return calculateOffset(inv) != offsetInvalid;
     }
     
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-        //if(!matches(inv, null))
-        //    return ItemStack.EMPTY;
         if(recipeFunction != null) {
             Map<String, IItemStack> marks = new HashMap<>();
             for(int x = 0; x < ingredients.length; x++) {
