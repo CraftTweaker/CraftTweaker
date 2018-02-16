@@ -4,6 +4,8 @@ import crafttweaker.*;
 import crafttweaker.api.liquid.*;
 import net.minecraftforge.fluids.*;
 
+import java.util.Objects;
+
 /**
  * @author Stan
  */
@@ -186,5 +188,22 @@ public class MCLiquidDefinition implements ILiquidDefinition {
             return "Setting " + fluid.getName() + " gaseous to " + newValue;
         }
         
+    }
+    
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        MCLiquidDefinition that = (MCLiquidDefinition) o;
+        return Objects.equals(fluid, that.fluid);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return Objects.hash(fluid);
     }
 }
