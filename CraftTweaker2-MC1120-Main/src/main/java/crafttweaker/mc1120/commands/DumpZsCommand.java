@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.commands;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.util.Pair;
 import crafttweaker.zenscript.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -20,7 +21,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         
         CraftTweakerAPI.logCommand("\nBracket Handlers:");
-        for(GlobalRegistry.Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
+        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
             CraftTweakerAPI.logCommand(pair.getValue().getClass().getName() + ", priority: "  + pair.getKey());
         }
         
