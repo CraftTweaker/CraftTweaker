@@ -20,7 +20,7 @@ public class CraftingRecipeWrapperShaped implements IShapedCraftingRecipeWrapper
     }
     
     public static void registerCraftingRecipes() {
-        List<CraftingRecipeWrapperShaped> wrappers = MCRecipeManager.recipesToAdd.stream().map(MCRecipeManager.ActionBaseAddRecipe::getRecipe).filter(MCRecipeBase::isVisible).filter(MCRecipeShaped.class::isInstance).map(MCRecipeShaped.class::cast).map(CraftingRecipeWrapperShaped::new).collect(Collectors.toList());
+        List<CraftingRecipeWrapperShaped> wrappers = MCRecipeManager.recipesToAdd.stream().map(MCRecipeManager.ActionBaseAddRecipe::getRecipe).filter(MCRecipeShaped.class::isInstance).filter(MCRecipeBase::isVisible).map(MCRecipeShaped.class::cast).map(MCRecipeShaped::update).map(CraftingRecipeWrapperShaped::new).collect(Collectors.toList());
         JEIAddonPlugin.modRegistry.addRecipes(wrappers, VanillaRecipeCategoryUid.CRAFTING);
     }
     

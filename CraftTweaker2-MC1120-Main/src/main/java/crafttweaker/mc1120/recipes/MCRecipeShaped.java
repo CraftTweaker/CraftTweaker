@@ -6,7 +6,7 @@ import crafttweaker.api.recipes.*;
 import crafttweaker.util.Pair;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
@@ -50,7 +50,8 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         NonNullList<Ingredient> ingredientList = NonNullList.withSize(width * height, Ingredient.EMPTY);
         for(int x = 0; x < ingredients.length; x++) {
             for(int y = 0; y < ingredients[x].length; y++) {
-                ingredientList.set(x * y + y, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[x][y].getItems())));
+                if(ingredients[x][y] != null)
+                    ingredientList.set(x * y + y, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[x][y].getItems())));
             }
         }
         return ingredientList;
@@ -85,6 +86,12 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     @Override
     public ItemStack getRecipeOutput() {
         return CraftTweakerMC.getItemStack(output);
+    }
+    
+    @Override
+    public MCRecipeShaped update() {
+        this.ingredientList = createIngredientList(ingredients);
+        return this;
     }
     
     @Override

@@ -88,4 +88,9 @@ public class MCRecipeWrapper extends MCRecipeBase {
     public ResourceLocation getRegistryName() {
         return recipe.getRegistryName();
     }
+    
+    @Override
+    public MCRecipeBase update() {
+        return this;
+    }
 }

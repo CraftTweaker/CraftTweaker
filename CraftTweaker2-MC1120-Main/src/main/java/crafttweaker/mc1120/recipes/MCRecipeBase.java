@@ -2,6 +2,7 @@ package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -14,7 +15,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     protected final ItemStack outputStack;
     protected final IItemStack output;
-    protected final NonNullList<Ingredient> ingredientList;
+    protected NonNullList<Ingredient> ingredientList;
     protected final IRecipeFunction recipeFunction;
     protected final IRecipeAction recipeAction;
     private final boolean hidden;
@@ -86,4 +87,25 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     public boolean isVisible() {
         return !isHidden();
     }
+    
+    @Override
+    public boolean hasTransformers() {
+        return false;
+    }
+    
+    @Override
+    public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
+    }
+    
+    @Override
+    public boolean matches(ICraftingInventory inventory) {
+        return false;
+    }
+    
+    @Override
+    public IItemStack getCraftingResult(ICraftingInventory inventory) {
+        return null;
+    }
+    
+    public abstract MCRecipeBase update();
 }

@@ -2,6 +2,7 @@ package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.oredict.*;
 import crafttweaker.api.recipes.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -24,7 +25,9 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
     private static NonNullList<Ingredient> createIngredientList(IIngredient[] ingredients) {
         NonNullList<Ingredient> ingredientList = NonNullList.withSize(ingredients.length, Ingredient.EMPTY);
         for(int index = 0; index < ingredients.length; index++) {
-            ingredientList.set(index, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[index].getItems())));
+            IIngredient ingredient = ingredients[index];
+            if(ingredient != null)
+                ingredientList.set(index, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[index].getItems())));
         }
         return ingredientList;
     }
@@ -131,5 +134,11 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         
         commandString.append("]);");
         return commandString.toString();
+    }
+    
+    @Override
+    public MCRecipeShapeless update() {
+        this.ingredientList = createIngredientList(ingredients);
+        return this;
     }
 }

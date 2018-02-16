@@ -24,4 +24,16 @@ public interface ICraftingRecipe {
     
 	@ZenGetter("commandString")
     String toCommandString();
+	
+	@Deprecated
+	boolean hasTransformers();
+	
+	@Deprecated
+	boolean matches(ICraftingInventory inventory);
+	
+	@Deprecated
+	IItemStack getCraftingResult(ICraftingInventory inventory);
+	
+	@Deprecated
+	void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
 }
