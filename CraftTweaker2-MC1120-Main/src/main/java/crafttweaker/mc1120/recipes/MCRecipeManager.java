@@ -3,9 +3,7 @@ package crafttweaker.mc1120.recipes;
 import crafttweaker.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
-import crafttweaker.mc1120.CraftTweaker;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,17 +27,14 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
  */
 public final class MCRecipeManager implements IRecipeManager {
     
-    public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     public final static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
     public final static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
     public final static ActionRemoveRecipesNoIngredients actionRemoveRecipesNoIngredients = new ActionRemoveRecipesNoIngredients();
+    public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     private static TIntSet usedHashes = new TIntHashSet();
     private static HashSet<String> usedRecipeNames = new HashSet<>();
     
-    public static List<ICraftingRecipe> transformerRecipes;
-    
     public MCRecipeManager() {
-        transformerRecipes = new ArrayList<>();
     }
     
     private static boolean matchesItem(ItemStack input, IIngredient ingredient) {
@@ -58,29 +53,33 @@ public final class MCRecipeManager implements IRecipeManager {
             return matchesItem((ItemStack) input, ingredient);
         }
         
-        return true;
+        return false;
     }
     
-    public boolean hasTransformerRecipes() {
-        return transformerRecipes.size() > 0;
-    }
-    
-    public void applyTransformations(ICraftingInventory inventory, IPlayer byPlayer) {
-        for(ICraftingRecipe recipe : transformerRecipes) {
-            if(recipe.matches(inventory)) {
-                recipe.applyTransformers(inventory, byPlayer);
-                return;
-            }
+    public static String saveToString(Object ingredient) {
+        if(ingredient == null) {
+            return "_";
+        } else {
+            return ingredient.toString();
         }
+    }
+    
+    public static String cleanRecipeName(String s) {
+        if(s.contains(":"))
+            CraftTweakerAPI.logWarning("Recipe name [" + s + "] may not contain a ':', replacing with '_'!");
+        return s.replace(":", "_");
     }
     
     @Override
     public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
         List<ICraftingRecipe> results = new ArrayList<>();
         
-        recipes.stream().filter(recipe -> ingredient.matches(CraftTweakerMC.getIItemStack(recipe.getValue().getRecipeOutput()))).forEach(recipe -> {
-            ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe.getValue());
-            results.add(converted);
+        recipes.stream().filter(recipe -> ingredient.matches(CraftTweakerMC.getIItemStack(recipe.getValue().getRecipeOutput()))).forEach(recipeEntry -> {
+            IRecipe recipe = recipeEntry.getValue();
+            if(recipe instanceof MCRecipeBase)
+                results.add((MCRecipeBase) recipe);
+            else
+                results.add(new MCRecipeWrapper(recipe));
         });
         
         return results;
@@ -89,9 +88,12 @@ public final class MCRecipeManager implements IRecipeManager {
     @Override
     public List<ICraftingRecipe> getAll() {
         List<ICraftingRecipe> results = new ArrayList<>();
-        for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-            ICraftingRecipe converted = RecipeConverter.toCraftingRecipe(recipe.getValue());
-            results.add(converted);
+        for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
+            IRecipe recipe = recipeEntry.getValue();
+            if(recipe instanceof MCRecipeBase)
+                results.add((MCRecipeBase) recipe);
+            else
+                results.add(new MCRecipeWrapper(recipe));
         }
         
         return results;
@@ -551,11 +553,23 @@ public final class MCRecipeManager implements IRecipeManager {
     /**
      * Classes for all addRecipe Actions
      */
-    public static abstract class ActionBaseAddRecipe implements IAction {
+    public static class ActionBaseAddRecipe implements IAction {
         
         // this is != null only _after_ it has been applied and is actually registered
-        protected IRecipe recipe;
+        protected final IRecipe recipe;
+        protected final IItemStack output;
+        protected final boolean isShaped;
         protected String name;
+        
+        private ActionBaseAddRecipe(IRecipe recipe, IItemStack output, boolean isShaped) {
+            this.recipe = recipe;
+            this.output = output;
+            this.isShaped = isShaped;
+        }
+        
+        public String getName() {
+            return name;
+        }
         
         protected void setName(String name) {
             if(name != null) {
@@ -572,128 +586,10 @@ public final class MCRecipeManager implements IRecipeManager {
             usedRecipeNames.add(this.name); //TODO: FINISH THIS and replace stuff in constructor call.
         }
         
-        
-        public void registerRecipe(IRecipe recipe, ICraftingRecipe craftingRecipe) {
-            recipe.setRegistryName(new ResourceLocation("crafttweaker", name));
-            ForgeRegistries.RECIPES.register(recipe);
-            
-            this.recipe = recipe;
-            
-            if(craftingRecipe.hasTransformers()) {
-                transformerRecipes.add(craftingRecipe);
-            }
-        }
-        
-        protected abstract String calculateName();
-        
-        public IRecipe getRecipe() {
-            return recipe;
-        }
-        
-        public String getName() {
-            return name;
-        }
-    }
-    
-    public static class ActionAddShapedRecipe extends ActionBaseAddRecipe {
-        
-        IItemStack output;
-        IIngredient[][] ingredients;
-        IRecipeFunction function;
-        IRecipeAction action;
-        boolean mirrored;
-        
-        public ActionAddShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            this.output = output;
-            this.ingredients = ingredients;
-            this.function = function;
-            this.action = action;
-            this.mirrored = mirrored;
-            setName(null);
-        }
-        
-        public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
-            this.output = output;
-            this.ingredients = ingredients;
-            this.function = function;
-            this.action = action;
-            this.mirrored = mirrored;
-            setName(name);
-        }
-        
-        @Override
-        public void apply() {
-            ShapedRecipe recipe = new ShapedRecipe(name, output, ingredients, function, action, mirrored);
-            IRecipe irecipe = RecipeConverter.convert(recipe, new ResourceLocation(CraftTweaker.MODID, name));
-            
-            super.registerRecipe(irecipe, recipe);
-        }
-        
-        
-        protected String calculateName() {
+        private String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(saveToString(output));
-            
-            for(IIngredient[] ingredient : ingredients) {
-                for(IIngredient iIngredient : ingredient) {
-                    sb.append(saveToString(iIngredient));
-                }
-            }
-            
-            int hash = sb.toString().hashCode();
-            while(usedHashes.contains(hash))
-                ++hash;
-            usedHashes.add(hash);
-            
-            return "ct_shaped" + hash;
-        }
-        
-        @Override
-        public String describe() {
-            if(output != null) {
-                return "Adding shaped recipe for " + output.getDisplayName() + " with name " + name;
-            } else {
-                return "Trying to add shaped recipe without correct output";
-            }
-        }
-    }
-    
-    public static class ActionAddShapelessRecipe extends ActionBaseAddRecipe {
-        
-        IItemStack output;
-        IIngredient[] ingredients;
-        IRecipeFunction function;
-        IRecipeAction action;
-        
-        public ActionAddShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            this.output = output;
-            this.ingredients = ingredients;
-            this.function = function;
-            this.action = action;
-            setName(null);
-        }
-        
-        public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-            this.output = output;
-            this.ingredients = ingredients;
-            this.function = function;
-            this.action = action;
-            setName(name);
-        }
-        
-        @Override
-        public void apply() {
-            ShapelessRecipe recipe = new ShapelessRecipe(name, output, ingredients, function, action);
-            IRecipe irecipe = RecipeConverter.convert(recipe, new ResourceLocation(CraftTweaker.MODID, name));
-            
-            super.registerRecipe(irecipe, recipe);
-        }
-        
-        public String calculateName() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(saveToString(output));
-            
-            for(IIngredient ingredient : ingredients) {
+            for(Ingredient ingredient : recipe.getIngredients()) {
                 sb.append(saveToString(ingredient));
             }
             
@@ -702,17 +598,46 @@ public final class MCRecipeManager implements IRecipeManager {
                 ++hash;
             usedHashes.add(hash);
             
-            return "ct_shapeless" + hash;
+            return (isShaped ? "ct_shaped" : "ct_shapeless") + hash;
+        }
+        
+        @Override
+        public void apply() {
+            recipe.setRegistryName(new ResourceLocation("crafttweaker", name));
+            ForgeRegistries.RECIPES.register(recipe);
         }
         
         @Override
         public String describe() {
             if(output != null) {
-                return "Adding shapeless recipe for " + output.getDisplayName() + " with name " + name;
+                return "Adding " + (isShaped ? "shaped" : "shapeless") + " recipe for " + output.getDisplayName() + " with name " + name;
             } else {
-                return "Trying to add shapeless recipe without correct output";
+                return "Trying to add " + (isShaped ? "shaped" : "shapeless") + "recipe without correct output";
             }
-            
+        }
+    }
+    
+    private static class ActionAddShapedRecipe extends ActionBaseAddRecipe {
+        
+        public ActionAddShapedRecipe(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
+            this(null, output, ingredients, function, action, mirrored);
+        }
+        
+        public ActionAddShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
+            super(new MCRecipeShaped(ingredients, output, function, action, mirrored), output, true);
+            setName(name);
+        }
+    }
+    
+    private static class ActionAddShapelessRecipe extends ActionBaseAddRecipe {
+        
+        public ActionAddShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+            this(null, output, ingredients, function, action);
+        }
+        
+        public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+            super(new MCRecipeShapeless(ingredients, output, function, action), output, false);
+            setName(name);
         }
     }
     
@@ -722,19 +647,5 @@ public final class MCRecipeManager implements IRecipeManager {
         public boolean canInteractWith(EntityPlayer var1) {
             return false;
         }
-    }
-    
-    public static String saveToString(IIngredient ingredient) {
-        if(ingredient == null) {
-            return "_";
-        } else {
-            return ingredient.toString();
-        }
-    }
-    
-    public static String cleanRecipeName(String s) {
-        if(s.contains(":"))
-            CraftTweakerAPI.logWarning("Recipe name [" + s + "] may not contain a ':', replacing with '_'!");
-        return s.replace(":", "_");
     }
 }

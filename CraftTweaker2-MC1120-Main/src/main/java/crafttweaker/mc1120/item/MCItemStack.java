@@ -33,11 +33,18 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
  * @author Stan
  */
 public class MCItemStack implements IItemStack {
+    public static final IItemStack EMPTY = new MCItemStack();
+    
     
     private final ItemStack stack;
     private final List<IItemStack> items;
     private IData tag = null;
     private boolean wildcardSize;
+    
+    private MCItemStack() {
+        stack = ItemStack.EMPTY;
+        items = Collections.singletonList(this);
+    }
     
     public MCItemStack(ItemStack itemStack) {
         if(itemStack.isEmpty())
@@ -647,5 +654,8 @@ public class MCItemStack implements IItemStack {
         return result.toString();
     }
     
-    
+    @Override
+    public String toCommandString() {
+        return toString();
+    }
 }

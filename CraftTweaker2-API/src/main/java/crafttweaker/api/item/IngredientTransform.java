@@ -63,15 +63,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformReplace(IIngredient ingredient, final IItemStack withItem) {
-        return ingredient.transform((item, byPlayer) -> {
-            if(item.getAmount() > 1) {
-                byPlayer.give(withItem);
-                return item;
-            } else {
-                byPlayer.give(withItem.withAmount(withItem.getAmount()));
-                return item;
-            }
-        });
+        return ingredient.transform((item, byPlayer) -> withItem);
     }
     
     /**

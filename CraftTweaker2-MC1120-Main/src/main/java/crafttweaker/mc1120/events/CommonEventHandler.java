@@ -7,15 +7,13 @@ import crafttweaker.api.event.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.recipes.*;
-import crafttweaker.mc1120.CraftTweaker;
+import crafttweaker.api.recipes.CraftingInfo;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
-import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.recipes.MCCraftingInventory;
+import crafttweaker.mc1120.recipes.*;
 import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -85,28 +83,18 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
-        if(CraftTweaker.INSTANCE.recipes.hasTransformerRecipes()) {
-            CraftTweaker.INSTANCE.recipes.applyTransformations(MCCraftingInventory.get(ev.craftMatrix, ev.player), iPlayer);
-        }
         if(ev.craftMatrix instanceof InventoryCrafting) {
-            CraftingManager.REGISTRY.getKeys().stream().filter(key -> CraftingManager.REGISTRY.getObject(key) instanceof IMTRecipe && CraftingManager.REGISTRY.getObject(key).getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {
+            CraftingManager.REGISTRY.getKeys().stream().filter(key -> CraftingManager.REGISTRY.getObject(key).getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {
                 IRecipe recipe = CraftingManager.REGISTRY.getObject(i);
-                IMTRecipe rec = (IMTRecipe) recipe;
-                if(rec.getRecipe() instanceof ShapedRecipe) {
-                    ShapedRecipe r = (ShapedRecipe) rec.getRecipe();
-                    if(r.getAction() != null) {
-                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCPlayer(ev.player));
-                    }
-                } else if(rec.getRecipe() instanceof ShapelessRecipe) {
-                    ShapelessRecipe r = (ShapelessRecipe) rec.getRecipe();
-                    if(r.getAction() != null) {
-                        r.getAction().process(new MCItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventory(ev.craftMatrix, ev.player), new MCWorld(ev.player.world)), new MCPlayer(ev.player));
-                    }
+                if(recipe instanceof MCRecipeBase) {
+                    MCRecipeBase recipeBase = (MCRecipeBase) recipe;
+                    if(recipeBase.hasRecipeAction())
+                    recipeBase.getRecipeAction().process(CraftTweakerMC.getIItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventorySquared(ev.craftMatrix, iPlayer), iPlayer.getWorld()), iPlayer);
                 }
             });
         }
         if(CrafttweakerImplementationAPI.events.hasPlayerCrafted()) {
-            CrafttweakerImplementationAPI.events.publishPlayerCrafted(new PlayerCraftedEvent(iPlayer, CraftTweakerMC.getIItemStack(ev.crafting), MCCraftingInventory.get(ev.craftMatrix, ev.player)));
+            CrafttweakerImplementationAPI.events.publishPlayerCrafted(new PlayerCraftedEvent(iPlayer, CraftTweakerMC.getIItemStack(ev.crafting), new MCCraftingInventorySquared(ev.craftMatrix, iPlayer)));
         }
     }
     

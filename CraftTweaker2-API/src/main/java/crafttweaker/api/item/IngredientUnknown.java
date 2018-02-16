@@ -103,4 +103,9 @@ public class IngredientUnknown implements IIngredient {
     public Object getInternal() {
         return null;
     }
+    
+    @Override
+    public String toCommandString() {
+        return "Error: UnknownIngredient";
+    }
 }

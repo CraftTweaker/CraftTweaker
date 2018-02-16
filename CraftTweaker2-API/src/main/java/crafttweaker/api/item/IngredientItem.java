@@ -147,4 +147,9 @@ public class IngredientItem implements IIngredient {
     public String toString() {
         return "(Ingredient) " + item.toString();
     }
+    
+    @Override
+    public String toCommandString() {
+        return item.toCommandString();
+    }
 }

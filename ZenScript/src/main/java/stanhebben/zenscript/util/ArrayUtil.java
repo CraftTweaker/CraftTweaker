@@ -1,6 +1,7 @@
 package stanhebben.zenscript.util;
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class ArrayUtil {
     
@@ -144,6 +145,19 @@ public class ArrayUtil {
                 return true;
         }
         return false;
+    }
+    
+    public static <T> T[] inverse(T[] array) {
+        return inverse(array, array.length);
+    }
+    
+    public static <T> T[] inverse(T[] array, int length) {
+        Class<T[]> clazz = (Class<T[]>) array.getClass();
+        T[] out = clazz.cast(Array.newInstance(clazz.getComponentType(), length));
+        for(int index = 0; index < array.length; index++) {
+            out[length - index - 1] = array[index];
+        }
+        return out;
     }
     
 }

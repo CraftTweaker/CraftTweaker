@@ -26,11 +26,13 @@ import net.minecraft.nbt.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * CraftTweaker - MineCraft API bridge.
@@ -76,7 +78,7 @@ public class CraftTweakerMC {
         if(internal == null || !(internal instanceof ItemStack)) {
             CraftTweakerAPI.logError("Not a valid item stack: " + item);
         }
-        return (ItemStack) internal;
+        return ((ItemStack) internal).copy();
     }
     
     /**

@@ -128,4 +128,9 @@ public class IngredientAnyAdvanced implements IIngredient {
     public Object getInternal() {
         return IngredientAny.INTERNAL_ANY;
     }
+    
+    @Override
+    public String toCommandString() {
+        return "<*>";
+    }
 }

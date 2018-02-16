@@ -53,11 +53,11 @@ public class IngredientOr implements IIngredient {
         return result;
     }
     
-	@Override
-	public IItemStack[] getItemArray() {
-		List<IItemStack> items = getItems();
-		return items.toArray(new IItemStack[items.size()]);
-	}
+    @Override
+    public IItemStack[] getItemArray() {
+        List<IItemStack> items = getItems();
+        return items.toArray(new IItemStack[items.size()]);
+    }
     
     @Override
     public List<ILiquidStack> getLiquids() {
@@ -155,5 +155,17 @@ public class IngredientOr implements IIngredient {
     @Override
     public Object getInternal() {
         return null;
+    }
+    
+    @Override
+    public String toCommandString() {
+        if(elements.length == 0)
+            return "ERROR";
+        StringBuilder commandString = new StringBuilder(elements[0].toCommandString());
+        for(int i = 1; i < elements.length; i++) {
+            commandString.append(" | ");
+            commandString.append(elements[i].toCommandString());
+        }
+        return commandString.toString();
     }
 }

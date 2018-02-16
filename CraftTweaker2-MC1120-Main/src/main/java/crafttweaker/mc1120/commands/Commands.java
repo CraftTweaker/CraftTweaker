@@ -14,6 +14,7 @@ import crafttweaker.mc1120.brackets.BracketHandlerPotion;
 import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.recipes.MCRecipeBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -198,13 +199,9 @@ public class Commands {
                         try {
                             CraftTweakerAPI.logCommand(recipe.toCommandString());
                         } catch(Throwable ex) {
-                            if(recipe instanceof ShapedRecipe) {
-                                ShapedRecipe shaped = (ShapedRecipe) recipe;
-                                IItemStack out = shaped.getOutput();
-                                CraftTweakerAPI.logError("Could not dump recipe for " + out, ex);
-                            } else if(recipe instanceof ShapelessRecipe) {
-                                ShapelessRecipe shapeless = (ShapelessRecipe) recipe;
-                                IItemStack out = shapeless.getOutput();
+                            if(recipe instanceof MCRecipeBase) {
+                                MCRecipeBase recipeBase = (MCRecipeBase) recipe;
+                                IItemStack out = recipeBase.getOutput();
                                 CraftTweakerAPI.logError("Could not dump recipe for " + out, ex);
                             } else {
                                 CraftTweakerAPI.logError("Could not dump recipe", ex);
@@ -728,7 +725,7 @@ public class Commands {
                 }
                 
                 sender.sendMessage(getNormalMessage("\u00A7bBeginning load of the scripts"));
-                boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(true, "crafttweaker");
+                boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(false, "crafttweaker");
                 
                 if(loadSuccessful) {
                     sender.sendMessage(getNormalMessage("Syntax of scripts is \u00A7acorrect\u00A7r, to see the effect \u00A7erestart the game"));

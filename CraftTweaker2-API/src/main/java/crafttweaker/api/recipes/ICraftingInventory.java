@@ -98,4 +98,8 @@ public interface ICraftingInventory {
      */
     @ZenMethod
     void setStack(int i, IItemStack stack);
+    
+    IItemStack[][] getItems();
+    
+    IItemStack[] getItemArray();
 }
