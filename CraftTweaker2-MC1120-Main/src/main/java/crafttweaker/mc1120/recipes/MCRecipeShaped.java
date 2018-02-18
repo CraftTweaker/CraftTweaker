@@ -48,10 +48,10 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         }
         
         NonNullList<Ingredient> ingredientList = NonNullList.withSize(width * height, Ingredient.EMPTY);
-        for(int x = 0; x < ingredients.length; x++) {
-            for(int y = 0; y < ingredients[x].length; y++) {
-                if(ingredients[x][y] != null)
-                    ingredientList.set(x * y + y, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[x][y].getItems())));
+        for(int row = 0; row < ingredients.length; row++) {
+            for(int column = 0; column < ingredients[row].length; column++) {
+                if(ingredients[row][column] != null)
+                    ingredientList.set(row * width + column, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[row][column].getItems())));
             }
         }
         return ingredientList;
@@ -97,9 +97,8 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         Pair<Integer, Integer> offsetPair;
-        //TODO calculate offsets and mirroring
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid)
+        if(offsetPair != offsetInvalid || !isMirrored)
             return getRemainingItems(inv, offsetPair, ingredients);
         
         //Mirror on X-Axis
