@@ -32,4 +32,24 @@ public class CrTErrorLogger implements IZenErrorLogger {
             CraftTweakerAPI.logInfo(position + ": " + message);
         }
     }
+    
+    @Override
+    public void error(String message) {
+        error(null, message);
+    }
+    
+    @Override
+    public void error(String message, Throwable e) {
+        CraftTweakerAPI.logError("system: " + message, e);
+    }
+    
+    @Override
+    public void warning(String message) {
+        warning(null, message);
+    }
+    
+    @Override
+    public void info(String message) {
+        info(null, message);
+    }
 }

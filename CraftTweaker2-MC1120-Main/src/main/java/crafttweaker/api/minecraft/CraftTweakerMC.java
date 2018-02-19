@@ -54,7 +54,7 @@ public class CraftTweakerMC {
         
         for(CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY) {
             String label;
-            label = ReflectionHelper.getPrivateValue(CreativeTabs.class, tab, "tabLabel", "field_78034_o");
+            label = tab.tabLabel;
             creativeTabs.put(label, new MCCreativeTab(tab, label));
         }
     }
