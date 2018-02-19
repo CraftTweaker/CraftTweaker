@@ -2,7 +2,6 @@ package crafttweaker.mc1120.commands.dumpZScommand;
 
 import crafttweaker.annotations.ZenDoc;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
-import crafttweaker.util.Pair;
 import crafttweaker.zenscript.*;
 import joptsimple.internal.Strings;
 import net.minecraft.command.ICommandSender;
@@ -11,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.util.Pair;
 
 import java.io.*;
 import java.lang.annotation.Annotation;

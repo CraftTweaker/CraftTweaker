@@ -3,7 +3,6 @@ package crafttweaker.zenscript;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.BracketHandler;
 import crafttweaker.runtime.GlobalFunctions;
-import crafttweaker.util.Pair;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.compiler.*;
@@ -11,6 +10,7 @@ import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.util.Pair;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -136,6 +136,7 @@ public class GlobalRegistry {
     public static Set<Pair<Integer, IBracketHandler>> getPrioritizedBracketHandlers() {
         return bracketHandlers;
     }
+    
     @Deprecated
     public static List<IBracketHandler> getBracketHandlers() {
         List<IBracketHandler> handlers = new LinkedList<>();

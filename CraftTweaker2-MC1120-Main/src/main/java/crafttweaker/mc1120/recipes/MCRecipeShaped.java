@@ -3,14 +3,13 @@ package crafttweaker.mc1120.recipes;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
-import crafttweaker.util.Pair;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-import stanhebben.zenscript.util.ArrayUtil;
+import stanhebben.zenscript.util.*;
 
 import java.util.*;
 
