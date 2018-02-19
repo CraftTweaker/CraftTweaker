@@ -2,13 +2,13 @@ package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.oredict.*;
 import crafttweaker.api.recipes.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.*;
 
@@ -98,7 +98,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
     
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-        NonNullList<ItemStack> out = IRecipe.super.getRemainingItems(inv);
+        NonNullList<ItemStack> out = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
         boolean[] visited = new boolean[inv.getSizeInventory()];
         
         for(int ingredientIndex = 0; ingredientIndex < ingredients.length; ingredientIndex++) {
@@ -106,12 +106,15 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                 ItemStack stackInSlot = inv.getStackInSlot(slot);
                 if(!stackInSlot.isEmpty() && !visited[slot]) {
                     IItemStack stack = CraftTweakerMC.getIItemStack(stackInSlot);
-                    if(ingredients[ingredientIndex].matches(stack) && ingredients[ingredientIndex].hasTransformers()) {
-                        IItemStack remainingItem = ingredients[ingredientIndex].applyTransform(stack, null);
-                        out.set(slot, remainingItem == null ? ItemStack.EMPTY : CraftTweakerMC.getItemStack(remainingItem));
-                        visited[slot] = true;
-                        break;
-                    }
+                    if(ingredients[ingredientIndex].matches(stack))
+                        if(ingredients[ingredientIndex].hasTransformers()) {
+                            IItemStack remainingItem = ingredients[ingredientIndex].applyTransform(stack, null);
+                            out.set(slot, remainingItem == null ? ItemStack.EMPTY : CraftTweakerMC.getItemStack(remainingItem));
+                            visited[slot] = true;
+                            break;
+                        } else
+                            out.set(slot, ForgeHooks.getContainerItem(stackInSlot));
+                    
                 }
             }
         }

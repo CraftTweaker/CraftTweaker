@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import stanhebben.zenscript.util.*;
 
@@ -120,7 +121,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     }
     
     private NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
-        NonNullList<ItemStack> out = IShapedRecipe.super.getRemainingItems(inv);
+        NonNullList<ItemStack> out = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
         if(offsetPair == offsetInvalid)
             return out;
         
@@ -134,6 +135,8 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                     IIngredient ingredient = ingredients[row][column];
                     if(ingredient != null && ingredient.hasTransformers())
                         out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyTransform(CraftTweakerMC.getIItemStack(itemStack), null))).orElse(ItemStack.EMPTY));
+                    else
+                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), ForgeHooks.getContainerItem(itemStack));
                 }
             }
         }
