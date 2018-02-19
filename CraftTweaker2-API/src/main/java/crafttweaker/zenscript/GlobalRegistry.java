@@ -10,6 +10,7 @@ import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.util.Pair;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -135,6 +136,7 @@ public class GlobalRegistry {
     public static Set<Pair<Integer, IBracketHandler>> getPrioritizedBracketHandlers() {
         return bracketHandlers;
     }
+    
     @Deprecated
     public static List<IBracketHandler> getBracketHandlers() {
         List<IBracketHandler> handlers = new LinkedList<>();
@@ -163,41 +165,5 @@ public class GlobalRegistry {
     
     public static Map<String, TypeExpansion> getExpansions() {
         return expansions;
-    }
-    
-    public static class Pair<K, V> {
-        
-        private final K key;
-        private final V value;
-        
-        public Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-        
-        public K getKey() {
-            return key;
-        }
-        
-        public V getValue() {
-            return value;
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            if(this == o)
-                return true;
-            if(o == null || getClass() != o.getClass())
-                return false;
-            Pair<?, ?> pair = (Pair<?, ?>) o;
-            return Objects.equals(key, pair.key) && Objects.equals(value, pair.value);
-        }
-        
-        @Override
-        public int hashCode() {
-            
-            return Objects.hash(key, value);
-        }
-        
     }
 }

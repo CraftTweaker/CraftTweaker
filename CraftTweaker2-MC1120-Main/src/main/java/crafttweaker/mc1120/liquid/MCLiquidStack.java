@@ -195,4 +195,9 @@ public class MCLiquidStack implements ILiquidStack {
     public String toString() {
     	return "<liquid:" + getName() + ">";
     }
+    
+    @Override
+    public String toCommandString() {
+        return toString();
+    }
 }

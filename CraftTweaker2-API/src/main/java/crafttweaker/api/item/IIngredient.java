@@ -204,4 +204,5 @@ public interface IIngredient {
      */
     Object getInternal();
     
+    String toCommandString();
 }

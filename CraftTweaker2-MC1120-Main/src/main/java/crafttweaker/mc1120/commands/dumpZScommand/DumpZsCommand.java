@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.util.Pair;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -72,7 +73,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
         }
         
         TreeNode<String> bracketNode = root.addChild("Bracket Handlers");
-        for(GlobalRegistry.Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
+        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
             bracketNode.addChild(pair.getClass().getName() + ", priority: " + pair.getKey());
         }
         

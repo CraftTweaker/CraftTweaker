@@ -12,6 +12,7 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 /**
  * @author Stan
  */
+@Deprecated
 public class ShapelessRecipeBasic extends ShapelessRecipes implements IMTRecipe {
     
     private final ShapelessRecipe recipe;

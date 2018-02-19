@@ -129,4 +129,9 @@ public class IngredientOreDict implements IIngredient {
     public Object getInternal() {
         return entry.getInternal();
     }
+    
+    @Override
+    public String toCommandString() {
+        return entry.toCommandString();
+    }
 }

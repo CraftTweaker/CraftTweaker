@@ -8,6 +8,7 @@ import java.util.*;
 /**
  * @author Stan
  */
+@Deprecated
 public class ShapelessRecipe implements ICraftingRecipe {
     
     private final IItemStack output;
@@ -85,12 +86,10 @@ public class ShapelessRecipe implements ICraftingRecipe {
         return output;
     }
     
-    @Override
     public boolean matches(ICraftingInventory inventory) {
         return matchShapeless(ingredients, inventory) != null;
     }
     
-    @Override
     public IItemStack getCraftingResult(ICraftingInventory inventory) {
         RecipeMatching matching = matchShapeless(ingredients, inventory);
         
@@ -113,7 +112,6 @@ public class ShapelessRecipe implements ICraftingRecipe {
         return actualOutput;
     }
     
-    @Override
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
         RecipeMatching matching = matchShapeless(ingredients, inventory);
         
@@ -149,7 +147,6 @@ public class ShapelessRecipe implements ICraftingRecipe {
         return result.toString();
     }
     
-    @Override
     public boolean hasTransformers() {
         for(IIngredient ingredient : ingredients) {
             if(ingredient.hasTransformers()) {

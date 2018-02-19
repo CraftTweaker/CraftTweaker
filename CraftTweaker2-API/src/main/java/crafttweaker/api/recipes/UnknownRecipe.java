@@ -6,6 +6,7 @@ import crafttweaker.api.player.IPlayer;
 /**
  * @author Stan
  */
+@Deprecated
 public class UnknownRecipe implements ICraftingRecipe {
     
     private final IItemStack output;
@@ -14,24 +15,20 @@ public class UnknownRecipe implements ICraftingRecipe {
         this.output = output;
     }
     
-    @Override
     public boolean matches(ICraftingInventory inventory) {
         return false;
     }
     
-    @Override
     public IItemStack getCraftingResult(ICraftingInventory inventory) {
         return output;
     }
     
-    @Override
     public boolean hasTransformers() {
         return false;
     }
     
-    @Override
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
-        
+    
     }
     
     @Override

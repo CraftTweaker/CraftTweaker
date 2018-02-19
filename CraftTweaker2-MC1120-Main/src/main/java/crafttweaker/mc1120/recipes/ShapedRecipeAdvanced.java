@@ -14,12 +14,13 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
  *
  * @author Stan
  */
+@Deprecated
 public class ShapedRecipeAdvanced extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IMTRecipe {
     
     private final ShapedRecipe recipe;
     public ShapedRecipeAdvanced(ShapedRecipe recipe) {
         this.recipe = recipe;
-    
+        
     }
     
     @Override

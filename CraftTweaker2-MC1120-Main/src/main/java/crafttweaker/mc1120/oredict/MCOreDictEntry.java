@@ -215,7 +215,12 @@ public class MCOreDictEntry implements IOreDictEntry {
     public Object getInternal() {
         return id;
     }
-
+    
+    @Override
+    public String toCommandString() {
+        return toString();
+    }
+    
     // #############################
     // ### Object implementation ###
     // #############################

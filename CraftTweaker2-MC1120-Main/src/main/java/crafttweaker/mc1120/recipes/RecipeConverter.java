@@ -15,6 +15,7 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 /**
  * @author Stan
  */
+@Deprecated
 public class RecipeConverter {
     
     public static final int TYPE_ADVANCED = 0;

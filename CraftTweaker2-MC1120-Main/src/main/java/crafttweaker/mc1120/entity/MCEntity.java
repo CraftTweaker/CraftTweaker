@@ -4,12 +4,14 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.MCPosition3f;
@@ -19,6 +21,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -107,7 +110,8 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public IEntity getRidingEntity() {
-        return new MCEntity(entity.getRidingEntity());
+        Entity result = entity.getRidingEntity();
+        return result == null ? null : new MCEntity(result);
     }
     
     @Override
@@ -503,6 +507,12 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public boolean isInvisible() {
         return entity.isInvisible();
+    }
+    
+    @Override
+    public ITeam getTeam() {
+        Team result = entity.getTeam();
+        return result == null ? null : new MCTeam(result);
     }
     
     @Override

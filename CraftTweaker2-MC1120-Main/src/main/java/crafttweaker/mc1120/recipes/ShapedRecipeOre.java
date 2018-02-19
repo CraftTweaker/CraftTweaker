@@ -13,20 +13,21 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 /**
  * @author Stan
  */
+@Deprecated
 public class ShapedRecipeOre extends ShapedOreRecipe implements IMTRecipe {
-
+    
     private final ShapedRecipe recipe;
-
+    
     public ShapedRecipeOre(ResourceLocation name, Object[] contents, ShapedRecipe recipe) {
         super(name, getItemStack(recipe.getOutput()), contents);
         this.recipe = recipe;
     }
-
+    
     @Override
     public boolean matches(InventoryCrafting inventory, World world) {
         return recipe.matches(MCCraftingInventory.get(inventory));
     }
-
+    
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
         if(recipe != null) {

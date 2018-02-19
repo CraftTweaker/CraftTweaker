@@ -1,6 +1,7 @@
 package crafttweaker.api.item;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -40,16 +41,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformDamage(IIngredient ingredient, final int damage) {
-        return ingredient.transform((item, byPlayer) -> {
-            int newDamage = item.getDamage() + damage;
-            if(newDamage > item.getMaxDamage()) {
-//                byPlayer.give(item.withDamage(0));
-                return item;
-            } else {
-                byPlayer.give(item.withDamage(newDamage));
-                return item;
-            }
-        });
+        return ingredient.transform((item, byPlayer) -> (item.getDamage() + damage > item.getMaxDamage()) ? null : item.withDamage(item.getDamage() + damage));
     }
     
     /**
@@ -63,15 +55,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformReplace(IIngredient ingredient, final IItemStack withItem) {
-        return ingredient.transform((item, byPlayer) -> {
-            if(item.getAmount() > 1) {
-                byPlayer.give(withItem);
-                return item;
-            } else {
-                byPlayer.give(withItem.withAmount(withItem.getAmount()));
-                return item;
-            }
-        });
+        return ingredient.transform((item, byPlayer) -> withItem);
     }
     
     /**
@@ -87,8 +71,8 @@ public class IngredientTransform {
     @ZenMethod
     public static IIngredient transformConsume(IIngredient ingredient, final int amount) {
         return ingredient.transform((item, byPlayer) -> {
-            byPlayer.give(item.withAmount(Math.max(item.getAmount() - amount, 0)));
-            return item;
+            int newAmount = Math.max(item.getAmount() - amount, 0);
+            return newAmount == 0 ? null : item.withAmount(newAmount);
         });
     }
     
@@ -115,14 +99,6 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {
-        return ingredient.transform((item, byPlayer) -> {
-            if(givenItem == null) {
-                byPlayer.give(item.withAmount(1));
-                return item;
-            } else {
-                byPlayer.give(givenItem);
-                return item;
-            }
-        });
+        return ingredient.transform((item, byPlayer) -> givenItem == null ? item : givenItem);
     }
 }

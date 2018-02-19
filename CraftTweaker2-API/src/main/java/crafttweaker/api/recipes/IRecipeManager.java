@@ -33,7 +33,7 @@ public interface IRecipeManager {
      */
     @ZenMethod
     List<ICraftingRecipe> getRecipesFor(IIngredient ingredient);
-        
+    
     /**
      * Adds a shaped recipe.
      *
@@ -95,6 +95,26 @@ public interface IRecipeManager {
     @ZenMethod
     void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
+    /**
+     * @param name        recipe name
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     * @param action      recipe action (optional)
+     */
+    @ZenMethod
+    void addHiddenShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+    
+    /**
+     * @param name        recipe name
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     * @param action      recipe action (optional)
+     * @param mirrored    is mirrored (optional)
+     */
+    @ZenMethod
+    void addHiddenShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean mirrored);
     /**
      * Removes all crafting recipes in the game
      *

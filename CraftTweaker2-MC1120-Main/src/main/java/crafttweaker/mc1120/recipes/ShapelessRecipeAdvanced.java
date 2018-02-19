@@ -13,6 +13,7 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 /**
  * @author Stan
  */
+@Deprecated
 public class ShapelessRecipeAdvanced extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IMTRecipe {
     
     private final ShapelessRecipe recipe;
@@ -46,7 +47,6 @@ public class ShapelessRecipeAdvanced extends IForgeRegistryEntry.Impl<IRecipe> i
         return NonNullList.create();
     }
     
-    @Override
     public ICraftingRecipe getRecipe() {
         return recipe;
     }

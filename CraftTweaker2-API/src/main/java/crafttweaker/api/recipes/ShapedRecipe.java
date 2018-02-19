@@ -8,6 +8,7 @@ import java.util.*;
 /**
  * @author Stan
  */
+@Deprecated
 public class ShapedRecipe implements ICraftingRecipe {
     
     private final int width;
@@ -106,7 +107,6 @@ public class ShapedRecipe implements ICraftingRecipe {
         return name;
     }
     
-    @Override
     public boolean matches(ICraftingInventory inventory) {
         if(inventory.getStackCount() != ingredients.length) {
             return false;
@@ -148,7 +148,6 @@ public class ShapedRecipe implements ICraftingRecipe {
         return false;
     }
     
-    @Override
     public IItemStack getCraftingResult(ICraftingInventory inventory) {
         IItemStack[] stacks = new IItemStack[ingredients.length];
         
@@ -191,7 +190,6 @@ public class ShapedRecipe implements ICraftingRecipe {
         return null;
     }
     
-    @Override
     public boolean hasTransformers() {
         for(IIngredient ingredient : ingredients) {
             if(ingredient.hasTransformers()) {
@@ -202,7 +200,6 @@ public class ShapedRecipe implements ICraftingRecipe {
         return false;
     }
     
-    @Override
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
         IItemStack[] stacks = new IItemStack[ingredients.length];
         
@@ -301,15 +298,15 @@ public class ShapedRecipe implements ICraftingRecipe {
         if(output == null) {
             return null;
         }
-
-		/*
+        
+        /*
          * for (int i = 0; i < ingredients.length; i++) { IItemStack transformed
-		 * = ingredients[i].applyTransform(stacks[i]); if (transformed !=
-		 * stacks[i]) { if (mirrored) { inventory.setStack( inventory.getWidth()
-		 * - (offx + posx[i]) - 1, offy + posy[i], transformed); } else {
-		 * inventory.setStack( offx + posx[i], offy + posy[i], transformed); } }
-		 * }
-		 */
+         * = ingredients[i].applyTransform(stacks[i]); if (transformed !=
+         * stacks[i]) { if (mirrored) { inventory.setStack( inventory.getWidth()
+         * - (offx + posx[i]) - 1, offy + posy[i], transformed); } else {
+         * inventory.setStack( offx + posx[i], offy + posy[i], transformed); } }
+         * }
+         */
         
         return output;
     }

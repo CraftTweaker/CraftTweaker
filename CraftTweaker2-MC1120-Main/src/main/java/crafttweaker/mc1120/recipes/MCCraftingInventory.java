@@ -15,6 +15,7 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 /**
  * @author Stan
  */
+@Deprecated
 public class MCCraftingInventory implements ICraftingInventory {
     
     private final IInventory inventory;
@@ -64,11 +65,11 @@ public class MCCraftingInventory implements ICraftingInventory {
     }
     
     public static MCCraftingInventory get(InventoryCrafting inventory) {
-       return new MCCraftingInventory(inventory);
+        return new MCCraftingInventory(inventory);
     }
     
     public static MCCraftingInventory get(IInventory inventory, EntityPlayer player) {
-       return new MCCraftingInventory(inventory, player);
+        return new MCCraftingInventory(inventory, player);
     }
     
     private void update() {
@@ -169,6 +170,16 @@ public class MCCraftingInventory implements ICraftingInventory {
             }
             stacks[i] = stack;
         }
+    }
+    
+    @Override
+    public IItemStack[][] getItems() {
+        return new IItemStack[0][];
+    }
+    
+    @Override
+    public IItemStack[] getItemArray() {
+        return new IItemStack[0];
     }
     
     private boolean changed(int i) {

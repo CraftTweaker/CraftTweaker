@@ -102,6 +102,11 @@ public class IngredientStack implements IIngredient {
     }
     
     @Override
+    public String toCommandString() {
+        return ingredient.toCommandString() + " * " + amount;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return ingredient.hasTransformers();
     }

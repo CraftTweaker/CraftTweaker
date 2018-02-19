@@ -113,4 +113,9 @@ public class IngredientAny implements IIngredient {
         return "<*>";
     }
     
+    
+    @Override
+    public String toCommandString() {
+        return toString();
+    }
 }

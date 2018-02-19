@@ -5,6 +5,7 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
@@ -328,8 +329,8 @@ public interface IEntity extends ICommandSender {
     @ZenGetter
     boolean isInvisible();
     
-    //@ZenGetter("team")
-    //ITeam getTeam();
+    @ZenGetter("team")
+    ITeam getTeam();
     
     @ZenSetter("isInvisible")
     void setInvisible(boolean invisible);
