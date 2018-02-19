@@ -102,4 +102,24 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     public byte[] getClass(String name) {
         return classes.get(name);
     }
+    
+    @Override
+    public void error(String message) {
+        CraftTweakerAPI.logError(message);
+    }
+    
+    @Override
+    public void error(String message, Throwable e) {
+        CraftTweakerAPI.logError(message, e);
+    }
+    
+    @Override
+    public void warning(String message) {
+        CraftTweakerAPI.logWarning(message);
+    }
+    
+    @Override
+    public void info(String message) {
+        CraftTweakerAPI.logInfo(message);
+    }
 }
