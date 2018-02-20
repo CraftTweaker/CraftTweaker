@@ -1,3 +1,3 @@
 [submodule "ZenScript"]
 	path = ZenScript
-	url = git@github.com:jaredlll08/ZenScript.git
+	url = https://github.com/CraftTweaker/ZenScript.git
