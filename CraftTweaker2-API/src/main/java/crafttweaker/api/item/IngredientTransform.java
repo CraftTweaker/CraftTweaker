@@ -103,4 +103,15 @@ public class IngredientTransform {
             byPlayer.give(givenItem == null ? item : givenItem);
         return null;});
     }
+    
+    /**
+     * Leaves the item in the crafting grid.
+     * @param ingredient
+     * @return
+     */
+    
+    @ZenMethod
+    public static IIngredient reuse(IIngredient ingredient) {
+        return ingredient.transformNew(item -> item);
+    }
 }

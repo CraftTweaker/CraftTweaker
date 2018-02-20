@@ -4,7 +4,7 @@ import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.NonNullList;
@@ -107,15 +107,26 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                 ItemStack stackInSlot = inv.getStackInSlot(slot);
                 if(!stackInSlot.isEmpty() && !visited[slot]) {
                     IItemStack stack = CraftTweakerMC.getIItemStack(stackInSlot);
-                    if(ingredients[ingredientIndex].matches(stack))
-                        if(ingredients[ingredientIndex].hasNewTransformers()) {
-                            IItemStack remainingItem = ingredients[ingredientIndex].applyNewTransform(stack);
+                    IIngredient ingredient = ingredients[ingredientIndex];
+                    if(ingredient.matches(stack)) {
+                        boolean needsContainerItem = true;
+                        if(ingredient.hasNewTransformers()) {
+                            IItemStack remainingItem = ingredient.applyNewTransform(stack);
                             out.set(slot, remainingItem == null ? ItemStack.EMPTY : CraftTweakerMC.getItemStack(remainingItem));
-                            visited[slot] = true;
-                            break;
-                        } else if (!ingredients[ingredientIndex].hasTransformers())
+                            needsContainerItem = false;
+                        }
+                        if(ingredient.hasTransformers()) {
+                            //increase stackSize by 1 so that it can then be decreased by one in the crafting process
+                            //done to insure the transformer works as intended
+                            stackInSlot.setCount(stackInSlot.getCount() + 1);
+                            needsContainerItem = false;
+                        }
+                        if(needsContainerItem) {
                             out.set(slot, ForgeHooks.getContainerItem(stackInSlot));
-                    
+                        }
+                        visited[slot] = true;
+                        break;
+                    }
                 }
             }
         }

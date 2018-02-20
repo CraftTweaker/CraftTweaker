@@ -185,11 +185,22 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                 ItemStack itemStack = inv.getStackInSlot((column + columnOffset) + (row + rowOffset) * inv.getWidth());
                 if(ingredients.length > row && ingredients[row].length > column) {
                     IIngredient ingredient = ingredients[row][column];
-                    if(ingredient == null) {}
-                    else if(ingredient.hasNewTransformers())
+                    boolean needsContainerItem = true;
+                    if(ingredient == null) {continue;}
+                    if(ingredient.hasNewTransformers()) {
                         out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyNewTransform(CraftTweakerMC.getIItemStack(itemStack)))).orElse(ItemStack.EMPTY));
-                    else if(!ingredient.hasTransformers())
+                        needsContainerItem = false;
+                    }
+                    if(ingredient.hasTransformers()) {
+                        //increase stackSize by 1 so that it can then be decreased by one in the crafting process
+                        //done to insure the transformer works as intended
+                        itemStack.setCount(itemStack.getCount() + 1);
+                        needsContainerItem = false;
+                    }
+                    
+                    if(needsContainerItem) {
                         out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), ForgeHooks.getContainerItem(itemStack));
+                    }
                 }
             }
         }
