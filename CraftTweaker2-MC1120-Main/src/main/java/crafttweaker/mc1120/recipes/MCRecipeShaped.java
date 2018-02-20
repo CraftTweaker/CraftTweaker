@@ -2,6 +2,7 @@ package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -89,6 +90,57 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     }
     
     @Override
+    public void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer) {
+        Pair<Integer, Integer> offsetPair;
+        offsetPair = checkRecipe(ingredients, inventory);
+        if(offsetPair != offsetInvalid || !isMirrored) {
+            applyTransformers(inventory, byPlayer, offsetPair, ingredients);
+            return;
+        }
+        
+        //Mirror on X-Axis
+        IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
+        offsetPair = checkRecipe(ingredients, inventory);
+        if(offsetPair != offsetInvalid) {
+            applyTransformers(inventory, byPlayer, offsetPair, ingredients);
+            return;
+        }
+        
+        //Mirror on Y-Axis
+        for(int i = 0; i < ingredients.length; i++)
+            ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
+        offsetPair = checkRecipe(ingredients, inventory);
+        if(offsetPair != offsetInvalid) {
+            applyTransformers(inventory, byPlayer, offsetPair, ingredients);
+            return;
+        }
+        
+        //Mirror on X-/Y-Axis
+        ingredients = ArrayUtil.inverse(ingredients, height);
+        offsetPair = checkRecipe(ingredients, inventory);
+        applyTransformers(inventory, byPlayer, offsetPair, ingredients);
+    }
+    
+    private void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
+        if(offsetPair == offsetInvalid)
+            return;
+        int rowOffset = offsetPair.getKey();
+        int columnOffset = offsetPair.getValue();
+        
+        for(int column = 0; column < height; column++) {
+            for(int row = 0; row < width; row++) {
+                ItemStack itemStack = inventory.getStackInSlot((column + columnOffset) + (row + rowOffset) * inventory.getWidth());
+                if(ingredients.length > row && ingredients[row].length > column) {
+                    IIngredient ingredient = ingredients[row][column];
+                    if(ingredient != null && ingredient.hasTransformers())
+                        inventory.setInventorySlotContents((column + columnOffset) + (row + rowOffset) * inventory.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyTransform(CraftTweakerMC.getIItemStack(itemStack), byPlayer))).orElse(ItemStack.EMPTY));
+                }
+            }
+            
+        }
+    }
+    
+    @Override
     public MCRecipeShaped update() {
         this.ingredientList = createIngredientList(ingredients);
         return this;
@@ -127,15 +179,16 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         
         int rowOffset = offsetPair.getKey();
         int columnOffset = offsetPair.getValue();
-        for(int column = 0; column < height; column++) {
-            for(int row = 0; row < width; row++) {
+        for(int column = 0; column < width; column++) {
+            for(int row = 0; row < height; row++) {
                 //TODO Player is null!
-                ItemStack itemStack = inv.getStackInRowAndColumn(row + rowOffset, column + columnOffset);
-                if(ingredients.length > column && ingredients[column].length > row) {
+                ItemStack itemStack = inv.getStackInSlot((column + columnOffset) + (row + rowOffset) * inv.getWidth());
+                if(ingredients.length > row && ingredients[row].length > column) {
                     IIngredient ingredient = ingredients[row][column];
-                    if(ingredient != null && ingredient.hasTransformers())
-                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyTransform(CraftTweakerMC.getIItemStack(itemStack), null))).orElse(ItemStack.EMPTY));
-                    else
+                    if(ingredient == null) {}
+                    else if(ingredient.hasNewTransformers())
+                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyNewTransform(CraftTweakerMC.getIItemStack(itemStack)))).orElse(ItemStack.EMPTY));
+                    else if(!ingredient.hasTransformers())
                         out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), ForgeHooks.getContainerItem(itemStack));
                 }
             }
@@ -220,6 +273,15 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
             commandString.deleteCharAt(commandString.length() - 1);
         }
         return commandString.append("]);").toString();
+    }
+    
+    @Override
+    public boolean hasTransformers() {
+        for(IIngredient[] row : ingredients)
+            for(IIngredient ingredient : row)
+                if(ingredient != null && ingredient.hasTransformers())
+                    return true;
+        return false;
     }
     
     @Override

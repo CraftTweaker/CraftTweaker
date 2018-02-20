@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class ArrayUtil {
     
     public static final IItemCondition[] EMPTY_CONDITIONS = new IItemCondition[0];
-    public static final IItemTransformer[] EMPTY_TRANSFORMERS = new IItemTransformer[0];
+    public static final IItemTransformerNew[] EMPTY_TRANSFORMERS = new IItemTransformerNew[0];
+    public static final IItemTransformer[] EMPTY_TRANSFORMERS_NEW = new IItemTransformer[0];
     
     public static IItemCondition[] append(IItemCondition[] values, IItemCondition value) {
         IItemCondition[] result = Arrays.copyOf(values, values.length + 1);
@@ -19,8 +20,8 @@ public class ArrayUtil {
         return result;
     }
     
-    public static IItemTransformer[] append(IItemTransformer[] values, IItemTransformer value) {
-        IItemTransformer[] result = Arrays.copyOf(values, values.length + 1);
+    public static IItemTransformerNew[] append(IItemTransformerNew[] values, IItemTransformerNew value) {
+        IItemTransformerNew[] result = Arrays.copyOf(values, values.length + 1);
         result[values.length] = value;
         return result;
     }

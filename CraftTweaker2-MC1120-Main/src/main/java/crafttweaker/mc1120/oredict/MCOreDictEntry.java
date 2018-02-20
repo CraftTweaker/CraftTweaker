@@ -156,18 +156,18 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
 
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientOreDict(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[]{transformer});
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientOreDict(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformerNew[]{transformer}, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
 
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientOreDict(this, null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientOreDict(this, null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
 
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientOreDict(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientOreDict(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
 
     @Override
@@ -205,12 +205,27 @@ public class MCOreDictEntry implements IOreDictEntry {
     public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
         return item;
     }
-
+    
+    @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return false;
+    }
+    
     @Override
     public boolean hasTransformers() {
         return false;
     }
-
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientOreDict(this, null, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS, new IItemTransformer[]{transformer});
+    }
+    
     @Override
     public Object getInternal() {
         return id;

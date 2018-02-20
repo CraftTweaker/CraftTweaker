@@ -16,16 +16,18 @@ public class IngredientItem implements IIngredient {
     private final IItemStack item;
     private final String mark;
     private final IItemCondition[] conditions;
-    private final IItemTransformer[] transformers;
+    private final IItemTransformerNew[] transformerNews;
     private final List<IItemStack> items;
+    private final IItemTransformer[] transformers;
     
-    public IngredientItem(IItemStack item, String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
+    public IngredientItem(IItemStack item, String mark, IItemCondition[] conditions, IItemTransformerNew[] transformerNews, IItemTransformer[] transformers) {
         this.item = item;
         this.mark = mark;
         this.conditions = conditions;
-        this.transformers = transformers;
+        this.transformerNews = transformerNews;
         
         items = Collections.singletonList(item);
+        this.transformers = transformers;
     }
     
     @Override
@@ -59,18 +61,18 @@ public class IngredientItem implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientItem(item, mark, conditions, ArrayUtil.append(transformers, transformer));
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientItem(item, mark, conditions, ArrayUtil.append(transformerNews, transformer), transformers);
     }
     
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientItem(item, mark, ArrayUtil.append(conditions, condition), transformers);
+        return new IngredientItem(item, mark, ArrayUtil.append(conditions, condition), transformerNews, transformers);
     }
     
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientItem(item, mark, conditions, transformers);
+        return new IngredientItem(item, mark, conditions, transformerNews, transformers);
     }
     
     @Override
@@ -130,8 +132,27 @@ public class IngredientItem implements IIngredient {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        for(IItemTransformerNew transform : transformerNews) {
+            item = transform.transform(item);
+        }
+    
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return transformerNews.length > 0;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return transformers.length > 0;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientItem(item, mark, conditions, transformerNews, stanhebben.zenscript.util.ArrayUtil.add(transformers, transformer));
     }
     
     @Override

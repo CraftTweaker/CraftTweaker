@@ -52,8 +52,8 @@ public class IngredientStack implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientStack(ingredient.transform(transformer), amount);
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientStack(ingredient.transformNew(transformer), amount);
     }
     
     @Override
@@ -97,6 +97,11 @@ public class IngredientStack implements IIngredient {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        return ingredient.applyNewTransform(item);
+    }
+    
+    @Override
     public Object getInternal() {
         return null;
     }
@@ -107,8 +112,18 @@ public class IngredientStack implements IIngredient {
     }
     
     @Override
+    public boolean hasNewTransformers() {
+        return ingredient.hasNewTransformers();
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return ingredient.hasTransformers();
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientStack(ingredient.transform(transformer), amount);
     }
     
     // #############################

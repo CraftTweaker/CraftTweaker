@@ -39,7 +39,7 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
             for(int y = 0; y < getHeight(); y++) {
                 ItemStack itemStack = inventory.getStackInSlot(x * getWidth() + y);
                 if (itemStack.isEmpty()) {
-                    items[x][y] = MCItemStack.EMPTY;
+                    items[x][y] = null;
                 } else {
                     stackcount++;
                     items[x][y] = new MCItemStack(itemStack);

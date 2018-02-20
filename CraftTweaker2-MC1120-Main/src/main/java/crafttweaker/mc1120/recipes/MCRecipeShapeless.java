@@ -2,8 +2,9 @@ package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.NonNullList;
@@ -107,12 +108,12 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                 if(!stackInSlot.isEmpty() && !visited[slot]) {
                     IItemStack stack = CraftTweakerMC.getIItemStack(stackInSlot);
                     if(ingredients[ingredientIndex].matches(stack))
-                        if(ingredients[ingredientIndex].hasTransformers()) {
-                            IItemStack remainingItem = ingredients[ingredientIndex].applyTransform(stack, null);
+                        if(ingredients[ingredientIndex].hasNewTransformers()) {
+                            IItemStack remainingItem = ingredients[ingredientIndex].applyNewTransform(stack);
                             out.set(slot, remainingItem == null ? ItemStack.EMPTY : CraftTweakerMC.getItemStack(remainingItem));
                             visited[slot] = true;
                             break;
-                        } else
+                        } else if (!ingredients[ingredientIndex].hasTransformers())
                             out.set(slot, ForgeHooks.getContainerItem(stackInSlot));
                     
                 }
@@ -137,6 +138,33 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         
         commandString.append("]);");
         return commandString.toString();
+    }
+    
+    @Override
+    public boolean hasTransformers() {
+        for(IIngredient ingredient : ingredients)
+            if(ingredient != null && ingredient.hasTransformers())
+                return true;
+        return false;
+    }
+    
+    @Override
+    public void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer) {
+        boolean[] visited = new boolean[inventory.getSizeInventory()];
+        for(int ingredientIndex = 0; ingredientIndex < ingredients.length; ingredientIndex++) {
+            IIngredient ingredient = ingredients[ingredientIndex];
+            for(int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+                ItemStack stackInSlot = inventory.getStackInSlot(slot);
+                if(!stackInSlot.isEmpty() && !visited[slot]) {
+                    IItemStack stack = CraftTweakerMC.getIItemStack(stackInSlot);
+                    if(ingredient.matches(stack)) {
+                        inventory.setInventorySlotContents(slot, CraftTweakerMC.getItemStack(ingredient.applyTransform(stack, byPlayer)));
+                        visited[slot] = true;
+                        break;
+                    }
+                }
+            }
+        }
     }
     
     @Override
