@@ -192,7 +192,7 @@ public class ShapedRecipe implements ICraftingRecipe {
     
     public boolean hasTransformers() {
         for(IIngredient ingredient : ingredients) {
-            if(ingredient.hasTransformers()) {
+            if(ingredient.hasNewTransformers()) {
                 return true;
             }
         }
@@ -301,7 +301,7 @@ public class ShapedRecipe implements ICraftingRecipe {
         
         /*
          * for (int i = 0; i < ingredients.length; i++) { IItemStack transformed
-         * = ingredients[i].applyTransform(stacks[i]); if (transformed !=
+         * = ingredients[i].applyNewTransform(stacks[i]); if (transformed !=
          * stacks[i]) { if (mirrored) { inventory.setStack( inventory.getWidth()
          * - (offx + posx[i]) - 1, offy + posy[i], transformed); } else {
          * inventory.setStack( offx + posx[i], offy + posy[i], transformed); } }
@@ -313,7 +313,7 @@ public class ShapedRecipe implements ICraftingRecipe {
     
     private void doRecipeTransformers(ICraftingInventory inventory, IItemStack[] stacks, int offx, int offy, boolean mirrored, IPlayer byPlayer) {
         for(int i = 0; i < ingredients.length; i++) {
-            IItemStack transformed = ingredients[i].applyTransform(stacks[i], byPlayer);
+            IItemStack transformed = ingredients[i].applyNewTransform(stacks[i]);
             if(transformed != stacks[i]) {
                 if(mirrored) {
                     inventory.setStack(inventory.getWidth() - (offx + posx[i]) - 1, offy + posy[i], transformed);

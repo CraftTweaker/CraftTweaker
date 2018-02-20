@@ -15,12 +15,14 @@ public class IngredientOreDict implements IIngredient {
     private final IOreDictEntry entry;
     private final String mark;
     private final IItemCondition[] conditions;
+    private final IItemTransformerNew[] transformerNews;
     private final IItemTransformer[] transformers;
     
-    public IngredientOreDict(IOreDictEntry entry, String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
+    public IngredientOreDict(IOreDictEntry entry, String mark, IItemCondition[] conditions, IItemTransformerNew[] transformerNews, IItemTransformer[] transformers) {
         this.entry = entry;
         this.mark = mark;
         this.conditions = conditions;
+        this.transformerNews = transformerNews;
         this.transformers = transformers;
     }
     
@@ -56,18 +58,18 @@ public class IngredientOreDict implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientOreDict(entry, mark, conditions, ArrayUtil.append(transformers, transformer));
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientOreDict(entry, mark, conditions, ArrayUtil.append(transformerNews, transformer), transformers);
     }
     
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientOreDict(entry, mark, ArrayUtil.append(conditions, condition), transformers);
+        return new IngredientOreDict(entry, mark, ArrayUtil.append(conditions, condition), transformerNews, transformers);
     }
     
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientOreDict(entry, mark, conditions, transformers);
+        return new IngredientOreDict(entry, mark, conditions, transformerNews, transformers);
     }
     
     @Override
@@ -121,8 +123,26 @@ public class IngredientOreDict implements IIngredient {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        for(IItemTransformerNew transformer : transformerNews) {
+            item = transformer.transform(item);
+        }
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return transformerNews.length > 0;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return transformers.length > 0;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientOreDict(entry, mark, conditions, transformerNews, stanhebben.zenscript.util.ArrayUtil.add(transformers, transformer));
     }
     
     @Override

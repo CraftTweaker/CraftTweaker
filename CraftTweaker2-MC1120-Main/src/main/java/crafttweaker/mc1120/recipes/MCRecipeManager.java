@@ -640,12 +640,15 @@ public final class MCRecipeManager implements IRecipeManager {
         protected String name;
         
         @Deprecated
-        public ActionBaseAddRecipe() {}
+        public ActionBaseAddRecipe() {
+        }
         
         private ActionBaseAddRecipe(MCRecipeBase recipe, IItemStack output, boolean isShaped) {
             this.recipe = recipe;
             this.output = output;
             this.isShaped = isShaped;
+            if(recipe.hasTransformers())
+                transformerRecipes.add(recipe);
         }
         
         public void setRecipe(MCRecipeBase recipe) {

@@ -4,6 +4,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
@@ -89,13 +90,10 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     }
     
     @Override
-    public boolean hasTransformers() {
-        return false;
-    }
-    
-    @Override
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
     }
+    
+    public abstract void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer);
     
     @Override
     public boolean matches(ICraftingInventory inventory) {

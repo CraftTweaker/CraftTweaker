@@ -53,18 +53,18 @@ public class IngredientAny implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientAnyAdvanced(null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[]{transformer});
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientAnyAdvanced(null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformerNew[]{transformer}, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
     
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientAnyAdvanced(null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientAnyAdvanced(null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
     
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientAnyAdvanced(mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientAnyAdvanced(mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
     
     @Override
@@ -99,8 +99,23 @@ public class IngredientAny implements IIngredient {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return false;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return false;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientAnyAdvanced(null, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS, new IItemTransformer[]{transformer});
     }
     
     @Override

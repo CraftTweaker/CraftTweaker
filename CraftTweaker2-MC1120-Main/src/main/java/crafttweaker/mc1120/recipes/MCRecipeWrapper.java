@@ -2,7 +2,8 @@ package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import net.minecraft.inventory.InventoryCrafting;
+import crafttweaker.api.player.IPlayer;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
@@ -83,10 +84,20 @@ public class MCRecipeWrapper extends MCRecipeBase {
         return commandString.append("]);").toString();
     }
     
+    @Override
+    public boolean hasTransformers() {
+        return false;
+    }
+    
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
         return recipe.getRegistryName();
+    }
+    
+    @Override
+    public void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer) {
+    
     }
     
     @Override

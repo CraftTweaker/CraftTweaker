@@ -7,7 +7,8 @@ import crafttweaker.api.event.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.recipes.CraftingInfo;
+import crafttweaker.api.recipes.*;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
@@ -82,6 +83,15 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
+        if(!MCRecipeManager.transformerRecipes.isEmpty()) {
+            MCRecipeManager.transformerRecipes.stream()
+                    .filter(MCRecipeBase.class::isInstance)
+                    .map(MCRecipeBase.class::cast)
+                    .filter(ICraftingRecipe::hasTransformers)
+                    .filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world))
+                    .forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
+        }
+        
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
         if(ev.craftMatrix instanceof InventoryCrafting) {
             CraftingManager.REGISTRY.getKeys().stream().filter(key -> CraftingManager.REGISTRY.getObject(key).getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {

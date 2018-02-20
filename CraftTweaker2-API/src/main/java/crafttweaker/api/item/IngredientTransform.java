@@ -41,7 +41,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformDamage(IIngredient ingredient, final int damage) {
-        return ingredient.transform((item, byPlayer) -> (item.getDamage() + damage > item.getMaxDamage()) ? null : item.withDamage(item.getDamage() + damage));
+        return ingredient.transformNew(item -> (item.getDamage() + damage > item.getMaxDamage()) ? null : item.withDamage(item.getDamage() + damage));
     }
     
     /**
@@ -55,7 +55,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformReplace(IIngredient ingredient, final IItemStack withItem) {
-        return ingredient.transform((item, byPlayer) -> withItem);
+        return ingredient.transformNew(item -> withItem);
     }
     
     /**
@@ -70,7 +70,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient transformConsume(IIngredient ingredient, final int amount) {
-        return ingredient.transform((item, byPlayer) -> {
+        return ingredient.transform((item, player) -> {
             int newAmount = Math.max(item.getAmount() - amount, 0);
             return newAmount == 0 ? null : item.withAmount(newAmount);
         });
@@ -85,7 +85,7 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient noReturn(IIngredient ingredient) {
-        return ingredient.transform((item, byPlayer) -> null);
+        return ingredient.transformNew(item -> null);
     }
     
     /**
@@ -99,6 +99,19 @@ public class IngredientTransform {
      */
     @ZenMethod
     public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {
-        return ingredient.transform((item, byPlayer) -> givenItem == null ? item : givenItem);
+        return ingredient.transform((item, byPlayer) -> {
+            byPlayer.give(givenItem == null ? item : givenItem);
+        return null;});
+    }
+    
+    /**
+     * Leaves the item in the crafting grid.
+     * @param ingredient
+     * @return
+     */
+    
+    @ZenMethod
+    public static IIngredient reuse(IIngredient ingredient) {
+        return ingredient.transformNew(item -> item);
     }
 }

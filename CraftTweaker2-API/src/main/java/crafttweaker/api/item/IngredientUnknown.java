@@ -54,7 +54,7 @@ public class IngredientUnknown implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
+    public IIngredient transformNew(IItemTransformerNew transformer) {
         return this;
     }
     
@@ -95,8 +95,23 @@ public class IngredientUnknown implements IIngredient {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return false;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return false;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return this;
     }
     
     @Override

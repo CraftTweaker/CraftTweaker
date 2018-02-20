@@ -22,7 +22,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -263,18 +262,18 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientItem(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[]{transformer});
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientItem(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformerNew[]{transformer}, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
     
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientItem(this, null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientItem(this, null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
     
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientItem(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
+        return new IngredientItem(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS, ArrayUtil.EMPTY_TRANSFORMERS_NEW);
     }
     
     @Override
@@ -330,8 +329,23 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return false;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return false;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientItem(this, null, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS, new IItemTransformer[]{transformer});
     }
     
     @Override

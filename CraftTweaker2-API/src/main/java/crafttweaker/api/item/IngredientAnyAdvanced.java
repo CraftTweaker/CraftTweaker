@@ -16,11 +16,13 @@ public class IngredientAnyAdvanced implements IIngredient {
     
     private final String mark;
     private final IItemCondition[] conditions;
+    private final IItemTransformerNew[] transformerNews;
     private final IItemTransformer[] transformers;
     
-    public IngredientAnyAdvanced(String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
+    public IngredientAnyAdvanced(String mark, IItemCondition[] conditions, IItemTransformerNew[] transformerNews, IItemTransformer[] transformers) {
         this.mark = mark;
         this.conditions = conditions;
+        this.transformerNews = transformerNews;
         this.transformers = transformers;
     }
     
@@ -55,18 +57,18 @@ public class IngredientAnyAdvanced implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientAnyAdvanced(mark, conditions, ArrayUtil.append(transformers, transformer));
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientAnyAdvanced(mark, conditions, ArrayUtil.append(transformerNews, transformer), transformers);
     }
     
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientAnyAdvanced(mark, ArrayUtil.append(conditions, condition), transformers);
+        return new IngredientAnyAdvanced(mark, ArrayUtil.append(conditions, condition), transformerNews, transformers);
     }
     
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientAnyAdvanced(mark, conditions, transformers);
+        return new IngredientAnyAdvanced(mark, conditions, transformerNews, transformers);
     }
     
     @Override
@@ -115,13 +117,32 @@ public class IngredientAnyAdvanced implements IIngredient {
         for(IItemTransformer transform : transformers) {
             item = transform.transform(item, byPlayer);
         }
+    
+        return item;
+    }
+    
+    @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        for(IItemTransformerNew transform : transformerNews) {
+            item = transform.transform(item);
+        }
         
         return item;
     }
     
     @Override
+    public boolean hasNewTransformers() {
+        return transformerNews.length > 0;
+    }
+    
+    @Override
     public boolean hasTransformers() {
         return transformers.length > 0;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientAnyAdvanced(mark, conditions, transformerNews, stanhebben.zenscript.util.ArrayUtil.add(transformers, transformer));
     }
     
     @Override

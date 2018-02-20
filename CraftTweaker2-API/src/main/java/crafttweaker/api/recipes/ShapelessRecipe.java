@@ -117,7 +117,7 @@ public class ShapelessRecipe implements ICraftingRecipe {
         
         for(int i = 0; i < ingredients.length; i++) {
             IIngredient ingredient = ingredients[i];
-            IItemStack transformed = ingredient.applyTransform(matching.inputs[i], byPlayer);
+            IItemStack transformed = ingredient.applyNewTransform(matching.inputs[i]);
             if(transformed != matching.inputs[i]) {
                 inventory.setStack(matching.indices[i], transformed);
             }
@@ -149,7 +149,7 @@ public class ShapelessRecipe implements ICraftingRecipe {
     
     public boolean hasTransformers() {
         for(IIngredient ingredient : ingredients) {
-            if(ingredient.hasTransformers()) {
+            if(ingredient.hasNewTransformers()) {
                 return true;
             }
         }

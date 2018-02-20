@@ -139,7 +139,7 @@ public class MCLiquidStack implements ILiquidStack {
     }
 
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
+    public IIngredient transformNew(IItemTransformerNew transformer) {
         throw new UnsupportedOperationException("Liquid stack can't have transformers");
     }
 
@@ -185,10 +185,25 @@ public class MCLiquidStack implements ILiquidStack {
     public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
         return item;
     }
-
+    
+    @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return false;
+    }
+    
     @Override
     public boolean hasTransformers() {
         return false;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        throw new UnsupportedOperationException("Liquid stack can't have transformers");
     }
     
     @Override

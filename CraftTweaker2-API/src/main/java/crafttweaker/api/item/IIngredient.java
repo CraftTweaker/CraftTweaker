@@ -106,7 +106,7 @@ public interface IIngredient {
      * @return modified ingredient
      */
     @ZenMethod
-    IIngredient transform(IItemTransformer transformer);
+    IIngredient transformNew(IItemTransformerNew transformer);
     
     /**
      * Returns a new ingredient with the given condition added to it.
@@ -175,7 +175,7 @@ public interface IIngredient {
     /**
      * Applies transformations after crafting, if any, to the given item.
      *
-     * @param item     item to transform
+     * @param item     item to transformNew
      * @param byPlayer player performing the crafting operation
      *
      * @return transformed item
@@ -183,15 +183,22 @@ public interface IIngredient {
     @ZenMethod
     IItemStack applyTransform(IItemStack item, IPlayer byPlayer);
     
+    
+    IItemStack applyNewTransform(IItemStack item);
+    
     /**
      * Checks if this ingredient has (or could have) any transformatiosns.
      *
      * @return true if there are (or could be) any transformations false
      * otherwise.
      */
+    boolean hasNewTransformers();
+    
     @ZenGetter("hasTransformations")
     boolean hasTransformers();
     
+    @ZenMethod
+    IIngredient transform(IItemTransformer transformer);
     
     /**
      * Gets the internal item backing this ingredient.

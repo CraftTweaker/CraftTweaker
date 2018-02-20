@@ -14,24 +14,27 @@ public class IngredientOr implements IIngredient {
     private final IIngredient[] elements;
     private final String mark;
     private final IItemCondition[] conditions;
-    private final IItemTransformer[] transformers;
+    private final IItemTransformerNew[] transformerNews;
+    private final IItemTransformer[] transformer;
     
     public IngredientOr(IIngredient[] elements) {
         this.elements = elements;
         mark = null;
         conditions = ArrayUtil.EMPTY_CONDITIONS;
-        transformers = ArrayUtil.EMPTY_TRANSFORMERS;
+        transformerNews = ArrayUtil.EMPTY_TRANSFORMERS;
+        transformer = ArrayUtil.EMPTY_TRANSFORMERS_NEW;
     }
     
     public IngredientOr(IIngredient a, IIngredient b) {
         this(new IIngredient[]{a, b});
     }
     
-    private IngredientOr(IIngredient[] elements, String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
+    private IngredientOr(IIngredient[] elements, String mark, IItemCondition[] conditions, IItemTransformerNew[] transformerNews, IItemTransformer[] transformers) {
         this.elements = elements;
         this.mark = mark;
         this.conditions = conditions;
-        this.transformers = transformers;
+        this.transformerNews = transformerNews;
+        this.transformer = transformers;
     }
     
     @Override
@@ -78,18 +81,18 @@ public class IngredientOr implements IIngredient {
     }
     
     @Override
-    public IIngredient transform(IItemTransformer transformer) {
-        return new IngredientOr(elements, mark, conditions, ArrayUtil.append(transformers, transformer));
+    public IIngredient transformNew(IItemTransformerNew transformer) {
+        return new IngredientOr(elements, mark, conditions, ArrayUtil.append(transformerNews, transformer), this.transformer);
     }
     
     @Override
     public IIngredient only(IItemCondition condition) {
-        return new IngredientOr(elements, mark, ArrayUtil.append(conditions, condition), transformers);
+        return new IngredientOr(elements, mark, ArrayUtil.append(conditions, condition), transformerNews, transformer);
     }
     
     @Override
     public IIngredient marked(String mark) {
-        return new IngredientOr(elements, mark, conditions, transformers);
+        return new IngredientOr(elements, mark, conditions, transformerNews, transformer);
     }
     
     @Override
@@ -140,7 +143,7 @@ public class IngredientOr implements IIngredient {
     
     @Override
     public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
-        for(IItemTransformer transformer : transformers) {
+        for(IItemTransformer transformer : transformer) {
             item = transformer.transform(item, byPlayer);
         }
         
@@ -148,8 +151,27 @@ public class IngredientOr implements IIngredient {
     }
     
     @Override
+    public IItemStack applyNewTransform(IItemStack item) {
+        for(IItemTransformerNew transformer : transformerNews) {
+            item = transformer.transform(item);
+        }
+    
+        return item;
+    }
+    
+    @Override
+    public boolean hasNewTransformers() {
+        return transformerNews.length > 0;
+    }
+    
+    @Override
     public boolean hasTransformers() {
-        return transformers.length > 0;
+        return false;
+    }
+    
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return null;
     }
     
     @Override
