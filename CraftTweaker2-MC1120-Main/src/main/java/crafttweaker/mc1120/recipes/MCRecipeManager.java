@@ -82,6 +82,8 @@ public final class MCRecipeManager implements IRecipeManager {
     public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
         List<ICraftingRecipe> results = new ArrayList<>();
         
+        if(recipes == null)
+            recipes = ForgeRegistries.RECIPES.getEntries();
         recipes.stream().filter(recipe -> ingredient.matches(CraftTweakerMC.getIItemStack(recipe.getValue().getRecipeOutput()))).forEach(recipeEntry -> {
             IRecipe recipe = recipeEntry.getValue();
             if(recipe instanceof MCRecipeBase)
@@ -96,6 +98,8 @@ public final class MCRecipeManager implements IRecipeManager {
     @Override
     public List<ICraftingRecipe> getAll() {
         List<ICraftingRecipe> results = new ArrayList<>();
+        if(recipes == null)
+            recipes = ForgeRegistries.RECIPES.getEntries();
         for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
             IRecipe recipe = recipeEntry.getValue();
             if(recipe instanceof MCRecipeBase)
