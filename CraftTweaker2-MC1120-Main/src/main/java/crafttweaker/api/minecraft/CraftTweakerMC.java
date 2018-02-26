@@ -524,7 +524,10 @@ public class CraftTweakerMC {
     }
     
     public static boolean matches(IItemStack iitem, ItemStack stack, boolean wildcardsize) {
-        ItemStack internal = (ItemStack) iitem.getInternal();
+        ItemStack internal = ItemStack.EMPTY;
+        if(iitem != null){
+            internal = (ItemStack) iitem.getInternal();
+        }
         if(stack.hasTagCompound()) {
             return matchesExact(iitem, stack);
         }
