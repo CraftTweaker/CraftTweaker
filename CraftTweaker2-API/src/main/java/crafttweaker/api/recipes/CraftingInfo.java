@@ -13,7 +13,11 @@ public class CraftingInfo implements ICraftingInfo {
     
     public CraftingInfo(ICraftingInventory inventory, IWorld world) {
         this.inventory = inventory;
-        this.world = world;
+        if(world != null)
+            this.world = world;
+        else
+            this.world = inventory.getPlayer() == null ? null : inventory.getPlayer().getWorld();
+        
     }
     
     @Override
@@ -33,6 +37,6 @@ public class CraftingInfo implements ICraftingInfo {
     
     @Override
     public IWorld getWorld() {
-        return null;
+        return world;
     }
 }
