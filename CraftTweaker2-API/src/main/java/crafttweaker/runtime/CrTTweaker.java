@@ -3,6 +3,7 @@ package crafttweaker.runtime;
 import crafttweaker.*;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.*;
+import crafttweaker.runtime.events.*;
 import crafttweaker.util.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
@@ -18,6 +19,7 @@ import static stanhebben.zenscript.ZenModule.*;
  * @author Stan Hebben
  */
 public class CrTTweaker implements ITweaker {
+    
     private static String defaultLoaderName = "crafttweaker";
     private NetworkSide networkSide = NetworkSide.INVALID_SIDE;
     
@@ -29,8 +31,13 @@ public class CrTTweaker implements ITweaker {
     private PreprocessorManager preprocessorManager = new PreprocessorManager();
     private IScriptProvider scriptProvider;
     
-    /** List of all event subscribers*/
-     private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
+    /**
+     * List of all event subscribers
+     */
+    private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
+    private final EventList<CrTLoadingScriptEventPre> CRT_LOADING_SCRIPT_PRE_EVENT_LIST = new EventList<>();
+    private final EventList<CrTLoadingScriptEventPost> CRT_LOADING_SCRIPT_POST_EVENT_LIST = new EventList<>();
+    
     
     
     public CrTTweaker() {
@@ -58,12 +65,11 @@ public class CrTTweaker implements ITweaker {
     public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
         CraftTweakerAPI.logInfo("Loading scripts");
         CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
-        
         preprocessorManager.clean();
         
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
-    
+        
         List<ScriptFile> scriptFiles = collectScriptFiles(isSyntaxCommand);
         
         // preprocessor magic
@@ -77,18 +83,21 @@ public class CrTTweaker implements ITweaker {
         IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
         
         // ZS magic
+        long totalTime = System.currentTimeMillis();
         for(ScriptFile scriptFile : scriptFiles) {
-            if (!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
+            if(!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
                 continue;
             }
             
-            if (!scriptFile.shouldBeLoadedOn(networkSide)){
+            if(!scriptFile.shouldBeLoadedOn(networkSide)) {
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");
                 continue;
             }
             
             if(!executed.contains(scriptFile.getEffectiveName())) {
+//                long time = System.currentTimeMillis();
+                
                 executed.add(scriptFile.getEffectiveName());
                 
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
@@ -97,6 +106,7 @@ public class CrTTweaker implements ITweaker {
                 String filename = scriptFile.getEffectiveName();
                 String className = extractClassName(filename);
     
+                CRT_LOADING_SCRIPT_PRE_EVENT_LIST.publish(new CrTLoadingScriptEventPre(filename));
                 Reader reader = null;
                 try {
                     reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8");
@@ -106,7 +116,8 @@ public class CrTTweaker implements ITweaker {
                     preprocessorManager.postLoadEvent(loadEvent);
                     
                     // blocks the parsing of the script
-                    if(scriptFile.isParsingBlocked()) continue;
+                    if(scriptFile.isParsingBlocked())
+                        continue;
                     
                     ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
@@ -130,15 +141,15 @@ public class CrTTweaker implements ITweaker {
                 }
                 
                 
-                
-                
                 try {
                     // Stops if the compile is disabled
-                    if (zenParsedFile == null || scriptFile.isCompileBlocked()) continue;
+                    if(zenParsedFile == null || scriptFile.isCompileBlocked())
+                        continue;
                     compileScripts(className, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
                     
                     // stops if the execution is disabled
-                    if (scriptFile.isExecutionBlocked() || isSyntaxCommand) continue;
+                    if(scriptFile.isExecutionBlocked() || isSyntaxCommand)
+                        continue;
                     
                     
                     ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
@@ -148,11 +159,14 @@ public class CrTTweaker implements ITweaker {
                     
                     
                 } catch(Throwable ex) {
-                    CraftTweakerAPI.logError("[" +loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
+                    CraftTweakerAPI.logError("[" + loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
                 }
+                CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
+//                CraftTweakerAPI.logInfo("Completed file: " + filename +" in: " + (System.currentTimeMillis() - time) + "ms");
             }
+            
         }
-        
+        CraftTweakerAPI.logInfo("Completed script loading in: " + (System.currentTimeMillis() - totalTime) + "ms");
         return loadSuccessful;
     }
     
@@ -176,7 +190,7 @@ public class CrTTweaker implements ITweaker {
         return fileList;
     }
     
-    private String getTweakerDescriptor(String loaderName){
+    private String getTweakerDescriptor(String loaderName) {
         return "[" + loaderName + " | " + networkSide + "]";
     }
     
@@ -203,7 +217,15 @@ public class CrTTweaker implements ITweaker {
         this.networkSide = networkSide;
     }
     
-    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler){
+    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler) {
         CRT_LOADING_STARTED_EVENT_EVENT_LIST.add(eventHandler);
+    }
+    
+    public void registerScriptLoadPreEvent(IEventHandler<CrTLoadingScriptEventPre> eventHandler) {
+        CRT_LOADING_SCRIPT_PRE_EVENT_LIST.add(eventHandler);
+    }
+    
+    public void registerScriptLoadPostEvent(IEventHandler<CrTLoadingScriptEventPost> eventHandler) {
+        CRT_LOADING_SCRIPT_POST_EVENT_LIST.add(eventHandler);
     }
 }

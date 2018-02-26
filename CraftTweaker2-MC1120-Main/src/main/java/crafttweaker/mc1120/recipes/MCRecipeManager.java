@@ -84,13 +84,18 @@ public final class MCRecipeManager implements IRecipeManager {
         
         if(recipes == null)
             recipes = ForgeRegistries.RECIPES.getEntries();
-        recipes.stream().filter(recipe -> ingredient.matches(CraftTweakerMC.getIItemStack(recipe.getValue().getRecipeOutput()))).forEach(recipeEntry -> {
-            IRecipe recipe = recipeEntry.getValue();
-            if(recipe instanceof MCRecipeBase)
-                results.add((MCRecipeBase) recipe);
-            else
-                results.add(new MCRecipeWrapper(recipe));
-        });
+        
+        for(Map.Entry<ResourceLocation, IRecipe> ent : recipes) {
+            ItemStack stack = ent.getValue().getRecipeOutput();
+            if(!stack.isEmpty()) {
+                if(ingredient.matches(CraftTweakerMC.getIItemStack(stack))) {
+                    if(ent.getValue() instanceof MCRecipeBase) {
+                        results.add((MCRecipeBase) ent.getValue());
+                    } else
+                        results.add(new MCRecipeWrapper(ent.getValue()));
+                }
+            }
+        }
         
         return results;
     }

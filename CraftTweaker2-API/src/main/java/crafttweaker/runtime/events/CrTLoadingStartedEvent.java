@@ -1,4 +1,4 @@
-package crafttweaker.runtime;
+package crafttweaker.runtime.events;
 
 import crafttweaker.api.network.NetworkSide;
 

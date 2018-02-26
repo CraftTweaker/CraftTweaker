@@ -4,6 +4,7 @@ import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.PreprocessorManager;
+import crafttweaker.runtime.events.*;
 import crafttweaker.util.IEventHandler;
 import stanhebben.zenscript.annotations.*;
 
@@ -76,4 +77,17 @@ public interface ITweaker {
      * Gets called as soon as the script start getting loaded (before the zs files are getting loaded)
      */
     void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler);
+    
+    
+    /**
+     * Gets called just before the script file is loaded
+     */
+    void registerScriptLoadPreEvent(IEventHandler<CrTLoadingScriptEventPre> eventHandler);
+    
+    
+    /**
+     * Gets called as soon as the script file is done loading.
+     */
+    void registerScriptLoadPostEvent(IEventHandler<CrTLoadingScriptEventPost> eventHandler);
+    
 }

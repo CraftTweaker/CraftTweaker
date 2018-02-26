@@ -7,7 +7,7 @@ import stanhebben.zenscript.annotations.*;
 /**
  *
  * Class for various Item utils
- * can be called with items.function
+ * can be called with itemUtils.function
  *
  * @author BloodWorkXGaming
  */
