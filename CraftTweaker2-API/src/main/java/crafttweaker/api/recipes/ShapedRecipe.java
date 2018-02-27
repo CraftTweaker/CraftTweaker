@@ -115,7 +115,7 @@ public class ShapedRecipe implements ICraftingRecipe {
             out:
             for(int j = 0; j <= inventory.getHeight() - height; j++) {
                 for(int k = 0; k < ingredients.length; k++) {
-                    IItemStack item = inventory.getStack(posx[k] + i, posy[k] + j);
+                    IItemStack item = inventory.getStack(posy[k] + j, posx[k] + i);
                     if(item == null)
                         continue out;
                     
@@ -132,7 +132,7 @@ public class ShapedRecipe implements ICraftingRecipe {
                 out:
                 for(int j = 0; j <= inventory.getHeight() - height; j++) {
                     for(int k = 0; k < ingredients.length; k++) {
-                        IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i) - 1, posy[k] + j);
+                        IItemStack item = inventory.getStack(posy[k] + j, inventory.getWidth() - (posx[k] + i) - 1);
                         if(item == null)
                             continue out;
                         
@@ -155,7 +155,7 @@ public class ShapedRecipe implements ICraftingRecipe {
             out:
             for(int j = 0; j <= inventory.getHeight() - height; j++) {
                 for(int k = 0; k < ingredients.length; k++) {
-                    IItemStack item = inventory.getStack(posx[k] + i, posy[k] + j);
+                    IItemStack item = inventory.getStack(posy[k] + j, posx[k] + i);
                     if(item == null)
                         continue out;
                     
@@ -173,7 +173,7 @@ public class ShapedRecipe implements ICraftingRecipe {
                 out:
                 for(int j = 0; j <= inventory.getHeight() - height; j++) {
                     for(int k = 0; k < ingredients.length; k++) {
-                        IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i) - 1, posy[k] + j);
+                        IItemStack item = inventory.getStack(posy[k] + j, inventory.getWidth() - (posx[k] + i) - 1);
                         if(item == null)
                             continue out;
                         
@@ -207,7 +207,7 @@ public class ShapedRecipe implements ICraftingRecipe {
             out:
             for(int j = 0; j <= inventory.getHeight() - height; j++) {
                 for(int k = 0; k < ingredients.length; k++) {
-                    IItemStack item = inventory.getStack(posx[k] + i, posy[k] + j);
+                    IItemStack item = inventory.getStack(posy[k] + j, posx[k] + i);
                     if(item == null)
                         continue out;
                     
@@ -226,7 +226,7 @@ public class ShapedRecipe implements ICraftingRecipe {
                 out:
                 for(int j = 0; j <= inventory.getHeight() - height; j++) {
                     for(int k = 0; k < ingredients.length; k++) {
-                        IItemStack item = inventory.getStack(inventory.getWidth() - (posx[k] + i) - 1, posy[k] + j);
+                        IItemStack item = inventory.getStack(posy[k] + j, inventory.getWidth() - (posx[k] + i) - 1);
                         if(item == null)
                             continue out;
                         
@@ -316,9 +316,9 @@ public class ShapedRecipe implements ICraftingRecipe {
             IItemStack transformed = ingredients[i].applyNewTransform(stacks[i]);
             if(transformed != stacks[i]) {
                 if(mirrored) {
-                    inventory.setStack(inventory.getWidth() - (offx + posx[i]) - 1, offy + posy[i], transformed);
+                    inventory.setStack(offy + posy[i], inventory.getWidth() - (offx + posx[i]) - 1, transformed);
                 } else {
-                    inventory.setStack(offx + posx[i], offy + posy[i], transformed);
+                    inventory.setStack(offy + posy[i], offx + posx[i], transformed);
                 }
             }
         }

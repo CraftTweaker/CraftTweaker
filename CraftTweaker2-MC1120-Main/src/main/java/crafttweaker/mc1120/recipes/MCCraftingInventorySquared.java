@@ -13,7 +13,7 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     
     private final IInventory inventory;
     private final IPlayer player;
-    private final int bordersize, stackcount;
+    private final int height, width;
     
     protected MCCraftingInventorySquared(IInventory inventory) {
         this(inventory, null);
@@ -22,9 +22,7 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     public MCCraftingInventorySquared(IInventory inventory, IPlayer player) {
         
         this.inventory = inventory;
-        
-        this.bordersize = (int) Math.sqrt(inventory.getSizeInventory());
-        this.stackcount = inventory.getSizeInventory();
+        this.height = this.width = (int) Math.sqrt(inventory.getSizeInventory());
         this.player = player == null ? getPlayerFromInventory(inventory) : player;
     }
     
@@ -55,22 +53,27 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     
     @Override
     public int getSize() {
-        return getWidth() * getHeight();
+        return inventory.getSizeInventory();
     }
     
     @Override
     public int getWidth() {
-        return bordersize;
+        return width;
     }
     
     @Override
     public int getHeight() {
-        return bordersize;
+        return height;
     }
     
     @Override
     public int getStackCount() {
-        return stackcount;
+        int count = 0;
+        for(int slot = 0; slot < getSize(); slot++) {
+            if(!inventory.getStackInSlot(slot).isEmpty())
+                count++;
+        }
+        return count;
     }
     
     @Override
@@ -79,13 +82,13 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     }
     
     @Override
-    public IItemStack getStack(int x, int y) {
-        return getStack(x + y * getWidth());
+    public IItemStack getStack(int row, int column) {
+        return getStack(column + row * getWidth());
     }
     
     @Override
-    public void setStack(int x, int y, IItemStack stack) {
-        setStack(x + y * getWidth(), stack);
+    public void setStack(int row, int column, IItemStack stack) {
+        setStack(column + row * getWidth(), stack);
     }
     
     @Override
