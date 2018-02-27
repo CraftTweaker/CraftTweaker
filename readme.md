@@ -4,9 +4,7 @@ Welcome to the Crafttweaker source! Crafttweaker is the official continuation of
 
 ## License and contributions
 
-The mod is licensed under the MIT license with the one stipulation that the name has to be changed, the reason for this is so that we do not have to deal with code that we didn't write.
-
-The mod itself may be redistributed in modpacks as long as these modpacks are distributed for free. No money can be made from the distribution of the mod.
+You are free to distribute the mod by itself and in modpacks as long as it is not being sold or redistributed on advertisement sponsored sites. You may create derivative works, but you may not redistribute it under an identical name.
 
 Want to contribute? That's great! Contact me if you want to propose or discuss new features. Adding new mods is definitely welcome and doesn't need prior permission (just follow the existing structure, add it & make a pull request). Credit will be granted appropriately.
 
