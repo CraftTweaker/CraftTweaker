@@ -83,7 +83,7 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
-        if(!MCRecipeManager.transformerRecipes.isEmpty()) {
+        if(ev.craftMatrix instanceof InventoryCrafting && !MCRecipeManager.transformerRecipes.isEmpty()) {
             MCRecipeManager.transformerRecipes.stream()
                     .filter(MCRecipeBase.class::isInstance)
                     .map(MCRecipeBase.class::cast)
