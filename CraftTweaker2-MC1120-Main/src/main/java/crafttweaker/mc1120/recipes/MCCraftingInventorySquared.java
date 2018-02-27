@@ -1,17 +1,10 @@
 package crafttweaker.mc1120.recipes;
 
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.ICraftingInventory;
-import crafttweaker.mc1120.item.MCItemStack;
-import crafttweaker.mc1120.player.MCPlayer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
-import net.minecraft.item.*;
-
-import java.util.*;
-
-import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 
 /**
  * @author Stan
@@ -20,8 +13,7 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     
     private final IInventory inventory;
     private final IPlayer player;
-    private final int bordersize, stackcount;
-    private final IItemStack[][] items;
+    private final int height, width;
     
     protected MCCraftingInventorySquared(IInventory inventory) {
         this(inventory, null);
@@ -30,24 +22,24 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     public MCCraftingInventorySquared(IInventory inventory, IPlayer player) {
         
         this.inventory = inventory;
-        this.player = player;
-        this.bordersize = (int) Math.sqrt(inventory.getSizeInventory());
-        int stackcount = 0;
-        
-        items = new IItemStack[getWidth()][getHeight()];
-        for(int x = 0; x < getWidth(); x++) {
-            for(int y = 0; y < getHeight(); y++) {
-                ItemStack itemStack = inventory.getStackInSlot(x * getWidth() + y);
-                if (itemStack.isEmpty()) {
-                    items[x][y] = null;
-                } else {
-                    stackcount++;
-                    items[x][y] = new MCItemStack(itemStack);
-                }
+        this.height = this.width = (int) Math.sqrt(inventory.getSizeInventory());
+        this.player = player == null ? getPlayerFromInventory(inventory) : player;
+    }
+    
+    private static IPlayer getPlayerFromInventory(IInventory inventory) {
+        if(inventory instanceof InventoryCrafting) {
+            InventoryCrafting inventoryCrafting = (InventoryCrafting) inventory;
+            Container eventHandler = inventoryCrafting.eventHandler;
+            if(eventHandler != null) {
+                for(Slot slot : eventHandler.inventorySlots)
+                    if(slot instanceof SlotCrafting) {
+                        return CraftTweakerMC.getIPlayer(((SlotCrafting) slot).player);
+                    }
             }
         }
-        this.stackcount = stackcount;
+        return null;
     }
+    
     
     public static MCCraftingInventorySquared get(IInventory inventory) {
         return new MCCraftingInventorySquared(inventory);
@@ -61,61 +53,67 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
     
     @Override
     public int getSize() {
-        return getWidth() * getHeight();
+        return inventory.getSizeInventory();
     }
     
     @Override
     public int getWidth() {
-        return bordersize;
+        return width;
     }
     
     @Override
     public int getHeight() {
-        return bordersize;
+        return height;
     }
     
     @Override
     public int getStackCount() {
-        return stackcount;
+        int count = 0;
+        for(int slot = 0; slot < getSize(); slot++) {
+            if(!inventory.getStackInSlot(slot).isEmpty())
+                count++;
+        }
+        return count;
     }
     
     @Override
     public IItemStack getStack(int i) {
-        int x = i / getWidth();
-        int y = Math.floorMod(i, getWidth());
-        return getStack(x, y);
+        return CraftTweakerMC.getIItemStack(inventory.getStackInSlot(i));
     }
     
     @Override
-    public IItemStack getStack(int x, int y) {
-        return items[x][y];
+    public IItemStack getStack(int row, int column) {
+        return getStack(column + row * getWidth());
     }
     
     @Override
-    public void setStack(int x, int y, IItemStack stack) {
-        items[x][y] = stack;
+    public void setStack(int row, int column, IItemStack stack) {
+        setStack(column + row * getWidth(), stack);
     }
     
     @Override
     public void setStack(int i, IItemStack stack) {
-        int x = i / getWidth();
-        int y = Math.floorMod(i, getWidth());
-        setStack(x, y, stack);
+        inventory.setInventorySlotContents(i, CraftTweakerMC.getItemStack(stack));
     }
     
     @Override
     public IItemStack[][] getItems() {
-        return items;
+        IItemStack[][] output = new IItemStack[getHeight()][getWidth()];
+        IItemStack[] oneDimensional = getItemArray();
+        for(int row = 0; row < getHeight(); row++) {
+            for(int column = 0; column < getWidth(); column++) {
+                output[row][column] = oneDimensional[row * getWidth() + column];
+            }
+        }
+        return output;
     }
     
     @Override
     public IItemStack[] getItemArray() {
-        IItemStack[] out = new IItemStack[getSize()];
-        for(int x = 0; x < items.length; x++) {
-            for(int y = 0; y < items[x].length; y++) {
-                out[x * y + y] = items[x][y];
-            }
+        IItemStack[] output = new IItemStack[getSize()];
+        for(int slot = 0; slot < getSize(); slot++) {
+            output[slot] = CraftTweakerMC.getIItemStack(inventory.getStackInSlot(slot));
         }
-        return out;
+        return output;
     }
 }

@@ -129,15 +129,15 @@ public class MCCraftingInventory implements ICraftingInventory {
     }
     
     @Override
-    public IItemStack getStack(int x, int y) {
-        return stacks[y * width + x];
+    public IItemStack getStack(int row, int column) {
+        return stacks[row * width + column];
     }
     
     @Override
-    public void setStack(int x, int y, IItemStack stack) {
+    public void setStack(int row, int column, IItemStack stack) {
         // System.out.println("SetStack(" + x + ", " + y + ") " + stack);
         
-        int ix = y * width + x;
+        int ix = row * width + column;
         if(stack != stacks[ix]) {
             if(stack == null) {
                 stackCount--;

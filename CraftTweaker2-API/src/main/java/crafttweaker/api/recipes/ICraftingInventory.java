@@ -69,37 +69,37 @@ public interface ICraftingInventory {
      * Gets the stack at the given position. The top left stack is position (0,
      * 0).
      *
-     * @param x stack x position
-     * @param y stack y position
+     * @param row       stack row (from top downwards)
+     * @param column    stack column (from left to right)
      *
      * @return item stack, or null if there is no item stack at that position
      */
     @ZenMethod
-    IItemStack getStack(int x, int y);
+    IItemStack getStack(int row, int column);
     
     /**
      * Sets the stack at the given position. The top left stack is position (0,
      * 0).
-     *
-     * @param x     stack x position
-     * @param y     stack y position
-     * @param stack item stack to be set, or null to clear the stack at that
-     *              position
+     * @param row        stack row (from top downwards)
+     * @param column     stack column (from left to right)
+     * @param stack      item stack to be set, or null to clear the stack at that position
      */
     @ZenMethod
-    void setStack(int x, int y, IItemStack stack);
+    void setStack(int row, int column, IItemStack stack);
     
     /**
      * Sets the stack at the given index.
      *
      * @param i     stack index
-     * @param stack item stack to be set, or null to clear the stack at that
-     *              index
+     * @param stack item stack to be set, or null to clear the stack at that index
+     *
      */
     @ZenMethod
     void setStack(int i, IItemStack stack);
     
+    @ZenGetter("items")
     IItemStack[][] getItems();
     
+    @ZenGetter("itemArray")
     IItemStack[] getItemArray();
 }
