@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.recipes;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -73,10 +74,15 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         marks.put(ingredients[x][y].getMark(), CraftTweakerMC.getIItemStack(inv.getStackInRowAndColumn(y, x)));
                 }
             }
-            
-            return CraftTweakerMC.getItemStack(recipeFunction.process(output, marks, new CraftingInfo(MCCraftingInventorySquared.get(inv), null))).copy();
+            IItemStack out = null;
+            try {
+                out = recipeFunction.process(output, marks, new CraftingInfo(MCCraftingInventorySquared.get(inv), null));
+            } catch(Throwable exception) {
+                CraftTweakerAPI.logError("Could not execute RecipeFunction: ", exception);
+            }
+            return CraftTweakerMC.getItemStack(out);
         }
-        return CraftTweakerMC.getItemStack(output).copy();
+        return CraftTweakerMC.getItemStack(output);
     }
     
     @Override
@@ -132,8 +138,16 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                 ItemStack itemStack = inventory.getStackInSlot((column + columnOffset) + (row + rowOffset) * inventory.getWidth());
                 if(ingredients.length > row && ingredients[row].length > column) {
                     IIngredient ingredient = ingredients[row][column];
-                    if(ingredient != null && ingredient.hasTransformers())
-                        inventory.setInventorySlotContents((column + columnOffset) + (row + rowOffset) * inventory.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyTransform(CraftTweakerMC.getIItemStack(itemStack), byPlayer))).orElse(ItemStack.EMPTY));
+                    if(ingredient != null && ingredient.hasTransformers()) {
+                        IItemStack out = null;
+                        try {
+                            out = ingredient.applyTransform(CraftTweakerMC.getIItemStack(itemStack), byPlayer);
+                        } catch(Throwable exception) {
+                            CraftTweakerAPI.logError("Could not execute RecipeTransformer on : " + ingredient.toCommandString(), exception);
+                        }
+                        inventory.setInventorySlotContents((column + columnOffset) + (row + rowOffset) * inventory.getWidth(), CraftTweakerMC.getItemStack(out));
+                        
+                    }
                 }
             }
             
@@ -186,9 +200,17 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                 if(ingredients.length > row && ingredients[row].length > column) {
                     IIngredient ingredient = ingredients[row][column];
                     boolean needsContainerItem = true;
-                    if(ingredient == null) {continue;}
+                    if(ingredient == null) {
+                        continue;
+                    }
                     if(ingredient.hasNewTransformers()) {
-                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), Optional.ofNullable(CraftTweakerMC.getItemStack(ingredient.applyNewTransform(CraftTweakerMC.getIItemStack(itemStack)))).orElse(ItemStack.EMPTY));
+                        IItemStack remainingItem = null;
+                        try {
+                            remainingItem = ingredient.applyNewTransform(CraftTweakerMC.getIItemStack(itemStack));
+                        } catch(Throwable exception) {
+                            CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + ingredient.toCommandString() + ":", exception);
+                        }
+                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), CraftTweakerMC.getItemStack(remainingItem));
                         needsContainerItem = false;
                     }
                     if(ingredient.hasTransformers()) {

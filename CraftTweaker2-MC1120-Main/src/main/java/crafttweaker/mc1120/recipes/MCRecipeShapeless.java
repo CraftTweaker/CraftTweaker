@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.recipes;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -88,7 +89,12 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                 }
             }
         }
-        IItemStack out = recipeFunction.process(output, marks, new CraftingInfo(new MCCraftingInventorySquared(inv), null));
+        IItemStack out = null;
+        try {
+            out = recipeFunction.process(output, marks, new CraftingInfo(new MCCraftingInventorySquared(inv), null));
+        } catch(Throwable exception) {
+            CraftTweakerAPI.logError("Could not execute RecipeFunction: ", exception);
+        }
         return CraftTweakerMC.getItemStack(out);
     }
     
@@ -111,8 +117,13 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                     if(ingredient.matches(stack)) {
                         boolean needsContainerItem = true;
                         if(ingredient.hasNewTransformers()) {
-                            IItemStack remainingItem = ingredient.applyNewTransform(stack);
-                            out.set(slot, remainingItem == null ? ItemStack.EMPTY : CraftTweakerMC.getItemStack(remainingItem));
+                            IItemStack remainingItem = null;
+                            try {
+                                remainingItem = ingredient.applyNewTransform(stack);
+                            } catch(Throwable exception) {
+                                CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + ingredient.toCommandString() + ":", exception);
+                            }
+                            out.set(slot, CraftTweakerMC.getItemStack(remainingItem));
                             needsContainerItem = false;
                         }
                         if(ingredient.hasTransformers()) {
@@ -169,7 +180,13 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                 if(!stackInSlot.isEmpty() && !visited[slot]) {
                     IItemStack stack = CraftTweakerMC.getIItemStack(stackInSlot);
                     if(ingredient.matches(stack)) {
-                        inventory.setInventorySlotContents(slot, CraftTweakerMC.getItemStack(ingredient.applyTransform(stack, byPlayer)));
+                        IItemStack out = null;
+                        try {
+                            out = ingredient.applyTransform(stack, byPlayer);
+                        } catch(Throwable exception) {
+                            CraftTweakerAPI.logError("Could not execute RecipeTransformer on " + ingredient.toCommandString() + ":", exception);
+                        }
+                        inventory.setInventorySlotContents(slot, CraftTweakerMC.getItemStack(out));
                         visited[slot] = true;
                         break;
                     }
