@@ -46,7 +46,10 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public void apply(IAction action) {
-        CraftTweakerAPI.logInfo(action.describe());
+        String describe = action.describe();
+        if(describe !=null && !describe.isEmpty()) {
+            CraftTweakerAPI.logInfo(describe);
+        }
         action.apply();
         actions.add(action);
     }
