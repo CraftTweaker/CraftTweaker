@@ -47,4 +47,9 @@ public class MCTeam implements ITeam {
     public String getCollisionRule() {
         return team.getCollisionRule().name;
     }
+    
+    @Override
+    public Team getInternal() {
+        return team;
+    }
 }

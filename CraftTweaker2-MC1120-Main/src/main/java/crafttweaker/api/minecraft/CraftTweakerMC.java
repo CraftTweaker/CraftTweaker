@@ -3,36 +3,52 @@ package crafttweaker.api.minecraft;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.creativetabs.ICreativeTab;
+import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.*;
+import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.potions.*;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
+import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.entity.*;
+import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.potions.*;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.*;
+import net.minecraft.entity.item.*;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
+import net.minecraft.potion.*;
+import net.minecraft.scoreboard.Team;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * CraftTweaker - MineCraft API bridge.
@@ -437,6 +453,13 @@ public class CraftTweakerMC {
         return ((MCBlockDefinition) block.getDefinition()).getInternalBlock();
     }
     
+    public static Block getBlock(IBlockDefinition blockDefinition) {
+        if(blockDefinition instanceof MCBlockDefinition)
+            return ((MCBlockDefinition) blockDefinition).getInternalBlock();
+        Object block = blockDefinition.getInternal();
+        return (block instanceof Block) ? (Block) block : null;
+    }
+    
     /**
      * Retrieves the internal fluid stack of the given stack.
      *
@@ -523,9 +546,17 @@ public class CraftTweakerMC {
         return new MCWorld(DimensionManager.getWorld(id));
     }
     
+    public static IWorld getIWorld(World world) {
+        return world == null ? null : new MCWorld(world);
+    }
+    
+    public static World getWorld(IWorld world) {
+        return world == null ? null : (World) world.getInternal();
+    }
+    
     public static boolean matches(IItemStack iitem, ItemStack stack, boolean wildcardsize) {
         ItemStack internal = ItemStack.EMPTY;
-        if(iitem != null){
+        if(iitem != null) {
             internal = (ItemStack) iitem.getInternal();
         }
         if(stack.hasTagCompound()) {
@@ -557,5 +588,148 @@ public class CraftTweakerMC {
             }
         }
         return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
+    }
+    
+    public static IBlockState getBlockState(net.minecraft.block.state.IBlockState block) {
+        return block == null ? null : new MCBlockState(block);
+    }
+    
+    public static net.minecraft.block.state.IBlockState getBlockState(IBlockState block) {
+        return block == null ? null : (net.minecraft.block.state.IBlockState) block.getInternal();
+    }
+    
+    public static IEntity getIEntity(Entity entity) {
+        if(entity == null)
+            return null;
+        else if(entity instanceof EntityLivingBase)
+            return getIEntityLivingBase((EntityLivingBase) entity);
+        else if(entity instanceof EntityItem)
+            return getIEntityItem((EntityItem) entity);
+        else if(entity instanceof EntityXPOrb)
+            return getIEntityXp((EntityXPOrb) entity);
+        else
+            return new MCEntity(entity);
+    }
+    
+    public static IEntityXp getIEntityXp(EntityXPOrb entityXPOrb) {
+        return entityXPOrb == null ? null : new MCEntityXp(entityXPOrb);
+    }
+    
+    public static IEntityItem getIEntityItem(EntityItem entityItem) {
+        return entityItem == null ? null : new MCEntityItem(entityItem);
+    }
+    
+    public static Entity getEntity(IEntity entity) {
+        return entity == null ? null : (Entity) entity.getInternal();
+    }
+    
+    public static IEntityLivingBase getIEntityLivingBase(EntityLivingBase entityLivingBase) {
+        if(entityLivingBase == null)
+            return null;
+        if(entityLivingBase instanceof EntityPlayer)
+            return getIPlayer((EntityPlayer) entityLivingBase);
+        else if(entityLivingBase instanceof EntityLiving)
+            return getIEntityLiving((EntityLiving) entityLivingBase);
+        return new MCEntityLivingBase(entityLivingBase);
+    }
+    
+    public static IEntityLiving getIEntityLiving(EntityLiving entityLiving) {
+        if(entityLiving == null)
+            return null;
+        if(entityLiving instanceof EntityCreature)
+            return getIEntityCreature((EntityCreature) entityLiving);
+        return new MCEntityLiving(entityLiving);
+    }
+    
+    public static IEntityCreature getIEntityCreature(EntityCreature entityCreature) {
+        if(entityCreature == null)
+            return null;
+        if(entityCreature instanceof EntityAgeable)
+            return getIEntityAgeable((EntityAgeable) entityCreature);
+        else if(entityCreature instanceof EntityMob) {
+            return getIEntityMob((EntityMob) entityCreature);
+        }
+        return new MCEntityCreature(entityCreature);
+    }
+    
+    public static IEntityAgeable getIEntityAgeable(EntityAgeable entityAgeable) {
+        if(entityAgeable == null)
+            return null;
+        if(entityAgeable instanceof EntityAnimal)
+            return getIEntityAnimal((EntityAnimal) entityAgeable);
+        return new MCEntityAgeable(entityAgeable);
+    }
+    
+    public static IEntityAnimal getIEntityAnimal(EntityAnimal entityAnimal) {
+        return entityAnimal == null ? null : new MCEntityAnimal(entityAnimal);
+    }
+    
+    public static IEntityMob getIEntityMob(EntityMob entityMob) {
+        return entityMob == null ? null : new MCEntityMob(entityMob);
+    }
+    
+    
+    public static IBlockPos getIBlockPos(BlockPos pos) {
+        return pos == null ? null : new MCBlockPos(pos);
+    }
+    
+    public static BlockPos getBlockPos(IBlockPos pos) {
+        return pos == null ? null : (BlockPos) pos.getInternal();
+    }
+    
+    public static ITeam getITeam(Team team) {
+        return team == null ? null : new MCTeam(team);
+    }
+    
+    public static Team getTeam(ITeam team) {
+        return team == null ? null : (Team) team.getInternal();
+    }
+    
+    public static IDamageSource getIDamageSource(DamageSource source) {
+        return source == null ? null : new MCDamageSource(source);
+    }
+    
+    public static DamageSource getDamageSource(IDamageSource source) {
+        return source == null ? null : (DamageSource) source.getInternal();
+    }
+    
+    public static IMaterial getIMaterial(Material material) {
+        return material == null ? null : new MCMaterial(material);
+    }
+    
+    public static Material getMaterial(IMaterial material) {
+        return material == null ? null : (Material) material.getInternal();
+    }
+    
+    public static EntityAnimal getEntityAnimal(IEntityAnimal entityAnimal) {
+        return entityAnimal == null ? null : (EntityAnimal) entityAnimal.getInternal();
+    }
+    
+    public static IEntityEquipmentSlot getIEntityEquipmentSlot(EntityEquipmentSlot slot) {
+        return slot == null ? null : new MCEntityEquipmentSlot(slot);
+    }
+    
+    public static EntityEquipmentSlot getEntityEquipmentSlot(IEntityEquipmentSlot slot) {
+        return slot == null ? null : (EntityEquipmentSlot) slot.getInternal();
+    }
+    
+    public static EntityLivingBase getEntityLivingBase(IEntityLivingBase entityLivingBase) {
+        return entityLivingBase == null ? null : (EntityLivingBase) entityLivingBase.getInternal();
+    }
+    
+    public static IPotion getIPotion(Potion potion) {
+        return potion == null ? null : new MCPotion(potion);
+    }
+    
+    public static Potion getPotion(IPotion potion) {
+        return potion == null ? null : (Potion) potion.getInternal();
+    }
+    
+    public static IPotionEffect getIPotionEffect(PotionEffect potionEffect) {
+        return potionEffect == null ? null : new MCPotionEfect(potionEffect);
+    }
+    
+    public static PotionEffect getPotionEffect(IPotionEffect potionEffect) {
+        return potionEffect == null ? null : (PotionEffect) potionEffect.getInternal();
     }
 }

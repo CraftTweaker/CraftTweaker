@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.*;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.mc1120.world.MCBlockPos;
 import net.minecraft.entity.*;
@@ -27,17 +28,17 @@ public class MCEntityCreature extends MCEntityLiving implements IEntityCreature 
     
     @Override
     public boolean isPositionWithinHomeDistance(IBlockPos pos) {
-        return entityCreature.isWithinHomeDistanceFromPosition((BlockPos) pos.getInternal());
+        return entityCreature.isWithinHomeDistanceFromPosition(CraftTweakerMC.getBlockPos(pos));
     }
     
     @Override
     public void setHomePositionAndDistance(IBlockPos pos, int distance) {
-        entityCreature.setHomePosAndDistance((BlockPos) pos.getInternal(), distance);
+        entityCreature.setHomePosAndDistance(CraftTweakerMC.getBlockPos(pos), distance);
     }
     
     @Override
     public IBlockPos getHomePosition() {
-        return new MCBlockPos(entityCreature.getHomePosition());
+        return CraftTweakerMC.getIBlockPos(entityCreature.getHomePosition());
     }
     
     @Override

@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.IEntityMob;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,6 @@ public class MCEntityMob extends MCEntityCreature implements IEntityMob {
     
     @Override
     public boolean isPreventingPlayerRest(IPlayer player) {
-        return entityMob.isPreventingPlayerRest((EntityPlayer) player.getInternal());
+        return entityMob.isPreventingPlayerRest(CraftTweakerMC.getPlayer(player));
     }
 }
