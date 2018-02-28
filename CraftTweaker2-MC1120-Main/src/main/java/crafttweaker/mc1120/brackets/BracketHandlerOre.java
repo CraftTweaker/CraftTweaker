@@ -47,7 +47,6 @@ public class BracketHandlerOre implements IBracketHandler {
                 return find(environment, tokens, 2, tokens.size());
             }
         }
-        
         return null;
     }
     

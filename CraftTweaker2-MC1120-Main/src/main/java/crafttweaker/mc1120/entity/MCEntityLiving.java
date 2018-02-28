@@ -120,12 +120,12 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     
     @Override
     public IEntity getLeashedToEntity() {
-        return new MCEntity(entityLiving.getLeashedToEntity());
+        return new MCEntity(entityLiving.getLeashHolder());
     }
     
     @Override
     public void setLeashedToEntity(IEntity entity, boolean sendAttachNotification) {
-        entityLiving.setLeashedToEntity((Entity) entity.getInternal(), sendAttachNotification);
+        entityLiving.setLeashHolder((Entity) entity.getInternal(), sendAttachNotification);
     }
     
     @Override

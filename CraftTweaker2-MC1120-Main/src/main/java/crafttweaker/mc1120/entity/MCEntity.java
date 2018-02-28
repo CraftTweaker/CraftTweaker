@@ -100,7 +100,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public double getDistanceSqToEntity(IEntity otherEntity) {
-        return entity.getDistanceSqToEntity((Entity) otherEntity.getInternal());
+        return entity.getDistance((Entity) otherEntity.getInternal());
     }
     
     @Override

@@ -588,7 +588,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public float getStrengthAgainstBlock(IBlockState blockState) {
-        return stack.getStrVsBlock((net.minecraft.block.state.IBlockState) blockState.getInternal());
+        return stack.getDestroySpeed((net.minecraft.block.state.IBlockState) blockState.getInternal());
     }
     
     @Override

@@ -69,6 +69,6 @@ public class MCBiome implements IBiome {
 
 	@Override
 	public float getTemperature() {
-		return biome.getTemperature();
+		return biome.getDefaultTemperature();
 	}
 }

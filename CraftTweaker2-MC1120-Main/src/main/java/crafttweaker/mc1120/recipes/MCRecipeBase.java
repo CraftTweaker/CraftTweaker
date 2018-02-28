@@ -42,7 +42,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     }
     
     @Override
-    public boolean isHidden() {
+    public boolean isDynamic() {
         return hidden;
     }
     
@@ -86,7 +86,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     }
     
     public boolean isVisible() {
-        return !isHidden();
+        return !isDynamic();
     }
     
     @Override
