@@ -116,4 +116,9 @@ public class MCCraftingInventorySquared implements ICraftingInventory {
         }
         return output;
     }
+    
+    @Override
+    public Object getInternal() {
+        return inventory;
+    }
 }

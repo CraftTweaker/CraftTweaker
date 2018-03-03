@@ -182,6 +182,11 @@ public class MCCraftingInventory implements ICraftingInventory {
         return new IItemStack[0];
     }
     
+    @Override
+    public Object getInternal() {
+        return inventory;
+    }
+    
     private boolean changed(int i) {
         return original[i] != inventory.getStackInSlot(i) || !original[i].isEmpty() && stacks[i].getAmount() != original[i].getCount();
         
