@@ -1,13 +1,14 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.*;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.EntityLiving;
 
 public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving {
+    
     private final EntityLiving entityLiving;
+    
     public MCEntityLiving(EntityLiving entity) {
         super(entity);
         this.entityLiving = entity;
@@ -15,12 +16,12 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     
     @Override
     public IEntityLivingBase getAttackTarget() {
-        return new MCEntityLivingBase(entityLiving.getAttackTarget());
+        return CraftTweakerMC.getIEntityLivingBase(entityLiving.getAttackTarget());
     }
     
     @Override
     public void setAttackTarget(IEntityLivingBase attackTarget) {
-        entityLiving.setAttackTarget((EntityLivingBase) attackTarget.getInternal());
+        entityLiving.setAttackTarget(CraftTweakerMC.getEntityLivingBase(attackTarget));
     }
     
     @Override
@@ -80,7 +81,7 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     
     @Override
     public void setDropChance(IEntityEquipmentSlot slot, float chance) {
-        entityLiving.setDropChance((EntityEquipmentSlot) slot.getInternal(), chance);
+        entityLiving.setDropChance(CraftTweakerMC.getEntityEquipmentSlot(slot), chance);
     }
     
     @Override
@@ -110,7 +111,7 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     
     @Override
     public boolean canBeLeashedTo(IPlayer player) {
-        return entityLiving.canBeLeashedTo((EntityPlayer) player.getInternal());
+        return entityLiving.canBeLeashedTo(CraftTweakerMC.getPlayer(player));
     }
     
     @Override
@@ -120,12 +121,12 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     
     @Override
     public IEntity getLeashedToEntity() {
-        return new MCEntity(entityLiving.getLeashHolder());
+        return CraftTweakerMC.getIEntity(entityLiving.getLeashHolder());
     }
     
     @Override
     public void setLeashedToEntity(IEntity entity, boolean sendAttachNotification) {
-        entityLiving.setLeashHolder((Entity) entity.getInternal(), sendAttachNotification);
+        entityLiving.setLeashHolder(CraftTweakerMC.getEntity(entity), sendAttachNotification);
     }
     
     @Override

@@ -2,6 +2,7 @@ package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.IEntityAnimal;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.entity.passive.*;
@@ -18,18 +19,17 @@ public class MCEntityAnimal extends MCEntityAgeable implements IEntityAnimal {
     
     @Override
     public boolean isBreedingItem(IItemStack itemStack) {
-        return entityAnimal.isBreedingItem((ItemStack) itemStack.getInternal());
+        return entityAnimal.isBreedingItem(CraftTweakerMC.getItemStack(itemStack));
     }
     
     @Override
     public void setInLove(IPlayer player) {
-        entityAnimal.setInLove(player == null ? null : (EntityPlayer) player.getInternal());
+        entityAnimal.setInLove(CraftTweakerMC.getPlayer(player));
     }
     
     @Override
     public IPlayer getLoveCause() {
-        EntityPlayerMP ret = entityAnimal.getLoveCause();
-        return ret == null ? null : new MCPlayer(ret);
+        return CraftTweakerMC.getIPlayer(entityAnimal.getLoveCause());
     }
     
     @Override
@@ -44,6 +44,6 @@ public class MCEntityAnimal extends MCEntityAgeable implements IEntityAnimal {
     
     @Override
     public boolean canMateWith(IEntityAnimal other) {
-        return entityAnimal.canMateWith((EntityAnimal) other.getInternal());
+        return entityAnimal.canMateWith(CraftTweakerMC.getEntityAnimal(other));
     }
 }

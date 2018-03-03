@@ -67,7 +67,7 @@ public class MCPotion implements IPotion {
     }
     
     @Override
-    public Object getInternal() {
+    public Potion getInternal() {
         return potion;
     }
 }

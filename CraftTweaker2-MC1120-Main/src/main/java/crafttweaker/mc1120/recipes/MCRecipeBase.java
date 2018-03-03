@@ -91,17 +91,22 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     @Override
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
+        if (inventory.getInternal() instanceof InventoryCrafting) {
+            applyTransformers((InventoryCrafting) inventory.getInternal(), byPlayer);
+        }
     }
     
     public abstract void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer);
     
     @Override
     public boolean matches(ICraftingInventory inventory) {
-        return false;
+        return inventory.getInternal() instanceof InventoryCrafting && matches((InventoryCrafting) inventory.getInternal(), inventory.getPlayer() == null ? null : CraftTweakerMC.getWorld(inventory.getPlayer().getWorld()));
     }
     
     @Override
     public IItemStack getCraftingResult(ICraftingInventory inventory) {
+        if (inventory.getInternal() instanceof InventoryCrafting)
+            return CraftTweakerMC.getIItemStack(getCraftingResult((InventoryCrafting) inventory));
         return null;
     }
     

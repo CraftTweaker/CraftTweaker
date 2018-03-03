@@ -102,4 +102,6 @@ public interface ICraftingInventory {
     
     @ZenGetter("itemArray")
     IItemStack[] getItemArray();
+    
+    Object getInternal();
 }

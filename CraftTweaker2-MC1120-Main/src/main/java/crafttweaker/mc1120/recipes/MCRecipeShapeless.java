@@ -75,7 +75,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         boolean[] visited = new boolean[inv.getSizeInventory()];
         for(int ingredientIndex = 0; ingredientIndex < ingredients.length; ingredientIndex++) {
             IIngredient ingredient = ingredients[ingredientIndex];
-            if(ingredient.getMark() == null)
+            if(ingredient == null || ingredient.getMark() == null)
                 continue;
             for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
                 ItemStack stackInSlot = inv.getStackInSlot(slot);

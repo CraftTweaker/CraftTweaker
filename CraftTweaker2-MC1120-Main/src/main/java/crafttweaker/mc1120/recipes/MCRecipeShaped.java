@@ -66,12 +66,16 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
+        Pair<Integer, Integer> pair = calculateOffset(inv);
+        int rowOffset = pair.getKey();
+        int columnOffset = pair.getValue();
         if(recipeFunction != null) {
             Map<String, IItemStack> marks = new HashMap<>();
-            for(int x = 0; x < ingredients.length; x++) {
-                for(int y = 0; y < ingredients[x].length; y++) {
-                    if(ingredients[x][y].getMark() != null)
-                        marks.put(ingredients[x][y].getMark(), CraftTweakerMC.getIItemStack(inv.getStackInRowAndColumn(y, x)));
+            for(int row = 0; row < ingredients.length; row++) {
+                for(int column = 0; column < ingredients[row].length; column++) {
+                    IIngredient ingredient = ingredients[row][column];
+                    if(ingredient != null && ingredient.getMark() != null)
+                        marks.put(ingredient.getMark(), CraftTweakerMC.getIItemStack(inv.getStackInRowAndColumn(column + columnOffset, row + rowOffset)));
                 }
             }
             IItemStack out = null;

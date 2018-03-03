@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.IEntityEquipmentSlot;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
 public class MCEntityEquipmentSlot implements IEntityEquipmentSlot {
@@ -27,7 +28,7 @@ public class MCEntityEquipmentSlot implements IEntityEquipmentSlot {
     
     @Override
     public int compareTo(IEntityEquipmentSlot other) {
-        return slot.compareTo((EntityEquipmentSlot) other.getInternal());
+        return slot.compareTo(CraftTweakerMC.getEntityEquipmentSlot(other));
     }
     
     @Override
