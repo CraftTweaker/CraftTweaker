@@ -25,7 +25,6 @@ public interface ICraftingRecipe {
 	@ZenGetter("commandString")
     String toCommandString();
 	
-	@Deprecated
 	boolean hasTransformers();
 	
 	@Deprecated

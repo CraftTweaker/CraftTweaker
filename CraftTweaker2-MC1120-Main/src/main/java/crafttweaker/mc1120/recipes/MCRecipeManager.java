@@ -31,11 +31,10 @@ public final class MCRecipeManager implements IRecipeManager {
     public final static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
     public final static ActionRemoveRecipesNoIngredients actionRemoveRecipesNoIngredients = new ActionRemoveRecipesNoIngredients();
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
+    
+    public static List<MCRecipeBase> transformerRecipes = new ArrayList<>();
     private static TIntSet usedHashes = new TIntHashSet();
     private static HashSet<String> usedRecipeNames = new HashSet<>();
-    
-    @Deprecated
-    public static List<ICraftingRecipe> transformerRecipes = new ArrayList<>();
     
     public MCRecipeManager() {
     }
@@ -59,6 +58,7 @@ public final class MCRecipeManager implements IRecipeManager {
         return false;
     }
     
+    @Deprecated
     public static String saveToString(Object ingredient) {
         if(ingredient == null) {
             return "_";
@@ -660,10 +660,6 @@ public final class MCRecipeManager implements IRecipeManager {
                 transformerRecipes.add(recipe);
         }
         
-        public void setRecipe(MCRecipeBase recipe) {
-            this.recipe = recipe;
-        }
-        
         public IItemStack getOutput() {
             return output;
         }
@@ -692,13 +688,7 @@ public final class MCRecipeManager implements IRecipeManager {
         }
         
         public String calculateName() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(saveToString(output));
-            for(Ingredient ingredient : recipe.getIngredients()) {
-                sb.append(saveToString(ingredient));
-            }
-            
-            int hash = sb.toString().hashCode();
+            int hash = recipe.toCommandString().hashCode();
             while(usedHashes.contains(hash))
                 ++hash;
             usedHashes.add(hash);
@@ -708,8 +698,7 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            recipe.setRegistryName(new ResourceLocation("crafttweaker", name));
-            ForgeRegistries.RECIPES.register(recipe);
+            ForgeRegistries.RECIPES.register(recipe.setRegistryName(new ResourceLocation("crafttweaker", name)));
         }
         
         @Override
