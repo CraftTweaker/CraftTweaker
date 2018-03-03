@@ -35,7 +35,11 @@ public class JEI {
     public static void hide(IItemStack stack) {
         LATE_ACTIONS.add(new HideAction(stack));
     }
-
+    
+    @ZenMethod
+    public static void hide(ILiquidStack stack) {
+        LATE_ACTIONS.add(new HideFluidAction(stack));
+    }
 
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
