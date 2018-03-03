@@ -29,4 +29,6 @@ public interface ITeam {
     
     @ZenGetter("collisionRule")
     String getCollisionRule();
+    
+    Object getInternal();
 }

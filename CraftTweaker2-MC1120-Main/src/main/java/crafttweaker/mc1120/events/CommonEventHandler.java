@@ -85,9 +85,6 @@ public class CommonEventHandler {
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
         if(ev.craftMatrix instanceof InventoryCrafting && !MCRecipeManager.transformerRecipes.isEmpty()) {
             MCRecipeManager.transformerRecipes.stream()
-                    .filter(MCRecipeBase.class::isInstance)
-                    .map(MCRecipeBase.class::cast)
-                    .filter(ICraftingRecipe::hasTransformers)
                     .filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world))
                     .forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
         }

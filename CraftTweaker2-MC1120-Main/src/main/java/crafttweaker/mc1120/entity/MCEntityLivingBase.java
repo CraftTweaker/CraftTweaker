@@ -4,83 +4,85 @@ import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.*;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import crafttweaker.mc1120.item.MCItemStack;
-import crafttweaker.mc1120.potions.MCPotionEfect;
 import net.minecraft.entity.*;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.*;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
+    
     private EntityLivingBase entityLivingBase;
-
+    
     public MCEntityLivingBase(EntityLivingBase entity) {
         super(entity);
         this.entityLivingBase = entity;
     }
-
+    
     @Override
     public boolean canBreatheUnderwater() {
         return entityLivingBase.canBreatheUnderwater();
     }
-
+    
     @Override
     public boolean isPotionActive(IPotion potion) {
-        return entityLivingBase.isPotionActive((Potion) potion.getInternal());
+        return entityLivingBase.isPotionActive(CraftTweakerMC.getPotion(potion));
     }
-
+    
     @Override
     public float getHealth() {
         return entityLivingBase.getHealth();
     }
-
+    
     @Override
     public void setHealth(float amount) {
         entityLivingBase.setHealth(amount);
     }
-
+    
     @Override
     public boolean isChild() {
         return entityLivingBase.isChild();
     }
-
+    
     @Override
     public void clearActivePotions() {
         entityLivingBase.clearActivePotions();
     }
-
+    
     @Override
     public boolean isUndead() {
         return entityLivingBase.isEntityUndead();
     }
-
+    
     @Override
     public void heal(float amount) {
         entityLivingBase.heal(amount);
     }
-
+    
     @Override
     public float getMaxHealth() {
         return entityLivingBase.getMaxHealth();
     }
-
+    
     @Override
     public IItemStack getHeldItemMainHand() {
-        return new MCItemStack(entityLivingBase.getHeldItemMainhand());
+        return CraftTweakerMC.getIItemStack(entityLivingBase.getHeldItemMainhand());
     }
-
+    
     @Override
     public IItemStack getHeldItemOffHand() {
-        return new MCItemStack(entityLivingBase.getHeldItemOffhand());
+        return CraftTweakerMC.getIItemStack(entityLivingBase.getHeldItemOffhand());
     }
-
+    
     @Override
     public IEntityAttributeInstance getAttribute(String name) {
         return new MCEntityAttributeInstance(entityLivingBase.getAttributeMap().getAttributeInstanceByName(name));
@@ -88,24 +90,22 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
     @Override
     public IEntityLivingBase getRevengeTarget() {
-        EntityLivingBase target = entityLivingBase.getRevengeTarget();
-        return target == null ? null : new MCEntityLivingBase(target);
+        return CraftTweakerMC.getIEntityLivingBase(entityLivingBase.getRevengeTarget());
     }
     
     @Override
     public void setRevengeTarger(IEntityLivingBase target) {
-        entityLivingBase.setRevengeTarget((EntityLivingBase) target.getInternal());
+        entityLivingBase.setRevengeTarget(CraftTweakerMC.getEntityLivingBase(target));
     }
     
     @Override
     public IEntityLivingBase getLastAttackedEntity() {
-        EntityLivingBase target = entityLivingBase.getLastAttackedEntity();
-        return target == null ? null : new MCEntityLivingBase(target);
+        return CraftTweakerMC.getIEntityLivingBase(entityLivingBase.getLastAttackedEntity());
     }
     
     @Override
     public void setLastAttackedEntity(IEntityLivingBase entity) {
-        entityLivingBase.setLastAttackedEntity((Entity) entity.getInternal());
+        entityLivingBase.setLastAttackedEntity(CraftTweakerMC.getEntityLivingBase(entity));
     }
     
     @Override
@@ -115,34 +115,32 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
     @Override
     public List<IPotionEffect> getActivePotionEffects() {
-        return entityLivingBase.getActivePotionEffects().stream().map(MCPotionEfect::new).collect(Collectors.toList());
+        return entityLivingBase.getActivePotionEffects().stream().map(CraftTweakerMC::getIPotionEffect).collect(Collectors.toList());
     }
     
     @Override
     public IPotionEffect getActivePotionEffect(IPotion potion) {
-        PotionEffect ret = entityLivingBase.getActivePotionEffect((Potion) potion.getInternal());
-        return ret == null ? null : new MCPotionEfect(ret);
+        return CraftTweakerMC.getIPotionEffect(entityLivingBase.getActivePotionEffect(CraftTweakerMC.getPotion(potion)));
     }
     
     @Override
     public boolean isPotionEffectApplicable(IPotionEffect potionEffect) {
-        return entityLivingBase.isPotionApplicable((PotionEffect) potionEffect.getInternal());
+        return entityLivingBase.isPotionApplicable(CraftTweakerMC.getPotionEffect(potionEffect));
     }
     
     @Override
     public IDamageSource getLastDamageSource() {
-        DamageSource src = entityLivingBase.getLastDamageSource();
-        return src == null ? null : new MCDamageSource(src);
+        return CraftTweakerMC.getIDamageSource(entityLivingBase.getLastDamageSource());
     }
     
     @Override
     public void onDeath(IDamageSource source) {
-        entityLivingBase.onDeath((DamageSource) source.getInternal());
+        entityLivingBase.onDeath(CraftTweakerMC.getDamageSource(source));
     }
     
     @Override
-    public void knockBack(IEntity entity, float one, double two, double three) {
-        entityLivingBase.knockBack((Entity) entity.getInternal(), one, two, three);
+    public void knockBack(IEntity entity, float strength, double xRatio, double zRatio) {
+        entityLivingBase.knockBack(CraftTweakerMC.getEntity(entity), strength, xRatio, zRatio);
     }
     
     @Override
@@ -157,8 +155,7 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
     @Override
     public IEntityLivingBase getAttackingEntity() {
-        EntityLivingBase target = entityLivingBase.getAttackingEntity();
-        return target == null ? null : new MCEntityLivingBase(target);
+        return CraftTweakerMC.getIEntityLivingBase(entityLivingBase.getAttackingEntity());
     }
     
     @Override
@@ -188,27 +185,26 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
     @Override
     public boolean canEntityBeSeen(IEntity other) {
-        return entityLivingBase.canEntityBeSeen((Entity) other.getInternal());
+        return entityLivingBase.canEntityBeSeen(CraftTweakerMC.getEntity(other));
     }
     
     @Override
     public void addPotionEffect(IPotionEffect potionEffect) {
-        entityLivingBase.addPotionEffect((PotionEffect) potionEffect.getInternal());
+        entityLivingBase.addPotionEffect(CraftTweakerMC.getPotionEffect(potionEffect));
     }
     
     @Override
     public void setItemToSlot(IEntityEquipmentSlot slot, IItemStack itemStack) {
-        entityLivingBase.setItemStackToSlot((EntityEquipmentSlot) slot.getInternal(), (ItemStack) itemStack.getInternal());
+        entityLivingBase.setItemStackToSlot(CraftTweakerMC.getEntityEquipmentSlot(slot), CraftTweakerMC.getItemStack(itemStack));
     }
     
     @Override
     public boolean hasItemInSlot(IEntityEquipmentSlot slot) {
-        return entityLivingBase.hasItemInSlot((EntityEquipmentSlot) slot.getInternal());
+        return entityLivingBase.hasItemInSlot(CraftTweakerMC.getEntityEquipmentSlot(slot));
     }
     
     @Override
     public IItemStack getItemInSlot(IEntityEquipmentSlot slot) {
-        ItemStack stack = entityLivingBase.getItemStackFromSlot((EntityEquipmentSlot) slot.getInternal());
-        return null == null ? null : new MCItemStack(stack);
+        return CraftTweakerMC.getIItemStack(entityLivingBase.getItemStackFromSlot(CraftTweakerMC.getEntityEquipmentSlot(slot)));
     }
 }

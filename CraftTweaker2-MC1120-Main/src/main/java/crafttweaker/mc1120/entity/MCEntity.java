@@ -1,14 +1,17 @@
 package crafttweaker.mc1120.entity;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.game.MCTeam;
@@ -95,12 +98,12 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public List<IEntity> getPassengers() {
-        return entity.getPassengers().stream().map(MCEntity::new).collect(Collectors.toList());
+        return entity.getPassengers().stream().map(CraftTweakerMC::getIEntity).collect(Collectors.toList());
     }
     
     @Override
     public double getDistanceSqToEntity(IEntity otherEntity) {
-        return entity.getDistance((Entity) otherEntity.getInternal());
+        return entity.getDistance(CraftTweakerMC.getEntity(otherEntity));
     }
     
     @Override
@@ -110,13 +113,12 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public IEntity getRidingEntity() {
-        Entity result = entity.getRidingEntity();
-        return result == null ? null : new MCEntity(result);
+        return CraftTweakerMC.getIEntity(entity.getRidingEntity());
     }
     
     @Override
     public IItemStack getPickedResult() {
-        return new MCItemStack(entity.getPickedResult(new RayTraceResult(entity)));
+        return CraftTweakerMC.getIItemStack(entity.getPickedResult(new RayTraceResult(entity)));
     }
     
     @Override
@@ -145,13 +147,13 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
-    public Object getInternal() {
+    public Entity getInternal() {
         return entity;
     }
     
     @Override
     public boolean canTrample(IWorld world, IBlockDefinition block, IBlockPos pos, float fall) {
-        return entity.canTrample((World) world.getInternal(), (Block) block.getInternal(), (BlockPos) pos.getInternal(), fall);
+        return entity.canTrample(CraftTweakerMC.getWorld(world), CraftTweakerMC.getBlock(block), CraftTweakerMC.getBlockPos(pos), fall);
     }
     
     @Override
@@ -161,7 +163,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public boolean isInvulnerableTo(IDamageSource source) {
-        return entity.isEntityInvulnerable((DamageSource) source.getInternal());
+        return entity.isEntityInvulnerable(CraftTweakerMC.getDamageSource(source));
     }
     
     @Override
@@ -176,7 +178,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public void setToLocationFrom(IEntity other) {
-        entity.copyLocationAndAnglesFrom((Entity) other.getInternal());
+        entity.copyLocationAndAnglesFrom(CraftTweakerMC.getEntity(other));
     }
     
     @Override
@@ -256,34 +258,32 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public boolean shouldRiderDismountInWater(IEntity rider) {
-        return entity.shouldDismountInWater((Entity) rider.getInternal());
+        return entity.shouldDismountInWater(CraftTweakerMC.getEntity(rider));
     }
     
     @Override
     public IEntity getControllingPassenger() {
-        Entity ent = entity.getControllingPassenger();
-        return ent == null ? null : new MCEntity(ent);
+        return CraftTweakerMC.getIEntity(entity.getControllingPassenger());
     }
     
     @Override
-    public boolean isPassenger(IEntity entity) {
-        return entity.isPassenger((IEntity) entity.getInternal());
+    public boolean isPassenger(IEntity passenger) {
+        return entity.isPassenger(CraftTweakerMC.getEntity(passenger));
     }
     
     @Override
     public List<IEntity> getPassengersRecursive() {
-        return entity.getRecursivePassengers().stream().map(MCEntity::new).collect(Collectors.toList());
+        return entity.getRecursivePassengers().stream().map(CraftTweakerMC::getIEntity).collect(Collectors.toList());
     }
     
     @Override
     public IEntity getLowestRidingEntity() {
-        Entity ent = entity.getLowestRidingEntity();
-        return ent == null ? null : new MCEntity(ent);
+        return CraftTweakerMC.getIEntity(entity.getLowestRidingEntity());
     }
     
     @Override
     public boolean isRidingSameEntity(IEntity other) {
-        return entity.isRidingSameEntity((Entity) other.getInternal());
+        return entity.isRidingSameEntity(CraftTweakerMC.getEntity(other));
     }
     
     @Override
@@ -293,12 +293,12 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public IWorld getWorld() {
-        return new MCWorld(entity.world);
+        return CraftTweakerMC.getIWorld(entity.getEntityWorld());
     }
     
     @Override
     public void setWorld(IWorld world) {
-        entity.setWorld((World) world.getInternal());
+        entity.setWorld(CraftTweakerMC.getWorld(world));
     }
     
     @Override
@@ -408,7 +408,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public boolean isInsideOfMaterial(IMaterial material) {
-        return entity.isInsideOfMaterial((Material) material.getInternal());
+        return entity.isInsideOfMaterial(CraftTweakerMC.getMaterial(material));
     }
     
     @Override
@@ -418,7 +418,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public boolean attackEntityFrom(IDamageSource source, float amount) {
-        return entity.attackEntityFrom((DamageSource) source.getInternal(), amount);
+        return entity.attackEntityFrom(CraftTweakerMC.getDamageSource(source), amount);
     }
     
     @Override
@@ -440,7 +440,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public IEntityItem dropItem(IItemStack itemStack, float offset) {
-        return new MCEntityItem(entity.entityDropItem((ItemStack) itemStack.getInternal(), offset));
+        return CraftTweakerMC.getIEntityItem(entity.entityDropItem(CraftTweakerMC.getItemStack(itemStack), offset));
     }
     
     @Override
@@ -461,21 +461,21 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public List<IItemStack> getHeldEquipment() {
         List<IItemStack> output = new ArrayList<>();
-        entity.getHeldEquipment().forEach(item -> output.add(new MCItemStack(item)));
+        entity.getHeldEquipment().forEach(item -> output.add(CraftTweakerMC.getIItemStack(item)));
         return output;
     }
     
     @Override
     public List<IItemStack> getArmorInventoryList() {
         List<IItemStack> output = new ArrayList<>();
-        entity.getArmorInventoryList().forEach(item -> output.add(new MCItemStack(item)));
+        entity.getArmorInventoryList().forEach(item -> output.add(CraftTweakerMC.getIItemStack(item)));
         return output;
     }
     
     @Override
     public List<IItemStack> getEquipmentAndArmor() {
         List<IItemStack> output = new ArrayList<>();
-        entity.getEquipmentAndArmor().forEach(item -> output.add(new MCItemStack(item)));
+        entity.getEquipmentAndArmor().forEach(item -> output.add(CraftTweakerMC.getIItemStack(item)));
         return output;
     }
     
@@ -511,8 +511,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public ITeam getTeam() {
-        Team result = entity.getTeam();
-        return result == null ? null : new MCTeam(result);
+       return CraftTweakerMC.getITeam(entity.getTeam());
     }
     
     @Override
@@ -522,7 +521,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public boolean isOnSameTeam(IEntity other) {
-        return entity.isOnSameTeam((Entity) other.getInternal());
+        return entity.isOnSameTeam(CraftTweakerMC.getEntity(other));
     }
     
     @Override
@@ -537,18 +536,23 @@ public class MCEntity extends MCCommandSender implements IEntity {
             return new IEntity[0];
         IEntity[] output = new IEntity[parts.length];
         for(int i = 0; i < parts.length; i++) {
-            output[i] = new MCEntity(parts[i]);
+            output[i] = CraftTweakerMC.getIEntity(parts[i]);
         }
         return output;
     }
     
     @Override
     public boolean isEntityEqual(IEntity other) {
-        return entity.isEntityEqual((Entity) other.getInternal());
+        return entity.isEntityEqual(CraftTweakerMC.getEntity(other));
     }
     
     @Override
     public boolean canBeAttackedWithItem() {
         return entity.canBeAttackedWithItem();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof MCEntity && entity.isEntityEqual(((MCEntity) obj).entity)) || super.equals(obj);
     }
 }
