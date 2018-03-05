@@ -1,5 +1,6 @@
 package crafttweaker.api.logger;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.runtime.ILogger;
 
@@ -25,7 +26,9 @@ public class MTLogger implements ILogger {
     public void addPlayer(IPlayer player) {
         players.add(player);
         if(!unprocessed.isEmpty()) {
-            unprocessed.forEach(player::sendChat);
+            if(!CraftTweakerAPI.noWarn) {
+                unprocessed.forEach(player::sendChat);
+            }
         }
     }
     
@@ -61,8 +64,10 @@ public class MTLogger implements ILogger {
         if(players.isEmpty()) {
             unprocessed.add(message2);
         } else {
-            for(IPlayer player : players) {
-                player.sendChat(message2);
+            if(!CraftTweakerAPI.noWarn) {
+                for(IPlayer player : players) {
+                    player.sendChat(message2);
+                }
             }
         }
     }
@@ -82,8 +87,10 @@ public class MTLogger implements ILogger {
         if(players.isEmpty()) {
             unprocessed.add(message2);
         } else {
-            for(IPlayer player : players) {
-                player.sendChat(message2);
+            if(!CraftTweakerAPI.noWarn) {
+                for(IPlayer player : players) {
+                    player.sendChat(message2);
+                }
             }
         }
     }

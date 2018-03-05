@@ -91,6 +91,10 @@ public class CraftTweakerAPI {
      */
     public static IBrewingManager brewingManager = null;
     
+    /**
+     * If true warnings sent to the log won't print to the player's chat
+     */
+    public static boolean noWarn = false;
     
     static {
         registerGlobalSymbol("logger", getJavaStaticGetterSymbol(CraftTweakerAPI.class, "getLogger"));
