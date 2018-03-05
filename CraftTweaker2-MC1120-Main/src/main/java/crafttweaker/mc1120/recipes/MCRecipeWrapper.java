@@ -74,7 +74,7 @@ public class MCRecipeWrapper extends MCRecipeBase {
             if(recipe.getIngredients().size() > 0) {
                 for(Ingredient ingredient : recipe.getIngredients()) {
                     IIngredient iIngredient = CraftTweakerMC.getIIngredient(ingredient);
-                    commandString.append(ingredient == null ? "null" : iIngredient.toCommandString()).append(", ");
+                    commandString.append(iIngredient == null ? "null" : iIngredient.toCommandString()).append(", ");
                 }
                 //Remove last ,
                 commandString.deleteCharAt(commandString.length() - 1);
