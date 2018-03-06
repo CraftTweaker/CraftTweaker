@@ -542,7 +542,7 @@ public class CraftTweakerMC {
         } else if(ingredient instanceof Ingredient) {
             if(ingredient instanceof OreIngredient)
                 return getOreDict((OreIngredient) ingredient);
-            ItemStack[] matchingStacks = ((Ingredient) ingredient).getMatchingStacks();
+            ItemStack[] matchingStacks = ((Ingredient) ingredient).matchingStacks;
             
             if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient) ingredient).apply(ItemStack.EMPTY)) {
                 return null;
