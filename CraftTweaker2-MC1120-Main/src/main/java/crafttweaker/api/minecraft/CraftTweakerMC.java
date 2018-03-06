@@ -212,9 +212,13 @@ public class CraftTweakerMC {
         
         ItemStack[] output = new ItemStack[items.length];
         for(int i = 0; i < items.length; i++) {
-            Object internal = items[i].getInternal();
-            if(internal instanceof ItemStack && !((ItemStack) internal).isEmpty()) {
-                output[i] = (ItemStack) internal;
+            if(items[i] == null) {
+                output[i] = ItemStack.EMPTY;
+            } else {
+                Object internal = items[i].getInternal();
+                if(internal instanceof ItemStack && !((ItemStack) internal).isEmpty()) {
+                    output[i] = (ItemStack) internal;
+                }
             }
         }
         return output;
@@ -234,11 +238,15 @@ public class CraftTweakerMC {
         
         ItemStack[] output = new ItemStack[items.size()];
         for(int i = 0; i < items.size(); i++) {
-            Object internal = items.get(i).getInternal();
-            if(internal instanceof ItemStack && !((ItemStack) internal).isEmpty()) {
-                output[i] = (ItemStack) internal;
-            } else {
-                CraftTweakerAPI.logError("Invalid item stack: " + items.get(i));
+            if(items.get(i) == null)
+                output[i] = ItemStack.EMPTY;
+            else {
+                Object internal = items.get(i).getInternal();
+                if(internal instanceof ItemStack && !((ItemStack) internal).isEmpty()) {
+                    output[i] = (ItemStack) internal;
+                } else {
+                    CraftTweakerAPI.logError("Invalid item stack: " + items.get(i));
+                }
             }
         }
         return output;
@@ -258,7 +266,8 @@ public class CraftTweakerMC {
         
         IItemStack[] result = new IItemStack[items.length];
         for(int i = 0; i < items.length; i++) {
-            if(!items[i].isEmpty()) {
+            ItemStack itemStack = items[i];
+            if(itemStack != null && !itemStack.isEmpty()) {
                 result[i] = new MCItemStack(items[i]);
             }
         }
@@ -279,8 +288,9 @@ public class CraftTweakerMC {
         
         IItemStack[] result = new IItemStack[items.size()];
         for(int i = 0; i < result.length; i++) {
-            if(!items.get(i).isEmpty()) {
-                result[i] = new MCItemStack(items.get(i));
+            ItemStack itemStack = items.get(i);
+            if(itemStack != null && !itemStack.isEmpty()) {
+                result[i] = new MCItemStack(itemStack);
             }
         }
         return result;
