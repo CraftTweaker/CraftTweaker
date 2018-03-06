@@ -46,7 +46,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.*;
 
 import java.util.*;
 
@@ -530,16 +530,32 @@ public class CraftTweakerMC {
         } else if(ingredient instanceof FluidStack) {
             return new MCLiquidStack((FluidStack) ingredient);
         } else if(ingredient instanceof Ingredient) {
+            if(ingredient instanceof OreIngredient)
+                return getOreDict((OreIngredient) ingredient);
             ItemStack[] matchingStacks = ((Ingredient) ingredient).getMatchingStacks();
             
             if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient) ingredient).apply(ItemStack.EMPTY)) {
                 return null;
             } else {
-                return getIItemStack(matchingStacks[0]);
+                return mergeIngredients(getIItemStacks(matchingStacks));
             }
         } else {
             throw new IllegalArgumentException("Not a valid ingredient: " + ingredient);
         }
+    }
+    
+    public static IIngredient mergeIngredients(IIngredient... ingredients) {
+        if(ingredients == null || ingredients.length <= 0)
+            return null;
+        IIngredient out = ingredients[0];
+        for(int i = 1; i < ingredients.length; i++) {
+            out = out.or(ingredients[i]);
+        }
+        return out;
+    }
+    
+    private static IOreDictEntry getOreDict(OreIngredient oreIngredient) {
+        return MCOreDictEntry.getFromIngredient(oreIngredient);
     }
     
     public static IWorld getWorldByID(int id) {

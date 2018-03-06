@@ -186,7 +186,7 @@ public class IngredientOr implements IIngredient {
         StringBuilder commandString = new StringBuilder(elements[0].toCommandString());
         for(int i = 1; i < elements.length; i++) {
             commandString.append(" | ");
-            commandString.append(elements[i].toCommandString());
+            commandString.append(elements[i] == null ? "null" : elements[i].toCommandString());
         }
         return commandString.toString();
     }
