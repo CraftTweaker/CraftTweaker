@@ -29,7 +29,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         for(int index = 0; index < ingredients.length; index++) {
             IIngredient ingredient = ingredients[index];
             if(ingredient != null)
-                ingredientList.set(index, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[index].getItems())));
+                ingredientList.set(index, CraftTweakerMC.getIngredient(ingredients[index]));
         }
         return ingredientList;
     }

@@ -53,7 +53,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         for(int row = 0; row < ingredients.length; row++) {
             for(int column = 0; column < ingredients[row].length; column++) {
                 if(ingredients[row][column] != null)
-                    ingredientList.set(row * width + column, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[row][column].getItems())));
+                    ingredientList.set(row * width + column, CraftTweakerMC.getIngredient(ingredients[row][column]));
             }
         }
         return ingredientList;

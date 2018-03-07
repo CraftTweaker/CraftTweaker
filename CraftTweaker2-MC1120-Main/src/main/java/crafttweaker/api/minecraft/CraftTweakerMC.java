@@ -39,7 +39,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.*;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
@@ -562,6 +562,14 @@ public class CraftTweakerMC {
             out = out.or(ingredients[i]);
         }
         return out;
+    }
+    
+    public static Ingredient getIngredient(IIngredient ingredient) {
+        if(ingredient instanceof IOreDictEntry)
+            return new OreIngredient(((IOreDictEntry) ingredient).getName());
+        if(ingredient instanceof IItemStack)
+            return Ingredient.fromStacks(getItemStack((IItemStack) ingredient));
+        return Ingredient.fromStacks(getItemStacks(ingredient.getItems()));
     }
     
     private static IOreDictEntry getOreDict(OreIngredient oreIngredient) {
