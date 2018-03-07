@@ -125,6 +125,26 @@ public class ShapelessRecipe implements ICraftingRecipe {
     }
     
     @Override
+    public IIngredient[] getIngredients1D() {
+        return new IIngredient[0];
+    }
+    
+    @Override
+    public IIngredient[][] getIngredients2D() {
+        return new IIngredient[0][];
+    }
+    
+    @Override
+    public boolean isHidden() {
+        return false;
+    }
+    
+    @Override
+    public boolean isShaped() {
+        return false;
+    }
+    
+    @Override
     public String toCommandString() {
         StringBuilder result = new StringBuilder();
         
@@ -157,12 +177,32 @@ public class ShapelessRecipe implements ICraftingRecipe {
         return false;
     }
     
+    @Override
+    public boolean hasRecipeAction() {
+        return false;
+    }
+    
+    @Override
+    public boolean hasRecipeFunction() {
+        return false;
+    }
+    
     public IRecipeAction getAction() {
         return action;
     }
     
     public String getName() {
         return name;
+    }
+    
+    @Override
+    public String getFullResourceName() {
+        return null;
+    }
+    
+    @Override
+    public String getResourceDomain() {
+        return null;
     }
     
     private static class RecipeMatching {

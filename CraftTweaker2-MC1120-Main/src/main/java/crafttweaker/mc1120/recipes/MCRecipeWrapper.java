@@ -15,10 +15,12 @@ import javax.annotation.Nullable;
 public class MCRecipeWrapper extends MCRecipeBase {
     
     private final IRecipe recipe;
+    private final boolean isShaped;
     
     MCRecipeWrapper(IRecipe recipe) {
         super(CraftTweakerMC.getIItemStack(recipe.getRecipeOutput()), recipe.getIngredients(), null, null, recipe.isDynamic());
         this.recipe = recipe;
+        this.isShaped = recipe instanceof IShapedRecipe;
     }
     
     @Override
@@ -44,7 +46,7 @@ public class MCRecipeWrapper extends MCRecipeBase {
     @Override
     public String toCommandString() {
         StringBuilder commandString = new StringBuilder("recipes.addShape");
-        if(recipe instanceof IShapedRecipe) {
+        if(isShaped) {
             IShapedRecipe shapedRecipe = (IShapedRecipe) recipe;
             int width = shapedRecipe.getRecipeWidth();
             int height = shapedRecipe.getRecipeHeight();
@@ -87,6 +89,35 @@ public class MCRecipeWrapper extends MCRecipeBase {
     @Override
     public boolean hasTransformers() {
         return false;
+    }
+    
+    @Override
+    public IIngredient[] getIngredients1D() {
+        return CraftTweakerMC.getIIngredients(ingredientList);
+    }
+    
+    @Override
+    public IIngredient[][] getIngredients2D() {
+        IIngredient[] ingredients = getIngredients1D();
+        if (!isShaped) {
+            return new IIngredient[][]{ingredients};
+        }
+        IShapedRecipe shapedRecipe = (ShapedRecipes)recipe;
+        int heigth = shapedRecipe.getRecipeHeight();
+        int width = shapedRecipe.getRecipeWidth();
+        IIngredient[][] out = new IIngredient[heigth][width];
+        
+        for(int row = 0; row < heigth; row++) {
+            for(int column = 0; column < width; column++) {
+                out[row][column] = ingredients[row * width + column];
+            }
+        }
+        return out;
+    }
+    
+    @Override
+    public boolean isShaped() {
+        return isShaped;
     }
     
     @Nullable

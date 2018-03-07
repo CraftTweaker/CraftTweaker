@@ -1,7 +1,7 @@
 package crafttweaker.api.recipes;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.*;
 import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -21,11 +21,24 @@ public interface ICraftingRecipe {
 	@ZenMethod
 	@ZenGetter("name")
     String getName();
+	
+	@ZenGetter("fullResourceDomain")
+	String getFullResourceName();
+	
+	@ZenGetter("resourceDomain")
+    String getResourceDomain();
     
 	@ZenGetter("commandString")
     String toCommandString();
 	
+	@ZenGetter
 	boolean hasTransformers();
+	
+	@ZenGetter
+	boolean hasRecipeAction();
+	
+	@ZenGetter
+	boolean hasRecipeFunction();
 	
 	@Deprecated
 	boolean matches(ICraftingInventory inventory);
@@ -35,4 +48,17 @@ public interface ICraftingRecipe {
 	
 	@Deprecated
 	void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer);
+	
+	@ZenGetter("ingredients1D")
+    IIngredient[] getIngredients1D();
+    
+    @ZenGetter("ingredients2D")
+    IIngredient[][] getIngredients2D();
+    
+    @ZenGetter("hidden")
+    boolean isHidden();
+    
+    @ZenGetter("shaped")
+    boolean isShaped();
+    
 }
