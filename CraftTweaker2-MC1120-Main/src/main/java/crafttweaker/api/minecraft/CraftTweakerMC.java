@@ -564,6 +564,14 @@ public class CraftTweakerMC {
         return out;
     }
     
+    public static Ingredient getIngredient(IIngredient ingredient) {
+        if(ingredient instanceof IOreDictEntry)
+            return new OreIngredient(((IOreDictEntry) ingredient).getName());
+        if(ingredient instanceof IItemStack)
+            return Ingredient.fromStacks(getItemStack((IItemStack) ingredient));
+        return Ingredient.fromStacks(getItemStacks(ingredient.getItems()));
+    }
+    
     private static IOreDictEntry getOreDict(OreIngredient oreIngredient) {
         return MCOreDictEntry.getFromIngredient(oreIngredient);
     }
@@ -757,5 +765,13 @@ public class CraftTweakerMC {
     
     public static PotionEffect getPotionEffect(IPotionEffect potionEffect) {
         return potionEffect == null ? null : (PotionEffect) potionEffect.getInternal();
+    }
+    
+    public static IIngredient[] getIIngredients(List<Ingredient> ingredientList) {
+        IIngredient[] out = new IIngredient[ingredientList.size()];
+        for(int index = 0; index < out.length; index++) {
+            out[index] = CraftTweakerMC.getIIngredient(ingredientList.get(index));
+        }
+        return out;
     }
 }

@@ -53,7 +53,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         for(int row = 0; row < ingredients.length; row++) {
             for(int column = 0; column < ingredients[row].length; column++) {
                 if(ingredients[row][column] != null)
-                    ingredientList.set(row * width + column, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[row][column].getItems())));
+                    ingredientList.set(row * width + column, CraftTweakerMC.getIngredient(ingredients[row][column]));
             }
         }
         return ingredientList;
@@ -290,7 +290,9 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     
     @Override
     public String toCommandString() {
-        StringBuilder commandString = new StringBuilder("recipes.addShaped(\"");
+        StringBuilder commandString = new StringBuilder("recipes.add");
+        commandString.append(hidden ? "Hidden" : "");
+        commandString.append("Shaped(\"");
         commandString.append(this.getName()).append("\", ");
         commandString.append(this.output.toString()).append(", [");
         if(height > 0 && width > 0) {
@@ -319,6 +321,28 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                 if(ingredient != null && ingredient.hasTransformers())
                     return true;
         return false;
+    }
+    
+    @Override
+    public IIngredient[] getIngredients1D() {
+        IIngredient[] out = new IIngredient[ingredientList.size()];
+        int index = 0;
+        for(IIngredient[] row : ingredients) {
+            for(IIngredient ingredient : row) {
+                out[index++] = ingredient;
+            }
+        }
+        return out;
+    }
+    
+    @Override
+    public IIngredient[][] getIngredients2D() {
+        return ingredients;
+    }
+    
+    @Override
+    public boolean isShaped() {
+        return true;
     }
     
     @Override

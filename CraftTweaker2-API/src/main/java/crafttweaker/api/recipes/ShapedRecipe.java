@@ -107,6 +107,16 @@ public class ShapedRecipe implements ICraftingRecipe {
         return name;
     }
     
+    @Override
+    public String getFullResourceName() {
+        return null;
+    }
+    
+    @Override
+    public String getResourceDomain() {
+        return null;
+    }
+    
     public boolean matches(ICraftingInventory inventory) {
         if(inventory.getStackCount() != ingredients.length) {
             return false;
@@ -200,6 +210,16 @@ public class ShapedRecipe implements ICraftingRecipe {
         return false;
     }
     
+    @Override
+    public boolean hasRecipeAction() {
+        return false;
+    }
+    
+    @Override
+    public boolean hasRecipeFunction() {
+        return false;
+    }
+    
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
         IItemStack[] stacks = new IItemStack[ingredients.length];
         
@@ -240,6 +260,26 @@ public class ShapedRecipe implements ICraftingRecipe {
                 }
             }
         }
+    }
+    
+    @Override
+    public IIngredient[] getIngredients1D() {
+        return new IIngredient[0];
+    }
+    
+    @Override
+    public IIngredient[][] getIngredients2D() {
+        return new IIngredient[0][];
+    }
+    
+    @Override
+    public boolean isHidden() {
+        return false;
+    }
+    
+    @Override
+    public boolean isShaped() {
+        return false;
     }
     
     @Override

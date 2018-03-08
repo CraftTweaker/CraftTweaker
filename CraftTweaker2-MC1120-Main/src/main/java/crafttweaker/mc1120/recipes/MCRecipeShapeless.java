@@ -29,7 +29,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         for(int index = 0; index < ingredients.length; index++) {
             IIngredient ingredient = ingredients[index];
             if(ingredient != null)
-                ingredientList.set(index, Ingredient.fromStacks(CraftTweakerMC.getItemStacks(ingredients[index].getItems())));
+                ingredientList.set(index, CraftTweakerMC.getIngredient(ingredients[index]));
         }
         return ingredientList;
     }
@@ -146,7 +146,9 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
     
     @Override
     public String toCommandString() {
-        StringBuilder commandString = new StringBuilder("recipes.addShapeless(\"");
+        StringBuilder commandString = new StringBuilder("recipes.add");
+        commandString.append(hidden ? "Hidden" : "");
+        commandString.append("Shapeless(\"");
         commandString.append(this.getName()).append("\", ");
         commandString.append(this.output.toString()).append(", [");
         if(ingredients.length > 0) {
@@ -167,6 +169,21 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         for(IIngredient ingredient : ingredients)
             if(ingredient != null && ingredient.hasTransformers())
                 return true;
+        return false;
+    }
+    
+    @Override
+    public IIngredient[] getIngredients1D() {
+        return ingredients;
+    }
+    
+    @Override
+    public IIngredient[][] getIngredients2D() {
+        return new IIngredient[][]{ingredients};
+    }
+    
+    @Override
+    public boolean isShaped() {
         return false;
     }
     

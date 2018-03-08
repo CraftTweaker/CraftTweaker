@@ -4,7 +4,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.*;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
@@ -16,10 +16,10 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     protected final ItemStack outputStack;
     protected final IItemStack output;
-    protected NonNullList<Ingredient> ingredientList;
     protected final IRecipeFunction recipeFunction;
     protected final IRecipeAction recipeAction;
-    private final boolean hidden;
+    protected final boolean hidden;
+    protected NonNullList<Ingredient> ingredientList;
     protected ResourceLocation recipeNameLocation = new ResourceLocation("crafttweaker", "unInitializedRecipeName");
     
     MCRecipeBase(IItemStack output, NonNullList<Ingredient> ingredientList, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean hidden) {
@@ -72,13 +72,34 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
         return recipeAction;
     }
     
+    @Override
     public boolean hasRecipeAction() {
         return recipeAction != null;
     }
     
     @Override
+    public boolean hasRecipeFunction() {
+        return recipeFunction != null;
+    }
+    
+    @Override
+    public boolean isHidden() {
+        return hidden;
+    }
+    
+    @Override
+    public String getFullResourceName() {
+        return String.valueOf(getRegistryName());
+    }
+    
+    @Override
+    public String getResourceDomain() {
+        return getRegistryName() == null ? "null" : getRegistryName().getResourceDomain();
+    }
+    
+    @Override
     public String getName() {
-        return getRegistryName().getResourcePath();
+        return getRegistryName() != null ? getRegistryName().getResourcePath() : "null";
     }
     
     public IItemStack getOutput() {
@@ -91,7 +112,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     @Override
     public void applyTransformers(ICraftingInventory inventory, IPlayer byPlayer) {
-        if (inventory.getInternal() instanceof InventoryCrafting) {
+        if(inventory.getInternal() instanceof InventoryCrafting) {
             applyTransformers((InventoryCrafting) inventory.getInternal(), byPlayer);
         }
     }
@@ -105,7 +126,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
     
     @Override
     public IItemStack getCraftingResult(ICraftingInventory inventory) {
-        if (inventory.getInternal() instanceof InventoryCrafting)
+        if(inventory.getInternal() instanceof InventoryCrafting)
             return CraftTweakerMC.getIItemStack(getCraftingResult((InventoryCrafting) inventory));
         return null;
     }
