@@ -102,6 +102,7 @@ public abstract class MCRecipeBase implements IRecipe, ICraftingRecipe {
         return getRegistryName() != null ? getRegistryName().getResourcePath() : "null";
     }
     
+    @Override
     public IItemStack getOutput() {
         return output;
     }

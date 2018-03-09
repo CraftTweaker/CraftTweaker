@@ -61,4 +61,7 @@ public interface ICraftingRecipe {
     @ZenGetter("shaped")
     boolean isShaped();
     
+    @ZenGetter("output")
+    IItemStack getOutput();
+    
 }

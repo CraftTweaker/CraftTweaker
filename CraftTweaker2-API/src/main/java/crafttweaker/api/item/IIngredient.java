@@ -211,5 +211,6 @@ public interface IIngredient {
      */
     Object getInternal();
     
+    @ZenGetter("commandString")
     String toCommandString();
 }
