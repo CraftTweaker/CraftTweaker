@@ -62,8 +62,13 @@ public class UnknownRecipe implements ICraftingRecipe {
     }
     
     @Override
+    public IItemStack getOutput() {
+        return output;
+    }
+    
+    @Override
     public String toCommandString() {
-        return "// unknown recipe type for " + output;
+        return "// unknown recipe type for " + output.toCommandString();
     }
     
     @Override

@@ -102,7 +102,7 @@ public class MCRecipeWrapper extends MCRecipeBase {
         if (!isShaped) {
             return new IIngredient[][]{ingredients};
         }
-        IShapedRecipe shapedRecipe = (ShapedRecipes)recipe;
+        IShapedRecipe shapedRecipe = (IShapedRecipe) recipe;
         int heigth = shapedRecipe.getRecipeHeight();
         int width = shapedRecipe.getRecipeWidth();
         IIngredient[][] out = new IIngredient[heigth][width];
