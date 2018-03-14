@@ -2,6 +2,7 @@ package crafttweaker.mc1120.brackets;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.*;
+import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.damage.expand.MCDamageSourceExpand;
 import crafttweaker.zenscript.*;
@@ -17,13 +18,13 @@ import java.util.List;
 @ZenRegister
 public class BracketHandlerDamageSource implements IBracketHandler {
     
-    private final IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypes(), MCDamageSource.class, "createOfType", String.class);
+    private final IJavaMethod method = CraftTweakerAPI.getJavaMethod(BracketHandlerDamageSource.class, "getFromString", String.class);
     
     @Override
     public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
         if(tokens == null || tokens.size() < 3 || !tokens.get(0).getValue().equalsIgnoreCase("damageSource"))
             return null;
-        String name = tokens.get(3).getValue();
+        String name = tokens.get(2).getValue();
         switch(name) {
             case "IN_FIRE":
             case "LIGHTNING_BOLT":
@@ -58,5 +59,9 @@ public class BracketHandlerDamageSource implements IBracketHandler {
     
     private IZenSymbol makeSymbol(String name, IEnvironmentGlobal environment) {
         return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, name));
+    }
+    
+    public static IDamageSource getFromString(String name) {
+        return MCDamageSourceExpand.createOfType(name);
     }
 }
