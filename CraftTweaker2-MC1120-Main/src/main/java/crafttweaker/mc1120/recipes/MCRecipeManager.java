@@ -270,7 +270,7 @@ public final class MCRecipeManager implements IRecipeManager {
     public static class ActionReplaceAllOccurences extends ActionBaseRemoveRecipes {
         //I'm odd, in that I'm an ActionBaseRemoveRecipes, that also creates recipes.
         private List<ResourceLocation> toRemove;
-        List<ICraftingRecipe> toChange;
+        List<MCRecipeBase> toChange;
         private final IIngredient toReplace;
         private final IIngredient replaceWith;
 
@@ -282,7 +282,7 @@ public final class MCRecipeManager implements IRecipeManager {
 
         @Override
         public String describe() {
-            return "Removing all occurences of ingredient: " + toReplace+ "and replacing them with " + replaceWith;
+            return "Removing all occurences of ingredient: " + toReplace+ "and replacing them with " + replaceWith + " in " + toChange.size() + " recipe(s)" ;
         }
         public ActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith) {
             this.toReplace = toReplace;
@@ -291,8 +291,8 @@ public final class MCRecipeManager implements IRecipeManager {
             toRemove = toChange.stream().map(f->new ResourceLocation(f.getFullResourceName())).collect(Collectors.toList());
         }
 
-        private void changeIngredients(List<ICraftingRecipe> toChange){
-            for(ICraftingRecipe recipe : toChange){
+        private void changeIngredients(List<MCRecipeBase> toChange){
+            for(MCRecipeBase recipe : toChange){
                 if (recipe.isShaped())
                 {
                     IIngredient[][] ingredients = recipe.getIngredients2D();
@@ -302,7 +302,7 @@ public final class MCRecipeManager implements IRecipeManager {
                                 targRow[i] = replaceWith;
                         }
                     }
-                    MCRecipeManager.recipesToAdd.add(new ActionAddShapedRecipe(((MCRecipeBase) recipe).output,ingredients,((MCRecipeBase) recipe).recipeFunction,((MCRecipeBase) recipe).recipeAction,false,((MCRecipeBase) recipe).hidden));
+                    MCRecipeManager.recipesToAdd.add(new ActionAddShapedRecipe(recipe.getName()+"-modified",recipe.output,ingredients,recipe.recipeFunction,recipe.recipeAction,false,recipe.hidden));
                 }
                 else
                 {
@@ -314,31 +314,34 @@ public final class MCRecipeManager implements IRecipeManager {
                             ingredients[i] =replaceWith;
                         }
                     }
-                    MCRecipeManager.recipesToAdd.add( new ActionAddShapelessRecipe(((MCRecipeBase) recipe).output,ingredients,((MCRecipeBase)recipe).recipeFunction,((MCRecipeBase)recipe).getRecipeAction()));
+                    new ActionAddShapelessRecipe(recipe.getOutput(),ingredients,recipe.recipeFunction,recipe.getRecipeAction());
+                    MCRecipeManager.recipesToAdd.add( new ActionAddShapelessRecipe(recipe.getName()+"-modified", recipe.getOutput(),ingredients,recipe.recipeFunction,recipe.getRecipeAction(),recipe.hidden));
                 }
             }
 
         }
 
-        private List<ICraftingRecipe> getAllForIngredient(IIngredient target) {
+        private List<MCRecipeBase> getAllForIngredient(IIngredient target) {
             Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
-            List<ICraftingRecipe> results = new ArrayList<>();
+            List<MCRecipeBase> results = new ArrayList<>();
 
             recipes = ForgeRegistries.RECIPES.getEntries();
 
             for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
-                OreIngredient oi;
-
                 IRecipe recipe = recipeEntry.getValue();
                 for (Ingredient ingredient :recipe.getIngredients()){
                     IIngredient iIngredient =CraftTweakerMC.getIIngredient(ingredient);
                     if (iIngredient == null)
                         continue;
                     if (target.contains(iIngredient)){
-                        if(recipe instanceof MCRecipeBase)
+                        if(recipe instanceof MCRecipeBase) {
                             results.add((MCRecipeBase) recipe);
-                        else
+                            break; //One ingredient is enough to get it added, bail out of ingredient loop.
+                        }
+                        else {
                             results.add(new MCRecipeWrapper(recipe));
+                            break; //See previous comment.
+                        }
                     }
                 }
             }
