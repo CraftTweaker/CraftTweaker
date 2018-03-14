@@ -4,11 +4,11 @@ import crafttweaker.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.event.*;
+import crafttweaker.api.event.PlayerInteractEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.recipes.*;
-import crafttweaker.mc1120.CraftTweaker;
+import crafttweaker.api.recipes.CraftingInfo;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
@@ -22,10 +22,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -84,9 +85,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
         if(ev.craftMatrix instanceof InventoryCrafting && !MCRecipeManager.transformerRecipes.isEmpty()) {
-            MCRecipeManager.transformerRecipes.stream()
-                    .filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world))
-                    .forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
+            MCRecipeManager.transformerRecipes.stream().filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world)).forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
         }
         
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
@@ -96,7 +95,7 @@ public class CommonEventHandler {
                 if(recipe instanceof MCRecipeBase) {
                     MCRecipeBase recipeBase = (MCRecipeBase) recipe;
                     if(recipeBase.hasRecipeAction())
-                    recipeBase.getRecipeAction().process(CraftTweakerMC.getIItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventorySquared(ev.craftMatrix, iPlayer), iPlayer.getWorld()), iPlayer);
+                        recipeBase.getRecipeAction().process(CraftTweakerMC.getIItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventorySquared(ev.craftMatrix, iPlayer), iPlayer.getWorld()), iPlayer);
                 }
             });
         }
@@ -172,6 +171,18 @@ public class CommonEventHandler {
                 IEntity ent = new MCEntity(ev.getEntity());
                 IDamageSource dmgSource = new MCDamageSource(ev.getSource());
                 entityDefinition.getDropFunctions().stream().map((fun) -> fun.handle(ent, dmgSource)).filter(Objects::nonNull).filter((item) -> item.getAmount() > 0).map(CraftTweakerMC::getItemStack).map((ItemStack item) -> new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, item)).forEach(ev.getDrops()::add);
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onPlayerBonemeal(BonemealEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerBonemeal()) {
+            EntityPlayer player = ev.getEntityPlayer();
+            if(player != null) {
+                boolean shouldCancel = CrafttweakerImplementationAPI.events.publishPlayerBonemeal(new PlayerBonemealEvent(CraftTweakerMC.getIPlayer(player), CraftTweakerMC.getIWorld(ev.getWorld()), CraftTweakerMC.getIBlockPos(ev.getPos())));
+                if(shouldCancel)
+                    ev.setCanceled(true);
             }
         }
     }

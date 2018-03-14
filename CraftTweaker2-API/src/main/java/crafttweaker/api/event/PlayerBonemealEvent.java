@@ -1,7 +1,7 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.*;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
@@ -15,18 +15,14 @@ public class PlayerBonemealEvent implements IEventCancelable {
     
     private final IPlayer player;
     private final IWorld world;
-    private final int x;
-    private final int y;
-    private final int z;
+    private final IBlockPos blockPos;
     private boolean canceled;
     private boolean processed;
     
-    public PlayerBonemealEvent(IPlayer player, IWorld world, int x, int y, int z) {
+    public PlayerBonemealEvent(IPlayer player, IWorld world, IBlockPos blockPos) {
         this.player = player;
         this.world = world;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.blockPos = blockPos;
         
         canceled = false;
         processed = false;
@@ -64,22 +60,32 @@ public class PlayerBonemealEvent implements IEventCancelable {
     
     @ZenGetter("x")
     public int getX() {
-        return x;
+        return blockPos.getX();
     }
     
     @ZenGetter("y")
     public int getY() {
-        return y;
+        return blockPos.getY();
     }
     
     @ZenGetter("z")
     public int getZ() {
-        return z;
+        return blockPos.getZ();
     }
     
     @ZenGetter("block")
     public IBlock getBlock() {
-        return world.getBlock(x, y, z);
+        return world.getBlock(blockPos);
+    }
+    
+    @ZenGetter("blockState")
+    public IBlockState getBlockState(){
+        return world.getBlockState(blockPos);
+    }
+    
+    @ZenGetter("blockPos")
+    public IBlockPos getBlockPos() {
+        return blockPos;
     }
     
     @ZenGetter("dimension")

@@ -35,6 +35,7 @@ public interface IEventManager {
     
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
     
     IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev);
