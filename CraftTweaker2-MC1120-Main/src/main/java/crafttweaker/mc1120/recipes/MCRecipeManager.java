@@ -302,7 +302,8 @@ public final class MCRecipeManager implements IRecipeManager {
                                 targRow[i] = replaceWith;
                         }
                     }
-                    MCRecipeManager.recipesToAdd.add(new ActionAddShapedRecipe(recipe.getName()+"-modified",recipe.output,ingredients,recipe.recipeFunction,recipe.recipeAction,false,recipe.hidden));
+                    String proposedName = recipe.getRegistryName().getResourceDomain()+"-"+recipe.getName()+"-modified";
+                    MCRecipeManager.recipesToAdd.add(new ActionAddShapedRecipe(proposedName,recipe.output,ingredients,recipe.recipeFunction,recipe.recipeAction,false,recipe.hidden));
                 }
                 else
                 {
@@ -314,8 +315,8 @@ public final class MCRecipeManager implements IRecipeManager {
                             ingredients[i] =replaceWith;
                         }
                     }
-                    new ActionAddShapelessRecipe(recipe.getOutput(),ingredients,recipe.recipeFunction,recipe.getRecipeAction());
-                    MCRecipeManager.recipesToAdd.add( new ActionAddShapelessRecipe(recipe.getName()+"-modified", recipe.getOutput(),ingredients,recipe.recipeFunction,recipe.getRecipeAction(),recipe.hidden));
+                    String proposedName = recipe.getRegistryName().getResourceDomain()+"-"+recipe.getName()+"-modified";
+                    MCRecipeManager.recipesToAdd.add( new ActionAddShapelessRecipe( proposedName, recipe.getOutput(),ingredients,recipe.recipeFunction,recipe.getRecipeAction(),recipe.hidden));
                 }
             }
 
