@@ -565,6 +565,8 @@ public class CraftTweakerMC {
     }
     
     public static Ingredient getIngredient(IIngredient ingredient) {
+        if (ingredient == null)
+            return Ingredient.EMPTY;
         if(ingredient instanceof IOreDictEntry)
             return new OreIngredient(((IOreDictEntry) ingredient).getName());
         if(ingredient instanceof IItemStack)
