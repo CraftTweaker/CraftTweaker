@@ -21,8 +21,8 @@ public interface IMod {
 
     @ZenGetter("version")
     String getVersion();
-
-    @ZenGetter("decription")
+    
+    @ZenGetter("description")
     String getDescription();
 
     @ZenGetter("items")
