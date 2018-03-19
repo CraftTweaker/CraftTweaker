@@ -3,7 +3,6 @@ package crafttweaker.mc1120.events;
 import crafttweaker.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.*;
-import crafttweaker.mc1120.events.handling.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -11,17 +10,17 @@ import crafttweaker.api.recipes.CraftingInfo;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
+import crafttweaker.mc1120.events.handling.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.recipes.*;
-import crafttweaker.mc1120.world.MCWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.*;
@@ -76,8 +75,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent ev) {
         MCPlayerPickupItemEvent event = new MCPlayerPickupItemEvent(ev);
-        if(CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event))
-            ev.setCanceled(true);
+        CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event);
     }
     
     @SubscribeEvent
@@ -117,10 +115,9 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent ev) {
-        if(!ev.getWorld().isRemote) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerInteract()) {
             MCPlayerInteractEvent event = new MCPlayerInteractEvent(ev);
-            if(CrafttweakerImplementationAPI.events.publishPlayerInteract(event))
-                ev.setCanceled(true);
+            CrafttweakerImplementationAPI.events.publishPlayerInteract(event);
         }
     }
     
@@ -177,24 +174,20 @@ public class CommonEventHandler {
     public void onPlayerBonemeal(BonemealEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerBonemeal()) {
             EntityPlayer player = ev.getEntityPlayer();
-            if(player != null) {
-                boolean shouldCancel = CrafttweakerImplementationAPI.events.publishPlayerBonemeal(new MCPlayerBonemealEvent(ev));
-                if(shouldCancel)
-                    ev.setCanceled(true);
-            }
+            CrafttweakerImplementationAPI.events.publishPlayerBonemeal(new MCPlayerBonemealEvent(ev));
         }
     }
     
     @SubscribeEvent
     public void onPlayerFillBucket(FillBucketEvent ev) {
-        if (CrafttweakerImplementationAPI.events.hasPlayerFillBucket()) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerFillBucket()) {
             CrafttweakerImplementationAPI.events.publishPlayerFillBucket(new MCPlayerFillBucketEvent(ev));
         }
     }
     
     @SubscribeEvent
     public void onPlayerDeathDrops(PlayerDropsEvent ev) {
-        if (CrafttweakerImplementationAPI.events.hasPlayerDeathDrops())
-                CrafttweakerImplementationAPI.events.publishPlayerDeathDrops(new MCPlayerDeathDropsEvent(ev));
+        if(CrafttweakerImplementationAPI.events.hasPlayerDeathDrops())
+            CrafttweakerImplementationAPI.events.publishPlayerDeathDrops(new MCPlayerDeathDropsEvent(ev));
     }
 }

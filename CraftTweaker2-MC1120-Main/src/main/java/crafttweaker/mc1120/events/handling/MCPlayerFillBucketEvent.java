@@ -1,15 +1,15 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.block.*;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.event.PlayerFillBucketEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
-import crafttweaker.mc1120.CraftTweaker;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import stanhebben.zenscript.annotations.*;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * @author Stan
@@ -35,6 +35,7 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     @Override
     public void setResult(IItemStack result) {
         event.setFilledBucket(CraftTweakerMC.getItemStack(result));
+        event.setResult(Event.Result.ALLOW);
     }
     
     @Override
@@ -85,7 +86,14 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     
     @Override
     public IBlockPos getPos() {
-        return CraftTweakerMC.getIBlockPos(event.getEntityPlayer().getPosition());
+        RayTraceResult target = event.getTarget();
+        return CraftTweakerMC.getIBlockPos(target == null ? event.getEntityPlayer().getPosition() : target.getBlockPos());
+    }
+    
+    @Override
+    public IEntity getHitEntity() {
+        RayTraceResult target = event.getTarget();
+        return target == null ? null : CraftTweakerMC.getIEntity(target.entityHit);
     }
     
     @Override
