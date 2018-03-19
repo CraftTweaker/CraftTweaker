@@ -10,40 +10,17 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerChangedDimensionEvent")
 @ZenRegister
-public class PlayerChangedDimensionEvent {
-    
-    private final IPlayer player;
-    private final IWorld from;
-    private final IWorld to;
-    
-    public PlayerChangedDimensionEvent(IPlayer player, IWorld from, IWorld to) {
-        this.player = player;
-        this.from = from;
-        this.to = to;
-    }
-    
-    @ZenGetter("player")
-    public IPlayer getPlayer() {
-        return player;
-    }
+public interface PlayerChangedDimensionEvent extends PlayerEvent {
     
     @ZenGetter("from")
-    public int getFrom() {
-        return from.getDimension();
-    }
+    int getFrom();
     
     @ZenGetter("to")
-    public int getTo() {
-        return to.getDimension();
-    }
+    int getTo();
     
     @ZenGetter("fromWorld")
-    public IWorld getFromWorld() {
-        return from;
-    }
+    IWorld getFromWorld();
     
     @ZenGetter("toWorld")
-    public IWorld getToWorld() {
-        return to;
-    }
+    IWorld getToWorld();
 }

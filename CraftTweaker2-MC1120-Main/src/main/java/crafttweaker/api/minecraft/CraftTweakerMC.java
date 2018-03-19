@@ -776,4 +776,8 @@ public class CraftTweakerMC {
         }
         return out;
     }
+    
+    public static EntityItem getEntityItem(IEntityItem entityItem) {
+        return entityItem == null ? null : (EntityItem) entityItem.getInternal();
+    }
 }

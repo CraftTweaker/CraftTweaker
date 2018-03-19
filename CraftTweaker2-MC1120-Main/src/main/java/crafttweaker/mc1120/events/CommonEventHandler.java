@@ -3,8 +3,7 @@ package crafttweaker.mc1120.events;
 import crafttweaker.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.*;
-import crafttweaker.api.event.*;
-import crafttweaker.api.event.PlayerInteractEvent;
+import crafttweaker.mc1120.events.handling.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -22,7 +21,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -67,17 +65,17 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {
-        CrafttweakerImplementationAPI.events.publishPlayerLoggedIn(new PlayerLoggedInEvent(CraftTweakerMC.getIPlayer(ev.player)));
+        CrafttweakerImplementationAPI.events.publishPlayerLoggedIn(new MCPlayerLoggedInEvent(CraftTweakerMC.getIPlayer(ev.player)));
     }
     
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent ev) {
-        CrafttweakerImplementationAPI.events.publishPlayerRespawn(new PlayerRespawnEvent(CraftTweakerMC.getIPlayer(ev.player)));
+        CrafttweakerImplementationAPI.events.publishPlayerRespawn(new MCPlayerRespawnEvent(ev));
     }
     
     @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent ev) {
-        PlayerPickupItemEvent event = new PlayerPickupItemEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), CraftTweakerMC.getIItemStack(ev.getItem().getItem()));
+        MCPlayerPickupItemEvent event = new MCPlayerPickupItemEvent(ev);
         if(CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event))
             ev.setCanceled(true);
     }
@@ -85,7 +83,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
         if(ev.craftMatrix instanceof InventoryCrafting && !MCRecipeManager.transformerRecipes.isEmpty()) {
-            MCRecipeManager.transformerRecipes.stream().filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world)).forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
+            MCRecipeManager.transformerRecipes.stream().filter(MCRecipeBase.class::isInstance).filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world)).forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
         }
         
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
@@ -100,27 +98,27 @@ public class CommonEventHandler {
             });
         }
         if(CrafttweakerImplementationAPI.events.hasPlayerCrafted()) {
-            CrafttweakerImplementationAPI.events.publishPlayerCrafted(new PlayerCraftedEvent(iPlayer, CraftTweakerMC.getIItemStack(ev.crafting), new MCCraftingInventorySquared(ev.craftMatrix, iPlayer)));
+            CrafttweakerImplementationAPI.events.publishPlayerCrafted(new MCPlayerCraftedEvent(ev));
         }
     }
     
     @SubscribeEvent
     public void onPlayerItemSmelted(PlayerEvent.ItemSmeltedEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerSmelted()) {
-            CrafttweakerImplementationAPI.events.publishPlayerSmelted(new PlayerSmeltedEvent(CraftTweakerMC.getIPlayer(ev.player), CraftTweakerMC.getIItemStack(ev.smelting)));
+            CrafttweakerImplementationAPI.events.publishPlayerSmelted(new MCPlayerSmeltedEvent(CraftTweakerMC.getIPlayer(ev.player), CraftTweakerMC.getIItemStack(ev.smelting)));
         }
     }
     
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent ev) {
-        CrafttweakerImplementationAPI.events.publishPlayerLoggedOut(new PlayerLoggedOutEvent(CraftTweakerMC.getIPlayer(ev.player)));
+        CrafttweakerImplementationAPI.events.publishPlayerLoggedOut(new MCPlayerLoggedOutEvent(CraftTweakerMC.getIPlayer(ev.player)));
     }
     
     
     @SubscribeEvent
     public void onPlayerInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent ev) {
         if(!ev.getWorld().isRemote) {
-            PlayerInteractEvent event = new PlayerInteractEvent(CraftTweakerMC.getIPlayer(ev.getEntityPlayer()), new MCWorld(ev.getWorld()), ev.getPos().getX(), ev.getPos().getY(), ev.getPos().getZ());
+            MCPlayerInteractEvent event = new MCPlayerInteractEvent(ev);
             if(CrafttweakerImplementationAPI.events.publishPlayerInteract(event))
                 ev.setCanceled(true);
         }
@@ -128,7 +126,7 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent ev) {
-        PlayerChangedDimensionEvent event = new PlayerChangedDimensionEvent(CraftTweakerMC.getIPlayer(ev.player), new MCWorld(DimensionManager.getWorld(ev.fromDim)), new MCWorld(DimensionManager.getWorld(ev.toDim)));
+        MCPlayerChangedDimensionEvent event = new MCPlayerChangedDimensionEvent(ev);
         CrafttweakerImplementationAPI.events.publishPlayerChangedDimension(event);
     }
     
@@ -180,10 +178,23 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPlayerBonemeal()) {
             EntityPlayer player = ev.getEntityPlayer();
             if(player != null) {
-                boolean shouldCancel = CrafttweakerImplementationAPI.events.publishPlayerBonemeal(new PlayerBonemealEvent(CraftTweakerMC.getIPlayer(player), CraftTweakerMC.getIWorld(ev.getWorld()), CraftTweakerMC.getIBlockPos(ev.getPos())));
+                boolean shouldCancel = CrafttweakerImplementationAPI.events.publishPlayerBonemeal(new MCPlayerBonemealEvent(ev));
                 if(shouldCancel)
                     ev.setCanceled(true);
             }
         }
+    }
+    
+    @SubscribeEvent
+    public void onPlayerFillBucket(FillBucketEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerFillBucket()) {
+            CrafttweakerImplementationAPI.events.publishPlayerFillBucket(new MCPlayerFillBucketEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onPlayerDeathDrops(PlayerDropsEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerDeathDrops())
+                CrafttweakerImplementationAPI.events.publishPlayerDeathDrops(new MCPlayerDeathDropsEvent(ev));
     }
 }

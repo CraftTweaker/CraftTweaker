@@ -11,85 +11,37 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerBonemealEvent")
 @ZenRegister
-public class PlayerBonemealEvent implements IEventCancelable {
+public interface PlayerBonemealEvent extends IEventCancelable, PlayerEvent {
     
-    private final IPlayer player;
-    private final IWorld world;
-    private final IBlockPos blockPos;
-    private boolean canceled;
-    private boolean processed;
-    
-    public PlayerBonemealEvent(IPlayer player, IWorld world, IBlockPos blockPos) {
-        this.player = player;
-        this.world = world;
-        this.blockPos = blockPos;
-        
-        canceled = false;
-        processed = false;
-    }
-    
-    @Override
-    public void cancel() {
-        canceled = true;
-    }
     
     @ZenMethod
-    public void process() {
-        processed = true;
-    }
+    void process();
     
-    @Override
-    public boolean isCanceled() {
-        return canceled;
-    }
     
     @ZenGetter("processed")
-    public boolean isProcessed() {
-        return processed;
-    }
-    
-    @ZenGetter("player")
-    public IPlayer getPlayer() {
-        return player;
-    }
+    boolean isProcessed();
     
     @ZenGetter("world")
-    public IWorld getBlocks() {
-        return world;
-    }
+    IWorld getWorld();
     
     @ZenGetter("x")
-    public int getX() {
-        return blockPos.getX();
-    }
+    int getX();
     
     @ZenGetter("y")
-    public int getY() {
-        return blockPos.getY();
-    }
+    int getY();
     
     @ZenGetter("z")
-    public int getZ() {
-        return blockPos.getZ();
-    }
+    int getZ();
     
     @ZenGetter("block")
-    public IBlock getBlock() {
-        return world.getBlock(blockPos);
-    }
+    IBlock getBlock();
     
     @ZenGetter("blockState")
-    public IBlockState getBlockState(){
-        return world.getBlockState(blockPos);
-    }
+    IBlockState getBlockState();
     
     @ZenGetter("blockPos")
-    public IBlockPos getBlockPos() {
-        return blockPos;
-    }
+    IBlockPos getBlockPos();
     
     @ZenGetter("dimension")
-    public int getDimension() {
-        return world.getDimension();
-    }
+    int getDimension();
 }

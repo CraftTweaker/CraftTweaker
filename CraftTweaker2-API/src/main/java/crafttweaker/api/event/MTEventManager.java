@@ -84,8 +84,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerCrafted.hasHandlers();
     }
     
-    public boolean publishPlayerCrafted(PlayerCraftedEvent event) {
-        return elPlayerCrafted.publish(event);
+    public void publishPlayerCrafted(PlayerCraftedEvent event) {
+        elPlayerCrafted.publish(event);
     }
     
     @Override
@@ -101,8 +101,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerSmelted.hasHandlers();
     }
     
-    public boolean publishPlayerSmelted(PlayerSmeltedEvent event) {
-        return elPlayerSmelted.publish(event);
+    public void publishPlayerSmelted(PlayerSmeltedEvent event) {
+        elPlayerSmelted.publish(event);
     }
     
     @Override
@@ -118,8 +118,8 @@ public class MTEventManager implements IEventManager {
     // ### PlayerBonemealEvent ###
     // ###########################
     
-    public boolean publishPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-        return elPlayerChangedDimension.publish(event);
+    public void publishPlayerChangedDimension(PlayerChangedDimensionEvent event) {
+        elPlayerChangedDimension.publish(event);
     }
     
     @Override
@@ -131,8 +131,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerLoggedIn.hasHandlers();
     }
     
-    public boolean publishPlayerLoggedIn(PlayerLoggedInEvent event) {
-        return elPlayerLoggedIn.publish(event);
+    public void publishPlayerLoggedIn(PlayerLoggedInEvent event) {
+        elPlayerLoggedIn.publish(event);
     }
     
     // #################################
@@ -147,8 +147,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerLoggedOut.hasHandlers();
     }
     
-    public boolean publishPlayerLoggedOut(PlayerLoggedOutEvent event) {
-        return elPlayerLoggedOut.publish(event);
+    public void publishPlayerLoggedOut(PlayerLoggedOutEvent event) {
+        elPlayerLoggedOut.publish(event);
     }
     
     @Override
@@ -164,8 +164,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerRespawn.hasHandlers();
     }
     
-    public boolean publishPlayerRespawn(PlayerRespawnEvent event) {
-        return elPlayerRespawn.publish(event);
+    public void publishPlayerRespawn(PlayerRespawnEvent event) {
+        elPlayerRespawn.publish(event);
     }
     
     @Override
@@ -181,8 +181,8 @@ public class MTEventManager implements IEventManager {
     // ### PlayerPickupItemEvent ###
     // #############################
     
-    public boolean publishPlayerAttackEntity(PlayerAttackEntityEvent event) {
-        return elPlayerAttackEntity.publish(event);
+    public void publishPlayerAttackEntity(PlayerAttackEntityEvent event) {
+        elPlayerAttackEntity.publish(event);
     }
     
     @Override
@@ -194,8 +194,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerBonemeal.hasHandlers();
     }
     
-    public boolean publishPlayerBonemeal(PlayerBonemealEvent event) {
-        return elPlayerBonemeal.publish(event);
+    public void publishPlayerBonemeal(PlayerBonemealEvent event) {
+        elPlayerBonemeal.publish(event);
     }
     
     // #############################
@@ -211,8 +211,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerInteractEntity.hasHandlers();
     }
     
-    public boolean publishPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        return elPlayerInteractEntity.publish(event);
+    public void publishPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        elPlayerInteractEntity.publish(event);
     }
     
     @Override
@@ -228,8 +228,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerPickup.hasHandlers();
     }
     
-    public boolean publishPlayerPickup(PlayerPickupEvent event) {
-        return elPlayerPickup.publish(event);
+    public void  publishPlayerPickup(PlayerPickupEvent event) {
+        elPlayerPickup.publish(event);
     }
     
     @Override
@@ -245,8 +245,8 @@ public class MTEventManager implements IEventManager {
     // ### PlayerInteractEvent ###
     // ###########################
     
-    public boolean publishPlayerPickupItem(PlayerPickupItemEvent event) {
-        return elPlayerPickupItem.publish(event);
+    public void publishPlayerPickupItem(PlayerPickupItemEvent event) {
+        elPlayerPickupItem.publish(event);
     }
     
     @Override
@@ -258,8 +258,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerFillBucket.hasHandlers();
     }
     
-    public boolean publishPlayerFillBucket(PlayerFillBucketEvent event) {
-        return elPlayerFillBucket.publish(event);
+    public void publishPlayerFillBucket(PlayerFillBucketEvent event) {
+        elPlayerFillBucket.publish(event);
     }
     
     // ################################
@@ -275,8 +275,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerDeathDrops.hasHandlers();
     }
     
-    public boolean publishPlayerDeathDrops(PlayerDeathDropsEvent event) {
-        return elPlayerDeathDrops.publish(event);
+    public void publishPlayerDeathDrops(PlayerDeathDropsEvent event) {
+        elPlayerDeathDrops.publish(event);
     }
     
     @Override
@@ -292,8 +292,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerInteract.hasHandlers();
     }
     
-    public boolean publishPlayerInteract(PlayerInteractEvent event) {
-        return elPlayerInteract.publish(event);
+    public void publishPlayerInteract(PlayerInteractEvent event) {
+        elPlayerInteract.publish(event);
     }
     
     @Override
@@ -309,8 +309,8 @@ public class MTEventManager implements IEventManager {
     // ### PlayerSleepInBedEvent ###
     // #############################
     
-    public boolean publishPlayerOpenContainer(PlayerOpenContainerEvent event) {
-        return elPlayerOpenContainer.publish(event);
+    public void publishPlayerOpenContainer(PlayerOpenContainerEvent event) {
+        elPlayerOpenContainer.publish(event);
     }
     
     @Override
@@ -322,8 +322,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerPickupXp.hasHandlers();
     }
     
-    public boolean publishPlayerPickup(PlayerPickupXpEvent event) {
-        return elPlayerPickupXp.publish(event);
+    public void publishPlayerPickup(PlayerPickupXpEvent event) {
+        elPlayerPickupXp.publish(event);
     }
     
     // #########################
@@ -339,8 +339,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerSleepInBed.hasHandlers();
     }
     
-    public boolean publishPlayerSleepInBed(PlayerSleepInBedEvent event) {
-        return elPlayerSleepInBed.publish(event);
+    public void publishPlayerSleepInBed(PlayerSleepInBedEvent event) {
+        elPlayerSleepInBed.publish(event);
     }
     
     @Override
@@ -356,8 +356,8 @@ public class MTEventManager implements IEventManager {
         return elPlayerUseHoe.hasHandlers();
     }
     
-    public boolean publishPlayerUseHoe(PlayerUseHoeEvent event) {
-        return elPlayerUseHoe.publish(event);
+    public void publishPlayerUseHoe(PlayerUseHoeEvent event) {
+        elPlayerUseHoe.publish(event);
     }
     
     @Override
@@ -373,8 +373,8 @@ public class MTEventManager implements IEventManager {
     // ### PlayerUseItemTickEvent ###
     // ##############################
     
-    public boolean publishPlayerUseItemStart(PlayerUseItemStartEvent event) {
-        return elPlayerUseItemStart.publish(event);
+    public void publishPlayerUseItemStart(PlayerUseItemStartEvent event) {
+        elPlayerUseItemStart.publish(event);
     }
     
     @Override
@@ -386,7 +386,7 @@ public class MTEventManager implements IEventManager {
         return elPlayerUseItemTick.hasHandlers();
     }
     
-    public boolean publishPlayerUseItemTick(PlayerUseItemTickEvent event) {
-        return elPlayerUseItemTick.publish(event);
+    public void publishPlayerUseItemTick(PlayerUseItemTickEvent event) {
+        elPlayerUseItemTick.publish(event);
     }
 }

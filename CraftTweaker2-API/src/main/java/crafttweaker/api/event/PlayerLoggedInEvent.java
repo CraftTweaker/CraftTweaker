@@ -9,16 +9,4 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerLoggedInEvent")
 @ZenRegister
-public class PlayerLoggedInEvent {
-    
-    private final IPlayer player;
-    
-    public PlayerLoggedInEvent(IPlayer player) {
-        this.player = player;
-    }
-    
-    @ZenGetter("player")
-    public IPlayer getPlayer() {
-        return player;
-    }
-}
+public interface PlayerLoggedInEvent extends PlayerEvent {}

@@ -45,8 +45,10 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev);
     
     @ZenMethod
@@ -58,6 +60,7 @@ public interface IEventManager {
     
     IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
     
     IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev);

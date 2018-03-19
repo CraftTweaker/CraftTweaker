@@ -2,6 +2,7 @@ package crafttweaker.mc1120.actions;
 
 import crafttweaker.*;
 import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.recipes.FurnaceRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 

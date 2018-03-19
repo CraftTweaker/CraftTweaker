@@ -10,35 +10,8 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerInteractEntityEvent")
 @ZenRegister
-public class PlayerInteractEntityEvent implements IEventCancelable {
-    
-    private final IPlayer player;
-    private final IEntity entity;
-    private boolean canceled;
-    
-    public PlayerInteractEntityEvent(IPlayer player, IEntity entity) {
-        this.player = player;
-        this.entity = entity;
-        canceled = false;
-    }
-    
-    @Override
-    public void cancel() {
-        canceled = true;
-    }
-    
-    @Override
-    public boolean isCanceled() {
-        return canceled;
-    }
-    
-    @ZenGetter("player")
-    public IPlayer getPlayer() {
-        return player;
-    }
+public interface PlayerInteractEntityEvent extends IEventCancelable, PlayerEvent {
     
     @ZenGetter("entity")
-    public IEntity getEntity() {
-        return entity;
-    }
+    public IEntity getEntity();
 }

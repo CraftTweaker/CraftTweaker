@@ -9,16 +9,8 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerRespawnEvent")
 @ZenRegister
-public class PlayerRespawnEvent {
+public interface PlayerRespawnEvent extends PlayerEvent {
     
-    private final IPlayer player;
-    
-    public PlayerRespawnEvent(IPlayer player) {
-        this.player = player;
-    }
-    
-    @ZenGetter("player")
-    public IPlayer getPlayer() {
-        return player;
-    }
+    @ZenGetter("endConquered")
+    boolean isEndConquered();
 }
