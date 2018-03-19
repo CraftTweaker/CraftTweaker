@@ -44,4 +44,9 @@ public class MCRayTraceResult implements IRayTraceResult {
     public IFacing getSideHit() {
         return new MCFacing(traceResult.sideHit);
     }
+    
+    @Override
+    public RayTraceResult getInternal() {
+        return traceResult;
+    }
 }
