@@ -1,7 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.block.*;
-import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.event.PlayerFillBucketEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -91,9 +90,9 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     }
     
     @Override
-    public IEntity getHitEntity() {
+    public IRayTraceResult getRayTraceResult() {
         RayTraceResult target = event.getTarget();
-        return target == null ? null : CraftTweakerMC.getIEntity(target.entityHit);
+        return target == null ? null : CraftTweakerMC.getIRayTraceResult(target);
     }
     
     @Override

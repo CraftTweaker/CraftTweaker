@@ -1,8 +1,7 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.IBlock;
-import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.block.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
@@ -49,6 +48,6 @@ public interface PlayerFillBucketEvent extends IEventCancelable, PlayerEvent {
     @ZenGetter("position")
     IBlockPos getPos();
     
-    @ZenGetter("hitEntity")
-    IEntity getHitEntity();
+    @ZenGetter("rayTraceResult")
+    IRayTraceResult getRayTraceResult();
 }

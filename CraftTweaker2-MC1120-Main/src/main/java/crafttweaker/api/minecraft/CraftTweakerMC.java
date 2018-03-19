@@ -40,7 +40,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.potion.*;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
@@ -779,5 +779,13 @@ public class CraftTweakerMC {
     
     public static EntityItem getEntityItem(IEntityItem entityItem) {
         return entityItem == null ? null : (EntityItem) entityItem.getInternal();
+    }
+    
+    public static IRayTraceResult getIRayTraceResult(RayTraceResult rayTraceResult) {
+        return rayTraceResult == null ? null : new MCRayTraceResult(rayTraceResult);
+    }
+    
+    public static RayTraceResult getRayTraceResult(IRayTraceResult rayTraceResult) {
+        return rayTraceResult == null ? null : (RayTraceResult) rayTraceResult.getInternal();
     }
 }
