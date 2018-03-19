@@ -96,5 +96,8 @@ public interface IItemDefinition {
     @ZenMethod
     List<IItemStack> getSubItems(ICreativeTab tab);
     
+    @ZenMethod
+    int getItemBurnTime(IItemStack itemStack);
+    
     Object getInternal();
 }

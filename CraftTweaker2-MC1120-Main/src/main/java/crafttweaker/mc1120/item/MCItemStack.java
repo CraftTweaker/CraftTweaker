@@ -20,6 +20,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.OreDictionary;
@@ -603,7 +604,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public int getItemBurnTime() {
-        return 0;
+        return TileEntityFurnace.getItemBurnTime(stack);
     }
     
     @Override

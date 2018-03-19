@@ -127,6 +127,11 @@ public class MCItemDefinition implements IItemDefinition {
     }
     
     @Override
+    public int getItemBurnTime(IItemStack itemStack) {
+        return item.getItemBurnTime(CraftTweakerMC.getItemStack(itemStack));
+    }
+    
+    @Override
     public Object getInternal() {
         return item;
     }
