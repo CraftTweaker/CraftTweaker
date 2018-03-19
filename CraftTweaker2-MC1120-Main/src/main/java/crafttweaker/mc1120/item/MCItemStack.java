@@ -609,12 +609,12 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean showsDurabilityBar() {
-        return false;
+        return stack.getItem().showDurabilityBar(stack);
     }
     
     @Override
     public boolean hasCustomEntity() {
-        return false;
+        return stack.getItem().hasCustomEntity(stack);
     }
     
     
