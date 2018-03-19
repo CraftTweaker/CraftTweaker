@@ -4,11 +4,13 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.*;
 import crafttweaker.api.enchantments.*;
-import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.world.*;
 import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.block.MCItemBlock;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -18,6 +20,7 @@ import crafttweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -461,6 +464,16 @@ public class MCItemStack implements IItemStack {
     @Override
     public boolean hasContainerItem() {
         return stack.getItem().hasContainerItem(stack);
+    }
+    
+    @Override
+    public IEntityItem createEntityItem(IWorld world, int x, int y, int z) {
+        return CraftTweakerMC.getIEntityItem(new EntityItem(CraftTweakerMC.getWorld(world), x, y, z, stack));
+    }
+    
+    @Override
+    public IEntityItem createEntityItem(IWorld world, IBlockPos pos) {
+        return createEntityItem(world, pos.getX(), pos.getY(), pos.getZ());
     }
     
     @Override
