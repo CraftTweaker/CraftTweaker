@@ -12,7 +12,9 @@ public interface IEventCancelable {
     boolean isCanceled();
     
     @ZenMethod
-    void cancel();
+    default void cancel(){
+        setCanceled(true);
+    }
     
     @ZenSetter("canceled")
     void setCanceled(boolean canceled);

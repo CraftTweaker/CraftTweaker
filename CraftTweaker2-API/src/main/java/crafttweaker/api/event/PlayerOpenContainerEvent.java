@@ -2,7 +2,6 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.container.IContainer;
-import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -10,7 +9,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerOpenContainerEvent")
 @ZenRegister
-public interface PlayerOpenContainerEvent extends IEventCancelable, PlayerEvent {
+public interface PlayerOpenContainerEvent extends IEventCancelable, IPlayerEvent {
     
     @ZenGetter("container")
     IContainer getContainer();

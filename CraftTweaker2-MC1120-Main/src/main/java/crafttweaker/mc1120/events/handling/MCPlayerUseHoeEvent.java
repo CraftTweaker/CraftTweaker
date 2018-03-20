@@ -46,21 +46,6 @@ public class MCPlayerUseHoeEvent implements PlayerUseHoeEvent {
     }
     
     @Override
-    public int getX() {
-        return getPosition().getX();
-    }
-    
-    @Override
-    public int getY() {
-        return getPosition().getY();
-    }
-    
-    @Override
-    public int getZ() {
-        return getPosition().getZ();
-    }
-    
-    @Override
     public int getDimension() {
         return getBlocks().getDimension();
     }
@@ -83,11 +68,6 @@ public class MCPlayerUseHoeEvent implements PlayerUseHoeEvent {
     @Override
     public boolean isCanceled() {
         return event.isCanceled();
-    }
-    
-    @Override
-    public void cancel() {
-        setCanceled(true);
     }
     
     @Override

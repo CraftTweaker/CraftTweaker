@@ -2,6 +2,7 @@ package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
+import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
@@ -14,6 +15,7 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.*;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
+import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -33,7 +35,7 @@ import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
@@ -787,5 +789,13 @@ public class CraftTweakerMC {
     
     public static RayTraceResult getRayTraceResult(IRayTraceResult rayTraceResult) {
         return rayTraceResult == null ? null : (RayTraceResult) rayTraceResult.getInternal();
+    }
+    
+    public static IContainer getIContainer(Container container) {
+        return container == null ? null : new MCContainer(container);
+    }
+    
+    public static Container getContainer(IContainer container) {
+        return container == null ? null : (Container)container.getInternal();
     }
 }

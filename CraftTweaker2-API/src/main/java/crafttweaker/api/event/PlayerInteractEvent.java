@@ -2,7 +2,6 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
-import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -11,22 +10,13 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerInteractEvent")
 @ZenRegister
-public interface PlayerInteractEvent extends IEventCancelable, PlayerEvent{
+public interface PlayerInteractEvent extends IEventCancelable, IPlayerEvent, IEventPositionable {
 
     @ZenMethod
     void damageItem(int amount);
     
     @ZenGetter("world")
     IWorld getWorld();
-    
-    @ZenGetter("x")
-    int getX();
-    
-    @ZenGetter("y")
-    int getY();
-    
-    @ZenGetter("z")
-    int getZ();
     
     @ZenGetter("block")
     IBlock getBlock();
@@ -35,7 +25,4 @@ public interface PlayerInteractEvent extends IEventCancelable, PlayerEvent{
     
     @ZenGetter("dimension")
     int getDimension();
-    
-    @ZenGetter("position")
-    IBlockPos getPosition();
 }

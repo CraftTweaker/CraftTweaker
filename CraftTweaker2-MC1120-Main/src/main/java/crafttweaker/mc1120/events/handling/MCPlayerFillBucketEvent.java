@@ -53,21 +53,6 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     }
     
     @Override
-    public int getX() {
-        return getPos().getX();
-    }
-    
-    @Override
-    public int getY() {
-        return getPos().getY();
-    }
-    
-    @Override
-    public int getZ() {
-        return getPos().getZ();
-    }
-    
-    @Override
     public IBlock getBlock() {
         IBlockState blockState = getBlockState();
         return blockState == null ? null : blockState.getBlock();
@@ -84,15 +69,14 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     }
     
     @Override
-    public IBlockPos getPos() {
+    public IBlockPos getPosition() {
         RayTraceResult target = event.getTarget();
         return CraftTweakerMC.getIBlockPos(target == null ? event.getEntityPlayer().getPosition() : target.getBlockPos());
     }
     
     @Override
     public IRayTraceResult getRayTraceResult() {
-        RayTraceResult target = event.getTarget();
-        return target == null ? null : CraftTweakerMC.getIRayTraceResult(target);
+        return CraftTweakerMC.getIRayTraceResult(event.getTarget());
     }
     
     @Override
@@ -101,12 +85,17 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     }
     
     @Override
-    public void cancel() {
-        setCanceled(true);
+    public void setCanceled(boolean canceled) {
+        event.setCanceled(canceled);
     }
     
     @Override
-    public void setCanceled(boolean canceled) {
-        event.setCanceled(canceled);
+    public void process() {
+        event.setResult(Event.Result.ALLOW);
+    }
+    
+    @Override
+    public boolean isProcessed() {
+        return event.getResult() == Event.Result.ALLOW;
     }
 }

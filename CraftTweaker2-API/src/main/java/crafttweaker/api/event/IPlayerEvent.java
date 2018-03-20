@@ -5,8 +5,8 @@ import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 @ZenRegister
-@ZenClass("crafttweaker.event.PlayerEvent")
-public interface PlayerEvent {
+@ZenClass("crafttweaker.event.IPlayerEvent")
+public interface IPlayerEvent {
     
     @ZenGetter("player")
     IPlayer getPlayer();

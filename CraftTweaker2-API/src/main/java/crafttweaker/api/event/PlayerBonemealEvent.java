@@ -2,7 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -11,27 +11,10 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerBonemealEvent")
 @ZenRegister
-public interface PlayerBonemealEvent extends IEventCancelable, PlayerEvent {
-    
-    
-    @ZenMethod
-    void process();
-    
-    
-    @ZenGetter("processed")
-    boolean isProcessed();
+public interface PlayerBonemealEvent extends IEventCancelable, IPlayerEvent, IProcessableEvent, IEventPositionable {
     
     @ZenGetter("world")
     IWorld getWorld();
-    
-    @ZenGetter("x")
-    int getX();
-    
-    @ZenGetter("y")
-    int getY();
-    
-    @ZenGetter("z")
-    int getZ();
     
     @ZenGetter("block")
     IBlock getBlock();
@@ -39,9 +22,9 @@ public interface PlayerBonemealEvent extends IEventCancelable, PlayerEvent {
     @ZenGetter("blockState")
     IBlockState getBlockState();
     
-    @ZenGetter("blockPos")
-    IBlockPos getBlockPos();
-    
     @ZenGetter("dimension")
     int getDimension();
+    
+    @ZenSetter("item")
+    IItemStack getItem();
 }

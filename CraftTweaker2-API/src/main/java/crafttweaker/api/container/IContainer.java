@@ -41,4 +41,6 @@ public interface IContainer extends Iterable<IItemStack> {
      */
     @ZenMethod
     void setStack(int i, IItemStack stack);
+    
+    Object getInternal();
 }

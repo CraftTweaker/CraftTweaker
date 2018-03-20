@@ -9,7 +9,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerPickupItemEvent")
 @ZenRegister
-public interface PlayerPickupItemEvent extends PlayerEvent {
+public interface PlayerPickupItemEvent extends IPlayerEvent {
     
     @ZenGetter("item")
     IEntityItem getItem();

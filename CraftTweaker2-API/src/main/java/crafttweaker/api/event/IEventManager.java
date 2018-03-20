@@ -54,10 +54,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);
     
     IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
     
     @ZenMethod

@@ -2,6 +2,7 @@ package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.block.*;
 import crafttweaker.api.event.PlayerBonemealEvent;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
@@ -41,21 +42,6 @@ public class MCPlayerBonemealEvent implements PlayerBonemealEvent {
     }
     
     @Override
-    public int getX() {
-        return event.getPos().getX();
-    }
-    
-    @Override
-    public int getY() {
-        return event.getPos().getY();
-    }
-    
-    @Override
-    public int getZ() {
-        return event.getPos().getZ();
-    }
-    
-    @Override
     public IBlock getBlock() {
         return getBlockState().getBlock();
     }
@@ -66,7 +52,7 @@ public class MCPlayerBonemealEvent implements PlayerBonemealEvent {
     }
     
     @Override
-    public IBlockPos getBlockPos() {
+    public IBlockPos getPosition() {
         return CraftTweakerMC.getIBlockPos(event.getPos());
     }
     
@@ -76,13 +62,13 @@ public class MCPlayerBonemealEvent implements PlayerBonemealEvent {
     }
     
     @Override
-    public boolean isCanceled() {
-        return event.isCanceled();
+    public IItemStack getItem() {
+        return CraftTweakerMC.getIItemStack(event.getStack());
     }
     
     @Override
-    public void cancel() {
-        setCanceled(true);
+    public boolean isCanceled() {
+        return event.isCanceled();
     }
     
     @Override

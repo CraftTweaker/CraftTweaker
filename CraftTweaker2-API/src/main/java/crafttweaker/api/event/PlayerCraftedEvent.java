@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerCraftedEvent")
 @ZenRegister
-public interface PlayerCraftedEvent extends PlayerEvent {
+public interface PlayerCraftedEvent extends IPlayerEvent {
     
     @ZenGetter("output")
     IItemStack getOutput();

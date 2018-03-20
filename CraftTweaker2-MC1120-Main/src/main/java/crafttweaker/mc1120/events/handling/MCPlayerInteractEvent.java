@@ -34,21 +34,6 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     }
     
     @Override
-    public int getX() {
-        return event.getPos().getX();
-    }
-    
-    @Override
-    public int getY() {
-        return event.getPos().getY();
-    }
-    
-    @Override
-    public int getZ() {
-        return event.getPos().getZ();
-    }
-    
-    @Override
     public IBlock getBlock() {
         return getBlockState().getBlock();
     }
@@ -71,11 +56,6 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     @Override
     public boolean isCanceled() {
         return event.isCanceled();
-    }
-    
-    @Override
-    public void cancel() {
-        setCanceled(true);
     }
     
     @Override

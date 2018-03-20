@@ -11,7 +11,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerFillBucketEvent")
 @ZenRegister
-public interface PlayerFillBucketEvent extends IEventCancelable, PlayerEvent {
+public interface PlayerFillBucketEvent extends IEventCancelable, IPlayerEvent, IProcessableEvent, IEventPositionable {
     
     @ZenGetter("result")
     IItemStack getResult();
@@ -30,23 +30,12 @@ public interface PlayerFillBucketEvent extends IEventCancelable, PlayerEvent {
     @ZenGetter("world")
     IWorld getWorld();
     
-    @ZenGetter("x")
-    int getX();
-    
-    @ZenGetter("y")
-    int getY();
-    
-    @ZenGetter("z")
-    int getZ();
     
     @ZenGetter("block")
     IBlock getBlock();
     
     @ZenGetter("dimension")
     int getDimension();
-    
-    @ZenGetter("position")
-    IBlockPos getPos();
     
     @ZenGetter("rayTraceResult")
     IRayTraceResult getRayTraceResult();

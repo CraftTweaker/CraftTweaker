@@ -7,47 +7,33 @@ import crafttweaker.util.*;
  */
 public class MTEventManager implements IEventManager {
     
+    // ##################
+    // ### EventLists ###
+    // ##################
     private final EventList<PlayerCraftedEvent> elPlayerCrafted = new EventList<>();
-    
-    // ##########################
-    // ### PlayerCraftedEvent ###
-    // ##########################
+    private final EventList<PlayerInteractEvent> elPlayerInteract = new EventList<>();
+    private final EventList<PlayerOpenContainerEvent> elPlayerOpenContainer = new EventList<>();
+    private final EventList<PlayerPickupXpEvent> elPlayerPickupXp = new EventList<>();
+    private final EventList<PlayerSleepInBedEvent> elPlayerSleepInBed = new EventList<>();
+    private final EventList<PlayerUseHoeEvent> elPlayerUseHoe = new EventList<>();
+    private final EventList<PlayerUseItemStartEvent> elPlayerUseItemStart = new EventList<>();
+    private final EventList<PlayerUseItemTickEvent> elPlayerUseItemTick = new EventList<>();
+    private final EventList<PlayerPickupEvent> elPlayerPickup = new EventList<>();
+    private final EventList<PlayerPickupItemEvent> elPlayerPickupItem = new EventList<>();
+    private final EventList<PlayerFillBucketEvent> elPlayerFillBucket = new EventList<>();
+    private final EventList<PlayerDeathDropsEvent> elPlayerDeathDrops = new EventList<>();
+    private final EventList<PlayerRespawnEvent> elPlayerRespawn = new EventList<>();
+    private final EventList<PlayerAttackEntityEvent> elPlayerAttackEntity = new EventList<>();
+    private final EventList<PlayerBonemealEvent> elPlayerBonemeal = new EventList<>();
+    private final EventList<PlayerInteractEntityEvent> elPlayerInteractEntity = new EventList<>();
     private final EventList<PlayerSmeltedEvent> elPlayerSmelted = new EventList<>();
     private final EventList<PlayerChangedDimensionEvent> elPlayerChangedDimension = new EventList<>();
     private final EventList<PlayerLoggedInEvent> elPlayerLoggedIn = new EventList<>();
     private final EventList<PlayerLoggedOutEvent> elPlayerLoggedOut = new EventList<>();
     
-    // ##########################
-    // ### PlayerSmeltedEvent ###
-    // ##########################
-    private final EventList<PlayerRespawnEvent> elPlayerRespawn = new EventList<>();
-    private final EventList<PlayerAttackEntityEvent> elPlayerAttackEntity = new EventList<>();
-    private final EventList<PlayerBonemealEvent> elPlayerBonemeal = new EventList<>();
-    private final EventList<PlayerInteractEntityEvent> elPlayerInteractEntity = new EventList<>();
-    
-    // ###################################
-    // ### PlayerChangedDimensionEvent ###
-    // ###################################
-    private final EventList<PlayerPickupEvent> elPlayerPickup = new EventList<>();
-    private final EventList<PlayerPickupItemEvent> elPlayerPickupItem = new EventList<>();
-    private final EventList<PlayerFillBucketEvent> elPlayerFillBucket = new EventList<>();
-    private final EventList<PlayerDeathDropsEvent> elPlayerDeathDrops = new EventList<>();
-    
-    // ###########################
-    // ### PlayerLoggedInEvent ###
-    // ###########################
-    private final EventList<PlayerInteractEvent> elPlayerInteract = new EventList<>();
-    private final EventList<PlayerOpenContainerEvent> elPlayerOpenContainer = new EventList<>();
-    private final EventList<PlayerPickupXpEvent> elPlayerPickupXp = new EventList<>();
-    private final EventList<PlayerSleepInBedEvent> elPlayerSleepInBed = new EventList<>();
-    
-    // ############################
-    // ### PlayerLoggedOutEvent ###
-    // ############################
-    private final EventList<PlayerUseHoeEvent> elPlayerUseHoe = new EventList<>();
-    private final EventList<PlayerUseItemStartEvent> elPlayerUseItemStart = new EventList<>();
-    private final EventList<PlayerUseItemTickEvent> elPlayerUseItemTick = new EventList<>();
-    
+    /**
+     * Clears all EventLists
+     */
     public void clear() {
         elPlayerCrafted.clear();
         elPlayerSmelted.clear();
@@ -71,8 +57,9 @@ public class MTEventManager implements IEventManager {
         elPlayerUseItemTick.clear();
     }
     
+    
     // ##########################
-    // ### PlayerRespawnEvent ###
+    // ### PlayerCraftedEvent ###
     // ##########################
     
     @Override
@@ -88,14 +75,15 @@ public class MTEventManager implements IEventManager {
         elPlayerCrafted.publish(event);
     }
     
+    
+    // ##########################
+    // ### PlayerSmeltedEvent ###
+    // ##########################
+    
     @Override
     public IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev) {
         return elPlayerSmelted.add(ev);
     }
-    
-    // ###############################
-    // ### PlayerAttackEntityEvent ###
-    // ###############################
     
     public boolean hasPlayerSmelted() {
         return elPlayerSmelted.hasHandlers();
@@ -104,6 +92,11 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerSmelted(PlayerSmeltedEvent event) {
         elPlayerSmelted.publish(event);
     }
+    
+    
+    // ###################################
+    // ### PlayerChangedDimensionEvent ###
+    // ###################################
     
     @Override
     public IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev) {
@@ -114,13 +107,14 @@ public class MTEventManager implements IEventManager {
         return elPlayerChangedDimension.hasHandlers();
     }
     
-    // ###########################
-    // ### PlayerBonemealEvent ###
-    // ###########################
-    
     public void publishPlayerChangedDimension(PlayerChangedDimensionEvent event) {
         elPlayerChangedDimension.publish(event);
     }
+    
+    
+    // ###########################
+    // ### PlayerLoggedInEvent ###
+    // ###########################
     
     @Override
     public IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev) {
@@ -135,9 +129,10 @@ public class MTEventManager implements IEventManager {
         elPlayerLoggedIn.publish(event);
     }
     
-    // #################################
-    // ### PlayerInteractEntityEvent ###
-    // #################################
+    
+    // ############################
+    // ### PlayerLoggedOutEvent ###
+    // ############################
     
     public IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev) {
         return elPlayerLoggedOut.add(ev);
@@ -151,14 +146,15 @@ public class MTEventManager implements IEventManager {
         elPlayerLoggedOut.publish(event);
     }
     
+    
+    // ##########################
+    // ### PlayerRespawnEvent ###
+    // ##########################
+    
     @Override
     public IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev) {
         return elPlayerRespawn.add(ev);
     }
-    
-    // #########################
-    // ### PlayerPickupEvent ###
-    // #########################
     
     public boolean hasPlayerRespawn() {
         return elPlayerRespawn.hasHandlers();
@@ -167,6 +163,11 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerRespawn(PlayerRespawnEvent event) {
         elPlayerRespawn.publish(event);
     }
+    
+    
+    // ###############################
+    // ### PlayerAttackEntityEvent ###
+    // ###############################
     
     @Override
     public IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev) {
@@ -177,13 +178,14 @@ public class MTEventManager implements IEventManager {
         return elPlayerAttackEntity.hasHandlers();
     }
     
-    // #############################
-    // ### PlayerPickupItemEvent ###
-    // #############################
-    
     public void publishPlayerAttackEntity(PlayerAttackEntityEvent event) {
         elPlayerAttackEntity.publish(event);
     }
+    
+    
+    // ###########################
+    // ### PlayerBonemealEvent ###
+    // ###########################
     
     @Override
     public IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev) {
@@ -198,9 +200,10 @@ public class MTEventManager implements IEventManager {
         elPlayerBonemeal.publish(event);
     }
     
-    // #############################
-    // ### PlayerFillBucketEvent ###
-    // #############################
+    
+    // #################################
+    // ### PlayerInteractEntityEvent ###
+    // #################################
     
     @Override
     public IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev) {
@@ -215,22 +218,28 @@ public class MTEventManager implements IEventManager {
         elPlayerInteractEntity.publish(event);
     }
     
+    
+    // #########################
+    // ### PlayerPickupEvent ###
+    // #########################
+    
     @Override
     public IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev) {
         return elPlayerPickup.add(ev);
     }
     
-    // #############################
-    // ### PlayerDeathDropsEvent ###
-    // #############################
-    
     public boolean hasPlayerPickup() {
         return elPlayerPickup.hasHandlers();
     }
     
-    public void  publishPlayerPickup(PlayerPickupEvent event) {
+    public void publishPlayerPickup(PlayerPickupEvent event) {
         elPlayerPickup.publish(event);
     }
+    
+    
+    // #############################
+    // ### PlayerPickupItemEvent ###
+    // #############################
     
     @Override
     public IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev) {
@@ -241,13 +250,14 @@ public class MTEventManager implements IEventManager {
         return elPlayerPickupItem.hasHandlers();
     }
     
-    // ###########################
-    // ### PlayerInteractEvent ###
-    // ###########################
-    
     public void publishPlayerPickupItem(PlayerPickupItemEvent event) {
         elPlayerPickupItem.publish(event);
     }
+    
+    
+    // #############################
+    // ### PlayerFillBucketEvent ###
+    // #############################
     
     @Override
     public IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev) {
@@ -262,9 +272,10 @@ public class MTEventManager implements IEventManager {
         elPlayerFillBucket.publish(event);
     }
     
-    // ################################
-    // ### PlayerOpenContainerEvent ###
-    // ################################
+    
+    // #############################
+    // ### PlayerDeathDropsEvent ###
+    // #############################
     
     @Override
     public IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev) {
@@ -279,14 +290,15 @@ public class MTEventManager implements IEventManager {
         elPlayerDeathDrops.publish(event);
     }
     
+    
+    // ###########################
+    // ### PlayerInteractEvent ###
+    // ###########################
+    
     @Override
     public IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev) {
         return elPlayerInteract.add(ev);
     }
-    
-    // ###########################
-    // ### PlayerPickupXpEvent ###
-    // ###########################
     
     public boolean hasPlayerInteract() {
         return elPlayerInteract.hasHandlers();
@@ -295,6 +307,11 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerInteract(PlayerInteractEvent event) {
         elPlayerInteract.publish(event);
     }
+    
+    
+    // ################################
+    // ### PlayerOpenContainerEvent ###
+    // ################################
     
     @Override
     public IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev) {
@@ -305,13 +322,15 @@ public class MTEventManager implements IEventManager {
         return elPlayerOpenContainer.hasHandlers();
     }
     
-    // #############################
-    // ### PlayerSleepInBedEvent ###
-    // #############################
-    
     public void publishPlayerOpenContainer(PlayerOpenContainerEvent event) {
         elPlayerOpenContainer.publish(event);
     }
+    
+    
+    // ###########################
+    // ### PlayerPickupXpEvent ###
+    // ###########################
+    
     
     @Override
     public IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev) {
@@ -326,9 +345,10 @@ public class MTEventManager implements IEventManager {
         elPlayerPickupXp.publish(event);
     }
     
-    // #########################
-    // ### PlayerUseHoeEvent ###
-    // #########################
+    
+    // #############################
+    // ### PlayerSleepInBedEvent ###
+    // #############################
     
     @Override
     public IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev) {
@@ -343,14 +363,15 @@ public class MTEventManager implements IEventManager {
         elPlayerSleepInBed.publish(event);
     }
     
+    
+    // #########################
+    // ### PlayerUseHoeEvent ###
+    // #########################
+    
     @Override
     public IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev) {
         return elPlayerUseHoe.add(ev);
     }
-    
-    // ###############################
-    // ### PlayerUseItemStartEvent ###
-    // ###############################
     
     public boolean hasPlayerUseHoe() {
         return elPlayerUseHoe.hasHandlers();
@@ -359,6 +380,11 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerUseHoe(PlayerUseHoeEvent event) {
         elPlayerUseHoe.publish(event);
     }
+    
+    
+    // ###############################
+    // ### PlayerUseItemStartEvent ###
+    // ###############################
     
     @Override
     public IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev) {
@@ -369,13 +395,14 @@ public class MTEventManager implements IEventManager {
         return elPlayerUseItemStart.hasHandlers();
     }
     
-    // ##############################
-    // ### PlayerUseItemTickEvent ###
-    // ##############################
-    
     public void publishPlayerUseItemStart(PlayerUseItemStartEvent event) {
         elPlayerUseItemStart.publish(event);
     }
+    
+    
+    // ##############################
+    // ### PlayerUseItemTickEvent ###
+    // ##############################
     
     @Override
     public IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev) {

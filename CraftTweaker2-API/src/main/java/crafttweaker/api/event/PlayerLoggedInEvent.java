@@ -1,7 +1,6 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -9,4 +8,4 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerLoggedInEvent")
 @ZenRegister
-public interface PlayerLoggedInEvent extends PlayerEvent {}
+public interface PlayerLoggedInEvent extends IPlayerEvent {}

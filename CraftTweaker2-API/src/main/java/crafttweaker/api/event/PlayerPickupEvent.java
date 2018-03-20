@@ -2,7 +2,6 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -10,16 +9,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerPickupEvent")
 @ZenRegister
-public interface PlayerPickupEvent extends IEventCancelable, PlayerEvent {
-    
-    /**
-     * Processes the event (picks up the entity).
-     */
-    @ZenMethod
-    void process();
-    
-    @ZenGetter("processed")
-    boolean isProcessed();
+public interface PlayerPickupEvent extends IEventCancelable, IPlayerEvent, IProcessableEvent {
     
     @ZenGetter("entity")
     IEntity getEntity();

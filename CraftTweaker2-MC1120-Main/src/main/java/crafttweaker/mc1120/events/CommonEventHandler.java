@@ -64,18 +64,20 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent ev) {
-        CrafttweakerImplementationAPI.events.publishPlayerLoggedIn(new MCPlayerLoggedInEvent(CraftTweakerMC.getIPlayer(ev.player)));
+        if(CrafttweakerImplementationAPI.events.hasPlayerLoggedIn())
+            CrafttweakerImplementationAPI.events.publishPlayerLoggedIn(new MCPlayerLoggedInEvent(CraftTweakerMC.getIPlayer(ev.player)));
     }
     
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent ev) {
-        CrafttweakerImplementationAPI.events.publishPlayerRespawn(new MCPlayerRespawnEvent(ev));
+        if(CrafttweakerImplementationAPI.events.hasPlayerRespawn())
+            CrafttweakerImplementationAPI.events.publishPlayerRespawn(new MCPlayerRespawnEvent(ev));
     }
     
     @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent ev) {
-        MCPlayerPickupItemEvent event = new MCPlayerPickupItemEvent(ev);
-        CrafttweakerImplementationAPI.events.publishPlayerPickupItem(event);
+        if(CrafttweakerImplementationAPI.events.hasPlayerPickupItem())
+        CrafttweakerImplementationAPI.events.publishPlayerPickupItem(new MCPlayerPickupItemEvent(ev));
     }
     
     @SubscribeEvent
@@ -109,7 +111,8 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent ev) {
-        CrafttweakerImplementationAPI.events.publishPlayerLoggedOut(new MCPlayerLoggedOutEvent(CraftTweakerMC.getIPlayer(ev.player)));
+        if(CrafttweakerImplementationAPI.events.hasPlayerLoggedOut())
+            CrafttweakerImplementationAPI.events.publishPlayerLoggedOut(new MCPlayerLoggedOutEvent(CraftTweakerMC.getIPlayer(ev.player)));
     }
     
     
@@ -123,8 +126,8 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent ev) {
-        MCPlayerChangedDimensionEvent event = new MCPlayerChangedDimensionEvent(ev);
-        CrafttweakerImplementationAPI.events.publishPlayerChangedDimension(event);
+        if(CrafttweakerImplementationAPI.events.hasPlayerChangedDimension())
+            CrafttweakerImplementationAPI.events.publishPlayerChangedDimension(new MCPlayerChangedDimensionEvent(ev));
     }
     
     @SubscribeEvent
@@ -172,10 +175,8 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerBonemeal(BonemealEvent ev) {
-        if(CrafttweakerImplementationAPI.events.hasPlayerBonemeal()) {
-            EntityPlayer player = ev.getEntityPlayer();
+        if(CrafttweakerImplementationAPI.events.hasPlayerBonemeal())
             CrafttweakerImplementationAPI.events.publishPlayerBonemeal(new MCPlayerBonemealEvent(ev));
-        }
     }
     
     @SubscribeEvent
@@ -189,5 +190,23 @@ public class CommonEventHandler {
     public void onPlayerDeathDrops(PlayerDropsEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerDeathDrops())
             CrafttweakerImplementationAPI.events.publishPlayerDeathDrops(new MCPlayerDeathDropsEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerSleepInBed(PlayerSleepInBedEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerSleepInBed())
+            CrafttweakerImplementationAPI.events.publishPlayerSleepInBed(new MCPlayerSleepInBedEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerOpenContainer(PlayerContainerEvent.Open ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerOpenContainer())
+            CrafttweakerImplementationAPI.events.publishPlayerOpenContainer(new MCPlayerOpenContainerEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onUseHoe(UseHoeEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerUseHoe())
+            CrafttweakerImplementationAPI.events.publishPlayerUseHoe(new MCPlayerUseHoeEvent(ev));
     }
 }
