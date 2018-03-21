@@ -28,7 +28,7 @@ public class MCContainer implements IContainer {
     
     @Override
     public void setStack(int i, IItemStack stack) {
-        container.getSlot(i).putStack(CraftTweakerMC.getItemStack(stack));
+        container.putStackInSlot(i, CraftTweakerMC.getItemStack(stack));
     }
     
     @Override
@@ -39,5 +39,15 @@ public class MCContainer implements IContainer {
     @Override
     public Iterator<IItemStack> iterator() {
         return container.inventoryItemStacks.stream().map(CraftTweakerMC::getIItemStack).iterator();
+    }
+    
+    @Override
+    public String asString() {
+        return container.toString();
+    }
+    
+    @Override
+    public String toString() {
+        return "MCContainer: " + asString();
     }
 }

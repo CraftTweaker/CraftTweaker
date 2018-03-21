@@ -23,7 +23,7 @@ import crafttweaker.mc1120.entity.*;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
-import crafttweaker.mc1120.oredict.MCOreDictEntry;
+import crafttweaker.mc1120.oredict.*;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.*;
 import crafttweaker.mc1120.world.*;
@@ -41,7 +41,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.*;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
@@ -797,5 +797,10 @@ public class CraftTweakerMC {
     
     public static Container getContainer(IContainer container) {
         return container == null ? null : (Container)container.getInternal();
+    }
+    
+    
+    public static IFacing getIFacing(EnumFacing sideHit) {
+        return sideHit == null ? null : new MCFacing(sideHit);
     }
 }

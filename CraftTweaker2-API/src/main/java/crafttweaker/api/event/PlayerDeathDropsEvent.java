@@ -24,6 +24,7 @@ public interface PlayerDeathDropsEvent extends IPlayerEvent {
     @ZenMethod
     void addItem(IItemStack item);
     
+    @ZenMethod
     void addItem(IEntityItem entityItem);
     
     @ZenGetter("damageSource")

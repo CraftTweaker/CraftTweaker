@@ -12,5 +12,5 @@ import stanhebben.zenscript.annotations.*;
 public interface PlayerInteractEntityEvent extends IEventCancelable, IPlayerEvent {
     
     @ZenGetter("entity")
-    public IEntity getEntity();
+    IEntity getEntity();
 }

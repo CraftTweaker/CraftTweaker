@@ -25,5 +25,6 @@ public interface PlayerUseHoeEvent extends IEventCancelable, IPlayerEvent, IProc
     @ZenGetter("block")
     IBlock getBlock();
     
+    @ZenGetter("blockState")
     IBlockState getBlockState();
 }

@@ -1,4 +1,4 @@
-package crafttweaker.api.block;
+package crafttweaker.api.world;
 
 
 import crafttweaker.annotations.ZenRegister;
@@ -6,7 +6,7 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
-@ZenClass("crafttweaker.block.IRayTraceResult")
+@ZenClass("crafttweaker.world.IRayTraceResult")
 @ZenRegister
 public interface IRayTraceResult {
     
@@ -16,7 +16,7 @@ public interface IRayTraceResult {
     @ZenGetter
     boolean isEntity();
     
-    @ZenGetter("isBlock")
+    @ZenGetter
     boolean isBlock();
     
     @ZenGetter("entity")
@@ -30,3 +30,5 @@ public interface IRayTraceResult {
     
     Object getInternal();
 }
+
+
