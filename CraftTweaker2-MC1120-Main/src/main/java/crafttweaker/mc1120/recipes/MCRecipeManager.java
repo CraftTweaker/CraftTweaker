@@ -276,19 +276,35 @@ public final class MCRecipeManager implements IRecipeManager {
 
         @Override
         public void apply() {
+            toChange = getAllForIngredient(toReplace);
+            toRemove = toChange.stream().map(f->new ResourceLocation(f.getFullResourceName())).collect(Collectors.toList());
             removeRecipes(toRemove);
             changeIngredients(toChange);
         }
 
         @Override
+        public void removeRecipes(List<ResourceLocation> removingRecipes) {
+            List<ActionBaseAddRecipe> toUnAdd = new ArrayList<>();
+            removingRecipes.forEach(recipe -> {
+                RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe);
+                recipesToAdd.stream().filter(f -> f instanceof ActionDummyAddRecipe).filter(f -> f.recipe.getRegistryName().equals(recipe)).forEach(f -> toUnAdd.add(f));
+            });
+            toUnAdd.stream().forEach(f -> {
+                        recipesToAdd.remove(f);
+                        if (usedRecipeNames.contains(f.getName())) {
+                            usedRecipeNames.remove(f.getName());
+                        }
+                    }
+            );
+        }
+
+        @Override
         public String describe() {
-            return "Removing all occurences of ingredient: " + toReplace+ "and replacing them with " + replaceWith + " in " + toChange.size() + " recipe(s)" ;
+            return "Removing all occurences of ingredient: " + toReplace+ "and replacing them with " + replaceWith;
         }
         public ActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith) {
             this.toReplace = toReplace;
             this.replaceWith = replaceWith;
-            toChange = getAllForIngredient(toReplace);
-            toRemove = toChange.stream().map(f->new ResourceLocation(f.getFullResourceName())).collect(Collectors.toList());
         }
 
         private void changeIngredients(List<MCRecipeBase> toChange){
@@ -302,8 +318,10 @@ public final class MCRecipeManager implements IRecipeManager {
                                 targRow[i] = replaceWith;
                         }
                     }
-                    String proposedName = recipe.getRegistryName().getResourceDomain()+"-"+recipe.getName()+"-modified";
-                    MCRecipeManager.recipesToAdd.add(new ActionAddShapedRecipe(proposedName,recipe.output,ingredients,recipe.recipeFunction,recipe.recipeAction,false,recipe.hidden));
+
+                    MCRecipeShaped newRecipe = new MCRecipeShaped(ingredients,recipe.getOutput(),recipe.recipeFunction,recipe.getRecipeAction(),false,recipe.hidden);
+                    registerNewRecipe(newRecipe, getNewRecipeName(recipe));
+
                 }
                 else
                 {
@@ -315,11 +333,26 @@ public final class MCRecipeManager implements IRecipeManager {
                             ingredients[i] =replaceWith;
                         }
                     }
-                    String proposedName = recipe.getRegistryName().getResourceDomain()+"-"+recipe.getName()+"-modified";
-                    MCRecipeManager.recipesToAdd.add( new ActionAddShapelessRecipe( proposedName, recipe.getOutput(),ingredients,recipe.recipeFunction,recipe.getRecipeAction(),recipe.hidden));
+                    MCRecipeShapeless newRecipe = new MCRecipeShapeless(ingredients,recipe.output,recipe.recipeFunction,recipe.recipeAction,recipe.hidden);
+                    registerNewRecipe(newRecipe, getNewRecipeName(recipe));
                 }
             }
 
+        }
+        private void registerNewRecipe(MCRecipeBase newRecipe, String name){
+            ActionDummyAddRecipe dummyRecipe = new ActionDummyAddRecipe(newRecipe,newRecipe.output,true);
+            dummyRecipe.setName(name);
+            MCRecipeManager.recipesToAdd.add( dummyRecipe);
+            ForgeRegistries.RECIPES.register(newRecipe);
+        }
+
+        private String getNewRecipeName(MCRecipeBase recipe){
+            if (recipe.getName().contains("modified")){
+                //This should keep adding re in front of a modified recipe every time it's modified.
+                //If you wind up with rererereremodified recipes, you're doing something wrong.  Stop it.
+                return recipe.getName().replace("modified","remodified");
+            }
+            return recipe.getRegistryName().getResourceDomain()+"-"+recipe.getName()+"-modified";
         }
 
         private List<MCRecipeBase> getAllForIngredient(IIngredient target) {
@@ -800,6 +833,26 @@ public final class MCRecipeManager implements IRecipeManager {
         
         public MCRecipeBase getRecipe() {
             return recipe;
+        }
+    }
+
+    public static class ActionDummyAddRecipe extends ActionBaseAddRecipe {
+        //This whole class is a dirty hack.
+        //It exists only to hold information for the CraftTweaker JEI plugin.
+        @Override
+        public void apply() {
+            //Our work was done elsehwere, apply is a noop.
+        }
+
+        public ActionDummyAddRecipe(MCRecipeBase recipe, IItemStack output, boolean isShaped) {
+            super(recipe, output, isShaped);
+        }
+
+        @Override
+        protected void setName(String name) {
+            super.setName(name);
+            //This is necessary to allow recipe name progression if we repeatedly modify a recipe.
+            recipe.setRegistryName(new ResourceLocation("crafttweaker",this.name));
         }
     }
     
