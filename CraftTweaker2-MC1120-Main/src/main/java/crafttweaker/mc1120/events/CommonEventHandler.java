@@ -23,7 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -79,7 +80,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerPickupItem())
-        CrafttweakerImplementationAPI.events.publishPlayerPickupItem(new MCPlayerPickupItemEvent(ev));
+            CrafttweakerImplementationAPI.events.publishPlayerPickupItem(new MCPlayerPickupItemEvent(ev));
     }
     
     @SubscribeEvent
@@ -120,10 +121,14 @@ public class CommonEventHandler {
     
     @SubscribeEvent
     public void onPlayerInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent ev) {
-        if(CrafttweakerImplementationAPI.events.hasPlayerInteract()) {
-            MCPlayerInteractEvent event = new MCPlayerInteractEvent(ev);
-            CrafttweakerImplementationAPI.events.publishPlayerInteract(event);
-        }
+        if(CrafttweakerImplementationAPI.events.hasPlayerInteract())
+            CrafttweakerImplementationAPI.events.publishPlayerInteract(new MCPlayerInteractEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerInteractEntity())
+            CrafttweakerImplementationAPI.events.publishPlayerInteractEntity(new MCPlayerInteractEntityEvent(ev));
     }
     
     @SubscribeEvent
@@ -219,5 +224,60 @@ public class CommonEventHandler {
             for(IItemStack ingredient : ingredients)
                 if(ingredient.matches(CraftTweakerMC.getIItemStack(ev.getOre())))
                     OreDictionary.getOres(ev.getName()).remove(ev.getOre());
+    }
+    
+    @SubscribeEvent
+    public void onPlayerPickupXp(PlayerPickupXpEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerPickupXp())
+            CrafttweakerImplementationAPI.events.publishPlayerPickupXp(new MCPlayerPickupXpEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onLivingEntityUseItemStartEvent(LivingEntityUseItemEvent.Start ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityLivingUseItemStart()) {
+            CrafttweakerImplementationAPI.events.publishEntityLivingUseItemStart(new MCLivingEntityUseItemEvent.MCEntityUseItemStartEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onLivingEntityUseItemStopEvent(LivingEntityUseItemEvent.Stop ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityLivingUseItemStop()) {
+            CrafttweakerImplementationAPI.events.publishEntityLivingUseItemStop(new MCLivingEntityUseItemEvent.MCEntityUseItemStopEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onLivingEntityUseItemTickEvent(LivingEntityUseItemEvent.Tick ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityLivingUseItemTick()) {
+            CrafttweakerImplementationAPI.events.publishEntityLivingUseItemTick(new MCLivingEntityUseItemEvent.MCEntityUseItemTickEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onLivingEntityUseItemFinishEvent(LivingEntityUseItemEvent.Finish ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityLivingUseItemFinish()) {
+            CrafttweakerImplementationAPI.events.publishEntityLivingUseItemFinish(new MCLivingEntityUseItemEvent.MCEntityUseItemFinishEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onPlayerAttackEntityEvent(AttackEntityEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerAttackEntity()) {
+            CrafttweakerImplementationAPI.events.publishPlayerAttackEntity(new MCPlayerAttackEntityEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onEntityStruckByLightningEvent(EntityStruckByLightningEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasEntityStruckByLightning()) {
+            CrafttweakerImplementationAPI.events.publishEntityStruckByLightning(new MCEntityStruckByLightningEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onEnderTeleportEvent(EnderTeleportEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasEnderTeleport()) {
+            CrafttweakerImplementationAPI.events.publishEnderTeleport(new MCEnderTeleportEvent(ev));
+        }
     }
 }

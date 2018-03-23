@@ -2,7 +2,6 @@ package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.event.PlayerLoggedOutEvent;
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.ZenGetter;
 
 /**
  * @author Stan

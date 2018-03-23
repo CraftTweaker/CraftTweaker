@@ -32,11 +32,6 @@ public class MCPlayerBonemealEvent implements PlayerBonemealEvent {
     }
     
     @Override
-    public IPlayer getPlayer() {
-        return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
-    }
-    
-    @Override
     public IWorld getWorld() {
         return CraftTweakerMC.getIWorld(event.getWorld());
     }
@@ -74,5 +69,10 @@ public class MCPlayerBonemealEvent implements PlayerBonemealEvent {
     @Override
     public void setCanceled(boolean canceled) {
         event.setCanceled(canceled);
+    }
+    
+    @Override
+    public IPlayer getPlayer() {
+        return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
     }
 }

@@ -803,4 +803,8 @@ public class CraftTweakerMC {
     public static IFacing getIFacing(EnumFacing sideHit) {
         return sideHit == null ? null : new MCFacing(sideHit);
     }
+    
+    public static CreativeTabs getCreativeTabs(ICreativeTab tab) {
+        return tab == null ? null : (CreativeTabs) tab.getInternal();
+    }
 }

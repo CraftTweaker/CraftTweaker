@@ -25,6 +25,6 @@ public interface PlayerBonemealEvent extends IEventCancelable, IPlayerEvent, IPr
     @ZenGetter("dimension")
     int getDimension();
     
-    @ZenSetter("item")
+    @ZenGetter("item")
     IItemStack getItem();
 }

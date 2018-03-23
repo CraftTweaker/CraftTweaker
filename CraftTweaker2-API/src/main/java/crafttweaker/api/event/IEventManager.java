@@ -33,14 +33,14 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
     
     @ZenMethod
     IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev);
-    
-    IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev);
     
     @ZenMethod
     IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
@@ -57,6 +57,7 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev);
     
     @ZenMethod
@@ -65,16 +66,25 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
     
-    IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev);
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemStart(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStartEvent> ev);
     
-    IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev);
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemStop(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStopEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemTick(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemTickEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemFinish(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityStruckByLightning(IEventHandler<EntityStruckByLightningEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEnderTeleport(IEventHandler<EnderTeleportEvent> ev);
     
     /*
-     * IEventHandle
-     * onPlayerUseItemStop(IEventHandler<PlayerUseItemStopEvent> ev);
-     *
-     * IEventHandle
-     * onPlayerUseItemFinish(IPlayerUserItemFinishEventHandler ev);
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
      *
@@ -84,11 +94,9 @@ public interface IEventManager {
      *
      * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
      *
-     * IEventHandle
-     * onEntityStruckByLightning(IEntityStruckByLightningEventHandler ev);
      *
-     * IEventHandle
-     * onLivingEnderTeleport(ILivingEnderTeleportEventHandler ev);
+     *
+     * IEventHandle onLivingEnderTeleport(ILivingEnderTeleportEventHandler ev);
      *
      * IEventHandle onLivingAttackEvent(ILivingAttackEventHandler ev);
      *

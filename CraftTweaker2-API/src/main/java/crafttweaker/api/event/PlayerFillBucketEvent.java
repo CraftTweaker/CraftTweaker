@@ -34,6 +34,9 @@ public interface PlayerFillBucketEvent extends IEventCancelable, IPlayerEvent, I
     @ZenGetter("block")
     IBlock getBlock();
     
+    @ZenGetter("blockState")
+    IBlockState getBlockState();
+    
     @ZenGetter("dimension")
     int getDimension();
     

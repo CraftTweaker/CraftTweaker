@@ -1,10 +1,8 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.event.PlayerSmeltedEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.*;
 
 /**
  * @author Stan

@@ -11,8 +11,8 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public interface PlayerPickupXpEvent extends IEventCancelable, IPlayerEvent {
     
-    @ZenGetter("entity")
-    IEntityXp getEntity();
+    @ZenGetter("entityXp")
+    IEntityXp getEntityXp();
     
     @ZenGetter("xp")
     float getXp();

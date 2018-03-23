@@ -43,11 +43,6 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     }
     
     @Override
-    public IPlayer getPlayer() {
-        return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
-    }
-    
-    @Override
     public IWorld getWorld() {
         return CraftTweakerMC.getIWorld(event.getWorld());
     }
@@ -58,6 +53,7 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
         return blockState == null ? null : blockState.getBlock();
     }
     
+    @Override
     public IBlockState getBlockState() {
         RayTraceResult target = event.getTarget();
         return target == null ? null : CraftTweakerMC.getBlockState(event.getWorld().getBlockState(target.getBlockPos()));
@@ -97,5 +93,10 @@ public class MCPlayerFillBucketEvent implements PlayerFillBucketEvent {
     @Override
     public boolean isProcessed() {
         return event.getResult() == Event.Result.ALLOW;
+    }
+    
+    @Override
+    public IPlayer getPlayer() {
+        return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
     }
 }

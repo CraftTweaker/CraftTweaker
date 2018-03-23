@@ -16,7 +16,7 @@ public class MCPlayerCraftedEvent implements PlayerCraftedEvent {
     private final PlayerEvent.ItemCraftedEvent event;
     
     public MCPlayerCraftedEvent(PlayerEvent.ItemCraftedEvent event) {
-        
+    
         this.event = event;
     }
     

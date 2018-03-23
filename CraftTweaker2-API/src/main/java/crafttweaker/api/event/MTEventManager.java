@@ -16,9 +16,10 @@ public class MTEventManager implements IEventManager {
     private final EventList<PlayerPickupXpEvent> elPlayerPickupXp = new EventList<>();
     private final EventList<PlayerSleepInBedEvent> elPlayerSleepInBed = new EventList<>();
     private final EventList<PlayerUseHoeEvent> elPlayerUseHoe = new EventList<>();
-    private final EventList<PlayerUseItemStartEvent> elPlayerUseItemStart = new EventList<>();
-    private final EventList<PlayerUseItemTickEvent> elPlayerUseItemTick = new EventList<>();
-    private final EventList<PlayerPickupEvent> elPlayerPickup = new EventList<>();
+    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemStartEvent> elEntityLivingUseItemStart = new EventList<>();
+    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemStopEvent> elEntityLivingUseItemStop = new EventList<>();
+    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemTickEvent> elEntityLivingUseItemTick = new EventList<>();
+    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent> elEntityLivingUseItemFinish = new EventList<>();
     private final EventList<PlayerPickupItemEvent> elPlayerPickupItem = new EventList<>();
     private final EventList<PlayerFillBucketEvent> elPlayerFillBucket = new EventList<>();
     private final EventList<PlayerDeathDropsEvent> elPlayerDeathDrops = new EventList<>();
@@ -30,31 +31,37 @@ public class MTEventManager implements IEventManager {
     private final EventList<PlayerChangedDimensionEvent> elPlayerChangedDimension = new EventList<>();
     private final EventList<PlayerLoggedInEvent> elPlayerLoggedIn = new EventList<>();
     private final EventList<PlayerLoggedOutEvent> elPlayerLoggedOut = new EventList<>();
+    private final EventList<EntityStruckByLightningEvent> elEntityStruckByLightning = new EventList<>();
+    private final EventList<EnderTeleportEvent> elEnderTeleport = new EventList<>();
     
     /**
      * Clears all EventLists
      */
     public void clear() {
         elPlayerCrafted.clear();
-        elPlayerSmelted.clear();
-        elPlayerChangedDimension.clear();
-        elPlayerLoggedIn.clear();
-        elPlayerLoggedOut.clear();
-        elPlayerRespawn.clear();
-        elPlayerAttackEntity.clear();
-        elPlayerBonemeal.clear();
-        elPlayerInteractEntity.clear();
-        elPlayerPickup.clear();
-        elPlayerPickupItem.clear();
-        elPlayerFillBucket.clear();
-        elPlayerDeathDrops.clear();
+        elPlayerCrafted.clear();
         elPlayerInteract.clear();
         elPlayerOpenContainer.clear();
         elPlayerPickupXp.clear();
         elPlayerSleepInBed.clear();
         elPlayerUseHoe.clear();
-        elPlayerUseItemStart.clear();
-        elPlayerUseItemTick.clear();
+        elEntityLivingUseItemStart.clear();
+        elEntityLivingUseItemStop.clear();
+        elEntityLivingUseItemTick.clear();
+        elEntityLivingUseItemFinish.clear();
+        elPlayerPickupItem.clear();
+        elPlayerFillBucket.clear();
+        elPlayerDeathDrops.clear();
+        elPlayerRespawn.clear();
+        elPlayerAttackEntity.clear();
+        elPlayerBonemeal.clear();
+        elPlayerInteractEntity.clear();
+        elPlayerSmelted.clear();
+        elPlayerChangedDimension.clear();
+        elPlayerLoggedIn.clear();
+        elPlayerLoggedOut.clear();
+        elEntityStruckByLightning.clear();
+        elEnderTeleport.clear();
     }
     
     
@@ -219,24 +226,6 @@ public class MTEventManager implements IEventManager {
     }
     
     
-    // #########################
-    // ### PlayerPickupEvent ###
-    // #########################
-    
-    @Override
-    public IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev) {
-        return elPlayerPickup.add(ev);
-    }
-    
-    public boolean hasPlayerPickup() {
-        return elPlayerPickup.hasHandlers();
-    }
-    
-    public void publishPlayerPickup(PlayerPickupEvent event) {
-        elPlayerPickup.publish(event);
-    }
-    
-    
     // #############################
     // ### PlayerPickupItemEvent ###
     // #############################
@@ -341,7 +330,7 @@ public class MTEventManager implements IEventManager {
         return elPlayerPickupXp.hasHandlers();
     }
     
-    public void publishPlayerPickup(PlayerPickupXpEvent event) {
+    public void publishPlayerPickupXp(PlayerPickupXpEvent event) {
         elPlayerPickupXp.publish(event);
     }
     
@@ -387,33 +376,105 @@ public class MTEventManager implements IEventManager {
     // ###############################
     
     @Override
-    public IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev) {
-        return elPlayerUseItemStart.add(ev);
+    public IEventHandle onEntityLivingUseItemStart(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStartEvent> ev) {
+        return elEntityLivingUseItemStart.add(ev);
     }
     
-    public boolean hasPlayerUseItemStart() {
-        return elPlayerUseItemStart.hasHandlers();
+    public boolean hasEntityLivingUseItemStart() {
+        return elEntityLivingUseItemStart.hasHandlers();
     }
     
-    public void publishPlayerUseItemStart(PlayerUseItemStartEvent event) {
-        elPlayerUseItemStart.publish(event);
+    public void publishEntityLivingUseItemStart(LivingEntityUseItemEvent.LivingEntityUseItemStartEvent event) {
+        elEntityLivingUseItemStart.publish(event);
     }
     
     
     // ##############################
-    // ### PlayerUseItemTickEvent ###
+    // ### PlayerUseItemStopEvent ###
     // ##############################
     
     @Override
-    public IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev) {
-        return elPlayerUseItemTick.add(ev);
+    public IEventHandle onEntityLivingUseItemStop(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStopEvent> ev) {
+        return elEntityLivingUseItemStop.add(ev);
     }
     
-    public boolean hasPlayerUseItemTick() {
-        return elPlayerUseItemTick.hasHandlers();
+    public boolean hasEntityLivingUseItemStop() {
+        return elEntityLivingUseItemStop.hasHandlers();
     }
     
-    public void publishPlayerUseItemTick(PlayerUseItemTickEvent event) {
-        elPlayerUseItemTick.publish(event);
+    public void publishEntityLivingUseItemStop(LivingEntityUseItemEvent.LivingEntityUseItemStopEvent event) {
+        elEntityLivingUseItemStop.publish(event);
+    }
+    
+    
+    // ###############################
+    // ### PlayerUseItemStartEvent ###
+    // ###############################
+    
+    @Override
+    public IEventHandle onEntityLivingUseItemTick(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemTickEvent> ev) {
+        return elEntityLivingUseItemTick.add(ev);
+    }
+    
+    public boolean hasEntityLivingUseItemTick() {
+        return elEntityLivingUseItemTick.hasHandlers();
+    }
+    
+    public void publishEntityLivingUseItemTick(LivingEntityUseItemEvent.LivingEntityUseItemTickEvent event) {
+        elEntityLivingUseItemTick.publish(event);
+    }
+    
+    
+    // ################################
+    // ### PlayerUseItemFinishEvent ###
+    // ################################
+    
+    @Override
+    public IEventHandle onEntityLivingUseItemFinish(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent> ev) {
+        return elEntityLivingUseItemFinish.add(ev);
+    }
+    
+    public boolean hasEntityLivingUseItemFinish() {
+        return elEntityLivingUseItemFinish.hasHandlers();
+    }
+    
+    public void publishEntityLivingUseItemFinish(LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent event) {
+        elEntityLivingUseItemFinish.publish(event);
+    }
+    
+    
+    // ###############################
+    // ### EntityStruckByLightning ###
+    // ###############################
+    
+    @Override
+    public IEventHandle onEntityStruckByLightning(IEventHandler<EntityStruckByLightningEvent> ev) {
+        return elEntityStruckByLightning.add(ev);
+    }
+    
+    public boolean hasEntityStruckByLightning() {
+        return elEntityStruckByLightning.hasHandlers();
+    }
+    
+    public void publishEntityStruckByLightning(EntityStruckByLightningEvent event) {
+        elEntityStruckByLightning.publish(event);
+    }
+    
+    
+    // ###############################
+    // ### EntityStruckByLightning ###
+    // ###############################
+    
+    @Override
+    public IEventHandle onEnderTeleport(IEventHandler<EnderTeleportEvent> ev) {
+        return elEnderTeleport.add(ev);
+    }
+    
+    public boolean hasEnderTeleport() {
+        return elEnderTeleport.hasHandlers();
+    }
+    
+    public void publishEnderTeleport(EnderTeleportEvent event) {
+        elEnderTeleport.publish(event);
     }
 }
