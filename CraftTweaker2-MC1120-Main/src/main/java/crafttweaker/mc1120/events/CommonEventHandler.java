@@ -13,6 +13,7 @@ import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.events.handling.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
+import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.recipes.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 
@@ -208,5 +210,14 @@ public class CommonEventHandler {
     public void onUseHoe(UseHoeEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerUseHoe())
             CrafttweakerImplementationAPI.events.publishPlayerUseHoe(new MCPlayerUseHoeEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onOreDictEvent(OreDictionary.OreRegisterEvent ev) {
+        List<IItemStack> ingredients = MCOreDictEntry.REMOVED_CONTENTS.get(ev.getName());
+        if(ingredients != null)
+            for(IItemStack ingredient : ingredients)
+                if(ingredient.matches(CraftTweakerMC.getIItemStack(ev.getOre())))
+                    OreDictionary.getOres(ev.getName()).remove(ev.getOre());
     }
 }
