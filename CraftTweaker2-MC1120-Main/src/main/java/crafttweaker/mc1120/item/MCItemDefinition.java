@@ -81,7 +81,7 @@ public class MCItemDefinition implements IItemDefinition {
     
     @Override
     public void setCreativeTab(ICreativeTab tab) {
-        item.setCreativeTab((CreativeTabs) tab.getInternal());
+        item.setCreativeTab(CraftTweakerMC.getCreativeTabs(tab));
     }
     
     @Override
