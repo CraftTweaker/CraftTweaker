@@ -60,7 +60,7 @@ public class ScriptFile {
     public String getEffectiveName(){
         if (script instanceof ScriptIteratorZip) {
             ScriptIteratorZip scriptIterator = (ScriptIteratorZip) script;
-            return getGroupName() + "\\" + scriptIterator.getCurrentName().replace('/', '\\');
+            return getGroupName() + File.separator + scriptIterator.getCurrentName().replace('/', File.separatorChar);
         }else {
             return getGroupName();
         }
