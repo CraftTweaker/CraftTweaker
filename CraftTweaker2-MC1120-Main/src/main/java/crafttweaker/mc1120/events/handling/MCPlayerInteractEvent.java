@@ -15,7 +15,6 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     
     public MCPlayerInteractEvent(net.minecraftforge.event.entity.player.PlayerInteractEvent event) {
         this.event = event;
-        
     }
     
     @Override

@@ -16,10 +16,11 @@ public class MTEventManager implements IEventManager {
     private final EventList<PlayerPickupXpEvent> elPlayerPickupXp = new EventList<>();
     private final EventList<PlayerSleepInBedEvent> elPlayerSleepInBed = new EventList<>();
     private final EventList<PlayerUseHoeEvent> elPlayerUseHoe = new EventList<>();
-    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemStartEvent> elEntityLivingUseItemStart = new EventList<>();
-    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemStopEvent> elEntityLivingUseItemStop = new EventList<>();
-    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemTickEvent> elEntityLivingUseItemTick = new EventList<>();
-    private final EventList<LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent> elEntityLivingUseItemFinish = new EventList<>();
+    private final EventList<EntityLivingUseItemEvent.Start> elEntityLivingUseItemStart = new EventList<>();
+    private final EventList<EntityLivingUseItemEvent.Stop> elEntityLivingUseItemStop = new EventList<>();
+    private final EventList<EntityLivingUseItemEvent.Tick> elEntityLivingUseItemTick = new EventList<>();
+    private final EventList<EntityLivingUseItemEvent.Finish> elEntityLivingUseItemFinish = new EventList<>();
+    private final EventList<EntityLivingUseItemEvent> elEntityLivingUseItem = new EventList<>();
     private final EventList<PlayerPickupItemEvent> elPlayerPickupItem = new EventList<>();
     private final EventList<PlayerFillBucketEvent> elPlayerFillBucket = new EventList<>();
     private final EventList<PlayerDeathDropsEvent> elPlayerDeathDrops = new EventList<>();
@@ -33,6 +34,15 @@ public class MTEventManager implements IEventManager {
     private final EventList<PlayerLoggedOutEvent> elPlayerLoggedOut = new EventList<>();
     private final EventList<EntityStruckByLightningEvent> elEntityStruckByLightning = new EventList<>();
     private final EventList<EnderTeleportEvent> elEnderTeleport = new EventList<>();
+    private final EventList<EntityLivingAttackedEvent> elEntityLivingAttacked = new EventList<>();
+    private final EventList<EntityLivingDeathEvent> elEntityLivingDeath = new EventList<>();
+    private final EventList<EntityLivingFallEvent> elEntityLivingFall = new EventList<>();
+    private final EventList<EntityLivingHurtEvent> elEntityLivingHurt = new EventList<>();
+    private final EventList<EntityLivingJumpEvent> elEntityLivingJump = new EventList<>();
+    private final EventList<EntityLivingDeathDropsEvent> elEntityLivingDeathDrops = new EventList<>();
+    private final EventList<ItemExpireEvent> elItemExpire = new EventList<>();
+    private final EventList<ItemTossEvent> elItemToss = new EventList<>();
+    
     
     /**
      * Clears all EventLists
@@ -49,6 +59,7 @@ public class MTEventManager implements IEventManager {
         elEntityLivingUseItemStop.clear();
         elEntityLivingUseItemTick.clear();
         elEntityLivingUseItemFinish.clear();
+        elEntityLivingUseItem.clear();
         elPlayerPickupItem.clear();
         elPlayerFillBucket.clear();
         elPlayerDeathDrops.clear();
@@ -62,12 +73,20 @@ public class MTEventManager implements IEventManager {
         elPlayerLoggedOut.clear();
         elEntityStruckByLightning.clear();
         elEnderTeleport.clear();
+        elEntityLivingAttacked.clear();
+        elEntityLivingDeath.clear();
+        elEntityLivingFall.clear();
+        elEntityLivingHurt.clear();
+        elEntityLivingJump.clear();
+        elEntityLivingDeathDrops.clear();
+        elItemExpire.clear();
+        elItemToss.clear();
     }
-    
     
     // ##########################
     // ### PlayerCraftedEvent ###
     // ##########################
+    
     
     @Override
     public IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev) {
@@ -82,10 +101,10 @@ public class MTEventManager implements IEventManager {
         elPlayerCrafted.publish(event);
     }
     
-    
     // ##########################
     // ### PlayerSmeltedEvent ###
     // ##########################
+    
     
     @Override
     public IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev) {
@@ -100,10 +119,10 @@ public class MTEventManager implements IEventManager {
         elPlayerSmelted.publish(event);
     }
     
-    
     // ###################################
     // ### PlayerChangedDimensionEvent ###
     // ###################################
+    
     
     @Override
     public IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev) {
@@ -118,10 +137,10 @@ public class MTEventManager implements IEventManager {
         elPlayerChangedDimension.publish(event);
     }
     
-    
     // ###########################
     // ### PlayerLoggedInEvent ###
     // ###########################
+    
     
     @Override
     public IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev) {
@@ -136,10 +155,10 @@ public class MTEventManager implements IEventManager {
         elPlayerLoggedIn.publish(event);
     }
     
-    
     // ############################
     // ### PlayerLoggedOutEvent ###
     // ############################
+    
     
     public IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev) {
         return elPlayerLoggedOut.add(ev);
@@ -153,10 +172,10 @@ public class MTEventManager implements IEventManager {
         elPlayerLoggedOut.publish(event);
     }
     
-    
     // ##########################
     // ### PlayerRespawnEvent ###
     // ##########################
+    
     
     @Override
     public IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev) {
@@ -171,10 +190,10 @@ public class MTEventManager implements IEventManager {
         elPlayerRespawn.publish(event);
     }
     
-    
     // ###############################
     // ### PlayerAttackEntityEvent ###
     // ###############################
+    
     
     @Override
     public IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev) {
@@ -189,10 +208,10 @@ public class MTEventManager implements IEventManager {
         elPlayerAttackEntity.publish(event);
     }
     
-    
     // ###########################
     // ### PlayerBonemealEvent ###
     // ###########################
+    
     
     @Override
     public IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev) {
@@ -207,10 +226,10 @@ public class MTEventManager implements IEventManager {
         elPlayerBonemeal.publish(event);
     }
     
-    
     // #################################
     // ### PlayerInteractEntityEvent ###
     // #################################
+    
     
     @Override
     public IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev) {
@@ -225,10 +244,10 @@ public class MTEventManager implements IEventManager {
         elPlayerInteractEntity.publish(event);
     }
     
-    
     // #############################
     // ### PlayerPickupItemEvent ###
     // #############################
+    
     
     @Override
     public IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev) {
@@ -243,10 +262,10 @@ public class MTEventManager implements IEventManager {
         elPlayerPickupItem.publish(event);
     }
     
-    
     // #############################
     // ### PlayerFillBucketEvent ###
     // #############################
+    
     
     @Override
     public IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev) {
@@ -261,10 +280,10 @@ public class MTEventManager implements IEventManager {
         elPlayerFillBucket.publish(event);
     }
     
-    
     // #############################
     // ### PlayerDeathDropsEvent ###
     // #############################
+    
     
     @Override
     public IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev) {
@@ -279,10 +298,10 @@ public class MTEventManager implements IEventManager {
         elPlayerDeathDrops.publish(event);
     }
     
-    
     // ###########################
     // ### PlayerInteractEvent ###
     // ###########################
+    
     
     @Override
     public IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev) {
@@ -297,10 +316,10 @@ public class MTEventManager implements IEventManager {
         elPlayerInteract.publish(event);
     }
     
-    
     // ################################
     // ### PlayerOpenContainerEvent ###
     // ################################
+    
     
     @Override
     public IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev) {
@@ -314,7 +333,6 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerOpenContainer(PlayerOpenContainerEvent event) {
         elPlayerOpenContainer.publish(event);
     }
-    
     
     // ###########################
     // ### PlayerPickupXpEvent ###
@@ -334,10 +352,10 @@ public class MTEventManager implements IEventManager {
         elPlayerPickupXp.publish(event);
     }
     
-    
     // #############################
     // ### PlayerSleepInBedEvent ###
     // #############################
+    
     
     @Override
     public IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev) {
@@ -352,10 +370,10 @@ public class MTEventManager implements IEventManager {
         elPlayerSleepInBed.publish(event);
     }
     
-    
     // #########################
     // ### PlayerUseHoeEvent ###
     // #########################
+    
     
     @Override
     public IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev) {
@@ -370,13 +388,31 @@ public class MTEventManager implements IEventManager {
         elPlayerUseHoe.publish(event);
     }
     
+    // ###############################
+    // ### EntityUseItemStartEvent ###
+    // ###############################
     
-    // ###############################
-    // ### PlayerUseItemStartEvent ###
-    // ###############################
     
     @Override
-    public IEventHandle onEntityLivingUseItemStart(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStartEvent> ev) {
+    public IEventHandle onEntityLivingUseItem(IEventHandler<EntityLivingUseItemEvent> ev) {
+        return elEntityLivingUseItem.add(ev);
+    }
+    
+    public boolean hasEntityLivingUseItem() {
+        return elEntityLivingUseItem.hasHandlers();
+    }
+    
+    public void publishEntityLivingUseItem(EntityLivingUseItemEvent event) {
+        elEntityLivingUseItem.publish(event);
+    }
+    
+    // ###############################
+    // ### EntityUseItemStartEvent ###
+    // ###############################
+    
+    
+    @Override
+    public IEventHandle onEntityLivingUseItemStart(IEventHandler<EntityLivingUseItemEvent.Start> ev) {
         return elEntityLivingUseItemStart.add(ev);
     }
     
@@ -384,17 +420,17 @@ public class MTEventManager implements IEventManager {
         return elEntityLivingUseItemStart.hasHandlers();
     }
     
-    public void publishEntityLivingUseItemStart(LivingEntityUseItemEvent.LivingEntityUseItemStartEvent event) {
+    public void publishEntityLivingUseItemStart(EntityLivingUseItemEvent.Start event) {
         elEntityLivingUseItemStart.publish(event);
     }
     
+    // ##############################
+    // ### EntityUseItemStopEvent ###
+    // ##############################
     
-    // ##############################
-    // ### PlayerUseItemStopEvent ###
-    // ##############################
     
     @Override
-    public IEventHandle onEntityLivingUseItemStop(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStopEvent> ev) {
+    public IEventHandle onEntityLivingUseItemStop(IEventHandler<EntityLivingUseItemEvent.Stop> ev) {
         return elEntityLivingUseItemStop.add(ev);
     }
     
@@ -402,17 +438,17 @@ public class MTEventManager implements IEventManager {
         return elEntityLivingUseItemStop.hasHandlers();
     }
     
-    public void publishEntityLivingUseItemStop(LivingEntityUseItemEvent.LivingEntityUseItemStopEvent event) {
+    public void publishEntityLivingUseItemStop(EntityLivingUseItemEvent.Stop event) {
         elEntityLivingUseItemStop.publish(event);
     }
     
+    // ###############################
+    // ### EntityUseItemStartEvent ###
+    // ###############################
     
-    // ###############################
-    // ### PlayerUseItemStartEvent ###
-    // ###############################
     
     @Override
-    public IEventHandle onEntityLivingUseItemTick(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemTickEvent> ev) {
+    public IEventHandle onEntityLivingUseItemTick(IEventHandler<EntityLivingUseItemEvent.Tick> ev) {
         return elEntityLivingUseItemTick.add(ev);
     }
     
@@ -420,17 +456,17 @@ public class MTEventManager implements IEventManager {
         return elEntityLivingUseItemTick.hasHandlers();
     }
     
-    public void publishEntityLivingUseItemTick(LivingEntityUseItemEvent.LivingEntityUseItemTickEvent event) {
+    public void publishEntityLivingUseItemTick(EntityLivingUseItemEvent.Tick event) {
         elEntityLivingUseItemTick.publish(event);
     }
     
+    // ################################
+    // ### EntityUseItemFinishEvent ###
+    // ################################
     
-    // ################################
-    // ### PlayerUseItemFinishEvent ###
-    // ################################
     
     @Override
-    public IEventHandle onEntityLivingUseItemFinish(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent> ev) {
+    public IEventHandle onEntityLivingUseItemFinish(IEventHandler<EntityLivingUseItemEvent.Finish> ev) {
         return elEntityLivingUseItemFinish.add(ev);
     }
     
@@ -438,7 +474,7 @@ public class MTEventManager implements IEventManager {
         return elEntityLivingUseItemFinish.hasHandlers();
     }
     
-    public void publishEntityLivingUseItemFinish(LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent event) {
+    public void publishEntityLivingUseItemFinish(EntityLivingUseItemEvent.Finish event) {
         elEntityLivingUseItemFinish.publish(event);
     }
     
@@ -477,4 +513,149 @@ public class MTEventManager implements IEventManager {
     public void publishEnderTeleport(EnderTeleportEvent event) {
         elEnderTeleport.publish(event);
     }
+    
+    
+    // ############################
+    // ### LivingEntityAttacked ###
+    // ############################
+    
+    @Override
+    public IEventHandle onEntityLivingAttacked(IEventHandler<EntityLivingAttackedEvent> ev) {
+        return elEntityLivingAttacked.add(ev);
+    }
+    
+    public boolean hasEntityLivingAttacked() {
+        return elEntityLivingAttacked.hasHandlers();
+    }
+    
+    public void publishEntityLivingAttacked(EntityLivingAttackedEvent event) {
+        elEntityLivingAttacked.publish(event);
+    }
+    
+    
+    // #########################
+    // ### LivingEntityDeath ###
+    // #########################
+    
+    @Override
+    public IEventHandle onEntityLivingDeath(IEventHandler<EntityLivingDeathEvent> ev) {
+        return elEntityLivingDeath.add(ev);
+    }
+    
+    public boolean hasEntityLivingDeath() {
+        return elEntityLivingDeath.hasHandlers();
+    }
+    
+    public void publishEntityLivingDeath(EntityLivingDeathEvent event) {
+        elEntityLivingDeath.publish(event);
+    }
+    
+    
+    // ########################
+    // ### LivingEntityFall ###
+    // ########################
+    
+    @Override
+    public IEventHandle onEntityLivingFall(IEventHandler<EntityLivingFallEvent> ev) {
+        return elEntityLivingFall.add(ev);
+    }
+    
+    public boolean hasEntityLivingFall() {
+        return elEntityLivingFall.hasHandlers();
+    }
+    
+    public void publishEntityLivingFall(EntityLivingFallEvent event) {
+        elEntityLivingFall.publish(event);
+    }
+    
+    
+    // ########################
+    // ### LivingEntityHurt ###
+    // ########################
+    
+    @Override
+    public IEventHandle onEntityLivingHurt(IEventHandler<EntityLivingHurtEvent> ev) {
+        return elEntityLivingHurt.add(ev);
+    }
+    
+    public boolean hasEntityLivingHurt() {
+        return elEntityLivingHurt.hasHandlers();
+    }
+    
+    public void publishEntityLivingHurt(EntityLivingHurtEvent event) {
+        elEntityLivingHurt.publish(event);
+    }
+    
+    
+    // ########################
+    // ### LivingEntityJump ###
+    // ########################
+    
+    @Override
+    public IEventHandle onEntityLivingJump(IEventHandler<EntityLivingJumpEvent> ev) {
+        return elEntityLivingJump.add(ev);
+    }
+    
+    public boolean hasEntityLivingJump() {
+        return elEntityLivingJump.hasHandlers();
+    }
+    
+    public void publishEntityLivingJump(EntityLivingJumpEvent event) {
+        elEntityLivingJump.publish(event);
+    }
+    
+    
+    // ##############################
+    // ### EntityLivingDeathDrops ###
+    // ##############################
+    
+    @Override
+    public IEventHandle onEntityLivingDeathDrops(IEventHandler<EntityLivingDeathDropsEvent> ev) {
+        return elEntityLivingDeathDrops.add(ev);
+    }
+    
+    public boolean hasEntityLivingDeathDrops() {
+        return elEntityLivingDeathDrops.hasHandlers();
+    }
+    
+    public void publishEntityLivingDeathDrops(EntityLivingDeathDropsEvent event) {
+        elEntityLivingDeathDrops.publish(event);
+    }
+    
+    
+    // ##################
+    // ### ItemExpire ###
+    // ##################
+    
+    @Override
+    public IEventHandle onItemExpire(IEventHandler<ItemExpireEvent> ev) {
+        return elItemExpire.add(ev);
+    }
+    
+    public boolean hasItemExpire() {
+        return elItemExpire.hasHandlers();
+    }
+    
+    public void publishItemExpire(ItemExpireEvent event) {
+        elItemExpire.publish(event);
+    }
+    
+    
+    // ################
+    // ### ItemToss ###
+    // ################
+    
+    @Override
+    public IEventHandle onItemToss(IEventHandler<ItemTossEvent> ev) {
+        return elItemToss.add(ev);
+    }
+    
+    public boolean hasItemToss() {
+        return elItemToss.hasHandlers();
+    }
+    
+    public void publishItemToss(ItemTossEvent event) {
+        elItemToss.publish(event);
+    }
+    
 }

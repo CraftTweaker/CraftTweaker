@@ -67,22 +67,49 @@ public interface IEventManager {
     IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
     
     @ZenMethod
-    IEventHandle onEntityLivingUseItemStart(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStartEvent> ev);
+    IEventHandle onEntityLivingUseItem(IEventHandler<EntityLivingUseItemEvent> ev);
     
     @ZenMethod
-    IEventHandle onEntityLivingUseItemStop(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemStopEvent> ev);
+    IEventHandle onEntityLivingUseItemStart(IEventHandler<EntityLivingUseItemEvent.Start> ev);
     
     @ZenMethod
-    IEventHandle onEntityLivingUseItemTick(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemTickEvent> ev);
+    IEventHandle onEntityLivingUseItemStop(IEventHandler<EntityLivingUseItemEvent.Stop> ev);
     
     @ZenMethod
-    IEventHandle onEntityLivingUseItemFinish(IEventHandler<LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent> ev);
+    IEventHandle onEntityLivingUseItemTick(IEventHandler<EntityLivingUseItemEvent.Tick> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemFinish(IEventHandler<EntityLivingUseItemEvent.Finish> ev);
     
     @ZenMethod
     IEventHandle onEntityStruckByLightning(IEventHandler<EntityStruckByLightningEvent> ev);
     
     @ZenMethod
     IEventHandle onEnderTeleport(IEventHandler<EnderTeleportEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingAttacked(IEventHandler<EntityLivingAttackedEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDeath(IEventHandler<EntityLivingDeathEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingFall(IEventHandler<EntityLivingFallEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingHurt(IEventHandler<EntityLivingHurtEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingJump(IEventHandler<EntityLivingJumpEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDeathDrops(IEventHandler<EntityLivingDeathDropsEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onItemExpire(IEventHandler<ItemExpireEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onItemToss(IEventHandler<ItemTossEvent> ev);
     
     /*
      *
@@ -94,29 +121,7 @@ public interface IEventManager {
      *
      * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
      *
-     *
-     *
-     * IEventHandle onLivingEnderTeleport(ILivingEnderTeleportEventHandler ev);
-     *
-     * IEventHandle onLivingAttackEvent(ILivingAttackEventHandler ev);
-     *
-     * IEventHandle onLivingDeathEvent(ILivingDeathEventHandler ev);
-     *
-     * IEventHandle onLivingJumpEvent(ILivingJumpEventHandler ev);
-     *
-     * IEventHandle onLivingFallEvent(ILivingFallEventHandler ev);
-     *
-     * IEventHandle onLivingHurtEvent(ILivingHurtEventHandler ev);
-     *
-     * IEventHandle onLivingDeathDropsEvent(ILivingDeathDropsEventHandler
-     * ev);
-     *
-     * IEventHandle onItemTossed(IItemTossedEventHandler ev);
-     *
-     * IEventHandle onItemExpired(IItemExpiredEventHandler ev);
-     *
-     * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler
-     * ev);
+     * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler ev);
      *
      * IEventHandle onMinecartInteract(IMinecartInteractEventHandler ev);
      *

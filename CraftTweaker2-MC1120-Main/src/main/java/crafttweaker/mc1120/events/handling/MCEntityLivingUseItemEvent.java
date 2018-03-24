@@ -1,17 +1,18 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.event.EntityLivingUseItemEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 
-public class MCLivingEntityUseItemEvent implements crafttweaker.api.event.LivingEntityUseItemEvent {
+public class MCEntityLivingUseItemEvent implements EntityLivingUseItemEvent {
     
     private final LivingEntityUseItemEvent event;
     
-    public MCLivingEntityUseItemEvent(LivingEntityUseItemEvent event) {
+    public MCEntityLivingUseItemEvent(LivingEntityUseItemEvent event) {
         this.event = event;
     }
     
@@ -60,26 +61,26 @@ public class MCLivingEntityUseItemEvent implements crafttweaker.api.event.Living
     // ### Actual classes ###
     // ######################
     
-    public static class MCEntityUseItemStartEvent extends MCLivingEntityUseItemEvent implements crafttweaker.api.event.LivingEntityUseItemEvent.LivingEntityUseItemStartEvent {
-        public MCEntityUseItemStartEvent(LivingEntityUseItemEvent.Start event) {
+    public static class Start extends MCEntityLivingUseItemEvent implements EntityLivingUseItemEvent.Start {
+        public Start(LivingEntityUseItemEvent.Start event) {
             super(event);
         }
     }
     
-    public static class MCEntityUseItemStopEvent extends MCLivingEntityUseItemEvent implements crafttweaker.api.event.LivingEntityUseItemEvent.LivingEntityUseItemStopEvent {
-        public MCEntityUseItemStopEvent(LivingEntityUseItemEvent.Stop event) {
+    public static class Stop extends MCEntityLivingUseItemEvent implements EntityLivingUseItemEvent.Stop {
+        public Stop(LivingEntityUseItemEvent.Stop event) {
             super(event);
         }
     }
     
-    public static class MCEntityUseItemTickEvent extends MCLivingEntityUseItemEvent implements crafttweaker.api.event.LivingEntityUseItemEvent.LivingEntityUseItemTickEvent {
-        public MCEntityUseItemTickEvent(LivingEntityUseItemEvent.Tick event) {
+    public static class Tick extends MCEntityLivingUseItemEvent implements EntityLivingUseItemEvent.Tick {
+        public Tick(LivingEntityUseItemEvent.Tick event) {
             super(event);
         }
     }
     
-    public static class MCEntityUseItemFinishEvent extends MCLivingEntityUseItemEvent implements crafttweaker.api.event.LivingEntityUseItemEvent.LivingEntityUseItemFinishEvent {
-        public MCEntityUseItemFinishEvent(LivingEntityUseItemEvent.Finish event) {
+    public static class Finish extends MCEntityLivingUseItemEvent implements EntityLivingUseItemEvent.Finish {
+        public Finish(LivingEntityUseItemEvent.Finish event) {
             super(event);
         }
     }
