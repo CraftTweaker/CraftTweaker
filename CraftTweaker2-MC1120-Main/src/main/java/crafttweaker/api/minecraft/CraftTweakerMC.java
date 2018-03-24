@@ -2,6 +2,7 @@ package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
+import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
@@ -13,8 +14,10 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.*;
+import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
+import crafttweaker.mc1120.command.*;
 import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
@@ -29,6 +32,7 @@ import crafttweaker.mc1120.potions.*;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import crafttweaker.api.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.*;
@@ -41,6 +45,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.*;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
@@ -806,5 +811,25 @@ public class CraftTweakerMC {
     
     public static CreativeTabs getCreativeTabs(ICreativeTab tab) {
         return tab == null ? null : (CreativeTabs) tab.getInternal();
+    }
+    
+    public static net.minecraft.command.ICommandSender getICommandSender(ICommandSender sender) {
+        return sender == null ? null : (net.minecraft.command.ICommandSender) sender.getInternal();
+    }
+    
+    public static ICommandSender getICommandSender(net.minecraft.command.ICommandSender sender) {
+        return sender == null ? null : new MCCommandSender(sender);
+    }
+    
+    public static ICommand getICommand(net.minecraft.command.ICommand iCommand) {
+        return iCommand == null ? null : new MCCommand(iCommand);
+    }
+    
+    public static net.minecraft.command.ICommand getICommand(ICommand command) {
+        return command == null ? null : (net.minecraft.command.ICommand) command.getInternal();
+    }
+    
+    public static MinecraftServer getMCServer(IServer server) {
+        return server == null ? null : (MinecraftServer) server.getInternal();
     }
 }

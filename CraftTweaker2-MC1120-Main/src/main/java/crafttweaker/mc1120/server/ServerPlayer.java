@@ -41,4 +41,9 @@ public class ServerPlayer implements IUser {
     @Override
     public void sendMessage(String text) {
     }
+    
+    @Override
+    public Object getInternal() {
+        return null;
+    }
 }

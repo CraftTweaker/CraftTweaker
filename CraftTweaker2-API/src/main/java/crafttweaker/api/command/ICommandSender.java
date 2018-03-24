@@ -23,4 +23,6 @@ public interface ICommandSender {
     
     @ZenMethod
     void sendMessage(String text);
+    
+    Object getInternal();
 }
