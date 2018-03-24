@@ -5,7 +5,7 @@ import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
-@ZenClass("crafttweaker.events.ItemExpireEvent")
+@ZenClass("crafttweaker.event.ItemExpireEvent")
 @ZenRegister
 public interface ItemExpireEvent extends IEntityEvent, IEventCancelable {
     

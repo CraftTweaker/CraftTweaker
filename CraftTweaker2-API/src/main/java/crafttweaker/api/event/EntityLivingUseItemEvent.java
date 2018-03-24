@@ -7,7 +7,7 @@ import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
 @ZenRegister
-@ZenClass("crafttweaker.event.EntityLivingUseItemEvent")
+@ZenClass("crafttweaker.event.EntityLivingUseItemEvent.All")
 public interface EntityLivingUseItemEvent extends IEventCancelable, ILivingEvent{
     
     @ZenGetter("item")
