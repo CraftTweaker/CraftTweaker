@@ -832,4 +832,12 @@ public class CraftTweakerMC {
     public static MinecraftServer getMCServer(IServer server) {
         return server == null ? null : (MinecraftServer) server.getInternal();
     }
+    
+    public static Vec3d getVec3d(IVector3d vector3d) {
+        return vector3d == null ? null : (Vec3d) vector3d.getInternal();
+    }
+    
+    public static IVector3d getIVector3d(Vec3d vec3d) {
+        return vec3d == null ? null : new MCVector3d(vec3d);
+    }
 }

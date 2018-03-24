@@ -3,6 +3,7 @@ package crafttweaker.api.entity;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
+import crafttweaker.api.world.*;
 import crafttweaker.util.IntegerRange;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
@@ -46,6 +47,12 @@ public interface IEntityDefinition {
 
     @ZenGetter("drops")
     List<IEntityDrop> getDrops();
+    
+    @ZenMethod
+    IEntity createEntity(IWorld world);
+    
+    @ZenMethod
+    IEntity spawnEntity(IWorld world, IBlockPos pos);
 
     @Deprecated
     Map<IItemStack, IntegerRange> getDropsToAdd();

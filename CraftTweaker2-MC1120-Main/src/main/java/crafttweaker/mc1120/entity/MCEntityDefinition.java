@@ -1,11 +1,11 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.entity.IEntityDrop;
-import crafttweaker.api.entity.IEntityDropFunction;
+import crafttweaker.api.entity.*;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.world.*;
 import crafttweaker.util.IntegerRange;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 
@@ -29,7 +29,7 @@ public class MCEntityDefinition implements IEntityDefinition {
         this.entityEntry = entityEntry;
         this.entityName = entityEntry.getName();
     }
-
+    
 
     @Override
     public String getId() {
@@ -86,7 +86,20 @@ public class MCEntityDefinition implements IEntityDefinition {
     public List<IEntityDrop> getDrops() {
         return drops;
     }
-
+    
+    @Override
+    public IEntity createEntity(IWorld world) {
+        return CraftTweakerMC.getIEntity(entityEntry.newInstance(CraftTweakerMC.getWorld(world)));
+    }
+    
+    @Override
+    public IEntity spawnEntity(IWorld world, IBlockPos pos) {
+        IEntity out = createEntity(world);
+        out.setPosition(pos);
+        world.spawnEntity(out);
+        return out;
+    }
+    
     @Override
     public Map<IItemStack, IntegerRange> getDropsToAdd() {
         return drops.stream().filter(drop -> !drop.isPlayerOnly()).collect(Collectors.toMap(IEntityDrop::getItemStack, IEntityDrop::getRange));

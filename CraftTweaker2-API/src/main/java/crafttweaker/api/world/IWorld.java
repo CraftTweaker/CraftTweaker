@@ -2,6 +2,7 @@ package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
@@ -75,4 +76,7 @@ public interface IWorld extends IBlockAccess {
     IWorldProvider getProvider();
     
     Object getInternal();
+    
+    @ZenMethod
+    boolean spawnEntity(IEntity entity);
 }

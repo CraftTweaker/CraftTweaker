@@ -156,7 +156,6 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
         if(flag && itemstack.isEmpty()) {
             itemstack.setCount(1);
             EntityItem entityitem1 = player.dropItem(itemstack, false);
-            
             if(entityitem1 != null) {
                 entityitem1.makeFakeItem();
             }

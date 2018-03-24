@@ -424,4 +424,57 @@ public interface IEntity extends ICommandSender {
     
     //@ZenGetter("soundCategory")
     //ISoundCategory getSoundCategory();
+    
+    @ZenGetter("rotationYaw")
+    float getRotationYaw();
+    
+    @ZenSetter("rotationYaw")
+    void setRotationYaw(float rotationYaw);
+    
+    @ZenGetter("rotationPitch")
+    float getRotationPitch();
+    
+    @ZenSetter("rotationPitch")
+    void setRotationPitch(float rotationPitch);
+    
+    @ZenGetter("motionX")
+    double getMotionX();
+    
+    @ZenSetter("motionX")
+    void setMotionX(double motionX);
+    
+    @ZenGetter("motionY")
+    double getMotionY();
+    
+    @ZenSetter("motionY")
+    void setMotionY(double motionY);
+    
+    @ZenGetter("motionZ")
+    double getMotionZ();
+    
+    @ZenSetter("motionZ")
+    void setMotionZ(double motionZ);
+    
+    @ZenGetter("posX")
+    double getPosX();
+    
+    @ZenSetter("posX")
+    void setPosX(double posX);
+    
+    @ZenGetter("posY")
+    double getPosY();
+    
+    @ZenSetter("posY")
+    void setPosY(double posY);
+    
+    @ZenGetter("posZ")
+    double getPosZ();
+    
+    @ZenSetter("posZ")
+    void setPosZ(double posZ);
+    
+    @ZenGetter("lookingDirection")
+    IVector3d getLookingDirection();
+    
+    
 }
