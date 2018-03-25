@@ -2,7 +2,7 @@ package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
-import crafttweaker.api.command.ICommandSender;
+import crafttweaker.api.command.*;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
@@ -26,13 +26,12 @@ import crafttweaker.mc1120.entity.*;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
-import crafttweaker.mc1120.oredict.*;
+import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.*;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import crafttweaker.api.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.*;
@@ -572,7 +571,7 @@ public class CraftTweakerMC {
     }
     
     public static Ingredient getIngredient(IIngredient ingredient) {
-        if (ingredient == null)
+        if(ingredient == null)
             return Ingredient.EMPTY;
         if(ingredient instanceof IOreDictEntry)
             return new OreIngredient(((IOreDictEntry) ingredient).getName());
@@ -801,7 +800,7 @@ public class CraftTweakerMC {
     }
     
     public static Container getContainer(IContainer container) {
-        return container == null ? null : (Container)container.getInternal();
+        return container == null ? null : (Container) container.getInternal();
     }
     
     
@@ -839,5 +838,15 @@ public class CraftTweakerMC {
     
     public static IVector3d getIVector3d(Vec3d vec3d) {
         return vec3d == null ? null : new MCVector3d(vec3d);
+    }
+    
+    public static List<IItemStack> getIItemStackList(List<ItemStack> drops) {
+        List<IItemStack> out = new ArrayList<>();
+        for(ItemStack itemStack : drops) {
+            IItemStack stack = getIItemStack(itemStack);
+            if(stack != null)
+                out.add(stack);
+        }
+        return out;
     }
 }

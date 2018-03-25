@@ -42,11 +42,21 @@ public class MTEventManager implements IEventManager {
     private final EventList<EntityLivingDeathDropsEvent> elEntityLivingDeathDrops = new EventList<>();
     private final EventList<ItemExpireEvent> elItemExpire = new EventList<>();
     private final EventList<ItemTossEvent> elItemToss = new EventList<>();
+    private final EventList<PlayerAnvilRepairEvent> elPlayerAnvilRepair = new EventList<>();
+    private final EventList<PlayerSetSpawnEvent> elPlayerSetSpawn = new EventList<>();
+    private final EventList<PlayerDestroyItemEvent> elPlayerDestroyItem = new EventList<>();
+    private final EventList<PlayerBrewedPotionEvent> elPlayerBrewedPotion = new EventList<>();
+    private final EventList<PlayerTickEvent> elPlayerTick = new EventList<>();
+    private final EventList<BlockBreakEvent> elBlockBreak = new EventList<>();
+    private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
+    private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
+    private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
     
     
     /**
      * Clears all EventLists
      */
+    @Override
     public void clear() {
         elPlayerCrafted.clear();
         elPlayerCrafted.clear();
@@ -81,6 +91,15 @@ public class MTEventManager implements IEventManager {
         elEntityLivingDeathDrops.clear();
         elItemExpire.clear();
         elItemToss.clear();
+        elPlayerAnvilRepair.clear();
+        elPlayerSetSpawn.clear();
+        elPlayerDestroyItem.clear();
+        elPlayerBrewedPotion.clear();
+        elPlayerTick.clear();
+        elBlockBreak.clear();
+        elBlockHarvestDrops.clear();
+        elPlayerBreakSpeed.clear();
+        elPlayerRightClickBlock.clear();
     }
     
     // ##########################
@@ -657,5 +676,167 @@ public class MTEventManager implements IEventManager {
     public void publishItemToss(ItemTossEvent event) {
         elItemToss.publish(event);
     }
+    
+    
+    // #########################
+    // ### PlayerAnvilRepair ###
+    // #########################
+    
+    
+    @Override
+    public IEventHandle onPlayerAnvilRepair(IEventHandler<PlayerAnvilRepairEvent> ev) {
+        return elPlayerAnvilRepair.add(ev);
+    }
+    
+    public boolean hasPlayerAnvilRepair() {
+        return elPlayerAnvilRepair.hasHandlers();
+    }
+    
+    public void publishPlayerAnvilRepair(PlayerAnvilRepairEvent event) {
+        elPlayerAnvilRepair.publish(event);
+    }
+    // ######################
+    // ### PlayerSetSpawn ###
+    // ######################
+    
+    
+    @Override
+    public IEventHandle onPlayerSetSpawn(IEventHandler<PlayerSetSpawnEvent> ev) {
+        return elPlayerSetSpawn.add(ev);
+    }
+    
+    public boolean hasPlayerSetSpawn() {
+        return elPlayerSetSpawn.hasHandlers();
+    }
+    
+    public void publishPlayerSetSpawn(PlayerSetSpawnEvent event) {
+        elPlayerSetSpawn.publish(event);
+    }
+    
+    // #########################
+    // ### PlayerDestroyItem ###
+    // #########################
+    
+    
+    @Override
+    public IEventHandle onPlayerDestroyItem(IEventHandler<PlayerDestroyItemEvent> ev) {
+        return elPlayerDestroyItem.add(ev);
+    }
+    
+    public boolean hasPlayerDestroyItem() {
+        return elPlayerDestroyItem.hasHandlers();
+    }
+    
+    public void publishPlayerDestroyItem(PlayerDestroyItemEvent event) {
+        elPlayerDestroyItem.publish(event);
+    }
+    // ##########################
+    // ### PlayerBrewedPotion ###
+    // ##########################
+    
+    
+    @Override
+    public IEventHandle onPlayerBrewedPotion(IEventHandler<PlayerBrewedPotionEvent> ev) {
+        return elPlayerBrewedPotion.add(ev);
+    }
+    
+    public boolean hasPlayerBrewedPotion() {
+        return elPlayerBrewedPotion.hasHandlers();
+    }
+    
+    public void publishPlayerBrewedPotion(PlayerBrewedPotionEvent event) {
+        elPlayerBrewedPotion.publish(event);
+    }
+    
+    // ##################
+    // ### PlayerTick ###
+    // ##################
+    
+    
+    @Override
+    public IEventHandle onPlayerTick(IEventHandler<PlayerTickEvent> ev) {
+        return elPlayerTick.add(ev);
+    }
+    
+    public boolean hasPlayerTick() {
+        return elPlayerTick.hasHandlers();
+    }
+    
+    public void publishPlayerTick(PlayerTickEvent event) {
+        elPlayerTick.publish(event);
+    }
+    
+    
+    // ##################
+    // ### BlockBreak ###
+    // ##################
+    
+    @Override
+    public IEventHandle onBlockBreak(IEventHandler<BlockBreakEvent> ev) {
+        return elBlockBreak.add(ev);
+    }
+    
+    public boolean hasBlockBreak() {
+        return elBlockBreak.hasHandlers();
+    }
+    
+    public void publishBlockBreak(BlockBreakEvent event) {
+        elBlockBreak.publish(event);
+    }
+    
+    
+    // #########################
+    // ### BlockHarvestDrops ###
+    // #########################
+    
+    @Override
+    public IEventHandle onBlockHarvestDrops(IEventHandler<BlockHarvestDropsEvent> ev) {
+        return elBlockHarvestDrops.add(ev);
+    }
+    
+    public boolean hasBlockHarvestDrops() {
+        return elBlockHarvestDrops.hasHandlers();
+    }
+    
+    public void publishBlockHarvestDrops(BlockHarvestDropsEvent event) {
+        elBlockHarvestDrops.publish(event);
+    }
+    
+    
+    // ########################
+    // ### PlayerBreakSpeed ###
+    // ########################
+    
+    @Override
+    public IEventHandle onPlayerBreakSpeed(IEventHandler<PlayerBreakSpeedEvent> ev) {
+        return elPlayerBreakSpeed.add(ev);
+    }
+    
+    public boolean hasPlayerBreakSpeed() {
+        return elPlayerBreakSpeed.hasHandlers();
+    }
+    
+    public void publishPlayerBreakSpeed(PlayerBreakSpeedEvent event) {
+        elPlayerBreakSpeed.publish(event);
+    }
+    
+    
+    // #############################
+    // ### PlayerRightClickBlock ###
+    // #############################
+    
+    @Override
+    public IEventHandle onPlayerRightClickBlock(IEventHandler<PlayerRightClickBlockEvent> ev) {
+        return elPlayerRightClickBlock.add(ev);
+    }
+    
+    public boolean hasPlayerRightClickBlock() {
+        return elPlayerRightClickBlock.hasHandlers();
+    }
+    
+    public void publishPlayerRightClickBlock(PlayerRightClickBlockEvent event) {
+        elPlayerRightClickBlock.publish(event);
+    }
+    
     
 }

@@ -23,12 +23,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.*;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.*;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -337,4 +340,60 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasItemToss())
             CrafttweakerImplementationAPI.events.publishItemToss(new MCItemTossEvent(ev));
     }
+    
+    @SubscribeEvent
+    public void onPlayerAnvilRepairEvent(AnvilRepairEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerAnvilRepair())
+            CrafttweakerImplementationAPI.events.publishPlayerAnvilRepair(new MCPlayerAnvilRepairEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerSetSpawnEvent(PlayerSetSpawnEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerSetSpawn())
+            CrafttweakerImplementationAPI.events.publishPlayerSetSpawn(new MCPlayerSetSpawnEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerDestroyItemEvent(PlayerDestroyItemEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerDestroyItem())
+            CrafttweakerImplementationAPI.events.publishPlayerDestroyItem(new MCPlayerDestroyItemEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerBrewedPotionEvent(PlayerBrewedPotionEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerBrewedPotion())
+            CrafttweakerImplementationAPI.events.publishPlayerBrewedPotion(new MCPlayerBrewedPotionEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerTickEvent(TickEvent.PlayerTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerTick())
+            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(CraftTweakerMC.getIPlayer(ev.player)));
+    }
+    
+    @SubscribeEvent
+    public void onBlockBreakEvent(BlockEvent.BreakEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasBlockBreak())
+            CrafttweakerImplementationAPI.events.publishBlockBreak(new MCBlockBreakEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onBlockHarvestDropsEvent(BlockEvent.HarvestDropsEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasBlockHarvestDrops())
+            CrafttweakerImplementationAPI.events.publishBlockHarvestDrops(new MCBlockHarvestDropsEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerBreakSpeedEvent(net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerBreakSpeed())
+            CrafttweakerImplementationAPI.events.publishPlayerBreakSpeed(new MCPlayerBreakSpeedEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerRightClickBlockEvent(PlayerInteractEvent.RightClickBlock ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerRightClickBlock())
+            CrafttweakerImplementationAPI.events.publishPlayerRightClickBlock(new MCPlayerRightClickBlockEvent(ev));
+    }
+    
+    
 }

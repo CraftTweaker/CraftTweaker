@@ -22,6 +22,9 @@ public interface IEventManager {
     IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
     
     @ZenMethod
+    void clear();
+    
+    @ZenMethod
     IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
     
     @ZenMethod
@@ -110,6 +113,33 @@ public interface IEventManager {
     
     @ZenMethod
     IEventHandle onItemToss(IEventHandler<ItemTossEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerAnvilRepair(IEventHandler<PlayerAnvilRepairEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerSetSpawn(IEventHandler<PlayerSetSpawnEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerDestroyItem(IEventHandler<PlayerDestroyItemEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerBrewedPotion(IEventHandler<PlayerBrewedPotionEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerTick(IEventHandler<PlayerTickEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onBlockBreak(IEventHandler<BlockBreakEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onBlockHarvestDrops(IEventHandler<BlockHarvestDropsEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerBreakSpeed(IEventHandler<PlayerBreakSpeedEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerRightClickBlock(IEventHandler<PlayerRightClickBlockEvent> ev);
     
     /*
      *
