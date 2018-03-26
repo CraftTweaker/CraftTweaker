@@ -19,7 +19,7 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 echo 'Building and Deploying to Maven'
-					sh './gradlew assembleAll uploadArchives'
+					sh './gradlew assembleAll publish'
                 }
             }
         }
