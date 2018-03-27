@@ -188,5 +188,8 @@ public interface IRecipeManager {
      */
     @ZenMethod
     IItemStack craft(IItemStack[][] contents);
-    
+
+
+    @ZenMethod
+    void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith);
 }
