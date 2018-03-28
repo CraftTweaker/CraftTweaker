@@ -16,7 +16,21 @@ public class FurnaceRecipe implements IFurnaceRecipe {
     
     @Override
     public String toCommandString() {
-        return String.format("furnace.addRecipe(%s, %s, %s)", output, input, xp);
+        return String.format("furnace.addRecipe(%s, %s, %f)", output.toCommandString(), input.toCommandString(), xp);
     }
     
+    @Override
+    public IItemStack getInput() {
+        return input;
+    }
+    
+    @Override
+    public IItemStack getOutput() {
+        return output;
+    }
+    
+    @Override
+    public float getXp() {
+        return xp;
+    }
 }

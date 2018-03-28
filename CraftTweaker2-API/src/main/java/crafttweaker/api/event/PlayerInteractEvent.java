@@ -1,8 +1,7 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.IBlock;
-import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.block.*;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -11,92 +10,19 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerInteractEvent")
 @ZenRegister
-public class PlayerInteractEvent implements IEventCancelable {
-    
-    private final IPlayer player;
-    private final IWorld world;
-    private final int x;
-    private final int y;
-    private final int z;
-    
-    private boolean canceled;
-    private boolean useBlock;
-    private boolean useItem;
-    
-    public PlayerInteractEvent(IPlayer player, IWorld blocks, int x, int y, int z) {
-        this.player = player;
-        this.world = blocks;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        
-        canceled = false;
-        useBlock = false;
-        useItem = false;
-    }
-    
-    @Override
-    public void cancel() {
-        canceled = true;
-    }
-    
+public interface PlayerInteractEvent extends IEventCancelable, IPlayerEvent, IEventPositionable {
+
     @ZenMethod
-    public void useBlock() {
-        useBlock = true;
-    }
-    
-    @ZenMethod
-    public void useItem() {
-        useItem = true;
-    }
-    
-    @Override
-    public boolean isCanceled() {
-        return canceled;
-    }
-    
-    @ZenGetter("usingBlock")
-    public boolean isUsingBlock() {
-        return useBlock;
-    }
-    
-    @ZenGetter("usingItem")
-    public boolean isUsingItem() {
-        return useItem;
-    }
-    
-    @ZenGetter("player")
-    public IPlayer getPlayer() {
-        return player;
-    }
+    void damageItem(int amount);
     
     @ZenGetter("world")
-    public IWorld getWorld() {
-        return world;
-    }
-    
-    @ZenGetter("x")
-    public int getX() {
-        return x;
-    }
-    
-    @ZenGetter("y")
-    public int getY() {
-        return y;
-    }
-    
-    @ZenGetter("z")
-    public int getZ() {
-        return z;
-    }
+    IWorld getWorld();
     
     @ZenGetter("block")
-    public IBlock getBlock() {
-        return world.getBlock(x, y, z);
-    }
+    IBlock getBlock();
+    
+    IBlockState getBlockState();
     
     @ZenGetter("dimension")
-    public int getDimension() {
-        return world.getDimension();
-    }
+    int getDimension();
 }

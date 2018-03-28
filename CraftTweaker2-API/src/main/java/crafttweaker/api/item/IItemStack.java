@@ -5,9 +5,10 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.IEnchantment;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
-import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
+import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -411,4 +412,10 @@ public interface IItemStack extends IIngredient {
     
     @ZenGetter("hasContainerItem")
     boolean hasContainerItem();
+    
+    @ZenMethod
+    IEntityItem createEntityItem(IWorld world, int x, int y, int z);
+    
+    @ZenMethod
+    IEntityItem createEntityItem(IWorld world, IBlockPos pos);
 }

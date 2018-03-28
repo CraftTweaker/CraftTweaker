@@ -66,9 +66,35 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-        Pair<Integer, Integer> pair = calculateOffset(inv);
-        int rowOffset = pair.getKey();
-        int columnOffset = pair.getValue();
+    
+        Pair<Integer, Integer> offsetPair;
+        offsetPair = checkRecipe(ingredients, inv);
+        if(offsetPair != offsetInvalid || !isMirrored)
+            return getCraftingResult(inv, offsetPair, ingredients);
+    
+        //Mirror on X-Axis
+        IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
+        offsetPair = checkRecipe(ingredients, inv);
+        if(offsetPair != offsetInvalid)
+            return getCraftingResult(inv, offsetPair, ingredients);
+    
+        //Mirror on Y-Axis
+        for(int i = 0; i < ingredients.length; i++)
+            ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
+        offsetPair = checkRecipe(ingredients, inv);
+        if(offsetPair != offsetInvalid)
+            return getCraftingResult(inv, offsetPair, ingredients);
+    
+        //Mirror on X-/Y-Axis
+        ingredients = ArrayUtil.inverse(ingredients, height);
+        offsetPair = checkRecipe(ingredients, inv);
+        return getCraftingResult(inv, offsetPair, ingredients);
+        
+    }
+    
+    private ItemStack getCraftingResult(InventoryCrafting inv, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
+        int rowOffset = offsetPair.getKey();
+        int columnOffset = offsetPair.getValue();
         if(recipeFunction != null) {
             Map<String, IItemStack> marks = new HashMap<>();
             for(int row = 0; row < ingredients.length; row++) {

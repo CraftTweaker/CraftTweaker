@@ -44,4 +44,9 @@ public class CommandBlockPlayer implements IUser {
         sender.sendMessage(new TextComponentString(text));
     }
     
+    @Override
+    public Object getInternal() {
+        return sender;
+    }
+    
 }

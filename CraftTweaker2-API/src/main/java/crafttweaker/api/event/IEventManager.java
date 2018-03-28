@@ -22,6 +22,9 @@ public interface IEventManager {
     IEventHandle onPlayerLoggedIn(IEventHandler<PlayerLoggedInEvent> ev);
     
     @ZenMethod
+    void clear();
+    
+    @ZenMethod
     IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
     
     @ZenMethod
@@ -33,42 +36,112 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev);
-    
-    IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev);
     
     @ZenMethod
     IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev);
     
     @ZenMethod
     IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
     
+    @ZenMethod
     IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
     
-    IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev);
+    @ZenMethod
+    IEventHandle onEntityLivingUseItem(IEventHandler<EntityLivingUseItemEvent> ev);
     
-    IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev);
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemStart(IEventHandler<EntityLivingUseItemEvent.Start> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemStop(IEventHandler<EntityLivingUseItemEvent.Stop> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemTick(IEventHandler<EntityLivingUseItemEvent.Tick> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingUseItemFinish(IEventHandler<EntityLivingUseItemEvent.Finish> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityStruckByLightning(IEventHandler<EntityStruckByLightningEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEnderTeleport(IEventHandler<EnderTeleportEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingAttacked(IEventHandler<EntityLivingAttackedEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDeath(IEventHandler<EntityLivingDeathEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingFall(IEventHandler<EntityLivingFallEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingHurt(IEventHandler<EntityLivingHurtEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingJump(IEventHandler<EntityLivingJumpEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDeathDrops(IEventHandler<EntityLivingDeathDropsEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onItemExpire(IEventHandler<ItemExpireEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onItemToss(IEventHandler<ItemTossEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerAnvilRepair(IEventHandler<PlayerAnvilRepairEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerSetSpawn(IEventHandler<PlayerSetSpawnEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerDestroyItem(IEventHandler<PlayerDestroyItemEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerBrewedPotion(IEventHandler<PlayerBrewedPotionEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerTick(IEventHandler<PlayerTickEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onBlockBreak(IEventHandler<BlockBreakEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onBlockHarvestDrops(IEventHandler<BlockHarvestDropsEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerBreakSpeed(IEventHandler<PlayerBreakSpeedEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerRightClickBlock(IEventHandler<PlayerRightClickBlockEvent> ev);
     
     /*
-     * IEventHandle
-     * onPlayerUseItemStop(IEventHandler<PlayerUseItemStopEvent> ev);
-     *
-     * IEventHandle
-     * onPlayerUseItemFinish(IPlayerUserItemFinishEventHandler ev);
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
      *
@@ -78,31 +151,7 @@ public interface IEventManager {
      *
      * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
      *
-     * IEventHandle
-     * onEntityStruckByLightning(IEntityStruckByLightningEventHandler ev);
-     *
-     * IEventHandle
-     * onLivingEnderTeleport(ILivingEnderTeleportEventHandler ev);
-     *
-     * IEventHandle onLivingAttackEvent(ILivingAttackEventHandler ev);
-     *
-     * IEventHandle onLivingDeathEvent(ILivingDeathEventHandler ev);
-     *
-     * IEventHandle onLivingJumpEvent(ILivingJumpEventHandler ev);
-     *
-     * IEventHandle onLivingFallEvent(ILivingFallEventHandler ev);
-     *
-     * IEventHandle onLivingHurtEvent(ILivingHurtEventHandler ev);
-     *
-     * IEventHandle onLivingDeathDropsEvent(ILivingDeathDropsEventHandler
-     * ev);
-     *
-     * IEventHandle onItemTossed(IItemTossedEventHandler ev);
-     *
-     * IEventHandle onItemExpired(IItemExpiredEventHandler ev);
-     *
-     * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler
-     * ev);
+     * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler ev);
      *
      * IEventHandle onMinecartInteract(IMinecartInteractEventHandler ev);
      *

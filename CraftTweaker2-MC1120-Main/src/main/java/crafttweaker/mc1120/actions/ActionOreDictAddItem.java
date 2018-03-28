@@ -16,7 +16,7 @@ public class ActionOreDictAddItem implements IAction {
     
     @Override
     public void apply() {
-        OreDictionary.registerOre(id, item);
+        OreDictionary.getOres(id).add(item);
     }
     
     

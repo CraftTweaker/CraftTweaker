@@ -2,6 +2,8 @@ package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
+import crafttweaker.api.command.*;
+import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
@@ -12,8 +14,11 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.*;
+import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
+import crafttweaker.mc1120.command.*;
+import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -33,14 +38,15 @@ import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.*;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
@@ -565,6 +571,8 @@ public class CraftTweakerMC {
     }
     
     public static Ingredient getIngredient(IIngredient ingredient) {
+        if(ingredient == null)
+            return Ingredient.EMPTY;
         if(ingredient instanceof IOreDictEntry)
             return new OreIngredient(((IOreDictEntry) ingredient).getName());
         if(ingredient instanceof IItemStack)
@@ -771,6 +779,73 @@ public class CraftTweakerMC {
         IIngredient[] out = new IIngredient[ingredientList.size()];
         for(int index = 0; index < out.length; index++) {
             out[index] = CraftTweakerMC.getIIngredient(ingredientList.get(index));
+        }
+        return out;
+    }
+    
+    public static EntityItem getEntityItem(IEntityItem entityItem) {
+        return entityItem == null ? null : (EntityItem) entityItem.getInternal();
+    }
+    
+    public static IRayTraceResult getIRayTraceResult(RayTraceResult rayTraceResult) {
+        return rayTraceResult == null ? null : new MCRayTraceResult(rayTraceResult);
+    }
+    
+    public static RayTraceResult getRayTraceResult(IRayTraceResult rayTraceResult) {
+        return rayTraceResult == null ? null : (RayTraceResult) rayTraceResult.getInternal();
+    }
+    
+    public static IContainer getIContainer(Container container) {
+        return container == null ? null : new MCContainer(container);
+    }
+    
+    public static Container getContainer(IContainer container) {
+        return container == null ? null : (Container) container.getInternal();
+    }
+    
+    
+    public static IFacing getIFacing(EnumFacing sideHit) {
+        return sideHit == null ? null : new MCFacing(sideHit);
+    }
+    
+    public static CreativeTabs getCreativeTabs(ICreativeTab tab) {
+        return tab == null ? null : (CreativeTabs) tab.getInternal();
+    }
+    
+    public static net.minecraft.command.ICommandSender getICommandSender(ICommandSender sender) {
+        return sender == null ? null : (net.minecraft.command.ICommandSender) sender.getInternal();
+    }
+    
+    public static ICommandSender getICommandSender(net.minecraft.command.ICommandSender sender) {
+        return sender == null ? null : new MCCommandSender(sender);
+    }
+    
+    public static ICommand getICommand(net.minecraft.command.ICommand iCommand) {
+        return iCommand == null ? null : new MCCommand(iCommand);
+    }
+    
+    public static net.minecraft.command.ICommand getICommand(ICommand command) {
+        return command == null ? null : (net.minecraft.command.ICommand) command.getInternal();
+    }
+    
+    public static MinecraftServer getMCServer(IServer server) {
+        return server == null ? null : (MinecraftServer) server.getInternal();
+    }
+    
+    public static Vec3d getVec3d(IVector3d vector3d) {
+        return vector3d == null ? null : (Vec3d) vector3d.getInternal();
+    }
+    
+    public static IVector3d getIVector3d(Vec3d vec3d) {
+        return vec3d == null ? null : new MCVector3d(vec3d);
+    }
+    
+    public static List<IItemStack> getIItemStackList(List<ItemStack> drops) {
+        List<IItemStack> out = new ArrayList<>();
+        for(ItemStack itemStack : drops) {
+            IItemStack stack = getIItemStack(itemStack);
+            if(stack != null)
+                out.add(stack);
         }
         return out;
     }

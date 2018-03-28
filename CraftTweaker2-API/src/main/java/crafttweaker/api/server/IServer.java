@@ -1,6 +1,7 @@
 package crafttweaker.api.server;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.command.ICommandManager;
 import crafttweaker.api.event.*;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.util.IEventHandler;
@@ -21,4 +22,9 @@ public interface IServer {
     
     @ZenMethod
     IEventHandle onPlayerLoggedOut(IEventHandler<PlayerLoggedOutEvent> ev);
+    
+    @ZenGetter("commandManager")
+    ICommandManager getCommandManager();
+    
+    Object getInternal();
 }

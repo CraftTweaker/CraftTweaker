@@ -81,7 +81,7 @@ public class MCItemDefinition implements IItemDefinition {
     
     @Override
     public void setCreativeTab(ICreativeTab tab) {
-        item.setCreativeTab((CreativeTabs) tab.getInternal());
+        item.setCreativeTab(CraftTweakerMC.getCreativeTabs(tab));
     }
     
     @Override
@@ -124,6 +124,11 @@ public class MCItemDefinition implements IItemDefinition {
         NonNullList<ItemStack> list = NonNullList.create();
         item.getSubItems((CreativeTabs) tab.getInternal(), list);
         return list.stream().map(MCItemStack::new).collect(Collectors.toList());
+    }
+    
+    @Override
+    public int getItemBurnTime(IItemStack itemStack) {
+        return item.getItemBurnTime(CraftTweakerMC.getItemStack(itemStack));
     }
     
     @Override

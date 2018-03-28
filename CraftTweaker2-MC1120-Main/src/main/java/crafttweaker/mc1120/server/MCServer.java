@@ -1,9 +1,11 @@
 package crafttweaker.mc1120.server;
 
+import crafttweaker.api.command.ICommandManager;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
 import crafttweaker.api.server.AbstractServer;
 import crafttweaker.mc1120.CraftTweaker;
+import crafttweaker.mc1120.command.MCCommandManager;
 import crafttweaker.mc1120.player.CommandBlockPlayer;
 import crafttweaker.mc1120.player.RconPlayer;
 import net.minecraft.command.ICommandSender;
@@ -49,5 +51,15 @@ public class MCServer extends AbstractServer {
     
         UserListOps ops = CraftTweaker.server.getPlayerList().getOppedPlayers();
         return !(server != null && server.isDedicatedServer()) || ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
+    }
+    
+    @Override
+    public ICommandManager getCommandManager() {
+        return new MCCommandManager(server.getCommandManager());
+    }
+    
+    @Override
+    public MinecraftServer getInternal() {
+        return server;
     }
 }

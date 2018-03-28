@@ -7,7 +7,7 @@ import crafttweaker.mc1120.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
 
-public abstract class MCCommandSender implements crafttweaker.api.command.ICommandSender {
+public class MCCommandSender implements crafttweaker.api.command.ICommandSender {
     
     private final ICommandSender sender;
     
@@ -38,6 +38,11 @@ public abstract class MCCommandSender implements crafttweaker.api.command.IComma
     @Override
     public void sendMessage(String text) {
         sender.sendMessage(new TextComponentString(text));
+    }
+    
+    @Override
+    public ICommandSender getInternal() {
+        return sender;
     }
     
 }

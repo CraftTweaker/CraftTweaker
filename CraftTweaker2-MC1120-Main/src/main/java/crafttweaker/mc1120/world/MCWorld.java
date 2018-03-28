@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.world;
 
 import crafttweaker.api.block.*;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
@@ -103,6 +104,11 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 	public Object getInternal() {
 		return world;
 	}
+    
+    @Override
+    public boolean spawnEntity(IEntity entity) {
+        return world.spawnEntity(CraftTweakerMC.getEntity(entity));
+    }
     
     @Override
 	public boolean setBlockState(IBlockState state, IBlockPos pos) {

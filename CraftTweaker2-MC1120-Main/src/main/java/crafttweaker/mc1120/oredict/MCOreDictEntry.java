@@ -27,6 +27,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     private static final List<NonNullList<ItemStack>> OREDICT_CONTENTS = CraftTweakerHacks.getOreIdStacks();
     private static final List<NonNullList<ItemStack>> OREDICT_CONTENTS_UN = CraftTweakerHacks.getOreIdStacksUn();
     private static final Field ORE_FIELD;
+    public static final Map<String, List<IItemStack>> REMOVED_CONTENTS = new HashMap<>();
     
     static {
         Field toSet = null;
@@ -126,7 +127,9 @@ public class MCOreDictEntry implements IOreDictEntry {
     
     @Override
     public void remove(IItemStack... items) {
+        REMOVED_CONTENTS.computeIfAbsent(id, s -> new ArrayList<>());
         for(IItemStack item : items) {
+            REMOVED_CONTENTS.get(id).add(item);
             ItemStack result = ItemStack.EMPTY;
             for(ItemStack itemStack : OreDictionary.getOres(id)) {
                 if(item.matches(getIItemStackWildcardSize(itemStack))) {

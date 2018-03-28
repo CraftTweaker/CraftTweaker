@@ -85,4 +85,7 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenGetter("foodStats")
     IFoodStats getFoodStats();
+    
+    @ZenMethod
+    void executeCommand(String rawCommand);
 }

@@ -39,7 +39,7 @@ public class EventList<T> {
         return first == null;
     }
     
-    public boolean publish(T event) {
+    public void publish(T event) {
         EventNode current;
         
         synchronized(this) {
@@ -49,8 +49,6 @@ public class EventList<T> {
         while(current != null) {
             try {
                 current.handler.handle(event);
-                if(event instanceof IEventCancelable && ((IEventCancelable) event).isCanceled())
-                    return true;
             } catch(Throwable ex) {
                 CraftTweakerAPI.logError(ex.getMessage(), ex);
             }
@@ -58,7 +56,6 @@ public class EventList<T> {
                 current = current.next;
             }
         }
-        return false;
     }
     
     private class EventNode implements IEventHandle {

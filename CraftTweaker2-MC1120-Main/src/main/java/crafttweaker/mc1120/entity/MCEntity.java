@@ -1,6 +1,5 @@
 package crafttweaker.mc1120.entity;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
@@ -11,23 +10,13 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
-import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
-import crafttweaker.mc1120.game.MCTeam;
-import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.MCPosition3f;
-import crafttweaker.mc1120.world.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -292,6 +281,91 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
+    public float getRotationYaw() {
+        return entity.rotationYaw;
+    }
+    
+    @Override
+    public void setRotationYaw(float rotationYaw) {
+        entity.rotationYaw = rotationYaw;
+    }
+    
+    @Override
+    public float getRotationPitch() {
+        return entity.rotationPitch;
+    }
+    
+    @Override
+    public void setRotationPitch(float rotationPitch) {
+        entity.rotationPitch = rotationPitch;
+    }
+    
+    @Override
+    public double getMotionX() {
+        return entity.motionX;
+    }
+    
+    @Override
+    public void setMotionX(double motionX) {
+        entity.motionX = motionX;
+    }
+    
+    @Override
+    public double getMotionY() {
+        return entity.motionY;
+    }
+    
+    @Override
+    public void setMotionY(double motionY) {
+        entity.motionY = motionY;
+    }
+    
+    @Override
+    public double getMotionZ() {
+        return entity.motionZ;
+    }
+    
+    @Override
+    public void setMotionZ(double motionZ) {
+        entity.motionZ = motionZ;
+    }
+    
+    @Override
+    public double getPosX() {
+        return entity.posX;
+    }
+    
+    @Override
+    public void setPosX(double posX) {
+        entity.posX = posX;
+    }
+    
+    @Override
+    public double getPosY() {
+        return entity.posY;
+    }
+    
+    @Override
+    public void setPosY(double posY) {
+        entity.posY = posY;
+    }
+    
+    @Override
+    public double getPosZ() {
+        return entity.posZ;
+    }
+    
+    @Override
+    public void setPosZ(double posZ) {
+        entity.posZ = posZ;
+    }
+    
+    @Override
+    public IVector3d getLookingDirection() {
+        return CraftTweakerMC.getIVector3d(entity.getLookVec());
+    }
+    
+    @Override
     public IWorld getWorld() {
         return CraftTweakerMC.getIWorld(entity.getEntityWorld());
     }
@@ -511,7 +585,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public ITeam getTeam() {
-       return CraftTweakerMC.getITeam(entity.getTeam());
+        return CraftTweakerMC.getITeam(entity.getTeam());
     }
     
     @Override
