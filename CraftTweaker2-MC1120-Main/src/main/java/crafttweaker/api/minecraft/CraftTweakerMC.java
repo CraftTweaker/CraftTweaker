@@ -10,7 +10,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
-import crafttweaker.api.liquid.ILiquidStack;
+import crafttweaker.api.liquid.*;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.*;
@@ -25,7 +25,7 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.*;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
-import crafttweaker.mc1120.liquid.MCLiquidStack;
+import crafttweaker.mc1120.liquid.*;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.*;
@@ -51,7 +51,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 
 import java.util.*;
@@ -848,5 +848,13 @@ public class CraftTweakerMC {
                 out.add(stack);
         }
         return out;
+    }
+    
+    public static Fluid getFluid(ILiquidDefinition liquidDefinition) {
+        return liquidDefinition == null ? null : (Fluid) liquidDefinition.getInternal();
+    }
+    
+    public static ILiquidDefinition getILiquidDefinition(Fluid fluid) {
+        return fluid == null ? null : new MCLiquidDefinition(fluid);
     }
 }

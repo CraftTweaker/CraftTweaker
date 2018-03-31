@@ -16,7 +16,9 @@ import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
+import net.minecraftforge.fml.common.registry.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -368,6 +370,15 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public IWorld getWorld() {
         return CraftTweakerMC.getIWorld(entity.getEntityWorld());
+    }
+    
+    @Override
+    public IEntityDefinition getDefinition() {
+        for (Map.Entry<ResourceLocation, EntityEntry> entry: ForgeRegistries.ENTITIES.getEntries()) {
+            if (entry.getValue().getEntityClass() == entity.getClass())
+                return new MCEntityDefinition(entry.getValue());
+        }
+        return null;
     }
     
     @Override

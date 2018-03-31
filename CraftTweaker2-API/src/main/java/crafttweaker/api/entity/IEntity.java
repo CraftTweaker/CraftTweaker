@@ -24,6 +24,10 @@ import java.util.List;
 @ZenRegister
 public interface IEntity extends ICommandSender {
     
+    @ZenGetter("definition")
+    IEntityDefinition getDefinition();
+    
+    
     /**
      * Retrieves the world this entity is in.
      *
