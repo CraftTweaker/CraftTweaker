@@ -64,4 +64,5 @@ public interface ILiquidDefinition {
     @ZenSetter("gaseous")
     void setGaseous(boolean gaseous);
     
+    Object getInternal();
 }

@@ -82,6 +82,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         CraftTweakerAPI.apply(new ActionSetGaseous(gaseous));
     }
     
+    @Override
+    public Fluid getInternal() {
+        return fluid;
+    }
+    
     private class ActionSetLuminosity implements IAction {
         
         private final int oldValue;
