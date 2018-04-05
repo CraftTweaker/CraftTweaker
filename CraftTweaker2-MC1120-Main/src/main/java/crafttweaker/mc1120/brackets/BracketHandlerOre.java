@@ -60,4 +60,13 @@ public class BracketHandlerOre implements IBracketHandler {
         return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, valueBuilder.toString()));
     }
     
+    @Override
+    public Class<?> getReturnedClass() {
+        return IOreDictEntry.class;
+    }
+    
+    @Override
+    public String getRegexMatchingString() {
+        return "ore:.*";
+    }
 }

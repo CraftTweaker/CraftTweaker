@@ -56,4 +56,13 @@ public class BracketHandlerEntity implements IBracketHandler {
         return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, valueBuilder.toString()));
     }
     
+    @Override
+    public String getRegexMatchingString() {
+        return "entity:.*";
+    }
+    
+    @Override
+    public Class<?> getReturnedClass() {
+        return IEntityDefinition.class;
+    }
 }

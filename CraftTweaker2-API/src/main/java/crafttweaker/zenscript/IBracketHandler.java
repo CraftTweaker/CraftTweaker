@@ -32,4 +32,8 @@ public interface IBracketHandler {
      * @return the resolved symbol, or null
      */
     IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens);
+    
+    default String getRegexMatchingString(){ return ".*"; }
+    
+    default Class<?> getReturnedClass() { return null; }
 }

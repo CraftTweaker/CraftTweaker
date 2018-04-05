@@ -42,4 +42,14 @@ public class BracketHandlerEnchantments implements IBracketHandler {
             return null;
         return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, tokens.subList(2, tokens.size()).stream().map(Token::getValue).collect(Collectors.joining())));
     }
+    
+    @Override
+    public String getRegexMatchingString() {
+        return "enchantment:.*";
+    }
+    
+    @Override
+    public Class<?> getReturnedClass() {
+        return IEnchantmentDefinition.class;
+    }
 }

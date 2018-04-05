@@ -121,4 +121,8 @@ public class BracketHandlerItem implements IBracketHandler {
         return null;
     }
     
+    @Override
+    public Class<?> getReturnedClass() {
+        return IItemStack.class;
+    }
 }

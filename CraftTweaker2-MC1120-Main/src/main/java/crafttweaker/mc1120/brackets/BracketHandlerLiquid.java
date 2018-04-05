@@ -71,4 +71,13 @@ public class BracketHandlerLiquid implements IBracketHandler {
         return null;
     }
     
+    @Override
+    public Class<?> getReturnedClass() {
+        return ILiquidStack.class;
+    }
+    
+    @Override
+    public String getRegexMatchingString() {
+        return "(fluid|liquid):.*";
+    }
 }

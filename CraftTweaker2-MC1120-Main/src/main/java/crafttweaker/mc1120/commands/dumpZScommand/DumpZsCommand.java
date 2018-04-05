@@ -7,6 +7,7 @@ import joptsimple.internal.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
+import stanhebben.zenscript.dump.TreeNode;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.type.natives.*;
@@ -120,6 +121,14 @@ public class DumpZsCommand extends CraftTweakerCommand {
             e.printStackTrace();
         }
         //Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+    
+    
+        ZsDumpCollector dump = new ZsDumpCollector();
+        dump.collectTypeRegistry(GlobalRegistry.getTypes());
+        dump.collectBracketHandlers(GlobalRegistry.getPrioritizedBracketHandlers());
+        dump.collectRoot(GlobalRegistry.getRoot());
+        
+        System.out.println("JSON DUMP: \n" + dump.toJson());
         
         
         sender.sendMessage(getFileOpenText("Dumped content of the GlobalRegistry to a html file \u00A7r[\u00A76Click here to open\u00A7r]", zsDataFolder.getAbsolutePath() + "/tree3.html"));

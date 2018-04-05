@@ -64,4 +64,14 @@ public class BracketHandlerDamageSource implements IBracketHandler {
     public static IDamageSource getFromString(String name) {
         return MCDamageSourceExpand.createOfType(name);
     }
+    
+    @Override
+    public String getRegexMatchingString() {
+        return "damageSource:.*";
+    }
+    
+    @Override
+    public Class<?> getReturnedClass() {
+        return IDamageSource.class;
+    }
 }
