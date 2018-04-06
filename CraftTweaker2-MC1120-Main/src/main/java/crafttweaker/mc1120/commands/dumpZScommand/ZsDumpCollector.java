@@ -5,7 +5,6 @@ import crafttweaker.mc1120.commands.dumpZScommand.types.DumpBracketHandler;
 import crafttweaker.zenscript.IBracketHandler;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.dump.*;
-import stanhebben.zenscript.dump.CustomTypeAdapterFactory;
 import stanhebben.zenscript.dump.types.*;
 import stanhebben.zenscript.symbols.SymbolPackage;
 import stanhebben.zenscript.util.Pair;
@@ -21,15 +20,16 @@ public class ZsDumpCollector {
     private List<IDumpedObject> rootDumps = new ArrayList<>();
     
     public ZsDumpCollector() {
-        gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapterFactory(new CustomTypeAdapterFactory())
-                /*.registerTypeAdapter(IDumpable.class, GSONDumpableSerializer.INSTANCE)
-                .registerTypeAdapter(DumpDummy.class, GSONDumpableSerializer.INSTANCE)
-                .registerTypeAdapter(DumpZenType.class, GSONDumpableSerializer.INSTANCE)
-                .registerTypeAdapter(DumpClassBase.class, GSONDumpableSerializer.INSTANCE)
-                .registerTypeAdapter(DumpBracketHandler.class, GSONDumpableSerializer.INSTANCE)*/
-                .create();
+        
+        Class<?> serializerClasses[] = {DumpDummy.class, DumpZenType.class, DumpClassBase.class, DumpBracketHandler.class, DumpZenTypeNative.class, DumpIJavaMethod.class,
+        }; // this workaround has to be used because for whatever reason registerTypeHierarchyAdapter() doesn't work as intended
+    
+        GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+        for(Class<?> serializerClass : serializerClasses) {
+            builder.registerTypeAdapter(serializerClass, GSONDumpableSerializer.INSTANCE);
+        }
+        
+        gson = builder.create();
     }
     
     void collectTypeRegistry(TypeRegistry typeRegistry) {

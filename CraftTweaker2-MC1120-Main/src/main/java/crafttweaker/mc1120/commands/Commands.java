@@ -11,6 +11,7 @@ import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
 import crafttweaker.mc1120.brackets.BracketHandlerPotion;
+import crafttweaker.mc1120.commands.dumpZScommand.*;
 import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
@@ -746,6 +747,7 @@ public class Commands {
         
         
         CTChatCommand.registerCommand(new DumpZsCommand());
+        CTChatCommand.registerCommand(new ExportZsCommand());
         
         CTChatCommand.registerCommand(new NamesCommand());
         
