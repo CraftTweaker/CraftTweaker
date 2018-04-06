@@ -17,7 +17,7 @@ public class ZsDumpCollector {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<DumpBracketHandler> bracketHandlerDumps = new ArrayList<>();
     private List<DumpZenType> zenTypeDumps = new ArrayList<>();
-    private List<IDumpedObject> rootDumps = new ArrayList<>();
+    private List<IDumpable> rootDumps = new ArrayList<>();
     
     public ZsDumpCollector() {
         

@@ -1,7 +1,6 @@
 package crafttweaker.mc1120.commands.dumpZScommand;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.GlobalRegistry;
 import net.minecraft.command.ICommandSender;
@@ -10,8 +9,6 @@ import net.minecraft.util.text.TextComponentString;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.*;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 
@@ -24,7 +21,6 @@ public class ExportZsCommand extends CraftTweakerCommand {
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         File file = new File("zs_export.json");
-        file.getParentFile().mkdirs();
         
         
         ZsDumpCollector dump = new ZsDumpCollector();

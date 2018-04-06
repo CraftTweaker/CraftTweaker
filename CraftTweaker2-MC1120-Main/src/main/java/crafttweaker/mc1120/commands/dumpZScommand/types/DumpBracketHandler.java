@@ -2,9 +2,9 @@ package crafttweaker.mc1120.commands.dumpZScommand.types;
 
 import com.google.gson.*;
 import crafttweaker.zenscript.IBracketHandler;
-import stanhebben.zenscript.dump.IDumpedObject;
+import stanhebben.zenscript.dump.IDumpable;
 
-public class DumpBracketHandler implements IDumpedObject {
+public class DumpBracketHandler implements IDumpable {
     
     private final int priority;
     private final String javaPath;
