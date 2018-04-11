@@ -24,6 +24,7 @@ public class ZsDumpCollector {
         Class<?> serializerClasses[] = {DumpDummy.class, DumpZenType.class, DumpClassBase.class, DumpBracketHandler.class, DumpZenTypeNative.class, DumpIJavaMethod.class,
         }; // this workaround has to be used because for whatever reason registerTypeHierarchyAdapter() doesn't work as intended
     
+	
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
         for(Class<?> serializerClass : serializerClasses) {
             builder.registerTypeAdapter(serializerClass, GSONDumpableSerializer.INSTANCE);
