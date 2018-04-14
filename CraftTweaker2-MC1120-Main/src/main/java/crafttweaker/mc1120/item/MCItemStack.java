@@ -41,6 +41,7 @@ public class MCItemStack implements IItemStack {
     
     private final ItemStack stack;
     private final List<IItemStack> items;
+    private boolean matchTagExact = true;
     private IData tag = null;
     private boolean wildcardSize;
     
@@ -181,14 +182,26 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack withTag(IData tag) {
+    public IItemStack withTag(IData tag, boolean matchTagExact) {
         ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), stack.getItemDamage());
         if(tag == null) {
             result.setTagCompound(null);
         } else {
             result.setTagCompound((NBTTagCompound) NBTConverter.from(tag));
         }
-        return new MCItemStack(result, tag);
+        MCItemStack out = new MCItemStack(result, tag);
+        out.matchTagExact = matchTagExact;
+        return out;
+    }
+    
+    @Override
+    public IItemStack withTag(IData tag) {
+        return withTag(tag, true);
+    }
+    
+    @Override
+    public IItemStack updateTag(IData tagUpdate) {
+        return updateTag(tagUpdate, true);
     }
     
     @Override
@@ -199,17 +212,17 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack updateTag(IData tagUpdate) {
+    public IItemStack updateTag(IData tagUpdate, boolean matchTagExact) {
         if(tag == null) {
             if(stack.getTagCompound() == null) {
-                return withTag(tagUpdate);
+                return withTag(tagUpdate, matchTagExact);
             }
             
             tag = NBTConverter.from(stack.getTagCompound(), true);
         }
         
         IData updated = tag.update(tagUpdate);
-        return withTag(updated);
+        return withTag(updated, matchTagExact);
     }
     
     @Override
@@ -288,7 +301,7 @@ public class MCItemStack implements IItemStack {
     @Override
     public boolean matches(IItemStack item) {
         ItemStack internal = getItemStack(item);
-        if(stack.hasTagCompound()) {
+        if(stack.hasTagCompound() && matchTagExact) {
             return matchesExact(item);
         }
         return !internal.isEmpty() && !stack.isEmpty() && internal.getItem() == stack.getItem() && (wildcardSize || internal.getCount() >= stack.getCount()) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
