@@ -4,10 +4,17 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.mc1120.commands.*;
 import crafttweaker.mods.jei.commands.ConflictCommand;
 import crafttweaker.mods.jei.recipeWrappers.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.relauncher.*;
+
+import java.util.*;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 import static crafttweaker.mods.jei.JEI.*;
@@ -47,6 +54,20 @@ public class JEIMod {
             });
         }
         //endregion
+    }
+    
+    @Mod.EventHandler
+    @SideOnly(Side.CLIENT)
+    public void onFMLLoadCompleteClient(FMLLoadCompleteEvent event) {
+        // Add a resource reload listener to keep up to sync with JEI.
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(listener -> {
+
+            if(Loader.isModLoaded("jei") && event.getSide().isClient()) {
+                JEI.HIDDEN_ITEMS.forEach(stack -> JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(stack)));
+                JEI.HIDDEN_LIQUIDS.forEach(stack -> JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, Collections.singletonList(stack)));
+
+            }
+        });
     }
     
     public static void onRegistered() {
