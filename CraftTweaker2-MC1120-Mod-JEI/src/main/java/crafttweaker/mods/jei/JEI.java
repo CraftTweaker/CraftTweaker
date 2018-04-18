@@ -1,6 +1,6 @@
 package crafttweaker.mods.jei;
 
-import crafttweaker.IAction;
+import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
@@ -38,24 +38,35 @@ public class JEI {
     
     @ZenMethod
     public static void hide(IItemStack stack) {
+        if(stack == null) {
+            CraftTweakerAPI.logError("Unable to hide null itemstack! " + stack);
+            return;
+        }
         LATE_ACTIONS.add(new HideAction(stack));
         HIDDEN_ITEMS.add(CraftTweakerMC.getItemStack(stack));
     }
     
     @ZenMethod
     public static void hide(ILiquidStack stack) {
+        if(stack == null) {
+            CraftTweakerAPI.logError("Unable to hide null fluidstack! " + stack);
+            return;
+        }
         LATE_ACTIONS.add(new HideFluidAction(stack));
-        HIDDEN_LIQUIDS.add(new FluidStack(CraftTweakerMC.getFluid(stack.getDefinition()),1));
+        HIDDEN_LIQUIDS.add(new FluidStack(CraftTweakerMC.getFluid(stack.getDefinition()), 1));
     }
     
     @ZenMethod
     public static void removeAndHide(IIngredient output, @Optional boolean nbtMatch) {
         MCRecipeManager.actionRemoveRecipesNoIngredients.addOutput(output, nbtMatch);
         for(IItemStack stack : output.getItems()) {
+            if(stack == null) {
+                CraftTweakerAPI.logError("Unable to hide null itemstack! " + stack + ", from:" + output);
+                continue;
+            }
             LATE_ACTIONS.add(new HideAction(stack));
             HIDDEN_ITEMS.add(CraftTweakerMC.getItemStack(stack));
         }
-    
         
         
     }
