@@ -16,7 +16,6 @@ import java.util.*;
  * @author BloodWorkXGaming
  */
 public class CTChatCommand extends CommandBase {
-    
     public static final String CRAFTTWEAKER_LOG_PATH = new File("crafttweaker.log").getAbsolutePath();
     private static final List<String> aliases = new ArrayList<>();
     private static final Map<String, CraftTweakerCommand> craftTweakerCommands = new TreeMap<>();
@@ -30,17 +29,6 @@ public class CTChatCommand extends CommandBase {
     public static void register(FMLServerStartingEvent ev) {
         Commands.registerCommands();
         ev.registerServerCommand(new CTChatCommand());
-    }
-    
-    public static void sendUsage(ICommandSender sender) {
-        sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
-        
-        for(Map.Entry<String, CraftTweakerCommand> entry : craftTweakerCommands.entrySet()) {
-            for(ITextComponent s : entry.getValue().getDescription()) {
-                sender.sendMessage(s);
-            }
-            sender.sendMessage(SpecialMessagesChat.EMPTY_TEXTMESSAGE);
-        }
     }
     
     public static void registerCommand(CraftTweakerCommand command) {
@@ -129,5 +117,9 @@ public class CTChatCommand extends CommandBase {
     @Override
     public int getRequiredPermissionLevel() {
         return 4;
+    }
+    
+    public static Map<String, CraftTweakerCommand> getCraftTweakerCommands() {
+        return craftTweakerCommands;
     }
 }

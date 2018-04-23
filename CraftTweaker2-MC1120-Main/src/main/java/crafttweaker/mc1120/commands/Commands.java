@@ -48,19 +48,6 @@ public class Commands {
     
     
     static void registerCommands() {
-        
-        CTChatCommand.registerCommand(new CraftTweakerCommand("help") {
-            @Override
-            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                CTChatCommand.sendUsage(sender);
-            }
-            
-            @Override
-            protected void init() {
-                setDescription(getClickableCommandText("\u00A72/ct help", "/ct help", true), getNormalMessage(" \u00A73Prints out the this help page"));
-            }
-        });
-        
         CTChatCommand.registerCommand(new CraftTweakerCommand("liquids") {
             
             @Override
@@ -80,7 +67,6 @@ public class Commands {
                 setDescription(getClickableCommandText("\u00A72/ct liquids", "/ct liquids", true), getNormalMessage(" \u00A73Outputs a list of all liquid names in the game to the crafttweaker.log"));
             }
         });
-        
         
         CTChatCommand.registerCommand(new CraftTweakerCommand("blocks") {
             @Override
@@ -748,6 +734,7 @@ public class Commands {
         
         CTChatCommand.registerCommand(new DumpZsCommand());
         CTChatCommand.registerCommand(new ExportZsCommand());
+        CTChatCommand.registerCommand(new HelpCommand());
         
         CTChatCommand.registerCommand(new NamesCommand());
         
