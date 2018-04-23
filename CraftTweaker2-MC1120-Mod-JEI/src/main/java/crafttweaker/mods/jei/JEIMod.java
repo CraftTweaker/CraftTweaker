@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.event.*;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 import static crafttweaker.mods.jei.JEI.*;
 
-@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.0", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.1", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class JEIMod {
     
     @Mod.EventHandler
