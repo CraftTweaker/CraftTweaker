@@ -43,7 +43,6 @@ public class JEI {
             return;
         }
         LATE_ACTIONS.add(new HideAction(stack));
-        HIDDEN_ITEMS.add(CraftTweakerMC.getItemStack(stack));
     }
     
     @ZenMethod
@@ -53,7 +52,6 @@ public class JEI {
             return;
         }
         LATE_ACTIONS.add(new HideFluidAction(stack));
-        HIDDEN_LIQUIDS.add(new FluidStack(CraftTweakerMC.getFluid(stack.getDefinition()), 1));
     }
     
     @ZenMethod
@@ -65,7 +63,6 @@ public class JEI {
                 continue;
             }
             LATE_ACTIONS.add(new HideAction(stack));
-            HIDDEN_ITEMS.add(CraftTweakerMC.getItemStack(stack));
         }
         
         

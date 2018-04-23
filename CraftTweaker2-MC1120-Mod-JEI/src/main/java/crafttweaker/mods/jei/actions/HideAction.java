@@ -5,8 +5,10 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.mods.jei.JEIAddonPlugin;
+import crafttweaker.mods.jei.*;
 import net.minecraft.item.ItemStack;
+
+import java.util.*;
 
 public class HideAction implements IAction {
     
@@ -26,7 +28,8 @@ public class HideAction implements IAction {
         
         
         ItemStack IStack = getItemStack(stack);
-        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEIAddonPlugin.getSubTypes(IStack));
+        JEI.HIDDEN_ITEMS.addAll(JEIAddonPlugin.getSubTypes(IStack));
+//        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, (Collection)JEIAddonPlugin.getSubTypes(IStack));
 
     }
     
