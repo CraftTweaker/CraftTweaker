@@ -1,5 +1,6 @@
 package crafttweaker.api.item;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
@@ -219,6 +220,12 @@ public interface IItemStack extends IIngredient {
      * @return resulting item stack
      */
     @ZenMethod
+    default IItemStack withTag(IData tag, @Optional(valueBoolean = true) boolean matchTagExact) {
+        CraftTweakerAPI.logError("Default method IItemStack#WithTag is not overwritten in " + getClass() + " please report to the author!");
+        return withTag(tag);
+    }
+    
+    @Deprecated
     IItemStack withTag(IData tag);
     
     /**
@@ -247,6 +254,12 @@ public interface IItemStack extends IIngredient {
      * @return updated item stack
      */
     @ZenMethod
+    default IItemStack updateTag(IData tagUpdate, @Optional(valueBoolean = true) boolean matchTagExact) {
+        CraftTweakerAPI.logError("Default method IItemStack#updateTag is not overwritten in " + getClass() + " please report to the author!");
+        return updateTag(tagUpdate);
+    }
+    
+    @Deprecated
     IItemStack updateTag(IData tagUpdate);
     
     /**
