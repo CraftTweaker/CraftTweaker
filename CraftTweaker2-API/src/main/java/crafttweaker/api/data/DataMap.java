@@ -186,12 +186,12 @@ public class DataMap implements IData {
     
     @Override
     public IData getAt(int i) {
-        throw new UnsupportedOperationException("Cannot index maps with integers");
+        return memberGet(Integer.toString(i));
     }
     
     @Override
     public void setAt(int i, IData value) {
-        throw new UnsupportedOperationException("Cannot index maps with integers");
+        memberSet(Integer.toString(i), value);
     }
     
     @Override
