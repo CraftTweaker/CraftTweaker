@@ -240,8 +240,10 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         } catch(Throwable exception) {
                             CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + ingredient.toCommandString() + ":", exception);
                         }
-                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), CraftTweakerMC.getItemStack(remainingItem));
-                        needsContainerItem = false;
+                        if(remainingItem != ItemStackUnknown.INSTANCE) {
+                            out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), CraftTweakerMC.getItemStack(remainingItem));
+                            needsContainerItem = false;
+                        }
                     }
                     if(ingredient.hasTransformers()) {
                         //increase stackSize by 1 so that it can then be decreased by one in the crafting process
