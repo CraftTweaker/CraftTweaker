@@ -837,6 +837,26 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerRightClickBlock(PlayerRightClickBlockEvent event) {
         elPlayerRightClickBlock.publish(event);
     }
-    
-    
+
+
+    // ###############
+    // ### Command ###
+    // ###############
+
+    private final EventList<CommandEvent> elCommand = new EventList<>();
+
+    @Override
+    public IEventHandle onCommand(IEventHandler<CommandEvent> ev) {
+        return elCommand.add(ev);
+    }
+
+    public boolean hasCommand() {
+        return elCommand.hasHandlers();
+    }
+
+    public void publishCommand(CommandEvent event) {
+        elCommand.publish(event);
+    }
+
+
 }
