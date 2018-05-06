@@ -61,30 +61,31 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
-        return calculateOffset(inv) != offsetInvalid;
+        
+        return !calculateOffset(inv).equals(offsetInvalid);
     }
     
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-    
+        
         Pair<Integer, Integer> offsetPair;
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid || !isMirrored)
+        if(!offsetPair.equals(offsetInvalid) || !isMirrored)
             return getCraftingResult(inv, offsetPair, ingredients);
-    
+        
         //Mirror on X-Axis
         IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid)
+        if(!offsetPair.equals(offsetInvalid))
             return getCraftingResult(inv, offsetPair, ingredients);
-    
+        
         //Mirror on Y-Axis
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid)
+        if(!offsetPair.equals(offsetInvalid))
             return getCraftingResult(inv, offsetPair, ingredients);
-    
+        
         //Mirror on X-/Y-Axis
         ingredients = ArrayUtil.inverse(ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
@@ -129,7 +130,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     public void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer) {
         Pair<Integer, Integer> offsetPair;
         offsetPair = checkRecipe(ingredients, inventory);
-        if(offsetPair != offsetInvalid || !isMirrored) {
+        if(!offsetPair.equals(offsetInvalid) || !isMirrored) {
             applyTransformers(inventory, byPlayer, offsetPair, ingredients);
             return;
         }
@@ -137,7 +138,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         //Mirror on X-Axis
         IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
         offsetPair = checkRecipe(ingredients, inventory);
-        if(offsetPair != offsetInvalid) {
+        if(!offsetPair.equals(offsetInvalid)) {
             applyTransformers(inventory, byPlayer, offsetPair, ingredients);
             return;
         }
@@ -146,7 +147,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         offsetPair = checkRecipe(ingredients, inventory);
-        if(offsetPair != offsetInvalid) {
+        if(!offsetPair.equals(offsetInvalid)) {
             applyTransformers(inventory, byPlayer, offsetPair, ingredients);
             return;
         }
@@ -158,7 +159,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     }
     
     private void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
-        if(offsetPair == offsetInvalid)
+        if(offsetPair.equals(offsetInvalid))
             return;
         int rowOffset = offsetPair.getKey();
         int columnOffset = offsetPair.getValue();
@@ -194,20 +195,20 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         Pair<Integer, Integer> offsetPair;
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid || !isMirrored)
+        if(!offsetPair.equals(offsetInvalid) || !isMirrored)
             return getRemainingItems(inv, offsetPair, ingredients);
         
         //Mirror on X-Axis
         IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid)
+        if(!offsetPair.equals(offsetInvalid))
             return getRemainingItems(inv, offsetPair, ingredients);
         
         //Mirror on Y-Axis
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         offsetPair = checkRecipe(ingredients, inv);
-        if(offsetPair != offsetInvalid)
+        if(!offsetPair.equals(offsetInvalid))
             return getRemainingItems(inv, offsetPair, ingredients);
         
         //Mirror on X-/Y-Axis
@@ -218,7 +219,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     
     private NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
         NonNullList<ItemStack> out = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-        if(offsetPair == offsetInvalid)
+        if(offsetPair.equals(offsetInvalid))
             return out;
         
         int rowOffset = offsetPair.getKey();
@@ -267,17 +268,18 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         //just test it in all possible mirrored states
         Pair<Integer, Integer> offset;
         offset = checkRecipe(ingredients, inv);
-        if(offset != offsetInvalid || !isMirrored)
+        System.out.println(offset + ":" + (!offset.equals(offsetInvalid) || !isMirrored));
+        if(!offset.equals(offsetInvalid) || !isMirrored)
             return offset;
         offset = checkRecipe(ArrayUtil.inverse(ingredients, height), inv);
-        if(offset != offsetInvalid)
+        if(!offset.equals(offsetInvalid))
             return offset;
         IIngredient[][] ingredients = new IIngredient[this.ingredients.length][];
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         
         offset = checkRecipe(ingredients, inv);
-        if(offset != offsetInvalid)
+        if(!offset.equals(offsetInvalid))
             return offset;
         return checkRecipe(ArrayUtil.inverse(ingredients, height), inv);
     }

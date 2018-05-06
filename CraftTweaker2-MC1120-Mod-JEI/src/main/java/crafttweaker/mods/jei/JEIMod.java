@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.event.*;
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 import static crafttweaker.mods.jei.JEI.*;
 
-@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.1", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.2", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class JEIMod {
     
     @Mod.EventHandler
@@ -25,8 +25,12 @@ public class JEIMod {
             } catch(Exception e) {
                 e.printStackTrace();
             }
-            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
-            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
+            if(!JEI.HIDDEN_ITEMS.isEmpty()) {
+                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
+            }
+            if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
+                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
+            }
         }
     }
     
