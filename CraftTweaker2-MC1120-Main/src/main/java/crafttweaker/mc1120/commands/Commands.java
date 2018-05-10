@@ -473,10 +473,11 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
-                    player.openBrowser("http://minetweaker3.powerofbytes.com/wiki/");
-                    sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
+                    player.openBrowser("http://crafttweaker.readthedocs.io/en/latest/");
+                    sender.sendMessage(getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
+        
                 } else {
-                    sender.sendMessage(new TextComponentString("http://minetweaker3.powerofbytes.com/wiki/"));
+                    sender.sendMessage(new TextComponentString("http://crafttweaker.readthedocs.io/en/latest/"));
                 }
             }
         });
