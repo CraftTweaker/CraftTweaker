@@ -34,12 +34,8 @@ repositories {
 }
 
 dependencies {
-    compile(project(':ZenScript')) {
-        exclude group: 'org.ow2.asm'
-    }
-    compile(project(':CraftTweaker2-API')) {
-        exclude group: 'org.ow2.asm'
-    }
+    compile(project(':ZenScript'))
+    compile(project(':CraftTweaker2-API'))
 
 //    deobfCompile "mezz.jei:jei_1.12:$jei_version"
 }
