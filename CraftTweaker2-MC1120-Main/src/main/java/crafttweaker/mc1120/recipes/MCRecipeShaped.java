@@ -17,16 +17,16 @@ import stanhebben.zenscript.util.*;
 import java.util.*;
 
 public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
-    
+
     private static final Pair<Integer, Integer> offsetInvalid = new Pair<>(-1, -1);
-    
+
     private final IIngredient[][] ingredients;
     private final int width, height;
     private final boolean isMirrored;
-    
+
     public MCRecipeShaped(IIngredient[][] ingredients, IItemStack output, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean isMirrored, boolean isHidden) {
         super(output, createIngredientList(ingredients), recipeFunction, recipeAction, isHidden);
-        
+
         this.height = ingredients.length;
         this.isMirrored = isMirrored;
         int width = 0;
@@ -38,17 +38,17 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
             if(this.ingredients[index].length < width)
                 this.ingredients[index] = Arrays.copyOf(this.ingredients[index], width);
         }
-        
+
         this.width = width;
     }
-    
+
     private static NonNullList<Ingredient> createIngredientList(IIngredient[][] ingredients) {
         int height = ingredients.length;
         int width = 0;
         for(IIngredient[] ingredientLine : ingredients) {
             width = Math.max(width, ingredientLine.length);
         }
-        
+
         NonNullList<Ingredient> ingredientList = NonNullList.withSize(width * height, Ingredient.EMPTY);
         for(int row = 0; row < ingredients.length; row++) {
             for(int column = 0; column < ingredients[row].length; column++) {
@@ -58,41 +58,40 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         }
         return ingredientList;
     }
-    
+
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
-        
-        return !calculateOffset(inv).equals(offsetInvalid);
+        return calculateOffset(inv) != offsetInvalid;
     }
-    
+
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-        
+
         Pair<Integer, Integer> offsetPair;
         offsetPair = checkRecipe(ingredients, inv);
-        if(!offsetPair.equals(offsetInvalid) || !isMirrored)
+        if(offsetPair != offsetInvalid || !isMirrored)
             return getCraftingResult(inv, offsetPair, ingredients);
-        
+
         //Mirror on X-Axis
         IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
-        if(!offsetPair.equals(offsetInvalid))
+        if(offsetPair != offsetInvalid)
             return getCraftingResult(inv, offsetPair, ingredients);
-        
+
         //Mirror on Y-Axis
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         offsetPair = checkRecipe(ingredients, inv);
-        if(!offsetPair.equals(offsetInvalid))
+        if(offsetPair != offsetInvalid)
             return getCraftingResult(inv, offsetPair, ingredients);
-        
+
         //Mirror on X-/Y-Axis
         ingredients = ArrayUtil.inverse(ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
         return getCraftingResult(inv, offsetPair, ingredients);
-        
+
     }
-    
+
     private ItemStack getCraftingResult(InventoryCrafting inv, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
         int rowOffset = offsetPair.getKey();
         int columnOffset = offsetPair.getValue();
@@ -115,55 +114,55 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         }
         return CraftTweakerMC.getItemStack(output);
     }
-    
+
     @Override
     public boolean canFit(int width, int height) {
         return this.width <= width && this.height <= height;
     }
-    
+
     @Override
     public ItemStack getRecipeOutput() {
         return CraftTweakerMC.getItemStack(output);
     }
-    
+
     @Override
     public void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer) {
         Pair<Integer, Integer> offsetPair;
         offsetPair = checkRecipe(ingredients, inventory);
-        if(!offsetPair.equals(offsetInvalid) || !isMirrored) {
+        if(offsetPair != offsetInvalid || !isMirrored) {
             applyTransformers(inventory, byPlayer, offsetPair, ingredients);
             return;
         }
-        
+
         //Mirror on X-Axis
         IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
         offsetPair = checkRecipe(ingredients, inventory);
-        if(!offsetPair.equals(offsetInvalid)) {
+        if(offsetPair != offsetInvalid) {
             applyTransformers(inventory, byPlayer, offsetPair, ingredients);
             return;
         }
-        
+
         //Mirror on Y-Axis
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         offsetPair = checkRecipe(ingredients, inventory);
-        if(!offsetPair.equals(offsetInvalid)) {
+        if(offsetPair != offsetInvalid) {
             applyTransformers(inventory, byPlayer, offsetPair, ingredients);
             return;
         }
-        
+
         //Mirror on X-/Y-Axis
         ingredients = ArrayUtil.inverse(ingredients, height);
         offsetPair = checkRecipe(ingredients, inventory);
         applyTransformers(inventory, byPlayer, offsetPair, ingredients);
     }
-    
+
     private void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
-        if(offsetPair.equals(offsetInvalid))
+        if(offsetPair == offsetInvalid)
             return;
         int rowOffset = offsetPair.getKey();
         int columnOffset = offsetPair.getValue();
-        
+
         for(int column = 0; column < height; column++) {
             for(int row = 0; row < width; row++) {
                 ItemStack itemStack = inventory.getStackInSlot((column + columnOffset) + (row + rowOffset) * inventory.getWidth());
@@ -177,51 +176,51 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                             CraftTweakerAPI.logError("Could not execute RecipeTransformer on : " + ingredient.toCommandString(), exception);
                         }
                         inventory.setInventorySlotContents((column + columnOffset) + (row + rowOffset) * inventory.getWidth(), CraftTweakerMC.getItemStack(out));
-                        
+
                     }
                 }
             }
-            
+
         }
     }
-    
+
     @Override
     public MCRecipeShaped update() {
         this.ingredientList = createIngredientList(ingredients);
         return this;
     }
-    
+
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         Pair<Integer, Integer> offsetPair;
         offsetPair = checkRecipe(ingredients, inv);
-        if(!offsetPair.equals(offsetInvalid) || !isMirrored)
+        if(offsetPair != offsetInvalid || !isMirrored)
             return getRemainingItems(inv, offsetPair, ingredients);
-        
+
         //Mirror on X-Axis
         IIngredient[][] ingredients = ArrayUtil.inverse(this.ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
-        if(!offsetPair.equals(offsetInvalid))
+        if(offsetPair != offsetInvalid)
             return getRemainingItems(inv, offsetPair, ingredients);
-        
+
         //Mirror on Y-Axis
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
         offsetPair = checkRecipe(ingredients, inv);
-        if(!offsetPair.equals(offsetInvalid))
+        if(offsetPair != offsetInvalid)
             return getRemainingItems(inv, offsetPair, ingredients);
-        
+
         //Mirror on X-/Y-Axis
         ingredients = ArrayUtil.inverse(ingredients, height);
         offsetPair = checkRecipe(ingredients, inv);
         return getRemainingItems(inv, offsetPair, ingredients);
     }
-    
+
     private NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
         NonNullList<ItemStack> out = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-        if(offsetPair.equals(offsetInvalid))
+        if(offsetPair == offsetInvalid)
             return out;
-        
+
         int rowOffset = offsetPair.getKey();
         int columnOffset = offsetPair.getValue();
         for(int column = 0; column < width; column++) {
@@ -241,8 +240,10 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         } catch(Throwable exception) {
                             CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + ingredient.toCommandString() + ":", exception);
                         }
-                        out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), CraftTweakerMC.getItemStack(remainingItem));
-                        needsContainerItem = false;
+                        if(remainingItem != ItemStackUnknown.INSTANCE) {
+                            out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), CraftTweakerMC.getItemStack(remainingItem));
+                            needsContainerItem = false;
+                        }
                     }
                     if(ingredient.hasTransformers()) {
                         //increase stackSize by 1 so that it can then be decreased by one in the crafting process
@@ -250,7 +251,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         itemStack.setCount(itemStack.getCount() + 1);
                         needsContainerItem = false;
                     }
-                    
+
                     if(needsContainerItem) {
                         out.set((column + columnOffset) + (row + rowOffset) * inv.getWidth(), ForgeHooks.getContainerItem(itemStack));
                     }
@@ -259,31 +260,30 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         }
         return out;
     }
-    
+
     public IIngredient[][] getIIngredients() {
         return ingredients;
     }
-    
+
     private Pair<Integer, Integer> calculateOffset(InventoryCrafting inv) {
         //just test it in all possible mirrored states
         Pair<Integer, Integer> offset;
         offset = checkRecipe(ingredients, inv);
-        System.out.println(offset + ":" + (!offset.equals(offsetInvalid) || !isMirrored));
-        if(!offset.equals(offsetInvalid) || !isMirrored)
+        if(offset != offsetInvalid || !isMirrored)
             return offset;
         offset = checkRecipe(ArrayUtil.inverse(ingredients, height), inv);
-        if(!offset.equals(offsetInvalid))
+        if(offset != offsetInvalid)
             return offset;
         IIngredient[][] ingredients = new IIngredient[this.ingredients.length][];
         for(int i = 0; i < ingredients.length; i++)
             ingredients[i] = ArrayUtil.inverse(this.ingredients[i], width);
-        
+
         offset = checkRecipe(ingredients, inv);
-        if(!offset.equals(offsetInvalid))
+        if(offset != offsetInvalid)
             return offset;
         return checkRecipe(ArrayUtil.inverse(ingredients, height), inv);
     }
-    
+
     //checks if the given IIngredient[][] somehow fits...
     private Pair<Integer, Integer> checkRecipe(IIngredient[][] ingredients, InventoryCrafting inv) {
         boolean[] visited = new boolean[inv.getSizeInventory()];
@@ -301,7 +301,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         if(itemStack.isEmpty() || !ingredients[row][column].matches(CraftTweakerMC.getIItemStack(itemStack)))
                             continue outer;
                         visited[(column + columnOffset) + (row + rowOffset) * inv.getWidth()] = true;
-                        
+
                     }
                 }
                 for(int slot = 0; slot < visited.length; slot++) {
@@ -310,12 +310,20 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                     if(!inv.getStackInSlot(slot).isEmpty())
                         return offsetInvalid;
                 }
+
+                //Check if other slots are empty
+                for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
+                    final int row = (slot / inv.getWidth()) - rowOffset;
+                    final int column = (slot % inv.getWidth()) - columnOffset;
+                    if((row < 0 || column < 0) && !inv.getStackInSlot(slot).isEmpty())
+                        return offsetInvalid;
+                }
                 return new Pair<>(rowOffset, columnOffset);
             }
         }
         return offsetInvalid;
     }
-    
+
     @Override
     public String toCommandString() {
         StringBuilder commandString = new StringBuilder("recipes.add");
@@ -341,7 +349,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         }
         return commandString.append("]);").toString();
     }
-    
+
     @Override
     public boolean hasTransformers() {
         for(IIngredient[] row : ingredients)
@@ -350,7 +358,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                     return true;
         return false;
     }
-    
+
     @Override
     public IIngredient[] getIngredients1D() {
         IIngredient[] out = new IIngredient[ingredientList.size()];
@@ -362,22 +370,22 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
         }
         return out;
     }
-    
+
     @Override
     public IIngredient[][] getIngredients2D() {
         return ingredients;
     }
-    
+
     @Override
     public boolean isShaped() {
         return true;
     }
-    
+
     @Override
     public int getRecipeWidth() {
         return width;
     }
-    
+
     @Override
     public int getRecipeHeight() {
         return height;

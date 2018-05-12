@@ -152,6 +152,19 @@ public class IngredientOr implements IIngredient {
     
     @Override
     public IItemStack applyNewTransform(IItemStack item) {
+
+        boolean changed = false;
+
+        for(IIngredient element : elements) {
+            if(element.matches(item) && element.hasNewTransformers()) {
+                item = element.applyNewTransform(item);
+                changed = true;
+            }
+        }
+
+        if(transformerNews.length == 0 && !changed)
+            return ItemStackUnknown.INSTANCE;
+
         for(IItemTransformerNew transformer : transformerNews) {
             item = transformer.transform(item);
         }
@@ -161,6 +174,9 @@ public class IngredientOr implements IIngredient {
     
     @Override
     public boolean hasNewTransformers() {
+        for(IIngredient element : elements)
+            if(element.hasNewTransformers())
+                return true;
         return transformerNews.length > 0;
     }
     

@@ -15,15 +15,15 @@ import net.minecraftforge.common.ForgeHooks;
 import java.util.*;
 
 public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
-    
+
     private final IIngredient ingredients[];
-    
-    
+
+
     public MCRecipeShapeless(IIngredient[] ingredients, IItemStack output, IRecipeFunction recipeFunction, IRecipeAction recipeAction, boolean isHidden) {
         super(output, createIngredientList(ingredients), recipeFunction, recipeAction, isHidden);
         this.ingredients = ingredients;
     }
-    
+
     private static NonNullList<Ingredient> createIngredientList(IIngredient[] ingredients) {
         NonNullList<Ingredient> ingredientList = NonNullList.withSize(ingredients.length, Ingredient.EMPTY);
         for(int index = 0; index < ingredients.length; index++) {
@@ -33,12 +33,12 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         }
         return ingredientList;
     }
-    
+
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
         boolean[] visited = new boolean[inv.getSizeInventory()];
         boolean matches = true;
-        
+
         //Check if all recipe items are present
         outer:
         for(int ingredientIndex = 0; ingredientIndex < ingredients.length; ingredientIndex++) {
@@ -55,8 +55,8 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
             }
             matches = false;
         }
-        
-        
+
+
         //make sure no other items are in the remaining slots
         for(int slot = 0; slot < visited.length; slot++) {
             if(visited[slot])
@@ -66,7 +66,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         }
         return matches;
     }
-    
+
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         if(recipeFunction == null)
@@ -97,17 +97,17 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         }
         return CraftTweakerMC.getItemStack(out);
     }
-    
+
     @Override
     public boolean canFit(int width, int height) {
         return (width * height) >= ingredients.length;
     }
-    
+
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         NonNullList<ItemStack> out = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
         boolean[] visited = new boolean[inv.getSizeInventory()];
-        
+
         for(int ingredientIndex = 0; ingredientIndex < ingredients.length; ingredientIndex++) {
             for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
                 ItemStack stackInSlot = inv.getStackInSlot(slot);
@@ -123,8 +123,10 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                             } catch(Throwable exception) {
                                 CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + ingredient.toCommandString() + ":", exception);
                             }
-                            out.set(slot, CraftTweakerMC.getItemStack(remainingItem));
-                            needsContainerItem = false;
+                            if(remainingItem != ItemStackUnknown.INSTANCE) {
+                                out.set(slot, CraftTweakerMC.getItemStack(remainingItem));
+                                needsContainerItem = false;
+                            }
                         }
                         if(ingredient.hasTransformers()) {
                             //increase stackSize by 1 so that it can then be decreased by one in the crafting process
@@ -143,7 +145,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
         }
         return out;
     }
-    
+
     @Override
     public String toCommandString() {
         StringBuilder commandString = new StringBuilder("recipes.add");
@@ -159,11 +161,11 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
             commandString.deleteCharAt(commandString.length() - 1);
             commandString.deleteCharAt(commandString.length() - 1);
         }
-        
+
         commandString.append("]);");
         return commandString.toString();
     }
-    
+
     @Override
     public boolean hasTransformers() {
         for(IIngredient ingredient : ingredients)
@@ -171,22 +173,22 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
                 return true;
         return false;
     }
-    
+
     @Override
     public IIngredient[] getIngredients1D() {
         return ingredients;
     }
-    
+
     @Override
     public IIngredient[][] getIngredients2D() {
         return new IIngredient[][]{ingredients};
     }
-    
+
     @Override
     public boolean isShaped() {
         return false;
     }
-    
+
     @Override
     public void applyTransformers(InventoryCrafting inventory, IPlayer byPlayer) {
         boolean[] visited = new boolean[inventory.getSizeInventory()];
@@ -211,7 +213,7 @@ public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
             }
         }
     }
-    
+
     @Override
     public MCRecipeShapeless update() {
         this.ingredientList = createIngredientList(ingredients);

@@ -22,7 +22,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.*;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.*;
@@ -394,6 +394,13 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPlayerRightClickBlock())
             CrafttweakerImplementationAPI.events.publishPlayerRightClickBlock(new MCPlayerRightClickBlockEvent(ev));
     }
-    
-    
+
+
+    @SubscribeEvent
+    public void onCommandEvent(CommandEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasCommand())
+            CrafttweakerImplementationAPI.events.publishCommand(new MCCommandEvent(ev));
+    }
+
+
 }
