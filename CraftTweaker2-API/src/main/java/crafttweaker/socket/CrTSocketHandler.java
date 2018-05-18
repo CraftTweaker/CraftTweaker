@@ -6,8 +6,10 @@ import crafttweaker.CraftTweakerAPI;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
-import java.util.HashMap;
+import java.security.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.*;
 
 public class CrTSocketHandler {
     
@@ -74,17 +76,36 @@ public class CrTSocketHandler {
             builder.append(inputLine).append("\n");
             
             while(in.ready() && (inputLine = in.readLine()) != null) {
-                builder.append(inputLine);
+                builder.append(inputLine).append("\n");
             }
-    
+            
             String message = builder.toString();
-    
+            
             System.out.println("message = " + message);
-            if (!message.startsWith("{")) {
+            if(message.startsWith("GET /")) {
+                String[] splits = message.split("\n");
+    
+                String key = null;
+                for(String split : splits) {
+                    if (!split.startsWith("Sec-WebSocket-Key: "))
+                        continue;
+        
+                    key = split.substring(19).trim();
+                }
+    
+                String secAccept = sha1base64(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+                out.print("HTTP/1.1 101 Switching Protocols\r\n" + "Upgrade: websocket\n" + "Connection: Upgrade\r\n" + "Sec-WebSocket-Accept: " + secAccept + "\r\n" + "Sec-WebSocket-Protocol: zslint\r\n");
+                out.flush();
+            }
+            
+            
+            
+            
+            if(!message.startsWith("{")) {
                 System.out.println("Message is no valid json, skipping.");
                 continue;
             }
-    
+            
             JsonElement json = jsonParser.parse(message);
             String messageType = json.getAsJsonObject().get("messageType").getAsString();
             
@@ -108,5 +129,16 @@ public class CrTSocketHandler {
             if(inputLine.equals("Bye."))
                 break;
         }
+    }
+    
+    
+    private String sha1base64(String str) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return Base64.getEncoder().encodeToString(md.digest(str.getBytes()));
     }
 }
