@@ -4,6 +4,7 @@ import crafttweaker.*;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.*;
 import crafttweaker.runtime.events.*;
+import crafttweaker.socket.CrTSocketHandler;
 import crafttweaker.util.*;
 import crafttweaker.zenscript.GlobalRegistry;
 import stanhebben.zenscript.*;
@@ -42,6 +43,7 @@ public class CrTTweaker implements ITweaker {
     
     public CrTTweaker() {
         PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
+        CrTSocketHandler socketHandler = new CrTSocketHandler();
     }
     
     @Override
@@ -64,43 +66,63 @@ public class CrTTweaker implements ITweaker {
         loadScript(false, defaultLoaderName);
     }
     
+    /**
+     * TODO: Keep this at all cost -----------------------
+     *
+     */
     @Override
     public boolean loadScript(boolean isSyntaxCommand, String loaderName) {
+        return loadScript(isSyntaxCommand, loaderName, null, false);
+    }
+    
+    private List<ScriptFile> loadPreprocessor(boolean isSyntaxCommand){
+        List<ScriptFile> scriptFiles = collectScriptFiles(isSyntaxCommand);
+    
+        // preprocessor magic
+        for(ScriptFile scriptFile : scriptFiles) {
+            scriptFile.addAll(preprocessorManager.checkFileForPreprocessors(scriptFile));
+        }
+    
+        scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
+        
+        return scriptFiles;
+    }
+    
+    
+    public boolean loadScript(boolean isSyntaxCommand, String loaderName, List<ParseException> parseExceptions, boolean isLinter) {
         CraftTweakerAPI.logInfo("Loading scripts");
-        CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
+        if (!isLinter)
+            CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
+        
         preprocessorManager.clean();
         
         Set<String> executed = new HashSet<>();
         boolean loadSuccessful = true;
         
-        List<ScriptFile> scriptFiles = collectScriptFiles(isSyntaxCommand);
+        List<ScriptFile> scriptFiles = loadPreprocessor(isSyntaxCommand);
         
-        // preprocessor magic
-        for(ScriptFile scriptFile : scriptFiles) {
-            scriptFile.addAll(preprocessorManager.checkFileForPreprocessors(scriptFile));
-        }
         
-        scriptFiles.sort(PreprocessorManager.SCRIPT_FILE_COMPARATOR);
-        
+
         Map<String, byte[]> classes = new HashMap<>();
         IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
         
         // ZS magic
         long totalTime = System.currentTimeMillis();
         for(ScriptFile scriptFile : scriptFiles) {
+            // check for loader
             if(!scriptFile.getLoaderName().equals(loaderName) && !isSyntaxCommand) {
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
                 continue;
             }
             
+            // check for network side
             if(!scriptFile.shouldBeLoadedOn(networkSide)) {
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");
                 continue;
             }
             
+            // prevent double execution
             if(!executed.contains(scriptFile.getEffectiveName())) {
-//                long time = System.currentTimeMillis();
-                
                 executed.add(scriptFile.getEffectiveName());
                 
                 CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
@@ -108,39 +130,32 @@ public class CrTTweaker implements ITweaker {
                 ZenParsedFile zenParsedFile = null;
                 String filename = scriptFile.getEffectiveName();
                 String className = extractClassName(filename);
-    
-                CRT_LOADING_SCRIPT_PRE_EVENT_LIST.publish(new CrTLoadingScriptEventPre(filename));
-                Reader reader = null;
-                try {
-                    reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8");
-                    
-                    
-                    CrTScriptLoadEvent loadEvent = new CrTScriptLoadEvent(scriptFile);
-                    preprocessorManager.postLoadEvent(loadEvent);
-                    
+                
+                if (!isLinter)
+                    CRT_LOADING_SCRIPT_PRE_EVENT_LIST.publish(new CrTLoadingScriptEventPre(filename));
+                
+                // start reading of the scripts
+                try(Reader reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8")) {
+                    preprocessorManager.postLoadEvent(new CrTScriptLoadEvent(scriptFile));
+        
                     // blocks the parsing of the script
                     if(scriptFile.isParsingBlocked())
                         continue;
-                    
+        
                     ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
-                    
+        
                 } catch(IOException ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Could not load script " + scriptFile + ": " + ex.getMessage());
                     loadSuccessful = false;
                 } catch(ParseException ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
                     loadSuccessful = false;
+                    if (parseExceptions != null)
+                        parseExceptions.add(ex);
                 } catch(Exception ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error loading " + scriptFile + ": " + ex.toString(), ex);
                     loadSuccessful = false;
-                } finally {
-                    if(reader != null) {
-                        try {
-                            reader.close();
-                        } catch(IOException ignored) {
-                        }
-                    }
                 }
                 
                 
@@ -151,7 +166,7 @@ public class CrTTweaker implements ITweaker {
                     compileScripts(className, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
                     
                     // stops if the execution is disabled
-                    if(scriptFile.isExecutionBlocked() || isSyntaxCommand)
+                    if(scriptFile.isExecutionBlocked() || isSyntaxCommand || isLinter)
                         continue;
                     
                     
