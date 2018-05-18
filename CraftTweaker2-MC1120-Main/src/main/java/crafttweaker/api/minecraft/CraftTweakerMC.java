@@ -817,6 +817,8 @@ public class CraftTweakerMC {
     }
     
     public static ICommandSender getICommandSender(net.minecraft.command.ICommandSender sender) {
+        if(sender instanceof Entity)
+            return getIEntity((Entity) sender);
         return sender == null ? null : new MCCommandSender(sender);
     }
     

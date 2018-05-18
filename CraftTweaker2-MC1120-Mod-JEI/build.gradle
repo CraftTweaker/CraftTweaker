@@ -28,8 +28,8 @@ repositories {
 }
 
 dependencies {
-    compile project(':ZenScript')
-    compile project(':CraftTweaker2-API')
+    compile(project(':ZenScript'))
+    compile(project(':CraftTweaker2-API'))
     compile project(':CraftTweaker2-MC1120-Main')
-	deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
+    deobfCompile "mezz.jei:jei_1.12.2:4.9.1.168"
 }

@@ -17,7 +17,7 @@ public class MCBiome implements IBiome {
 
     @Override
     public String getName() {
-        return biome.getBiomeName();
+        return biome.biomeName;
     }
 
 	@Override
