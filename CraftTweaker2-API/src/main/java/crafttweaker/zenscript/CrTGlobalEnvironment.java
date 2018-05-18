@@ -1,6 +1,7 @@
 package crafttweaker.zenscript;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.socket.SingleError;
 import stanhebben.zenscript.*;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -16,6 +17,7 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     private final Map<String, byte[]> classes;
     private final Map<String, IZenSymbol> symbols;
     private final ClassNameGenerator generator;
+    private List<SingleError> errors = new ArrayList<>();
     
     public CrTGlobalEnvironment(Map<String, byte[]> classes) {
         this.classes = classes;
@@ -81,16 +83,21 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     @Override
     public void error(ZenPosition position, String message) {
         CraftTweakerAPI.logError(position.toString() + " > " + message);
+        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.ERROR));
     }
     
     @Override
     public void warning(ZenPosition position, String message) {
         CraftTweakerAPI.logWarning(position.toString() + " > " + message);
+        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.WARN));
+    
     }
     
     @Override
     public void info(ZenPosition position, String message) {
         CraftTweakerAPI.logInfo(position.toString() + " > " + message);
+        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.INFO));
+    
     }
     
     @Override
@@ -122,4 +129,14 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     public void info(String message) {
         CraftTweakerAPI.logInfo(message);
     }
+    
+    // Stuff for storing errors to retrieve later
+    public void clear() {
+        errors.clear();
+    }
+    
+    public List<SingleError> getErrors() {
+        return errors;
+    }
+    
 }

@@ -2,19 +2,27 @@ package crafttweaker.socket;
 
 public class SingleError {
     public String fileName;
-    public String line;
+    public int line;
     public int offset;
     public String explanation;
+    public Level level;
     
-    public SingleError(String fileName, String line, int offset, String explanation) {
+    public SingleError(String fileName, int line, int offset, String explanation, Level level) {
         this.fileName = fileName;
         this.line = line;
         this.offset = offset;
         this.explanation = explanation;
+        this.level = level;
     }
     
     @Override
     public String toString() {
-        return "SingleError{" + "fileName='" + fileName + '\'' + ", line='" + line + '\'' + ", offset=" + offset + ", explanation='" + explanation + '\'' + '}';
+        return "SingleError{" + "fileName='" + fileName + '\'' + ", line=" + line + ", offset=" + offset + ", explanation='" + explanation + '\'' + ", level=" + level + '}';
+    }
+    
+    public enum Level {
+        INFO,
+        WARN,
+        ERROR
     }
 }

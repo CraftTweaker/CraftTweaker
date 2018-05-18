@@ -17,8 +17,8 @@ public class TestSocket {
     
     
             LintRequestMessage lint = new LintRequestMessage();
-            lint.comment = "this is a multiline\ncomment";
-            lint.sourcePath = "D:\\Users\\jonas\\Documents\\GitHub\\CraftTweaker\\CraftTweaker2-API\\src\\main\\java\\crafttweaker\\socket";
+            // lint.comment = "this is a multiline\ncomment";
+            // lint.sourcePath = "D:\\Users\\jonas\\Documents\\GitHub\\CraftTweaker\\CraftTweaker2-API\\src\\main\\java\\crafttweaker\\socket";
             
             String j = gson.toJson(lint);
             out.println(j);

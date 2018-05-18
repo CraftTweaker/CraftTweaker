@@ -2,7 +2,6 @@ package crafttweaker.socket;
 
 import com.google.gson.*;
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.runtime.CrTTweaker;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -30,6 +29,10 @@ public class CrTSocketHandler {
     
     public static void registerType(String typeName, Type type) {
         TYPE_HASH_MAP.put(typeName, type);
+    }
+    
+    public static Type getType(String typeName) {
+        return TYPE_HASH_MAP.get(typeName);
     }
     
     private void handleServerSocket() {
@@ -73,8 +76,16 @@ public class CrTSocketHandler {
             while(in.ready() && (inputLine = in.readLine()) != null) {
                 builder.append(inputLine);
             }
-            
-            JsonElement json = jsonParser.parse(builder.toString());
+    
+            String message = builder.toString();
+    
+            System.out.println("message = " + message);
+            if (!message.startsWith("{")) {
+                System.out.println("Message is no valid json, skipping.");
+                continue;
+            }
+    
+            JsonElement json = jsonParser.parse(message);
             String messageType = json.getAsJsonObject().get("messageType").getAsString();
             
             Type type = TYPE_HASH_MAP.get(messageType);
@@ -84,29 +95,18 @@ public class CrTSocketHandler {
             }
             
             SocketMessage obj = gson.fromJson(json, type);
-            obj.handleReceive();
-            
-            /*List<SingleError> array = new ArrayList<>();
-            array.add(new SingleError("bla", "blu", 12, "Because " + inputLine + "!"));
-            LintResponseMessage toDump = new LintResponseMessage(array);
-            out.println(gson.toJson(toDump, LintResponseMessage.class));
-            System.out.println("inputLine = '" + inputLine + "'");*/
-            
             out.println("Recieved: " + obj.toString());
+            
+            
+            if(obj instanceof IRequestMessage) {
+                SocketMessage res = ((IRequestMessage) obj).handleReceive();
+                out.println(gson.toJson(res, getType(res.messageType)));
+            } else {
+                out.println("INVALID MESSAGE!!!");
+            }
             
             if(inputLine.equals("Bye."))
                 break;
         }
-    }
-    
-    private void lint() {
-        if(!(CraftTweakerAPI.tweaker instanceof CrTTweaker)) {
-            CraftTweakerAPI.logError("We currently load with an unsupported loader class: " + CraftTweakerAPI.tweaker.getClass());
-            return;
-        }
-        
-        CrTTweaker tweaker = (CrTTweaker) CraftTweakerAPI.tweaker;
-        
-        
     }
 }

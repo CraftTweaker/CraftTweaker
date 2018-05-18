@@ -1,6 +1,6 @@
 package crafttweaker.socket;
 
-public abstract class SocketMessage {
+public abstract class SocketMessage<T extends SocketMessage> {
     
     public String messageType;
     
@@ -8,8 +8,6 @@ public abstract class SocketMessage {
         this.messageType = messageType;
     }
     
-    public SocketMessage() {
-    }
-    
-    public abstract void handleReceive();
+    // Needed for gson
+    private SocketMessage() {}
 }
