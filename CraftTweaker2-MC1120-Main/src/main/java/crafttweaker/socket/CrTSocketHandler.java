@@ -2,6 +2,11 @@ package crafttweaker.socket;
 
 import com.google.gson.*;
 import crafttweaker.CraftTweakerAPI;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker13;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -9,7 +14,6 @@ import java.net.*;
 import java.security.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.*;
 
 public class CrTSocketHandler {
     
@@ -40,10 +44,30 @@ public class CrTSocketHandler {
     private void handleServerSocket() {
         
         try {
-            ServerSocket serverSocket = new ServerSocket(PORT);
+            // ServerSocket serverSocket = new ServerSocket(PORT);
+    
+            NioEventLoopGroup acceptorGroup = new NioEventLoopGroup(2);
+            NioEventLoopGroup handlerGroup = new NioEventLoopGroup(10);
+    
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(acceptorGroup, handlerGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new CrTSocketInitialiser())
+                    .option(ChannelOption.SO_BACKLOG, 5)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
             
+            b.localAddress(PORT).bind().sync();
+            
+            
+            
+            /*WebSocketServerHandshaker13 handshaker13 = new WebSocketServerHandshaker13("ws://127.0.0.1", "zslint", true, 1000000);
+            Channel channel =
+            handshaker13.handshake()*/
+            
+            /*
             while(shouldRun.get()) {
                 final Socket clientSocket = serverSocket.accept();
+                
                 CraftTweakerAPI.logInfo("Reached connection from " + clientSocket);
                 if(!clientSocket.getInetAddress().isLoopbackAddress()) {
                     CraftTweakerAPI.logInfo("Invalid connection, not from localhost, rejecting: " + clientSocket);
@@ -57,7 +81,8 @@ public class CrTSocketHandler {
                     }
                 }).start();
             }
-        } catch(IOException e) {
+            */
+        } catch(/*IOException | */InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -84,21 +109,25 @@ public class CrTSocketHandler {
             System.out.println("message = " + message);
             if(message.startsWith("GET /")) {
                 String[] splits = message.split("\n");
-    
+                
                 String key = null;
                 for(String split : splits) {
-                    if (!split.startsWith("Sec-WebSocket-Key: "))
+                    if(!split.startsWith("Sec-WebSocket-Key: "))
                         continue;
-        
+                    
                     key = split.substring(19).trim();
                 }
-    
+                
                 String secAccept = sha1base64(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
-                out.print("HTTP/1.1 101 Switching Protocols\r\n" + "Upgrade: websocket\n" + "Connection: Upgrade\r\n" + "Sec-WebSocket-Accept: " + secAccept + "\r\n" + "Sec-WebSocket-Protocol: zslint\r\n");
+                
+                String response = "HTTP/1.1 101 Switching Protocols\r\n" + "Upgrade: websocket\r\n" + "Connection: Upgrade\r\n" + "Sec-WebSocket-Accept: " + secAccept + "\r\n" + "Sec-WebSocket-Protocol: zslint\r\n";
+                System.out.println("response = " + response);
+                
+                out.print(response);
                 out.flush();
+                
+                continue;
             }
-            
-            
             
             
             if(!message.startsWith("{")) {
@@ -136,7 +165,7 @@ public class CrTSocketHandler {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-1");
-        } catch (NoSuchAlgorithmException e) {
+        } catch(NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return Base64.getEncoder().encodeToString(md.digest(str.getBytes()));

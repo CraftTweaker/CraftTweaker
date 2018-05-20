@@ -4,7 +4,7 @@ import crafttweaker.*;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.preprocessor.*;
 import crafttweaker.runtime.events.*;
-import crafttweaker.socket.*;
+import crafttweaker.socket.SingleError;
 import crafttweaker.util.*;
 import crafttweaker.zenscript.*;
 import stanhebben.zenscript.*;
@@ -40,7 +40,6 @@ public class CrTTweaker implements ITweaker {
     
     public CrTTweaker() {
         PreprocessorManager.registerOwnPreprocessors(preprocessorManager);
-        CrTSocketHandler socketHandler = new CrTSocketHandler();
     }
     
     @Override
