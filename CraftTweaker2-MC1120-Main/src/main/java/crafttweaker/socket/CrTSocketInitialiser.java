@@ -20,8 +20,11 @@ public class CrTSocketInitialiser extends ChannelInitializer<SocketChannel> {
         System.out.println("ch = " + ch.parent());
         System.out.println("ch = " + ch.config());
         System.out.println("ch = " + ch.remoteAddress());
-    
-        pipeline.addLast(new HttpServerCodec());
+        
+        pipeline.addLast("httpServerCodec", new HttpServerCodec());
+        pipeline.addLast("httpHandler", new HttpServerHandler());
+        
+        /*pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));
@@ -40,6 +43,6 @@ public class CrTSocketInitialiser extends ChannelInitializer<SocketChannel> {
             protected void channelRead0(ChannelHandlerContext ctx, LintRequestMessage msg) throws Exception {
                 System.out.println("Your message was: " + msg);
             }
-        });
+        });*/
     }
 }

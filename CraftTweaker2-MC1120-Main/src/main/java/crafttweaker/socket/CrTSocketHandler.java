@@ -7,6 +7,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker13;
+import io.netty.handler.logging.*;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -42,22 +43,24 @@ public class CrTSocketHandler {
     }
     
     private void handleServerSocket() {
-        
+    
+        NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+    
         try {
             // ServerSocket serverSocket = new ServerSocket(PORT);
     
-            NioEventLoopGroup acceptorGroup = new NioEventLoopGroup(2);
-            NioEventLoopGroup handlerGroup = new NioEventLoopGroup(10);
-    
             ServerBootstrap b = new ServerBootstrap();
-            b.group(acceptorGroup, handlerGroup)
+            b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new CrTSocketInitialiser())
-                    .option(ChannelOption.SO_BACKLOG, 5)
+                    .option(ChannelOption.SO_BACKLOG, 512)
+                    .handler(new LoggingHandler(LogLevel.INFO))
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
             
-            b.localAddress(PORT).bind().sync();
+            Channel ch = b.bind(PORT).sync().channel();
             
+            ch.closeFuture().sync();
             
             
             /*WebSocketServerHandshaker13 handshaker13 = new WebSocketServerHandshaker13("ws://127.0.0.1", "zslint", true, 1000000);
@@ -84,6 +87,9 @@ public class CrTSocketHandler {
             */
         } catch(/*IOException | */InterruptedException e) {
             e.printStackTrace();
+        }finally {
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
     }
     
