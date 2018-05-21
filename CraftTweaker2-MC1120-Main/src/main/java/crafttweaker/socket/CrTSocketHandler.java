@@ -48,8 +48,6 @@ public class CrTSocketHandler {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
     
         try {
-            // ServerSocket serverSocket = new ServerSocket(PORT);
-    
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)

@@ -31,9 +31,9 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
             } else {
                 System.out.println("Unsupported WebSocketFrame");
             }
-            
-            
-            
         }
+    
+        System.out.println("ctx = " + ctx);
+        System.out.println("msg = " + msg);
     }
 }
