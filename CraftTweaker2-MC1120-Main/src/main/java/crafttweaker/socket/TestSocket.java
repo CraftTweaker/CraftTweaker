@@ -1,10 +1,10 @@
 package crafttweaker.socket;
 
 import com.google.gson.*;
+import crafttweaker.socket.messages.LintRequestMessage;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.regex.*;
 
 public class TestSocket {
     

@@ -130,6 +130,7 @@ public class CrTTweaker implements ITweaker {
                     CRT_LOADING_SCRIPT_PRE_EVENT_LIST.publish(new CrTLoadingScriptEventPre(filename));
                 
                 // start reading of the scripts
+                ZenTokener parser = null;
                 try(Reader reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8")) {
                     preprocessorManager.postLoadEvent(new CrTScriptLoadEvent(scriptFile));
                     
@@ -137,7 +138,7 @@ public class CrTTweaker implements ITweaker {
                     if(scriptFile.isParsingBlocked())
                         continue;
                     
-                    ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
+                    parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
                     
                 } catch(IOException ex) {
@@ -147,9 +148,11 @@ public class CrTTweaker implements ITweaker {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error parsing " + ex.getFile().getFileName() + ":" + ex.getLine() + " -- " + ex.getExplanation());
                     loadSuccessful = false;
                     if(parseExceptions != null)
-                        parseExceptions.add(new SingleError(ex.getFile().getFileName(), ex.getLine(), ex.getLineOffset(), ex.getMessage(), SingleError.Level.ERROR));
+                        parseExceptions.add(new SingleError(ex.getFile().getFileName(), ex.getLine(), ex.getLineOffset(), ex.getExplanation(), SingleError.Level.ERROR));
                 } catch(Exception ex) {
                     CraftTweakerAPI.logError(getTweakerDescriptor(loaderName) + ": Error loading " + scriptFile + ": " + ex.toString(), ex);
+                    if (parser != null && parseExceptions != null)
+                        parseExceptions.add(new SingleError(parser.getFile().getFileName(), parser.getLine(), parser.getLineOffset(), "Generic ERROR", SingleError.Level.ERROR));
                     loadSuccessful = false;
                 }
                 

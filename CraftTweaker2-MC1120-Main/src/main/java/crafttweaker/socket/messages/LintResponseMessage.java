@@ -1,4 +1,6 @@
-package crafttweaker.socket;
+package crafttweaker.socket.messages;
+
+import crafttweaker.socket.SingleError;
 
 import java.util.List;
 

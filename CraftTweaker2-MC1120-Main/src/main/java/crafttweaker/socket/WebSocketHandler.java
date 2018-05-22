@@ -16,7 +16,16 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
                 System.out.println( ((BinaryWebSocketFrame) msg).content() );
             } else if (msg instanceof TextWebSocketFrame) {
                 System.out.println("TextWebSocketFrame Received : ");
-                ctx.channel().writeAndFlush(new TextWebSocketFrame("Message recieved : " + ((TextWebSocketFrame) msg).text()));
+                String text = ((TextWebSocketFrame) msg).text();
+                
+                if (!text.startsWith("{")) {
+                    System.out.println("No valid json request: " + text);
+                    return;
+                }
+    
+                TextWebSocketFrame res = new TextWebSocketFrame(JsonMessageHandler.handleJson(text, ctx));
+                
+                ctx.channel().writeAndFlush(res);
                 System.out.println( ((TextWebSocketFrame) msg).text() );
             } else if (msg instanceof PingWebSocketFrame) {
                 System.out.println("PingWebSocketFrame Received : ");
@@ -32,8 +41,5 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Unsupported WebSocketFrame");
             }
         }
-    
-        System.out.println("ctx = " + ctx);
-        System.out.println("msg = " + msg);
     }
 }

@@ -1,4 +1,4 @@
-package crafttweaker.socket;
+package crafttweaker.socket.messages;
 
 public abstract class SocketMessage<T extends SocketMessage> {
     

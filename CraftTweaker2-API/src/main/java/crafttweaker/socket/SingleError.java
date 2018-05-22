@@ -11,7 +11,7 @@ public class SingleError {
         this.fileName = fileName;
         this.line = line;
         this.offset = offset;
-        this.explanation = explanation;
+        this.explanation = explanation == null ? "NO MESSAGE PROVIDED" : explanation;
         this.level = level;
     }
     

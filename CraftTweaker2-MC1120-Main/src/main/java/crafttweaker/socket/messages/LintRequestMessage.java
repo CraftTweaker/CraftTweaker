@@ -1,7 +1,9 @@
-package crafttweaker.socket;
+package crafttweaker.socket.messages;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.runtime.CrTTweaker;
+import crafttweaker.socket.SingleError;
+import io.netty.channel.ChannelHandlerContext;
 
 import java.util.*;
 
@@ -14,7 +16,7 @@ public class LintRequestMessage extends SocketMessage implements IRequestMessage
     }
     
     @Override
-    public LintResponseMessage handleReceive() {
+    public LintResponseMessage handleReceive(ChannelHandlerContext ctx) {
         System.out.println("Received a linting request, starting to lint.");
     
         List<SingleError> errors = new ArrayList<>();
@@ -32,9 +34,7 @@ public class LintRequestMessage extends SocketMessage implements IRequestMessage
         
         CrTTweaker tweaker = (CrTTweaker) CraftTweakerAPI.tweaker;
         
-        tweaker.loadScript(true, "NONE", list, true);
-        
-        return false;
+        return tweaker.loadScript(true, "NONE", list, true);
     }
     
     @Override
