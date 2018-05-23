@@ -9,5 +9,6 @@ public abstract class SocketMessage<T extends SocketMessage> {
     }
     
     // Needed for gson
-    private SocketMessage() {}
+    private SocketMessage() {
+    }
 }

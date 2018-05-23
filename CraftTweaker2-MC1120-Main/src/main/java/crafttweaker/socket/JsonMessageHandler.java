@@ -1,6 +1,7 @@
 package crafttweaker.socket;
 
 import com.google.gson.*;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.socket.messages.*;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -37,7 +38,7 @@ public class JsonMessageHandler {
         String messageType = json.getAsJsonObject().get("messageType").getAsString();
         Type type = TYPE_HASH_MAP.get(messageType);
         if(type == null) {
-            System.out.println("Invalid type in json element: " + json);
+            CraftTweakerAPI.logWarning("Invalid type in json element: " + json);
             return "Invalid Type.";
         }
         
@@ -49,7 +50,7 @@ public class JsonMessageHandler {
             if(res != null) {
                 String jsonRes = gson.toJson(res, getType(res.messageType));
                 
-                System.out.println("jres = " + jsonRes);
+                CraftTweakerAPI.logWarning("jres = " + jsonRes);
                 return jsonRes;
             } else {
                 return "Null response!";

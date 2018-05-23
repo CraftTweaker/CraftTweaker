@@ -4,7 +4,8 @@ import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpServerCodec;
 
-public class CrTSocketInitialiser extends ChannelInitializer<SocketChannel> {
+public class CrTSocketInitializer extends ChannelInitializer<SocketChannel> {
+    
     @Override
     protected void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();

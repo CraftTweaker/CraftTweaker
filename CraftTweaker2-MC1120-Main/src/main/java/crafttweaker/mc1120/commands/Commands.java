@@ -16,6 +16,7 @@ import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
+import crafttweaker.socket.CrTSocketHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -729,6 +730,19 @@ public class Commands {
                 List<String> commands = new ArrayList<>(1);
                 commands.add("debug");
                 return commands;
+            }
+        });
+        
+        CTChatCommand.registerCommand(new CraftTweakerCommand("zslint") {
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct zslint", "/ct zslint", true), getNormalMessage(" \u00A73Starts the ZsLint socket."));
+            }
+            
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                sender.sendMessage(getNormalMessage("\u00A7bStarting socket."));
+                CrTSocketHandler.enableSocket();
             }
         });
         

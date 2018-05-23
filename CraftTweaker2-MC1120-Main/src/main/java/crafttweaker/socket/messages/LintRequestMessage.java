@@ -8,20 +8,17 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.*;
 
 public class LintRequestMessage extends SocketMessage implements IRequestMessage<LintResponseMessage> {
-    // public String sourcePath;
-    // public String comment;
-    
     public LintRequestMessage() {
         super("LintRequest");
     }
     
     @Override
     public LintResponseMessage handleReceive(ChannelHandlerContext ctx) {
-        System.out.println("Received a linting request, starting to lint.");
-    
+        CraftTweakerAPI.logInfo("Received a linting request, starting to lint.");
+        
         List<SingleError> errors = new ArrayList<>();
         boolean didLoad = lint(errors);
-        System.out.println("errors = " + errors);
+        CraftTweakerAPI.logInfo("errors = " + errors);
         
         return new LintResponseMessage(errors, didLoad);
     }

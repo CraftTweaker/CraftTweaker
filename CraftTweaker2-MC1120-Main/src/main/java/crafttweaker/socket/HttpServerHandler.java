@@ -1,5 +1,6 @@
 package crafttweaker.socket;
 
+import crafttweaker.CraftTweakerAPI;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
@@ -15,33 +16,33 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         
         if(msg instanceof FullHttpMessage) {
-            System.out.println("Full HTTP Message Received");
+            CraftTweakerAPI.logInfo("Full HTTP Message Received");
         } else if(msg instanceof HttpRequest) {
             HttpRequest httpRequest = (HttpRequest) msg;
             
-            System.out.println("Http Request Received");
+            CraftTweakerAPI.logInfo("Http Request Received");
             
             HttpHeaders headers = httpRequest.headers();
-            System.out.println("Connection : " + headers.get("Connection"));
-            System.out.println("Upgrade : " + headers.get("Upgrade"));
+            CraftTweakerAPI.logInfo("Connection : " + headers.get("Connection"));
+            CraftTweakerAPI.logInfo("Upgrade : " + headers.get("Upgrade"));
             
             if(headers.get("Connection").equalsIgnoreCase("Upgrade") || headers.get("Upgrade").equalsIgnoreCase("WebSocket")) {
                 
                 //Adding new handler to the existing pipeline to handle WebSocket Messages
-                ctx.pipeline().replace(this, "websocketHandler", new WebSocketHandler());
+                ctx.pipeline().replace(this, "websocketHandler", new CrTWebSocketHandler());
                 
-                System.out.println("WebSocketHandler added to the pipeline");
+                CraftTweakerAPI.logInfo("CrTWebSocketHandler added to the pipeline");
                 
-                System.out.println("Opened Channel : " + ctx.channel());
+                CraftTweakerAPI.logInfo("Opened Channel : " + ctx.channel());
                 
-                System.out.println("Handshaking....");
+                CraftTweakerAPI.logInfo("Handshaking....");
                 //Do the Handshake to upgrade connection from HTTP to WebSocket protocol
                 handleHandshake(ctx, httpRequest);
-                System.out.println("Handshake is done");
+                CraftTweakerAPI.logInfo("Handshake is done");
                 
             }
         } else {
-            System.out.println("Incoming request is unknown");
+            CraftTweakerAPI.logWarning("Incoming request is unknown");
         }
         
     }
@@ -59,9 +60,9 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
     
     
     protected String getWebSocketURL(HttpRequest req) {
-        System.out.println("Req URI : " + req.uri());
+        CraftTweakerAPI.logInfo("Req URI : " + req.uri());
         String url = "ws://" + req.headers().get("Host") + req.uri();
-        System.out.println("Constructed URL : " + url);
+        CraftTweakerAPI.logInfo("Constructed URL : " + url);
         return url;
     }
     

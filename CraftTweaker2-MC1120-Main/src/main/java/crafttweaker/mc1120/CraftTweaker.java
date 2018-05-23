@@ -14,7 +14,7 @@ import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
 import crafttweaker.mc1120.network.*;
 import crafttweaker.mc1120.oredict.MCOreDict;
-import crafttweaker.mc1120.preprocessors.ModLoadedPreprocessor;
+import crafttweaker.mc1120.preprocessors.*;
 import crafttweaker.mc1120.proxies.CommonProxy;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
@@ -87,6 +87,7 @@ public class CraftTweaker {
 
         // register the modloaded preprocessor which can't be in the API package as it needs access to MC
         CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("modloaded", ModLoadedPreprocessor::new);
+        CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("zslint", ZsLintPreprocessor::new);
     }
     
     @EventHandler
@@ -130,10 +131,6 @@ public class CraftTweaker {
             e.printStackTrace();
             CraftTweakerAPI.logError("Error while applying actions", e);
         }
-    
-    
-        CrTSocketHandler socketHandler = new CrTSocketHandler();
-        
     }
     
     @EventHandler
