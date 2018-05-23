@@ -50,7 +50,7 @@ public class JsonMessageHandler {
             if(res != null) {
                 String jsonRes = gson.toJson(res, getType(res.messageType));
                 
-                CraftTweakerAPI.logWarning("jres = " + jsonRes);
+                CraftTweakerAPI.logInfo("jres = " + jsonRes);
                 return jsonRes;
             } else {
                 return "Null response!";
