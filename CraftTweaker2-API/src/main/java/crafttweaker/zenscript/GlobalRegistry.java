@@ -27,7 +27,7 @@ public class GlobalRegistry {
     private static final Set<Pair<Integer, IBracketHandler>> bracketHandlers = new TreeSet<>(Comparator.comparingInt((ToIntFunction<Pair<Integer, IBracketHandler>>) Pair::getKey).thenComparing(o -> o.getValue().getClass().getName()));
     private static final TypeRegistry types = new TypeRegistry();
     private static final SymbolPackage root = new SymbolPackage("<root>");
-    private static final IZenErrorLogger errors = new CrTErrorLogger();
+    private static final IZenErrorLogger errors = new CrtStoringErrorLogger();
     private static final IZenCompileEnvironment environment = new CrTCompileEnvironment();
     private static final Map<String, TypeExpansion> expansions = new HashMap<>();
     

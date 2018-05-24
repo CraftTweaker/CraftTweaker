@@ -39,4 +39,13 @@ public class BracketHandlerCreativeTab implements IBracketHandler {
         return position -> new ExpressionCallStatic(position, environment, method, new ExpressionString(position, tokens.subList(2, tokens.size()).stream().map(Token::getValue).collect(Collectors.joining())));
     }
     
+    @Override
+    public String getRegexMatchingString() {
+        return "creativetab:.*";
+    }
+    
+    @Override
+    public Class<?> getReturnedClass() {
+        return ICreativeTab.class;
+    }
 }

@@ -65,6 +65,16 @@ public class BracketHandlerPotion implements IBracketHandler {
         return new PotionReferenceSymbol(environment, valueBuilder.toString());
     }
     
+    @Override
+    public Class<?> getReturnedClass() {
+        return IPotion.class;
+    }
+    
+    @Override
+    public String getRegexMatchingString() {
+        return "potion:.*";
+    }
+    
     private class PotionReferenceSymbol implements IZenSymbol {
         
         private final IEnvironmentGlobal environment;

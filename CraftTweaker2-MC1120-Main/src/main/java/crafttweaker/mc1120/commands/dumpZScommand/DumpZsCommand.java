@@ -7,6 +7,7 @@ import joptsimple.internal.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
+import stanhebben.zenscript.dump.TreeNode;
 import stanhebben.zenscript.symbols.*;
 import stanhebben.zenscript.type.*;
 import stanhebben.zenscript.type.natives.*;
@@ -74,7 +75,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
         
         TreeNode<String> bracketNode = root.addChild("Bracket Handlers");
         for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
-            bracketNode.addChild(pair.getClass().getName() + ", priority: " + pair.getKey());
+            bracketNode.addChild(pair.getValue().getClass().getName() + ", priority: " + pair.getKey());
         }
         
         TreeNode<String> types = root.addChild("Types");
@@ -120,7 +121,6 @@ public class DumpZsCommand extends CraftTweakerCommand {
             e.printStackTrace();
         }
         //Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-        
         
         sender.sendMessage(getFileOpenText("Dumped content of the GlobalRegistry to a html file \u00A7r[\u00A76Click here to open\u00A7r]", zsDataFolder.getAbsolutePath() + "/tree3.html"));
     }

@@ -1,8 +1,7 @@
 package crafttweaker.mc1120;
 
 import crafttweaker.*;
-import crafttweaker.annotations.ModOnly;
-import crafttweaker.annotations.ZenRegister;
+import crafttweaker.annotations.*;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.mc1120.brewing.MCBrewing;
 import crafttweaker.mc1120.client.MCClient;
@@ -13,23 +12,20 @@ import crafttweaker.mc1120.game.MCGame;
 import crafttweaker.mc1120.item.MCItemUtils;
 import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
-import crafttweaker.mc1120.network.MessageCopyClipboard;
-import crafttweaker.mc1120.network.MessageOpenBrowser;
+import crafttweaker.mc1120.network.*;
 import crafttweaker.mc1120.oredict.MCOreDict;
-import crafttweaker.mc1120.preprocessors.ModLoadedPreprocessor;
+import crafttweaker.mc1120.preprocessors.*;
 import crafttweaker.mc1120.proxies.CommonProxy;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.IScriptProvider;
-import crafttweaker.runtime.providers.ScriptProviderCascade;
-import crafttweaker.runtime.providers.ScriptProviderDirectory;
+import crafttweaker.runtime.providers.*;
+import crafttweaker.socket.CrTSocketHandler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -91,6 +87,7 @@ public class CraftTweaker {
 
         // register the modloaded preprocessor which can't be in the API package as it needs access to MC
         CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("modloaded", ModLoadedPreprocessor::new);
+        CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("zslint", ZsLintPreprocessor::new);
     }
     
     @EventHandler
@@ -134,7 +131,6 @@ public class CraftTweaker {
             e.printStackTrace();
             CraftTweakerAPI.logError("Error while applying actions", e);
         }
-        
     }
     
     @EventHandler
