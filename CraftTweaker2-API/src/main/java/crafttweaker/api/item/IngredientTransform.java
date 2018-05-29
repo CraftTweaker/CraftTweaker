@@ -112,6 +112,6 @@ public class IngredientTransform {
     
     @ZenMethod
     public static IIngredient reuse(IIngredient ingredient) {
-        return ingredient.transformNew(item -> item);
+        return ingredient.transformNew(item -> item.withAmount(1));
     }
 }
