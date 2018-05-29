@@ -18,7 +18,7 @@ Note: If this bug occurs in a modpack, please report this to the modpack author.
 
 
 
-#### Minetweaker.log file (Please Pastebin or gist your file, posting an unpasted or ungist'd file will automatically close this issue):
+#### crafttweaker.log file (Please Pastebin or gist your file, posting an unpasted or ungist'd file will automatically close this issue):
 
 
 ____
@@ -27,6 +27,8 @@ ____
 - Minecraft:
 - Forge:
 - Crafttweaker: 
+- Using a server: 
+- If yes, does the client have the exact same scripts?
 
 #### Your most recent log file where the issue was present: 
 
