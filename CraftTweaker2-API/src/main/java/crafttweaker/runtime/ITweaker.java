@@ -90,4 +90,5 @@ public interface ITweaker {
      */
     void registerScriptLoadPostEvent(IEventHandler<CrTLoadingScriptEventPost> eventHandler);
     
+    ScriptLoader addLoader(String... nameAndAliases);
 }
