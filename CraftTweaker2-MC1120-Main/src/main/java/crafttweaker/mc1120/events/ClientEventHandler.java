@@ -8,7 +8,7 @@ import crafttweaker.api.tooltip.IngredientTooltips;
 import crafttweaker.mc1120.formatting.IMCFormattedString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.util.RecipeBookClient;
+import net.minecraft.client.util.*;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.*;
@@ -43,19 +43,9 @@ public class ClientEventHandler {
         final Minecraft minecraft = Minecraft.getMinecraft();
         if(minecraft.player != null && !alreadyChangedThePlayer) {
             alreadyChangedThePlayer = true;
-            
             RecipeBookClient.rebuildTable();
             minecraft.populateSearchTreeManager();
-            
-            // final SimpleReloadableResourceManager manager = ((SimpleReloadableResourceManager) minecraft.getResourceManager());
-            // manager.notifyReloadListeners();
-            // //for(IResourceManagerReloadListener reloadListener : manager.reloadListeners) {
-            // //    //if(reloadListener instanceof SearchTreeManager)
-            // //        reloadListener.onResourceManagerReload(manager);
-            // //}
-            
-            //FIXME find better solution
-            minecraft.refreshResources();
+            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }
     }
