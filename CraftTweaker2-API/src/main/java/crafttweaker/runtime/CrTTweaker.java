@@ -31,9 +31,11 @@ public class CrTTweaker implements ITweaker {
     /**
      * List of all event subscribers
      */
-    private final EventList<CrTLoadingStartedEvent> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
-    private final EventList<CrTLoadingScriptEventPre> CRT_LOADING_SCRIPT_PRE_EVENT_LIST = new EventList<>();
-    private final EventList<CrTLoadingScriptEventPost> CRT_LOADING_SCRIPT_POST_EVENT_LIST = new EventList<>();
+    private final EventList<CrTLoaderLoadingEvent.Started> CRT_LOADING_STARTED_EVENT_EVENT_LIST = new EventList<>();
+    private final EventList<CrTLoaderLoadingEvent.Finished> CRT_LOADING_FINISHED_EVENT_EVENT_LIST = new EventList<>();
+    private final EventList<CrTLoaderLoadingEvent.Aborted> CRT_LOADING_ABORTED_EVENT_EVENT_LIST = new EventList<>();
+    private final EventList<CrTScriptLoadingEvent.Pre> CRT_LOADING_SCRIPT_PRE_EVENT_LIST = new EventList<>();
+    private final EventList<CrTScriptLoadingEvent.Post> CRT_LOADING_SCRIPT_POST_EVENT_LIST = new EventList<>();
     private NetworkSide networkSide = NetworkSide.INVALID_SIDE;
     /**
      * PreprocessorManager, deals with all preprocessor Actions
@@ -100,18 +102,17 @@ public class CrTTweaker implements ITweaker {
             return false;
         }
 
-        CraftTweakerAPI.logInfo("Loading scripts for loader with names ["+ loader.getNames().stream().collect(Collectors.joining(" | ")) + "]");
-        if(loader.isLoaded()) {
+        CraftTweakerAPI.logInfo("Loading scripts for loader with names " + loader.toString());
+        if(loader.isLoaded() && !isSyntaxCommand) {
             CraftTweakerAPI.logInfo("Skipping loading for loader " + loader + " since it's already been loaded");
             return false;
         }
 
 
 
-        loader.setLoaded(true);
+        loader.setLoaderStage(ScriptLoader.LoaderStage.LOADING);
         if(!isLinter)
-            for(String loaderName : loader.getNames())
-                CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loaderName, isSyntaxCommand, networkSide));
+                CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loader, networkSide, isSyntaxCommand));
 
         preprocessorManager.clean();
 
@@ -219,8 +220,9 @@ public class CrTTweaker implements ITweaker {
             CrTGlobalEnvironment global = (CrTGlobalEnvironment)environmentGlobal;
             parseExceptions.addAll(global.getErrors());
         }
-
-
+    
+    
+        loader.setLoaderStage(loadSuccessful ? ScriptLoader.LoaderStage.LOADED_SUCCESSFUL : ScriptLoader.LoaderStage.ERROR);
         CraftTweakerAPI.logInfo("Completed script loading in: " + (System.currentTimeMillis() - totalTime) + "ms");
         return loadSuccessful;
     }
@@ -272,15 +274,23 @@ public class CrTTweaker implements ITweaker {
         this.networkSide = networkSide;
     }
     
-    public void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler) {
+    public void registerLoadStartedEvent(IEventHandler<CrTLoaderLoadingEvent.Started> eventHandler) {
         CRT_LOADING_STARTED_EVENT_EVENT_LIST.add(eventHandler);
     }
+    
+    public void registerLoadFinishedEvent(IEventHandler<CrTLoaderLoadingEvent.Finished> eventHandler) {
+        CRT_LOADING_FINISHED_EVENT_EVENT_LIST.add(eventHandler);
+    }
+    
+    public void registerLoadAbortedEvent(IEventHandler<CrTLoaderLoadingEvent.Aborted> eventHandler) {
+        CRT_LOADING_ABORTED_EVENT_EVENT_LIST.add(eventHandler);
+    }
 
-    public void registerScriptLoadPreEvent(IEventHandler<CrTLoadingScriptEventPre> eventHandler) {
+    public void registerScriptLoadPreEvent(IEventHandler<CrTScriptLoadingEvent.Pre> eventHandler) {
         CRT_LOADING_SCRIPT_PRE_EVENT_LIST.add(eventHandler);
     }
 
-    public void registerScriptLoadPostEvent(IEventHandler<CrTLoadingScriptEventPost> eventHandler) {
+    public void registerScriptLoadPostEvent(IEventHandler<CrTScriptLoadingEvent.Post> eventHandler) {
         CRT_LOADING_SCRIPT_POST_EVENT_LIST.add(eventHandler);
     }
 
@@ -316,7 +326,7 @@ public class CrTTweaker implements ITweaker {
 
     public void resetLoaderStats() {
         for(ScriptLoader loader : loaders) {
-            loader.setLoaded(false);
+            loader.setLoaderStage(ScriptLoader.LoaderStage.NOT_LOADED);
         }
     }
 }

@@ -51,6 +51,7 @@ public class CommonEventHandler {
         
         CraftTweakerAPI.logInfo("CraftTweaker: Successfully built item registry");
         MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Pre());
+        CraftTweakerAPI.tweaker.addLoader("crafttweaker", "recipeEvent");
         CrafttweakerImplementationAPI.load();
         MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Post());
         
