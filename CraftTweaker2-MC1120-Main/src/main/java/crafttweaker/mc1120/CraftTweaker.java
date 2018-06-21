@@ -114,6 +114,9 @@ public class CraftTweaker {
         
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
+        
+        CraftTweakerAPI.tweaker.addLoader("preinit");
+        CraftTweakerAPI.tweaker.loadScript(false, "preinit");
     }
     
     @EventHandler

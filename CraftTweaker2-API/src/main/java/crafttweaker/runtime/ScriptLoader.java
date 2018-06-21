@@ -32,7 +32,7 @@ public class ScriptLoader {
     
     public void addAliases(String... names) {
         if(isLoaded())
-            CraftTweakerAPI.logInfo("Trying to add loader aliases [" + String.join(" | ", names) + "] to already loaderStage ScriptLoader " + this.toString());
+            CraftTweakerAPI.logInfo("Trying to add loader aliases [" + String.join(" | ", names) + "] to already loaded ScriptLoader " + this.toString());
         
         for(String name : names)
             this.names.add(name.toLowerCase());
