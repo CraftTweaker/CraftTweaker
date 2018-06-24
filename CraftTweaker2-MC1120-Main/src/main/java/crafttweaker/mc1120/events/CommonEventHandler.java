@@ -48,7 +48,8 @@ public class CommonEventHandler {
         BracketHandlerLiquid.rebuildLiquidRegistry();
         BracketHandlerEntity.rebuildEntityRegistry();
         BracketHandlerPotion.rebuildRegistry();
-        
+        BracketHandlerBiome.rebuildBiomeRegistry();
+        BracketHandlerBiomeType.rebuildBiomeTypeRegistry();
         CraftTweakerAPI.logInfo("CraftTweaker: Successfully built item registry");
         MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Pre());
         CrafttweakerImplementationAPI.load();
