@@ -325,8 +325,11 @@ public class MCItemStack implements IItemStack {
                     return false;
                 }
             }
+        }else{
+            return false;
         }
-        return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
+        // if it gets here, it is equal
+        return true;
     }
     
     @Override
