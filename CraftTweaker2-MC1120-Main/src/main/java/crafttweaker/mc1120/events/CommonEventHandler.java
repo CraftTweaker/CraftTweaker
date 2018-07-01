@@ -36,6 +36,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
 
@@ -96,14 +98,13 @@ public class CommonEventHandler {
         
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
         if(ev.craftMatrix instanceof InventoryCrafting) {
-            CraftingManager.REGISTRY.getKeys().stream().filter(key -> CraftingManager.REGISTRY.getObject(key).getRecipeOutput().isItemEqual(ev.crafting)).forEach(i -> {
-                IRecipe recipe = CraftingManager.REGISTRY.getObject(i);
-                if(recipe instanceof MCRecipeBase) {
-                    MCRecipeBase recipeBase = (MCRecipeBase) recipe;
-                    if(recipeBase.hasRecipeAction())
-                        recipeBase.getRecipeAction().process(CraftTweakerMC.getIItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventorySquared(ev.craftMatrix, iPlayer), iPlayer.getWorld()), iPlayer);
-                }
-            });
+            Stream<IRecipe> recipeStream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(CraftingManager.REGISTRY.iterator(), 0), false);
+            // only look at tweaker recipes (Unchecked cast here is necessairy)
+            Stream<MCRecipeBase> tweakedRecipeStream = (Stream<MCRecipeBase>) recipeStream.filter(MCRecipeBase.class::isInstance).map(MCRecipeBase.class::cast);
+            // check for the presence of a recipe action first since that is cheaper.
+            tweakedRecipeStream.filter(MCRecipeBase::hasRecipeAction)
+                    .filter(recipe->recipe.getRecipeOutput().isItemEqual(ev.crafting))
+                    .forEach(recipe->recipe.getRecipeAction().process(CraftTweakerMC.getIItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventorySquared(ev.craftMatrix, iPlayer), iPlayer.getWorld()), iPlayer));
         }
         if(CrafttweakerImplementationAPI.events.hasPlayerCrafted()) {
             CrafttweakerImplementationAPI.events.publishPlayerCrafted(new MCPlayerCraftedEvent(ev));
