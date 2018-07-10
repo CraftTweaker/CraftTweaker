@@ -73,12 +73,34 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
             CraftTweakerAPI.logError("not a valid chat message");
             return;
         }
-        player.sendMessage((ITextComponent) internal);
+        ITextComponent text = (ITextComponent) internal;
+        if (text.getUnformattedText().length() > 30000) {
+            // TODO: Split them instead, somehow.
+            CraftTweakerAPI.logError("Message too long, suppressing:");
+            CraftTweakerAPI.logError(text.getFormattedText());
+        } else {
+            player.sendMessage(text);
+        }
     }
     
     @Override
     public void sendChat(String message) {
-        player.sendMessage(new TextComponentString(message));
+        String[] words = message.split(" ");
+        StringBuilder out = new StringBuilder();
+        for (int i = 0, wordsLength = words.length; i < wordsLength; i++) {
+            String word = words[i];
+            out.append(word);
+            if (i < wordsLength - 1) {
+                out.append(' ');
+            }
+            if (out.length() > 25000) {
+                player.sendMessage(new TextComponentString(out.toString()));
+                out = new StringBuilder();
+            }
+        }
+        if (out.length() > 0) {
+            player.sendMessage(new TextComponentString(out.toString()));
+        }
     }
     
     @Override
