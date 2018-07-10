@@ -43,13 +43,10 @@ public class MCEntityDefinition implements IEntityDefinition {
 
     @Override
     public void addDrop(IItemStack stack, int min, int max, float chance) {
-        if (min < 1 || max < 1) {
-            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s). Stack sizes must be greater than 0", entityName, stack, min, max, Float.toString(chance)));
+        if (min < 0 || max < 0 || chance < 0 || chance > 1) {
+            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s).", entityName, stack, min, max, Float.toString(chance)));
             return;
-        } else if (chance < 0 || chance > 1) {
-	    CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s). Chance must be from 0.0 to 1.0", entityName, stack, min, max, Float.toString(chance)));
-            return;
-	}
+        }
         drops.add(new EntityDrop(stack, min, max, chance));
     }
     
@@ -62,13 +59,11 @@ public class MCEntityDefinition implements IEntityDefinition {
 
     @Override
     public void addPlayerOnlyDrop(IItemStack stack, int min, int max, float chance) {
-        if (min < 1 || max < 1) {
-            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s). Stack sizes must be greater than 0", entityName, stack, min, max, Float.toString(chance)));
+        if (min < 0 || max < 0 || chance < 0 || chance > 1) {
+            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addPlayerOnlyDrop(%s, %d, %d, %s).", entityName, stack, min, max, Float.toString(chance)));
             return;
-        } else if (chance < 0 || chance > 1) {
-	    CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s). Chance must be from 0.0 to 1.0", entityName, stack, min, max, Float.toString(chance)));
-            return;
-	}
+        }
+        drops.add(new EntityDrop(stack, min, max, chance, true));
     }
     
     @Override
