@@ -192,6 +192,14 @@ public class CraftTweakerAPI {
         getLogger().logError(message, exception);
     }
     
+    /**
+     * Logs an info message, but only if it has not been disabled
+     * @param message info message
+     */
+    public static void logDefault(String message) {
+        getLogger().logDefault(message);
+    }
+    
     // ###################################
     // ### Plugin registration methods ###
     // ###################################

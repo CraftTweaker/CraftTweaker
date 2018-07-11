@@ -1,7 +1,7 @@
 package crafttweaker.runtime;
 
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * @author Stan
@@ -25,4 +25,13 @@ public interface ILogger {
     
     @ZenMethod
     void logPlayer(IPlayer player);
+    
+    @ZenMethod
+    void logDefault(String message);
+    
+    @ZenGetter("logDisabled")
+    boolean isLogDisabled();
+    
+    @ZenSetter("logDisabled")
+    void setLogDisabled(boolean logDisabled);
 }

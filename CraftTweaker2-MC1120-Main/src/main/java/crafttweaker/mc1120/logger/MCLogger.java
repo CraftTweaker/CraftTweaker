@@ -12,6 +12,7 @@ public class MCLogger implements ILogger {
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
     private final Writer writer;
     private final PrintWriter printWriter;
+    private boolean isDefaultDisabled = false;
 
     public MCLogger(File output) {
         try {
@@ -82,5 +83,21 @@ public class MCLogger implements ILogger {
      */
     public String stripMessage(String message) {
         return message == null ? null : FORMATTING_CODE_PATTERN.matcher(message).replaceAll("");
+    }
+    
+    @Override
+    public void logDefault(String message) {
+        if(!isLogDisabled())
+            logInfo(message);
+    }
+    
+    @Override
+    public boolean isLogDisabled() {
+        return isDefaultDisabled;
+    }
+    
+    @Override
+    public void setLogDisabled(boolean logDisabled) {
+        this.isDefaultDisabled = logDisabled;
     }
 }
