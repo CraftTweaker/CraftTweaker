@@ -55,6 +55,7 @@ public class BracketHandlerItem implements IBracketHandler {
             String domain = itemName.toString().replace(" ", "").replace("'", "");
             itemNames.put(domain, Item.REGISTRY.getObject(itemName));
         }
+        
         for(ResourceLocation blockName : Block.REGISTRY.getKeys()) {
             String domain = blockName.toString().replace(" ", "").replace("'", "");
             blockNames.put(domain, Block.REGISTRY.getObject(blockName));

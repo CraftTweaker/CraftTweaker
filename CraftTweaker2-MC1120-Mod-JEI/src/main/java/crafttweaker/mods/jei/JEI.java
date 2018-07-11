@@ -30,7 +30,9 @@ import java.util.*;
 @ModOnly("jei")
 public class JEI {
     
-    public static List<IAction> LATE_ACTIONS = new LinkedList<>();
+    public static List<IAction> LATE_ACTIONS_PRE = new LinkedList<>();
+    public static List<IAction> LATE_ACTIONS_POST = new LinkedList<>();
+    
     public static List<ItemStack> HIDDEN_ITEMS = new LinkedList<>();
     public static List<FluidStack> HIDDEN_LIQUIDS = new LinkedList<>();
     
@@ -42,7 +44,7 @@ public class JEI {
             CraftTweakerAPI.logError("Unable to hide null itemstack! " + stack);
             return;
         }
-        LATE_ACTIONS.add(new HideAction(stack));
+        LATE_ACTIONS_PRE.add(new HideAction(stack));
     }
     
     @ZenMethod
@@ -51,7 +53,7 @@ public class JEI {
             CraftTweakerAPI.logError("Unable to hide null fluidstack! " + stack);
             return;
         }
-        LATE_ACTIONS.add(new HideFluidAction(stack));
+        LATE_ACTIONS_PRE.add(new HideFluidAction(stack));
     }
     
     @ZenMethod
@@ -62,7 +64,7 @@ public class JEI {
                 CraftTweakerAPI.logError("Unable to hide null itemstack! " + stack + ", from:" + output);
                 continue;
             }
-            LATE_ACTIONS.add(new HideAction(stack));
+            LATE_ACTIONS_PRE.add(new HideAction(stack));
         }
         
         
@@ -94,7 +96,7 @@ public class JEI {
     
     @ZenMethod
     public static void addItem(IItemStack stack) {
-        LATE_ACTIONS.add(new AddItemAction(stack));
+        LATE_ACTIONS_POST.add(new AddItemAction(stack));
     }
     
 }

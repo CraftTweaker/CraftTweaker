@@ -4,6 +4,8 @@ import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
+import java.util.List;
+
 /**
  * @author Stan
  */
@@ -14,6 +16,9 @@ public interface IBiome {
     
 	@ZenGetter("name")
     String getName();
+	
+	@ZenGetter("id")
+    String getId();
 	
 	@ZenGetter("canRain")
 	boolean getCanRain();
@@ -44,5 +49,8 @@ public interface IBiome {
 	
 	@ZenGetter("temperature")
 	float getTemperature();
+	
+	@ZenGetter("types")
+	List<IBiomeType> getTypes();
 	
 }

@@ -10,7 +10,7 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
-import crafttweaker.mc1120.brackets.BracketHandlerPotion;
+import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.commands.dumpZScommand.*;
 import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -539,10 +539,29 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 CraftTweakerAPI.logCommand("Biomes:");
                 for(IBiome biome : CraftTweakerAPI.game.getBiomes()) {
-                    CraftTweakerAPI.logCommand("-" + biome.getName());
+                    CraftTweakerAPI.logCommand("-" + biome.getId() + "\t" + biome.getName());
                 }
                 
                 sender.sendMessage(getLinkToCraftTweakerLog("Biome list generated", sender));
+            }
+        });
+    
+        CTChatCommand.registerCommand(new CraftTweakerCommand("biomeTypes") {
+        
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct biomeTypes", "/ct biomeTypes", true), getNormalMessage(" \u00A73Lists all the biome types in the game"));
+            
+            }
+        
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                CraftTweakerAPI.logCommand("Biome Types:");
+                BracketHandlerBiomeType.biomeTypes.forEach((s, iBiomeType) -> {
+                    CraftTweakerAPI.logCommand("-" + s);
+                });
+            
+                sender.sendMessage(getLinkToCraftTweakerLog("Biome Types list generated", sender));
             }
         });
         
