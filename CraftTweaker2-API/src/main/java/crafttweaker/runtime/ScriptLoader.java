@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ScriptLoader {
     
+    private String mainName;
     private final Set<String> names = new HashSet<>();
     private LoaderStage loaderStage = LoaderStage.NOT_LOADED;
     
@@ -16,6 +17,14 @@ public class ScriptLoader {
     
     public Set<String> getNames() {
         return names;
+    }
+    
+    public String getMainName() {
+        return mainName != null ? mainName : names.iterator().next();
+    }
+    
+    public void setMainName(String mainName) {
+        this.mainName = mainName;
     }
     
     public boolean isLoaded() {
