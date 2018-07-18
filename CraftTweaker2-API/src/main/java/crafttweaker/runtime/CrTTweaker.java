@@ -326,6 +326,7 @@ public class CrTTweaker implements ITweaker {
                     mergeLoader = loader;
                 } else {
                     mergeLoader.addAliases(loader.getNames().toArray(new String[0]));
+                    mergeLoader.setMainName(loader.getMainName());
                     it.remove();
                 }
             }

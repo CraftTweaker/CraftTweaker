@@ -20,10 +20,14 @@ public class ScriptLoader {
     }
     
     public String getMainName() {
-        return mainName != null ? mainName : names.iterator().next();
+        if(mainName == null)
+            mainName = names.iterator().next();
+        return mainName;
     }
     
     public void setMainName(String mainName) {
+        if(!canExecute(mainName))
+            addAliases(mainName);
         this.mainName = mainName;
     }
     
@@ -44,12 +48,14 @@ public class ScriptLoader {
             CraftTweakerAPI.logInfo("Trying to add loader aliases [" + String.join(" | ", names) + "] to already loaded ScriptLoader " + this.toString());
         
         for(String name : names)
-            this.names.add(name.toLowerCase());
+            this.names.add(name.trim().toLowerCase());
+        if(this.names.isEmpty())
+            throw new IllegalArgumentException("Loader is empty after all aliases have been added");
     }
     
     public boolean canExecute(String... loaderNames) {
         for(String loaderName : loaderNames) {
-            if(names.contains(loaderName.toLowerCase()))
+            if(names.contains(loaderName.trim().toLowerCase()))
                 return true;
         }
         return false;
@@ -57,7 +63,16 @@ public class ScriptLoader {
     
     @Override
     public String toString() {
-        return "[" + String.join(" | ", names) + "]";
+        StringJoiner joiner = new StringJoiner(" | ", "[", "]");
+    
+        final String mainName = getMainName();
+        joiner.add(mainName);
+        for(String name : names) {
+            if(!mainName.equals(name))
+                joiner.add(name);
+        }
+        
+        return joiner.toString();
     }
     
     
