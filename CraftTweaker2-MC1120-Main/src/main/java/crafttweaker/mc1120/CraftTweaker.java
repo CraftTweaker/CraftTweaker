@@ -20,7 +20,7 @@ import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
-import crafttweaker.runtime.IScriptProvider;
+import crafttweaker.runtime.*;
 import crafttweaker.runtime.providers.*;
 import crafttweaker.socket.CrTSocketHandler;
 import net.minecraft.server.MinecraftServer;
@@ -114,6 +114,9 @@ public class CraftTweaker {
         
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
+    
+        CraftTweakerAPI.tweaker.addLoader("preinit").setMainName("preinit");
+        CraftTweakerAPI.tweaker.loadScript(false, "preinit");
     }
     
     @EventHandler

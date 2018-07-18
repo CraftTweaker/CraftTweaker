@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ScriptLoader {
     
+    private String mainName;
     private final Set<String> names = new HashSet<>();
     private LoaderStage loaderStage = LoaderStage.NOT_LOADED;
     
@@ -16,6 +17,14 @@ public class ScriptLoader {
     
     public Set<String> getNames() {
         return names;
+    }
+    
+    public String getMainName() {
+        return mainName != null ? mainName : names.iterator().next();
+    }
+    
+    public void setMainName(String mainName) {
+        this.mainName = mainName;
     }
     
     public boolean isLoaded() {
@@ -32,7 +41,7 @@ public class ScriptLoader {
     
     public void addAliases(String... names) {
         if(isLoaded())
-            CraftTweakerAPI.logInfo("Trying to add loader aliases [" + String.join(" | ", names) + "] to already loaderStage ScriptLoader " + this.toString());
+            CraftTweakerAPI.logInfo("Trying to add loader aliases [" + String.join(" | ", names) + "] to already loaded ScriptLoader " + this.toString());
         
         for(String name : names)
             this.names.add(name.toLowerCase());
