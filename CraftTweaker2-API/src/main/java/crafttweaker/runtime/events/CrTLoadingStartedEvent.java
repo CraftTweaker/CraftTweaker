@@ -12,7 +12,7 @@ public class CrTLoadingStartedEvent extends CrTLoaderLoadingEvent.Started {
     
     @Deprecated
     public CrTLoadingStartedEvent(String loaderName, boolean isSyntaxCommand, NetworkSide networkSide) {
-        super(CraftTweakerAPI.tweaker.addLoader(loaderName), networkSide, isSyntaxCommand);
+        super(CraftTweakerAPI.tweaker.getOrCreate(loaderName), networkSide, isSyntaxCommand);
     }
     
     public CrTLoadingStartedEvent(ScriptLoader loader, NetworkSide networkSide, boolean isSyntaxCommand) {
@@ -20,6 +20,21 @@ public class CrTLoadingStartedEvent extends CrTLoaderLoadingEvent.Started {
     }
     
     public String getLoaderName() {
-        return getLoader().getNames().iterator().next();
+        return getLoader().getMainName();
+    }
+    
+    @Override
+    public ScriptLoader getLoader() {
+        return super.getLoader();
+    }
+    
+    @Override
+    public NetworkSide getNetworkSide() {
+        return super.getNetworkSide();
+    }
+    
+    @Override
+    public boolean isSyntaxCommand() {
+        return super.isSyntaxCommand();
     }
 }
