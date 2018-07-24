@@ -108,7 +108,7 @@ public class CrTTweaker implements ITweaker {
         
         CraftTweakerAPI.logInfo("Loading scripts for loader with names " + loader.toString());
         if(loader.isLoaded() && !isSyntaxCommand) {
-            CraftTweakerAPI.logInfo("Skipping loading for loader " + loader + " since it's already been loaded");
+            CraftTweakerAPI.logDefault("Skipping loading for loader " + loader + " since it's already been loaded");
             return false;
         }
         
@@ -144,13 +144,13 @@ public class CrTTweaker implements ITweaker {
             
             
             if(!loader.canExecute(scriptFile.getLoaderName()) && !isSyntaxCommand) {
-                CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
+                CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
                 continue;
             }
             
             // check for network side
             if(!scriptFile.shouldBeLoadedOn(networkSide)) {
-                CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");
+                CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");
                 continue;
             }
             
@@ -158,7 +158,7 @@ public class CrTTweaker implements ITweaker {
             if(!executed.contains(scriptFile.getEffectiveName())) {
                 executed.add(scriptFile.getEffectiveName());
                 
-                CraftTweakerAPI.logInfo(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
+                CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
                 
                 ZenParsedFile zenParsedFile = null;
                 String filename = scriptFile.getEffectiveName();
@@ -218,7 +218,7 @@ public class CrTTweaker implements ITweaker {
                 
                 if(!isLinter)
                     CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
-                //                CraftTweakerAPI.logInfo("Completed file: " + filename +" in: " + (System.currentTimeMillis() - time) + "ms");
+                    //CraftTweakerAPI.logDefault("Completed file: " + filename +" in: " + (System.currentTimeMillis() - time) + "ms");
             }
             
         }
@@ -233,7 +233,7 @@ public class CrTTweaker implements ITweaker {
         
         
         loader.setLoaderStage(loadSuccessful ? ScriptLoader.LoaderStage.LOADED_SUCCESSFUL : ScriptLoader.LoaderStage.ERROR);
-        CraftTweakerAPI.logInfo("Completed script loading in: " + (System.currentTimeMillis() - totalTime) + "ms");
+        CraftTweakerAPI.logDefault("Completed script loading in: " + (System.currentTimeMillis() - totalTime) + "ms");
         return loadSuccessful;
     }
     
@@ -350,7 +350,7 @@ public class CrTTweaker implements ITweaker {
             loaders.add(mergeLoader);
         }
         
-        CraftTweakerAPI.logInfo("Current loaders after merging: " + loaders);
+        CraftTweakerAPI.logDefault("Current loaders after merging: " + loaders);
         return mergeLoader;
     }
     
