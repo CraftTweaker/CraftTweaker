@@ -44,6 +44,9 @@ public interface ITweaker {
      * @return Whether it was successful at loading or not
      */
     boolean loadScript(boolean isSyntaxCommand, String loaderName);
+    
+    
+    void loadScript(boolean isSyntaxCommand, ScriptLoader loader);
 
 
     /**
@@ -102,8 +105,9 @@ public interface ITweaker {
     
     /**
      * Gets or adds a new loader
+     * Be careful as this loader might become invalidated if merged with another loader so always call this method anew if possible.
      * @param nameAndAliases the Names the loader will be callable under, if an existing loader already has any of the names, they will be merged
      * @return The added, retrieved or changed loader
      */
-    ScriptLoader addLoader(String... nameAndAliases);
+    ScriptLoader getOrCreateLoader(String... nameAndAliases);
 }

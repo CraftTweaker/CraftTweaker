@@ -8,21 +8,27 @@ public class TestLoaders {
     
     public static void main(String[] args) {
         
-        CraftTweakerAPI.tweaker.setScriptProvider(Collections.EMPTY_LIST::iterator);
+        CraftTweakerAPI.tweaker.setScriptProvider(Collections::emptyIterator);
         CrafttweakerImplementationAPI.logger.addLogger(new SoutLogger());
         
         
-        CraftTweakerAPI.tweaker.addLoader("test1");
-        CraftTweakerAPI.tweaker.addLoader("test2");
-        CraftTweakerAPI.tweaker.addLoader("test1", "test2");
-        CraftTweakerAPI.tweaker.addLoader("test3", "test4").setMainName("test5");
-        CraftTweakerAPI.tweaker.addLoader("test1", "test3");
+        CraftTweakerAPI.tweaker.getOrCreateLoader("test1");
+        CraftTweakerAPI.tweaker.getOrCreateLoader("test2");
+        CraftTweakerAPI.tweaker.getOrCreateLoader("test1", "test2");
+        CraftTweakerAPI.tweaker.getOrCreateLoader("test3", "test4").setMainName("test5");
+        CraftTweakerAPI.tweaker.getOrCreateLoader("test1", "test3");
+    
+        CraftTweakerAPI.logInfo("Stage: " + CraftTweakerAPI.tweaker.getOrCreateLoader("test2").getLoaderStage());
         
         CraftTweakerAPI.tweaker.loadScript(false, "test1");
+    
+        CraftTweakerAPI.logInfo("Stage: " + CraftTweakerAPI.tweaker.getOrCreateLoader("test2").getLoaderStage());
         
-        CraftTweakerAPI.tweaker.addLoader("test5", "test6", "test7", "test8");
+        CraftTweakerAPI.tweaker.getOrCreateLoader("test5", "test6", "test7", "test8");
         CraftTweakerAPI.tweaker.loadScript(false, "test4");
         
+        
+        CraftTweakerAPI.logInfo("Stage: " + CraftTweakerAPI.tweaker.getOrCreateLoader("test2").getLoaderStage());
     }
     
     

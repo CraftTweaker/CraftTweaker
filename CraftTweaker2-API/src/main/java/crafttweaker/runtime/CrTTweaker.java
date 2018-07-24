@@ -95,6 +95,11 @@ public class CrTTweaker implements ITweaker {
         return loadScript(isSyntaxCommand, parseExceptions, isLinter, loaderName);
     }
     
+    @Override
+    public void loadScript(boolean isSyntaxCommand, ScriptLoader loader) {
+        loadScript(isSyntaxCommand, loader, null, false);
+    }
+    
     private boolean loadScript(boolean isSyntaxCommand, ScriptLoader loader, List<SingleError> parseExceptions, boolean isLinter) {
         if(loader == null) {
             CraftTweakerAPI.logError("Error when trying to load with a null loader");
@@ -130,7 +135,7 @@ public class CrTTweaker implements ITweaker {
         long totalTime = System.currentTimeMillis();
         for(ScriptFile scriptFile : scriptFiles) {
             // check for loader
-            final String loaderName = loader.getNames().iterator().next();
+            final String loaderName = loader.getMainName();
             
             
             if(!loader.canExecute(scriptFile.getLoaderName()) && !isSyntaxCommand) {
@@ -294,7 +299,7 @@ public class CrTTweaker implements ITweaker {
         CRT_LOADING_SCRIPT_POST_EVENT_LIST.add(eventHandler);
     }
     
-    public ScriptLoader getLoader(String... names) {
+    private ScriptLoader getLoader(String... names) {
         for(ScriptLoader loader : loaders) {
             if(loader.canExecute(names))
                 return loader;
@@ -302,18 +307,18 @@ public class CrTTweaker implements ITweaker {
         return null;
     }
     
-    public ScriptLoader getOrAddLoader(String... names) {
+    private ScriptLoader getOrAddLoader(String... names) {
         ScriptLoader loader = getLoader(names);
         if(loader != null)
             return loader;
-        return addLoader(names);
+        return getOrCreateLoader(names);
     }
     
     /**
      * Adds a loader, merges with other Lists if possible
      */
     @Override
-    public ScriptLoader addLoader(String... nameAndAliases) {
+    public ScriptLoader getOrCreateLoader(String... nameAndAliases) {
         Iterator<ScriptLoader> it = loaders.iterator();
         ScriptLoader mergeLoader = null;
         
@@ -327,6 +332,8 @@ public class CrTTweaker implements ITweaker {
                 } else {
                     mergeLoader.addAliases(loader.getNames().toArray(new String[0]));
                     mergeLoader.setMainName(loader.getMainName());
+                    if(loader.getLoaderStage() != ScriptLoader.LoaderStage.NOT_LOADED)
+                        mergeLoader.setLoaderStage(loader.getLoaderStage());
                     it.remove();
                 }
             }
