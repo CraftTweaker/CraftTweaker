@@ -112,6 +112,11 @@ public class CrTTweaker implements ITweaker {
             return false;
         }
         
+        if(loader.getLoaderStage() == ScriptLoader.LoaderStage.INVALIDATED) {
+            CraftTweakerAPI.logWarning("Skipping loading for loader " + loader + " since it's become invalidated");
+            return false;
+        }
+        
         
         loader.setLoaderStage(ScriptLoader.LoaderStage.LOADING);
         if(!isLinter)
@@ -332,8 +337,9 @@ public class CrTTweaker implements ITweaker {
                 } else {
                     mergeLoader.addAliases(loader.getNames().toArray(new String[0]));
                     mergeLoader.setMainName(loader.getMainName());
-                    if(loader.getLoaderStage() != ScriptLoader.LoaderStage.NOT_LOADED)
+                    if(loader.getLoaderStage() != ScriptLoader.LoaderStage.NOT_LOADED && loader.getLoaderStage() != ScriptLoader.LoaderStage.INVALIDATED)
                         mergeLoader.setLoaderStage(loader.getLoaderStage());
+                    loader.setLoaderStage(ScriptLoader.LoaderStage.INVALIDATED);
                     it.remove();
                 }
             }

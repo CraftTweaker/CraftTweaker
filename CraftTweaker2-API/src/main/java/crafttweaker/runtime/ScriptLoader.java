@@ -77,7 +77,7 @@ public class ScriptLoader {
     
     
     public enum LoaderStage {
-        NOT_LOADED, LOADING, LOADED_SUCCESSFUL, ERROR, UNKNOWN
+        NOT_LOADED, LOADING, LOADED_SUCCESSFUL, ERROR, INVALIDATED, UNKNOWN
     }
     
 }
