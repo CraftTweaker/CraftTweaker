@@ -15,7 +15,7 @@ public class CrTLoadingStartedEvent extends CrTLoaderLoadingEvent.Started {
         super(CraftTweakerAPI.tweaker.getOrCreateLoader(loaderName), networkSide, isSyntaxCommand);
     }
     
-    public CrTLoadingStartedEvent(ScriptLoader loader, NetworkSide networkSide, boolean isSyntaxCommand) {
+    public CrTLoadingStartedEvent(ScriptLoader loader, boolean isSyntaxCommand, NetworkSide networkSide) {
         super(loader, networkSide, isSyntaxCommand);
     }
     

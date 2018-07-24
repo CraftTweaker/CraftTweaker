@@ -120,7 +120,7 @@ public class CrTTweaker implements ITweaker {
         
         loader.setLoaderStage(ScriptLoader.LoaderStage.LOADING);
         if(!isLinter)
-            CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loader, networkSide, isSyntaxCommand));
+            CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loader, isSyntaxCommand, networkSide));
         
         preprocessorManager.clean();
         
