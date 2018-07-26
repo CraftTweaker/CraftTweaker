@@ -103,7 +103,10 @@ public class MCOreDictEntry implements IOreDictEntry {
     
     @Override
     public void add(IItemStack... items) {
+        final List<IItemStack> removedContents = REMOVED_CONTENTS.get(id);
         for(IItemStack item : items) {
+            if(removedContents != null)
+                removedContents.removeIf(removedItem -> removedItem.matches(item));
             ItemStack stack = getItemStack(item);
             if(!stack.isEmpty()) {
                 CraftTweakerAPI.apply(new ActionOreDictAddItem(id, stack));
