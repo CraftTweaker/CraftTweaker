@@ -852,6 +852,16 @@ public class CraftTweakerMC {
         return out;
     }
     
+    public static List<WeightedItemStack> getWeightedItemStackList(List<ItemStack> drops) {
+        List<WeightedItemStack> out = new ArrayList<>();
+        for(ItemStack itemStack : drops) {
+            IItemStack stack = getIItemStack(itemStack);
+            if(stack != null)
+                out.add(new WeightedItemStack(stack, 100));
+        }
+        return out;
+    }
+    
     public static Fluid getFluid(ILiquidDefinition liquidDefinition) {
         return liquidDefinition == null ? null : (Fluid) liquidDefinition.getInternal();
     }
