@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.relauncher.*;
+import org.lwjgl.input.Keyboard;
 
 public class ClientEventHandler {
     
@@ -28,7 +29,7 @@ public class ClientEventHandler {
             for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
                 ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
             }
-            if(GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak)) {
+            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
                 for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
                     ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
                 }
