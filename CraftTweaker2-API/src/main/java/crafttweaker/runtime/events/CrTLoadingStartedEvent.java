@@ -1,27 +1,40 @@
 package crafttweaker.runtime.events;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.network.NetworkSide;
+import crafttweaker.runtime.ScriptLoader;
 
-public class CrTLoadingStartedEvent {
-    private String loaderName;
-    private boolean isSyntaxCommand;
-    private NetworkSide networkSide;
+/**
+ * Deprecated, use the newly added super class
+ */
+@Deprecated
+public class CrTLoadingStartedEvent extends CrTLoaderLoadingEvent.Started {
     
+    @Deprecated
     public CrTLoadingStartedEvent(String loaderName, boolean isSyntaxCommand, NetworkSide networkSide) {
-        this.loaderName = loaderName;
-        this.isSyntaxCommand = isSyntaxCommand;
-        this.networkSide = networkSide;
+        super(CraftTweakerAPI.tweaker.getOrCreateLoader(loaderName), networkSide, isSyntaxCommand);
+    }
+    
+    public CrTLoadingStartedEvent(ScriptLoader loader, boolean isSyntaxCommand, NetworkSide networkSide) {
+        super(loader, networkSide, isSyntaxCommand);
     }
     
     public String getLoaderName() {
-        return loaderName;
+        return getLoader().getMainName();
     }
     
-    public boolean isSyntaxCommand() {
-        return isSyntaxCommand;
+    @Override
+    public ScriptLoader getLoader() {
+        return super.getLoader();
     }
     
+    @Override
     public NetworkSide getNetworkSide() {
-        return networkSide;
+        return super.getNetworkSide();
+    }
+    
+    @Override
+    public boolean isSyntaxCommand() {
+        return super.isSyntaxCommand();
     }
 }

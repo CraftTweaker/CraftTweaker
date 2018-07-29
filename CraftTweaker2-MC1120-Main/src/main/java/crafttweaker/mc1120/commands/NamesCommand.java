@@ -29,7 +29,7 @@ public class NamesCommand extends CraftTweakerCommand {
     
     @Override
     protected void init() {
-        setDescription(getClickableCommandText("\u00A72/ct names", "/ct names", true), getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"), getClickableCommandText(" \u00A7a/ct names desc", "/ct names desc", true), getNormalMessage("  \u00A7bAdds the Display name of the Item to the output"));
+        setDescription(getClickableCommandText("\u00A72/ct names", "/ct names", true), getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"), getClickableCommandText(" \u00A7a/ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs", "/ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs", true), getNormalMessage("  \u00A7bAdds all possible information to the output."));
         
         subCommands = new ArrayList<>(2);
         for(NameCommandParams para : NameCommandParams.values()) {

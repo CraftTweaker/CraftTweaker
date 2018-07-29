@@ -44,6 +44,9 @@ public interface ITweaker {
      * @return Whether it was successful at loading or not
      */
     boolean loadScript(boolean isSyntaxCommand, String loaderName);
+    
+    
+    void loadScript(boolean isSyntaxCommand, ScriptLoader loader);
 
 
     /**
@@ -76,18 +79,35 @@ public interface ITweaker {
     /**
      * Gets called as soon as the script start getting loaded (before the zs files are getting loaded)
      */
-    void registerLoadStartedEvent(IEventHandler<CrTLoadingStartedEvent> eventHandler);
+    void registerLoadStartedEvent(IEventHandler<CrTLoaderLoadingEvent.Started> eventHandler);
+    
+    /**
+     * Gets called once the loader has finished loading
+     */
+    void registerLoadFinishedEvent(IEventHandler<CrTLoaderLoadingEvent.Finished> eventHandler);
+    
+    /**
+     * Gets called if the loader was aborted for any reason
+     */
+    void registerLoadAbortedEvent(IEventHandler<CrTLoaderLoadingEvent.Aborted> eventHandler);
     
     
     /**
      * Gets called just before the script file is loaded
      */
-    void registerScriptLoadPreEvent(IEventHandler<CrTLoadingScriptEventPre> eventHandler);
+    void registerScriptLoadPreEvent(IEventHandler<CrTScriptLoadingEvent.Pre> eventHandler);
     
     
     /**
      * Gets called as soon as the script file is done loading.
      */
-    void registerScriptLoadPostEvent(IEventHandler<CrTLoadingScriptEventPost> eventHandler);
+    void registerScriptLoadPostEvent(IEventHandler<CrTScriptLoadingEvent.Post> eventHandler);
     
+    /**
+     * Gets or adds a new loader
+     * Be careful as this loader might become invalidated if merged with another loader so always call this method anew if possible.
+     * @param nameAndAliases the Names the loader will be callable under, if an existing loader already has any of the names, they will be merged
+     * @return The added, retrieved or changed loader
+     */
+    ScriptLoader getOrCreateLoader(String... nameAndAliases);
 }

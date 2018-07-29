@@ -1,14 +1,18 @@
 package crafttweaker.runtime.events;
 
-public class CrTLoadingScriptEventPre {
-    
-    private String fileName;
+
+/**
+ * Deprecated, use the newly added super class
+ */
+@Deprecated
+public class CrTLoadingScriptEventPre extends CrTScriptLoadingEvent.Pre {
     
     public CrTLoadingScriptEventPre(String fileName) {
-        this.fileName = fileName;
+        super(fileName);
     }
     
+    @Override
     public String getFileName() {
-        return fileName;
+        return super.getFileName();
     }
 }

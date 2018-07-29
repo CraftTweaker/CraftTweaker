@@ -206,4 +206,9 @@ public class IngredientOr implements IIngredient {
         }
         return commandString.toString();
     }
+
+    @Override
+    public String toString() {
+        return toCommandString();
+    }
 }

@@ -15,6 +15,7 @@ import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.recipes.*;
+import crafttweaker.runtime.ScriptLoader;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,7 +55,9 @@ public class CommonEventHandler {
         BracketHandlerBiomeType.rebuildBiomeTypeRegistry();
         CraftTweakerAPI.logInfo("CraftTweaker: Successfully built item registry");
         MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Pre());
-        CrafttweakerImplementationAPI.load();
+        final ScriptLoader loader = CraftTweakerAPI.tweaker.getOrCreateLoader("crafttweaker", "recipeEvent");
+        loader.setMainName("crafttweaker");
+        CraftTweakerAPI.tweaker.loadScript(false, loader);
         MinecraftForge.EVENT_BUS.post(new ScriptRunEvent.Post());
         
     }

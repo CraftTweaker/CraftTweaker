@@ -90,7 +90,6 @@ public class HelpCommand extends CraftTweakerCommand{
             for(ITextComponent iTextComponent : entry.getDescription()) {
                 int width = (iTextComponent.getUnformattedText().length() / windowWidth) + 1;
                 currentEntry += width;
-                System.out.println( "["+ pages.size() + "]" + iTextComponent.getUnformattedText() + " : " + width);
             }
             
             currentCount += currentEntry;

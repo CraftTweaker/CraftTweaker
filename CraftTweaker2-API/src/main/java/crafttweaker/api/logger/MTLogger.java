@@ -14,6 +14,7 @@ public class MTLogger implements ILogger {
     private final List<ILogger> loggers = new ArrayList<>();
     private final List<IPlayer> players = new ArrayList<>();
     private final List<String> unprocessed = new ArrayList<>();
+    private boolean isDefaultDisabled = false;
     
     public void addLogger(ILogger logger) {
         loggers.add(logger);
@@ -98,5 +99,21 @@ public class MTLogger implements ILogger {
     @Override
     public void logPlayer(IPlayer player) {
     
+    }
+    
+    @Override
+    public void logDefault(String message) {
+        if(!isLogDisabled())
+            logInfo(message);
+    }
+    
+    @Override
+    public boolean isLogDisabled() {
+        return isDefaultDisabled;
+    }
+    
+    @Override
+    public void setLogDisabled(boolean logDisabled) {
+        this.isDefaultDisabled = logDisabled;
     }
 }

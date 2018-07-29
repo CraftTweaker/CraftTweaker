@@ -7,14 +7,15 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.tooltip.IngredientTooltips;
 import crafttweaker.mc1120.formatting.IMCFormattedString;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.*;
-import net.minecraft.client.util.RecipeBookClient;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.util.*;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.relauncher.*;
 
 public class ClientEventHandler {
+    
     private static boolean alreadyChangedThePlayer = false;
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -34,14 +35,17 @@ public class ClientEventHandler {
             }
         }
     }
+    
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onGuiOpenEvent(GuiOpenEvent ev){
+    public void onGuiOpenEvent(GuiOpenEvent ev) {
         
-        if (Minecraft.getMinecraft().player != null && !alreadyChangedThePlayer){
+        final Minecraft minecraft = Minecraft.getMinecraft();
+        if(minecraft.player != null && !alreadyChangedThePlayer) {
             alreadyChangedThePlayer = true;
-            
             RecipeBookClient.rebuildTable();
+            minecraft.populateSearchTreeManager();
+            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }
     }
