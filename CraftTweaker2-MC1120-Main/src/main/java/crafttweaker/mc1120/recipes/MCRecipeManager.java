@@ -11,6 +11,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.*;
 import net.minecraftforge.registries.*;
@@ -41,12 +42,7 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     private static boolean matchesItem(ItemStack input, IIngredient ingredient) {
-        if((input.isEmpty()) == (ingredient == null)) {
-            return true;
-        } else if(ingredient != null) {
-            return !input.isEmpty() && ingredient.matches(getIItemStack(input));
-        }
-        return true;
+        return ingredient == null ? input.isEmpty() : !input.isEmpty() && ingredient.matches(getIItemStack(input));
     }
     
     private static boolean matches(Object input, IIngredient ingredient) {
@@ -402,31 +398,36 @@ public final class MCRecipeManager implements IRecipeManager {
             if(ingredients != null) {
                 ingredientsHeight = ingredients.length;
                 
-                for(IIngredient[] ingredient : ingredients) {
+                for(final IIngredient[] ingredient : ingredients) {
                     ingredientsWidth = Math.max(ingredientsWidth, ingredient.length);
                 }
             }
             
-            List<ResourceLocation> toRemove = new ArrayList<>();
+            final List<ResourceLocation> toRemove = new ArrayList<>();
             outer:
-            for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-                if(recipe.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStack(recipe.getValue().getRecipeOutput()))) {
+            for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
+                final IRecipe recipe = recipeEntry.getValue();
+                final ItemStack output = recipe.getRecipeOutput();
+                if(output.isEmpty() || !this.output.matches(getIItemStack(output))) {
                     continue;
                 }
                 
                 if(ingredients != null) {
-                    if(recipe.getValue() instanceof ShapedRecipes) {
-                        ShapedRecipes srecipe = (ShapedRecipes) recipe.getValue();
-                        if(ingredientsWidth != srecipe.recipeWidth || ingredientsHeight != srecipe.recipeHeight) {
+                    if(recipe instanceof IShapedRecipe) {
+                        final IShapedRecipe shapedRecipe = (IShapedRecipe) recipe;
+                        final int width = shapedRecipe.getRecipeWidth();
+                        final int height = shapedRecipe.getRecipeHeight();
+    
+                        if(ingredientsWidth != width || ingredientsHeight != height) {
                             continue;
                         }
                         
                         for(int j = 0; j < ingredientsHeight; j++) {
-                            IIngredient[] row = ingredients[j];
+                            final IIngredient[] row = ingredients[j];
                             for(int k = 0; k < ingredientsWidth; k++) {
-                                IIngredient ingredient = k > row.length ? null : row[k];
-                                ItemStack input;
-                                Ingredient ing = srecipe.getIngredients().get(j * srecipe.recipeWidth + k);
+                                final IIngredient ingredient = k > row.length ? null : row[k];
+                                final ItemStack input;
+                                final Ingredient ing = shapedRecipe.getIngredients().get(j * width + k);
                                 if(ing == Ingredient.EMPTY || ing.test(ItemStack.EMPTY) || ing.getMatchingStacks().length == 0) {
                                     input = ItemStack.EMPTY;
                                 } else {
@@ -437,46 +438,11 @@ public final class MCRecipeManager implements IRecipeManager {
                                 }
                             }
                         }
-                    } else if(recipe.getValue() instanceof ShapedOreRecipe) {
-                        ShapedOreRecipe srecipe = (ShapedOreRecipe) recipe.getValue();
-                        int recipeWidth = srecipe.getRecipeWidth();
-                        int recipeHeight = srecipe.getRecipeHeight();
-                        if(ingredientsWidth != recipeWidth || ingredientsHeight != recipeHeight) {
-                            continue;
-                        }
-                        
-                        for(int j = 0; j < ingredientsHeight; j++) {
-                            IIngredient[] row = ingredients[j];
-                            for(int k = 0; k < ingredientsWidth; k++) {
-                                IIngredient ingredient = k > row.length ? null : row[k];
-                                ItemStack input;
-                                Ingredient ing = srecipe.getIngredients().get(j * recipeWidth + k);
-                                if(ing == Ingredient.EMPTY || ing.test(ItemStack.EMPTY) || ing.getMatchingStacks().length > 0) {
-                                    input = ItemStack.EMPTY;
-                                } else {
-                                    input = ing.getMatchingStacks()[0];
-                                }
-                                
-                                if(!matches(input, ingredient)) {
-                                    continue outer;
-                                }
-                            }
-                        }
-                    } else {
-                        if(recipe.getValue() instanceof ShapelessRecipes) {
-                            continue;
-                        } else if(recipe.getValue() instanceof ShapelessOreRecipe) {
-                            continue;
-                        }
-                    }
-                } else {
-                    if(recipe.getValue() instanceof ShapelessRecipes) {
+                    } else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe)
                         continue;
-                    } else if(recipe.getValue() instanceof ShapelessOreRecipe) {
-                        continue;
-                    }
-                }
-                toRemove.add(recipe.getKey());
+                } else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe)
+                    continue;
+                toRemove.add(recipeEntry.getKey());
             }
             CraftTweakerAPI.logInfo(toRemove.size() + " removed");
             super.removeRecipes(toRemove);
