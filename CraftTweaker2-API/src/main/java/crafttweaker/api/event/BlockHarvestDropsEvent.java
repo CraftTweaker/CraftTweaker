@@ -2,7 +2,7 @@ package crafttweaker.api.event;
 
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.*;
 import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.*;
 
@@ -22,13 +22,13 @@ public interface BlockHarvestDropsEvent extends IBlockEvent {
     int getFortuneLevel();
     
     @ZenGetter("drops")
-    List<IItemStack> getDrops();
+    List<WeightedItemStack> getDrops();
     
     @ZenSetter("drops")
-    void setDrops(List<IItemStack> drops);
+    void setDrops(List<WeightedItemStack> drops);
     
     @ZenMethod
-    void addItem(IItemStack itemStack);
+    void addItem(WeightedItemStack itemStack);
     
     @ZenGetter("silkTouch")
     boolean isSilkTouch();

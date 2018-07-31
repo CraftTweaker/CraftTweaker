@@ -1,7 +1,7 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.event.BlockHarvestDropsEvent;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -35,21 +35,22 @@ public class MCBlockHarvestDropsEvent extends MCBlockEvent implements BlockHarve
     }
     
     @Override
-    public List<IItemStack> getDrops() {
-        return CraftTweakerMC.getIItemStackList(event.getDrops());
+    public List<WeightedItemStack> getDrops() {
+        return CraftTweakerMC.getWeightedItemStackList(event.getDrops());
     }
     
     @Override
-    public void setDrops(List<IItemStack> drops) {
+    public void setDrops(List<WeightedItemStack> drops) {
         event.getDrops().clear();
-        for(IItemStack drop : drops) {
+        for(WeightedItemStack drop : drops) {
             addItem(drop);
         }
     }
     
     @Override
-    public void addItem(IItemStack itemStack) {
-        event.getDrops().add(CraftTweakerMC.getItemStack(itemStack));
+    public void addItem(WeightedItemStack itemStack) {
+        if(event.getWorld().rand.nextFloat() <= itemStack.getChance())
+            event.getDrops().add(CraftTweakerMC.getItemStack(itemStack.getStack()));
     }
     
     @Override
