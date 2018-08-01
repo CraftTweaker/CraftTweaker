@@ -480,5 +480,6 @@ public interface IEntity extends ICommandSender {
     @ZenGetter("lookingDirection")
     IVector3d getLookingDirection();
     
-    
+    @ZenMethod
+    IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks);
 }
