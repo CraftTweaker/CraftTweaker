@@ -50,6 +50,8 @@ public final class MCRecipeManager implements IRecipeManager {
             return ingredient.contains(getOreDict((String) input));
         } else if(input instanceof ItemStack) {
             return matchesItem((ItemStack) input, ingredient);
+        } else if(input instanceof Ingredient) {
+            return matchesItem(((Ingredient) input).getMatchingStacks()[0], ingredient);
         }
         
         return false;
@@ -248,10 +250,10 @@ public final class MCRecipeManager implements IRecipeManager {
             return getIItemStack(result);
         }
     }
-
+    
     @Override
     public void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith) {
-        recipesToRemove.add(new ActionReplaceAllOccurences(toReplace,replaceWith));
+        recipesToRemove.add(new ActionReplaceAllOccurences(toReplace, replaceWith));
     }
     
     /**
@@ -263,21 +265,23 @@ public final class MCRecipeManager implements IRecipeManager {
             removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         }
     }
+    
     public static class ActionReplaceAllOccurences extends ActionBaseRemoveRecipes {
+        
         //I'm odd, in that I'm an ActionBaseRemoveRecipes, that also creates recipes.
         private List<ResourceLocation> toRemove;
         List<MCRecipeBase> toChange;
         private final IIngredient toReplace;
         private final IIngredient replaceWith;
-
+        
         @Override
         public void apply() {
             toChange = getAllForIngredient(toReplace);
-            toRemove = toChange.stream().map(f->new ResourceLocation(f.getFullResourceName())).collect(Collectors.toList());
+            toRemove = toChange.stream().map(f -> new ResourceLocation(f.getFullResourceName())).collect(Collectors.toList());
             removeRecipes(toRemove);
             changeIngredients(toChange);
         }
-
+        
         @Override
         public void removeRecipes(List<ResourceLocation> removingRecipes) {
             List<ActionBaseAddRecipe> toUnAdd = new ArrayList<>();
@@ -286,89 +290,86 @@ public final class MCRecipeManager implements IRecipeManager {
                 recipesToAdd.stream().filter(f -> f instanceof ActionDummyAddRecipe).filter(f -> f.recipe.getRegistryName().equals(recipe)).forEach(f -> toUnAdd.add(f));
             });
             toUnAdd.stream().forEach(f -> {
-                        recipesToAdd.remove(f);
-                        if (usedRecipeNames.contains(f.getName())) {
-                            usedRecipeNames.remove(f.getName());
-                        }
-                    }
-            );
+                recipesToAdd.remove(f);
+                if(usedRecipeNames.contains(f.getName())) {
+                    usedRecipeNames.remove(f.getName());
+                }
+            });
         }
-
+        
         @Override
         public String describe() {
-            return "Removing all occurences of ingredient: " + toReplace+ "and replacing them with " + replaceWith;
+            return "Removing all occurences of ingredient: " + toReplace + "and replacing them with " + replaceWith;
         }
+        
         public ActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith) {
             this.toReplace = toReplace;
             this.replaceWith = replaceWith;
         }
-
-        private void changeIngredients(List<MCRecipeBase> toChange){
-            for(MCRecipeBase recipe : toChange){
-                if (recipe.isShaped())
-                {
+        
+        private void changeIngredients(List<MCRecipeBase> toChange) {
+            for(MCRecipeBase recipe : toChange) {
+                if(recipe.isShaped()) {
                     IIngredient[][] ingredients = recipe.getIngredients2D();
-                    for(IIngredient[] targRow : ingredients){
-                        for (int i = 0; i < targRow.length; i++) {
-                            if (targRow[i] !=null && targRow[i].contains(toReplace))
+                    for(IIngredient[] targRow : ingredients) {
+                        for(int i = 0; i < targRow.length; i++) {
+                            if(targRow[i] != null && targRow[i].contains(toReplace))
                                 targRow[i] = replaceWith;
                         }
                     }
-
-                    MCRecipeShaped newRecipe = new MCRecipeShaped(ingredients,recipe.getOutput(),recipe.recipeFunction,recipe.getRecipeAction(),false,recipe.hidden);
+                    
+                    MCRecipeShaped newRecipe = new MCRecipeShaped(ingredients, recipe.getOutput(), recipe.recipeFunction, recipe.getRecipeAction(), false, recipe.hidden);
                     registerNewRecipe(newRecipe, getNewRecipeName(recipe));
-
-                }
-                else
-                {
-                    if (replaceWith == null)
+                    
+                } else {
+                    if(replaceWith == null)
                         continue; //No null's in shapeless recipies... We can't do anything, so we just won't add the recipe.
                     IIngredient[] ingredients = recipe.getIngredients1D();
-                    for (int i = 0; i < ingredients.length; i++) {
-                        if (ingredients[i].contains(toReplace)){
-                            ingredients[i] =replaceWith;
+                    for(int i = 0; i < ingredients.length; i++) {
+                        if(ingredients[i].contains(toReplace)) {
+                            ingredients[i] = replaceWith;
                         }
                     }
-                    MCRecipeShapeless newRecipe = new MCRecipeShapeless(ingredients,recipe.output,recipe.recipeFunction,recipe.recipeAction,recipe.hidden);
+                    MCRecipeShapeless newRecipe = new MCRecipeShapeless(ingredients, recipe.output, recipe.recipeFunction, recipe.recipeAction, recipe.hidden);
                     registerNewRecipe(newRecipe, getNewRecipeName(recipe));
                 }
             }
-
+            
         }
-        private void registerNewRecipe(MCRecipeBase newRecipe, String name){
-            ActionDummyAddRecipe dummyRecipe = new ActionDummyAddRecipe(newRecipe,newRecipe.output,true);
+        
+        private void registerNewRecipe(MCRecipeBase newRecipe, String name) {
+            ActionDummyAddRecipe dummyRecipe = new ActionDummyAddRecipe(newRecipe, newRecipe.output, true);
             dummyRecipe.setName(name);
-            MCRecipeManager.recipesToAdd.add( dummyRecipe);
+            MCRecipeManager.recipesToAdd.add(dummyRecipe);
             ForgeRegistries.RECIPES.register(newRecipe);
         }
-
-        private String getNewRecipeName(MCRecipeBase recipe){
-            if (recipe.getName().contains("modified")){
+        
+        private String getNewRecipeName(MCRecipeBase recipe) {
+            if(recipe.getName().contains("modified")) {
                 //This should keep adding re in front of a modified recipe every time it's modified.
                 //If you wind up with rererereremodified recipes, you're doing something wrong.  Stop it.
-                return recipe.getName().replace("modified","remodified");
+                return recipe.getName().replace("modified", "remodified");
             }
-            return recipe.getRegistryName().getResourceDomain()+"-"+recipe.getName()+"-modified";
+            return recipe.getRegistryName().getResourceDomain() + "-" + recipe.getName() + "-modified";
         }
-
+        
         private List<MCRecipeBase> getAllForIngredient(IIngredient target) {
             Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
             List<MCRecipeBase> results = new ArrayList<>();
-
+            
             recipes = ForgeRegistries.RECIPES.getEntries();
-
+            
             for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
                 IRecipe recipe = recipeEntry.getValue();
-                for (Ingredient ingredient :recipe.getIngredients()){
-                    IIngredient iIngredient =CraftTweakerMC.getIIngredient(ingredient);
-                    if (iIngredient == null)
+                for(Ingredient ingredient : recipe.getIngredients()) {
+                    IIngredient iIngredient = CraftTweakerMC.getIIngredient(ingredient);
+                    if(iIngredient == null)
                         continue;
-                    if (target.contains(iIngredient)){
+                    if(target.contains(iIngredient)) {
                         if(recipe instanceof MCRecipeBase) {
                             results.add((MCRecipeBase) recipe);
                             break; //One ingredient is enough to get it added, bail out of ingredient loop.
-                        }
-                        else {
+                        } else {
                             results.add(new MCRecipeWrapper(recipe));
                             break; //See previous comment.
                         }
@@ -378,7 +379,7 @@ public final class MCRecipeManager implements IRecipeManager {
             return results;
         }
     }
-
+    
     public static class ActionRemoveShapedRecipes extends ActionBaseRemoveRecipes {
         
         IIngredient output;
@@ -412,12 +413,13 @@ public final class MCRecipeManager implements IRecipeManager {
                     continue;
                 }
                 
-                if(ingredients != null) {
-                    if(recipe instanceof IShapedRecipe) {
+                if(recipe instanceof IShapedRecipe) {//We only want to remove ShapedRecipes, so do nothing if not one.
+                    if(ingredients != null) {
+                        //NonNull ingredientList given, compare against the provided IIngredients
                         final IShapedRecipe shapedRecipe = (IShapedRecipe) recipe;
                         final int width = shapedRecipe.getRecipeWidth();
                         final int height = shapedRecipe.getRecipeHeight();
-    
+                        
                         if(ingredientsWidth != width || ingredientsHeight != height) {
                             continue;
                         }
@@ -438,11 +440,11 @@ public final class MCRecipeManager implements IRecipeManager {
                                 }
                             }
                         }
-                    } else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe)
-                        continue;
-                } else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe)
-                    continue;
-                toRemove.add(recipeEntry.getKey());
+                        toRemove.add(recipeEntry.getKey());
+                    } else
+                        //null ingredient list given, remove all ShapedRecipes with the given output
+                        toRemove.add(recipeEntry.getKey());
+                }
             }
             CraftTweakerAPI.logInfo(toRemove.size() + " removed");
             super.removeRecipes(toRemove);
@@ -801,24 +803,25 @@ public final class MCRecipeManager implements IRecipeManager {
             return recipe;
         }
     }
-
+    
     public static class ActionDummyAddRecipe extends ActionBaseAddRecipe {
+        
         //This whole class is a dirty hack.
         //It exists only to hold information for the CraftTweaker JEI plugin.
         @Override
         public void apply() {
             //Our work was done elsehwere, apply is a noop.
         }
-
+        
         public ActionDummyAddRecipe(MCRecipeBase recipe, IItemStack output, boolean isShaped) {
             super(recipe, output, isShaped);
         }
-
+        
         @Override
         protected void setName(String name) {
             super.setName(name);
             //This is necessary to allow recipe name progression if we repeatedly modify a recipe.
-            recipe.setRegistryName(new ResourceLocation("crafttweaker",this.name));
+            recipe.setRegistryName(new ResourceLocation("crafttweaker", this.name));
         }
     }
     
