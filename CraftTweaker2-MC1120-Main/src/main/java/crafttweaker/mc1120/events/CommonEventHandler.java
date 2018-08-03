@@ -1,8 +1,10 @@
 package crafttweaker.mc1120.events;
 
-import crafttweaker.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.api.damage.IDamageSource;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -14,37 +16,42 @@ import crafttweaker.mc1120.events.handling.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
-import crafttweaker.mc1120.recipes.*;
+import crafttweaker.mc1120.recipes.MCCraftingInventorySquared;
+import crafttweaker.mc1120.recipes.MCRecipeBase;
+import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.runtime.ScriptLoader;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.*;
+import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.item.*;
+import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.*;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static net.minecraftforge.fml.common.eventhandler.EventPriority.LOWEST;
-
 public class CommonEventHandler {
     
-    @SubscribeEvent(priority = LOWEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> ev) {
         CraftTweakerAPI.logInfo("CraftTweaker: Building registry");
         BracketHandlerItem.rebuildItemRegistry();
@@ -62,7 +69,7 @@ public class CommonEventHandler {
         
     }
     
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onFurnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
         if(!MCFurnaceManager.fuelMap.isEmpty()) {
             if(!event.getItemStack().isEmpty()) {
