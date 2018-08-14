@@ -67,7 +67,7 @@ public class CommonEventHandler {
         if(!MCFurnaceManager.fuelMap.isEmpty()) {
             if(!event.getItemStack().isEmpty()) {
                 for(Map.Entry<IItemStack, Integer> entry : MCFurnaceManager.fuelMap.entrySet()) {
-                    if(entry.getKey().matches(CraftTweakerMC.getIItemStack(event.getItemStack()))) {
+                    if(entry.getKey().matches(MCItemStack.createNonCopy(event.getItemStack()))) {
                         event.setBurnTime(entry.getValue());
                     }
                 }
@@ -96,14 +96,14 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerItemCrafted(PlayerEvent.ItemCraftedEvent ev) {
         if(ev.craftMatrix instanceof InventoryCrafting && !MCRecipeManager.transformerRecipes.isEmpty()) {
-            MCRecipeManager.transformerRecipes.stream().filter(MCRecipeBase.class::isInstance).filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world)).forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
+            MCRecipeManager.transformerRecipes.stream().filter(Objects::nonNull).filter(mcRecipeBase -> mcRecipeBase.matches((InventoryCrafting) ev.craftMatrix, ev.player.world)).forEach(recipe -> recipe.applyTransformers((InventoryCrafting) ev.craftMatrix, CraftTweakerMC.getIPlayer(ev.player)));
         }
         
         IPlayer iPlayer = CraftTweakerMC.getIPlayer(ev.player);
         if(ev.craftMatrix instanceof InventoryCrafting) {
             Stream<IRecipe> recipeStream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(CraftingManager.REGISTRY.iterator(), 0), false);
             // only look at tweaker recipes (Unchecked cast here is necessairy)
-            Stream<MCRecipeBase> tweakedRecipeStream = (Stream<MCRecipeBase>) recipeStream.filter(MCRecipeBase.class::isInstance).map(MCRecipeBase.class::cast);
+            Stream<MCRecipeBase> tweakedRecipeStream = recipeStream.filter(MCRecipeBase.class::isInstance).map(MCRecipeBase.class::cast);
             // check for the presence of a recipe action first since that is cheaper.
             tweakedRecipeStream.filter(MCRecipeBase::hasRecipeAction)
                     .filter(recipe->recipe.getRecipeOutput().isItemEqual(ev.crafting))
