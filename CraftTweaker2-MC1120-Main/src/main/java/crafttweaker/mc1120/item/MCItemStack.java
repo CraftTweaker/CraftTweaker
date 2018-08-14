@@ -30,12 +30,11 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
-
 /**
  * @author Stan
  */
 public class MCItemStack implements IItemStack {
+    
     public static final IItemStack EMPTY = new MCItemStack();
     
     
@@ -87,14 +86,17 @@ public class MCItemStack implements IItemStack {
      *
      * @param unused to prevent constructor conflicts, has no purpose
      */
-    private MCItemStack(ItemStack itemStack, int unused){
+    private MCItemStack(ItemStack itemStack, int unused) {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
         stack = itemStack;
         items = Collections.singletonList(this);
     }
     
-    public static MCItemStack createNonCopy(ItemStack itemStack){
+    public static MCItemStack createNonCopy(ItemStack itemStack) {
+        if(itemStack == null || itemStack.isEmpty())
+            return null;
+        
         return new MCItemStack(itemStack, -1);
     }
     
@@ -317,6 +319,9 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matches(IItemStack item) {
+        if(item == null)
+            return false;
+        
         ItemStack internal = (ItemStack) item.getInternal();
         if(stack.hasTagCompound() && matchTagExact) {
             return matchesExact(item);
@@ -326,8 +331,11 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matchesExact(IItemStack item) {
+        if(item == null)
+            return false;
+        
         ItemStack internal = (ItemStack) item.getInternal();
-    
+        
         if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
             return false;
         }
@@ -343,7 +351,7 @@ public class MCItemStack implements IItemStack {
                     return false;
                 }
             }
-        }else{
+        } else {
             return false;
         }
         // if it gets here, it is equal
