@@ -81,6 +81,23 @@ public class MCItemStack implements IItemStack {
         this.wildcardSize = wildcardSize;
     }
     
+    /**
+     * This is a constructor which creates a itemstack that doesn't copy the internal stack
+     * Only use this is you are sure it will never be changed
+     *
+     * @param unused to prevent constructor conflicts, has no purpose
+     */
+    private MCItemStack(ItemStack itemStack, int unused){
+        if(itemStack.isEmpty())
+            throw new IllegalArgumentException("stack cannot be null");
+        stack = itemStack;
+        items = Collections.singletonList(this);
+    }
+    
+    public static MCItemStack createNonCopy(ItemStack itemStack){
+        return new MCItemStack(itemStack, -1);
+    }
+    
     @Override
     public IItemDefinition getDefinition() {
         return new MCItemDefinition(stack.getItem().getRegistryName().toString(), stack.getItem());
@@ -300,7 +317,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matches(IItemStack item) {
-        ItemStack internal = getItemStack(item);
+        ItemStack internal = (ItemStack) item.getInternal();
         if(stack.hasTagCompound() && matchTagExact) {
             return matchesExact(item);
         }
@@ -309,7 +326,8 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matchesExact(IItemStack item) {
-        ItemStack internal = getItemStack(item);
+        ItemStack internal = (ItemStack) item.getInternal();
+    
         if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
             return false;
         }

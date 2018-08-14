@@ -4,6 +4,7 @@ import crafttweaker.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
+import crafttweaker.mc1120.item.MCItemStack;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.entity.player.EntityPlayer;
@@ -410,7 +411,7 @@ public final class MCRecipeManager implements IRecipeManager {
             List<ResourceLocation> toRemove = new ArrayList<>();
             outer:
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
-                if(recipe.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStack(recipe.getValue().getRecipeOutput()))) {
+                if(recipe.getValue().getRecipeOutput().isEmpty() || !output.matches(MCItemStack.createNonCopy(recipe.getValue().getRecipeOutput()))) {
                     continue;
                 }
                 
@@ -513,7 +514,7 @@ public final class MCRecipeManager implements IRecipeManager {
             outer:
             for(Map.Entry<ResourceLocation, IRecipe> entry : recipes) {
                 IRecipe recipe = entry.getValue();
-                if(entry.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStack(entry.getValue().getRecipeOutput()))) {
+                if(entry.getValue().getRecipeOutput().isEmpty() || !output.matches(MCItemStack.createNonCopy(entry.getValue().getRecipeOutput()))) {
                     continue;
                 }
                 
