@@ -122,8 +122,8 @@ public class CraftTweaker {
     public void onPostInit(FMLPostInitializationEvent ev) {
         try {
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-            MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.actionRemoveRecipesNoIngredients.apply();
+            MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
