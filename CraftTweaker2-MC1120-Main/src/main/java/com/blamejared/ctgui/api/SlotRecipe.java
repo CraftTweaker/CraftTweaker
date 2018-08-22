@@ -84,11 +84,11 @@ public class SlotRecipe extends Slot {
             builder.append(".noReturn()");
         if(getPropertyFromMap("nbt")) {
             final IData data = NBTConverter.from(getStack().getTagCompound(), false);
-            if(data != null)
-                if(this instanceof SlotRecipeOutput)
-                    builder.append(String.format(".withTag(%s)", data.toString()));
-                else
+            if(data != null) {
+                builder.append(String.format(".withTag(%s)", data.toString()));
+                if(!(this instanceof SlotRecipeOutput))
                     builder.append(String.format(".onlyWithTag(%s)", data.toString()));
+            }
         }
         return builder.toString();
     }
