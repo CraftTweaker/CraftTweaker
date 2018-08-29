@@ -99,6 +99,7 @@ public class CraftTweakerMC {
         Object internal = item.getInternal();
         if(internal == null || !(internal instanceof ItemStack)) {
             CraftTweakerAPI.logError("Not a valid item stack: " + item);
+            throw new IllegalArgumentException("Not a valid item stack: " + item);
         }
         return ((ItemStack) internal).copy();
     }
