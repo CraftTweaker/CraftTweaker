@@ -15,6 +15,8 @@ public class MCCreativeTab implements ICreativeTab {
     }
     
     public static ICreativeTab getICreativeTab(CreativeTabs tab) {
+        if(tab == null)
+            return null;
         return CraftTweakerMC.creativeTabs.values().stream().filter(ta -> ta.getInternal().equals(tab)).findFirst().orElse(null);
     }
     
