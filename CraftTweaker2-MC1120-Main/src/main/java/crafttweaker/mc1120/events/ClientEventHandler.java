@@ -7,7 +7,6 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.tooltip.IngredientTooltips;
 import crafttweaker.mc1120.formatting.IMCFormattedString;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.util.*;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -46,6 +45,7 @@ public class ClientEventHandler {
             alreadyChangedThePlayer = true;
             RecipeBookClient.rebuildTable();
             minecraft.populateSearchTreeManager();
+            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
             ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }
