@@ -368,6 +368,11 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
+    public IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks) {
+        return CraftTweakerMC.getIRayTraceResult(entity.rayTrace(blockReachDistance, partialTicks));
+    }
+    
+    @Override
     public IWorld getWorld() {
         return CraftTweakerMC.getIWorld(entity.getEntityWorld());
     }

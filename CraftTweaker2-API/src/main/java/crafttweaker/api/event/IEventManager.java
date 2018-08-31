@@ -140,6 +140,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerRightClickBlock(IEventHandler<PlayerRightClickBlockEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerInteractBlock(IEventHandler<PlayerRightClickBlockEvent> ev);
 
     @ZenMethod
     IEventHandle onCommand(IEventHandler<CommandEvent> ev);

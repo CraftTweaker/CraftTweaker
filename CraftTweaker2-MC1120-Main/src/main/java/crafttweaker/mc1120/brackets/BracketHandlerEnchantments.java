@@ -1,18 +1,22 @@
 package crafttweaker.mc1120.brackets;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.annotations.*;
+import crafttweaker.annotations.BracketHandler;
+import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.mc1120.enchantments.MCEnchantmentDefinition;
 import crafttweaker.zenscript.IBracketHandler;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.expression.*;
+import stanhebben.zenscript.expression.ExpressionCallStatic;
+import stanhebben.zenscript.expression.ExpressionString;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.natives.IJavaMethod;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @BracketHandler(priority = 100)
@@ -23,10 +27,11 @@ public class BracketHandlerEnchantments implements IBracketHandler {
     private final IJavaMethod method;
     
     public BracketHandlerEnchantments() {
-        Enchantment.REGISTRY.getKeys().forEach(key -> enchantments.put(key.toString(), new MCEnchantmentDefinition(Enchantment.REGISTRY.getObject(key))));
+        updateEnchantmentRegistry();
         method = CraftTweakerAPI.getJavaMethod(BracketHandlerEnchantments.class, "getEnchantment", String.class);
     }
     
+    @SuppressWarnings("unused")
     public static IEnchantmentDefinition getEnchantment(String id) {
         IEnchantmentDefinition result = enchantments.get(id);
         if(result == null)
@@ -51,5 +56,9 @@ public class BracketHandlerEnchantments implements IBracketHandler {
     @Override
     public Class<?> getReturnedClass() {
         return IEnchantmentDefinition.class;
+    }
+    
+    public static void updateEnchantmentRegistry() {
+        Enchantment.REGISTRY.getKeys().forEach(key -> enchantments.computeIfAbsent(key.toString(), name -> new MCEnchantmentDefinition(Enchantment.REGISTRY.getObject(key))));
     }
 }

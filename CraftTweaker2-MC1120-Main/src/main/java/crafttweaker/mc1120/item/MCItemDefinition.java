@@ -2,17 +2,20 @@ package crafttweaker.mc1120.item;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.creativetabs.ICreativeTab;
-import crafttweaker.api.item.*;
+import crafttweaker.api.item.IItemDefinition;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -115,14 +118,14 @@ public class MCItemDefinition implements IItemDefinition {
     }
     
     @Override
-    public List<IItemStack> getSubItems () {
+    public List<IItemStack> getSubItems() {
         return getSubItems(getCreativeTab());
     }
     
     @Override
     public List<IItemStack> getSubItems(ICreativeTab tab) {
         NonNullList<ItemStack> list = NonNullList.create();
-        item.getSubItems((CreativeTabs) tab.getInternal(), list);
+        item.getSubItems(tab == null ? CreativeTabs.SEARCH : (CreativeTabs) tab.getInternal(), list);
         return list.stream().map(MCItemStack::new).collect(Collectors.toList());
     }
     

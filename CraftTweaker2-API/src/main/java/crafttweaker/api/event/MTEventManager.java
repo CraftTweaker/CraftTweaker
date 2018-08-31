@@ -837,8 +837,14 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerRightClickBlock(PlayerRightClickBlockEvent event) {
         elPlayerRightClickBlock.publish(event);
     }
-
-
+    
+    
+    //Only due to a wrong name... Well, now they can use it
+    @Override
+    public IEventHandle onPlayerInteractBlock(IEventHandler<PlayerRightClickBlockEvent> ev) {
+        return onPlayerRightClickBlock(ev);
+    }
+    
     // ###############
     // ### Command ###
     // ###############

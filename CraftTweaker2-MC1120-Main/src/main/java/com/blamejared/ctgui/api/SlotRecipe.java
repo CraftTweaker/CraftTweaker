@@ -1,13 +1,17 @@
 package com.blamejared.ctgui.api;
 
+import crafttweaker.api.data.IData;
 import crafttweaker.mc1120.data.NBTConverter;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jared.
@@ -70,19 +74,21 @@ public class SlotRecipe extends Slot {
         if(getPropertyFromMap("onlyDamage"))
             builder.append(".onlyDamaged()");
         if(getPropertyFromMap("gted"))
-            builder.append(".onlyDamageAtLeast(").append("").append(getProperty("gted")).append(')');
+            builder.append(".onlyDamageAtLeast(").append(getProperty("gted")).append(')');
         if(getPropertyFromMap("ltd"))
-            builder.append(".onlyDamageAtMost(").append("").append(getProperty("ltd")).append(')');
+            builder.append(".onlyDamageAtMost(").append(getProperty("ltd")).append(')');
         if(getPropertyFromMap("betweenDamage")) {
-            builder.append(".onlyDamageBetween(").append("").append(getProperty("betweenDamageX")).append(", ").append("").append(getProperty("betweenDamageY")).append(')');
+            builder.append(".onlyDamageBetween(").append(getProperty("betweenDamageX")).append(", ").append(getProperty("betweenDamageY")).append(')');
         }
         if(getPropertyFromMap("noreturn"))
             builder.append(".noReturn()");
         if(getPropertyFromMap("nbt")) {
-            if(this instanceof SlotRecipeOutput)
-                builder.append(String.format(".withTag(%s)", NBTConverter.from(getStack().getTagCompound(), false).toString()));
-            else
-                builder.append(String.format(".onlyWithTag(%s)", NBTConverter.from(getStack().getTagCompound(), false).toString()));
+            final IData data = NBTConverter.from(getStack().getTagCompound(), false);
+            if(data != null) {
+                builder.append(String.format(".withTag(%s)", data.toString()));
+                if(!(this instanceof SlotRecipeOutput))
+                    builder.append(String.format(".onlyWithTag(%s)", data.toString()));
+            }
         }
         return builder.toString();
     }
