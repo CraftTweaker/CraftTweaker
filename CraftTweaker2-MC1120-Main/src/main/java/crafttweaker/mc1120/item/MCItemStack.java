@@ -30,12 +30,11 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
-
 /**
  * @author Stan
  */
 public class MCItemStack implements IItemStack {
+    
     public static final IItemStack EMPTY = new MCItemStack();
     
     
@@ -79,6 +78,26 @@ public class MCItemStack implements IItemStack {
         items = Collections.singletonList(this);
         this.tag = tag;
         this.wildcardSize = wildcardSize;
+    }
+    
+    /**
+     * This is a constructor which creates a itemstack that doesn't copy the internal stack
+     * Only use this is you are sure it will never be changed
+     *
+     * @param unused to prevent constructor conflicts, has no purpose
+     */
+    private MCItemStack(ItemStack itemStack, int unused) {
+        if(itemStack.isEmpty())
+            throw new IllegalArgumentException("stack cannot be null");
+        stack = itemStack;
+        items = Collections.singletonList(this);
+    }
+    
+    public static MCItemStack createNonCopy(ItemStack itemStack) {
+        if(itemStack == null || itemStack.isEmpty())
+            return null;
+        
+        return new MCItemStack(itemStack, -1);
     }
     
     @Override
@@ -300,7 +319,10 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matches(IItemStack item) {
-        ItemStack internal = getItemStack(item);
+        if(item == null)
+            return false;
+        
+        ItemStack internal = (ItemStack) item.getInternal();
         if(stack.hasTagCompound() && matchTagExact) {
             return matchesExact(item);
         }
@@ -309,7 +331,11 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matchesExact(IItemStack item) {
-        ItemStack internal = getItemStack(item);
+        if(item == null)
+            return false;
+        
+        ItemStack internal = (ItemStack) item.getInternal();
+        
         if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
             return false;
         }
@@ -325,7 +351,7 @@ public class MCItemStack implements IItemStack {
                     return false;
                 }
             }
-        }else{
+        } else {
             return false;
         }
         // if it gets here, it is equal
