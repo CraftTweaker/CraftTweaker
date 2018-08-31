@@ -411,7 +411,7 @@ public final class MCRecipeManager implements IRecipeManager {
             for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
                 final IRecipe recipe = recipeEntry.getValue();
                 final ItemStack output = recipe.getRecipeOutput();
-                if(output.isEmpty() || !this.output.matches(getIItemStack(output))) {
+                if(output.isEmpty() || !this.output.matches(MCItemStack.createNonCopy(output))) {
                     continue;
                 }
                 
