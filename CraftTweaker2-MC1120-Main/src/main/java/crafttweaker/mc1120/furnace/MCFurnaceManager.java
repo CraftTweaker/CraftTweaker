@@ -23,30 +23,30 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
  * @author Stan
  */
 public class MCFurnaceManager implements IFurnaceManager {
-    
-    
+
+
     public static final Map<IItemStack, Integer> fuelMap = new HashMap<>();
-    
+
     public static List<ActionAddFurnaceRecipe> recipesToAdd = new ArrayList<>();
     public static List<IActionFurnaceRemoval> recipesToRemove = new ArrayList<>();
-    
+
     public MCFurnaceManager() {
-    
+
     }
-    
+
     @Override
     public void remove(IIngredient output, @Optional IIngredient input) {
         if(output == null)
             throw new IllegalArgumentException("output cannot be null");
-        
+
         recipesToRemove.add(new ActionFurnaceRemoveRecipe(output, input));
     }
-    
+
     @Override
     public void removeAll() {
         recipesToRemove.add(new ActionFurnaceRemoveAllRecipes());
     }
-    
+
     @Override
     public void addRecipe(IItemStack output, IIngredient input, @Optional double xp) {
         List<IItemStack> items = input.getItems();
@@ -58,21 +58,32 @@ public class MCFurnaceManager implements IFurnaceManager {
         ItemStack output2 = getItemStack(output);
         recipesToAdd.add(new ActionAddFurnaceRecipe(input, items2, output2, xp));
     }
-    
+
     @Override
     public void setFuel(IIngredient item, int fuel) {
         CraftTweakerAPI.apply(new ActionSetFuel(new SetFuelPattern(item, fuel)));
     }
-    
+
     @Override
     public int getFuel(IItemStack item) {
         return TileEntityFurnace.getItemBurnTime(CraftTweakerMC.getItemStack(item));
     }
-    
+
     @Override
     public List<IFurnaceRecipe> getAll() {
-        return FurnaceRecipes.instance().getSmeltingList().entrySet().stream().map(ent -> new FurnaceRecipe(new MCItemStack(ent.getKey()), new MCItemStack(ent.getValue()), FurnaceRecipes.instance().getSmeltingExperience(ent.getValue()))).collect(Collectors.toList());
+        return FurnaceRecipes.instance()
+                .getSmeltingList().entrySet().stream()
+                .filter(ent -> {
+                    if (!ent.getValue().isEmpty() && !ent.getKey().isEmpty()) {
+                        return true;
+                    } else {
+                        CraftTweakerAPI.logWarning("Furnace recipe from " + ent.getKey() + " to " + ent.getValue() + " has a empty stack.");
+                        return false;
+                    }
+                })
+                .map(ent -> new FurnaceRecipe(new MCItemStack(ent.getKey()), new MCItemStack(ent.getValue()), FurnaceRecipes.instance().getSmeltingExperience(ent.getValue())))
+                .collect(Collectors.toList());
     }
-    
-    
+
+
 }
