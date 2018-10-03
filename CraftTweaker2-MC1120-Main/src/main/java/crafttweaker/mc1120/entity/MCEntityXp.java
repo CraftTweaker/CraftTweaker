@@ -15,4 +15,9 @@ public class MCEntityXp extends MCEntity implements IEntityXp{
     public float getXp() {
         return entityXPOrb.getXpValue();
     }
+    
+    @Override
+    public void setXp(int xp) {
+        entityXPOrb.xpValue = xp;
+    }
 }

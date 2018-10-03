@@ -19,4 +19,11 @@ public interface IEntityXp extends IEntity {
      */
     @ZenGetter("xp")
     float getXp();
+    
+    /**
+     * Sets the amount of xp in this orb.
+     * @param xp amount
+     */
+    @ZenSetter("xp")
+    void setXp(int xp);
 }
