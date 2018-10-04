@@ -327,7 +327,8 @@ public final class MCRecipeManager implements IRecipeManager {
                         continue; //No null's in shapeless recipies... We can't do anything, so we just won't add the recipe.
                     IIngredient[] ingredients = recipe.getIngredients1D();
                     for(int i = 0; i < ingredients.length; i++) {
-                        if(ingredients[i].contains(toReplace)) {
+                        final IIngredient ingredient = ingredients[i];
+                        if(ingredient != null && ingredient.contains(toReplace)) {
                             ingredients[i] = replaceWith;
                         }
                     }
