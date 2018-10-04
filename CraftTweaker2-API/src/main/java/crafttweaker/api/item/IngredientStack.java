@@ -3,7 +3,9 @@ package crafttweaker.api.item;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.player.IPlayer;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Contains an ingredient stack. Is an ingredient with a specific stack size
@@ -23,7 +25,7 @@ public class IngredientStack implements IIngredient {
     
     @Override
     public String getMark() {
-        return null;
+        return ingredient.getMark();
     }
     
     @Override
@@ -38,7 +40,7 @@ public class IngredientStack implements IIngredient {
     
     @Override
     public IItemStack[] getItemArray() {
-    	return ingredient.getItemArray();
+        return ingredient.getItemArray();
     }
     
     @Override
@@ -103,7 +105,7 @@ public class IngredientStack implements IIngredient {
     
     @Override
     public Object getInternal() {
-        return null;
+        return ingredient;
     }
     
     @Override
@@ -132,14 +134,9 @@ public class IngredientStack implements IIngredient {
     
     @Override
     public String toString() {
-        String s = "(Ingredients) ";
-        List<String> names = new ArrayList<>();
-        
-        for(IItemStack st : ingredient.getItems()) {
-            names.add(st.getName());
-        }
-        s += String.join(",", names);
-        
-        return s;
+        StringJoiner stringJoiner = new StringJoiner(",", "(Ingredients) ", "");
+        for(IItemStack item : ingredient.getItems())
+            stringJoiner.add(item.getName());
+        return stringJoiner.toString();
     }
 }
