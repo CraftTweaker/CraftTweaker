@@ -1,12 +1,19 @@
 package crafttweaker.mc1120.world;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
+import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
+import crafttweaker.mc1120.data.NBTConverter;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 
 /**
  * @author Stan
@@ -113,6 +120,33 @@ public class MCWorld extends MCBlockAccess implements IWorld {
     @Override
 	public boolean setBlockState(IBlockState state, IBlockPos pos) {
 		return world.setBlockState((BlockPos)pos.getInternal(), (net.minecraft.block.state.IBlockState)state.getInternal());
+	}
+
+	@Override
+	public boolean setBlockState(IBlockState state, IData tileEntityData, IBlockPos pos) {
+		boolean placed = world.setBlockState((BlockPos)pos.getInternal(), (net.minecraft.block.state.IBlockState)state.getInternal());
+		if (tileEntityData != null) {
+			NBTTagCompound tileEntityNBT = (NBTTagCompound) NBTConverter.from(tileEntityData);
+			if (!tileEntityNBT.hasNoTags()) {
+				TileEntity tileEntity = world.getTileEntity((BlockPos) pos.getInternal());
+				if (tileEntity != null) {
+					NBTTagCompound currentNBT = tileEntity.writeToNBT(new NBTTagCompound());
+					NBTTagCompound originalNBT = currentNBT.copy();
+					currentNBT.merge(tileEntityNBT.copy());
+					currentNBT.setInteger("x", pos.getX());
+					currentNBT.setInteger("y", pos.getY());
+					currentNBT.setInteger("z", pos.getZ());
+					if (!currentNBT.equals(originalNBT)) {
+						tileEntity.readFromNBT(currentNBT);
+						tileEntity.markDirty();
+					}
+				} else {
+					CraftTweakerAPI.logInfo("No tile entity found when placing block.");
+				}
+			}
+		}
+
+		return placed;
 	}
 
 	@Override

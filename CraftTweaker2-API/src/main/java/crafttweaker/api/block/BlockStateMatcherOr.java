@@ -31,7 +31,7 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
 
     @Override
     public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
-        CraftTweakerAPI.logWarning("Cannot change allowed values for a compound blockstate matcher")
+        CraftTweakerAPI.logWarning("Cannot change allowed values for a compound blockstate matcher");
         return this;
     }
 

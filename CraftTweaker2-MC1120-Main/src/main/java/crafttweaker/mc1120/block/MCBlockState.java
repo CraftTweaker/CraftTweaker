@@ -62,7 +62,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     public crafttweaker.api.block.IBlockState withProperty(String name, String value) {
         IProperty property = blockState.getBlock().getBlockState().getProperty(name);
         if (property == null) {
-            CrafttweakerAPI.logWarning("Invalid property name");
+            CraftTweakerAPI.logWarning("Invalid property name");
         } else {
             //noinspection unchecked
             Optional<? extends Comparable> propValue = property.parseValue(value);
@@ -70,7 +70,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
                 //noinspection unchecked
                 return new MCBlockState(blockState.withProperty(property, propValue.get()));
             }
-            CrafttweakerAPI.logWarning("Invalid property value");
+            CraftTweakerAPI.logWarning("Invalid property value");
         }
         return this;
     }

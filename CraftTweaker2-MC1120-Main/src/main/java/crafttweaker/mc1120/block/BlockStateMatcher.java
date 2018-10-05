@@ -33,7 +33,7 @@ public class BlockStateMatcher implements IBlockStateMatcher {
         }
         for (Object o : blockStates) {
             if (o == null) {
-                throw new IllegalArgumentException("Cannot create matcher for null blockstate")
+                throw new IllegalArgumentException("Cannot create matcher for null blockstate");
             }
         }
         if (blockStates.length == 1) {
@@ -45,7 +45,7 @@ public class BlockStateMatcher implements IBlockStateMatcher {
 
     @Override
     public boolean matches(crafttweaker.api.block.IBlockState toMatch) {
-        if (other == null) {
+        if (toMatch == null) {
             return false;
         }
         // If internal states are equal, they must match
@@ -56,7 +56,7 @@ public class BlockStateMatcher implements IBlockStateMatcher {
             // Iterate over the properties in `toMatch`
             for (Map.Entry<IProperty<?>, Comparable<?>> entry : ((IBlockState) toMatch.getInternal()).getProperties().entrySet()) {
                 // If this matcher has values specified for this property name, and the value is not in the list of allowed values
-                List<String> allowed = allowedProperties.get(entry.getKey().getName())
+                List<String> allowed = allowedProperties.get(entry.getKey().getName());
                 if (allowed != null && !(allowed.contains(entry.getValue().toString()) || allowed.contains("*"))) {
                     // No dice.
                     return false;
