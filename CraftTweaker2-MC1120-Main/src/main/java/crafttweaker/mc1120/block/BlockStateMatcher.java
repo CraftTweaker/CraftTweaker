@@ -2,14 +2,18 @@ package crafttweaker.mc1120.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@ZenClass("crafttweaker.mc1120.block.BlockStateMatcher")
+@ZenRegister
 public class BlockStateMatcher implements IBlockStateMatcher {
 
     private final crafttweaker.api.block.IBlockState blockState;
@@ -22,6 +26,16 @@ public class BlockStateMatcher implements IBlockStateMatcher {
 
     public BlockStateMatcher(crafttweaker.api.block.IBlockState blockState) {
         this(blockState, ImmutableMap.of());
+    }
+
+    @ZenMethod
+    public static IBlockStateMatcher create(crafttweaker.api.block.IBlockState... blockStates) {
+        if (blockStates == null || blockStates.length == 0) return null;
+        if (blockStates.length == 1) {
+            return new BlockStateMatcher(blockStates[0]);
+        } else {
+            return new BlockStateMatcherOr(Arrays.copyOf(blockStates, blockStates.length));
+        }
     }
 
     @Override
@@ -54,5 +68,14 @@ public class BlockStateMatcher implements IBlockStateMatcher {
     @Override
     public IBlockStateMatcher or(IBlockStateMatcher matcher) {
         return new BlockStateMatcherOr(this, matcher);
+    }
+
+    @Override
+    public Collection<crafttweaker.api.block.IBlockState> getMatchingBlockStates() {
+        IBlockState state = ((IBlockState) blockState.getInternal());
+        return state.getBlock().getBlockState().getValidStates()
+                .stream()
+                .map(MCBlockState::new)
+                .collect(Collectors.toList());
     }
 }

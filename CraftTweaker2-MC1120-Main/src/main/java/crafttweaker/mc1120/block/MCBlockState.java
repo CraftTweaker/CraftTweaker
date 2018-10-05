@@ -12,9 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MCBlockState extends MCBlockProperties implements crafttweaker.api.block.IBlockState {
     
@@ -86,5 +84,10 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public IBlockStateMatcher or(IBlockStateMatcher matcher) {
         return new BlockStateMatcherOr(this, matcher);
+    }
+
+    @Override
+    public Collection<crafttweaker.api.block.IBlockState> getMatchingBlockStates() {
+        return ImmutableList.of(this);
     }
 }

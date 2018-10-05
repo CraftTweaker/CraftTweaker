@@ -33,7 +33,7 @@ public class BracketHandlerBlockState implements IBracketHandler {
 
         if (block != null) {
             iBlock = new MCBlockState(block.getDefaultState());
-            if (properties != null) {
+            if (properties != null && properties.length() > 0) {
                 for (String propertyPair : properties.split(",")) {
                     String[] splitPair = propertyPair.split("=");
                     if (splitPair.length != 2)
@@ -57,7 +57,7 @@ public class BracketHandlerBlockState implements IBracketHandler {
         if (split.length > 1) {
             if ("blockstate".equalsIgnoreCase(split[0])) {
                 String blockName;
-                String properties = null;
+                String properties = "";
                 if (split.length > 2) {
                     blockName = split[1] + ":" + split[2];
                     if (split.length > 3) {

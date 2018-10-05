@@ -2,6 +2,10 @@ package crafttweaker.api.block;
 
 import crafttweaker.util.ArrayUtil;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class BlockStateMatcherOr implements IBlockStateMatcher {
 
     private final IBlockStateMatcher[] elements;
@@ -32,5 +36,16 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
     @Override
     public IBlockStateMatcher or(IBlockStateMatcher matcher) {
         return new BlockStateMatcherOr(ArrayUtil.append(elements, matcher));
+    }
+
+    @Override
+    public Collection<IBlockState> getMatchingBlockStates() {
+        Collection<IBlockState> matchingStates = new ArrayList<>();
+        for (IBlockStateMatcher matcher : elements) {
+            Collection<IBlockState> states = matcher.getMatchingBlockStates();
+            if (states == null) continue;
+            matchingStates.addAll(states);
+        }
+        return matchingStates;
     }
 }
