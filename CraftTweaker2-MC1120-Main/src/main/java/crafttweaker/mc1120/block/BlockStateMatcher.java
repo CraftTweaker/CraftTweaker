@@ -62,7 +62,7 @@ public class BlockStateMatcher implements IBlockStateMatcher {
             newProps.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
         }
         newProps.put(name, ImmutableList.copyOf(values));
-        return new BlockStateMatcher(this.blockState, newProps);
+        return new BlockStateMatcher(blockState, newProps);
     }
 
     @Override
@@ -76,6 +76,7 @@ public class BlockStateMatcher implements IBlockStateMatcher {
         return state.getBlock().getBlockState().getValidStates()
                 .stream()
                 .map(MCBlockState::new)
+                .filter(this::matches)
                 .collect(Collectors.toList());
     }
 }
