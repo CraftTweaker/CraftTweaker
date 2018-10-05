@@ -1,7 +1,7 @@
 package crafttweaker.mc1120.brackets;
 
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.annotations.ZenRegister;
+import crafttweaker.*;
+import crafttweaker.annotations.*;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.mc1120.block.MCBlockState;
 import crafttweaker.zenscript.IBracketHandler;
@@ -9,10 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.expression.ExpressionCallStatic;
-import stanhebben.zenscript.expression.ExpressionString;
+import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.impl.BracketHandler;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.natives.IJavaMethod;
@@ -35,11 +33,13 @@ public class BracketHandlerBlockState implements IBracketHandler {
 
         if (block != null) {
             iBlock = new MCBlockState(block.getDefaultState());
-            for (String propertyPair : properties.split(",")) {
-                String[] splitPair = propertyPair.split("=");
-                if (splitPair.length != 2)
-                    return null;
-                iBlock = iBlock.withProperty(splitPair[0], splitPair[1]);
+            if (properties != null) {
+                for (String propertyPair : properties.split(",")) {
+                    String[] splitPair = propertyPair.split("=");
+                    if (splitPair.length != 2)
+                        return null;
+                    iBlock = iBlock.withProperty(splitPair[0], splitPair[1]);
+                }
             }
         }
 
@@ -50,14 +50,21 @@ public class BracketHandlerBlockState implements IBracketHandler {
     public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
         IZenSymbol zenSymbol = null;
 
-        if (tokens.size() > 2) {
-            if ("blockstate".equalsIgnoreCase(tokens.get(0).getValue())) {
+        String bracketString = tokens.stream().map(Token::getValue).reduce("", String::concat);
+
+        String[] split = bracketString.split(":", 4);
+
+        if (split.length > 1) {
+            if ("blockstate".equalsIgnoreCase(split[0])) {
                 String blockName;
                 String properties = null;
-                if (tokens.size() >= 5) {
-                    blockName = tokens.get(2).getValue() + ":" + tokens.get(4).getValue();
+                if (split.length > 2) {
+                    blockName = split[1] + ":" + split[2];
+                    if (split.length > 3) {
+                        properties = split[3];
+                    }
                 } else {
-                    blockName = tokens.get(2).getValue();
+                    blockName = split[1];
                 }
                 zenSymbol = new BlockStateReferenceSymbol(environment, blockName, properties);
             }
@@ -69,6 +76,11 @@ public class BracketHandlerBlockState implements IBracketHandler {
     @Override
     public String getRegexMatchingString() {
         return "blockstate:.*";
+    }
+
+    @Override
+    public Class<?> getReturnedClass() {
+        return IBlockState.class;
     }
 
     private class BlockStateReferenceSymbol implements IZenSymbol {
