@@ -2,6 +2,7 @@ package crafttweaker.mc1120.block;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.world.*;
 import net.minecraft.block.Block;
@@ -60,13 +61,18 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public crafttweaker.api.block.IBlockState withProperty(String name, String value) {
         IProperty property = blockState.getBlock().getBlockState().getProperty(name);
-        //noinspection unchecked
-        Optional<? extends Comparable> propValue = property.parseValue(value);
-        if (propValue.isPresent()) {
+        if (property == null) {
+            CrafttweakerAPI.logWarning("Invalid property name");
+        } else {
             //noinspection unchecked
-            return new MCBlockState(blockState.withProperty(property, propValue.get()));
+            Optional<? extends Comparable> propValue = property.parseValue(value);
+            if (propValue.isPresent()) {
+                //noinspection unchecked
+                return new MCBlockState(blockState.withProperty(property, propValue.get()));
+            }
+            CrafttweakerAPI.logWarning("Invalid property value");
         }
-        return null;
+        return this;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package crafttweaker.api.block;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.util.ArrayUtil;
 
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
 
     @Override
     public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
-        return null;
+        CraftTweakerAPI.logWarning("Cannot change allowed values for a compound blockstate matcher")
+        return this;
     }
 
     @Override
@@ -43,7 +45,9 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
         Collection<IBlockState> matchingStates = new ArrayList<>();
         for (IBlockStateMatcher matcher : elements) {
             Collection<IBlockState> states = matcher.getMatchingBlockStates();
-            if (states == null) continue;
+            if (states == null) {
+                continue;
+            }
             matchingStates.addAll(states);
         }
         return matchingStates;

@@ -28,22 +28,26 @@ public class BracketHandlerBlockState implements IBracketHandler {
     }
 
     public static IBlockState getBlockState(String name, String properties) {
-        IBlockState iBlock = null;
+        IBlockState blockState = null;
         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
 
         if (block != null) {
-            iBlock = new MCBlockState(block.getDefaultState());
+            blockState = new MCBlockState(block.getDefaultState());
             if (properties != null && properties.length() > 0) {
                 for (String propertyPair : properties.split(",")) {
                     String[] splitPair = propertyPair.split("=");
-                    if (splitPair.length != 2)
-                        return null;
-                    iBlock = iBlock.withProperty(splitPair[0], splitPair[1]);
+                    if (splitPair.length != 2) {
+                        CraftTweakerAPI.logWarning("Invalid blockstate property format");
+                        continue;
+                    }
+                    blockState = blockState.withProperty(splitPair[0], splitPair[1]);
                 }
             }
+        } else {
+            CraftTweakerAPI.logWarning("No block found named " + name);
         }
 
-        return iBlock;
+        return blockState;
     }
 
     @Override

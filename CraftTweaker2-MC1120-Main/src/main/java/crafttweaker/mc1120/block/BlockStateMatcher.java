@@ -2,6 +2,7 @@ package crafttweaker.mc1120.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import net.minecraft.block.properties.IProperty;
@@ -12,8 +13,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ZenClass("crafttweaker.mc1120.block.BlockStateMatcher")
-@ZenRegister
 public class BlockStateMatcher implements IBlockStateMatcher {
 
     private final crafttweaker.api.block.IBlockState blockState;
@@ -28,9 +27,15 @@ public class BlockStateMatcher implements IBlockStateMatcher {
         this(blockState, ImmutableMap.of());
     }
 
-    @ZenMethod
     public static IBlockStateMatcher create(crafttweaker.api.block.IBlockState... blockStates) {
-        if (blockStates == null || blockStates.length == 0) return null;
+        if (blockStates == null) {
+            throw new IllegalArgumentException("Cannot create matcher for null blockstate");
+        }
+        for (Object o : blockStates) {
+            if (o == null) {
+                throw new IllegalArgumentException("Cannot create matcher for null blockstate")
+            }
+        }
         if (blockStates.length == 1) {
             return new BlockStateMatcher(blockStates[0]);
         } else {
@@ -39,17 +44,25 @@ public class BlockStateMatcher implements IBlockStateMatcher {
     }
 
     @Override
-    public boolean matches(crafttweaker.api.block.IBlockState other) {
-        if (this.blockState.getInternal().equals(other.getInternal())) {
+    public boolean matches(crafttweaker.api.block.IBlockState toMatch) {
+        if (other == null) {
+            return false;
+        }
+        // If internal states are equal, they must match
+        if (this.blockState.getInternal().equals(toMatch.getInternal())) {
             return true;
-        } else if (((IBlockState) this.blockState.getInternal()).getBlock().equals(((IBlockState) other.getInternal()).getBlock())) {
-            for (Map.Entry<IProperty<?>, Comparable<?>> entry : ((IBlockState)other.getInternal()).getProperties().entrySet()) {
-                if (allowedProperties.containsKey(entry.getKey().getName())) {
-                    if (!allowedProperties.get(entry.getKey().getName()).contains(entry.getValue().toString())) {
-                        return false;
-                    }
+        // Otherwise if the internal Blocks are equal, there is a possible match
+        } else if (((IBlockState) this.blockState.getInternal()).getBlock().equals(((IBlockState) toMatch.getInternal()).getBlock())) {
+            // Iterate over the properties in `toMatch`
+            for (Map.Entry<IProperty<?>, Comparable<?>> entry : ((IBlockState) toMatch.getInternal()).getProperties().entrySet()) {
+                // If this matcher has values specified for this property name, and the value is not in the list of allowed values
+                List<String> allowed = allowedProperties.get(entry.getKey().getName())
+                if (allowed != null && !(allowed.contains(entry.getValue().toString()) || allowed.contains("*"))) {
+                    // No dice.
+                    return false;
                 }
             }
+            // Every property was either not specified, wildcarded, or matched an allowed value
             return true;
         }
         return false;
@@ -57,11 +70,15 @@ public class BlockStateMatcher implements IBlockStateMatcher {
 
     @Override
     public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
+        // Create a new map
         Map<String, List<String>> newProps = new HashMap<>();
+        // Copy over current values
         for (Map.Entry<String, List<String>> entry : allowedProperties.entrySet()) {
             newProps.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
         }
+        // Put the specified allowed values into the map
         newProps.put(name, ImmutableList.copyOf(values));
+        // Wham, bam, thank-you-ma'am
         return new BlockStateMatcher(blockState, newProps);
     }
 
@@ -73,10 +90,10 @@ public class BlockStateMatcher implements IBlockStateMatcher {
     @Override
     public Collection<crafttweaker.api.block.IBlockState> getMatchingBlockStates() {
         IBlockState state = ((IBlockState) blockState.getInternal());
-        return state.getBlock().getBlockState().getValidStates()
+        return state.getBlock().getBlockState().getValidStates() // get list of valid states
                 .stream()
-                .map(MCBlockState::new)
-                .filter(this::matches)
-                .collect(Collectors.toList());
+                .map(MCBlockState::new)     // convert to crafttweaker IBlockStates
+                .filter(this::matches)      // filter for matching states
+                .collect(Collectors.toList());  // collect and return
     }
 }
