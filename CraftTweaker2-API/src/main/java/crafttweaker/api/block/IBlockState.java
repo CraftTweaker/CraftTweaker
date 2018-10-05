@@ -6,7 +6,7 @@ import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.block.IBlockState")
 @ZenRegister
-public interface IBlockState extends IBlockProperties {
+public interface IBlockState extends IBlockProperties, IBlockStateMatcher {
     
     @ZenMethod
     @ZenGetter("block")
@@ -22,4 +22,7 @@ public interface IBlockState extends IBlockProperties {
     @ZenMethod
     @ZenOperator(OperatorType.COMPARE)
     int compare(IBlockState other);
+
+    @ZenMethod
+    IBlockState withProperty(String name, String value);
 }
