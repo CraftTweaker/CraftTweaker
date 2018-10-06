@@ -191,5 +191,5 @@ public interface IRecipeManager {
 
 
     @ZenMethod
-    void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith);
+    void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, @Optional IIngredient forOutput);
 }
