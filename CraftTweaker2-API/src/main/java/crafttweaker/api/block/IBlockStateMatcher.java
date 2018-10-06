@@ -4,7 +4,6 @@ import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.Collection;
-import java.util.List;
 
 @ZenClass("crafttweaker.block.IBlockStateMatcher")
 @ZenRegister
