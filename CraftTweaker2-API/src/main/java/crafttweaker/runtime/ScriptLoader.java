@@ -8,12 +8,26 @@ public class ScriptLoader {
     
     private String mainName;
     private final Set<String> names = new HashSet<>();
+    private final Set<String> delayUntil = new HashSet<>();
     private LoaderStage loaderStage = LoaderStage.NOT_LOADED;
     
     public ScriptLoader(String... nameAndAliases) {
         addAliases(nameAndAliases);
     }
     
+    
+    public void delayUntil(String... name) {
+        delayUntil.addAll(Arrays.asList(name));
+    }
+    
+    public boolean isDelayed() {
+        return !delayUntil.isEmpty();
+    }
+    
+    public ScriptLoader removeDelay(String... name) {
+        delayUntil.removeAll(Arrays.asList(name));
+        return this;
+    }
     
     public Set<String> getNames() {
         return names;
