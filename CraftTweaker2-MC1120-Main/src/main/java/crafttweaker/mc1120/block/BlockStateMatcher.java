@@ -48,21 +48,14 @@ public class BlockStateMatcher implements IBlockStateMatcher {
         if (toMatch == null) {
             return false;
         }
-        // If internal states are equal, they must match
-        if (this.blockState.getInternal().equals(toMatch.getInternal())) {
-            return true;
-        // Otherwise if the internal Blocks are equal, there is a possible match
-        } else if (((IBlockState) this.blockState.getInternal()).getBlock().equals(((IBlockState) toMatch.getInternal()).getBlock())) {
-            // Iterate over the properties in `toMatch`
+        // If the internal Blocks are equal, there is a possible match
+        if (((IBlockState) this.blockState.getInternal()).getBlock().equals(((IBlockState) toMatch.getInternal()).getBlock())) {
             for (Map.Entry<IProperty<?>, Comparable<?>> entry : ((IBlockState) toMatch.getInternal()).getProperties().entrySet()) {
-                // If this matcher has values specified for this property name, and the value is not in the list of allowed values
                 List<String> allowed = allowedProperties.get(entry.getKey().getName());
                 if (allowed != null && !(allowed.contains(entry.getValue().toString()) || allowed.contains("*"))) {
-                    // No dice.
                     return false;
                 }
             }
-            // Every property was either not specified, wildcarded, or matched an allowed value
             return true;
         }
         return false;
