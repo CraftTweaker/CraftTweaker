@@ -12,6 +12,7 @@ import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.parser.ParseException;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static stanhebben.zenscript.ZenModule.*;
@@ -87,8 +88,8 @@ public class CrTTweaker implements ITweaker {
     }
     
     
-    public boolean loadScript(boolean isSyntaxCommand, List<SingleError> parseExceptions, boolean isLinter, String... loaderName) {
-        return loadScript(isSyntaxCommand, getOrAddLoader(loaderName), parseExceptions, isLinter);
+    public boolean loadScript(boolean isSyntaxCommand, List<SingleError> parseExceptions, boolean isLinter, String... loaderNames) {
+        return loadScript(isSyntaxCommand, getOrAddLoader(loaderNames).removeDelay(loaderNames), parseExceptions, isLinter);
     }
     
     public boolean loadScript(boolean isSyntaxCommand, String loaderName, List<SingleError> parseExceptions, boolean isLinter) {
@@ -109,6 +110,11 @@ public class CrTTweaker implements ITweaker {
         CraftTweakerAPI.logInfo("Loading scripts for loader with names " + loader.toString());
         if(loader.isLoaded() && !isSyntaxCommand) {
             CraftTweakerAPI.logDefault("Skipping loading for loader " + loader + " since it's already been loaded");
+            return false;
+        }
+        
+        if(loader.isDelayed() && !isSyntaxCommand) {
+            CraftTweakerAPI.logDefault("Skipping loading for loader " + loader + " since its execution is being delayed by another mod.");
             return false;
         }
         
@@ -169,7 +175,7 @@ public class CrTTweaker implements ITweaker {
                 
                 // start reading of the scripts
                 ZenTokener parser = null;
-                try(Reader reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), "UTF-8")) {
+                try(Reader reader = new InputStreamReader(new BufferedInputStream(scriptFile.open()), StandardCharsets.UTF_8)) {
                     preprocessorManager.postLoadEvent(new CrTScriptLoadEvent(scriptFile));
                     
                     // blocks the parsing of the script
@@ -233,6 +239,8 @@ public class CrTTweaker implements ITweaker {
         
         
         loader.setLoaderStage(loadSuccessful ? ScriptLoader.LoaderStage.LOADED_SUCCESSFUL : ScriptLoader.LoaderStage.ERROR);
+        if(!isLinter)
+            CRT_LOADING_FINISHED_EVENT_EVENT_LIST.publish(new CrTLoaderLoadingEvent.Finished(loader, networkSide, isSyntaxCommand));
         CraftTweakerAPI.logDefault("Completed script loading in: " + (System.currentTimeMillis() - totalTime) + "ms");
         return loadSuccessful;
     }

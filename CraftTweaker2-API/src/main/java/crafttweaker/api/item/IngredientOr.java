@@ -192,19 +192,18 @@ public class IngredientOr implements IIngredient {
     
     @Override
     public Object getInternal() {
-        return null;
+        return elements;
     }
     
     @Override
     public String toCommandString() {
         if(elements.length == 0)
             return "ERROR";
-        StringBuilder commandString = new StringBuilder(elements[0].toCommandString());
-        for(int i = 1; i < elements.length; i++) {
-            commandString.append(" | ");
-            commandString.append(elements[i] == null ? "null" : elements[i].toCommandString());
+        StringJoiner joiner = new StringJoiner(" | ");
+        for(IIngredient element : elements) {
+            joiner.add(element == null ? "null" : element.toCommandString());
         }
-        return commandString.toString();
+        return joiner.toString();
     }
 
     @Override

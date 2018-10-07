@@ -1,29 +1,39 @@
 package crafttweaker.mc1120.recipes;
 
-import crafttweaker.*;
-import crafttweaker.api.item.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.IAction;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.IngredientAny;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.item.MCItemStack;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.*;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.RegistryManager;
 import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.*;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStack;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getOreDict;
 
 /**
  * @author Stan, BloodWorkXGaming
@@ -253,9 +263,10 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith) {
-        recipesToRemove.add(new ActionReplaceAllOccurences(toReplace, replaceWith));
+    public void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
+        recipesToRemove.add(new ActionReplaceAllOccurences(toReplace, replaceWith, forOutput));
     }
+    
     
     /**
      * Classes of all removeRecipe Actions
@@ -268,12 +279,19 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     public static class ActionReplaceAllOccurences extends ActionBaseRemoveRecipes {
-        
+    
         //I'm odd, in that I'm an ActionBaseRemoveRecipes, that also creates recipes.
-        private List<ResourceLocation> toRemove;
-        List<MCRecipeBase> toChange;
         private final IIngredient toReplace;
         private final IIngredient replaceWith;
+        private final IIngredient forOutput;
+        private List<MCRecipeBase> toChange;
+        private List<ResourceLocation> toRemove;
+        
+        public ActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
+            this.toReplace = toReplace;
+            this.replaceWith = replaceWith;
+            this.forOutput = forOutput == null ? IngredientAny.INSTANCE : forOutput;
+        }
         
         @Override
         public void apply() {
@@ -288,24 +306,17 @@ public final class MCRecipeManager implements IRecipeManager {
             List<ActionBaseAddRecipe> toUnAdd = new ArrayList<>();
             removingRecipes.forEach(recipe -> {
                 RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe);
-                recipesToAdd.stream().filter(f -> f instanceof ActionDummyAddRecipe).filter(f -> f.recipe.getRegistryName().equals(recipe)).forEach(f -> toUnAdd.add(f));
+                recipesToAdd.stream().filter(f -> f instanceof ActionDummyAddRecipe).filter(f -> f.recipe.getRegistryName().equals(recipe)).forEach(toUnAdd::add);
             });
-            toUnAdd.stream().forEach(f -> {
+            toUnAdd.forEach(f -> {
                 recipesToAdd.remove(f);
-                if(usedRecipeNames.contains(f.getName())) {
-                    usedRecipeNames.remove(f.getName());
-                }
+                usedRecipeNames.remove(f.getName());
             });
         }
         
         @Override
         public String describe() {
-            return "Removing all occurences of ingredient: " + toReplace + "and replacing them with " + replaceWith;
-        }
-        
-        public ActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith) {
-            this.toReplace = toReplace;
-            this.replaceWith = replaceWith;
+            return "Removing all occurences of ingredient: " + toReplace + " and replacing them with " + replaceWith;
         }
         
         private void changeIngredients(List<MCRecipeBase> toChange) {
@@ -327,7 +338,8 @@ public final class MCRecipeManager implements IRecipeManager {
                         continue; //No null's in shapeless recipies... We can't do anything, so we just won't add the recipe.
                     IIngredient[] ingredients = recipe.getIngredients1D();
                     for(int i = 0; i < ingredients.length; i++) {
-                        if(ingredients[i].contains(toReplace)) {
+                        final IIngredient ingredient = ingredients[i];
+                        if(ingredient != null && ingredient.contains(toReplace)) {
                             ingredients[i] = replaceWith;
                         }
                     }
@@ -362,8 +374,16 @@ public final class MCRecipeManager implements IRecipeManager {
             
             for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
                 IRecipe recipe = recipeEntry.getValue();
+    
+                //Check the recipe output if provided.
+                {
+                    final IItemStack output = CraftTweakerMC.getIItemStack(recipe.getRecipeOutput());
+                    if(forOutput != IngredientAny.INSTANCE && output != null && !forOutput.matches(output))
+                        continue;
+                }
+    
                 for(Ingredient ingredient : recipe.getIngredients()) {
-                    IIngredient iIngredient = CraftTweakerMC.getIIngredient(ingredient);
+                    final IIngredient iIngredient = CraftTweakerMC.getIIngredient(ingredient);
                     if(iIngredient == null)
                         continue;
                     if(target.contains(iIngredient)) {
@@ -407,7 +427,7 @@ public final class MCRecipeManager implements IRecipeManager {
             
             final List<ResourceLocation> toRemove = new ArrayList<>();
             outer:
-
+            
             for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
                 final IRecipe recipe = recipeEntry.getValue();
                 final ItemStack output = recipe.getRecipeOutput();
@@ -808,15 +828,15 @@ public final class MCRecipeManager implements IRecipeManager {
     
     public static class ActionDummyAddRecipe extends ActionBaseAddRecipe {
         
+        public ActionDummyAddRecipe(MCRecipeBase recipe, IItemStack output, boolean isShaped) {
+            super(recipe, output, isShaped);
+        }
+        
         //This whole class is a dirty hack.
         //It exists only to hold information for the CraftTweaker JEI plugin.
         @Override
         public void apply() {
             //Our work was done elsehwere, apply is a noop.
-        }
-        
-        public ActionDummyAddRecipe(MCRecipeBase recipe, IItemStack output, boolean isShaped) {
-            super(recipe, output, isShaped);
         }
         
         @Override
