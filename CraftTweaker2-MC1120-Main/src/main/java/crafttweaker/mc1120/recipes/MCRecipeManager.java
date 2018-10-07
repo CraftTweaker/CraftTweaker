@@ -463,9 +463,10 @@ public final class MCRecipeManager implements IRecipeManager {
                             }
                         }
                         toRemove.add(recipeEntry.getKey());
-                    } else
+                    } else {
                         //null ingredient list given, remove all ShapedRecipes with the given output
                         toRemove.add(recipeEntry.getKey());
+                    }
                 }
             }
             CraftTweakerAPI.logInfo(toRemove.size() + " removed");
