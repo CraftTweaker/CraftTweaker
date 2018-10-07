@@ -336,26 +336,25 @@ public class MCItemStack implements IItemStack {
         
         ItemStack internal = (ItemStack) item.getInternal();
         
-        if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
+        NBTTagCompound internalTag = internal.getTagCompound();
+        NBTTagCompound stackTag = stack.getTagCompound();
+        if(internal.hasTagCompound() != stack.hasTagCompound()) {
             return false;
         }
-        if(internal.getTagCompound() == null && stack.getTagCompound() != null) {
-            return false;
+        boolean itemMatches = stack.getItem() == internal.getItem() && (internal.getMetadata() == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == internal.getMetadata());
+        if(internalTag == null && stackTag == null) {
+            return itemMatches;
         }
-        if(internal.getTagCompound() == null && stack.getTagCompound() == null) {
-            return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
-        }
-        if(internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
-            for(String s : internal.getTagCompound().getKeySet()) {
-                if(!internal.getTagCompound().getTag(s).equals(stack.getTagCompound().getTag(s))) {
+        if(internalTag.getKeySet().equals(stackTag.getKeySet())) {
+            for(String s : internalTag.getKeySet()) {
+                if(!internalTag.getTag(s).equals(stackTag.getTag(s))) {
                     return false;
                 }
             }
         } else {
             return false;
         }
-        // if it gets here, it is equal
-        return true;
+        return itemMatches;
     }
     
     @Override
