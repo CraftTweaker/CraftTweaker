@@ -1,13 +1,19 @@
 package crafttweaker.mc1120.block;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.world.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
+
+import java.util.*;
 
 public class MCBlockState extends MCBlockProperties implements crafttweaker.api.block.IBlockState {
     
@@ -51,5 +57,43 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
         }
         return result;
     }
-    
+
+    @Override
+    public crafttweaker.api.block.IBlockState withProperty(String name, String value) {
+        IProperty property = blockState.getBlock().getBlockState().getProperty(name);
+        if (property == null) {
+            CraftTweakerAPI.logWarning("Invalid property name");
+        } else {
+            //noinspection unchecked
+            Optional<? extends Comparable> propValue = property.parseValue(value);
+            if (propValue.isPresent()) {
+                //noinspection unchecked
+                return new MCBlockState(blockState.withProperty(property, propValue.get()));
+            }
+            CraftTweakerAPI.logWarning("Invalid property value");
+        }
+        return this;
+    }
+
+    @Override
+    public boolean matches(crafttweaker.api.block.IBlockState other) {
+        return compare(other) == 0;
+    }
+
+    @Override
+    public IBlockStateMatcher allowValuesForProperty(String propertyName, String... propertyValues) {
+        Map<String, List<String>> newProps = new HashMap<>();
+        newProps.put(propertyName, ImmutableList.copyOf(propertyValues));
+        return new BlockStateMatcher(this, newProps);
+    }
+
+    @Override
+    public IBlockStateMatcher or(IBlockStateMatcher matcher) {
+        return new BlockStateMatcherOr(this, matcher);
+    }
+
+    @Override
+    public Collection<crafttweaker.api.block.IBlockState> getMatchingBlockStates() {
+        return ImmutableList.of(this);
+    }
 }

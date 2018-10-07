@@ -1,6 +1,7 @@
 package crafttweaker.util;
 
 import crafttweaker.api.block.IBlockPattern;
+import crafttweaker.api.block.IBlockStateMatcher;
 import crafttweaker.api.item.*;
 
 import java.util.Arrays;
@@ -34,6 +35,12 @@ public class ArrayUtil {
     
     public static IBlockPattern[] append(IBlockPattern[] values, IBlockPattern value) {
         IBlockPattern[] result = Arrays.copyOf(values, values.length + 1);
+        result[values.length] = value;
+        return result;
+    }
+
+    public static IBlockStateMatcher[] append(IBlockStateMatcher[] values, IBlockStateMatcher value) {
+        IBlockStateMatcher[] result = Arrays.copyOf(values, values.length + 1);
         result[values.length] = value;
         return result;
     }
