@@ -6,6 +6,7 @@ import crafttweaker.api.block.IBlockState;
 import crafttweaker.mc1120.block.MCBlockState;
 import crafttweaker.zenscript.IBracketHandler;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
@@ -29,7 +30,13 @@ public class BracketHandlerBlockState implements IBracketHandler {
 
     public static IBlockState getBlockState(String name, String properties) {
         IBlockState blockState = null;
+
+        if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(name))) {
+            CraftTweakerAPI.logError("No block found with name '" + name + "'. Air block used instead.");
+        }
+
         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
+
 
         if (block != null) {
             blockState = new MCBlockState(block.getDefaultState());
@@ -37,14 +44,12 @@ public class BracketHandlerBlockState implements IBracketHandler {
                 for (String propertyPair : properties.split(",")) {
                     String[] splitPair = propertyPair.split("=");
                     if (splitPair.length != 2) {
-                        CraftTweakerAPI.logWarning("Invalid blockstate property format");
+                        CraftTweakerAPI.logWarning("Invalid blockstate property format '" + propertyPair + "'. Using default property value.");
                         continue;
                     }
                     blockState = blockState.withProperty(splitPair[0], splitPair[1]);
                 }
             }
-        } else {
-            CraftTweakerAPI.logWarning("No block found named " + name);
         }
 
         return blockState;
@@ -69,6 +74,9 @@ public class BracketHandlerBlockState implements IBracketHandler {
                     }
                 } else {
                     blockName = split[1];
+                }
+                if (!ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(blockName))) {
+                    return null;
                 }
                 zenSymbol = new BlockStateReferenceSymbol(environment, blockName, properties);
             }
