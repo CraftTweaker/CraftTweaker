@@ -507,7 +507,12 @@ public final class MCRecipeManager implements IRecipeManager {
                 if(entry.getValue().getRecipeOutput().isEmpty() || !output.matches(MCItemStack.createNonCopy(entry.getValue().getRecipeOutput()))) {
                     continue;
                 }
-                
+                if(recipe instanceof IShapedRecipe) {
+                    continue;
+                }
+                if(!(recipe instanceof ShapelessRecipes) && !(recipe instanceof ShapelessOreRecipe)){
+                    continue;
+                }
                 if(ingredients != null) {
                     if(recipe instanceof ShapelessRecipes) {
                         ShapelessRecipes srecipe = (ShapelessRecipes) recipe;
@@ -550,21 +555,12 @@ public final class MCRecipeManager implements IRecipeManager {
                             continue outer;
                         }
                     }
-                    if(recipe instanceof ShapedRecipes) {
-                        continue;
-                    } else if(recipe instanceof ShapedOreRecipe) {
-                        continue;
-                    }
-                } else {
-                    if(recipe instanceof ShapedRecipes) {
-                        continue;
-                    } else if(recipe instanceof ShapedOreRecipe) {
-                        continue;
-                    }
+                    
                 }
                 toRemove.add(entry.getKey());
             }
             
+            CraftTweakerAPI.logInfo("Removing " + toRemove.size() + " Shapeless recipes.");
             super.removeRecipes(toRemove);
         }
         
