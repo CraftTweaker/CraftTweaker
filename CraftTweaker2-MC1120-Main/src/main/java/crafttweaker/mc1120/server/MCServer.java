@@ -4,6 +4,9 @@ import crafttweaker.api.command.ICommandManager;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
 import crafttweaker.api.server.AbstractServer;
+import crafttweaker.api.server.IServer;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.command.MCCommandManager;
 import crafttweaker.mc1120.player.CommandBlockPlayer;
@@ -14,6 +17,7 @@ import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListOps;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author Stan
@@ -46,9 +50,6 @@ public class MCServer extends AbstractServer {
     @SuppressWarnings("MethodCallSideOnly")
     @Override
     public boolean isOp(IPlayer player) {
-        if(player == ServerPlayer.INSTANCE)
-            return true;
-    
         UserListOps ops = CraftTweaker.server.getPlayerList().getOppedPlayers();
         return !(server != null && server.isDedicatedServer()) || ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
     }
@@ -56,6 +57,31 @@ public class MCServer extends AbstractServer {
     @Override
     public ICommandManager getCommandManager() {
         return new MCCommandManager(server.getCommandManager());
+    }
+    
+    @Override
+    public String getDisplayName() {
+        return server.getDisplayName().getFormattedText();
+    }
+    
+    @Override
+    public IBlockPos getPosition() {
+        return CraftTweakerMC.getIBlockPos(server.getPosition());
+    }
+    
+    @Override
+    public IWorld getWorld() {
+        return CraftTweakerMC.getIWorld(server.getEntityWorld());
+    }
+    
+    @Override
+    public IServer getServer() {
+        return this;
+    }
+    
+    @Override
+    public void sendMessage(String text) {
+        server.sendMessage(new TextComponentString(text));
     }
     
     @Override

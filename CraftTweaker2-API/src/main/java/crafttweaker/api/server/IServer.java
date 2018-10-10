@@ -2,6 +2,7 @@ package crafttweaker.api.server;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.command.ICommandManager;
+import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.event.*;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.util.IEventHandler;
@@ -12,7 +13,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.server.IServer")
 @ZenRegister
-public interface IServer {
+public interface IServer extends ICommandSender {
 
     @ZenMethod
     boolean isOp(IPlayer player);
