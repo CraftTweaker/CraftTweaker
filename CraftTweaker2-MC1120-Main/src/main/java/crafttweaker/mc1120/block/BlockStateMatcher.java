@@ -57,16 +57,6 @@ public class BlockStateMatcher implements IBlockStateMatcher {
     }
 
     @Override
-    public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
-        Map<String, List<String>> newProps = new HashMap<>();
-        for (Map.Entry<String, List<String>> entry : allowedProperties.entrySet()) {
-            newProps.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
-        }
-        newProps.put(name, ImmutableList.copyOf(values));
-        return new BlockStateMatcher(blockState, newProps);
-    }
-
-    @Override
     public IBlockStateMatcher or(IBlockStateMatcher matcher) {
         return new BlockStateMatcherOr(this, matcher);
     }
@@ -79,5 +69,37 @@ public class BlockStateMatcher implements IBlockStateMatcher {
                 .map(MCBlockState::new)
                 .filter(this::matches)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public IBlockStateMatcher withMatchedValuesForProperty(String name, String... values) {
+        Map<String, List<String>> newProps = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : allowedProperties.entrySet()) {
+            newProps.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
+        }
+        newProps.put(name, ImmutableList.copyOf(values));
+        return new BlockStateMatcher(blockState, newProps);
+    }
+
+    @Override
+    public List<String> getMatchedValuesForProperty(String name) {
+        if (allowedProperties.containsKey(name)) {
+            return ImmutableList.copyOf(allowedProperties.get(name));
+        }
+        return ImmutableList.of("*");
+    }
+
+    @Override
+    public Map<String, List<String>> getMatchedProperties() {
+        Map<String, List<String>> props = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : allowedProperties.entrySet()) {
+            props.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
+        }
+        return ImmutableMap.copyOf(props);
+    }
+
+    @Override
+    public boolean isCompound() {
+        return false;
     }
 }

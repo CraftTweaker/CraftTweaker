@@ -3,9 +3,7 @@ package crafttweaker.api.block;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.util.ArrayUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class BlockStateMatcherOr implements IBlockStateMatcher {
 
@@ -30,12 +28,6 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
     }
 
     @Override
-    public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
-        CraftTweakerAPI.logWarning("Cannot change allowed values for a compound blockstate matcher");
-        return this;
-    }
-
-    @Override
     public IBlockStateMatcher or(IBlockStateMatcher matcher) {
         return new BlockStateMatcherOr(ArrayUtil.append(elements, matcher));
     }
@@ -51,5 +43,28 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
             matchingStates.addAll(states);
         }
         return matchingStates;
+    }
+
+    @Override
+    public IBlockStateMatcher withMatchedValuesForProperty(String name, String... values) {
+        CraftTweakerAPI.logWarning("Cannot change matched values for a compound blockstate matcher");
+        return this;
+    }
+
+    @Override
+    public List<String> getMatchedValuesForProperty(String name) {
+        CraftTweakerAPI.logWarning("Cannot retrieve matched values for a compound blockstate matcher");
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Map<String, List<String>> getMatchedProperties() {
+        CraftTweakerAPI.logWarning("Cannot retrieve matched values for a compound blockstate matcher");
+        return new HashMap<>();
+    }
+
+    @Override
+    public boolean isCompound() {
+        return true;
     }
 }
