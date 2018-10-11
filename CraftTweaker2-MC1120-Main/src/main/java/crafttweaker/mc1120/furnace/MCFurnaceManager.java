@@ -81,7 +81,7 @@ public class MCFurnaceManager implements IFurnaceManager {
                         return false;
                     }
                 })
-                .map(ent -> new FurnaceRecipe(new MCItemStack(ent.getKey()), new MCItemStack(ent.getValue()), FurnaceRecipes.instance().getSmeltingExperience(ent.getValue())))
+                .map(ent -> new FurnaceRecipe(MCItemStack.createNonCopy(ent.getKey()), MCItemStack.createNonCopy(ent.getValue()), FurnaceRecipes.instance().getSmeltingExperience(ent.getValue())))
                 .collect(Collectors.toList());
     }
 
