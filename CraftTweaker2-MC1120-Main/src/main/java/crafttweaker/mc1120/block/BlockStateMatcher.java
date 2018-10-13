@@ -2,6 +2,7 @@ package crafttweaker.mc1120.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -69,6 +70,12 @@ public class BlockStateMatcher implements IBlockStateMatcher {
                 .map(MCBlockState::new)
                 .filter(this::matches)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
+        CraftTweakerAPI.logWarning("IBlockStateMatcher#allowValuesForProperty is deprecated. Please use IBlockStateMatcher#withMatchedValuesForProperty instead.");
+        return withMatchedValuesForProperty(name, values);
     }
 
     @Override

@@ -46,6 +46,12 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
     }
 
     @Override
+    public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
+        CraftTweakerAPI.logWarning("IBlockStateMatcher#allowValuesForProperty is deprecated. Please use IBlockStateMatcher#withMatchedValuesForProperty instead.");
+        return withMatchedValuesForProperty(name, values);
+    }
+
+    @Override
     public IBlockStateMatcher withMatchedValuesForProperty(String name, String... values) {
         CraftTweakerAPI.logWarning("Cannot change matched values for a compound blockstate matcher");
         return this;

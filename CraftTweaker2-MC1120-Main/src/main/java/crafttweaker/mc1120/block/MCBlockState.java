@@ -85,6 +85,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     public String getPropertyValue(String name) {
         IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
         if (prop != null) {
+            //noinspection unchecked
             return blockState.getValue(prop).toString();
         }
         CraftTweakerAPI.logWarning("Invalid property name");
@@ -95,6 +96,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     public List<String> getAllowedValuesForProperty(String name) {
         IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
         List<String> values = new ArrayList<>();
+        //noinspection unchecked
         prop.getAllowedValues().forEach(v -> values.add(v.toString()));
         return values;
     }
@@ -121,6 +123,12 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public Collection<crafttweaker.api.block.IBlockState> getMatchingBlockStates() {
         return ImmutableList.of(this);
+    }
+
+    @Override
+    public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
+        CraftTweakerAPI.logWarning("IBlockStateMatcher#allowValuesForProperty is deprecated. Please use IBlockStateMatcher#withMatchedValuesForProperty instead.");
+        return withMatchedValuesForProperty(name, values);
     }
 
     @Override

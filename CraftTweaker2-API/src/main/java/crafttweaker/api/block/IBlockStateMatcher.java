@@ -20,6 +20,10 @@ public interface IBlockStateMatcher {
     @ZenMethod
     Collection<IBlockState> getMatchingBlockStates();
 
+    @Deprecated
+    @ZenMethod
+    IBlockStateMatcher allowValuesForProperty(String name, String... values);
+
     @ZenMethod
     IBlockStateMatcher withMatchedValuesForProperty(String name, String... values);
 
