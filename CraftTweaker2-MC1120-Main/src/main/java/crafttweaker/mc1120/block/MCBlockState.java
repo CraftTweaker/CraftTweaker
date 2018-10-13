@@ -99,10 +99,14 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public List<String> getAllowedValuesForProperty(String name) {
         IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
-        List<String> values = new ArrayList<>();
-        //noinspection unchecked
-        prop.getAllowedValues().forEach(v -> values.add(v.toString()));
-        return values;
+        if (prop != null) {
+            List<String> values = new ArrayList<>();
+            //noinspection unchecked
+            prop.getAllowedValues().forEach(v -> values.add(v.toString()));
+            return values;
+        }
+        CraftTweakerAPI.logWarning("Invalid property name");
+        return ImmutableList.of();
     }
 
     @Override
