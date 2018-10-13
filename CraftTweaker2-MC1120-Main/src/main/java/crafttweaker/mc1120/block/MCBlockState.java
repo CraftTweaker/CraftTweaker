@@ -78,7 +78,11 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
 
     @Override
     public List<String> getPropertyNames() {
-        return null;
+        List<String> props = new ArrayList<>();
+        for (IProperty prop : blockState.getPropertyKeys()) {
+            props.add(prop.getName());
+        }
+        return ImmutableList.copyOf(props);
     }
 
     @Override
