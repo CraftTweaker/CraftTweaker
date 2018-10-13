@@ -134,7 +134,12 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public IBlockStateMatcher withMatchedValuesForProperty(String name, String... values) {
         Map<String, List<String>> newProps = new HashMap<>();
-        newProps.put(name, ImmutableList.copyOf(values));
+        List<String> newValues = ImmutableList.copyOf(values);
+        if (newValues.contains("*") && newValues.size() > 1) {
+            newProps.put(name, ImmutableList.of("*"));
+        } else {
+            newProps.put(name, newValues);
+        }
         return new BlockStateMatcher(this, newProps);
     }
 

@@ -84,7 +84,13 @@ public class BlockStateMatcher implements IBlockStateMatcher {
         for (Map.Entry<String, List<String>> entry : allowedProperties.entrySet()) {
             newProps.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
         }
-        newProps.put(name, ImmutableList.copyOf(values));
+        List<String> newValues = ImmutableList.copyOf(values);
+        if (newValues.contains("*") && newValues.size() > 1) {
+            newProps.put(name, ImmutableList.of("*"));
+        } else {
+            newProps.put(name, newValues);
+        }
+
         return new BlockStateMatcher(blockState, newProps);
     }
 
