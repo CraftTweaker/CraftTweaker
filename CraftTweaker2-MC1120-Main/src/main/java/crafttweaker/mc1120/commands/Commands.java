@@ -10,12 +10,14 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.*;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.commands.dumpZScommand.*;
 import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
+import crafttweaker.runtime.ScriptLoader;
 import crafttweaker.socket.CrTSocketHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
@@ -733,13 +735,24 @@ public class Commands {
                 }
                 
                 sender.sendMessage(getNormalMessage("\u00A7bBeginning load of the scripts"));
-                boolean loadSuccessful = CraftTweakerAPI.tweaker.loadScript(true, "crafttweaker");
+    
+                List<ScriptLoader> erroredLoaders = new ArrayList<>();
+                for(ScriptLoader loader : CraftTweakerAPI.tweaker.getLoaders()) {
+                    CraftTweakerAPI.tweaker.loadScript(true, loader);
+                    if(loader.getLoaderStage() == ScriptLoader.LoaderStage.ERROR)
+                        erroredLoaders.add(loader);
+                }
                 
-                if(loadSuccessful) {
+                if(erroredLoaders.isEmpty()) {
                     sender.sendMessage(getNormalMessage("Syntax of scripts is \u00A7acorrect\u00A7r, to see the effect \u00A7erestart the game"));
                     sender.sendMessage(getNormalMessage("Please be advised that \u00A7bbrackets (<>) \u00A7rmay have \u00A74errored, see above."));
                     sender.sendMessage(getNormalMessage("If no errors appeared above everything was fine."));
                 } else {
+                    sender.sendMessage(getNormalMessage("These loaders failed to load correctly:"));
+                    //TODO beautify
+                    for(ScriptLoader erroredLoader : erroredLoaders) {
+                        sender.sendMessage(getNormalMessage("\t" + erroredLoader.getMainName()));
+                    }
                     sender.sendMessage(getLinkToCraftTweakerLog("\u00A74Syntax of the scripts is incorrect!", sender));
                 }
             }
