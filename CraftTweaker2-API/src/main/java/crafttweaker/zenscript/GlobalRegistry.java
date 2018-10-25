@@ -129,6 +129,16 @@ public class GlobalRegistry {
         return new CrTGlobalEnvironment(classes);
     }
     
+    public static IEnvironmentGlobal makeGlobalEnvironment(Map<String, byte[]> classes, String loaderMainName) {
+        return new CrTGlobalEnvironment(classes, capitalize(loaderMainName));
+    }
+    
+    private static String capitalize(String in) {
+        if(in == null || in.length() < 1)
+            return "";
+        return Character.toUpperCase(in.charAt(0)) + in.substring(1);
+    }
+    
     public static Map<String, IZenSymbol> getGlobals() {
         return globals;
     }

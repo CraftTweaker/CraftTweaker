@@ -20,9 +20,13 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     private List<SingleError> errors = new ArrayList<>();
     
     public CrTGlobalEnvironment(Map<String, byte[]> classes) {
+        this(classes, "");
+    }
+    
+    public CrTGlobalEnvironment(Map<String, byte[]> classes, String loaderMainName) {
         this.classes = classes;
         symbols = new HashMap<>();
-        generator = new ClassNameGenerator();
+        generator = new ClassNameGenerator("ZenClass" + loaderMainName);
     }
     
     @Override
@@ -38,6 +42,11 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     @Override
     public String makeClassName() {
         return generator.generate();
+    }
+    
+    @Override
+    public String makeClassNameWithMiddleName(String middleName) {
+        return generator.generateWithMiddleName(middleName);
     }
     
     @Override
