@@ -107,7 +107,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
             IItemStack out = null;
             try {
                 out = recipeFunction.process(output, marks, new CraftingInfo(MCCraftingInventorySquared.get(inv), null));
-            } catch(Throwable exception) {
+            } catch(Exception exception) {
                 CraftTweakerAPI.logError("Could not execute RecipeFunction: ", exception);
             }
             return CraftTweakerMC.getItemStack(out);
@@ -172,7 +172,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         IItemStack out = null;
                         try {
                             out = ingredient.applyTransform(CraftTweakerMC.getIItemStack(itemStack), byPlayer);
-                        } catch(Throwable exception) {
+                        } catch(Exception exception) {
                             CraftTweakerAPI.logError("Could not execute RecipeTransformer on : " + ingredient.toCommandString(), exception);
                         }
                         inventory.setInventorySlotContents((column + columnOffset) + (row + rowOffset) * inventory.getWidth(), CraftTweakerMC.getItemStack(out));
@@ -237,7 +237,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                         IItemStack remainingItem = null;
                         try {
                             remainingItem = ingredient.applyNewTransform(CraftTweakerMC.getIItemStack(itemStack));
-                        } catch(Throwable exception) {
+                        } catch(Exception exception) {
                             CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + ingredient.toCommandString() + ":", exception);
                         }
                         if(remainingItem != ItemStackUnknown.INSTANCE) {

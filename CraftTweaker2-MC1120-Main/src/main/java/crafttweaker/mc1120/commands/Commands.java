@@ -187,7 +187,7 @@ public class Commands {
                     for(ICraftingRecipe recipe : CraftTweakerAPI.recipes.getAll()) {
                         try {
                             CraftTweakerAPI.logCommand(recipe.toCommandString());
-                        } catch(Throwable ex) {
+                        } catch(Exception ex) {
                             if(recipe instanceof MCRecipeBase) {
                                 MCRecipeBase recipeBase = (MCRecipeBase) recipe;
                                 IItemStack out = recipeBase.getOutput();
@@ -228,7 +228,7 @@ public class Commands {
                     for(IFurnaceRecipe recipe : furnace.getAll()) {
                         try {
                             CraftTweakerAPI.logCommand(recipe.toCommandString());
-                        } catch(Throwable ex) {
+                        } catch(Exception ex) {
                             CraftTweakerAPI.logError("Could not dump furnace recipe", ex);
                         }
                     }
