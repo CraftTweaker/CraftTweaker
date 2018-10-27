@@ -215,9 +215,8 @@ public abstract class GuiBase extends GuiContainer {
             if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
-            try {
+            try (BufferedReader reader = new BufferedReader(new FileReader(scriptFile));) {
                 List<String> lines = new LinkedList<>();
-                BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
                 String line;
                 while((line = reader.readLine()) != null) {
                     lines.add(line);
@@ -228,7 +227,6 @@ public abstract class GuiBase extends GuiContainer {
                         lines.add(line);
                     }
                 }
-                reader.close();
                 PrintWriter writer = new PrintWriter(new FileWriter(scriptFile));
                 for(int i = 0; i < lines.size(); i++) {
                     String beforeLine = "";
