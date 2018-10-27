@@ -73,7 +73,7 @@ public class MCRecipeWrapper extends MCRecipeBase {
             commandString.append("less(\"").append(this.getRegistryName()).append("\", ");
             IItemStack output = getOutput();
             commandString.append(output == null ? "null" : output.toCommandString()).append(", [");
-            if(recipe.getIngredients().size() > 0) {
+            if(!recipe.getIngredients().isEmpty()) {
                 for(Ingredient ingredient : recipe.getIngredients()) {
                     IIngredient iIngredient = CraftTweakerMC.getIIngredient(ingredient);
                     commandString.append(iIngredient == null ? "null" : iIngredient.toCommandString()).append(", ");

@@ -346,7 +346,7 @@ public class Commands {
                             try {
                                 
                                 List<String> oreDictNames = CommandUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
-                                if(oreDictNames.size() > 0) {
+                                if(!oreDictNames.isEmpty()) {
                                     sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
                                     
                                     for(String oreName : oreDictNames) {
