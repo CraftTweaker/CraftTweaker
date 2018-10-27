@@ -317,7 +317,7 @@ public class Commands {
                         ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName + "\u00A7a" + withNBT, itemName + withNBT);
                         
                         // adds the oredict names if it has some
-                        if(oreDictNames.size() > 0) {
+                        if(!oreDictNames.isEmpty()) {
                             sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
                             for(String oreName : oreDictNames) {
                                 ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e- \u00A7b" + oreName, "<ore:" + oreName + ">");
