@@ -1,6 +1,8 @@
 package com.blamejared.ctgui.api;
 
 import com.blamejared.ctgui.client.gui.GuiMenu;
+
+import crafttweaker.mc1120.CraftTweaker;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -205,7 +207,7 @@ public abstract class GuiBase extends GuiContainer {
                 }
                 writer.close();
             } catch(IOException e) {
-                e.printStackTrace();
+                CraftTweaker.LOG.catching(e);
             }
         }
         if(btn.equals(remove)) {
@@ -243,7 +245,7 @@ public abstract class GuiBase extends GuiContainer {
                 }
                 writer.close();
             } catch(IOException e) {
-                e.printStackTrace();
+                CraftTweaker.LOG.catching(e);
             }
         }
     }
@@ -302,7 +304,7 @@ public abstract class GuiBase extends GuiContainer {
             writer.println("//File End");
             writer.close();
         } catch(IOException e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
         }
     }
     

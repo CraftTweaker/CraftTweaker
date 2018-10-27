@@ -12,6 +12,8 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+import crafttweaker.mc1120.CraftTweaker;
+
 /**
  * @author Stan
  */
@@ -58,7 +60,7 @@ public class MessageOpenBrowser implements IMessage, IMessageHandler<MessageOpen
             } catch(IOException | URISyntaxException ignored) {
             }
         } else {
-            System.out.println("Desktop not supported");
+            CraftTweaker.LOG.error("Desktop not supported");
         }
     }
 }

@@ -248,7 +248,6 @@ public class Commands {
                 ArrayList<String> currentPossibleCommands = new ArrayList<>();
                 
                 for(String cmd : subCommands) {
-                    System.out.println("Trying " + cmd);
                     
                     if(cmd.startsWith(args[0])) {
                         currentPossibleCommands.add(cmd);

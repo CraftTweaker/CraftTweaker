@@ -36,6 +36,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
@@ -45,7 +48,7 @@ public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
     public static final String NAME = "Crafttweaker";
-    
+    public static final Logger LOG = LogManager.getLogger(NAME);
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
     
     public static MinecraftServer server;
@@ -106,7 +109,7 @@ public class CraftTweaker {
                 }
                 
             } catch(ClassNotFoundException e) {
-                e.printStackTrace();
+                CraftTweaker.LOG.catching(e);
             }
         });
         if(CraftTweakerPlatformUtils.isClient()) {
@@ -133,7 +136,7 @@ public class CraftTweaker {
             LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
         } catch(Exception e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
             CraftTweakerAPI.logError("Error while applying actions", e);
         }
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());

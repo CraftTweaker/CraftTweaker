@@ -6,6 +6,7 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.*;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.util.CraftTweakerHacks;
 import crafttweaker.util.ArrayUtil;
@@ -35,7 +36,7 @@ public class MCOreDictEntry implements IOreDictEntry {
             toSet = OreIngredient.class.getDeclaredField("ores");
             toSet.setAccessible(true);
         } catch(NoSuchFieldException e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
         }
         ORE_FIELD = toSet;
     }
@@ -60,7 +61,7 @@ public class MCOreDictEntry implements IOreDictEntry {
                 }
                 
             } catch(IllegalAccessException e) {
-                e.printStackTrace();
+                CraftTweaker.LOG.catching(e);
             }
         return null;
     }
