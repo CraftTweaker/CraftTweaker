@@ -169,6 +169,7 @@ public abstract class GuiBase extends GuiContainer {
         return "recipes";
     }
     
+    @Override
     protected void actionPerformed(GuiButton btn) {
         
         if(btn.equals(add)) {
@@ -267,18 +268,22 @@ public abstract class GuiBase extends GuiContainer {
         return this.buttonList;
     }
     
+    @Override
     public int getGuiLeft() {
         return guiLeft;
     }
     
+    @Override
     public int getGuiTop() {
         return guiTop;
     }
     
+    @Override
     public int getXSize() {
         return xSize;
     }
     
+    @Override
     public int getYSize() {
         return ySize;
     }

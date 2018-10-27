@@ -76,7 +76,7 @@ public class CheckButton extends GuiCheckBox {
         return false;
     }
 
-
+    @Override
     public void setIsChecked(boolean isChecked) {
         super.setIsChecked(isChecked);
         if(isChecked()) {
