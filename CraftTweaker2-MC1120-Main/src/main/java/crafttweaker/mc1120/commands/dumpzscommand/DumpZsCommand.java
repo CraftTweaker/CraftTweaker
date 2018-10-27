@@ -1,4 +1,4 @@
-package crafttweaker.mc1120.commands.dumpZScommand;
+package crafttweaker.mc1120.commands.dumpzscommand;
 
 import crafttweaker.annotations.ZenDoc;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
