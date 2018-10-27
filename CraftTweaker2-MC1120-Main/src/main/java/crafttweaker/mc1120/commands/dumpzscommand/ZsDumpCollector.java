@@ -13,7 +13,7 @@ import stanhebben.zenscript.util.Pair;
 import java.util.*;
 
 public class ZsDumpCollector {
-    private transient final Gson gson;
+    private final transient Gson gson;
     
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<DumpBracketHandler> bracketHandlerDumps = new ArrayList<>();

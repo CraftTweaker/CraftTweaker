@@ -13,7 +13,7 @@ import java.util.*;
  */
 public abstract class CraftTweakerCommand {
     
-    private final static ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{SpecialMessagesChat.getNormalMessage("No Description provided")};
+    private static final ITextComponent[] NO_DESCRIPTION = new ITextComponent[]{SpecialMessagesChat.getNormalMessage("No Description provided")};
     
     protected final String subCommandName;
     private ITextComponent[] description;
