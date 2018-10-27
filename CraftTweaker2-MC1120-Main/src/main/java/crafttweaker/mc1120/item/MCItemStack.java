@@ -345,7 +345,7 @@ public class MCItemStack implements IItemStack {
         if(internalTag == null && stackTag == null) {
             return itemMatches;
         }
-        if(internalTag.getKeySet().equals(stackTag.getKeySet())) {
+        if(internalTag != null && internalTag.getKeySet().equals(stackTag.getKeySet())) {
             for(String s : internalTag.getKeySet()) {
                 if(!internalTag.getTag(s).equals(stackTag.getTag(s))) {
                     return false;

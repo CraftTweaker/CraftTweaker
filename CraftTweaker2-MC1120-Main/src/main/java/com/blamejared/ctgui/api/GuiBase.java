@@ -123,7 +123,7 @@ public abstract class GuiBase extends GuiContainer {
                     case 0:
                         break;
                     case 1:
-                        if(slot.getHasStack()) {
+                        if(slot.getHasStack() && editingField != null) {
                             clickedSlot[0] = true;
                             selectedSlot = slot;
                             editingField.setText(slot.getItemString());
