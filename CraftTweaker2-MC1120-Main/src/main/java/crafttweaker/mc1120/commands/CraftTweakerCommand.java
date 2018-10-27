@@ -45,11 +45,9 @@ public abstract class CraftTweakerCommand {
      *
      * @return Returns an empty List by default
      */
-    @SuppressWarnings("unchecked")
     public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
-    
     
     public String getSubCommandName() {
         return subCommandName;
