@@ -19,7 +19,7 @@ public class IngredientTooltips {
     
     private static final IngredientMap<IFormattedText> TOOLTIPS = new IngredientMap<>();
     private static final IngredientMap<IFormattedText> SHIFT_TOOLTIPS = new IngredientMap<>();
-    private static final List<IItemDefinition> CLEARED_TOOLTIPS = new LinkedList<>();
+    private static final List<IIngredient> CLEARED_TOOLTIPS = new LinkedList<>();
     
     
     @ZenMethod
@@ -33,7 +33,7 @@ public class IngredientTooltips {
     }
     
     @ZenMethod
-    public static void clearTooltip(IIngredient ingredient){
+    public static void clearTooltip(IIngredient ingredient) {
         CraftTweakerAPI.apply(new ClearTooltipAction(ingredient));
     }
     
@@ -45,8 +45,13 @@ public class IngredientTooltips {
         return SHIFT_TOOLTIPS.getEntries(item);
     }
     
-    public static boolean shouldClearToolTip(IItemStack item){
-        return CLEARED_TOOLTIPS.contains(item.getDefinition());
+    public static boolean shouldClearToolTip(IItemStack item) {
+        for(IIngredient cleared : CLEARED_TOOLTIPS) {
+            if(cleared.matches(item)){
+                return true;
+            }
+        }
+        return false;
     }
     
     // ######################
@@ -89,7 +94,7 @@ public class IngredientTooltips {
         
         @Override
         public void apply() {
-            ingredient.getItems().forEach(item -> CLEARED_TOOLTIPS.add(item.getDefinition()));
+            ingredient.getItems().forEach(item -> CLEARED_TOOLTIPS.add(item));
         }
         
         

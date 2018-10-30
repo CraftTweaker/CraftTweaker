@@ -2,6 +2,7 @@ package crafttweaker.mc1120.block;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.world.*;
@@ -76,15 +77,50 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     }
 
     @Override
-    public boolean matches(crafttweaker.api.block.IBlockState other) {
-        return compare(other) == 0;
+    public List<String> getPropertyNames() {
+        List<String> props = new ArrayList<>();
+        for (IProperty prop : blockState.getPropertyKeys()) {
+            props.add(prop.getName());
+        }
+        return ImmutableList.copyOf(props);
     }
 
     @Override
-    public IBlockStateMatcher allowValuesForProperty(String propertyName, String... propertyValues) {
-        Map<String, List<String>> newProps = new HashMap<>();
-        newProps.put(propertyName, ImmutableList.copyOf(propertyValues));
-        return new BlockStateMatcher(this, newProps);
+    public String getPropertyValue(String name) {
+        IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
+        if (prop != null) {
+            //noinspection unchecked
+            return blockState.getValue(prop).toString();
+        }
+        CraftTweakerAPI.logWarning("Invalid property name");
+        return "";
+    }
+
+    @Override
+    public List<String> getAllowedValuesForProperty(String name) {
+        IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
+        if (prop != null) {
+            List<String> values = new ArrayList<>();
+            //noinspection unchecked
+            prop.getAllowedValues().forEach(v -> values.add(v.toString()));
+            return values;
+        }
+        CraftTweakerAPI.logWarning("Invalid property name");
+        return ImmutableList.of();
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+        Map<String, String> props = new HashMap<>();
+        for (Map.Entry<IProperty<?>, Comparable<?>> entry : blockState.getProperties().entrySet()) {
+            props.put(entry.getKey().getName(), entry.getValue().toString());
+        }
+        return ImmutableMap.copyOf(props);
+    }
+
+    @Override
+    public boolean matches(crafttweaker.api.block.IBlockState other) {
+        return compare(other) == 0;
     }
 
     @Override
@@ -95,5 +131,42 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public Collection<crafttweaker.api.block.IBlockState> getMatchingBlockStates() {
         return ImmutableList.of(this);
+    }
+
+    @Override
+    public IBlockStateMatcher allowValuesForProperty(String name, String... values) {
+        CraftTweakerAPI.logWarning("IBlockStateMatcher#allowValuesForProperty is deprecated. Please use IBlockStateMatcher#withMatchedValuesForProperty instead.");
+        return withMatchedValuesForProperty(name, values);
+    }
+
+    @Override
+    public IBlockStateMatcher withMatchedValuesForProperty(String name, String... values) {
+        Map<String, List<String>> newProps = new HashMap<>();
+        List<String> newValues = ImmutableList.copyOf(values);
+        if (newValues.contains("*") && newValues.size() > 1) {
+            newProps.put(name, ImmutableList.of("*"));
+        } else {
+            newProps.put(name, newValues);
+        }
+        return new BlockStateMatcher(this, newProps);
+    }
+
+    @Override
+    public List<String> getMatchedValuesForProperty(String name) {
+        return ImmutableList.of(getPropertyValue(name));
+    }
+
+    @Override
+    public Map<String, List<String>> getMatchedProperties() {
+        Map<String, List<String>> props = new HashMap<>();
+        for(Map.Entry<String,String> entry : getProperties().entrySet()) {
+            props.put(entry.getKey(), ImmutableList.of(entry.getValue()));
+        }
+        return ImmutableMap.copyOf(props);
+    }
+
+    @Override
+    public boolean isCompound() {
+        return false;
     }
 }

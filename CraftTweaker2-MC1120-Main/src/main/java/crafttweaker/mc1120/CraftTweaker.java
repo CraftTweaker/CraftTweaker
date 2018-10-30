@@ -6,6 +6,7 @@ import crafttweaker.api.network.NetworkSide;
 import crafttweaker.mc1120.brewing.MCBrewing;
 import crafttweaker.mc1120.client.MCClient;
 import crafttweaker.mc1120.commands.CTChatCommand;
+import crafttweaker.mc1120.events.ActionApplyEvent;
 import crafttweaker.mc1120.formatting.MCFormatter;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.game.MCGame;
@@ -20,9 +21,10 @@ import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
-import crafttweaker.runtime.*;
+import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.*;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
@@ -78,12 +80,12 @@ public class CraftTweaker {
         scriptsGlobal = new ScriptProviderDirectory(globalDir);
         CrafttweakerImplementationAPI.setScriptProvider(scriptsGlobal);
         
-        if (event.getSide().isServer()){
+        if(event.getSide().isServer()) {
             CraftTweakerAPI.tweaker.setNetworkSide(NetworkSide.SIDE_SERVER);
         } else {
             CraftTweakerAPI.tweaker.setNetworkSide(NetworkSide.SIDE_CLIENT);
         }
-
+        
         // register the modloaded preprocessor which can't be in the API package as it needs access to MC
         CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("modloaded", ModLoadedPreprocessor::new);
         CraftTweakerAPI.tweaker.getPreprocessorManager().registerPreprocessorAction("zslint", ZsLintPreprocessor::new);
@@ -113,13 +115,14 @@ public class CraftTweaker {
         
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
-    
+        
         CraftTweakerAPI.tweaker.getOrCreateLoader("preinit").setMainName("preinit");
         CraftTweakerAPI.tweaker.loadScript(false, "preinit");
     }
     
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
+        MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
         try {
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
             MCRecipeManager.actionRemoveRecipesNoIngredients.apply();
@@ -133,6 +136,7 @@ public class CraftTweaker {
             e.printStackTrace();
             CraftTweakerAPI.logError("Error while applying actions", e);
         }
+        MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
     }
     
     @EventHandler

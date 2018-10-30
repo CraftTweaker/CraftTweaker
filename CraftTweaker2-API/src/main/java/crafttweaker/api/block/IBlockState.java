@@ -4,6 +4,9 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
+import java.util.List;
+import java.util.Map;
+
 @ZenClass("crafttweaker.block.IBlockState")
 @ZenRegister
 public interface IBlockState extends IBlockProperties, IBlockStateMatcher {
@@ -25,4 +28,16 @@ public interface IBlockState extends IBlockProperties, IBlockStateMatcher {
 
     @ZenMethod
     IBlockState withProperty(String name, String value);
+
+    @ZenMethod
+    List<String> getPropertyNames();
+
+    @ZenMethod
+    String getPropertyValue(String name);
+
+    @ZenMethod
+    List<String> getAllowedValuesForProperty(String name);
+
+    @ZenMethod
+    Map<String, String> getProperties();
 }

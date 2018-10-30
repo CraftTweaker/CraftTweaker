@@ -140,7 +140,7 @@ public class CrTTweaker implements ITweaker {
         
         
         Map<String, byte[]> classes = new HashMap<>();
-        IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes);
+        IEnvironmentGlobal environmentGlobal = GlobalRegistry.makeGlobalEnvironment(classes, loader.getMainName());
         
         // ZS magic
         long totalTime = System.currentTimeMillis();
@@ -149,8 +149,9 @@ public class CrTTweaker implements ITweaker {
             final String loaderName = loader.getMainName();
             
             
-            if(!loader.canExecute(scriptFile.getLoaderName()) && !isSyntaxCommand) {
-                CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
+            if(!loader.canExecute(scriptFile.getLoaderName())) {
+                if(!isSyntaxCommand)
+                    CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
                 continue;
             }
             
@@ -164,6 +165,8 @@ public class CrTTweaker implements ITweaker {
             if(!executed.contains(scriptFile.getEffectiveName())) {
                 executed.add(scriptFile.getEffectiveName());
                 
+                //TODO: Only print if not syntax command?
+                //if(!isSyntaxCommand)
                 CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Loading Script: " + scriptFile);
                 
                 ZenParsedFile zenParsedFile = null;
@@ -325,6 +328,11 @@ public class CrTTweaker implements ITweaker {
         if(loader != null)
             return loader;
         return getOrCreateLoader(names);
+    }
+    
+    @Override
+    public List<ScriptLoader> getLoaders() {
+        return loaders;
     }
     
     /**

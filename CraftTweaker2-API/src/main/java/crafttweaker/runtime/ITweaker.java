@@ -104,6 +104,11 @@ public interface ITweaker {
     void registerScriptLoadPostEvent(IEventHandler<CrTScriptLoadingEvent.Post> eventHandler);
     
     /**
+     * Gets all registered loaders
+     */
+    List<ScriptLoader> getLoaders();
+    
+    /**
      * Gets or adds a new loader
      * Be careful as this loader might become invalidated if merged with another loader so always call this method anew if possible.
      * @param nameAndAliases the Names the loader will be callable under, if an existing loader already has any of the names, they will be merged
