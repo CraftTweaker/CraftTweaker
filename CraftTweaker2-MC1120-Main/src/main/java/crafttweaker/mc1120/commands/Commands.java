@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.commands;
 
+import com.google.gson.JsonPrimitive;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
@@ -387,7 +388,8 @@ public class Commands {
 
             @Override
             protected void init() {
-                setDescription(getClickableCommandText("\u00A72/ct json", "/ct json", true), getNormalMessage(" \u00A73Outputs the nbt of the item in your hand"), getNormalMessage(" \u00A73This format is in json format, different from the one used in ZenScript"));
+                setDescription(getClickableCommandText("\u00A72/ct json", "/ct json", true), getNormalMessage(" \u00A73Outputs the nbt of the item in your hand"), getNormalMessage(" \u00A73This format is in json format, different from the one used in ZenScript"),
+                        getClickableCommandText(" \u00A7a/ct json escaped", "/ct json escaped", true), getNormalMessage("  \u00A7bAutomatically escapes the string to use in json."));
             }
 
             @Override
@@ -407,6 +409,11 @@ public class Commands {
                         String withNBT = "";
                         if (heldItem.serializeNBT().hasKey("tag")) {
                             String nbt = heldItem.serializeNBT().getTag("tag").toString();
+
+                            if (args.length == 1) {
+                                nbt = new JsonPrimitive(nbt).toString();
+                            }
+                            
                             if (nbt.length() > 0)
                                 withNBT = " NBT: [" + nbt + "]";
                         }
