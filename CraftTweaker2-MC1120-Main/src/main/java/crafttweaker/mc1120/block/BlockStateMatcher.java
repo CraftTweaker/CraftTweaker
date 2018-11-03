@@ -112,6 +112,22 @@ public class BlockStateMatcher implements IBlockStateMatcher {
     }
 
     @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("Matcher (");
+        IBlockState state = (IBlockState) blockState.getInternal();
+        builder.append(state.getBlock().getRegistryName());
+        if (!allowedProperties.isEmpty()) {
+            builder.append(":");
+            StringJoiner joiner = new StringJoiner(",");
+            for (Map.Entry<String, List<String>> entry : allowedProperties.entrySet()) {
+                joiner.add(entry.getKey() + "=" + entry.getValue());
+            }
+            builder.append(joiner);
+        }
+        return builder.append(")").toString();
+    }
+
+    @Override
     public boolean isCompound() {
         return false;
     }

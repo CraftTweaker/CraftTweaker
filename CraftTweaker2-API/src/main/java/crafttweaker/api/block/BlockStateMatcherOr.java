@@ -70,6 +70,15 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
     }
 
     @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner(" | ", "Matcher (", ")");
+        for (IBlockStateMatcher element : elements) {
+            joiner.add(element.toString());
+        }
+        return joiner.toString();
+    }
+
+    @Override
     public boolean isCompound() {
         return true;
     }
