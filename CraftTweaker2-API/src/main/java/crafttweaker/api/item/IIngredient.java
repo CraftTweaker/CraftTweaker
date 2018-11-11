@@ -183,7 +183,7 @@ public interface IIngredient {
     @ZenMethod
     IItemStack applyTransform(IItemStack item, IPlayer byPlayer);
     
-    
+    @ZenMethod
     IItemStack applyNewTransform(IItemStack item);
     
     /**
@@ -192,6 +192,7 @@ public interface IIngredient {
      * @return true if there are (or could be) any transformations false
      * otherwise.
      */
+    @ZenGetter("hasNewTransformers")
     boolean hasNewTransformers();
     
     @ZenGetter("hasTransformations")
