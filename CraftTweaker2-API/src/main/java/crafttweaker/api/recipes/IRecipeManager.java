@@ -56,6 +56,19 @@ public interface IRecipeManager {
     void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
     
     /**
+     * Adds a shaped recipe specifying group.
+     *
+     * @param group       recipe group
+     * @param name        recipe name
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     */
+    @ZenDoc("Adds a shaped recipe.")
+    @ZenMethod
+    void addShaped(String group, String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+
+    /**
      * Adds a mirrored shaped recipe.
      *
      * @param output      recipe output
@@ -94,7 +107,19 @@ public interface IRecipeManager {
      */
     @ZenMethod
     void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
-    
+
+     /**
+     * Adds a shapeless recipe with a group.
+     *
+     * @param group       recipe group
+     * @param name        recipe name
+     * @param output      recipe output
+     * @param ingredients recipe ingredients
+     * @param function    recipe function (optional)
+     */
+    @ZenMethod
+    void addShapeless(String group, String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action);
+
     /**
      * @param name        recipe name
      * @param output      recipe output

@@ -135,6 +135,13 @@ public final class MCRecipeManager implements IRecipeManager {
     public void addShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
         recipesToAdd.add(new ActionAddShapedRecipe(name, output, ingredients, function, action, false, false));
     }
+
+    @Override
+    public void addShaped(String group, String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+        ActionAddShapedRecipe recipe = new ActionAddShapedRecipe(name, output, ingredients, function, action, false, false);
+        recipe.setGroup(group);
+        recipesToAdd.add(recipe);
+    }
     
     @Override
     public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
@@ -174,6 +181,23 @@ public final class MCRecipeManager implements IRecipeManager {
             return;
         }
         recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action, false));
+    }
+
+    @Override
+    public void addShapeless(String group, String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+        boolean valid = output != null;
+        for(IIngredient ing : ingredients) {
+            if(ing == null) {
+                valid = false;
+            }
+        }
+        if(!valid) {
+            CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
+            return;
+        }
+        ActionAddShapelessRecipe recipe = new ActionAddShapelessRecipe(name, output, ingredients, function, action, false);
+        recipe.setGroup(group);
+        recipesToAdd.add(recipe);
     }
     
     @Override
@@ -755,6 +779,7 @@ public final class MCRecipeManager implements IRecipeManager {
         protected IItemStack output;
         protected boolean isShaped;
         protected String name;
+        protected String group = "crafttweaker";
         
         @Deprecated
         public ActionBaseAddRecipe() {
@@ -778,6 +803,12 @@ public final class MCRecipeManager implements IRecipeManager {
         
         public String getName() {
             return name;
+        }
+
+        public void setGroup(String group) {
+            if (group != null) {
+                this.group = group;
+            }
         }
         
         protected void setName(String name) {
@@ -806,7 +837,7 @@ public final class MCRecipeManager implements IRecipeManager {
         
         @Override
         public void apply() {
-            ForgeRegistries.RECIPES.register(recipe.setRegistryName(new ResourceLocation("crafttweaker", name)));
+            ForgeRegistries.RECIPES.register(recipe.setRegistryName(new ResourceLocation(group, name)));
         }
         
         @Override
@@ -840,7 +871,7 @@ public final class MCRecipeManager implements IRecipeManager {
         protected void setName(String name) {
             super.setName(name);
             //This is necessary to allow recipe name progression if we repeatedly modify a recipe.
-            recipe.setRegistryName(new ResourceLocation("crafttweaker", this.name));
+            recipe.setRegistryName(new ResourceLocation(group, this.name));
         }
     }
     
