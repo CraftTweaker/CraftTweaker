@@ -345,13 +345,10 @@ public class MCItemStack implements IItemStack {
         if(internalTag == null && stackTag == null) {
             return itemMatches;
         }
-        if(internalTag != null && internalTag.getKeySet().equals(stackTag.getKeySet())) {
-            for(String s : internalTag.getKeySet()) {
-                if(!internalTag.getTag(s).equals(stackTag.getTag(s))) {
-                    return false;
-                }
-            }
-        } else {
+
+        // Lets just use the partial nbt
+        if(!NBTConverter.from(internalTag, true).contains(NBTConverter.from(stackTag, true))){
+
             return false;
         }
         return itemMatches;

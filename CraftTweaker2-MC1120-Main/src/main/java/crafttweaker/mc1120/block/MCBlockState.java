@@ -119,6 +119,11 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     }
 
     @Override
+    public IBlockStateMatcher matchBlock() {
+        return new BlockStateMatcher(this);
+    }
+
+    @Override
     public boolean matches(crafttweaker.api.block.IBlockState other) {
         return compare(other) == 0;
     }
@@ -163,6 +168,21 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
             props.put(entry.getKey(), ImmutableList.of(entry.getValue()));
         }
         return ImmutableMap.copyOf(props);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("<blockstate:");
+        builder.append(blockState.getBlock().getRegistryName());
+        if (!blockState.getProperties().isEmpty()) {
+            builder.append(":");
+            StringJoiner joiner = new StringJoiner(",");
+            for (Map.Entry<IProperty<?>, Comparable<?>> entry : blockState.getProperties().entrySet()) {
+                joiner.add(entry.getKey().getName() + "=" + entry.getValue());
+            }
+            builder.append(joiner);
+        }
+        return builder.append(">").toString();
     }
 
     @Override
