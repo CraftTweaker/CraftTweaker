@@ -4,7 +4,6 @@ import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mods.jei.actions.*;
@@ -34,9 +33,21 @@ public class JEI {
     public static List<IAction> LATE_ACTIONS_POST = new LinkedList<>();
     
     public static List<ItemStack> HIDDEN_ITEMS = new LinkedList<>();
+    public static Set<String> HIDDEN_CATEGORIES = new HashSet<>();
     public static List<FluidStack> HIDDEN_LIQUIDS = new LinkedList<>();
     
     public static List<IAction> DESCRIPTIONS = new LinkedList<>();
+    
+    
+    @ZenMethod
+    public static void hideCategory(String name) {
+        if(name == null || name.isEmpty()) {
+            CraftTweakerAPI.logError("Unable to hide null or empty name! " + name);
+            return;
+        }
+        LATE_ACTIONS_PRE.add(new HideCategoryAction(name));
+    }
+    
     
     @ZenMethod
     public static void hide(IItemStack stack) {

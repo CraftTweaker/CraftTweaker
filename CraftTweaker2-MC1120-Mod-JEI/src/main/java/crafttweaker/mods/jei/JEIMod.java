@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.mc1120.commands.*;
 import crafttweaker.mods.jei.commands.ConflictCommand;
 import crafttweaker.mods.jei.recipeWrappers.*;
+import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -29,6 +30,9 @@ public class JEIMod {
             if(!JEI.HIDDEN_ITEMS.isEmpty()) {
                 JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
             }
+            if(!JEI.HIDDEN_CATEGORIES.isEmpty()) {
+                JEI.HIDDEN_CATEGORIES.forEach(str -> JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str));
+            }
             if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
                 JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
             }
@@ -38,9 +42,23 @@ public class JEIMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         
-        //region >>> conflict Command
         if(Loader.isModLoaded("jei")) {
             CTChatCommand.registerCommand(new ConflictCommand());
+            CTChatCommand.registerCommand(new CraftTweakerCommand("jeiCategories") {
+                @Override
+                protected void init() {
+                    setDescription(getClickableCommandText("\u00A72/ct jeiCategories", "/ct jeiCategories", true), getNormalMessage(" \u00A73Lists all JEI recipe categories in the game"));
+                }
+                
+                @Override
+                public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                    CraftTweakerAPI.logCommand("--- JEI Categories ---");
+                    for(IRecipeCategory category : JEIAddonPlugin.recipeRegistry.getRecipeCategories()) {
+                        CraftTweakerAPI.logCommand(category.getUid());
+                    }
+                    sender.sendMessage(getLinkToCraftTweakerLog("List of categories generated;", sender));
+                }
+            });
         } else {
             CTChatCommand.registerCommand(new CraftTweakerCommand("conflict") {
                 @Override
@@ -54,7 +72,6 @@ public class JEIMod {
                 }
             });
         }
-        //endregion
     }
     
     public static void onRegistered() {
