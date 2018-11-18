@@ -40,4 +40,7 @@ public interface IBlockState extends IBlockProperties, IBlockStateMatcher {
 
     @ZenMethod
     Map<String, String> getProperties();
+    
+    @ZenMethod
+    IBlockStateMatcher matchBlock();
 }
