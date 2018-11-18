@@ -13,10 +13,11 @@ import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.recipes.ICraftingRecipe;
 import crafttweaker.api.recipes.IFurnaceRecipe;
 import crafttweaker.api.world.IBiome;
-import crafttweaker.mc1120.brackets.BracketHandlerBiomeType;
-import crafttweaker.mc1120.brackets.BracketHandlerPotion;
-import crafttweaker.mc1120.commands.dumpZScommand.DumpZsCommand;
-import crafttweaker.mc1120.commands.dumpZScommand.ExportZsCommand;
+
+import crafttweaker.mc1120.CraftTweaker;
+import crafttweaker.mc1120.brackets.*;
+import crafttweaker.mc1120.commands.dumpzscommand.*;
+
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
@@ -197,8 +198,10 @@ public class Commands {
                     for (ICraftingRecipe recipe : CraftTweakerAPI.recipes.getAll()) {
                         try {
                             CraftTweakerAPI.logCommand(recipe.toCommandString());
-                        } catch (Throwable ex) {
-                            if (recipe instanceof MCRecipeBase) {
+
+                        } catch(Exception ex) {
+                            if(recipe instanceof MCRecipeBase) {
+
                                 MCRecipeBase recipeBase = (MCRecipeBase) recipe;
                                 IItemStack out = recipeBase.getOutput();
                                 CraftTweakerAPI.logError("Could not dump recipe for " + out, ex);
@@ -238,7 +241,9 @@ public class Commands {
                     for (IFurnaceRecipe recipe : furnace.getAll()) {
                         try {
                             CraftTweakerAPI.logCommand(recipe.toCommandString());
-                        } catch (Throwable ex) {
+
+                        } catch(Exception ex) {
+
                             CraftTweakerAPI.logError("Could not dump furnace recipe", ex);
                         }
                     }
@@ -257,10 +262,11 @@ public class Commands {
                 String[] subCommands = new String[]{"hand", "furnace"};
                 ArrayList<String> currentPossibleCommands = new ArrayList<>();
 
-                for (String cmd : subCommands) {
-                    System.out.println("Trying " + cmd);
+                
+                for(String cmd : subCommands) {
+                    
+                    if(cmd.startsWith(args[0])) {
 
-                    if (cmd.startsWith(args[0])) {
                         currentPossibleCommands.add(cmd);
                     }
                 }
@@ -328,7 +334,9 @@ public class Commands {
                         ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName + "\u00A7a" + withNBT, itemName + withNBT);
 
                         // adds the oredict names if it has some
-                        if (oreDictNames.size() > 0) {
+
+                        if(!oreDictNames.isEmpty()) {
+
                             sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
                             for (String oreName : oreDictNames) {
                                 ClipboardHelper.sendMessageWithCopy(player, "    \u00A7e- \u00A7b" + oreName, "<ore:" + oreName + ">");
@@ -357,7 +365,7 @@ public class Commands {
                             try {
 
                                 List<String> oreDictNames = CommandUtils.getOreDictOfItem(new ItemStack(block.getBlock(), 1, block.getBlock().getMetaFromState(block)));
-                                if (oreDictNames.size() > 0) {
+                                if(!oreDictNames.isEmpty()) {
                                     sender.sendMessage(new TextComponentString("\u00A73OreDict Entries:"));
 
                                     for (String oreName : oreDictNames) {

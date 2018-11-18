@@ -170,15 +170,14 @@ public class MCLiquidStack implements ILiquidStack {
 
     @Override
     public boolean contains(IIngredient ingredient) {
-        if(!ingredient.getItems().isEmpty())
-            return false;
-
-        for(ILiquidStack liquid : ingredient.getLiquids()) {
-            if(!matches(liquid))
+        
+        for (ILiquidStack liquid : ingredient.getLiquids()) {
+            if (!matches(liquid)) {
                 return false;
+            }
         }
 
-        return false;
+        return !ingredient.getLiquids().isEmpty();
     }
 
     @Override

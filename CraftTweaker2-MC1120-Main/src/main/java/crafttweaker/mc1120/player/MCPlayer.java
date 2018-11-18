@@ -154,7 +154,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     
     @Override
     public boolean equals(Object other) {
-        return other.getClass() == this.getClass() && ((MCPlayer) other).player == player;
+        return other != null && other.getClass() == this.getClass() && ((MCPlayer) other).player == player;
         
     }
     

@@ -4,6 +4,7 @@ import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Range;
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import gnu.trove.map.TIntObjectMap;
@@ -90,7 +91,7 @@ public class ConflictCommand extends CraftTweakerCommand {
         rangeMap = getRangeForSize();
 
         rangeMap.forEachEntry((k, v) -> {
-            System.out.println(k + ": " + v);
+            CraftTweaker.LOG.info(k + ": " + v);
             return true;
         });
 
@@ -106,7 +107,7 @@ public class ConflictCommand extends CraftTweakerCommand {
 
             if (progress - lastProgress > 0.05) {
                 int percentage = (int) ((progress) * 100);
-                System.out.println("Current Progress on the scan: " + percentage + "%");
+                CraftTweaker.LOG.info("Current Progress on the scan: " + percentage + "%");
                 lastProgress = progress;
             }
         }

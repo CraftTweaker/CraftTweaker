@@ -59,6 +59,8 @@ public class CheckButtonRecipe extends CheckButton {
             parent.getButtonList().add(slider);
         }
     }
+    
+    @Override
     public void setIsChecked(boolean isChecked) {
         super.setIsChecked(isChecked);
         if(isChecked()) {

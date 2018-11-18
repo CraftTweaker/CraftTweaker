@@ -118,14 +118,14 @@ public class NBTUtils {
         return stringBuilder.toString();
     }
     
-    static private void addNewLine(StringBuilder s, int indent) {
+    private static void addNewLine(StringBuilder s, int indent) {
         s.append("\n\u00A7e├");
         for(int j = 0; j < indent; j++) {
             s.append("\u00A7e    ");
         }
     }
     
-    static private void addNewLineNoColor(StringBuilder s, int indent) {
+    private static void addNewLineNoColor(StringBuilder s, int indent) {
         s.append("\n├");
         for(int j = 0; j < indent; j++) {
             s.append("    ");

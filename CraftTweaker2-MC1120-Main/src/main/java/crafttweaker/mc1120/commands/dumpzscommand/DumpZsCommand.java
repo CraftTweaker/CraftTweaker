@@ -1,6 +1,7 @@
-package crafttweaker.mc1120.commands.dumpZScommand;
+package crafttweaker.mc1120.commands.dumpzscommand;
 
 import crafttweaker.annotations.ZenDoc;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.commands.CraftTweakerCommand;
 import crafttweaker.zenscript.*;
 import joptsimple.internal.Strings;
@@ -48,7 +49,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
         TreeNode<String> root = new TreeNode<>("root");
         File zsDataFolder;
-        System.out.println("args = " + Arrays.toString(args));
+        CraftTweaker.LOG.info("args = " + Arrays.toString(args));
         if (args == null || args.length <= 0){
             zsDataFolder = new File("crafttweaker_dump");
         }else {
@@ -63,14 +64,14 @@ public class DumpZsCommand extends CraftTweakerCommand {
         try {
             FileUtils.copyURLToFile(inputUrlPNG, new File(zsDataFolder, "icons.png"));
         } catch(IOException e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
         }
         
         URL inputUrlCSS = getClass().getResource("/assets/crafttweaker/tree3.css");
         try {
             FileUtils.copyURLToFile(inputUrlCSS, new File(zsDataFolder, "tree3.css"));
         } catch(IOException e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
         }
         
         TreeNode<String> bracketNode = root.addChild("Bracket Handlers");
@@ -118,7 +119,7 @@ public class DumpZsCommand extends CraftTweakerCommand {
             Path file = Paths.get(zsDataFolder.getAbsolutePath() + "/tree3.html");
             Files.write(file, lines, Charset.forName("UTF-8"));
         } catch(IOException e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
         }
         //Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
         

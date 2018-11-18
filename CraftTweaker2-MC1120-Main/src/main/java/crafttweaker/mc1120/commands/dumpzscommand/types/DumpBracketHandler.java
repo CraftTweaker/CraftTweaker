@@ -1,4 +1,4 @@
-package crafttweaker.mc1120.commands.dumpZScommand.types;
+package crafttweaker.mc1120.commands.dumpzscommand.types;
 
 import com.google.gson.*;
 import crafttweaker.zenscript.IBracketHandler;

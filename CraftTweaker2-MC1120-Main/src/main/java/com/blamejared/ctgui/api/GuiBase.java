@@ -1,6 +1,8 @@
 package com.blamejared.ctgui.api;
 
 import com.blamejared.ctgui.client.gui.GuiMenu;
+
+import crafttweaker.mc1120.CraftTweaker;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -121,7 +123,7 @@ public abstract class GuiBase extends GuiContainer {
                     case 0:
                         break;
                     case 1:
-                        if(slot.getHasStack()) {
+                        if(slot.getHasStack() && editingField != null) {
                             clickedSlot[0] = true;
                             selectedSlot = slot;
                             editingField.setText(slot.getItemString());
@@ -167,6 +169,7 @@ public abstract class GuiBase extends GuiContainer {
         return "recipes";
     }
     
+    @Override
     protected void actionPerformed(GuiButton btn) {
         
         if(btn.equals(add)) {
@@ -205,7 +208,7 @@ public abstract class GuiBase extends GuiContainer {
                 }
                 writer.close();
             } catch(IOException e) {
-                e.printStackTrace();
+                CraftTweaker.LOG.catching(e);
             }
         }
         if(btn.equals(remove)) {
@@ -213,9 +216,8 @@ public abstract class GuiBase extends GuiContainer {
             if(!scriptFile.exists()) {
                 generateFile(scriptFile);
             }
-            try {
+            try (BufferedReader reader = new BufferedReader(new FileReader(scriptFile));) {
                 List<String> lines = new LinkedList<>();
-                BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
                 String line;
                 while((line = reader.readLine()) != null) {
                     lines.add(line);
@@ -226,7 +228,6 @@ public abstract class GuiBase extends GuiContainer {
                         lines.add(line);
                     }
                 }
-                reader.close();
                 PrintWriter writer = new PrintWriter(new FileWriter(scriptFile));
                 for(int i = 0; i < lines.size(); i++) {
                     String beforeLine = "";
@@ -243,7 +244,7 @@ public abstract class GuiBase extends GuiContainer {
                 }
                 writer.close();
             } catch(IOException e) {
-                e.printStackTrace();
+                CraftTweaker.LOG.catching(e);
             }
         }
     }
@@ -267,18 +268,22 @@ public abstract class GuiBase extends GuiContainer {
         return this.buttonList;
     }
     
+    @Override
     public int getGuiLeft() {
         return guiLeft;
     }
     
+    @Override
     public int getGuiTop() {
         return guiTop;
     }
     
+    @Override
     public int getXSize() {
         return xSize;
     }
     
+    @Override
     public int getYSize() {
         return ySize;
     }
@@ -302,7 +307,7 @@ public abstract class GuiBase extends GuiContainer {
             writer.println("//File End");
             writer.close();
         } catch(IOException e) {
-            e.printStackTrace();
+            CraftTweaker.LOG.catching(e);
         }
     }
     

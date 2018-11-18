@@ -37,7 +37,7 @@ public class MCItemUtils implements IItemUtils{
                 NonNullList<ItemStack> list = NonNullList.create();
                 item.getSubItems(CreativeTabs.SEARCH, list);
                 
-                if(list.size() > 0) {
+                if(!list.isEmpty()) {
                     itemList.addAll(list);
                 } else {
                     ItemStack stack = new ItemStack(item, 1, 0);

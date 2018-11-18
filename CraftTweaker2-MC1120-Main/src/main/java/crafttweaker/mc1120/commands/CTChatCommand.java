@@ -8,6 +8,8 @@ import net.minecraft.util.text.*;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
+import crafttweaker.mc1120.CraftTweaker;
+
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
@@ -105,7 +107,7 @@ public class CTChatCommand extends CommandBase {
         // each has to implement on it's own for special requirements
         CraftTweakerCommand subCommand = craftTweakerCommands.get(args[0]);
         if(subCommand != null) {
-            System.out.println(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
+            CraftTweaker.LOG.error(Arrays.toString(ArrayUtils.subarray(args, 1, args.length)));
             return subCommand.getSubSubCommand(server, sender, ArrayUtils.subarray(args, 1, args.length), targetPos);
             
         }

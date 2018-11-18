@@ -91,7 +91,7 @@ public class NamesCommand extends CraftTweakerCommand {
                 item.getSubItems(CreativeTabs.SEARCH, list);
                 
                 
-                if(list.size() > 0) {
+                if(!list.isEmpty()) {
                     for(ItemStack stack : list) {
                         CraftTweakerAPI.logCommand(createOutputForItem(stack, paramList));
                         totalAmount++;

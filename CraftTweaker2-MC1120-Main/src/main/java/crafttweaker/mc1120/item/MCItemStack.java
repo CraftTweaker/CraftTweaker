@@ -345,8 +345,10 @@ public class MCItemStack implements IItemStack {
         if(internalTag == null && stackTag == null) {
             return itemMatches;
         }
+
         // Lets just use the partial nbt
         if(!NBTConverter.from(internalTag, true).contains(NBTConverter.from(stackTag, true))){
+
             return false;
         }
         return itemMatches;

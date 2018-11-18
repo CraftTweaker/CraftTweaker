@@ -1,7 +1,8 @@
-package crafttweaker.mc1120.commands.dumpZScommand;
+package crafttweaker.mc1120.commands.dumpzscommand;
 
 import com.google.gson.*;
-import crafttweaker.mc1120.commands.dumpZScommand.types.DumpBracketHandler;
+
+import crafttweaker.mc1120.commands.dumpzscommand.types.DumpBracketHandler;
 import crafttweaker.zenscript.IBracketHandler;
 import stanhebben.zenscript.compiler.TypeRegistry;
 import stanhebben.zenscript.dump.*;
@@ -12,7 +13,7 @@ import stanhebben.zenscript.util.Pair;
 import java.util.*;
 
 public class ZsDumpCollector {
-    private transient final Gson gson;
+    private final transient Gson gson;
     
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<DumpBracketHandler> bracketHandlerDumps = new ArrayList<>();

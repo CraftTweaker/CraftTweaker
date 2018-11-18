@@ -601,9 +601,10 @@ public class CraftTweakerMC {
         ItemStack internal = ItemStack.EMPTY;
         if(iitem != null) {
             internal = (ItemStack) iitem.getInternal();
-        }
-        if(stack.hasTagCompound()) {
-            return matchesExact(iitem, stack);
+            
+            if(stack.hasTagCompound()) {
+                return matchesExact(iitem, stack);
+            }
         }
         return !internal.isEmpty() && !stack.isEmpty() && internal.getItem() == stack.getItem() && (wildcardsize || internal.getCount() >= stack.getCount()) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
     }

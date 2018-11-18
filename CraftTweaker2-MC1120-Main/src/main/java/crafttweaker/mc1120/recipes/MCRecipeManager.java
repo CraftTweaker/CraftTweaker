@@ -40,9 +40,9 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getOreDict;
  */
 public final class MCRecipeManager implements IRecipeManager {
     
-    public final static List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
-    public final static List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
-    public final static ActionRemoveRecipesNoIngredients actionRemoveRecipesNoIngredients = new ActionRemoveRecipesNoIngredients();
+    public static final List<ActionBaseAddRecipe> recipesToAdd = new ArrayList<>();
+    public static final List<ActionBaseRemoveRecipes> recipesToRemove = new ArrayList<>();
+    public static final ActionRemoveRecipesNoIngredients actionRemoveRecipesNoIngredients = new ActionRemoveRecipesNoIngredients();
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     
     public static List<MCRecipeBase> transformerRecipes = new ArrayList<>();
@@ -271,7 +271,7 @@ public final class MCRecipeManager implements IRecipeManager {
     /**
      * Classes of all removeRecipe Actions
      */
-    public static abstract class ActionBaseRemoveRecipes implements IAction {
+    public abstract static class ActionBaseRemoveRecipes implements IAction {
         
         public void removeRecipes(List<ResourceLocation> removingRecipes) {
             removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));

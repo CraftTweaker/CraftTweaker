@@ -40,9 +40,9 @@ public class MCServer extends AbstractServer {
         } else if(commandSender.getName().equals("Server")) {
             return ServerPlayer.INSTANCE;
         } else {
-            System.out.println("Unsupported command sender: " + commandSender + " defaulting to server player!");
-            System.out.println("player name: " + commandSender.getName());
-            System.out.println("Please report to mod author if this is incorrect!");
+            CraftTweaker.LOG.error("Unsupported command sender: " + commandSender + " defaulting to server player!");
+            CraftTweaker.LOG.error("player name: " + commandSender.getName());
+            CraftTweaker.LOG.error("Please report to mod author if this is incorrect!");
             return ServerPlayer.INSTANCE;
         }
     }
