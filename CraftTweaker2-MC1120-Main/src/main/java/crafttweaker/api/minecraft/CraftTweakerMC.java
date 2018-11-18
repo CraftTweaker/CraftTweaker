@@ -614,7 +614,7 @@ public class CraftTweakerMC {
     }
     
     public static boolean matchesExact(IItemStack item, ItemStack stack) {
-        ItemStack internal = (ItemStack) item.getInternal();
+        ItemStack internal = getItemStack(item);
         if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
             return false;
         }
