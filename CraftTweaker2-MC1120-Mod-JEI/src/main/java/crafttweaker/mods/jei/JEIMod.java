@@ -27,15 +27,18 @@ public class JEIMod {
             } catch(Exception e) {
                 e.printStackTrace();
             }
-            if(!JEI.HIDDEN_ITEMS.isEmpty()) {
-                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
+            if(JEIAddonPlugin.itemRegistry != null) {
+                if(!JEI.HIDDEN_ITEMS.isEmpty()) {
+                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
+                }
+                if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
+                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
+                }
             }
-            if(!JEI.HIDDEN_CATEGORIES.isEmpty()) {
-                JEI.HIDDEN_CATEGORIES.forEach(str -> JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str));
-            }
-            if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
-                JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
-            }
+            if(JEIAddonPlugin.recipeRegistry != null)
+                if(!JEI.HIDDEN_CATEGORIES.isEmpty()) {
+                    JEI.HIDDEN_CATEGORIES.forEach(str -> JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str));
+                }
         }
     }
     
