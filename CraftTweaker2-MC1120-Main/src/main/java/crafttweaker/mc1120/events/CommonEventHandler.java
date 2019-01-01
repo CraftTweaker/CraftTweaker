@@ -113,8 +113,9 @@ public class CommonEventHandler {
             // only look at tweaker recipes (Unchecked cast here is necessairy)
             Stream<MCRecipeBase> tweakedRecipeStream = recipeStream.filter(MCRecipeBase.class::isInstance).map(MCRecipeBase.class::cast);
             // check for the presence of a recipe action first since that is cheaper.
+            
             tweakedRecipeStream.filter(MCRecipeBase::hasRecipeAction)
-                    .filter(recipe->recipe.getRecipeOutput().isItemEqual(ev.crafting))
+                    .filter(recipe->recipe.getRecipeOutput().isItemEqual(ev.crafting)).filter(recipe -> recipe.matches((InventoryCrafting)ev.craftMatrix, ev.player.world))
                     .forEach(recipe->recipe.getRecipeAction().process(CraftTweakerMC.getIItemStack(ev.crafting), new CraftingInfo(new MCCraftingInventorySquared(ev.craftMatrix, iPlayer), iPlayer.getWorld()), iPlayer));
         }
         if(CrafttweakerImplementationAPI.events.hasPlayerCrafted()) {
