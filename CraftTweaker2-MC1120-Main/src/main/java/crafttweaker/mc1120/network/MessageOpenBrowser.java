@@ -1,48 +1,44 @@
 package crafttweaker.mc1120.network;
 
+import crafttweaker.mc1120.CraftTweaker;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-
-import crafttweaker.mc1120.CraftTweaker;
 
 /**
  * @author Stan
  */
 public class MessageOpenBrowser implements IMessage, IMessageHandler<MessageOpenBrowser, IMessage> {
-
-    private static final Charset UTF8 = Charset.forName("utf-8");
-
+    
+    
     private String url;
-
+    
     public MessageOpenBrowser() {
-
+    
     }
-
+    
     public MessageOpenBrowser(String url) {
         this.url = url;
     }
-
+    
     public String getUrl() {
         return url;
     }
-
+    
     @Override
     public void fromBytes(ByteBuf buf) {
-        url = UTF8.decode(ByteBuffer.wrap(buf.array())).toString().trim();
+        url = ByteBufUtils.readUTF8String(buf);//UTF8.decode(ByteBuffer.wrap(buf.array())).toString().trim();
     }
-
+    
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBytes(UTF8.encode(url).array());
+        ByteBufUtils.writeUTF8String(buf, url);
     }
     
     @Override
