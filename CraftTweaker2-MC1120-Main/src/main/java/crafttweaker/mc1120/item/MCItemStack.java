@@ -15,6 +15,7 @@ import crafttweaker.mc1120.actions.*;
 import crafttweaker.mc1120.block.MCItemBlock;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.enchantments.MCEnchantment;
+import crafttweaker.mc1120.game.MCGame;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
@@ -117,7 +118,10 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public void setDisplayName(String name) {
-        CraftTweakerAPI.apply(new ActionSetStackTranslation(this, getName() + ".name", name));
+        ActionSetStackTranslation action = new ActionSetStackTranslation(this, getName() + ".name", name);
+        MCGame.TRANSLATION_ACTIONS.add(action);
+        CraftTweakerAPI.apply(action);
+        
     }
     
     @Override

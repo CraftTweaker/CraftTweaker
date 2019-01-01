@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.game;
 
-import crafttweaker.CraftTweakerAPI;
+import crafttweaker.*;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.game.IGame;
@@ -32,6 +32,7 @@ public class MCGame implements IGame {
     public static final MCGame INSTANCE = new MCGame();
     private static final Map<String, String> TRANSLATIONS = net.minecraft.util.text.translation.I18n.localizedName.languageList;
     private static final List<IEntityDefinition> ENTITY_DEFINITIONS = new ArrayList<>();
+    public static final List<IAction> TRANSLATION_ACTIONS  = new ArrayList<>();
     
     private MCGame() {
     }
@@ -101,12 +102,16 @@ public class MCGame implements IGame {
     
     @Override
     public void setLocalization(String key, String value) {
-        CraftTweakerAPI.apply(new ActionSetTranslation(null, key, value));
+        ActionSetTranslation action = new ActionSetTranslation(null, key, value);
+        TRANSLATION_ACTIONS.add(action);
+        CraftTweakerAPI.apply(action);
     }
     
     @Override
     public void setLocalization(String lang, String key, String value) {
-        CraftTweakerAPI.apply(new ActionSetTranslation(lang, key, value));
+        ActionSetTranslation action = new ActionSetTranslation(lang, key, value);
+        TRANSLATION_ACTIONS.add(action);
+        CraftTweakerAPI.apply(action);
     }
     
     @Override

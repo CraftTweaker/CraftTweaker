@@ -121,6 +121,7 @@ public class CraftTweaker {
         
         CraftTweakerAPI.tweaker.getOrCreateLoader("preinit").setMainName("preinit");
         CraftTweakerAPI.tweaker.loadScript(false, "preinit");
+        
     }
     
     @EventHandler
@@ -145,6 +146,7 @@ public class CraftTweaker {
     @EventHandler
     public void onInit(FMLInitializationEvent ev) {
         MCBrewing.fixBrewingRecipes();
+        PROXY.registerReloadListener();
     }
     
     
