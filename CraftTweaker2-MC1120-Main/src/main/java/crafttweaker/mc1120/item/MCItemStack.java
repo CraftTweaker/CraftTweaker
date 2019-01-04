@@ -30,6 +30,7 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Stan
@@ -283,7 +284,13 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public List<ILiquidStack> getLiquids() {
-        return Collections.emptyList();
+        return items.stream()
+                .filter(Objects::nonNull)
+                .map(CraftTweakerMC::getItemStack)
+                .map(FluidUtil::getFluidContained)
+                .filter(Objects::nonNull)
+                .map(CraftTweakerMC::getILiquidStack)
+                .collect(Collectors.toList());
     }
     
     @Override
