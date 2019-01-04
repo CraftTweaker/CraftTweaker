@@ -54,13 +54,13 @@ public class IngredientMap<T> {
     
     public List<T> getEntries(IItemStack item) {
         if(item == null || item.getDefinition() == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         List<IngredientMapEntry<T>> entries = this.entries.get(item.getDefinition());
         if(entries != null) {
             return entries.stream().filter(entry -> entry.ingredient.matches(item)).map(entry -> entry.entry).collect(Collectors.toCollection(ArrayList::new));
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
     
