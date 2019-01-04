@@ -130,6 +130,11 @@ public class MCItemUtils implements IItemUtils{
         return iItemStacks;
     }
     
+    @Override
+    public IItemStack getItem(String location, @Optional int meta) {
+        return BracketHandlerItem.getItem(location, meta);
+    }
+    
     
     public IItemStack[] getItemsByRegexUnlocalizedName(String regex){
         ArrayList<ItemStack> matchedItems = new ArrayList<>();

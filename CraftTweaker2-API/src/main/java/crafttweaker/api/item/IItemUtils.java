@@ -33,6 +33,14 @@ public interface IItemUtils {
     @ZenMethod
     IItemStack[] getItemsByRegexRegistryName(String regex);
     
+    /**
+     * Invokes the Bracket Handler Item method
+     * @param location What you would write in the BH, e.g. "minecraft:dirt"
+     * @param meta The metadata, default to 0
+     * @return The same thing the Bracket handler would return.
+     */
+    @ZenMethod
+    IItemStack getItem(String location, @Optional int meta);
     
     /**
      * Gets all Items where the Regex matches the Unlocalized name
