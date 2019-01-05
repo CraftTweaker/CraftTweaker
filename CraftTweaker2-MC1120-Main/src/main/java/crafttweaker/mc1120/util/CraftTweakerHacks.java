@@ -87,7 +87,7 @@ public class CraftTweakerHacks {
     
     public static WeightedRandom.Item constructSeedEntry(WeightedItemStack stack) {
         try {
-            return SEEDENTRY_CONSTRUCTOR.newInstance(CraftTweakerMC.getItemStack(stack.getStack()), (int) stack.getChance());
+            return SEEDENTRY_CONSTRUCTOR.newInstance(CraftTweakerMC.getItemStack(stack.getStack()), (int) stack.getPercent());
         } catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             CraftTweakerAPI.logError("could not construct SeedEntry");
         }

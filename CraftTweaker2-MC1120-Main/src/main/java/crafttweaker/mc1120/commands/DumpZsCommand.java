@@ -1,97 +1,62 @@
 package crafttweaker.mc1120.commands;
 
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.zenscript.*;
+import crafttweaker.mc1120.commands.dumpZScommand.DumpZsTarget;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import org.apache.commons.lang3.StringUtils;
-import stanhebben.zenscript.symbols.*;
-import stanhebben.zenscript.type.*;
-import stanhebben.zenscript.util.Pair;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
-import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static crafttweaker.mc1120.commands.SpecialMessagesChat.getClickableCommandText;
+import static crafttweaker.mc1120.commands.SpecialMessagesChat.getNormalMessage;
 
 public class DumpZsCommand extends CraftTweakerCommand {
     
-    public DumpZsCommand() {
-        super("dumpzs");
-    }
+    private final Map<String, DumpZsTarget> targets;
     
-    @Override
-    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-        
-        CraftTweakerAPI.logCommand("\nBracket Handlers:");
-        for(Pair<Integer, IBracketHandler> pair : GlobalRegistry.getPrioritizedBracketHandlers()) {
-            CraftTweakerAPI.logCommand(pair.getValue().getClass().getName() + ", priority: " + pair.getKey());
+    public DumpZsCommand(DumpZsTarget... targets) {
+        super("dumpzs");
+        this.targets = Arrays.stream(targets).collect(Collectors.toMap(t -> t.argumentName, Function.identity()));
+    
+        final ITextComponent[] components = new ITextComponent[this.targets.size() + 2];
+        components[0] = getClickableCommandText("\u00A72/ct dumpzs " + this.targets.keySet()
+                .stream()
+                .collect(Collectors.joining(" | ", "[", "]")), "/ct dumpzs", true);
+        components[1] = getNormalMessage(" \u00A73Dumps the whole ZenScript Registry");
+    
+        int i = 2;
+        for(DumpZsTarget value : this.targets.values()) {
+            components[i++] = getNormalMessage(String.format(" \u00A73[%s]: %s", value.argumentName, value.getDescription()));
         }
-        
-        CraftTweakerAPI.logCommand("\nTypes:");
-        GlobalRegistry.getTypes().getTypeMap().forEach((aClass, zenType) -> CraftTweakerAPI.logCommand(aClass.getName() + ": " + zenType.getName()));
-        
-        CraftTweakerAPI.logCommand("\nGlobals:");
-        GlobalRegistry.getGlobals().forEach((s, iZenSymbol) -> CraftTweakerAPI.logCommand(s + ": " + iZenSymbol.toString()));
-        
-        CraftTweakerAPI.logCommand("\nExpansions:");
-        GlobalRegistry.getExpansions().forEach((s, typeExpansion) -> CraftTweakerAPI.logCommand(s + ": " + typeExpansion.toString()));
-        
-        CraftTweakerAPI.logCommand("\nRoot (Symbol Package):");
-        GlobalRegistry.getRoot().getPackages().forEach(this::printZenSymbol);
-        
-        sender.sendMessage(getLinkToCraftTweakerLog("Dumped content of the GlobalRegistry", sender));
-        
+        setDescription(components);
     }
     
     @Override
     protected void init() {
-        setDescription(getClickableCommandText("\u00A72/ct dumpzs", "/ct dumpzs", true),
-                getNormalMessage(" \u00A73Dumps the whole ZenScript Registry to the crafttweaker log"));
+        //No-Op since we need the map to have already been initialized
+        //That means this instead goes into the constructor...
     }
     
-    
-    /**
-     * Recursivly prints all zenSymbols if they are Symbol Packages
-     */
-    private void printZenSymbol(String s, IZenSymbol zenSymbol) {
-        if(zenSymbol instanceof SymbolPackage) {
-            printZenSymbolHelper(zenSymbol, 0);
-        } else {
-            CraftTweakerAPI.logCommand(s + ": " + zenSymbol.toString());
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+        if(args.length == 0) {
+            sender.sendMessage(getNormalMessage("Please provide a target"));
+            return;
+        }
+        for(String arg : args) {
+            if(!targets.containsKey(arg))
+                sender.sendMessage(getNormalMessage("No target found for argument " + arg));
+            else
+                targets.get(arg).execute(sender, server);
         }
     }
     
-    /**
-     * Helper functions for printing the zenSymbols
-     *
-     * @param zenSymbol
-     * @param depth
-     */
-    private void printZenSymbolHelper(IZenSymbol zenSymbol, final int depth) {
-        int finalDepth = depth + 1;
-        
-        if(zenSymbol instanceof SymbolPackage) {
-            SymbolPackage symbolPackage = (SymbolPackage) zenSymbol;
-            
-            symbolPackage.getPackages().forEach((s1, symbol) -> {
-                CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s1 + ": " + symbol.toString());
-                printZenSymbolHelper(symbol, finalDepth);
-            });
-        } else if(zenSymbol instanceof SymbolType || zenSymbol instanceof ZenTypeNative) {
-            ZenTypeNative typeNative = null;
-            if(zenSymbol instanceof SymbolType) {
-                ZenType type = ((SymbolType) zenSymbol).getType();
-                if(type instanceof ZenTypeNative) {
-                    typeNative = (ZenTypeNative) type;
-                }
-            } else {
-                typeNative = (ZenTypeNative) zenSymbol;
-            }
-            
-            if(typeNative != null) {
-                for(String s : typeNative.dumpTypeInfo()) {
-                    CraftTweakerAPI.logCommand(StringUtils.repeat("\t", finalDepth) + s);
-                }
-            }
-        }
+    @Override
+    public List<String> getSubSubCommand(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        return new ArrayList<>(targets.keySet());
     }
-    
 }

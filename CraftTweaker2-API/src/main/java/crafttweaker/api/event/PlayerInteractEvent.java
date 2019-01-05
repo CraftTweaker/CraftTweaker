@@ -21,6 +21,7 @@ public interface PlayerInteractEvent extends IEventCancelable, IPlayerEvent, IEv
     @ZenGetter("block")
     IBlock getBlock();
     
+    @ZenGetter("blockState")
     IBlockState getBlockState();
     
     @ZenGetter("dimension")

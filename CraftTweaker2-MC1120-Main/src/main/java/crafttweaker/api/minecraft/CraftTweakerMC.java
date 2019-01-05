@@ -97,7 +97,7 @@ public class CraftTweakerMC {
             return ItemStack.EMPTY;
         
         Object internal = item.getInternal();
-        if(internal == null || !(internal instanceof ItemStack)) {
+        if(!(internal instanceof ItemStack)) {
             CraftTweakerAPI.logError("Not a valid item stack: " + item);
             throw new IllegalArgumentException("Not a valid item stack: " + item);
         }
@@ -120,6 +120,8 @@ public class CraftTweakerMC {
         if(items.size() != 1) {
             CraftTweakerAPI.logError("Not an ingredient with a single item: " + ingredient);
         }
+        if(items.isEmpty())
+            return ItemStack.EMPTY;
         return getItemStack(items.get(0));
     }
     
@@ -342,6 +344,7 @@ public class CraftTweakerMC {
         
         if(!(player instanceof MCPlayer)) {
             CraftTweakerAPI.logError("Invalid player: " + player);
+            return null;
         }
         
         return ((MCPlayer) player).getInternal();
@@ -440,6 +443,9 @@ public class CraftTweakerMC {
      * @return MT block instance
      */
     public static IBlock getBlockAnyMeta(Block block) {
+        if(block == null)
+            return null;
+        
         return new MCSpecificBlock(block, OreDictionary.WILDCARD_VALUE);
     }
     
@@ -452,6 +458,8 @@ public class CraftTweakerMC {
      * @return MT block instance
      */
     public static IBlock getBlock(Block block, int meta) {
+        if(block == null)
+            return null;
         return new MCSpecificBlock(block, meta);
     }
     
@@ -463,10 +471,14 @@ public class CraftTweakerMC {
      * @return
      */
     public static Block getBlock(IItemStack itemStack) {
+        if(itemStack == null)
+            return null;
         return ((MCBlockDefinition) itemStack.asBlock().getDefinition()).getInternalBlock();
     }
     
     public static Block getBlock(IBlock block) {
+        if(block == null)
+            return null;
         return ((MCBlockDefinition) block.getDefinition()).getInternalBlock();
     }
     
@@ -506,6 +518,19 @@ public class CraftTweakerMC {
             res[i] = getLiquidStack(liquidStack);
         }
         return res;
+    }
+    
+    /**
+     * Retrieves the CT liquid stack of the given stack.
+     *
+     * @param stack MCF liquid stack
+     *
+     * @return CrT fluid stack
+     */
+    public static ILiquidStack getILiquidStack(FluidStack stack) {
+        if(stack == null)
+            return null;
+        return new MCLiquidStack(stack);
     }
     
     public static IOreDictEntry getOreDictEntryFromArray(List array) {
@@ -614,7 +639,7 @@ public class CraftTweakerMC {
     }
     
     public static boolean matchesExact(IItemStack item, ItemStack stack) {
-        ItemStack internal = (ItemStack) item.getInternal();
+        ItemStack internal = getItemStack(item);
         if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
             return false;
         }
@@ -778,6 +803,9 @@ public class CraftTweakerMC {
     }
     
     public static IIngredient[] getIIngredients(List<Ingredient> ingredientList) {
+        if(ingredientList == null)
+            return new IIngredient[0];
+        
         IIngredient[] out = new IIngredient[ingredientList.size()];
         for(int index = 0; index < out.length; index++) {
             out[index] = CraftTweakerMC.getIIngredient(ingredientList.get(index));
@@ -846,6 +874,11 @@ public class CraftTweakerMC {
     
     public static List<IItemStack> getIItemStackList(List<ItemStack> drops) {
         List<IItemStack> out = new ArrayList<>();
+        
+        if(drops == null) {
+            return out;
+        }
+        
         for(ItemStack itemStack : drops) {
             IItemStack stack = getIItemStack(itemStack);
             if(stack != null)
@@ -856,6 +889,11 @@ public class CraftTweakerMC {
     
     public static List<WeightedItemStack> getWeightedItemStackList(List<ItemStack> drops) {
         List<WeightedItemStack> out = new ArrayList<>();
+        
+        if(drops == null) {
+            return out;
+        }
+        
         for(ItemStack itemStack : drops) {
             IItemStack stack = getIItemStack(itemStack);
             if(stack != null)

@@ -1,6 +1,10 @@
 package crafttweaker.api.data;
 
-import java.util.*;
+import crafttweaker.CraftTweakerAPI;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Contains a string value.
@@ -22,32 +26,62 @@ public class DataString implements IData {
     
     @Override
     public byte asByte() {
-        return Byte.parseByte(value);
+        try {
+            return Byte.parseByte(value);
+        } catch(NumberFormatException ignored) {
+            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Byte, substituting 0!");
+            return 0;
+        }
     }
     
     @Override
     public short asShort() {
-        return Short.parseShort(value);
+        try {
+            return Short.parseShort(value);
+        } catch(NumberFormatException ignored) {
+            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Short, substituting 0!");
+            return 0;
+        }
     }
     
     @Override
     public int asInt() {
-        return Integer.parseInt(value);
+        try {
+            return Integer.parseInt(value);
+        } catch(NumberFormatException ignored) {
+            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Int, substituting 0!");
+            return 0;
+        }
     }
     
     @Override
     public long asLong() {
-        return Long.parseLong(value);
+        try {
+            return Long.parseLong(value);
+        } catch(NumberFormatException ignored) {
+            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Long, substituting 0!");
+            return 0;
+        }
     }
     
     @Override
     public float asFloat() {
-        return Float.parseFloat(value);
+        try {
+            return Float.parseFloat(value);
+        } catch(NumberFormatException ignored) {
+            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Float, substituting 0!");
+            return 0;
+        }
     }
     
     @Override
     public double asDouble() {
-        return Double.parseDouble(value);
+        try {
+            return Double.parseDouble(value);
+        } catch(NumberFormatException ignored) {
+            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Double, substituting 0!");
+            return 0;
+        }
     }
     
     @Override
@@ -62,7 +96,7 @@ public class DataString implements IData {
     
     @Override
     public Map<String, IData> asMap() {
-        return Collections.singletonMap(value,this);
+        return Collections.singletonMap(value, this);
     }
     
     @Override
