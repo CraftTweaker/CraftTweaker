@@ -14,10 +14,9 @@ import crafttweaker.api.recipes.ICraftingRecipe;
 import crafttweaker.api.recipes.IFurnaceRecipe;
 import crafttweaker.api.world.IBiome;
 
-import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
-import crafttweaker.mc1120.commands.dumpzscommand.*;
 
+import crafttweaker.mc1120.commands.dumpZScommand.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
@@ -842,10 +841,8 @@ public class Commands {
                 CrTSocketHandler.enableSocket();
             }
         });
-
-
-        CTChatCommand.registerCommand(new DumpZsCommand());
-        CTChatCommand.registerCommand(new ExportZsCommand());
+        
+        CTChatCommand.registerCommand(new DumpZsCommand(new TargetLog(), new TargetHtml(), new TargetJson()));
         CTChatCommand.registerCommand(new HelpCommand());
 
         CTChatCommand.registerCommand(new NamesCommand());

@@ -1,4 +1,4 @@
-package crafttweaker.mc1120.commands.dumpzscommand;
+package crafttweaker.mc1120.commands.dumpZScommand;
 
 import com.google.gson.*;
 
