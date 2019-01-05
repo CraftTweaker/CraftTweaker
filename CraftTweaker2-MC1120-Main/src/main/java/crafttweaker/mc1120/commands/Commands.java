@@ -527,11 +527,11 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
-                    player.openBrowser("http://crafttweaker.readthedocs.io/en/latest/");
-                    sender.sendMessage(getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
+                    player.openBrowser("http://docs.blamejared.com/en/");
+                    sender.sendMessage(getClickableBrowserLinkText("http://docs.blamejared.com/en/", "http://docs.blamejared.com/en/"));
 
                 } else {
-                    sender.sendMessage(new TextComponentString("http://crafttweaker.readthedocs.io/en/latest/"));
+                    sender.sendMessage(new TextComponentString("http://docs.blamejared.com/en/"));
                 }
             }
         });
@@ -546,11 +546,11 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
-                    player.openBrowser("https://github.com/jaredlll08/CraftTweaker/issues");
-                    sender.sendMessage(getClickableBrowserLinkText("http://minetweaker3.powerofbytes.com/wiki/", "http://minetweaker3.powerofbytes.com/wiki/"));
+                    player.openBrowser("https://github.com/CraftTweaker/CraftTweaker/issues");
+                    sender.sendMessage(getClickableBrowserLinkText("https://github.com/CraftTweaker/CraftTweaker/issues", "https://github.com/CraftTweaker/CraftTweaker/issues"));
 
                 } else {
-                    sender.sendMessage(new TextComponentString("https://github.com/jaredlll08/CraftTweaker/issues"));
+                    sender.sendMessage(new TextComponentString("https://github.com/CraftTweaker/CraftTweaker/issues"));
                 }
             }
         });
@@ -565,11 +565,11 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
-                    player.openBrowser("https://discord.gg/3VBK9ar");
-                    sender.sendMessage(getClickableBrowserLinkText("https://discord.gg/3VBK9ar", "https://discord.gg/3VBK9ar"));
+                    player.openBrowser("https://discord.blamejared.com/");
+                    sender.sendMessage(getClickableBrowserLinkText("https://discord.blamejared.com/", "https://discord.blamejared.com/"));
 
                 } else {
-                    sender.sendMessage(new TextComponentString("https://discord.gg/3VBK9ar"));
+                    sender.sendMessage(new TextComponentString("https://discord.blamejared.com/"));
                 }
             }
         });
@@ -584,11 +584,11 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
-                    player.openBrowser("http://crafttweaker.readthedocs.io/en/latest/");
-                    sender.sendMessage(getClickableBrowserLinkText("http://crafttweaker.readthedocs.io/en/latest/", "http://crafttweaker.readthedocs.io/en/latest/"));
+                    player.openBrowser("http://docs.blamejared.com/en/");
+                    sender.sendMessage(getClickableBrowserLinkText("http://docs.blamejared.com/en/", "http://docs.blamejared.com/en/"));
 
                 } else {
-                    sender.sendMessage(new TextComponentString("http://crafttweaker.readthedocs.io/en/latest/"));
+                    sender.sendMessage(new TextComponentString("http://docs.blamejared.com/en/"));
                 }
             }
         });
