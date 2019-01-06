@@ -1,0 +1,122 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url = 'https://files.minecraftforge.net/maven'
+        }
+        jcenter()
+        mavenCentral()
+    }
+    // This is only here while i'm activly developing FG, Remind me to remove when we publically release
+    configurations {
+        classpath.resolutionStrategy {
+            cacheDynamicVersionsFor 10, 'seconds'
+            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+
+version = '1.0'
+group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'modid'
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'snapshot', version: '20180921-1.13'
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+
+    //accessTransformer = file('my_at.cfg')
+
+    // default run configurations.
+    // these can be tweaked, removed, or duplicated as needed.
+    runConfig {
+        name = "MinecraftClient"
+        main = "net.minecraftforge.userdev.UserdevLauncher"
+        ideaModuleName = "${project.name}_main"
+        workingDirectory = project.file("run").canonicalPath
+        environment "target", "fmldevclient"
+        environment "assetDirectory", downloadAssets.output.absolutePath
+    }
+
+    runConfig {
+        name = "MinecraftServer"
+        main = "net.minecraftforge.userdev.UserdevLauncher"
+        ideaModuleName = "${project.name}_main"
+        workingDirectory = project.file("run").canonicalPath
+        environment "target", "fmldevserver"
+        environment "assetDirectory", downloadAssets.output.absolutePath
+    }
+}
+
+repositories {
+	flatDir {
+    		dirs 'libs'
+    	}
+    //maven {
+    //    url "https://maven.openzen.org/"
+    //}
+
+}
+dependencies {
+    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied. 
+    minecraft 'net.minecraftforge.test:forge:1.13-24.0.35-1.13-pre'
+    //compile 'org.openzen.zencode:zencode-javascripting:0.3.0'
+    compile name: 'JavaScripting-0.3.5'
+    compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+    // you may put jars on which you depend on in ./libs
+    // or you may define them like so..
+    //compile "some.group:artifact:version:classifier"
+    //compile "some.group:artifact:version"
+
+    // real examples
+    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
+    // except that these dependencies get remapped to your current MCP mappings
+    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // for more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', '1.13'
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META_INF/mods.toml'
+
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': '1.13'
+    }
+
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META_INF/mods.toml'
+    }
+}
