@@ -10,19 +10,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.javafmlmod.FMLModLoadingContext;
 import org.apache.logging.log4j.*;
-import org.objectweb.asm.Type;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
-import org.openzen.zenscript.codemodel.definition.ClassDefinition;
-import org.openzen.zenscript.codemodel.member.*;
-import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
-import org.openzen.zenscript.javabytecode.JavaBytecodeRunUnit;
-import org.openzen.zenscript.javashared.*;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.parser.*;
 
-import javax.tools.JavaFileObject;
 import java.io.File;
 import java.lang.reflect.*;
 import java.util.*;
@@ -67,6 +60,8 @@ public class ExampleMod {
             example.addGlobals(CraftTweakerApi.class);
             example.addClass(TestClass.class);
             example.addGlobals(TestClass.class);
+            example.addClass(MCRecipeManager.class);
+            example.addGlobals(MCRecipeManager.class);
             engine.registerNativeProvided(example);
             File inputDirectory = new File("scripts");
             inputDirectory.mkdir();
