@@ -64,7 +64,7 @@ public class ExampleMod {
             // The name of the base package MUST match with the package of the classes that will be registered below
             JavaNativeModule example = engine.createNativeModule("example", "com.example.examplemod");
             example.addClass(MCItemStack.class);
-            example.addGlobals(SKApi.class);
+            example.addGlobals(CraftTweakerApi.class);
             example.addClass(TestClass.class);
             example.addGlobals(TestClass.class);
             engine.registerNativeProvided(example);
