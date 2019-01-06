@@ -6,7 +6,7 @@ import net.minecraft.util.*;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeGlobals;
 
-public class SKApi implements ZenCodeGlobals {
+public class CraftTweakerApi implements ZenCodeGlobals {
     
     @Global
     public static void addShapelessRecipe(String name, String output, String inputs) {
