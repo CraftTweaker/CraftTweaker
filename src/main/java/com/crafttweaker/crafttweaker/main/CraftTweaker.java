@@ -1,5 +1,8 @@
-package com.example.examplemod;
+package com.crafttweaker.crafttweaker.main;
 
+import com.crafttweaker.crafttweaker.main.brackets.BracketExpressionParsers;
+import com.crafttweaker.crafttweaker.main.zencode.ZenCodeInterface;
+import com.crafttweaker.crafttweaker.main.zencode.loader.Loader;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -14,22 +17,20 @@ import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
 import org.openzen.zenscript.lexer.ParseException;
-import org.openzen.zenscript.parser.*;
+import org.openzen.zenscript.parser.PrefixedBracketParser;
 
 import java.io.File;
-import java.lang.reflect.*;
 import java.util.*;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("examplemod")
-public class ExampleMod {
-    
-    public static List<IRecipe> recipeList = new ArrayList<>();
+@Mod("crafttweaker")
+public class CraftTweaker {
     
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
+    public static List<IRecipe> recipeList = new ArrayList<>();
     
-    public ExampleMod() {
+    public CraftTweaker() {
         // Register the preInit method for modloading
         FMLModLoadingContext.get().getModEventBus().addListener(this::preInit);
         // Register the init method for modloading
@@ -55,13 +56,14 @@ public class ExampleMod {
             
             // The name of the module can be freely chosen (but make sure it matches the dependency name below)
             // The name of the base package MUST match with the package of the classes that will be registered below
-            JavaNativeModule example = engine.createNativeModule("example", "com.example.examplemod");
-            example.addClass(MCItemStack.class);
-            example.addGlobals(CraftTweakerApi.class);
-            example.addClass(TestClass.class);
-            example.addGlobals(TestClass.class);
-            example.addClass(MCRecipeManager.class);
-            example.addGlobals(MCRecipeManager.class);
+            JavaNativeModule example = engine.createNativeModule("example", "com.crafttweaker.crafttweaker");
+            
+            for(Class<?> clazz : ZenCodeInterface.collectClassesToRegister()) {
+                example.addGlobals(clazz);
+                example.addClass(clazz);
+            }
+            
+            
             engine.registerNativeProvided(example);
             File inputDirectory = new File("scripts");
             inputDirectory.mkdir();
@@ -71,7 +73,7 @@ public class ExampleMod {
                 sourceFiles[i] = new FileSourceFile(inputFiles[i].getName(), inputFiles[i]);
             
             final PrefixedBracketParser bracketExpressionParser = new PrefixedBracketParser(null);
-            bracketExpressionParser.register("item", new SimpleBracketParser(engine.registry, example.loadStaticMethod(MCItemStack.class.getMethod("create", String.class))));
+            BracketExpressionParsers.collectParsers(engine.registry, example).forEach(bracketExpressionParser::register);
             
             
             SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bracketExpressionParser, new FunctionParameter[0], "example");
@@ -82,47 +84,14 @@ public class ExampleMod {
             
             engine.registerCompiled(scripts);
             engine.run(Collections.emptyMap(), new Loader(this.getClass().getClassLoader()));
-        } catch(CompileException | ParseException | NoSuchMethodException e) {
+        } catch(CompileException | ParseException e) {
             e.printStackTrace();
         }
-    
+        
         System.out.println(">>>");
         System.out.println(recipeList);
     }
     
-    private static final Method findLoadedClassMethod;
-    static {
-        Method method;
-        try {
-            method = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
-            method.setAccessible(true);
-        } catch(NoSuchMethodException e) {
-            e.printStackTrace();
-            method = null;
-        }
-        
-        findLoadedClassMethod = method;
-    }
-    
-    private static class Loader extends ClassLoader {
-        
-        private Loader(ClassLoader classLoader) {
-            super(classLoader);
-        }
-        
-        @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
-            if(findLoadedClassMethod != null) {
-                try {
-                    Class<?> clazz = (Class<?>) findLoadedClassMethod.invoke(this.getParent(), name);
-                    if(clazz != null)
-                        return clazz;
-                } catch(IllegalAccessException | InvocationTargetException ignored) {
-                }
-            }
-            return getParent().loadClass(name);
-        }
-    }
     
     //    @SubscribeEvent
     //    public void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
@@ -137,7 +106,7 @@ public class ExampleMod {
         NonNullList<Ingredient> list = NonNullList.create();
         list.add(Ingredient.fromStacks(new ItemStack(Blocks.DIRT)));
         final RecipeManager recipeManager = event.getServer().getRecipeManager();
-        recipeManager.addRecipe(new ShapelessRecipe(new ResourceLocation("examplemod", "test"), "", new ItemStack(Items.DIAMOND), list));
+        recipeManager.addRecipe(new ShapelessRecipe(new ResourceLocation("crafttweaker", "test"), "", new ItemStack(Items.DIAMOND), list));
         for(IRecipe iRecipe : recipeList) {
             recipeManager.addRecipe(iRecipe);
         }
