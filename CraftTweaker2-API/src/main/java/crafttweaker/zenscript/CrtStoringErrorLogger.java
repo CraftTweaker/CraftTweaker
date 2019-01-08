@@ -20,20 +20,20 @@ public class CrtStoringErrorLogger extends CrTErrorLogger {
     @Override
     public void error(ZenPosition position, String message) {
         super.error(position, message);
-        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.ERROR));
+        errors.add(new SingleError(position.getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.ERROR));
     }
     
     @Override
     public void warning(ZenPosition position, String message) {
         super.warning(position, message);
-        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.WARN));
+        errors.add(new SingleError(position.getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.WARN));
     
     }
     
     @Override
     public void info(ZenPosition position, String message) {
         super.info(position, message);
-        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.INFO));
+        errors.add(new SingleError(position.getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.INFO));
     }
     
 }
