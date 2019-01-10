@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static crafttweaker.CraftTweakerAPI.furnace;
 import static crafttweaker.CrafttweakerImplementationAPI.*;
@@ -813,10 +814,7 @@ public class Commands {
                     sender.sendMessage(getNormalMessage("If no errors appeared above everything was fine."));
                 } else {
                     sender.sendMessage(getNormalMessage("These loaders failed to load correctly:"));
-                    //TODO beautify
-                    for(ScriptLoader erroredLoader : erroredLoaders) {
-                        sender.sendMessage(getNormalMessage("\t" + erroredLoader.getMainName()));
-                    }
+                    sender.sendMessage(getNormalMessage(erroredLoaders.stream().map(ScriptLoader::getMainName).collect(Collectors.joining(", "))));
                     sender.sendMessage(getLinkToCraftTweakerLog("\u00A74Syntax of the scripts is incorrect!", sender));
                 }
             }
