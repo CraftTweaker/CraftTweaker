@@ -1,14 +1,17 @@
 package crafttweaker.mc1120.commands;
 
 import crafttweaker.CraftTweakerAPI;
+import crafttweaker.api.recipes.FurnaceRecipe;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -29,7 +32,7 @@ public class NamesCommand extends CraftTweakerCommand {
     
     @Override
     protected void init() {
-        setDescription(getClickableCommandText("\u00A72/ct names", "/ct names", true), getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"), getClickableCommandText(" \u00A7a/ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs", "/ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs", true), getNormalMessage("  \u00A7bAdds all possible information to the output."));
+        setDescription(getClickableCommandText("\u00A72/ct names", "/ct names", true), getNormalMessage(" \u00A73Outputs a list of all item names in the game to the CraftTweaker log"), getClickableCommandText(" \u00A7a/ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs enchantability burntime", "/ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs", true), getNormalMessage("  \u00A7bAdds all possible information to the output."));
         
         subCommands = new ArrayList<>(2);
         for(NameCommandParams para : NameCommandParams.values()) {
@@ -160,7 +163,7 @@ public class NamesCommand extends CraftTweakerCommand {
     
     /**
      * For easy copy paste of the command
-     * /ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs
+     * /ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs enchantability burntime
      */
     @SuppressWarnings("unused")
     private enum NameCommandParams {
@@ -213,7 +216,11 @@ public class NamesCommand extends CraftTweakerCommand {
             tabString.append("]");
             
             return tabString.toString();
-        });
+        }),
+        
+        ENCHANTABILITY("enchantability", stack -> Integer.toString(stack.getItem().getItemEnchantability(stack))),
+        
+        BURN_TIME("burntime", stack -> Integer.toString(TileEntityFurnace.getItemBurnTime(stack)));
     
     
         /**
