@@ -38,6 +38,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerAdvancement(IEventHandler<PlayerAdvancementEvent> ev);
 
     @ZenMethod
     IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);

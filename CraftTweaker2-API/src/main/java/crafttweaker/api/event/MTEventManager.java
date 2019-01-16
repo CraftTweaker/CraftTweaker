@@ -863,6 +863,26 @@ public class MTEventManager implements IEventManager {
     public void publishCommand(CommandEvent event) {
         elCommand.publish(event);
     }
-
-
+    
+    
+    // #########################
+    // ### PlayerAdvancement ###
+    // #########################
+    
+    private final EventList<PlayerAdvancementEvent> elPlayerAdvancement = new EventList<>();
+    
+    @Override
+    public IEventHandle onPlayerAdvancement(IEventHandler<PlayerAdvancementEvent> ev) {
+        return elPlayerAdvancement.add(ev);
+    }
+    
+    public boolean hasPlayerAdvancement() {
+        return elPlayerAdvancement.hasHandlers();
+    }
+    
+    public void publishPlayerAdvancement(PlayerAdvancementEvent event) {
+        elPlayerAdvancement.publish(event);
+    }
+    
+    
 }

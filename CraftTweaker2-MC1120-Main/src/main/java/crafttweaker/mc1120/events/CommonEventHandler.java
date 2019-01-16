@@ -20,6 +20,7 @@ import crafttweaker.mc1120.recipes.MCCraftingInventorySquared;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.runtime.ScriptLoader;
+import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -415,6 +416,12 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasCommand())
             CrafttweakerImplementationAPI.events.publishCommand(new MCCommandEvent(ev));
     }
-
-
+    
+    @SubscribeEvent
+    public void onPlayerAdvancementEvent(AdvancementEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerAdvancement())
+            CrafttweakerImplementationAPI.events.publishPlayerAdvancement(new MCPlayerAdvancementEvent(ev));
+    }
+    
+    
 }
