@@ -2,8 +2,10 @@ package crafttweaker.zenscript;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.socket.SingleError;
-import stanhebben.zenscript.*;
-import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.IZenCompileEnvironment;
+import stanhebben.zenscript.TypeExpansion;
+import stanhebben.zenscript.compiler.ClassNameGenerator;
+import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.symbols.IZenSymbol;
 import stanhebben.zenscript.type.ZenType;
@@ -92,21 +94,19 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     @Override
     public void error(ZenPosition position, String message) {
         CraftTweakerAPI.logError(position.toString() + " > " + message);
-        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.ERROR));
+        errors.add(new SingleError(position.getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.ERROR));
     }
     
     @Override
     public void warning(ZenPosition position, String message) {
         CraftTweakerAPI.logWarning(position.toString() + " > " + message);
-        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.WARN));
-    
+        errors.add(new SingleError(position.getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.WARN));
     }
     
     @Override
     public void info(ZenPosition position, String message) {
         CraftTweakerAPI.logInfo(position.toString() + " > " + message);
-        errors.add(new SingleError(position.getFile().getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.INFO));
-    
+        errors.add(new SingleError(position.getFileName(), position.getLine(), position.getLineOffset(), message, SingleError.Level.INFO));
     }
     
     @Override
