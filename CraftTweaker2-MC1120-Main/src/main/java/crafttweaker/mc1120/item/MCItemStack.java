@@ -735,4 +735,29 @@ public class MCItemStack implements IItemStack {
     public String toCommandString() {
         return toString();
     }
+    
+    @Override
+    public boolean isFood() {
+        return stack.getItem() instanceof ItemFood;
+    }
+    
+    @Override
+    public float getSaturation() {
+        if(isFood()) {
+            ItemFood item = (ItemFood) stack.getItem();
+            return item.getSaturationModifier(stack);
+        } else {
+            return 0;
+        }
+    }
+    
+    @Override
+    public int getHealAmount() {
+        if(isFood()) {
+            ItemFood item = (ItemFood) stack.getItem();
+            return item.getHealAmount(stack);
+        } else {
+            return 0;
+        }
+    }
 }
