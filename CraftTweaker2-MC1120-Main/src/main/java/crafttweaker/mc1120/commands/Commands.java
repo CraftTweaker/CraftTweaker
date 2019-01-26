@@ -4,8 +4,7 @@ import com.google.gson.JsonPrimitive;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.item.WeightedItemStack;
+import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.mods.IMod;
 import crafttweaker.api.oredict.IOreDictEntry;
@@ -61,6 +60,30 @@ public class Commands {
 
 
     static void registerCommands() {
+        CTChatCommand.registerCommand(new CraftTweakerCommand("foods") {
+        
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                List<ILiquidDefinition> liquids = CraftTweakerAPI.game.getLiquids();
+                liquids.sort(LIQUID_COMPARATOR);
+            
+                CraftTweakerAPI.logCommand("Foods:");
+                for(IItemDefinition item : CraftTweakerAPI.game.getItems()) {
+                    for(IItemStack stack : item.getSubItems()) {
+                        if(stack.isFood()) {
+                            CraftTweakerAPI.logCommand("- " + stack.toCommandString() + " Heal amount: " + stack.getHealAmount() + " Saturation amount: " + stack.getSaturation());
+                        }
+                    }
+                }
+                sender.sendMessage(getLinkToCraftTweakerLog("List of foods generated;", sender));
+            }
+        
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct foods", "/ct foods", true), getNormalMessage(" \u00A73Outputs a list of all foods in the game to the crafttweaker.log"));
+            }
+        });
+        
         CTChatCommand.registerCommand(new CraftTweakerCommand("liquids") {
 
             @Override

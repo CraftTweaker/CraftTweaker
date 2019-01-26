@@ -431,4 +431,19 @@ public interface IItemStack extends IIngredient {
     
     @ZenMethod
     IEntityItem createEntityItem(IWorld world, IBlockPos pos);
+    
+    @ZenGetter("isFood")
+    default boolean isFood(){
+        return false;
+    }
+    
+    @ZenGetter("saturation")
+    default float getSaturation(){
+        return 0;
+    }
+    
+    @ZenGetter("healAmount")
+    default int getHealAmount(){
+        return 0;
+    }
 }

@@ -872,14 +872,14 @@ public class CraftTweakerMC {
         return vec3d == null ? null : new MCVector3d(vec3d);
     }
     
-    public static List<IItemStack> getIItemStackList(List<ItemStack> drops) {
+    public static List<IItemStack> getIItemStackList(List<ItemStack> items) {
         List<IItemStack> out = new ArrayList<>();
         
-        if(drops == null) {
+        if(items == null || items.isEmpty()) {
             return out;
         }
         
-        for(ItemStack itemStack : drops) {
+        for(ItemStack itemStack : items) {
             IItemStack stack = getIItemStack(itemStack);
             if(stack != null)
                 out.add(stack);
@@ -887,14 +887,33 @@ public class CraftTweakerMC {
         return out;
     }
     
-    public static List<WeightedItemStack> getWeightedItemStackList(List<ItemStack> drops) {
+    public static List<IItemStack> getIItemStacks(Collection<ItemStack> items) {
+        List<IItemStack> convertedOutputs = new ArrayList<>();
+        
+        if(items != null && !items.isEmpty()) {
+            
+            for(ItemStack itemStack : items) {
+                
+                IItemStack stack = CraftTweakerMC.getIItemStack(itemStack);
+                
+                if(stack != null && !stack.isEmpty()) {
+                    
+                    convertedOutputs.add(stack);
+                }
+            }
+        }
+        
+        return convertedOutputs;
+    }
+    
+    public static List<WeightedItemStack> getWeightedItemStackList(List<ItemStack> items) {
         List<WeightedItemStack> out = new ArrayList<>();
         
-        if(drops == null) {
+        if(items == null || items.isEmpty()) {
             return out;
         }
         
-        for(ItemStack itemStack : drops) {
+        for(ItemStack itemStack : items) {
             IItemStack stack = getIItemStack(itemStack);
             if(stack != null)
                 out.add(new WeightedItemStack(stack, 100));
