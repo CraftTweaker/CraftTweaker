@@ -220,7 +220,11 @@ public class NamesCommand extends CraftTweakerCommand {
         
         ENCHANTABILITY("enchantability", stack -> Integer.toString(stack.getItem().getItemEnchantability(stack))),
         
-        BURN_TIME("burntime", stack -> Integer.toString(TileEntityFurnace.getItemBurnTime(stack)));
+        BURN_TIME("burntime", stack -> Integer.toString(TileEntityFurnace.getItemBurnTime(stack))),
+        
+        FOOD_VALUE("foodvalue", stack -> Integer.toString((stack.getItem() instanceof ItemFood) ? ((ItemFood)stack.getItem()).getHealAmount(stack) : -1)),
+        
+        SATURATION_VALUE("saturationvalue", stack -> Float.toString((stack.getItem() instanceof ItemFood) ? ((ItemFood)stack.getItem()).getSaturationModifier(stack) : -1f));
     
     
         /**
