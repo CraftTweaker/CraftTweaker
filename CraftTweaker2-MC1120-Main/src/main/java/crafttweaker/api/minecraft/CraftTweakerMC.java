@@ -51,6 +51,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 
@@ -574,6 +575,12 @@ public class CraftTweakerMC {
         } else if(ingredient instanceof Ingredient) {
             if(ingredient instanceof OreIngredient)
                 return getOreDict((OreIngredient) ingredient);
+            if(ingredient instanceof CompoundIngredient) {
+                return ((CompoundIngredient) ingredient).getChildren().stream()
+                        .map(CraftTweakerMC::getIIngredient)
+                        .reduce(IngredientUnknown.INSTANCE, IIngredient::or);
+            }
+            
             ItemStack[] matchingStacks = ((Ingredient) ingredient).matchingStacks;
             
             if(ingredient == Ingredient.EMPTY || matchingStacks.length <= 0 || ((Ingredient) ingredient).apply(ItemStack.EMPTY)) {
@@ -591,7 +598,7 @@ public class CraftTweakerMC {
             return null;
         IIngredient out = ingredients[0];
         for(int i = 1; i < ingredients.length; i++) {
-            out = out.or(ingredients[i]);
+            out = out == null ? ingredients[i] : out.or(ingredients[i]);
         }
         return out;
     }
