@@ -884,5 +884,63 @@ public class MTEventManager implements IEventManager {
         elPlayerAdvancement.publish(event);
     }
     
+    // ##################
+    // ### CheckSpawn ###
+    // ##################
+    
+    private final EventList<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> elCheckSpawn = new EventList<>();
+    
+    @Override
+    public IEventHandle onCheckSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev) {
+        return elCheckSpawn.add(ev);
+    }
+    
+    public boolean hasCheckSpawn() {
+        return elCheckSpawn.hasHandlers();
+    }
+    
+    public void publishCheckSpawn(EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent event) {
+        elCheckSpawn.publish(event);
+    }
+    
+    // ####################
+    // ### SpecialSpawn ###
+    // ####################
+    
+    private final EventList<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> elSpecialSpawn = new EventList<>();
+    
+    @Override
+    public IEventHandle onSpecialSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev) {
+        return elSpecialSpawn.add(ev);
+    }
+    
+    public boolean hasSpecialSpawn() {
+        return elSpecialSpawn.hasHandlers();
+    }
+    
+    public void publishSpecialSpawn(EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent event) {
+        elSpecialSpawn.publish(event);
+    }
+    
+    
+    // ####################
+    // ### AllowDespawn ###
+    // ####################
+    
+    private final EventList<EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent> elAllowDespawn = new EventList<>();
+    
+    @Override
+    public IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent> ev) {
+        return elAllowDespawn.add(ev);
+    }
+    
+    public boolean hasAllowDespawn() {
+        return elAllowDespawn.hasHandlers();
+    }
+    
+    public void publishAllowDespawn(EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent event) {
+        elAllowDespawn.publish(event);
+    }
+    
     
 }

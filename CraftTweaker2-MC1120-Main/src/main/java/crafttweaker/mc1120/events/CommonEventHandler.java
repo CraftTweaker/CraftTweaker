@@ -423,5 +423,23 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishPlayerAdvancement(new MCPlayerAdvancementEvent(ev));
     }
     
+    @SubscribeEvent
+    public void onCheckSpawnEvent(LivingSpawnEvent.CheckSpawn ev) {
+        if(CrafttweakerImplementationAPI.events.hasCheckSpawn())
+            CrafttweakerImplementationAPI.events.publishCheckSpawn(new MCEntityLivingSpawnEvent.MCEntityLivingExtendedSpawnEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn ev) {
+        if(CrafttweakerImplementationAPI.events.hasSpecialSpawn())
+            CrafttweakerImplementationAPI.events.publishSpecialSpawn(new MCEntityLivingSpawnEvent.MCEntityLivingExtendedSpawnEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onAllowDespawnEvent(LivingSpawnEvent.AllowDespawn ev) {
+        if(CrafttweakerImplementationAPI.events.hasAllowDespawn())
+            CrafttweakerImplementationAPI.events.publishAllowDespawn(new MCEntityLivingSpawnEvent.MCEntityLivingAllowDespawnEvent(ev));
+    }
+    
     
 }

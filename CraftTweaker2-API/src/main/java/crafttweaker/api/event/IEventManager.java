@@ -149,7 +149,16 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onCommand(IEventHandler<CommandEvent> ev);
-
+    
+    @ZenMethod
+    IEventHandle onCheckSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onSpecialSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent> ev);
+    
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
