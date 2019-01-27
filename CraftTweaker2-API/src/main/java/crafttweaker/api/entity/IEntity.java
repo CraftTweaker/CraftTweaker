@@ -1,5 +1,6 @@
 package crafttweaker.api.entity;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.command.ICommandSender;
@@ -482,4 +483,9 @@ public interface IEntity extends ICommandSender {
     
     @ZenMethod
     IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks);
+    
+    @ZenMethod
+    default void update(IData data){
+        CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
+    }
 }

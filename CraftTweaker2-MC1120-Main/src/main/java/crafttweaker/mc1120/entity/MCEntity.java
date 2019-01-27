@@ -642,6 +642,11 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
+    public void update(IData data) {
+        NBTConverter.updateMap(entity.getEntityData(), data);
+    }
+    
+    @Override
     public boolean equals(Object obj) {
         return (obj instanceof MCEntity && entity.isEntityEqual(((MCEntity) obj).entity)) || super.equals(obj);
     }
