@@ -11,7 +11,9 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.wrapper.ICraftingRecipeWrapper;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import mezz.jei.ingredients.Ingredients;
@@ -119,8 +121,8 @@ public class ConflictCommand extends CraftTweakerCommand {
             String shape1 = it.getKey().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
             String shape2 = it.getValue().shapedRecipe ? "[Shaped] " : "[Shapeless] ";
 
-            String name1 = "<" + it.getKey().output.getItem().getRegistryName().toString() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
-            String name2 = "<" + it.getValue().output.getItem().getRegistryName().toString() + ":" + it.getValue().output.getMetadata() + "> * " + it.getValue().output.getCount();
+            String name1 = "<" + it.getKey().output.getItem().getRegistryName() + ":" + it.getKey().output.getMetadata() + "> * " + it.getKey().output.getCount();
+            String name2 = "<" + it.getValue().output.getItem().getRegistryName() + ":" + it.getValue().output.getMetadata() + "> * " + it.getValue().output.getCount();
 
             String name1dp = "[" + it.getKey().recipeName + "](" + it.getKey().output.getDisplayName() + ") ";
             String name2dp = "[" + it.getValue().recipeName + "](" + it.getValue().output.getDisplayName() + ") ";
@@ -165,11 +167,11 @@ public class ConflictCommand extends CraftTweakerCommand {
     private void gatherRecipes() {
         IRecipeRegistry reg = JEIAddonPlugin.recipeRegistry;
 
-        for (IRecipeCategory category : reg.getRecipeCategories()) {
+        for (IRecipeCategory<?> category : reg.getRecipeCategories()) {
             if (category instanceof CraftingRecipeCategory) {
 
-                List wrappers = reg.getRecipeWrappers(category);
-                for (Object wrapper : wrappers) {
+                List<? extends IRecipeWrapper> wrappers = reg.getRecipeWrappers(category);
+                for (IRecipeWrapper wrapper : wrappers) {
 
                     if (wrapper instanceof ICraftingRecipeWrapper && !(wrapper instanceof TippedArrowRecipeWrapper)) {
 
@@ -178,8 +180,8 @@ public class ConflictCommand extends CraftTweakerCommand {
                         wrap.getIngredients(ing);
 
 
-                        List<List<ItemStack>> inputs = ing.getInputs(ItemStack.class);
-                        List<List<ItemStack>> outputs = ing.getOutputs(ItemStack.class);
+                        List<List<ItemStack>> inputs = ing.getInputs(VanillaTypes.ITEM);
+                        List<List<ItemStack>> outputs = ing.getOutputs(VanillaTypes.ITEM);
 
                         // checks for having no outputs or having a "null" output
                         ItemStack output = outputs.size() > 0 ? outputs.get(0) != null ? outputs.get(0).size() > 0 ? outputs.get(0).get(0) : null : null : null;
@@ -488,18 +490,10 @@ public class ConflictCommand extends CraftTweakerCommand {
          * Compares the two {@link ItemStack} and checks for nbt
          */
         boolean compareItemStack(ItemStack stack1, ItemStack stack2) {
-            if (stack1.isEmpty() || stack1.isEmpty()) return false;
+            if (stack1 == null || stack2 == null || stack1.isEmpty() || stack2.isEmpty())
+                return false;
             boolean itemsAreSame = stack1.getItem() == stack2.getItem() && stack1.getMetadata() == stack2.getMetadata();
-            if (itemsAreSame)
-                if (stack1.getTagCompound() == null && stack2.getTagCompound() == null) {
-                    return true;
-                } else if (stack1.hasTagCompound() && stack2.hasTagCompound()
-                        && stack1.getTagCompound().equals(stack2.getTagCompound())) {
-                    // System.out.println("stack1 = " + stack1.getItem().getRegistryName() + ":" + stack1.getMetadata() + " > " + stack1.getTagCompound());
-                    // System.out.println("stack2 = " + stack2.getItem().getRegistryName() + ":" + stack2.getMetadata() + " > " + stack2.getTagCompound());
-                    return true;
-                }
-            return false;
+            return itemsAreSame && Objects.equals(stack1.getTagCompound(), stack2.getTagCompound());
         }
 
         @Override
