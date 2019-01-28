@@ -93,6 +93,8 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
     }
 
     private ItemStack getCraftingResult(InventoryCrafting inv, Pair<Integer, Integer> offsetPair, IIngredient[][] ingredients) {
+        if(offsetPair == offsetInvalid)
+            return ItemStack.EMPTY;
         int rowOffset = offsetPair.getKey();
         int columnOffset = offsetPair.getValue();
         if(recipeFunction != null) {
