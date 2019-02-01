@@ -128,18 +128,20 @@ public class MCLiquidStack implements ILiquidStack {
     @Override
     public List<IItemStack> getItems() {
         final IItemStack stack = CraftTweakerMC.getIItemStack(FluidUtil.getFilledBucket(this.stack.copy()));
-        if(stack != null)
-            return Collections.singletonList(stack.withDisplayName(String.format("Any container with %s * %d", this.stack
-                    .getLocalizedName(), this.getAmount())));
+        if(stack != null) {
+            final String name = String.format("Any container with %s * %d", this.stack.getLocalizedName(), this.getAmount());
+            return Collections.singletonList(stack.withDisplayName(name));
+        }
         return Collections.emptyList();
     }
     
     @Override
     public IItemStack[] getItemArray() {
         final IItemStack stack = CraftTweakerMC.getIItemStack(FluidUtil.getFilledBucket(this.stack.copy()));
-        if(stack != null)
-            return new IItemStack[]{stack.withDisplayName(String.format("Any container with %s * %d", this.stack.getLocalizedName(), this
-                    .getAmount()))};
+        if(stack != null) {
+            final String name = String.format("Any container with %s * %d", this.stack.getLocalizedName(), this.getAmount());
+            return new IItemStack[]{stack.withDisplayName(name)};
+        }
         return new IItemStack[0];
     }
 
