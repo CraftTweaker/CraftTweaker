@@ -2,13 +2,23 @@ package crafttweaker.mc1120.liquid;
 
 import crafttweaker.api.data.IData;
 import crafttweaker.api.item.*;
-import crafttweaker.api.liquid.*;
+import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.ILiquidStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.item.MCItemStack;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Stan
@@ -16,15 +26,17 @@ import java.util.*;
 public class MCLiquidStack implements ILiquidStack {
 
     private final FluidStack stack;
-    private IData tag = null;
+    private final IItemTransformerNew transformerNew;
+    private IData tag;
 
     public MCLiquidStack(FluidStack stack) {
-        this.stack = stack;
+        this(stack, null, null);
     }
 
-    private MCLiquidStack(FluidStack stack, IData tag) {
+    private MCLiquidStack(FluidStack stack, IData tag, IItemTransformerNew transformerNew) {
         this.stack = stack;
         this.tag = tag;
+        this.transformerNew = transformerNew;
     }
 
     @Override
@@ -64,14 +76,14 @@ public class MCLiquidStack implements ILiquidStack {
     public ILiquidStack withTag(IData data) {
         FluidStack result = new FluidStack(stack.getFluid(), stack.amount);
         result.tag = (NBTTagCompound) NBTConverter.from(data);
-        return new MCLiquidStack(result, data.immutable());
+        return new MCLiquidStack(result, data.immutable(), transformerNew);
     }
 
     @Override
     public ILiquidStack withAmount(int amount) {
         FluidStack result = new FluidStack(stack.getFluid(), amount);
         result.tag = stack.tag;
-        return new MCLiquidStack(result, tag);
+        return new MCLiquidStack(result, tag, transformerNew);
     }
 
     @Override
@@ -115,12 +127,20 @@ public class MCLiquidStack implements ILiquidStack {
 
     @Override
     public List<IItemStack> getItems() {
+        final IItemStack stack = CraftTweakerMC.getIItemStack(FluidUtil.getFilledBucket(this.stack.copy()));
+        if(stack != null)
+            return Collections.singletonList(stack.withDisplayName(String.format("Any container with %s * %d", this.stack
+                    .getLocalizedName(), this.getAmount())));
         return Collections.emptyList();
     }
     
     @Override
     public IItemStack[] getItemArray() {
-    	return new IItemStack[]{};
+        final IItemStack stack = CraftTweakerMC.getIItemStack(FluidUtil.getFilledBucket(this.stack.copy()));
+        if(stack != null)
+            return new IItemStack[]{stack.withDisplayName(String.format("Any container with %s * %d", this.stack.getLocalizedName(), this
+                    .getAmount()))};
+        return new IItemStack[0];
     }
 
     @Override
@@ -140,7 +160,7 @@ public class MCLiquidStack implements ILiquidStack {
 
     @Override
     public IIngredient transformNew(IItemTransformerNew transformer) {
-        throw new UnsupportedOperationException("Liquid stack can't have transformers");
+        return new MCLiquidStack(this.stack, this.tag, transformer);
     }
 
     @Override
@@ -155,12 +175,13 @@ public class MCLiquidStack implements ILiquidStack {
 
     @Override
     public boolean matches(IItemStack item) {
-        return false;
+        final FluidStack fluidStack = FluidUtil.getFluidContained(CraftTweakerMC.getItemStack(item));
+        return fluidStack != null && this.matches(CraftTweakerMC.getILiquidStack(fluidStack));
     }
 
     @Override
     public boolean matchesExact(IItemStack item) {
-        return false;
+        return matches(item);
     }
 
     @Override
@@ -171,8 +192,8 @@ public class MCLiquidStack implements ILiquidStack {
     @Override
     public boolean contains(IIngredient ingredient) {
         
-        for (ILiquidStack liquid : ingredient.getLiquids()) {
-            if (!matches(liquid)) {
+        for(ILiquidStack liquid : ingredient.getLiquids()) {
+            if(!matches(liquid)) {
                 return false;
             }
         }
@@ -187,12 +208,27 @@ public class MCLiquidStack implements ILiquidStack {
     
     @Override
     public IItemStack applyNewTransform(IItemStack item) {
-        return item;
+        if(transformerNew != null)
+            return transformerNew.transform(item);
+    
+        final ItemStack itemStack = CraftTweakerMC.getItemStack(item);
+    
+        //Hardcoded cause a bucket that's drained with less than 1000 MB returns itself
+        if(itemStack.getItem().getClass() == ItemBucket.class || itemStack.getItem() == Items.MILK_BUCKET)
+            return new MCItemStack(new ItemStack(Items.BUCKET, 1));
+    
+        final IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(itemStack);
+        if(fluidHandler == null)
+            return CraftTweakerMC.getIItemStack(ForgeHooks.getContainerItem(itemStack));
+        fluidHandler.drain(this.stack.copy(), true);
+    
+        return MCItemStack.createNonCopy(itemStack);
     }
     
     @Override
     public boolean hasNewTransformers() {
-        return false;
+        //Always return true so that the draining can be done
+        return true;
     }
     
     @Override
@@ -207,7 +243,7 @@ public class MCLiquidStack implements ILiquidStack {
     
     @Override
     public String toString() {
-    	return "<liquid:" + getName() + ">";
+        return "<liquid:" + getName() + ">";
     }
     
     @Override
