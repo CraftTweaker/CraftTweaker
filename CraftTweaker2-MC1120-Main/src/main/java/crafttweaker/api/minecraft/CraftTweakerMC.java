@@ -25,6 +25,7 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.*;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
+import crafttweaker.mc1120.item.VanillaIngredient;
 import crafttweaker.mc1120.liquid.*;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
@@ -52,6 +53,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.crafting.CompoundIngredient;
+import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 
@@ -609,8 +611,12 @@ public class CraftTweakerMC {
         if(ingredient instanceof IOreDictEntry)
             return new OreIngredient(((IOreDictEntry) ingredient).getName());
         if(ingredient instanceof IItemStack)
-            return Ingredient.fromStacks(getItemStack((IItemStack) ingredient));
-        return Ingredient.fromStacks(getItemStacks(ingredient.getItems()));
+            if(((IItemStack) ingredient).hasTag())
+                return new IngredientNBT(getItemStack(ingredient)){};
+            else
+                return Ingredient.fromStacks(getItemStack((IItemStack) ingredient));
+                
+        return new VanillaIngredient(ingredient);
     }
     
     private static IOreDictEntry getOreDict(OreIngredient oreIngredient) {
