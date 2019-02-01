@@ -216,7 +216,7 @@ public class MCLiquidStack implements ILiquidStack {
         final ItemStack itemStack = CraftTweakerMC.getItemStack(item);
     
         //Hardcoded cause a bucket that's drained with less than 1000 MB returns itself
-        if(itemStack.getItem().getClass() == ItemBucket.class || itemStack.getItem() == Items.MILK_BUCKET)
+        if(itemStack.getItem() instanceof ItemBucket || itemStack.getItem() == Items.MILK_BUCKET)
             return new MCItemStack(new ItemStack(Items.BUCKET, 1));
     
         final IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(itemStack);
