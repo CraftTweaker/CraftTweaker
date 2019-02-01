@@ -26,7 +26,7 @@ public class VanillaIngredient extends Ingredient {
     
     @Override
     public ItemStack[] getMatchingStacks() {
-        return ingredient == null ? new ItemStack[0] : CraftTweakerMC.getItemStacks(ingredient.getItemArray());
+        return CraftTweakerMC.getItemStacks(ingredient.getItemArray());
     }
     
     @Override
@@ -54,7 +54,6 @@ public class VanillaIngredient extends Ingredient {
     
     @Override
     protected void invalidate() {
-        this.ingredient = null;
         this.stacks = null;
     }
     
