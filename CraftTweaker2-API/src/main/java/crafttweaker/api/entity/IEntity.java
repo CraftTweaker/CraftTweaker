@@ -481,8 +481,14 @@ public interface IEntity extends ICommandSender {
     @ZenGetter("lookingDirection")
     IVector3d getLookingDirection();
     
-    @ZenMethod
+    @Deprecated
     IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks);
+    
+    @ZenMethod
+    default IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks, @Optional boolean stopOnLiquid, @Optional boolean ignoreBlockWithoutBoundingBox, @Optional(valueBoolean = true) boolean returnLastUncollidableBlock) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not properly implement IEntity#getRayTrace, ask the author to fix this");
+        return getRayTrace(blockReachDistance, partialTicks);
+    }
     
     @ZenMethod
     default void update(IData data){
