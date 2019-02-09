@@ -23,6 +23,7 @@ import crafttweaker.runtime.ScriptLoader;
 import crafttweaker.socket.CrTSocketHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -652,6 +653,24 @@ public class Commands {
                 });
 
                 sender.sendMessage(getLinkToCraftTweakerLog("Biome Types list generated", sender));
+            }
+        });
+
+        CTChatCommand.registerCommand(new CraftTweakerCommand("enchants") {
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct enchants", "/ct enchants", true), getNormalMessage(" \u00A73Lists all the enchants in the game."));
+            }
+
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                CraftTweakerAPI.logCommand("Enchants:");
+                BracketHandlerEnchantments.enchantments.forEach((s, iEnchant) -> {
+                    String name = ((Enchantment) iEnchant.getInternal()).getTranslatedName(1);
+                    CraftTweakerAPI.logCommand("-" + name + String.format(" (at level 1, max level %d, registry name %s, enchant id %d)", iEnchant.getMaxLevel(), s, iEnchant.getID()));
+                });
+
+                sender.sendMessage(getLinkToCraftTweakerLog("Enchants list generated", sender));
             }
         });
 
