@@ -19,6 +19,7 @@ import stanhebben.zenscript.type.natives.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.Arrays;
 import java.util.logging.*;
 
 /**
@@ -330,5 +331,18 @@ public class CraftTweakerAPI {
      */
     public static IJavaMethod getJavaMethod(Class<? extends IBracketHandler> cls, String name, Class... arguments) {
         return JavaMethod.get(GlobalRegistry.getTypes(), cls, name, arguments);
+    }
+    
+    /**
+     * Gets a string representation of the Script file and line from the current stacktrace.
+     * Only works if the current Stacktrace actually has a script within, otherwise returns
+     * @return The filename and line number of the originating script.
+     */
+    public static String getScriptFileAndLine() {
+        return Arrays.stream(Thread.currentThread().getStackTrace())
+                .filter(s -> s != null && s.getFileName() != null && s.getFileName().endsWith(".zs"))
+                .findFirst()
+                .map(s -> s.getFileName() + ":" + s.getLineNumber())
+                .orElse("<?>");
     }
 }
