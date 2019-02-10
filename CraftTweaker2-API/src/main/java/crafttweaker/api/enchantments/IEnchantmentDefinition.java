@@ -11,6 +11,9 @@ public interface IEnchantmentDefinition {
     @ZenGetter("id")
     int getID();
     
+    @ZenGetter("registryName")
+    String getRegistryName();
+    
     @ZenGetter("name")
     String getName();
     
@@ -53,6 +56,9 @@ public interface IEnchantmentDefinition {
     @ZenOperator(OperatorType.MUL)
     @ZenMethod
     IEnchantment makeEnchantment(int level);
+    
+    @ZenOperator(OperatorType.COMPARE)
+    int compare(IEnchantmentDefinition other);
     
     Object getInternal();
 }

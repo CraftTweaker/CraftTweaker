@@ -1,9 +1,11 @@
 package crafttweaker.mc1120.enchantments;
 
-import crafttweaker.api.enchantments.*;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.item.IItemStack;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class MCEnchantmentDefinition implements IEnchantmentDefinition {
     
@@ -20,6 +22,12 @@ public class MCEnchantmentDefinition implements IEnchantmentDefinition {
     @Override
     public int getID() {
         return Enchantment.getEnchantmentID(enchantment);
+    }
+    
+    @Override
+    public String getRegistryName() {
+        final ResourceLocation registryName = enchantment.getRegistryName();
+        return registryName != null ? registryName.toString() : null;
     }
     
     @Override
@@ -90,6 +98,11 @@ public class MCEnchantmentDefinition implements IEnchantmentDefinition {
     @Override
     public IEnchantment makeEnchantment(int level) {
         return new MCEnchantment(enchantment, level);
+    }
+    
+    @Override
+    public int compare(IEnchantmentDefinition other) {
+        return Integer.compare(this.getID(), other.getID());
     }
     
     @Override
