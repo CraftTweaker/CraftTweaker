@@ -15,7 +15,7 @@ import crafttweaker.api.world.IBiome;
 
 import crafttweaker.mc1120.brackets.*;
 
-import crafttweaker.mc1120.commands.dumpZScommand.*;
+import crafttweaker.mc1120.commands.dumpzscommand.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.recipes.MCRecipeBase;

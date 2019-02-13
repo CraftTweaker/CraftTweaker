@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.commands;
 
-import crafttweaker.mc1120.commands.dumpZScommand.DumpZsTarget;
+import crafttweaker.mc1120.commands.dumpzscommand.DumpZsTarget;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
