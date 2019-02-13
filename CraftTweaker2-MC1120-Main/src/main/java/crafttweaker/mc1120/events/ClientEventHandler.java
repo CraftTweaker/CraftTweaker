@@ -4,7 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.tooltip.IngredientTooltips;
+import crafttweaker.api.tooltip.*;
 import crafttweaker.mc1120.formatting.IMCFormattedString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.*;
@@ -28,9 +28,15 @@ public class ClientEventHandler {
             for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
                 ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
             }
+            for(ITooltipFunction tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
+                ev.getToolTip().add(tooltip.process(itemStack));
+            }
             if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
                 for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
                     ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
+                }
+                for(ITooltipFunction tooltip : IngredientTooltips.getAdvancedShiftTooltips(itemStack)) {
+                    ev.getToolTip().add(tooltip.process(itemStack));
                 }
             }
         }

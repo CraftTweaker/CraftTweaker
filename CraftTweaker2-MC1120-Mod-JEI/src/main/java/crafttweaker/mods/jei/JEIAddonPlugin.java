@@ -39,14 +39,15 @@ public class JEIAddonPlugin implements IModPlugin {
         itemRegistry = registry.getIngredientRegistry();
         ingredientHelper = itemRegistry.getIngredientHelper(ItemStack.class);
         modRegistry = registry;
-        
         JEIMod.onRegistered();
+        
     }
     
     @Override
     public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
         recipeRegistry = iJeiRuntime.getRecipeRegistry();
         jeiRuntime = iJeiRuntime;
+        JEIMod.applyActions();
     }
     
     public static List<ItemStack> getSubTypes(ItemStack stack) {

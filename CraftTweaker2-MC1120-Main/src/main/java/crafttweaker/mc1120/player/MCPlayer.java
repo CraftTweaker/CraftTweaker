@@ -74,7 +74,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
             return;
         }
         ITextComponent text = (ITextComponent) internal;
-        if (text.getUnformattedText().length() > 30000) {
+        if(text.getUnformattedText().length() > 30000) {
             // TODO: Split them instead, somehow.
             CraftTweakerAPI.logError("Message too long, suppressing:");
             CraftTweakerAPI.logError(text.getFormattedText());
@@ -87,18 +87,18 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     public void sendChat(String message) {
         String[] words = message.split(" ");
         StringBuilder out = new StringBuilder();
-        for (int i = 0, wordsLength = words.length; i < wordsLength; i++) {
+        for(int i = 0, wordsLength = words.length; i < wordsLength; i++) {
             String word = words[i];
             out.append(word);
-            if (i < wordsLength - 1) {
+            if(i < wordsLength - 1) {
                 out.append(' ');
             }
-            if (out.length() > 25000) {
+            if(out.length() > 25000) {
                 player.sendMessage(new TextComponentString(out.toString()));
                 out = new StringBuilder();
             }
         }
-        if (out.length() > 0) {
+        if(out.length() > 0) {
             player.sendMessage(new TextComponentString(out.toString()));
         }
     }
@@ -221,5 +221,35 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
         MinecraftServer server = player.getServer();
         if(server != null)
             server.getCommandManager().executeCommand(player, rawCommand);
+    }
+    
+    @Override
+    public boolean isDamageDisabled() {
+        return player.capabilities.disableDamage;
+    }
+    
+    @Override
+    public void setDamageDisabled(boolean disabled) {
+        player.capabilities.disableDamage = disabled;
+    }
+    
+    @Override
+    public boolean canFly() {
+        return player.capabilities.allowFlying;
+    }
+    
+    @Override
+    public void setCanFly(boolean canFly) {
+        player.capabilities.allowFlying = canFly;
+    }
+    
+    @Override
+    public boolean canEdit() {
+        return player.capabilities.allowEdit;
+    }
+    
+    @Override
+    public void setCanEdit(boolean canEdit) {
+        player.capabilities.allowEdit = canEdit;
     }
 }

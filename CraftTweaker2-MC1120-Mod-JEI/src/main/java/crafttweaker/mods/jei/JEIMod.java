@@ -10,37 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 import static crafttweaker.mods.jei.JEI.*;
 
 @Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.2", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class JEIMod {
-    
-    @Mod.EventHandler
-    public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
-        if(Loader.isModLoaded("jei")) {
-            try {
-                LATE_ACTIONS_PRE.forEach(CraftTweakerAPI::apply);
-                LATE_ACTIONS_POST.forEach(CraftTweakerAPI::apply);
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-            if(JEIAddonPlugin.itemRegistry != null) {
-                if(!JEI.HIDDEN_ITEMS.isEmpty()) {
-                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
-                }
-                if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
-                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
-                }
-            }
-            if(JEIAddonPlugin.recipeRegistry != null)
-                if(!JEI.HIDDEN_CATEGORIES.isEmpty()) {
-                    JEI.HIDDEN_CATEGORIES.forEach(str -> JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str));
-                }
-        }
-    }
     
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -74,6 +50,29 @@ public class JEIMod {
                     sender.sendMessage(getNormalMessage("\u00A74This Command needs to be run with JEI installed"));
                 }
             });
+        }
+    }
+    
+    public static void applyActions() {
+        if(Loader.isModLoaded("jei")) {
+            try {
+                LATE_ACTIONS_PRE.forEach(CraftTweakerAPI::apply);
+                LATE_ACTIONS_POST.forEach(CraftTweakerAPI::apply);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            if(JEIAddonPlugin.itemRegistry != null) {
+                if(!JEI.HIDDEN_ITEMS.isEmpty()) {
+                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
+                }
+                if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
+                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
+                }
+            }
+            if(JEIAddonPlugin.recipeRegistry != null)
+                if(!JEI.HIDDEN_CATEGORIES.isEmpty()) {
+                    JEI.HIDDEN_CATEGORIES.forEach(str -> JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str));
+                }
         }
     }
     
