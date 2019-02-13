@@ -2,6 +2,7 @@ package crafttweaker.api.block;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.liquid.ILiquidDefinition;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -26,4 +27,7 @@ public interface IBlock extends IBlockPattern {
     
     @ZenGetter("data")
     IData getTileData();
+    
+    @ZenGetter("fluid")
+    ILiquidDefinition getFluid();
 }

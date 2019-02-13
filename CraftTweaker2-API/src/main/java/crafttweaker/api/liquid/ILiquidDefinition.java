@@ -1,6 +1,7 @@
 package crafttweaker.api.liquid;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.block.IBlock;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -63,6 +64,9 @@ public interface ILiquidDefinition {
     
     @ZenSetter("gaseous")
     void setGaseous(boolean gaseous);
+    
+    @ZenGetter("block")
+    IBlock getBlock();
     
     Object getInternal();
 }

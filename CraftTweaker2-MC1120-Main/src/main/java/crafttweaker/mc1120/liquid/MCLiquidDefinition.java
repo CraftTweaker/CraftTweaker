@@ -1,7 +1,9 @@
 package crafttweaker.mc1120.liquid;
 
 import crafttweaker.*;
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.liquid.*;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraftforge.fluids.*;
 
 import java.util.Objects;
@@ -80,6 +82,11 @@ public class MCLiquidDefinition implements ILiquidDefinition {
     @Override
     public void setGaseous(boolean gaseous) {
         CraftTweakerAPI.apply(new ActionSetGaseous(gaseous));
+    }
+    
+    @Override
+    public IBlock getBlock() {
+        return CraftTweakerMC.getBlock(fluid.getBlock(), 0);
     }
     
     @Override

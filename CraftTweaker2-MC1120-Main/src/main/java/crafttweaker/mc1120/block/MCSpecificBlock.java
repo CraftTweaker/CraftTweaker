@@ -2,8 +2,10 @@ package crafttweaker.mc1120.block;
 
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.block.Block;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -39,7 +41,12 @@ public class MCSpecificBlock implements IBlock {
     public IData getTileData() {
         return null;
     }
-
+    
+    @Override
+    public ILiquidDefinition getFluid() {
+        return CraftTweakerMC.getILiquidDefinition(FluidRegistry.lookupFluidForBlock(block));
+    }
+    
     @Override
     public List<IBlock> getBlocks() {
         return Collections.singletonList(this);
