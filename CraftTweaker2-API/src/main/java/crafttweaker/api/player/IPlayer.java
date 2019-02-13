@@ -14,7 +14,7 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.player.IPlayer")
 @ZenRegister
 public interface IPlayer extends IEntityLivingBase, IUser {
-
+    
     @ZenGetter("name")
     String getName();
     
@@ -71,14 +71,14 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenMethod
     void teleport(Position3f pos);
-
+    
     @ZenMethod
     @ZenGetter("score")
     int getScore();
-
+    
     @ZenMethod
     void addScore(int amount);
-
+    
     @ZenMethod
     @ZenSetter("score")
     void setScore(int amount);
@@ -88,4 +88,23 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenMethod
     void executeCommand(String rawCommand);
+    
+    @ZenGetter("damageDisabled")
+    boolean isDamageDisabled();
+    
+    @ZenSetter("damageDisabled")
+    void setDamageDisabled(boolean disabled);
+    
+    @ZenGetter("canFly")
+    boolean canFly();
+    
+    @ZenSetter("canFly")
+    void setCanFly(boolean canFly);
+    
+    @ZenGetter("canEdit")
+    boolean canEdit();
+    
+    @ZenSetter("canEdit")
+    void setCanEdit(boolean canEdit);
+    
 }
