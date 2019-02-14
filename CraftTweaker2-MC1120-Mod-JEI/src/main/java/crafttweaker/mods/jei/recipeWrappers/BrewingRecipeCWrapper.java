@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import crafttweaker.mc1120.brewing.MultiBrewingRecipe;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.plugins.vanilla.brewing.BrewingRecipeWrapper;
@@ -29,8 +30,8 @@ public class BrewingRecipeCWrapper extends BrewingRecipeWrapper  {
 
 	@Override
 	public void getIngredients(IIngredients ingredients) {
-		ingredients.setInputLists(ItemStack.class, ingredientList);
-		ingredients.setOutput(ItemStack.class, output);
+	    ingredients.setInputLists(VanillaTypes.ITEM, ingredientList);
+		ingredients.setOutput(VanillaTypes.ITEM, output);
 	}
 	
 	@Override
