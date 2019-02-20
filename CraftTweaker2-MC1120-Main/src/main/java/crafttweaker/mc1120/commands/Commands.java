@@ -667,7 +667,7 @@ public class Commands {
                 CraftTweakerAPI.logCommand("Enchants:");
                 BracketHandlerEnchantments.enchantments.forEach((s, iEnchant) -> {
                     String name = ((Enchantment) iEnchant.getInternal()).getTranslatedName(1);
-                    CraftTweakerAPI.logCommand("-<enchantment:" + s + ">" + String.format(" - %s (at level 1, max level %d, enchant id %d)", name, iEnchant.getMaxLevel(), iEnchant.getID()));
+                    CraftTweakerAPI.logCommand("-<enchantment:" + s + ">" + String.format(" - %s (at level 1, max level %d, treasure: %s, enchant id %d)", name, iEnchant.getMaxLevel(), (iEnchant.isTreasureEnchantment()) ? "yes" : "no", iEnchant.getID()));
                 });
 
                 sender.sendMessage(getLinkToCraftTweakerLog("Enchants list generated", sender));
