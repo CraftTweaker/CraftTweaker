@@ -17,8 +17,7 @@ public class ActionOreDictRemoveItem implements IAction {
     
     @Override
     public void apply() {
-        int oreId = OreDictionary.getOreID(id);
-        MCOreDictEntry.getOredictContents().get(oreId).remove(item);
+        OreDictionary.getOres(id, false).remove(item);
     }
     
     

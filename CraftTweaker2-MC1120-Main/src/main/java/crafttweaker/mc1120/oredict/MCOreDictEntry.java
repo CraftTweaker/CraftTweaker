@@ -53,11 +53,9 @@ public class MCOreDictEntry implements IOreDictEntry {
                 //Unfortunately there's no way of getting the oreList from the oreIngredient without Reflection
                 NonNullList<ItemStack> ores = (NonNullList<ItemStack>) MCOreDictEntry.ORE_FIELD.get(oreIngredient);
                 
-                //Reference to OreDictionary#idToStack
-                List<NonNullList<ItemStack>> oreDicts = getOredictContents();
-                for(int oreId = 0; oreId < oreDicts.size(); oreId++) {
-                    if(ores == oreDicts.get(oreId))
-                        return new MCOreDictEntry(OreDictionary.getOreName(oreId));
+                for(String oreName : OreDictionary.getOreNames()) {
+                    if(ores == OreDictionary.getOres(oreName, false))
+                        return new MCOreDictEntry(oreName);
                 }
                 
             } catch(IllegalAccessException e) {
