@@ -863,6 +863,8 @@ public class Commands {
             }
         });
         
+       CTChatCommand.registerCommand(new GiveCommand());
+        
         CTChatCommand.registerCommand(new DumpZsCommand(new TargetLog(), new TargetHtml(), new TargetJson()));
         CTChatCommand.registerCommand(new HelpCommand());
 
