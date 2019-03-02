@@ -189,4 +189,9 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     public boolean isCompound() {
         return false;
     }
+    
+    @Override
+    public String toCommandString() {
+        return toString();
+    }
 }

@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.util.ArrayUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BlockStateMatcherOr implements IBlockStateMatcher {
 
@@ -81,5 +82,14 @@ public class BlockStateMatcherOr implements IBlockStateMatcher {
     @Override
     public boolean isCompound() {
         return true;
+    }
+    
+    @Override
+    public String toCommandString() {
+        StringJoiner joiner = new StringJoiner(" | ");
+        for(IBlockStateMatcher element : elements) {
+            joiner.add(element.toCommandString());
+        }
+        return joiner.toString();
     }
 }

@@ -131,4 +131,19 @@ public class BlockStateMatcher implements IBlockStateMatcher {
     public boolean isCompound() {
         return false;
     }
+    
+    @Override
+    public String toCommandString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.blockState.toCommandString());
+        if (!allowedProperties.isEmpty()) {
+            for(Map.Entry<String, List<String>> allowedProperty : allowedProperties.entrySet()) {
+                builder.append(".withMatchedValuesForProperty(");
+                builder.append(allowedProperty.getKey()).append(", ");
+                builder.append(allowedProperty.getValue().toString());
+                builder.append(")");
+            }
+        }
+        return builder.toString();
+    }
 }

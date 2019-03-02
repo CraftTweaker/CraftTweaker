@@ -1,5 +1,6 @@
 package crafttweaker.api.block;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.*;
 
@@ -35,4 +36,10 @@ public interface IBlockStateMatcher {
 
     @ZenMethod
     boolean isCompound();
+    
+    @ZenGetter("commandString")
+    default String toCommandString() {
+        CraftTweakerAPI.logError(this.getClass() + " does not overwrite IBlockStateMatcher#toCommandString");
+        return toString();
+    }
 }
