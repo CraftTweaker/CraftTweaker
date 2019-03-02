@@ -88,4 +88,8 @@ public class MCBiome implements IBiome {
         }
         return types;
     }
+    
+    public Biome getInternal() {
+        return biome;
+    }
 }

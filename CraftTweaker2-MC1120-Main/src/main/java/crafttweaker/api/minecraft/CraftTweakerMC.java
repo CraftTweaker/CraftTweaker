@@ -941,4 +941,8 @@ public class CraftTweakerMC {
     public static ILiquidDefinition getILiquidDefinition(Fluid fluid) {
         return fluid == null ? null : new MCLiquidDefinition(fluid);
     }
+    
+    public static Biome getBiome(IBiome biome) {
+        return biome == null ? null : biome instanceof MCBiome ? ((MCBiome) biome).getInternal() : Biome.REGISTRY.getObject(new ResourceLocation(biome.getId()));
+    }
 }
