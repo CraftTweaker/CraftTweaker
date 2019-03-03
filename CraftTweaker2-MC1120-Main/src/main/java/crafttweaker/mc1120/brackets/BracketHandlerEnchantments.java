@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @ZenRegister
 public class BracketHandlerEnchantments implements IBracketHandler {
     
-    private static final HashMap<String, IEnchantmentDefinition> enchantments = new HashMap<>();
+    public static final HashMap<String, IEnchantmentDefinition> enchantments = new HashMap<>();
     private final IJavaMethod method;
     
     public BracketHandlerEnchantments() {
