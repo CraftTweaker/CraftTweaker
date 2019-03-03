@@ -9,10 +9,12 @@ import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.Optional;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Contains an item stack. An item stack consists of an item definition, a meta
@@ -445,5 +447,16 @@ public interface IItemStack extends IIngredient {
     @ZenGetter("healAmount")
     default int getHealAmount(){
         return 0;
+    }
+    
+    @ZenMethod
+    default int getHarvestLevel(String toolClass){
+        return -1;
+    }
+    
+    
+    @ZenMethod
+    default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState){
+        return -1;
     }
 }

@@ -760,4 +760,14 @@ public class MCItemStack implements IItemStack {
             return 0;
         }
     }
+    
+    @Override
+    public int getHarvestLevel(String toolClass) {
+        return stack.getItem().getHarvestLevel(stack, toolClass, null, null);
+    }
+    
+    @Override
+    public int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState) {
+        return stack.getItem().getHarvestLevel(stack, toolClass, CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockState(blockState));
+    }
 }
