@@ -863,6 +863,84 @@ public class MTEventManager implements IEventManager {
     public void publishCommand(CommandEvent event) {
         elCommand.publish(event);
     }
-
-
+    
+    
+    // #########################
+    // ### PlayerAdvancement ###
+    // #########################
+    
+    private final EventList<PlayerAdvancementEvent> elPlayerAdvancement = new EventList<>();
+    
+    @Override
+    public IEventHandle onPlayerAdvancement(IEventHandler<PlayerAdvancementEvent> ev) {
+        return elPlayerAdvancement.add(ev);
+    }
+    
+    public boolean hasPlayerAdvancement() {
+        return elPlayerAdvancement.hasHandlers();
+    }
+    
+    public void publishPlayerAdvancement(PlayerAdvancementEvent event) {
+        elPlayerAdvancement.publish(event);
+    }
+    
+    // ##################
+    // ### CheckSpawn ###
+    // ##################
+    
+    private final EventList<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> elCheckSpawn = new EventList<>();
+    
+    @Override
+    public IEventHandle onCheckSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev) {
+        return elCheckSpawn.add(ev);
+    }
+    
+    public boolean hasCheckSpawn() {
+        return elCheckSpawn.hasHandlers();
+    }
+    
+    public void publishCheckSpawn(EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent event) {
+        elCheckSpawn.publish(event);
+    }
+    
+    // ####################
+    // ### SpecialSpawn ###
+    // ####################
+    
+    private final EventList<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> elSpecialSpawn = new EventList<>();
+    
+    @Override
+    public IEventHandle onSpecialSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev) {
+        return elSpecialSpawn.add(ev);
+    }
+    
+    public boolean hasSpecialSpawn() {
+        return elSpecialSpawn.hasHandlers();
+    }
+    
+    public void publishSpecialSpawn(EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent event) {
+        elSpecialSpawn.publish(event);
+    }
+    
+    
+    // ####################
+    // ### AllowDespawn ###
+    // ####################
+    
+    private final EventList<EntityLivingSpawnEvent> elAllowDespawn = new EventList<>();
+    
+    @Override
+    public IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent> ev) {
+        return elAllowDespawn.add(ev);
+    }
+    
+    public boolean hasAllowDespawn() {
+        return elAllowDespawn.hasHandlers();
+    }
+    
+    public void publishAllowDespawn(EntityLivingSpawnEvent event) {
+        elAllowDespawn.publish(event);
+    }
+    
+    
 }

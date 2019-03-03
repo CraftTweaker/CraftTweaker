@@ -19,7 +19,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
@@ -62,7 +61,8 @@ public final class MCRecipeManager implements IRecipeManager {
         } else if(input instanceof ItemStack) {
             return matchesItem((ItemStack) input, ingredient);
         } else if(input instanceof Ingredient) {
-            return matchesItem(((Ingredient) input).getMatchingStacks()[0], ingredient);
+            final ItemStack[] matchingStacks = ((Ingredient) input).getMatchingStacks();
+            return matchingStacks.length > 0 && matchesItem(matchingStacks[0], ingredient);
         }
         
         return false;
@@ -87,6 +87,22 @@ public final class MCRecipeManager implements IRecipeManager {
             CraftTweakerAPI.logWarning("Recipe name [" + s + "] may not contain a ':', replacing with '_'!");
         return s.replace(":", "_");
     }
+    
+    /**
+     * Removes invalid recipes from the list so that they aren't added to JEI.
+     * Also tells the user which recipes were not registered correctly.
+     */
+    public static void cleanUpRecipeList() {
+        final Iterator<ActionBaseAddRecipe> iterator = recipesToAdd.iterator();
+        while(iterator.hasNext()) {
+            final MCRecipeBase recipe = iterator.next().getRecipe();
+            if(!ForgeRegistries.RECIPES.containsKey(recipe.getRegistryName())) {
+                CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, check for other errors in your log!");
+                iterator.remove();
+            }
+        }
+    }
+    
     
     @Override
     public List<ICraftingRecipe> getRecipesFor(IIngredient ingredient) {
@@ -296,7 +312,9 @@ public final class MCRecipeManager implements IRecipeManager {
         @Override
         public void apply() {
             toChange = getAllForIngredient(toReplace);
-            toRemove = toChange.stream().map(f -> new ResourceLocation(f.getFullResourceName())).collect(Collectors.toList());
+            toRemove = toChange.stream()
+                    .map(f -> new ResourceLocation(f.getFullResourceName()))
+                    .collect(Collectors.toList());
             removeRecipes(toRemove);
             changeIngredients(toChange);
         }
@@ -306,7 +324,10 @@ public final class MCRecipeManager implements IRecipeManager {
             List<ActionBaseAddRecipe> toUnAdd = new ArrayList<>();
             removingRecipes.forEach(recipe -> {
                 RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe);
-                recipesToAdd.stream().filter(f -> f instanceof ActionDummyAddRecipe).filter(f -> f.recipe.getRegistryName().equals(recipe)).forEach(toUnAdd::add);
+                recipesToAdd.stream()
+                        .filter(f -> f instanceof ActionDummyAddRecipe)
+                        .filter(f -> f.recipe.getRegistryName().equals(recipe))
+                        .forEach(toUnAdd::add);
             });
             toUnAdd.forEach(f -> {
                 recipesToAdd.remove(f);
@@ -510,7 +531,7 @@ public final class MCRecipeManager implements IRecipeManager {
                 if(recipe instanceof IShapedRecipe) {
                     continue;
                 }
-                if(!(recipe instanceof ShapelessRecipes) && !(recipe instanceof ShapelessOreRecipe)){
+                if(!(recipe instanceof ShapelessRecipes) && !(recipe instanceof ShapelessOreRecipe)) {
                     continue;
                 }
                 if(ingredients != null) {

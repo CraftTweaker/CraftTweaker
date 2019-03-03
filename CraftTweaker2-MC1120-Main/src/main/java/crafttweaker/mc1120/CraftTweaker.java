@@ -136,6 +136,9 @@ public class CraftTweaker {
             MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
             LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+            
+            //Cleanup
+            MCRecipeManager.cleanUpRecipeList();
         } catch(Exception e) {
             CraftTweaker.LOG.catching(e);
             CraftTweakerAPI.logError("Error while applying actions", e);

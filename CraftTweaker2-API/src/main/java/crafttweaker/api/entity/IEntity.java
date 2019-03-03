@@ -1,5 +1,6 @@
 package crafttweaker.api.entity;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.command.ICommandSender;
@@ -480,6 +481,17 @@ public interface IEntity extends ICommandSender {
     @ZenGetter("lookingDirection")
     IVector3d getLookingDirection();
     
-    @ZenMethod
+    @Deprecated
     IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks);
+    
+    @ZenMethod
+    default IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks, @Optional boolean stopOnLiquid, @Optional boolean ignoreBlockWithoutBoundingBox, @Optional(valueBoolean = true) boolean returnLastUncollidableBlock) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not properly implement IEntity#getRayTrace, ask the author to fix this");
+        return getRayTrace(blockReachDistance, partialTicks);
+    }
+    
+    @ZenMethod
+    default void update(IData data){
+        CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
+    }
 }

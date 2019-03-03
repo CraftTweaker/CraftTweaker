@@ -38,6 +38,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerAdvancement(IEventHandler<PlayerAdvancementEvent> ev);
 
     @ZenMethod
     IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
@@ -146,7 +149,16 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onCommand(IEventHandler<CommandEvent> ev);
-
+    
+    @ZenMethod
+    IEventHandle onCheckSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onSpecialSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent> ev);
+    
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

@@ -1,5 +1,6 @@
 package crafttweaker.api.world;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
@@ -83,4 +84,10 @@ public interface IWorld extends IBlockAccess {
     
     @ZenMethod
     boolean spawnEntity(IEntity entity);
+    
+    @ZenMethod
+    default IRayTraceResult rayTraceBlocks(IVector3d begin, IVector3d ray, @Optional boolean stopOnLiquid, @Optional boolean ignoreBlockWithoutBoundingBox, @Optional(valueBoolean = true) boolean returnLastUncollidableBlock) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getRayTrace, tell the author to fix that.");
+        return null;
+    }
 }

@@ -10,6 +10,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.server.MCServer;
@@ -373,6 +374,15 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
+    public IRayTraceResult getRayTrace(double blockReachDistance, float partialTicks, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
+        //Stolen from Entity
+        Vec3d positionEyes = this.entity.getPositionEyes(partialTicks);
+        Vec3d lookingDirection = this.entity.getLook(partialTicks);
+        Vec3d lookingVector = positionEyes.addVector(lookingDirection.x * blockReachDistance, lookingDirection.y * blockReachDistance, lookingDirection.z * blockReachDistance);
+        return CraftTweakerMC.getIRayTraceResult(this.entity.world.rayTraceBlocks(positionEyes, lookingVector, stopOnLiquid, ignoreBlockWithoutBoundingBox, returnLastUncollidableBlock));
+    }
+    
+    @Override
     public IWorld getWorld() {
         return CraftTweakerMC.getIWorld(entity.getEntityWorld());
     }
@@ -639,6 +649,11 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public boolean canBeAttackedWithItem() {
         return entity.canBeAttackedWithItem();
+    }
+    
+    @Override
+    public void update(IData data) {
+        NBTConverter.updateMap(entity.getEntityData(), data);
     }
     
     @Override

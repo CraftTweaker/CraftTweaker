@@ -11,11 +11,11 @@ import stanhebben.zenscript.annotations.*;
 public class ExpandFacing {
     
     static final IFacing NORTH = new MCFacing(EnumFacing.NORTH);
-    static final IFacing EAST = new MCFacing(EnumFacing.NORTH);
-    static final IFacing WEST = new MCFacing(EnumFacing.NORTH);
-    static final IFacing SOUTH = new MCFacing(EnumFacing.NORTH);
-    static final IFacing UP = new MCFacing(EnumFacing.NORTH);
-    static final IFacing DOWN = new MCFacing(EnumFacing.NORTH);
+    static final IFacing EAST = new MCFacing(EnumFacing.EAST);
+    static final IFacing WEST = new MCFacing(EnumFacing.WEST);
+    static final IFacing SOUTH = new MCFacing(EnumFacing.SOUTH);
+    static final IFacing UP = new MCFacing(EnumFacing.UP);
+    static final IFacing DOWN = new MCFacing(EnumFacing.DOWN);
     
     @ZenMethodStatic
     public static IFacing north() {
