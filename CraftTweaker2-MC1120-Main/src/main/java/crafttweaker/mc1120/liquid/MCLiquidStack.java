@@ -9,12 +9,15 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Collections;
@@ -216,8 +219,14 @@ public class MCLiquidStack implements ILiquidStack {
         final ItemStack itemStack = CraftTweakerMC.getItemStack(item);
     
         //Hardcoded cause a bucket that's drained with less than 1000 MB returns itself
-        if(itemStack.getItem() instanceof ItemBucket || itemStack.getItem() == Items.MILK_BUCKET)
-            return new MCItemStack(new ItemStack(Items.BUCKET, 1));
+        final Item item1 = itemStack.getItem();
+        if(item1 instanceof ItemBucket
+                || item1 instanceof UniversalBucket
+                || item1 == Items.MILK_BUCKET
+                || item1 == Items.WATER_BUCKET
+                || item1 == Items.LAVA_BUCKET
+                || item1 == ForgeModContainer.getInstance().universalBucket
+        ) return new MCItemStack(new ItemStack(Items.BUCKET, 1));
     
         final IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(itemStack);
         if(fluidHandler == null)
