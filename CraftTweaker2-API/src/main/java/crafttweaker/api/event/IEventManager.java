@@ -157,7 +157,7 @@ public interface IEventManager {
     IEventHandle onSpecialSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
     
     @ZenMethod
-    IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent> ev);
+    IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent> ev);
     
     /*
      *

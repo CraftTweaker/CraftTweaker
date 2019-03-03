@@ -23,23 +23,20 @@ public interface EntityLivingSpawnEvent extends ILivingEvent {
     @ZenGetter("z")
     float getZ();
     
+    @ZenMethod
+    void allow();
+    
+    @ZenMethod
+    void deny();
+    
+    @ZenMethod
+    void pass();
+    
     @ZenClass("crafttweaker.event.EntityLivingExtendedSpawnEvent")
     @ZenRegister
     interface EntityLivingExtendedSpawnEvent extends EntityLivingSpawnEvent {
+        
         @ZenGetter("spawner")
         IMobSpawnerBaseLogic getSpawner();
-    }
-    
-    @ZenClass("crafttweaker.event.EntityLivingAllowDespawnEvent")
-    @ZenRegister
-    interface EntityLivingAllowDespawnEvent extends EntityLivingSpawnEvent {
-        @ZenMethod
-        void forceDespawn();
-        
-        @ZenMethod
-        void forceRemain();
-        
-        @ZenMethod
-        void pass();
     }
 }

@@ -927,10 +927,10 @@ public class MTEventManager implements IEventManager {
     // ### AllowDespawn ###
     // ####################
     
-    private final EventList<EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent> elAllowDespawn = new EventList<>();
+    private final EventList<EntityLivingSpawnEvent> elAllowDespawn = new EventList<>();
     
     @Override
-    public IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent> ev) {
+    public IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent> ev) {
         return elAllowDespawn.add(ev);
     }
     
@@ -938,7 +938,7 @@ public class MTEventManager implements IEventManager {
         return elAllowDespawn.hasHandlers();
     }
     
-    public void publishAllowDespawn(EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent event) {
+    public void publishAllowDespawn(EntityLivingSpawnEvent event) {
         elAllowDespawn.publish(event);
     }
     

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class MCEntityLivingSpawnEvent implements EntityLivingSpawnEvent {
     
-    private final LivingSpawnEvent event;
+    protected final LivingSpawnEvent event;
     
     public MCEntityLivingSpawnEvent(LivingSpawnEvent event) {
         this.event = event;
@@ -38,6 +38,21 @@ public class MCEntityLivingSpawnEvent implements EntityLivingSpawnEvent {
     }
     
     @Override
+    public void allow() {
+        event.setResult(Event.Result.ALLOW);
+    }
+    
+    @Override
+    public void deny() {
+        event.setResult(Event.Result.DENY);
+    }
+    
+    @Override
+    public void pass() {
+        event.setResult(Event.Result.DEFAULT);
+    }
+    
+    @Override
     public IEntityLivingBase getEntityLivingBase() {
         return CraftTweakerMC.getIEntityLivingBase(event.getEntityLiving());
     }
@@ -45,7 +60,7 @@ public class MCEntityLivingSpawnEvent implements EntityLivingSpawnEvent {
     public static class MCEntityLivingExtendedSpawnEvent extends MCEntityLivingSpawnEvent implements EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent {
     
         private final IMobSpawnerBaseLogic spawnerBaseLogic;
-        
+    
         public MCEntityLivingExtendedSpawnEvent(LivingSpawnEvent.CheckSpawn event) {
             super(event);
             spawnerBaseLogic = event.getSpawner() == null ? null : new MCMobSpawnerBaseLogic(event.getSpawner());
@@ -62,28 +77,24 @@ public class MCEntityLivingSpawnEvent implements EntityLivingSpawnEvent {
         }
     }
     
-    public static class MCEntityLivingAllowDespawnEvent extends MCEntityLivingSpawnEvent implements EntityLivingSpawnEvent.EntityLivingAllowDespawnEvent {
+    public static class MCEntityLivingSpecialSpawnEvent extends MCEntityLivingExtendedSpawnEvent {
     
-        private final LivingSpawnEvent.AllowDespawn event;
-    
-        public MCEntityLivingAllowDespawnEvent(LivingSpawnEvent.AllowDespawn event) {
+        public MCEntityLivingSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn event) {
             super(event);
-            this.event = event;
         }
     
         @Override
-        public void forceDespawn() {
-            event.setResult(Event.Result.ALLOW);
+        public void allow() {
+            event.setCanceled(false);
         }
     
         @Override
-        public void forceRemain() {
-            event.setResult(Event.Result.DENY);
+        public void deny() {
+            event.setCanceled(true);
         }
     
         @Override
         public void pass() {
-            event.setResult(Event.Result.DEFAULT);
         }
     }
 }

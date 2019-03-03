@@ -432,13 +432,13 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn ev) {
         if(CrafttweakerImplementationAPI.events.hasSpecialSpawn())
-            CrafttweakerImplementationAPI.events.publishSpecialSpawn(new MCEntityLivingSpawnEvent.MCEntityLivingExtendedSpawnEvent(ev));
+            CrafttweakerImplementationAPI.events.publishSpecialSpawn(new MCEntityLivingSpawnEvent.MCEntityLivingSpecialSpawnEvent(ev));
     }
     
     @SubscribeEvent
     public void onAllowDespawnEvent(LivingSpawnEvent.AllowDespawn ev) {
         if(CrafttweakerImplementationAPI.events.hasAllowDespawn())
-            CrafttweakerImplementationAPI.events.publishAllowDespawn(new MCEntityLivingSpawnEvent.MCEntityLivingAllowDespawnEvent(ev));
+            CrafttweakerImplementationAPI.events.publishAllowDespawn(new MCEntityLivingSpawnEvent(ev));
     }
     
     
