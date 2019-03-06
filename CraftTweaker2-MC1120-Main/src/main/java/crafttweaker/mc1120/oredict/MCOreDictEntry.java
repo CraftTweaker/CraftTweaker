@@ -189,7 +189,7 @@ public class MCOreDictEntry implements IOreDictEntry {
     @Override
     public IItemStack[] getItemArray() {
         List<IItemStack> items = getItems();
-        return items.toArray(new IItemStack[items.size()]);
+        return items.toArray(new IItemStack[0]);
     }
     
     @Override
@@ -239,6 +239,9 @@ public class MCOreDictEntry implements IOreDictEntry {
     
     @Override
     public boolean contains(IIngredient ingredient) {
+        if(ingredient == null)
+            return false;
+        
         List<IItemStack> items = ingredient.getItems();
         for(IItemStack item : items) {
             if(!matches(item))

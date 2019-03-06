@@ -4,7 +4,9 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.util.ArrayUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * @author Stan
@@ -50,8 +52,11 @@ public class IngredientOr implements IIngredient {
     @Override
     public List<IItemStack> getItems() {
         List<IItemStack> result = new ArrayList<>();
-        for(IIngredient element : elements) {
-            result.addAll(element.getItems());
+        for(final IIngredient element : elements) {
+            if(element != null)
+                result.addAll(element.getItems());
+            else if(result.contains(null))
+                result.add(null);
         }
         return result;
     }
@@ -59,14 +64,15 @@ public class IngredientOr implements IIngredient {
     @Override
     public IItemStack[] getItemArray() {
         List<IItemStack> items = getItems();
-        return items.toArray(new IItemStack[items.size()]);
+        return items.toArray(new IItemStack[0]);
     }
     
     @Override
     public List<ILiquidStack> getLiquids() {
         List<ILiquidStack> result = new ArrayList<>();
         for(IIngredient element : elements) {
-            result.addAll(element.getLiquids());
+            if(element != null)
+                result.addAll(element.getLiquids());
         }
         return result;
     }
@@ -75,7 +81,8 @@ public class IngredientOr implements IIngredient {
     public IIngredient amount(int amount) {
         IIngredient[] result = new IIngredient[elements.length];
         for(int i = 0; i < elements.length; i++) {
-            result[i] = elements[i].amount(amount);
+            if(elements[i] != null)
+                result[i] = elements[i].amount(amount);
         }
         return new IngredientOr(result);
     }
@@ -103,7 +110,10 @@ public class IngredientOr implements IIngredient {
     @Override
     public boolean matches(IItemStack item) {
         for(IIngredient ingredient : elements) {
-            if(ingredient.matches(item))
+            if(ingredient == null) {
+                if(item == null)
+                    return true;
+            } else if(ingredient.matches(item))
                 return true;
         }
         
@@ -113,7 +123,10 @@ public class IngredientOr implements IIngredient {
     @Override
     public boolean matchesExact(IItemStack item) {
         for(IIngredient ingredient : elements) {
-            if(ingredient.matchesExact(item))
+            if(ingredient == null) {
+                if(item == null)
+                    return true;
+            } else if(ingredient.matchesExact(item))
                 return true;
         }
         
@@ -123,15 +136,22 @@ public class IngredientOr implements IIngredient {
     @Override
     public boolean matches(ILiquidStack liquid) {
         for(IIngredient ingredient : elements) {
-            if(ingredient.matches(liquid))
+            if(ingredient == null) {
+                if(liquid == null)
+                    return true;
+            } else if(ingredient.matches(liquid))
                 return true;
         }
-        
+    
         return false;
     }
     
     @Override
     public boolean contains(IIngredient ingredient) {
+        if(ingredient == null) {
+            return matches((IItemStack) null) || matches((ILiquidStack) null);
+        }
+        
         List<IItemStack> items = ingredient.getItems();
         for(IItemStack item : items) {
             if(!matches(item))
@@ -154,8 +174,11 @@ public class IngredientOr implements IIngredient {
     public IItemStack applyNewTransform(IItemStack item) {
 
         boolean changed = false;
-
+    
         for(IIngredient element : elements) {
+            if(element == null)
+                continue;
+        
             if(element.matches(item) && element.hasNewTransformers()) {
                 item = element.applyNewTransform(item);
                 changed = true;
@@ -175,19 +198,19 @@ public class IngredientOr implements IIngredient {
     @Override
     public boolean hasNewTransformers() {
         for(IIngredient element : elements)
-            if(element.hasNewTransformers())
+            if(element != null && element.hasNewTransformers())
                 return true;
         return transformerNews.length > 0;
     }
     
     @Override
     public boolean hasTransformers() {
-        return false;
+        return transformer.length != 0;
     }
     
     @Override
     public IIngredient transform(IItemTransformer transformer) {
-        return null;
+        return new IngredientOr(elements, mark, conditions, transformerNews, ArrayUtil.append(this.transformer, transformer));
     }
     
     @Override

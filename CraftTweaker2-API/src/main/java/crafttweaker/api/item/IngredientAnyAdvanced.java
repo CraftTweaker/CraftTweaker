@@ -4,6 +4,7 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.util.ArrayUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class IngredientAnyAdvanced implements IIngredient {
     
     @Override
     public List<IItemStack> getItems() {
-        return null;
+        return Collections.emptyList();
     }
     
 	@Override
@@ -48,7 +49,7 @@ public class IngredientAnyAdvanced implements IIngredient {
     
     @Override
     public List<ILiquidStack> getLiquids() {
-        return null;
+        return Collections.emptyList();
     }
     
     @Override
@@ -103,9 +104,11 @@ public class IngredientAnyAdvanced implements IIngredient {
     
     @Override
     public boolean contains(IIngredient ingredient) {
-        List<IItemStack> iitems = ingredient.getItems();
-        for(IItemStack iitem : iitems) {
-            if(!matches(iitem))
+        if(ingredient == null)
+            return matches((IItemStack) null);
+        List<IItemStack> items = ingredient.getItems();
+        for(IItemStack item : items) {
+            if(!matches(item))
                 return false;
         }
         
