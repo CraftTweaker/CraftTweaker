@@ -95,8 +95,12 @@ public final class MCRecipeManager implements IRecipeManager {
     public static void cleanUpRecipeList() {
         final Iterator<ActionBaseAddRecipe> iterator = recipesToAdd.iterator();
         while(iterator.hasNext()) {
-            final MCRecipeBase recipe = iterator.next().getRecipe();
-            if(!ForgeRegistries.RECIPES.containsKey(recipe.getRegistryName())) {
+            final ActionBaseAddRecipe next = iterator.next();
+            final MCRecipeBase recipe = next.getRecipe();
+            if(recipe == null) {
+                //Debug statement...
+                CraftTweakerAPI.logError("Recipe action " + next + " had null recipe, please report this issue!");
+            } else if(!ForgeRegistries.RECIPES.containsKey(recipe.getRegistryName())) {
                 CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, check for other errors in your log!");
                 iterator.remove();
             }
