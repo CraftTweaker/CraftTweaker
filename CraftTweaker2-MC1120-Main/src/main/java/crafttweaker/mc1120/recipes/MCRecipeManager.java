@@ -99,7 +99,7 @@ public final class MCRecipeManager implements IRecipeManager {
             final MCRecipeBase recipe = next.getRecipe();
             if(recipe == null) {
                 //Debug statement...
-                CraftTweakerAPI.logError("Recipe action " + next + " had null recipe, please report this issue!");
+                CraftTweakerAPI.logWarning("Recipe action " + next.getClass().getCanonicalName() + " had null recipe, please report this issue!");
             } else if(!ForgeRegistries.RECIPES.containsKey(recipe.getRegistryName())) {
                 CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, check for other errors in your log!");
                 iterator.remove();
