@@ -192,7 +192,7 @@ public class CommonEventHandler {
             }
             
             if(!entityDefinition.getDropFunctions().isEmpty()) {
-                IEntity ent = new MCEntity(ev.getEntity());
+                IEntity ent = CraftTweakerMC.getIEntity(entity);
                 IDamageSource dmgSource = new MCDamageSource(ev.getSource());
                 entityDefinition.getDropFunctions().stream().map((fun) -> fun.handle(ent, dmgSource)).filter(Objects::nonNull).filter((item) -> item.getAmount() > 0).map(CraftTweakerMC::getItemStack).map((ItemStack item) -> new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, item)).forEach(ev.getDrops()::add);
             }
