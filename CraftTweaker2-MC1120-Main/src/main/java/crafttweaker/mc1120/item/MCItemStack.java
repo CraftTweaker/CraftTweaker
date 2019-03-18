@@ -279,7 +279,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack[] getItemArray() {
-        return items.toArray(new IItemStack[items.size()]);
+        return items.toArray(new IItemStack[0]);
     }
     
     @Override
@@ -372,8 +372,10 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean contains(IIngredient ingredient) {
+        if(ingredient == null)
+            return false;
         List<IItemStack> iitems = ingredient.getItems();
-        return !(iitems == null || iitems.size() != 1) && matches(iitems.get(0));
+        return iitems != null && iitems.size() == 1 && matches(iitems.get(0));
     }
     
     @Override

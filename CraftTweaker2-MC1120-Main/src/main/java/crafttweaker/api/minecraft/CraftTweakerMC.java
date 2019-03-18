@@ -578,9 +578,10 @@ public class CraftTweakerMC {
             if(ingredient instanceof OreIngredient)
                 return getOreDict((OreIngredient) ingredient);
             if(ingredient instanceof CompoundIngredient) {
-                return ((CompoundIngredient) ingredient).getChildren().stream()
+                return mergeIngredients(((CompoundIngredient) ingredient).getChildren().stream()
                         .map(CraftTweakerMC::getIIngredient)
-                        .reduce(IngredientUnknown.INSTANCE, IIngredient::or);
+                        .toArray(IIngredient[]::new));
+                        
             }
             
             ItemStack[] matchingStacks = ((Ingredient) ingredient).matchingStacks;
@@ -596,13 +597,14 @@ public class CraftTweakerMC {
     }
     
     public static IIngredient mergeIngredients(IIngredient... ingredients) {
-        if(ingredients == null || ingredients.length <= 0)
+        if(ingredients == null || ingredients.length == 0)
             return null;
-        IIngredient out = ingredients[0];
-        for(int i = 1; i < ingredients.length; i++) {
-            out = out == null ? ingredients[i] : out.or(ingredients[i]);
-        }
-        return out;
+        final IIngredient[] objects = Arrays.stream(ingredients).filter(i -> i != IngredientUnknown.INSTANCE).toArray(IIngredient[]::new);
+        if(objects.length == 0)
+            return null;
+        if(objects.length == 1)
+            return objects[0];
+        return new IngredientOr(objects);
     }
     
     public static Ingredient getIngredient(IIngredient ingredient) {

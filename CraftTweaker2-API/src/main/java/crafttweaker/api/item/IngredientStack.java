@@ -77,12 +77,12 @@ public class IngredientStack implements IIngredient {
     
     @Override
     public boolean matches(IItemStack item) {
-        return item.getAmount() >= this.getAmount() && ingredient.matches(item);
+        return item != null && item.getAmount() >= this.getAmount() && ingredient.matches(item);
     }
     
     @Override
     public boolean matchesExact(IItemStack item) {
-        return item.getAmount() >= this.getAmount() && ingredient.matchesExact(item);
+        return item != null && item.getAmount() >= this.getAmount() && ingredient.matchesExact(item);
     }
     
     @Override

@@ -21,6 +21,12 @@ public class ArrayUtil {
         return result;
     }
     
+    public static IItemTransformer[] append(IItemTransformer[] values, IItemTransformer value) {
+        IItemTransformer[] result = Arrays.copyOf(values, values.length + 1);
+        result[values.length] = value;
+        return result;
+    }
+    
     public static IItemTransformerNew[] append(IItemTransformerNew[] values, IItemTransformerNew value) {
         IItemTransformerNew[] result = Arrays.copyOf(values, values.length + 1);
         result[values.length] = value;

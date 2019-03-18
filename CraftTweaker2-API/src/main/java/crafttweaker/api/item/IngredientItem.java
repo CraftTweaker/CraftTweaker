@@ -47,7 +47,7 @@ public class IngredientItem implements IIngredient {
     
 	@Override
 	public IItemStack[] getItemArray() {
-		return items.toArray(new IItemStack[items.size()]);
+		return items.toArray(new IItemStack[0]);
 	}
     
     @Override

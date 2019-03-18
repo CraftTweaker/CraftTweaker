@@ -44,7 +44,7 @@ public class IngredientOreDict implements IIngredient {
     @Override
     public IItemStack[] getItemArray() {
     	List<IItemStack> items = getItems();
-    	return items.toArray(new IItemStack[items.size()]);
+    	return items.toArray(new IItemStack[0]);
     }
     
     @Override
