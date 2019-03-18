@@ -97,6 +97,11 @@ public class CraftTweakerAPI {
      */
     public static boolean noWarn = false;
     
+    /**
+     * If true, script actions will be profiled and the results will be printed to the log.
+     */
+    public static boolean profile = false;
+    
     static {
         registerGlobalSymbol("logger", getJavaStaticGetterSymbol(CraftTweakerAPI.class, "getLogger"));
         registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(CraftTweakerAPI.class, "recipes"));
@@ -133,7 +138,16 @@ public class CraftTweakerAPI {
      * @param action action object
      */
     public static void apply(IAction action) {
+        long time = 0;
+        if(profile){
+            time = System.nanoTime();
+        }
+        
         tweaker.apply(action);
+        
+        if(profile){
+            logInfo("Took " + ((System.nanoTime() - time)/1000000d) + " ms");
+        }
     }
     
     /**

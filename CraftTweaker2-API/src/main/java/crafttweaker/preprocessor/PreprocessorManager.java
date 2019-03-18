@@ -133,7 +133,8 @@ public class PreprocessorManager {
         manager.registerPreprocessorAction("loader", LoaderPreprocessor::new);
         manager.registerPreprocessorAction("priority", PriorityPreprocessor::new);
         manager.registerPreprocessorAction("ikwid", NoWarnPreprocessor::new);
-    
+        manager.registerPreprocessorAction("profile", ProfilePreprocessor::new);
+        
         manager.registerPreprocessorAction(SideOnlyPreprocessor.PREPROCESSOR_NAME, SideOnlyPreprocessor::new);
     }
 
