@@ -24,6 +24,18 @@ public interface IItemUtils {
     @ZenMethod
     IItemStack createPotion(Object[]... params);
 
+    /**
+     * @param item An item to be enchanted. Outside of checking for <minecraft:enchanted_book>
+     *             or <minecraft:book> (to determine which key to use), no checks are made to
+     *             make sure that the enchantments can actually be applied to the item.
+     *             If the item is already enchanted, this will attempt to merge the new
+     *             enchantments into the existing list.
+     * @param enchantments List of enchantments, the result of (eg):
+     *                     <enchantment:minecraft:protection>.makeEnchantment(3);
+     * @return returns the {@IItemStack} of the item with new enchantments.
+     */
+    @ZenMethod
+    IItemStack enchantItem (IItemStack item, IEnchantment... enchantments);
 
     /**
      * @param enchantments List of enchantment, the result of (eg):
