@@ -1,6 +1,10 @@
 package crafttweaker.mc1120.item;
 
+import crafttweaker.api.data.DataList;
+import crafttweaker.api.data.DataMap;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IItemUtils;
@@ -14,6 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
@@ -101,8 +106,35 @@ public class MCItemUtils implements IItemUtils {
         
         return new MCItemStack(item);
     }
-    
-    
+
+    @Override
+    public IItemStack createEnchantedBook(IEnchantment... enchantments) {
+        NBTTagList enchants = new NBTTagList();
+        for (IEnchantment ench : enchantments) {
+            enchants.appendTag((NBTTagCompound) ench.makeNBTInternal());
+        }
+        ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
+        NBTTagCompound result = new NBTTagCompound();
+        result.setTag("StoredEnchantments", enchants);
+        book.setTagCompound(result);
+        return new MCItemStack(book);
+    }
+
+    @Override
+    public IData combineEnchantments(String baseKey, IEnchantment... enchantments) {
+        List<IData> enchantmentsList = new ArrayList<>();
+        for (IEnchantment enchDef : enchantments) {
+            enchantmentsList.add(new DataMap(enchDef.makeTagInternal(), false));
+        }
+        return new DataMap(Collections.singletonMap(baseKey, new DataList(enchantmentsList, false)), false);
+    }
+
+    @Override
+    public IData combineEnchantments(IEnchantment... enchantments) {
+        return combineEnchantments("ench", enchantments);
+    }
+
+
     public IItemStack[] getItemsByRegexRegistryName(String regex) {
         final HashSet<String> alreadyChecked = new HashSet<>();
         final Predicate<String> predicate = Pattern.compile(regex).asPredicate();

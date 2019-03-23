@@ -1,6 +1,8 @@
 package crafttweaker.api.item;
 
 import crafttweaker.api.data.IData;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import stanhebben.zenscript.annotations.*;
 
@@ -21,7 +23,37 @@ public interface IItemUtils {
      */
     @ZenMethod
     IItemStack createPotion(Object[]... params);
-    
+
+
+    /**
+     * @param enchantments List of enchantment, the result of (eg):
+     *                     <enchantment:minecraft:protection>.makeEnchantment(3);
+     * @return returns the {@IItemStack} of the enchanted book.
+     */
+    @ZenMethod
+    IItemStack createEnchantedBook(IEnchantment... enchantments);
+
+    /**
+     * @param baseKey The base key, one of either "ench" or "StoredEnchantments". The former
+     *                functions for enchanted items (swords, weapons, tools, etc) while the latter
+     *                is specifically for Enchanted Books.
+     * @param enchantments Contains the enchantment to combine, result of (eg):
+     *                     <enchantment:minecraft:protection>.makeEnchantment(3)
+     * @return
+     */
+    @ZenMethod
+    IData combineEnchantments (String baseKey, IEnchantment... enchantments);
+
+    /**
+     * @param enchantments Contains the enchantment to combine, result of (eg):
+     *                     <enchantment:minecraft:protection>.makeEnchantment(3)
+     * @return A combined list of enchantments as though you had manually combined using
+     * makeTag. By default this method overloads with the key "ench", making it suitable
+     * for application to the end-result product enchanted items. Use the unoverloaded method
+     * with the key "StoredEnchantments" to create an enchanted book, or use createEnchantedBook.
+     */
+    @ZenMethod
+    IData combineEnchantments (IEnchantment... enchantments);
     
     /**
      * Gets all Items where the Regex matches the Registry name
