@@ -4,20 +4,20 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.mc1120.commands.*;
 import crafttweaker.mods.jei.commands.ConflictCommand;
 import crafttweaker.mods.jei.recipeWrappers.*;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+
 import net.minecraft.command.ICommandSender;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 import static crafttweaker.mods.jei.JEI.*;
 
-@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.2", dependencies = "after:jei;", acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = "crafttweakerjei", name = "CraftTweaker JEI Support", version = "2.0.3", dependencies = "after:jei@[4.12.0,);", acceptedMinecraftVersions = "[1.12, 1.13)")
 public class JEIMod {
-    
+
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         
@@ -63,15 +63,21 @@ public class JEIMod {
             }
             if(JEIAddonPlugin.itemRegistry != null) {
                 if(!JEI.HIDDEN_ITEMS.isEmpty()) {
-                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(ItemStack.class, JEI.HIDDEN_ITEMS);
+                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, JEI.HIDDEN_ITEMS);
                 }
                 if(!JEI.HIDDEN_LIQUIDS.isEmpty()) {
-                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(FluidStack.class, JEI.HIDDEN_LIQUIDS);
+                    JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.FLUID, JEI.HIDDEN_LIQUIDS);
                 }
             }
             if(JEIAddonPlugin.recipeRegistry != null)
                 if(!JEI.HIDDEN_CATEGORIES.isEmpty()) {
-                    JEI.HIDDEN_CATEGORIES.forEach(str -> JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str));
+                    JEI.HIDDEN_CATEGORIES.forEach(str -> {
+                        try {
+                            JEIAddonPlugin.recipeRegistry.hideRecipeCategory(str);
+                        } catch (RuntimeException e) {
+                            CraftTweakerAPI.logError("Failed to hide recipe category: " + str, e);
+                        }
+                    });
                 }
         }
     }

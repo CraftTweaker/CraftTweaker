@@ -7,7 +7,7 @@ import java.util.Collections;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
-import net.minecraft.item.ItemStack;
+import mezz.jei.api.ingredients.VanillaTypes;
 
 public class AddItemAction implements IAction{
 
@@ -19,7 +19,7 @@ public class AddItemAction implements IAction{
 	
 	@Override
 	public void apply() {
-		JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(ItemStack.class, Collections.singletonList(getItemStack(stack)));		
+		JEIAddonPlugin.itemRegistry.addIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singletonList(getItemStack(stack)));
 	}
 
 	@Override
