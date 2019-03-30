@@ -2,6 +2,7 @@ package crafttweaker.api.item;
 
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.potions.IPotionEffect;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -21,8 +22,10 @@ public interface IItemUtils {
      */
     @ZenMethod
     IItemStack createPotion(Object[]... params);
-    
-    
+
+    @ZenMethod
+    IItemStack createPotion(IPotionEffect... params);
+
     /**
      * Gets all Items where the Regex matches the Registry name
      * check in syntax "mod:item:meta"

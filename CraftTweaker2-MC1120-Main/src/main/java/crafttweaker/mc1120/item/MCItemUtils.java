@@ -6,6 +6,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IItemUtils;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.commands.Commands;
 import crafttweaker.mc1120.data.NBTConverter;
@@ -23,6 +24,8 @@ import stanhebben.zenscript.annotations.Optional;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author BloodWorkXGaming
@@ -101,8 +104,22 @@ public class MCItemUtils implements IItemUtils {
         
         return new MCItemStack(item);
     }
-    
-    
+
+    /**
+    * @param params is a series of IPotionEffects.
+    *
+    * @return returns the {@link IItemStack} of the potion
+    */
+    @Override
+    public IItemStack createPotion(IPotionEffect... params) {
+        ItemStack item = new ItemStack(Items.POTIONITEM, 1, 0);
+
+        List<PotionEffect> potionEffects = Stream.of(params).map(k -> (PotionEffect) k.getInternal()).collect(Collectors.toList());
+        PotionUtils.appendEffects(item, potionEffects);
+
+        return new MCItemStack(item);
+    }
+
     public IItemStack[] getItemsByRegexRegistryName(String regex) {
         final HashSet<String> alreadyChecked = new HashSet<>();
         final Predicate<String> predicate = Pattern.compile(regex).asPredicate();
