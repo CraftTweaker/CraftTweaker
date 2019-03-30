@@ -37,7 +37,7 @@ public class JEIAddonPlugin implements IModPlugin {
     public void register(IModRegistry registry) {
         jeiHelpers = registry.getJeiHelpers();
         itemRegistry = registry.getIngredientRegistry();
-        ingredientHelper = itemRegistry.getIngredientHelper(ItemStack.class);
+        ingredientHelper = itemRegistry.getIngredientHelper(VanillaTypes.ITEM);
         modRegistry = registry;
         JEIMod.onRegistered();
         
