@@ -4,6 +4,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.IEnchantment;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.potions.IPotionEffect;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -23,6 +24,14 @@ public interface IItemUtils {
      */
     @ZenMethod
     IItemStack createPotion(Object[]... params);
+
+
+    /**
+     * @param params list of IPotionEffects
+     * @return retursn the {@link IItemStack} of the potion
+     */
+    @ZenMethod
+    IItemStack createPotion(IPotionEffect... params);
 
     /**
      * @param item An item to be enchanted. Outside of checking for <minecraft:enchanted_book>
@@ -66,7 +75,7 @@ public interface IItemUtils {
      */
     @ZenMethod
     IData combineEnchantments (IEnchantment... enchantments);
-    
+
     /**
      * Gets all Items where the Regex matches the Registry name
      * check in syntax "mod:item:meta"
