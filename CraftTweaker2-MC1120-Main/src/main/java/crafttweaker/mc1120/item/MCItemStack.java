@@ -346,21 +346,26 @@ public class MCItemStack implements IItemStack {
             return false;
         
         ItemStack internal = (ItemStack) item.getInternal();
-        
+    
         NBTTagCompound internalTag = internal.getTagCompound();
         NBTTagCompound stackTag = stack.getTagCompound();
         if(internal.hasTagCompound() != stack.hasTagCompound()) {
             return false;
         }
+        
         boolean itemMatches = stack.getItem() == internal.getItem() && (internal.getMetadata() == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == internal.getMetadata());
-        if(internalTag == null && stackTag == null) {
-            return itemMatches;
-        }
-
-        // Lets just use the partial nbt
-        if(!NBTConverter.from(internalTag, true).contains(NBTConverter.from(stackTag, true))){
-
-            return false;
+        
+        if(itemMatches) {
+    
+            if(internalTag == null && stackTag == null) {
+                return true;
+            }
+    
+            // Lets just use the partial nbt
+            if(!NBTConverter.from(internalTag, true).contains(NBTConverter.from(stackTag, true))) {
+        
+                return false;
+            }
         }
         return itemMatches;
     }
