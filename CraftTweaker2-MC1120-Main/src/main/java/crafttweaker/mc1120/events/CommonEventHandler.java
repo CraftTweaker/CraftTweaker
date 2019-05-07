@@ -383,7 +383,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerTickEvent(TickEvent.PlayerTickEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerTick())
-            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(CraftTweakerMC.getIPlayer(ev.player)));
+            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(CraftTweakerMC.getIPlayer(ev.player), ev.phase.name().toUpperCase()));
     }
     
     @SubscribeEvent
