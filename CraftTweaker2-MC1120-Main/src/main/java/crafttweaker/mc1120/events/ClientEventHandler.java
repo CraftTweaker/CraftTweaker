@@ -1,13 +1,10 @@
 package crafttweaker.mc1120.events;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.tooltip.*;
 import crafttweaker.mc1120.formatting.IMCFormattedString;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.*;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.*;
@@ -16,7 +13,6 @@ import org.lwjgl.input.Keyboard;
 
 public class ClientEventHandler {
     
-    private static boolean alreadyChangedThePlayer = false;
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltip(ItemTooltipEvent ev) {
@@ -45,15 +41,6 @@ public class ClientEventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiOpenEvent(GuiOpenEvent ev) {
-        
-        final Minecraft minecraft = Minecraft.getMinecraft();
-        if(minecraft.player != null && !alreadyChangedThePlayer) {
-            alreadyChangedThePlayer = true;
-            RecipeBookClient.rebuildTable();
-            minecraft.populateSearchTreeManager();
-            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
-            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
-            CraftTweakerAPI.logInfo("Fixed the RecipeBook");
-        }
+    
     }
 }

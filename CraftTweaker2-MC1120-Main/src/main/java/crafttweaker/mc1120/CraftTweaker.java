@@ -23,6 +23,8 @@ import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.*;
@@ -31,7 +33,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.io.File;
 import java.util.*;
@@ -144,6 +146,23 @@ public class CraftTweaker {
             CraftTweakerAPI.logError("Error while applying actions", e);
         }
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
+    }
+    
+    private static boolean alreadyChangedThePlayer = false;
+    
+    @EventHandler
+    @SideOnly(Side.CLIENT)
+    public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
+        
+        final Minecraft minecraft = Minecraft.getMinecraft();
+        if(!alreadyChangedThePlayer) {
+            alreadyChangedThePlayer = true;
+            RecipeBookClient.rebuildTable();
+            minecraft.populateSearchTreeManager();
+            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
+            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+            CraftTweakerAPI.logInfo("Fixed the RecipeBook");
+        }
     }
     
     @EventHandler
