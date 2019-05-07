@@ -67,8 +67,6 @@ public class SlotRecipe extends Slot {
         if(!oreDict && !matchAny && (metaWildcard || getStack().getItemDamage() != 0))
             builder.append(':').append(metaWildcard || getStack().getItemDamage() == OreDictionary.WILDCARD_VALUE ? "*" : getStack().getItemDamage());
         builder.append('>');
-        if(getStack().getCount() > 1)
-            builder.append(" * ").append(getStack().getCount());
         if(getPropertyFromMap("anyDamage"))
             builder.append(".anyDamage()");
         if(getPropertyFromMap("onlyDamage"))
@@ -90,6 +88,8 @@ public class SlotRecipe extends Slot {
                     builder.append(String.format(".onlyWithTag(%s)", data.toString()));
             }
         }
+        if(getStack().getCount() > 1)
+            builder.append(" * ").append(getStack().getCount());
         return builder.toString();
     }
     
