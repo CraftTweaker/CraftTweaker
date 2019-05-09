@@ -1,6 +1,8 @@
 package crafttweaker.mc1120.data;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.data.*;
+import crafttweaker.mc1120.CraftTweaker;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.parser.Token;
 
@@ -43,7 +45,11 @@ public class StringIDataParser {
             case T_FLOATVALUE:
                 base = new DataDouble(Double.parseDouble(next.getValue()));
                 break;
+            case T_STRINGVALUE:
+                base = new DataString(next.getValue());
+                break;
             default:
+                CraftTweakerAPI.logError("Could not completely resolve Data near " + next.toString());
                 return new DataMap(Collections.emptyMap(), true);
         }
         
