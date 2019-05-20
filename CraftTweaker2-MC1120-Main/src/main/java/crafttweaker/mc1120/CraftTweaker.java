@@ -45,7 +45,7 @@ import org.apache.logging.log4j.Logger;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.1.17", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = CraftTweaker.MODID, version = "4.1.18", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
