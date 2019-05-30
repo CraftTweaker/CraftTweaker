@@ -483,10 +483,10 @@ public class MCItemStack implements IItemStack {
         }
         
         NBTTagList loreList;
-        if(!tagComp.hasKey("Lore") || !(tagComp.getTag("Lore") instanceof NBTTagList)) {
+        if(!display.hasKey("Lore") || !(display.getTag("Lore") instanceof NBTTagList)) {
             loreList = new NBTTagList();
         } else {
-            loreList = (NBTTagList) tagComp.getTag("Lore");
+            loreList = (NBTTagList) display.getTag("Lore");
         }
         
         for(String s : lore) {
