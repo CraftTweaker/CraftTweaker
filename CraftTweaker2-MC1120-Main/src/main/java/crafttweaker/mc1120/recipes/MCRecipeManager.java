@@ -101,7 +101,7 @@ public final class MCRecipeManager implements IRecipeManager {
                 //Debug statement...
                 CraftTweakerAPI.logWarning("Recipe action " + next.getClass().getCanonicalName() + " had null recipe, please report this issue!");
             } else if(!ForgeRegistries.RECIPES.containsKey(recipe.getRegistryName())) {
-                CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, check for other errors in your log!");
+                CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, checkShapelessNulls for other errors in your log!");
                 iterator.remove();
             }
         }
@@ -168,36 +168,26 @@ public final class MCRecipeManager implements IRecipeManager {
     
     @Override
     public void addShapeless(IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-        boolean valid = output != null;
-        for(IIngredient ing : ingredients) {
-            if(ing == null) {
-                valid = false;
-            }
-        }
-        if(!valid) {
-            CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
+        if(checkShapelessNulls(output, ingredients))
             return;
-        }
         recipesToAdd.add(new ActionAddShapelessRecipe(output, ingredients, function, action));
     }
     
     @Override
     public void addShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
-        boolean valid = output != null;
-        for(IIngredient ing : ingredients) {
-            if(ing == null) {
-                valid = false;
-            }
-        }
-        if(!valid) {
-            CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
+        if(checkShapelessNulls(output, ingredients))
             return;
-        }
         recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action, false));
     }
     
     @Override
     public void addHiddenShapeless(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action) {
+        if(checkShapelessNulls(output, ingredients))
+            return;
+        recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action, true));
+    }
+    
+    private boolean checkShapelessNulls(IItemStack output, IIngredient[] ingredients) {
         boolean valid = output != null;
         for(IIngredient ing : ingredients) {
             if(ing == null) {
@@ -206,9 +196,9 @@ public final class MCRecipeManager implements IRecipeManager {
         }
         if(!valid) {
             CraftTweakerAPI.logError("Null not allowed in shapeless recipes! Recipe for: " + output + " not created!");
-            return;
+            return true;
         }
-        recipesToAdd.add(new ActionAddShapelessRecipe(name, output, ingredients, function, action, true));
+        return false;
     }
     
     @Override
@@ -223,6 +213,10 @@ public final class MCRecipeManager implements IRecipeManager {
     
     @Override
     public void remove(IIngredient output, @Optional boolean nbtMatch) {
+        if(output == null) {
+            CraftTweakerAPI.logError("Cannot remove recipes for a null item!");
+            return;
+        }
         actionRemoveRecipesNoIngredients.addOutput(output, nbtMatch);
     }
     
@@ -243,11 +237,19 @@ public final class MCRecipeManager implements IRecipeManager {
     
     @Override
     public void removeShaped(IIngredient output, IIngredient[][] ingredients) {
+        if(output == null) {
+            CraftTweakerAPI.logError("Cannot remove recipes for a null item!");
+            return;
+        }
         recipesToRemove.add(new ActionRemoveShapedRecipes(output, ingredients));
     }
     
     @Override
     public void removeShapeless(IIngredient output, IIngredient[] ingredients, boolean wildcard) {
+        if(output == null) {
+            CraftTweakerAPI.logError("Cannot remove recipes for a null item!");
+            return;
+        }
         recipesToRemove.add(new ActionRemoveShapelessRecipes(output, ingredients, wildcard));
     }
     
