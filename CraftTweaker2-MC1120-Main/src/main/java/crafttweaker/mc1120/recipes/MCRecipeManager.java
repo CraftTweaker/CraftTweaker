@@ -101,7 +101,7 @@ public final class MCRecipeManager implements IRecipeManager {
                 //Debug statement...
                 CraftTweakerAPI.logWarning("Recipe action " + next.getClass().getCanonicalName() + " had null recipe, please report this issue!");
             } else if(!ForgeRegistries.RECIPES.containsKey(recipe.getRegistryName())) {
-                CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, checkShapelessNulls for other errors in your log!");
+                CraftTweakerAPI.logWarning("Recipe " + recipe.toCommandString() + " was created but not added to the Recipe Registry, check for other errors in your log!");
                 iterator.remove();
             }
         }
