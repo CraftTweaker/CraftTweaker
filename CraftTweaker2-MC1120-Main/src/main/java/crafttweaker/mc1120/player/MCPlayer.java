@@ -3,6 +3,7 @@ package crafttweaker.mc1120.player;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
@@ -106,6 +107,11 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     @Override
     public void sendStatusMessage(String message, boolean hotBar) {
         this.player.sendStatusMessage(new TextComponentString(message), hotBar);
+    }
+    
+    @Override
+    public void sendStatusMessage(IFormattedText message, boolean hotBar) {
+        this.player.sendStatusMessage(new TextComponentString(message.getText()), hotBar);
     }
     
     @Override

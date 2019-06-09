@@ -4,6 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
@@ -41,6 +42,9 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenMethod
     void sendStatusMessage(String message, boolean hotBar);
+    
+    @ZenMethod
+    void sendStatusMessage(IFormattedText message, boolean hotBar);
     
     @ZenGetter("hotbarSize")
     int getHotbarSize();
