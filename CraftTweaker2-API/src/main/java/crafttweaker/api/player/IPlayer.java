@@ -39,6 +39,9 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     @ZenMethod
     void sendChat(String message);
     
+    @ZenMethod
+    void sendStatusMessage(String message, boolean hotBar);
+    
     @ZenGetter("hotbarSize")
     int getHotbarSize();
     

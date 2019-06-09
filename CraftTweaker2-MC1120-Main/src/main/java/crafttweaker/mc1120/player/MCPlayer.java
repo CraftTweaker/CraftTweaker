@@ -104,6 +104,11 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
     
     @Override
+    public void sendStatusMessage(String message, boolean hotBar) {
+        this.player.sendStatusMessage(new TextComponentString(message), hotBar);
+    }
+    
+    @Override
     public int getHotbarSize() {
         return 9;
     }
