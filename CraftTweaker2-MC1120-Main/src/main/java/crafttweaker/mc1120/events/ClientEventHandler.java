@@ -10,6 +10,10 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
+import stanhebben.zenscript.util.Pair;
+
+import java.util.*;
+import java.util.regex.*;
 
 public class ClientEventHandler {
     
@@ -21,18 +25,37 @@ public class ClientEventHandler {
             if(IngredientTooltips.shouldClearToolTip(itemStack)) {
                 ev.getToolTip().clear();
             }
-            for(IFormattedText tooltip : IngredientTooltips.getTooltips(itemStack)) {
-                ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
-            }
-            for(ITooltipFunction tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
-                ev.getToolTip().add(tooltip.process(itemStack));
-            }
-            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-                for(IFormattedText tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
-                    ev.getToolTip().add(((IMCFormattedString) tooltip).getTooltipString());
+            
+            List<String> toRemove = new ArrayList<>();
+            for(Pattern regex : IngredientTooltips.getTooltipsToRemove(itemStack)) {
+                for(String s : ev.getToolTip()) {
+                    if(regex.matcher(s).find()) {
+                        toRemove.add(s);
+                    }
                 }
-                for(ITooltipFunction tooltip : IngredientTooltips.getAdvancedShiftTooltips(itemStack)) {
-                    ev.getToolTip().add(tooltip.process(itemStack));
+            }
+            ev.getToolTip().removeAll(toRemove);
+            
+            for(Pair<IFormattedText, IFormattedText> tooltip : IngredientTooltips.getTooltips(itemStack)) {
+                ev.getToolTip().add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
+            }
+            for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
+                ev.getToolTip().add(tooltip.getKey().process(itemStack));
+            }
+            
+            boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+            for(Pair<IFormattedText, IFormattedText> tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
+                if(pressed) {
+                    ev.getToolTip().add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
+                } else if(tooltip.getValue() != null) {
+                    ev.getToolTip().add(((IMCFormattedString) tooltip.getValue()).getTooltipString());
+                }
+            }
+            for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedShiftTooltips(itemStack)) {
+                if(pressed) {
+                    ev.getToolTip().add(tooltip.getKey().process(itemStack));
+                } else if(tooltip.getValue() != null) {
+                    ev.getToolTip().add(tooltip.getValue().process(itemStack));
                 }
             }
         }
