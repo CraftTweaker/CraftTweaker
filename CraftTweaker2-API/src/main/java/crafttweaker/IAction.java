@@ -39,18 +39,20 @@ public interface IAction {
     String describe();
     
     /**
-     * Determines if an IAction can be applied.
+     * Determines if an IAction can be applied. Reasons for why the action is invalid should be supplied in {@link #describeInvalid()}
+     *
      * @return true if the IAction can be applied, false otherwise.
      */
-    default boolean validate(){
+    default boolean validate() {
         return true;
     }
     
     /**
-     * If the action is invalid, this is the message the user gets told.
+     * If the action is invalid, this is the message the user gets told. Will only be called if {@link #validate()}
+     *
      * @return message to tell the user why it is invalid.
      */
-    default String describeInvalid(){
+    default String describeInvalid() {
         return "Valid by default!";
     }
 }

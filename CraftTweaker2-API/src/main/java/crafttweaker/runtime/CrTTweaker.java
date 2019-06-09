@@ -51,7 +51,7 @@ public class CrTTweaker implements ITweaker {
     @Override
     public void apply(IAction action) {
         if(!action.validate()) {
-            CraftTweakerAPI.logError("Action could not be applied: \n" + action.describeInvalid());
+            CraftTweakerAPI.logError("Action could not be applied", new UnsupportedOperationException(action.describeInvalid()));
             return;
         }
         String describe = action.describe();
