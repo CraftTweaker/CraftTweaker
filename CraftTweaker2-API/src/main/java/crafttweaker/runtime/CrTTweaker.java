@@ -50,6 +50,10 @@ public class CrTTweaker implements ITweaker {
     
     @Override
     public void apply(IAction action) {
+        if(!action.validate()) {
+            CraftTweakerAPI.logError("Action could not be applied: \n" + action.describeInvalid());
+            return;
+        }
         String describe = action.describe();
         if(describe != null && !describe.isEmpty()) {
             CraftTweakerAPI.logInfo(describe);
@@ -227,7 +231,7 @@ public class CrTTweaker implements ITweaker {
                 
                 if(!isLinter)
                     CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
-                    //CraftTweakerAPI.logDefault("Completed file: " + filename +" in: " + (System.currentTimeMillis() - time) + "ms");
+                //CraftTweakerAPI.logDefault("Completed file: " + filename +" in: " + (System.currentTimeMillis() - time) + "ms");
             }
             
         }

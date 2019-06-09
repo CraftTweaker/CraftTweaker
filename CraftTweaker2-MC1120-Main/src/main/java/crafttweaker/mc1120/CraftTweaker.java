@@ -131,7 +131,7 @@ public class CraftTweaker {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
         try {
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-            MCRecipeManager.actionRemoveRecipesNoIngredients.apply();
+            CraftTweakerAPI.apply(MCRecipeManager.actionRemoveRecipesNoIngredients);
             MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
             MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);

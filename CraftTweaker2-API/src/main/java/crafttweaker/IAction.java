@@ -20,8 +20,7 @@ package crafttweaker;
 public interface IAction {
     
     /**
-     * Executes what the action is supposed to do. This method can be called
-     * again if undo() has been called in between.
+     * Executes what the action is supposed to do.
      */
     void apply();
     
@@ -38,4 +37,20 @@ public interface IAction {
      * @return the description of this action
      */
     String describe();
+    
+    /**
+     * Determines if an IAction can be applied.
+     * @return true if the IAction can be applied, false otherwise.
+     */
+    default boolean validate(){
+        return true;
+    }
+    
+    /**
+     * If the action is invalid, this is the message the user gets told.
+     * @return message to tell the user why it is invalid.
+     */
+    default String describeInvalid(){
+        return "Valid by default!";
+    }
 }
