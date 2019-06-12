@@ -23,4 +23,9 @@ public interface IClient {
     
     @ZenGetter("language")
     String getLanguage();
+    
+    boolean isKeyDown(String keyName);
+    
+    boolean isKeyDown(int keyCode);
+    
 }

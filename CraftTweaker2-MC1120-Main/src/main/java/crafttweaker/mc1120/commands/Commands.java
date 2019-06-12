@@ -37,10 +37,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -896,7 +898,36 @@ public class Commands {
         CTChatCommand.registerCommand(new HelpCommand());
         
         CTChatCommand.registerCommand(new NamesCommand());
+    
+    
+        CTChatCommand.registerCommand(new CraftTweakerCommand("keyNames") {
+    
+            @Override
+            public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                CraftTweakerAPI.logCommand("\"KeyName\" -> keyCode");
         
+                Field[] fields = Keyboard.class.getFields();
+                try {
+                    for(Field field : fields) {
+                        if(Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.getType().equals(int.class) && field.getName().startsWith("KEY_") && !field.getName().endsWith("WIN")) { /* Don't use deprecated names */
+                    
+                            int key = field.getInt(null);
+                            String name = field.getName().substring(4);
+                            CraftTweakerAPI.logCommand("\"" + name  + "\" -> " + key);
+                        }
+                
+                    }
+                } catch(Exception e) {
+                }
+        
+                sender.sendMessage(getLinkToCraftTweakerLog("List of Key names generated", sender));
+            }
+        
+            @Override
+            protected void init() {
+                setDescription(getClickableCommandText("\u00A72/ct keyNames", "/ct keyNames", true), getNormalMessage(" \u00A73Outputs a list of all LWJGL keynames to their respective KeyCodes in the game to the crafttweaker.log"));
+            }
+        });
     }
     
     
