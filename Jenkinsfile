@@ -10,16 +10,10 @@ pipeline {
                 sh './gradlew clean'
             }
         }
-        stage('Setup') {
-            steps {
-                echo 'Setting up Workspace'
-                sh './gradlew setupDecompWorkspaceAll'
-            }
-        }
         stage('Build and Deploy') {
             steps {
                 echo 'Building and Deploying to Maven'
-					sh './gradlew assembleAll publish'
+					sh './gradlew build publish'
                 }
             }
         }
