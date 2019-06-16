@@ -1,0 +1,20 @@
+rootProject.name = 'CraftTweaker'
+include("ZenCode")
+
+// Find the directories containing a "build.gradle" file in the root directory
+// of the project. That is, every directory containing a "build.gradle" will
+// be automatically the subproject of this project.
+
+def subDirs = new File(rootDir, "ZenCode").listFiles(new FileFilter() {
+    boolean accept(File file) {
+        if (!file.isDirectory()) {
+            return false
+        }
+        return new File(file, 'build.gradle').isFile()
+    }
+})
+
+subDirs.each { File dir ->
+    include(":" + dir.name)
+    project(":" + dir.name).projectDir = new File("./ZenCode/" + dir.name)
+}

@@ -16,6 +16,12 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
+//apply from: rootProject.file('common.gradle')
+
+subprojects {
+    apply from: rootProject.file('common.gradle')
+}
+
 version = '1.14.2-5.0.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -73,6 +79,15 @@ minecraft {
 }
 
 dependencies {
+    compile project(':JavaIntegration')
+    compile project(':JavaAnnotations')
+    compile project(':JavaBytecodeCompiler')
+    compile project(':JavaShared')
+    compile project(':Validator')
+    compile project(':Parser')
+    compile project(':CodeModel')
+    compile project(':Shared')
+
     minecraft 'net.minecraftforge:forge:1.14.2-26.0.25'
 }
 
