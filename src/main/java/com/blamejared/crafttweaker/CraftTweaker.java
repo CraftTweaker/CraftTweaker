@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.*;
 import net.minecraft.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -11,7 +11,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import org.apache.logging.log4j.*;
 import org.openzen.zencode.java.*;
-import org.openzen.zencode.shared.CompileException;
+import org.openzen.zencode.shared.*;
+import org.openzen.zenscript.codemodel.*;
+import org.openzen.zenscript.lexer.ParseException;
+
+import java.io.File;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -29,6 +35,9 @@ public class CraftTweaker {
     
     private void setup(final FMLCommonSetupEvent event) {
         LOG.info("{} has loaded successfully!", NAME);
+        CraftTweakerAPI.SCRIPT_DIR.mkdirs();
+        CraftTweakerAPI.SCRIPT_DIR.mkdir();
+        
         CraftTweakerRegistry.findClasses();
     }
     
@@ -46,6 +55,7 @@ public class CraftTweaker {
             //Register crafttweaker module first to assign deps
             JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
             CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
+            CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
             try {
                 engine.registerNativeProvided(crafttweakerModule);
                 for(String key : CraftTweakerRegistry.getRootPackages()) {
@@ -57,7 +67,22 @@ public class CraftTweaker {
                     CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
                     engine.registerNativeProvided(module);
                 }
-            } catch(CompileException e) {
+                
+                File[] files = CraftTweakerAPI.SCRIPT_DIR.listFiles((dir, name) -> {
+                    name = name.toLowerCase();
+                    return name.endsWith(".zs") || name.endsWith(".zc");
+                });
+                SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).collect(Collectors.toList()).toArray(new SourceFile[0]);
+                
+                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles);
+                if(!scripts.isValid()) {
+                    LOG.info("Scripts are invalid!");
+                    return;
+                }
+                engine.registerCompiled(scripts);
+                engine.run();
+                
+            } catch(CompileException | ParseException e) {
                 e.printStackTrace();
             }
         });

@@ -2,12 +2,13 @@ package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.*;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
-import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.java.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,8 @@ public class CraftTweakerRegistry {
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
     
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
+    private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
+    
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -62,8 +65,35 @@ public class CraftTweakerRegistry {
                 ZEN_CLASS_MAP.put(name.value(), zenClass);
             }
             
+            if(hasGlobal(zenClass)) {
+                ZEN_GLOBALS.add(zenClass);
+            }
         }
+        
+        
     }
+    
+    /**
+     * Used to determine if the class has a field / method
+     *
+     * @param zenClass class to scan
+     * @return true if this class has a global annotation on a method.
+     */
+    private static boolean hasGlobal(Class zenClass) {
+        for(Method method : zenClass.getDeclaredMethods()) {
+            if(method.isAnnotationPresent(ZenCodeGlobals.Global.class) && Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
+                return true;
+            }
+        }
+        
+        for(Field field : zenClass.getDeclaredFields()) {
+            if(field.isAnnotationPresent(ZenCodeGlobals.Global.class) && Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     
     /**
      * Gets an ImmutableMap of {@link CraftTweakerRegistry#ZEN_CLASS_MAP}.
@@ -94,10 +124,19 @@ public class CraftTweakerRegistry {
     
     /**
      * Gets all the top level Zen Packages.
+     *
      * @return Set of top level packages
      */
     public static Set<String> getRootPackages() {
         return ZEN_CLASS_MAP.keySet().stream().map(s -> s.split("\\.")[0]).collect(Collectors.toSet());
     }
     
+    /**
+     * Gets the ZenGlobals list.
+     *
+     * @return ImmutableList of the ZenGlobals
+     */
+    public static List<Class> getZenGlobals() {
+        return ImmutableList.copyOf(ZEN_GLOBALS);
+    }
 }
