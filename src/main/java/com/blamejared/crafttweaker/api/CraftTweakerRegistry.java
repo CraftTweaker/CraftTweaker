@@ -2,9 +2,11 @@ package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import net.minecraftforge.fml.*;
+import com.google.common.collect.ImmutableMap;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
+import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,6 +15,8 @@ public class CraftTweakerRegistry {
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
+    
+    private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -26,10 +30,12 @@ public class CraftTweakerRegistry {
                 e.printStackTrace();
             }
         }
+        
+        sortClasses();
     }
     
     /**
-     * Adds a class to {@link CraftTweakerRegistry#ZEN_CLASSES} if it's required mod deps are found
+     * Adds a class to {@link CraftTweakerRegistry#ZEN_CLASSES} if it's required mod deps are found.
      *
      * @param data Scan data for a given class.
      */
@@ -46,5 +52,52 @@ public class CraftTweakerRegistry {
         ZEN_CLASSES.add(Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader()));
     }
     
+    /**
+     * Sorts {@link CraftTweakerRegistry#ZEN_CLASSES} into {@link CraftTweakerRegistry#ZEN_CLASS_MAP} to go from ZenCode name to Java class for registration.
+     */
+    private static void sortClasses() {
+        for(Class zenClass : ZEN_CLASSES) {
+            if(zenClass.isAnnotationPresent(ZenCodeType.Name.class)) {
+                ZenCodeType.Name name = (ZenCodeType.Name) zenClass.getAnnotation(ZenCodeType.Name.class);
+                ZEN_CLASS_MAP.put(name.value(), zenClass);
+            }
+            
+        }
+    }
+    
+    /**
+     * Gets an ImmutableMap of {@link CraftTweakerRegistry#ZEN_CLASS_MAP}.
+     * <p>
+     * Classes should not be added manually to this map. See {@link ZenRegister}
+     *
+     * @return Map of String -> Class for ZenName -> Java class
+     */
+    public static Map<String, Class> getZenClassMap() {
+        return ImmutableMap.copyOf(ZEN_CLASS_MAP);
+    }
+    
+    /**
+     * Gets all classes with a given package root.
+     * <p>
+     * Providing "crafttweaker" as the name can return:
+     * <p>
+     * {@code "crafttweaker.sub.package.Class}
+     * and
+     * {@code "crafttweaker.sub.other.package.Class}
+     *
+     * @param name Name of the Zen Package.
+     * @return list of classes in the Zen Package.
+     */
+    public static List<Class> getClassesInPackage(String name) {
+        return ZEN_CLASS_MAP.keySet().stream().filter(key -> key.startsWith(name)).map(ZEN_CLASS_MAP::get).collect(Collectors.toList());
+    }
+    
+    /**
+     * Gets all the top level Zen Packages.
+     * @return Set of top level packages
+     */
+    public static Set<String> getRootPackages() {
+        return ZEN_CLASS_MAP.keySet().stream().map(s -> s.split("\\.")[0]).collect(Collectors.toSet());
+    }
     
 }
