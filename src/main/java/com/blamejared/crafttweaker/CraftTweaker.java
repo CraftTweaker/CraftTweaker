@@ -12,12 +12,11 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import org.apache.logging.log4j.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.codemodel.*;
+import org.openzen.zenscript.codemodel.SemanticModule;
 import org.openzen.zenscript.lexer.ParseException;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -27,18 +26,21 @@ public class CraftTweaker {
     
     public static final Logger LOG = LogManager.getLogger(NAME);
     
-    public CraftTweaker() {
+    public CraftTweaker() throws Exception {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
+        
     }
     
     private void setup(final FMLCommonSetupEvent event) {
         LOG.info("{} has loaded successfully!", NAME);
+        CraftTweakerAPI.setupLoggers();
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         
         CraftTweakerRegistry.findClasses();
+        
     }
     
     private void setupClient(final FMLClientSetupEvent event) {
@@ -47,7 +49,6 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
-        //TODO this is still untested code, scripts aren't compiled yet, just discovering a registering classes
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.func_219534_a((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
             ScriptingEngine engine = new ScriptingEngine();
@@ -56,6 +57,7 @@ public class CraftTweaker {
             JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
             CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
             CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
+            
             try {
                 engine.registerNativeProvided(crafttweakerModule);
                 for(String key : CraftTweakerRegistry.getRootPackages()) {
@@ -72,19 +74,21 @@ public class CraftTweaker {
                     name = name.toLowerCase();
                     return name.endsWith(".zs") || name.endsWith(".zc");
                 });
-                SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).collect(Collectors.toList()).toArray(new SourceFile[0]);
+                SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).toArray(SourceFile[]::new);
                 
                 SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles);
                 if(!scripts.isValid()) {
+                    CraftTweakerAPI.logger.error("Scripts are invalid!");
                     LOG.info("Scripts are invalid!");
                     return;
                 }
                 engine.registerCompiled(scripts);
                 engine.run();
-                
             } catch(CompileException | ParseException e) {
                 e.printStackTrace();
+                CraftTweakerAPI.logger.error("Error running scripts", e);
             }
         });
     }
+    
 }

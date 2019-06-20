@@ -1,15 +1,14 @@
 package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import org.openzen.zencode.java.ZenCodeGlobals;
-
+import org.openzen.zencode.java.*;
 
 @ZenRegister
 public class CraftTweakerGlobals {
     
     @ZenCodeGlobals.Global
     public static void println(String msg) {
-        System.out.println(msg);
+        CraftTweakerAPI.logger.info(msg);
     }
     
 }
