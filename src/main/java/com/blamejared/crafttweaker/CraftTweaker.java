@@ -13,10 +13,9 @@ import org.apache.logging.log4j.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.SemanticModule;
-import org.openzen.zenscript.lexer.ParseException;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.*;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -51,14 +50,15 @@ public class CraftTweaker {
     public void startServer(FMLServerAboutToStartEvent event) {
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.func_219534_a((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
-            ScriptingEngine engine = new ScriptingEngine();
-            engine.debug = true;
-            //Register crafttweaker module first to assign deps
-            JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
-            CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
-            CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
-            
             try {
+                ScriptingEngine engine = new ScriptingEngine();
+                engine.debug = true;
+                //Register crafttweaker module first to assign deps
+                JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
+                CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
+                CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
+                
+                
                 engine.registerNativeProvided(crafttweakerModule);
                 for(String key : CraftTweakerRegistry.getRootPackages()) {
                     //module already registered
@@ -83,8 +83,8 @@ public class CraftTweaker {
                     return;
                 }
                 engine.registerCompiled(scripts);
-                engine.run();
-            } catch(CompileException | ParseException e) {
+                engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
+            } catch(Exception e) {
                 e.printStackTrace();
                 CraftTweakerAPI.logger.error("Error running scripts", e);
             }
