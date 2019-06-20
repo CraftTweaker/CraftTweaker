@@ -11,6 +11,32 @@ import java.io.*;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ILogger")
 public interface ILogger {
+
+    /**
+     * <p>
+     * Sets the last level that will be logged<br>
+     * E.g. a logLevel of INFO means that everything below
+     *   it (in this case{@code [DEBUG]}) will <strong>not</strong> be logged
+     * </p>
+     * <p>
+     * In case of using SubLoggers (e.g. {@link GroupLogger}) propagates the
+     *   method call to <strong>all</strong> SubLoggers
+     * </p>
+     */
+    void setLogLevel(LogLevel logLevel);
+
+    /**
+     * <p>
+     * Returns the last level that will be logged<br>
+     * E.g. a logLevel of INFO means that everything below
+     *   it (in this case{@code [DEBUG]}) will <strong>not</strong> be logged
+     * </p>
+     * <p>
+     * In case of using SubLoggers (e.g. {@link GroupLogger}) returns the last level
+     *   at which <strong>anything</strong> will be logged
+     * </p>
+     */
+    LogLevel getLogLevel();
     
     void log(LogLevel level, String message, boolean prefix);
     

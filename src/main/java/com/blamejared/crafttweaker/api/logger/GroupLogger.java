@@ -14,7 +14,19 @@ public class GroupLogger implements ILogger {
     public List<ILogger> getSubLoggers() {
         return subLoggers;
     }
-    
+
+    @Override
+    public void setLogLevel(LogLevel logLevel) {
+        for (ILogger subLogger : subLoggers) {
+            subLogger.setLogLevel(logLevel);
+        }
+    }
+
+    @Override
+    public LogLevel getLogLevel() {
+        return subLoggers.stream().map(ILogger::getLogLevel).min(LogLevel::compareTo).orElse(LogLevel.DEBUG);
+    }
+
     @Override
     public void log(LogLevel level, String message, boolean prefix) {
         for(ILogger logger : getSubLoggers()) {
