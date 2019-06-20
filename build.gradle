@@ -78,20 +78,20 @@ minecraft {
     }
 }
 
-dependencies {
-    compile project(':JavaIntegration')
-    compile project(':JavaAnnotations')
-    compile project(':JavaBytecodeCompiler')
-    compile project(':JavaShared')
-    compile project(':Validator')
-    compile project(':Parser')
-    compile project(':CodeModel')
-    compile project(':Shared')
 
+def zenCodeDeps = [':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
+
+dependencies {
+
+    zenCodeDeps.collect { compile project(it) }
+    
     minecraft 'net.minecraftforge:forge:1.14.2-26.0.25'
 }
 
 jar {
+    dependsOn zenCodeDeps.collect{ it+":compileJava"}
+    from files(zenCodeDeps.collect{ project(it).sourceSets.main.output })
+
     manifest {
         attributes([
                 "Specification-Title"     : "crafttweaker",
@@ -108,18 +108,21 @@ jar {
 task sourcesJar(type: Jar, dependsOn: classes) {
     description = 'Creates a JAR containing the source code.'
     from sourceSets.main.allSource
+    from files(zenCodeDeps.collect{ project(it).sourceSets.main.allSource})
     classifier = 'sources'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     description = 'Creates a JAR containing the JavaDocs.'
     from javadoc.destinationDir
+    from files(zenCodeDeps.collect{ project(it).javadoc.destinationDir})
     classifier = 'javadoc'
 }
 
 task deobfJar(type: Jar) {
     description = 'Creates a JAR containing the non-obfuscated compiled code.'
     from sourceSets.main.output
+    from files(zenCodeDeps.collect{ project(it).sourceSets.main.output})
     classifier = "deobf"
 }
 

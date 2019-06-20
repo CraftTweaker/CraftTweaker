@@ -10,6 +10,9 @@ def subDirs = new File(rootDir, "ZenCode").listFiles(new FileFilter() {
         if (!file.isDirectory()) {
             return false
         }
+        if (file.name == 'ModuleDeserializer' || file.name == "ModuleSerializationShared" || file.name == "ModuleSerializer") {
+            return false
+        }
         return new File(file, 'build.gradle').isFile()
     }
 })
