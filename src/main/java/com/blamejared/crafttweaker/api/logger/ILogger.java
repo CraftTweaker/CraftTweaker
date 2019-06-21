@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.logger;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.logger.*;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.io.*;

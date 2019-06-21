@@ -1,20 +1,20 @@
 package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.*;
-import net.minecraft.resources.SimpleReloadableResourceManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.resources.*;
+import net.minecraftforge.common.*;
+import net.minecraftforge.eventbus.api.*;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.event.lifecycle.*;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import net.minecraftforge.fml.event.server.*;
+import net.minecraftforge.fml.javafmlmod.*;
+import net.minecraftforge.resource.*;
 import org.apache.logging.log4j.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.codemodel.SemanticModule;
+import org.openzen.zenscript.codemodel.*;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 @Mod(CraftTweaker.MODID)
@@ -29,7 +29,6 @@ public class CraftTweaker {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
-        
     }
     
     private void setup(final FMLCommonSetupEvent event) {
@@ -37,7 +36,6 @@ public class CraftTweaker {
         CraftTweakerAPI.setupLoggers();
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
-        
         CraftTweakerRegistry.findClasses();
         
     }
@@ -57,7 +55,6 @@ public class CraftTweaker {
                 JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
                 CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
                 CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
-                
                 
                 engine.registerNativeProvided(crafttweakerModule);
                 for(String key : CraftTweakerRegistry.getRootPackages()) {

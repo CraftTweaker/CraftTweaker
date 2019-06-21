@@ -1,4 +1,6 @@
-package com.blamejared.crafttweaker.api.logger;
+package com.blamejared.crafttweaker.impl.logger;
+
+import com.blamejared.crafttweaker.api.logger.*;
 
 import java.util.*;
 
