@@ -16,65 +16,65 @@ public class GroupLogger implements ILogger {
     public List<ILogger> getSubLoggers() {
         return subLoggers;
     }
-
+    
     @Override
     public void setLogLevel(LogLevel logLevel) {
-        for (ILogger subLogger : subLoggers) {
+        for(ILogger subLogger : subLoggers) {
             subLogger.setLogLevel(logLevel);
         }
     }
-
+    
     @Override
     public LogLevel getLogLevel() {
         return subLoggers.stream().map(ILogger::getLogLevel).min(LogLevel::compareTo).orElse(LogLevel.DEBUG);
     }
-
+    
     @Override
-    public void log(LogLevel level, String message, boolean prefix) {
+    public void log(LogLevel level, String message, boolean prefix, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.log(level, message, prefix);
+            logger.log(level, message, prefix, formats);
         }
     }
     
     @Override
-    public void log(LogLevel level, String message) {
+    public void log(LogLevel level, String message, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.log(level, message);
+            logger.log(level, message, formats);
         }
     }
     
     @Override
-    public void info(String message) {
+    public void info(String message, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.info(message);
+            logger.info(message, formats);
         }
     }
     
     @Override
-    public void debug(String message) {
+    public void debug(String message, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.debug(message);
+            logger.debug(message, formats);
         }
     }
     
     @Override
-    public void warning(String message) {
+    public void warning(String message, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.warning(message);
+            logger.warning(message, formats);
         }
     }
     
     @Override
-    public void error(String message) {
+    public void error(String message, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.error(message);
+            logger.error(message, formats);
         }
     }
     
     @Override
-    public void error(String message, Throwable throwable) {
+    public void throwing(String message, Throwable throwable, Object... formats) {
         for(ILogger logger : getSubLoggers()) {
-            logger.error(message, throwable);
+            logger.throwing(message, throwable, formats);
         }
     }
 }
