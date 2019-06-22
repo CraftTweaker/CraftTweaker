@@ -71,9 +71,18 @@ public class CraftTweaker {
                     name = name.toLowerCase();
                     return name.endsWith(".zs") || name.endsWith(".zc");
                 });
+                if(files == null)
+                    throw new FileNotFoundException("Could not find/open script dir " + CraftTweakerAPI.SCRIPT_DIR);
                 SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).toArray(SourceFile[]::new);
                 
-                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles);
+                SemanticModule scripts = engine.createScriptedModule(
+                        "scripts",
+                        sourceFiles,
+                        null, FunctionParameter.NONE,
+                        compileError -> CraftTweakerAPI.logger.error(compileError.toString()),
+                        validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()),
+                        sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename())
+                );
                 if(!scripts.isValid()) {
                     CraftTweakerAPI.logger.error("Scripts are invalid!");
                     LOG.info("Scripts are invalid!");
