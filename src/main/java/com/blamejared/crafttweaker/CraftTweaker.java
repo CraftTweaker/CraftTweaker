@@ -83,7 +83,7 @@ public class CraftTweaker {
                 engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
             } catch(Exception e) {
                 e.printStackTrace();
-                CraftTweakerAPI.logger.error("Error running scripts", e);
+                CraftTweakerAPI.logger.throwing("Error running scripts", e);
             }
         });
     }
