@@ -25,24 +25,24 @@ public class FileLogger implements ILogger {
             throw new RuntimeException("Cannot create log file.", e);
         }
     }
-    
+
     @Override
     public void setLogLevel(LogLevel logLevel) {
         if(logLevel.canLog(LogLevel.INFO))
             this.logLevel = logLevel;
     }
-    
+
     @Override
     public LogLevel getLogLevel() {
         return logLevel;
     }
-    
+
     @Override
-    public void log(LogLevel level, String message, boolean prefix, Object... formats) {
+    public void log(LogLevel level, String message, boolean prefix) {
         if(this.logLevel.canLog(level)) {
             try {
                 if(prefix) {
-                    message = String.format("[%s][%s][%s][%s] %s", TIME_FORMAT.format(LocalDateTime.now()), ModLoadingContext.get().getActiveContainer().getCurrentState(), EffectiveSide.get(), level, strip(String.format(message, formats)));
+                    message = String.format("[%s][%s][%s][%s] %s", TIME_FORMAT.format(LocalDateTime.now()), ModLoadingContext.get().getActiveContainer().getCurrentState(), EffectiveSide.get(), level, strip(message));
                 }
                 this.output.write(message + "\n");
                 this.output.flush();
