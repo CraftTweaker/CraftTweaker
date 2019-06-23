@@ -21,12 +21,10 @@ public class BracketHandlers {
             CraftTweakerAPI.logWarning("Item BEP <item:%s> does not seem to be lower-cased!", tokens);
         
         final String[] split = tokens.split(":");
-        if(split.length > 3)
-            throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">");
+        if(split.length != 2)
+            throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
         
         final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1])));
-        if(split.length == 3)
-            value.setDamage(Integer.parseInt(split[2], 10));
         return new MCItemStack(value);
     }
     

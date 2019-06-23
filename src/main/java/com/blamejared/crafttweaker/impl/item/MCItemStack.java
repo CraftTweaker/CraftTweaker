@@ -35,6 +35,13 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public IItemStack withDamage(int damage) {
+        final ItemStack copy = internal.copy();
+        copy.setDamage(damage);
+        return new MCItemStack(copy);
+    }
+    
+    @Override
     public boolean isStackable() {
         return internal.isStackable();
     }
@@ -63,9 +70,9 @@ public class MCItemStack implements IItemStack {
     public String getCommandString() {
         final StringBuilder sb = new StringBuilder("<item:");
         sb.append(internal.getItem().getRegistryName());
-        if(internal.getDamage() > 0)
-            sb.append(":").append(internal.getDamage());
         sb.append(">");
+        if(internal.getDamage() > 0)
+            sb.append(".withDamage(").append(internal.getDamage()).append(")");
         
         if(getAmount() != 1)
             sb.append(" * ").append(getAmount());

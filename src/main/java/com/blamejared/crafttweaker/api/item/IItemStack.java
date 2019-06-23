@@ -52,6 +52,13 @@ public interface IItemStack extends IIngredient {
     boolean isStackable();
     
     /**
+     * Sets the damage of the ItemStack
+     * @param damage the new damage value
+     */
+    @ZenCodeType.Method
+    IItemStack withDamage(int damage);
+    
+    /**
      * Returns if the ItemStack is damageable
      * I.E Swords and tools are damageable, sticks are not.
      *
