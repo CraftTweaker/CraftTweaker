@@ -13,7 +13,7 @@ public class CrTRecipeManager {
     
     @ZenCodeGlobals.Global("recipes")
     public static final CrTRecipeManager INSTANCE = new CrTRecipeManager();
-    public static RecipeManager vanillaRecipeManager = null;
+    //public static RecipeManager vanillaRecipeManager = null;
     //private final List<ActionAddCraftingRecipe> addedRecipes = new ArrayList<>();
     
     private CrTRecipeManager() {
