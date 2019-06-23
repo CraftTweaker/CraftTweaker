@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.item;
 
-import com.blamejared.crafttweaker.api.item.*;
-import net.minecraft.item.*;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
 
 public class MCItemStack implements IItemStack {
     
@@ -58,6 +58,18 @@ public class MCItemStack implements IItemStack {
         return internal.getTranslationKey();
     }
     
+    @Override
+    public String getCommandString() {
+        final StringBuilder sb = new StringBuilder("<item:");
+        sb.append(internal.getItem().getRegistryName());
+        if(internal.getDamage() > 0)
+            sb.append(":").append(internal.getDamage());
+        sb.append(">");
+        
+        if(getAmount() != 1)
+            sb.append(" * ").append(getAmount());
+        return sb.toString();
+    }
     
     @Override
     public ItemStack getInternal() {

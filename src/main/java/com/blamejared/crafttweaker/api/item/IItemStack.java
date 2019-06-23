@@ -86,6 +86,12 @@ public interface IItemStack {
     @ZenCodeType.Getter("translationKey")
     String getTranslationKey();
     
+    /**
+     * Returns the BEP to get this stack
+     */
+    @ZenCodeType.Getter("commandString")
+    String getCommandString();
+    
     
     /**
      * Gets the internal {@link ItemStack}for this IItemStack.
