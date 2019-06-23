@@ -7,7 +7,7 @@ import org.openzen.zencode.java.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
-public interface IItemStack {
+public interface IItemStack extends IIngredient {
     
     /**
      * Returns if the ItemStack is empty
@@ -50,6 +50,13 @@ public interface IItemStack {
      */
     @ZenCodeType.Getter("stackable")
     boolean isStackable();
+    
+    /**
+     * Sets the damage of the ItemStack
+     * @param damage the new damage value
+     */
+    @ZenCodeType.Method
+    IItemStack withDamage(int damage);
     
     /**
      * Returns if the ItemStack is damageable
