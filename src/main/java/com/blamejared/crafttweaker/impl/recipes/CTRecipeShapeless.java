@@ -1,6 +1,6 @@
-package com.blamejared.crafttweaker.api.handlers.recipes.craftingtable.internal;
+package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.api.handlers.recipes.craftingtable.CrTRecipeManager;
+import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import mcp.MethodsReturnNonnullByDefault;
@@ -15,15 +15,15 @@ import javax.annotation.*;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class CrTRecipeShapeless implements ICraftingRecipe {
+public class CTRecipeShapeless implements ICraftingRecipe {
     
     private final IIngredient[] ingredients;
     private final IItemStack output;
     @Nullable
-    private final CrTRecipeManager.RecipeFunctionShapeless function;
+    private final CTRecipeManager.RecipeFunctionShapeless function;
     private final ResourceLocation resourceLocation;
     
-    public CrTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable CrTRecipeManager.RecipeFunctionShapeless function) {
+    public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable CTRecipeManager.RecipeFunctionShapeless function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.ingredients = ingredients;
@@ -135,7 +135,7 @@ public class CrTRecipeShapeless implements ICraftingRecipe {
     }
     
     @Override
-    public IRecipeSerializer<CrTRecipeShapeless> getSerializer() {
+    public IRecipeSerializer<CTRecipeShapeless> getSerializer() {
         return new SerializerStub<>(this);
     }
     

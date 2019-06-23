@@ -1,22 +1,19 @@
-package com.blamejared.crafttweaker.api.handlers.recipes.craftingtable;
+package com.blamejared.crafttweaker.impl.managers;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.*;
-import net.minecraft.item.crafting.RecipeManager;
 import org.openzen.zencode.java.*;
 
-import java.util.ArrayList;
-
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.item.IIngredient")
-public class CrTRecipeManager {
+@ZenCodeType.Name("crafttweaker.api.CTRecipeManager")
+public class CTRecipeManager {
     
     @ZenCodeGlobals.Global("recipes")
-    public static final CrTRecipeManager INSTANCE = new CrTRecipeManager();
+    public static final CTRecipeManager INSTANCE = new CTRecipeManager();
     //public static RecipeManager vanillaRecipeManager = null;
     //private final List<ActionAddCraftingRecipe> addedRecipes = new ArrayList<>();
     
-    private CrTRecipeManager() {
+    private CTRecipeManager() {
     }
     
     @ZenCodeType.Method

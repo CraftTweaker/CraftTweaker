@@ -1,11 +1,10 @@
-package com.blamejared.crafttweaker.api.handlers.recipes.craftingtable.internal;
+package com.blamejared.crafttweaker.impl.recipes;
 
-import com.google.gson.JsonObject;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.CraftingInventory;
+import com.google.gson.*;
+import mcp.*;
 import net.minecraft.item.crafting.*;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.*;
+import net.minecraft.util.*;
 
 import javax.annotation.*;
 

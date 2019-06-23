@@ -1,6 +1,6 @@
-package com.blamejared.crafttweaker.api.handlers.recipes.craftingtable.internal;
+package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.api.handlers.recipes.craftingtable.CrTRecipeManager;
+import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.impl.item.*;
@@ -16,7 +16,7 @@ import javax.annotation.*;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class CrTRecipeShaped implements ICraftingRecipe {
+public class CTRecipeShaped implements ICraftingRecipe {
     
     private static final IntPair INVALID = new IntPair(-1, -1);
     
@@ -24,10 +24,10 @@ public class CrTRecipeShaped implements ICraftingRecipe {
     private final IItemStack output;
     private final boolean mirrored;
     @Nullable
-    private final CrTRecipeManager.RecipeFunctionShaped function;
+    private final CTRecipeManager.RecipeFunctionShaped function;
     private final ResourceLocation resourceLocation;
     
-    public CrTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable CrTRecipeManager.RecipeFunctionShaped function) {
+    public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable CTRecipeManager.RecipeFunctionShaped function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.ingredients = ingredients;
@@ -187,7 +187,7 @@ public class CrTRecipeShaped implements ICraftingRecipe {
     }
     
     @Override
-    public IRecipeSerializer<CrTRecipeShaped> getSerializer() {
+    public IRecipeSerializer<CTRecipeShaped> getSerializer() {
         return new SerializerStub<>(this);
     }
     
