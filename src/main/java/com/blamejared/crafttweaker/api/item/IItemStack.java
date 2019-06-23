@@ -7,7 +7,7 @@ import org.openzen.zencode.java.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
-public interface IItemStack {
+public interface IItemStack extends IIngredient {
     
     /**
      * Returns if the ItemStack is empty
@@ -85,12 +85,6 @@ public interface IItemStack {
      */
     @ZenCodeType.Getter("translationKey")
     String getTranslationKey();
-    
-    /**
-     * Returns the BEP to get this stack
-     */
-    @ZenCodeType.Getter("commandString")
-    String getCommandString();
     
     
     /**
