@@ -1,11 +1,15 @@
 package com.blamejared.crafttweaker.api.item;
 
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
+
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.item.IIngredient")
 public interface IIngredient {
     
     /**
