@@ -1,24 +1,25 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.*;
+import com.blamejared.crafttweaker.api.annotations.*;
 import com.google.common.collect.*;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.fml.*;
+import net.minecraftforge.forgespi.language.*;
 import org.objectweb.asm.Type;
 import org.openzen.zencode.java.*;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 public class CraftTweakerRegistry {
     
-    private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
     
-    private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
+    private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
+    private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
+    private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     
     
     /**
@@ -56,7 +57,7 @@ public class CraftTweakerRegistry {
     }
     
     /**
-     * Sorts {@link CraftTweakerRegistry#ZEN_CLASSES} into {@link CraftTweakerRegistry#ZEN_CLASS_MAP} to go from ZenCode name to Java class for registration.
+     * Sorts {@link CraftTweakerRegistry#ZEN_CLASSES} into their respective List/Maps.
      */
     private static void sortClasses() {
         for(Class zenClass : ZEN_CLASSES) {
@@ -67,6 +68,22 @@ public class CraftTweakerRegistry {
             
             if(hasGlobal(zenClass)) {
                 ZEN_GLOBALS.add(zenClass);
+            }
+            
+            for(Method method : zenClass.getDeclaredMethods()) {
+                if(!method.isAnnotationPresent(BracketResolver.class)) {
+                    continue;
+                }
+                if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
+                    CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it is not public and static.", method.toString());
+                    continue;
+                }
+                Class<?>[] parameters = method.getParameterTypes();
+                if(parameters.length == 1 && parameters[0].equals(String.class)) {
+                    BRACKET_RESOLVERS.add(method);
+                } else {
+                    CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
+                }
             }
         }
         
@@ -139,4 +156,14 @@ public class CraftTweakerRegistry {
     public static List<Class> getZenGlobals() {
         return ImmutableList.copyOf(ZEN_GLOBALS);
     }
+    
+    /**
+     * Gets the Bracket Resolver list.
+     *
+     * @return ImmutableList of the Bracket Resolvers
+     */
+    public static List<Method> getBracketResolvers() {
+        return ImmutableList.copyOf(BRACKET_RESOLVERS);
+    }
+    
 }

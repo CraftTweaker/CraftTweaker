@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.*;
+import com.blamejared.crafttweaker.api.annotations.*;
 import net.minecraft.resources.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.eventbus.api.*;
@@ -13,8 +14,11 @@ import org.apache.logging.log4j.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
+import org.openzen.zenscript.codemodel.member.ref.*;
+import org.openzen.zenscript.parser.*;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 @Mod(CraftTweaker.MODID)
@@ -55,7 +59,12 @@ public class CraftTweaker {
                 JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
                 CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
                 CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
-                
+                PrefixedBracketParser bep = new PrefixedBracketParser(null);
+                for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
+                    String name = method.getAnnotation(BracketResolver.class).value();
+                    FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
+                    bep.register(name, new SimpleBracketParser(engine.registry, memberRef));
+                }
                 engine.registerNativeProvided(crafttweakerModule);
                 for(String key : CraftTweakerRegistry.getRootPackages()) {
                     //module already registered
@@ -75,14 +84,7 @@ public class CraftTweaker {
                     throw new FileNotFoundException("Could not find/open script dir " + CraftTweakerAPI.SCRIPT_DIR);
                 SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).toArray(SourceFile[]::new);
                 
-                SemanticModule scripts = engine.createScriptedModule(
-                        "scripts",
-                        sourceFiles,
-                        null, FunctionParameter.NONE,
-                        compileError -> CraftTweakerAPI.logger.error(compileError.toString()),
-                        validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()),
-                        sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename())
-                );
+                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
                 if(!scripts.isValid()) {
                     CraftTweakerAPI.logger.error("Scripts are invalid!");
                     LOG.info("Scripts are invalid!");
