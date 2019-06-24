@@ -1,19 +1,19 @@
 package com.blamejared.crafttweaker.impl.logger;
 
 import com.blamejared.crafttweaker.api.logger.*;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.*;
+import net.minecraftforge.fml.common.thread.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.regex.Pattern;
+import java.nio.charset.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.regex.*;
 
 public class FileLogger implements ILogger {
     
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_TIME;
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
     
     private final Writer output;
     private LogLevel logLevel = LogLevel.INFO;
