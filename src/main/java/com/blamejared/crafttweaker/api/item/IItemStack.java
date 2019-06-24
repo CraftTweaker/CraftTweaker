@@ -95,7 +95,7 @@ public interface IItemStack extends IIngredient {
     
     
     /**
-     * Gets the internal {@link ItemStack}for this IItemStack.
+     * Gets the internal {@link ItemStack} for this IItemStack.
      *
      * @return internal ItemStack
      */
