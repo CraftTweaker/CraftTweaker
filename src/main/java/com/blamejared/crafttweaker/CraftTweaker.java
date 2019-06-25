@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.impl.managers.*;
+import net.minecraft.item.crafting.*;
 import net.minecraft.resources.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.eventbus.api.*;
@@ -54,7 +55,14 @@ public class CraftTweaker {
         
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
-            CTRecipeManager.recipeManager = event.getServer().getRecipeManager();
+            //ImmutableMap of ImmutableMaps. Nice.
+            RecipeManager recipeManager = event.getServer().getRecipeManager();
+            recipeManager.recipes = new HashMap<>(recipeManager.recipes);
+            for(IRecipeType<?> type : recipeManager.recipes.keySet()) {
+                recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
+            }
+            CTRecipeManager.recipeManager = recipeManager;
+            
             try {
                 CraftTweakerAPI.reload();
                 ScriptingEngine engine = new ScriptingEngine();
