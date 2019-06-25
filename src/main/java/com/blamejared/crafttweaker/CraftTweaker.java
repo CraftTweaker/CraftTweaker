@@ -53,7 +53,7 @@ public class CraftTweaker {
     public void startServer(FMLServerAboutToStartEvent event) {
         
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
-        manager.func_219534_a((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
+        manager.addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
             CTRecipeManager.recipeManager = event.getServer().getRecipeManager();
             try {
                 CraftTweakerAPI.reload();

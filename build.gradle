@@ -45,7 +45,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190608-1.14.2'
+    mappings channel: 'snapshot', version: '20190621-1.14.2'
     accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
 
     runs {
@@ -90,8 +90,8 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.14.2-26.0.25'
-    compile fg.deobf("mezz.jei:jei-1.14.2:6.0.0.1");
+    minecraft 'net.minecraftforge:forge:1.14.3-27.0.2'
+//    compile fg.deobf("mezz.jei:jei-1.14.2:6.0.0.1");
 }
 
 jar {

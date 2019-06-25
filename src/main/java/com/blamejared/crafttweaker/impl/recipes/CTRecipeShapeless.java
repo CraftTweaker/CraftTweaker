@@ -139,11 +139,11 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         return new SerializerStub<>(this);
     }
     
-    @Override
-    public IRecipeType<?> func_222127_g() {
-        return IRecipeType.field_222149_a;
-    }
     
+    @Override
+    public IRecipeType<?> getType() {
+        return IRecipeType.CRAFTING;
+    }
     
     private interface ForAllUniqueAction {
         

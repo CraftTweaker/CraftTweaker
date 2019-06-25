@@ -48,7 +48,7 @@ public class SerializerStub<T extends ICraftingRecipe> implements IRecipeSeriali
     @Override
     public Class<IRecipeSerializer<?>> getRegistryType() {
         //TODO: Just. make. it. work.
-        return field_222157_a.getRegistryType();
+        return CRAFTING_SHAPED.getRegistryType();
     }
     
 }

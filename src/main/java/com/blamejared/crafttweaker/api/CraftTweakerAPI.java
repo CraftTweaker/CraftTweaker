@@ -33,7 +33,7 @@ public class CraftTweakerAPI {
     
     public static void apply(IAction action) {
         if(!(action instanceof IRuntimeAction)) {
-            if(!firstRun) {
+            if(!isFirstRun()) {
                 return;
             }
         }
