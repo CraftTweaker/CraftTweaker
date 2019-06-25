@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.managers;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.managers.*;
+import net.minecraft.item.crafting.*;
 import org.openzen.zencode.java.*;
 
 @ZenRegister
@@ -11,6 +12,7 @@ public class CTRecipeManager implements IRegistryManager {
     
     @ZenCodeGlobals.Global("recipes")
     public static final CTRecipeManager INSTANCE = new CTRecipeManager();
+    public static RecipeManager recipeManager;
     //public static RecipeManager vanillaRecipeManager = null;
     //private final List<ActionAddCraftingRecipe> addedRecipes = new ArrayList<>();
     
