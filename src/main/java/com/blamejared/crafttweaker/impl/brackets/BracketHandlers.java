@@ -23,8 +23,11 @@ public class BracketHandlers {
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
-        
-        final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1])));
+        ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        if(!ForgeRegistries.ITEMS.containsKey(key)) {
+            throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
+        }
+        final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(key));
         return new MCItemStack(value);
     }
     

@@ -15,5 +15,6 @@ public interface IRegistryManager {
      *
      * @param name registry name of recipe to remove
      */
+    @ZenCodeType.Method
     void removeByName(String name);
 }
