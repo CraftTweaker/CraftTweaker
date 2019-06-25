@@ -46,7 +46,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 
 minecraft {
     mappings channel: 'snapshot', version: '20190608-1.14.2'
-    // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+    accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -77,20 +77,26 @@ minecraft {
         }
     }
 }
-
+repositories {
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+}
 
 def zenCodeDeps = [':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
+
 
 dependencies {
 
     zenCodeDeps.collect { compile project(it) }
-    
+
     minecraft 'net.minecraftforge:forge:1.14.2-26.0.25'
+    compile fg.deobf("mezz.jei:jei-1.14.2:6.0.0.1");
 }
 
 jar {
-    dependsOn zenCodeDeps.collect{ it+":compileJava"}
-    from files(zenCodeDeps.collect{ project(it).sourceSets.main.output })
+    dependsOn zenCodeDeps.collect { it + ":compileJava" }
+    from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
 
     manifest {
         attributes([
@@ -108,21 +114,21 @@ jar {
 task sourcesJar(type: Jar, dependsOn: classes) {
     description = 'Creates a JAR containing the source code.'
     from sourceSets.main.allSource
-    from files(zenCodeDeps.collect{ project(it).sourceSets.main.allSource})
+    from files(zenCodeDeps.collect { project(it).sourceSets.main.allSource })
     classifier = 'sources'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     description = 'Creates a JAR containing the JavaDocs.'
     from javadoc.destinationDir
-    from files(zenCodeDeps.collect{ project(it).javadoc.destinationDir})
+    from files(zenCodeDeps.collect { project(it).javadoc.destinationDir })
     classifier = 'javadoc'
 }
 
 task deobfJar(type: Jar) {
     description = 'Creates a JAR containing the non-obfuscated compiled code.'
     from sourceSets.main.output
-    from files(zenCodeDeps.collect{ project(it).sourceSets.main.output})
+    from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
     classifier = "deobf"
 }
 
