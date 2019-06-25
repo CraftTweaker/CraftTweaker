@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.impl.managers.*;
 import net.minecraft.resources.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.eventbus.api.*;
@@ -50,9 +51,12 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
+        
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.func_219534_a((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
+            CTRecipeManager.recipeManager = event.getServer().getRecipeManager();
             try {
+                CraftTweakerAPI.reload();
                 ScriptingEngine engine = new ScriptingEngine();
                 engine.debug = true;
                 //Register crafttweaker module first to assign deps
@@ -92,10 +96,13 @@ public class CraftTweaker {
                 }
                 engine.registerCompiled(scripts);
                 engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
+                
             } catch(Exception e) {
                 e.printStackTrace();
                 CraftTweakerAPI.logger.throwing("Error running scripts", e);
             }
+            
+            CraftTweakerAPI.endFirstRun();
         });
     }
     
