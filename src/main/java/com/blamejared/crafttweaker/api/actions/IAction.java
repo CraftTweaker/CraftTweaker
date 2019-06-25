@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.logger.*;
  * Any and all {@link org.openzen.zencode.java.ZenCodeType.Method} methods should create an instance of this class or one of it's subclasses, this is to make reloading actually work without breaking everything.
  * <p>
  * <p>
- * If an action should be reloadable, use {@link IReloadableAction} instead of this class, if a class does not implement {@link IReloadableAction} in any way, it will NOT be reloaded.
+ * If an action should be reloadable, use {@link IUndoableAction} instead of this class, if a class does not implement {@link IUndoableAction} in any way, it will NOT be reloaded.
  */
 public interface IAction {
     
