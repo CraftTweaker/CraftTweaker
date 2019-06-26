@@ -1,9 +1,12 @@
 package com.blamejared.crafttweaker.impl.managers;
 
+import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.impl.actions.*;
 import net.minecraft.item.crafting.*;
+import net.minecraft.util.*;
 import org.openzen.zencode.java.*;
 
 @ZenRegister
@@ -32,11 +35,12 @@ public class CTRecipeManager implements IRegistryManager {
     @ZenCodeType.Method
     public void removeRecipe(IIngredient output) {
         //ActionRemoveRecipeNoIngredients.INSTANCE.addOutput(output);
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(IRecipeType.CRAFTING, output));
     }
     
     @Override
     public void removeByName(String name) {
-        //Remove by name here
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByName(IRecipeType.CRAFTING, new ResourceLocation(name)));
     }
     
     //public List<ActionAddCraftingRecipe> getAddedRecipes() {
