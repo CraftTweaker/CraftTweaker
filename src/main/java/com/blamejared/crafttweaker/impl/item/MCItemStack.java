@@ -9,7 +9,7 @@ public class MCItemStack implements IItemStack {
     private final ItemStack internal;
     
     public MCItemStack(ItemStack internal) {
-        this.internal = internal;
+        this.internal = internal.copy();
     }
     
     @Override
@@ -86,7 +86,22 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public boolean matches(IItemStack stack) {
-        return ItemStack.areItemStacksEqual(this.getInternal(), stack.getInternal());
+        ItemStack stack1 = internal;
+        ItemStack stack2 = stack.getInternal();
+    
+        if(stack1.isEmpty() != stack2.isEmpty()){
+            return false;
+        }
+        if(stack1.getItem() != stack2.getItem()){
+            return false;
+        }
+        if(stack1.getCount() > stack2.getCount()){
+            return false;
+        }
+        if(stack1.getDamage() != stack2.getDamage()){
+            return false;
+        }
+        return true;
     }
     
     @Override
