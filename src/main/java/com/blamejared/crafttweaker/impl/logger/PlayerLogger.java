@@ -7,7 +7,7 @@ import net.minecraft.util.text.*;
 public class PlayerLogger implements ILogger {
     
     private PlayerEntity player;
-    private LogLevel logLevel = LogLevel.INFO;
+    private LogLevel logLevel = LogLevel.ERROR;
     
     public PlayerLogger(PlayerEntity player) {
         this.player = player;
@@ -15,7 +15,7 @@ public class PlayerLogger implements ILogger {
     
     @Override
     public void setLogLevel(LogLevel logLevel) {
-        if(logLevel.canLog(LogLevel.INFO))
+        if(logLevel.canLog(LogLevel.ERROR))
             this.logLevel = logLevel;
     }
     
