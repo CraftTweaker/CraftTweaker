@@ -61,6 +61,7 @@ public class CraftTweakerAPI {
         
         ACTION_LIST.clear();
         ACTION_LIST_INVALID.clear();
+        ((GroupLogger) logger).getPreviousMessages().clear();
     }
     
     public static void setupLoggers() {
