@@ -7,7 +7,7 @@ import java.util.*;
 public class GroupLogger implements ILogger {
     
     private final List<ILogger> subLoggers = new ArrayList<>();
-    
+    //TODO keep a list of all messages that are logged, when a new logger is added, log those messages to that logger, for players logging in etc?
     
     public void addLogger(ILogger logger) {
         this.subLoggers.add(logger);

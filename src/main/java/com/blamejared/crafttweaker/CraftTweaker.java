@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.logger.*;
 import com.blamejared.crafttweaker.impl.managers.*;
 import com.mojang.brigadier.builder.*;
 import net.minecraft.command.*;
@@ -11,6 +12,7 @@ import net.minecraft.resources.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.eventbus.api.*;
 import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.gameevent.*;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.*;
 import net.minecraftforge.fml.javafmlmod.*;
@@ -53,6 +55,12 @@ public class CraftTweaker {
         LOG.info("{} client has loaded successfully!", NAME);
     }
     
+    
+    @SubscribeEvent
+    public void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+    }
+    
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
@@ -66,7 +74,6 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
-        
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
             //ImmutableMap of ImmutableMaps. Nice.
