@@ -2,7 +2,10 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.managers.*;
+import com.mojang.brigadier.builder.*;
+import net.minecraft.command.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.resources.*;
 import net.minecraftforge.common.*;
@@ -48,6 +51,17 @@ public class CraftTweaker {
     
     private void setupClient(final FMLClientSetupEvent event) {
         LOG.info("{} client has loaded successfully!", NAME);
+    }
+    
+    @SubscribeEvent
+    public void serverStarting(FMLServerStartingEvent event) {
+        LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
+        root.then(Commands.literal("hand").executes(context -> {
+            CraftTweakerAPI.logInfo("Hand output\n" + new MCItemStackMutable(context.getSource().asPlayer().getHeldItemMainhand()).getCommandString());
+            return 0;
+        }));
+        
+        event.getCommandDispatcher().register(root);
     }
     
     @SubscribeEvent
