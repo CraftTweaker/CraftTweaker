@@ -66,11 +66,18 @@ public interface ILogger {
         log(LogLevel.ERROR, message);
     }
     
-    default void throwing(String message, Throwable throwable) {
+    default void throwingErr(String message, Throwable throwable) {
         error(message);
         StringPrintStream s = new StringPrintStream();
         throwable.printStackTrace(errorStream);
         log(LogLevel.ERROR, errorStream.getValue(), false);
+    }
+    
+    default void throwingWarn(String message, Throwable throwable) {
+        warning(message);
+        StringPrintStream s = new StringPrintStream();
+        throwable.printStackTrace(errorStream);
+        log(LogLevel.WARNING, errorStream.getValue(), false);
     }
     
     StringPrintStream errorStream = new StringPrintStream();

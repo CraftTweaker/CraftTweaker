@@ -86,7 +86,7 @@ public class CraftTweakerAPI {
     }
     
     public static void logThrowing(String message, Throwable e, Object... formats) {
-        logger.throwing(String.format(message, formats), e);
+        logger.throwingErr(String.format(message, formats), e);
     }
     
     

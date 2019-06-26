@@ -107,7 +107,7 @@ public class CraftTweaker {
                 
             } catch(Exception e) {
                 e.printStackTrace();
-                CraftTweakerAPI.logger.throwing("Error running scripts", e);
+                CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
             }
             
             CraftTweakerAPI.endFirstRun();

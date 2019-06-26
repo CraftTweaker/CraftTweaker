@@ -72,9 +72,9 @@ public class GroupLogger implements ILogger {
     }
     
     @Override
-    public void throwing(String message, Throwable throwable) {
+    public void throwingErr(String message, Throwable throwable) {
         for(ILogger logger : getSubLoggers()) {
-            logger.throwing(message, throwable);
+            logger.throwingErr(message, throwable);
         }
     }
 }
