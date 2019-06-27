@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.actions;
+package com.blamejared.crafttweaker.impl.actions.recipes;
 
 import com.blamejared.crafttweaker.api.actions.*;
 import com.blamejared.crafttweaker.api.logger.*;

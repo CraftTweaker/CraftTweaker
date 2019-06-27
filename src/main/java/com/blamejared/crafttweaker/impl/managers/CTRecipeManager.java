@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.impl.actions.*;
+import com.blamejared.crafttweaker.impl.actions.recipes.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.util.*;
 import org.openzen.zencode.java.*;
