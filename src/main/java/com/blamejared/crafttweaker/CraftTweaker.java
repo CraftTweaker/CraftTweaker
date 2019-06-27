@@ -22,6 +22,7 @@ import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
 import org.openzen.zenscript.codemodel.member.ref.*;
+import org.openzen.zenscript.formatter.*;
 import org.openzen.zenscript.parser.*;
 
 import java.io.*;
@@ -108,13 +109,12 @@ public class CraftTweaker {
                     CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
                     engine.registerNativeProvided(module);
                 }
+                List<File> fileList = new ArrayList<>();
+                findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
                 
-                File[] files = CraftTweakerAPI.SCRIPT_DIR.listFiles((dir, name) -> {
-                    name = name.toLowerCase();
-                    return name.endsWith(".zs") || name.endsWith(".zc");
-                });
-                if(files == null)
-                    throw new FileNotFoundException("Could not find/open script dir " + CraftTweakerAPI.SCRIPT_DIR);
+                File[] files = fileList.toArray(new File[0]);
+//                if(files == null )
+//                    throw new FileNotFoundException("Could not find/open script dir " + CraftTweakerAPI.SCRIPT_DIR);
                 SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).toArray(SourceFile[]::new);
                 
                 SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
@@ -123,9 +123,29 @@ public class CraftTweaker {
                     LOG.info("Scripts are invalid!");
                     return;
                 }
+                
+                boolean formatScripts = false;
+                //  toggle this to format scripts, ideally this should be a command
+                if(formatScripts) {
+                    List<HighLevelDefinition> all = scripts.definitions.getAll();
+                    ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
+                    FileFormatter formatter = new FileFormatter(builder.build());
+                    List<ScriptBlock> blocks = scripts.scripts;
+                    for(ScriptBlock block : blocks) {
+                        String format = formatter.format(scripts.rootPackage, block, all);
+                        File parent = new File("scriptsFormatted");
+                        parent.mkdirs();
+                        parent.mkdir();
+                        File file = new File(parent, block.file.getFilename());
+                        file.createNewFile();
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                        writer.write(format);
+                        writer.close();
+                    }
+                }
                 engine.registerCompiled(scripts);
                 engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
-                
+    
             } catch(Exception e) {
                 e.printStackTrace();
                 CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
@@ -133,6 +153,20 @@ public class CraftTweaker {
             
             CraftTweakerAPI.endFirstRun();
         });
+    }
+    
+    public static void findScriptFiles(File path, List<File> files){
+        if(path.isDirectory()) {
+            for(File file : path.listFiles()) {
+                if(file.isDirectory()){
+                    findScriptFiles(file, files);
+                }else{
+                    if(file.getName().toLowerCase().endsWith(".zs")){
+                        files.add(file);
+                    }
+                }
+            }
+        }
     }
     
 }
