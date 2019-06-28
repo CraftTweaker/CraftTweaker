@@ -122,12 +122,7 @@ public class CraftTweaker {
                 List<File> fileList = new ArrayList<>();
                 findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
                 
-                File[] files = CraftTweakerAPI.SCRIPT_DIR.listFiles((dir, name) -> {
-                    name = name.toLowerCase();
-                    return name.endsWith(".zs") || name.endsWith(".zc");
-                });
-                if(files == null)
-                    throw new FileNotFoundException("Could not find/open script dir " + CraftTweakerAPI.SCRIPT_DIR);
+                File[] files = fileList.toArray(new File[0]);
                 SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
                 
                 SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
@@ -137,7 +132,7 @@ public class CraftTweaker {
                     return;
                 }
                 
-                boolean formatScripts = false;
+                boolean formatScripts = true;
                 //  toggle this to format scripts, ideally this should be a command
                 if(formatScripts) {
                     List<HighLevelDefinition> all = scripts.definitions.getAll();
