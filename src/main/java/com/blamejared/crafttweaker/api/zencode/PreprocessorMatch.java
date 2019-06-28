@@ -17,6 +17,8 @@ public class PreprocessorMatch {
      * May have been modified by another preprocessor
      *
      * If you need the content of the preprocessor call, {@link #getContent()}
+     *
+     * The line numbers are 1-Based, i.e. the first line has getLine() == 1
      */
     public int getLine() {
         return line;
@@ -24,6 +26,9 @@ public class PreprocessorMatch {
     
     /**
      * The content of the line at the time the preprocessor was found
+     *
+     * Careful, this starts <strong>after</strong> the preprocessor call
+     * So {@code "bb#name cc dd"} would have {@code "cc dd"} as content
      */
     public String getContent() {
         return content;
