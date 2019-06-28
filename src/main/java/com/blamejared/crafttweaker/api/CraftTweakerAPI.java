@@ -90,6 +90,10 @@ public class CraftTweakerAPI {
         logger.throwingErr(String.format(message, formats), e);
     }
     
+    public static void log(LogLevel level, String filename, int lineNumber, String message, Object... formats) {
+        logger.log(level, String.format("[%s:%d%s]", filename, lineNumber, String.format(message, formats)));
+    }
+    
     
     public static List<IAction> getActionList() {
         return ImmutableList.copyOf(ACTION_LIST);

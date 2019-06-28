@@ -17,6 +17,8 @@ public class PreprocessorMatch {
      * May have been modified by another preprocessor
      *
      * If you need the content of the preprocessor call, {@link #getContent()}
+     *
+     * The line numbers are 1-Based, i.e. the first line has getLine() == 1
      */
     public int getLine() {
         return line;

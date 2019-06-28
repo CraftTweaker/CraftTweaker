@@ -1,35 +1,50 @@
 package com.blamejared.crafttweaker;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.logger.*;
-import com.blamejared.crafttweaker.impl.managers.*;
-import com.mojang.brigadier.builder.*;
-import net.minecraft.command.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.resources.*;
-import net.minecraftforge.common.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.gameevent.*;
-import net.minecraftforge.fml.event.lifecycle.*;
-import net.minecraftforge.fml.event.server.*;
-import net.minecraftforge.fml.javafmlmod.*;
-import net.minecraftforge.resource.*;
-import org.apache.logging.log4j.*;
-import org.openzen.zencode.java.*;
-import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.codemodel.*;
-import org.openzen.zenscript.codemodel.member.ref.*;
-import org.openzen.zenscript.formatter.*;
-import org.openzen.zenscript.parser.*;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
+import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.resources.SimpleReloadableResourceManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openzen.zencode.java.JavaNativeModule;
+import org.openzen.zencode.java.ScriptingEngine;
+import org.openzen.zencode.shared.SourceFile;
+import org.openzen.zenscript.codemodel.FunctionParameter;
+import org.openzen.zenscript.codemodel.HighLevelDefinition;
+import org.openzen.zenscript.codemodel.ScriptBlock;
+import org.openzen.zenscript.codemodel.SemanticModule;
+import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
+import org.openzen.zenscript.formatter.FileFormatter;
+import org.openzen.zenscript.formatter.ScriptFormattingSettings;
+import org.openzen.zenscript.parser.PrefixedBracketParser;
+import org.openzen.zenscript.parser.SimpleBracketParser;
 
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Method;
 import java.util.*;
 
 @Mod(CraftTweaker.MODID)
@@ -78,12 +93,6 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
-        final Map<String, IPreprocessor> preprocessors = new HashMap<>();
-        {
-            for(IPreprocessor p : Arrays.asList(new NoLoadPreprocessor(), new DebugPreprocessor(), new PrintPreprocessor(), new ReplacePreprocessor())) {
-                preprocessors.put(p.getName(), p);
-            }
-        }
         
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
@@ -121,11 +130,30 @@ public class CraftTweaker {
                 }
                 List<File> fileList = new ArrayList<>();
                 findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
+
+
+                final Map<String, IPreprocessor> preprocessors = new HashMap<>();
+                {
+                    final List<IPreprocessor> pList = Arrays.asList(new DebugPreprocessor(), new NoLoadPreprocessor(), new PriorityPreprocessor(), new ReplacePreprocessor(), new LoadFirstPreprocessor(), new LoadLastPreprocessor());
+
+                    for (IPreprocessor p : pList) {
+                        preprocessors.put(p.getName(), p);
+                    }
+                }
+
+                final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors.values());
+                SourceFile[] sourceFiles = fileList.stream()
+                        .map(file -> new FileAccessSingle(file, preprocessors))
+                        .filter(FileAccessSingle::shouldBeLoaded)
+                        .sorted(comparator)
+                        .map(FileAccessSingle::getSourceFile)
+                        .toArray(SourceFile[]::new);
+
+                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE,
+                        compileError -> CraftTweakerAPI.logger.error(compileError.toString()),
+                        validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()),
+                        sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
                 
-                File[] files = fileList.toArray(new File[0]);
-                SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
-                
-                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
                 if(!scripts.isValid()) {
                     CraftTweakerAPI.logger.error("Scripts are invalid!");
                     LOG.info("Scripts are invalid!");

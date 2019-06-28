@@ -6,7 +6,7 @@ import javax.annotation.*;
 import java.util.*;
 import java.util.regex.*;
 
-public interface IPreprocessor {
+public interface IPreprocessor extends Comparator<FileAccessSingle> {
     
     Pattern preprocessorPattern = Pattern.compile("#\\w+");
     
@@ -38,4 +38,16 @@ public interface IPreprocessor {
      * @return {@code false} if the script is no longer eligible to be loaded
      */
     boolean apply(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches);
+    
+    
+    /**
+     * If your Preprocessor changes the order of script execution, then you can override this method.
+     *
+     * Careful, this will be called for every preprocessor, regardless of whether it is actually in the compared files or not
+     * You can use {@link FileAccessSingle#hasMatchFor(IPreprocessor)} to see if the preprocessor is in the files
+     */
+    @Override
+    default int compare(FileAccessSingle o1, FileAccessSingle o2) {
+        return 0;
+    }
 }
