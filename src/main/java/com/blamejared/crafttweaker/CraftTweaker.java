@@ -2,6 +2,9 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.zencode.*;
+import com.blamejared.crafttweaker.api.zencode.impl.*;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.logger.*;
 import com.blamejared.crafttweaker.impl.managers.*;
@@ -74,6 +77,13 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
+        final Map<String, IPreprocessor> preprocessors = new HashMap<>();
+        {
+            for(IPreprocessor p : Arrays.asList(new NoLoadPreprocessor(), new DebugPreprocessor(), new PrintPreprocessor(), new ReplacePreprocessor())) {
+                preprocessors.put(p.getName(), p);
+            }
+        }
+        
         SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
         manager.addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
             //ImmutableMap of ImmutableMaps. Nice.
@@ -115,7 +125,7 @@ public class CraftTweaker {
                 });
                 if(files == null)
                     throw new FileNotFoundException("Could not find/open script dir " + CraftTweakerAPI.SCRIPT_DIR);
-                SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileSourceFile(file.getName(), file)).toArray(SourceFile[]::new);
+                SourceFile[] sourceFiles = Arrays.stream(files).map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
                 
                 SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
                 if(!scripts.isValid()) {
