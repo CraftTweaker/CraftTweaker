@@ -132,16 +132,15 @@ public class CraftTweaker {
                 findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
 
 
-                final Map<String, IPreprocessor> preprocessors = new HashMap<>();
-                {
-                    final List<IPreprocessor> pList = Arrays.asList(new DebugPreprocessor(), new NoLoadPreprocessor(), new PriorityPreprocessor(), new ReplacePreprocessor(), new LoadFirstPreprocessor(), new LoadLastPreprocessor());
+                final List<IPreprocessor> preprocessors = new ArrayList<>(6);
+                preprocessors.add(new DebugPreprocessor());
+                preprocessors.add(new NoLoadPreprocessor());
+                preprocessors.add(new PriorityPreprocessor());
+                preprocessors.add(new ReplacePreprocessor());
+                preprocessors.add(new LoadFirstPreprocessor());
+                preprocessors.add(new LoadLastPreprocessor());
 
-                    for (IPreprocessor p : pList) {
-                        preprocessors.put(p.getName(), p);
-                    }
-                }
-
-                final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors.values());
+                final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors);
                 SourceFile[] sourceFiles = fileList.stream()
                         .map(file -> new FileAccessSingle(file, preprocessors))
                         .filter(FileAccessSingle::shouldBeLoaded)

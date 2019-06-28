@@ -26,6 +26,9 @@ public class PreprocessorMatch {
     
     /**
      * The content of the line at the time the preprocessor was found
+     *
+     * Careful, this starts <strong>after</strong> the preprocessor call
+     * So {@code "bb#name cc dd"} would have {@code "cc dd"} as content
      */
     public String getContent() {
         return content;

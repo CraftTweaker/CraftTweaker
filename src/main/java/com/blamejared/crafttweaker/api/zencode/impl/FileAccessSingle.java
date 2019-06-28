@@ -20,8 +20,16 @@ public class FileAccessSingle {
     private final Map<String, IPreprocessor> registeredPreprocessors;
     private boolean shouldBeLoaded;
 
-    public FileAccessSingle(File file, Map<String, IPreprocessor> registeredPreprocessors) {
-        this.registeredPreprocessors = registeredPreprocessors;
+    /**
+     * Constructs a new FileAccessSingle object
+     *
+     * <p>The file should be accessible, if an IOException occurs it will be logged and the content will remain empty</p>
+     */
+    public FileAccessSingle(File file, Collection<IPreprocessor> preprocessors) {
+        this.registeredPreprocessors = new HashMap<>();
+        for (IPreprocessor preprocessor : preprocessors) {
+            this.registeredPreprocessors.put(preprocessor.getName().toLowerCase(Locale.ENGLISH), preprocessor);
+        }
         this.fileName = file.getName();
         this.fileContents = new ArrayList<>();
         readFile(file);
@@ -29,6 +37,7 @@ public class FileAccessSingle {
         applyPreprocessors();
     }
 
+    
     public static Comparator<FileAccessSingle> createComparator(Collection<IPreprocessor> preprocessors) {
         List<IPreprocessor> list = new ArrayList<>(preprocessors);
         list.sort(Comparator.comparingInt(IPreprocessor::getPriority).reversed());
@@ -80,13 +89,13 @@ public class FileAccessSingle {
             return;
 
         final String g = matcher.group();
-        final String preprocessorName = g.substring(1);
+        final String preprocessorName = g.substring(1).trim().toLowerCase(Locale.ENGLISH);
         if (!registeredPreprocessors.containsKey(preprocessorName))
             return;
 
         final IPreprocessor preprocessor = registeredPreprocessors.get(preprocessorName);
         final List<PreprocessorMatch> matches = this.matches.computeIfAbsent(preprocessor, p -> new ArrayList<>(1));
-        matches.add(new PreprocessorMatch(preprocessor, lineNumber, line.substring(g.length()).trim()));
+        matches.add(new PreprocessorMatch(preprocessor, lineNumber, line.substring(matcher.end())));
     }
 
     public Map<IPreprocessor, List<PreprocessorMatch>> getMatches() {

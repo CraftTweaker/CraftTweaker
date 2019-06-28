@@ -8,7 +8,7 @@ import java.util.regex.*;
 
 public interface IPreprocessor extends Comparator<FileAccessSingle> {
     
-    Pattern preprocessorPattern = Pattern.compile("#\\w+");
+    Pattern preprocessorPattern = Pattern.compile("#\\w+ ?");
     
     /**
      * The preprocessor's name.
