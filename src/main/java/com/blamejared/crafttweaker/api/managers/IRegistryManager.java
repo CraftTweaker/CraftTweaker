@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.managers;
 
 import com.blamejared.crafttweaker.api.annotations.*;
+import net.minecraft.item.crafting.IRecipeType;
 import org.openzen.zencode.java.*;
 
 /**
@@ -17,4 +18,11 @@ public interface IRegistryManager {
      */
     @ZenCodeType.Method
     void removeByName(String name);
+    
+    /**
+     * Gets the recipe type for the registry to remove from.
+     *
+     * @return IRecipeType of this registry.
+     */
+    IRecipeType getRecipeType();
 }
