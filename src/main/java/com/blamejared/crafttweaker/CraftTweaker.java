@@ -5,7 +5,12 @@ import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.*;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.DebugPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadFirstPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadLastPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.NoLoadPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.PriorityPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.ReplacePreprocessor;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
@@ -45,7 +50,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -130,8 +139,8 @@ public class CraftTweaker {
                 }
                 List<File> fileList = new ArrayList<>();
                 findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
-
-
+                
+                
                 final List<IPreprocessor> preprocessors = new ArrayList<>(6);
                 preprocessors.add(new DebugPreprocessor());
                 preprocessors.add(new NoLoadPreprocessor());
@@ -139,19 +148,11 @@ public class CraftTweaker {
                 preprocessors.add(new ReplacePreprocessor());
                 preprocessors.add(new LoadFirstPreprocessor());
                 preprocessors.add(new LoadLastPreprocessor());
-
+                
                 final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors);
-                SourceFile[] sourceFiles = fileList.stream()
-                        .map(file -> new FileAccessSingle(file, preprocessors))
-                        .filter(FileAccessSingle::shouldBeLoaded)
-                        .sorted(comparator)
-                        .map(FileAccessSingle::getSourceFile)
-                        .toArray(SourceFile[]::new);
-
-                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE,
-                        compileError -> CraftTweakerAPI.logger.error(compileError.toString()),
-                        validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()),
-                        sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
+                SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
+                
+                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
                 
                 if(!scripts.isValid()) {
                     CraftTweakerAPI.logger.error("Scripts are invalid!");
@@ -180,7 +181,7 @@ public class CraftTweaker {
                 }
                 engine.registerCompiled(scripts);
                 engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
-    
+                
             } catch(Exception e) {
                 e.printStackTrace();
                 CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
@@ -190,13 +191,14 @@ public class CraftTweaker {
         });
     }
     
-    public static void findScriptFiles(File path, List<File> files){
+    
+    public static void findScriptFiles(File path, List<File> files) {
         if(path.isDirectory()) {
             for(File file : path.listFiles()) {
-                if(file.isDirectory()){
+                if(file.isDirectory()) {
                     findScriptFiles(file, files);
-                }else{
-                    if(file.getName().toLowerCase().endsWith(".zs")){
+                } else {
+                    if(file.getName().toLowerCase().endsWith(".zs")) {
                         files.add(file);
                     }
                 }
