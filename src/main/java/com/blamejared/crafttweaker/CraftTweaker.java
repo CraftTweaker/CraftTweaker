@@ -110,14 +110,16 @@ public class CraftTweaker {
                 engine.debug = true;
                 //Register crafttweaker module first to assign deps
                 JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
-                CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
-                CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
+
                 PrefixedBracketParser bep = new PrefixedBracketParser(null);
                 for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
                     String name = method.getAnnotation(BracketResolver.class).value();
                     FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
                     bep.register(name, new SimpleBracketParser(engine.registry, memberRef));
                 }
+                crafttweakerModule.registerBEP(bep);
+                CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
+                CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
                 engine.registerNativeProvided(crafttweakerModule);
                 for(String key : CraftTweakerRegistry.getRootPackages()) {
                     //module already registered
