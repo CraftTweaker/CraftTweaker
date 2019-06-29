@@ -25,6 +25,15 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Getter("displayName")
     String getDisplayName();
     
+    
+    /**
+     * Sets the display name of the ItemStack
+     *
+     * @param name New name of the stack.
+     */
+    @ZenCodeType.Method
+    IItemStack setDisplayName(String name);
+    
     /**
      * Gets the amount of Items in the ItemStack
      *

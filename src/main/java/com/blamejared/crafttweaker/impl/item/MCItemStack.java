@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.item;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.text.StringTextComponent;
 
 public class MCItemStack implements IItemStack {
     
@@ -20,6 +21,13 @@ public class MCItemStack implements IItemStack {
     @Override
     public String getDisplayName() {
         return internal.getDisplayName().getFormattedText();
+    }
+    
+    @Override
+    public IItemStack setDisplayName(String name) {
+        ItemStack newStack = internal.copy();
+        newStack.setDisplayName(new StringTextComponent(name));
+        return new MCItemStack(newStack);
     }
     
     @Override

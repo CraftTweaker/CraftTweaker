@@ -1,8 +1,9 @@
 package com.blamejared.crafttweaker.impl.item;
 
-import com.blamejared.crafttweaker.api.item.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.text.StringTextComponent;
 
 public class MCItemStackMutable implements IItemStack {
     
@@ -20,6 +21,12 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public String getDisplayName() {
         return internal.getDisplayName().getFormattedText();
+    }
+    
+    @Override
+    public IItemStack setDisplayName(String name) {
+        internal.setDisplayName(new StringTextComponent(name));
+        return this;
     }
     
     @Override
