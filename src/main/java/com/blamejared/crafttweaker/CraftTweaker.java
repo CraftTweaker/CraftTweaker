@@ -5,12 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.DebugPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadFirstPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadLastPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.NoLoadPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.PriorityPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.ReplacePreprocessor;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.*;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
@@ -141,6 +136,7 @@ public class CraftTweaker {
                 preprocessors.add(new ReplacePreprocessor());
                 preprocessors.add(new LoadFirstPreprocessor());
                 preprocessors.add(new LoadLastPreprocessor());
+                preprocessors.add(new SnippingPreprocessor());
                 
                 final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors);
                 SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
