@@ -11,13 +11,10 @@ import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadLastPrepro
 import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.NoLoadPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.PriorityPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.ReplacePreprocessor;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.SimpleReloadableResourceManager;
@@ -91,13 +88,7 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
-        LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
-        root.then(Commands.literal("hand").executes(context -> {
-            CraftTweakerAPI.logInfo("Hand output\n" + new MCItemStackMutable(context.getSource().asPlayer().getHeldItemMainhand()).getCommandString());
-            return 0;
-        }));
-        
-        event.getCommandDispatcher().register(root);
+        CTCommands.init(event.getCommandDispatcher());
     }
     
     @SubscribeEvent
