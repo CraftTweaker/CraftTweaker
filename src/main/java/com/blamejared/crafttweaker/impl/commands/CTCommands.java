@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
+import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -41,9 +42,10 @@ public class CTCommands {
         root.then(Commands.literal("copy").then(Commands.argument("toCopy", StringReader::readString).executes(context -> {
             String toCopy = context.getArgument("toCopy", String.class);
             ServerPlayerEntity entity = context.getSource().asPlayer();
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new PacketHandler.MessageCopy(toCopy));
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
             return 0;
         })));
+    
         
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
