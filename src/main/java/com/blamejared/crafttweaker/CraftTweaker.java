@@ -15,9 +15,13 @@ import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.blamejared.crafttweaker.impl.network.PacketHandler;
+import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.SimpleReloadableResourceManager;
+import net.minecraft.tags.TagCollection;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,12 +56,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
     public static final String NAME = "CraftTweaker";
+    public static final String VERSION = "5.0.0";
     
     public static final Logger LOG = LogManager.getLogger(NAME);
     
@@ -65,6 +72,7 @@ public class CraftTweaker {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
+        PacketHandler.init();
     }
     
     private void setup(final FMLCommonSetupEvent event) {
@@ -89,6 +97,14 @@ public class CraftTweaker {
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
+    }
+    
+    public class TagCollectionWrapper extends TagCollection<Item> {
+        
+        public TagCollectionWrapper(Function<ResourceLocation, Optional<Item>> p_i50686_1_, String p_i50686_2_, boolean p_i50686_3_, String p_i50686_4_) {
+            super(p_i50686_1_, p_i50686_2_, p_i50686_3_, p_i50686_4_);
+            
+        }
     }
     
     @SubscribeEvent
