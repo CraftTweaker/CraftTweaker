@@ -5,12 +5,29 @@ import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class SnippingPreprocessor implements IPreprocessor {
+	/**
+	 * called whenever a Snip preprocessor is hit.<br>
+	 * If any of these return true for the given String[] then everything up until the next {@code #snip end} will be snipped.
+	 *
+	 * The Predicates will test the remainder of the preprocessor call (everything after {@code #snip } up to the end of the line, split by one whitespace {@code " "}
+	 */
+	private final List<Predicate<String[]>> headers;
+
+	public SnippingPreprocessor() {
+		headers = new ArrayList<>(2);
+		headers.add(s -> "start".equals(s[0]));
+		headers.add(s -> s.length > 1 && "modnotloaded".equals(s[0]) && !ModList.get().isLoaded(s[1]));
+	}
+
+
 	@Override
 	public String getName() {
 		return "snip";
@@ -32,10 +49,20 @@ public class SnippingPreprocessor implements IPreprocessor {
 		final SortedSet<Integer> starts = new TreeSet<>();
 		final SortedSet<Integer> ends = new TreeSet<>();
 
+		outer:
 		for (PreprocessorMatch preprocessorMatch : preprocessorMatches) {
-			if(preprocessorMatch.getContent().startsWith("start")) {
-				starts.add(preprocessorMatch.getLine());
-			} else if(preprocessorMatch.getContent().startsWith("end")) {
+			final String[] content = preprocessorMatch.getContent().split(" ");
+			if(content.length < 1)
+				continue;
+
+			for (Predicate<String[]> header : headers) {
+				if(header.test(content)) {
+					starts.add(preprocessorMatch.getLine());
+					continue outer;
+				}
+			}
+
+			if("end".equals(content[0])) {
 				ends.add(preprocessorMatch.getLine());
 			} else {
 				CraftTweakerAPI.log(LogLevel.WARNING, file.getFileName(), preprocessorMatch.getLine(), "Invalid snip arguments: " + preprocessorMatch.getLine());
@@ -60,7 +87,7 @@ public class SnippingPreprocessor implements IPreprocessor {
 			if(snipping) {
 				final int fromChar;
 				if (snippingStarted) {
-					fromChar = lineContent.indexOf("#" + getName() + " start");
+					fromChar = lineContent.indexOf("#" + getName());
 					snippingStarted = false;
 				} else fromChar = 0;
 
