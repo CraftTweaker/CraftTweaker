@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
@@ -188,7 +189,7 @@ public class CTRecipeShaped implements ICraftingRecipe {
     
     @Override
     public IRecipeSerializer<CTRecipeShaped> getSerializer() {
-        return new SerializerStub<>(this);
+        return CraftTweaker.SHAPELESS_SERIALIZER;
     }
     
     private static final class IntPair {

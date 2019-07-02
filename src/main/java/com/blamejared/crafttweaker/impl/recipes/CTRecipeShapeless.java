@@ -1,16 +1,24 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
-import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-import javax.annotation.*;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 
 @MethodsReturnNonnullByDefault
@@ -55,6 +63,12 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack);
         
         return this.function.process(this.output, stacks).getInternal();
+    }
+    
+    
+    @Nullable
+    public CTRecipeManager.RecipeFunctionShapeless getFunction() {
+        return function;
     }
     
     @Override
@@ -136,7 +150,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public IRecipeSerializer<CTRecipeShapeless> getSerializer() {
-        return new SerializerStub<>(this);
+        return CraftTweaker.SHAPELESS_SERIALIZER;
     }
     
     

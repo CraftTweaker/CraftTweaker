@@ -16,11 +16,14 @@ import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
+import com.blamejared.crafttweaker.impl.recipes.SerializerStub;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +33,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.JavaNativeModule;
@@ -64,11 +68,16 @@ public class CraftTweaker {
     
     public static final Logger LOG = LogManager.getLogger(NAME);
     
+    public static IRecipeSerializer SHAPELESS_SERIALIZER;
+    
     public CraftTweaker() throws Exception {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
         PacketHandler.init();
+        SHAPELESS_SERIALIZER = new SerializerStub().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
+        ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
+        
     }
     
     private void setup(final FMLCommonSetupEvent event) {
@@ -109,7 +118,6 @@ public class CraftTweaker {
                     recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
                 }
                 CTRecipeManager.recipeManager = recipeManager;
-                
                 try {
                     CraftTweakerAPI.reload();
                     ScriptingEngine engine = new ScriptingEngine();
