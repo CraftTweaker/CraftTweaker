@@ -42,7 +42,6 @@ public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryE
     
     @Override
     public CTRecipeShapeless read(ResourceLocation recipeId, JsonObject json) {
-        
         String s = JSONUtils.getString(json, "group", "");
         NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
         IIngredient[] ingredients = new IIngredient[nonnulllist.size()];
@@ -62,7 +61,6 @@ public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryE
     
     @Override
     public CTRecipeShapeless read(ResourceLocation recipeId, PacketBuffer buffer) {
-        
         String s = buffer.readString(32767);
         int i = buffer.readVarInt();
         IIngredient[] ingredients = new IIngredient[i];
@@ -83,15 +81,6 @@ public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryE
             ingredient.write(buffer);
         }
         buffer.writeItemStack(recipe.getRecipeOutput());
-//        try {
-//            ByteArrayOutputStream bo = new ByteArrayOutputStream();
-//            ObjectOutputStream so = new ObjectOutputStream(bo);
-//            so.writeObject(recipe.getFunction());
-//            so.flush();
-//            buffer.writeString(bo.toString());
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
     }
     
     

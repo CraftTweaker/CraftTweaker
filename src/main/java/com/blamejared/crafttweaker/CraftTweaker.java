@@ -24,6 +24,9 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -95,9 +98,30 @@ public class CraftTweaker {
     
     
     @SubscribeEvent
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        System.out.println("side");
+        /*
+        called on singleplayer join on the client
+        Called on multiplayer login on the server
+         */
+        System.out.println("logged in");
         ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void getRecipes(RecipesUpdatedEvent event) {
+        /*
+         * Called on the client when joining a world and the server.
+         *
+         * Recipes are only written and read on the server, we should not load scripts on the client if it is a single player world.
+         *
+         * Use a Recipe serializer to serialize the scripts from the server and run those scripts here.
+         *
+         *
+         * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
+         */
+        System.out.println("Recipes updated");
     }
     
     @SubscribeEvent
