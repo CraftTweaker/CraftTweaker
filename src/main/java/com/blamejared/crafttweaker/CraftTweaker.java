@@ -98,7 +98,6 @@ public class CraftTweaker {
     
     
     @SubscribeEvent
-    @OnlyIn(Dist.DEDICATED_SERVER)
     public void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         /*
         called on singleplayer join on the client
