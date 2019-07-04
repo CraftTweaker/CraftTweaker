@@ -56,7 +56,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     @Override
     public ItemStack getCraftingResult(CraftingInventory inv) {
         if(this.function == null)
-            return this.output.getInternal();
+            return this.output.getInternal().copy();
         
         final IItemStack[] stacks = new IItemStack[this.ingredients.length];
         
@@ -78,7 +78,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public ItemStack getRecipeOutput() {
-        return output.getInternal();
+        return output.getInternal().copy();
     }
     
     @Override

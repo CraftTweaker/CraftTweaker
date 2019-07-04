@@ -119,7 +119,7 @@ public class CTRecipeShaped implements ICraftingRecipe {
                 stacks[rowIndex][columnIndex] = ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex)));
             }
         }
-        return function.process(this.output, stacks).getInternal();
+        return function.process(this.output, stacks).getInternal().copy();
     }
     
     @Override
@@ -129,7 +129,7 @@ public class CTRecipeShaped implements ICraftingRecipe {
     
     @Override
     public ItemStack getRecipeOutput() {
-        return output.getInternal();
+        return output.getInternal().copy();
     }
     
     @Override
