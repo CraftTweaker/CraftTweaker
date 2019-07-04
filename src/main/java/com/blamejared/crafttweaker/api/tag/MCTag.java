@@ -80,6 +80,9 @@ public class MCTag implements IIngredient {
     
     @Override
     public Ingredient asVanillaIngredient() {
+        if(itemTag == null) {
+            return Ingredient.EMPTY;
+        }
         return Ingredient.fromTag(itemTag);
     }
     
