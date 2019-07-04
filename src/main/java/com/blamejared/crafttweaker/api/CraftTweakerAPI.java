@@ -1,14 +1,39 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.api.actions.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.logger.*;
-import com.blamejared.crafttweaker.impl.logger.*;
-import com.google.common.collect.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.actions.IAction;
+import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
+import com.blamejared.crafttweaker.api.actions.IUndoableAction;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.impl.logger.FileLogger;
+import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import com.google.common.collect.ImmutableList;
+import org.openzen.zencode.java.JavaNativeModule;
+import org.openzen.zencode.java.ScriptingEngine;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.shared.SourceFile;
+import org.openzen.zenscript.codemodel.FunctionParameter;
+import org.openzen.zenscript.codemodel.HighLevelDefinition;
+import org.openzen.zenscript.codemodel.ScriptBlock;
+import org.openzen.zenscript.codemodel.SemanticModule;
+import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
+import org.openzen.zenscript.formatter.FileFormatter;
+import org.openzen.zenscript.formatter.ScriptFormattingSettings;
+import org.openzen.zenscript.parser.PrefixedBracketParser;
+import org.openzen.zenscript.parser.SimpleBracketParser;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @ZenRegister
 public class CraftTweakerAPI {
@@ -21,15 +46,12 @@ public class CraftTweakerAPI {
     private static final List<IAction> ACTION_LIST = new ArrayList<>();
     private static final List<IAction> ACTION_LIST_INVALID = new ArrayList<>();
     
+    private static ScriptingEngine SCRIPTING_ENGINE;
+    
+    //TODO change this before release
+    public static boolean DEBUG_MODE = true;
     private static boolean firstRun = true;
     
-    public static void endFirstRun() {
-        firstRun = false;
-    }
-    
-    public static boolean isFirstRun() {
-        return firstRun;
-    }
     
     public static void apply(IAction action) {
         if(!(action instanceof IRuntimeAction)) {
@@ -62,6 +84,96 @@ public class CraftTweakerAPI {
         ACTION_LIST.clear();
         ACTION_LIST_INVALID.clear();
         ((GroupLogger) logger).getPreviousMessages().clear();
+    }
+    
+    
+    private static void initEngine() {
+        SCRIPTING_ENGINE = new ScriptingEngine();
+        SCRIPTING_ENGINE.debug = DEBUG_MODE;
+    }
+    
+    
+    public static void loadScripts() {
+        try {
+            CraftTweakerAPI.reload();
+            initEngine();
+            //Register crafttweaker module first to assign deps
+            JavaNativeModule crafttweakerModule = SCRIPTING_ENGINE.createNativeModule(CraftTweaker.MODID, "crafttweaker");
+            CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
+            CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
+            PrefixedBracketParser bep = new PrefixedBracketParser(null);
+            for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
+                String name = method.getAnnotation(BracketResolver.class).value();
+                FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
+                bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
+            }
+            SCRIPTING_ENGINE.registerNativeProvided(crafttweakerModule);
+            for(String key : CraftTweakerRegistry.getRootPackages()) {
+                //module already registered
+                if(key.equals("crafttweaker")) {
+                    continue;
+                }
+                JavaNativeModule module = SCRIPTING_ENGINE.createNativeModule(key, key, crafttweakerModule);
+                CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
+                SCRIPTING_ENGINE.registerNativeProvided(module);
+            }
+            List<File> fileList = new ArrayList<>();
+            findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
+            
+            
+            final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
+            SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
+            
+            SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
+            
+            if(!scripts.isValid()) {
+                CraftTweakerAPI.logger.error("Scripts are invalid!");
+                CraftTweaker.LOG.info("Scripts are invalid!");
+                return;
+            }
+            boolean formatScripts = true;
+            //  toggle this to format scripts, ideally this should be a command
+            if(formatScripts) {
+                List<HighLevelDefinition> all = scripts.definitions.getAll();
+                ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
+                FileFormatter formatter = new FileFormatter(builder.build());
+                List<ScriptBlock> blocks = scripts.scripts;
+                for(ScriptBlock block : blocks) {
+                    String format = formatter.format(scripts.rootPackage, block, all);
+                    File parent = new File("scriptsFormatted");
+                    parent.mkdirs();
+                    parent.mkdir();
+                    File file = new File(parent, block.file.getFilename());
+                    file.createNewFile();
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                    writer.write(format);
+                    writer.close();
+                }
+            }
+            SCRIPTING_ENGINE.registerCompiled(scripts);
+            SCRIPTING_ENGINE.run(Collections.emptyMap(), CraftTweaker.class.getClassLoader());
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+            CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
+        }
+        
+        CraftTweakerAPI.endFirstRun();
+    }
+    
+    
+    public static void findScriptFiles(File path, List<File> files) {
+        if(path.isDirectory()) {
+            for(File file : path.listFiles()) {
+                if(file.isDirectory()) {
+                    findScriptFiles(file, files);
+                } else {
+                    if(file.getName().toLowerCase().endsWith(".zs")) {
+                        files.add(file);
+                    }
+                }
+            }
+        }
     }
     
     public static void setupLoggers() {
@@ -101,5 +213,22 @@ public class CraftTweakerAPI {
     
     public static List<IAction> getActionListInvalid() {
         return ImmutableList.copyOf(ACTION_LIST_INVALID);
+    }
+    
+    
+    public static void endFirstRun() {
+        firstRun = false;
+    }
+    
+    public static boolean isFirstRun() {
+        return firstRun;
+    }
+    
+    public static ScriptingEngine getEngine() {
+        if(SCRIPTING_ENGINE == null) {
+            initEngine();
+        }
+        
+        return SCRIPTING_ENGINE;
     }
 }

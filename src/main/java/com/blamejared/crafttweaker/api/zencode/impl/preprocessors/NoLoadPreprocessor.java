@@ -1,11 +1,15 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
+import com.blamejared.crafttweaker.api.annotations.PreProcessor;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
+@PreProcessor
 public class NoLoadPreprocessor implements IPreprocessor {
     
     @Override

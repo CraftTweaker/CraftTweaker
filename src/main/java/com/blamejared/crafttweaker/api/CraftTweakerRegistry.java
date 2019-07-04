@@ -1,26 +1,42 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.google.common.collect.*;
-import net.minecraftforge.fml.*;
-import net.minecraftforge.forgespi.language.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.annotations.PreProcessor;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
-import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.stream.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CraftTweakerRegistry {
     
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
+    private static final Type TYPE_PRE_PROCESSOR = Type.getType(PreProcessor.class);
+    
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
     private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
-    
+    private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -36,6 +52,45 @@ public class CraftTweakerRegistry {
         }
         
         sortClasses();
+        
+        
+        for(ModFileScanData.AnnotationData data : ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_PRE_PROCESSOR.equals(a.getAnnotationType())).collect(Collectors.toList())) {
+            Type type = data.getClassType();
+            try {
+                Class<?> clazz = Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
+                boolean valid = false;
+                for(Class<?> intFace : clazz.getInterfaces()) {
+                    if(intFace == IPreprocessor.class) {
+                        valid = true;
+                        break;
+                    }
+                }
+                if(!valid) {
+                    CraftTweakerAPI.logWarning("Preprocessor: \"%s\" does not implement IPreprocessor!", type.getClassName());
+                    continue;
+                }
+                IPreprocessor preprocessor = null;
+                for(Constructor<?> constructor : clazz.getConstructors()) {
+                    if(constructor.getParameterCount() != 0) {
+                        continue;
+                    }
+                    
+                    try {
+                        preprocessor = (IPreprocessor) constructor.newInstance();
+                    } catch(InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        CraftTweakerAPI.logThrowing("Preprocessor: \"%s\" can not be instantiated! Make sure it has a public empty constructor", e);
+                        e.printStackTrace();
+                    }
+                }
+                if(preprocessor != null) {
+                    PREPROCESSORS.add(preprocessor);
+                } else {
+                    CraftTweakerAPI.logWarning("Can not register Preprocessor: \"%s\"!", type.getClassName());
+                }
+            } catch(ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     /**
@@ -166,4 +221,7 @@ public class CraftTweakerRegistry {
         return ImmutableList.copyOf(BRACKET_RESOLVERS);
     }
     
+    public static List<IPreprocessor> getPreprocessors() {
+        return PREPROCESSORS;
+    }
 }

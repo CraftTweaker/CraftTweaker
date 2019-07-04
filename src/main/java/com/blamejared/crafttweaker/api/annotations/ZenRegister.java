@@ -1,10 +1,17 @@
 package com.blamejared.crafttweaker.api.annotations;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Used to automatically register a class to the ZenScript Scripting Engine, should be combined with {@link org.openzen.zencode.java.ZenCodeType.Name}.
  * <p>
  * set {@link ZenRegister#modDeps()} if this class should only be loaded if another mod is present, value is an array of modids of the required mods.
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface ZenRegister {
     
     /**

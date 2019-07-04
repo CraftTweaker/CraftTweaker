@@ -2,15 +2,6 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.api.annotations.BracketResolver;
-import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.DebugPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadFirstPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoadLastPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.NoLoadPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.PriorityPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.ReplacePreprocessor;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
@@ -39,28 +30,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openzen.zencode.java.JavaNativeModule;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.shared.SourceFile;
-import org.openzen.zenscript.codemodel.FunctionParameter;
-import org.openzen.zenscript.codemodel.HighLevelDefinition;
-import org.openzen.zenscript.codemodel.ScriptBlock;
-import org.openzen.zenscript.codemodel.SemanticModule;
-import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
-import org.openzen.zenscript.formatter.FileFormatter;
-import org.openzen.zenscript.formatter.ScriptFormattingSettings;
-import org.openzen.zenscript.parser.PrefixedBracketParser;
-import org.openzen.zenscript.parser.SimpleBracketParser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -140,97 +111,9 @@ public class CraftTweaker {
                     recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
                 }
                 CTRecipeManager.recipeManager = recipeManager;
-                try {
-                    CraftTweakerAPI.reload();
-                    ScriptingEngine engine = new ScriptingEngine();
-                    engine.debug = true;
-                    //Register crafttweaker module first to assign deps
-                    JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
-                    CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
-                    CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
-                    PrefixedBracketParser bep = new PrefixedBracketParser(null);
-                    for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
-                        String name = method.getAnnotation(BracketResolver.class).value();
-                        FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
-                        bep.register(name, new SimpleBracketParser(engine.registry, memberRef));
-                    }
-                    engine.registerNativeProvided(crafttweakerModule);
-                    for(String key : CraftTweakerRegistry.getRootPackages()) {
-                        //module already registered
-                        if(key.equals("crafttweaker")) {
-                            continue;
-                        }
-                        JavaNativeModule module = engine.createNativeModule(key, key, crafttweakerModule);
-                        CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
-                        engine.registerNativeProvided(module);
-                    }
-                    List<File> fileList = new ArrayList<>();
-                    findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
-                    
-                    
-                    final List<IPreprocessor> preprocessors = new ArrayList<>(6);
-                    preprocessors.add(new DebugPreprocessor());
-                    preprocessors.add(new NoLoadPreprocessor());
-                    preprocessors.add(new PriorityPreprocessor());
-                    preprocessors.add(new ReplacePreprocessor());
-                    preprocessors.add(new LoadFirstPreprocessor());
-                    preprocessors.add(new LoadLastPreprocessor());
-                    
-                    final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors);
-                    SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
-                    
-                    SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
-                    
-                    if(!scripts.isValid()) {
-                        CraftTweakerAPI.logger.error("Scripts are invalid!");
-                        LOG.info("Scripts are invalid!");
-                        return;
-                    }
-                    boolean formatScripts = true;
-                    //  toggle this to format scripts, ideally this should be a command
-                    if(formatScripts) {
-                        List<HighLevelDefinition> all = scripts.definitions.getAll();
-                        ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
-                        FileFormatter formatter = new FileFormatter(builder.build());
-                        List<ScriptBlock> blocks = scripts.scripts;
-                        for(ScriptBlock block : blocks) {
-                            String format = formatter.format(scripts.rootPackage, block, all);
-                            File parent = new File("scriptsFormatted");
-                            parent.mkdirs();
-                            parent.mkdir();
-                            File file = new File(parent, block.file.getFilename());
-                            file.createNewFile();
-                            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                            writer.write(format);
-                            writer.close();
-                        }
-                    }
-                    engine.registerCompiled(scripts);
-                    engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
-                    
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
-                }
-                
-                CraftTweakerAPI.endFirstRun();
+                CraftTweakerAPI.loadScripts();
             }
         });
-    }
-    
-    
-    public static void findScriptFiles(File path, List<File> files) {
-        if(path.isDirectory()) {
-            for(File file : path.listFiles()) {
-                if(file.isDirectory()) {
-                    findScriptFiles(file, files);
-                } else {
-                    if(file.getName().toLowerCase().endsWith(".zs")) {
-                        files.add(file);
-                    }
-                }
-            }
-        }
     }
     
 }
