@@ -103,7 +103,6 @@ public class CraftTweaker {
         called on singleplayer join on the client
         Called on multiplayer login on the server
          */
-        System.out.println("logged in");
         ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
     }
     
