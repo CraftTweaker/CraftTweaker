@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.brackets;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -31,4 +32,14 @@ public class BracketHandlers {
         return new MCItemStack(value);
     }
     
+    
+    @BracketResolver("tag")
+    public static MCTag getTag(String tokens){
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("Tag BEP <tag:%s> does not seem to be lower-cased!", tokens);
+        final String[] split = tokens.split(":");
+        if(split.length != 2)
+            throw new IllegalArgumentException("Could not get Tag with name: <tag:" + tokens + ">! Syntax is <tag:modid:tagname>");
+        return new MCTag(new ResourceLocation(tokens));
+    }
 }
