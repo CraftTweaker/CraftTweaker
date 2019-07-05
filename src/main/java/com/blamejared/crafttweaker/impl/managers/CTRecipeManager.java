@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.managers.IRegistryManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
+import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
@@ -28,13 +29,17 @@ public class CTRecipeManager implements IRegistryManager {
     }
     
     @ZenCodeType.Method
-    public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Nullable RecipeFunctionShaped recipeFunction) {
-        //addedRecipes.add(new ActionAddCraftingRecipe.Shaped(recipeName, output, ingredients, true, recipeFunction));
+    public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionShaped recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShaped(recipeName, output, ingredients, false, recipeFunction), "shaped"));
+    }
+    
+    @ZenCodeType.Method
+    public void addShapedMirrored(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionShaped recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShaped(recipeName, output, ingredients, true, recipeFunction), "mirroring shaped"));
     }
     
     @ZenCodeType.Method
     public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionShapeless recipeFunction) {
-        //addedRecipes.add(new ActionAddCraftingRecipe.Shapeless(recipeName, output, ingredients, recipeFunction));
         CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
     }
     
@@ -44,8 +49,15 @@ public class CTRecipeManager implements IRegistryManager {
     }
     
     @Override
+    @ZenCodeType.Method
     public void removeByName(String name) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByName(getRecipeType(), new ResourceLocation(name)));
+    }
+    
+    @Override
+    @ZenCodeType.Method
+    public void remove(IItemStack output) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
     }
     
     @Override
