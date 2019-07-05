@@ -49,13 +49,11 @@ public class CTRecipeManager implements IRegistryManager {
     }
     
     @Override
-    @ZenCodeType.Method
     public void removeByName(String name) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByName(getRecipeType(), new ResourceLocation(name)));
     }
     
     @Override
-    @ZenCodeType.Method
     public void remove(IItemStack output) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
     }
