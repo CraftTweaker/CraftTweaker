@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.tag;
+package com.blamejared.crafttweaker.impl.tag;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -36,12 +36,9 @@ public class MCTag implements IIngredient {
     
     @ZenCodeType.Getter("items")
     public IItemStack[] getItems() {
-        if(itemTag == null) {
-            itemTag = ItemTags.getCollection().get(id);
-            if(itemTag == null) {
-                CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not an ItemTag!");
-                return new IItemStack[0];
-            }
+        if(getItemTag() == null) {
+            CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not an ItemTag!");
+            return new IItemStack[0];
         }
         
         List<IItemStack> returned = new ArrayList<>();
@@ -80,10 +77,17 @@ public class MCTag implements IIngredient {
     
     @Override
     public Ingredient asVanillaIngredient() {
-        if(itemTag == null) {
+        if(getItemTag() == null) {
             return Ingredient.EMPTY;
         }
         return Ingredient.fromTag(itemTag);
+    }
+    
+    public Tag<Item> getItemTag() {
+        if(itemTag == null) {
+            itemTag = ItemTags.getCollection().get(id);
+        }
+        return itemTag;
     }
     
     @Override
