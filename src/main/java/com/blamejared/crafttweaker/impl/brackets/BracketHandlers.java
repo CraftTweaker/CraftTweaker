@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.brackets;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

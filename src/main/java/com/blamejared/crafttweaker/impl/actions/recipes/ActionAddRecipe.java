@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.recipes;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -25,6 +26,6 @@ public class ActionAddRecipe implements IRuntimeAction {
     
     @Override
     public String describe() {
-        return "Adding \"" + Registry.RECIPE_TYPE.getKey(recipeType) + "\" recipe with name: \"" + recipe.getId() + "\" that outputs: ";
+        return "Adding \"" + Registry.RECIPE_TYPE.getKey(recipeType) + "\" recipe, of type: \"" + subType + "\", with name: \"" + recipe.getId() + "\" that outputs: " + new MCItemStackMutable(recipe.getRecipeOutput());
     }
 }
