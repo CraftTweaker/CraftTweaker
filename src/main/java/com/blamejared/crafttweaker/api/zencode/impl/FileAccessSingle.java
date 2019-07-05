@@ -7,8 +7,10 @@ import org.openzen.zencode.shared.SourceFile;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -32,11 +34,31 @@ public class FileAccessSingle {
         }
         this.fileName = file.getName();
         this.fileContents = new ArrayList<>();
-        readFile(file);
+        try {
+            readFile(new FileReader(file));
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
         fillInMissingPreprocessors();
         applyPreprocessors();
     }
-
+    
+    
+    /**
+     * Constructs a new FileAccessSingle object from a string
+     *
+     */
+    public FileAccessSingle(String fileName, Reader reader, Collection<IPreprocessor> preprocessors) {
+        this.registeredPreprocessors = new HashMap<>();
+        for (IPreprocessor preprocessor : preprocessors) {
+            this.registeredPreprocessors.put(preprocessor.getName().toLowerCase(Locale.ENGLISH), preprocessor);
+        }
+        this.fileName = fileName;
+        this.fileContents = new ArrayList<>();
+        readFile(reader);
+        fillInMissingPreprocessors();
+        applyPreprocessors();
+    }
     
     public static Comparator<FileAccessSingle> createComparator(Collection<IPreprocessor> preprocessors) {
         List<IPreprocessor> list = new ArrayList<>(preprocessors);
@@ -70,8 +92,8 @@ public class FileAccessSingle {
         }
     }
 
-    private void readFile(File file) {
-        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+    private void readFile(Reader reader) {
+        try (final BufferedReader bufferedReader = new BufferedReader(reader)) {
             int i = 0;
             while (bufferedReader.ready()) {
                 final String line = bufferedReader.readLine();
@@ -79,7 +101,7 @@ public class FileAccessSingle {
                 this.fileContents.add(line);
             }
         } catch (IOException e) {
-            CraftTweakerAPI.logThrowing("Could not load file %s", e, file);
+            CraftTweakerAPI.logThrowing("Could not load file %s", e, this.fileName);
         }
     }
 
