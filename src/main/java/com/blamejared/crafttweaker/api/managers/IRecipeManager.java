@@ -9,8 +9,8 @@ import org.openzen.zencode.java.ZenCodeType;
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
  */
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.registries.IRegistryManager")
-public interface IRegistryManager {
+@ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
+public interface IRecipeManager {
     
     /**
      * Remove recipe based on Registry name

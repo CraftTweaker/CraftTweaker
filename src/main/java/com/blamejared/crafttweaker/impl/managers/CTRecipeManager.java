@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.managers.IRegistryManager;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CTRecipeManager")
-public class CTRecipeManager implements IRegistryManager {
+public class CTRecipeManager implements IRecipeManager {
     
     @ZenCodeGlobals.Global("recipes")
     public static final CTRecipeManager INSTANCE = new CTRecipeManager();

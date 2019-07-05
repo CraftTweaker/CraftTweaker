@@ -26,6 +26,14 @@ public class ActionAddRecipe implements IRuntimeAction {
     
     @Override
     public String describe() {
-        return "Adding \"" + Registry.RECIPE_TYPE.getKey(recipeType) + "\" recipe, of type: \"" + subType + "\", with name: \"" + recipe.getId() + "\" that outputs: " + new MCItemStackMutable(recipe.getRecipeOutput());
+        return "Adding \"" + Registry.RECIPE_TYPE.getKey(recipeType) + "\" recipe" + getSubTypeDescription() + ", with name: \"" + recipe.getId() + "\" that outputs: " + new MCItemStackMutable(recipe.getRecipeOutput());
+    }
+    
+    private String getSubTypeDescription() {
+        if(subType != null && !subType.trim().isEmpty()) {
+            return ", of type: \"" + subType + "\"";
+        } else {
+            return "";
+        }
     }
 }
