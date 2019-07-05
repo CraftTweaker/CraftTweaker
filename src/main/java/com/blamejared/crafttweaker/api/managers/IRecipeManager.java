@@ -2,8 +2,13 @@ package com.blamejared.crafttweaker.api.managers;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.Map;
 
 /**
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
@@ -36,5 +41,12 @@ public interface IRecipeManager {
      */
     IRecipeType getRecipeType();
     
-    
+    /**
+     * Gets all the vanilla IRecipes for this recipe type.
+     *
+     * @return Map of ResourceLocation to IRecipe for this recipe type.
+     */
+    default Map<ResourceLocation, IRecipe<?>> getRecipes() {
+        return CTRecipeManager.recipeManager.recipes.get(getRecipeType());
+    }
 }

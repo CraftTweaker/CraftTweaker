@@ -22,7 +22,7 @@ public interface ISingleRecipeManager extends IRecipeManager {
      * @param cookTime how long it takes to cook
      */
     @ZenCodeType.Method
-    void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime, @ZenCodeType.Optional RecipeFunctionSingle function);
+    void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime);
     
     /**
      * Removes a recipe based on it's output and input.
@@ -33,11 +33,4 @@ public interface ISingleRecipeManager extends IRecipeManager {
     @ZenCodeType.Method
     void removeRecipe(IItemStack output, IIngredient input);
     
-    
-    @FunctionalInterface
-    @ZenRegister
-    interface RecipeFunctionSingle {
-        
-        IItemStack process(IItemStack usualOut, IIngredient input);
-    }
 }
