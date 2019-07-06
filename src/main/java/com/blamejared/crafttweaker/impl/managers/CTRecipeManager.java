@@ -6,13 +6,10 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
-import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
-import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -41,21 +38,6 @@ public class CTRecipeManager implements IRecipeManager {
     @ZenCodeType.Method
     public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionShapeless recipeFunction) {
         CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
-    }
-    
-    @ZenCodeType.Method
-    public void removeRecipe(IIngredient output) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
-    }
-    
-    @Override
-    public void removeByName(String name) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByName(getRecipeType(), new ResourceLocation(name)));
-    }
-    
-    @Override
-    public void remove(IItemStack output) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
     }
     
     @Override

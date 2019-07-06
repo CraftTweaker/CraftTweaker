@@ -9,7 +9,6 @@ import net.minecraft.util.registry.*;
 
 public class ActionRemoveRecipeByName implements IRuntimeAction {
     
-    
     private final IRecipeType recipeType;
     private final ResourceLocation name;
     
@@ -31,7 +30,7 @@ public class ActionRemoveRecipeByName implements IRuntimeAction {
     @Override
     public boolean validate(ILogger logger) {
         boolean containsKey = CTRecipeManager.recipeManager.recipes.get(recipeType).containsKey(name);
-        if(!containsKey){
+        if(!containsKey) {
             logger.warning("No recipe with type: \"" + Registry.RECIPE_TYPE.getKey(recipeType) + "\" and name: \"" + name + "\"");
         }
         return containsKey;

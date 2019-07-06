@@ -1,7 +1,12 @@
 package com.blamejared.crafttweaker.api.managers;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -17,14 +22,6 @@ import java.util.Map;
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
 public interface IRecipeManager {
     
-    /**
-     * Remove recipe based on Registry name
-     *
-     * @param name registry name of recipe to remove
-     */
-    @ZenCodeType.Method
-    void removeByName(String name);
-    
     
     /**
      * Remove a recipe based on it's output.
@@ -32,7 +29,39 @@ public interface IRecipeManager {
      * @param output output of the recipe
      */
     @ZenCodeType.Method
-    void remove(IItemStack output);
+    default void removeRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
+    }
+    
+    /**
+     * Remove recipe based on Registry name
+     *
+     * @param name registry name of recipe to remove
+     */
+    @ZenCodeType.Method
+    default void removeByName(String name) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByName(getRecipeType(), new ResourceLocation(name)));
+    }
+    
+    /**
+     * Remove recipe based on Registry name modid
+     *
+     * @param modid modid of the recipes to remove
+     */
+    @ZenCodeType.Method
+    default void removeByModid(String modid) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(getRecipeType(), modid));
+    }
+    
+    /**
+     * Remove recipe based on regex
+     *
+     * @param regex regex to match against
+     */
+    @ZenCodeType.Method
+    default void removeByRegex(String regex) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(getRecipeType(), regex));
+    }
     
     /**
      * Gets the recipe type for the registry to remove from.

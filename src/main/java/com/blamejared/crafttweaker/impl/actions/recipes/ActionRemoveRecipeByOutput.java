@@ -15,11 +15,10 @@ import java.util.*;
 
 public class ActionRemoveRecipeByOutput implements IRuntimeAction {
     
-    
     private final IRecipeType recipeType;
-    private final IIngredient output;
+    private final IItemStack output;
     
-    public ActionRemoveRecipeByOutput(IRecipeType recipeType, IIngredient output) {
+    public ActionRemoveRecipeByOutput(IRecipeType recipeType, IItemStack output) {
         this.recipeType = recipeType;
         this.output = output;
     }
