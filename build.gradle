@@ -46,7 +46,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 
 minecraft {
     mappings channel: 'snapshot', version: '20190621-1.14.2'
-    accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
