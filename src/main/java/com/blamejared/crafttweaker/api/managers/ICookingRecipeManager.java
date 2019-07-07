@@ -4,7 +4,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutputInput;
+import net.minecraft.item.crafting.AbstractCookingRecipe;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -24,7 +26,9 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @param cookTime how long it takes to cook
      */
     @ZenCodeType.Method
-    void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime);
+    default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime){
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, makeRecipe(name, output, input, xp, cookTime), ""));
+    }
     
     /**
      * Removes a recipe based on it's output and input.
@@ -37,4 +41,6 @@ public interface ICookingRecipeManager extends IRecipeManager {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutputInput(this, output, input));
     }
     
+    
+    AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime);
 }
