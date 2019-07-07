@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.managers.ISingleRecipeManager;
+import com.blamejared.crafttweaker.api.managers.ICookingRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.FurnaceManager")
-public class CTFurnaceManager implements ISingleRecipeManager {
+public class CTFurnaceManager implements ICookingRecipeManager {
     
     @ZenCodeGlobals.Global("furnace")
     public static final CTFurnaceManager INSTANCE = new CTFurnaceManager();

@@ -11,8 +11,8 @@ import org.openzen.zencode.java.ZenCodeType;
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
  */
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.registries.ISingleRecipeManager")
-public interface ISingleRecipeManager extends IRecipeManager {
+@ZenCodeType.Name("crafttweaker.api.registries.ICookingRecipeManager")
+public interface ICookingRecipeManager extends IRecipeManager {
     
     /**
      * Adds a recipe based on given params.
