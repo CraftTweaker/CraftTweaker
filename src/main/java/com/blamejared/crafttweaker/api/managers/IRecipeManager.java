@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.managers;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveAll;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
@@ -61,6 +62,15 @@ public interface IRecipeManager {
     @ZenCodeType.Method
     default void removeByRegex(String regex) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex));
+    }
+    
+    
+    /**
+     * Remove all recipes in this registry
+     */
+    @ZenCodeType.Method
+    default void removeAll() {
+        CraftTweakerAPI.apply(new ActionRemoveAll(this));
     }
     
     /**
