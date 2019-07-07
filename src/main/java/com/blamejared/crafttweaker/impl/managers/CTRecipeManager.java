@@ -26,18 +26,18 @@ public class CTRecipeManager implements IRecipeManager {
     }
     
     @ZenCodeType.Method
-    public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionShaped recipeFunction) {
-        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShaped(recipeName, output, ingredients, false, recipeFunction), "shaped"));
+    public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, false, recipeFunction), "shaped"));
     }
     
     @ZenCodeType.Method
-    public void addShapedMirrored(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionShaped recipeFunction) {
-        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShaped(recipeName, output, ingredients, true, recipeFunction), "mirroring shaped"));
+    public void addShapedMirrored(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, true, recipeFunction), "mirroring shaped"));
     }
     
     @ZenCodeType.Method
-    public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionShapeless recipeFunction) {
-        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
+    public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionArray recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
     }
     
     @Override
@@ -50,17 +50,4 @@ public class CTRecipeManager implements IRecipeManager {
     //}
     
     
-    @FunctionalInterface
-    @ZenRegister
-    public interface RecipeFunctionShaped {
-        
-        IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
-    }
-    
-    @FunctionalInterface
-    @ZenRegister
-    public interface RecipeFunctionShapeless {
-        
-        IItemStack process(IItemStack usualOut, IItemStack[] inputs);
-    }
 }

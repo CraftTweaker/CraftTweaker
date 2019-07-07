@@ -22,7 +22,7 @@ public class CTFurnaceManager implements ISingleRecipeManager {
     
     @Override
     public void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
-        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new FurnaceRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime), ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new FurnaceRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime), ""));
     }
     
     @Override

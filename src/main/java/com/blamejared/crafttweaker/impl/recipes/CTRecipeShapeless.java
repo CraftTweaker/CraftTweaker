@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.impl.recipes;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
@@ -28,10 +28,10 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     private final IIngredient[] ingredients;
     private final IItemStack output;
     @Nullable
-    private final CTRecipeManager.RecipeFunctionShapeless function;
+    private final IRecipeManager.RecipeFunctionArray function;
     private final ResourceLocation resourceLocation;
     
-    public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable CTRecipeManager.RecipeFunctionShapeless function) {
+    public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable IRecipeManager.RecipeFunctionArray function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.ingredients = ingredients;
@@ -67,7 +67,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     
     @Nullable
-    public CTRecipeManager.RecipeFunctionShapeless getFunction() {
+    public IRecipeManager.RecipeFunctionArray getFunction() {
         return function;
     }
     

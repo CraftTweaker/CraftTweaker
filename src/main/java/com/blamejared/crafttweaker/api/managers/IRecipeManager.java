@@ -30,7 +30,7 @@ public interface IRecipeManager {
      */
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(this, output));
     }
     
     /**
@@ -40,7 +40,7 @@ public interface IRecipeManager {
      */
     @ZenCodeType.Method
     default void removeByName(String name) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByName(getRecipeType(), new ResourceLocation(name)));
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByName(this, new ResourceLocation(name)));
     }
     
     /**
@@ -50,7 +50,7 @@ public interface IRecipeManager {
      */
     @ZenCodeType.Method
     default void removeByModid(String modid) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(getRecipeType(), modid));
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(this, modid));
     }
     
     /**
@@ -60,7 +60,7 @@ public interface IRecipeManager {
      */
     @ZenCodeType.Method
     default void removeByRegex(String regex) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(getRecipeType(), regex));
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex));
     }
     
     /**
@@ -78,4 +78,27 @@ public interface IRecipeManager {
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
         return CTRecipeManager.recipeManager.recipes.get(getRecipeType());
     }
+    
+    
+    @FunctionalInterface
+    @ZenRegister
+    interface RecipeFunctionSingle {
+        
+        IItemStack process(IItemStack usualOut, IItemStack inputs);
+    }
+    
+    @FunctionalInterface
+    @ZenRegister
+    interface RecipeFunctionArray {
+        
+        IItemStack process(IItemStack usualOut, IItemStack[] inputs);
+    }
+    
+    @FunctionalInterface
+    @ZenRegister
+    interface RecipeFunctionMatrix {
+        
+        IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
+    }
+    
 }

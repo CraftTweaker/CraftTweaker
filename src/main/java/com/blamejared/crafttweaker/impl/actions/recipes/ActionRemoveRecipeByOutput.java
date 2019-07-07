@@ -1,44 +1,42 @@
 package com.blamejared.crafttweaker.impl.actions.recipes;
 
-import com.blamejared.crafttweaker.api.actions.*;
-import com.blamejared.crafttweaker.api.exceptions.*;
-import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.api.logger.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.managers.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
-import net.minecraft.util.registry.*;
+import com.blamejared.crafttweaker.api.exceptions.ScriptException;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ActionRemoveRecipeByOutput implements IRuntimeAction {
+public class ActionRemoveRecipeByOutput extends ActionRecipeBase {
     
-    private final IRecipeType recipeType;
     private final IItemStack output;
     
-    public ActionRemoveRecipeByOutput(IRecipeType recipeType, IItemStack output) {
-        this.recipeType = recipeType;
+    public ActionRemoveRecipeByOutput(IRecipeManager manager, IItemStack output) {
+        super(manager);
         this.output = output;
     }
     
     @Override
     public void apply() {
         List<ResourceLocation> toRemove = new ArrayList<>();
-        for(ResourceLocation location : CTRecipeManager.recipeManager.recipes.get(recipeType).keySet()) {
-            ItemStack recOut = CTRecipeManager.recipeManager.recipes.get(recipeType).get(location).getRecipeOutput();
+        for(ResourceLocation location : getManager().getRecipes().keySet()) {
+            ItemStack recOut = getManager().getRecipes().get(location).getRecipeOutput();
             if(output.matches(new MCItemStackMutable(recOut))) {
                 toRemove.add(location);
             }
         }
-        toRemove.forEach(CTRecipeManager.recipeManager.recipes.get(recipeType)::remove);
+        toRemove.forEach(getManager().getRecipes()::remove);
         
     }
     
     @Override
     public String describe() {
-        return "Removing \"" + Registry.RECIPE_TYPE.getKey(recipeType) + "\" recipes with output: " + output + "\"";
+        return "Removing \"" + Registry.RECIPE_TYPE.getKey(getManager().getRecipeType()) + "\" recipes with output: " + output + "\"";
     }
     
     @Override

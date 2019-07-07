@@ -3,10 +3,10 @@ package com.blamejared.crafttweaker.impl.recipes;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCMutableItemStack;
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -31,12 +31,12 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     private final IItemStack output;
     private final boolean mirrored;
     @Nullable
-    private final CTRecipeManager.RecipeFunctionShaped function;
+    private final IRecipeManager.RecipeFunctionMatrix function;
     private final ResourceLocation resourceLocation;
     
     private final int width, height;
     
-    public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable CTRecipeManager.RecipeFunctionShaped function) {
+    public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable IRecipeManager.RecipeFunctionMatrix function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.ingredients = ingredients;

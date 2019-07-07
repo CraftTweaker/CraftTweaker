@@ -31,6 +31,7 @@ public interface ISingleRecipeManager extends IRecipeManager {
      * @param input  IIngredient of the recipe to remove.
      */
     @ZenCodeType.Method
-    void removeRecipe(IItemStack output, IIngredient input);
+    default void removeRecipe(IItemStack output, IIngredient input){
+    }
     
 }
