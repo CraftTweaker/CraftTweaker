@@ -26,11 +26,6 @@ public class CTFurnaceManager implements ISingleRecipeManager {
     }
     
     @Override
-    public void removeRecipe(IItemStack output, IIngredient input) {
-    
-    }
-    
-    @Override
     public IRecipeType getRecipeType() {
         return IRecipeType.SMELTING;
     }

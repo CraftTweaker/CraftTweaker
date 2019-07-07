@@ -34,7 +34,7 @@ public class MCTag implements IIngredient {
         this.id = id;
     }
     
-    @ZenCodeType.Getter("items")
+    @Override
     public IItemStack[] getItems() {
         if(getItemTag() == null) {
             CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not an ItemTag!");

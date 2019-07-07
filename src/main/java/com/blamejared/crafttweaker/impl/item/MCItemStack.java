@@ -88,6 +88,11 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public IItemStack[] getItems() {
+        return new IItemStack[]{this};
+    }
+    
+    @Override
     public ItemStack getInternal() {
         return internal;
     }
@@ -96,17 +101,17 @@ public class MCItemStack implements IItemStack {
     public boolean matches(IItemStack stack) {
         ItemStack stack1 = internal;
         ItemStack stack2 = stack.getInternal();
-    
-        if(stack1.isEmpty() != stack2.isEmpty()){
+        
+        if(stack1.isEmpty() != stack2.isEmpty()) {
             return false;
         }
-        if(stack1.getItem() != stack2.getItem()){
+        if(stack1.getItem() != stack2.getItem()) {
             return false;
         }
-        if(stack1.getCount() > stack2.getCount()){
+        if(stack1.getCount() > stack2.getCount()) {
             return false;
         }
-        if(stack1.getDamage() != stack2.getDamage()){
+        if(stack1.getDamage() != stack2.getDamage()) {
             return false;
         }
         return true;

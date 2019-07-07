@@ -85,6 +85,11 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
+    public IItemStack[] getItems() {
+        return new IItemStack[]{this};
+    }
+    
+    @Override
     public ItemStack getInternal() {
         return internal;
     }

@@ -1,8 +1,10 @@
 package com.blamejared.crafttweaker.api.managers;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutputInput;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -31,7 +33,8 @@ public interface ISingleRecipeManager extends IRecipeManager {
      * @param input  IIngredient of the recipe to remove.
      */
     @ZenCodeType.Method
-    default void removeRecipe(IItemStack output, IIngredient input){
+    default void removeRecipe(IItemStack output, IIngredient input) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutputInput(this, output, input));
     }
     
 }
