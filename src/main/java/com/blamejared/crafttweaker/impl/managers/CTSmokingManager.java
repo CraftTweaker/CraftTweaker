@@ -19,6 +19,9 @@ public class CTSmokingManager implements ICookingRecipeManager {
     @ZenCodeGlobals.Global("smoking")
     public static final CTSmokingManager INSTANCE = new CTSmokingManager();
     
+    private CTSmokingManager() {
+    }
+    
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
         return new SmokingRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);

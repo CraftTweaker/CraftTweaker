@@ -19,6 +19,9 @@ public class CTFurnaceManager implements ICookingRecipeManager {
     @ZenCodeGlobals.Global("furnace")
     public static final CTFurnaceManager INSTANCE = new CTFurnaceManager();
     
+    private CTFurnaceManager() {
+    }
+    
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
         return new FurnaceRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);

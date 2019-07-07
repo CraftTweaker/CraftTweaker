@@ -19,6 +19,9 @@ public class CTCookingManager implements ICookingRecipeManager {
     @ZenCodeGlobals.Global("cooking")
     public static final CTCookingManager INSTANCE = new CTCookingManager();
     
+    private CTCookingManager() {
+    }
+    
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
         return new CampfireCookingRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);

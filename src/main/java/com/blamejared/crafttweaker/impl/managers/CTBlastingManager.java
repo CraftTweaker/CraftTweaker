@@ -19,6 +19,9 @@ public class CTBlastingManager implements ICookingRecipeManager {
     @ZenCodeGlobals.Global("blasting")
     public static final CTBlastingManager INSTANCE = new CTBlastingManager();
     
+    private CTBlastingManager() {
+    }
+    
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
         return new BlastingRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
