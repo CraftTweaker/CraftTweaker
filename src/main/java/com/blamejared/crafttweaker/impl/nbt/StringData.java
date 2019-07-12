@@ -21,23 +21,13 @@ public class StringData implements IData {
     }
     
     @Override
-    public byte getId() {
-        return internal.getId();
-    }
-    
-    @Override
     public IData copy() {
         return new StringData(internal);
     }
     
-    @ZenCodeType.Method
-    public String getInternal() {
-        return internal.getString();
-    }
-    
-    @ZenCodeType.Caster(implicit = true)
-    public String toString() {
-        return internal.toString();
+    @Override
+    public StringNBT getInternal() {
+        return internal;
     }
     
 }

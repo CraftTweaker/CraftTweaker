@@ -5,9 +5,9 @@ import com.blamejared.crafttweaker.api.nbt.*;
 import net.minecraft.nbt.*;
 import org.openzen.zencode.java.*;
 
-@ZenCodeType.Name("crafttweaker.api.nbt.StringData")
+@ZenCodeType.Name("crafttweaker.api.nbt.ByteData")
 @ZenRegister
-public class ByteData implements IData {
+public class ByteData implements INumberData {
     
     private ByteNBT internal;
     
@@ -21,23 +21,13 @@ public class ByteData implements IData {
     }
     
     @Override
-    public byte getId() {
-        return internal.getId();
-    }
-    
-    @Override
     public IData copy() {
         return new ByteData(internal);
     }
     
-    @ZenCodeType.Method
-    public byte getInternal() {
-        return internal.getByte();
-    }
-    
-    @ZenCodeType.Caster(implicit = true)
-    public String toString() {
-        return internal.toString();
+    @Override
+    public ByteNBT getInternal() {
+        return internal;
     }
     
 }
