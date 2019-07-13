@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 public class CraftTweakerRegistry {
     
@@ -42,19 +42,11 @@ public class CraftTweakerRegistry {
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
-        final List<ModFileScanData.AnnotationData> annotations = ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_ZEN_REGISTER.equals(a.getAnnotationType())).collect(Collectors.toList());
-        for(ModFileScanData.AnnotationData data : annotations) {
-            try {
-                addClass(data);
-            } catch(ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        
+        Stream<ModFileScanData.AnnotationData> annotationData = ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream);
+        annotationData.filter(a -> TYPE_ZEN_REGISTER.equals(a.getAnnotationType())).collect(Collectors.toList()).forEach(CraftTweakerRegistry::addClass);
         sortClasses();
         
-        
-        for(ModFileScanData.AnnotationData data : ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_PRE_PROCESSOR.equals(a.getAnnotationType())).collect(Collectors.toList())) {
+        annotationData.filter(a -> TYPE_PRE_PROCESSOR.equals(a.getAnnotationType())).forEach(data -> {
             Type type = data.getClassType();
             try {
                 Class<?> clazz = Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
@@ -67,7 +59,7 @@ public class CraftTweakerRegistry {
                 }
                 if(!valid) {
                     CraftTweakerAPI.logWarning("Preprocessor: \"%s\" does not implement IPreprocessor!", type.getClassName());
-                    continue;
+                    return;
                 }
                 IPreprocessor preprocessor = null;
                 for(Constructor<?> constructor : clazz.getConstructors()) {
@@ -90,7 +82,7 @@ public class CraftTweakerRegistry {
             } catch(ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        });
     }
     
     /**
@@ -98,7 +90,8 @@ public class CraftTweakerRegistry {
      *
      * @param data Scan data for a given class.
      */
-    private static void addClass(ModFileScanData.AnnotationData data) throws ClassNotFoundException {
+    private static void addClass(ModFileScanData.AnnotationData data) {
+        
         if(data.getAnnotationData().containsKey("modDeps")) {
             List<String> modOnly = (List<String>) data.getAnnotationData().get("modDeps");
             for(String mod : modOnly) {
@@ -108,7 +101,11 @@ public class CraftTweakerRegistry {
             }
         }
         CraftTweaker.LOG.info("Found ZenRegister: {}", data.getClassType().getClassName());
-        ZEN_CLASSES.add(Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader()));
+        try {
+            ZEN_CLASSES.add(Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader()));
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -149,6 +146,7 @@ public class CraftTweakerRegistry {
      * Used to determine if the class has a field / method
      *
      * @param zenClass class to scan
+     *
      * @return true if this class has a global annotation on a method.
      */
     private static boolean hasGlobal(Class zenClass) {
@@ -188,6 +186,7 @@ public class CraftTweakerRegistry {
      * {@code "crafttweaker.sub.other.package.Class}
      *
      * @param name Name of the Zen Package.
+     *
      * @return list of classes in the Zen Package.
      */
     public static List<Class> getClassesInPackage(String name) {
