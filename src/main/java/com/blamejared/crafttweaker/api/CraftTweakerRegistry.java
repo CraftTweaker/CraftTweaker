@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Streams;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
@@ -37,16 +38,15 @@ public class CraftTweakerRegistry {
     private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
+    private static final Map<String, List<Class>> EXPANSIONS = new HashMap<>();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
-        Stream<ModFileScanData.AnnotationData> annotationData = ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream);
-        annotationData.filter(a -> TYPE_ZEN_REGISTER.equals(a.getAnnotationType())).collect(Collectors.toList()).forEach(CraftTweakerRegistry::addClass);
+        ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_ZEN_REGISTER.equals(a.getAnnotationType())).collect(Collectors.toList()).forEach(CraftTweakerRegistry::addClass);
         sortClasses();
-        
-        annotationData.filter(a -> TYPE_PRE_PROCESSOR.equals(a.getAnnotationType())).forEach(data -> {
+        ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_PRE_PROCESSOR.equals(a.getAnnotationType())).forEach(data -> {
             Type type = data.getClassType();
             try {
                 Class<?> clazz = Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
@@ -116,6 +116,10 @@ public class CraftTweakerRegistry {
             if(zenClass.isAnnotationPresent(ZenCodeType.Name.class)) {
                 ZenCodeType.Name name = (ZenCodeType.Name) zenClass.getAnnotation(ZenCodeType.Name.class);
                 ZEN_CLASS_MAP.put(name.value(), zenClass);
+            }
+            
+            if(zenClass.isAnnotationPresent(ZenCodeType.Expansion.class)) {
+                EXPANSIONS.computeIfAbsent(((ZenCodeType.Expansion) zenClass.getAnnotation(ZenCodeType.Expansion.class)).value(), s -> new ArrayList<>()).add(zenClass);
             }
             
             if(hasGlobal(zenClass)) {
@@ -222,5 +226,9 @@ public class CraftTweakerRegistry {
     
     public static List<IPreprocessor> getPreprocessors() {
         return PREPROCESSORS;
+    }
+    
+    public static Map<String, List<Class>> getExpansions() {
+        return EXPANSIONS;
     }
 }
