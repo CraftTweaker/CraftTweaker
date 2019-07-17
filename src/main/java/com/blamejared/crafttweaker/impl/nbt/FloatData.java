@@ -29,4 +29,9 @@ public class FloatData implements IData {
     public FloatNBT getInternal() {
         return internal;
     }
+    
+    @Override
+    public String asString() {
+        return internal.getFloat() + " as float";
+    }
 }

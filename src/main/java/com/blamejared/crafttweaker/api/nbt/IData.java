@@ -19,8 +19,13 @@ public interface IData {
     INBT getInternal();
     
     
-    @ZenCodeType.Caster(implicit = true)
+    @ZenCodeType.Method
     default String getString() {
         return getInternal().toString();
     }
+    
+    default String asString() {
+        return "non as NIY";
+    }
+    
 }

@@ -1,9 +1,10 @@
 package com.blamejared.crafttweaker.impl.nbt;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.nbt.*;
-import net.minecraft.nbt.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.nbt.IData;
+import com.blamejared.crafttweaker.api.nbt.INumberData;
+import net.minecraft.nbt.ByteNBT;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.nbt.ByteData")
 @ZenRegister
@@ -28,6 +29,11 @@ public class ByteData implements INumberData {
     @Override
     public ByteNBT getInternal() {
         return internal;
+    }
+    
+    @Override
+    public String asString() {
+        return internal.getByte() + " as byte";
     }
     
 }

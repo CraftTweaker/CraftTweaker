@@ -70,4 +70,22 @@ public class LongArrayData implements ICollectionData {
     public void clear() {
         internal.clear();
     }
+    
+    
+    @Override
+    public String asString() {
+        StringBuilder result = new StringBuilder();
+        result.append('[');
+        boolean first = true;
+        for(LongNBT nbt : internal) {
+            if(first) {
+                first = false;
+            } else {
+                result.append(", ");
+            }
+            result.append(nbt.getLong());
+        }
+        result.append(']').append("as long[]");
+        return result.toString();
+    }
 }

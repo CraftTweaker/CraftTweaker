@@ -70,4 +70,21 @@ public class ByteArrayData implements ICollectionData {
     public void clear() {
         internal.clear();
     }
+    
+    @Override
+    public String asString() {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        boolean first = true;
+        for(ByteNBT nbt : internal) {
+            if(first)
+                first = false;
+            else
+                result.append(", ");
+            
+            result.append(nbt.getByte());
+        }
+        result.append("] as byte[]");
+        return result.toString();
+    }
 }

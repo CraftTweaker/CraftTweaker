@@ -29,4 +29,9 @@ public class LongData implements IData {
     public LongNBT getInternal() {
         return internal;
     }
+    
+    @Override
+    public String asString() {
+        return internal.getLong() + " as long";
+    }
 }

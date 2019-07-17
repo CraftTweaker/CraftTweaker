@@ -29,4 +29,9 @@ public class IntData implements IData {
     public IntNBT getInternal() {
         return internal;
     }
+    
+    @Override
+    public String asString() {
+        return internal.getInt() + "";
+    }
 }

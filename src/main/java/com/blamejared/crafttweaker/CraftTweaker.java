@@ -15,6 +15,7 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
@@ -112,6 +113,7 @@ public class CraftTweaker {
                 }
                 CTRecipeManager.recipeManager = recipeManager;
                 CraftTweakerAPI.loadScripts();
+                event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
             }
         });
     }

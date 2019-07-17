@@ -70,4 +70,21 @@ public class IntArrayData implements ICollectionData {
     public void clear() {
         internal.clear();
     }
+    
+    @Override
+    public String asString() {
+        StringBuilder result = new StringBuilder();
+        result.append('[');
+        boolean first = true;
+        for(IntNBT nbt : internal) {
+            if(first) {
+                first = false;
+            } else {
+                result.append(", ");
+            }
+            result.append(nbt.getInt());
+        }
+        result.append(']').append("as int[]");
+        return result.toString();
+    }
 }

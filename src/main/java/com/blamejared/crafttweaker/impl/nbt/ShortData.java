@@ -29,4 +29,9 @@ public class ShortData implements IData {
     public ShortNBT getInternal() {
         return internal;
     }
+    
+    @Override
+    public String asString() {
+        return internal.getShort() + " as short";
+    }
 }

@@ -29,4 +29,9 @@ public class DoubleData implements IData {
     public DoubleNBT getInternal() {
         return internal;
     }
+    
+    @Override
+    public String asString() {
+        return internal.getDouble() + " as double";
+    }
 }
