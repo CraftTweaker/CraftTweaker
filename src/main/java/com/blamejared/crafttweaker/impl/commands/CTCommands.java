@@ -36,7 +36,21 @@ public class CTCommands {
     
     private static final List<CommandImpl> COMMANDS = new ArrayList<>();
     
-    
+    private static String quoteAndEscape(String p_193588_0_) {
+        StringBuilder stringbuilder = new StringBuilder("\"");
+        
+        for(int i = 0; i < p_193588_0_.length(); ++i) {
+            char c0 = p_193588_0_.charAt(i);
+            
+            if(c0 == '\\' || c0 == '"') {
+                stringbuilder.append('\\');
+            }
+            
+            stringbuilder.append(c0);
+        }
+        
+        return stringbuilder.append('"').toString();
+    }
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
         root.then(Commands.literal("copy").then(Commands.argument("toCopy", StringReader::readString).executes(context -> {
@@ -62,8 +76,8 @@ public class CTCommands {
             
             return 0;
         }));
-        
-        
+    
+    
         //        registerCommand(new CommandImpl("help", (CommandCallerPlayer) (player, stack) -> {
         //            StringBuilder builder = new StringBuilder();
         //            ItemTags.getCollection().getOwningTags(stack.getItem()).forEach(resourceLocation -> builder.append(color("\t- ", TextFormatting.YELLOW)).append(color(resourceLocation.toString(), TextFormatting.AQUA)).append("\n"));
@@ -180,7 +194,7 @@ public class CTCommands {
     public static TextComponent copy(TextComponent base, String toCopy) {
         base.applyTextStyle(style -> {
             style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
-            style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy \"" + toCopy + "\""));
+            style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
         });
         
         return base;
