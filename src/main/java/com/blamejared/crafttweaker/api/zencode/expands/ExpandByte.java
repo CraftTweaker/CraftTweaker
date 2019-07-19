@@ -10,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandByte {
     
     @ZenCodeType.Caster
-    public static IData asData(byte value) {
+    public static IData asData(Byte value) {
         return new ByteData(value);
     }
     
