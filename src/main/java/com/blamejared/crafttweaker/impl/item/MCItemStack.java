@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.impl.item;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.impl.data.MapData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
@@ -75,10 +77,24 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public IItemStack withTag(MapData tag) {
+        final ItemStack copy = internal.copy();
+        copy.setTag(tag.getInternal());
+        return new MCItemStack(copy);
+    }
+    
+    @Override
     public String getCommandString() {
         final StringBuilder sb = new StringBuilder("<item:");
         sb.append(internal.getItem().getRegistryName());
         sb.append(">");
+        
+        if(internal.getTag() != null) {
+            sb.append(".withTag(");
+            sb.append(NBTConverter.convert(internal.getTag()).asString());
+            sb.append(")");
+        }
+        
         if(internal.getDamage() > 0)
             sb.append(".withDamage(").append(internal.getDamage()).append(")");
         

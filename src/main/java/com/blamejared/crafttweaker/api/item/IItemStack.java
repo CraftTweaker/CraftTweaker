@@ -1,9 +1,10 @@
 package com.blamejared.crafttweaker.api.item;
 
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import net.minecraft.item.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.data.MapData;
+import net.minecraft.item.ItemStack;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
@@ -102,6 +103,9 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Getter("translationKey")
     String getTranslationKey();
     
+    
+    @ZenCodeType.Method
+    IItemStack withTag(MapData tag);
     
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.
