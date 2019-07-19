@@ -1,10 +1,10 @@
-package com.blamejared.crafttweaker.api.nbt;
+package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotations.*;
 import net.minecraft.nbt.INBT;
 import org.openzen.zencode.java.*;
 
-@ZenCodeType.Name("crafttweaker.api.tag.IData")
+@ZenCodeType.Name("crafttweaker.api.data.IData")
 @ZenRegister
 public interface IData {
     
@@ -24,8 +24,7 @@ public interface IData {
         return getInternal().toString();
     }
     
-    default String asString() {
-        return "non as NIY";
-    }
+    @ZenCodeType.Method
+    String asString();
     
 }

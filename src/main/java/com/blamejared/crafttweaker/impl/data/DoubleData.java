@@ -1,11 +1,11 @@
-package com.blamejared.crafttweaker.impl.nbt;
+package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.nbt.IData;
+import com.blamejared.crafttweaker.api.data.IData;
 import net.minecraft.nbt.DoubleNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
-@ZenCodeType.Name("crafttweaker.api.nbt.DoubleData")
+@ZenCodeType.Name("crafttweaker.api.data.DoubleData")
 @ZenRegister
 public class DoubleData implements IData {
     

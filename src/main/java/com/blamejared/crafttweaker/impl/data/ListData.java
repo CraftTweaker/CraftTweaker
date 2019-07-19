@@ -1,16 +1,16 @@
-package com.blamejared.crafttweaker.impl.nbt;
+package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.nbt.ICollectionData;
-import com.blamejared.crafttweaker.api.nbt.IData;
-import com.blamejared.crafttweaker.api.nbt.NBTConverter;
+import com.blamejared.crafttweaker.api.data.ICollectionData;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.NBTConverter;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 
-@ZenCodeType.Name("crafttweaker.api.tag.ListData")
+@ZenCodeType.Name("crafttweaker.api.data.ListData")
 @ZenRegister
 public class ListData implements ICollectionData {
     
@@ -21,6 +21,10 @@ public class ListData implements ICollectionData {
     }
     
     @ZenCodeType.Constructor
+    public ListData() {
+        this.internal = new ListNBT();
+    }
+    
     public ListData(List<IData> list) {
         this.internal = new ListNBT();
         list.forEach(iData -> internal.add(iData.getInternal()));
@@ -34,6 +38,11 @@ public class ListData implements ICollectionData {
     @Override
     public void add(int index, IData value) {
         internal.add(index, value.getInternal());
+    }
+    
+    @Override
+    public void add(IData value) {
+        internal.add(value.getInternal());
     }
     
     @Override

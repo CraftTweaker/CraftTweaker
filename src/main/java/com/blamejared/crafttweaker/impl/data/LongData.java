@@ -1,11 +1,11 @@
-package com.blamejared.crafttweaker.impl.nbt;
+package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.nbt.IData;
+import com.blamejared.crafttweaker.api.data.IData;
 import net.minecraft.nbt.LongNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
-@ZenCodeType.Name("crafttweaker.api.nbt.LongData")
+@ZenCodeType.Name("crafttweaker.api.data.LongData")
 @ZenRegister
 public class LongData implements IData {
     

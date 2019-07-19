@@ -1,11 +1,11 @@
-package com.blamejared.crafttweaker.api.nbt;
+package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.tag.INumberData")
+@ZenCodeType.Name("crafttweaker.api.data.INumberData")
 public interface INumberData extends IData {
     
     default long getLong() {
