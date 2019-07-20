@@ -31,6 +31,14 @@ public class LongData implements IData {
     }
     
     @Override
+    public boolean contains(IData data) {
+        if(data instanceof LongData) {
+            return getInternal().getLong() == ((LongData) data).getInternal().getLong();
+        }
+        return false;
+    }
+    
+    @Override
     public String asString() {
         return internal.getLong() + " as long";
     }

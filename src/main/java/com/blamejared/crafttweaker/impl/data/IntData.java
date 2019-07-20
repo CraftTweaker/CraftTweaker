@@ -31,6 +31,14 @@ public class IntData implements IData {
     }
     
     @Override
+    public boolean contains(IData data) {
+        if(data instanceof IntData) {
+            return getInternal().getInt() == ((IntData) data).getInternal().getInt();
+        }
+        return false;
+    }
+    
+    @Override
     public String asString() {
         return internal.getInt() + "";
     }

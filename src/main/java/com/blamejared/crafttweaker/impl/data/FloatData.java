@@ -31,6 +31,14 @@ public class FloatData implements IData {
     }
     
     @Override
+    public boolean contains(IData data) {
+        if(data instanceof FloatData) {
+            return getInternal().getFloat() == ((FloatData) data).getInternal().getFloat();
+        }
+        return false;
+    }
+    
+    @Override
     public String asString() {
         return internal.getFloat() + " as float";
     }

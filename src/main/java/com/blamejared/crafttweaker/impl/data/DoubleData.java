@@ -31,6 +31,14 @@ public class DoubleData implements IData {
     }
     
     @Override
+    public boolean contains(IData data) {
+        if(data instanceof DoubleData) {
+            return getInternal().getDouble() == ((DoubleData) data).getInternal().getDouble();
+        }
+        return false;
+    }
+    
+    @Override
     public String asString() {
         return internal.getDouble() + " as double";
     }

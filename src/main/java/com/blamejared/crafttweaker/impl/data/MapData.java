@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,8 +27,14 @@ public class MapData implements IData {
     
     public MapData(Map<String, IData> map) {
         this.internal = new CompoundNBT();
+        putAll(map);
+    }
+    
+    @ZenCodeType.Method
+    public void putAll(Map<String, IData> map) {
         map.forEach((s, iData) -> internal.put(s, iData.getInternal()));
     }
+    
     
     @ZenCodeType.Getter("keySet")
     public Set<String> getKeySet() {
@@ -77,6 +84,35 @@ public class MapData implements IData {
     @Override
     public CompoundNBT getInternal() {
         return internal;
+    }
+    
+    @Override
+    public Map<String, IData> asMap() {
+        Map<String, IData> newMap = new HashMap<>();
+        internal.keySet().forEach(s -> newMap.put(s, get(s)));
+        return newMap;
+    }
+    
+    @Override
+    public boolean contains(IData data) {
+        if(data instanceof StringData) {
+            return this.internal.contains(data.asString());
+        }
+        
+        
+        Map<String, IData> dataMap = data.asMap();
+        if(dataMap == null)
+            return false;
+        
+        for(Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
+            if(!this.getInternal().contains(dataEntry.getKey())) {
+                return false;
+            } else if(!NBTConverter.convert(this.getInternal().get(dataEntry.getKey())).contains(dataEntry.getValue())) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     @Override

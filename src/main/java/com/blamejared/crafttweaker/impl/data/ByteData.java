@@ -32,6 +32,14 @@ public class ByteData implements INumberData {
     }
     
     @Override
+    public boolean contains(IData data) {
+        if(data instanceof ByteData) {
+            return getInternal().getByte() == ((ByteData) data).getInternal().getByte();
+        }
+        return false;
+    }
+    
+    @Override
     public String asString() {
         return internal.getByte() + " as byte";
     }

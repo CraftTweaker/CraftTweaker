@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker.impl.item.MCMutableItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -84,7 +84,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
                         final int slotNumber = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
                         final ItemStack stackInSlot = inv.getStackInSlot(slotNumber);
                         
-                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(new MCMutableItemStack(stackInSlot))) {
+                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(new MCItemStackMutable(stackInSlot))) {
                             continue offset;
                         }
                         visited[slotNumber] = true;

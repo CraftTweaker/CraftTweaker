@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
@@ -20,6 +21,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -44,6 +47,7 @@ public class CraftTweaker {
     public static final Logger LOG = LogManager.getLogger(NAME);
     
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
+    public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
     
     public CraftTweaker() throws Exception {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -52,6 +56,8 @@ public class CraftTweaker {
         PacketHandler.init();
         SHAPELESS_SERIALIZER = new SerializerStub().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
+        INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
+        CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
         
     }
     
@@ -61,7 +67,6 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerRegistry.findClasses();
-        
     }
     
     private void setupClient(final FMLClientSetupEvent event) {

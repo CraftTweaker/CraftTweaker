@@ -31,6 +31,14 @@ public class ShortData implements IData {
     }
     
     @Override
+    public boolean contains(IData data) {
+        if(data instanceof ShortData) {
+            return getInternal().getShort() == ((ShortData) data).getInternal().getShort();
+        }
+        return false;
+    }
+    
+    @Override
     public String asString() {
         return internal.getShort() + " as short";
     }

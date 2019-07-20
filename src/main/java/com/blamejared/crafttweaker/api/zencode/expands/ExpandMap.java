@@ -7,7 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Map;
 
 //@ZenRegister
-@ZenCodeType.Expansion("any[any]")
+@ZenCodeType.Expansion("IData[string]")
 public class ExpandMap {
     
     @ZenCodeType.Caster

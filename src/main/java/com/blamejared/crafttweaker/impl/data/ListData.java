@@ -8,6 +8,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ZenCodeType.Name("crafttweaker.api.data.ListData")
@@ -75,6 +76,42 @@ public class ListData implements ICollectionData {
         return internal;
     }
     
+    @Override
+    public List<IData> asList() {
+        List<IData> data = new ArrayList<>();
+        for(INBT inbt : internal) {
+            data.add(NBTConverter.convert(inbt));
+        }
+        return data;
+    }
+    
+    @Override
+    public boolean contains(IData data) {
+        List<IData> dataValues = data.asList();
+        if(dataValues != null && containsList(dataValues))
+            return true;
+        
+        for(INBT value : internal) {
+            if(NBTConverter.convert(value).contains(data))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    private boolean containsList(List<IData> dataValues) {
+        outer:
+        for(IData dataValue : dataValues) {
+            for(INBT value : internal) {
+                if(NBTConverter.convert(value).contains(dataValue))
+                    continue outer;
+            }
+            
+            return false;
+        }
+        
+        return true;
+    }
     @Override
     public String asString() {
         StringBuilder output = new StringBuilder();

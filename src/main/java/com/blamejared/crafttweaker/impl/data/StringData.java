@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.impl.data;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.data.*;
-import net.minecraft.nbt.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
+import net.minecraft.nbt.StringNBT;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.data.StringData")
 @ZenRegister
@@ -28,6 +28,12 @@ public class StringData implements IData {
     @Override
     public StringNBT getInternal() {
         return internal;
+    }
+    
+    
+    @Override
+    public boolean contains(IData data) {
+        return asString().equals(data.asString());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)

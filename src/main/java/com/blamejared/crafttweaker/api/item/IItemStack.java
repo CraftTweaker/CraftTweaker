@@ -2,8 +2,10 @@ package com.blamejared.crafttweaker.api.item;
 
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -16,7 +18,9 @@ public interface IItemStack extends IIngredient {
      * @return true if empty, false if not
      */
     @ZenCodeType.Getter("empty")
-    boolean isEmpty();
+    default boolean isEmpty() {
+        return getInternal().isEmpty();
+    }
     
     /**
      * Gets the display name of the ItemStack
@@ -24,7 +28,9 @@ public interface IItemStack extends IIngredient {
      * @return formatted display name of the ItemStack
      */
     @ZenCodeType.Getter("displayName")
-    String getDisplayName();
+    default String getDisplayName() {
+        return getInternal().getDisplayName().getFormattedText();
+    }
     
     
     /**
@@ -41,7 +47,9 @@ public interface IItemStack extends IIngredient {
      * @return ItemStackz` amount
      */
     @ZenCodeType.Getter("amount")
-    int getAmount();
+    default int getAmount() {
+        return getInternal().getCount();
+    }
     
     /**
      * Sets the amount of the ItemStack
@@ -59,7 +67,9 @@ public interface IItemStack extends IIngredient {
      * @return true if this ItemStack can contain more than one item.
      */
     @ZenCodeType.Getter("stackable")
-    boolean isStackable();
+    default boolean isStackable() {
+        return getInternal().isStackable();
+    }
     
     /**
      * Sets the damage of the ItemStack
@@ -75,7 +85,9 @@ public interface IItemStack extends IIngredient {
      * @return true if this ItemStack can take damage.
      */
     @ZenCodeType.Getter("damageable")
-    boolean isDamageable();
+    default boolean isDamageable() {
+        return getInternal().isDamageable();
+    }
     
     /**
      * Returns if the ItemStack is damaged
@@ -84,7 +96,9 @@ public interface IItemStack extends IIngredient {
      * @return true if this ItemStack is damaged.
      */
     @ZenCodeType.Getter("damaged")
-    boolean isDamaged();
+    default boolean isDamaged() {
+        return getInternal().isDamaged();
+    }
     
     /**
      * Returns the max damage of the ItemStack
@@ -93,7 +107,9 @@ public interface IItemStack extends IIngredient {
      * @return The ItemStack's max durability.
      */
     @ZenCodeType.Getter("maxDamage")
-    int getMaxDamage();
+    default int getMaxDamage() {
+        return getInternal().getMaxDamage();
+    }
     
     /**
      * Returns the unlocalized Name of the Item in the ItemStack
@@ -101,11 +117,48 @@ public interface IItemStack extends IIngredient {
      * @return the unlocalized name.
      */
     @ZenCodeType.Getter("translationKey")
-    String getTranslationKey();
+    default String getTranslationKey() {
+        return getInternal().getTranslationKey();
+    }
     
     
     @ZenCodeType.Method
     IItemStack withTag(MapData tag);
+    
+    @Override
+    default boolean matches(IItemStack stack) {
+        ItemStack stack1 = getInternal();
+        ItemStack stack2 = stack.getInternal();
+        
+        if(stack1.isEmpty() != stack2.isEmpty()) {
+            return false;
+        }
+        if(stack1.getItem() != stack2.getItem()) {
+            return false;
+        }
+        if(stack1.getCount() > stack2.getCount()) {
+            return false;
+        }
+        if(stack1.getDamage() != stack2.getDamage()) {
+            return false;
+        }
+        CompoundNBT stack1Tag = stack1.getTag();
+        CompoundNBT stack2Tag = stack2.getTag();
+        if(stack1.hasTag() != stack2.hasTag()) {
+            return false;
+        }
+        if(stack1Tag == null && stack2Tag == null) {
+            return true;
+        }
+        
+        // Lets just use the partial nbt
+        if(!NBTConverter.convert(stack2Tag).contains(NBTConverter.convert(stack1Tag))) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.
@@ -113,5 +166,6 @@ public interface IItemStack extends IIngredient {
      * @return internal ItemStack
      */
     ItemStack getInternal();
+    
     
 }
