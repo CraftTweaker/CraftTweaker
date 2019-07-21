@@ -4,6 +4,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.tags.ActionTagAdd;
+import com.blamejared.crafttweaker.impl.actions.tags.ActionTagRemove;
+import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -47,6 +50,17 @@ public class MCTag implements IIngredient {
         }
         return returned.toArray(new IItemStack[0]);
     }
+    
+    @ZenCodeType.Method
+    public void add(IItemStack... items) {
+        CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items)));
+    }
+    
+    @ZenCodeType.Method
+    public void remove(IItemStack... items) {
+        CraftTweakerAPI.apply(new ActionTagRemove<>(getItemTag(), CraftTweakerHelper.getItems(items)));
+    }
+    
     
     //    //TODO replace this with IBlock when it exists
     //    public Object[] getBlocks() {
