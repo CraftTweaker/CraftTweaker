@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -16,9 +17,12 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -57,6 +61,7 @@ public class CTCommands {
             String toCopy = context.getArgument("toCopy", String.class);
             ServerPlayerEntity entity = context.getSource().asPlayer();
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
+            send(new StringTextComponent("Copied!"), entity);
             return 0;
         })));
     
@@ -66,14 +71,25 @@ public class CTCommands {
             String string = new MCItemStackMutable(stack).getCommandString();
             TextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
             send(copy, player);
+            if(player instanceof ServerPlayerEntity) {
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
+            }
             Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
             if(tags.isEmpty()) {
                 return 0;
             }
             send(copy(new FormattedTextComponent(color("Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
-            //TODO replace this with tag bep
-            tags.forEach(resourceLocation -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(resourceLocation.toString(), TextFormatting.AQUA)), resourceLocation.toString()), player));
+    
+            tags.stream().map(resourceLocation -> new MCTag(resourceLocation).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
             
+            return 0;
+        }));
+    
+        registerCommand(new CommandImpl("recipeTypes", "Outputs the names of all Recipe Types", (CommandCallerPlayer) (player, stack) -> {
+            for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
+                CraftTweakerAPI.logInfo("- " + new ResourceLocation(type.toString()).toString());
+            }
+            send(new StringTextComponent(color("Recipe Type list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         }));
     
