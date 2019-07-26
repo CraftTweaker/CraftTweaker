@@ -5,9 +5,11 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.tags.ActionTagAdd;
+import com.blamejared.crafttweaker.impl.actions.tags.ActionTagCreate;
 import com.blamejared.crafttweaker.impl.actions.tags.ActionTagRemove;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
@@ -35,6 +37,12 @@ public class MCTag implements IIngredient {
     
     public MCTag(ResourceLocation id) {
         this.id = id;
+    }
+    
+    @ZenCodeType.Method
+    public MCTag createItemTag() {
+        CraftTweakerAPI.apply(new ActionTagCreate<>(ItemTags.getCollection(), "Item", new Tag<Item>(id, Sets.newHashSet(), false)));
+        return this;
     }
     
     @Override
