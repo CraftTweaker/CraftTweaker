@@ -22,7 +22,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '1.14.3-5.0.0'
+version = '1.14.4-5.0.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -105,7 +105,7 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.2'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.11'
     compile fg.deobf("mezz.jei:jei-1.14.3:6.0.0.+");
 }
 
