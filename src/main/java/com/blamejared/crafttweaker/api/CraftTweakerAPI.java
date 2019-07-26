@@ -11,9 +11,11 @@ import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
-import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.JavaNativeModule;
+import org.openzen.zencode.java.ScriptingEngine;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.codemodel.FunctionParameter;
 import org.openzen.zenscript.codemodel.HighLevelDefinition;
@@ -29,8 +31,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 @ZenRegister
 public class CraftTweakerAPI {
@@ -96,15 +101,8 @@ public class CraftTweakerAPI {
             initEngine();
             //Register crafttweaker module first to assign deps
             JavaNativeModule crafttweakerModule = SCRIPTING_ENGINE.createNativeModule(CraftTweaker.MODID, "crafttweaker");
-            Set<String> registeredExpansions = new HashSet<>();
             List<JavaNativeModule> modules = new LinkedList<>();
-            CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(clazz -> {
-                crafttweakerModule.addClass(clazz);
-                String name = getClassName(clazz);
-                if(CraftTweakerRegistry.getExpansions().containsKey(name))
-                    CraftTweakerRegistry.getExpansions().get(name).forEach(crafttweakerModule::addClass);
-                registeredExpansions.add(name);
-            });
+            CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
             CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
             modules.add(crafttweakerModule);
             PrefixedBracketParser bep = new PrefixedBracketParser(null);
@@ -121,20 +119,14 @@ public class CraftTweakerAPI {
                 }
                 JavaNativeModule module = SCRIPTING_ENGINE.createNativeModule(key, key, crafttweakerModule);
                 if(CraftTweakerRegistry.getExpansions().containsKey(key))
-                    CraftTweakerRegistry.getClassesInPackage(key).forEach(clazz -> {
-                        
-                        module.addClass(clazz);
-                        String name = getClassName(clazz);
-                        CraftTweakerRegistry.getExpansions().get(name).forEach(module::addClass);
-                        registeredExpansions.add(name);
-                    });
+                    CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
                 SCRIPTING_ENGINE.registerNativeProvided(module);
                 modules.add(module);
             }
             
             // For expansions on ZenScript types (I.E. any[any], string, int) and just anything else that fails
             JavaNativeModule expansions = SCRIPTING_ENGINE.createNativeModule("expansions", "", modules.toArray(new JavaNativeModule[0]));
-            CraftTweakerRegistry.getExpansions().keySet().stream().filter(Predicates.not(registeredExpansions::contains)).map(CraftTweakerRegistry.getExpansions()::get).forEach(classes -> {
+            CraftTweakerRegistry.getExpansions().keySet().stream().map(CraftTweakerRegistry.getExpansions()::get).forEach(classes -> {
                 classes.forEach(expansions::addClass);
             });
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
