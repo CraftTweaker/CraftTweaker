@@ -86,6 +86,15 @@ public interface IEntity extends ICommandSender {
     @ZenGetter("position3f")
     Position3f getPosition3f();
     
+    @ZenMethod
+    @ZenSetter("position3f")
+    default void setPosition3f(Position3f position3f) {
+        CraftTweakerAPI.logWarning(String.format("Class %s does not seem to override IEntity#setPosition3f, please report to the mod author!", this.getClass().getCanonicalName()));
+        this.setPosX(position3f.getX());
+        this.setPosY(position3f.getY());
+        this.setPosZ(position3f.getZ());
+    }
+    
     /**
      * Sets the position of this entity. Instantly moves (teleports) the entity
      * to that position.

@@ -64,6 +64,11 @@ public class MCEntity extends MCCommandSender implements IEntity {
     }
     
     @Override
+    public void setPosition3f(Position3f position3f) {
+        entity.setPosition(position3f.getX(), position3f.getY(), position3f.getZ());
+    }
+    
+    @Override
     public void setPosition(IBlockPos position) {
         entity.setPosition(position.getX(), position.getY(), position.getZ());
     }
@@ -340,7 +345,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public void setPosX(double posX) {
-        entity.posX = posX;
+        entity.setPosition(posX, entity.posY, entity.posZ);
     }
     
     @Override
@@ -350,7 +355,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public void setPosY(double posY) {
-        entity.posY = posY;
+        entity.setPosition(entity.posX, posY, entity.posZ);
     }
     
     @Override
@@ -360,7 +365,7 @@ public class MCEntity extends MCCommandSender implements IEntity {
     
     @Override
     public void setPosZ(double posZ) {
-        entity.posZ = posZ;
+        entity.setPosition(entity.posX, entity.posY, posZ);
     }
     
     @Override
