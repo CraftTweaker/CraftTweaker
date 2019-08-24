@@ -40,10 +40,7 @@ public class ClientEventHandler {
                 ev.getToolTip().add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
-                final IFormattedText text = tooltip.getKey().process(itemStack);
-                if(text instanceof IMCFormattedString) {
-                    ev.getToolTip().add(((IMCFormattedString) text).getTooltipString());
-                }
+                    ev.getToolTip().add(tooltip.getKey().process(itemStack));
             }
             
             boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
@@ -56,15 +53,9 @@ public class ClientEventHandler {
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedShiftTooltips(itemStack)) {
                 if(pressed) {
-                    final IFormattedText text = tooltip.getKey().process(itemStack);
-                    if(text instanceof IMCFormattedString) {
-                        ev.getToolTip().add(((IMCFormattedString) text).getTooltipString());
-                    }
+                    ev.getToolTip().add(tooltip.getKey().process(itemStack));
                 } else if(tooltip.getValue() != null) {
-                    final IFormattedText text = tooltip.getValue().process(itemStack);
-                    if(text instanceof IMCFormattedString) {
-                        ev.getToolTip().add(((IMCFormattedString) text).getTooltipString());
-                    }
+                    ev.getToolTip().add(tooltip.getValue().process(itemStack));
                 }
             }
         }
