@@ -6,10 +6,11 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.HashMap;
 
-public class ActionTagCreate<T> extends ActionTag<T> {
+public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> {
     
     private final TagCollection<T> collection;
     

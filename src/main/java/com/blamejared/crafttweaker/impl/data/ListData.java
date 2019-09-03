@@ -128,4 +128,9 @@ public class ListData implements ICollectionData {
         output.append(']');
         return output.toString();
     }
+    
+    @ZenCodeType.Caster(implicit = true)
+    public static List<IData> castToMap(ListData data) {
+        return data.asList();
+    }
 }

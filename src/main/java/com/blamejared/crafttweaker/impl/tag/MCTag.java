@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.tags.ActionTagAdd;
 import com.blamejared.crafttweaker.impl.actions.tags.ActionTagCreate;
 import com.blamejared.crafttweaker.impl.actions.tags.ActionTagRemove;
+import com.blamejared.crafttweaker.impl.blocks.MCBlock;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.google.common.collect.Sets;
@@ -16,6 +17,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +28,7 @@ import java.util.List;
 
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.MCTag")
+@ZenCodeType.Name("crafttweaker.api.tag.MCTag")
 public class MCTag implements IIngredient {
     
     private final ResourceLocation id;
@@ -45,6 +47,12 @@ public class MCTag implements IIngredient {
         return this;
     }
     
+    @ZenCodeType.Method
+    public MCTag createBlockTag() {
+        CraftTweakerAPI.apply(new ActionTagCreate<>(BlockTags.getCollection(), "Block", new Tag<Block>(id, Sets.newHashSet(), false)));
+        return this;
+    }
+    
     @Override
     public IItemStack[] getItems() {
         if(getItemTag() == null) {
@@ -59,21 +67,43 @@ public class MCTag implements IIngredient {
         return returned.toArray(new IItemStack[0]);
     }
     
+    @ZenCodeType.Getter("blocks")
+    public MCBlock[] getBlocks() {
+        if(getBlockTag() == null) {
+            CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not a BlockTag!");
+            return new MCBlock[0];
+        }
+        
+        List<MCBlock> returned = new ArrayList<>();
+        for(Block element : blockTag.getAllElements()) {
+            returned.add(new MCBlock(element));
+        }
+        return returned.toArray(new MCBlock[0]);
+    }
+    
     @ZenCodeType.Method
-    public void add(IItemStack... items) {
+    public void addItems(IItemStack... items) {
         CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items)));
     }
     
     @ZenCodeType.Method
-    public void remove(IItemStack... items) {
+    public void removeItems(IItemStack... items) {
         CraftTweakerAPI.apply(new ActionTagRemove<>(getItemTag(), CraftTweakerHelper.getItems(items)));
     }
     
     
-    //    //TODO replace this with IBlock when it exists
-    //    public Object[] getBlocks() {
-    //        return blockTag.getAllElements().toArray();
-    //    }
+    @ZenCodeType.Method
+    public void addBlocks(MCBlock... blocks) {
+        CraftTweakerAPI.apply(new ActionTagAdd<Block>(getBlockTag(), CraftTweakerHelper.getBlocks(blocks)));
+    }
+    
+    @ZenCodeType.Method
+    public void removeBlocks(MCBlock... blocks) {
+        CraftTweakerAPI.apply(new ActionTagRemove<Block>(getBlockTag(), CraftTweakerHelper.getBlocks(blocks)));
+    }
+    
+    
+    
     //
     //    //TODO replace this with something entity related when it exists
     //    public Object[] getEntities() {
@@ -111,6 +141,14 @@ public class MCTag implements IIngredient {
         }
         return itemTag;
     }
+    
+    public Tag<Block> getBlockTag() {
+        if(blockTag == null) {
+            blockTag = BlockTags.getCollection().get(id);
+        }
+        return blockTag;
+    }
+    
     
     @Override
     public String getCommandString() {

@@ -2,11 +2,13 @@ package com.blamejared.crafttweaker.api.item;
 
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker.impl.data.MapData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
@@ -23,15 +25,83 @@ public interface IItemStack extends IIngredient {
     }
     
     /**
+     * Returns the max stack size of the Item in the ItemStack
+     *
+     * @return max stack size
+     */
+    @ZenCodeType.Getter("maxStackSize")
+    default int getMaxStackSize() {
+        return getInternal().getItem().getItemStackLimit(getInternal());
+    }
+    
+    
+    /**
      * Gets the display name of the ItemStack
      *
-     * @return formatted display name of the ItemStack
+     * @return formatted display name of the ItemStack.
      */
     @ZenCodeType.Getter("displayName")
     default String getDisplayName() {
         return getInternal().getDisplayName().getFormattedText();
     }
     
+    /**
+     * Clears any custom name set for this ItemStack
+     */
+    @ZenCodeType.Method
+    default void clearCustomName() {
+        getInternal().clearCustomName();
+    }
+    
+    /**
+     * Returns true if the ItemStack has a display name.
+     *
+     * @return true if a display name is present on the ItemStack.
+     */
+    @ZenCodeType.Getter("hasDisplayName")
+    default boolean hasDisplayName() {
+        return getInternal().hasDisplayName();
+    }
+    
+    /**
+     * Returns true if this ItemStack has an effect.
+     *
+     * @return true if there is an effect.
+     */
+    @ZenCodeType.Getter("hasEffect")
+    default boolean hasEffect() {
+        return getInternal().hasEffect();
+    }
+    
+    /**
+     * Can this ItemStack be enchanted?
+     *
+     * @return true if this ItemStack can be enchanted.
+     */
+    @ZenCodeType.Getter("isEnchantable")
+    default boolean isEnchantable() {
+        return getInternal().isEnchantable();
+    }
+    
+    /**
+     * Is this ItemStack enchanted?
+     *
+     * @return true if this ItemStack is enchanted.
+     */
+    @ZenCodeType.Getter("isEnchanted")
+    default boolean isEnchanted() {
+        return getInternal().isEnchanted();
+    }
+    
+    /**
+     * Gets the repair cost of the ItemStack, or 0 if no repair is defined.
+     *
+     * @return ItemStack repair cost or 0 if no repair is set.
+     */
+    @ZenCodeType.Getter("getRepairCost")
+    default int getRepairCost() {
+        return getInternal().getRepairCost();
+    }
     
     /**
      * Sets the display name of the ItemStack
@@ -123,7 +193,40 @@ public interface IItemStack extends IIngredient {
     
     
     @ZenCodeType.Method
-    IItemStack withTag(MapData tag);
+    IItemStack withTag(Map<String, IData> tag);
+    
+    /**
+     * Returns true if this ItemStack has a Tag
+     *
+     * @return true if tag is present.
+     */
+    @ZenCodeType.Getter("hasTag")
+    default boolean hasTag() {
+        return getInternal().hasTag();
+    }
+    
+    /**
+     * Returns the NBT tag attached to this ItemStack.
+     *
+     * @return IData of the ItemStack NBT Tag, null if it doesn't exist.
+     */
+    @ZenCodeType.Getter("tag")
+    default IData getTag() {
+        return NBTConverter.convert(getInternal().getTag());
+    }
+    
+    /**
+     * Returns the NBT tag attached to this ItemStack or makes a new tag.
+     *
+     * @return IData of the ItemStack NBT Tag, empty tag if it doesn't exist.
+     */
+    @ZenCodeType.Getter("getOrCreate")
+    default IData getOrCreateTag() {
+        if(getInternal().getTag() == null) {
+            getInternal().setTag(new CompoundNBT());
+        }
+        return NBTConverter.convert(getInternal().getTag());
+    }
     
     @Override
     default boolean matches(IItemStack stack) {
@@ -160,6 +263,25 @@ public interface IItemStack extends IIngredient {
     }
     
     
+    /**
+     * Gets the use duration of the ItemStack
+     *
+     * @return use duration
+     */
+    @ZenCodeType.Getter("useDuration")
+    default int getUseDuration() {
+        return getInternal().getUseDuration();
+    }
+    
+    /**
+     * Returns true if this stack is considered a crossbow item
+     *
+     * @return true if stack is a crossbow
+     */
+    @ZenCodeType.Getter("isCrossbow")
+    default boolean isCrossbowStack() {
+        return getInternal().isCrossbowStack();
+    }
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.
      *

@@ -23,9 +23,9 @@ import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
@@ -49,7 +49,7 @@ public class CraftTweaker {
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
     public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
     
-    public CraftTweaker() throws Exception {
+    public CraftTweaker() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
@@ -58,7 +58,6 @@ public class CraftTweaker {
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
-        
     }
     
     private void setup(final FMLCommonSetupEvent event) {

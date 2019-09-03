@@ -13,7 +13,6 @@ public class ExpandMap {
     
     @ZenCodeType.Caster
     public static IData asData(Map<String, IData> map) {
-        System.out.println("Converted!!!");
         return new MapData(map);
     }
     

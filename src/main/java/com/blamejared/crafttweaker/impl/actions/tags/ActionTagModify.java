@@ -2,8 +2,9 @@ package com.blamejared.crafttweaker.impl.actions.tags;
 
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import net.minecraft.tags.Tag;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class ActionTagModify<T> extends ActionTag<T> {
+public abstract class ActionTagModify<T extends ForgeRegistryEntry> extends ActionTag<T> {
     
     protected final T[] values;
     

@@ -152,4 +152,9 @@ public class MapData implements IData {
         
         return true;
     }
+    
+    @ZenCodeType.Caster(implicit = true)
+    public static Map<String, IData> castToMap(MapData data) {
+        return data.asMap();
+    }
 }

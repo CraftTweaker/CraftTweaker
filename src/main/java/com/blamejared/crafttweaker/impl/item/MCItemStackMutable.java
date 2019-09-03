@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.item;
 
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
@@ -7,6 +8,8 @@ import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
+
+import java.util.Map;
 
 public class MCItemStackMutable implements IItemStack {
     
@@ -35,8 +38,8 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
-    public IItemStack withTag(MapData tag) {
-        internal.setTag(tag.getInternal());
+    public IItemStack withTag(Map<String, IData> tag) {
+        internal.setTag(new MapData(tag).getInternal());
         return this;
     }
     
