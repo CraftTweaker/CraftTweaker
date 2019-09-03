@@ -45,7 +45,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: '20190817-1.14.3'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -94,7 +94,7 @@ minecraft {
 }
 repositories {
     maven {
-        url "http://dvs1.progwml6.com/files/maven"
+        url "https://dvs1.progwml6.com/files/maven"
     }
 }
 
@@ -105,8 +105,13 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.11'
-    compile fg.deobf("mezz.jei:jei-1.14.3:6.0.0.+");
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.83'
+    minecraft([
+            group  : "net.minecraftforge",
+            name   : "forge",
+            version: "1.14.4-28.0.83"
+    ])
+    compile fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11");
 }
 
 jar {
