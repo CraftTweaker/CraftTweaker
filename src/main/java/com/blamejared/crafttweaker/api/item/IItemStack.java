@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.api.item;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
+@Document
 public interface IItemStack extends IIngredient {
     
     /**
@@ -114,7 +116,7 @@ public interface IItemStack extends IIngredient {
     /**
      * Gets the amount of Items in the ItemStack
      *
-     * @return ItemStackz` amount
+     * @return ItemStack's amount
      */
     @ZenCodeType.Getter("amount")
     default int getAmount() {

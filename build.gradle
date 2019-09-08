@@ -45,7 +45,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190817-1.14.3'
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -102,6 +102,9 @@ def zenCodeDeps = [ ':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration'
 
 
 dependencies {
+
+    compile project(":CraftTweaker_Annotations");
+    annotationProcessor project(":CraftTweaker_Annotation_Processors");
 
     zenCodeDeps.collect { compile project(it) }
 
