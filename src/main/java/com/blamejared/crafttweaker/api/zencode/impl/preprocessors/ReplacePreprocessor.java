@@ -1,15 +1,19 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.PreProcessor;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * {@code #replace toReplace replaceWith}
  */
+@PreProcessor
 public class ReplacePreprocessor implements IPreprocessor {
     
     @Override

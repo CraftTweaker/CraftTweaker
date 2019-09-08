@@ -22,7 +22,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '1.14.2-5.0.0'
+version = '1.14.4-5.0.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -45,8 +45,8 @@ if (JavaVersion.current().isJava8Compatible()) {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190621-1.14.2'
-    accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+    mappings channel: 'snapshot', version: '20190817-1.14.3'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -75,11 +75,26 @@ minecraft {
                 }
             }
         }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                crafttweaker {
+                    source sourceSets.main
+                }
+            }
+        }
     }
 }
 repositories {
     maven {
-        url "http://dvs1.progwml6.com/files/maven"
+        url "https://dvs1.progwml6.com/files/maven"
     }
 }
 
@@ -90,8 +105,13 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.14.3-27.0.2'
-    compile fg.deobf("mezz.jei:jei-1.14.2:6.0.0.1");
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.83'
+    minecraft([
+            group  : "net.minecraftforge",
+            name   : "forge",
+            version: "1.14.4-28.0.83"
+    ])
+    compile fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11");
 }
 
 jar {

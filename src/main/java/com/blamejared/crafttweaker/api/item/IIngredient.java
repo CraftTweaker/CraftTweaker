@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
@@ -36,4 +35,8 @@ public interface IIngredient {
      */
     @ZenCodeType.Getter("commandString")
     String getCommandString();
+    
+    
+    @ZenCodeType.Getter("items")
+    IItemStack[] getItems();
 }

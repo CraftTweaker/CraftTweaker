@@ -1,54 +1,87 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
-import com.google.gson.*;
-import mcp.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.network.*;
-import net.minecraft.util.*;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.*;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SerializerStub<T extends ICraftingRecipe> implements IRecipeSerializer<T> {
+public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CTRecipeShapeless> {
     
-    private final T recipe;
+    //    private final T recipe;
     
-    public SerializerStub(T recipe) {
-        this.recipe = recipe;
+    public SerializerStub() {
+        //        this.recipe = recipe;
     }
     
-    
-    @Override
-    public T read(ResourceLocation recipeId, JsonObject json) {
-        return recipe;
-    }
-    
-    @Override
-    public T read(ResourceLocation recipeId, PacketBuffer buffer) {
-        return recipe;
-    }
-    
-    @Override
-    public void write(PacketBuffer buffer, T recipe) {
-    
+    private static NonNullList<Ingredient> readIngredients(JsonArray p_199568_0_) {
+        NonNullList<Ingredient> nonnulllist = NonNullList.create();
+        
+        for(int i = 0; i < p_199568_0_.size(); ++i) {
+            Ingredient ingredient = Ingredient.deserialize(p_199568_0_.get(i));
+            if(!ingredient.hasNoMatchingItems()) {
+                nonnulllist.add(ingredient);
+            }
+        }
+        
+        return nonnulllist;
     }
     
     @Override
-    public IRecipeSerializer<?> setRegistryName(ResourceLocation name) {
-        return this;
+    public CTRecipeShapeless read(ResourceLocation recipeId, JsonObject json) {
+        String s = JSONUtils.getString(json, "group", "");
+        NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
+        IIngredient[] ingredients = new IIngredient[nonnulllist.size()];
+        for(int i = 0; i < nonnulllist.size(); i++) {
+            ingredients[i] = new MCItemStack(nonnulllist.get(i).getMatchingStacks()[0]);
+        }
+        if(nonnulllist.isEmpty()) {
+            throw new JsonParseException("No ingredients for shapeless recipe");
+        } else if(nonnulllist.size() > 3 * 3) {
+            throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (3 * 3));
+        } else {
+            ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            return new CTRecipeShapeless(recipeId.getPath(), new MCItemStack(itemstack), ingredients, null);
+        }
+        
     }
     
-    @Nullable
     @Override
-    public ResourceLocation getRegistryName() {
-        return recipe.getId();
+    public CTRecipeShapeless read(ResourceLocation recipeId, PacketBuffer buffer) {
+        String s = buffer.readString(32767);
+        int i = buffer.readVarInt();
+        IIngredient[] ingredients = new IIngredient[i];
+        
+        for(int j = 0; j < ingredients.length; ++j) {
+            ingredients[j] = new MCItemStack(Ingredient.read(buffer).getMatchingStacks()[0]);
+        }
+        
+        ItemStack itemstack = buffer.readItemStack();
+        return new CTRecipeShapeless(recipeId.getPath(), new MCItemStack(itemstack), ingredients, null);
     }
     
     @Override
-    public Class<IRecipeSerializer<?>> getRegistryType() {
-        //TODO: Just. make. it. work.
-        return CRAFTING_SHAPED.getRegistryType();
+    public void write(PacketBuffer buffer, CTRecipeShapeless recipe) {
+        buffer.writeString(recipe.getGroup());
+        buffer.writeVarInt(recipe.getIngredients().size());
+        for(Ingredient ingredient : recipe.getIngredients()) {
+            ingredient.write(buffer);
+        }
+        buffer.writeItemStack(recipe.getRecipeOutput());
     }
+    
     
 }

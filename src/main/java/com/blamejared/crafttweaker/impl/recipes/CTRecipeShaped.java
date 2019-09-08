@@ -1,22 +1,29 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
-import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
-import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-import javax.annotation.*;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class CTRecipeShaped implements ICraftingRecipe {
+public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.common.crafting.IShapedRecipe<CraftingInventory> {
     
     private static final IntPair INVALID = new IntPair(-1, -1);
     
@@ -24,15 +31,23 @@ public class CTRecipeShaped implements ICraftingRecipe {
     private final IItemStack output;
     private final boolean mirrored;
     @Nullable
-    private final CTRecipeManager.RecipeFunctionShaped function;
+    private final IRecipeManager.RecipeFunctionMatrix function;
     private final ResourceLocation resourceLocation;
     
-    public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable CTRecipeManager.RecipeFunctionShaped function) {
+    private final int width, height;
+    
+    public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable IRecipeManager.RecipeFunctionMatrix function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.ingredients = ingredients;
         this.mirrored = mirrored;
         this.function = function;
+        this.height = ingredients.length;
+        int tempWidth = ingredients[0].length;
+        for(int i = 0; i < ingredients.length; i++) {
+            tempWidth = Math.max(ingredients[i].length, tempWidth);
+        }
+        this.width = tempWidth;
     }
     
     private IntPair calculateOffset(CraftingInventory inv) {
@@ -69,7 +84,7 @@ public class CTRecipeShaped implements ICraftingRecipe {
                         final int slotNumber = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
                         final ItemStack stackInSlot = inv.getStackInSlot(slotNumber);
                         
-                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(new MCMutableItemStack(stackInSlot))) {
+                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(new MCItemStackMutable(stackInSlot))) {
                             continue offset;
                         }
                         visited[slotNumber] = true;
@@ -107,7 +122,7 @@ public class CTRecipeShaped implements ICraftingRecipe {
             columnOffset = offset.getY();
         }
         
-        IItemStack[][] stacks = new IItemStack[this.ingredients.length][this.ingredients[0].length];
+        IItemStack[][] stacks = new IItemStack[height][width];
         for(int rowIndex = 0; rowIndex < this.ingredients.length; rowIndex++) {
             final IIngredient[] row = this.ingredients[rowIndex];
             for(int columnIndex = 0; columnIndex < row.length; columnIndex++) {
@@ -118,17 +133,17 @@ public class CTRecipeShaped implements ICraftingRecipe {
                 stacks[rowIndex][columnIndex] = ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex)));
             }
         }
-        return function.process(this.output, stacks).getInternal();
+        return function.process(this.output, stacks).getInternal().copy();
     }
     
     @Override
     public boolean canFit(int width, int height) {
-        return ingredients.length >= height && ingredients[0].length >= width;
+        return this.height >= height && this.width >= width;
     }
     
     @Override
     public ItemStack getRecipeOutput() {
-        return output.getInternal();
+        return output.getInternal().copy();
     }
     
     @Override
@@ -153,8 +168,7 @@ public class CTRecipeShaped implements ICraftingRecipe {
                 if(ingredient == null)
                     continue;
                 final int slotIndex = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
-                result.set(slotIndex, ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex)))
-                        .getInternal());
+                result.set(slotIndex, ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex))).getInternal());
             }
         }
         
@@ -188,8 +202,19 @@ public class CTRecipeShaped implements ICraftingRecipe {
     
     @Override
     public IRecipeSerializer<CTRecipeShaped> getSerializer() {
-        return new SerializerStub<>(this);
+        return CraftTweaker.SHAPELESS_SERIALIZER;
     }
+    
+    @Override
+    public int getRecipeWidth() {
+        return width;
+    }
+    
+    @Override
+    public int getRecipeHeight() {
+        return height;
+    }
+    
     
     private static final class IntPair {
         

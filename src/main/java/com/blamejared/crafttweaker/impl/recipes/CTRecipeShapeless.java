@@ -1,16 +1,24 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
-import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-import javax.annotation.*;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 
 @MethodsReturnNonnullByDefault
@@ -20,10 +28,10 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     private final IIngredient[] ingredients;
     private final IItemStack output;
     @Nullable
-    private final CTRecipeManager.RecipeFunctionShapeless function;
+    private final IRecipeManager.RecipeFunctionArray function;
     private final ResourceLocation resourceLocation;
     
-    public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable CTRecipeManager.RecipeFunctionShapeless function) {
+    public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable IRecipeManager.RecipeFunctionArray function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.ingredients = ingredients;
@@ -48,13 +56,19 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     @Override
     public ItemStack getCraftingResult(CraftingInventory inv) {
         if(this.function == null)
-            return this.output.getInternal();
+            return this.output.getInternal().copy();
         
         final IItemStack[] stacks = new IItemStack[this.ingredients.length];
         
         forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack);
         
         return this.function.process(this.output, stacks).getInternal();
+    }
+    
+    
+    @Nullable
+    public IRecipeManager.RecipeFunctionArray getFunction() {
+        return function;
     }
     
     @Override
@@ -64,7 +78,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public ItemStack getRecipeOutput() {
-        return output.getInternal();
+        return output.getInternal().copy();
     }
     
     @Override
@@ -136,7 +150,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public IRecipeSerializer<CTRecipeShapeless> getSerializer() {
-        return new SerializerStub<>(this);
+        return CraftTweaker.SHAPELESS_SERIALIZER;
     }
     
     

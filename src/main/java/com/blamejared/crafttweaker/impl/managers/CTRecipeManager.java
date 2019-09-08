@@ -4,20 +4,18 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.managers.IRegistryManager;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
-import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
-import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
+import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CTRecipeManager")
-public class CTRecipeManager implements IRegistryManager {
+public class CTRecipeManager implements IRecipeManager {
     
     @ZenCodeGlobals.Global("recipes")
     public static final CTRecipeManager INSTANCE = new CTRecipeManager();
@@ -28,24 +26,18 @@ public class CTRecipeManager implements IRegistryManager {
     }
     
     @ZenCodeType.Method
-    public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Nullable RecipeFunctionShaped recipeFunction) {
-        //addedRecipes.add(new ActionAddCraftingRecipe.Shaped(recipeName, output, ingredients, true, recipeFunction));
+    public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, false, recipeFunction), "shaped"));
     }
     
     @ZenCodeType.Method
-    public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionShapeless recipeFunction) {
-        //addedRecipes.add(new ActionAddCraftingRecipe.Shapeless(recipeName, output, ingredients, recipeFunction));
-        CraftTweakerAPI.apply(new ActionAddRecipe(getRecipeType(), new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
+    public void addShapedMirrored(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, true, recipeFunction), "mirroring shaped"));
     }
     
     @ZenCodeType.Method
-    public void removeRecipe(IIngredient output) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(getRecipeType(), output));
-    }
-    
-    @Override
-    public void removeByName(String name) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByName(getRecipeType(), new ResourceLocation(name)));
+    public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionArray recipeFunction) {
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
     }
     
     @Override
@@ -58,17 +50,4 @@ public class CTRecipeManager implements IRegistryManager {
     //}
     
     
-    @FunctionalInterface
-    @ZenRegister
-    public interface RecipeFunctionShaped {
-        
-        IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
-    }
-    
-    @FunctionalInterface
-    @ZenRegister
-    public interface RecipeFunctionShapeless {
-        
-        IItemStack process(IItemStack usualOut, IItemStack[] inputs);
-    }
 }

@@ -1,41 +1,88 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.google.common.collect.*;
-import net.minecraftforge.fml.*;
-import net.minecraftforge.forgespi.language.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.annotations.PreProcessor;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Streams;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
-import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.*;
 
 public class CraftTweakerRegistry {
     
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
+    private static final Type TYPE_PRE_PROCESSOR = Type.getType(PreProcessor.class);
+    
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
     private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
-    
+    private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
+    private static final Map<String, List<Class>> EXPANSIONS = new HashMap<>();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
-        final List<ModFileScanData.AnnotationData> annotations = ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_ZEN_REGISTER.equals(a.getAnnotationType())).collect(Collectors.toList());
-        for(ModFileScanData.AnnotationData data : annotations) {
+        ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_ZEN_REGISTER.equals(a.getAnnotationType())).collect(Collectors.toList()).forEach(CraftTweakerRegistry::addClass);
+        sortClasses();
+        ModList.get().getAllScanData().stream().map(ModFileScanData::getAnnotations).flatMap(Collection::stream).filter(a -> TYPE_PRE_PROCESSOR.equals(a.getAnnotationType())).forEach(data -> {
+            Type type = data.getClassType();
             try {
-                addClass(data);
+                Class<?> clazz = Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
+                boolean valid = false;
+                for(Class<?> intFace : clazz.getInterfaces()) {
+                    if(intFace == IPreprocessor.class) {
+                        valid = true;
+                        break;
+                    }
+                }
+                if(!valid) {
+                    CraftTweakerAPI.logWarning("Preprocessor: \"%s\" does not implement IPreprocessor!", type.getClassName());
+                    return;
+                }
+                IPreprocessor preprocessor = null;
+                for(Constructor<?> constructor : clazz.getConstructors()) {
+                    if(constructor.getParameterCount() != 0) {
+                        continue;
+                    }
+                    
+                    try {
+                        preprocessor = (IPreprocessor) constructor.newInstance();
+                    } catch(InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        CraftTweakerAPI.logThrowing("Preprocessor: \"%s\" can not be instantiated! Make sure it has a public empty constructor", e);
+                        e.printStackTrace();
+                    }
+                }
+                if(preprocessor != null) {
+                    PREPROCESSORS.add(preprocessor);
+                } else {
+                    CraftTweakerAPI.logWarning("Can not register Preprocessor: \"%s\"!", type.getClassName());
+                }
             } catch(ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
-        
-        sortClasses();
+        });
     }
     
     /**
@@ -43,7 +90,8 @@ public class CraftTweakerRegistry {
      *
      * @param data Scan data for a given class.
      */
-    private static void addClass(ModFileScanData.AnnotationData data) throws ClassNotFoundException {
+    private static void addClass(ModFileScanData.AnnotationData data) {
+        
         if(data.getAnnotationData().containsKey("modDeps")) {
             List<String> modOnly = (List<String>) data.getAnnotationData().get("modDeps");
             for(String mod : modOnly) {
@@ -53,7 +101,11 @@ public class CraftTweakerRegistry {
             }
         }
         CraftTweaker.LOG.info("Found ZenRegister: {}", data.getClassType().getClassName());
-        ZEN_CLASSES.add(Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader()));
+        try {
+            ZEN_CLASSES.add(Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader()));
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -64,6 +116,10 @@ public class CraftTweakerRegistry {
             if(zenClass.isAnnotationPresent(ZenCodeType.Name.class)) {
                 ZenCodeType.Name name = (ZenCodeType.Name) zenClass.getAnnotation(ZenCodeType.Name.class);
                 ZEN_CLASS_MAP.put(name.value(), zenClass);
+            }
+            
+            if(zenClass.isAnnotationPresent(ZenCodeType.Expansion.class)) {
+                EXPANSIONS.computeIfAbsent(((ZenCodeType.Expansion) zenClass.getAnnotation(ZenCodeType.Expansion.class)).value(), s -> new ArrayList<>()).add(zenClass);
             }
             
             if(hasGlobal(zenClass)) {
@@ -94,6 +150,7 @@ public class CraftTweakerRegistry {
      * Used to determine if the class has a field / method
      *
      * @param zenClass class to scan
+     *
      * @return true if this class has a global annotation on a method.
      */
     private static boolean hasGlobal(Class zenClass) {
@@ -133,6 +190,7 @@ public class CraftTweakerRegistry {
      * {@code "crafttweaker.sub.other.package.Class}
      *
      * @param name Name of the Zen Package.
+     *
      * @return list of classes in the Zen Package.
      */
     public static List<Class> getClassesInPackage(String name) {
@@ -166,4 +224,11 @@ public class CraftTweakerRegistry {
         return ImmutableList.copyOf(BRACKET_RESOLVERS);
     }
     
+    public static List<IPreprocessor> getPreprocessors() {
+        return PREPROCESSORS;
+    }
+    
+    public static Map<String, List<Class>> getExpansions() {
+        return EXPANSIONS;
+    }
 }

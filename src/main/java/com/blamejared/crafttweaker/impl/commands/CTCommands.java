@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
+import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -16,53 +18,89 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class CTCommands {
     
-    public static LiteralArgumentBuilder<CommandSource> root;
+    public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
     
-    private static final List<CommandImpl> COMMANDS = new ArrayList<>();
+    private static final Map<String, CommandImpl> COMMANDS = new TreeMap<>(String::compareTo);
     
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
         root.then(Commands.literal("copy").then(Commands.argument("toCopy", StringReader::readString).executes(context -> {
             String toCopy = context.getArgument("toCopy", String.class);
             ServerPlayerEntity entity = context.getSource().asPlayer();
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
+            send(new StringTextComponent("Copied!"), entity);
             return 0;
         })));
-    
         
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
             String string = new MCItemStackMutable(stack).getCommandString();
             TextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
             send(copy, player);
+            if(player instanceof ServerPlayerEntity) {
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
+            }
             Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
             if(tags.isEmpty()) {
                 return 0;
             }
             send(copy(new FormattedTextComponent(color("Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
-            //TODO replace this with tag bep
-            tags.forEach(resourceLocation -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(resourceLocation.toString(), TextFormatting.AQUA)), resourceLocation.toString()), player));
+            
+            tags.stream().map(resourceLocation -> new MCTag(resourceLocation).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
             
             return 0;
         }));
+        registerCommand(new CommandImpl("log", "Opens the log file", (CommandCallerPlayer) (player, stack) -> {
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("logs/crafttweaker.log").toURI().toString()));
+            return 0;
+        }));
         
+        registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
+            send(new StringTextComponent("Dump types: "), player);
+            COMMANDS.get("dump").getSubCommands().forEach((s, command) -> send(run(new StringTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
+            return 0;
+        }));
+        
+        
+        registerDump("recipes", "Outputs the names of all registered recipes", (CommandCallerPlayer) (player, stack) -> {
+            for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
+                CraftTweakerAPI.logInfo(type.toString());
+                for(ResourceLocation location : player.world.getRecipeManager().recipes.get(type).keySet()) {
+                    CraftTweakerAPI.logInfo("- " + location.toString());
+                }
+            }
+            send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerDump("recipeTypes", "Outputs the names of all Recipe Types", (CommandCallerPlayer) (player, stack) -> {
+            for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
+                CraftTweakerAPI.logInfo("- " + new ResourceLocation(type.toString()).toString());
+            }
+            send(new StringTextComponent(color("Recipe Type list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
         
         //        registerCommand(new CommandImpl("help", (CommandCallerPlayer) (player, stack) -> {
         //            StringBuilder builder = new StringBuilder();
@@ -72,13 +110,9 @@ public class CTCommands {
         //            return 0;
         //        }));
         //TODO maybe post an event to collect sub commands from other addons?
-        COMMANDS.sort(CommandImpl::compareTo);
         root.then(Commands.literal("help").executes(context -> executeHelp(context, 0)).then(Commands.argument("page", StringReader::readInt).executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
         
-        
-        COMMANDS.forEach(command -> root.then(Commands.literal(command.getName()).executes(context -> command.getCaller().executeCommand(context))));
-        
-        
+        COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));
         LiteralCommandNode<CommandSource> rootNode = dispatcher.register(root);
         dispatcher.register(Commands.literal("crafttweaker").redirect(rootNode));
         
@@ -88,6 +122,32 @@ public class CTCommands {
          * Not adding these aliases is a simple way to say "Don't expect previous things to work".
          * Saying that, feel free to try and convince me to add the aliases, if you can give a good argument for them, I may add them back.
          */
+    }
+    
+    
+    public static void registerDump(String name, String desc, CommandCaller caller) {
+        registerCommand("dump", new CommandImpl(name, desc, caller));
+    }
+    
+    public static void registerCommand(CommandImpl command) {
+        COMMANDS.put(command.getName(), command);
+    }
+    
+    public static void registerCommand(String command, CommandImpl subCommand) {
+        COMMANDS.get(command).getSubCommands().put(subCommand.getName(), subCommand);
+    }
+    
+    public static void registerCommand(CommandImpl command, CommandImpl subCommand) {
+        command.getSubCommands().put(subCommand.getName(), subCommand);
+    }
+    
+    private static void registerCommandInternal(LiteralArgumentBuilder<CommandSource> root, CommandImpl command) {
+        LiteralArgumentBuilder<CommandSource> litCommand = Commands.literal(command.getName());
+        if(!command.getSubCommands().isEmpty()) {
+            command.getSubCommands().forEach((s, command1) -> registerCommandInternal(litCommand, command1));
+        }
+        root.then(litCommand.executes(command.getCaller()::executeCommand));
+        
     }
     
     
@@ -101,10 +161,6 @@ public class CTCommands {
         }
         context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (COMMANDS.size() / commandsPerPage) - 1), true);
         return 0;
-    }
-    
-    public static void registerCommand(CommandImpl command) {
-        COMMANDS.add(command);
     }
     
     
@@ -123,11 +179,13 @@ public class CTCommands {
         private final String name;
         private final String description;
         private final CommandCaller caller;
+        private final Map<String, CommandImpl> subCommands;
         
         public CommandImpl(String name, String description, CommandCaller caller) {
             this.name = name;
             this.description = description;
             this.caller = caller;
+            this.subCommands = new TreeMap<>();
         }
         
         public String getName() {
@@ -141,6 +199,14 @@ public class CTCommands {
         
         public String getDescription() {
             return description;
+        }
+        
+        public void registerSubCommand(CommandImpl subCommand) {
+            this.subCommands.put(subCommand.getName(), subCommand);
+        }
+        
+        public Map<String, CommandImpl> getSubCommands() {
+            return subCommands;
         }
         
         @Override
@@ -180,11 +246,21 @@ public class CTCommands {
     public static TextComponent copy(TextComponent base, String toCopy) {
         base.applyTextStyle(style -> {
             style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
-            style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy \"" + toCopy + "\""));
+            style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
         });
         
         return base;
     }
+    
+    public static TextComponent open(TextComponent base, String path) {
+        base.applyTextStyle(style -> {
+            style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to open [%s]", color(path, TextFormatting.GOLD))));
+            style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path));
+        });
+        
+        return base;
+    }
+    
     
     public static TextComponent run(TextComponent base, String command) {
         base.applyTextStyle(style -> {
@@ -193,5 +269,22 @@ public class CTCommands {
         });
         
         return base;
+    }
+    
+    
+    private static String quoteAndEscape(String p_193588_0_) {
+        StringBuilder stringbuilder = new StringBuilder("\"");
+        
+        for(int i = 0; i < p_193588_0_.length(); ++i) {
+            char c0 = p_193588_0_.charAt(i);
+            
+            if(c0 == '\\' || c0 == '"') {
+                stringbuilder.append('\\');
+            }
+            
+            stringbuilder.append(c0);
+        }
+        
+        return stringbuilder.append('"').toString();
     }
 }

@@ -1,9 +1,14 @@
 package com.blamejared.crafttweaker.api.item;
 
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import net.minecraft.item.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.NBTConverter;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
@@ -15,16 +20,88 @@ public interface IItemStack extends IIngredient {
      * @return true if empty, false if not
      */
     @ZenCodeType.Getter("empty")
-    boolean isEmpty();
+    default boolean isEmpty() {
+        return getInternal().isEmpty();
+    }
+    
+    /**
+     * Returns the max stack size of the Item in the ItemStack
+     *
+     * @return max stack size
+     */
+    @ZenCodeType.Getter("maxStackSize")
+    default int getMaxStackSize() {
+        return getInternal().getItem().getItemStackLimit(getInternal());
+    }
+    
     
     /**
      * Gets the display name of the ItemStack
      *
-     * @return formatted display name of the ItemStack
+     * @return formatted display name of the ItemStack.
      */
     @ZenCodeType.Getter("displayName")
-    String getDisplayName();
+    default String getDisplayName() {
+        return getInternal().getDisplayName().getFormattedText();
+    }
     
+    /**
+     * Clears any custom name set for this ItemStack
+     */
+    @ZenCodeType.Method
+    default void clearCustomName() {
+        getInternal().clearCustomName();
+    }
+    
+    /**
+     * Returns true if the ItemStack has a display name.
+     *
+     * @return true if a display name is present on the ItemStack.
+     */
+    @ZenCodeType.Getter("hasDisplayName")
+    default boolean hasDisplayName() {
+        return getInternal().hasDisplayName();
+    }
+    
+    /**
+     * Returns true if this ItemStack has an effect.
+     *
+     * @return true if there is an effect.
+     */
+    @ZenCodeType.Getter("hasEffect")
+    default boolean hasEffect() {
+        return getInternal().hasEffect();
+    }
+    
+    /**
+     * Can this ItemStack be enchanted?
+     *
+     * @return true if this ItemStack can be enchanted.
+     */
+    @ZenCodeType.Getter("isEnchantable")
+    default boolean isEnchantable() {
+        return getInternal().isEnchantable();
+    }
+    
+    /**
+     * Is this ItemStack enchanted?
+     *
+     * @return true if this ItemStack is enchanted.
+     */
+    @ZenCodeType.Getter("isEnchanted")
+    default boolean isEnchanted() {
+        return getInternal().isEnchanted();
+    }
+    
+    /**
+     * Gets the repair cost of the ItemStack, or 0 if no repair is defined.
+     *
+     * @return ItemStack repair cost or 0 if no repair is set.
+     */
+    @ZenCodeType.Getter("getRepairCost")
+    default int getRepairCost() {
+        return getInternal().getRepairCost();
+    }
     
     /**
      * Sets the display name of the ItemStack
@@ -40,7 +117,9 @@ public interface IItemStack extends IIngredient {
      * @return ItemStackz` amount
      */
     @ZenCodeType.Getter("amount")
-    int getAmount();
+    default int getAmount() {
+        return getInternal().getCount();
+    }
     
     /**
      * Sets the amount of the ItemStack
@@ -58,7 +137,9 @@ public interface IItemStack extends IIngredient {
      * @return true if this ItemStack can contain more than one item.
      */
     @ZenCodeType.Getter("stackable")
-    boolean isStackable();
+    default boolean isStackable() {
+        return getInternal().isStackable();
+    }
     
     /**
      * Sets the damage of the ItemStack
@@ -74,7 +155,9 @@ public interface IItemStack extends IIngredient {
      * @return true if this ItemStack can take damage.
      */
     @ZenCodeType.Getter("damageable")
-    boolean isDamageable();
+    default boolean isDamageable() {
+        return getInternal().isDamageable();
+    }
     
     /**
      * Returns if the ItemStack is damaged
@@ -83,7 +166,9 @@ public interface IItemStack extends IIngredient {
      * @return true if this ItemStack is damaged.
      */
     @ZenCodeType.Getter("damaged")
-    boolean isDamaged();
+    default boolean isDamaged() {
+        return getInternal().isDamaged();
+    }
     
     /**
      * Returns the max damage of the ItemStack
@@ -92,7 +177,9 @@ public interface IItemStack extends IIngredient {
      * @return The ItemStack's max durability.
      */
     @ZenCodeType.Getter("maxDamage")
-    int getMaxDamage();
+    default int getMaxDamage() {
+        return getInternal().getMaxDamage();
+    }
     
     /**
      * Returns the unlocalized Name of the Item in the ItemStack
@@ -100,14 +187,107 @@ public interface IItemStack extends IIngredient {
      * @return the unlocalized name.
      */
     @ZenCodeType.Getter("translationKey")
-    String getTranslationKey();
+    default String getTranslationKey() {
+        return getInternal().getTranslationKey();
+    }
     
     
+    @ZenCodeType.Method
+    IItemStack withTag(Map<String, IData> tag);
+    
+    /**
+     * Returns true if this ItemStack has a Tag
+     *
+     * @return true if tag is present.
+     */
+    @ZenCodeType.Getter("hasTag")
+    default boolean hasTag() {
+        return getInternal().hasTag();
+    }
+    
+    /**
+     * Returns the NBT tag attached to this ItemStack.
+     *
+     * @return IData of the ItemStack NBT Tag, null if it doesn't exist.
+     */
+    @ZenCodeType.Getter("tag")
+    default IData getTag() {
+        return NBTConverter.convert(getInternal().getTag());
+    }
+    
+    /**
+     * Returns the NBT tag attached to this ItemStack or makes a new tag.
+     *
+     * @return IData of the ItemStack NBT Tag, empty tag if it doesn't exist.
+     */
+    @ZenCodeType.Getter("getOrCreate")
+    default IData getOrCreateTag() {
+        if(getInternal().getTag() == null) {
+            getInternal().setTag(new CompoundNBT());
+        }
+        return NBTConverter.convert(getInternal().getTag());
+    }
+    
+    @Override
+    default boolean matches(IItemStack stack) {
+        ItemStack stack1 = getInternal();
+        ItemStack stack2 = stack.getInternal();
+        
+        if(stack1.isEmpty() != stack2.isEmpty()) {
+            return false;
+        }
+        if(stack1.getItem() != stack2.getItem()) {
+            return false;
+        }
+        if(stack1.getCount() > stack2.getCount()) {
+            return false;
+        }
+        if(stack1.getDamage() != stack2.getDamage()) {
+            return false;
+        }
+        CompoundNBT stack1Tag = stack1.getTag();
+        CompoundNBT stack2Tag = stack2.getTag();
+        if(stack1.hasTag() != stack2.hasTag()) {
+            return false;
+        }
+        if(stack1Tag == null && stack2Tag == null) {
+            return true;
+        }
+        
+        // Lets just use the partial nbt
+        if(!NBTConverter.convert(stack2Tag).contains(NBTConverter.convert(stack1Tag))) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    
+    /**
+     * Gets the use duration of the ItemStack
+     *
+     * @return use duration
+     */
+    @ZenCodeType.Getter("useDuration")
+    default int getUseDuration() {
+        return getInternal().getUseDuration();
+    }
+    
+    /**
+     * Returns true if this stack is considered a crossbow item
+     *
+     * @return true if stack is a crossbow
+     */
+    @ZenCodeType.Getter("isCrossbow")
+    default boolean isCrossbowStack() {
+        return getInternal().isCrossbowStack();
+    }
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.
      *
      * @return internal ItemStack
      */
     ItemStack getInternal();
+    
     
 }

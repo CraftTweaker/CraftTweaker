@@ -2,57 +2,40 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.api.annotations.BracketResolver;
-import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.*;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
-import net.minecraft.item.Item;
+import com.blamejared.crafttweaker.impl.recipes.SerializerStub;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.resources.SimpleReloadableResourceManager;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openzen.zencode.java.JavaNativeModule;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.shared.SourceFile;
-import org.openzen.zenscript.codemodel.FunctionParameter;
-import org.openzen.zenscript.codemodel.HighLevelDefinition;
-import org.openzen.zenscript.codemodel.ScriptBlock;
-import org.openzen.zenscript.codemodel.SemanticModule;
-import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
-import org.openzen.zenscript.formatter.FileFormatter;
-import org.openzen.zenscript.formatter.ScriptFormattingSettings;
-import org.openzen.zenscript.parser.PrefixedBracketParser;
-import org.openzen.zenscript.parser.SimpleBracketParser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -63,11 +46,18 @@ public class CraftTweaker {
     
     public static final Logger LOG = LogManager.getLogger(NAME);
     
-    public CraftTweaker() throws Exception {
+    public static IRecipeSerializer SHAPELESS_SERIALIZER;
+    public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
+
+    public CraftTweaker() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
         PacketHandler.init();
+        SHAPELESS_SERIALIZER = new SerializerStub().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
+        ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
+        INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
+        CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
     }
     
     private void setup(final FMLCommonSetupEvent event) {
@@ -76,7 +66,6 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerRegistry.findClasses();
-        
     }
     
     private void setupClient(final FMLClientSetupEvent event) {
@@ -86,129 +75,51 @@ public class CraftTweaker {
     
     @SubscribeEvent
     public void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        /*
+        called on singleplayer join on the client
+        Called on multiplayer login on the server
+         */
         ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
     }
     
     @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void getRecipes(RecipesUpdatedEvent event) {
+        /*
+         * Called on the client when joining a world and the server.
+         *
+         * Recipes are only written and read on the server, we should not load scripts on the client if it is a single player world.
+         *
+         * Use a Recipe serializer to serialize the scripts from the server and run those scripts here.
+         *
+         *
+         * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
+         */
+        System.out.println("Recipes updated");
+    }
+
+    @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
     }
-    
-    public class TagCollectionWrapper extends TagCollection<Item> {
-        
-        public TagCollectionWrapper(Function<ResourceLocation, Optional<Item>> p_i50686_1_, String p_i50686_2_, boolean p_i50686_3_, String p_i50686_4_) {
-            super(p_i50686_1_, p_i50686_2_, p_i50686_3_, p_i50686_4_);
-            
-        }
-    }
-    
+
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
-        
-        SimpleReloadableResourceManager manager = (SimpleReloadableResourceManager) event.getServer().getResourceManager();
-        manager.addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
-            //ImmutableMap of ImmutableMaps. Nice.
-            RecipeManager recipeManager = event.getServer().getRecipeManager();
-            recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-            for(IRecipeType<?> type : recipeManager.recipes.keySet()) {
-                recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
+        IReloadableResourceManager manager = event.getServer().getResourceManager();
+        manager.addReloadListener(new IResourceManagerReloadListener() {
+            @Override
+            public void onResourceManagerReload(IResourceManager resourceManager) {
+                //ImmutableMap of ImmutableMaps. Nice.
+                RecipeManager recipeManager = event.getServer().getRecipeManager();
+                recipeManager.recipes = new HashMap<>(recipeManager.recipes);
+                for(IRecipeType<?> type : recipeManager.recipes.keySet()) {
+                    recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
+                }
+                CTRecipeManager.recipeManager = recipeManager;
+                CraftTweakerAPI.loadScripts();
+                event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
             }
-            CTRecipeManager.recipeManager = recipeManager;
-            
-            try {
-                CraftTweakerAPI.reload();
-                ScriptingEngine engine = new ScriptingEngine();
-                engine.debug = true;
-                //Register crafttweaker module first to assign deps
-                JavaNativeModule crafttweakerModule = engine.createNativeModule(MODID, "crafttweaker");
-
-                PrefixedBracketParser bep = new PrefixedBracketParser(null);
-                for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
-                    String name = method.getAnnotation(BracketResolver.class).value();
-                    FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
-                    bep.register(name, new SimpleBracketParser(engine.registry, memberRef));
-                }
-                crafttweakerModule.registerBEP(bep);
-                CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
-                CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
-                engine.registerNativeProvided(crafttweakerModule);
-                for(String key : CraftTweakerRegistry.getRootPackages()) {
-                    //module already registered
-                    if(key.equals("crafttweaker")) {
-                        continue;
-                    }
-                    JavaNativeModule module = engine.createNativeModule(key, key, crafttweakerModule);
-                    CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
-                    engine.registerNativeProvided(module);
-                }
-                List<File> fileList = new ArrayList<>();
-                findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
-                
-                
-                final List<IPreprocessor> preprocessors = new ArrayList<>(6);
-                preprocessors.add(new DebugPreprocessor());
-                preprocessors.add(new NoLoadPreprocessor());
-                preprocessors.add(new PriorityPreprocessor());
-                preprocessors.add(new ReplacePreprocessor());
-                preprocessors.add(new LoadFirstPreprocessor());
-                preprocessors.add(new LoadLastPreprocessor());
-                preprocessors.add(new SnippingPreprocessor());
-                
-                final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(preprocessors);
-                SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, preprocessors)).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
-                
-                SemanticModule scripts = engine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
-                
-                if(!scripts.isValid()) {
-                    CraftTweakerAPI.logger.error("Scripts are invalid!");
-                    LOG.info("Scripts are invalid!");
-                    return;
-                }
-                
-                boolean formatScripts = true;
-                //  toggle this to format scripts, ideally this should be a command
-                if(formatScripts) {
-                    List<HighLevelDefinition> all = scripts.definitions.getAll();
-                    ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
-                    FileFormatter formatter = new FileFormatter(builder.build());
-                    List<ScriptBlock> blocks = scripts.scripts;
-                    for(ScriptBlock block : blocks) {
-                        String format = formatter.format(scripts.rootPackage, block, all);
-                        File parent = new File("scriptsFormatted");
-                        parent.mkdirs();
-                        parent.mkdir();
-                        File file = new File(parent, block.file.getFilename());
-                        file.createNewFile();
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(format);
-                        writer.close();
-                    }
-                }
-                engine.registerCompiled(scripts);
-                engine.run(Collections.emptyMap(), this.getClass().getClassLoader());
-                
-            } catch(Exception e) {
-                e.printStackTrace();
-                CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
-            }
-            
-            CraftTweakerAPI.endFirstRun();
         });
-    }
-    
-    
-    public static void findScriptFiles(File path, List<File> files) {
-        if(path.isDirectory()) {
-            for(File file : path.listFiles()) {
-                if(file.isDirectory()) {
-                    findScriptFiles(file, files);
-                } else {
-                    if(file.getName().toLowerCase().endsWith(".zs")) {
-                        files.add(file);
-                    }
-                }
-            }
-        }
     }
     
 }
