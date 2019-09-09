@@ -23,26 +23,30 @@ import java.util.*;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DocumentProcessor extends AbstractProcessor {
 
+	private static boolean firstCall = true;
+
 	/**
 	 * Creates a directory or deletes all files if it already exists
 	 */
 	private static void createDir(Path docsDir, Messager messager) {
-		try {
-			Files.walkFileTree(docsDir, new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					Files.delete(file);
-					return FileVisitResult.CONTINUE;
-				}
+		if(Files.exists(docsDir)) {
+			try {
+				Files.walkFileTree(docsDir, new SimpleFileVisitor<Path>() {
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						Files.delete(file);
+						return FileVisitResult.CONTINUE;
+					}
 
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					Files.delete(dir);
-					return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
+					@Override
+					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+						Files.delete(dir);
+						return FileVisitResult.CONTINUE;
+					}
+				});
+			} catch (IOException e) {
+				messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
+			}
 		}
 
 
@@ -57,14 +61,14 @@ public class DocumentProcessor extends AbstractProcessor {
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-		if (annotations.isEmpty())
-			return false;
-
 		final File absoluteFile = new File("build/mkdocs").getAbsoluteFile();
 		final Path docsDir = absoluteFile.toPath();
 		final Messager messager = this.processingEnv.getMessager();
 
-		createDir(docsDir, messager);
+		if(firstCall) {
+			createDir(docsDir, messager);
+			firstCall = false;
+		}
 
 		//This outer loop is kinda redundant, cause there only exists one annotation matching the supported types
 		for (TypeElement annotation : annotations) {
@@ -81,7 +85,7 @@ public class DocumentProcessor extends AbstractProcessor {
 
 				if (typeElement.getAnnotation(ZenCodeType.Name.class) == null && typeElement.getAnnotation(ZenCodeType.Expansion.class) == null) {
 					messager.printMessage(Diagnostic.Kind.ERROR, String.format(Locale.ENGLISH, "@Document requires either @ZenCodeType.Name or @ZenCodeType.Expansion to be present. Class %s has neither", typeElement
-							.getQualifiedName()));
+							.getQualifiedName()), typeElement);
 				}
 
 				final List<Class<? extends Annotation>> annotationsToCheck = new ArrayList<>();
@@ -115,19 +119,21 @@ public class DocumentProcessor extends AbstractProcessor {
 
 	private void writeFile(Path docsDir, Messager messager, TypeElement typeElement, Map<Class<? extends Annotation>, List<Element>> membersToWrite) {
 		final Path fullPath;
+		final ZenCodeType.Name annotation = typeElement.getAnnotation(ZenCodeType.Name.class);
+		final boolean isClass = annotation != null;
 		{
 			final StringBuilder sb = new StringBuilder();
-			typeElement.getQualifiedName()
+			(isClass ? annotation.value() : typeElement.getQualifiedName())
 					.chars()
 					.map(i -> i != '.' ? i : File.separatorChar)
 					.forEach(i -> sb.append((char) i));
 			fullPath = docsDir.resolve(sb.append(".md").toString());
 		}
 
-		final boolean isClass = typeElement.getAnnotation(ZenCodeType.Name.class) != null;
+
 		if (!isClass && typeElement.getAnnotation(ZenCodeType.Expansion.class) == null) {
 			messager.printMessage(Diagnostic.Kind.ERROR, String.format(Locale.ENGLISH, "@Document requires either @ZenCodeType.Name or @ZenCodeType.Expansion to be present. Class %s has neither, skipping class", typeElement
-					.getQualifiedName()));
+					.getQualifiedName()), typeElement);
 			return;
 		}
 
@@ -151,7 +157,7 @@ public class DocumentProcessor extends AbstractProcessor {
 				e.printStackTrace();
 			}
 		} catch (IOException e) {
-			messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
+			messager.printMessage(Diagnostic.Kind.ERROR, e.toString(), typeElement);
 		}
 	}
 
@@ -168,7 +174,7 @@ public class DocumentProcessor extends AbstractProcessor {
 			if (docComment != null) {
 				writer.println(docComment);
 			} else {
-				messager.printMessage(Diagnostic.Kind.WARNING, typeElement.getQualifiedName() + " has no documentation!");
+				messager.printMessage(Diagnostic.Kind.WARNING, typeElement.getQualifiedName() + " has no documentation!", typeElement);
 				writer.println("No further info provided.");
 			}
 		}
@@ -180,7 +186,7 @@ public class DocumentProcessor extends AbstractProcessor {
 			writer.println("## Importing the class");
 			writer.println();
 			writer.println("It might be required for you to import the package if you encounter any issues (like casting an [Array](/AdvancedFunctions/Arrays_and_Loops/)), so better be safe than sorry and add the import.  ");
-			writer.printf("`%s`%n%n", typeElement.getAnnotation(ZenCodeType.Name.class).value());
+			writer.printf("`import %s;`%n%n", typeElement.getAnnotation(ZenCodeType.Name.class).value());
 		} else {
 			final String expandedType = typeElement.getAnnotation(ZenCodeType.Expansion.class).value();
 			final String expandedTypeName = expandedType.substring(expandedType.lastIndexOf('.') + 1);
@@ -210,7 +216,7 @@ public class DocumentProcessor extends AbstractProcessor {
 					setterNames.add(actualName);
 				} else {
 					this.processingEnv.getMessager()
-							.printMessage(Diagnostic.Kind.WARNING, "Skipping Setter " + element.toString());
+							.printMessage(Diagnostic.Kind.WARNING, "Skipping Setter " + element.toString(), element);
 					continue;
 				}
 			}
@@ -238,7 +244,7 @@ public class DocumentProcessor extends AbstractProcessor {
 					getterNames.add(actualName);
 				} else {
 					this.processingEnv.getMessager()
-							.printMessage(Diagnostic.Kind.WARNING, "Skipping Getter " + element.toString());
+							.printMessage(Diagnostic.Kind.WARNING, "Skipping Getter " + element.toString(), element);
 					continue;
 				}
 			}
@@ -295,10 +301,10 @@ public class DocumentProcessor extends AbstractProcessor {
 			if (parameters.size() != requiredMethodParameters) {
 				if (isExtension) {
 					this.processingEnv.getMessager()
-							.printMessage(Diagnostic.Kind.ERROR, String.format("Operator %s requires %d operands as it is an extension method.", operatorType, requiredMethodParameters));
+							.printMessage(Diagnostic.Kind.ERROR, String.format("Operator %s requires %d operands as it is an extension method.", operatorType, requiredMethodParameters), method);
 				} else {
 					this.processingEnv.getMessager()
-							.printMessage(Diagnostic.Kind.ERROR, String.format("Operator %s requires %d operands.", operatorType, requiredMethodParameters));
+							.printMessage(Diagnostic.Kind.ERROR, String.format("Operator %s requires %d operands.", operatorType, requiredMethodParameters), method);
 				}
 
 				continue;
@@ -357,8 +363,6 @@ public class DocumentProcessor extends AbstractProcessor {
 				if (parentDoc == null)
 					parentDoc = "";
 			}
-
-			this.processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, parentDoc);
 
 			final StringJoiner sb = new StringJoiner("<br>");
 			boolean found = false;

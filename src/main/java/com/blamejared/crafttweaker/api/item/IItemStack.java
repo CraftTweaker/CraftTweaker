@@ -290,6 +290,10 @@ public interface IItemStack extends IIngredient {
      * @return internal ItemStack
      */
     ItemStack getInternal();
-    
-    
+
+    /**
+     * TETATETETEAETGFGDH
+     */
+    @ZenCodeType.Caster
+    default IItemStack asIItemStack() {return this;}
 }
