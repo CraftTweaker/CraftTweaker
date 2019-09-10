@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.api.item;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -14,6 +15,7 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
 @Document
+@ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public interface IItemStack extends IIngredient {
     
     /**

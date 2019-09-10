@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors;
 
 import com.blamejared.crafttweaker_annotations.annotations.AsIAction;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -16,25 +17,27 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-@SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.AsIAction"})
+@SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.AsIAction", "com.blamejared.crafttweaker_annotations.annotations.ZenWrapper"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AsIActionProcessor extends AbstractProcessor {
 
+	private final Map<String, Element> annotationsByWrappedElement = new HashMap<>();
+
 	private String getNewMethodDescriptor(VariableElement variableElement) {
 
-		if (variableElement.asType().getKind().isPrimitive())
-			return variableElement.asType().toString();
+		final TypeMirror typeMirror = variableElement.asType();
+		final String className = typeMirror.toString();
+		if (typeMirror.getKind().isPrimitive())
+			return className;
 
-		final String s = variableElement.asType().toString();
-		if (s.equalsIgnoreCase("net.minecraft.item.ItemStack")) {
-			return "com.blamejared.crafttweaker.api.item.IItemStack";
-		} else if (s.equalsIgnoreCase("net.minecraft.item.crafting.Ingredient")) {
-			return "com.blamejared.crafttweaker.api.item.IIngredient";
+		if (annotationsByWrappedElement.containsKey(className)) {
+			return annotationsByWrappedElement.get(className).asType().toString();
 		}
 
-		this.processingEnv.getMessager()
-				.printMessage(Diagnostic.Kind.WARNING, "Could not find type " + s, variableElement);
-		return s;
+		if (className.startsWith("java.lang."))
+			return className;
+
+		return null;
 	}
 
 	private String getConversionFormat(VariableElement variableElement) {
@@ -42,34 +45,62 @@ public class AsIActionProcessor extends AbstractProcessor {
 		if (typeMirror.getKind().isPrimitive())
 			return "%s";
 
-		final String s = typeMirror.toString();
-		if (s.equalsIgnoreCase("net.minecraft.item.crafting.Ingredient")) {
-			return "%s.asVanillaIngredient()";
+		final String className = typeMirror.toString();
+		if (annotationsByWrappedElement.containsKey(className)) {
+			return annotationsByWrappedElement.get(className).getAnnotation(ZenWrapper.class).conversionMethodFormat();
 		}
 
-		return "%s.getInternal()";
+		if (toString().startsWith("java.lang.")) {
+			return "%s";
+		}
+
+		this.processingEnv.getMessager()
+				.printMessage(Diagnostic.Kind.WARNING, "Could not conversion for " + className, variableElement);
+		return "%s";
+	}
+
+	private String getDisplayStringFormat(VariableElement variableElement) {
+		final TypeMirror typeMirror = variableElement.asType();
+		if (typeMirror.getKind().isPrimitive())
+			return "%s";
+
+		final String className = typeMirror.toString();
+		if (annotationsByWrappedElement.containsKey(className)) {
+			return annotationsByWrappedElement.get(className).getAnnotation(ZenWrapper.class).displayStringFormat();
+		}
+
+		if (toString().startsWith("java.lang.")) {
+			return "%s";
+		}
+
+		this.processingEnv.getMessager()
+				.printMessage(Diagnostic.Kind.WARNING, "No display String possible for " + className, variableElement);
+		return "%s";
 	}
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
+		for (Element element : roundEnv.getElementsAnnotatedWith(ZenWrapper.class)) {
+			this.annotationsByWrappedElement.put(element.getAnnotation(ZenWrapper.class).wrappedClass(), element);
+		}
 
 		if (annotations.isEmpty())
 			return false;
 
-		if (annotations.size() > 1) {
+		if (annotations.size() > 2) {
 			this.processingEnv.getMessager()
-					.printMessage(Diagnostic.Kind.ERROR, "More than one annotation type found?");
+					.printMessage(Diagnostic.Kind.ERROR, "More than two annotation type found?");
 		}
 
 		final Map<String, List<ExecutableElement>> classes = new HashMap<>();
-		final TypeElement asActionAnnotationElement = annotations.iterator().next();
-		for (Element element : roundEnv.getElementsAnnotatedWith(asActionAnnotationElement)) {
+		for (Element element : roundEnv.getElementsAnnotatedWith(AsIAction.class)) {
 			//AsIAction is only applicable to methods so the cast is safe
 			ExecutableElement method = (ExecutableElement) element;
 
-			if(!method.getModifiers().contains(Modifier.STATIC)) {
-				this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "AsIActionAnnotation requires the method to be static", method);
+			if (!method.getModifiers().contains(Modifier.STATIC)) {
+				this.processingEnv.getMessager()
+						.printMessage(Diagnostic.Kind.ERROR, "AsIActionAnnotation requires the method to be static", method);
 			}
 
 			final Element enclosingElement = method.getEnclosingElement();
@@ -97,8 +128,8 @@ public class AsIActionProcessor extends AbstractProcessor {
 		for (Map.Entry<String, List<ExecutableElement>> stringListEntry : classes.entrySet()) {
 			final String name = stringListEntry.getKey();
 			final List<ExecutableElement> methods = stringListEntry.getValue();
-			final String qualifiedName = ((QualifiedNameable) methods.get(0)
-					.getEnclosingElement()).getQualifiedName() + "GeneratedCrt";
+			final QualifiedNameable nameable = ((QualifiedNameable) methods.get(0).getEnclosingElement());
+			final String qualifiedName = nameable.getQualifiedName() + "GeneratedCrt";
 
 			final JavaFileObject sourceFile = this.processingEnv.getFiler()
 					.createSourceFile(qualifiedName);
@@ -112,10 +143,21 @@ public class AsIActionProcessor extends AbstractProcessor {
 				writer.println("@com.blamejared.crafttweaker.api.annotations.ZenRegister");
 				writer.println("@com.blamejared.crafttweaker_annotations.annotations.Document");
 				writer.printf("@org.openzen.zencode.java.ZenCodeType.Name(\"%s\")%n", name);
-				writer.printf("public class %s {", qualifiedName.substring(lastDot + 1));
+
+				{
+					final String doc = this.processingEnv.getElementUtils().getDocComment(nameable);
+					if(doc != null) {
+						writer.println("/**");
+						writer.println(doc);
+						writer.println("*/");
+					}
+				}
+
+				writer.printf("public class %s {%n%n", qualifiedName.substring(lastDot + 1));
 
 				for (ExecutableElement method : methods) {
 					writeMethod(method, writer);
+					writer.println();
 				}
 
 				writer.println("}");
@@ -133,7 +175,7 @@ public class AsIActionProcessor extends AbstractProcessor {
 		StringBuilder sb = new StringBuilder();
 
 		final String docComment = this.processingEnv.getElementUtils().getDocComment(method);
-		if(docComment!= null) {
+		if (docComment != null) {
 			sb.append("/**\n");
 			sb.append(docComment);
 			sb.append("*/\n");
@@ -189,7 +231,11 @@ public class AsIActionProcessor extends AbstractProcessor {
 		{
 			final StringJoiner sj = new StringJoiner(", ");
 			for (VariableElement parameter : parameters) {
-				sj.add(parameter.getSimpleName());
+				if(parameter.asType().getKind().isPrimitive()) {
+					sj.add(parameter.getSimpleName());
+				} else {
+					sj.add(String.format("%s == null ? null : String.format(\"%s\", %s)", parameter, getDisplayStringFormat(parameter), parameter.getSimpleName()));
+				}
 			}
 			sb.append(sj.toString());
 		}
