@@ -14,10 +14,10 @@ import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.CTRecipeManager")
+@ZenCodeType.Name("crafttweaker.api.CraftingTableManager")
 public class CTRecipeManager implements IRecipeManager {
     
-    @ZenCodeGlobals.Global("recipes")
+    @ZenCodeGlobals.Global("craftingTable")
     public static final CTRecipeManager INSTANCE = new CTRecipeManager();
     public static RecipeManager recipeManager;
     //private final List<ActionAddCraftingRecipe> addedRecipes = new ArrayList<>();
