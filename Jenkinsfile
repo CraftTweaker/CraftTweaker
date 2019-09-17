@@ -13,7 +13,7 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 echo 'Building and Deploying to Maven'
-					sh './gradlew build publish --stacktrace'
+					sh './gradlew build publish --stacktrace --debug'
                 }
             }
         }
