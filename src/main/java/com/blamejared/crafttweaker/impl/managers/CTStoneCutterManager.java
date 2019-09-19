@@ -14,11 +14,11 @@ import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.CuttingManager")
-public class CTCuttingManager implements IRecipeManager {
+@ZenCodeType.Name("crafttweaker.api.StoneCutterManager")
+public class CTStoneCutterManager implements IRecipeManager {
     
-    @ZenCodeGlobals.Global("cutting")
-    public static final CTCuttingManager INSTANCE = new CTCuttingManager();
+    @ZenCodeGlobals.Global("stoneCutter")
+    public static final CTStoneCutterManager INSTANCE = new CTStoneCutterManager();
     
     @ZenCodeType.Method
     public void addRecipe(String recipeName, IItemStack output, IIngredient input) {
