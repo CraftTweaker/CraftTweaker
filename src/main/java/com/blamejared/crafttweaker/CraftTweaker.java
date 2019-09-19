@@ -48,7 +48,7 @@ public class CraftTweaker {
     
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
     public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
-    
+
     public CraftTweaker() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
@@ -97,12 +97,12 @@ public class CraftTweaker {
          */
         System.out.println("Recipes updated");
     }
-    
+
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
     }
-    
+
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
         IReloadableResourceManager manager = event.getServer().getResourceManager();

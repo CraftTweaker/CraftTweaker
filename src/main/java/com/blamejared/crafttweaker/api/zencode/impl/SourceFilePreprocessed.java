@@ -22,11 +22,11 @@ public class SourceFilePreprocessed implements SourceFile {
     
     @Override
     public Reader open() {
-        return new StringReader(String.join("\n", fileContent));
+        return new StringReader(String.join(System.lineSeparator(), fileContent) + System.lineSeparator());
     }
     
     @Override
     public void update(String content) {
-        fileContent = Arrays.asList(content.split("\n"));
+        fileContent = Arrays.asList(content.split(System.lineSeparator()));
     }
 }
