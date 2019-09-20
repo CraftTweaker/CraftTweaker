@@ -20,6 +20,6 @@ subprojects {
 }
 
 dependencies {
-	compile project(":CraftTweaker_Annotations");
+	compile project(":Crafttweaker_Annotations");
 	compile project(":JavaAnnotations");
 }

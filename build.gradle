@@ -104,8 +104,8 @@ def zenCodeDeps = [ ':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration'
 
 dependencies {
 
-    compile project(":CraftTweaker_Annotations");
-    annotationProcessor project(":CraftTweaker_Annotation_Processors");
+    compile project(":Crafttweaker_Annotations");
+    annotationProcessor project(":Crafttweaker_Annotation_Processors");
 
     zenCodeDeps.collect { compile project(it) }
 
