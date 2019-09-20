@@ -137,15 +137,13 @@ class FormattingUtils {
 	/**
 	 * Formats the parameter to fit ZS.
 	 */
-	static String convertTypeName(Element element, Types typeUtils) {
-		final ZenCodeType.Name annotation = element.getAnnotation(ZenCodeType.Name.class);
+	static String convertTypeName(TypeMirror typeMirror, Types typeUtils) {
+		if(typeMirror.getKind().isPrimitive())
+			return typeMirror.toString();
+
+		final ZenCodeType.Name annotation = typeUtils.asElement(typeMirror).getAnnotation(ZenCodeType.Name.class);
 		if (annotation != null) {
 			return annotation.value();
-		}
-		final TypeMirror typeMirror = element.asType();
-		final ZenCodeType.Name annotation1 = typeMirror.getAnnotation(ZenCodeType.Name.class);
-		if (annotation1 != null) {
-			return annotation1.value();
 		}
 
 		if(typeMirror instanceof DeclaredType) {
@@ -153,12 +151,11 @@ class FormattingUtils {
 			final String typeString = declaredType.toString().toLowerCase();
 			if(typeString.startsWith("java.util.map<")) {
 				final List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-				final String valueType = convertTypeName(typeUtils.asElement(typeArguments.get(1)), typeUtils);
-				final String keyType = convertTypeName(typeUtils.asElement(typeArguments.get(0)), typeUtils);
+				final String valueType = convertTypeName(typeArguments.get(1), typeUtils);
+				final String keyType = convertTypeName(typeArguments.get(0), typeUtils);
 				return String.format("%s[%s]", valueType, keyType);
 			} else if(typeString.startsWith("java.util.list<")) {
-				final String elementType = convertTypeName(typeUtils.asElement(declaredType.getTypeArguments()
-						.get(0)), typeUtils);
+				final String elementType = convertTypeName(declaredType.getTypeArguments().get(0), typeUtils);
 				return String.format("%s[]", elementType);
 			}
 		}
