@@ -7,7 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Expansion("int[]")
 public class ExpandIntArray {
     
-    @ZenCodeType.Caster
+    @ZenCodeType.Caster(implicit = true)
     public static IData asData(int[] value) {
         return new IntArrayData(value);
     }

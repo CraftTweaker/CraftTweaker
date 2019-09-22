@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Expansion("string")
 public class ExpandString {
     
-    @ZenCodeType.Caster
+    @ZenCodeType.Caster(implicit = true)
     public static IData asData(String value) {
         return new StringData(value);
     }

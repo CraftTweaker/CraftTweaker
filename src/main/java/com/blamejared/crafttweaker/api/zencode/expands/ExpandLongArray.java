@@ -7,7 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Expansion("long[]")
 public class ExpandLongArray {
     
-    @ZenCodeType.Caster
+    @ZenCodeType.Caster(implicit = true)
     public static IData asData(long[] value) {
         return new LongArrayData(value);
     }
