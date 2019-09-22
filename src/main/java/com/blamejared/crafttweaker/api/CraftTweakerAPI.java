@@ -31,11 +31,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @ZenRegister
 public class CraftTweakerAPI {
@@ -126,9 +122,7 @@ public class CraftTweakerAPI {
             
             // For expansions on ZenScript types (I.E. any[any], string, int) and just anything else that fails
             JavaNativeModule expansions = SCRIPTING_ENGINE.createNativeModule("expansions", "", modules.toArray(new JavaNativeModule[0]));
-            CraftTweakerRegistry.getExpansions().keySet().stream().map(CraftTweakerRegistry.getExpansions()::get).forEach(classes -> {
-                classes.forEach(expansions::addClass);
-            });
+            CraftTweakerRegistry.getExpansions().values().stream().flatMap(Collection::stream).forEach(expansions::addClass);
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
             
             List<File> fileList = new ArrayList<>();

@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Expansion("byte?")
 public class ExpandByte {
     
-    @ZenCodeType.Caster
+    @ZenCodeType.Caster(implicit = true)
     public static IData asData(Byte value) {
         return new ByteData(value);
     }

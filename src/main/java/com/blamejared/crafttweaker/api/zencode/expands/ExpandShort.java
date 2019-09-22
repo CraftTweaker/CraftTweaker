@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Expansion("short")
 public class ExpandShort {
     
-    @ZenCodeType.Caster
+    @ZenCodeType.Caster(implicit = true)
     public static IData asData(short value) {
         return new ShortData(value);
     }

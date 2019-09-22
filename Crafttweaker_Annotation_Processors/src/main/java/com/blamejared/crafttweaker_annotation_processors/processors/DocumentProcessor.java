@@ -281,9 +281,9 @@ public class DocumentProcessor extends AbstractProcessor {
 
 	private void writeOperators(Map<Class<? extends Annotation>, List<Element>> membersToWrite, PrintWriter writer, boolean isExtension) {
 		final List<Element> elements = membersToWrite.get(ZenCodeType.Operator.class);
-		elements.sort(Comparator.comparing(e -> e.getAnnotation(ZenCodeType.Operator.class).value().name()));
 		if (elements.isEmpty())
 			return;
+		elements.sort(Comparator.comparing(e -> e.getAnnotation(ZenCodeType.Operator.class).value().name()));
 
 		writer.println("## Operators");
 		writer.println();
@@ -344,14 +344,14 @@ public class DocumentProcessor extends AbstractProcessor {
 					.get(0) : method.getEnclosingElement();
 			final String simpleName = argumentElement.getSimpleName().toString();
 			operandNames[0] = "my" + simpleName.substring(0, 1) + simpleName.substring(1);
-			operandTypes[0] = FormattingUtils.convertTypeName(argumentElement, this.processingEnv.getTypeUtils());
+			operandTypes[0] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
 			//Description of base type will never be printed so we dont need to set it to anything.
 		}
 
 		for (int i = 1; i < operandCount; i++) {
 			final VariableElement argumentElement = method.getParameters().get(isExtension ? i : i - 1);
 			operandNames[i] = argumentElement.getSimpleName().toString();
-			operandTypes[i] = FormattingUtils.convertTypeName(argumentElement, this.processingEnv.getTypeUtils());
+			operandTypes[i] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
 
 			String parentDoc;
 			final Document docAnnotation = argumentElement.getEnclosingElement().getAnnotation(Document.class);
@@ -479,10 +479,9 @@ public class DocumentProcessor extends AbstractProcessor {
 		writer.println("|-------------|----------|-------------|");
 		for (Element element : elements) {
 			//ZenCodeType.caster can only be applied to methods so the cast should be save.
-			ExecutableElement method = (ExecutableElement) element;
+			final ExecutableElement method = (ExecutableElement) element;
 
-			final String returnType = FormattingUtils.convertTypeName(this.processingEnv.getTypeUtils()
-					.asElement(method.getReturnType()), this.processingEnv.getTypeUtils());
+			final String returnType = FormattingUtils.convertTypeName(method.getReturnType(), this.processingEnv.getTypeUtils());
 
 			String description;
 			final Document annotation = method.getAnnotation(Document.class);
