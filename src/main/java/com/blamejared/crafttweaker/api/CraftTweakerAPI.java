@@ -8,8 +8,7 @@ import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
-import com.blamejared.crafttweaker.api.zencode.expands.RewriteArray;
-import com.blamejared.crafttweaker.api.zencode.expands.RewriteMap;
+import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
@@ -55,8 +54,8 @@ public class CraftTweakerAPI {
     private static boolean firstRun = true;
     
     static {
-        ParsedExpressionMap.compileOverrides.add(new RewriteMap());
-        ParsedExpressionArray.compileOverrides.add(new RewriteArray());
+        ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
+        ParsedExpressionArray.compileOverrides.add(IDataRewrites::rewriteArray);
     }
     
     
