@@ -41,9 +41,14 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack withTag(Map<String, IData> tag) {
+    public IItemStack withTag(IData tag) {
         final ItemStack copy = internal.copy();
-        copy.setTag(new MapData(tag).getInternal());
+        if(tag instanceof MapData)
+            copy.setTag(((MapData) tag).getInternal());
+        else {
+            //TODO: What do we do if it's not a map?
+            copy.setTag(new MapData(tag.asMap()).getInternal());
+        }
         return new MCItemStack(copy);
     }
     

@@ -197,12 +197,7 @@ public interface IItemStack extends IIngredient {
     
     
     @ZenCodeType.Method
-    IItemStack withTag(Map<String, IData> tag);
-    
-    @ZenCodeType.Method
-    default IItemStack withIDataTag(IData tag) {
-        return tag == null ? this : withTag(tag.asMap());
-    }
+    IItemStack withTag(IData tag);
     
     /**
      * Returns true if this ItemStack has a Tag
