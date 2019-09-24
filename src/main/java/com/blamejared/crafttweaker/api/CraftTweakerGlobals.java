@@ -11,4 +11,9 @@ public class CraftTweakerGlobals {
         CraftTweakerAPI.logger.info(msg);
     }
     
+    @ZenCodeGlobals.Global
+    public static void print(String msg) {
+        CraftTweakerAPI.logger.info(msg);
+    }
+    
 }
