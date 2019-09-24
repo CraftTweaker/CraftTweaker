@@ -177,11 +177,13 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> ingredients = NonNullList.create();
-        for(IIngredient[] ingredientRow : this.ingredients)
-            for(IIngredient ingredient : ingredientRow) {
-                ingredients.add(ingredient.asVanillaIngredient());
+        NonNullList<Ingredient> ingredients = NonNullList.withSize(this.height * this.width, Ingredient.EMPTY);
+        for(int row = 0; row < this.ingredients.length; row++) {
+            IIngredient[] ingredientRow = this.ingredients[row];
+            for(int column = 0; column < ingredientRow.length; column++) {
+                ingredients.set(row * width + column, ingredientRow[column].asVanillaIngredient());
             }
+        }
         return ingredients;
     }
     
