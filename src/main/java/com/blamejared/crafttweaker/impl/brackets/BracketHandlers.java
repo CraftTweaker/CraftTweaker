@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.BracketDumper;
 import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -10,6 +11,7 @@ import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
@@ -17,8 +19,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -38,6 +39,15 @@ public class BracketHandlers {
         }
         final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(key));
         return new MCItemStack(value);
+    }
+    
+    @BracketDumper("item")
+    public static Collection<String> getItemBracketDump() {
+        final HashSet<String> result = new HashSet<>();
+        for(ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
+            result.add(String.format(Locale.ENGLISH, "<item:%s>", key));
+        }
+        return result;
     }
     
     
@@ -62,6 +72,15 @@ public class BracketHandlers {
         } else {
             throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
         }
+    }
+    
+    @BracketDumper("recipetype")
+    public static Collection<String> getRecipeTypeDump() {
+        final HashSet<String> result = new HashSet<>();
+        for(ResourceLocation location: Registry.RECIPE_TYPE.keySet()) {
+            result.add(String.format(Locale.ENGLISH, "<recipetype:%s>", location));
+        }
+        return result;
     }
     
     @BracketResolver("blockstate")
