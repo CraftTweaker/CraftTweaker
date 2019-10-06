@@ -4,13 +4,11 @@ package com.blamejared.crafttweaker.api.item;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
@@ -197,12 +195,8 @@ public interface IItemStack extends IIngredient {
     
     
     @ZenCodeType.Method
-    IItemStack withTag(Map<String, IData> tag);
+    IItemStack withTag(IData tag);
     
-    @ZenCodeType.Method
-    default IItemStack withIDataTag(IData tag) {
-        return tag == null ? this : withTag(tag.asMap());
-    }
     
     /**
      * Returns true if this ItemStack has a Tag

@@ -126,6 +126,7 @@ public class ListData implements ICollectionData {
             output.append(NBTConverter.convert(inbt).asString());
         }
         output.append(']');
+        output.append(" as IData");
         return output.toString();
     }
     

@@ -9,8 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
 
-import java.util.Map;
-
 public class MCItemStackMutable implements IItemStack {
     
     private final ItemStack internal;
@@ -38,8 +36,11 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
-    public IItemStack withTag(Map<String, IData> tag) {
-        internal.setTag(new MapData(tag).getInternal());
+    public IItemStack withTag(IData tag) {
+        if(!(tag instanceof MapData)) {
+            tag = new MapData(tag.asMap());
+        }
+        internal.setTag(((MapData) tag).getInternal());
         return this;
     }
     

@@ -137,7 +137,7 @@ public class MapData implements IData {
             result.append(": ");
             result.append(value.asString());
         }
-        result.append('}');
+        result.append('}').append(" as IData");
         return result.toString();
     }
     
