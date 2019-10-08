@@ -10,12 +10,12 @@ import java.util.Map;
 
 /**
  * The IData interface is a generic Interface for handling Data like NBT.
- * You can cast about all primitives (short, double, string, int, …) as well as certain arrays to IData.
+ * You can cast about all primitives (short, double, string, int, ...) as well as certain arrays to IData.
  * Remember that while they offer similar features, IData and their counterparts are NOT the same, which is why they will be referred to as DataTypes (e.g. ByteData).
  */
 @ZenCodeType.Name("crafttweaker.api.data.IData")
 @ZenRegister
-@Document()
+@Document
 public interface IData {
     
     /**
