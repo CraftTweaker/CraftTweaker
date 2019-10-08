@@ -31,7 +31,9 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -153,11 +155,12 @@ public class CTCommands {
     
     private static int executeHelp(CommandContext<CommandSource> context, int helpPage) {
         int commandsPerPage = 4;
-        int page = MathHelper.clamp(helpPage, 0, (COMMANDS.size() / commandsPerPage) - 1);
-        for(int i = page * commandsPerPage; i < Math.min((page * commandsPerPage) + commandsPerPage, COMMANDS.size()); i++) {
-            FormattedTextComponent message = new FormattedTextComponent("/ct %s", COMMANDS.get(i).getName());
+        List<String> keys = new ArrayList<>(COMMANDS.keySet());
+        int page = MathHelper.clamp(helpPage, 0, (keys.size() / commandsPerPage) - 1);
+        for(int i = page * commandsPerPage; i < Math.min((page * commandsPerPage) + commandsPerPage, keys.size()); i++) {
+            FormattedTextComponent message = new FormattedTextComponent("/ct %s", COMMANDS.get(keys.get(i)).getName());
             context.getSource().sendFeedback(run(message, message.getUnformattedComponentText()), true);
-            context.getSource().sendFeedback(new FormattedTextComponent("- %s", color(COMMANDS.get(i).getDescription(), TextFormatting.DARK_AQUA)), true);
+            context.getSource().sendFeedback(new FormattedTextComponent("- %s", color(COMMANDS.get(keys.get(i)).getDescription(), TextFormatting.DARK_AQUA)), true);
         }
         context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (COMMANDS.size() / commandsPerPage) - 1), true);
         return 0;
