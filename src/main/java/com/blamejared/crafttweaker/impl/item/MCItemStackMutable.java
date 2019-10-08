@@ -9,8 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
 
-import java.util.Map;
-
 public class MCItemStackMutable implements IItemStack {
     
     private final ItemStack internal;
@@ -39,11 +37,14 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public IItemStack withTag(IData tag) {
+        if(!(tag instanceof MapData)) {
+            tag = new MapData(tag.asMap());
+        }
         if(tag instanceof MapData)
             internal.setTag(((MapData) tag).getInternal());
         else {
             //TODO: What do we do if it's not a map?
-            internal.setTag(new MapData(tag.asMap()).getInternal());
+            internal.setTag(((MapData) tag.asMap()).getInternal());
         }
         return this;
     }

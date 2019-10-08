@@ -8,7 +8,8 @@ import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
-import com.blamejared.crafttweaker.impl.recipes.SerializerStub;
+import com.blamejared.crafttweaker.impl.recipes.SerializerShaped;
+import com.blamejared.crafttweaker.impl.recipes.SerializerShapeless;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
@@ -47,6 +48,7 @@ public class CraftTweaker {
     public static final Logger LOG = LogManager.getLogger(NAME);
     
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
+    public static IRecipeSerializer SHAPED_SERIALIZER;
     public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
 
     public CraftTweaker() {
@@ -54,7 +56,9 @@ public class CraftTweaker {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
         PacketHandler.init();
-        SHAPELESS_SERIALIZER = new SerializerStub().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
+        SHAPELESS_SERIALIZER = new SerializerShapeless().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
+        SHAPED_SERIALIZER = new SerializerShaped().setRegistryName(new ResourceLocation("crafttweaker:shaped"));
+    
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);

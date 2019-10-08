@@ -204,7 +204,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     
     @Override
     public IRecipeSerializer<CTRecipeShaped> getSerializer() {
-        return CraftTweaker.SHAPELESS_SERIALIZER;
+        return CraftTweaker.SHAPED_SERIALIZER;
     }
     
     @Override
@@ -217,6 +217,10 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         return height;
     }
     
+    
+    public boolean isMirrored() {
+        return mirrored;
+    }
     
     private static final class IntPair {
         

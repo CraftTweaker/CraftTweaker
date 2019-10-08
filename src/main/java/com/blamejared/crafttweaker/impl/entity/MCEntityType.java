@@ -9,10 +9,18 @@ import org.openzen.zencode.java.ZenCodeType;
 public class MCEntityType {
     
     private final EntityType internal;
+    private final MCEntityClassification classification;
     
     public MCEntityType(EntityType internal) {
         this.internal = internal;
+        this.classification = new MCEntityClassification(internal.getClassification());
     }
+    
+    @ZenCodeType.Getter("classification")
+    public MCEntityClassification getClassification() {
+        return classification;
+    }
+    
     
     @ZenCodeType.Getter("serializable")
     public boolean isSerializable() {
@@ -57,4 +65,5 @@ public class MCEntityType {
     public EntityType getInternal() {
         return internal;
     }
+    
 }

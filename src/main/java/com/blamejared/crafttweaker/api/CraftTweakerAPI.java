@@ -94,7 +94,7 @@ public class CraftTweakerAPI {
     
     
     private static void initEngine() {
-        SCRIPTING_ENGINE = new ScriptingEngine();
+        SCRIPTING_ENGINE = new ScriptingEngine(logger);
         SCRIPTING_ENGINE.debug = DEBUG_MODE;
     }
     

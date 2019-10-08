@@ -32,7 +32,9 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -76,13 +78,13 @@ public class CTCommands {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("logs/crafttweaker.log").toURI().toString()));
             return 0;
         }));
-        
+
         registerCommand(new CommandImpl("dumpBrackets", "Dumps available Bracket Expressions into the /ct_dumps folder", source -> {
             final File folder = new File("ct_dumps");
             if(!folder.exists() && !folder.mkdir()) {
                 CraftTweakerAPI.logError("Could not create output folder %s", folder);
             }
-    
+
             CraftTweakerRegistry.getBracketDumpers().forEach((name, dumpSupplier) -> {
                 try(final PrintWriter writer = new PrintWriter(new FileWriter(new File(folder, name + ".txt"), false))) {
                     dumpSupplier.get().forEach(writer::println);
@@ -90,12 +92,12 @@ public class CTCommands {
                     CraftTweakerAPI.logThrowing("Error writing to file '%s.txt'", e, name);
                 }
             });
-            
+
             send(new StringTextComponent("Files Created"), source.getSource());
-    
+
             return 0;
         }));
-        
+
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
             send(new StringTextComponent("Dump types: "), player);
             COMMANDS.get("dump").getSubCommands().forEach((s, command) -> send(run(new StringTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
@@ -173,11 +175,12 @@ public class CTCommands {
     
     private static int executeHelp(CommandContext<CommandSource> context, int helpPage) {
         int commandsPerPage = 4;
-        int page = MathHelper.clamp(helpPage, 0, (COMMANDS.size() / commandsPerPage) - 1);
-        for(int i = page * commandsPerPage; i < Math.min((page * commandsPerPage) + commandsPerPage, COMMANDS.size()); i++) {
-            FormattedTextComponent message = new FormattedTextComponent("/ct %s", COMMANDS.get(i).getName());
+        List<String> keys = new ArrayList<>(COMMANDS.keySet());
+        int page = MathHelper.clamp(helpPage, 0, (keys.size() / commandsPerPage) - 1);
+        for(int i = page * commandsPerPage; i < Math.min((page * commandsPerPage) + commandsPerPage, keys.size()); i++) {
+            FormattedTextComponent message = new FormattedTextComponent("/ct %s", COMMANDS.get(keys.get(i)).getName());
             context.getSource().sendFeedback(run(message, message.getUnformattedComponentText()), true);
-            context.getSource().sendFeedback(new FormattedTextComponent("- %s", color(COMMANDS.get(i).getDescription(), TextFormatting.DARK_AQUA)), true);
+            context.getSource().sendFeedback(new FormattedTextComponent("- %s", color(COMMANDS.get(keys.get(i)).getDescription(), TextFormatting.DARK_AQUA)), true);
         }
         context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (COMMANDS.size() / commandsPerPage) - 1), true);
         return 0;

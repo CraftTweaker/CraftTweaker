@@ -14,16 +14,17 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CTRecipeShapeless> {
+public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CTRecipeShapeless> {
     
     //    private final T recipe;
     
-    public SerializerStub() {
+    public SerializerShapeless() {
         //        this.recipe = recipe;
     }
     
@@ -42,7 +43,6 @@ public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryE
     
     @Override
     public CTRecipeShapeless read(ResourceLocation recipeId, JsonObject json) {
-        String s = JSONUtils.getString(json, "group", "");
         NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
         IIngredient[] ingredients = new IIngredient[nonnulllist.size()];
         for(int i = 0; i < nonnulllist.size(); i++) {
@@ -61,7 +61,6 @@ public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryE
     
     @Override
     public CTRecipeShapeless read(ResourceLocation recipeId, PacketBuffer buffer) {
-        String s = buffer.readString(32767);
         int i = buffer.readVarInt();
         IIngredient[] ingredients = new IIngredient[i];
         
@@ -75,7 +74,6 @@ public class SerializerStub extends net.minecraftforge.registries.ForgeRegistryE
     
     @Override
     public void write(PacketBuffer buffer, CTRecipeShapeless recipe) {
-        buffer.writeString(recipe.getGroup());
         buffer.writeVarInt(recipe.getIngredients().size());
         for(Ingredient ingredient : recipe.getIngredients()) {
             ingredient.write(buffer);
