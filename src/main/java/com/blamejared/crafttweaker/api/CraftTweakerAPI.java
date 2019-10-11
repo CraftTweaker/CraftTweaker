@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
@@ -26,6 +27,8 @@ import org.openzen.zenscript.formatter.FileFormatter;
 import org.openzen.zenscript.formatter.ScriptFormattingSettings;
 import org.openzen.zenscript.parser.PrefixedBracketParser;
 import org.openzen.zenscript.parser.SimpleBracketParser;
+import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
+import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -54,6 +57,11 @@ public class CraftTweakerAPI {
     //TODO change this before release
     public static boolean DEBUG_MODE = true;
     private static boolean firstRun = true;
+    
+    static {
+        ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
+        ParsedExpressionArray.compileOverrides.add(IDataRewrites::rewriteArray);
+    }
     
     
     public static void apply(IAction action) {
@@ -112,6 +120,7 @@ public class CraftTweakerAPI {
                 FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
                 bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
             }
+            crafttweakerModule.registerBEP(bep);
             SCRIPTING_ENGINE.registerNativeProvided(crafttweakerModule);
             for(String key : CraftTweakerRegistry.getRootPackages()) {
                 //module already registered

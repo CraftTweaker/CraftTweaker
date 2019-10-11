@@ -4,11 +4,15 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import net.minecraft.nbt.CompoundNBT;
+import org.openzen.zencode.java.StorageTagType;
+import org.openzen.zencode.java.ZenCodeStorageTag;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+
 
 @ZenCodeType.Name("crafttweaker.api.data.MapData")
 @ZenRegister
@@ -25,7 +29,8 @@ public class MapData implements IData {
         this.internal = new CompoundNBT();
     }
     
-    public MapData(Map<String, IData> map) {
+    @ZenCodeType.Constructor
+    public MapData(Map<@ZenCodeStorageTag(StorageTagType.STATIC) String, IData> map) {
         this.internal = new CompoundNBT();
         putAll(map);
     }

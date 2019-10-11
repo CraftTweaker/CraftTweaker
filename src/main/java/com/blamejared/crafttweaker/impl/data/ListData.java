@@ -9,6 +9,7 @@ import net.minecraft.nbt.ListNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ZenCodeType.Name("crafttweaker.api.data.ListData")
@@ -26,9 +27,14 @@ public class ListData implements ICollectionData {
         this.internal = new ListNBT();
     }
     
+    @ZenCodeType.Constructor
     public ListData(List<IData> list) {
         this.internal = new ListNBT();
         list.forEach(iData -> internal.add(iData.getInternal()));
+    }
+    @ZenCodeType.Constructor
+    public ListData(IData... array) {
+        this(Arrays.asList(array));
     }
     
     @Override

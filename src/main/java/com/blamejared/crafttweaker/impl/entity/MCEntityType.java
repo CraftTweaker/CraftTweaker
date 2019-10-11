@@ -61,6 +61,11 @@ public class MCEntityType {
     public float getHeight() {
         return getInternal().getHeight();
     }
+
+    @ZenCodeType.Getter("commandString")
+    public String getCommandString() {
+        return "<entityType:" + internal.getRegistryName() + ">";
+    }
     
     public EntityType getInternal() {
         return internal;

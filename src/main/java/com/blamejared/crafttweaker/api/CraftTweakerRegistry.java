@@ -1,31 +1,20 @@
 package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.api.annotations.BracketResolver;
-import com.blamejared.crafttweaker.api.annotations.PreProcessor;
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Streams;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class CraftTweakerRegistry {
     
@@ -36,6 +25,7 @@ public class CraftTweakerRegistry {
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
     private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
+    private static final Map<String, Supplier<Collection<String>>> BRACKET_DUMPERS = new HashMap<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
     private static final Map<String, List<Class>> EXPANSIONS = new HashMap<>();
@@ -127,24 +117,66 @@ public class CraftTweakerRegistry {
             }
             
             for(Method method : zenClass.getDeclaredMethods()) {
-                if(!method.isAnnotationPresent(BracketResolver.class)) {
-                    continue;
-                }
-                if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
-                    CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it is not public and static.", method.toString());
-                    continue;
-                }
-                Class<?>[] parameters = method.getParameterTypes();
-                if(parameters.length == 1 && parameters[0].equals(String.class)) {
-                    BRACKET_RESOLVERS.add(method);
-                } else {
-                    CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
-                }
+                handleBracketResolver(method);
+                handleBracketDumper(method);
             }
         }
-        
-        
     }
+    
+    private static void handleBracketResolver(Method method) {
+        if(!method.isAnnotationPresent(BracketResolver.class)) {
+            return;
+        }
+        if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it is not public and static.", method.toString());
+            return;
+        }
+        Class<?>[] parameters = method.getParameterTypes();
+        if(parameters.length == 1 && parameters[0].equals(String.class)) {
+            BRACKET_RESOLVERS.add(method);
+        } else {
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
+        }
+    }
+    
+    private static void handleBracketDumper(Method method) {
+        if(!method.isAnnotationPresent(BracketDumper.class)) {
+            return;
+        }
+        if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketDumper, but it is not public and static.", method.toString());
+            return;
+        }
+        
+        if(method.getParameterCount() != 0) {
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as BracketDumper but does not have 0 parameters.", method.toString());
+            return;
+        }
+        
+        if(!Collection.class.isAssignableFrom(method.getReturnType()) || ((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0] != String.class) {
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as BracketDumper but does not have 'Collection<String>' as return type.", method.toGenericString());
+            return;
+        }
+    
+        final String value = method.getAnnotation(BracketDumper.class).value();
+    
+        BRACKET_DUMPERS.merge(value, () -> {
+            try {
+                //noinspection unchecked
+                return (Collection<String>) method.invoke(null);
+            } catch(InvocationTargetException | IllegalAccessException ignored) {
+                return null;
+            }
+        }, (dumpFun1, dumpFun2) -> () -> {
+            final Collection<String> strings1 = dumpFun1.get();
+            final Collection<String> strings2 = dumpFun2.get();
+            final Collection<String> result = new HashSet<>(strings1.size() + strings2.size());
+            result.addAll(strings1);
+            result.addAll(strings2);
+            return result;
+        });
+    }
+    
     
     /**
      * Used to determine if the class has a field / method
@@ -222,6 +254,14 @@ public class CraftTweakerRegistry {
      */
     public static List<Method> getBracketResolvers() {
         return ImmutableList.copyOf(BRACKET_RESOLVERS);
+    }
+    
+    /**
+     * Gets the Bracket dumper Map
+     * @return ImmutableMap of the Bracket dumpers
+     */
+    public static Map<String, Supplier<Collection<String>>> getBracketDumpers() {
+        return ImmutableMap.copyOf(BRACKET_DUMPERS);
     }
     
     public static List<IPreprocessor> getPreprocessors() {
