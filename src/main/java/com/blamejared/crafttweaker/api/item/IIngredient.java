@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IIngredient")
-@Document
+@Document("vanilla/items/IIngredient")
 @ZenWrapper(wrappedClass = "net.minecraft.item.crafting.Ingredient", conversionMethodFormat = "%s.asVanillaIngredient()", displayStringFormat = "%.getCommandString()")
 public interface IIngredient {
     

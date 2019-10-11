@@ -141,7 +141,7 @@ public class AsIActionProcessor extends AbstractProcessor {
 				writer.println();
 
 				writer.println("@com.blamejared.crafttweaker.api.annotations.ZenRegister");
-				writer.println("@com.blamejared.crafttweaker_annotations.annotations.Document");
+				writer.printf("@com.blamejared.crafttweaker_annotations.annotations.Document(\"%s\")%n", name);
 				writer.printf("@org.openzen.zencode.java.ZenCodeType.Name(\"%s\")%n", name);
 
 				{
