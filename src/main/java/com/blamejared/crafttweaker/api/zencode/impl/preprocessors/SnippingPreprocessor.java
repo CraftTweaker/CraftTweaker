@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.PreProcessor;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
@@ -9,9 +10,15 @@ import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Predicate;
 
+@PreProcessor
 public class SnippingPreprocessor implements IPreprocessor {
 	/**
 	 * called whenever a Snip preprocessor is hit.<br>

@@ -3,6 +3,9 @@ package com.blamejared.crafttweaker.api.data;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * The ICollection data is used to represent a collection of IData like a List<IData>
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.data.ICollectionData")
 public interface ICollectionData extends IData {
