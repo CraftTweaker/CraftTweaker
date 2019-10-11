@@ -89,7 +89,7 @@ public class CraftTweaker {
         called on singleplayer join on the client
         Called on multiplayer login on the server
          */
-        ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+        
         List<String> msgs = new ArrayList<>();
         msgs.add("Thank you for participating in the CraftTweaker Open beta!");
         msgs.add("Things to note: ");
@@ -111,6 +111,7 @@ public class CraftTweaker {
         event.getPlayer().sendMessage(discord);
         
         event.getPlayer().sendMessage(new StringTextComponent("This message will show every time a world is joined. There is no way to remove it, as I said, this is " + TextFormatting.RED + "NOT" + TextFormatting.RESET + " modpack ready!"));
+        ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
     }
     
     @SubscribeEvent

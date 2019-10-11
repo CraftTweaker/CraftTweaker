@@ -28,12 +28,14 @@ public class ListData implements ICollectionData {
     }
     
     @ZenCodeType.Constructor
-    public ListData(List<IData> list) {
+    public ListData(@ZenCodeType.Optional List<IData> list) {
         this.internal = new ListNBT();
+        if(list != null)
         list.forEach(iData -> internal.add(iData.getInternal()));
     }
+    
     @ZenCodeType.Constructor
-    public ListData(IData... array) {
+    public ListData(@ZenCodeType.Optional IData... array) {
         this(Arrays.asList(array));
     }
     
