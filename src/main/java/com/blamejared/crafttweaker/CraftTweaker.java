@@ -14,10 +14,12 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
@@ -36,7 +38,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -50,7 +54,7 @@ public class CraftTweaker {
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
     public static IRecipeSerializer SHAPED_SERIALIZER;
     public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
-
+    
     public CraftTweaker() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
@@ -58,8 +62,10 @@ public class CraftTweaker {
         PacketHandler.init();
         SHAPELESS_SERIALIZER = new SerializerShapeless().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
         SHAPED_SERIALIZER = new SerializerShaped().setRegistryName(new ResourceLocation("crafttweaker:shaped"));
-    
+        
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
+        ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPED_SERIALIZER);
+        
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
     }
@@ -84,6 +90,27 @@ public class CraftTweaker {
         Called on multiplayer login on the server
          */
         ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+        List<String> msgs = new ArrayList<>();
+        msgs.add("Thank you for participating in the CraftTweaker Open beta!");
+        msgs.add("Things to note: ");
+        msgs.add("Quite literally everything has been rewritten, from Forge, the mod, even the ZenScript engine! So things may not work!");
+        msgs.add("This is " + TextFormatting.RED + "NOT" + TextFormatting.RESET + " modpack ready! This is a release to help find issues and allow modpack developers to start work on their packs!");
+        msgs.add("Script reloading is back!");
+        msgs.add("The command is now bundled in /reload!");
+        msgs.add("\nWith that, there is no more /ct syntax (is there a reason to have it? if so, let me know on discord or twitter!)");
+        
+        msgs.stream().map(StringTextComponent::new).forEach(event.getPlayer()::sendMessage);
+        StringTextComponent github = new StringTextComponent("If you find a bug, please report it on the " + TextFormatting.AQUA + "Issue Tracker!" + TextFormatting.RESET);
+        github.applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/CraftTweaker/CraftTweaker/issues")));
+        github.applyTextStyle(style -> style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to go to the issue tracker!"))));
+        event.getPlayer().sendMessage(github);
+        
+        StringTextComponent discord = new StringTextComponent("If you need any help, join the " + TextFormatting.AQUA + "Discord!" + TextFormatting.RESET);
+        discord.applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.blamejared.com")));
+        discord.applyTextStyle(style -> style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to join the discord!"))));
+        event.getPlayer().sendMessage(discord);
+        
+        event.getPlayer().sendMessage(new StringTextComponent("This message will show every time a world is joined. There is no way to remove it, as I said, this is " + TextFormatting.RED + "NOT" + TextFormatting.RESET + " modpack ready!"));
     }
     
     @SubscribeEvent
@@ -99,30 +126,27 @@ public class CraftTweaker {
          *
          * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
          */
-        System.out.println("Recipes updated");
+        //        System.out.println("Recipes updated");
     }
-
+    
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
     }
-
+    
     @SubscribeEvent
     public void startServer(FMLServerAboutToStartEvent event) {
         IReloadableResourceManager manager = event.getServer().getResourceManager();
-        manager.addReloadListener(new IResourceManagerReloadListener() {
-            @Override
-            public void onResourceManagerReload(IResourceManager resourceManager) {
-                //ImmutableMap of ImmutableMaps. Nice.
-                RecipeManager recipeManager = event.getServer().getRecipeManager();
-                recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-                for(IRecipeType<?> type : recipeManager.recipes.keySet()) {
-                    recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
-                }
-                CTRecipeManager.recipeManager = recipeManager;
-                CraftTweakerAPI.loadScripts();
-                event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
+        manager.addReloadListener((IResourceManagerReloadListener) resourceManager -> {
+            //ImmutableMap of ImmutableMaps. Nice.
+            RecipeManager recipeManager = event.getServer().getRecipeManager();
+            recipeManager.recipes = new HashMap<>(recipeManager.recipes);
+            for(IRecipeType<?> type : recipeManager.recipes.keySet()) {
+                recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
             }
+            CTRecipeManager.recipeManager = recipeManager;
+            CraftTweakerAPI.loadScripts();
+            event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
         });
     }
     

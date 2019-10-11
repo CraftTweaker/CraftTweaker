@@ -34,7 +34,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 @ZenRegister
 public class CraftTweakerAPI {
@@ -148,7 +153,7 @@ public class CraftTweakerAPI {
                 CraftTweaker.LOG.info("Scripts are invalid!");
                 return;
             }
-            boolean formatScripts = true;
+            boolean formatScripts = false;
             //  toggle this to format scripts, ideally this should be a command
             if(formatScripts) {
                 List<HighLevelDefinition> all = scripts.definitions.getAll();
