@@ -132,11 +132,13 @@ public class BracketHandlers {
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
-            throw new IllegalArgumentException("Could not get Entity type <entityType:" + tokens + ">");
+            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            return null;
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         if(!ForgeRegistries.ENTITIES.containsKey(resourceLocation)) {
-            throw new IllegalArgumentException("Could not get Entity type <entityType:" + tokens + ">");
+            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            return null;
         }
 
         //Cannot be null since we checked containsKey
