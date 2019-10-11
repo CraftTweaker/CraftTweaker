@@ -8,18 +8,22 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -122,5 +126,28 @@ public class BracketHandlers {
         }
         
         return blockState;
+    }
+
+    @BracketResolver("entityType")
+    public static MCEntityType getEntityType(String tokens) {
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 2) {
+            throw new IllegalArgumentException("Could not get Entity type <entityType:" + tokens + ">");
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        if(!ForgeRegistries.ENTITIES.containsKey(resourceLocation)) {
+            throw new IllegalArgumentException("Could not get Entity type <entityType:" + tokens + ">");
+        }
+
+        //Cannot be null since we checked containsKey
+        //noinspection ConstantConditions
+        return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
+    }
+
+    @BracketDumper("entityType")
+    public static Collection<String> getEntityTypeDump() {
+        return ForgeRegistries.ENTITIES.getKeys().stream()
+                .map(key -> "<entityType:" + key + ">")
+                .collect(Collectors.toList());
     }
 }
