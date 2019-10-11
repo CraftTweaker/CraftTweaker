@@ -37,7 +37,11 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     private final int width, height;
     
     public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable IRecipeManager.RecipeFunctionMatrix function) {
-        this.resourceLocation = new ResourceLocation("crafttweaker", name);
+        this(new ResourceLocation("crafttweaker", name), output, ingredients, mirrored, function);
+    }
+    
+    public CTRecipeShaped(ResourceLocation resourceLocation, IItemStack output, IIngredient[][] ingredients, boolean mirrored, @Nullable IRecipeManager.RecipeFunctionMatrix function) {
+        this.resourceLocation = resourceLocation;
         this.output = output;
         this.ingredients = ingredients;
         this.mirrored = mirrored;
