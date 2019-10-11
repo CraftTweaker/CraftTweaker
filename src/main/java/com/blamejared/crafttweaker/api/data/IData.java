@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @ZenCodeType.Name("crafttweaker.api.data.IData")
 @ZenRegister
-@Document
+@Document("vanilla/data/IData")
 public interface IData {
     
     /**

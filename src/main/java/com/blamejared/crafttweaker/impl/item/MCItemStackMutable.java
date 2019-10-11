@@ -40,7 +40,12 @@ public class MCItemStackMutable implements IItemStack {
         if(!(tag instanceof MapData)) {
             tag = new MapData(tag.asMap());
         }
-        internal.setTag(((MapData) tag).getInternal());
+        if(tag instanceof MapData)
+            internal.setTag(((MapData) tag).getInternal());
+        else {
+            //TODO: What do we do if it's not a map?
+            internal.setTag(((MapData) tag.asMap()).getInternal());
+        }
         return this;
     }
     

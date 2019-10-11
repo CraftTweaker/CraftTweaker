@@ -1,24 +1,29 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.BracketDumper;
 import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -38,6 +43,15 @@ public class BracketHandlers {
         }
         final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(key));
         return new MCItemStack(value);
+    }
+    
+    @BracketDumper("item")
+    public static Collection<String> getItemBracketDump() {
+        final HashSet<String> result = new HashSet<>();
+        for(ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
+            result.add(String.format(Locale.ENGLISH, "<item:%s>", key));
+        }
+        return result;
     }
     
     
@@ -62,6 +76,15 @@ public class BracketHandlers {
         } else {
             throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
         }
+    }
+    
+    @BracketDumper("recipetype")
+    public static Collection<String> getRecipeTypeDump() {
+        final HashSet<String> result = new HashSet<>();
+        for(ResourceLocation location: Registry.RECIPE_TYPE.keySet()) {
+            result.add(String.format(Locale.ENGLISH, "<recipetype:%s>", location));
+        }
+        return result;
     }
     
     @BracketResolver("blockstate")
@@ -103,5 +126,30 @@ public class BracketHandlers {
         }
         
         return blockState;
+    }
+
+    @BracketResolver("entityType")
+    public static MCEntityType getEntityType(String tokens) {
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 2) {
+            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            return null;
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        if(!ForgeRegistries.ENTITIES.containsKey(resourceLocation)) {
+            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            return null;
+        }
+
+        //Cannot be null since we checked containsKey
+        //noinspection ConstantConditions
+        return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
+    }
+
+    @BracketDumper("entityType")
+    public static Collection<String> getEntityTypeDump() {
+        return ForgeRegistries.ENTITIES.getKeys().stream()
+                .map(key -> "<entityType:" + key + ">")
+                .collect(Collectors.toList());
     }
 }

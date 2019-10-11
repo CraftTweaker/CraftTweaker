@@ -15,5 +15,4 @@ public class CraftTweakerGlobals {
     public static void print(String msg) {
         println(msg);
     }
-    
 }
