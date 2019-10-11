@@ -78,6 +78,22 @@ public class CTCommands {
             return 0;
         }));
         
+        registerCommand(new CommandImpl("discord", "Opens a link to discord", (CommandCallerPlayer) (player, stack) -> {
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
+            return 0;
+        }));
+    
+        registerCommand(new CommandImpl("issues", "Opens a link to the issue tracker", (CommandCallerPlayer) (player, stack) -> {
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://github.com/CraftTweaker/CraftTweaker/issues"));
+            return 0;
+        }));
+    
+        registerCommand(new CommandImpl("patreon", "Opens a link to patreon", (CommandCallerPlayer) (player, stack) -> {
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://patreon.com/jaredlll08"));
+            return 0;
+        }));
+    
+    
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
             send(new StringTextComponent("Dump types: "), player);
             COMMANDS.get("dump").getSubCommands().forEach((s, command) -> send(run(new StringTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
@@ -154,15 +170,15 @@ public class CTCommands {
     
     
     private static int executeHelp(CommandContext<CommandSource> context, int helpPage) {
-        int commandsPerPage = 4;
+        double commandsPerPage = 4;
         List<String> keys = new ArrayList<>(COMMANDS.keySet());
-        int page = MathHelper.clamp(helpPage, 0, (keys.size() / commandsPerPage) - 1);
-        for(int i = page * commandsPerPage; i < Math.min((page * commandsPerPage) + commandsPerPage, keys.size()); i++) {
+        int page = (int) MathHelper.clamp(helpPage, 0, Math.ceil(keys.size() / commandsPerPage) - 1);
+        for(int i = (int) (page * commandsPerPage); i < Math.min((page * commandsPerPage) + commandsPerPage, keys.size()); i++) {
             FormattedTextComponent message = new FormattedTextComponent("/ct %s", COMMANDS.get(keys.get(i)).getName());
             context.getSource().sendFeedback(run(message, message.getUnformattedComponentText()), true);
             context.getSource().sendFeedback(new FormattedTextComponent("- %s", color(COMMANDS.get(keys.get(i)).getDescription(), TextFormatting.DARK_AQUA)), true);
         }
-        context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (COMMANDS.size() / commandsPerPage) - 1), true);
+        context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (int)Math.ceil(keys.size() / commandsPerPage) - 1), true);
         return 0;
     }
     
