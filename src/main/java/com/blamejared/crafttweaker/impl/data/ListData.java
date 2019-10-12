@@ -31,13 +31,21 @@ public class ListData implements ICollectionData {
     public ListData(@ZenCodeType.Optional List<IData> list) {
         this.internal = new ListNBT();
         if(list != null)
-        list.forEach(iData -> internal.add(iData.getInternal()));
+            list.forEach(iData -> internal.add(iData.getInternal()));
     }
     
     @ZenCodeType.Constructor
     public ListData(@ZenCodeType.Optional IData... array) {
-        this(Arrays.asList(array));
+        this(getArraySafe(array));
     }
+    
+    private static List<IData> getArraySafe(IData... array) {
+        if(array == null) {
+            array = new IData[0];
+        }
+        return Arrays.asList(array);
+    }
+    
     
     @Override
     public IData set(int index, IData value) {
@@ -120,6 +128,7 @@ public class ListData implements ICollectionData {
         
         return true;
     }
+    
     @Override
     public String asString() {
         StringBuilder output = new StringBuilder();
