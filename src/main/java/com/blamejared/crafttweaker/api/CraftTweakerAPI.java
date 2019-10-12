@@ -128,8 +128,7 @@ public class CraftTweakerAPI {
                     continue;
                 }
                 JavaNativeModule module = SCRIPTING_ENGINE.createNativeModule(key, key, crafttweakerModule);
-                if(CraftTweakerRegistry.getExpansions().containsKey(key))
-                    CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
+                CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
                 SCRIPTING_ENGINE.registerNativeProvided(module);
                 modules.add(module);
             }
