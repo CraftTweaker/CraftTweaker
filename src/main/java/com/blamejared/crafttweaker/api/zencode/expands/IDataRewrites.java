@@ -32,7 +32,7 @@ public class IDataRewrites {
         }
     
         TypeID typeID = hints.get(0).type;
-        if(!(typeID instanceof DefinitionTypeID) || !((DefinitionTypeID) typeID).definition.name.equals("IData") && ((DefinitionTypeID) typeID).definition.name.equals("ListData")) {
+        if (!(typeID instanceof DefinitionTypeID && (((DefinitionTypeID) typeID).definition.name.equals("IData") || ((DefinitionTypeID) typeID).definition.name.equals("ListData")))) {
             return null;
         }
     
