@@ -20,6 +20,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -30,8 +32,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -83,13 +89,13 @@ public class CTCommands {
             return 0;
         }));
         
-
+        
         registerCommand(new CommandImpl("dumpBrackets", "Dumps available Bracket Expressions into the /ct_dumps folder", source -> {
             final File folder = new File("ct_dumps");
             if(!folder.exists() && !folder.mkdir()) {
                 CraftTweakerAPI.logError("Could not create output folder %s", folder);
             }
-
+            
             CraftTweakerRegistry.getBracketDumpers().forEach((name, dumpSupplier) -> {
                 try(final PrintWriter writer = new PrintWriter(new FileWriter(new File(folder, name + ".txt"), false))) {
                     dumpSupplier.get().forEach(writer::println);
@@ -97,29 +103,29 @@ public class CTCommands {
                     CraftTweakerAPI.logThrowing("Error writing to file '%s.txt'", e, name);
                 }
             });
-
+            
             send(new StringTextComponent("Files Created"), source.getSource());
-
+            
             return 0;
         }));
-
-
+        
+        
         registerCommand(new CommandImpl("discord", "Opens a link to discord", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
             return 0;
         }));
-
+        
         registerCommand(new CommandImpl("issues", "Opens a link to the issue tracker", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://github.com/CraftTweaker/CraftTweaker/issues"));
             return 0;
         }));
-
+        
         registerCommand(new CommandImpl("patreon", "Opens a link to patreon", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://patreon.com/jaredlll08"));
             return 0;
         }));
-
-
+        
+        
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
             send(new StringTextComponent("Dump types: "), player);
             COMMANDS.get("dump").getSubCommands().forEach((s, command) -> send(run(new StringTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
@@ -143,6 +149,22 @@ public class CTCommands {
                 CraftTweakerAPI.logInfo("- " + new ResourceLocation(type.toString()).toString());
             }
             send(new StringTextComponent(color("Recipe Type list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerDump("potions", "Outputs the names of all Potions", (CommandCallerPlayer) (player, stack) -> {
+            for(Potion type : ForgeRegistries.POTION_TYPES) {
+                CraftTweakerAPI.logInfo("- " + type.getRegistryName().toString());
+            }
+            send(new StringTextComponent(color("Potion list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerDump("effects", "Outputs the names of all Effects", (CommandCallerPlayer) (player, stack) -> {
+            for(Effect type : ForgeRegistries.POTIONS) {
+                CraftTweakerAPI.logInfo("- " + type.getRegistryName().toString());
+            }
+            send(new StringTextComponent(color("Effect list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
         
@@ -204,7 +226,7 @@ public class CTCommands {
             context.getSource().sendFeedback(run(message, message.getUnformattedComponentText()), true);
             context.getSource().sendFeedback(new FormattedTextComponent("- %s", color(COMMANDS.get(keys.get(i)).getDescription(), TextFormatting.DARK_AQUA)), true);
         }
-        context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (int)Math.ceil(keys.size() / commandsPerPage) - 1), true);
+        context.getSource().sendFeedback(new FormattedTextComponent("Page %s of %s", page, (int) Math.ceil(keys.size() / commandsPerPage) - 1), true);
         return 0;
     }
     

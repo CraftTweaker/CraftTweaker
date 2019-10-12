@@ -10,19 +10,23 @@ import com.blamejared.crafttweaker.api.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.potion.MCPotion;
+import com.blamejared.crafttweaker.impl.potion.MCEffect;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -44,6 +48,40 @@ public class BracketHandlers {
         final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(key));
         return new MCItemStack(value);
     }
+    
+    @BracketResolver("potion")
+    public static MCPotion getPotion(String tokens) {
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("Potion BEP <potion:%s> does not seem to be lower-cased!", tokens);
+        
+        final String[] split = tokens.split(":");
+        if(split.length != 2)
+            throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Syntax is <potion:modid:potionname>");
+        ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        if(!ForgeRegistries.POTIONS.containsKey(key)) {
+            throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!");
+        }
+        Potion potion = ForgeRegistries.POTION_TYPES.getValue(key);
+        return new MCPotion(potion);
+    }
+    
+    @BracketResolver("effect")
+    public static MCEffect getEffect(String tokens) {
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("Effect BEP <effect:%s> does not seem to be lower-cased!", tokens);
+        
+        final String[] split = tokens.split(":");
+        if(split.length != 2)
+            throw new IllegalArgumentException("Could not get effect with name: <effect:" + tokens + ">! Syntax is <effect:modid:potionname>");
+        ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        if(!ForgeRegistries.POTIONS.containsKey(key)) {
+            throw new IllegalArgumentException("Could not get effect with name: <potion:" + tokens + ">! Effect does not appear to exist!");
+        }
+        Effect effect = ForgeRegistries.POTIONS.getValue(key);
+        return new MCEffect(effect);
+    }
+    
+    
     
     @BracketDumper("item")
     public static Collection<String> getItemBracketDump() {
@@ -81,7 +119,7 @@ public class BracketHandlers {
     @BracketDumper("recipetype")
     public static Collection<String> getRecipeTypeDump() {
         final HashSet<String> result = new HashSet<>();
-        for(ResourceLocation location: Registry.RECIPE_TYPE.keySet()) {
+        for(ResourceLocation location : Registry.RECIPE_TYPE.keySet()) {
             result.add(String.format(Locale.ENGLISH, "<recipetype:%s>", location));
         }
         return result;
@@ -127,7 +165,7 @@ public class BracketHandlers {
         
         return blockState;
     }
-
+    
     @BracketResolver("entityType")
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
@@ -140,16 +178,14 @@ public class BracketHandlers {
             CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
             return null;
         }
-
+        
         //Cannot be null since we checked containsKey
         //noinspection ConstantConditions
         return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
     }
-
+    
     @BracketDumper("entityType")
     public static Collection<String> getEntityTypeDump() {
-        return ForgeRegistries.ENTITIES.getKeys().stream()
-                .map(key -> "<entityType:" + key + ">")
-                .collect(Collectors.toList());
+        return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entityType:" + key + ">").collect(Collectors.toList());
     }
 }
