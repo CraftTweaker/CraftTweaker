@@ -20,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.*;
 import java.util.*;
 
 import static stanhebben.zenscript.ZenModule.compileScripts;
@@ -126,12 +127,12 @@ public class MTTweaker implements ITweaker {
 				while (script.next()) {
 					Reader reader = null;
 					try {
-						reader = new InputStreamReader(new BufferedInputStream(script.open()), "UTF-8");
+						reader = new InputStreamReader(new BufferedInputStream(script.open()), StandardCharsets.UTF_8);
 
 						String filename = script.getName();
 						String className = extractClassName(filename);
 
-						ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment());
+						ZenTokener parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, false);
 						ZenParsedFile pfile = new ZenParsedFile(filename, className, parser, environmentGlobal);
 						files.add(pfile);
 					} catch (IOException ex) {
@@ -146,7 +147,7 @@ public class MTTweaker implements ITweaker {
 					if (reader != null) {
 						try {
 							reader.close();
-						} catch (IOException ex) {
+						} catch (IOException ignored) {
 						}
 					}
 				}

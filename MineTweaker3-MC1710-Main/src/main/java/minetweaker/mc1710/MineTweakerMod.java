@@ -31,7 +31,7 @@ import minetweaker.mc1710.server.MCServer;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.mc1710.util.MineTweakerPlatformUtils;
 import minetweaker.mc1710.vanilla.MCVanilla;
-import minetweaker.runtime.IScriptProvider;
+import minetweaker.runtime.*;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
