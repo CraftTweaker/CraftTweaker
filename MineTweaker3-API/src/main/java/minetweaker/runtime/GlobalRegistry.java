@@ -66,7 +66,8 @@ public class GlobalRegistry {
 				}
 			}
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+            errors.error("Error while applying expansion", ex);
+            ex.printStackTrace();
 		}
 	}
 

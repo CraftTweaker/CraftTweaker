@@ -70,12 +70,7 @@ public class MineTweakerAPI {
 	};
 
 	static {
-//		List<Class> apiClasses = new ArrayList<Class>();
-//		ClassRegistry.getClasses(apiClasses);
-//
-//		for (Class cls : apiClasses) {
-//			registerClass(cls);
-//		}
+		registerClassRegistry(ClassRegistry.class, "MT-API");
 
 		registerGlobalSymbol("logger", getJavaStaticGetterSymbol(MineTweakerAPI.class, "getLogger"));
 		registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(MineTweakerAPI.class, "recipes"));
@@ -260,7 +255,7 @@ public class MineTweakerAPI {
 		try {
 			Method method = registryClass.getMethod("getClasses", List.class);
 			if ((method.getModifiers() & Modifier.STATIC) == 0) {
-				System.out.println("ERROR: getClasses method in " + registryClass.getName() + " isn't static");
+				logError("ERROR: getClasses method in " + registryClass.getName() + " isn't static");
 			} else {
 				List<Class> classes = new ArrayList<Class>();
 				method.invoke(null, classes);
@@ -285,16 +280,12 @@ public class MineTweakerAPI {
 				}
 
 				if (description != null)
-					System.out.println("Loaded class registry: " + description);
+					logInfo("Loaded class registry: " + description);
 			}
-		} catch (NoSuchMethodException ex) {
-
-		} catch (IllegalAccessException ex) {
-
-		} catch (InvocationTargetException ex) {
-
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+		    logError("Error registering class registry", ex);
 		}
-	}
+    }
 
 	/**
 	 * Registers a class registry. Will attempt to resolve the given class name.
