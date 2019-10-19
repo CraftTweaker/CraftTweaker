@@ -1,8 +1,5 @@
 import minetweaker.tasks.RegisterZenClassesTask;
 
-
-
-
 buildscript {
     repositories {
         jcenter()
@@ -27,38 +24,38 @@ archivesBaseName = project.projectDir.name
 minecraft {
     version = forgeVersion1102
     runDir = "eclipse"
-    mappings = "snapshot_20160518"
+    mappings = "stable_29"
 }
 
 dependencies {
-	compile project(':ZenScript')
-	compile project(':MineTweaker3-API')
+    compile project(':ZenScript')
+    compile project(':MineTweaker3-API')
 }
 
 task makeRegistry(type: RegisterZenClassesTask) {
-	inputDir = file('build/classes/main')
-	outputDir = file('build/classes/main')
-	className = 'minetweaker.mc1102.MineTweakerRegistry'
+    inputDir = file('build/classes/main')
+    outputDir = file('build/classes/main')
+    className = 'minetweaker.mc1102.MineTweakerRegistry'
 }
 
 tasks.jar.dependsOn(makeRegistry)
 
 processResources
-{
+        {
 
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+                expand 'version': project.version, 'mcversion': project.minecraft.version
+            }
+
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 uploadArchives {
     repositories {

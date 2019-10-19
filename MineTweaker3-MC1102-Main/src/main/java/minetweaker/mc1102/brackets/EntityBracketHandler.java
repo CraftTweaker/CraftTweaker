@@ -2,48 +2,46 @@ package minetweaker.mc1102.brackets;
 
 import minetweaker.*;
 import minetweaker.annotations.BracketHandler;
-import minetweaker.api.oredict.IOreDictEntry;
-import minetweaker.mc1102.oredict.MCOreDictEntry;
-import minetweaker.runtime.GlobalRegistry;
+import minetweaker.api.entity.IEntityDefinition;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.IZenSymbol;
-import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.type.natives.IJavaMethod;
 import stanhebben.zenscript.util.ZenPosition;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
- * @author Stan
+ * @author Jared
  */
-@BracketHandler
-public class OreBracketHandler implements IBracketHandler {
+@BracketHandler(priority = 100)
+public class EntityBracketHandler implements IBracketHandler {
 
-    public static IOreDictEntry getOre(String name) {
-        return new MCOreDictEntry(name);
+    private static final Map<String, IEntityDefinition> entityNames = new HashMap<>();
+    private final IJavaMethod method;
+
+    public EntityBracketHandler() {
+        method = MineTweakerAPI.getJavaMethod(EntityBracketHandler.class, "getEntity", String.class);
     }
 
-    public static List<IOreDictEntry> getOreList(String wildcardName) {
-        List<IOreDictEntry> result = new ArrayList<>();
-        Pattern wildcardPattern = Pattern.compile(wildcardName.replaceAll("\\*", ".+"));
+    @SuppressWarnings("unchecked")
+    public static void rebuildEntityRegistry() {
+        entityNames.clear();
+        MineTweakerAPI.game.getEntities().forEach(ent -> {
+            entityNames.put(ent.getName().toLowerCase(), ent);
+        });
+    }
 
-        for(IOreDictEntry someOreDict : MineTweakerAPI.oreDict.getEntries()) {
-            String oreDictName = someOreDict.getName();
-            if(wildcardPattern.matcher(oreDictName).matches()) {
-                result.add(getOre(oreDictName));
-            }
-        }
-
-        return result;
+    public static IEntityDefinition getEntity(String name) {
+        return entityNames.get(name.toLowerCase());
     }
 
     @Override
     public IZenSymbol resolve(IEnvironmentGlobal environment, List<Token> tokens) {
         if(tokens.size() > 2) {
-            if(tokens.get(0).getValue().equals("ore") && tokens.get(1).getValue().equals(":")) {
+            if(tokens.get(0).getValue().equals("entity") && tokens.get(1).getValue().equals(":")) {
                 return find(environment, tokens, 2, tokens.size());
             }
         }
@@ -58,23 +56,21 @@ public class OreBracketHandler implements IBracketHandler {
             valueBuilder.append(token.getValue());
         }
 
-        return new OreReferenceSymbol(environment, valueBuilder.toString());
+        return new EntityReferenceSymbol(environment, valueBuilder.toString());
     }
 
-    private class OreReferenceSymbol implements IZenSymbol {
+    private class EntityReferenceSymbol implements IZenSymbol {
 
         private final IEnvironmentGlobal environment;
         private final String name;
 
-        public OreReferenceSymbol(IEnvironmentGlobal environment, String name) {
+        public EntityReferenceSymbol(IEnvironmentGlobal environment, String name) {
             this.environment = environment;
             this.name = name;
         }
 
         @Override
         public IPartialExpression instance(ZenPosition position) {
-            IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypeRegistry(), OreBracketHandler.class, name.contains("*") ? "getOreList" : "getOre", String.class);
-
             return new ExpressionCallStatic(position, environment, method, new ExpressionString(position, name));
         }
     }

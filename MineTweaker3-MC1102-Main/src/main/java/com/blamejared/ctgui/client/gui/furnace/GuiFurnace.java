@@ -1,14 +1,13 @@
 package com.blamejared.ctgui.client.gui.furnace;
 
-import com.blamejared.ctgui.api.ContainerBase;
-import com.blamejared.ctgui.api.GuiBase;
-import com.blamejared.ctgui.api.Slider;
+import com.blamejared.ctgui.api.*;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Jared.
  */
 public class GuiFurnace extends GuiBase {
+
     private Slider xpSlider;
 
     public GuiFurnace(ContainerBase container) {
@@ -25,7 +24,7 @@ public class GuiFurnace extends GuiBase {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (!container.getRecipeSlots().get(1).getHasStack()) {
+        if(!container.getRecipeSlots().get(1).getHasStack()) {
             add.enabled = false;
             remove.enabled = false;
         }

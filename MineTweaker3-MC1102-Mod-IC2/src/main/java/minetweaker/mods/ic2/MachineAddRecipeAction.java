@@ -1,8 +1,7 @@
 package minetweaker.mods.ic2;
 
 import ic2.api.recipe.IMachineRecipeManager;
-import minetweaker.MineTweakerAPI;
-import minetweaker.OneWayAction;
+import minetweaker.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -12,6 +11,7 @@ import java.util.Arrays;
  * @author Stan Hebben
  */
 public class MachineAddRecipeAction extends OneWayAction {
+
     private final String name;
     private final IMachineRecipeManager machine;
     private final ItemStack[] output;
@@ -30,21 +30,21 @@ public class MachineAddRecipeAction extends OneWayAction {
     public void apply() {
         try {
             machine.addRecipe(input, tag, false, output);
-        } catch (RuntimeException ex) {
+        } catch(RuntimeException ex) {
             MineTweakerAPI.logError(ex.getMessage());
         }
     }
 
     @Override
     public String describe() {
-        if (output.length == 1) {
+        if(output.length == 1) {
             return "Adding " + name + " recipe for " + output[0].getDisplayName();
         } else {
             StringBuilder result = new StringBuilder();
             result.append("Adding ").append(name).append(" recipe for ");
             result.append("[");
-            for (int i = 0; i < output.length; i++) {
-                if (i == 0) {
+            for(int i = 0; i < output.length; i++) {
+                if(i == 0) {
                     result.append(", ");
                 } else {
                     result.append(output[i].getDisplayName());
@@ -73,28 +73,13 @@ public class MachineAddRecipeAction extends OneWayAction {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if(obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if(getClass() != obj.getClass()) {
             return false;
         }
         final MachineAddRecipeAction other = (MachineAddRecipeAction) obj;
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        if (this.machine != other.machine && (this.machine == null || !this.machine.equals(other.machine))) {
-            return false;
-        }
-        if (!Arrays.deepEquals(this.output, other.output)) {
-            return false;
-        }
-        if (this.input != other.input && (this.input == null || !this.input.equals(other.input))) {
-            return false;
-        }
-        if (this.tag != other.tag && (this.tag == null || !this.tag.equals(other.tag))) {
-            return false;
-        }
-        return true;
+        return (this.name == null) ? other.name == null : this.name.equals(other.name) && !(this.machine != other.machine && (this.machine == null || !this.machine.equals(other.machine))) && Arrays.deepEquals(this.output, other.output) && !(this.input != other.input && (this.input == null || !this.input.equals(other.input))) && !(this.tag != other.tag && (this.tag == null || !this.tag.equals(other.tag)));
     }
 }

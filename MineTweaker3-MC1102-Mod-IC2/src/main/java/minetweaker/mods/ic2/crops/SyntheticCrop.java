@@ -1,16 +1,11 @@
 package minetweaker.mods.ic2.crops;
 
-import ic2.api.crops.CropCard;
-import ic2.api.crops.CropProperties;
-import ic2.api.crops.ICropTile;
+import ic2.api.crops.*;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * A synthetic crop, created in ZS
@@ -80,6 +75,11 @@ public class SyntheticCrop extends CropCard {
         return properties;
     }
 
+    @ZenSetter("properties")
+    public void setProperties(CropProperties properties) {
+        this.properties = properties;
+    }
+
     /**
      * Gets the localization key used for this crop
      */
@@ -96,7 +96,6 @@ public class SyntheticCrop extends CropCard {
         return tier;
     }
 
-
     /**
      * Gets any additional attributes of this crop
      */
@@ -104,6 +103,16 @@ public class SyntheticCrop extends CropCard {
     @ZenGetter("attributes")
     public String[] getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Sets the additional attributes for this crop
+     *
+     * @param attributes Sets the attributes of this crop
+     */
+    @ZenSetter("attributes")
+    public void setAttributes(String[] attributes) {
+        this.attributes = attributes;
     }
 
     /**
@@ -115,21 +124,30 @@ public class SyntheticCrop extends CropCard {
         return maxSize;
     }
 
+    /**
+     * Sets the maximum size this crop goes to
+     *
+     * @param maxSize The new max size of this crop
+     */
+    @ZenSetter("maxSize")
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
 
     @Override
     public boolean canGrow(ICropTile crop) {
-        if (crop.getCurrentSize() == maxSize) {
+        if(crop.getCurrentSize() == maxSize) {
             return false;
-        } else if (reqs == null) {
+        } else if(reqs == null) {
             return true;
         } else {
-            if (!crop.isBlockBelow(MineTweakerMC.getBlock(reqs.getRequiredBlock()))) {
+            if(!crop.isBlockBelow(MineTweakerMC.getBlock(reqs.getRequiredBlock()))) {
                 return false;
-            } else if (crop.getAirQuality() < reqs.getMinAirQuality()) {
+            } else if(crop.getAirQuality() < reqs.getMinAirQuality()) {
                 return false;
-            } else if (crop.getHumidity() < reqs.getMinHumidity()) {
+            } else if(crop.getHumidity() < reqs.getMinHumidity()) {
                 return false;
-            } else if (crop.getNutrients() < reqs.getMinNutrients()) {
+            } else if(crop.getNutrients() < reqs.getMinNutrients()) {
                 return false;
             } else {
                 int lgh = crop.getLightLevel();
@@ -138,6 +156,7 @@ public class SyntheticCrop extends CropCard {
         }
     }
 
+    // ZS Support
 
     @Override
     public boolean canBeHarvested(ICropTile crop) {
@@ -157,8 +176,6 @@ public class SyntheticCrop extends CropCard {
     public double dropGainChance() {
         return dropChance;
     }
-
-// ZS Support
 
     /**
      * Sets the tier of this crop
@@ -188,31 +205,11 @@ public class SyntheticCrop extends CropCard {
      */
     @ZenMethod
     public void setStat(int stat, int val) {
-        if (stat < 0 || stat > 3) {
+        if(stat < 0 || stat > 3) {
             MineTweakerAPI.logWarning("invalid stat index " + stat);
         } else {
             stats[stat] = val;
         }
-    }
-
-    /**
-     * Sets the additional attributes for this crop
-     *
-     * @param attributes Sets the attributes of this crop
-     */
-    @ZenSetter("attributes")
-    public void setAttributes(String[] attributes) {
-        this.attributes = attributes;
-    }
-
-    /**
-     * Sets the maximum size this crop goes to
-     *
-     * @param maxSize The new max size of this crop
-     */
-    @ZenSetter("maxSize")
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
     }
 
     /**
@@ -251,11 +248,5 @@ public class SyntheticCrop extends CropCard {
      */
     public void setReqs(GrowthRequirements reqs) {
         this.reqs = reqs;
-    }
-
-
-    @ZenSetter("properties")
-    public void setProperties(CropProperties properties) {
-        this.properties = properties;
     }
 }

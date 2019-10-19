@@ -3,6 +3,7 @@ package minetweaker;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.client.IClient;
+import minetweaker.api.compat.*;
 import minetweaker.api.event.IEventManager;
 import minetweaker.api.formatting.IFormatter;
 import minetweaker.api.game.IGame;
@@ -68,8 +69,9 @@ public class MineTweakerAPI {
 			"Red",
 			"Black"
 	};
-
-	static {
+    private static IJEIRecipeRegistry ijeiRecipeRegistry = new DummyJEIRecipeRegistry();
+    
+    static {
 		registerClassRegistry(ClassRegistry.class, "MT-API");
 
 		registerGlobalSymbol("logger", getJavaStaticGetterSymbol(MineTweakerAPI.class, "getLogger"));
@@ -436,4 +438,12 @@ public class MineTweakerAPI {
 	public static IJavaMethod getJavaMethod(Class cls, String name, Class... arguments) {
 		return JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
 	}
+    
+    public static IJEIRecipeRegistry getIjeiRecipeRegistry() {
+        return ijeiRecipeRegistry;
+    }
+    
+    public static void setIjeiRecipeRegistry(IJEIRecipeRegistry ijeiRecipeRegistry) {
+        MineTweakerAPI.ijeiRecipeRegistry = ijeiRecipeRegistry;
+    }
 }

@@ -1,41 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.util;
 
-import com.google.common.collect.BiMap;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.WeightedItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.util.text.translation.LanguageMap;
+import net.minecraft.util.text.translation.*;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.*;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
@@ -44,7 +25,8 @@ import java.util.logging.Logger;
  *
  * @author Stan Hebben
  */
-public class MineTweakerHacks{
+public class MineTweakerHacks {
+
     private static final Field NBTTAGLIST_TAGLIST;
     private static final Field OREDICTIONARY_IDTOSTACK;
     private static final Field OREDICTIONARY_IDTOSTACKUN;
@@ -53,11 +35,10 @@ public class MineTweakerHacks{
     private static final Field INVENTORYCRAFTING_EVENTHANDLER;
     private static final Field SLOTCRAFTING_PLAYER;
 
-    private static final Field ENTITYREGISTRY_CLASSREGISTRATIONS;
     private static final Field SEEDENTRY_SEED;
     private static final Constructor<? extends WeightedRandom.Item> SEEDENTRY_CONSTRUCTOR;
 
-    static{
+    static {
         NBTTAGLIST_TAGLIST = getField(NBTTagList.class, MineTweakerObfuscation.NBTTAGLIST_TAGLIST);
         OREDICTIONARY_IDTOSTACK = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_IDTOSTACK);
         OREDICTIONARY_IDTOSTACKUN = getField(OreDictionary.class, MineTweakerObfuscation.OREDICTIONARY_IDTOSTACKUN);
@@ -66,96 +47,84 @@ public class MineTweakerHacks{
         INVENTORYCRAFTING_EVENTHANDLER = getField(InventoryCrafting.class, MineTweakerObfuscation.INVENTORYCRAFTING_EVENTHANDLER);
         SLOTCRAFTING_PLAYER = getField(SlotCrafting.class, MineTweakerObfuscation.SLOTCRAFTING_PLAYER);
 
-        ENTITYREGISTRY_CLASSREGISTRATIONS = getField(EntityRegistry.class, "entityClassRegistrations");
 
         Class<? extends WeightedRandom.Item> forgeSeedEntry = null;
-        try{
+        try {
             forgeSeedEntry = (Class<? extends WeightedRandom.Item>) Class.forName("net.minecraftforge.common.ForgeHooks$SeedEntry");
-        }catch(ClassNotFoundException ex){
+        } catch(ClassNotFoundException ex) {
         }
 
         SEEDENTRY_SEED = getField(forgeSeedEntry, "seed");
 
         Constructor<? extends WeightedRandom.Item> seedEntryConstructor = null;
 
-        try{
+        try {
             seedEntryConstructor = forgeSeedEntry.getConstructor(ItemStack.class, int.class);
             seedEntryConstructor.setAccessible(true);
-        }catch(NoSuchMethodException ex){
-            Logger.getLogger(MineTweakerHacks.class.getName()).log(Level.SEVERE, null, ex);
-        }catch(SecurityException ex){
+        } catch(NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(MineTweakerHacks.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         SEEDENTRY_CONSTRUCTOR = seedEntryConstructor;
     }
 
-    private MineTweakerHacks(){
+    private MineTweakerHacks() {
     }
 
-    public static BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration> getEntityClassRegistrations(){
-        try{
-            return (BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration>) ENTITYREGISTRY_CLASSREGISTRATIONS.get(EntityRegistry.instance());
-        }catch(IllegalArgumentException ex){
+
+    public static List<NBTBase> getTagList(NBTTagList list) {
+        if(NBTTAGLIST_TAGLIST == null) {
             return null;
-        }catch(IllegalAccessException ex){
+        }
+        try {
+            return (List<NBTBase>) NBTTAGLIST_TAGLIST.get(list);
+        } catch(IllegalArgumentException ex) {
+            return null;
+        } catch(IllegalAccessException ex) {
             return null;
         }
     }
 
-    public static List<NBTBase> getTagList(NBTTagList list){
-        if(NBTTAGLIST_TAGLIST == null){
-            return null;
-        }
-        try{
-            return (List) NBTTAGLIST_TAGLIST.get(list);
-        }catch(IllegalArgumentException ex){
-            return null;
-        }catch(IllegalAccessException ex){
-            return null;
-        }
-    }
-
-    public static List getSeeds(){
+    public static List getSeeds() {
         return getPrivateStaticObject(ForgeHooks.class, "seedList");
     }
 
 
-    public static Map getTranslations(){
+    public static Map<String, String> getTranslations() {
         return getPrivateObject(getPrivateStaticObject(I18n.class, "localizedName", "field_74839_a"), "languageList", "field_74816_c");
     }
 
-    public static List<ArrayList<ItemStack>> getOreIdStacks(){
-        try{
+    public static List<ArrayList<ItemStack>> getOreIdStacks() {
+        try {
             return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACK.get(null);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("ERROR - could not load ore dictionary stacks!");
             return null;
         }
     }
 
-    public static List<List<ItemStack>> getOreIdStacksUn(){
-        try{
+    public static List<List<ItemStack>> getOreIdStacksUn() {
+        try {
             return (List<List<ItemStack>>) OREDICTIONARY_IDTOSTACKUN.get(null);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("ERROR - could not load ore dictionary stacks!");
             return null;
         }
     }
 
-    public static File getAnvilFile(MinecraftServer server){
-        try{
+    public static File getAnvilFile(MinecraftServer server) {
+        try {
             return (File) MINECRAFTSERVER_ANVILFILE.get(server);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("could not load anvil file!");
             return null;
         }
     }
 
-    public static File getWorldDirectory(MinecraftServer server){
-        if(server.isDedicatedServer()){
+    public static File getWorldDirectory(MinecraftServer server) {
+        if(server.isDedicatedServer()) {
             return server.getFile("world");
-        }else{
+        } else {
             File worldsDir = getAnvilFile(server);
             if(worldsDir == null)
                 return null;
@@ -164,28 +133,28 @@ public class MineTweakerHacks{
         }
     }
 
-    public static int getShapedOreRecipeWidth(ShapedOreRecipe recipe){
-        try{
+    public static int getShapedOreRecipeWidth(ShapedOreRecipe recipe) {
+        try {
             return SHAPEDORERECIPE_WIDTH.getInt(recipe);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("could not load anvil file!");
             return 3;
         }
     }
 
-    public static Container getCraftingContainer(InventoryCrafting inventory){
-        try{
+    public static Container getCraftingContainer(InventoryCrafting inventory) {
+        try {
             return (Container) INVENTORYCRAFTING_EVENTHANDLER.get(inventory);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("could not get inventory eventhandler");
             return null;
         }
     }
 
-    public static EntityPlayer getCraftingSlotPlayer(SlotCrafting slot){
-        try{
+    public static EntityPlayer getCraftingSlotPlayer(SlotCrafting slot) {
+        try {
             return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("could not get inventory eventhandler");
             return null;
         }
@@ -195,50 +164,39 @@ public class MineTweakerHacks{
         try {
             Field field = getField(LanguageMap.class, MineTweakerObfuscation.LANGUAGEMAP_INSTANCE);
             return (LanguageMap) field.get(null);
-        } catch (IllegalAccessException ex) {
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("could not get LanguageMap");
             return null;
         }
     }
 
-    public static ItemStack getSeedEntrySeed(Object entry){
-        try{
+    public static ItemStack getSeedEntrySeed(Object entry) {
+        try {
             return (ItemStack) SEEDENTRY_SEED.get(entry);
-        }catch(IllegalAccessException ex){
+        } catch(IllegalAccessException ex) {
             MineTweakerAPI.logError("could not get SeedEntry seed");
             return null;
         }
     }
 
 
-
-    public static WeightedRandom.Item constructSeedEntry(WeightedItemStack stack){
-        try{
+    public static WeightedRandom.Item constructSeedEntry(WeightedItemStack stack) {
+        try {
             return SEEDENTRY_CONSTRUCTOR.newInstance(MineTweakerMC.getItemStack(stack.getStack()), (int) stack.getChance());
-        }catch(InstantiationException ex){
-            MineTweakerAPI.logError("could not construct SeedEntry");
-        }catch(IllegalAccessException ex){
-            MineTweakerAPI.logError("could not construct SeedEntry");
-        }catch(IllegalArgumentException ex){
-            MineTweakerAPI.logError("could not construct SeedEntry");
-        }catch(InvocationTargetException ex){
+        } catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             MineTweakerAPI.logError("could not construct SeedEntry");
         }
 
         return null;
     }
 
-    public static <T> T getPrivateStaticObject(Class<?> cls, String... names){
-        for(String name : names){
-            try{
+    public static <T> T getPrivateStaticObject(Class<?> cls, String... names) {
+        for(String name : names) {
+            try {
                 Field field = cls.getDeclaredField(name);
                 field.setAccessible(true);
                 return (T) field.get(null);
-            }catch(NoSuchFieldException ex){
-
-            }catch(SecurityException ex){
-
-            }catch(IllegalAccessException ex){
+            } catch(NoSuchFieldException | SecurityException | IllegalAccessException ignored) {
 
             }
         }
@@ -246,18 +204,14 @@ public class MineTweakerHacks{
         return null;
     }
 
-    public static <T> T getPrivateObject(Object object, String... names){
+    public static <T> T getPrivateObject(Object object, String... names) {
         Class<?> cls = object.getClass();
-        for(String name : names){
-            try{
+        for(String name : names) {
+            try {
                 Field field = cls.getDeclaredField(name);
                 field.setAccessible(true);
                 return (T) field.get(object);
-            }catch(NoSuchFieldException ex){
-
-            }catch(SecurityException ex){
-
-            }catch(IllegalAccessException ex){
+            } catch(NoSuchFieldException | SecurityException | IllegalAccessException ignored) {
 
             }
         }
@@ -269,14 +223,13 @@ public class MineTweakerHacks{
     // ### Private Methods ###
     // #######################
 
-    private static Field getField(Class cls, String... names){
-        for(String name : names){
-            try{
+    private static Field getField(Class cls, String... names) {
+        for(String name : names) {
+            try {
                 Field field = cls.getDeclaredField(name);
                 field.setAccessible(true);
                 return field;
-            }catch(NoSuchFieldException ex){
-            }catch(SecurityException ex){
+            } catch(NoSuchFieldException | SecurityException ignored) {
             }
         }
 

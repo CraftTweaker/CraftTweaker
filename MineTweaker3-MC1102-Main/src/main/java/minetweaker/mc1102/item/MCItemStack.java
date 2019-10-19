@@ -1,374 +1,359 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.item;
 
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlock;
-import minetweaker.api.data.DataMap;
-import minetweaker.api.data.IData;
+import minetweaker.api.data.*;
 import minetweaker.api.item.*;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.player.IPlayer;
-import minetweaker.mc1102.actions.SetBlockHardnessAction;
-import minetweaker.mc1102.actions.SetStackSizeAction;
-import minetweaker.mc1102.actions.SetStackmaxDamageAction;
-import minetweaker.mc1102.actions.SetTranslationAction;
+import minetweaker.mc1102.actions.*;
 import minetweaker.mc1102.block.MCItemBlock;
 import minetweaker.mc1102.data.NBTConverter;
 import minetweaker.mc1102.liquid.MCLiquidStack;
 import minetweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
 /**
  * @author Stan
  */
-public class MCItemStack implements IItemStack{
+public class MCItemStack implements IItemStack {
+    
     private final ItemStack stack;
     private final List<IItemStack> items;
     private IData tag = null;
     private boolean wildcardSize;
-
-    public MCItemStack(ItemStack itemStack){
+    
+    public MCItemStack(ItemStack itemStack) {
         if(itemStack == null)
             throw new IllegalArgumentException("stack cannot be null");
-
+        
         stack = itemStack.copy();
-        items = Collections.<IItemStack>singletonList(this);
+        items = Collections.singletonList(this);
     }
-
-    public MCItemStack(ItemStack itemStack, boolean wildcardSize){
+    
+    public MCItemStack(ItemStack itemStack, boolean wildcardSize) {
         this(itemStack);
-
+        
         this.wildcardSize = wildcardSize;
     }
-
-    private MCItemStack(ItemStack itemStack, IData tag){
+    
+    private MCItemStack(ItemStack itemStack, IData tag) {
         if(itemStack == null)
             throw new IllegalArgumentException("stack cannot be null");
-
+        
         stack = itemStack;
-        items = Collections.<IItemStack>singletonList(this);
+        items = Collections.singletonList(this);
         this.tag = tag;
     }
-
-    private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize){
+    
+    private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
         stack = itemStack;
-        items = Collections.<IItemStack>singletonList(this);
+        items = Collections.singletonList(this);
         this.tag = tag;
         this.wildcardSize = wildcardSize;
     }
-
+    
     @Override
-    public IItemDefinition getDefinition(){
+    public IItemDefinition getDefinition() {
         return new MCItemDefinition(Item.REGISTRY.getNameForObject(stack.getItem()).toString(), stack.getItem());
     }
-
+    
     @Override
-    public String getName(){
+    public String getName() {
         return stack.getUnlocalizedName();
     }
-
+    
     @Override
-    public String getDisplayName(){
+    public String getDisplayName() {
         return stack.getDisplayName();
     }
-
+    
     @Override
-    public void setDisplayName(String name){
+    public void setDisplayName(String name) {
         MineTweakerAPI.apply(new SetTranslationAction(getName() + ".name", name));
     }
-
+    
     @Override
-    public int getMaxStackSize(){
+    public int getMaxStackSize() {
         return stack.getMaxStackSize();
     }
-
+    
     @Override
-    public void setMaxStackSize(int size){
+    public void setMaxStackSize(int size) {
         MineTweakerAPI.apply(new SetStackSizeAction((ItemStack) getInternal(), size));
     }
-
+    
     @Override
-    public float getBlockHardness(){
+    public float getBlockHardness() {
         return ReflectionHelper.getPrivateValue(Block.class, Block.getBlockFromItem(stack.getItem()), "blockHardness");
     }
-
+    
     @Override
-    public void setBlockHardness(float hardness){
+    public void setBlockHardness(float hardness) {
         MineTweakerAPI.apply(new SetBlockHardnessAction(stack, hardness));
     }
-
+    
     @Override
-    public int getDamage(){
+    public int getDamage() {
         return stack.getItemDamage();
     }
-
+    
     @Override
-    public IData getTag(){
-        if(tag == null){
-            if(stack.getTagCompound() == null){
+    public IData getTag() {
+        if(tag == null) {
+            if(stack.getTagCompound() == null) {
                 return DataMap.EMPTY;
             }
-
+            
             tag = NBTConverter.from(stack.getTagCompound(), true);
         }
         return tag;
     }
-
+    
     @Override
-    public int getMaxDamage(){
+    public int getMaxDamage() {
         return stack.getMaxDamage();
     }
-
+    
     @Override
-    public void setMaxDamage(int damage){
+    public void setMaxDamage(int damage) {
         MineTweakerAPI.apply(new SetStackmaxDamageAction(stack, damage));
     }
-
+    
     @Override
-    public ILiquidStack getLiquid(){
+    public ILiquidStack getLiquid() {
         FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
         return liquid == null ? null : new MCLiquidStack(liquid);
     }
-
+    
     @Override
-    public IIngredient anyDamage(){
-        if(stack.getItem().getHasSubtypes()){
-            MineTweakerAPI.logWarning("subitems don't have damaged states");
-            return this;
-        }else{
+    public IIngredient anyDamage() {
             ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, OreDictionary.WILDCARD_VALUE);
             result.setTagCompound(stack.getTagCompound());
             return new MCItemStack(result, tag);
-        }
     }
-
+    
     @Override
-    public IItemStack withDamage(int damage){
-        if(stack.getItem().getHasSubtypes()){
-            MineTweakerAPI.logWarning("subitems don't have damaged states");
-            return this;
-        }else{
+    public IItemStack withDamage(int damage) {
             ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, damage);
             result.setTagCompound(stack.getTagCompound());
             return new MCItemStack(result, tag);
-        }
     }
-
+    
     @Override
-    public IItemStack anyAmount(){
+    public IItemStack anyAmount() {
         ItemStack result = new ItemStack(stack.getItem(), 1, stack.getItemDamage());
         result.setTagCompound(stack.getTagCompound());
         return new MCItemStack(result, tag, true);
     }
-
+    
     @Override
-    public IItemStack withAmount(int amount){
+    public IItemStack withAmount(int amount) {
         ItemStack result = new ItemStack(stack.getItem(), amount, stack.getItemDamage());
         result.setTagCompound(stack.getTagCompound());
         return new MCItemStack(result, tag);
     }
-
+    
     @Override
-    public IItemStack withTag(IData tag){
+    public IItemStack withTag(IData tag) {
         ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
-        if(tag == null){
+        if(tag == null) {
             result.setTagCompound(null);
-        }else{
+        } else {
             result.setTagCompound((NBTTagCompound) NBTConverter.from(tag));
         }
         return new MCItemStack(result, tag);
     }
-
+    
     @Override
-    public IItemStack updateTag(IData tagUpdate){
-        if(tag == null){
-            if(stack.getTagCompound() == null){
+    public IItemStack withEmptyTag() {
+        ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
+        result.setTagCompound(new NBTTagCompound());
+        return new MCItemStack(result, NBTConverter.from(new NBTTagCompound(), true));
+    }
+    
+    @Override
+    public IItemStack updateTag(IData tagUpdate) {
+        if(tag == null) {
+            if(stack.getTagCompound() == null) {
                 return withTag(tagUpdate);
             }
-
+            
             tag = NBTConverter.from(stack.getTagCompound(), true);
         }
-
+        
         IData updated = tag.update(tagUpdate);
         return withTag(updated);
     }
-
+    
     @Override
-    public IItemStack removeTag(String tag){
+    public IItemStack removeTag(String tag) {
         ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
-
-        if(tag == null){
+        
+        if(tag == null) {
             result.setTagCompound(null);
-        }else{
+        } else {
             result.getTagCompound().removeTag(tag);
         }
         IData dataTag = NBTConverter.from(result.getTagCompound(), false);
         return new MCItemStack(result, dataTag);
     }
-
+    
     @Override
-    public String getMark(){
+    public String getMark() {
         return null;
     }
-
+    
     @Override
-    public int getAmount(){
+    public int getAmount() {
         return stack.stackSize;
     }
-
+    
     @Override
-    public List<IItemStack> getItems(){
+    public List<IItemStack> getItems() {
         return items;
     }
-
+    
     @Override
-    public List<ILiquidStack> getLiquids(){
+    public List<ILiquidStack> getLiquids() {
         return Collections.emptyList();
     }
-
+    
     @Override
-    public IItemStack amount(int amount){
+    public IItemStack amount(int amount) {
         return withAmount(amount);
     }
-
+    
     @Override
-    public WeightedItemStack percent(float chance){
+    public WeightedItemStack percent(float chance) {
         return new WeightedItemStack(this, chance * 0.01f);
     }
-
+    
     @Override
-    public WeightedItemStack weight(float chance){
+    public WeightedItemStack weight(float chance) {
         return new WeightedItemStack(this, chance);
     }
-
+    
     @Override
-    public IIngredient transform(IItemTransformer transformer){
+    public IIngredient transform(IItemTransformer transformer) {
         return new IngredientItem(this, null, ArrayUtil.EMPTY_CONDITIONS, new IItemTransformer[]{transformer});
     }
-
+    
     @Override
-    public IIngredient only(IItemCondition condition){
+    public IIngredient only(IItemCondition condition) {
         return new IngredientItem(this, null, new IItemCondition[]{condition}, ArrayUtil.EMPTY_TRANSFORMERS);
     }
-
+    
     @Override
-    public IIngredient marked(String mark){
+    public IIngredient marked(String mark) {
         return new IngredientItem(this, mark, ArrayUtil.EMPTY_CONDITIONS, ArrayUtil.EMPTY_TRANSFORMERS);
     }
-
+    
     @Override
-    public IIngredient or(IIngredient ingredient){
+    public IIngredient or(IIngredient ingredient) {
         return new IngredientOr(this, ingredient);
     }
-
+    
     @Override
-    public boolean matches(IItemStack item){
+    public boolean matches(IItemStack item) {
         ItemStack internal = getItemStack(item);
+        if(stack.hasTagCompound()) {
+            return matchesExact(item);
+        }
         return internal != null && stack != null && internal.getItem() == stack.getItem() && (wildcardSize || internal.stackSize >= stack.stackSize) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
     }
-
+    
     @Override
     public boolean matchesExact(IItemStack item) {
         ItemStack internal = getItemStack(item);
-        if (internal.getTagCompound() != null && stack.getTagCompound() == null) {
+        if(internal.getTagCompound() != null && stack.getTagCompound() == null) {
             return false;
         }
-        if (internal.getTagCompound() == null && stack.getTagCompound() != null) {
+        if(internal.getTagCompound() == null && stack.getTagCompound() != null) {
             return false;
         }
-        if (internal.getTagCompound() == null && stack.getTagCompound() == null) {
+        if(internal.getTagCompound() == null && stack.getTagCompound() == null) {
             return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
         }
-        if (internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
-            for (String s : internal.getTagCompound().getKeySet()) {
-                if (!internal.getTagCompound().getTag(s).equals(stack.getTagCompound().getTag(s))) {
+        if(internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
+            for(String s : internal.getTagCompound().getKeySet()) {
+                if(!internal.getTagCompound().getTag(s).equals(stack.getTagCompound().getTag(s))) {
                     return false;
                 }
             }
         }
         return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
     }
-
+    
     @Override
-    public boolean matches(ILiquidStack liquid){
+    public boolean matches(ILiquidStack liquid) {
         return false;
     }
-
+    
     @Override
-    public boolean contains(IIngredient ingredient){
+    public boolean contains(IIngredient ingredient) {
         List<IItemStack> iitems = ingredient.getItems();
-        if(iitems == null || iitems.size() != 1)
-            return false;
-        return matches(iitems.get(0));
+        return !(iitems == null || iitems.size() != 1) && matches(iitems.get(0));
     }
-
+    
     @Override
-    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer){
+    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
         return item;
     }
-
+    
     @Override
-    public boolean hasTransformers(){
+    public boolean hasTransformers() {
         return false;
     }
-
+    
     @Override
-    public Object getInternal(){
+    public Object getInternal() {
         return stack;
     }
-
+    
     @Override
-    public IBlock asBlock(){
+    public IBlock asBlock() {
         ResourceLocation name = Block.REGISTRY.getNameForObject(Block.getBlockFromItem(stack.getItem()));
-        if(Block.REGISTRY.containsKey(name)){
+        if(Block.REGISTRY.containsKey(name)) {
             return new MCItemBlock(stack);
-        }else{
+        } else {
             throw new ClassCastException("This item is not a block");
         }
     }
-
+    
     @Override
-    public List<IOreDictEntry> getOres(){
-        List<IOreDictEntry> result = new ArrayList<IOreDictEntry>();
-
-        for(String key : OreDictionary.getOreNames()){
-            for(ItemStack is : OreDictionary.getOres(key)){
-                if(is.getItem() == stack.getItem() && (is.getItemDamage() == OreDictionary.WILDCARD_VALUE || is.getItemDamage() == stack.getItemDamage())){
+    public List<IOreDictEntry> getOres() {
+        List<IOreDictEntry> result = new ArrayList<>();
+        
+        for(String key : OreDictionary.getOreNames()) {
+            for(ItemStack is : OreDictionary.getOres(key)) {
+                if(is.getItem() == stack.getItem() && (is.getItemDamage() == OreDictionary.WILDCARD_VALUE || is.getItemDamage() == stack.getItemDamage())) {
                     result.add(MineTweakerAPI.oreDict.get(key));
                     break;
                 }
             }
         }
-
+        
         return result;
     }
-
+    
     // #############################
     // ### Object implementation ###
     // #############################
-
+    
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int hash = 7;
         hash = 41 * hash + stack.getItem().hashCode();
         hash = 41 * hash + stack.getItemDamage();
@@ -377,48 +362,42 @@ public class MCItemStack implements IItemStack{
         hash = 41 * hash + (this.wildcardSize ? 1 : 0);
         return hash;
     }
-
+    
     @Override
-    public boolean equals(Object obj){
-        if(obj == null){
+    public boolean equals(Object obj) {
+        if(obj == null) {
             return false;
         }
-        if(getClass() != obj.getClass()){
+        if(getClass() != obj.getClass()) {
             return false;
         }
         final MCItemStack other = (MCItemStack) obj;
-        if(this.stack.getItem() != other.stack.getItem())
-            return false;
-        if(this.stack.getItemDamage() != other.stack.getItemDamage())
-            return false;
-        if(this.stack.stackSize != other.stack.stackSize)
-            return false;
-        if(this.stack.getTagCompound() != other.stack.getTagCompound() && (this.stack == null || this.stack.equals(other.stack)))
-            return false;
-        return this.wildcardSize == other.wildcardSize;
+        return this.stack.getItem() == other.stack.getItem() && this.stack.getItemDamage() == other.stack.getItemDamage() && this.stack.stackSize == other.stack.stackSize && !(this.stack.getTagCompound() != other.stack.getTagCompound() && (this.stack == null || this.stack.equals(other.stack))) && this.wildcardSize == other.wildcardSize;
     }
-
+    
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append('<');
         result.append(Item.REGISTRY.getNameForObject(stack.getItem()));
-
-        if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE){
+        
+        if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             result.append(":*");
-        }else if(stack.getItemDamage() > 0){
+        } else if(stack.getItemDamage() > 0) {
             result.append(':').append(stack.getItemDamage());
         }
         result.append('>');
-
-        if(stack.getTagCompound() != null){
+        
+        if(stack.getTagCompound() != null) {
             result.append(".withTag(");
             result.append(NBTConverter.from(stack.getTagCompound(), wildcardSize).toString());
             result.append(")");
         }
-
+        if(!wildcardSize && stack.stackSize > 1) {
+            result.append(" * ").append(stack.stackSize);
+        }
         return result.toString();
     }
-
-
+    
+    
 }
