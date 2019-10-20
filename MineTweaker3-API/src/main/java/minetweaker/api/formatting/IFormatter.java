@@ -1,80 +1,74 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.formatting;
 
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- *
  * @author Stan
  */
 public interface IFormatter {
-	public IFormattedText string(String text);
-
-	@ZenMethod
-	public IFormattedText black(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText darkBlue(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText darkGreen(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText darkAqua(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText darkRed(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText darkPurple(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText gold(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText gray(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText darkGray(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText blue(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText green(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText aqua(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText red(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText lightPurple(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText yellow(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText white(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText obfuscated(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText bold(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText strikethrough(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText underline(IFormattedText text);
-
-	@ZenMethod
-	public IFormattedText italic(IFormattedText text);
+    
+    IFormattedText string(String text);
+    
+    @ZenMethod
+    IFormattedText black(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText darkBlue(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText darkGreen(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText darkAqua(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText darkRed(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText darkPurple(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText gold(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText gray(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText darkGray(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText blue(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText green(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText aqua(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText red(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText lightPurple(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText yellow(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText white(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText obfuscated(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText bold(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText strikethrough(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText underline(IFormattedText text);
+    
+    @ZenMethod
+    IFormattedText italic(IFormattedText text);
 }

@@ -48,8 +48,23 @@ public class ServerPlayer implements IPlayer {
 		// TODO: implement
 		return null;
 	}
-
-	@Override
+    
+    @Override
+    public int getXP() {
+        return 0;
+    }
+    
+    @Override
+    public void setXP(int xp) {
+    
+    }
+    
+    @Override
+    public void removeXP(int xp) {
+    
+    }
+    
+    @Override
 	public void update(IData data) {
 		// TODO: implement
 	}

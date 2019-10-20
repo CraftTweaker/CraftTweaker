@@ -50,8 +50,26 @@ public class MCPlayer implements IPlayer {
 	public IData getData() {
 		return NBTConverter.from(player.getEntityData(), true);
 	}
-
-	@Override
+    
+    @Override
+    public int getXP() {
+        return player.experienceLevel;
+    }
+    
+    @Override
+    public void setXP(int xp) {
+        player.experienceLevel = 0;
+        player.addExperienceLevel(xp);
+    }
+    
+    @Override
+    public void removeXP(int xp) {
+        final int newLvl = Math.max(0, player.experienceLevel - xp);
+        player.experienceLevel = 0;
+        player.addExperienceLevel(newLvl);
+    }
+    
+    @Override
 	public void update(IData data) {
 		NBTConverter.updateMap(player.getEntityData(), data);
 	}

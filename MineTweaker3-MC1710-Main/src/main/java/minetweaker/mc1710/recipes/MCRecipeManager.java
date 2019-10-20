@@ -98,18 +98,18 @@ public class MCRecipeManager implements IRecipeManager {
     }
 
     @Override
-    public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
-        addShaped(output, ingredients, function, false);
+    public void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action) {
+        addShaped(output, ingredients, function, action, false);
     }
 
     @Override
-    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function) {
-        addShaped(output, ingredients, function, true);
+    public void addShapedMirrored(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action) {
+        addShaped(output, ingredients, function, action, true);
     }
 
     @Override
-    public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function) {
-        ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function);
+    public void addShapeless(IItemStack output, IIngredient[] ingredients, IRecipeFunction function, IRecipeAction action) {
+        ShapelessRecipe recipe = new ShapelessRecipe(output, ingredients, function, action);
         IRecipe irecipe = RecipeConverter.convert(recipe);
         MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
     }
@@ -393,8 +393,8 @@ public class MCRecipeManager implements IRecipeManager {
         }
     }
 
-    private void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, boolean mirrored) {
-        ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, mirrored);
+    private void addShaped(IItemStack output, IIngredient[][] ingredients, IRecipeFunction function, IRecipeAction action, boolean mirrored) {
+        ShapedRecipe recipe = new ShapedRecipe(output, ingredients, function, action, mirrored);
         IRecipe irecipe = RecipeConverter.convert(recipe);
         MineTweakerAPI.apply(new ActionAddRecipe(irecipe, recipe));
     }

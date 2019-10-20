@@ -1,8 +1,6 @@
 package minetweaker.api.vanilla;
 
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Created by Jared on 6/3/2016.
@@ -15,7 +13,6 @@ public interface ILootFunction {
 
     @ZenSetter
     void setName();
-
 
 
 }

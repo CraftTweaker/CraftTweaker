@@ -139,7 +139,7 @@ public class RecipeConverter {
 				ingredients[i] = MineTweakerMC.getIIngredient(shapeless.recipeItems.get(i));
 			}
 
-			return new ShapelessRecipe(output, ingredients, null);
+			return new ShapelessRecipe(output, ingredients, null, null);
 		} else if (recipe instanceof ShapedRecipes) {
 			ShapedRecipes shaped = (ShapedRecipes) recipe;
 
@@ -150,7 +150,7 @@ public class RecipeConverter {
 				}
 			}
 
-			return new ShapedRecipe(output, ingredients, null, false);
+			return new ShapedRecipe(output, ingredients, null, null, false);
 		} else if (recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe shaped = (ShapedOreRecipe) recipe;
 
@@ -164,7 +164,7 @@ public class RecipeConverter {
 				}
 			}
 
-			return new ShapedRecipe(output, recipeIngredients, null, false);
+			return new ShapedRecipe(output, recipeIngredients, null, null, false);
 		} else if (recipe instanceof ShapelessOreRecipe) {
 			ShapelessOreRecipe shapeless = (ShapelessOreRecipe) recipe;
 
@@ -173,7 +173,7 @@ public class RecipeConverter {
 				ingredients[i] = MineTweakerMC.getIIngredient(shapeless.getInput().get(i));
 			}
 
-			return new ShapelessRecipe(output, ingredients, null);
+			return new ShapelessRecipe(output, ingredients, null, null);
 		} else {
 			return new UnknownRecipe(output);
 		}

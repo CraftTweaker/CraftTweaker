@@ -285,7 +285,11 @@ public class MineTweakerAPI {
 					logInfo("Loaded class registry: " + description);
 			}
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-		    logError("Error registering class registry", ex);
+		    if(ex.getCause() instanceof NoClassDefFoundError) {
+		        logInfo("Classes for registry " + registryClass + " not found, skipping");
+            } else {
+                logError("Error registering class registry", ex);
+            }
 		}
     }
 

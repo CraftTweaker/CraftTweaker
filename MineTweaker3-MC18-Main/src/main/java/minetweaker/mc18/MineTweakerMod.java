@@ -49,7 +49,7 @@ import java.io.File;
  *
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.13")
+@Mod(modid = MineTweakerMod.MODID, version = "3.1.0")
 public class MineTweakerMod {
     public static final String MODID = "MineTweaker3";
     public static final String MCVERSION = "1.8.9";

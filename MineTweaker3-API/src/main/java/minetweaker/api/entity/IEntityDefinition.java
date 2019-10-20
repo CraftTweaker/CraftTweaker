@@ -1,23 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.entity;
 
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
+import minetweaker.api.item.IItemStack;
+import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.value.*;
+
+import java.util.*;
+
 
 /**
- *
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.entity.IEntityDefinition")
 public interface IEntityDefinition {
-	@ZenGetter("id")
-	public String getId();
-
-	@ZenGetter("name")
-	public String getName();
+    
+    @ZenGetter("id")
+    String getId();
+    
+    @ZenGetter("name")
+    String getName();
+    
+    @ZenMethod
+    void addDrop(IItemStack stack, @Optional int min, @Optional int max);
+    
+    @ZenMethod
+    void addPlayerOnlyDrop(IItemStack stack, @Optional int min, @Optional int max);
+    
+    @ZenMethod
+    void removeDrop(IItemStack stack);
+    
+    Map<IItemStack, IntRange> getDropsToAdd();
+    
+    Map<IItemStack, IntRange> getDropsToAddPlayerOnly();
+    
+    List<IItemStack> getDropsToRemove();
+    
 }
