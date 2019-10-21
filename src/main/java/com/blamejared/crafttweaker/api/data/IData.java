@@ -59,7 +59,7 @@ public interface IData {
     }
     
     /**
-     * Checks if this IData contains another IData, mainly used in subclasses of {@link ICollectionData}, is the same as an equals check on other IData types
+     * Checks if this IData contains another IData, mainly used in subclasses of {@link com.blamejared.crafttweaker.api.data.ICollectionData}, is the same as an equals check on other IData types
      *
      * @param data data to check if it is contained
      *

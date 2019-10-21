@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.data;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.StorageTagType;
 import org.openzen.zencode.java.ZenCodeStorageTag;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @ZenCodeType.Name("crafttweaker.api.data.MapData")
 @ZenRegister
+@Document("vanilla/data/MapData")
 public class MapData implements IData {
     
     private CompoundNBT internal;
