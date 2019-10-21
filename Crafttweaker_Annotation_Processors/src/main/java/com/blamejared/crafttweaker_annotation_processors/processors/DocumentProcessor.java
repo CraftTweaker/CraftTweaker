@@ -5,19 +5,19 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -168,7 +168,7 @@ public class DocumentProcessor extends AbstractProcessor {
 		writer.printf("# %s%n%n", typeElement.getSimpleName());
 
 		//Description
-		final String docComment = processingEnv.getElementUtils().getDocComment(typeElement);
+		final String docComment = convertDocComment(typeElement);
 		if (docComment != null) {
 			writer.println(docComment);
 		} else {
@@ -337,11 +337,17 @@ public class DocumentProcessor extends AbstractProcessor {
 
 	private void fillMethodInfo(boolean isExtension, int operandCount, ExecutableElement method, String[] operandNames, String[] operandTypes, String[] operandDescriptions) {
 		{
-			final Element argumentElement = isExtension ? method.getParameters()
-					.get(0) : method.getEnclosingElement();
+			final boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
+			final Element argumentElement = isExtension ? method.getParameters().get(0) : method.getEnclosingElement();
 			final String simpleName = argumentElement.getSimpleName().toString();
-			operandNames[0] = "my" + simpleName.substring(0, 1).toUpperCase() + simpleName.substring(1);
-			operandTypes[0] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
+
+			if(!isExtension && isStatic) {
+				operandNames[0] = method.getEnclosingElement().toString();
+				operandTypes[0] = "";
+			} else {
+				operandNames[0] = "my" + simpleName.substring(0, 1).toUpperCase() + simpleName.substring(1);
+				operandTypes[0] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
+			}
 			//Description of base type will never be printed so we dont need to set it to anything.
 		}
 
@@ -350,8 +356,7 @@ public class DocumentProcessor extends AbstractProcessor {
 			operandNames[i] = argumentElement.getSimpleName().toString();
 			operandTypes[i] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
 
-			String parentDoc = this.processingEnv.getElementUtils()
-					.getDocComment(argumentElement.getEnclosingElement());
+			String parentDoc = convertDocComment(argumentElement.getEnclosingElement());
 			if (parentDoc == null) {
 				parentDoc = "";
 			}
@@ -416,7 +421,7 @@ public class DocumentProcessor extends AbstractProcessor {
 				fillMethodInfo(isExpansion, totalCount, method, names, types, descriptions);
 
 
-				final String docComment = this.processingEnv.getElementUtils().getDocComment(method);
+				final String docComment = convertDocComment(method);
 				final String description;
 				if (docComment != null) {
 					final StringJoiner sj = new StringJoiner("<br>");
@@ -475,7 +480,7 @@ public class DocumentProcessor extends AbstractProcessor {
 
 			final String returnType = FormattingUtils.convertTypeName(method.getReturnType(), this.processingEnv.getTypeUtils());
 
-			String description = this.processingEnv.getElementUtils().getDocComment(method);
+			String description = convertDocComment(method);
 			if (description == null) {
 				description = "No information provided.";
 			}
@@ -496,10 +501,50 @@ public class DocumentProcessor extends AbstractProcessor {
 	}
 
 	private void mergeGetterSetterDescriptions(Map<String, String> descriptions, Element element, String actualName) {
-		final String docComment = this.processingEnv.getElementUtils().getDocComment(element);
+		final String docComment = convertDocComment(element);
 		if (docComment != null) {
 			descriptions.merge(actualName, docComment, (a, b) -> String.format("%s<br>%s", a, b));
 		}
+	}
+
+	private String convertDocComment(Element element) {
+		String docComment = this.processingEnv.getElementUtils().getDocComment(element);
+		if(docComment == null)
+			return null;
+
+		//TODO: currently only catching fully qualified @links
+		docComment = StringReplaceUtil.replaceAll(docComment, "\\{@link [\\w \\.]*}", s -> {
+			s = s.substring("{@link ".length());
+			s = s.substring(0, s.length() - 1).trim();
+			final TypeElement typeElement = processingEnv.getElementUtils().getTypeElement(s);
+			if (typeElement == null) {
+				return s;
+			}
+
+			final String display;
+			final String link;
+
+			final ZenCodeType.Name nameAnnotation = typeElement.getAnnotation(ZenCodeType.Name.class);
+			if (nameAnnotation == null) {
+				display = element.getSimpleName().toString();
+			} else {
+				final String value = nameAnnotation.value();
+				display = value.substring(value.lastIndexOf('.') + 1);
+			}
+
+			final Document documentAnnotation = typeElement.getAnnotation(Document.class);
+			if (documentAnnotation == null) {
+				link = "UNKNOWN LINK!!!";
+			} else {
+				final String value = documentAnnotation.value().replaceAll("\\.", File.pathSeparator);
+				link = value.startsWith("/") ? value : "/" + value;
+			}
+
+
+			return String.format(Locale.ENGLISH, "[%s](%s)", display, link);
+		});
+
+		return docComment;
 	}
 
 

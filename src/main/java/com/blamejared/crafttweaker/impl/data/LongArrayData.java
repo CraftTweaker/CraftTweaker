@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.ICollectionData;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.nbt.LongNBT;
 import net.minecraft.nbt.NumberNBT;
@@ -11,6 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.data.LongArrayData")
 @ZenRegister
+@Document("vanilla/data/LongArrayData")
 public class LongArrayData implements ICollectionData {
     
     private LongArrayNBT internal;

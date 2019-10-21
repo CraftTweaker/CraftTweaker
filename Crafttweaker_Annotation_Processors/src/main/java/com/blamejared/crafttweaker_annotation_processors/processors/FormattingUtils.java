@@ -3,7 +3,9 @@ package com.blamejared.crafttweaker_annotation_processors.processors;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import java.util.List;
@@ -140,6 +142,9 @@ class FormattingUtils {
 	static String convertTypeName(TypeMirror typeMirror, Types typeUtils) {
 		if(typeMirror.getKind().isPrimitive())
 			return typeMirror.toString();
+		if(typeMirror.getKind() == TypeKind.ARRAY) {
+			return convertTypeName(((ArrayType) typeMirror).getComponentType(), typeUtils) + "[]";
+		}
 
 		final ZenCodeType.Name annotation = typeUtils.asElement(typeMirror).getAnnotation(ZenCodeType.Name.class);
 		if (annotation != null) {
