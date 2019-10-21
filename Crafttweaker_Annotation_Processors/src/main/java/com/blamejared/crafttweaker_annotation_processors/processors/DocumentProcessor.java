@@ -52,6 +52,9 @@ public class DocumentProcessor extends AbstractProcessor {
         annotationsToCheck.add(ZenCodeType.Field.class);
         annotationsToCheck.add(ZenCodeType.Caster.class);
     }
+    private static final Map<String, String> CLASS_TO_ZEN_MAP = new HashMap<>();
+    private static final Map<String, TypeElement> CLASS_TO_ELEMENT_MAP = new HashMap<>();
+    
     
     /**
      * Creates a directory or deletes all files if it already exists
@@ -88,7 +91,6 @@ public class DocumentProcessor extends AbstractProcessor {
     
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        
         final File absoluteFile = new File("build/mkdocs").getAbsoluteFile();
         final Path docsDir = absoluteFile.toPath();
         final Messager messager = this.processingEnv.getMessager();
@@ -96,7 +98,10 @@ public class DocumentProcessor extends AbstractProcessor {
         if(firstCall) {
             createDir(docsDir, messager);
             firstCall = false;
+        } else {
+            CLASS_TO_ELEMENT_MAP.clear();
         }
+        
         
         //This outer loop is kinda redundant, cause there only exists one annotation matching the supported types
         for(TypeElement annotation : annotations) {
@@ -113,24 +118,31 @@ public class DocumentProcessor extends AbstractProcessor {
                 
                 if(typeElement.getAnnotation(ZenCodeType.Name.class) == null && typeElement.getAnnotation(ZenCodeType.Expansion.class) == null) {
                     messager.printMessage(Diagnostic.Kind.ERROR, String.format(Locale.ENGLISH, "@Document requires either @ZenCodeType.Name or @ZenCodeType.Expansion to be present. Class %s has neither", typeElement.getQualifiedName()), typeElement);
+                } else if(typeElement.getAnnotation(ZenCodeType.Name.class) != null) {
+                    CLASS_TO_ZEN_MAP.put(typeElement.getQualifiedName().toString(), typeElement.getAnnotation(ZenCodeType.Name.class).value());
                 }
                 
+                CLASS_TO_ELEMENT_MAP.put(typeElement.getQualifiedName().toString(), typeElement);
                 
-                final Map<Class<? extends Annotation>, List<Element>> annotatedMembers = new HashMap<>();
+            }
+        }
+        
+        for(TypeElement typeElement : CLASS_TO_ELEMENT_MAP.values()) {
+            
+            final Map<Class<? extends Annotation>, List<Element>> annotatedMembers = new HashMap<>();
+            for(Class<? extends Annotation> zenAnnotation : annotationsToCheck) {
+                annotatedMembers.put(zenAnnotation, new ArrayList<>());
+            }
+            
+            for(Element enclosedElement : typeElement.getEnclosedElements()) {
                 for(Class<? extends Annotation> zenAnnotation : annotationsToCheck) {
-                    annotatedMembers.put(zenAnnotation, new ArrayList<>());
-                }
-                
-                for(Element enclosedElement : typeElement.getEnclosedElements()) {
-                    for(Class<? extends Annotation> zenAnnotation : annotationsToCheck) {
-                        if(enclosedElement.getAnnotation(zenAnnotation) != null) {
-                            annotatedMembers.get(zenAnnotation).add(enclosedElement);
-                        }
+                    if(enclosedElement.getAnnotation(zenAnnotation) != null) {
+                        annotatedMembers.get(zenAnnotation).add(enclosedElement);
                     }
                 }
-                
-                writeFile(docsDir, messager, typeElement, annotatedMembers);
             }
+            
+            writeFile(docsDir, messager, typeElement, annotatedMembers);
         }
         
         return true;
@@ -140,13 +152,9 @@ public class DocumentProcessor extends AbstractProcessor {
         final Path fullPath;
         final ZenCodeType.Name nameAnnotation = typeElement.getAnnotation(ZenCodeType.Name.class);
         final boolean isClass = nameAnnotation != null;
-        {
-            final StringBuilder sb = new StringBuilder();
-            final Document docAnnotation = typeElement.getAnnotation(Document.class);
-            (docAnnotation != null && !docAnnotation.value().isEmpty() ? docAnnotation.value() : isClass ? nameAnnotation.value() : typeElement.getQualifiedName()).chars().map(i -> i != '.' ? i : File.separatorChar).forEach(i -> sb.append((char) i));
-            fullPath = docsDir.resolve(sb.append(".md").toString());
-        }
+        final Document docAnnotation = typeElement.getAnnotation(Document.class);
         
+        fullPath = docsDir.resolve(getDocsDir(typeElement, docAnnotation, nameAnnotation, isClass) + ".md");
         
         if(!isClass && typeElement.getAnnotation(ZenCodeType.Expansion.class) == null) {
             messager.printMessage(Diagnostic.Kind.ERROR, String.format(Locale.ENGLISH, "@Document requires either @ZenCodeType.Name or @ZenCodeType.Expansion to be present. Class %s has neither, skipping class", typeElement.getQualifiedName()), typeElement);
@@ -374,7 +382,7 @@ public class DocumentProcessor extends AbstractProcessor {
                 }
                 
                 if(found) {
-                    sb.add(s.substring(prefix.length() + 1));
+                    sb.add(s.substring(prefix.length()).trim());
                 }
             }
             
@@ -417,6 +425,7 @@ public class DocumentProcessor extends AbstractProcessor {
                 
                 
                 final String docComment = this.processingEnv.getElementUtils().getDocComment(method);
+                
                 final String description;
                 if(docComment != null) {
                     final StringJoiner sj = new StringJoiner("<br>");
@@ -428,11 +437,18 @@ public class DocumentProcessor extends AbstractProcessor {
                         if(s.startsWith("@return")) {
                             s = "Returns: `" + s.substring("@return".length()) + "`";
                         }
+                        
+                        while(s.contains("{@link ")) {
+                            String clazz = s.split("\\{@link ")[1].split("}")[0];
+                            String zsClass = CLASS_TO_ZEN_MAP.getOrDefault(clazz, clazz);
+                            s = s.replaceAll("\\{@link " + clazz + "}", String.format("[%s](/%s/)", zsClass.substring(zsClass.lastIndexOf(".") + 1), getDocsDir(CLASS_TO_ELEMENT_MAP.get(clazz)).isEmpty() ? clazz : getDocsDir(CLASS_TO_ELEMENT_MAP.get(clazz))));
+                        }
                         sj.add(s);
                     }
                     description = sj.length() == 0 ? "No information given." : sj.toString();
                 } else {
-                    description = "No information given";
+                    
+                    description = "No documentation found!";
                 }
                 writer.println(description);
                 
@@ -503,6 +519,19 @@ public class DocumentProcessor extends AbstractProcessor {
         if(docComment != null) {
             descriptions.merge(actualName, docComment, (a, b) -> String.format("%s<br>%s", a, b));
         }
+    }
+    
+    private String getDocsDir(TypeElement typeElement) {
+        if(typeElement == null) {
+            return "Unknown type!";
+        }
+        return getDocsDir(typeElement, typeElement.getAnnotation(Document.class), typeElement.getAnnotation(ZenCodeType.Name.class), typeElement.getAnnotation(ZenCodeType.Name.class) != null);
+    }
+    
+    private String getDocsDir(TypeElement typeElement, Document docAnnotation, ZenCodeType.Name nameAnnotation, boolean isClass) {
+        final StringBuilder sb = new StringBuilder();
+        (docAnnotation != null && !docAnnotation.value().isEmpty() ? docAnnotation.value() : isClass ? nameAnnotation.value() : typeElement.getQualifiedName()).chars().map(i -> i != '.' ? i : File.separatorChar).forEach(i -> sb.append((char) i));
+        return sb.toString();
     }
     
     
