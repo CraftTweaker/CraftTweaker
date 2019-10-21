@@ -424,6 +424,10 @@ public class DocumentProcessor extends AbstractProcessor {
 						s = s.trim();
 						if (s.isEmpty() || s.startsWith("@param"))
 							continue;
+						
+						if (s.startsWith("@return")){
+						    s = "Returns: `" + s.substring("@return".length()) + "`";
+                        }
 						sj.add(s);
 					}
 					description = sj.length() == 0 ? "No information given." : sj.toString();
