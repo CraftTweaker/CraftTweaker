@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -8,6 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.data.ICollectionData")
+@Document("vanilla/data/ICollectionData")
 public interface ICollectionData extends IData {
     
     @ZenCodeType.Method
