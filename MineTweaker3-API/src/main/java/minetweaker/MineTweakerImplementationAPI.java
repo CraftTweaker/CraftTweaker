@@ -646,12 +646,12 @@ public class MineTweakerImplementationAPI {
         MineTweakerAPI.tweaker.rollback();
         if (MineTweakerAPI.server != null) {
             if (!MineTweakerAPI.server.isCommandAdded("minetweaker")) {
-                server.addCommand("minetweaker", "", new String[]{"mt"}, new ICommandFunction() {
+                server.addCommand("minetweaker", "", new String[]{"mt", "crafttweaker", "ct"}, new ICommandFunction() {
                     @Override
                     public void execute(String[] arguments, IPlayer player) {
                         if (arguments.length == 0) {
                             player.sendChat("Please provide a command. Use /mt help for more info.");
-                        } else if (arguments[0].equals("help")) {
+                        } else if (argum ents[0].equals("help")) {
                             String[] keys = minetweakerCommands.keySet().toArray(new String[minetweakerCommands.size()]);
                             Arrays.sort(keys);
                             for (String key : keys) {

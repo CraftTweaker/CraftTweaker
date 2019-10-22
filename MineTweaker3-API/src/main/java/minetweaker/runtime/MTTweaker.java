@@ -107,6 +107,7 @@ public class MTTweaker implements ITweaker {
 
 	@Override
 	public void load() {
+	    ZenModule.loadedClasses.clear();
 		System.out.println("Loading scripts");
 
 		scriptData = ScriptProviderMemory.collect(scriptProvider);
