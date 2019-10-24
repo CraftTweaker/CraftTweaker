@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.ICollectionData;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @ZenCodeType.Name("crafttweaker.api.data.ListData")
 @ZenRegister
+@Document("vanilla/data/ListData")
 public class ListData implements ICollectionData {
     
     private ListNBT internal;

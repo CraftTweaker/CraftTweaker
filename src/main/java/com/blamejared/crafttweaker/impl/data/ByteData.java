@@ -3,11 +3,13 @@ package com.blamejared.crafttweaker.impl.data;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ByteNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.data.ByteData")
 @ZenRegister
+@Document("vanilla/data/ByteData")
 public class ByteData implements INumberData {
     
     private ByteNBT internal;

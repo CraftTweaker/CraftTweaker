@@ -2,11 +2,13 @@ package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.StringNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.data.StringData")
 @ZenRegister
+@Document("vanilla/data/StringData")
 public class StringData implements IData {
     
     private StringNBT internal;

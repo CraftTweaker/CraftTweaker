@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.ICollectionData;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ByteArrayNBT;
 import net.minecraft.nbt.ByteNBT;
 import net.minecraft.nbt.NumberNBT;
@@ -11,6 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.data.ByteArrayData")
 @ZenRegister
+@Document("vanilla/data/ByteArrayData")
 public class ByteArrayData implements ICollectionData {
     
     private ByteArrayNBT internal;
