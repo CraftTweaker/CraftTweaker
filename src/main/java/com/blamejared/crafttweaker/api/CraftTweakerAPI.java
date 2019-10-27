@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.google.common.collect.ImmutableList;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import org.openzen.zencode.java.JavaNativeModule;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -71,7 +72,7 @@ public class CraftTweakerAPI {
             }
         }
         try {
-            if(action.validate(logger)) {
+            if(action.shouldApplyOn(EffectiveSide.get()) && action.validate(logger)) {
                 String describe = action.describe();
                 if(describe != null && !describe.isEmpty()) {
                     logInfo(describe);
