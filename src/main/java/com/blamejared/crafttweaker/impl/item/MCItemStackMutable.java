@@ -1,9 +1,12 @@
 package com.blamejared.crafttweaker.impl.item;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -33,6 +36,15 @@ public class MCItemStackMutable implements IItemStack {
     public IItemStack withDamage(int damage) {
         internal.setDamage(damage);
         return this;
+    }
+    @Override
+    public MCFood getFood() {
+        return new MCFood(getInternal().getItem().getFood());
+    }
+    
+    @Override
+    public void setFood(MCFood food) {
+        CraftTweakerAPI.apply(new ActionSetFood(this, food));
     }
     
     @Override

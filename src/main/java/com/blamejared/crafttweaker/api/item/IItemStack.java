@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.api.item;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
@@ -127,6 +128,7 @@ public interface IItemStack extends IIngredient {
      * Sets the amount of the ItemStack
      *
      * @param amount new amount
+     *
      * @return
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
@@ -145,6 +147,7 @@ public interface IItemStack extends IIngredient {
     
     /**
      * Sets the damage of the ItemStack
+     *
      * @param damage the new damage value
      */
     @ZenCodeType.Method
@@ -196,7 +199,7 @@ public interface IItemStack extends IIngredient {
     
     @ZenCodeType.Method
     IItemStack withTag(IData tag);
-
+    
     
     /**
      * Returns true if this ItemStack has a Tag
@@ -285,16 +288,25 @@ public interface IItemStack extends IIngredient {
     default boolean isCrossbowStack() {
         return getInternal().isCrossbowStack();
     }
+    
+    @ZenCodeType.Getter("food")
+    MCFood getFood();
+    
+    @ZenCodeType.Setter("food")
+    void setFood(MCFood food);
+    
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.
      *
      * @return internal ItemStack
      */
     ItemStack getInternal();
-
+    
     /**
      * TETATETETEAETGFGDH
      */
     @ZenCodeType.Caster
-    default IItemStack asIItemStack() {return this;}
+    default IItemStack asIItemStack() {
+        return this;
+    }
 }
