@@ -155,11 +155,13 @@ public class CraftTweaker {
          *
          * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
          */
-        //        System.out.println("Recipes updated");
+        if(event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>()).size() == 0) {
+            // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
+            return;
+        }
         CTRecipeManager.recipeManager = event.getRecipeManager();
         Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
         Collection<IRecipe<?>> recipes = map.values();
-        
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = recipes.stream().map(iRecipe -> (ScriptRecipe) iRecipe).map(recipe -> new FileAccessSingle(recipe.getFileName(), new StringReader(recipe.getContent()), CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
         CraftTweakerAPI.loadScripts(sourceFiles);
