@@ -95,10 +95,12 @@ public class FileAccessSingle {
     private void readFile(Reader reader) {
         try (final BufferedReader bufferedReader = new BufferedReader(reader)) {
             int i = 0;
-            while (bufferedReader.ready()) {
-                final String line = bufferedReader.readLine();
-                this.checkPreprocessor(line, ++i);
-                this.fileContents.add(line);
+            String line = "";
+            if (bufferedReader.ready()) {
+                while((line =  bufferedReader.readLine()) !=null) {
+                    this.checkPreprocessor(line, ++i);
+                    this.fileContents.add(line);
+                }
             }
         } catch (IOException e) {
             CraftTweakerAPI.logThrowing("Could not load file %s", e, this.fileName);
