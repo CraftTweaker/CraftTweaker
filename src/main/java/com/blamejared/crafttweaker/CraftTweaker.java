@@ -184,7 +184,7 @@ public class CraftTweaker {
             CraftTweakerAPI.loadScripts();
             DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
                 List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
-                scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath(), readContents(file))).forEach(scriptRecipe -> {
+                scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
                     Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
                     map.put(scriptRecipe.getId(), scriptRecipe);
                 });
