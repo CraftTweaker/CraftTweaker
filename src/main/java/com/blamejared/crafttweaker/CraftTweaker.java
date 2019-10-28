@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
@@ -10,12 +11,16 @@ import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShaped;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShapeless;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.blamejared.crafttweaker.impl.script.SerializerScript;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -28,6 +33,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -37,10 +43,20 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openzen.zencode.shared.SourceFile;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -53,7 +69,10 @@ public class CraftTweaker {
     
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
     public static IRecipeSerializer SHAPED_SERIALIZER;
+    public static IRecipeSerializer SCRIPT_SERIALIZER;
+    
     public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
+    public static IRecipeType<ScriptRecipe> RECIPE_TYPE_SCRIPTS;
     
     public CraftTweaker() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -62,10 +81,19 @@ public class CraftTweaker {
         PacketHandler.init();
         SHAPELESS_SERIALIZER = new SerializerShapeless().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
         SHAPED_SERIALIZER = new SerializerShaped().setRegistryName(new ResourceLocation("crafttweaker:shaped"));
+        SCRIPT_SERIALIZER = new SerializerScript().setRegistryName(new ResourceLocation("crafttweaker:scripts"));
+        
         
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPED_SERIALIZER);
+        ForgeRegistries.RECIPE_SERIALIZERS.register(SCRIPT_SERIALIZER);
         
+        RECIPE_TYPE_SCRIPTS = Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MODID, "scripts"), new IRecipeType<ScriptRecipe>() {
+            @Override
+            public String toString() {
+                return "scripts";
+            }
+        });
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
     }
@@ -128,6 +156,13 @@ public class CraftTweaker {
          * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
          */
         //        System.out.println("Recipes updated");
+        CTRecipeManager.recipeManager = event.getRecipeManager();
+        Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
+        Collection<IRecipe<?>> recipes = map.values();
+        
+        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
+        SourceFile[] sourceFiles = recipes.stream().map(iRecipe -> (ScriptRecipe) iRecipe).map(recipe -> new FileAccessSingle(recipe.getFileName(), new StringReader(recipe.getContent()), CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
+        CraftTweakerAPI.loadScripts(sourceFiles);
     }
     
     @SubscribeEvent
@@ -147,8 +182,25 @@ public class CraftTweaker {
             }
             CTRecipeManager.recipeManager = recipeManager;
             CraftTweakerAPI.loadScripts();
+            DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
+                List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
+                scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath(), readContents(file))).forEach(scriptRecipe -> {
+                    Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
+                    map.put(scriptRecipe.getId(), scriptRecipe);
+                });
+            });
+            
             event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
         });
+    }
+    
+    public String readContents(File file) {
+        try {
+            return new BufferedReader(new FileReader(file)).lines().collect(Collectors.joining("\r\n"));
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
     
 }

@@ -13,8 +13,6 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CTRecipeShaped> {
     
-    private static final ResourceLocation NAME = new ResourceLocation("minecraft", "crafting_shaped");
-    
     public CTRecipeShaped read(ResourceLocation recipeId, JsonObject json) {
         // People shouldn't be making our recipes from json :eyes:
         return new CTRecipeShaped("", new MCItemStack(ItemStack.EMPTY), new IIngredient[][]{{new MCItemStack(new ItemStack(Items.ACACIA_BOAT))}}, false, null);

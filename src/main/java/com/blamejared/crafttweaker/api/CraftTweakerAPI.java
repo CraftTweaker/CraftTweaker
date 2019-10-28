@@ -105,7 +105,20 @@ public class CraftTweakerAPI {
     }
     
     
+    public static List<File> getScriptFiles() {
+        List<File> fileList = new ArrayList<>();
+        findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
+        return fileList;
+    }
+    
     public static void loadScripts() {
+        List<File> fileList = getScriptFiles();
+        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
+        SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
+        loadScripts(sourceFiles);
+    }
+    
+    public static void loadScripts(SourceFile[] sourceFiles) {
         try {
             CraftTweakerAPI.reload();
             initEngine();
@@ -139,12 +152,6 @@ public class CraftTweakerAPI {
             CraftTweakerRegistry.getExpansions().values().stream().flatMap(Collection::stream).forEach(expansions::addClass);
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
             
-            List<File> fileList = new ArrayList<>();
-            findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
-            
-            
-            final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
-            SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
             
             SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
             
@@ -174,7 +181,6 @@ public class CraftTweakerAPI {
             }
             SCRIPTING_ENGINE.registerCompiled(scripts);
             SCRIPTING_ENGINE.run(Collections.emptyMap(), CraftTweaker.class.getClassLoader());
-            
         } catch(Exception e) {
             e.printStackTrace();
             CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
