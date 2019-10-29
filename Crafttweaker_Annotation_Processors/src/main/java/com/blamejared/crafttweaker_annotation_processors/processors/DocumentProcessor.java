@@ -12,28 +12,16 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.tools.Diagnostic;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.annotation.Annotation;
-import java.net.URL;
+import java.nio.Buffer;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.StringJoiner;
-import java.util.TreeSet;
+import java.util.*;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -136,6 +124,19 @@ public class DocumentProcessor extends AbstractProcessor {
     private void writeFile(Path docsDir, Messager messager, TypeElement typeElement, Map<Class<? extends Annotation>, List<Element>> membersToWrite) {
         final ZenCodeType.Name nameAnnotation = typeElement.getAnnotation(ZenCodeType.Name.class);
         final boolean isClass = nameAnnotation != null;
+        final boolean needsDocParam; //No script file -> @docParam are needed!
+        {
+            final Document annotation = typeElement.getAnnotation(Document.class);
+            needsDocParam = annotation==null || annotation.scriptFile().isEmpty();
+
+            if(needsDocParam) {
+                final String docComment = this.processingEnv.getElementUtils().getDocComment(typeElement);
+                if(docComment == null || !docComment.contains("@docParam this")) {
+                    //TODO: Error?
+                    messager.printMessage(Diagnostic.Kind.WARNING, "Type " + typeElement.getQualifiedName() + " requires either a Script file or a '@docParam this <example>' doc comment", typeElement);
+                }
+            }
+        }
         final Path fullPath = docsDir.resolve(getDocsDir(typeElement) + ".md");
 
         if(!isClass && typeElement.getAnnotation(ZenCodeType.Expansion.class) == null) {
@@ -155,16 +156,39 @@ public class DocumentProcessor extends AbstractProcessor {
 
                 writeGetterSetter(membersToWrite, writer);
 
-                writeOperators(membersToWrite, writer, !isClass);
+                writeOperators(membersToWrite, writer, !isClass, needsDocParam);
 
-                writeMethods(membersToWrite, writer, !isClass);
+                writeMethods(membersToWrite, writer, !isClass, needsDocParam);
 
                 writeCasters(membersToWrite, writer);
 
+                if(!needsDocParam) {
+                    writeScript(typeElement, writer);
+                }
             }
         } catch (IOException e) {
             messager.printMessage(Diagnostic.Kind.ERROR, e.toString(), typeElement);
         }
+    }
+
+    private void writeScript(TypeElement typeElement, PrintWriter writer) {
+        writer.println();
+        writer.println();
+        writer.println("## Example");
+        writer.println();
+        writer.println("```zenscript");
+
+
+        //By this time we're sure that it is present so no null check after getAnnotation
+        final String pathname = typeElement.getAnnotation(Document.class).scriptFile();
+        try(final BufferedReader br = new BufferedReader(new FileReader(new File(pathname).getAbsoluteFile()))) {
+            br.lines().forEach(writer::println);
+        } catch (IOException e) {
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not read script file " + pathname + ": " + e);
+        }
+
+        writer.println("```");
+
     }
 
     private void writeHeaderAndDescription(Messager messager, TypeElement typeElement, boolean isClass, PrintWriter writer) {
@@ -174,7 +198,7 @@ public class DocumentProcessor extends AbstractProcessor {
         //Description
         final String docComment = convertDocComment(typeElement);
         if(docComment != null) {
-            writer.println(docComment);
+            writer.println(StringReplaceUtil.replaceAll(docComment, "@docParam this [^\\r\\n]*", s -> "Example: `" + s.trim().substring(15) + "`"));
         } else {
             messager.printMessage(Diagnostic.Kind.WARNING, typeElement.getQualifiedName() + " has no documentation!", typeElement);
             writer.println("No further info provided.");
@@ -274,7 +298,7 @@ public class DocumentProcessor extends AbstractProcessor {
         writer.println();
     }
 
-    private void writeOperators(Map<Class<? extends Annotation>, List<Element>> membersToWrite, PrintWriter writer, boolean isExtension) {
+    private void writeOperators(Map<Class<? extends Annotation>, List<Element>> membersToWrite, PrintWriter writer, boolean isExtension, boolean needsDocParam) {
         final List<Element> elements = membersToWrite.get(ZenCodeType.Operator.class);
         if(elements.isEmpty())
             return;
@@ -303,20 +327,20 @@ public class DocumentProcessor extends AbstractProcessor {
                 continue;
             }
 
-            final String[] operandNames = new String[operandCount];
-            final String[] operandTypes = new String[operandCount];
-            final String[] operandDescriptions = new String[operandCount];
+            final OperandInfo[] operandInfo = new OperandInfo[operandCount];
 
 
-            fillMethodInfo(isExtension, operandCount, method, operandNames, operandTypes, operandDescriptions);
+            fillMethodInfo(isExtension, operandCount, method, operandInfo, needsDocParam);
 
 
             writer.println("### " + operatorType.name());
             writer.println();
             writer.println("```zenscript");
 
-            //noinspection RedundantCast
-            writer.printf(operatorFormat, (Object[]) operandNames);
+            writer.print("//");
+            writer.printf(operatorFormat, Arrays.stream(operandInfo).map(OperandInfo::getOperandName).toArray());
+            writer.println();
+            writer.printf(operatorFormat, Arrays.stream(operandInfo).map(OperandInfo::getOperandExample).toArray());
             writer.println();
             writer.println("```");
 
@@ -325,62 +349,92 @@ public class DocumentProcessor extends AbstractProcessor {
             writer.println("|----------------|----------------|-------------|");
 
             for(int i = 1; i < operandCount; i++) {
-                writer.printf("| %s | %s | %s |%n", operandNames[i], operandTypes[i], operandDescriptions[i]);
+                final OperandInfo operandInfo1 = operandInfo[i];
+                writer.printf("| %s | %s | %s |%n",
+                        operandInfo1.getOperandName(), operandInfo1.getOperandType(), operandInfo1
+                        .getOperandDescription());
             }
         }
         writer.println();
     }
 
-    private void fillMethodInfo(boolean isExtension, int operandCount, ExecutableElement method, String[] operandNames, String[] operandTypes, String[] operandDescriptions) {
+    private void fillMethodInfo(boolean isExtension, int operandCount, ExecutableElement method, OperandInfo[] operandInfos, boolean needsDocParam) {
         {
             final boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
             final Element argumentElement = isExtension ? method.getParameters().get(0) : method.getEnclosingElement();
             final String simpleName = argumentElement.getSimpleName().toString();
 
+            final OperandInfo operandInfo = new OperandInfo();
+            operandInfos[0] = operandInfo;
             if(!isExtension && isStatic) {
-                operandNames[0] = method.getEnclosingElement().toString();
-                operandTypes[0] = "";
+                operandInfo.setOperandName(method.getEnclosingElement().toString());
+                operandInfo.setOperandType("");
+                operandInfo.setOperandExample("TODO: Static method");
             } else {
-                operandNames[0] = "my" + simpleName.substring(0, 1).toUpperCase() + simpleName.substring(1);
-                operandTypes[0] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
+                operandInfo.setOperandName("my" + simpleName.substring(0, 1).toUpperCase() + simpleName.substring(1));
+                operandInfo.setOperandType(FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils()));
+                final StringJoiner docParamJoiner = new StringJoiner("");
+                final String docComment = this.processingEnv.getElementUtils().getDocComment(argumentElement);
+                if(docComment != null) {
+                    joinDocAnnotation(docComment, docParamJoiner, "@docParam", "this");
+                    if(docParamJoiner.length() != 0) {
+                        operandInfo.setOperandExample(docParamJoiner.toString());
+                    }
+                }
             }
             //Description of base type will never be printed so we dont need to set it to anything.
         }
 
         for(int i = 1; i < operandCount; i++) {
+            final OperandInfo operandInfo = new OperandInfo();
+            operandInfos[i] = operandInfo;
             final VariableElement argumentElement = method.getParameters().get(isExtension ? i : i - 1);
-            operandNames[i] = argumentElement.getSimpleName().toString();
-            operandTypes[i] = FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils());
+            operandInfo.setOperandName(argumentElement.getSimpleName().toString());
+            operandInfo.setOperandType(FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils()));
 
             String parentDoc = convertDocComment(argumentElement.getEnclosingElement());
             if(parentDoc == null) {
                 parentDoc = "";
             }
 
-            final StringJoiner sb = new StringJoiner("<br>");
-            boolean found = false;
-            final String prefix = "@param " + operandNames[i];
-            for(String s : parentDoc.split("\n")) {
-                s = s.trim();
-                if(s.isEmpty()) {
-                    continue;
-                }
-                if(s.startsWith(prefix)) {
-                    found = true;
-                } else if(s.startsWith("@")) {
-                    found = false;
-                }
+            final StringJoiner paramJoiner = new StringJoiner("<br>");
+            final StringJoiner docParamJoiner = new StringJoiner("<br>");
+            joinDocAnnotation(parentDoc, paramJoiner, "@param", operandInfo.getOperandName());
+            joinDocAnnotation(parentDoc, docParamJoiner, "@docParam", operandInfo.getOperandName());
 
-                if(found) {
-                    sb.add(s.substring(prefix.length() + 1));
-                }
+            if(paramJoiner.length() != 0) {
+                operandInfo.setOperandDescription(paramJoiner.toString());
             }
-
-            operandDescriptions[i] = sb.length() == 0 ? "No information given" : sb.toString();
+            if(docParamJoiner.length() != 0) {
+                operandInfo.setOperandExample(docParamJoiner.toString());
+            } else if (needsDocParam) {
+                //TODO Error?
+                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, String.format(Locale.ENGLISH, "Parameter %s of method %s requires a '@docParam' in the method's javadoc since the type %s has no attached script.", operandInfo.getOperandName(), method.getSimpleName(), method.getEnclosingElement().getSimpleName()));
+            }
         }
     }
 
-    private void writeMethods(Map<Class<? extends Annotation>, List<Element>> membersToWrite, PrintWriter writer, boolean isExpansion) {
+    private void joinDocAnnotation(String parentDoc, StringJoiner paramJoiner, String annotation, String operandName) {
+        boolean found = false;
+        final String prefix = annotation + " " + operandName;
+        for(String s : parentDoc.split("\n")) {
+            s = s.trim();
+            if(s.isEmpty()) {
+                continue;
+            }
+            if(s.startsWith(prefix)) {
+                found = true;
+            } else if(s.startsWith("@")) {
+                found = false;
+            }
+
+            if(found) {
+                paramJoiner.add(s.substring(prefix.length() + 1));
+            }
+        }
+    }
+
+    private void writeMethods(Map<Class<? extends Annotation>, List<Element>> membersToWrite, PrintWriter writer, boolean isExpansion, boolean needsDocParam) {
         final List<Element> elements = membersToWrite.get(ZenCodeType.Method.class);
         if(elements.isEmpty()) {
             return;
@@ -407,11 +461,9 @@ public class DocumentProcessor extends AbstractProcessor {
                 final List<? extends VariableElement> parameters = method.getParameters();
                 final int totalCount = isExpansion ? parameters.size() : parameters.size() + 1;
 
-                final String[] names = new String[totalCount];
-                final String[] types = new String[totalCount];
-                final String[] descriptions = new String[totalCount];
+                final OperandInfo[] operandInfos = new OperandInfo[totalCount];
 
-                fillMethodInfo(isExpansion, totalCount, method, names, types, descriptions);
+                fillMethodInfo(isExpansion, totalCount, method, operandInfos, needsDocParam);
 
 
                 final String docComment = convertDocComment(method);
@@ -435,14 +487,22 @@ public class DocumentProcessor extends AbstractProcessor {
 
 
                 writer.println("```zenscript");
-                final StringJoiner sj = new StringJoiner(", ", names[0] + "." + method.getSimpleName() + "(", ");");
+                final boolean hasAllExamples = Arrays.stream(operandInfos).allMatch(OperandInfo::hasOperandExample);
+                final StringJoiner joiner = new StringJoiner(", ", (hasAllExamples ? "//" : "") + operandInfos[0].getOperandName() + "." + method.getSimpleName() + "(", ");");
+                final StringJoiner joinerExample = new StringJoiner(", ", operandInfos[0].getOperandExample() + "." + method.getSimpleName() + "(", ");");
 
                 for(int i = 1; i < totalCount; i++) {
                     //TODO, with or without "as type"?
-                    sj.add(names[i] + " as " + types[i]);
+                    joiner.add(operandInfos[i].getOperandName() + " as " + operandInfos[i].getOperandType());
+                    if(hasAllExamples) {
+                        joinerExample.add(operandInfos[i].getOperandExample());
+                    }
                 }
 
-                writer.println(sj.toString());
+                writer.println(joiner.toString());
+                if(hasAllExamples) {
+                    writer.println(joinerExample.toString());
+                }
                 writer.println("```");
                 writer.println();
 
@@ -450,7 +510,7 @@ public class DocumentProcessor extends AbstractProcessor {
                     writer.println("| Parameter | Type | Description |");
                     writer.println("|-----------|------|-------------|");
                     for(int i = 1; i < totalCount; i++) {
-                        writer.printf("| %s | %s | %s |%n", names[i], types[i], descriptions[i]);
+                        writer.printf("| %s | %s | %s |%n", operandInfos[i].getOperandName(), operandInfos[i].getOperandType(), operandInfos[i].getOperandDescription());
                     }
                     writer.println();
                 }

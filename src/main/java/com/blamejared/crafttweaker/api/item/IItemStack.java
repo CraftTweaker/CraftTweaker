@@ -11,6 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * This represents an item.
+ * It can be retrieved using an Item BEP
+ *
+ * @docParam this <item:minecraft:dirt>
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
 @Document("vanilla/items/IItemStack")
@@ -128,8 +134,7 @@ public interface IItemStack extends IIngredient {
      * Sets the amount of the ItemStack
      *
      * @param amount new amount
-     *
-     * @return
+     * @docParam amount 3
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     IItemStack setAmount(int amount);
