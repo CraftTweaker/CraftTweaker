@@ -200,8 +200,13 @@ public interface IItemStack extends IIngredient {
     default String getTranslationKey() {
         return getInternal().getTranslationKey();
     }
-    
-    
+
+    /**
+     * Sets the tag for the ItemStack.
+     * @param tag The tag to set.
+     * @docParam tag {Display: {lore: ["Hello"]}}
+     * @return This itemStack if it is mutable, a new one with the changed property otherwise
+     */
     @ZenCodeType.Method
     IItemStack withTag(IData tag);
     

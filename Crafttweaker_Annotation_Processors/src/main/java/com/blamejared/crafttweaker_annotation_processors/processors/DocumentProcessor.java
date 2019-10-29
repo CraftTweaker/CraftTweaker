@@ -14,7 +14,6 @@ import javax.lang.model.type.TypeKind;
 import javax.tools.Diagnostic;
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.nio.Buffer;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -132,8 +131,16 @@ public class DocumentProcessor extends AbstractProcessor {
             if(needsDocParam) {
                 final String docComment = this.processingEnv.getElementUtils().getDocComment(typeElement);
                 if(docComment == null || !docComment.contains("@docParam this")) {
-                    //TODO: Error?
-                    messager.printMessage(Diagnostic.Kind.WARNING, "Type " + typeElement.getQualifiedName() + " requires either a Script file or a '@docParam this <example>' doc comment", typeElement);
+                    //We only print the message if there are nonstatic members
+                    final boolean containsNonStatic = membersToWrite.values()
+                            .stream()
+                            .flatMap(List::stream)
+                            .map(Element::getModifiers)
+                            .anyMatch(e -> !e.contains(Modifier.STATIC));
+                    if(containsNonStatic) {
+                        //TODO: Error?
+                        messager.printMessage(Diagnostic.Kind.WARNING, "Type " + typeElement.getQualifiedName() + " requires either a Script file or a '@docParam this <example>' doc comment", typeElement);
+                    }
                 }
             }
         }
@@ -196,7 +203,7 @@ public class DocumentProcessor extends AbstractProcessor {
         writer.printf("# %s%n%n", typeElement.getSimpleName());
 
         //Description
-        final String docComment = convertDocComment(typeElement);
+        final String docComment = convertDocComment(typeElement, false);
         if(docComment != null) {
             writer.println(StringReplaceUtil.replaceAll(docComment, "@docParam this [^\\r\\n]*", s -> "Example: `" + s.trim().substring(15) + "`"));
         } else {
@@ -367,9 +374,11 @@ public class DocumentProcessor extends AbstractProcessor {
             final OperandInfo operandInfo = new OperandInfo();
             operandInfos[0] = operandInfo;
             if(!isExtension && isStatic) {
-                operandInfo.setOperandName(method.getEnclosingElement().toString());
-                operandInfo.setOperandType("");
-                operandInfo.setOperandExample("TODO: Static method");
+                final Element enclosingElement = method.getEnclosingElement();
+                final String typeName = FormattingUtils.convertTypeName(enclosingElement.asType(), this.processingEnv.getTypeUtils());
+                operandInfo.setOperandName(typeName);
+                operandInfo.setOperandType(typeName);
+                operandInfo.setOperandExample(typeName);
             } else {
                 operandInfo.setOperandName("my" + simpleName.substring(0, 1).toUpperCase() + simpleName.substring(1));
                 operandInfo.setOperandType(FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils()));
@@ -392,7 +401,7 @@ public class DocumentProcessor extends AbstractProcessor {
             operandInfo.setOperandName(argumentElement.getSimpleName().toString());
             operandInfo.setOperandType(FormattingUtils.convertTypeName(argumentElement.asType(), this.processingEnv.getTypeUtils()));
 
-            String parentDoc = convertDocComment(argumentElement.getEnclosingElement());
+            String parentDoc = convertDocComment(argumentElement.getEnclosingElement(), false);
             if(parentDoc == null) {
                 parentDoc = "";
             }
@@ -466,7 +475,7 @@ public class DocumentProcessor extends AbstractProcessor {
                 fillMethodInfo(isExpansion, totalCount, method, operandInfos, needsDocParam);
 
 
-                final String docComment = convertDocComment(method);
+                final String docComment = convertDocComment(method, true);
                 final String description;
                 if(docComment != null) {
                     final StringJoiner sj = new StringJoiner("<br>");
@@ -536,7 +545,7 @@ public class DocumentProcessor extends AbstractProcessor {
 
             final String returnType = FormattingUtils.convertTypeName(method.getReturnType(), this.processingEnv.getTypeUtils());
 
-            String description = convertDocComment(method);
+            String description = convertDocComment(method, true);
             if(description == null) {
                 description = "No information provided.";
             }
@@ -556,7 +565,7 @@ public class DocumentProcessor extends AbstractProcessor {
     }
 
     private void mergeGetterSetterDescriptions(Map<String, String> descriptions, Element element, String actualName) {
-        final String docComment = convertDocComment(element);
+        final String docComment = convertDocComment(element, true);
         if(docComment != null) {
             descriptions.merge(actualName, docComment, (a, b) -> String.format("%s<br>%s", a, b));
         }
@@ -581,7 +590,7 @@ public class DocumentProcessor extends AbstractProcessor {
         return s.replace('.', File.separatorChar);
     }
 
-    private String convertDocComment(Element element) {
+    private String convertDocComment(Element element, boolean replaceDocParam) {
         String docComment = this.processingEnv.getElementUtils().getDocComment(element);
         if(docComment == null)
             return null;
@@ -618,7 +627,7 @@ public class DocumentProcessor extends AbstractProcessor {
             return String.format(Locale.ENGLISH, "[%s](%s)", display, link);
         });
 
-        return docComment;
+        return replaceDocParam ? docComment.replaceAll("@docParam \\w* [^\\r\\n]*", ""): docComment;
     }
 
 
