@@ -98,7 +98,7 @@ public class CTCommands {
             
             CraftTweakerRegistry.getBracketDumpers().forEach((name, dumpSupplier) -> {
                 try(final PrintWriter writer = new PrintWriter(new FileWriter(new File(folder, name + ".txt"), false))) {
-                    dumpSupplier.get().forEach(writer::println);
+                    dumpSupplier.get().stream().sorted().forEach(writer::println);
                 } catch(IOException e) {
                     CraftTweakerAPI.logThrowing("Error writing to file '%s.txt'", e, name);
                 }
