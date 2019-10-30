@@ -13,7 +13,8 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * This represents an item.
- * It can be retrieved using an Item BEP
+ * It can be retrieved using an Item BEP.
+ * Is an {@link IIngredient}
  *
  * @docParam this <item:minecraft:dirt>
  */
@@ -116,6 +117,7 @@ public interface IItemStack extends IIngredient {
      * Sets the display name of the ItemStack
      *
      * @param name New name of the stack.
+     * @docParam name "totally not dirt"
      */
     @ZenCodeType.Method
     IItemStack setDisplayName(String name);
@@ -154,6 +156,7 @@ public interface IItemStack extends IIngredient {
      * Sets the damage of the ItemStack
      *
      * @param damage the new damage value
+     * @docParam damage 10
      */
     @ZenCodeType.Method
     IItemStack withDamage(int damage);

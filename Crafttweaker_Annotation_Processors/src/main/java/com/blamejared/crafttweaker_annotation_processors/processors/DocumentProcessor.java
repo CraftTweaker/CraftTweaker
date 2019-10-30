@@ -151,7 +151,7 @@ public class DocumentProcessor extends AbstractProcessor {
                             .anyMatch(e -> !e.contains(Modifier.STATIC));
                     if (containsNonStatic) {
                         //TODO: Error?
-                        messager.printMessage(Diagnostic.Kind.WARNING, "Type " + typeElement.getQualifiedName() + " requires either a Script file or a '@docParam this <example>' doc comment", typeElement);
+                        messager.printMessage(Diagnostic.Kind.ERROR, "Type " + typeElement.getQualifiedName() + " requires either a Script file or a '@docParam this <example>' doc comment", typeElement);
                     }
                 }
             }
@@ -441,9 +441,9 @@ public class DocumentProcessor extends AbstractProcessor {
             } else if (needsDocParam) {
                 //TODO Error?
                 this.processingEnv.getMessager()
-                        .printMessage(Diagnostic.Kind.WARNING, String.format(Locale.ENGLISH, "Parameter %s of method %s requires a '@docParam' in the method's javadoc since the type %s has no attached script.", operandInfo
+                        .printMessage(Diagnostic.Kind.ERROR, String.format(Locale.ENGLISH, "Parameter %s of method %s requires a '@docParam' in the method's javadoc since the type %s has no attached script.", operandInfo
                                 .getOperandName(), method.getSimpleName(), method.getEnclosingElement()
-                                .getSimpleName()));
+                                .getSimpleName()), method);
             }
         }
     }

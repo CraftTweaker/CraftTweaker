@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * The ICollection data is used to represent a collection of IData like a List<IData>
+ * The ICollection data is used to represent a collection of {@link IData} like a List<IData>
  *
  * @docParam this new ListData(["Hello", "World"])
  */
@@ -40,16 +40,31 @@ public interface ICollectionData extends IData {
      */
     @ZenCodeType.Method
     void add(IData value);
-    
+
+    /**
+     * Removes the {@link IData} stored at the given index.
+     * @param index The index (0-based)
+     * @docParam index 0
+     * @return The {@link IData} that was removed
+     */
     @ZenCodeType.Method
     IData remove(int index);
-    
+
+    /**
+     * Retrieves the {@link IData} stored at the given index.
+     * @param index The index (0-based)
+     * @docParam index 0
+     * @return The {@link IData}
+     */
     @ZenCodeType.Method
     IData get(int index);
     
     @ZenCodeType.Getter("size")
     int size();
-    
+
+    /**
+     * Removes every element in the list
+     */
     @ZenCodeType.Method
     void clear();
     
