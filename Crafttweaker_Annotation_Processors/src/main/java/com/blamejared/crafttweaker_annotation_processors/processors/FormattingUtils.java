@@ -1,14 +1,19 @@
 package com.blamejared.crafttweaker_annotation_processors.processors;
 
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
-import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 class FormattingUtils {
 
@@ -140,9 +145,9 @@ class FormattingUtils {
 	 * Formats the parameter to fit ZS.
 	 */
 	static String convertTypeName(TypeMirror typeMirror, Types typeUtils) {
-		if(typeMirror.getKind().isPrimitive())
+		if (typeMirror.getKind().isPrimitive())
 			return typeMirror.toString();
-		if(typeMirror.getKind() == TypeKind.ARRAY) {
+		if (typeMirror.getKind() == TypeKind.ARRAY) {
 			return convertTypeName(((ArrayType) typeMirror).getComponentType(), typeUtils) + "[]";
 		}
 
@@ -151,20 +156,19 @@ class FormattingUtils {
 			return annotation.value();
 		}
 
-		if(typeMirror instanceof DeclaredType) {
+		if (typeMirror instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) typeMirror;
 			final String typeString = declaredType.toString().toLowerCase();
-			if(typeString.startsWith("java.util.map<")) {
+			if (typeString.startsWith("java.util.map<")) {
 				final List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 				final String valueType = convertTypeName(typeArguments.get(1), typeUtils);
 				final String keyType = convertTypeName(typeArguments.get(0), typeUtils);
 				return String.format("%s[%s]", valueType, keyType);
-			} else if(typeString.startsWith("java.util.list<")) {
+			} else if (typeString.startsWith("java.util.list<")) {
 				final String elementType = convertTypeName(declaredType.getTypeArguments().get(0), typeUtils);
 				return String.format("%s[]", elementType);
 			}
 		}
-
 
 
 		final String s = typeMirror.toString();
@@ -174,4 +178,37 @@ class FormattingUtils {
 		return s;
 	}
 
+	static String createLink(Elements elementUtils, String javaQualifiedName, PackageElement packageElement) {
+		TypeElement typeElement = elementUtils.getTypeElement(javaQualifiedName);
+		if (typeElement == null) {
+			if (packageElement != null) {
+				typeElement = elementUtils.getTypeElement(packageElement.getQualifiedName() + "." + javaQualifiedName);
+			}
+		}
+		if (typeElement == null) {
+			return javaQualifiedName;
+		}
+
+		final String display;
+		final String link;
+
+		final ZenCodeType.Name nameAnnotation = typeElement.getAnnotation(ZenCodeType.Name.class);
+		if (nameAnnotation == null) {
+			display = typeElement.getSimpleName().toString();
+		} else {
+			final String value = nameAnnotation.value();
+			display = value.substring(value.lastIndexOf('.') + 1);
+		}
+
+		final Document documentAnnotation = typeElement.getAnnotation(Document.class);
+		if (documentAnnotation == null) {
+			link = "UNKNOWN LINK!!!";
+		} else {
+			final String value = documentAnnotation.value().replaceAll("\\.", File.pathSeparator);
+			link = value.startsWith("/") ? value : "/" + value;
+		}
+
+
+		return String.format(Locale.ENGLISH, "[%s](%s)", display, link);
+	}
 }
