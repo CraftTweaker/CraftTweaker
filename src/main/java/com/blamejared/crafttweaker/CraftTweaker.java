@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
@@ -78,6 +79,7 @@ public class CraftTweaker {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new CTEventHandler());
         PacketHandler.init();
         SHAPELESS_SERIALIZER = new SerializerShapeless().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
         SHAPED_SERIALIZER = new SerializerShaped().setRegistryName(new ResourceLocation("crafttweaker:shaped"));
@@ -125,7 +127,6 @@ public class CraftTweaker {
         msgs.add("This is " + TextFormatting.RED + "NOT" + TextFormatting.RESET + " modpack ready! This is a release to help find issues and allow modpack developers to start work on their packs!");
         msgs.add("Script reloading is back!");
         msgs.add("The command is now bundled in /reload!");
-        msgs.add("\nWith that, there is no more /ct syntax (is there a reason to have it? if so, let me know on discord or twitter!)");
         
         msgs.stream().map(StringTextComponent::new).forEach(event.getPlayer()::sendMessage);
         StringTextComponent github = new StringTextComponent("If you find a bug, please report it on the " + TextFormatting.AQUA + "Issue Tracker!" + TextFormatting.RESET);

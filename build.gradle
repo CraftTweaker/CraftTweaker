@@ -10,11 +10,19 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
+
+apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
+
+if (project.hasProperty('secretFile')) {
+    loadSecrets(new File((String) findProperty('secretFile')))
+}
 
 //apply from: rootProject.file('common.gradle')
 
@@ -22,7 +30,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '5.0.0'
+version = '5.0.1'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -98,7 +106,7 @@ repositories {
     }
 }
 
-def zenCodeDeps = [ ':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
+def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
 
 
 dependencies {
@@ -111,6 +119,32 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.14.4-28.1.70'
     compile fg.deobf("mezz.jei:jei-1.14.4:6.0.0.18");
 }
+
+task genGitChangelog() {
+    def stdout = new ByteArrayOutputStream()
+    // first commit to check from, in our case the first commit of the branch
+    String firstCommit = "b73b3d2c3a4f1b90cbf3989030d5ec852e823597";
+    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
+    // was having issues with grep and spaces in the regex
+    exec {
+        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{1}'
+        standardOutput = stdout
+    }
+    if (stdout.toString().trim().indexOf("\n") >= 0) {
+        firstCommit = stdout.toString().split("\n")[0].trim();
+    }
+    System.out.println("Last version hash: \"" + firstCommit + "\"");
+    stdout = new ByteArrayOutputStream()
+    def test = exec {
+        commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
+        standardOutput = stdout
+    }
+    File file = new File("changelog.md")
+    file.write("### Current version: " + project.version)
+    file.append("\n" + stdout.toString())
+    System.out.println("Changelog generated!")
+}
+
 
 jar {
     dependsOn zenCodeDeps.collect { it + ":compileJava" }
@@ -169,10 +203,10 @@ publishing {
 
             // Allows the maven pom file to be modified.
             pom.withXml {
-            
+
                 // Go through all the dependencies.
-                asNode().dependencies.dependency.each { dep ->    
-                
+                asNode().dependencies.dependency.each { dep ->
+
                     println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
                     assert dep.parent().remove(dep)
                 }
@@ -199,5 +233,20 @@ publishing {
 
             url "file://" + System.getenv("local_maven")
         }
+    }
+}
+
+curseforge {
+
+    apiKey = findProperty('curseforge_api_token') ?: 0
+    project {
+        id = "239197"
+        releaseType = 'beta'
+        changelog = file("changelog.md")
+        changelogType = 'markdown'
+
+        addArtifact(sourcesJar)
+        addArtifact(javadocJar)
+        addArtifact(deobfJar)
     }
 }
