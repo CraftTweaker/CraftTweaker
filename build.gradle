@@ -10,11 +10,19 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
+
+apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
+
+if (project.hasProperty('secretFile')) {
+    loadSecrets(new File((String) findProperty('secretFile')))
+}
 
 //apply from: rootProject.file('common.gradle')
 
@@ -22,7 +30,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '5.0.0'
+version = '5.0.1'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -137,6 +145,7 @@ task genGitChangelog() {
     System.out.println("Changelog generated!")
 }
 
+
 jar {
     dependsOn zenCodeDeps.collect { it + ":compileJava" }
     from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
@@ -224,5 +233,20 @@ publishing {
 
             url "file://" + System.getenv("local_maven")
         }
+    }
+}
+
+curseforge {
+
+    apiKey = findProperty('curseforge_api_token') ?: 0
+    project {
+        id = "239197"
+        releaseType = 'beta'
+        changelog = file("changelog.md")
+        changelogType = 'markdown'
+
+        addArtifact(sourcesJar)
+        addArtifact(javadocJar)
+        addArtifact(deobfJar)
     }
 }
