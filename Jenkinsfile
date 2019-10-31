@@ -21,19 +21,23 @@ pipeline {
             }
         }
         stage('Git Changelog') {
-            withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
-                sh './gradlew genGitChangelog'
+            steps{
+                withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
+                    sh './gradlew genGitChangelog'
+                }
             }
         }
 
         stage('Publish') {
-            withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
+            steps{
+                withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
                     echo 'Deploying to Maven'
                     sh './gradlew publish'
 
                     //echo 'Deploying to CurseForge'
                     //sh './gradlew curseforge'
                 }
+            }
         }
     }
     post {
