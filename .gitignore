@@ -31,3 +31,5 @@
 desktop.ini
 runServer/
 changelog.md
+
+secrets.json
