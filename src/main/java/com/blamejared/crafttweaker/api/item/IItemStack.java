@@ -1,14 +1,17 @@
 package com.blamejared.crafttweaker.api.item;
 
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -294,6 +297,16 @@ public interface IItemStack extends IIngredient {
     
     @ZenCodeType.Setter("food")
     void setFood(MCFood food);
+    
+    @ZenCodeType.Getter("burnTime")
+    default int getBurnTime() {
+        return ForgeHooks.getBurnTime(getInternal());
+    }
+    
+    @ZenCodeType.Setter("burnTime")
+    default void setBurnTime(int time) {
+        CraftTweakerAPI.apply(new ActionSetBurnTime(this, time));
+    }
     
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.
