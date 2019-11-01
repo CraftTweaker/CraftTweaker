@@ -46,7 +46,7 @@ if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
 
         tasks.withType(Javadoc) {
-
+            options.tags += "docParam"
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }

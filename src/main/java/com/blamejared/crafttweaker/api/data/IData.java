@@ -12,6 +12,8 @@ import java.util.Map;
  * The IData interface is a generic Interface for handling Data like NBT.
  * You can cast about all primitives (short, double, string, int, ...) as well as certain arrays to IData.
  * Remember that while they offer similar features, IData and their counterparts are NOT the same, which is why they will be referred to as DataTypes (e.g. {@link com.blamejared.crafttweaker.impl.data.ByteData}).
+ *
+ * @docParam this {Display: {lore: ["Hello", "World"]}}
  */
 @ZenCodeType.Name("crafttweaker.api.data.IData")
 @ZenRegister
@@ -62,6 +64,7 @@ public interface IData {
      * Checks if this IData contains another IData, mainly used in subclasses of {@link com.blamejared.crafttweaker.api.data.ICollectionData}, is the same as an equals check on other IData types
      *
      * @param data data to check if it is contained
+     * @docParam data "Display"
      *
      * @return true if the given IData is contained in this IData
      */

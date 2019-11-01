@@ -12,11 +12,30 @@ pipeline {
                 }
             }
         }
-        stage('Build and Deploy') {
+        stage('Build') {
             steps {
                 withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
-                    echo 'Building and Deploying to Maven'
-                    sh './gradlew build genGitChangelog publish curseforge'
+                    echo 'Building'
+                    sh './gradlew build'
+                }
+            }
+        }
+        stage('Git Changelog') {
+            steps{
+                withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
+                    sh './gradlew genGitChangelog'
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps{
+                withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
+                    echo 'Deploying to Maven'
+                    sh './gradlew publish'
+
+                    //echo 'Deploying to CurseForge'
+                    //sh './gradlew curseforge'
                 }
             }
         }
@@ -24,6 +43,7 @@ pipeline {
     post {
         always {
             archive 'build/libs/**.jar'
+            archive 'changelog.md'
         }
     }
 }

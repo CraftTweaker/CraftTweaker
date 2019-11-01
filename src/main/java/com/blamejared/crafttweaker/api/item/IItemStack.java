@@ -14,6 +14,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * This represents an item.
+ * It can be retrieved using an Item BEP.
+ * Is an {@link IIngredient}
+ *
+ * @docParam this <item:minecraft:dirt>
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
 @Document("vanilla/items/IItemStack")
@@ -113,6 +120,7 @@ public interface IItemStack extends IIngredient {
      * Sets the display name of the ItemStack
      *
      * @param name New name of the stack.
+     * @docParam name "totally not dirt"
      */
     @ZenCodeType.Method
     IItemStack setDisplayName(String name);
@@ -131,8 +139,7 @@ public interface IItemStack extends IIngredient {
      * Sets the amount of the ItemStack
      *
      * @param amount new amount
-     *
-     * @return
+     * @docParam amount 3
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     IItemStack setAmount(int amount);
@@ -152,6 +159,7 @@ public interface IItemStack extends IIngredient {
      * Sets the damage of the ItemStack
      *
      * @param damage the new damage value
+     * @docParam damage 10
      */
     @ZenCodeType.Method
     IItemStack withDamage(int damage);
@@ -198,8 +206,13 @@ public interface IItemStack extends IIngredient {
     default String getTranslationKey() {
         return getInternal().getTranslationKey();
     }
-    
-    
+
+    /**
+     * Sets the tag for the ItemStack.
+     * @param tag The tag to set.
+     * @docParam tag {Display: {lore: ["Hello"]}}
+     * @return This itemStack if it is mutable, a new one with the changed property otherwise
+     */
     @ZenCodeType.Method
     IItemStack withTag(IData tag);
     

@@ -11,6 +11,8 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * This is IIngredient!!!
+ *
+ * @docParam this <tag:ingotIron>
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IIngredient")
@@ -20,6 +22,9 @@ public interface IIngredient {
     
     /**
      * Does the given stack match the ingredient?
+     *
+     * @param stack The stack to check
+     * @docParam stack <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
     boolean matches(IItemStack stack);
@@ -31,8 +36,13 @@ public interface IIngredient {
     
     /**
      * When this ingredient stack is crafted, what will remain in the grid?
+     * Does not check if the stack matches though!
      * Used e.g. in CrT's {@link net.minecraft.item.crafting.ICraftingRecipe#getRemainingItems}
+     *
+     * @param stack The stack to provide for this ingredient.
+     * @docParam stack <item:minecraft:iron_ingot>
      */
+    @ZenCodeType.Method
     default IItemStack getRemainingItem(IItemStack stack) {
         return new MCItemStack(ForgeHooks.getContainerItem(stack.getInternal()));
     }

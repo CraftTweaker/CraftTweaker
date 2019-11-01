@@ -6,6 +6,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.StringNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this new StringData("Hello")
+ */
 @ZenCodeType.Name("crafttweaker.api.data.StringData")
 @ZenRegister
 @Document("vanilla/data/StringData")
@@ -37,10 +40,17 @@ public class StringData implements IData {
     public boolean contains(IData data) {
         return asString().equals(data.asString());
     }
-    
+
+    /**
+     * Concatenates the two string Datas and returns the result.
+     *
+     * @param data The other data to append
+     * @docParam data new StringData("World")
+     * @return A new StringData with the value concatenated.
+     */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
     public StringData addTogether(StringData data) {
-        return new StringData(internal.getString() + " and " + data.internal.getString());
+        return new StringData(internal.getString() + data.internal.getString());
     }
     
     @Override
