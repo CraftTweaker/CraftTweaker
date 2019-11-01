@@ -107,6 +107,10 @@ public class BracketHandlers {
     public static IRecipeManager getRecipeManager(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("RecipeType BEP <recipetype:%s> does not seem to be lower-cased!", tokens);
+        if(tokens.equalsIgnoreCase("crafttweaker:scripts")){
+            // This is bound to cause issues, like: <recipetype:crafttweaker:scripts.removeAll(); Best to just fix it now
+            throw new IllegalArgumentException("Nice try, but there's no reason you need to access the <recipetype:crafttweaker:scripts> recipe manager!");
+        }
         Optional<IRecipeType<?>> value = Registry.RECIPE_TYPE.getValue(new ResourceLocation(tokens));
         
         if(value.isPresent()) {
@@ -119,9 +123,7 @@ public class BracketHandlers {
     @BracketDumper("recipetype")
     public static Collection<String> getRecipeTypeDump() {
         final HashSet<String> result = new HashSet<>();
-        for(ResourceLocation location : Registry.RECIPE_TYPE.keySet()) {
-            result.add(String.format(Locale.ENGLISH, "<recipetype:%s>", location));
-        }
+        Registry.RECIPE_TYPE.keySet().stream().filter(rl -> !rl.toString().equals("crafttweaker:scripts")).forEach(rl -> result.add(String.format(Locale.ENGLISH, "<recipetype:%s>", rl)));
         return result;
     }
     
