@@ -93,7 +93,7 @@ public class CraftTweaker {
         RECIPE_TYPE_SCRIPTS = Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MODID, "scripts"), new IRecipeType<ScriptRecipe>() {
             @Override
             public String toString() {
-                return "scripts";
+                return MODID + ":scripts";
             }
         });
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
