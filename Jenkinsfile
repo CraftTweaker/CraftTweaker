@@ -34,8 +34,8 @@ pipeline {
                     echo 'Deploying to Maven'
                     sh './gradlew publish'
 
-                    //echo 'Deploying to CurseForge'
-                    //sh './gradlew curseforge'
+                    echo 'Deploying to CurseForge'
+                    sh './gradlew curseforge'
                 }
             }
         }
