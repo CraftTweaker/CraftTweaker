@@ -34,7 +34,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -185,12 +184,10 @@ public class CraftTweaker {
             }
             CTRecipeManager.recipeManager = recipeManager;
             CraftTweakerAPI.loadScripts();
-            DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
-                List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
-                scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
-                    Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
-                    map.put(scriptRecipe.getId(), scriptRecipe);
-                });
+            List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
+            scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
+                Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
+                map.put(scriptRecipe.getId(), scriptRecipe);
             });
             
             event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
