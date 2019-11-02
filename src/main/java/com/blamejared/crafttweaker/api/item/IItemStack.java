@@ -27,6 +27,17 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public interface IItemStack extends IIngredient {
     
+    
+    /**
+     * Gets the registry name for the Item in this IItemStack
+     *
+     * @return registry name of the Item this IItemStack represents
+     */
+    @ZenCodeType.Getter("registryName")
+    default String getRegistryName() {
+        return getInternal().getItem().getRegistryName().toString();
+    }
+    
     /**
      * Returns if the ItemStack is empty
      *
@@ -120,6 +131,7 @@ public interface IItemStack extends IIngredient {
      * Sets the display name of the ItemStack
      *
      * @param name New name of the stack.
+     *
      * @docParam name "totally not dirt"
      */
     @ZenCodeType.Method
@@ -139,6 +151,7 @@ public interface IItemStack extends IIngredient {
      * Sets the amount of the ItemStack
      *
      * @param amount new amount
+     *
      * @docParam amount 3
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
@@ -159,6 +172,7 @@ public interface IItemStack extends IIngredient {
      * Sets the damage of the ItemStack
      *
      * @param damage the new damage value
+     *
      * @docParam damage 10
      */
     @ZenCodeType.Method
@@ -206,12 +220,15 @@ public interface IItemStack extends IIngredient {
     default String getTranslationKey() {
         return getInternal().getTranslationKey();
     }
-
+    
     /**
      * Sets the tag for the ItemStack.
+     *
      * @param tag The tag to set.
-     * @docParam tag {Display: {lore: ["Hello"]}}
+     *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
+     *
+     * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
     IItemStack withTag(IData tag);
