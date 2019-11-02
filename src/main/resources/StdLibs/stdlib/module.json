@@ -1,0 +1,17 @@
+{
+	"package": "stdlib",
+	"host": "universal",
+	"globals": {
+		"Comparable": {"type": "Definition", "definition": "Comparable"},
+		"Exception": {"type": "Definition", "definition": "Exception"},
+		"EqualsComparable": {"type": "Definition", "definition": "EqualsComparable"},
+		"Hashable": {"type": "Definition", "definition": "Hashable"},
+		"IllegalArgumentException": {"type": "Definition", "definition": "IllegalArgumentException"},
+		"Iterable": {"type": "Definition", "definition": "Iterable"},
+		"Iterator": {"type": "Definition", "definition": "Iterator"},
+		"List": {"type": "Definition", "definition": "List"},
+		"StringBuilder": {"type": "Definition", "definition": "StringBuilder"},
+		"StringBuildable": {"type": "Definition", "definition": "StringBuildable"},
+		"Result": {"type": "Definition", "definition": "Result"}
+	}
+}

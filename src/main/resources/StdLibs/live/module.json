@@ -1,0 +1,6 @@
+{
+	"package": "live",
+	"javaPackage": "org.openzen.zencode.stdlib.live",
+	"host": "universal",
+	"dependencies": ["listeners"]
+}
