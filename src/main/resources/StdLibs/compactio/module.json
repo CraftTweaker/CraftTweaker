@@ -1,6 +1,0 @@
-{
-	"package": "compactio",
-	"javaPackage": "org.openzen.zencode.stdlib.compactio",
-	"host": "universal",
-	"dependencies": ["io"]
-}

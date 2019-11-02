@@ -1,6 +1,0 @@
-{
-	"package": "live",
-	"javaPackage": "org.openzen.zencode.stdlib.uuid",
-	"host": "universal",
-	"dependencies": []
-}
