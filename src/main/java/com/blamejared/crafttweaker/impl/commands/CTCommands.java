@@ -22,6 +22,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -146,9 +149,7 @@ public class CTCommands {
         });
         
         registerDump("recipeTypes", "Outputs the names of all Recipe Types", (CommandCallerPlayer) (player, stack) -> {
-            for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
-                CraftTweakerAPI.logInfo("- " + new ResourceLocation(type.toString()).toString());
-            }
+            Registry.RECIPE_TYPE.keySet().stream().filter(rl -> !rl.toString().equals("crafttweaker:scripts")).forEach(rl -> CraftTweakerAPI.logInfo(rl.toString()));
             send(new StringTextComponent(color("Recipe Type list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
@@ -166,6 +167,23 @@ public class CTCommands {
                 CraftTweakerAPI.logInfo("- " + type.getRegistryName().toString());
             }
             send(new StringTextComponent(color("Effect list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerDump("tags", "Outputs the names of all registered tags (vanilla tag types)", (CommandCallerPlayer) (player, stack) -> {
+            CraftTweakerAPI.logInfo("Item Tags:\n");
+            ItemTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            
+            CraftTweakerAPI.logInfo("Block Tags:\n");
+            BlockTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            
+            CraftTweakerAPI.logInfo("Fluid Tags:\n");
+            FluidTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            
+            CraftTweakerAPI.logInfo("Entity Type Tags:\n");
+            EntityTypeTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            
+            send(new StringTextComponent(color("Tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
         
