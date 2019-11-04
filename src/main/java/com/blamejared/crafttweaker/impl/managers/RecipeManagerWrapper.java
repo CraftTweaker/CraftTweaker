@@ -1,5 +1,6 @@
-package com.blamejared.crafttweaker.api.managers;
+package com.blamejared.crafttweaker.impl.managers;
 
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import net.minecraft.item.crafting.IRecipeType;
 
 public class RecipeManagerWrapper implements IRecipeManager {

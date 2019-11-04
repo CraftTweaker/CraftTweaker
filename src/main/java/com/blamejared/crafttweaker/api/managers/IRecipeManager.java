@@ -1,16 +1,24 @@
 package com.blamejared.crafttweaker.api.managers;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveAll;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRegex;
+import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -23,6 +31,30 @@ import java.util.Map;
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
 public interface IRecipeManager {
     
+    Gson JSON_RECIPE_GSON = new GsonBuilder().setPrettyPrinting().create();
+    
+    /**
+     * Adds a recipe based on a provided IData. The provided IData should represent a DataPack JSON, this effectively allows you to register recipes for any DataPack supporting IRecipeType systems.
+     *
+     * @param name name of the recipe
+     * @param data data representing the json file
+     */
+    @ZenCodeType.Method
+    default void addJSONRecipe(String name, IData data) {
+        if(!(data instanceof MapData)) {
+            throw new IllegalArgumentException("Json recipe's IData should be a MapData!");
+        }
+        MapData mapData = (MapData) data;
+        JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.toJsonString(), JsonObject.class);
+        if(recipeObject.has("type")) {
+            if(!recipeObject.get("type").getAsString().equals(getRecipeType().toString()))
+                throw new IllegalArgumentException("Cannot override recipe type! Given: \"" + recipeObject.get("type").getAsString() + "\", Expected: \"" + getRecipeType().toString() + "\"");
+        } else {
+            recipeObject.addProperty("type", getRecipeType().toString());
+        }
+        IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, iRecipe, ""));
+    }
     
     /**
      * Remove a recipe based on it's output.

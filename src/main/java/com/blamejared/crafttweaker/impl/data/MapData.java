@@ -5,10 +5,13 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.StorageTagType;
 import org.openzen.zencode.java.ZenCodeStorageTag;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,11 +41,13 @@ public class MapData implements IData {
         this.internal = new CompoundNBT();
         putAll(map);
     }
-
+    
     /**
      * Adds all entries from the given map into this one.
      * Can override existing keys.
+     *
      * @param map The other entries to be added to this map
+     *
      * @docParam map {Hello: "Goodbye", Item: "Bedrock"}
      */
     @ZenCodeType.Method
@@ -60,45 +65,56 @@ public class MapData implements IData {
     public int getSize() {
         return internal.size();
     }
-
+    
     /**
      * Adds sets the value for the given key or creates a new entry if it did not exist before.
-     * @param key The key to set the value for.
-     * @docParam key "Hello"
+     *
+     * @param key   The key to set the value for.
      * @param value The value to set.
-     * @docParam value "Goodbye"
+     *
      * @return The previous value if present, null otherwise
+     *
+     * @docParam key "Hello"
+     * @docParam value "Goodbye"
      */
     @ZenCodeType.Method
     public IData put(String key, IData value) {
         return NBTConverter.convert(internal.put(key, value.getInternal()));
     }
-
+    
     /**
      * Retrieves the value associated with the key
+     *
      * @param key The key to search for
-     * @docParam key "Hello"
+     *
      * @return The value if present, null otherwise
+     *
+     * @docParam key "Hello"
      */
     @ZenCodeType.Method
     public IData get(String key) {
         return NBTConverter.convert(internal.get(key));
     }
-
+    
     /**
      * Checks if the Map contains the given key.
+     *
      * @param key The key to search for
-     * @docParam key "Hello"
+     *
      * @return True if the Map contains the key
+     *
+     * @docParam key "Hello"
      */
     @ZenCodeType.Method
     public boolean contains(String key) {
         return internal.contains(key);
     }
-
+    
     /**
      * Removes the entry with the given key from the Map
+     *
      * @param key The key of the entry to remove
+     *
      * @docParam key "Somewhere"
      */
     @ZenCodeType.Method
@@ -110,14 +126,17 @@ public class MapData implements IData {
     public boolean isEmpty() {
         return internal.isEmpty();
     }
-
+    
     /**
      * Merges this map and the other map.
      * If entries from this map and the other map share the values are tried to be merged.
      * If that does not work, then the value from the other map is used.
+     *
      * @param other The other map.
-     * @docParam other {Doodle: "Do}
+     *
      * @return This map, after the merge
+     *
+     * @docParam other {Doodle: "Do}
      */
     @ZenCodeType.Method
     public MapData merge(MapData other) {
@@ -204,5 +223,27 @@ public class MapData implements IData {
     @ZenCodeType.Caster(implicit = true)
     public static Map<String, IData> castToMap(MapData data) {
         return data.asMap();
+    }
+    
+    public String toJsonString() {
+        
+        StringBuilder stringbuilder = new StringBuilder("{");
+        Collection<String> collection = getInternal().keySet();
+        
+        for(String s : collection) {
+            if(stringbuilder.length() != 1) {
+                stringbuilder.append(',');
+            }
+            
+            INBT obj = getInternal().get(s);
+            String value = obj.toString();
+            // some numbers such as float are represented as "0.35f" which isn't exactly valid json
+            if(obj instanceof NumberNBT) {
+                value = ((NumberNBT) obj).getAsNumber().toString();
+            }
+            stringbuilder.append("\"").append(CompoundNBT.handleEscape(s)).append("\"").append(':').append(value);
+        }
+        
+        return stringbuilder.append('}').toString();
     }
 }
