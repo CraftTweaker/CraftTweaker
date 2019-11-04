@@ -22,7 +22,7 @@ public class CTStoneCutterManager implements IRecipeManager {
     
     @ZenCodeType.Method
     public void addRecipe(String recipeName, IItemStack output, IIngredient input) {
-        CraftTweakerAPI.apply(new ActionAddRecipe(this, new StonecuttingRecipe(new ResourceLocation(CraftTweaker.MODID, recipeName), "", input.asVanillaIngredient(), output.getInternal()), "shaped"));
+        CraftTweakerAPI.apply(new ActionAddRecipe(this, new StonecuttingRecipe(new ResourceLocation(CraftTweaker.MODID, recipeName), "", input.asVanillaIngredient(), output.getInternal()), ""));
     }
     
     @Override
