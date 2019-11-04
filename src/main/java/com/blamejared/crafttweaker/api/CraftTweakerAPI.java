@@ -213,6 +213,10 @@ public class CraftTweakerAPI {
         //TODO maybe post an event to collect a bunch of loggers? not sure if it will be used much
     }
     
+    public static void logDump(String message, Object... formats) {
+        logger.log(LogLevel.INFO, String.format(message, formats), false);
+    }
+    
     public static void logInfo(String message, Object... formats) {
         logger.info(String.format(message, formats));
     }

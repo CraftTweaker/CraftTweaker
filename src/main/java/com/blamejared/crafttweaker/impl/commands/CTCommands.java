@@ -139,9 +139,9 @@ public class CTCommands {
         
         registerDump("recipes", "Outputs the names of all registered recipes", (CommandCallerPlayer) (player, stack) -> {
             for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
-                CraftTweakerAPI.logInfo(type.toString());
+                CraftTweakerAPI.logDump(type.toString());
                 for(ResourceLocation location : player.world.getRecipeManager().recipes.getOrDefault(type, new HashMap<>()).keySet()) {
-                    CraftTweakerAPI.logInfo("- " + location.toString());
+                    CraftTweakerAPI.logDump("- " + location.toString());
                 }
             }
             send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
@@ -149,14 +149,14 @@ public class CTCommands {
         });
         
         registerDump("recipeTypes", "Outputs the names of all Recipe Types", (CommandCallerPlayer) (player, stack) -> {
-            Registry.RECIPE_TYPE.keySet().stream().filter(rl -> !rl.toString().equals("crafttweaker:scripts")).forEach(rl -> CraftTweakerAPI.logInfo(rl.toString()));
+            Registry.RECIPE_TYPE.keySet().stream().filter(rl -> !rl.toString().equals("crafttweaker:scripts")).forEach(rl -> CraftTweakerAPI.logDump(rl.toString()));
             send(new StringTextComponent(color("Recipe Type list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
         
         registerDump("potions", "Outputs the names of all Potions", (CommandCallerPlayer) (player, stack) -> {
             for(Potion type : ForgeRegistries.POTION_TYPES) {
-                CraftTweakerAPI.logInfo("- " + type.getRegistryName().toString());
+                CraftTweakerAPI.logDump("- " + type.getRegistryName().toString());
             }
             send(new StringTextComponent(color("Potion list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
@@ -164,24 +164,24 @@ public class CTCommands {
         
         registerDump("effects", "Outputs the names of all Effects", (CommandCallerPlayer) (player, stack) -> {
             for(Effect type : ForgeRegistries.POTIONS) {
-                CraftTweakerAPI.logInfo("- " + type.getRegistryName().toString());
+                CraftTweakerAPI.logDump("- " + type.getRegistryName().toString());
             }
             send(new StringTextComponent(color("Effect list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
         
         registerDump("tags", "Outputs the names of all registered tags (vanilla tag types)", (CommandCallerPlayer) (player, stack) -> {
-            CraftTweakerAPI.logInfo("Item Tags:\n");
-            ItemTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            CraftTweakerAPI.logDump("Item Tags:\n");
+            ItemTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
-            CraftTweakerAPI.logInfo("Block Tags:\n");
-            BlockTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            CraftTweakerAPI.logDump("Block Tags:\n");
+            BlockTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
-            CraftTweakerAPI.logInfo("Fluid Tags:\n");
-            FluidTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            CraftTweakerAPI.logDump("Fluid Tags:\n");
+            FluidTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
-            CraftTweakerAPI.logInfo("Entity Type Tags:\n");
-            EntityTypeTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logInfo("-" + resourceLocation.toString()));
+            CraftTweakerAPI.logDump("Entity Type Tags:\n");
+            EntityTypeTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             send(new StringTextComponent(color("Tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
@@ -252,12 +252,12 @@ public class CTCommands {
     
     private static void send(TextComponent component, CommandSource source) {
         source.sendFeedback(component, true);
-        CraftTweakerAPI.logInfo(component.getFormattedText());
+        CraftTweakerAPI.logDump(component.getFormattedText());
     }
     
     private static void send(TextComponent component, PlayerEntity player) {
         player.sendMessage(component);
-        CraftTweakerAPI.logInfo(component.getFormattedText());
+        CraftTweakerAPI.logDump(component.getFormattedText());
     }
     
     public static class CommandImpl implements Comparable<CommandImpl> {
