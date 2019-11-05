@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ShortNBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -9,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.data.ShortData")
 @ZenRegister
 @Document("vanilla/data/ShortData")
-public class ShortData implements IData {
+public class ShortData implements INumberData {
     
     private ShortNBT internal;
     

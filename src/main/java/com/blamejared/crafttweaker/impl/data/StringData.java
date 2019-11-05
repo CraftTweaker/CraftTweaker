@@ -57,7 +57,12 @@ public class StringData implements IData {
     public String asString() {
         return quoteAndEscape(internal.getString()) + " as string";
     }
-    
+
+    @Override
+    public String toJsonString() {
+        return quoteAndEscape(internal.getString());
+    }
+
     private String quoteAndEscape(String p_193588_0_) {
         StringBuilder stringbuilder = new StringBuilder("\"");
         

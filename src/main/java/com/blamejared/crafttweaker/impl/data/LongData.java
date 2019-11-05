@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongNBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -9,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.data.LongData")
 @ZenRegister
 @Document("vanilla/data/LongData")
-public class LongData implements IData {
+public class LongData implements INumberData {
     
     private LongNBT internal;
     
