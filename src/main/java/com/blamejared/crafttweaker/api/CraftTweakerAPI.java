@@ -88,7 +88,7 @@ public class CraftTweakerAPI {
     }
     
     public static void reload() {
-        ACTION_LIST.stream().filter(iAction -> iAction instanceof IUndoableAction).map(iAction -> (IUndoableAction) iAction).forEach(iUndoableAction -> {
+        ACTION_LIST.stream().filter(iAction -> iAction instanceof IUndoableAction).filter(iAction -> iAction.shouldApplyOn(EffectiveSide.get())).map(iAction -> (IUndoableAction) iAction).forEach(iUndoableAction -> {
             CraftTweakerAPI.logInfo(iUndoableAction.describeUndo());
             iUndoableAction.undo();
         });
