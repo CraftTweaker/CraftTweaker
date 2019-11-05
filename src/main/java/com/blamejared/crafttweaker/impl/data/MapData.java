@@ -226,20 +226,26 @@ public class MapData implements IData {
     }
     
     public String toJsonString() {
+        return toJsonString(getInternal());
+    }
+    
+    public String toJsonString(CompoundNBT nbt) {
         
         StringBuilder stringbuilder = new StringBuilder("{");
-        Collection<String> collection = getInternal().keySet();
+        Collection<String> collection = nbt.keySet();
         
         for(String s : collection) {
             if(stringbuilder.length() != 1) {
                 stringbuilder.append(',');
             }
             
-            INBT obj = getInternal().get(s);
+            INBT obj = nbt.get(s);
             String value = obj.toString();
             // some numbers such as float are represented as "0.35f" which isn't exactly valid json
             if(obj instanceof NumberNBT) {
                 value = ((NumberNBT) obj).getAsNumber().toString();
+            } else if(obj instanceof CompoundNBT) {
+                value = toJsonString((CompoundNBT) obj);
             }
             stringbuilder.append("\"").append(CompoundNBT.handleEscape(s)).append("\"").append(':').append(value);
         }
