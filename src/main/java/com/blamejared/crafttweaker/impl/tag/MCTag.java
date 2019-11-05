@@ -155,10 +155,7 @@ public class MCTag implements IIngredient {
     
     @Override
     public Ingredient asVanillaIngredient() {
-        if(getItemTag() == null) {
-            return Ingredient.EMPTY;
-        }
-        return Ingredient.fromTag(itemTag);
+        return Ingredient.fromTag(getItemTag());
     }
     
     public Tag<Item> getItemTag() {
