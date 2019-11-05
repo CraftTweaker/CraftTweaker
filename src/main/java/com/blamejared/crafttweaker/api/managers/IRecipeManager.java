@@ -31,7 +31,7 @@ import java.util.Map;
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
 public interface IRecipeManager {
     
-    Gson JSON_RECIPE_GSON = new GsonBuilder().setPrettyPrinting().create();
+    Gson JSON_RECIPE_GSON = new GsonBuilder().create();
     
     /**
      * Adds a recipe based on a provided IData. The provided IData should represent a DataPack JSON, this effectively allows you to register recipes for any DataPack supporting IRecipeType systems.
