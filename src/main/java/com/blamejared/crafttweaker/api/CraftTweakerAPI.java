@@ -55,8 +55,7 @@ public class CraftTweakerAPI {
     
     private static ScriptingEngine SCRIPTING_ENGINE;
     
-    //TODO change this before release
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
     private static boolean firstRun = true;
     
     static {
