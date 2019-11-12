@@ -56,6 +56,7 @@ public class CraftTweakerAPI {
     private static ScriptingEngine SCRIPTING_ENGINE;
     
     public static boolean DEBUG_MODE = false;
+    public static boolean NO_BRAND = false;
     private static boolean firstRun = true;
     
     static {
@@ -111,6 +112,7 @@ public class CraftTweakerAPI {
     }
     
     public static void loadScripts() {
+        NO_BRAND = false;
         List<File> fileList = getScriptFiles();
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
