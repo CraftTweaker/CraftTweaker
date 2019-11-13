@@ -43,12 +43,6 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.SourceFile;
@@ -58,8 +52,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.Arrays;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -112,18 +108,10 @@ public class CraftTweaker {
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
         new Thread(() -> {
             try {
-                HttpGet request = new HttpGet("https://blamejared.com/patrons.txt");
-                request.addHeader(HttpHeaders.USER_AGENT, "CraftTweaker");
-                
-                try(CloseableHttpResponse response = HttpClients.createDefault().execute(request)) {
-                    HttpEntity entity = response.getEntity();
-                    if(response.getStatusLine().getStatusCode() >= 400) {
-                        return;
-                    }
-                    if(entity != null) {
-                        PATRON_LIST = Arrays.stream(EntityUtils.toString(entity).split("\n")).collect(Collectors.toSet());
-                    }
-                }
+                URL url = new URL("https://blamejared.com/patrons.txt");
+                URLConnection urlConnection = url.openConnection();
+                urlConnection.setRequestProperty("User-Agent", "CraftTweaker");
+                PATRON_LIST = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())).lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
             } catch(IOException e) {
                 e.printStackTrace();
             }
