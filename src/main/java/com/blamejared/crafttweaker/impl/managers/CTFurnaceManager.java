@@ -13,6 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this furnace
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.FurnaceManager")
 @Document("vanilla/managers/FurnaceManager")

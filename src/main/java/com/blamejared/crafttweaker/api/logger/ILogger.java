@@ -11,6 +11,7 @@ import java.io.PrintStream;
 
 /**
  * Base class used to interface with the crafttweaker.log file and other loggers (such as the player logger).
+ * @docParam this logger
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ILogger")
@@ -54,6 +55,7 @@ public interface ILogger extends IZSLogger {
      * Logs an info message.
      *
      * @param message message to be logged.
+     * @docParam message "message"
      */
     @ZenCodeType.Method
     default void info(String message) {
@@ -64,6 +66,7 @@ public interface ILogger extends IZSLogger {
      * Logs a debug message.
      *
      * @param message message to be logged.
+     * @docParam message "message"
      */
     @ZenCodeType.Method
     default void debug(String message) {
@@ -74,6 +77,7 @@ public interface ILogger extends IZSLogger {
      * Logs a warning message.
      *
      * @param message message to be logged.
+     * @docParam message "message"
      */
     @ZenCodeType.Method
     default void warning(String message) {
@@ -84,6 +88,7 @@ public interface ILogger extends IZSLogger {
      * Logs an error message.
      *
      * @param message message to be logged.
+     * @docParam message "message"
      */
     @ZenCodeType.Method
     default void error(String message) {

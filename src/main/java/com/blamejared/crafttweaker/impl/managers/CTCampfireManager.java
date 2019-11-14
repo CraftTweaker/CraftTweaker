@@ -13,6 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this campfire
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CampFireManager")
 @Document("vanilla/managers/CampFireManager")

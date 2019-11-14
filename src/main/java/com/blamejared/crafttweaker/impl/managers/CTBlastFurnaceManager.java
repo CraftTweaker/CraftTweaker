@@ -13,6 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this blastFurnace
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BlastFurnaceManager")
 @Document("vanilla/managers/BlastFurnaceManager")

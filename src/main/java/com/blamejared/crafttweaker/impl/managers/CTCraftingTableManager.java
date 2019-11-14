@@ -14,6 +14,9 @@ import net.minecraft.item.crafting.RecipeManager;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this craftingTable
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CraftingTableManager")
 @Document("vanilla/managers/CraftingTableManager")
@@ -26,17 +29,57 @@ public class CTCraftingTableManager implements IRecipeManager {
     
     private CTCraftingTableManager() {
     }
-    
+    /**
+     * Adds a shaped recipe to the crafting table
+     *
+     * @param recipeName     name of the recipe to add.
+     * @param output         output {@link IItemStack}
+     * @param ingredients    array of an array of {@link IIngredient} for inputs
+     * @param recipeFunction optional {@link com.blamejared.crafttweaker.api.managers.IRecipeManager.RecipeFunctionMatrix} for more advanced conditions
+     *
+     * @docParam recipeName "recipe_name"
+     * @docParam output <item:minecraft:dirt>
+     * @docParam ingredients [[<item:minecraft:diamond>], [<tag:minecraft:wool>]]
+     * TODO this example may not be right
+     * @docParam recipeFunction (usualOut as IItemStack, inputs as IItemStack[][]) => {if(inputs[0][0].displayName == "totally real diamond block" ){return usualOut;}return <item:minecraft:clay>.setDisplayName("Diamond");}
+     */
     @ZenCodeType.Method
     public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
         CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, false, recipeFunction), "shaped"));
     }
     
+    /**
+     * Adds a mirrored shaped recipe to the crafting table
+     *
+     * @param recipeName     name of the recipe to add.
+     * @param output         output {@link IItemStack}
+     * @param ingredients    array of an array of {@link IIngredient} for inputs
+     * @param recipeFunction optional {@link com.blamejared.crafttweaker.api.managers.IRecipeManager.RecipeFunctionMatrix} for more advanced conditions
+     *
+     * @docParam recipeName "recipe_name"
+     * @docParam output <item:minecraft:dirt>
+     * @docParam ingredients [[<item:minecraft:diamond>], [<tag:minecraft:wool>]]
+     * TODO this example may not be right
+     * @docParam recipeFunction (usualOut as IItemStack, inputs as IItemStack[][]) => {if(inputs[0][0].displayName == "totally real diamond block" ){return usualOut;}return <item:minecraft:clay>.setDisplayName("Diamond");}
+     */
     @ZenCodeType.Method
     public void addShapedMirrored(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
         CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, true, recipeFunction), "mirroring shaped"));
     }
     
+    /**
+     * Adds a shapeless recipe to the crafting table
+     *
+     * @param recipeName     name of the recipe to add.
+     * @param output         output {@link IItemStack}
+     * @param ingredients    array of {@link IIngredient} for inputs
+     * @param recipeFunction optional {@link com.blamejared.crafttweaker.api.managers.IRecipeManager.RecipeFunctionArray} for more advanced conditions
+     *
+     * @docParam recipeName "recipe_name"
+     * @docParam output <item:minecraft:dirt>
+     * @docParam ingredients [<item:minecraft:diamond>, <tag:minecraft:wool>]
+     * @docParam recipeFunction (usualOut as IItemStack, inputs as IItemStack[]) => {if(inputs[0].displayName == "totally real diamond block" ){return usualOut;}return <item:minecraft:clay>.setDisplayName("Diamond");}
+     */
     @ZenCodeType.Method
     public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionArray recipeFunction) {
         CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
