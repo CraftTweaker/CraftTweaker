@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutputInput;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -14,6 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.ICookingRecipeManager")
+@Document("vanilla/managers/ICookingRecipeManager")
 public interface ICookingRecipeManager extends IRecipeManager {
     
     /**

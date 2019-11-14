@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -15,6 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CraftingTableManager")
+@Document("vanilla/managers/CraftingTableManager")
 public class CTRecipeManager implements IRecipeManager {
     
     @ZenCodeGlobals.Global("craftingTable")

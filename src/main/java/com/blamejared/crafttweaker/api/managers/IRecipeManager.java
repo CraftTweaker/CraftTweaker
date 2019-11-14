@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutp
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -29,6 +30,7 @@ import java.util.Map;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
+@Document("vanilla/managers/IRecipeManager")
 public interface IRecipeManager {
     
     Gson JSON_RECIPE_GSON = new GsonBuilder().create();

@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.ICookingRecipeManager;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.BlastingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -14,6 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BlastFurnaceManager")
+@Document("vanilla/managers/BlastFurnaceManager")
 public class CTBlastFurnaceManager implements ICookingRecipeManager {
     
     @ZenCodeGlobals.Global("blastFurnace")

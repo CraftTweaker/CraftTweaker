@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.StonecuttingRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -15,6 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.StoneCutterManager")
+@Document("vanilla/managers/StoneCutterManager")
 public class CTStoneCutterManager implements IRecipeManager {
     
     @ZenCodeGlobals.Global("stoneCutter")

@@ -1,17 +1,20 @@
 package com.blamejared.crafttweaker.api.logger;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.logger.*;
+import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.IZSLogger;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 /**
- * Base class used to interface with the crafttweaker.log file and other loggers.
+ * Base class used to interface with the crafttweaker.log file and other loggers (such as the player logger).
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ILogger")
+@Document("vanilla/logger/ILogger")
 public interface ILogger extends IZSLogger {
     
     /**
@@ -47,21 +50,41 @@ public interface ILogger extends IZSLogger {
         log(level, message, true);
     }
     
+    /**
+     * Logs an info message.
+     *
+     * @param message message to be logged.
+     */
     @ZenCodeType.Method
     default void info(String message) {
         log(LogLevel.INFO, message);
     }
     
+    /**
+     * Logs a debug message.
+     *
+     * @param message message to be logged.
+     */
     @ZenCodeType.Method
     default void debug(String message) {
         log(LogLevel.DEBUG, message);
     }
     
+    /**
+     * Logs a warning message.
+     *
+     * @param message message to be logged.
+     */
     @ZenCodeType.Method
     default void warning(String message) {
         log(LogLevel.WARNING, message);
     }
     
+    /**
+     * Logs an error message.
+     *
+     * @param message message to be logged.
+     */
     @ZenCodeType.Method
     default void error(String message) {
         log(LogLevel.ERROR, message);
