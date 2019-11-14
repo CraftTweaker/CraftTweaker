@@ -12,7 +12,7 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -120,7 +120,7 @@ public interface IRecipeManager {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
-        return CTRecipeManager.recipeManager.recipes.get(getRecipeType());
+        return CTCraftingTableManager.recipeManager.recipes.get(getRecipeType());
     }
     
     

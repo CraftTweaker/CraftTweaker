@@ -8,7 +8,7 @@ import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShaped;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShapeless;
@@ -159,7 +159,7 @@ public class CraftTweaker {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
-        CTRecipeManager.recipeManager = event.getRecipeManager();
+        CTCraftingTableManager.recipeManager = event.getRecipeManager();
         Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
         Collection<IRecipe<?>> recipes = map.values();
         CraftTweakerAPI.NO_BRAND = false;
@@ -182,7 +182,7 @@ public class CraftTweaker {
             RecipeManager recipeManager = event.getServer().getRecipeManager();
             recipeManager.recipes = new HashMap<>(recipeManager.recipes);
             recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
-            CTRecipeManager.recipeManager = recipeManager;
+            CTCraftingTableManager.recipeManager = recipeManager;
             CraftTweakerAPI.loadScripts();
             List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
             scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
