@@ -110,8 +110,12 @@ public class CraftTweaker {
             try {
                 URL url = new URL("https://blamejared.com/patrons.txt");
                 URLConnection urlConnection = url.openConnection();
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setReadTimeout(15000);
                 urlConnection.setRequestProperty("User-Agent", "CraftTweaker");
-                PATRON_LIST = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())).lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
+                    PATRON_LIST = reader.lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+                }
             } catch(IOException e) {
                 e.printStackTrace();
             }
