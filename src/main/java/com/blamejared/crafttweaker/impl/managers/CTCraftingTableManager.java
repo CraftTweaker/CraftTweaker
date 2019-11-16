@@ -40,7 +40,6 @@ public class CTCraftingTableManager implements IRecipeManager {
      * @docParam recipeName "recipe_name"
      * @docParam output <item:minecraft:dirt>
      * @docParam ingredients [[<item:minecraft:diamond>], [<tag:minecraft:wool>]]
-     * TODO this example may not be right
      * @docParam recipeFunction (usualOut as IItemStack, inputs as IItemStack[][]) => {if(inputs[0][0].displayName == "totally real diamond block" ){return usualOut;}return <item:minecraft:clay>.setDisplayName("Diamond");}
      */
     @ZenCodeType.Method
@@ -59,7 +58,6 @@ public class CTCraftingTableManager implements IRecipeManager {
      * @docParam recipeName "recipe_name"
      * @docParam output <item:minecraft:dirt>
      * @docParam ingredients [[<item:minecraft:diamond>], [<tag:minecraft:wool>]]
-     * TODO this example may not be right
      * @docParam recipeFunction (usualOut as IItemStack, inputs as IItemStack[][]) => {if(inputs[0][0].displayName == "totally real diamond block" ){return usualOut;}return <item:minecraft:clay>.setDisplayName("Diamond");}
      */
     @ZenCodeType.Method
