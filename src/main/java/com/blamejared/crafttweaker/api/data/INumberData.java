@@ -7,6 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Represents a Number in the form of an {@link IData}, useful for converting between types (double to int / long for example).
+ * @docParam this 1
  */
 @Document("vanilla/data/INumberData")
 @ZenRegister

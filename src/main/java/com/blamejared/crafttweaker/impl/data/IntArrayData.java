@@ -10,6 +10,9 @@ import net.minecraft.nbt.IntNBT;
 import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this [4, 128, 256, 1024]
+ */
 @ZenCodeType.Name("crafttweaker.api.data.IntArrayData")
 @ZenRegister
 @Document("vanilla/data/IntArrayData")
@@ -93,7 +96,7 @@ public class IntArrayData implements ICollectionData {
             }
             result.append(nbt.getInt());
         }
-        result.append(']').append("as int[]");
+        result.append(']');
         return result.toString();
     }
 }

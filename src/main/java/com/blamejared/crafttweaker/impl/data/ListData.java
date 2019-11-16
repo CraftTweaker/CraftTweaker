@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @docParam this ["Hello", "World", "!"]
+ */
 @ZenCodeType.Name("crafttweaker.api.data.ListData")
 @ZenRegister
 @Document("vanilla/data/ListData")
@@ -145,7 +148,6 @@ public class ListData implements ICollectionData {
             output.append(NBTConverter.convert(inbt).asString());
         }
         output.append(']');
-        output.append(" as IData");
         return output.toString();
     }
     

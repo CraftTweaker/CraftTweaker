@@ -204,7 +204,7 @@ public class MapData implements IData {
             result.append(": ");
             result.append(value.asString());
         }
-        result.append('}').append(" as IData");
+        result.append('}');
         return result.toString();
     }
     

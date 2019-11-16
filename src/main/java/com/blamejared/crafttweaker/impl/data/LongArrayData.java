@@ -10,6 +10,9 @@ import net.minecraft.nbt.LongNBT;
 import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this [100000, 800000, 50000]
+ */
 @ZenCodeType.Name("crafttweaker.api.data.LongArrayData")
 @ZenRegister
 @Document("vanilla/data/LongArrayData")
@@ -94,7 +97,7 @@ public class LongArrayData implements ICollectionData {
             }
             result.append(nbt.getLong());
         }
-        result.append(']').append("as long[]");
+        result.append(']');
         return result.toString();
     }
 }

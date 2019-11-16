@@ -10,6 +10,9 @@ import net.minecraft.nbt.ByteNBT;
 import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this [4, 1, 2]
+ */
 @ZenCodeType.Name("crafttweaker.api.data.ByteArrayData")
 @ZenRegister
 @Document("vanilla/data/ByteArrayData")
@@ -93,7 +96,7 @@ public class ByteArrayData implements ICollectionData {
             
             result.append(nbt.getByte());
         }
-        result.append("] as byte[]");
+        result.append("]");
         return result.toString();
     }
 }
