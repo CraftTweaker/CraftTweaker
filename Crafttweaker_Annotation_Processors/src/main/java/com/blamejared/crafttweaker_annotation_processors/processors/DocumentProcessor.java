@@ -512,7 +512,7 @@ public class DocumentProcessor extends AbstractProcessor {
                 operandInfo.setOperandDescription(param);
             }
             if (!docParam.isEmpty()) {
-                operandInfo.setOperandExample(docParam);
+                operandInfo.setOperandExample(docParam.trim());
             } else if (needsDocParam) {
                 //TODO Error?
                 this.processingEnv.getMessager()
