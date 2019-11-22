@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
@@ -15,6 +16,7 @@ import com.blamejared.crafttweaker.impl.potion.MCPotion;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.util.CTDirectionAxis;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
@@ -193,6 +195,25 @@ public class BracketHandlers {
         return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entitytype:" + key + ">").collect(Collectors.toList());
     }
     
+    @BracketResolver("entityclassification")
+    public static MCEntityClassification getEntityClassification(String tokens) {
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 1) {
+            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
+            return null;
+        }
+        if(Arrays.stream(EntityClassification.values()).anyMatch(entityClassification -> entityClassification.name().equalsIgnoreCase(tokens))) {
+            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
+            return null;
+        }
+        //Cannot be null since we checked containsKey
+        return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
+    }
+    
+    @BracketDumper("entityclassification")
+    public static Collection<String> getEntityClassificationDump() {
+        return Arrays.stream(EntityClassification.values()).map(key -> "<entityclassification:" + key.name().toLowerCase() + ">").collect(Collectors.toList());
+    }
     
     @BracketResolver("directionaxis")
     public static CTDirectionAxis getDirectionAxis(String tokens) {
