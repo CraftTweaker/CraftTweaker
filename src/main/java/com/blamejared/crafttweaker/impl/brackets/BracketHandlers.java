@@ -170,16 +170,16 @@ public class BracketHandlers {
         return blockState;
     }
     
-    @BracketResolver("entityType")
+    @BracketResolver("entitytype")
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
-            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
             return null;
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         if(!ForgeRegistries.ENTITIES.containsKey(resourceLocation)) {
-            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
             return null;
         }
         
@@ -188,9 +188,9 @@ public class BracketHandlers {
         return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
     }
     
-    @BracketDumper("entityType")
+    @BracketDumper("entitytype")
     public static Collection<String> getEntityTypeDump() {
-        return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entityType:" + key + ">").collect(Collectors.toList());
+        return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entitytype:" + key + ">").collect(Collectors.toList());
     }
     
     
