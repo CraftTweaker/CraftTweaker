@@ -48,6 +48,7 @@ public interface IRecipeManager {
      */
     @ZenCodeType.Method
     default void addJSONRecipe(String name, IData data) {
+        validateRecipeName(name);
         if(!(data instanceof MapData)) {
             throw new IllegalArgumentException("Json recipe's IData should be a MapData!");
         }
@@ -136,6 +137,16 @@ public interface IRecipeManager {
         return CTCraftingTableManager.recipeManager.recipes.get(getRecipeType());
     }
     
+    /**
+     * Checks if the given name is a valid ResourceLocation path, used to ensure recipe names are correct
+     *
+     * @param name name to check
+     */
+    default void validateRecipeName(String name) {
+        if(!name.chars().allMatch((ch) -> ch == 95 || ch == 45 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57 || ch == 47 || ch == 46)) {
+            throw new IllegalArgumentException("Given name does not fit the \"[a-z0-9/._-]\" regex! Name: \"" + name + "\"");
+        }
+    }
     
     @FunctionalInterface
     @ZenRegister
