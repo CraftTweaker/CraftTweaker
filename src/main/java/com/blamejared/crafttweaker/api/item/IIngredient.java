@@ -1,12 +1,16 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.item.MCIngredientList;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.Arrays;
 
 
 /**
@@ -24,6 +28,7 @@ public interface IIngredient {
      * Does the given stack match the ingredient?
      *
      * @param stack The stack to check
+     *
      * @docParam stack <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
@@ -40,6 +45,7 @@ public interface IIngredient {
      * Used e.g. in CrT's {@link net.minecraft.item.crafting.ICraftingRecipe#getRemainingItems}
      *
      * @param stack The stack to provide for this ingredient.
+     *
      * @docParam stack <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
@@ -56,4 +62,16 @@ public interface IIngredient {
     
     @ZenCodeType.Getter("items")
     IItemStack[] getItems();
+    
+    static IIngredient fromIngredient(Ingredient ingredient) {
+        if(ingredient.hasNoMatchingItems()) {
+            return new MCItemStack(ItemStack.EMPTY);
+        } else {
+            if(ingredient.getMatchingStacks().length == 1) {
+                return new MCItemStack(ingredient.getMatchingStacks()[0]);
+            } else {
+                return new MCIngredientList(Arrays.stream(ingredient.getMatchingStacks()).map(MCItemStack::new).toArray(IItemStack[]::new));
+            }
+        }
+    }
 }

@@ -7,6 +7,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.IntNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this 8192
+ */
 @ZenCodeType.Name("crafttweaker.api.data.IntData")
 @ZenRegister
 @Document("vanilla/data/IntData")

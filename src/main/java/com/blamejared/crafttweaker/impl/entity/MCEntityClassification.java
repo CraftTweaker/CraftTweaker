@@ -1,8 +1,11 @@
 package com.blamejared.crafttweaker.impl.entity;
 
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import net.minecraft.entity.EntityClassification;
 import org.openzen.zencode.java.ZenCodeType;
 
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.entity.MCEntityClassification")
 public class MCEntityClassification {
     
     private EntityClassification internal;

@@ -55,8 +55,8 @@ public class CraftTweakerAPI {
     
     private static ScriptingEngine SCRIPTING_ENGINE;
     
-    //TODO change this before release
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
+    public static boolean NO_BRAND = false;
     private static boolean firstRun = true;
     
     static {
@@ -88,7 +88,7 @@ public class CraftTweakerAPI {
     }
     
     public static void reload() {
-        ACTION_LIST.stream().filter(iAction -> iAction instanceof IUndoableAction).map(iAction -> (IUndoableAction) iAction).forEach(iUndoableAction -> {
+        ACTION_LIST.stream().filter(iAction -> iAction instanceof IUndoableAction).filter(iAction -> iAction.shouldApplyOn(EffectiveSide.get())).map(iAction -> (IUndoableAction) iAction).forEach(iUndoableAction -> {
             CraftTweakerAPI.logInfo(iUndoableAction.describeUndo());
             iUndoableAction.undo();
         });
@@ -112,6 +112,7 @@ public class CraftTweakerAPI {
     }
     
     public static void loadScripts() {
+        NO_BRAND = false;
         List<File> fileList = getScriptFiles();
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);

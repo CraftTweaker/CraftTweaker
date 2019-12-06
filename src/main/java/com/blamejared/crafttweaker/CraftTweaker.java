@@ -8,7 +8,7 @@ import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShaped;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShapeless;
@@ -23,6 +23,8 @@ import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -49,13 +51,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mod(CraftTweaker.MODID)
@@ -73,6 +81,7 @@ public class CraftTweaker {
     
     public static IIngredientSerializer INGREDIENT_NBT_SERIALIZER;
     public static IRecipeType<ScriptRecipe> RECIPE_TYPE_SCRIPTS;
+    private static Set<String> PATRON_LIST = new HashSet<>();
     
     public CraftTweaker() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -97,6 +106,20 @@ public class CraftTweaker {
         });
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
+        new Thread(() -> {
+            try {
+                URL url = new URL("https://blamejared.com/patrons.txt");
+                URLConnection urlConnection = url.openConnection();
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setReadTimeout(15000);
+                urlConnection.setRequestProperty("User-Agent", "CraftTweaker");
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
+                    PATRON_LIST = reader.lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
     
     private void setup(final FMLCommonSetupEvent event) {
@@ -105,6 +128,7 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerRegistry.findClasses();
+        
     }
     
     private void setupClient(final FMLClientSetupEvent event) {
@@ -119,26 +143,6 @@ public class CraftTweaker {
         Called on multiplayer login on the server
          */
         
-        List<String> msgs = new ArrayList<>();
-        msgs.add("Thank you for participating in the CraftTweaker Open beta!");
-        msgs.add("Things to note: ");
-        msgs.add("Quite literally everything has been rewritten, from Forge, the mod, even the ZenScript engine! So things may not work!");
-        msgs.add("This is " + TextFormatting.RED + "NOT" + TextFormatting.RESET + " modpack ready! This is a release to help find issues and allow modpack developers to start work on their packs!");
-        msgs.add("Script reloading is back!");
-        msgs.add("The command is now bundled in /reload!");
-        
-        msgs.stream().map(StringTextComponent::new).forEach(event.getPlayer()::sendMessage);
-        StringTextComponent github = new StringTextComponent("If you find a bug, please report it on the " + TextFormatting.AQUA + "Issue Tracker!" + TextFormatting.RESET);
-        github.applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/CraftTweaker/CraftTweaker/issues")));
-        github.applyTextStyle(style -> style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to go to the issue tracker!"))));
-        event.getPlayer().sendMessage(github);
-        
-        StringTextComponent discord = new StringTextComponent("If you need any help, join the " + TextFormatting.AQUA + "Discord!" + TextFormatting.RESET);
-        discord.applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.blamejared.com")));
-        discord.applyTextStyle(style -> style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to join the discord!"))));
-        event.getPlayer().sendMessage(discord);
-        
-        event.getPlayer().sendMessage(new StringTextComponent("This message will show every time a world is joined. There is no way to remove it, as I said, this is " + TextFormatting.RED + "NOT" + TextFormatting.RESET + " modpack ready!"));
         ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
     }
     
@@ -159,9 +163,10 @@ public class CraftTweaker {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
-        CTRecipeManager.recipeManager = event.getRecipeManager();
+        CTCraftingTableManager.recipeManager = event.getRecipeManager();
         Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
         Collection<IRecipe<?>> recipes = map.values();
+        CraftTweakerAPI.NO_BRAND = false;
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = recipes.stream().map(iRecipe -> (ScriptRecipe) iRecipe).map(recipe -> new FileAccessSingle(recipe.getFileName(), new StringReader(recipe.getContent()), CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
         CraftTweakerAPI.loadScripts(sourceFiles);
@@ -176,13 +181,12 @@ public class CraftTweaker {
     public void startServer(FMLServerAboutToStartEvent event) {
         IReloadableResourceManager manager = event.getServer().getResourceManager();
         manager.addReloadListener((IResourceManagerReloadListener) resourceManager -> {
+            event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload starting!"));
             //ImmutableMap of ImmutableMaps. Nice.
             RecipeManager recipeManager = event.getServer().getRecipeManager();
             recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-            for(IRecipeType<?> type : recipeManager.recipes.keySet()) {
-                recipeManager.recipes.put(type, new HashMap<>(recipeManager.recipes.get(type)));
-            }
-            CTRecipeManager.recipeManager = recipeManager;
+            recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
+            CTCraftingTableManager.recipeManager = recipeManager;
             CraftTweakerAPI.loadScripts();
             List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
             scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
@@ -190,7 +194,17 @@ public class CraftTweaker {
                 map.put(scriptRecipe.getId(), scriptRecipe);
             });
             
-            event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload complete!"));
+            TextComponent msg = new StringTextComponent("CraftTweaker reload complete!");
+            event.getServer().getPlayerList().sendMessage(msg);
+            
+            if(!CraftTweakerAPI.NO_BRAND) {
+                String name = PATRON_LIST.stream().skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size())).findFirst().orElse("");
+                if(!name.isEmpty()) {
+                    msg = new StringTextComponent("This reload was made possible by " + name + " and more!" + TextFormatting.GREEN + " [Learn more!]");
+                    msg.setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
+                    event.getServer().getPlayerList().sendMessage(msg);
+                }
+            }
         });
     }
     

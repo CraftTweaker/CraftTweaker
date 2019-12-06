@@ -24,7 +24,7 @@ public class DebugPreprocessor implements IPreprocessor {
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
-        CraftTweakerAPI.logInfo("Debug preprocessor hit %d times in file %s", preprocessorMatches.size(), file.getFileName());
+        CraftTweakerAPI.DEBUG_MODE = true;
         return true;
     }
 }

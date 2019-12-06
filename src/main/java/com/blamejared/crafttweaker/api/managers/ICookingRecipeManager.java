@@ -6,14 +6,17 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutputInput;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
+ * @docParam this furnace
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.ICookingRecipeManager")
+@Document("vanilla/managers/ICookingRecipeManager")
 public interface ICookingRecipeManager extends IRecipeManager {
     
     /**
@@ -24,6 +27,11 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @param input    IIngredient input of the recipe
      * @param xp       how much xp the player gets
      * @param cookTime how long it takes to cook
+     * @docParam name "wool2diamond"
+     * @docParam output <item:diamond>
+     * @docParam input <tag:minecraft:wool>
+     * @docParam xp 1.0
+     * @docParam cookTime 0
      */
     @ZenCodeType.Method
     default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime){
@@ -35,6 +43,8 @@ public interface ICookingRecipeManager extends IRecipeManager {
      *
      * @param output IItemStack output of the recipe.
      * @param input  IIngredient of the recipe to remove.
+     * @docParam output <item:minecraft:diamond>
+     * @docParam input <tag:minecraft:wool>
      */
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output, IIngredient input) {

@@ -7,6 +7,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.DoubleNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this 3.25
+ */
 @ZenCodeType.Name("crafttweaker.api.data.DoubleData")
 @ZenRegister
 @Document("vanilla/data/DoubleData")
@@ -43,6 +46,6 @@ public class DoubleData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getDouble() + " as double";
+        return internal.getDouble() +"";
     }
 }

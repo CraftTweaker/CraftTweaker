@@ -12,7 +12,8 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.managers.CTRecipeManager;
+import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -26,18 +27,24 @@ import java.util.Map;
 
 /**
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
+ *
+ * @docParam this craftingTable
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
+@Document("vanilla/managers/IRecipeManager")
 public interface IRecipeManager {
     
-    Gson JSON_RECIPE_GSON = new GsonBuilder().setPrettyPrinting().create();
+    Gson JSON_RECIPE_GSON = new GsonBuilder().create();
     
     /**
      * Adds a recipe based on a provided IData. The provided IData should represent a DataPack JSON, this effectively allows you to register recipes for any DataPack supporting IRecipeType systems.
      *
      * @param name name of the recipe
      * @param data data representing the json file
+     *
+     * @docParam name "recipe_name"
+     * @docParam data {ingredient:{item:<item:minecraft:gold_ore>.registryName},result:<item:minecraft:cooked_porkchop>.registryName,experience:0.35 as float, cookingtime:100}
      */
     @ZenCodeType.Method
     default void addJSONRecipe(String name, IData data) {
@@ -60,6 +67,8 @@ public interface IRecipeManager {
      * Remove a recipe based on it's output.
      *
      * @param output output of the recipe
+     *
+     * @docParam output <item:minecraft:glass>
      */
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output) {
@@ -70,6 +79,8 @@ public interface IRecipeManager {
      * Remove recipe based on Registry name
      *
      * @param name registry name of recipe to remove
+     *
+     * @docParam name "minecraft:furnace"
      */
     @ZenCodeType.Method
     default void removeByName(String name) {
@@ -80,6 +91,8 @@ public interface IRecipeManager {
      * Remove recipe based on Registry name modid
      *
      * @param modid modid of the recipes to remove
+     *
+     * @docParam modid "minecraft"
      */
     @ZenCodeType.Method
     default void removeByModid(String modid) {
@@ -90,6 +103,8 @@ public interface IRecipeManager {
      * Remove recipe based on regex
      *
      * @param regex regex to match against
+     *
+     * @docParam regex "\\d_\\d"
      */
     @ZenCodeType.Method
     default void removeByRegex(String regex) {
@@ -118,7 +133,7 @@ public interface IRecipeManager {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
-        return CTRecipeManager.recipeManager.recipes.get(getRecipeType());
+        return CTCraftingTableManager.recipeManager.recipes.get(getRecipeType());
     }
     
     

@@ -7,6 +7,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ByteNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this 4
+ */
 @ZenCodeType.Name("crafttweaker.api.data.ByteData")
 @ZenRegister
 @Document("vanilla/data/ByteData")
@@ -43,7 +46,7 @@ public class ByteData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getByte() + " as byte";
+        return internal.getByte()+"";
     }
     
 }

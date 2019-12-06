@@ -7,6 +7,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this 800000000
+ */
 @ZenCodeType.Name("crafttweaker.api.data.LongData")
 @ZenRegister
 @Document("vanilla/data/LongData")
@@ -43,6 +46,6 @@ public class LongData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getLong() + " as long";
+        return internal.getLong() + "";
     }
 }

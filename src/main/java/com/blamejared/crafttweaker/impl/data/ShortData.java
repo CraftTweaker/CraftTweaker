@@ -7,6 +7,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ShortNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this 1058
+ */
 @ZenCodeType.Name("crafttweaker.api.data.ShortData")
 @ZenRegister
 @Document("vanilla/data/ShortData")
@@ -43,6 +46,6 @@ public class ShortData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getShort() + " as short";
+        return internal.getShort() + "";
     }
 }

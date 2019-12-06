@@ -7,6 +7,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.FloatNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this 8.5
+ */
 @ZenCodeType.Name("crafttweaker.api.data.FloatData")
 @ZenRegister
 @Document("vanilla/data/FloatData")
@@ -43,6 +46,6 @@ public class FloatData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getFloat() + " as float";
+        return internal.getFloat() + "";
     }
 }
