@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlockState")
@@ -134,6 +135,18 @@ public class MCBlockState {
     @ZenCodeType.Caster(implicit = true)
     public static MCBlock asBlock(MCBlockState block) {
         return block.getInternalBlock();
+    }
+    
+    @ZenCodeType.Getter("commandString")
+    public String getCommandString() {
+        StringBuilder builder = new StringBuilder("<blockstate:");
+        builder.append(getBlock().getInternal().getRegistryName().toString());
+        if(!getProperties().isEmpty()) {
+            builder.append(":");
+            builder.append(getProperties().entrySet().stream().map(kv -> kv.getKey() + "=" + kv.getValue()).collect(Collectors.joining(",")));
+        }
+        builder.append(">");
+        return builder.toString();
     }
     
     public BlockState getInternal() {
