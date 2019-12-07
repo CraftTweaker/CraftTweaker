@@ -45,7 +45,7 @@ import org.apache.logging.log4j.Logger;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.1.19", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = CraftTweaker.MODID, version = "4.1.20", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12]")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
@@ -158,7 +158,7 @@ public class CraftTweaker {
         if(!alreadyChangedThePlayer) {
             alreadyChangedThePlayer = true;
             RecipeBookClient.rebuildTable();
-            if(ENABLE_SEARCH_TREE_RECALCULATION) {
+            if(CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION) {
                 minecraft.populateSearchTreeManager();
                 ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
                 ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
