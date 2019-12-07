@@ -10,7 +10,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '2.6'
+    gradleVersion = '4.9'
 }
 
 //Shuts up javadoc failures
@@ -95,6 +95,3 @@ assembleAll.group = CrtBuildGroup
 assembleMC1120.group = CrtBuildGroup
 assembleDevBase1120.group = CrtBuildGroup
 assembleDevFull1120.group = CrtBuildGroup
-
-
-

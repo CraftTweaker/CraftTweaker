@@ -13,7 +13,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
 
 // #######################
-// ### 1.12.1 settings ###
+// ### 1.12.2 settings ###
 // #######################
 
 ext.jei_version = "4.8.5.158"
