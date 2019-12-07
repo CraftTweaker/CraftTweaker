@@ -18,7 +18,7 @@ import java.util.regex.*;
 public class ClientEventHandler {
     
     
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onItemTooltip(ItemTooltipEvent ev) {
         if(!ev.getItemStack().isEmpty()) {
             IItemStack itemStack = CraftTweakerMC.getIItemStack(ev.getItemStack());
