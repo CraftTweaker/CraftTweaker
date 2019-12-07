@@ -97,6 +97,9 @@ public class CraftTweakerAPI {
      */
     public static boolean noWarn = false;
     
+    // Here shadows pls use
+    public static boolean ENABLE_SEARCH_TREE_RECALCULATION = true;
+    
     /**
      * If true, script actions will be profiled and the results will be printed to the log.
      */

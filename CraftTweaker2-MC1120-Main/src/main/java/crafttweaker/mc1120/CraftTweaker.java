@@ -158,9 +158,11 @@ public class CraftTweaker {
         if(!alreadyChangedThePlayer) {
             alreadyChangedThePlayer = true;
             RecipeBookClient.rebuildTable();
-            minecraft.populateSearchTreeManager();
-            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
-            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+            if(ENABLE_SEARCH_TREE_RECALCULATION) {
+                minecraft.populateSearchTreeManager();
+                ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
+                ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+            }
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }
     }
