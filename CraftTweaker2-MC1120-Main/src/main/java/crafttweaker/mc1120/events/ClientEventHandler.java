@@ -40,7 +40,7 @@ public class ClientEventHandler {
                 ev.getToolTip().add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
-                ev.getToolTip().add(tooltip.getKey().process(itemStack));
+                    ev.getToolTip().add(tooltip.getKey().process(itemStack));
             }
             
             boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
