@@ -35,6 +35,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -177,7 +178,7 @@ public class CraftTweaker {
         CTCommands.init(event.getCommandDispatcher());
     }
     
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void startServer(FMLServerAboutToStartEvent event) {
         IReloadableResourceManager manager = event.getServer().getResourceManager();
         manager.addReloadListener((IResourceManagerReloadListener) resourceManager -> {

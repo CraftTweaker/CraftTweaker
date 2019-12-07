@@ -294,11 +294,17 @@ public interface IItemStack extends IIngredient {
         }
         
         // Lets just use the partial nbt
-        if(!NBTConverter.convert(stack2Tag).contains(NBTConverter.convert(stack1Tag))) {
+        IData stack2Data = NBTConverter.convert(stack2Tag);
+        IData stack1Data = NBTConverter.convert(stack1Tag);
+        // I think this is correct
+        if((stack2Data == null) != (stack1Data == null)){
             return false;
         }
-        
-        return true;
+        if(stack2Data == null) {
+            return true;
+        }
+    
+        return stack2Data.contains(stack1Data);
     }
     
     

@@ -12,6 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
+ *
  * @docParam this furnace
  */
 @ZenRegister
@@ -27,6 +28,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @param input    IIngredient input of the recipe
      * @param xp       how much xp the player gets
      * @param cookTime how long it takes to cook
+     *
      * @docParam name "wool2diamond"
      * @docParam output <item:diamond>
      * @docParam input <tag:minecraft:wool>
@@ -34,7 +36,8 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @docParam cookTime 0
      */
     @ZenCodeType.Method
-    default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime){
+    default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+        validateRecipeName(name);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, makeRecipe(name, output, input, xp, cookTime), ""));
     }
     
@@ -43,6 +46,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      *
      * @param output IItemStack output of the recipe.
      * @param input  IIngredient of the recipe to remove.
+     *
      * @docParam output <item:minecraft:diamond>
      * @docParam input <tag:minecraft:wool>
      */

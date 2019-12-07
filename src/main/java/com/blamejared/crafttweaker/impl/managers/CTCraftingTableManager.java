@@ -29,6 +29,7 @@ public class CTCraftingTableManager implements IRecipeManager {
     
     private CTCraftingTableManager() {
     }
+    
     /**
      * Adds a shaped recipe to the crafting table
      *
@@ -44,6 +45,7 @@ public class CTCraftingTableManager implements IRecipeManager {
      */
     @ZenCodeType.Method
     public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
+        validateRecipeName(recipeName);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, false, recipeFunction), "shaped"));
     }
     
@@ -62,6 +64,7 @@ public class CTCraftingTableManager implements IRecipeManager {
      */
     @ZenCodeType.Method
     public void addShapedMirrored(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunctionMatrix recipeFunction) {
+        validateRecipeName(recipeName);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShaped(recipeName, output, ingredients, true, recipeFunction), "mirroring shaped"));
     }
     
@@ -80,6 +83,7 @@ public class CTCraftingTableManager implements IRecipeManager {
      */
     @ZenCodeType.Method
     public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunctionArray recipeFunction) {
+        validateRecipeName(recipeName);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, new CTRecipeShapeless(recipeName, output, ingredients, recipeFunction), "shapeless"));
     }
     

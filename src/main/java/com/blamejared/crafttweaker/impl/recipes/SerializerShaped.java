@@ -19,14 +19,13 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     }
     
     public CTRecipeShaped read(ResourceLocation recipeId, PacketBuffer buffer) {
-        int width = buffer.readVarInt();
         int height = buffer.readVarInt();
-        IIngredient[][] inputs = new IIngredient[width][height];
+        int width = buffer.readVarInt();
+        IIngredient[][] inputs = new IIngredient[height][width];
         
-        for(int w = 0; w < inputs.length; w++) {
-            for(int h = 0; h < inputs[w].length; h++) {
-                
-                inputs[w][h] = IIngredient.fromIngredient(Ingredient.read(buffer));
+        for(int h = 0; h < inputs.length; h++) {
+            for(int w = 0; w < inputs[h].length; w++) {
+                inputs[h][w] = IIngredient.fromIngredient(Ingredient.read(buffer));
             }
         }
         
@@ -36,8 +35,8 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     }
     
     public void write(PacketBuffer buffer, CTRecipeShaped recipe) {
-        buffer.writeVarInt(recipe.getRecipeWidth());
         buffer.writeVarInt(recipe.getRecipeHeight());
+        buffer.writeVarInt(recipe.getRecipeWidth());
         
         for(Ingredient ingredient : recipe.getIngredients()) {
             ingredient.write(buffer);

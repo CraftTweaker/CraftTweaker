@@ -6,23 +6,28 @@ import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker.impl.potion.MCPotion;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.potion.MCEffect;
+import com.blamejared.crafttweaker.impl.potion.MCPotion;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker.impl.util.CTDirectionAxis;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
@@ -82,7 +87,6 @@ public class BracketHandlers {
     }
     
     
-    
     @BracketDumper("item")
     public static Collection<String> getItemBracketDump() {
         final HashSet<String> result = new HashSet<>();
@@ -107,7 +111,7 @@ public class BracketHandlers {
     public static IRecipeManager getRecipeManager(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("RecipeType BEP <recipetype:%s> does not seem to be lower-cased!", tokens);
-        if(tokens.equalsIgnoreCase("crafttweaker:scripts")){
+        if(tokens.equalsIgnoreCase("crafttweaker:scripts")) {
             // This is bound to cause issues, like: <recipetype:crafttweaker:scripts.removeAll(); Best to just fix it now
             throw new IllegalArgumentException("Nice try, but there's no reason you need to access the <recipetype:crafttweaker:scripts> recipe manager!");
         }
@@ -168,16 +172,16 @@ public class BracketHandlers {
         return blockState;
     }
     
-    @BracketResolver("entityType")
+    @BracketResolver("entitytype")
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
-            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
             return null;
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         if(!ForgeRegistries.ENTITIES.containsKey(resourceLocation)) {
-            CraftTweakerAPI.logError("Could not get EntityType <entityType:%s>", tokens);
+            CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
             return null;
         }
         
@@ -186,8 +190,49 @@ public class BracketHandlers {
         return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
     }
     
-    @BracketDumper("entityType")
+    @BracketDumper("entitytype")
     public static Collection<String> getEntityTypeDump() {
-        return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entityType:" + key + ">").collect(Collectors.toList());
+        return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entitytype:" + key + ">").collect(Collectors.toList());
     }
+    
+    @BracketResolver("entityclassification")
+    public static MCEntityClassification getEntityClassification(String tokens) {
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 1) {
+            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
+            return null;
+        }
+        if(Arrays.stream(EntityClassification.values()).anyMatch(entityClassification -> entityClassification.name().equalsIgnoreCase(tokens))) {
+            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
+            return null;
+        }
+        //Cannot be null since we checked containsKey
+        return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
+    }
+    
+    @BracketDumper("entityclassification")
+    public static Collection<String> getEntityClassificationDump() {
+        return Arrays.stream(EntityClassification.values()).map(key -> "<entityclassification:" + key.name().toLowerCase() + ">").collect(Collectors.toList());
+    }
+    
+    @BracketResolver("directionaxis")
+    public static CTDirectionAxis getDirectionAxis(String tokens) {
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
+        
+        final String[] split = tokens.split(":");
+        if(split.length != 1)
+            throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Syntax is <directionaxis:axis>");
+        
+        if(Direction.Axis.byName(split[0]) != null) {
+            throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
+        }
+        return CTDirectionAxis.getAxis(Direction.Axis.byName(split[0]));
+    }
+    
+    @BracketDumper("directionaxis")
+    public static Collection<String> getDirectionAxisDump() {
+        return Arrays.stream(Direction.Axis.values()).map(key -> "<directionaxis:" + key + ">").collect(Collectors.toList());
+    }
+    
 }
