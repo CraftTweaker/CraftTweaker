@@ -66,20 +66,20 @@ uploadArchives {
 }
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '2.6'
+    gradleVersion = '3.0'
 }
 
 subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
 
-task setupDecompWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupDecompWorkspace" } + projects18.collect { ':' + it + ':setupDecompWorkspace'} + projects1102.collect { ':' + it + ':setupDecompWorkspace'}) {}
+task setupDecompWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupDecompWorkspace" } + projects18.collect { ':' + it + ':setupDecompWorkspace'} + projects1102.collect { ':' + it + ':setupDecompWorkspace'} + projects1112.collect { ':' + it + ':setupDecompWorkspace'}) {}
 
-task setupCIWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupCIWorkspace" } + projects18.collect { ':' + it + ':setupCIWorkspace'} + projects1102.collect { ':' + it + ':setupCIWorkspace'}) {}
+task setupCIWorkspaceAll(dependsOn: projects1710.collect { ':' + it + ":setupCIWorkspace" } + projects18.collect { ':' + it + ':setupCIWorkspace'} + projects1102.collect { ':' + it + ':setupCIWorkspace'} + projects1112.collect { ':' + it + ':setupCIWorkspace'}) {}
 
 task assembleMC1710(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.7.10-${mineTweakerVersion}-legacy.jar"
 
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -93,7 +93,7 @@ task assembleMC18(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-1.8.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.8.9-${mineTweakerVersion}-legacy.jar"
 
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -107,7 +107,7 @@ task assembleMC1102(type: Jar, dependsOn: [\
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1102.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-1.10.2-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-1.10.2-${mineTweakerVersion}-legacy.jar"
 
 	from zipTree(project(":ZenScript").jar.archivePath)
 	from zipTree(project(':MineTweaker3-API').jar.archivePath)
@@ -117,11 +117,25 @@ task assembleMC1102(type: Jar, dependsOn: [\
 	}
 }
 
+task assembleMC1112(type: Jar, dependsOn: [\
+		':ZenScript:build',
+                                           ':MineTweaker3-API:build']
+        + projects1112.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-1.11.2-${mineTweakerVersion}-legacy.jar"
+
+    from zipTree(project(":ZenScript").jar.archivePath)
+    from zipTree(project(':MineTweaker3-API').jar.archivePath)
+
+    for (p in projects1112) {
+        from zipTree(project(p).jar.archivePath)
+    }
+}
+
 task assembleDevBase1710(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1710-Main:build']) {
-	archiveName="CraftTweaker-Dev-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.7.10-${mineTweakerVersion}-legacy.jar"
 
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -132,7 +146,7 @@ task assembleDevBase18(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC18-Main:build']) {
-	archiveName="CraftTweaker-Dev-1.8.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.8.9-${mineTweakerVersion}-legacy.jar"
 
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -143,18 +157,29 @@ task assembleDevBase1102(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build',
 		':MineTweaker3-MC1102-Main:build']) {
-	archiveName="CraftTweaker-Dev-1.10.2-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-1.10.2-${mineTweakerVersion}-legacy.jar"
 
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
 	from project(':MineTweaker3-MC1102-Main').sourceSets.main.output
 }
 
+task assembleDevBase1112(type: Jar, dependsOn: [
+        ':ZenScript:build',
+        ':MineTweaker3-API:build',
+        ':MineTweaker3-MC1112-Main:build']) {
+    archiveName = "CraftTweaker-Dev-1.11.2-${mineTweakerVersion}-legacy.jar"
+
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
+    from project(':MineTweaker3-MC1112-Main').sourceSets.main.output
+}
+
 task assembleDevFull1710(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1710.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Dev-Full-1.7.10-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.7.10-${mineTweakerVersion}-legacy.jar"
 
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -169,7 +194,7 @@ task assembleDevFull18(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects18.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Dev-Full-1.8.9-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.8.9-${mineTweakerVersion}-legacy.jar"
 
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -183,7 +208,7 @@ task assembleDevFull1102(type: Jar, dependsOn: [
 		':ZenScript:build',
 		':MineTweaker3-API:build']
 		+ projects1102.collect { ':' + it + ":build" }) {
-	archiveName="CraftTweaker-Dev-Full-1.10.2-${mineTweakerVersion}.jar"
+	archiveName="CraftTweaker-Dev-Full-1.10.2-${mineTweakerVersion}-legacy.jar"
 
 	from project(':ZenScript').sourceSets.main.output
 	from project(':MineTweaker3-API').sourceSets.main.output
@@ -193,16 +218,33 @@ task assembleDevFull1102(type: Jar, dependsOn: [
 	}
 }
 
+task assembleDevFull1112(type: Jar, dependsOn: [
+        ':ZenScript:build',
+        ':MineTweaker3-API:build']
+        + projects1112.collect { ':' + it + ":build" }) {
+    archiveName = "CraftTweaker-Dev-Full-1.11.2-${mineTweakerVersion}-legacy.jar"
+
+    from project(':ZenScript').sourceSets.main.output
+    from project(':MineTweaker3-API').sourceSets.main.output
+
+    for (p in projects1112) {
+        from project(p).sourceSets.main.output
+    }
+}
+
 task assembleAll(dependsOn: [
 	assembleMC1710,
 	assembleMC18,
 	assembleMC1102,
+	assembleMC1112,
 	assembleDevBase1710,
 	assembleDevBase18,
 	assembleDevBase1102,
+	assembleDevBase1112,
 	assembleDevFull1710,
 	assembleDevFull18,
-	assembleDevFull1102]) {
+	assembleDevFull1102,
+	assembleDevFull1112]) {
 }
 
 configurations {

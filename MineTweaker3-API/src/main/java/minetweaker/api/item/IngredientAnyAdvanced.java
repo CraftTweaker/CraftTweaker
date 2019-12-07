@@ -9,118 +9,119 @@ import java.util.List;
 /**
  * Represents the wildcard ingredient, with conditions and/or transformers
  * applied to it.
- * 
+ *
  * @author Stan Hebben
  */
 public class IngredientAnyAdvanced implements IIngredient {
-	private final String mark;
-	private final IItemCondition[] conditions;
-	private final IItemTransformer[] transformers;
 
-	public IngredientAnyAdvanced(String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
-		this.mark = mark;
-		this.conditions = conditions;
-		this.transformers = transformers;
-	}
+    private final String mark;
+    private final IItemCondition[] conditions;
+    private final IItemTransformer[] transformers;
 
-	@Override
-	public String getMark() {
-		return mark;
-	}
+    public IngredientAnyAdvanced(String mark, IItemCondition[] conditions, IItemTransformer[] transformers) {
+        this.mark = mark;
+        this.conditions = conditions;
+        this.transformers = transformers;
+    }
 
-	@Override
-	public int getAmount() {
-		return 1;
-	}
+    @Override
+    public String getMark() {
+        return mark;
+    }
 
-	@Override
-	public List<IItemStack> getItems() {
-		return null;
-	}
+    @Override
+    public int getAmount() {
+        return 1;
+    }
 
-	@Override
-	public List<ILiquidStack> getLiquids() {
-		return null;
-	}
+    @Override
+    public List<IItemStack> getItems() {
+        return null;
+    }
 
-	@Override
-	public IIngredient amount(int amount) {
-		return new IngredientStack(this, amount);
-	}
+    @Override
+    public List<ILiquidStack> getLiquids() {
+        return null;
+    }
 
-	@Override
-	public IIngredient transform(IItemTransformer transformer) {
-		return new IngredientAnyAdvanced(mark, conditions, ArrayUtil.append(transformers, transformer));
-	}
+    @Override
+    public IIngredient amount(int amount) {
+        return new IngredientStack(this, amount);
+    }
 
-	@Override
-	public IIngredient only(IItemCondition condition) {
-		return new IngredientAnyAdvanced(mark, ArrayUtil.append(conditions, condition), transformers);
-	}
+    @Override
+    public IIngredient transform(IItemTransformer transformer) {
+        return new IngredientAnyAdvanced(mark, conditions, ArrayUtil.append(transformers, transformer));
+    }
 
-	@Override
-	public IIngredient marked(String mark) {
-		return new IngredientAnyAdvanced(mark, conditions, transformers);
-	}
+    @Override
+    public IIngredient only(IItemCondition condition) {
+        return new IngredientAnyAdvanced(mark, ArrayUtil.append(conditions, condition), transformers);
+    }
 
-	@Override
-	public IIngredient or(IIngredient ingredient) {
-		return new IngredientOr(this, ingredient);
-	}
+    @Override
+    public IIngredient marked(String mark) {
+        return new IngredientAnyAdvanced(mark, conditions, transformers);
+    }
 
-	@Override
-	public boolean matches(IItemStack item) {
-		for (IItemCondition condition : conditions) {
-			if (!condition.matches(item))
-				return false;
-		}
+    @Override
+    public IIngredient or(IIngredient ingredient) {
+        return new IngredientOr(this, ingredient);
+    }
 
-		return true;
-	}
+    @Override
+    public boolean matches(IItemStack item) {
+        for(IItemCondition condition : conditions) {
+            if(!condition.matches(item))
+                return false;
+        }
 
-	@Override
-	public boolean matchesExact(IItemStack item) {
-		for (IItemCondition condition : conditions) {
-			if (!condition.matches(item))
-				return false;
-		}
+        return true;
+    }
 
-		return true;
-	}
+    @Override
+    public boolean matchesExact(IItemStack item) {
+        for(IItemCondition condition : conditions) {
+            if(!condition.matches(item))
+                return false;
+        }
 
-	@Override
-	public boolean matches(ILiquidStack liquid) {
-		// TODO: conditions on liquids?
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public boolean contains(IIngredient ingredient) {
-		List<IItemStack> iitems = ingredient.getItems();
-		for (IItemStack iitem : iitems) {
-			if (!matches(iitem))
-				return false;
-		}
+    @Override
+    public boolean matches(ILiquidStack liquid) {
+        // TODO: conditions on liquids?
+        return true;
+    }
 
-		return true;
-	}
+    @Override
+    public boolean contains(IIngredient ingredient) {
+        List<IItemStack> iitems = ingredient.getItems();
+        for(IItemStack iitem : iitems) {
+            if(!matches(iitem))
+                return false;
+        }
 
-	@Override
-	public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
-		for (IItemTransformer transform : transformers) {
-			item = transform.transform(item, byPlayer);
-		}
+        return true;
+    }
 
-		return item;
-	}
+    @Override
+    public IItemStack applyTransform(IItemStack item, IPlayer byPlayer) {
+        for(IItemTransformer transform : transformers) {
+            item = transform.transform(item, byPlayer);
+        }
 
-	@Override
-	public boolean hasTransformers() {
-		return transformers.length > 0;
-	}
+        return item;
+    }
 
-	@Override
-	public Object getInternal() {
-		return IngredientAny.INTERNAL_ANY;
-	}
+    @Override
+    public boolean hasTransformers() {
+        return transformers.length > 0;
+    }
+
+    @Override
+    public Object getInternal() {
+        return IngredientAny.INTERNAL_ANY;
+    }
 }

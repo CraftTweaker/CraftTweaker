@@ -31,7 +31,7 @@ import minetweaker.mc1710.server.MCServer;
 import minetweaker.mc1710.util.MineTweakerHacks;
 import minetweaker.mc1710.util.MineTweakerPlatformUtils;
 import minetweaker.mc1710.vanilla.MCVanilla;
-import minetweaker.runtime.IScriptProvider;
+import minetweaker.runtime.*;
 import minetweaker.runtime.providers.ScriptProviderCascade;
 import minetweaker.runtime.providers.ScriptProviderCustom;
 import minetweaker.runtime.providers.ScriptProviderDirectory;
@@ -46,7 +46,7 @@ import java.io.File;
  * 
  * @author Stan Hebben
  */
-@Mod(modid = MineTweakerMod.MODID, version = "3.0.13")
+@Mod(modid = MineTweakerMod.MODID, version = "3.1.0")
 public class MineTweakerMod {
 	public static final String MODID = "MineTweaker3";
 	public static final String MCVERSION = "1.7.10";

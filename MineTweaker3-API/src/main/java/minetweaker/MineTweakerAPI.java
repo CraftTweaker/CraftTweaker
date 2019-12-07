@@ -3,6 +3,7 @@ package minetweaker;
 import minetweaker.annotations.BracketHandler;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.client.IClient;
+import minetweaker.api.compat.*;
 import minetweaker.api.event.IEventManager;
 import minetweaker.api.formatting.IFormatter;
 import minetweaker.api.game.IGame;
@@ -68,14 +69,10 @@ public class MineTweakerAPI {
 			"Red",
 			"Black"
 	};
-
-	static {
-//		List<Class> apiClasses = new ArrayList<Class>();
-//		ClassRegistry.getClasses(apiClasses);
-//
-//		for (Class cls : apiClasses) {
-//			registerClass(cls);
-//		}
+    private static IJEIRecipeRegistry ijeiRecipeRegistry = new DummyJEIRecipeRegistry();
+    
+    static {
+		registerClassRegistry(ClassRegistry.class, "MT-API");
 
 		registerGlobalSymbol("logger", getJavaStaticGetterSymbol(MineTweakerAPI.class, "getLogger"));
 		registerGlobalSymbol("recipes", getJavaStaticFieldSymbol(MineTweakerAPI.class, "recipes"));
@@ -260,7 +257,7 @@ public class MineTweakerAPI {
 		try {
 			Method method = registryClass.getMethod("getClasses", List.class);
 			if ((method.getModifiers() & Modifier.STATIC) == 0) {
-				System.out.println("ERROR: getClasses method in " + registryClass.getName() + " isn't static");
+				logError("ERROR: getClasses method in " + registryClass.getName() + " isn't static");
 			} else {
 				List<Class> classes = new ArrayList<Class>();
 				method.invoke(null, classes);
@@ -285,16 +282,16 @@ public class MineTweakerAPI {
 				}
 
 				if (description != null)
-					System.out.println("Loaded class registry: " + description);
+					logInfo("Loaded class registry: " + description);
 			}
-		} catch (NoSuchMethodException ex) {
-
-		} catch (IllegalAccessException ex) {
-
-		} catch (InvocationTargetException ex) {
-
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+		    if(ex.getCause() instanceof NoClassDefFoundError) {
+		        logInfo("Classes for registry " + registryClass + " not found, skipping");
+            } else {
+                logError("Error registering class registry", ex);
+            }
 		}
-	}
+    }
 
 	/**
 	 * Registers a class registry. Will attempt to resolve the given class name.
@@ -445,4 +442,12 @@ public class MineTweakerAPI {
 	public static IJavaMethod getJavaMethod(Class cls, String name, Class... arguments) {
 		return JavaMethod.get(GlobalRegistry.getTypeRegistry(), cls, name, arguments);
 	}
+    
+    public static IJEIRecipeRegistry getIjeiRecipeRegistry() {
+        return ijeiRecipeRegistry;
+    }
+    
+    public static void setIjeiRecipeRegistry(IJEIRecipeRegistry ijeiRecipeRegistry) {
+        MineTweakerAPI.ijeiRecipeRegistry = ijeiRecipeRegistry;
+    }
 }

@@ -1,36 +1,37 @@
 package minetweaker.api.data;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Data converter interface. Used to convert data elements to other types.
- * 
- * @author Stan Hebben
+ *
  * @param <T> output type
+ *
+ * @author Stan Hebben
  */
 public interface IDataConverter<T> {
-	public T fromBool(boolean value);
 
-	public T fromByte(byte value);
+    T fromBool(boolean value);
 
-	public T fromShort(short value);
+    T fromByte(byte value);
 
-	public T fromInt(int value);
+    T fromShort(short value);
 
-	public T fromLong(long value);
+    T fromInt(int value);
 
-	public T fromFloat(float value);
+    T fromLong(long value);
 
-	public T fromDouble(double value);
+    T fromFloat(float value);
 
-	public T fromString(String value);
+    T fromDouble(double value);
 
-	public T fromList(List<IData> values);
+    T fromString(String value);
 
-	public T fromMap(Map<String, IData> values);
+    T fromList(List<IData> values);
 
-	public T fromByteArray(byte[] value);
+    T fromMap(Map<String, IData> values);
 
-	public T fromIntArray(int[] value);
+    T fromByteArray(byte[] value);
+
+    T fromIntArray(int[] value);
 }

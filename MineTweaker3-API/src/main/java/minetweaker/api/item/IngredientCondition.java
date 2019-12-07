@@ -1,8 +1,7 @@
 package minetweaker.api.item;
 
 import minetweaker.api.data.IData;
-import stanhebben.zenscript.annotations.ZenExpansion;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * Conditions can be used to set requirements for matching items. They can be
@@ -13,10 +12,12 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenExpansion("minetweaker.item.IIngredient")
 public class IngredientCondition {
+
     /**
      * Requires the item to be damaged. A damage value of 1 is enough.
      *
      * @param ingredient target value
+     *
      * @return damaged condition
      */
     @ZenMethod
@@ -34,6 +35,7 @@ public class IngredientCondition {
      *
      * @param ingredient target value
      * @param minDamage  minimum damage
+     *
      * @return damage condition
      */
     @ZenMethod
@@ -52,6 +54,7 @@ public class IngredientCondition {
      *
      * @param ingredient target value
      * @param maxDamage  maximum damage
+     *
      * @return damage condition
      */
     @ZenMethod
@@ -70,6 +73,7 @@ public class IngredientCondition {
      * @param ingredient target value
      * @param minDamage  minimum damage
      * @param maxDamage  maximum damage
+     *
      * @return damage condition
      */
     @ZenMethod
@@ -88,6 +92,7 @@ public class IngredientCondition {
      *
      * @param ingredient target value
      * @param data       required data
+     *
      * @return data condition
      */
     @ZenMethod
@@ -106,6 +111,7 @@ public class IngredientCondition {
      *
      * @param ingredient target value
      * @param amount     required stack size
+     *
      * @return stack size condition
      */
     @ZenMethod

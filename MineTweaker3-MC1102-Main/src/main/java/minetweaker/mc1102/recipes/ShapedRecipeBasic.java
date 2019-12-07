@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.recipes;
 
 import minetweaker.api.item.IItemStack;
-import minetweaker.api.recipes.ShapedRecipe;
+import minetweaker.api.recipes.*;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
@@ -18,27 +12,33 @@ import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 /**
  * @author Stan
  */
-public class ShapedRecipeBasic extends ShapedRecipes{
+public class ShapedRecipeBasic extends ShapedRecipes implements IMTRecipe {
+
     private final ShapedRecipe recipe;
 
-    public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedRecipe recipe){
+    public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedRecipe recipe) {
         super(recipe.getWidth(), recipe.getHeight(), basicInputs, getItemStack(recipe.getOutput()));
 
         this.recipe = recipe;
     }
 
     @Override
-    public boolean matches(InventoryCrafting inventory, World world){
+    public boolean matches(InventoryCrafting inventory, World world) {
         return recipe.matches(MCCraftingInventory.get(inventory));
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inventory){
+    public ItemStack getCraftingResult(InventoryCrafting inventory) {
         IItemStack result = recipe.getCraftingResult(MCCraftingInventory.get(inventory));
-        if(result == null){
+        if(result == null) {
             return null;
-        }else{
+        } else {
             return getItemStack(result).copy();
         }
+    }
+
+    @Override
+    public ICraftingRecipe getRecipe() {
+        return recipe;
     }
 }

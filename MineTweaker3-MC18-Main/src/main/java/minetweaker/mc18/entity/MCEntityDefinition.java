@@ -7,25 +7,64 @@
 package minetweaker.mc18.entity;
 
 import minetweaker.api.entity.IEntityDefinition;
+import minetweaker.api.item.*;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import stanhebben.zenscript.value.*;
+
+import java.util.*;
 
 /**
  * @author Stan
  */
-public class MCEntityDefinition implements IEntityDefinition{
+public class MCEntityDefinition implements IEntityDefinition {
+    
     private final EntityRegistry.EntityRegistration registration;
-
-    public MCEntityDefinition(EntityRegistry.EntityRegistration registration){
+    
+    private final Map<IItemStack, IntRange> dropsToAdd = new HashMap<IItemStack, IntRange>();
+    private final Map<IItemStack, IntRange> dropsToAddPlayerOnly = new HashMap<IItemStack, IntRange>();
+    private final List<IItemStack> dropsToRemove = new ArrayList<IItemStack>();
+    
+    public MCEntityDefinition(EntityRegistry.EntityRegistration registration) {
         this.registration = registration;
     }
-
+    
     @Override
-    public String getId(){
+    public String getId() {
         return registration.getEntityClass().getName();
     }
-
+    
     @Override
-    public String getName(){
+    public String getName() {
         return registration.getEntityName();
+    }
+    
+    @Override
+    public void addDrop(IItemStack stack, int min, int max) {
+        dropsToAdd.put(stack, new IntRange(min, max));
+    }
+    
+    @Override
+    public void addPlayerOnlyDrop(IItemStack stack, int min, int max) {
+        dropsToAddPlayerOnly.put(stack, new IntRange(min, max));
+    }
+    
+    @Override
+    public void removeDrop(IItemStack stack) {
+        dropsToRemove.add(stack);
+    }
+    
+    @Override
+    public Map<IItemStack, IntRange> getDropsToAdd() {
+        return dropsToAdd;
+    }
+    
+    @Override
+    public Map<IItemStack, IntRange> getDropsToAddPlayerOnly() {
+        return dropsToAddPlayerOnly;
+    }
+    
+    @Override
+    public List<IItemStack> getDropsToRemove() {
+        return dropsToRemove;
     }
 }

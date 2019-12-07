@@ -1,8 +1,7 @@
 package com.blamejared.ctgui.client;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -35,8 +34,7 @@ public class InventoryFake implements IInventory {
     @Nullable
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        ItemStack itemstack = ItemStackHelper.getAndSplit(items, index, count);
-        return itemstack;
+        return ItemStackHelper.getAndSplit(items, index, count);
     }
 
     @Nullable
@@ -59,11 +57,12 @@ public class InventoryFake implements IInventory {
     public void markDirty() {
 
     }
-
+    
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return true;
     }
+    
 
     @Override
     public void openInventory(EntityPlayer player) {
@@ -97,7 +96,7 @@ public class InventoryFake implements IInventory {
 
     @Override
     public void clear() {
-        for (int i = 0; i < this.items.length; ++i) {
+        for(int i = 0; i < this.items.length; ++i) {
             this.items[i] = null;
         }
     }

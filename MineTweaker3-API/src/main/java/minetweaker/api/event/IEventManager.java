@@ -4,93 +4,94 @@ import minetweaker.util.IEventHandler;
 
 /**
  * 37 kinds of event handlers!
- * 
+ * <p>
  * NOTE: not all of these are implemented yet, but will be later on.
- * 
+ *
  * @author Stan
  */
 public interface IEventManager {
-	// implemented
-	public IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
-
-	// implemented
-	public IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev);
-
-	public IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev);
-
-	public IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev);
-
-	public IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
-
-	public IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
-
-	public IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev);
-
-	public IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev);
-
-	public IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
-
-	public IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev);
-
-	public IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev);
-
-	public IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev);
-
-	public IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);
-
-	public IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev);
-
-	public IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
-
-	public IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
-
-	public IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev);
-
-	public IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev);
+    
+    // implemented
+    IEventHandle onPlayerCrafted(IEventHandler<PlayerCraftedEvent> ev);
+    
+    // implemented
+    IEventHandle onPlayerSmelted(IEventHandler<PlayerSmeltedEvent> ev);
+    
+    IEventHandle onPlayerChangedDimension(IEventHandler<PlayerChangedDimensionEvent> ev);
+    
+    IEventHandle onPlayerRespawn(IEventHandler<PlayerRespawnEvent> ev);
+    
+    IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
+    
+    IEventHandle onPlayerBonemeal(IEventHandler<PlayerBonemealEvent> ev);
+    
+    IEventHandle onPlayerInteractEntity(IEventHandler<PlayerInteractEntityEvent> ev);
+    
+    IEventHandle onPlayerPickup(IEventHandler<PlayerPickupEvent> ev);
+    
+    IEventHandle onPlayerPickupItem(IEventHandler<PlayerPickupItemEvent> ev);
+    
+    IEventHandle onPlayerFillBucket(IEventHandler<PlayerFillBucketEvent> ev);
+    
+    IEventHandle onPlayerDeathDrops(IEventHandler<PlayerDeathDropsEvent> ev);
+    
+    IEventHandle onPlayerInteract(IEventHandler<PlayerInteractEvent> ev);
+    
+    IEventHandle onPlayerOpenContainer(IEventHandler<PlayerOpenContainerEvent> ev);
+    
+    IEventHandle onPlayerPickupXp(IEventHandler<PlayerPickupXpEvent> ev);
+    
+    IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
+    
+    IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
+    
+    IEventHandle onPlayerUseItemStart(IEventHandler<PlayerUseItemStartEvent> ev);
+    
+    IEventHandle onPlayerUseItemTick(IEventHandler<PlayerUseItemTickEvent> ev);
 
 	/*
-	 * public IEventHandle
+     * IEventHandle
 	 * onPlayerUseItemStop(IEventHandler<PlayerUseItemStopEvent> ev);
 	 * 
-	 * public IEventHandle
+	 * IEventHandle
 	 * onPlayerUseItemFinish(IPlayerUserItemFinishEventHandler ev);
 	 * 
-	 * public IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
+	 * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
 	 * 
-	 * public IEventHandle onTimerSingle(int millis, ITimerEventHandler ev);
+	 * IEventHandle onTimerSingle(int millis, ITimerEventHandler ev);
 	 * 
-	 * public IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
+	 * IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
 	 * 
-	 * public IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
+	 * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
 	 * 
-	 * public IEventHandle
+	 * IEventHandle
 	 * onEntityStruckByLightning(IEntityStruckByLightningEventHandler ev);
 	 * 
-	 * public IEventHandle
+	 * IEventHandle
 	 * onLivingEnderTeleport(ILivingEnderTeleportEventHandler ev);
 	 * 
-	 * public IEventHandle onLivingAttackEvent(ILivingAttackEventHandler ev);
+	 * IEventHandle onLivingAttackEvent(ILivingAttackEventHandler ev);
 	 * 
-	 * public IEventHandle onLivingDeathEvent(ILivingDeathEventHandler ev);
+	 * IEventHandle onLivingDeathEvent(ILivingDeathEventHandler ev);
 	 * 
-	 * public IEventHandle onLivingJumpEvent(ILivingJumpEventHandler ev);
+	 * IEventHandle onLivingJumpEvent(ILivingJumpEventHandler ev);
 	 * 
-	 * public IEventHandle onLivingFallEvent(ILivingFallEventHandler ev);
+	 * IEventHandle onLivingFallEvent(ILivingFallEventHandler ev);
 	 * 
-	 * public IEventHandle onLivingHurtEvent(ILivingHurtEventHandler ev);
+	 * IEventHandle onLivingHurtEvent(ILivingHurtEventHandler ev);
 	 * 
-	 * public IEventHandle onLivingDeathDropsEvent(ILivingDeathDropsEventHandler
+	 * IEventHandle onLivingDeathDropsEvent(ILivingDeathDropsEventHandler
 	 * ev);
 	 * 
-	 * public IEventHandle onItemTossed(IItemTossedEventHandler ev);
+	 * IEventHandle onItemTossed(IItemTossedEventHandler ev);
 	 * 
-	 * public IEventHandle onItemExpired(IItemExpiredEventHandler ev);
+	 * IEventHandle onItemExpired(IItemExpiredEventHandler ev);
 	 * 
-	 * public IEventHandle onMinecartCollision(IMinecartCollisionEventHandler
+	 * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler
 	 * ev);
 	 * 
-	 * public IEventHandle onMinecartInteract(IMinecartInteractEventHandler ev);
+	 * IEventHandle onMinecartInteract(IMinecartInteractEventHandler ev);
 	 * 
-	 * public IEventHandle onCommand(ICommandEventHandler ev);
+	 * IEventHandle onCommand(ICommandEventHandler ev);
 	 */
 }

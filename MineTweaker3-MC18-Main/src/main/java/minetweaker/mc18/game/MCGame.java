@@ -6,6 +6,7 @@
 
 package minetweaker.mc18.game;
 
+import com.google.common.collect.*;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlockDefinition;
@@ -43,6 +44,8 @@ import java.util.Set;
 public class MCGame implements IGame{
     public static final MCGame INSTANCE = new MCGame();
     private static final Map<String, String> TRANSLATIONS = MineTweakerHacks.getTranslations();
+    private static final List<IEntityDefinition> ENTITY_DEFINITIONS = new ArrayList<IEntityDefinition>();
+    
     private boolean locked = false;
 
     public MCGame(){
@@ -86,16 +89,47 @@ public class MCGame implements IGame{
         }
         return result;
     }
-
+    
     @Override
-    public List<IEntityDefinition> getEntities(){
-        List<IEntityDefinition> result = new ArrayList<IEntityDefinition>();
-
-        for(EntityRegistry.EntityRegistration entityRegistration : MineTweakerHacks.getEntityClassRegistrations().values()){
-            result.add(new MCEntityDefinition(entityRegistration));
+    public List<IEntityDefinition> getEntities() {
+        final Set<EntityRegistry.EntityRegistration> values = MineTweakerHacks.getEntityClassRegistrations().values();
+        if(Iterables.size(values) != ENTITY_DEFINITIONS.size()) {
+            ENTITY_DEFINITIONS.clear();
+            for(EntityRegistry.EntityRegistration entry : values) {
+                ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry));
+            }
         }
-
-        return result;
+        return ENTITY_DEFINITIONS;
+    }
+    
+    @Override
+    public IEntityDefinition getEntity(String entityName) {
+        for(IEntityDefinition ent : getEntities()) {
+            if(ent.getName().equalsIgnoreCase(entityName)) {
+                return ent;
+            }
+        }
+        boolean needsReloading = false;
+        for(EntityRegistry.EntityRegistration res : MineTweakerHacks.getEntityClassRegistrations().values()) {
+            if(res.getEntityName().equalsIgnoreCase(entityName)) {
+                needsReloading = true;
+                break;
+            }
+        }
+        if(needsReloading) {
+            ENTITY_DEFINITIONS.clear();
+            for(EntityRegistry.EntityRegistration entry : MineTweakerHacks.getEntityClassRegistrations().values()) {
+                ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry));
+            }
+        }
+        
+        for(IEntityDefinition entity : getEntities()) {
+            if(entity.getName().equalsIgnoreCase(entityName)) {
+                return entity;
+            }
+        }
+        return null;
+        
     }
 
     @Override

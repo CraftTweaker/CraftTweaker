@@ -1,42 +1,28 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.mc1102.server;
 
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
+import minetweaker.*;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.player.IPlayer;
-import minetweaker.api.server.AbstractServer;
-import minetweaker.api.server.ICommandFunction;
-import minetweaker.api.server.ICommandTabCompletion;
-import minetweaker.api.server.ICommandValidator;
+import minetweaker.api.server.*;
 import minetweaker.mc1102.MineTweakerMod;
-import minetweaker.mc1102.player.CommandBlockPlayer;
-import minetweaker.mc1102.player.RconPlayer;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.CommandHandler;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
+import minetweaker.mc1102.player.*;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.UserListOps;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.math.BlockPos;
 import stanhebben.zenscript.annotations.Optional;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author Stan
  */
 public class MCServer extends AbstractServer {
+
     private final MinecraftServer server;
 
     public MCServer(MinecraftServer server) {
@@ -46,22 +32,22 @@ public class MCServer extends AbstractServer {
     private static IPlayer getPlayer(ICommandSender commandSender) {
         if(commandSender instanceof EntityPlayer) {
             return MineTweakerMC.getIPlayer((EntityPlayer) commandSender);
-        } else if(commandSender instanceof DedicatedServer) {
-            return ServerPlayer.INSTANCE;
         } else if(commandSender instanceof RConConsoleSource) {
             return new RconPlayer(commandSender);
         } else if(commandSender instanceof CommandBlockBaseLogic) {
             return new CommandBlockPlayer(commandSender);
+        } else if(commandSender.getName().equals("Server")) {
+            return ServerPlayer.INSTANCE;
         } else {
-            System.out.println("Unsupported command sender: " + commandSender);
+            System.out.println("Unsupported command sender: " + commandSender + " defaulting to server player!");
             System.out.println("player name: " + commandSender.getName());
-            return null;
+            System.out.println("Please report to mod author if this is incorrect!");
+            return ServerPlayer.INSTANCE;
         }
     }
 
     @Override
     public void addCommand(String name, String usage, String[] aliases, ICommandFunction function, @Optional ICommandValidator validator, @Optional ICommandTabCompletion completion) {
-
         ICommand command = new MCCommand(name, usage, aliases, function, validator, completion);
         MineTweakerAPI.apply(new AddCommandAction(command));
     }
@@ -72,7 +58,7 @@ public class MCServer extends AbstractServer {
             return true;
 
         UserListOps ops = MineTweakerMod.server.getPlayerList().getOppedPlayers();
-        if(server.isDedicatedServer() && ops != null) {
+        if(server != null && server.isDedicatedServer() && ops != null) {
             //TODO figure if this is correct
             //            return ops.func_152690_d() || ops.func_152700_a(player.getName()) != null || player instanceof RconPlayer;
             return ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
@@ -87,6 +73,7 @@ public class MCServer extends AbstractServer {
     }
 
     private class MCCommand implements ICommand {
+
         private final String name;
         private final String usage;
         private final List<String> aliases;
@@ -104,17 +91,17 @@ public class MCServer extends AbstractServer {
         }
 
         @Override
-        public String getCommandName() {
+        public String getName() {
             return name;
         }
 
         @Override
-        public String getCommandUsage(ICommandSender var1) {
+        public String getUsage(ICommandSender var1) {
             return usage;
         }
 
         @Override
-        public List getCommandAliases() {
+        public List getAliases() {
             return aliases;
         }
 
@@ -131,9 +118,9 @@ public class MCServer extends AbstractServer {
                 return validator.canExecute(getPlayer(sender));
             }
         }
-
+        
         @Override
-        public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
             if(completion != null) {
                 return Arrays.asList(completion.getTabCompletionOptions(args, getPlayer(sender)));
             } else {
@@ -148,11 +135,12 @@ public class MCServer extends AbstractServer {
 
         @Override
         public int compareTo(ICommand o) {
-            return 0;
+            return this.getName().compareTo(o.getName());
         }
     }
 
     private class AddCommandAction implements IUndoableAction {
+
         private final ICommand command;
 
         public AddCommandAction(ICommand command) {
@@ -180,13 +168,13 @@ public class MCServer extends AbstractServer {
         public String describe() {
             CommandHandler ch = (CommandHandler) MineTweakerMod.server.getCommandManager();
             if(!ch.getCommands().containsValue(command))
-                return "Adding command " + command.getCommandName();
+                return "Adding command " + command.getName();
             return "";
         }
 
         @Override
         public String describeUndo() {
-            return "tried to remove command: " + command.getCommandName() + " failed. THIS IS NOT AN ERROR!";
+            return "tried to remove command: " + command.getName() + " failed. THIS IS NOT AN ERROR!";
         }
 
         @Override

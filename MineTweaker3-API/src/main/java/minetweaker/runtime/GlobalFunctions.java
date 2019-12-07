@@ -19,4 +19,8 @@ public class GlobalFunctions {
 	public static void print(String message) {
 		MineTweakerAPI.logInfo(message);
 	}
+    
+    public static boolean isNull(Object any){
+        return any == null;
+    }
 }

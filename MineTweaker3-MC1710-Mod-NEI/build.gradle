@@ -21,6 +21,7 @@ apply plugin: 'forge'
 
 minecraft {
 	version = forgeVersion1710
+    mappings = "stable_12"
 }
 
 version = "1.0"

@@ -1,147 +1,141 @@
 package minetweaker.api.data;
 
-import java.util.List;
-import java.util.Map;
-import stanhebben.zenscript.annotations.ZenCaster;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMemberGetter;
-import stanhebben.zenscript.annotations.ZenMemberSetter;
-import stanhebben.zenscript.annotations.ZenOperator;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
+
+import java.util.*;
 
 /**
  * Generic data interface. A data element may contain any kind of basic data
  * element (bool, byte, short, int, long, float, double, string, list, map, int
  * array or byte array). Used to store data with stacks, blocks, world, ...
- * 
+ *
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.data.IData")
 public interface IData {
-	@ZenOperator(OperatorType.ADD)
-	public IData add(IData other);
 
-	@ZenOperator(OperatorType.SUB)
-	public IData sub(IData other);
+    @ZenOperator(OperatorType.ADD)
+    IData add(IData other);
 
-	@ZenOperator(OperatorType.MUL)
-	public IData mul(IData other);
+    @ZenOperator(OperatorType.SUB)
+    IData sub(IData other);
 
-	@ZenOperator(OperatorType.DIV)
-	public IData div(IData other);
+    @ZenOperator(OperatorType.MUL)
+    IData mul(IData other);
 
-	@ZenOperator(OperatorType.MOD)
-	public IData mod(IData other);
+    @ZenOperator(OperatorType.DIV)
+    IData div(IData other);
 
-	@ZenOperator(OperatorType.AND)
-	public IData and(IData other);
+    @ZenOperator(OperatorType.MOD)
+    IData mod(IData other);
 
-	@ZenOperator(OperatorType.OR)
-	public IData or(IData other);
+    @ZenOperator(OperatorType.AND)
+    IData and(IData other);
 
-	@ZenOperator(OperatorType.XOR)
-	public IData xor(IData other);
+    @ZenOperator(OperatorType.OR)
+    IData or(IData other);
 
-	@ZenOperator(OperatorType.NEG)
-	public IData neg();
+    @ZenOperator(OperatorType.XOR)
+    IData xor(IData other);
 
-	@ZenOperator(OperatorType.NOT)
-	public IData not();
+    @ZenOperator(OperatorType.NEG)
+    IData neg();
 
-	@ZenCaster
-	public boolean asBool();
+    @ZenOperator(OperatorType.NOT)
+    IData not();
 
-	@ZenCaster
-	public byte asByte();
+    @ZenCaster
+    boolean asBool();
 
-	@ZenCaster
-	public short asShort();
+    @ZenCaster
+    byte asByte();
 
-	@ZenCaster
-	public int asInt();
+    @ZenCaster
+    short asShort();
 
-	@ZenCaster
-	public long asLong();
+    @ZenCaster
+    int asInt();
 
-	@ZenCaster
-	public float asFloat();
+    @ZenCaster
+    long asLong();
 
-	@ZenCaster
-	public double asDouble();
+    @ZenCaster
+    float asFloat();
 
-	@ZenCaster
-	public String asString();
+    @ZenCaster
+    double asDouble();
 
-	/**
-	 * Attempts to convert this value to a List. Returns null if this value
-	 * cannot be converted to a list.
-	 * 
-	 * @return list data of this value, if any
-	 */
-	@ZenCaster
-	public List<IData> asList();
+    @ZenCaster
+    String asString();
 
-	/**
-	 * Attempts to convert this value to a Map. Returns null if this value
-	 * cannot be converted to a map.
-	 * 
-	 * @return map data of this value, if any
-	 */
-	@ZenCaster
-	public Map<String, IData> asMap();
+    /**
+     * Attempts to convert this value to a List. Returns null if this value
+     * cannot be converted to a list.
+     *
+     * @return list data of this value, if any
+     */
+    @ZenCaster
+    List<IData> asList();
 
-	/**
-	 * Attempts to convert this value to a byte array. Returns null if this
-	 * value cannot be converted to a byte array.
-	 * 
-	 * @return byte array data of this value, if any
-	 */
-	@ZenCaster
-	public byte[] asByteArray();
+    /**
+     * Attempts to convert this value to a Map. Returns null if this value
+     * cannot be converted to a map.
+     *
+     * @return map data of this value, if any
+     */
+    @ZenCaster
+    Map<String, IData> asMap();
 
-	/**
-	 * Attempts to convert this value to an int array. Returns null if this
-	 * value cannot be converted to an int array.
-	 * 
-	 * @return int array data of this value, if any
-	 */
-	@ZenCaster
-	public int[] asIntArray();
+    /**
+     * Attempts to convert this value to a byte array. Returns null if this
+     * value cannot be converted to a byte array.
+     *
+     * @return byte array data of this value, if any
+     */
+    @ZenCaster
+    byte[] asByteArray();
 
-	@ZenOperator(OperatorType.INDEXGET)
-	public IData getAt(int i);
+    /**
+     * Attempts to convert this value to an int array. Returns null if this
+     * value cannot be converted to an int array.
+     *
+     * @return int array data of this value, if any
+     */
+    @ZenCaster
+    int[] asIntArray();
 
-	@ZenOperator(OperatorType.INDEXSET)
-	public void setAt(int i, IData value);
+    @ZenOperator(OperatorType.INDEXGET)
+    IData getAt(int i);
 
-	@ZenMemberGetter
-	public IData memberGet(String name);
+    @ZenOperator(OperatorType.INDEXSET)
+    void setAt(int i, IData value);
 
-	@ZenMemberSetter
-	public void memberSet(String name, IData data);
+    @ZenMemberGetter
+    IData memberGet(String name);
 
-	@ZenGetter
-	public int length();
+    @ZenMemberSetter
+    void memberSet(String name, IData data);
 
-	@ZenOperator(OperatorType.CONTAINS)
-	public boolean contains(IData data);
+    @ZenGetter
+    int length();
 
-	@ZenOperator(OperatorType.COMPARE)
-	public int compareTo(IData data);
+    @ZenOperator(OperatorType.CONTAINS)
+    boolean contains(IData data);
 
-	@ZenOperator(OperatorType.EQUALS)
-	public boolean equals(IData data);
+    @ZenOperator(OperatorType.COMPARE)
+    int compareTo(IData data);
 
-	@ZenGetter
-	public IData immutable();
+    @ZenOperator(OperatorType.EQUALS)
+    boolean equals(IData data);
 
-	@ZenMethod
-	public IData update(IData data);
+    @ZenGetter
+    IData immutable();
 
-	public <T> T convert(IDataConverter<T> converter);
+    @ZenMethod
+    IData update(IData data);
 
-	@Override
-	public String toString();
+    <T> T convert(IDataConverter<T> converter);
+
+    @Override
+    String toString();
 }

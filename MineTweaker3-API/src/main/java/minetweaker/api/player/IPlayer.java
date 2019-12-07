@@ -1,69 +1,70 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package minetweaker.api.player;
 
 import minetweaker.api.chat.IChatMessage;
 import minetweaker.api.data.IData;
 import minetweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.*;
 
 /**
- *
  * @author Stan
  */
 @ZenClass("minetweaker.player.IPlayer")
 public interface IPlayer {
-	@ZenGetter("id")
-	public String getId();
 
-	@ZenGetter("name")
-	public String getName();
+    @ZenGetter("id")
+    String getId();
 
-	@ZenGetter("data")
-	public IData getData();
+    @ZenGetter("name")
+    String getName();
 
-	@ZenMethod
-	public void update(IData data);
+    @ZenGetter("data")
+    IData getData();
 
-	@ZenMethod
-	public void sendChat(IChatMessage message);
+    @ZenGetter("xp")
+    int getXP();
 
-	@ZenMethod
-	public void sendChat(String message);
+    @ZenSetter("xp")
+    void setXP(int xp);
 
-	@ZenGetter("hotbarSize")
-	public int getHotbarSize();
+    @ZenMethod
+    void removeXP(int xp);
 
-	@ZenMethod
-	public IItemStack getHotbarStack(int i);
+    @ZenMethod
+    void update(IData data);
 
-	@ZenGetter("inventorySize")
-	public int getInventorySize();
+    @ZenMethod
+    void sendChat(IChatMessage message);
 
-	@ZenMethod
-	public IItemStack getInventoryStack(int i);
+    @ZenMethod
+    void sendChat(String message);
 
-	@ZenGetter("currentItem")
-	public IItemStack getCurrentItem();
+    @ZenGetter("hotbarSize")
+    int getHotbarSize();
 
-	@ZenGetter("creative")
-	public boolean isCreative();
+    @ZenMethod
+    IItemStack getHotbarStack(int i);
 
-	@ZenGetter("adventure")
-	public boolean isAdventure();
+    @ZenGetter("inventorySize")
+    int getInventorySize();
 
-	@ZenMethod
-	public void give(IItemStack stack);
+    @ZenMethod
+    IItemStack getInventoryStack(int i);
 
-	// not an exposed method. risks abuse
-	public void openBrowser(String url);
+    @ZenGetter("currentItem")
+    IItemStack getCurrentItem();
 
-	// not an exposed method, so far. would it be useful?
-	public void copyToClipboard(String value);
+    @ZenGetter("creative")
+    boolean isCreative();
+
+    @ZenGetter("adventure")
+    boolean isAdventure();
+
+    @ZenMethod
+    void give(IItemStack stack);
+
+    // not an exposed method. risks abuse
+    void openBrowser(String url);
+
+    // not an exposed method, so far. would it be useful?
+    void copyToClipboard(String value);
 }

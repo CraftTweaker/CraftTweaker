@@ -6,6 +6,7 @@
 
 package minetweaker.mc1710.game;
 
+import com.google.common.collect.*;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.block.IBlockDefinition;
 import minetweaker.api.entity.IEntityDefinition;
+import minetweaker.api.event.*;
 import minetweaker.api.game.IGame;
 import minetweaker.api.item.IItemDefinition;
 import minetweaker.api.liquid.ILiquidDefinition;
@@ -31,6 +33,7 @@ import minetweaker.mc1710.util.MineTweakerPlatformUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.util.*;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -44,8 +47,9 @@ public class MCGame implements IGame {
 	public static final MCGame INSTANCE = new MCGame();
 
 	private boolean locked = false;
-
-	private MCGame() {
+    private static final List<IEntityDefinition> ENTITY_DEFINITIONS = new ArrayList<IEntityDefinition>();
+    
+    private MCGame() {
 	}
 
 	@Override
@@ -86,19 +90,50 @@ public class MCGame implements IGame {
 		}
 		return result;
 	}
-
-	@Override
-	public List<IEntityDefinition> getEntities() {
-		List<IEntityDefinition> result = new ArrayList<IEntityDefinition>();
-
-		for (EntityRegistry.EntityRegistration entityRegistration : MineTweakerHacks.getEntityClassRegistrations().values()) {
-			result.add(new MCEntityDefinition(entityRegistration));
-		}
-
-		return result;
-	}
-
-	@Override
+    
+    @Override
+    public List<IEntityDefinition> getEntities() {
+        final Set<EntityRegistry.EntityRegistration> values = MineTweakerHacks.getEntityClassRegistrations().values();
+        if(Iterables.size(values) != ENTITY_DEFINITIONS.size()) {
+            ENTITY_DEFINITIONS.clear();
+            for(EntityRegistry.EntityRegistration entry : values) {
+                ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry));
+            }
+        }
+        return ENTITY_DEFINITIONS;
+    }
+    
+    @Override
+    public IEntityDefinition getEntity(String entityName) {
+        for(IEntityDefinition ent : getEntities()) {
+            if(ent.getName().equalsIgnoreCase(entityName)) {
+                return ent;
+            }
+        }
+        boolean needsReloading = false;
+        for(EntityRegistry.EntityRegistration res : MineTweakerHacks.getEntityClassRegistrations().values()) {
+            if(res.getEntityName().equalsIgnoreCase(entityName)) {
+                needsReloading = true;
+                break;
+            }
+        }
+        if(needsReloading) {
+            ENTITY_DEFINITIONS.clear();
+            for(EntityRegistry.EntityRegistration entry : MineTweakerHacks.getEntityClassRegistrations().values()) {
+                ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry));
+            }
+        }
+    
+        for(IEntityDefinition entity : getEntities()) {
+            if(entity.getName().equalsIgnoreCase(entityName)) {
+                return entity;
+            }
+        }
+        return null;
+        
+    }
+    
+    @Override
 	public void setLocalization(String key, String value) {
 		MineTweakerAPI.apply(new SetTranslation(null, key, value));
 	}

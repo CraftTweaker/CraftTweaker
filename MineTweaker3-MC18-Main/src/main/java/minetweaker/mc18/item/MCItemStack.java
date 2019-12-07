@@ -197,7 +197,14 @@ public class MCItemStack implements IItemStack{
         }
         return new MCItemStack(result, tag);
     }
-
+    
+    @Override
+    public IItemStack withEmptyTag() {
+        ItemStack result = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
+        result.setTagCompound(null);
+        return new MCItemStack(result);
+    }
+    
     @Override
     public IItemStack updateTag(IData tagUpdate){
         if(tag == null){

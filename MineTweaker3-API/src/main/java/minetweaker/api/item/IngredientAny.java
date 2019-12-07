@@ -12,6 +12,7 @@ import java.util.List;
  * @author Stan Hebben
  */
 public class IngredientAny implements IIngredient {
+
     public static final IngredientAny INSTANCE = new IngredientAny();
 
     public static Object INTERNAL_ANY = null; // platforms supporting an "any"

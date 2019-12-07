@@ -646,7 +646,7 @@ public class MineTweakerImplementationAPI {
         MineTweakerAPI.tweaker.rollback();
         if (MineTweakerAPI.server != null) {
             if (!MineTweakerAPI.server.isCommandAdded("minetweaker")) {
-                server.addCommand("minetweaker", "", new String[]{"mt"}, new ICommandFunction() {
+                server.addCommand("minetweaker", "", new String[]{"mt", "crafttweaker", "ct"}, new ICommandFunction() {
                     @Override
                     public void execute(String[] arguments, IPlayer player) {
                         if (arguments.length == 0) {

@@ -6,32 +6,22 @@
 
 package minetweaker.runtime;
 
-import minetweaker.IBracketHandler;
-import minetweaker.IRecipeRemover;
-import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IIngredient;
-import stanhebben.zenscript.IZenCompileEnvironment;
-import stanhebben.zenscript.IZenErrorLogger;
-import stanhebben.zenscript.TypeExpansion;
-import stanhebben.zenscript.annotations.ZenExpansion;
-import stanhebben.zenscript.compiler.ClassNameGenerator;
-import stanhebben.zenscript.compiler.IEnvironmentGlobal;
-import stanhebben.zenscript.compiler.TypeRegistry;
-import stanhebben.zenscript.expression.partial.IPartialExpression;
-import stanhebben.zenscript.parser.Token;
+import minetweaker.*;
+import minetweaker.api.item.*;
+import stanhebben.zenscript.*;
+import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.compiler.*;
+import stanhebben.zenscript.expression.partial.*;
+import stanhebben.zenscript.parser.*;
 import stanhebben.zenscript.symbols.*;
-import stanhebben.zenscript.type.ZenType;
-import stanhebben.zenscript.type.ZenTypeNative;
-import stanhebben.zenscript.type.natives.IJavaMethod;
-import stanhebben.zenscript.type.natives.JavaMethod;
-import stanhebben.zenscript.util.ZenPosition;
+import stanhebben.zenscript.type.*;
+import stanhebben.zenscript.type.natives.*;
+import stanhebben.zenscript.util.*;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  *
@@ -49,11 +39,16 @@ public class GlobalRegistry {
 
 	static {
 		registerGlobal("print", getStaticFunction(GlobalFunctions.class, "print", String.class));
-		registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
-		registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
+        registerGlobal("isNull", getStaticFunction(GlobalFunctions.class, "isNull", Object.class));
+        registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
+        registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
+        registerGlobal("pow", getStaticFunction(Math.class, "pow", double.class, double.class));
 	}
-
-	private GlobalRegistry() {
+    public static IZenErrorLogger getErrors() {
+        return errors;
+    }
+    
+    private GlobalRegistry() {
 	}
 
 	public static void registerGlobal(String name, IZenSymbol symbol) {
@@ -76,7 +71,8 @@ public class GlobalRegistry {
 				}
 			}
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+            errors.error("Error while applying expansion", ex);
+            ex.printStackTrace();
 		}
 	}
 
@@ -89,12 +85,15 @@ public class GlobalRegistry {
 	}
 
 	public static void registerNativeClass(Class<?> cls) {
+	    //MineTweakerAPI.logInfo("Registering class: " + cls);
 		try {
+		 
 			ZenTypeNative type = new ZenTypeNative(cls);
 			type.complete(types);
 
 			root.put(type.getName(), new SymbolType(type), errors);
 		} catch (Throwable ex) {
+		    MineTweakerAPI.logError("Error for " + cls, ex);
 			ex.printStackTrace();
 		}
 	}
@@ -162,7 +161,36 @@ public class GlobalRegistry {
 				MineTweakerAPI.logWarning(position + ": " + message);
 			}
 		}
-	}
+        
+        @Override
+        public void info(ZenPosition position, String message) {
+            if (position == null) {
+                MineTweakerAPI.logInfo("system: " + message);
+            } else {
+                MineTweakerAPI.logInfo(position + ": " + message);
+            }
+        }
+        
+        @Override
+        public void error(String message) {
+            error(null, message);
+        }
+        
+        @Override
+        public void error(String message, Throwable e) {
+            error(null, message);
+        }
+        
+        @Override
+        public void warning(String message) {
+            warning(null, message);
+        }
+        
+        @Override
+        public void info(String message) {
+            info(null, message);
+        }
+    }
 
 	private static class MyCompileEnvironment implements IZenCompileEnvironment {
 		@Override
@@ -180,11 +208,6 @@ public class GlobalRegistry {
 		}
 
 		@Override
-		public IZenSymbol getDollar(String name) {
-			return null;
-		}
-
-		@Override
 		public IZenSymbol getBracketed(IEnvironmentGlobal environment, List<Token> tokens) {
 			return resolveBracket(environment, tokens);
 		}
@@ -198,7 +221,13 @@ public class GlobalRegistry {
 		public TypeExpansion getExpansion(String type) {
 			return expansions.get(type);
 		}
-	}
+        
+        @Override
+        public void setRegistry(IZenRegistry registry) {
+            //NO-OP
+            throw new UnsupportedOperationException("Registry is not local");
+        }
+    }
 
 	private static class MyGlobalEnvironment implements IEnvironmentGlobal {
 		private final Map<String, byte[]> classes;
@@ -225,8 +254,13 @@ public class GlobalRegistry {
 		public String makeClassName() {
 			return generator.generate();
 		}
-
-		@Override
+        
+        @Override
+        public String makeClassNameWithMiddleName(String middleName) {
+            return generator.generateWithMiddleName(middleName);
+        }
+        
+        @Override
 		public boolean containsClass(String name) {
 			return classes.containsKey(name);
 		}
@@ -275,6 +309,30 @@ public class GlobalRegistry {
 		public void warning(ZenPosition position, String message) {
 			MineTweakerAPI.logWarning(position.toString() + " > " + message);
 		}
+        
+        @Override
+        public void info(ZenPosition position, String message) {
+            MineTweakerAPI.logInfo(position.toString() + " > " + message);
+        }
+        
+        public void error(String message) {
+            MineTweakerAPI.logError(message);
+        }
+        
+        @Override
+        public void error(String message, Throwable e) {
+            MineTweakerAPI.logError(message, e);
+        }
+        
+        @Override
+        public void warning(String message) {
+            MineTweakerAPI.logWarning(message);
+        }
+        
+        @Override
+        public void info(String message) {
+            MineTweakerAPI.logInfo(message);
+        }
 
 		@Override
 		public Set<String> getClassNames() {

@@ -1,78 +1,76 @@
 package minetweaker.api.liquid;
 
-import java.util.List;
 import minetweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenOperator;
-import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
+
+import java.util.List;
 
 /**
  * Contains a liquid definition. Liquid definitions provide additional
  * information about liquids.
- * 
+ *
  * @author Stan Hebben
  */
 @ZenClass("minetweaker.liquid.ILiquidDefinition")
 public interface ILiquidDefinition {
-	/**
-	 * Converts this liquid into a liquid stack.
-	 * 
-	 * @param millibuckets item stack size
-	 * @return resulting item stack
-	 */
-	@ZenOperator(OperatorType.MUL)
-	public ILiquidStack asStack(int millibuckets);
 
-	/**
-	 * Gets the unlocalized name of this item.
-	 * 
-	 * @return unlocalized name
-	 */
-	@ZenGetter("name")
-	public String getName();
+    /**
+     * Converts this liquid into a liquid stack.
+     *
+     * @param millibuckets item stack size
+     *
+     * @return resulting item stack
+     */
+    @ZenOperator(OperatorType.MUL)
+    ILiquidStack asStack(int millibuckets);
 
-	@ZenGetter("displayName")
-	public String getDisplayName();
+    /**
+     * Gets the unlocalized name of this item.
+     *
+     * @return unlocalized name
+     */
+    @ZenGetter("name")
+    String getName();
 
-	@ZenGetter("luminosity")
-	public int getLuminosity();
+    @ZenGetter("displayName")
+    String getDisplayName();
 
-	@ZenSetter("luminosity")
-	public void setLuminosity(int value);
+    @ZenGetter("luminosity")
+    int getLuminosity();
 
-	@ZenGetter("density")
-	public int getDensity();
+    @ZenSetter("luminosity")
+    void setLuminosity(int value);
 
-	@ZenSetter("density")
-	public void setDensity(int density);
+    @ZenGetter("density")
+    int getDensity();
 
-	@ZenGetter("temperature")
-	public int getTemperature();
+    @ZenSetter("density")
+    void setDensity(int density);
 
-	@ZenSetter("temperature")
-	public void setTemperature(int temperature);
+    @ZenGetter("temperature")
+    int getTemperature();
 
-	@ZenGetter("viscosity")
-	public int getViscosity();
+    @ZenSetter("temperature")
+    void setTemperature(int temperature);
 
-	@ZenSetter("viscosity")
-	public void setViscosity(int viscosity);
+    @ZenGetter("viscosity")
+    int getViscosity();
 
-	@ZenGetter("gaseous")
-	public boolean isGaseous();
+    @ZenSetter("viscosity")
+    void setViscosity(int viscosity);
 
-	@ZenSetter("gaseous")
-	public void setGaseous(boolean gaseous);
+    @ZenGetter("gaseous")
+    boolean isGaseous();
 
-	@ZenGetter("containers")
-	public List<IItemStack> getContainers();
+    @ZenSetter("gaseous")
+    void setGaseous(boolean gaseous);
 
-	@ZenMethod
-	public void addContainer(IItemStack filled, IItemStack empty, int amount);
+    @ZenGetter("containers")
+    List<IItemStack> getContainers();
 
-	@ZenMethod
-	public void removeContainer(IItemStack filled);
+    @ZenMethod
+    void addContainer(IItemStack filled, IItemStack empty, int amount);
+
+    @ZenMethod
+    void removeContainer(IItemStack filled);
 }
