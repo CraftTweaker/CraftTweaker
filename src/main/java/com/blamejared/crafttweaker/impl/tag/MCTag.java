@@ -184,4 +184,9 @@ public class MCTag implements IIngredient {
     public String getCommandString() {
         return String.format("<tag:%s>", this.id);
     }
+    
+    @Override
+    public String toString() {
+        return getCommandString();
+    }
 }
