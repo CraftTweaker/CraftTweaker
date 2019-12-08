@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotations.PreProcessor;
+import com.blamejared.crafttweaker.api.annotations.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * {@code #replace toReplace replaceWith}
  */
-@PreProcessor
+@Preprocessor
 public class ReplacePreprocessor implements IPreprocessor {
     
     @Override

@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors;
+package com.blamejared.crafttweaker_annotation_processors.processors.validation;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;

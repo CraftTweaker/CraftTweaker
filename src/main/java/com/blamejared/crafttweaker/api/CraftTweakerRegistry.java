@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class CraftTweakerRegistry {
     
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
-    private static final Type TYPE_PRE_PROCESSOR = Type.getType(PreProcessor.class);
+    private static final Type TYPE_PRE_PROCESSOR = Type.getType(Preprocessor.class);
     
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();

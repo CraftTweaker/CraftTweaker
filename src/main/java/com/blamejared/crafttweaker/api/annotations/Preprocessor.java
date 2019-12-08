@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to mark a Class a a PreProcessor, this has to be applied to a {@link com.blamejared.crafttweaker.api.zencode.IPreprocessor}.
+ * Used to mark a Class a a Preprocessor, this has to be applied to a {@link com.blamejared.crafttweaker.api.zencode.IPreprocessor}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface PreProcessor {
+public @interface Preprocessor {
 
 }
     
