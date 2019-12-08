@@ -1,12 +1,13 @@
 package com.blamejared.crafttweaker.impl.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import net.minecraft.entity.EntityType;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityType")
-public class MCEntityType {
+public class MCEntityType implements CommandStringDisplayable {
     
     private final EntityType internal;
     private final MCEntityClassification classification;
@@ -63,6 +64,7 @@ public class MCEntityType {
     }
 
     @ZenCodeType.Getter("commandString")
+    @Override
     public String getCommandString() {
         return "<entityType:" + internal.getRegistryName() + ">";
     }

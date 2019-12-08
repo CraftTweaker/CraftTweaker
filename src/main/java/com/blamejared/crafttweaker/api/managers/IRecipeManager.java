@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.managers;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
@@ -33,7 +34,7 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
 @Document("vanilla/managers/IRecipeManager")
-public interface IRecipeManager {
+public interface IRecipeManager extends CommandStringDisplayable {
     
     Gson JSON_RECIPE_GSON = new GsonBuilder().create();
     
@@ -167,6 +168,11 @@ public interface IRecipeManager {
     interface RecipeFunctionMatrix {
         
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
+    }
+
+    @Override
+    default String getCommandString() {
+        return "<recipetype:" + getRecipeType().toString() + ">";
     }
     
 }

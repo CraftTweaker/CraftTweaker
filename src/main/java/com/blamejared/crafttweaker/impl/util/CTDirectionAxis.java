@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.util;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
@@ -17,7 +18,7 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.DirectionAxis")
 @Document("vanilla/util/DirectionAxis")
-public class CTDirectionAxis {
+public class CTDirectionAxis implements CommandStringDisplayable {
     
     private static final Map<Direction.Axis, CTDirectionAxis> AXIS_MAP = Util.make(new HashMap<>(), map -> {
         map.put(Direction.Axis.X, new CTDirectionAxis(Direction.Axis.X));
@@ -103,5 +104,10 @@ public class CTDirectionAxis {
     
     public static CTDirectionAxis getAxis(Direction.Axis axis) {
         return AXIS_MAP.get(axis);
+    }
+
+    @Override
+    public String getCommandString() {
+        return "<directionaxis:" + internal.getName2() + ">";
     }
 }

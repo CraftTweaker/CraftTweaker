@@ -1,12 +1,13 @@
 package com.blamejared.crafttweaker.impl.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import net.minecraft.entity.EntityClassification;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityClassification")
-public class MCEntityClassification {
+public class MCEntityClassification implements CommandStringDisplayable {
     
     private EntityClassification internal;
     
@@ -33,8 +34,15 @@ public class MCEntityClassification {
     public boolean isAnimal() {
         return internal.getAnimal();
     }
+
+
     
     public EntityClassification getInternal() {
         return internal;
+    }
+
+    @Override
+    public String getCommandString() {
+        return "<entityclassification:" + internal.func_220363_a() + ">";
     }
 }

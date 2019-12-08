@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.potion;
 
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import net.minecraft.potion.Potion;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotion")
-public class MCPotion {
+public class MCPotion implements CommandStringDisplayable {
     
     private final Potion internal;
     
@@ -35,5 +36,10 @@ public class MCPotion {
     
     public Potion getInternal() {
         return internal;
+    }
+
+    @Override
+    public String getCommandString() {
+        return "<potion:" + internal.getRegistryName() + ">";
     }
 }
