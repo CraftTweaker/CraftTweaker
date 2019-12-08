@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.impl.actions.tags;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -24,8 +23,8 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     @Override
     public void apply() {
-        if(ItemTags.getCollection().tagMap instanceof ImmutableMap)
-            ItemTags.getCollection().tagMap = new HashMap<>(ItemTags.getCollection().tagMap);
+        if(collection.tagMap instanceof ImmutableMap)
+            collection.tagMap = new HashMap<>(collection.tagMap);
         collection.tagMap.put(tag.getId(), tag);
     }
     
