@@ -70,4 +70,9 @@ public interface INumberData extends IData {
     
     @Override
     NumberNBT getInternal();
+
+    @Override
+    default String toJsonString() {
+        return String.valueOf(getInternal().getAsNumber());
+    }
 }

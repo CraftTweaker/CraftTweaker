@@ -4,6 +4,9 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 /**
  * The ICollection data is used to represent a collection of {@link IData} like a List<IData>
  *
@@ -67,8 +70,13 @@ public interface ICollectionData extends IData {
      */
     @ZenCodeType.Method
     void clear();
-    
-//    @ZenCodeType.Caster(implicit = true)
+
+    @Override
+    default String toJsonString() {
+        return this.asList().stream().map(IData::toJsonString).collect(Collectors.joining(",", "[", "]"));
+    }
+
+    //    @ZenCodeType.Caster(implicit = true)
 //    default IData asIData(){
 //        return this;
 //    }

@@ -11,10 +11,7 @@ import org.openzen.zencode.java.StorageTagType;
 import org.openzen.zencode.java.ZenCodeStorageTag;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -224,32 +221,11 @@ public class MapData implements IData {
     public static Map<String, IData> castToMap(MapData data) {
         return data.asMap();
     }
-    
+
+    @Override
     public String toJsonString() {
-        return toJsonString(getInternal());
-    }
-    
-    public String toJsonString(CompoundNBT nbt) {
-        
-        StringBuilder stringbuilder = new StringBuilder("{");
-        Collection<String> collection = nbt.keySet();
-        
-        for(String s : collection) {
-            if(stringbuilder.length() != 1) {
-                stringbuilder.append(',');
-            }
-            
-            INBT obj = nbt.get(s);
-            String value = obj.toString();
-            // some numbers such as float are represented as "0.35f" which isn't exactly valid json
-            if(obj instanceof NumberNBT) {
-                value = ((NumberNBT) obj).getAsNumber().toString();
-            } else if(obj instanceof CompoundNBT) {
-                value = toJsonString((CompoundNBT) obj);
-            }
-            stringbuilder.append("\"").append(CompoundNBT.handleEscape(s)).append("\"").append(':').append(value);
-        }
-        
-        return stringbuilder.append('}').toString();
+        final StringJoiner sj = new StringJoiner(",", "{", "}");
+        this.asMap().forEach((s, iData) -> sj.add(String.format(Locale.ENGLISH, "\"%s\" : %s", s, iData.toJsonString())));
+        return sj.toString();
     }
 }

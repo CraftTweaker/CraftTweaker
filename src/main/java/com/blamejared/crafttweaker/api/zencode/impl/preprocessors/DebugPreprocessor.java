@@ -1,14 +1,14 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
 import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.PreProcessor;
+import com.blamejared.crafttweaker.api.annotations.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.*;
 import com.blamejared.crafttweaker.api.zencode.impl.*;
 
 import javax.annotation.*;
 import java.util.*;
 
-@PreProcessor
+@Preprocessor
 public class DebugPreprocessor implements IPreprocessor {
     
     @Override

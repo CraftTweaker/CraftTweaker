@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class CraftTweakerRegistry {
     
     private static final Type TYPE_ZEN_REGISTER = Type.getType(ZenRegister.class);
-    private static final Type TYPE_PRE_PROCESSOR = Type.getType(PreProcessor.class);
+    private static final Type TYPE_PRE_PROCESSOR = Type.getType(Preprocessor.class);
     
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
@@ -136,6 +137,10 @@ public class CraftTweakerRegistry {
             BRACKET_RESOLVERS.add(method);
         } else {
             CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
+        }
+
+        if(!CommandStringDisplayable.class.isAssignableFrom(method.getReturnType())){
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, so it should return something that implements %s.", method.toString(), CommandStringDisplayable.class.getSimpleName());
         }
     }
     

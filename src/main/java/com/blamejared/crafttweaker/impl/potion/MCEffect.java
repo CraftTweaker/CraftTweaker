@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.potion;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import net.minecraft.potion.Effect;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffect")
-public class MCEffect {
+public class MCEffect implements CommandStringDisplayable {
     
     private final Effect internal;
     
@@ -61,5 +62,10 @@ public class MCEffect {
     
     public Effect getInternal() {
         return internal;
+    }
+
+    @Override
+    public String getCommandString() {
+        return "<effect:" + internal.getRegistryName() + ">";
     }
 }

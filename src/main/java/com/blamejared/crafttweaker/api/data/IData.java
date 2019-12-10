@@ -101,5 +101,6 @@ public interface IData {
      */
     @ZenCodeType.Method
     String asString();
-    
+
+    String toJsonString();
 }

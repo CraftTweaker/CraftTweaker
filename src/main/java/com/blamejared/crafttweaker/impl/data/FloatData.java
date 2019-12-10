@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.FloatNBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -12,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.data.FloatData")
 @ZenRegister
 @Document("vanilla/data/FloatData")
-public class FloatData implements IData {
+public class FloatData implements INumberData {
     
     private FloatNBT internal;
     

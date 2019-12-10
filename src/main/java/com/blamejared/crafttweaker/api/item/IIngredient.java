@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.impl.item.MCIngredientList;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -22,7 +23,7 @@ import java.util.Arrays;
 @ZenCodeType.Name("crafttweaker.api.item.IIngredient")
 @Document("vanilla/items/IIngredient")
 @ZenWrapper(wrappedClass = "net.minecraft.item.crafting.Ingredient", conversionMethodFormat = "%s.asVanillaIngredient()", displayStringFormat = "%.getCommandString()")
-public interface IIngredient {
+public interface IIngredient extends CommandStringDisplayable {
     
     /**
      * Does the given stack match the ingredient?

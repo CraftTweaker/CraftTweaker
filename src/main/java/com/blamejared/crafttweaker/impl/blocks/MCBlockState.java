@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.blocks;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlockState")
-public class MCBlockState {
+public class MCBlockState implements CommandStringDisplayable {
     
     private final BlockState internal;
     
@@ -138,6 +139,7 @@ public class MCBlockState {
     }
     
     @ZenCodeType.Getter("commandString")
+    @Override
     public String getCommandString() {
         StringBuilder builder = new StringBuilder("<blockstate:");
         builder.append(getBlock().getInternal().getRegistryName().toString());
