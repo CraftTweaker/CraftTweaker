@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
+import com.blamejared.crafttweaker.impl.events.CTEventManager;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
@@ -129,7 +130,7 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerRegistry.findClasses();
-        
+        CTEventManager.register(new CTEventManager.CTTooltipEvent(System.out::println));
     }
     
     private void setupClient(final FMLClientSetupEvent event) {
