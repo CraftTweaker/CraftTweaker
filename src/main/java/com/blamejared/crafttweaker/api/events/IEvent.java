@@ -6,20 +6,20 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Consumer;
 
-@ZenRegister
+@ZenRegister()
 @ZenCodeType.Name("crafttweaker.api.event.IEvent")
-public abstract class IEvent<E extends IEvent, V extends Event> {
+public abstract class IEvent<E extends IEvent<E, V>, V extends Event> {
     
     private V internal;
     
-    private IEventHandler<E> handler;
+    private Consumer<E> handler;
     
     public IEvent(V internal) {
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
-    public IEvent(IEventHandler<E> handler) {
+    public IEvent(Consumer<E> handler) {
         this.handler = handler;
     }
     
@@ -34,11 +34,11 @@ public abstract class IEvent<E extends IEvent, V extends Event> {
         return internal;
     }
     
-    public IEventHandler<E> getHandler() {
+    public Consumer<E> getHandler() {
         return handler;
     }
     
-    public void setHandler(IEventHandler<E> handler) {
+    public void setHandler(Consumer<E> handler) {
         this.handler = handler;
     }
 }

@@ -130,7 +130,7 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerRegistry.findClasses();
-        CTEventManager.register(new CTEventManager.CTTooltipEvent(System.out::println));
+        //CTEventManager.register(new CTEventManager.CTTooltipEvent(System.out::println));
     }
     
     private void setupClient(final FMLClientSetupEvent event) {
