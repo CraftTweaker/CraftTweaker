@@ -13,16 +13,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.BlockPos")
 @Document("vanilla/util/BlockPos")
-public class CTBlockPos {
+public class MCBlockPos {
     
     private BlockPos internal;
     
-    public CTBlockPos(BlockPos internal) {
+    public MCBlockPos(BlockPos internal) {
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
-    public CTBlockPos(int x, int y, int z) {
+    public MCBlockPos(int x, int y, int z) {
         this.internal = new BlockPos(x, y, z);
     }
     
@@ -45,8 +45,8 @@ public class CTBlockPos {
      * @docParam z -25.2
      */
     @ZenCodeType.Method
-    public CTBlockPos add(double x, double y, double z) {
-        return x == 0.0D && y == 0.0D && z == 0.0D ? this : new CTBlockPos(new BlockPos((double) this.getX() + x, (double) this.getY() + y, (double) this.getZ() + z));
+    public MCBlockPos add(double x, double y, double z) {
+        return x == 0.0D && y == 0.0D && z == 0.0D ? this : new MCBlockPos(new BlockPos((double) this.getX() + x, (double) this.getY() + y, (double) this.getZ() + z));
     }
     
     /**
@@ -63,8 +63,8 @@ public class CTBlockPos {
      * @docParam z -25
      */
     @ZenCodeType.Method
-    public CTBlockPos add(int x, int y, int z) {
-        return x == 0 && y == 0 && z == 0 ? this : new CTBlockPos(new BlockPos(this.getX() + x, this.getY() + y, this.getZ() + z));
+    public MCBlockPos add(int x, int y, int z) {
+        return x == 0 && y == 0 && z == 0 ? this : new MCBlockPos(new BlockPos(this.getX() + x, this.getY() + y, this.getZ() + z));
         
     }
     
@@ -73,13 +73,13 @@ public class CTBlockPos {
      *
      * @param pos other position to add
      *
-     * @return new {@link CTBlockPos} with the added values.
+     * @return new {@link MCBlockPos} with the added values.
      *
      * @docParam pos new BlockPos(3, 2, 1)
      */
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
-    public CTBlockPos add(CTBlockPos pos) {
+    public MCBlockPos add(MCBlockPos pos) {
         return add(pos);
     }
     
@@ -88,14 +88,14 @@ public class CTBlockPos {
      *
      * @param pos other position to remove
      *
-     * @return new {@link CTBlockPos} with the removed values.
+     * @return new {@link MCBlockPos} with the removed values.
      *
      * @docParam pos new BlockPos(2, 1, 3)
      */
     
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.SUB)
-    public CTBlockPos subtract(CTBlockPos pos) {
+    public MCBlockPos subtract(MCBlockPos pos) {
         return this.add(-pos.getX(), -pos.getY(), -pos.getZ());
     }
     
@@ -229,19 +229,19 @@ public class CTBlockPos {
     }
     
     /**
-     * Creates a new BlockPos based on this BlockPos that is one block offset of this BlockPos based on the given {@link CTDirection}
+     * Creates a new BlockPos based on this BlockPos that is one block offset of this BlockPos based on the given {@link MCDirection}
      *
      * @return a new BlockPos that is 1 block offset of this BlockPos
      *
      * @docParam direction <direction:east>
      */
     @ZenCodeType.Method
-    public CTBlockPos offset(CTDirection direction) {
+    public MCBlockPos offset(MCDirection direction) {
         return offset(direction, 1);
     }
     
     /**
-     * Creates a new BlockPos based on this BlockPos that is n block(s) offset of this BlockPos based on the given {@link CTDirection}
+     * Creates a new BlockPos based on this BlockPos that is n block(s) offset of this BlockPos based on the given {@link MCDirection}
      *
      * @return a new BlockPos that is n block(s) offset of this BlockPos
      *
@@ -249,8 +249,8 @@ public class CTBlockPos {
      * @docParam n 3
      */
     @ZenCodeType.Method
-    public CTBlockPos offset(CTDirection direction, int n) {
-        return n == 0 ? this : new CTBlockPos(new BlockPos(this.getX() + direction.getXOffset() * n, this.getY() + direction.getYOffset() * n, this.getZ() + direction.getZOffset() * n));
+    public MCBlockPos offset(MCDirection direction, int n) {
+        return n == 0 ? this : new MCBlockPos(new BlockPos(this.getX() + direction.getXOffset() * n, this.getY() + direction.getYOffset() * n, this.getZ() + direction.getZOffset() * n));
         
     }
     
@@ -264,8 +264,8 @@ public class CTBlockPos {
      * @docParam pos new BlockPos(5, 8, 2);
      */
     @ZenCodeType.Method
-    public CTBlockPos crossProduct(CTBlockPos pos) {
-        return new CTBlockPos(this.getY() * pos.getZ() - this.getZ() * pos.getY(), this.getZ() * pos.getX() - this.getX() * pos.getZ(), this.getX() * pos.getY() - this.getY() * pos.getX());
+    public MCBlockPos crossProduct(MCBlockPos pos) {
+        return new MCBlockPos(this.getY() * pos.getZ() - this.getZ() * pos.getY(), this.getZ() * pos.getX() - this.getX() * pos.getZ(), this.getX() * pos.getY() - this.getY() * pos.getX());
     }
     
     @ZenCodeType.Getter("x")
@@ -295,7 +295,7 @@ public class CTBlockPos {
      * @docParam distance 10
      */
     @ZenCodeType.Method
-    public boolean withinDistance(CTBlockPos pos, double distance) {
+    public boolean withinDistance(MCBlockPos pos, double distance) {
         return this.distanceSq(pos.getX(), pos.getY(), pos.getZ(), true) < distance * distance;
     }
     
@@ -310,7 +310,7 @@ public class CTBlockPos {
      * @docParam useCenter true
      */
     @ZenCodeType.Method
-    public double distanceSq(CTBlockPos to) {
+    public double distanceSq(MCBlockPos to) {
         return this.distanceSq(to, true);
     }
     
@@ -326,7 +326,7 @@ public class CTBlockPos {
      * @docParam useCenter true
      */
     @ZenCodeType.Method
-    public double distanceSq(CTBlockPos to, boolean useCenter) {
+    public double distanceSq(MCBlockPos to, boolean useCenter) {
         return this.distanceSq(to.getX(), to.getY(), to.getZ(), useCenter);
     }
     
@@ -360,7 +360,7 @@ public class CTBlockPos {
      * @docParam other new BlockPos(4, 5, 6)
      */
     @ZenCodeType.Method
-    public int manhattanDistance(CTBlockPos other) {
+    public int manhattanDistance(MCBlockPos other) {
         return internal.manhattanDistance(other.getInternal());
     }
     
