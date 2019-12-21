@@ -1,13 +1,15 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.tools.Diagnostic;
+import java.io.PrintWriter;
 
-public class DocumentedProperty {
+public class DocumentedProperty implements Writable {
     private final String name;
     private boolean hasGetter, hasSetter;
 
@@ -91,5 +93,10 @@ public class DocumentedProperty {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void write(PrintWriter writer) {
+
     }
 }

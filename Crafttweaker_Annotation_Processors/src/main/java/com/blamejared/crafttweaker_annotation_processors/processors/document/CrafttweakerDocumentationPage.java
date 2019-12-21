@@ -12,11 +12,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Anything that can be written to file as a MD page.
+ * Can be a {@link DocumentedClass} or a {@link DocumentedExpansion}
+ */
 public abstract class CrafttweakerDocumentationPage {
     public static Map<TypeElement, CrafttweakerDocumentationPage> knownTypes = new HashMap<>();
 
     public static CrafttweakerDocumentationPage convertType(TypeElement element, ProcessingEnvironment environment) {
-        if(knownTypes.containsKey(element)) {
+        if (knownTypes.containsKey(element)) {
             return knownTypes.get(element);
         }
 
@@ -31,9 +35,13 @@ public abstract class CrafttweakerDocumentationPage {
             return null;
         }
 
-        knownTypes.put(element, documentationPage);
+        if(!knownTypes.containsKey(element)) {
+            knownTypes.put(element, documentationPage);
+        }
+
         return documentationPage;
     }
 
     public abstract void write(File docsDirectory) throws IOException;
+
 }

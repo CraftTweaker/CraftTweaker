@@ -10,6 +10,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document"})
@@ -34,7 +36,18 @@ public class DocumentProcessorNew extends AbstractProcessor {
 
             final TypeElement typeElement = (TypeElement) element;
             final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
-            System.out.println(documentationPage);
+
+            if (documentationPage != null) {
+                try {
+                    final File docsOut = new File("docsOut");
+                    if(!docsOut.exists() && !docsOut.mkdirs()) {
+                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath(), element);
+                    }
+                    documentationPage.write(docsOut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
 
         }

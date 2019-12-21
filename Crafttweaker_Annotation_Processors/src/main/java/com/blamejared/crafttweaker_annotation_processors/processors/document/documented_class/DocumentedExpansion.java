@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -11,10 +10,11 @@ import java.io.IOException;
 
 public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     public static DocumentedExpansion convertExpansion(TypeElement element, ProcessingEnvironment environment) {
-        if(knownTypes.containsKey(element)) {
+        if (knownTypes.containsKey(element)) {
             final CrafttweakerDocumentationPage documentationPage = knownTypes.get(element);
-            if(!(documentationPage instanceof DocumentedExpansion)) {
-                environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Internal error: " + element + " is not a class", element);
+            if (!(documentationPage instanceof DocumentedExpansion)) {
+                environment.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Internal error: " + element + " is not a class", element);
                 return null;
             }
             return (DocumentedExpansion) documentationPage;
