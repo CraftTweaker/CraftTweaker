@@ -28,6 +28,9 @@ public abstract class DocumentedType {
             if (documentedClass != null)
                 return new DocumentedClassType(documentedClass);
         }
+        if(element == null) {
+            return null;
+        }
         return fromTypeMirror(element.asType(), environment);
     }
 

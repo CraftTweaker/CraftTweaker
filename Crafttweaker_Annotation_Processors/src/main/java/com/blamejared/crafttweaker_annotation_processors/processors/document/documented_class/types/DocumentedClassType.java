@@ -19,6 +19,6 @@ public class DocumentedClassType extends DocumentedType {
     @Override
     public String getClickableMarkdown() {
         //TODO implement.
-        return String.format(Locale.ENGLISH, "(%s)[%s]", documentedClass.getZSName(), documentedClass.getDocPath());
+        return String.format(Locale.ENGLISH, "[%s](/%s)", documentedClass.getZSName(), documentedClass.getDocPath());
     }
 }

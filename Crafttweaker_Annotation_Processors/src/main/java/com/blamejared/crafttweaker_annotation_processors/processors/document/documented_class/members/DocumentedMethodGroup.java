@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
 
 import java.io.PrintWriter;
 import java.util.*;
@@ -12,24 +13,27 @@ import java.util.*;
 public class DocumentedMethodGroup implements Writable {
     private final String name;
     private final Set<DocumentedMethod> methods;
+    private final DocumentedClass containingClass;
 
-    public DocumentedMethodGroup(String name) {
+    public DocumentedMethodGroup(String name, DocumentedClass containingClass) {
         this.name = name;
+        this.containingClass = containingClass;
         this.methods = new TreeSet<>(Comparator.comparingInt(m -> m.getParameterList()
                 .size()));
-    }
-
-    private DocumentedMethodGroup(String name, Collection<DocumentedMethod> methodsA, Collection<DocumentedMethod> methodsB) {
-        this.name = name;
-        this.methods = new TreeSet<>(Comparator.comparingInt(m -> m.getParameterList()
-                .size()));
-
-        this.methods.addAll(methodsA);
-        this.methods.addAll(methodsB);
     }
 
     public void add(DocumentedMethod method) {
-        this.methods.add(method);
+        if (!Objects.equals(this.containingClass, method.getContainingClass())) {
+            this.methods.add(method.withCallee(this.containingClass.getDocParamThis()));
+        }else {
+            this.methods.add(method);
+        }
+    }
+
+    public void addAll(Collection<DocumentedMethod> methods) {
+        for (DocumentedMethod method : methods) {
+            add(method);
+        }
     }
 
     @Override
@@ -41,14 +45,18 @@ public class DocumentedMethodGroup implements Writable {
     }
 
     public DocumentedMethodGroup merge(DocumentedMethodGroup other) {
+
+        final DocumentedMethodGroup documentedMethodGroup;
         if (Objects.equals(this.name, other.name)) {
-            return new DocumentedMethodGroup(this.name, this.methods, other.methods);
+            documentedMethodGroup = new DocumentedMethodGroup(this.name, containingClass);
+        } else if (this.name == null || other.name == null) {
+            documentedMethodGroup = new DocumentedMethodGroup(this.name == null ? other.name : this.name, containingClass);
+        } else {
+            throw new IllegalStateException("Method groups have different names: " + this.name + " and " + other.name);
         }
 
-        if (this.name == null || other.name == null) {
-            return new DocumentedMethodGroup(this.name == null ? other.name : this.name, this.methods, other.methods);
-        }
-
-        throw new IllegalStateException("Method groups have different names: " + this.name + " and " + other.name);
+        documentedMethodGroup.addAll(this.methods);
+        documentedMethodGroup.addAll(other.methods);
+        return documentedMethodGroup;
     }
 }

@@ -3,7 +3,9 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.do
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentedScriptingExample;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.IDontKnowHowToNameThisUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types.DocumentedClassType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -12,7 +14,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -32,11 +37,14 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     private final Set<DocumentedScriptingExample> examples = new HashSet<>();
     private final String ZSName;
     private final String docPath;
+    private final String docComment;
     private final DocumentedClass superClass;
+    private String docParamThis = null;
 
-    public DocumentedClass(String ZSName, String docPath, DocumentedClass superClass) {
+    public DocumentedClass(String ZSName, String docPath, String docComment, DocumentedClass superClass) {
         this.ZSName = ZSName;
         this.docPath = docPath;
+        this.docComment = docComment;
         this.superClass = superClass;
     }
 
@@ -66,8 +74,18 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         }
 
         final DocumentedClass superClass = convertClass(element.getSuperclass(), environment);
-        final DocumentedClass out = new DocumentedClass(zsName, docPath, superClass);
+        final String docComment = environment.getElementUtils().getDocComment(element);
+        final DocumentedClass out = new DocumentedClass(zsName, docPath, CommentUtils.formatDocCommentForDisplay(element, environment), superClass);
         knownTypes.put(element, out);
+        typesByZSName.put(zsName, element);
+
+        if (docComment != null) {
+            final String s = CommentUtils.joinDocAnnotation(docComment, "@docParam this", environment).trim();
+            if (!s.isEmpty()) {
+                out.docParamThis = s;
+            }
+        }
+
 
         for (final TypeMirror anInterface : element.getInterfaces()) {
             final DocumentedClass documentedClass = convertClass(anInterface, environment);
@@ -87,9 +105,10 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             {
                 final ZenCodeType.Method method = enclosedElement.getAnnotation(ZenCodeType.Method.class);
                 if (method != null) {
-                    final DocumentedMethod documentedMethod = DocumentedMethod.convertMethod((ExecutableElement) enclosedElement, environment);
+                    final DocumentedMethod documentedMethod = DocumentedMethod.convertMethod(out, (ExecutableElement) enclosedElement, environment);
                     if (documentedMethod != null) {
-                        out.methods.computeIfAbsent(documentedMethod.getName(), DocumentedMethodGroup::new).add(documentedMethod);
+                        out.methods.computeIfAbsent(documentedMethod.getName(), name -> new DocumentedMethodGroup(name, out))
+                                .add(documentedMethod);
                     }
                 }
             }
@@ -97,7 +116,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             {
                 final ZenCodeType.Field method = enclosedElement.getAnnotation(ZenCodeType.Field.class);
                 if (method != null) {
-                    final DocumentedProperty documentedProperty = DocumentedProperty.fromField(enclosedElement, environment);
+                    final DocumentedProperty documentedProperty = DocumentedProperty.fromField(out, enclosedElement, environment);
                     if (documentedProperty != null) {
                         out.properties.merge(documentedProperty.getName(), documentedProperty, ((p1, p2) -> DocumentedProperty
                                 .merge(p1, p2, environment)));
@@ -108,7 +127,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Setter
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Getter.class) != null || enclosedElement.getAnnotation(ZenCodeType.Setter.class) != null) {
-                    final DocumentedProperty documentedProperty = DocumentedProperty.fromMethod(enclosedElement, environment);
+                    final DocumentedProperty documentedProperty = DocumentedProperty.fromMethod(out, enclosedElement, environment);
                     if (documentedProperty != null) {
                         out.properties.merge(documentedProperty.getName(), documentedProperty, ((p1, p2) -> DocumentedProperty
                                 .merge(p1, p2, environment)));
@@ -118,7 +137,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Constructor
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Constructor.class) != null) {
-                    final DocumentedConstructor documentedConstructor = DocumentedConstructor.fromConstructor(((ExecutableElement) enclosedElement), environment);
+                    final DocumentedConstructor documentedConstructor = DocumentedConstructor.fromConstructor(out, ((ExecutableElement) enclosedElement), environment);
                     if (documentedConstructor != null) {
                         out.constructors.add(documentedConstructor);
                     }
@@ -127,7 +146,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Operator
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Operator.class) != null) {
-                    final DocumentedOperator documentedOperator = DocumentedOperator.fromMethod((ExecutableElement) enclosedElement, environment);
+                    final DocumentedOperator documentedOperator = DocumentedOperator.fromMethod(out, (ExecutableElement) enclosedElement, environment);
                     if (documentedOperator != null) {
                         out.operators.add(documentedOperator);
                     }
@@ -137,12 +156,22 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Caster
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Caster.class) != null) {
-                    final DocumentedCaster documentedCaster = DocumentedCaster.fromMethod((ExecutableElement) enclosedElement, environment);
+                    final DocumentedCaster documentedCaster = DocumentedCaster.fromMethod(out, (ExecutableElement) enclosedElement, environment);
                     if (documentedCaster != null) {
                         out.casters.add(documentedCaster);
                     }
                 }
             }
+        }
+    }
+
+    private static void printSection(String sectionName, Collection<? extends Writable> writables, PrintWriter writer) {
+        if (!writables.isEmpty()) {
+            writer.printf("## %s%n", sectionName);
+            for (Writable writable : writables) {
+                writable.write(writer);
+            }
+            writer.println();
         }
     }
 
@@ -159,32 +188,111 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         return ZSName.substring(ZSName.lastIndexOf('.') + 1);
     }
 
+    @Override
     public String getDocPath() {
         return docPath;
     }
 
+    public String getDocParamThis() {
+        return docParamThis == null ? "my" + getZSShortName() : docParamThis;
+    }
+
     @Override
-    public void write(File docsDirectory) throws IOException {
+    public void write(File docsDirectory, ProcessingEnvironment environment) throws IOException {
         final File file = new File(docsDirectory, getDocPath() + ".md");
-        if(!file.getParentFile().exists() && !file.getParentFile().mkdirs()){
+        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
             throw new IOException("Could not create folder " + file.getAbsolutePath());
         }
 
-        try(final PrintWriter printWriter = new PrintWriter(new FileWriter(file))) {
-            printWriter.printf("# %s%n", getZSShortName());
-            printWriter.println();
+        try (final PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+            writer.printf("# %s%n", getZSShortName());
+            writer.println();
 
-            //TODO comment
 
-            if(!methods.isEmpty()) {
-                printWriter.println("## Methods");
-                for (DocumentedMethodGroup value : methods.values()) {
-                    value.write(printWriter);
+            if (docComment != null) {
+                writer.println(docComment);
+                writer.println();
+            }
+
+            writer.println("## Importing the class");
+            //TODO: Create Arrays pages and re-add the '[Array](link)'
+            writer.println("It might be required for you to import the package if you encounter any issues (like casting an Array), so better be safe than sorry and add the import.  ");
+            writer.println("```zenscript");
+            writer.println(this.getZSName());
+            writer.println("```");
+            writer.println();
+
+            if (!implementedInterfaces.isEmpty()) {
+                writer.println("## Implemented Interfaces");
+                writer.printf("%s implements the following interfaces. That means any method available to them can also be used on this class.  %n", this
+                        .getZSShortName());
+                for (DocumentedClass implementedInterface : implementedInterfaces) {
+                    writer.printf("- %s%n", new DocumentedClassType(implementedInterface).getClickableMarkdown());
+
+                    this.constructors.addAll(implementedInterface.constructors);
+                    this.casters.addAll(implementedInterface.casters);
+                    this.operators.addAll(implementedInterface.operators);
+                    implementedInterface.properties.forEach((s, documentedProperty) -> this.properties.merge(s, documentedProperty, (a, b) -> DocumentedProperty
+                            .merge(a, b, environment)));
+                    for (Map.Entry<String, DocumentedMethodGroup> entry : implementedInterface.methods.entrySet()) {
+                        String s = entry.getKey();
+                        DocumentedMethodGroup documentedMethodGroup = entry.getValue();
+                        this.methods.computeIfAbsent(s, s1 -> new DocumentedMethodGroup(s1, this));
+                        this.methods.merge(s, documentedMethodGroup, DocumentedMethodGroup::merge);
+                    }
+
+                    if (this.docParamThis == null) {
+                        this.docParamThis = implementedInterface.docParamThis;
+                    }
                 }
+                writer.println();
             }
 
 
+            printSection("Constructors", this.constructors, writer);
+            printSection("Methods", this.methods.values(), writer);
+            printProperties(writer);
+            printSection("Operators", this.operators, writer);
+            //printSection("Casters", this.casters, writer);
+            printCasters(writer);
+        }
+    }
+
+    private void printProperties(PrintWriter writer) {
+        if (this.properties.isEmpty()) {
+            return;
         }
 
+        writer.println("## Properties");
+        writer.println();
+        writer.println("| Name | Type | Has Getter | Has Setter |");
+        writer.println("|------|------|------------|------------|");
+        for (DocumentedProperty value : this.properties.values()) {
+            value.write(writer);
+        }
+
+        writer.println();
+    }
+
+    private void printCasters(PrintWriter writer) {
+        if (this.casters.isEmpty()) {
+            return;
+        }
+
+        writer.println("## Casters");
+        writer.println();
+        writer.println("| Result type | Is Implicit |");
+        writer.println("|-------------|-------------|");
+        for (DocumentedCaster caster : this.casters) {
+            caster.writeTable(writer);
+        }
+
+        writer.println();
+    }
+
+    public boolean extendsOrImplements(DocumentedClass containingClass) {
+        return this.equals(containingClass)
+                || this.superClass != null && this.superClass.equals(containingClass)
+                || this.implementedInterfaces.contains(containingClass);
     }
 }

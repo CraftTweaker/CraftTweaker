@@ -1,8 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedExpansion;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_expansion.DocumentedExpansion;
 import org.openzen.zencode.java.ZenCodeType;
+import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 public abstract class CrafttweakerDocumentationPage {
     public static Map<TypeElement, CrafttweakerDocumentationPage> knownTypes = new HashMap<>();
+    public static Map<String, TypeElement> typesByZSName = new HashMap<>();
 
     public static CrafttweakerDocumentationPage convertType(TypeElement element, ProcessingEnvironment environment) {
         if (knownTypes.containsKey(element)) {
@@ -42,6 +44,8 @@ public abstract class CrafttweakerDocumentationPage {
         return documentationPage;
     }
 
-    public abstract void write(File docsDirectory) throws IOException;
+    public abstract String getDocPath();
+
+    public abstract void write(File docsDirectory, ProcessingEnvironment environment) throws IOException;
 
 }

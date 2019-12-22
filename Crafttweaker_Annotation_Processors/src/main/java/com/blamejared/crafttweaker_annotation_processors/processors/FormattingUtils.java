@@ -15,10 +15,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-class FormattingUtils {
+public class FormattingUtils {
 
 
-	static String getOperatorFormat(ZenCodeType.OperatorType operator) {
+	public static String getOperatorFormat(ZenCodeType.OperatorType operator) {
 		switch (operator) {
 			case ADD:
 				return "%s + %s";
@@ -92,7 +92,7 @@ class FormattingUtils {
 		}
 	}
 
-	static int getOperandCountFor(ZenCodeType.OperatorType operator) {
+	public static int getOperandCountFor(ZenCodeType.OperatorType operator) {
 		switch (operator) {
 			//Unary Operators
 			case NEG:
@@ -144,7 +144,7 @@ class FormattingUtils {
 	/**
 	 * Formats the parameter to fit ZS.
 	 */
-	static String convertTypeName(TypeMirror typeMirror, Types typeUtils) {
+	public static String convertTypeName(TypeMirror typeMirror, Types typeUtils) {
 		if (typeMirror.getKind().isPrimitive())
 			return typeMirror.toString();
 		if (typeMirror.getKind() == TypeKind.ARRAY) {
@@ -178,7 +178,7 @@ class FormattingUtils {
 		return s;
 	}
 
-	static String createLink(Elements elementUtils, String javaQualifiedName, PackageElement packageElement) {
+	public static String createLink(Elements elementUtils, String javaQualifiedName, PackageElement packageElement) {
 		TypeElement typeElement = elementUtils.getTypeElement(javaQualifiedName);
 		if (typeElement == null) {
 			if (packageElement != null) {

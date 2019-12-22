@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_expansion;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 
@@ -23,7 +23,12 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     }
 
     @Override
-    public void write(File docsDirectory) throws IOException {
+    public String getDocPath() {
+        return null;
+    }
+
+    @Override
+    public void write(File docsDirectory, ProcessingEnvironment environment) throws IOException {
 
     }
 }

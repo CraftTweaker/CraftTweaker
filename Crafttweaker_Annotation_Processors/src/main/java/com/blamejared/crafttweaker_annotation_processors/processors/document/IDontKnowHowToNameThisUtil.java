@@ -24,4 +24,5 @@ public class IDontKnowHowToNameThisUtil {
 
         return nameAnnotation.value().replace('.', '/');
     }
+
 }
