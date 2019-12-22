@@ -1,7 +1,7 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.CommentUtils;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -50,7 +50,8 @@ public class DocumentedParameter {
                 .getDocComment(element.getEnclosingElement());
         final String[] examples = CommentUtils.findAllAnnotation(methodDocComment, "@docParam " + name);
 
-        final String description = CommentUtils.joinDocAnnotation(methodDocComment, "@param " + name, environment).trim();
+        final String description = CommentUtils.joinDocAnnotation(methodDocComment, "@param " + name, environment)
+                .trim();
 
 
         return new DocumentedParameter(name, type, optional, aDefault, examples, description.isEmpty() ? null : description);

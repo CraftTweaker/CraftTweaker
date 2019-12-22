@@ -1,7 +1,7 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.StringReplaceUtil;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

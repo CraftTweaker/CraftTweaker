@@ -1,8 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.DocumentedParameter;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
@@ -13,7 +14,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DocumentedConstructor implements Writable {
 
@@ -56,7 +56,7 @@ public class DocumentedConstructor implements Writable {
         DocumentedParameter.printAllCalls("new " + containingClass.getZSName(), parameterList, writer);
         writer.println("```");
 
-        if(!parameterList.isEmpty()) {
+        if (!parameterList.isEmpty()) {
             DocumentedParameter.printTable(parameterList, writer);
             writer.println();
         }

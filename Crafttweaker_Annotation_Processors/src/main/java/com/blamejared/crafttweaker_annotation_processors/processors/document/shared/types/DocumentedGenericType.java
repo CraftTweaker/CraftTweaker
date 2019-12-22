@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,5 +26,10 @@ public class DocumentedGenericType extends DocumentedType {
         return genericTypes.stream()
                 .map(DocumentedType::getClickableMarkdown)
                 .collect(Collectors.joining(", ", baseType.getClickableMarkdown() + "<", ">"));
+    }
+
+    @Override
+    public String getZSShortName() {
+        return baseType.getZSShortName();
     }
 }

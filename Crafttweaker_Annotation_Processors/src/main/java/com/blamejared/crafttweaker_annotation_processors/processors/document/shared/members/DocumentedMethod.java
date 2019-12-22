@@ -1,9 +1,9 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.CommentUtils;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -20,13 +20,13 @@ public class DocumentedMethod implements Writable {
 
     private final String name;
     private final List<DocumentedParameter> parameterList;
-    private final DocumentedClass containingClass;
+    private final CrafttweakerDocumentationPage containingPage;
     private final String callee; //full class name if static, else my[Type] or content of docParam this
     private final String docComment;
     private final DocumentedType returnType;
 
-    public DocumentedMethod(DocumentedClass containingClass, String name, List<DocumentedParameter> parameterList, String callee, String docComment, DocumentedType returnType) {
-        this.containingClass = containingClass;
+    public DocumentedMethod(CrafttweakerDocumentationPage containingPage, String name, List<DocumentedParameter> parameterList, String callee, String docComment, DocumentedType returnType) {
+        this.containingPage = containingPage;
         this.name = name;
         this.parameterList = parameterList;
         this.callee = callee;
@@ -34,7 +34,7 @@ public class DocumentedMethod implements Writable {
         this.returnType = returnType;
     }
 
-    public static DocumentedMethod convertMethod(DocumentedClass containingClass, ExecutableElement method, ProcessingEnvironment environment) {
+    public static DocumentedMethod convertMethod(CrafttweakerDocumentationPage containingPage, ExecutableElement method, ProcessingEnvironment environment, boolean isExpansion) {
         final ZenCodeType.Method methodAnnotation = method.getAnnotation(ZenCodeType.Method.class);
         if (methodAnnotation == null) {
             //Nani?
@@ -48,7 +48,8 @@ public class DocumentedMethod implements Writable {
 
         final List<DocumentedParameter> parameterList = new ArrayList<>();
         boolean optionalsHit = false;
-        for (VariableElement parameter : method.getParameters()) {
+        final List<? extends VariableElement> parameters = method.getParameters();
+        for (VariableElement parameter : isExpansion ? parameters.subList(1, parameters.size()) : parameters) {
             final DocumentedParameter e = DocumentedParameter.fromElement(parameter, environment);
             if (e == null) {
                 continue;
@@ -67,9 +68,17 @@ public class DocumentedMethod implements Writable {
 
 
         String callee = null;
-        if (isStatic) {
-            callee = containingClass.getZSName();
-        } else if (docComment != null) {
+        if (!isExpansion && isStatic) {
+            callee = containingPage.getZSName();
+        } else if (isExpansion) {
+            final String docParam_this = CommentUtils.joinDocAnnotation(docComment, "docParam " + parameters.get(0)
+                    .getSimpleName(), environment)
+                    .trim();
+            if (!docParam_this.isEmpty()) {
+                callee = docParam_this;
+            }
+        }
+        if (callee == null && docComment != null) {
             final String docParam_this = CommentUtils.joinDocAnnotation(docComment, "docParam this", environment)
                     .trim();
             if (!docParam_this.isEmpty()) {
@@ -77,14 +86,14 @@ public class DocumentedMethod implements Writable {
             }
         }
         if (callee == null) {
-            callee = containingClass.getDocParamThis();
+            callee = containingPage.getDocParamThis();
         }
 
         final DocumentedType returnType = method.getReturnType()
                 .getKind() == TypeKind.VOID ? null : DocumentedType.fromTypeMirror(method.getReturnType(), environment);
 
 
-        return new DocumentedMethod(containingClass, name, parameterList, callee, CommentUtils.formatDocCommentForDisplay(method, environment), returnType);
+        return new DocumentedMethod(containingPage, name, parameterList, callee, CommentUtils.formatDocCommentForDisplay(method, environment), returnType);
 
     }
 
@@ -93,8 +102,8 @@ public class DocumentedMethod implements Writable {
     }
 
     public DocumentedMethod withCallee(String c) {
-        if(c != null) {
-            return new DocumentedMethod(containingClass, name, parameterList, c, docComment, returnType);
+        if (c != null) {
+            return new DocumentedMethod(containingPage, name, parameterList, c, docComment, returnType);
         }
         return this;
     }
@@ -120,8 +129,8 @@ public class DocumentedMethod implements Writable {
         }
     }
 
-    public DocumentedClass getContainingClass() {
-        return containingClass;
+    public CrafttweakerDocumentationPage getContainingPage() {
+        return containingPage;
     }
 
     public String getCallee() {

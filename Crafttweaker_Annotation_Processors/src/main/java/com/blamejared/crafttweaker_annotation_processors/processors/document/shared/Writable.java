@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared;
 
 import java.io.PrintWriter;
 

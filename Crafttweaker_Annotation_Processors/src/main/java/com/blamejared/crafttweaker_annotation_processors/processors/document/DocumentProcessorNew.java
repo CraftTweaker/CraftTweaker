@@ -2,11 +2,12 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.io.File;
@@ -39,8 +40,9 @@ public class DocumentProcessorNew extends AbstractProcessor {
             if (documentationPage != null) {
                 try {
                     final File docsOut = new File("docsOut");
-                    if(!docsOut.exists() && !docsOut.mkdirs()) {
-                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath(), element);
+                    if (!docsOut.exists() && !docsOut.mkdirs()) {
+                        processingEnv.getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath(), element);
                     }
                     documentationPage.write(docsOut, processingEnv);
                 } catch (IOException e) {

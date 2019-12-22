@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_expansion.DocumentedExpansion;
 import org.openzen.zencode.java.ZenCodeType;
-import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -37,7 +36,7 @@ public abstract class CrafttweakerDocumentationPage {
             return null;
         }
 
-        if(!knownTypes.containsKey(element)) {
+        if (!knownTypes.containsKey(element)) {
             knownTypes.put(element, documentationPage);
         }
 
@@ -48,4 +47,7 @@ public abstract class CrafttweakerDocumentationPage {
 
     public abstract void write(File docsDirectory, ProcessingEnvironment environment) throws IOException;
 
+    public abstract String getZSName();
+
+    public abstract String getDocParamThis();
 }

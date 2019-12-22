@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
 
@@ -28,7 +28,7 @@ public abstract class DocumentedType {
             if (documentedClass != null)
                 return new DocumentedClassType(documentedClass);
         }
-        if(element == null) {
+        if (element == null) {
             return null;
         }
         return fromTypeMirror(element.asType(), environment);
@@ -50,8 +50,9 @@ public abstract class DocumentedType {
             if (!typeArguments.isEmpty()) {
                 final TypeMirror erasure = environment.getTypeUtils().erasure(typeMirror);
 
-                if(erasure.toString().equals("java.util.Map")) {
-                    return new DocumentedMapType(fromTypeMirror(typeArguments.get(0), environment), fromTypeMirror(typeArguments.get(1), environment));
+                if (erasure.toString().equals("java.util.Map")) {
+                    return new DocumentedMapType(fromTypeMirror(typeArguments.get(0), environment), fromTypeMirror(typeArguments
+                            .get(1), environment));
                 }
 
                 final DocumentedType base = fromTypeMirror(erasure, environment);
@@ -76,7 +77,9 @@ public abstract class DocumentedType {
         }
 
 
-        environment.getMessager().printMessage(Diagnostic.Kind.WARNING, "Found a type without a Name Annotation: ", environment.getTypeUtils().asElement(typeMirror));
+        environment.getMessager()
+                .printMessage(Diagnostic.Kind.WARNING, "Found a type without a Name Annotation: ", environment.getTypeUtils()
+                        .asElement(typeMirror));
         return new DocumentedNativeType(typeMirror.toString());
     }
 
@@ -89,4 +92,6 @@ public abstract class DocumentedType {
     public String toString() {
         return getZSName();
     }
+
+    public abstract String getZSShortName();
 }

@@ -1,14 +1,15 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.FormattingUtils;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.CommentUtils;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
@@ -20,19 +21,17 @@ public class DocumentedOperator implements Writable {
     public static Comparator<DocumentedOperator> compareByOp = Comparator.comparing(DocumentedOperator::getOperator);
     private final ZenCodeType.OperatorType operator;
     private final List<DocumentedParameter> parameterList;
-    private final DocumentedClass containingClass;
     private final String docComment;
     private final String callee;
 
-    private DocumentedOperator(DocumentedClass containingClass, ZenCodeType.OperatorType operator, List<DocumentedParameter> parameterList, String docComment, String callee) {
-        this.containingClass = containingClass;
+    private DocumentedOperator(ZenCodeType.OperatorType operator, List<DocumentedParameter> parameterList, String docComment, String callee) {
         this.operator = operator;
         this.parameterList = parameterList;
         this.docComment = docComment;
         this.callee = callee;
     }
 
-    public static DocumentedOperator fromMethod(DocumentedClass containingClass, ExecutableElement method, ProcessingEnvironment environment) {
+    public static DocumentedOperator fromMethod(CrafttweakerDocumentationPage containingPage, ExecutableElement method, ProcessingEnvironment environment, boolean isExpansion) {
         if (method.getKind() != ElementKind.METHOD) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Internal error: Expected this to be a method!", method);
@@ -46,26 +45,67 @@ public class DocumentedOperator implements Writable {
             return null;
         }
 
+        if (isExpansion != method.getModifiers().contains(Modifier.STATIC)) {
+            if (isExpansion) {
+                environment.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Expansion Operator methods must be static!", method);
+            } else {
+                environment.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Operator methods must not be static!", method);
+            }
+            return null;
+        }
+
         //-1 because 'this' is the 1st operand
-        final int requiredOperands = FormattingUtils.getOperandCountFor(operator.value()) - 1;
-        if(requiredOperands != method.getParameters().size()){
-            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format("Operator %s requires %d parameters in the method, received %d.", operator.value(), requiredOperands, method.getParameters().size()));
+        final int requiredOperands = FormattingUtils.getOperandCountFor(operator.value()) - (isExpansion ? 0 : 1);
+        final List<? extends VariableElement> methodParameters = method.getParameters();
+        if (requiredOperands != methodParameters.size()) {
+            environment.getMessager()
+                    .printMessage(Diagnostic.Kind.ERROR, String.format("Operator %s requires %d parameters in the method, received %d.", operator
+                            .value(), requiredOperands, methodParameters.size()));
         }
 
-
-        final ArrayList<DocumentedParameter> parameters = new ArrayList<>(method.getParameters().size());
-        for (VariableElement parameter : method.getParameters()) {
-            parameters.add(DocumentedParameter.fromElement(parameter, environment));
-        }
         final String docComment = environment.getElementUtils().getDocComment(method);
+        final List<DocumentedParameter> parameters;
+        String callee = null;
+        {
+            final String s = CommentUtils.joinDocAnnotation(docComment, "@docComment this", environment).trim();
+            if (!s.isEmpty()) {
+                callee = s;
+            }
+        }
 
-        final String s = CommentUtils.joinDocAnnotation(docComment, "@docComment this", environment);
 
-        return new DocumentedOperator(containingClass,
+        if (isExpansion) {
+            parameters = new ArrayList<>(methodParameters.size() - 1);
+            for (VariableElement parameter : methodParameters.subList(1, methodParameters.size())) {
+                parameters.add(DocumentedParameter.fromElement(parameter, environment));
+            }
+
+            if (callee == null) {
+                final String docParam_this = CommentUtils.joinDocAnnotation(docComment, "docParam " + methodParameters.get(0)
+                        .getSimpleName(), environment).trim();
+                if (!docParam_this.isEmpty()) {
+                    callee = docParam_this;
+                }
+            }
+        } else {
+            parameters = new ArrayList<>(methodParameters.size());
+            for (VariableElement parameter : methodParameters) {
+                parameters.add(DocumentedParameter.fromElement(parameter, environment));
+            }
+        }
+
+        if (callee == null) {
+            callee = containingPage.getDocParamThis();
+        }
+
+
+        return new DocumentedOperator(
                 operator.value(),
                 parameters,
                 CommentUtils.formatDocCommentForDisplay(method, environment),
-                s.isEmpty() ? containingClass.getDocParamThis() : s
+                callee
         );
     }
 

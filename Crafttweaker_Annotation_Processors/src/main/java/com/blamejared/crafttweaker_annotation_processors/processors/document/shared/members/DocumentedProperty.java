@@ -1,14 +1,16 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
@@ -18,14 +20,14 @@ public class DocumentedProperty implements Writable {
     private final String name;
     private final boolean hasGetter, hasSetter;
     private final DocumentedType type;
-    private final DocumentedClass containingClass;
+    private final CrafttweakerDocumentationPage containingPage;
 
-    public DocumentedProperty(DocumentedClass containingClass, String name, DocumentedType type) {
-        this(containingClass, name, false, false, type);
+    public DocumentedProperty(CrafttweakerDocumentationPage containingPage, String name, DocumentedType type) {
+        this(containingPage, name, false, false, type);
     }
 
-    public DocumentedProperty(DocumentedClass containingClass, String name, boolean hasGetter, boolean hasSetter, DocumentedType type) {
-        this.containingClass = containingClass;
+    public DocumentedProperty(CrafttweakerDocumentationPage containingPage, String name, boolean hasGetter, boolean hasSetter, DocumentedType type) {
+        this.containingPage = containingPage;
         this.name = name;
         this.hasGetter = hasGetter;
         this.hasSetter = hasSetter;
@@ -38,15 +40,19 @@ public class DocumentedProperty implements Writable {
                     .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not merge properties " + propertyA.name + " and " + propertyB.name);
         }
 
-        if (!Objects.equals(propertyA.containingClass, propertyB.containingClass)) {
-            if (propertyA.containingClass != null && !propertyA.containingClass.extendsOrImplements(propertyB.containingClass)) {
-                environment.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not merge properties from classes " + propertyA.containingClass
-                                .getZSName() + " and " + propertyB.containingClass.getZSName());
+        if (!Objects.equals(propertyA.containingPage, propertyB.containingPage)) {
+            if (propertyA.containingPage != null) {
+                if (!(propertyA.containingPage instanceof DocumentedClass)
+                        || !(propertyB.containingPage instanceof DocumentedClass)
+                        || !((DocumentedClass) propertyA.containingPage).extendsOrImplements((DocumentedClass) propertyB.containingPage)) {
+                    environment.getMessager()
+                            .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not merge properties from classes " + propertyA.containingPage
+                                    .getZSName() + " and " + propertyB.containingPage.getZSName());
+                }
             }
         }
 
-        return new DocumentedProperty(propertyA.containingClass != null ? propertyA.containingClass : propertyB.containingClass, propertyA.name != null ? propertyA.name : propertyB.name, propertyA.hasGetter || propertyB.hasGetter, propertyA.hasSetter || propertyB.hasSetter, propertyA.type == null ? propertyB.type : propertyA.type);
+        return new DocumentedProperty(propertyA.containingPage != null ? propertyA.containingPage : propertyB.containingPage, propertyA.name != null ? propertyA.name : propertyB.name, propertyA.hasGetter || propertyB.hasGetter, propertyA.hasSetter || propertyB.hasSetter, propertyA.type == null ? propertyB.type : propertyA.type);
 
     }
 
@@ -69,21 +75,32 @@ public class DocumentedProperty implements Writable {
         return new DocumentedProperty(containingClass, name, true, true, type);
     }
 
-    public static DocumentedProperty fromMethod(DocumentedClass containingClass, Element method, ProcessingEnvironment environment) {
+    public static DocumentedProperty fromMethod(CrafttweakerDocumentationPage containingClass, Element method, ProcessingEnvironment environment, boolean isExpansion) {
         if (method.getKind() != ElementKind.METHOD) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Internal error: Expected this to be a getter or setter method!", method);
             return null;
         }
 
+        if (isExpansion != method.getModifiers().contains(Modifier.STATIC)) {
+            if (isExpansion) {
+                environment.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Expansion Getters/Setters must be static!", method);
+            } else {
+                environment.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Getters/Setters must not be static!", method);
+            }
+            return null;
+        }
+
         final ZenCodeType.Getter getter = method.getAnnotation(ZenCodeType.Getter.class);
         if (getter != null) {
-            return fromGetter(containingClass, (ExecutableElement) method, getter, environment);
+            return fromGetter(containingClass, (ExecutableElement) method, getter, environment, isExpansion);
         }
 
         final ZenCodeType.Setter setter = method.getAnnotation(ZenCodeType.Setter.class);
         if (setter != null) {
-            return fromSetter(containingClass, (ExecutableElement) method, setter, environment);
+            return fromSetter(containingClass, (ExecutableElement) method, setter, environment, isExpansion);
         }
 
         environment.getMessager()
@@ -91,7 +108,7 @@ public class DocumentedProperty implements Writable {
         return null;
     }
 
-    private static DocumentedProperty fromGetter(DocumentedClass containingClass, ExecutableElement method, ZenCodeType.Getter annotation, ProcessingEnvironment environment) {
+    private static DocumentedProperty fromGetter(CrafttweakerDocumentationPage containingClass, ExecutableElement method, ZenCodeType.Getter annotation, ProcessingEnvironment environment, boolean isExpansion) {
         final String name;
         if (annotation != null && !annotation.value().isEmpty()) {
             name = annotation.value();
@@ -99,7 +116,7 @@ public class DocumentedProperty implements Writable {
             name = method.getSimpleName().toString();
         }
 
-        if (method.getParameters().size() != 0) {
+        if (method.getParameters().size() != (isExpansion ? 1 : 0)) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Getter methods need to have no parameters!", method);
         }
@@ -113,7 +130,7 @@ public class DocumentedProperty implements Writable {
         return new DocumentedProperty(containingClass, name, true, false, type);
     }
 
-    private static DocumentedProperty fromSetter(DocumentedClass containingClass, ExecutableElement method, ZenCodeType.Setter annotation, ProcessingEnvironment environment) {
+    private static DocumentedProperty fromSetter(CrafttweakerDocumentationPage containingClass, ExecutableElement method, ZenCodeType.Setter annotation, ProcessingEnvironment environment, boolean isExpansion) {
         final String name;
         if (annotation != null && !annotation.value().isEmpty()) {
             name = annotation.value();
@@ -121,7 +138,7 @@ public class DocumentedProperty implements Writable {
             name = method.getSimpleName().toString();
         }
 
-        if (method.getParameters().size() != 1) {
+        if (method.getParameters().size() != (isExpansion ? 2 : 1)) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Setter method needs to have exactly one parameter!", method);
         }
@@ -130,7 +147,7 @@ public class DocumentedProperty implements Writable {
             environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Setter method need to return void!", method);
         }
 
-        DocumentedType type = DocumentedType.fromElement(method.getParameters().get(0), environment);
+        DocumentedType type = DocumentedType.fromElement(method.getParameters().get(isExpansion ? 1 : 0), environment);
         return new DocumentedProperty(containingClass, name, false, true, type);
     }
 

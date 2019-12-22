@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
 
@@ -20,5 +20,10 @@ public class DocumentedClassType extends DocumentedType {
     public String getClickableMarkdown() {
         //TODO implement.
         return String.format(Locale.ENGLISH, "[%s](/%s)", documentedClass.getZSName(), documentedClass.getDocPath());
+    }
+
+    @Override
+    public String getZSShortName() {
+        return this.documentedClass.getZSShortName();
     }
 }

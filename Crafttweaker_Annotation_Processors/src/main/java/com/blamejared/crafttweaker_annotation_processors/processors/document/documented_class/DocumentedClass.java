@@ -1,11 +1,13 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentedScriptingExample;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.IDontKnowHowToNameThisUtil;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.Writable;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.types.DocumentedClassType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.DocumentedConstructor;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.DocumentedScriptingExample;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.IDontKnowHowToNameThisUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedClassType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -68,7 +70,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
 
         final ZenCodeType.Name nameAnnotation = element.getAnnotation(ZenCodeType.Name.class);
         final String zsName = nameAnnotation != null ? nameAnnotation.value() : element.getQualifiedName().toString();
-        final String docPath = IDontKnowHowToNameThisUtil.getDocPath(element, nameAnnotation);
+        final String docPath = IDontKnowHowToNameThisUtil.getDocPath(element);
         if (docPath == null) {
             return null;
         }
@@ -105,7 +107,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             {
                 final ZenCodeType.Method method = enclosedElement.getAnnotation(ZenCodeType.Method.class);
                 if (method != null) {
-                    final DocumentedMethod documentedMethod = DocumentedMethod.convertMethod(out, (ExecutableElement) enclosedElement, environment);
+                    final DocumentedMethod documentedMethod = DocumentedMethod.convertMethod(out, (ExecutableElement) enclosedElement, environment, false);
                     if (documentedMethod != null) {
                         out.methods.computeIfAbsent(documentedMethod.getName(), name -> new DocumentedMethodGroup(name, out))
                                 .add(documentedMethod);
@@ -127,7 +129,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Setter
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Getter.class) != null || enclosedElement.getAnnotation(ZenCodeType.Setter.class) != null) {
-                    final DocumentedProperty documentedProperty = DocumentedProperty.fromMethod(out, enclosedElement, environment);
+                    final DocumentedProperty documentedProperty = DocumentedProperty.fromMethod(out, enclosedElement, environment, false);
                     if (documentedProperty != null) {
                         out.properties.merge(documentedProperty.getName(), documentedProperty, ((p1, p2) -> DocumentedProperty
                                 .merge(p1, p2, environment)));
@@ -146,7 +148,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Operator
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Operator.class) != null) {
-                    final DocumentedOperator documentedOperator = DocumentedOperator.fromMethod(out, (ExecutableElement) enclosedElement, environment);
+                    final DocumentedOperator documentedOperator = DocumentedOperator.fromMethod(out, (ExecutableElement) enclosedElement, environment, false);
                     if (documentedOperator != null) {
                         out.operators.add(documentedOperator);
                     }
@@ -156,7 +158,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             //Caster
             {
                 if (enclosedElement.getAnnotation(ZenCodeType.Caster.class) != null) {
-                    final DocumentedCaster documentedCaster = DocumentedCaster.fromMethod(out, (ExecutableElement) enclosedElement, environment);
+                    final DocumentedCaster documentedCaster = DocumentedCaster.fromMethod((ExecutableElement) enclosedElement, environment, false);
                     if (documentedCaster != null) {
                         out.casters.add(documentedCaster);
                     }
