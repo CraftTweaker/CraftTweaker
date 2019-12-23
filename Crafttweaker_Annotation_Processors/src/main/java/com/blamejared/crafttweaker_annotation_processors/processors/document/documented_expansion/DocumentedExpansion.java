@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.do
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentProcessorNew;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.IDontKnowHowToNameThisUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
@@ -23,16 +23,18 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     private final String docComment;
     private final DocumentedType expandedType;
     private final Set<DocumentedOperator> operators = new TreeSet<>(DocumentedOperator.compareByOp);
-    private String docParamThis;
-    private Set<DocumentedCaster> casters = new TreeSet<>(DocumentedCaster.byZSName);
-    private Map<String, DocumentedMethodGroup> methods = new TreeMap<>();
-    private Map<String, DocumentedProperty> properties = new TreeMap<>();
-    private String declaringModId;
+    private final Set<DocumentedCaster> casters = new TreeSet<>(DocumentedCaster.byZSName);
+    private final Map<String, DocumentedMethodGroup> methods = new TreeMap<>();
+    private final Map<String, DocumentedProperty> properties = new TreeMap<>();
+    private final String docParamThis;
+    private final String declaringModId;
 
-    public DocumentedExpansion(String docPath, String docComment, DocumentedType expandedType) {
+    public DocumentedExpansion(String docPath, String docComment, DocumentedType expandedType, String docParamThis, String declaringModId) {
         this.docPath = docPath;
         this.docComment = docComment;
         this.expandedType = expandedType;
+        this.docParamThis = docParamThis;
+        this.declaringModId = declaringModId;
     }
 
     public static DocumentedExpansion convertExpansion(TypeElement element, ProcessingEnvironment environment) {
@@ -65,14 +67,18 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
             return null;
         }
         final String s = CommentUtils.formatDocCommentForDisplay(element, environment);
-        final DocumentedExpansion out = new DocumentedExpansion(docPath, (s == null || s.isEmpty()) ? null : s, expandedType);
         final String docComment = environment.getElementUtils().getDocComment(element);
-        final String docParamThis = CommentUtils.joinDocAnnotation(docComment, "docParam this", environment);
-        if(docComment != null && !docComment.isEmpty()){
-            out.docParamThis = docParamThis;
-        }
+        String docParamThis = CommentUtils.joinDocAnnotation(docComment, "docParam this", environment);
 
-        out.declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+        if(!docParamThis.isEmpty()){
+            docParamThis = null;
+        }
+        final String declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+        final DocumentedExpansion out = new DocumentedExpansion(docPath, (s == null || s.isEmpty()) ? null : s, expandedType, docParamThis, declaringModId);
+        knownTypes.put(element, out);
+
+
+
 
         handleEnclosedElements(out, element, environment);
 
@@ -201,10 +207,10 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         return docParamThis == null ? "my" + expandedType.getZSShortName() : docParamThis;
     }
 
-    private static void printSection(String sectionName, Collection<? extends Writable> writables, PrintWriter writer) {
-        if (!writables.isEmpty()) {
+    private static void printSection(String sectionName, Collection<? extends Writable> collectionWritable, PrintWriter writer) {
+        if (!collectionWritable.isEmpty()) {
             writer.printf("## %s%n", sectionName);
-            for (Writable writable : writables) {
+            for (Writable writable : collectionWritable) {
                 writable.write(writer);
             }
             writer.println();

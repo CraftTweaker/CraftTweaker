@@ -3,9 +3,9 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.do
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentProcessorNew;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.DocumentedConstructor;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.DocumentedScriptingExample;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.IDontKnowHowToNameThisUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedClassType;
@@ -37,19 +37,23 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     private final Map<String, DocumentedMethodGroup> methods = new TreeMap<>();
     private final Map<String, DocumentedProperty> properties = new TreeMap<>();
     private final Set<DocumentedOperator> operators = new TreeSet<>(DocumentedOperator.compareByOp);
+
+    //TODO: Example files
     private final Set<DocumentedScriptingExample> examples = new HashSet<>();
     private final String ZSName;
     private final String docPath;
     private final String docComment;
     private final DocumentedClass superClass;
-    private String docParamThis = null;
-    private String declaringModId;
+    private String docParamThis;
+    private final String declaringModId;
 
-    public DocumentedClass(String ZSName, String docPath, String docComment, DocumentedClass superClass) {
+    public DocumentedClass(String ZSName, String docPath, String docComment, DocumentedClass superClass, String docParamThis, String declaringModId) {
         this.ZSName = ZSName;
         this.docPath = docPath;
         this.docComment = docComment;
         this.superClass = superClass;
+        this.docParamThis = docParamThis;
+        this.declaringModId = declaringModId;
     }
 
     public static DocumentedClass convertClass(TypeMirror type, ProcessingEnvironment environment) {
@@ -79,19 +83,20 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
 
         final DocumentedClass superClass = convertClass(element.getSuperclass(), environment);
         final String docComment = environment.getElementUtils().getDocComment(element);
-        final DocumentedClass out = new DocumentedClass(zsName, docPath, CommentUtils.formatDocCommentForDisplay(element, environment), superClass);
-        knownTypes.put(element, out);
-        typesByZSName.put(zsName, element);
 
-        out.declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+        final String declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+        String docParamThis = null;
 
         if (docComment != null) {
             final String s = CommentUtils.joinDocAnnotation(docComment, "@docParam this", environment).trim();
             if (!s.isEmpty()) {
-                out.docParamThis = s;
+                docParamThis = s;
             }
         }
 
+        final DocumentedClass out = new DocumentedClass(zsName, docPath, CommentUtils.formatDocCommentForDisplay(element, environment), superClass, docParamThis, declaringModId);
+        knownTypes.put(element, out);
+        typesByZSName.put(zsName, element);
 
         for (final TypeMirror anInterface : element.getInterfaces()) {
             final DocumentedClass documentedClass = convertClass(anInterface, environment);
@@ -253,6 +258,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
                     }
 
                     if (this.docParamThis == null) {
+                        //TODO: Do we want this
                         this.docParamThis = implementedInterface.docParamThis;
                     }
                 }

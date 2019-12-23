@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.shared;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util;
 
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;

@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util;
 
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.Contract;

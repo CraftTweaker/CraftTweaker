@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 import org.openzen.zencode.java.ZenCodeType;
@@ -133,10 +133,6 @@ public class DocumentedMethod implements Writable {
 
     public CrafttweakerDocumentationPage getContainingPage() {
         return containingPage;
-    }
-
-    public String getCallee() {
-        return callee;
     }
 
     public List<DocumentedParameter> getParameterList() {

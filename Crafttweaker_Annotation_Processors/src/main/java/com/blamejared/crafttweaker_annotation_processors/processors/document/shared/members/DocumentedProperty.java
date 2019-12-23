@@ -22,11 +22,7 @@ public class DocumentedProperty {
     private final DocumentedType type;
     private final CrafttweakerDocumentationPage containingPage;
 
-    public DocumentedProperty(CrafttweakerDocumentationPage containingPage, String name, DocumentedType type) {
-        this(containingPage, name, false, false, type);
-    }
-
-    public DocumentedProperty(CrafttweakerDocumentationPage containingPage, String name, boolean hasGetter, boolean hasSetter, DocumentedType type) {
+    private DocumentedProperty(CrafttweakerDocumentationPage containingPage, String name, boolean hasGetter, boolean hasSetter, DocumentedType type) {
         this.containingPage = containingPage;
         this.name = name;
         this.hasGetter = hasGetter;
@@ -171,7 +167,7 @@ public class DocumentedProperty {
         return name;
     }
 
-    public void writeTable(PrintWriter writer) {
+    private void writeTable(PrintWriter writer) {
         writer.printf("| %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter);
     }
 }

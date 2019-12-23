@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.FormattingUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.FormattingUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import org.openzen.zencode.java.ZenCodeType;
 

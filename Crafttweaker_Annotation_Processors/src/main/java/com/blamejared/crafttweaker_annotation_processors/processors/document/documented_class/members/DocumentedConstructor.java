@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.DocumentedParameter;
 
@@ -34,7 +34,7 @@ public class DocumentedConstructor implements Writable {
     public static DocumentedConstructor fromConstructor(DocumentedClass containingClass, ExecutableElement method, ProcessingEnvironment environment) {
         if (method.getKind() != ElementKind.CONSTRUCTOR) {
             environment.getMessager()
-                    .printMessage(Diagnostic.Kind.ERROR, "Internal Error: Expected this to be a construcor", method);
+                    .printMessage(Diagnostic.Kind.ERROR, "Internal Error: Expected this to be a constructor", method);
             return null;
         }
 

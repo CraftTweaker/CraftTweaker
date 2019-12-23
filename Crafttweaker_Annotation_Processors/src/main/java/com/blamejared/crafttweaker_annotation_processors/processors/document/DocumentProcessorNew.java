@@ -54,7 +54,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
                     }
                 }
                 processingEnv.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not find modid for this element!", element);
+                        .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not find mod-id for this element!", element);
             }
         }
 

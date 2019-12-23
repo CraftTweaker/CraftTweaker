@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -149,10 +149,6 @@ public class DocumentedParameter {
         return optional;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
     public String[] getExamples() {
         return examples;
     }
@@ -161,7 +157,7 @@ public class DocumentedParameter {
         return String.format("%s as %s", getName(), getType().getZSName());
     }
 
-    public void writeTable(PrintWriter writer, boolean containsOptionals) {
+    void writeTable(PrintWriter writer, boolean containsOptionals) {
         final String desc = description == null ? "No description provided" : description;
         if (containsOptionals) {
             writer.printf("| %s | %s | %s | %s | %s |%n", getName(), type.getClickableMarkdown(), desc, isOptional(), defaultValue);
