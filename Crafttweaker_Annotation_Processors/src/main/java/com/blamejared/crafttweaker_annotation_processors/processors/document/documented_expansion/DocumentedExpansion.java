@@ -1,7 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_expansion;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentProcessorNew;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.IDontKnowHowToNameThisUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 import org.openzen.zencode.java.ZenCodeType;
@@ -10,23 +13,25 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     private final String docPath;
+    private final String docComment;
     private final DocumentedType expandedType;
     private final Set<DocumentedOperator> operators = new TreeSet<>(DocumentedOperator.compareByOp);
     private String docParamThis;
     private Set<DocumentedCaster> casters = new TreeSet<>(DocumentedCaster.byZSName);
     private Map<String, DocumentedMethodGroup> methods = new TreeMap<>();
     private Map<String, DocumentedProperty> properties = new TreeMap<>();
+    private String declaringModId;
 
-    public DocumentedExpansion(String docPath, DocumentedType expandedType) {
+    public DocumentedExpansion(String docPath, String docComment, DocumentedType expandedType) {
         this.docPath = docPath;
+        this.docComment = docComment;
         this.expandedType = expandedType;
     }
 
@@ -59,7 +64,16 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         if (docPath == null) {
             return null;
         }
-        final DocumentedExpansion out = new DocumentedExpansion(docPath, expandedType);
+        final String s = CommentUtils.formatDocCommentForDisplay(element, environment);
+        final DocumentedExpansion out = new DocumentedExpansion(docPath, (s == null || s.isEmpty()) ? null : s, expandedType);
+        final String docComment = environment.getElementUtils().getDocComment(element);
+        final String docParamThis = CommentUtils.joinDocAnnotation(docComment, "docParam this", environment);
+        if(docComment != null && !docComment.isEmpty()){
+            out.docParamThis = docParamThis;
+        }
+
+        out.declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+
         handleEnclosedElements(out, element, environment);
 
         return out;
@@ -147,7 +161,34 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
 
     @Override
     public void write(File docsDirectory, ProcessingEnvironment environment) throws IOException {
+        final File file = new File(docsDirectory, getDocPath() + ".md");
+        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+            throw new IOException("Could not create folder " + file.getAbsolutePath());
+        }
 
+        try (final PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+            writer.printf("# Expansion for %s%n", this.expandedType.getZSShortName());
+            writer.println();
+            if(docComment != null) {
+                writer.println(docComment);
+                writer.println();
+            }
+
+            if(declaringModId != null) {
+                writer.printf("This expansion was added by a mod with mod-id `%s`. So you need to have this mod installed if you want to use this feature.%n", declaringModId);
+                writer.println();
+            }
+
+            writer.printf("This is an expansion class for %s.  %n", this.expandedType.getClickableMarkdown());
+            writer.printf("That means that whenever you have an object that is a %s, you can use these methods on it as if they were directly declared in %1$s.%n", this.expandedType.getClickableMarkdown());
+            writer.println("Of course, that only works if the mod that declares this expansion class is also loaded!");
+            writer.println();
+
+            printSection("Methods", this.methods.values(), writer);
+            DocumentedProperty.printProperties(this.properties.values(), writer);
+            printSection("Operators", this.operators, writer);
+            DocumentedCaster.printCasters(this.casters, writer);
+        }
     }
 
     @Override
@@ -158,5 +199,15 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     @Override
     public String getDocParamThis() {
         return docParamThis == null ? "my" + expandedType.getZSShortName() : docParamThis;
+    }
+
+    private static void printSection(String sectionName, Collection<? extends Writable> writables, PrintWriter writer) {
+        if (!writables.isEmpty()) {
+            writer.printf("## %s%n", sectionName);
+            for (Writable writable : writables) {
+                writable.write(writer);
+            }
+            writer.println();
+        }
     }
 }

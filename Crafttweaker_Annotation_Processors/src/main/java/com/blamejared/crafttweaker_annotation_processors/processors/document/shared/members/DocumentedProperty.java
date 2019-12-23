@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.sh
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.DocumentedClass;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -14,9 +13,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Objects;
 
-public class DocumentedProperty implements Writable {
+public class DocumentedProperty {
     private final String name;
     private final boolean hasGetter, hasSetter;
     private final DocumentedType type;
@@ -151,12 +151,27 @@ public class DocumentedProperty implements Writable {
         return new DocumentedProperty(containingClass, name, false, true, type);
     }
 
+    public static void printProperties(Collection<DocumentedProperty> properties, PrintWriter writer) {
+        if (properties.isEmpty()) {
+            return;
+        }
+
+        writer.println("## Properties");
+        writer.println();
+        writer.println("| Name | Type | Has Getter | Has Setter |");
+        writer.println("|------|------|------------|------------|");
+        for (DocumentedProperty value : properties) {
+            value.writeTable(writer);
+        }
+
+        writer.println();
+    }
+
     public String getName() {
         return name;
     }
 
-    @Override
-    public void write(PrintWriter writer) {
+    public void writeTable(PrintWriter writer) {
         writer.printf("| %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter);
     }
 }

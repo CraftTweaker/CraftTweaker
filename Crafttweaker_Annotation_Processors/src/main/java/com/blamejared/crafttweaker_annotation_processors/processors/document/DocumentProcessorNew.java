@@ -2,23 +2,62 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-@SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document"})
+@SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DocumentProcessorNew extends AbstractProcessor {
+    public static Map<String, String> modIdByPackage = new HashMap<>();
+
+    public static String getModIdForPackage(Element element, ProcessingEnvironment environment) {
+        final String packageName = environment.getElementUtils().getPackageOf(element).getQualifiedName().toString();
+        for (String knownPackName : modIdByPackage.keySet()) {
+            if (packageName.startsWith(knownPackName)) {
+                return modIdByPackage.get(knownPackName);
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        {
+            final TypeElement typeElement = processingEnv.getElementUtils()
+                    .getTypeElement("net.minecraftforge.fml.common.Mod");
+            outer:
+            for (Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
+                for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+                    if (annotationMirror.getAnnotationType().asElement().equals(typeElement)) {
+                        final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror
+                                .getElementValues();
+
+                        for (ExecutableElement executableElement : elementValues.keySet()) {
+                            if (executableElement.getSimpleName().toString().equals("value")) {
+                                final String packageName = processingEnv.getElementUtils()
+                                        .getPackageOf(element)
+                                        .getQualifiedName()
+                                        .toString();
+                                modIdByPackage.put(packageName, elementValues.get(executableElement)
+                                        .getValue()
+                                        .toString());
+                                continue outer;
+                            }
+                        }
+                    }
+                }
+                processingEnv.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not find modid for this element!", element);
+            }
+        }
+
 
         for (Element element : roundEnv.getElementsAnnotatedWith(Document.class)) {
             final Document document = element.getAnnotation(Document.class);

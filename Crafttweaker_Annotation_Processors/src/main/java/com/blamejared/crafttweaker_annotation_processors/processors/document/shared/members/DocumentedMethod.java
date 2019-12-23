@@ -112,8 +112,10 @@ public class DocumentedMethod implements Writable {
     public void write(PrintWriter writer) {
         writer.println();
 
-        writer.println(docComment);
-        writer.println();
+        if(docComment != null) {
+            writer.println(docComment);
+            writer.println();
+        }
         if (returnType != null) {
             writer.println("Returns " + returnType.getClickableMarkdown());
             writer.println();

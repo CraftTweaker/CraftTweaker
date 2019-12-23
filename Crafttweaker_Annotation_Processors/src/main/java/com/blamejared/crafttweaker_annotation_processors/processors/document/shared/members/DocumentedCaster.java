@@ -9,6 +9,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Comparator;
 
 public class DocumentedCaster {
@@ -56,7 +57,23 @@ public class DocumentedCaster {
         return resultType;
     }
 
-    public void writeTable(PrintWriter writer) {
+    public static void printCasters(Collection<DocumentedCaster> casters, PrintWriter writer) {
+        if (casters.isEmpty()) {
+            return;
+        }
+
+        writer.println("## Casters");
+        writer.println();
+        writer.println("| Result type | Is Implicit |");
+        writer.println("|-------------|-------------|");
+        for (DocumentedCaster caster : casters) {
+            caster.writeTable(writer);
+        }
+
+        writer.println();
+    }
+
+    private void writeTable(PrintWriter writer) {
         writer.printf("| %s | %s |%n", resultType.getClickableMarkdown(), implicit);
     }
 }

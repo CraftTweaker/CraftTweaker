@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentProcessorNew;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.DocumentedConstructor;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.DocumentedScriptingExample;
@@ -42,6 +43,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     private final String docComment;
     private final DocumentedClass superClass;
     private String docParamThis = null;
+    private String declaringModId;
 
     public DocumentedClass(String ZSName, String docPath, String docComment, DocumentedClass superClass) {
         this.ZSName = ZSName;
@@ -80,6 +82,8 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         final DocumentedClass out = new DocumentedClass(zsName, docPath, CommentUtils.formatDocCommentForDisplay(element, environment), superClass);
         knownTypes.put(element, out);
         typesByZSName.put(zsName, element);
+
+        out.declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
 
         if (docComment != null) {
             final String s = CommentUtils.joinDocAnnotation(docComment, "@docParam this", environment).trim();
@@ -216,6 +220,11 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
                 writer.println();
             }
 
+            if(declaringModId != null) {
+                writer.printf("This class was added by a mod with mod-id `%s`. So you need to have this mod installed if you want to use this feature.%n", declaringModId);
+                writer.println();
+            }
+
             writer.println("## Importing the class");
             //TODO: Create Arrays pages and re-add the '[Array](link)'
             writer.println("It might be required for you to import the package if you encounter any issues (like casting an Array), so better be safe than sorry and add the import.  ");
@@ -253,44 +262,13 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
 
             printSection("Constructors", this.constructors, writer);
             printSection("Methods", this.methods.values(), writer);
-            printProperties(writer);
+            DocumentedProperty.printProperties(this.properties.values(), writer);
             printSection("Operators", this.operators, writer);
             //printSection("Casters", this.casters, writer);
-            printCasters(writer);
+            DocumentedCaster.printCasters(this.casters, writer);
         }
     }
 
-    private void printProperties(PrintWriter writer) {
-        if (this.properties.isEmpty()) {
-            return;
-        }
-
-        writer.println("## Properties");
-        writer.println();
-        writer.println("| Name | Type | Has Getter | Has Setter |");
-        writer.println("|------|------|------------|------------|");
-        for (DocumentedProperty value : this.properties.values()) {
-            value.write(writer);
-        }
-
-        writer.println();
-    }
-
-    private void printCasters(PrintWriter writer) {
-        if (this.casters.isEmpty()) {
-            return;
-        }
-
-        writer.println("## Casters");
-        writer.println();
-        writer.println("| Result type | Is Implicit |");
-        writer.println("|-------------|-------------|");
-        for (DocumentedCaster caster : this.casters) {
-            caster.writeTable(writer);
-        }
-
-        writer.println();
-    }
 
     public boolean extendsOrImplements(DocumentedClass containingClass) {
         return this.equals(containingClass)
