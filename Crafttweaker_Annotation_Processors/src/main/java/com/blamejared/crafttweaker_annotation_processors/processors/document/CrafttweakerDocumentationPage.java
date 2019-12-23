@@ -17,12 +17,12 @@ import java.util.Map;
  * Can be a {@link DocumentedClass} or a {@link DocumentedExpansion}
  */
 public abstract class CrafttweakerDocumentationPage {
-    public static Map<TypeElement, CrafttweakerDocumentationPage> knownTypes = new HashMap<>();
+    public static Map<String, CrafttweakerDocumentationPage> knownTypes = new HashMap<>();
     public static Map<String, TypeElement> typesByZSName = new HashMap<>();
 
     public static CrafttweakerDocumentationPage convertType(TypeElement element, ProcessingEnvironment environment) {
-        if (knownTypes.containsKey(element)) {
-            return knownTypes.get(element);
+        if (knownTypes.containsKey(element.toString())) {
+            return knownTypes.get(element.toString());
         }
 
         final CrafttweakerDocumentationPage documentationPage;
@@ -36,8 +36,8 @@ public abstract class CrafttweakerDocumentationPage {
             return null;
         }
 
-        if (!knownTypes.containsKey(element)) {
-            knownTypes.put(element, documentationPage);
+        if (!knownTypes.containsKey(element.toString())) {
+            knownTypes.put(element.toString(), documentationPage);
         }
 
         return documentationPage;
@@ -50,4 +50,6 @@ public abstract class CrafttweakerDocumentationPage {
     public abstract String getZSName();
 
     public abstract String getDocParamThis();
+
+    public abstract String getDocumentTitle();
 }

@@ -7,15 +7,16 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.PrintWriter;
+import java.util.*;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DocumentProcessorNew extends AbstractProcessor {
     public static Map<String, String> modIdByPackage = new HashMap<>();
+    private static final File docsOut = new File("docsOut");
 
     public static String getModIdForPackage(Element element, ProcessingEnvironment environment) {
         final String packageName = environment.getElementUtils().getPackageOf(element).getQualifiedName().toString();
@@ -29,35 +30,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        {
-            final TypeElement typeElement = processingEnv.getElementUtils()
-                    .getTypeElement("net.minecraftforge.fml.common.Mod");
-            outer:
-            for (Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
-                for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-                    if (annotationMirror.getAnnotationType().asElement().equals(typeElement)) {
-                        final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror
-                                .getElementValues();
-
-                        for (ExecutableElement executableElement : elementValues.keySet()) {
-                            if (executableElement.getSimpleName().toString().equals("value")) {
-                                final String packageName = processingEnv.getElementUtils()
-                                        .getPackageOf(element)
-                                        .getQualifiedName()
-                                        .toString();
-                                modIdByPackage.put(packageName, elementValues.get(executableElement)
-                                        .getValue()
-                                        .toString());
-                                continue outer;
-                            }
-                        }
-                    }
-                }
-                processingEnv.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not find mod-id for this element!", element);
-            }
-        }
-
+        fillModIdInfo(roundEnv);
 
         for (Element element : roundEnv.getElementsAnnotatedWith(Document.class)) {
             final Document document = element.getAnnotation(Document.class);
@@ -78,7 +51,6 @@ public class DocumentProcessorNew extends AbstractProcessor {
 
             if (documentationPage != null) {
                 try {
-                    final File docsOut = new File("docsOut");
                     if (!docsOut.exists() && !docsOut.mkdirs()) {
                         processingEnv.getMessager()
                                 .printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath(), element);
@@ -91,6 +63,52 @@ public class DocumentProcessorNew extends AbstractProcessor {
 
 
         }
+
+        if(roundEnv.processingOver()) {
+            writeYAML();
+        }
         return false;
+    }
+
+    private void fillModIdInfo(RoundEnvironment roundEnv) {
+        final TypeElement typeElement = processingEnv.getElementUtils()
+                .getTypeElement("net.minecraftforge.fml.common.Mod");
+        outer:
+        for (Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
+            for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+                if (annotationMirror.getAnnotationType().asElement().equals(typeElement)) {
+                    final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror
+                            .getElementValues();
+
+                    for (ExecutableElement executableElement : elementValues.keySet()) {
+                        if (executableElement.getSimpleName().toString().equals("value")) {
+                            final String packageName = processingEnv.getElementUtils()
+                                    .getPackageOf(element)
+                                    .getQualifiedName()
+                                    .toString();
+                            modIdByPackage.put(packageName, elementValues.get(executableElement)
+                                    .getValue()
+                                    .toString());
+                            continue outer;
+                        }
+                    }
+                }
+            }
+            processingEnv.getMessager()
+                    .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not find mod-id for this element!", element);
+        }
+    }
+
+    private void writeYAML() {
+        final File mkdocsFile = new File(docsOut, "mkdocs.yml");
+        try(final PrintWriter writer = new PrintWriter(new FileWriter(mkdocsFile))) {
+            final List<CrafttweakerDocumentationPage> values = new ArrayList<>(CrafttweakerDocumentationPage.knownTypes.values());
+            values.sort(Comparator.comparing(CrafttweakerDocumentationPage::getDocPath));
+            for (CrafttweakerDocumentationPage value : values) {
+                writer.printf("  - %s: '%s.md'%n", value.getDocumentTitle(), value.getDocPath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

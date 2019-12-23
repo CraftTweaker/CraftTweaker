@@ -64,8 +64,8 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         if (element == null || element.equals(environment.getElementUtils().getTypeElement("java.lang.Object"))) {
             return null;
         }
-        if (knownTypes.containsKey(element)) {
-            final CrafttweakerDocumentationPage documentationPage = knownTypes.get(element);
+        if (knownTypes.containsKey(element.toString())) {
+            final CrafttweakerDocumentationPage documentationPage = knownTypes.get(element.toString());
             if (!(documentationPage instanceof DocumentedClass)) {
                 environment.getMessager()
                         .printMessage(Diagnostic.Kind.ERROR, "Internal error: " + element + " is not a class", element);
@@ -95,7 +95,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         }
 
         final DocumentedClass out = new DocumentedClass(zsName, docPath, CommentUtils.formatDocCommentForDisplay(element, environment), superClass, docParamThis, declaringModId);
-        knownTypes.put(element, out);
+        knownTypes.put(element.toString(), out);
         typesByZSName.put(zsName, element);
 
         for (final TypeMirror anInterface : element.getInterfaces()) {
@@ -209,6 +209,11 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     }
 
     @Override
+    public String getDocumentTitle() {
+        return getZSShortName();
+    }
+
+    @Override
     public void write(File docsDirectory, ProcessingEnvironment environment) throws IOException {
         final File file = new File(docsDirectory, getDocPath() + ".md");
         if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
@@ -216,7 +221,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         }
 
         try (final PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            writer.printf("# %s%n", getZSShortName());
+            writer.printf("# %s%n", getDocumentTitle());
             writer.println();
 
 

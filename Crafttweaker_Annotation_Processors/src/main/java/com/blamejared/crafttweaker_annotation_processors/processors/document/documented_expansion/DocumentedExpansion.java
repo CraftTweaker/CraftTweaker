@@ -38,8 +38,8 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     }
 
     public static DocumentedExpansion convertExpansion(TypeElement element, ProcessingEnvironment environment) {
-        if (knownTypes.containsKey(element)) {
-            final CrafttweakerDocumentationPage documentationPage = knownTypes.get(element);
+        if (knownTypes.containsKey(element.toString())) {
+            final CrafttweakerDocumentationPage documentationPage = knownTypes.get(element.toString());
             if (!(documentationPage instanceof DocumentedExpansion)) {
                 environment.getMessager()
                         .printMessage(Diagnostic.Kind.ERROR, "Internal error: " + element + " is not a class", element);
@@ -75,7 +75,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         }
         final String declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
         final DocumentedExpansion out = new DocumentedExpansion(docPath, (s == null || s.isEmpty()) ? null : s, expandedType, docParamThis, declaringModId);
-        knownTypes.put(element, out);
+        knownTypes.put(element.toString(), out);
 
 
 
@@ -173,7 +173,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         }
 
         try (final PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            writer.printf("# Expansion for %s%n", this.expandedType.getZSShortName());
+            writer.printf("# %s%n", this.getDocumentTitle());
             writer.println();
             if(docComment != null) {
                 writer.println(docComment);
@@ -205,6 +205,11 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
     @Override
     public String getDocParamThis() {
         return docParamThis == null ? "my" + expandedType.getZSShortName() : docParamThis;
+    }
+
+    @Override
+    public String getDocumentTitle() {
+        return "Expansion for " + expandedType.getZSShortName();
     }
 
     private static void printSection(String sectionName, Collection<? extends Writable> collectionWritable, PrintWriter writer) {
