@@ -15,8 +15,9 @@ import java.util.*;
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DocumentProcessorNew extends AbstractProcessor {
-    public static Map<String, String> modIdByPackage = new HashMap<>();
     private static final File docsOut = new File("docsOut");
+    private static final Set<CrafttweakerDocumentationPage> pages = new TreeSet<>(Comparator.comparing(CrafttweakerDocumentationPage::getDocumentTitle));
+    public static Map<String, String> modIdByPackage = new HashMap<>();
 
     public static String getModIdForPackage(Element element, ProcessingEnvironment environment) {
         final String packageName = environment.getElementUtils().getPackageOf(element).getQualifiedName().toString();
@@ -48,24 +49,13 @@ public class DocumentProcessorNew extends AbstractProcessor {
 
             final TypeElement typeElement = (TypeElement) element;
             final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
-
             if (documentationPage != null) {
-                try {
-                    if (!docsOut.exists() && !docsOut.mkdirs()) {
-                        processingEnv.getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath(), element);
-                    }
-                    documentationPage.write(docsOut, processingEnv);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                pages.add(documentationPage);
             }
-
-
         }
 
-        if(roundEnv.processingOver()) {
-            writeYAML();
+        if (roundEnv.processingOver()) {
+            writeToFiles();
         }
         return false;
     }
@@ -99,16 +89,33 @@ public class DocumentProcessorNew extends AbstractProcessor {
         }
     }
 
-    private void writeYAML() {
+    private void writeToFiles() {
+        //Create folder
+        if (!docsOut.exists() && !docsOut.mkdirs()) {
+            processingEnv.getMessager()
+                    .printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath());
+            return;
+        }
+
+        //Create files
+        try {
+            for (CrafttweakerDocumentationPage page : pages) {
+                page.write(docsOut, processingEnv);
+            }
+            writeYAML();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeYAML() throws IOException {
         final File mkdocsFile = new File(docsOut, "mkdocs.yml");
-        try(final PrintWriter writer = new PrintWriter(new FileWriter(mkdocsFile))) {
+        try (final PrintWriter writer = new PrintWriter(new FileWriter(mkdocsFile))) {
             final List<CrafttweakerDocumentationPage> values = new ArrayList<>(CrafttweakerDocumentationPage.knownTypes.values());
             values.sort(Comparator.comparing(CrafttweakerDocumentationPage::getDocPath));
             for (CrafttweakerDocumentationPage value : values) {
                 writer.printf("  - %s: '%s.md'%n", value.getDocumentTitle(), value.getDocPath());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

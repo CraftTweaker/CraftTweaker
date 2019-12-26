@@ -59,6 +59,13 @@ public class DocumentedProperty {
             return null;
         }
 
+
+        if (!field.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "ZenFields need to be public!", field);
+            return null;
+        }
+
+
         final ZenCodeType.Field annotation = field.getAnnotation(ZenCodeType.Field.class);
         final String name;
         if (annotation != null && !annotation.value().isEmpty()) {
@@ -112,6 +119,12 @@ public class DocumentedProperty {
             name = method.getSimpleName().toString();
         }
 
+        if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Getter methods need to be public!", method);
+            return null;
+        }
+
+
         if (method.getParameters().size() != (isExpansion ? 1 : 0)) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Getter methods need to have no parameters!", method);
@@ -132,6 +145,11 @@ public class DocumentedProperty {
             name = annotation.value();
         } else {
             name = method.getSimpleName().toString();
+        }
+
+        if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Setter methods need to be public!", method);
+            return null;
         }
 
         if (method.getParameters().size() != (isExpansion ? 2 : 1)) {

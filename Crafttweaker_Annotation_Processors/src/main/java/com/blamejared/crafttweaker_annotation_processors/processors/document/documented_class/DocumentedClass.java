@@ -3,12 +3,12 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.do
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentProcessorNew;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.DocumentedConstructor;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.DocumentedScriptingExample;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedClassType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -44,8 +44,8 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     private final String docPath;
     private final String docComment;
     private final DocumentedClass superClass;
-    private String docParamThis;
     private final String declaringModId;
+    private String docParamThis;
 
     public DocumentedClass(String ZSName, String docPath, String docComment, DocumentedClass superClass, String docParamThis, String declaringModId) {
         this.ZSName = ZSName;
@@ -230,7 +230,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
                 writer.println();
             }
 
-            if(declaringModId != null) {
+            if (declaringModId != null) {
                 writer.printf("This class was added by a mod with mod-id `%s`. So you need to have this mod installed if you want to use this feature.%n", declaringModId);
                 writer.println();
             }

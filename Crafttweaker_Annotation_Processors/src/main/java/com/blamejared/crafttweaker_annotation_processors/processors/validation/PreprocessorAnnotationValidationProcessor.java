@@ -19,13 +19,18 @@ public class PreprocessorAnnotationValidationProcessor extends AbstractProcessor
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
-                if(!(element instanceof TypeElement)) {
-                    this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "How is this annotated?", element);
+                if (!(element instanceof TypeElement)) {
+                    this.processingEnv.getMessager()
+                            .printMessage(Diagnostic.Kind.ERROR, "How is this annotated?", element);
                     continue;
                 }
 
-                if(!this.processingEnv.getTypeUtils().isAssignable(element.asType(), this.processingEnv.getElementUtils().getTypeElement(preprocessorInterfaceCanonicalName).asType())){
-                    this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Element is annotated as Preprocessor but is not assignable to " + preprocessorInterfaceCanonicalName + "!", element);
+                if (!this.processingEnv.getTypeUtils()
+                        .isAssignable(element.asType(), this.processingEnv.getElementUtils()
+                                .getTypeElement(preprocessorInterfaceCanonicalName)
+                                .asType())) {
+                    this.processingEnv.getMessager()
+                            .printMessage(Diagnostic.Kind.ERROR, "Element is annotated as Preprocessor but is not assignable to " + preprocessorInterfaceCanonicalName + "!", element);
                 }
             }
         }

@@ -44,6 +44,11 @@ public class DocumentedCaster {
             return null;
         }
 
+        if (!element.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Caster methods need to be public!", element);
+            return null;
+        }
+
         if (isExpansion != element.getModifiers().contains(Modifier.STATIC)) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Caster methods need to be nonstatic if not in an expansion and static when in an expansion!", element);
@@ -51,10 +56,6 @@ public class DocumentedCaster {
         }
 
         return new DocumentedCaster(DocumentedType.fromTypeMirror(element.getReturnType(), environment), caster.implicit());
-    }
-
-    public DocumentedType getResultType() {
-        return resultType;
     }
 
     public static void printCasters(Collection<DocumentedCaster> casters, PrintWriter writer) {
@@ -71,6 +72,10 @@ public class DocumentedCaster {
         }
 
         writer.println();
+    }
+
+    public DocumentedType getResultType() {
+        return resultType;
     }
 
     private void writeTable(PrintWriter writer) {

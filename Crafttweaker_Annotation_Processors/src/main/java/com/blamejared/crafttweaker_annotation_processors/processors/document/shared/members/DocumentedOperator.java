@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.FormattingUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.FormattingUtils;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -44,6 +44,13 @@ public class DocumentedOperator implements Writable {
                     .printMessage(Diagnostic.Kind.ERROR, "Internal error: Expected this method to have an Operator annotation1", method);
             return null;
         }
+
+        if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager()
+                    .printMessage(Diagnostic.Kind.ERROR, "Operator methods need to be public!", method);
+            return null;
+        }
+
 
         if (isExpansion != method.getModifiers().contains(Modifier.STATIC)) {
             if (isExpansion) {

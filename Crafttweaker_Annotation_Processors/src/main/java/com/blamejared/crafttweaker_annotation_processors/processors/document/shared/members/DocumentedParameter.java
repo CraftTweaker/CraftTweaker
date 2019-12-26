@@ -1,11 +1,12 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
@@ -57,6 +58,26 @@ public class DocumentedParameter {
         return new DocumentedParameter(name, type, optional, aDefault, examples, description.isEmpty() ? null : description);
     }
 
+    public static List<DocumentedParameter> getMethodParameters(ExecutableElement method, ProcessingEnvironment environment, boolean isExpansion) {
+        final List<DocumentedParameter> parameterList = new ArrayList<>();
+        boolean optionalsHit = false;
+        final List<? extends VariableElement> parameters = method.getParameters();
+        for (VariableElement parameter : isExpansion ? parameters.subList(1, parameters.size()) : parameters) {
+            final DocumentedParameter e = DocumentedParameter.fromElement(parameter, environment);
+            if (e == null) {
+                continue;
+            }
+
+            if (optionalsHit && !e.isOptional()) {
+                environment.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Non-Optional parameter after an optional one!", parameter);
+            }
+            optionalsHit = optionalsHit || e.isOptional();
+            parameterList.add(e);
+        }
+        return parameterList;
+    }
+
 
     private static String getDefault(VariableElement element) {
         for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
@@ -84,40 +105,19 @@ public class DocumentedParameter {
                 .mapToInt(d -> d.getExamples().length)
                 .reduce((left, right) -> left * right).orElse(0);
         if (reduce > 0) {
-            //TODO: WTF was I thinking? These generated calls are nonsense
-            // They generate calls with middle optionals left out -.-
-            // Back to the drawing board I guess..?
+            List<String> ss = new ArrayList<>();
+            List<String> lastCall = new ArrayList<>();
 
-            List<List<String>> withOptionals = new ArrayList<>();
-            {
-                if (parameterList.get(0).isOptional()) {
-                    withOptionals.add(new ArrayList<>());
-                }
-                final ArrayList<String> t = new ArrayList<>();
-                t.add(parameterList.get(0).getExamples()[0]);
-                withOptionals.add(t);
-            }
-
-            for (DocumentedParameter documentedParameter : parameterList.subList(1, parameterList.size())) {
+            for (DocumentedParameter documentedParameter : parameterList) {
                 if (documentedParameter.isOptional()) {
-                    final List<List<String>> newWithOptionals = new ArrayList<>();
-                    for (List<String> withOptional : withOptionals) {
-                        newWithOptionals.add(withOptional);
-                        final ArrayList<String> t = new ArrayList<>(withOptional);
-                        t.add(documentedParameter.getExamples()[0]);
-                        newWithOptionals.add(t);
-                    }
-                    withOptionals = newWithOptionals;
-                } else {
-                    for (List<String> withOptional : withOptionals) {
-                        withOptional.add(documentedParameter.getExamples()[0]);
-                    }
+                    ss.add(String.join(", ", lastCall));
                 }
+                lastCall.add(documentedParameter.getExamples()[0]);
             }
+            ss.add(String.join(", ", lastCall));
 
-            for (List<String> withOptional : withOptionals) {
-                final String exampleFit = String.join(", ", withOptional);
-                writer.printf("%s(%s);%n", callee, exampleFit);
+            for (String s : ss) {
+                writer.printf("%s(%s);%n", callee, s);
             }
         }
     }

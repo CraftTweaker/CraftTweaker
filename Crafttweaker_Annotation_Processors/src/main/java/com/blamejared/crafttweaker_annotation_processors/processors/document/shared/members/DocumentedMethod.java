@@ -1,19 +1,17 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DocumentedMethod implements Writable {
@@ -42,27 +40,21 @@ public class DocumentedMethod implements Writable {
                     .printMessage(Diagnostic.Kind.ERROR, "Internal error: method has not Method Annotation", method);
             return null;
         }
+
+        if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Methods need to be public!", method);
+            return null;
+        }
+
         final String name = methodAnnotation.value()
                 .isEmpty() ? method.getSimpleName()
                 .toString() : methodAnnotation.value();
 
-        final List<DocumentedParameter> parameterList = new ArrayList<>();
-        boolean optionalsHit = false;
-        final List<? extends VariableElement> parameters = method.getParameters();
-        for (VariableElement parameter : isExpansion ? parameters.subList(1, parameters.size()) : parameters) {
-            final DocumentedParameter e = DocumentedParameter.fromElement(parameter, environment);
-            if (e == null) {
-                continue;
-            }
-
-            if (optionalsHit && !e.isOptional()) {
-                environment.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, "Non-Optional parameter after an optional one!", parameter);
-            }
-            optionalsHit = optionalsHit || e.isOptional();
-            parameterList.add(e);
-        }
+        final List<DocumentedParameter> parameterList = DocumentedParameter.getMethodParameters(method, environment, isExpansion);
         final boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
+        if (isExpansion && !isStatic) {
+            environment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Expansion methods must be static!", method);
+        }
 
         final String docComment = environment.getElementUtils().getDocComment(method);
 
@@ -71,7 +63,8 @@ public class DocumentedMethod implements Writable {
         if (!isExpansion && isStatic) {
             callee = containingPage.getZSName();
         } else if (isExpansion) {
-            final String docParam_this = CommentUtils.joinDocAnnotation(docComment, "docParam " + parameters.get(0)
+            final String docParam_this = CommentUtils.joinDocAnnotation(docComment, "docParam " + method.getParameters()
+                    .get(0)
                     .getSimpleName(), environment)
                     .trim();
             if (!docParam_this.isEmpty()) {
@@ -112,7 +105,7 @@ public class DocumentedMethod implements Writable {
     public void write(PrintWriter writer) {
         writer.println();
 
-        if(docComment != null) {
+        if (docComment != null) {
             writer.println(docComment);
             writer.println();
         }
