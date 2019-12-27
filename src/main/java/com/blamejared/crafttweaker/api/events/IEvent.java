@@ -41,4 +41,9 @@ public abstract class IEvent<E extends IEvent<E, V>, V extends Event> {
     public void setHandler(Consumer<E> handler) {
         this.handler = handler;
     }
+
+    public String getName() {
+        //Or should we leave this abstract and force them to give a name?
+        return this.getClass().getSimpleName();
+    }
 }

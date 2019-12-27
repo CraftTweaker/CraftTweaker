@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker.impl.events;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.actions.IUndoableAction;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.events.IEvent;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -16,8 +18,32 @@ import java.util.function.Consumer;
 public class CTEventManager {
 
     @ZenCodeType.Method
-    public static <EVE extends IEvent<EVE, VA>, VA extends Event> void register(IEvent<EVE, VA> event) {
-        MinecraftForge.EVENT_BUS.addListener(event.getConsumer());
+    public static void register(IEvent<?, ?> event) {
+        final Consumer<?> consumer = event.getConsumer();
+        CraftTweakerAPI.apply(new IUndoableAction() {
+            @Override
+            public void undo() {
+                MinecraftForge.EVENT_BUS.unregister(new Object(){
+                    @SuppressWarnings("unused")
+                    public final Consumer<?> cons = consumer;
+                });
+            }
+
+            @Override
+            public String describeUndo() {
+                return "Unregistering event listener for " + event.getName() + ".";
+            }
+
+            @Override
+            public void apply() {
+                MinecraftForge.EVENT_BUS.addListener(event.getConsumer());
+            }
+
+            @Override
+            public String describe() {
+                return "Registering event listener for " + event.getName() + ".";
+            }
+        });
     }
 
     @ZenRegister
@@ -29,9 +55,18 @@ public class CTEventManager {
             super(handler);
         }
 
+        public CTTooltipEvent(ItemTooltipEvent itemTooltipEvent) {
+            super(itemTooltipEvent);
+        }
+
         @Override
         public Consumer<ItemTooltipEvent> getConsumer() {
-            return itemTooltipEvent -> getHandler().accept(this);
+            return itemTooltipEvent -> getHandler().accept(new CTTooltipEvent(itemTooltipEvent));
+        }
+
+        @Override
+        public String getName() {
+            return "CTTooltipEvent";
         }
 
         @ZenCodeType.Method
