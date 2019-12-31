@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.wrapper;
+package com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information;
 
 import java.io.Serializable;
 
@@ -75,5 +75,21 @@ public class WrapperInfo implements Serializable {
         } else {
             return String.format(unWrappingFormat, "(" + s + ")");
         }
+    }
+
+    public void setWrappingFormat(String wrappingFormat) {
+        this.wrappingFormat = wrappingFormat;
+    }
+
+    public void setUnWrappingFormat(String unWrappingFormat) {
+        this.unWrappingFormat = unWrappingFormat;
+    }
+
+    public String getWrappingFormat() {
+        return wrappingFormat;
+    }
+
+    public String getUnWrappingFormat() {
+        return unWrappingFormat;
     }
 }

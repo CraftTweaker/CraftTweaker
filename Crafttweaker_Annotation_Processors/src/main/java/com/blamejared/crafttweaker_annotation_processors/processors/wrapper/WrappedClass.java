@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.WrapperInfo;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import java.io.PrintWriter;

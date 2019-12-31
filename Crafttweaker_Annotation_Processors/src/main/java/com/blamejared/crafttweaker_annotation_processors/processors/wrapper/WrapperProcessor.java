@@ -1,17 +1,26 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.ArrayWrapperInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.CollectionWrapperInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.NativeWrapperInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.WrapperInfo;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SupportedAnnotationTypes({"net.minecraftforge.fml.common.Mod", "com.blamejared.crafttweaker_annotations.annotations.ZenWrapper"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -21,16 +30,49 @@ public class WrapperProcessor extends AbstractProcessor {
     private static Collection<WrapperInfo> knownWrappers = new HashSet<>();
     private boolean firstRun = true;
 
-    public static WrapperInfo getWrapperInfoFor(TypeElement element) {
-        return knownWrappers.stream()
-                .filter(knownWrapper -> element.getQualifiedName().contentEquals(knownWrapper.getWrappedClass()))
-                .findFirst()
-                .orElse(null);
-    }
+    public static WrapperInfo getWrapperInfoFor(TypeMirror returnType, ProcessingEnvironment environment) {
+        final String retTypeString = returnType.toString();
+        if (retTypeString.startsWith("java.lang")) {
+            return new NativeWrapperInfo(retTypeString);
+        }
 
-    public static WrapperInfo getWrapperInfoFor(TypeMirror returnType) {
+
+        if(returnType.getKind() == TypeKind.ARRAY) {
+            final ArrayType arrayType = (ArrayType) returnType;
+            final WrapperInfo wrapperInfoFor = getWrapperInfoFor(arrayType.getComponentType(), environment);
+            return wrapperInfoFor == null ? null : new ArrayWrapperInfo(wrapperInfoFor);
+        }
+
+        final Pattern compile = Pattern.compile("java[.]util[.](?:Collection|Set|List|HashSet|ArrayList|LinkedList)<(?<innerType>[\\w.]*)>");
+        final Matcher matcher = compile.matcher(retTypeString);
+        if (matcher.matches()) {
+            final String innerType = matcher.group("innerType");
+            final TypeElement innerTypeElement = environment.getElementUtils()
+                    .getTypeElement(innerType);
+            if(innerTypeElement == null) {
+                return null;
+            }
+            final WrapperInfo wrapperInfoFor = getWrapperInfoFor(innerTypeElement
+                    .asType(), environment);
+
+            if (wrapperInfoFor == null) {
+                return null;
+            }
+            final String usedType;
+            final Element element = environment.getTypeUtils().asElement(returnType);
+            if (element.getKind() == ElementKind.INTERFACE) {
+                usedType = retTypeString.contains("Set") ? "java.util.HashSet" : "java.util.ArrayList";
+            } else {
+                usedType = retTypeString;
+            }
+
+            return new CollectionWrapperInfo(retTypeString, usedType, wrapperInfoFor);
+
+        }
+
+
         return knownWrappers.stream()
-                .filter(knownWrapper -> returnType.toString().contentEquals(knownWrapper.getWrappedClass()))
+                .filter(knownWrapper -> retTypeString.contentEquals(knownWrapper.getWrappedClass()))
                 .findFirst()
                 .orElse(null);
     }
@@ -65,7 +107,7 @@ public class WrapperProcessor extends AbstractProcessor {
         }
          */
 
-        for(final WrapperInfo next : wrappedInfo){
+        for (final WrapperInfo next : wrappedInfo) {
             System.out.printf("%n%n%n%n%n%n%n%n%n-----------------------%n");
             final StringWriter out = new StringWriter();
             WrappedClass.write(new PrintWriter(out), next, processingEnv);

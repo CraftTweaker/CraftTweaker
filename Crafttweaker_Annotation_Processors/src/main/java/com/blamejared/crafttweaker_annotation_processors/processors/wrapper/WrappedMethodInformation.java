@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.WrapperInfo;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -17,15 +19,13 @@ public class WrappedMethodInformation {
 
 
         final boolean returnsVoid = returnType.getKind() == TypeKind.VOID;
-        final boolean leaveReturnType = returnType.getKind().isPrimitive()
-                || returnType.toString().startsWith("java.lang")
-                || returnType.toString().startsWith("java.util");
+        final boolean leaveReturnType = returnType.getKind().isPrimitive();
 
         final WrapperInfo retTypeWrapperInfo;
         if (returnsVoid || leaveReturnType) {
             retTypeWrapperInfo = null;
         } else {
-            retTypeWrapperInfo = WrapperProcessor.getWrapperInfoFor(returnType);
+            retTypeWrapperInfo = WrapperProcessor.getWrapperInfoFor(returnType, environment);
             if (retTypeWrapperInfo == null) {
                 return;
             }
@@ -37,16 +37,14 @@ public class WrappedMethodInformation {
 
         for (VariableElement parameter : method.getParameters()) {
             final TypeMirror paramTypeMirror = parameter.asType();
-            if (paramTypeMirror.getKind().isPrimitive()
-                    || paramTypeMirror.toString().startsWith("java.lang")
-                    || paramTypeMirror.toString().startsWith("java.util")) {
+            if (paramTypeMirror.getKind().isPrimitive()) {
                 parameterBuilder.add(paramTypeMirror + " " + parameter.getSimpleName());
                 internalCallBuilder.add(parameter.getSimpleName());
                 continue;
             }
 
 
-            final WrapperInfo paramWrapperInfo = WrapperProcessor.getWrapperInfoFor(paramTypeMirror);
+            final WrapperInfo paramWrapperInfo = WrapperProcessor.getWrapperInfoFor(paramTypeMirror, environment);
             if (paramWrapperInfo == null) {
                 return;
             }
