@@ -24,4 +24,5 @@ dependencies {
 	compile project(":JavaAnnotations");
 
     compile 'org.jetbrains:annotations:17.0.0'
+    compile files('libs/tools.jar')
 }

@@ -120,6 +120,7 @@ dependencies {
     compile fg.deobf("mezz.jei:jei-1.14.4:6.0.0.18");
 }
 
+
 task genGitChangelog() {
     def stdout = new ByteArrayOutputStream()
     // first commit to check from, in our case the first commit of the branch
@@ -248,5 +249,33 @@ curseforge {
 //        addArtifact(sourcesJar)
 //        addArtifact(javadocJar)
         addArtifact(deobfJar)
+    }
+}
+
+
+//task mySuperTest(type: WrapperTask) {
+//    generatedSourceDirectory = file('src/generated/java');
+//    addClassName(new WrapperInfo("net.minecraft.world.World", "crafttweaker.api.world.IWorld"))
+//    addClassName(new WrapperInfo("net.minecraft.world.biome.Biome", "crafttweaker.api.world.IBiome"))
+//}
+//tasks.compileJava.dependsOn(mySuperTest);
+
+
+//compileJava {
+//    options.compilerArgs += ["-Xprefer:source", "-verbose"]
+//    //options.fork = true
+//    //options.forkOptions.executable = 'javac'
+//}
+
+sourceSets {
+    main {
+        java.srcDirs += "/src/generated/java/"
+    }
+
+}
+
+idea {
+    module {
+        generatedSourceDirs += file("src/generated/java")
     }
 }

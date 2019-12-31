@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
