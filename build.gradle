@@ -253,14 +253,6 @@ curseforge {
 }
 
 
-//task mySuperTest(type: WrapperTask) {
-//    generatedSourceDirectory = file('src/generated/java');
-//    addClassName(new WrapperInfo("net.minecraft.world.World", "crafttweaker.api.world.IWorld"))
-//    addClassName(new WrapperInfo("net.minecraft.world.biome.Biome", "crafttweaker.api.world.IBiome"))
-//}
-//tasks.compileJava.dependsOn(mySuperTest);
-
-
 //compileJava {
 //    options.compilerArgs += ["-Xprefer:source", "-verbose"]
 //    //options.fork = true
