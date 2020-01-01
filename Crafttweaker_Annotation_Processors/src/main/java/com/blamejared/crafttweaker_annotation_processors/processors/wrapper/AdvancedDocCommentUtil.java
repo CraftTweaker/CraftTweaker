@@ -154,17 +154,17 @@ public class AdvancedDocCommentUtil {
         }
 
         final List<String> subList = fileContent.subList(i, fileDeclaration - 1);
-        if(subList.get(0).trim().equals("/**")) {
+        if (subList.get(0).trim().equals("/**")) {
             subList.remove(0);
         }
         for (int i1 = subList.size() - 1; i1 >= 0; i1--) {
             final String trim = subList.get(i1).trim();
-            if(trim.endsWith("*/")) {
+            if (trim.endsWith("*/")) {
                 subList.set(i1, trim.substring(0, trim.lastIndexOf("*/")));
                 break;
             }
 
-            if(trim.matches("@.*")) {
+            if (trim.matches("@.*")) {
                 subList.remove(i1);
             }
         }
@@ -209,10 +209,23 @@ public class AdvancedDocCommentUtil {
                     .findAny()
                     .orElse(null);
 
-            System.out.println("");
+            System.out.println();
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static JavacFileManager getFileManager(ProcessingEnvironment environment) {
+        final Field fileManager;
+        try {
+            fileManager = JavacFiler.class.getDeclaredField("fileManager");
+            fileManager.setAccessible(true);
+            return (JavacFileManager) fileManager.get(environment.getFiler());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

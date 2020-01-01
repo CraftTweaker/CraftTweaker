@@ -24,5 +24,7 @@ dependencies {
 	compile project(":JavaAnnotations");
 
     compile 'org.jetbrains:annotations:17.0.0'
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
+    compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
     compile files('libs/tools.jar')
 }

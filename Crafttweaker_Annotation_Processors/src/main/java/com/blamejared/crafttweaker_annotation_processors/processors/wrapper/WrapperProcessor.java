@@ -6,6 +6,11 @@ import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrap
 import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.NativeWrapperInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.WrapperInfo;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.processing.JavacFiler;
+import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -15,9 +20,12 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +33,7 @@ import java.util.regex.Pattern;
 @SupportedAnnotationTypes({"net.minecraftforge.fml.common.Mod", "com.blamejared.crafttweaker_annotations.annotations.ZenWrapper"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class WrapperProcessor extends AbstractProcessor {
-    private static final File location = new File("wrappedClasses");
+    private static final File location = new File("wrappedClasses.csv");
     private static Collection<WrapperInfo> wrappedInfo = new HashSet<>();
     private static Collection<WrapperInfo> knownWrappers = new HashSet<>();
     private boolean firstRun = true;
@@ -37,7 +45,7 @@ public class WrapperProcessor extends AbstractProcessor {
         }
 
 
-        if(returnType.getKind() == TypeKind.ARRAY) {
+        if (returnType.getKind() == TypeKind.ARRAY) {
             final ArrayType arrayType = (ArrayType) returnType;
             final WrapperInfo wrapperInfoFor = getWrapperInfoFor(arrayType.getComponentType(), environment);
             return wrapperInfoFor == null ? null : new ArrayWrapperInfo(wrapperInfoFor);
@@ -49,7 +57,7 @@ public class WrapperProcessor extends AbstractProcessor {
             final String innerType = matcher.group("innerType");
             final TypeElement innerTypeElement = environment.getElementUtils()
                     .getTypeElement(innerType);
-            if(innerTypeElement == null) {
+            if (innerTypeElement == null) {
                 return null;
             }
             final WrapperInfo wrapperInfoFor = getWrapperInfoFor(innerTypeElement
@@ -79,6 +87,7 @@ public class WrapperProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+
         if (firstRun) {
             firstRun = false;
         } else {
@@ -88,31 +97,41 @@ public class WrapperProcessor extends AbstractProcessor {
         readWrappedInfos(roundEnv);
         AdvancedDocCommentUtil.getZipLocation(processingEnv);
 
-
-        /*
-        final Element getPrecipitation = processingEnv.getElementUtils()
-                .getTypeElement("net.minecraft.world.biome.Biome")
-                .getEnclosedElements()
-                .stream()
-                .filter(e -> e.getSimpleName().contentEquals("getSkyColorByTemp"))
-                .findAny()
-                .orElse(null);
-
-        if (getPrecipitation != null) {
-            final String s = AdvancedDocCommentUtil.safeGetDocComment(processingEnv, getPrecipitation);
-
-            System.out.println("-----------------------");
-            System.out.println(s);
-            System.out.println("-----------------------");
-        }
-         */
-
+        final File absoluteFile = new File("src/generated/java").getAbsoluteFile();
+        final JavacFileManager fileManager = AdvancedDocCommentUtil.getFileManager(processingEnv);
         for (final WrapperInfo next : wrappedInfo) {
+            if (processingEnv.getElementUtils().getTypeElement(next.getCrTQualifiedName()) != null) {
+                continue;
+            }
+
+            final File file = next.getFile(absoluteFile);
+
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+                processingEnv.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + file.getParentFile());
+            }
+
+            if (fileManager == null) {
+                return false;
+            }
+
+
+            final JavaFileObject regularFile = fileManager.getRegularFile(file);
+            try (final PrintWriter writer = new PrintWriter(regularFile.openWriter())) {
+                WrappedClass.write(writer, next, processingEnv);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ((JavacFiler) processingEnv.getFiler()).getGeneratedSourceFileObjects().add(regularFile);
+
+            /*
             System.out.printf("%n%n%n%n%n%n%n%n%n-----------------------%n");
             final StringWriter out = new StringWriter();
             WrappedClass.write(new PrintWriter(out), next, processingEnv);
             System.out.println(out.getBuffer().toString());
             System.out.printf("-----------------------%n%n%n%n%n%n%n%n%n");
+
+             */
         }
 
         return false;
@@ -125,7 +144,12 @@ public class WrapperProcessor extends AbstractProcessor {
             wrappedInfo.add(new WrapperInfo("net.minecraft.world.biome.Biome", "com.blamejared.crafttweaker.impl.IBiome", "crafttweaker.api.world.IBiome", "vanilla/world/IBiome"));
         } else {
             try (final BufferedReader reader = new BufferedReader(new FileReader(location))) {
-                reader.lines().map(s -> s.split(";[ \\t]*", 3)).map(WrapperInfo::new).forEach(wrappedInfo::add);
+                reader.lines()
+                        .filter(s -> !s.isEmpty() && !s.startsWith("//"))
+                        .map(s -> s.split(";[ \\t]*"))
+                        .map(WrapperInfo::create)
+                        .filter(Objects::nonNull)
+                        .forEach(wrappedInfo::add);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -133,8 +157,7 @@ public class WrapperProcessor extends AbstractProcessor {
 
         knownWrappers.addAll(wrappedInfo);
 
-        for (Element element : roundEnv.getElementsAnnotatedWith(processingEnv.getElementUtils()
-                .getTypeElement("com.blamejared.crafttweaker_annotations.annotations.ZenWrapper"))) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(ZenWrapper.class)) {
             final ZenWrapper annotation = element.getAnnotation(ZenWrapper.class);
 
             if (element instanceof TypeElement) {
@@ -144,6 +167,24 @@ public class WrapperProcessor extends AbstractProcessor {
             } else {
                 knownWrappers.add(new WrapperInfo(annotation.wrappedClass(), element.toString()));
             }
+        }
+
+        final Set<Class<?>> typesAnnotatedWith = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()))
+                .getTypesAnnotatedWith(ZenWrapper.class);
+
+        //Also scan the classPath (needed when CrT is added as dependency)
+        for (Class<?> aClass : typesAnnotatedWith) {
+            final ZenWrapper annotation = aClass.getAnnotation(ZenWrapper.class);
+            final WrapperInfo wrapperInfo = new WrapperInfo(annotation.wrappedClass(), aClass.getCanonicalName());
+            if (!annotation.conversionMethodFormat().isEmpty()) {
+                wrapperInfo.setUnWrappingFormat(annotation.conversionMethodFormat());
+            }
+
+            if (!annotation.creationMethodFormat().isEmpty()) {
+                wrapperInfo.setWrappingFormat(annotation.creationMethodFormat());
+            }
+
+            knownWrappers.add(wrapperInfo);
         }
     }
 }

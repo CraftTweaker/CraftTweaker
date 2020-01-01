@@ -1,6 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class WrapperInfo implements Serializable {
     private final String wrappedClass;
@@ -29,8 +32,38 @@ public class WrapperInfo implements Serializable {
         this(wrappedClass, CrTQualifiedName, CrTQualifiedName, docsPath);
     }
 
-    public WrapperInfo(String[] strings) {
-        this(strings[0], strings.length > 1 ? strings[1] : null, strings.length > 2 ? strings[2] : null);
+    public static WrapperInfo create(String[] strings) {
+        final String wrappedClass, CrTName, ZCName, docPath;
+
+        if (strings.length == 0) {
+            return null;
+        }
+
+        wrappedClass = strings[0];
+        if (wrappedClass.isEmpty()) {
+            return null;
+        }
+
+        if (strings.length > 1 && !strings[1].isEmpty()) {
+            CrTName = strings[1];
+        } else {
+            final String crTName = wrappedClass.replaceFirst("net\\.minecraft(?:forge)?", "com.blamejared.crafttweaker.impl");
+            CrTName = crTName.substring(0, crTName.lastIndexOf('.') + 1) + "MC" + crTName.substring(crTName.lastIndexOf('.') + 1);
+        }
+
+        if (strings.length > 2 && !strings[2].isEmpty()) {
+            ZCName = strings[2];
+        } else {
+            ZCName = CrTName.replaceFirst("com\\.blamejared\\.crafttweaker\\.(?:impl|api)", "crafttweaker.api");
+        }
+
+        if (strings.length > 3 && !strings[3].isEmpty()) {
+            docPath = strings[3];
+        } else {
+            docPath = ZCName.replaceFirst("crafttweaker\\.api\\.", "vanilla/").replace('.', '/');
+        }
+
+        return new WrapperInfo(wrappedClass, CrTName, ZCName, docPath);
     }
 
     public String getCrTPackage() {
@@ -48,6 +81,10 @@ public class WrapperInfo implements Serializable {
         return wrappedClass;
     }
 
+    public String getWrappedClassName() {
+        return wrappedClass.substring(wrappedClass.lastIndexOf('.') + 1);
+    }
+
     public String getCrTQualifiedName() {
         return CrTQualifiedName;
     }
@@ -60,10 +97,9 @@ public class WrapperInfo implements Serializable {
         return docsPath;
     }
 
-
     public String formatWrapCall(String s) {
         if (wrappingFormat == null || wrappingFormat.isEmpty()) {
-            return String.format("new %s(%s)", getCrTQualifiedName(), s);
+            return String.format("new %s(%s)", getCrTClassName(), s);
         } else {
             return String.format(wrappingFormat, "(" + s + ")");
         }
@@ -77,19 +113,30 @@ public class WrapperInfo implements Serializable {
         }
     }
 
+    public String getWrappingFormat() {
+        return wrappingFormat;
+    }
+
     public void setWrappingFormat(String wrappingFormat) {
         this.wrappingFormat = wrappingFormat;
+    }
+
+    public String getUnWrappingFormat() {
+        return unWrappingFormat;
     }
 
     public void setUnWrappingFormat(String unWrappingFormat) {
         this.unWrappingFormat = unWrappingFormat;
     }
 
-    public String getWrappingFormat() {
-        return wrappingFormat;
+    public Collection<String> getImport() {
+        return Arrays.asList(
+                "import " + getCrTQualifiedName() + ";",
+                "import " + getWrappedClass() + ";"
+        );
     }
 
-    public String getUnWrappingFormat() {
-        return unWrappingFormat;
+    public File getFile(File parent) {
+        return new File(parent, CrTQualifiedName.replace('.', File.separatorChar) + ".java");
     }
 }

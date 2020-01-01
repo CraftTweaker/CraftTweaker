@@ -1,0 +1,5 @@
+//WrappedClass;CrTName;ZCName;DocPath
+net.minecraft.world.World;com.blamejared.crafttweaker.impl.world.MCWorld;crafttweaker.api.world.MCWorld;vanilla/world/MCWorld
+net.minecraft.world.biome.Biome;com.blamejared.crafttweaker.impl.world.MCBiome
+net.minecraft.block.material.Material
+net.minecraft.block.material.MaterialColor
