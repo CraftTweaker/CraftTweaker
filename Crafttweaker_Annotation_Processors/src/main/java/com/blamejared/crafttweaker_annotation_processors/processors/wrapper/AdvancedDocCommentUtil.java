@@ -12,15 +12,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class AdvancedDocCommentUtil {
-    private static File sourceZip = null;
+    private static List<File> sourceZip = new ArrayList<>();
     private static boolean created = false;
 
     public static String safeGetDocComment(ProcessingEnvironment environment, Element element) {
@@ -50,11 +49,23 @@ public class AdvancedDocCommentUtil {
 
         TypeElement typeElement = (TypeElement) enclosingElement;
 
-        final ZipFile zipFile = new ZipFile(sourceZip);
-        final ZipEntry entry = zipFile.getEntry(typeElement.getQualifiedName()
-                .toString()
-                .replace('.', '/')
-                + ".java");
+        ZipFile zipFile = null;
+        ZipEntry entry = null;
+
+        for (File zip : sourceZip) {
+            zipFile = new ZipFile(zip);
+            entry = zipFile.getEntry(typeElement.getQualifiedName()
+                    .toString()
+                    .replace('.', '/')
+                    + ".java");
+
+            if (entry != null) {
+                break;
+            }
+        }
+        if (zipFile == null || entry == null) {
+            return null;
+        }
 
         final List<String> fileContent = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)))
                 .lines()
@@ -113,7 +124,7 @@ public class AdvancedDocCommentUtil {
             patternBuilder.append(executable.getSimpleName());
         }
 
-        patternBuilder.append("\\([\\w_ ,]*\\)\\s*\\{\\s*");
+        patternBuilder.append("\\([\\w_ ,]*\\)\\s*[^;]?\\s*");
         final Pattern compile = Pattern.compile(patternBuilder.toString());
         final List<String> collect = fileContent.stream()
                 .filter(compile.asPredicate())
@@ -198,16 +209,35 @@ public class AdvancedDocCommentUtil {
             final Field zipFileIndexCache = JavacFileManager.class.getDeclaredField("zipFileIndexCache");
             zipFileIndexCache.setAccessible(true);
             ZipFileIndexCache cache = (ZipFileIndexCache) zipFileIndexCache.get(javacFileManager);
-            sourceZip = cache.getZipFileIndexes()
+            final List<String> distinct = cache.getZipFileIndexes()
                     .stream()
                     .map(ZipFileIndex::getZipFile)
                     .map(File::getAbsolutePath)
                     .distinct()
+                    .collect(Collectors.toList());
+
+            distinct.stream()
                     .filter(s -> s.endsWith("-recomp.jar"))
                     .map(s -> new File(s.substring(0, s.length() - "recomp.jar".length()) + "sources.jar"))
                     .filter(File::exists)
-                    .findAny()
-                    .orElse(null);
+                    .forEach(sourceZip::add);
+
+            distinct.stream()
+                    .filter(s -> s.contains("eventbus"))
+                    .map(File::new)
+                    .filter(File::exists)
+                    .map(File::getParentFile)
+                    .map(File::getParentFile)
+                    .map(File::listFiles)
+                    .filter(Objects::nonNull)
+                    .flatMap(Arrays::stream)
+                    .map(File::listFiles)
+                    .filter(Objects::nonNull)
+                    .flatMap(Arrays::stream)
+                    .filter(File::exists)
+                    .filter(File::isFile)
+                    .filter(f -> f.getAbsolutePath().endsWith("sources.jar"))
+                    .forEach(sourceZip::add);
 
             System.out.println();
 

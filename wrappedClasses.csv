@@ -1,3 +1,4 @@
 //WrappedClass;CrTName;ZCName;DocPath: All except the 1st are optional and calculated based on the preceding value(s)
 net.minecraft.block.material.Material
 net.minecraft.block.material.MaterialColor
+net.minecraftforge.event.entity.player.ItemTooltipEvent
