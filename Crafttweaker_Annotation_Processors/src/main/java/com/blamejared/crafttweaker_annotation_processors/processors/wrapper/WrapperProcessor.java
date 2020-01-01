@@ -1,10 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
-import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.ArrayWrapperInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.CollectionWrapperInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.NativeWrapperInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.WrapperInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.*;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.processing.JavacFiler;
@@ -162,10 +158,10 @@ public class WrapperProcessor extends AbstractProcessor {
 
             if (element instanceof TypeElement) {
                 TypeElement typeElement = (TypeElement) element;
-                knownWrappers.add(new WrapperInfo(annotation.wrappedClass(), typeElement.getQualifiedName()
-                        .toString(), IDontKnowHowToNameThisUtil.getDocPath(typeElement)));
+                knownWrappers.add(new ExistingWrapperInfo(annotation.wrappedClass(), typeElement.getQualifiedName()
+                        .toString(), annotation.implementingClass()));
             } else {
-                knownWrappers.add(new WrapperInfo(annotation.wrappedClass(), element.toString()));
+                knownWrappers.add(new ExistingWrapperInfo(annotation.wrappedClass(), element.toString(), annotation.implementingClass()));
             }
         }
 
@@ -175,7 +171,8 @@ public class WrapperProcessor extends AbstractProcessor {
         //Also scan the classPath (needed when CrT is added as dependency)
         for (Class<?> aClass : typesAnnotatedWith) {
             final ZenWrapper annotation = aClass.getAnnotation(ZenWrapper.class);
-            final WrapperInfo wrapperInfo = new WrapperInfo(annotation.wrappedClass(), aClass.getCanonicalName());
+            final ExistingWrapperInfo wrapperInfo = new ExistingWrapperInfo(annotation.wrappedClass(), aClass.getCanonicalName(), annotation
+                    .implementingClass());
             if (!annotation.conversionMethodFormat().isEmpty()) {
                 wrapperInfo.setUnWrappingFormat(annotation.conversionMethodFormat());
             }

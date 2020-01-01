@@ -45,33 +45,4 @@ public class CTEventManager {
         });
     }
 
-    @ZenRegister
-    @ZenCodeType.Name("crafttweaker.api.events.CTooltipEvent")
-    public static class CTTooltipEvent extends IEvent<CTTooltipEvent, ItemTooltipEvent> {
-
-        @ZenCodeType.Constructor
-        public CTTooltipEvent(Consumer<CTTooltipEvent> handler) {
-            super(handler);
-        }
-
-        public CTTooltipEvent(ItemTooltipEvent itemTooltipEvent) {
-            super(itemTooltipEvent);
-        }
-
-        @Override
-        public Consumer<ItemTooltipEvent> getConsumer() {
-            return itemTooltipEvent -> getHandler().accept(new CTTooltipEvent(itemTooltipEvent));
-        }
-
-        @Override
-        public String getName() {
-            return "CTTooltipEvent";
-        }
-
-        @ZenCodeType.Method
-        public IItemStack getItemStack() {
-            return new MCItemStack(getInternal().getItemStack());
-        }
-    }
-
 }

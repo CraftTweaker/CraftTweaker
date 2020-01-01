@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.event.IEvent")
 public abstract class IEvent<E extends IEvent<E, V>, V extends Event> {
     
-    private V internal;
+    protected V internal;
     
     private Consumer<E> handler;
     

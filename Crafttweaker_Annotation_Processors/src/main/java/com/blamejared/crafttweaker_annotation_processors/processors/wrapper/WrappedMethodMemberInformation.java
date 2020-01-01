@@ -72,7 +72,12 @@ public class WrappedMethodMemberInformation implements WrappedMemberInformation 
         final StringBuilder outBuilder = new StringBuilder();
         final String s = AdvancedDocCommentUtil.safeGetDocComment(environment, method);
         if (s != null) {
-            outBuilder.append(String.format("    /**%n%s%n*/%n", s));
+            outBuilder.append("    /**").append(System.lineSeparator());
+            for (String commentLine : s.split("[\\r\\n]+")) {
+                outBuilder.append("     * ").append(commentLine).append(System.lineSeparator());
+            }
+            outBuilder.append("     */").append(System.lineSeparator());
+            //outBuilder.append(String.format("    /**%n%s%n*/%n", s));
         }
         outBuilder.append("    @ZenCodeType.Method").append(System.lineSeparator());
         outBuilder.append("    public ");

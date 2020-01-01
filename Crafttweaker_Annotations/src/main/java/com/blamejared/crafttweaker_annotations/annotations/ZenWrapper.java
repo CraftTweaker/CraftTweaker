@@ -38,4 +38,9 @@ public @interface ZenWrapper {
 	 * E.g. {@code "%s.getCommandString()"}
 	 */
 	String displayStringFormat() default "%s";
+
+	/**
+	 * If this type is an interface, the class that should be instantiated
+	 */
+	String implementingClass() default "";
 }

@@ -13,6 +13,12 @@ public class WrappedClass {
 
     public static void write(PrintWriter writer, WrapperInfo info, ProcessingEnvironment environment) {
         final TypeElement typeElement = environment.getElementUtils().getTypeElement(info.getWrappedClass());
+
+        final boolean isEvent = environment.getTypeUtils()
+                .isSubtype(typeElement.asType(), environment.getElementUtils()
+                        .getTypeElement("net.minecraftforge.eventbus.api.Event")
+                        .asType());
+
         final Set<WrappedMemberInformation> wrappedMembers = getMembers(typeElement, environment);
 
         writer.printf("package %s;%n", info.getCrTPackage());
@@ -26,6 +32,11 @@ public class WrappedClass {
         collect.add("import com.blamejared.crafttweaker_annotations.annotations.Document;");
         collect.add("import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;");
         collect.add("import " + info.getWrappedClass() + ";");
+        if (isEvent) {
+            collect.add("import net.minecraftforge.eventbus.api.Event;");
+            collect.add("import com.blamejared.crafttweaker.api.events.IEvent;");
+            collect.add("import java.util.function.Consumer;");
+        }
 
         collect.stream()
                 .sorted()
@@ -38,13 +49,34 @@ public class WrappedClass {
         writer.printf("@Document(\"%s\")%n", info.getDocsPath());
         writer.printf("@ZenWrapper(wrappedClass = \"%s\", conversionMethodFormat = \"%%s.getInternal()\", displayStringFormat = \"%%s.toString()\")%n", info
                 .getWrappedClass());
-        writer.printf("public class %s {%n", info.getCrTClassName());
+        if (!isEvent) {
+            writer.printf("public class %s {%n", info.getCrTClassName());
+            writer.printf("    private final %s internal;%n", info.getWrappedClassName());
+            writer.println();
+            writer.printf("    public %s(%s internal){%n", info.getCrTClassName(), info.getWrappedClassName());
+            writer.println("        this.internal = internal;");
+            writer.println("    }");
+        } else {
+            writer.printf("public class %s extends IEvent<%1$s, %s> {%n", info.getCrTClassName(), info.getWrappedClassName());
+            writer.println();
+            writer.printf("    public %s(%s internal){%n", info.getCrTClassName(), info.getWrappedClassName());
+            writer.println("        super(internal);");
+            writer.println("    }");
+            writer.println();
 
-        writer.printf("    private final %s internal;%n", info.getWrappedClassName());
-        writer.println();
-        writer.printf("    public %s(%s internal){%n", info.getCrTClassName(), info.getWrappedClassName());
-        writer.println("        this.internal = internal;");
-        writer.println("    }");
+            writer.println("    @ZenCodeType.Constructor");
+            writer.printf("    public %s(Consumer<%1$s> handler) {%n", info.getCrTClassName());
+            writer.println("        super(handler);");
+            writer.println("    }");
+            writer.println();
+
+            writer.println("    @Override");
+            writer.printf("    public Consumer<%s> getConsumer() {%n", info.getWrappedClassName());
+            final String name = "myStrangeType" + info.getCrTClassName();
+            writer.printf("        return %s -> getHandler().accept(new %s(%1$s));%n", name, info.getCrTClassName());
+            writer.println("    }");
+            writer.println();
+        }
 
 
         for (WrappedMemberInformation wrappedMember : wrappedMembers) {
@@ -59,7 +91,12 @@ public class WrappedClass {
 
     public static Set<WrappedMemberInformation> getMembers(TypeElement typeElement, ProcessingEnvironment environment) {
         final Set<WrappedMemberInformation> out = new HashSet<>();
-        for (Element enclosedElement : typeElement.getEnclosedElements()) {
+        for (Element enclosedElement : environment.getElementUtils().getAllMembers(typeElement)) {
+
+            if (enclosedElement.getEnclosingElement().asType().toString().startsWith("java.")) {
+                continue;
+            }
+
             if (!enclosedElement.getModifiers().contains(Modifier.PUBLIC)) {
                 continue;
             }

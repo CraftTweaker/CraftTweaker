@@ -10,8 +10,8 @@ public class WrapperInfo implements Serializable {
     private final String CrTQualifiedName;
     private final String zcName;
     private final String docsPath;
-    private String wrappingFormat = null; //MC -> CrT
-    private String unWrappingFormat = null; //CrT -> MC
+    protected String wrappingFormat = null; //MC -> CrT
+    protected String unWrappingFormat = null; //CrT -> MC
 
     public WrapperInfo(String wrappedClass, String crTQualifiedName, String zcName, String docsPath) {
         this.wrappedClass = wrappedClass;
