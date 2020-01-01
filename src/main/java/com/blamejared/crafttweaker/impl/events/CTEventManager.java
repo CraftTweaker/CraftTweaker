@@ -6,11 +6,13 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.events.IEvent;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.Event;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 @ZenRegister
@@ -19,14 +21,11 @@ public class CTEventManager {
 
     @ZenCodeType.Method
     public static void register(IEvent<?, ?> event) {
-        final Consumer<?> consumer = event.getConsumer();
+        final Consumer<? extends Event> consumer = event.getConsumer();
         CraftTweakerAPI.apply(new IUndoableAction() {
             @Override
             public void undo() {
-                MinecraftForge.EVENT_BUS.unregister(new Object(){
-                    @SuppressWarnings("unused")
-                    public final Consumer<?> cons = consumer;
-                });
+                MinecraftForge.EVENT_BUS.unregister(consumer);
             }
 
             @Override
@@ -36,7 +35,7 @@ public class CTEventManager {
 
             @Override
             public void apply() {
-                MinecraftForge.EVENT_BUS.addListener(event.getConsumer());
+                MinecraftForge.EVENT_BUS.addListener(consumer);
             }
 
             @Override
