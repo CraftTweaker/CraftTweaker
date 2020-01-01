@@ -11,6 +11,8 @@ import com.blamejared.crafttweaker.impl.blocks.MCBlock;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -31,6 +33,8 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
+@Document(value = "vanilla/tags/MCTag")
+@ZenWrapper(wrappedClass = "net.minecraft.tags.Tag", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCTag implements IIngredient {
     
     private final ResourceLocation id;

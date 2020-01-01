@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.impl.food;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.potion.MCEffectInstance;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.Food;
 import net.minecraft.potion.EffectInstance;
 import org.apache.commons.lang3.tuple.Pair;
@@ -9,6 +11,8 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.food.MCFood")
 @ZenRegister
+@Document(value = "vanilla/food/MCFood")
+@ZenWrapper(wrappedClass = "net.minecraft.item.food", conversionMethodFormat = "%s.getInternal()")
 public class MCFood {
     
     private final Food internal;

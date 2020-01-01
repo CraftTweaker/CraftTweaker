@@ -2,11 +2,15 @@ package com.blamejared.crafttweaker.impl.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.entity.EntityType;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityType")
+@Document(value = "vanilla/entities/MCEntityType")
+@ZenWrapper(wrappedClass = "net.minecraft.entity.EntityType", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCEntityType implements CommandStringDisplayable {
     
     private final EntityType internal;

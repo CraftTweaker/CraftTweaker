@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker.impl.potion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.potion.EffectInstance;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffectInstance")
+@Document(value = "vanilla/potions/MCPotionEffectInstance")
+@ZenWrapper(wrappedClass = "net.minecraft.potion.EffectInstance", conversionMethodFormat = "%s.getInternal()")
 public class MCEffectInstance {
     
     private final EffectInstance internal;

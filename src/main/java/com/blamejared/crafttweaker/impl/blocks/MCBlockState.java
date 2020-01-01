@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker.impl.blocks;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlockState")
+@Document(value = "vanilla/blocks/MCBlockState")
+@ZenWrapper(wrappedClass = "net.minecraft.block.BlockState", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCBlockState implements CommandStringDisplayable {
     
     private final BlockState internal;
@@ -129,13 +133,13 @@ public class MCBlockState implements CommandStringDisplayable {
     
     
     @ZenCodeType.Caster(implicit = false)
-    public static String asString(MCBlockState block) {
-        return block.getInternal().toString();
+    public String asString() {
+        return internal.toString();
     }
     
     @ZenCodeType.Caster(implicit = true)
-    public static MCBlock asBlock(MCBlockState block) {
-        return block.getInternalBlock();
+    public MCBlock asBlock() {
+        return this.getInternalBlock();
     }
     
     @ZenCodeType.Getter("commandString")

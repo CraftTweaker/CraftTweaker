@@ -2,11 +2,15 @@ package com.blamejared.crafttweaker.impl.world;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.world.MCBiomeSpawnEntry")
+@Document("crafttweaker/world/MCBiomeSpawnEntry")
+@ZenWrapper(wrappedClass = "net.minecraft.world.biome.Biome.SpawnListEntry", conversionMethodFormat = "%s.getInternal()")
 public class MCBiomeSpawnEntry {
     
     private final Biome.SpawnListEntry internal;
