@@ -36,7 +36,8 @@ public class WrapperProcessor extends AbstractProcessor {
 
     public static WrapperInfo getWrapperInfoFor(TypeMirror returnType, ProcessingEnvironment environment) {
         final String retTypeString = returnType.toString();
-        if (retTypeString.startsWith("java.lang")) {
+        //Iterable<E> is java.lang?
+        if (retTypeString.startsWith("java.lang") && !retTypeString.contains("<")) {
             return new NativeWrapperInfo(retTypeString);
         }
 
@@ -47,10 +48,11 @@ public class WrapperProcessor extends AbstractProcessor {
             return wrapperInfoFor == null ? null : new ArrayWrapperInfo(wrapperInfoFor);
         }
 
-        final Pattern compile = Pattern.compile("java[.]util[.](?:Collection|Set|List|HashSet|ArrayList|LinkedList)<(?<innerType>[\\w.]*)>");
+        final Pattern compile = Pattern.compile("(?<collectionClass>java[.]util[.](?:Collection|Set|List|HashSet|ArrayList|LinkedList))<(?<innerType>[\\w.]*)>");
         final Matcher matcher = compile.matcher(retTypeString);
         if (matcher.matches()) {
             final String innerType = matcher.group("innerType");
+            final String collectionClass = matcher.group("collectionClass");
             final TypeElement innerTypeElement = environment.getElementUtils()
                     .getTypeElement(innerType);
             if (innerTypeElement == null) {
@@ -63,14 +65,14 @@ public class WrapperProcessor extends AbstractProcessor {
                 return null;
             }
             final String usedType;
-            final Element element = environment.getTypeUtils().asElement(returnType);
+            final Element element = environment.getTypeUtils().asElement(environment.getTypeUtils().erasure(returnType));
             if (element.getKind() == ElementKind.INTERFACE) {
                 usedType = retTypeString.contains("Set") ? "java.util.HashSet" : "java.util.ArrayList";
             } else {
                 usedType = retTypeString;
             }
 
-            return new CollectionWrapperInfo(retTypeString, usedType, wrapperInfoFor);
+            return new CollectionWrapperInfo(collectionClass, usedType, wrapperInfoFor);
 
         }
 

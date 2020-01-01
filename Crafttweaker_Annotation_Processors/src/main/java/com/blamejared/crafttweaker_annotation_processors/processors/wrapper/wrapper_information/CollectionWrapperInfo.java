@@ -15,9 +15,9 @@ public class CollectionWrapperInfo extends WrapperInfo {
         this.elements = elements;
 
         final String name = "myStrangeType" + elements.getCrTClassName();
-        this.setWrappingFormat(String.format("%%s.stream().map(%s -> %s).collect(java.util.stream.Collectors.toCollection(%s::new));", name, elements
+        this.setWrappingFormat(String.format("%%s.stream().map(%s -> %s).collect(java.util.stream.Collectors.toCollection(%s::new))", name, elements
                 .formatWrapCall(name), usedClass));
-        this.setUnWrappingFormat(String.format("%%s.stream().map(%s -> %s).collect(java.util.stream.Collectors.toCollection(%s::new));", name, elements
+        this.setUnWrappingFormat(String.format("%%s.stream().map(%s -> %s).collect(java.util.stream.Collectors.toCollection(%s::new))", name, elements
                 .formatUnwrapCall(name), usedClass));
 
         //Arrays.stream(new String[]{}).collect(Collectors.toCollection(() -> new ArrayList<>()))
@@ -29,5 +29,19 @@ public class CollectionWrapperInfo extends WrapperInfo {
         anImport.add("import " + usedClass + ";");
         anImport.add("import " + collectionClass + ";");
         return anImport;
+    }
+
+    @Override
+    public String getCrTClassName() {
+        return getCollectionClassName() + "<" + elements.getCrTClassName() + ">";
+    }
+
+    @Override
+    public String getWrappedClassName() {
+        return getCollectionClassName() + "<" + elements.getWrappedClassName() + ">";
+    }
+
+    public String getCollectionClassName() {
+        return collectionClass.substring(collectionClass.lastIndexOf('.') + 1);
     }
 }

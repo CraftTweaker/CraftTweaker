@@ -56,6 +56,10 @@ public class WrappedClass {
             writer.printf("    public %s(%s internal){%n", info.getCrTClassName(), info.getWrappedClassName());
             writer.println("        this.internal = internal;");
             writer.println("    }");
+            writer.println();
+            writer.printf("    public %s getInternal() {%n", info.getWrappedClassName());
+            writer.println("        return this.internal;");
+            writer.println("    }");
         } else {
             writer.printf("public class %s extends IEvent<%1$s, %s> {%n", info.getCrTClassName(), info.getWrappedClassName());
             writer.println();
@@ -75,8 +79,9 @@ public class WrappedClass {
             final String name = "myStrangeType" + info.getCrTClassName();
             writer.printf("        return %s -> getHandler().accept(new %s(%1$s));%n", name, info.getCrTClassName());
             writer.println("    }");
-            writer.println();
         }
+
+        writer.println();
 
 
         for (WrappedMemberInformation wrappedMember : wrappedMembers) {

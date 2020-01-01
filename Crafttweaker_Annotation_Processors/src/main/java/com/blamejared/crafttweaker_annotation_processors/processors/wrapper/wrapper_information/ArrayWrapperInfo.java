@@ -10,8 +10,8 @@ public class ArrayWrapperInfo extends WrapperInfo {
         this.element = element;
 
         final String name = "myStrangeType" + element.getCrTClassName();
-        this.setWrappingFormat(String.format("Arrays.stream(%%s).map(%s -> %s).toArray(%s::new);", name, element.formatWrapCall(name), getCrTQualifiedName()));
-        this.setUnWrappingFormat(String.format("Arrays.stream(%%s).map(%s -> %s).toArray(%s::new);", name, element.formatUnwrapCall(name), getWrappedClass()));
+        this.setWrappingFormat(String.format("Arrays.stream(%%s).map(%s -> %s).toArray(%s::new)", name, element.formatWrapCall(name), getCrTQualifiedName()));
+        this.setUnWrappingFormat(String.format("Arrays.stream(%%s).map(%s -> %s).toArray(%s::new)", name, element.formatUnwrapCall(name), getWrappedClass()));
     }
 
     @Override
