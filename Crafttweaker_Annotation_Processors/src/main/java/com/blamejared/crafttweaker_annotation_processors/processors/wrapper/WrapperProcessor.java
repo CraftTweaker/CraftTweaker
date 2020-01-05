@@ -136,11 +136,7 @@ public class WrapperProcessor extends AbstractProcessor {
     }
 
     private void readWrappedInfos(RoundEnvironment roundEnv) {
-        if (!location.exists()) {
-            //TODO: Testing only
-            wrappedInfo.add(new WrapperInfo("net.minecraft.world.World", "com.blamejared.crafttweaker.impl.world.IWorld", "crafttweaker.api.world.IWorld", "vanilla/world/IWorld"));
-            wrappedInfo.add(new WrapperInfo("net.minecraft.world.biome.Biome", "com.blamejared.crafttweaker.impl.IBiome", "crafttweaker.api.world.IBiome", "vanilla/world/IBiome"));
-        } else {
+        if (location.exists()) {
             try (final BufferedReader reader = new BufferedReader(new FileReader(location))) {
                 reader.lines()
                         .filter(s -> !s.isEmpty() && !s.startsWith("//"))
