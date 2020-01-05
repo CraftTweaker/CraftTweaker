@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.impl.world;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
-import com.blamejared.crafttweaker.impl.util.CTBlockPos;
+import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.world.biome.Biome;
@@ -124,7 +124,7 @@ public class MCBiome {
     }
     
     @ZenCodeType.Method
-    public float getTemperature(CTBlockPos pos) {
+    public float getTemperature(MCBlockPos pos) {
         return getInternal().getTemperature(pos.getInternal());
     }
     

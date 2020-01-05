@@ -142,7 +142,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     
     @Override
     public boolean canFit(int width, int height) {
-        return this.height >= height && this.width >= width;
+        return width >= this.width && height >= this.height;
     }
     
     @Override

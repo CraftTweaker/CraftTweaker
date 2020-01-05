@@ -19,20 +19,20 @@ import java.util.Map;
 @ZenCodeType.Name("crafttweaker.api.util.Direction")
 @Document("vanilla/util/Direction")
 @ZenWrapper(wrappedClass = "net.minecraft.util.Direction", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()")
-public class CTDirection {
+public class MCDirection {
     
-    private static final Map<Direction, CTDirection> DIRECTION_MAP = Util.make(new HashMap<>(), map -> {
-        map.put(Direction.NORTH, new CTDirection(Direction.NORTH));
-        map.put(Direction.SOUTH, new CTDirection(Direction.SOUTH));
-        map.put(Direction.EAST, new CTDirection(Direction.EAST));
-        map.put(Direction.WEST, new CTDirection(Direction.WEST));
-        map.put(Direction.UP, new CTDirection(Direction.UP));
-        map.put(Direction.DOWN, new CTDirection(Direction.DOWN));
+    private static final Map<Direction, MCDirection> DIRECTION_MAP = Util.make(new HashMap<>(), map -> {
+        map.put(Direction.NORTH, new MCDirection(Direction.NORTH));
+        map.put(Direction.SOUTH, new MCDirection(Direction.SOUTH));
+        map.put(Direction.EAST, new MCDirection(Direction.EAST));
+        map.put(Direction.WEST, new MCDirection(Direction.WEST));
+        map.put(Direction.UP, new MCDirection(Direction.UP));
+        map.put(Direction.DOWN, new MCDirection(Direction.DOWN));
     });
     
     private Direction internal;
     
-    public CTDirection(Direction internal) {
+    public MCDirection(Direction internal) {
         this.internal = internal;
     }
     
@@ -78,7 +78,7 @@ public class CTDirection {
      * @return The opposite of this direction.
      */
     @ZenCodeType.Getter("opposite")
-    public CTDirection getOpposite() {
+    public MCDirection getOpposite() {
         return DIRECTION_MAP.get(internal.getOpposite());
     }
     
@@ -92,7 +92,7 @@ public class CTDirection {
      * @docParam axis <directionaxis:north>
      */
     @ZenCodeType.Method
-    public CTDirection rotateAround(CTDirectionAxis axis) {
+    public MCDirection rotateAround(MCDirectionAxis axis) {
         return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
     }
     
@@ -102,7 +102,7 @@ public class CTDirection {
      * @return the direction that rotated on the Y axis of this direction
      */
     @ZenCodeType.Method
-    public CTDirection rotateY() {
+    public MCDirection rotateY() {
         return DIRECTION_MAP.get(internal.rotateY());
     }
     
@@ -112,7 +112,7 @@ public class CTDirection {
      * @return the direction that is counter clockwise on the Y axis
      */
     @ZenCodeType.Method
-    public CTDirection rotateYCCW() {
+    public MCDirection rotateYCCW() {
         return DIRECTION_MAP.get(internal.rotateYCCW());
     }
     
@@ -149,11 +149,11 @@ public class CTDirection {
     /**
      * Gets the direction axis of this direction
      *
-     * @return a {@link CTDirectionAxis} of this axis
+     * @return a {@link MCDirectionAxis} of this axis
      */
     @ZenCodeType.Getter("axis")
-    public CTDirectionAxis getAxis() {
-        return CTDirectionAxis.getAxis(internal.getAxis());
+    public MCDirectionAxis getAxis() {
+        return MCDirectionAxis.getAxis(internal.getAxis());
     }
     
     /**

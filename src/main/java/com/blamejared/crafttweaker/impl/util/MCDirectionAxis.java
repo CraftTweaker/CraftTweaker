@@ -20,17 +20,17 @@ import java.util.Map;
 @ZenCodeType.Name("crafttweaker.api.util.DirectionAxis")
 @Document("vanilla/util/DirectionAxis")
 @ZenWrapper(wrappedClass = "net.minecraft.util.Direction.Axis", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
-public class CTDirectionAxis implements CommandStringDisplayable {
+public class MCDirectionAxis implements CommandStringDisplayable {
     
-    private static final Map<Direction.Axis, CTDirectionAxis> AXIS_MAP = Util.make(new HashMap<>(), map -> {
-        map.put(Direction.Axis.X, new CTDirectionAxis(Direction.Axis.X));
-        map.put(Direction.Axis.Y, new CTDirectionAxis(Direction.Axis.Y));
-        map.put(Direction.Axis.Z, new CTDirectionAxis(Direction.Axis.Z));
+    private static final Map<Direction.Axis, MCDirectionAxis> AXIS_MAP = Util.make(new HashMap<>(), map -> {
+        map.put(Direction.Axis.X, new MCDirectionAxis(Direction.Axis.X));
+        map.put(Direction.Axis.Y, new MCDirectionAxis(Direction.Axis.Y));
+        map.put(Direction.Axis.Z, new MCDirectionAxis(Direction.Axis.Z));
     });
     
     private Direction.Axis internal;
     
-    public CTDirectionAxis(Direction.Axis internal) {
+    public MCDirectionAxis(Direction.Axis internal) {
         this.internal = internal;
     }
     
@@ -104,7 +104,7 @@ public class CTDirectionAxis implements CommandStringDisplayable {
         return internal;
     }
     
-    public static CTDirectionAxis getAxis(Direction.Axis axis) {
+    public static MCDirectionAxis getAxis(Direction.Axis axis) {
         return AXIS_MAP.get(axis);
     }
 

@@ -14,7 +14,7 @@ import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.potion.MCEffect;
 import com.blamejared.crafttweaker.impl.potion.MCPotion;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
-import com.blamejared.crafttweaker.impl.util.CTDirectionAxis;
+import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemStack;
@@ -216,7 +216,7 @@ public class BracketHandlers {
     }
     
     @BracketResolver("directionaxis")
-    public static CTDirectionAxis getDirectionAxis(String tokens) {
+    public static MCDirectionAxis getDirectionAxis(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
         
@@ -227,7 +227,7 @@ public class BracketHandlers {
         if(Direction.Axis.byName(split[0]) != null) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
-        return CTDirectionAxis.getAxis(Direction.Axis.byName(split[0]));
+        return MCDirectionAxis.getAxis(Direction.Axis.byName(split[0]));
     }
     
     @BracketDumper("directionaxis")
