@@ -10,9 +10,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -57,9 +60,36 @@ public class DocumentProcessorNew extends AbstractProcessor {
         }
 
         if (roundEnv.processingOver()) {
+            clearOutputDir();
             writeToFiles();
         }
         return false;
+    }
+
+    private void clearOutputDir() {
+        if (docsOut.exists()) {
+            if (!docsOut.isDirectory()) {
+                throw new IllegalStateException("File " + docsOut + " exists and is not a directory!");
+            }
+
+            try {
+                Files.walkFileTree(docsOut.getAbsoluteFile().toPath(), new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return super.visitFile(file, attrs);
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return super.postVisitDirectory(dir, exc);
+                    }
+                });
+            } catch (IOException e) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
+            }
+        }
     }
 
     private void fillModIdInfo(RoundEnvironment roundEnv) {
