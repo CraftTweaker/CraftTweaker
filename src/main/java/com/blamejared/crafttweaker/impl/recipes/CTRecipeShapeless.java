@@ -73,7 +73,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public boolean canFit(int width, int height) {
-        return ingredients.length >= width * height;
+        return width * height >= this.ingredients.length;
     }
     
     @Override
