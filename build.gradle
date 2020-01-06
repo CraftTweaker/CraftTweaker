@@ -30,13 +30,13 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '5.0.1'
+version = '6.0.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.14.4'
+archivesBaseName = 'CraftTweaker-1.15.1'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 

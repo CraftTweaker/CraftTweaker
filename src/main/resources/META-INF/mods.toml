@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[26,)"
+loaderVersion="[30,)"
 issueTrackerURL="https://github.com/CraftTweaker/CraftTweaker/issues"
 [[mods]]
 modId="crafttweaker"
@@ -12,12 +12,12 @@ description="Customize your minecraft experience!"
 [[dependencies.examplemod]]
     modId="forge"
     mandatory=true
-    versionRange="[26,)"
+    versionRange="[30,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.examplemod]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.4]"
+    versionRange="[1.15.1]"
     ordering="NONE"
     side="BOTH"
