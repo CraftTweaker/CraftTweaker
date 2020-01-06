@@ -178,7 +178,7 @@ public class CTCommands {
             BlockTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Fluid Tags:\n");
-            FluidTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
+            FluidTags.func_226157_a_().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Entity Type Tags:\n");
             EntityTypeTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));

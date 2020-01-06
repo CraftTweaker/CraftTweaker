@@ -23,7 +23,7 @@ public class FloatData implements INumberData {
     
     @ZenCodeType.Constructor
     public FloatData(float internal) {
-        this.internal = new FloatNBT(internal);
+        this.internal = FloatNBT.func_229689_a_(internal);
     }
     
     @Override
