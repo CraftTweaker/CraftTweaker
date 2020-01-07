@@ -4,6 +4,8 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import org.openzen.zencode.java.ZenCodeType;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffect")
+@Document(value = "vanilla/potions/MCPotionEffect")
+@ZenWrapper(wrappedClass = "net.minecraft.potion.Effect", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCEffect implements CommandStringDisplayable {
     
     private final Effect internal;

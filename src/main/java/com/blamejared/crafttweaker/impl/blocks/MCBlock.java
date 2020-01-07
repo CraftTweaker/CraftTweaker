@@ -1,11 +1,15 @@
 package com.blamejared.crafttweaker.impl.blocks;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.block.Block;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlock")
+@Document(value = "vanilla/blocks/MCBlock")
+@ZenWrapper(wrappedClass = "net.minecraft.block.Block", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.asString()")
 public class MCBlock {
     
     private final Block internal;
@@ -35,8 +39,8 @@ public class MCBlock {
     }
     
     @ZenCodeType.Caster(implicit = false)
-    public static String asString(MCBlock block) {
-        return block.getInternal().toString();
+    public String asString() {
+        return internal.toString();
     }
     
     public Block getInternal() {

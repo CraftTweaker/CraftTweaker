@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.util;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
 import org.openzen.zencode.java.ZenCodeType;
@@ -18,6 +19,7 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.DirectionAxis")
 @Document("vanilla/util/DirectionAxis")
+@ZenWrapper(wrappedClass = "net.minecraft.util.Direction.Axis", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCDirectionAxis implements CommandStringDisplayable {
     
     private static final Map<Direction.Axis, MCDirectionAxis> AXIS_MAP = Util.make(new HashMap<>(), map -> {

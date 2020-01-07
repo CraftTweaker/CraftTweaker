@@ -35,12 +35,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @ZenRegister
 public class CraftTweakerAPI {
@@ -93,7 +88,8 @@ public class CraftTweakerAPI {
             iUndoableAction.undo();
         });
         
-        ACTION_LIST.clear();
+        //ACTION_LIST.clear();
+        ACTION_LIST.removeIf(iAction -> iAction.shouldApplyOn(EffectiveSide.get()));
         ACTION_LIST_INVALID.clear();
         ((GroupLogger) logger).getPreviousMessages().clear();
     }

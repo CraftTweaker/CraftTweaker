@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker.impl.world;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.world.MCBiome")
+@Document("crafttweaker/world/MCBiome")
+@ZenWrapper(wrappedClass = "net.minecraft.world.biome.Biome", conversionMethodFormat = "%s.getInternal()")
 public class MCBiome {
     
     private final Biome internal;

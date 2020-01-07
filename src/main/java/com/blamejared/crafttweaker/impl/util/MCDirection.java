@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.util;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
 import org.openzen.zencode.java.ZenCodeType;
@@ -17,6 +18,7 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.Direction")
 @Document("vanilla/util/Direction")
+@ZenWrapper(wrappedClass = "net.minecraft.util.Direction", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()")
 public class MCDirection {
     
     private static final Map<Direction, MCDirection> DIRECTION_MAP = Util.make(new HashMap<>(), map -> {

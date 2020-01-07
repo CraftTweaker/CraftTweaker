@@ -218,8 +218,8 @@ public class MapData implements IData {
     }
     
     @ZenCodeType.Caster(implicit = true)
-    public static Map<String, IData> castToMap(MapData data) {
-        return data.asMap();
+    public Map<String, IData> castToMap() {
+        return this.asMap();
     }
 
     @Override

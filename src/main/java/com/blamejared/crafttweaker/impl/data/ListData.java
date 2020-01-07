@@ -152,7 +152,7 @@ public class ListData implements ICollectionData {
     }
     
     @ZenCodeType.Caster(implicit = true)
-    public static List<IData> castToMap(ListData data) {
-        return data.asList();
+    public List<IData> castToMap() {
+        return this.asList();
     }
 }
