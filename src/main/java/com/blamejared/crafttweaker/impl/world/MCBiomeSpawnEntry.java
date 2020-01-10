@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.world.MCBiomeSpawnEntry")
-@Document("crafttweaker/world/MCBiomeSpawnEntry")
+@Document("vanilla/world/MCBiomeSpawnEntry")
 @ZenWrapper(wrappedClass = "net.minecraft.world.biome.Biome.SpawnListEntry", conversionMethodFormat = "%s.getInternal()")
 public class MCBiomeSpawnEntry {
     
