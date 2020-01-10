@@ -51,6 +51,15 @@ public class MapData implements IData {
     public void putAll(Map<String, IData> map) {
         map.forEach((s, iData) -> internal.put(s, iData.getInternal()));
     }
+
+    /**
+     * Adds all entries from the given IData to this entry
+     */
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
+    public MapData opAdd(IData data) {
+        putAll(data.asMap());
+        return this;
+    }
     
     
     @ZenCodeType.Getter("keySet")

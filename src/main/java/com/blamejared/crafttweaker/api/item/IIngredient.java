@@ -2,6 +2,9 @@ package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.JSONConverter;
+import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.item.MCIngredientList;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -74,5 +77,16 @@ public interface IIngredient extends CommandStringDisplayable {
                 return new MCIngredientList(Arrays.stream(ingredient.getMatchingStacks()).map(MCItemStack::new).toArray(IItemStack[]::new));
             }
         }
+    }
+
+    @ZenCodeType.Caster(implicit = true)
+    default MapData asMapData() {
+        final IData data = this.asIData();
+        return data instanceof MapData ? ((MapData) data) : new MapData();
+    }
+
+    @ZenCodeType.Caster(implicit = true)
+    default IData asIData() {
+        return JSONConverter.convert(this.asVanillaIngredient().serialize());
     }
 }
