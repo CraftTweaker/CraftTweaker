@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.world.MCBiome")
-@Document("crafttweaker/world/MCBiome")
+@Document("vanilla/world/MCBiome")
 @ZenWrapper(wrappedClass = "net.minecraft.world.biome.Biome", conversionMethodFormat = "%s.getInternal()")
 public class MCBiome {
     
