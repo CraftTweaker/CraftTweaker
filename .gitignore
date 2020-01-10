@@ -33,3 +33,6 @@ runServer/
 changelog.md
 
 secrets.json
+
+docsOut/
+src/generated
