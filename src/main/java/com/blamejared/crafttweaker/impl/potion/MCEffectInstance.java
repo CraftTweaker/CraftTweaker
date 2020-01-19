@@ -13,7 +13,7 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffectInstance")
-@Document(value = "vanilla/potions/MCPotionEffectInstance")
+@Document("vanilla/potions/MCPotionEffectInstance")
 @ZenWrapper(wrappedClass = "net.minecraft.potion.EffectInstance", conversionMethodFormat = "%s.getInternal()")
 public class MCEffectInstance {
     

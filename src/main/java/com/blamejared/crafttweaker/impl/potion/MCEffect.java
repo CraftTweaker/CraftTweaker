@@ -14,7 +14,7 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffect")
-@Document(value = "vanilla/potions/MCPotionEffect")
+@Document("vanilla/potions/MCPotionEffect")
 @ZenWrapper(wrappedClass = "net.minecraft.potion.Effect", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCEffect implements CommandStringDisplayable {
     

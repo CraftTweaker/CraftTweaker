@@ -8,7 +8,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlock")
-@Document(value = "vanilla/blocks/MCBlock")
+@Document("vanilla/blocks/MCBlock")
 @ZenWrapper(wrappedClass = "net.minecraft.block.Block", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.asString()")
 public class MCBlock {
     

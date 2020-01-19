@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlockState")
-@Document(value = "vanilla/blocks/MCBlockState")
+@Document("vanilla/blocks/MCBlockState")
 @ZenWrapper(wrappedClass = "net.minecraft.block.BlockState", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCBlockState implements CommandStringDisplayable {
     
