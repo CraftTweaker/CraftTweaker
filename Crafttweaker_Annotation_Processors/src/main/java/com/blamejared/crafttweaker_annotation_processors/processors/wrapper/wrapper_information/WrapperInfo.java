@@ -60,7 +60,7 @@ public class WrapperInfo implements Serializable {
         if (strings.length > 3 && !strings[3].isEmpty()) {
             docPath = strings[3];
         } else {
-            docPath = ZCName.replaceFirst("crafttweaker\\.api\\.", "vanilla/").replace('.', '/');
+            docPath = ZCName.replaceFirst("crafttweaker\\.api\\.", "vanilla/api/").replace('.', '/');
         }
 
         return new WrapperInfo(wrappedClass, CrTName, ZCName, docPath);
