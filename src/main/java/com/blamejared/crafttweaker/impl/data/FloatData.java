@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.FloatData")
 @ZenRegister
-@Document("vanilla/data/FloatData")
+@Document("vanilla/api/data/FloatData")
 public class FloatData implements INumberData {
     
     private FloatNBT internal;

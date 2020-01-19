@@ -19,7 +19,7 @@ import java.util.*;
  */
 @ZenCodeType.Name("crafttweaker.api.data.MapData")
 @ZenRegister
-@Document("vanilla/data/MapData")
+@Document("vanilla/api/data/MapData")
 public class MapData implements IData {
     
     private CompoundNBT internal;

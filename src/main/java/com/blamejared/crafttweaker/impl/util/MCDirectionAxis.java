@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.DirectionAxis")
-@Document("vanilla/util/DirectionAxis")
+@Document("vanilla/api/util/DirectionAxis")
 @ZenWrapper(wrappedClass = "net.minecraft.util.Direction.Axis", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCDirectionAxis implements CommandStringDisplayable {
     

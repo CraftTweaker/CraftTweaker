@@ -17,7 +17,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.ICookingRecipeManager")
-@Document("vanilla/managers/ICookingRecipeManager")
+@Document("vanilla/api/managers/ICookingRecipeManager")
 public interface ICookingRecipeManager extends IRecipeManager {
     
     /**

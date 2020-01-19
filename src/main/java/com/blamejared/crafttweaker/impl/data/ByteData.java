@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.ByteData")
 @ZenRegister
-@Document("vanilla/data/ByteData")
+@Document("vanilla/api/data/ByteData")
 public class ByteData implements INumberData {
     
     private ByteNBT internal;

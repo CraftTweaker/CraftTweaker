@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.FurnaceManager")
-@Document("vanilla/managers/FurnaceManager")
+@Document("vanilla/api/managers/FurnaceManager")
 public class CTFurnaceManager implements ICookingRecipeManager {
     
     @ZenCodeGlobals.Global("furnace")

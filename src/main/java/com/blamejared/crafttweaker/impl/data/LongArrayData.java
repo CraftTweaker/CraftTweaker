@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.LongArrayData")
 @ZenRegister
-@Document("vanilla/data/LongArrayData")
+@Document("vanilla/api/data/LongArrayData")
 public class LongArrayData implements ICollectionData {
     
     private LongArrayNBT internal;

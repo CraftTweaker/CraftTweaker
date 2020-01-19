@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.LongData")
 @ZenRegister
-@Document("vanilla/data/LongData")
+@Document("vanilla/api/data/LongData")
 public class LongData implements INumberData {
     
     private LongNBT internal;

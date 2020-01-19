@@ -13,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.BlockPos")
-@Document("vanilla/util/BlockPos")
+@Document("vanilla/api/util/BlockPos")
 @ZenWrapper(wrappedClass = "net.minecraft.util.math.BlockPos", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()")
 public class MCBlockPos {
     private BlockPos internal;

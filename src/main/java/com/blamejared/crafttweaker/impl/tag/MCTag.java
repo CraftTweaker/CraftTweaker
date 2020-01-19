@@ -33,7 +33,7 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
-@Document("vanilla/tags/MCTag")
+@Document("vanilla/api/tags/MCTag")
 @ZenWrapper(wrappedClass = "net.minecraft.tags.Tag", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCTag implements IIngredient {
     

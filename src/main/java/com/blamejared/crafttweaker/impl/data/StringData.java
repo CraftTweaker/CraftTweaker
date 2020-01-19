@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.StringData")
 @ZenRegister
-@Document("vanilla/data/StringData")
+@Document("vanilla/api/data/StringData")
 public class StringData implements IData {
     
     private StringNBT internal;

@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityClassification")
-@Document("vanilla/entities/MCEntityClassification")
+@Document("vanilla/api/entities/MCEntityClassification")
 @ZenWrapper(wrappedClass = "net.minecraft.entity.EntityClassification", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCEntityClassification implements CommandStringDisplayable {
     

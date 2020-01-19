@@ -19,7 +19,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CraftingTableManager")
-@Document("vanilla/managers/CraftingTableManager")
+@Document("vanilla/api/managers/CraftingTableManager")
 public class CTCraftingTableManager implements IRecipeManager {
     
     @ZenCodeGlobals.Global("craftingTable")

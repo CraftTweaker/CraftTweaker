@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.SmokerManager")
-@Document("vanilla/managers/SmokerManager")
+@Document("vanilla/api/managers/SmokerManager")
 public class CTSmokerManager implements ICookingRecipeManager {
     
     @ZenCodeGlobals.Global("smoker")

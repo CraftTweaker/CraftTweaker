@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.data.ICollectionData")
-@Document("vanilla/data/ICollectionData")
+@Document("vanilla/api/data/ICollectionData")
 public interface ICollectionData extends IData {
 
     /**

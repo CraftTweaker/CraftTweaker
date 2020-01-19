@@ -19,7 +19,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.StoneCutterManager")
-@Document("vanilla/managers/StoneCutterManager")
+@Document("vanilla/api/managers/StoneCutterManager")
 public class CTStoneCutterManager implements IRecipeManager {
     
     @ZenCodeGlobals.Global("stoneCutter")

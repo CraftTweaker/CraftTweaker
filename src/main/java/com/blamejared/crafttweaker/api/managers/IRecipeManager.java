@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.registries.IRecipeManager")
-@Document("vanilla/managers/IRecipeManager")
+@Document("vanilla/api/managers/IRecipeManager")
 public interface IRecipeManager extends CommandStringDisplayable {
     
     Gson JSON_RECIPE_GSON = new GsonBuilder().create();

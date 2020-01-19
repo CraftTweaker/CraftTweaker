@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotion")
-@Document("vanilla/potions/MCPotion")
+@Document("vanilla/api/potions/MCPotion")
 @ZenWrapper(wrappedClass = "net.minecraft.potion.Potion", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
 public class MCPotion implements CommandStringDisplayable {
     

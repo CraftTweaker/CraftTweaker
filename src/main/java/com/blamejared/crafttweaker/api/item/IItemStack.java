@@ -23,7 +23,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
-@Document("vanilla/items/IItemStack")
+@Document("vanilla/api/items/IItemStack")
 @ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
 public interface IItemStack extends IIngredient {
     

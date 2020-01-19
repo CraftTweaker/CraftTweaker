@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.ShortData")
 @ZenRegister
-@Document("vanilla/data/ShortData")
+@Document("vanilla/api/data/ShortData")
 public class ShortData implements INumberData {
     
     private ShortNBT internal;

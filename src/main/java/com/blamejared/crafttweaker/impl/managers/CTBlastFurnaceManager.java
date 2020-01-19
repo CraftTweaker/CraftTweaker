@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BlastFurnaceManager")
-@Document("vanilla/managers/BlastFurnaceManager")
+@Document("vanilla/api/managers/BlastFurnaceManager")
 public class CTBlastFurnaceManager implements ICookingRecipeManager {
     
     @ZenCodeGlobals.Global("blastFurnace")

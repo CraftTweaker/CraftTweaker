@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.Direction")
-@Document("vanilla/util/Direction")
+@Document("vanilla/api/util/Direction")
 @ZenWrapper(wrappedClass = "net.minecraft.util.Direction", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()")
 public class MCDirection {
     

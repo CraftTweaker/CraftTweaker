@@ -18,7 +18,7 @@ import java.util.List;
  */
 @ZenCodeType.Name("crafttweaker.api.data.ListData")
 @ZenRegister
-@Document("vanilla/data/ListData")
+@Document("vanilla/api/data/ListData")
 public class ListData implements ICollectionData {
     
     private ListNBT internal;

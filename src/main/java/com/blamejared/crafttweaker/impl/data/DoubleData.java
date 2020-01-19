@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.DoubleData")
 @ZenRegister
-@Document("vanilla/data/DoubleData")
+@Document("vanilla/api/data/DoubleData")
 public class DoubleData implements INumberData {
     
     private DoubleNBT internal;

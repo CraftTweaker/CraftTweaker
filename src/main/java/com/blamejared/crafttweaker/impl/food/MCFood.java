@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Name("crafttweaker.api.food.MCFood")
 @ZenRegister
-@Document("vanilla/food/MCFood")
+@Document("vanilla/api/food/MCFood")
 @ZenWrapper(wrappedClass = "net.minecraft.item.food", conversionMethodFormat = "%s.getInternal()")
 public class MCFood {
     

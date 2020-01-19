@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CampFireManager")
-@Document("vanilla/managers/CampFireManager")
+@Document("vanilla/api/managers/CampFireManager")
 public class CTCampfireManager implements ICookingRecipeManager {
     
     @ZenCodeGlobals.Global("campfire")

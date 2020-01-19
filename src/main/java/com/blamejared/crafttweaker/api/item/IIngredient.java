@@ -24,7 +24,7 @@ import java.util.Arrays;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IIngredient")
-@Document("vanilla/items/IIngredient")
+@Document("vanilla/api/items/IIngredient")
 @ZenWrapper(wrappedClass = "net.minecraft.item.crafting.Ingredient", conversionMethodFormat = "%s.asVanillaIngredient()", displayStringFormat = "%.getCommandString()")
 public interface IIngredient extends CommandStringDisplayable {
     

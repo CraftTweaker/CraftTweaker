@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenCodeType.Name("crafttweaker.api.data.IntArrayData")
 @ZenRegister
-@Document("vanilla/data/IntArrayData")
+@Document("vanilla/api/data/IntArrayData")
 public class IntArrayData implements ICollectionData {
     
     private IntArrayNBT internal;

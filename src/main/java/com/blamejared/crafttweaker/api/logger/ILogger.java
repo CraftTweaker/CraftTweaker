@@ -15,7 +15,7 @@ import java.io.PrintStream;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ILogger")
-@Document("vanilla/logger/ILogger")
+@Document("vanilla/api/logger/ILogger")
 public interface ILogger extends IZSLogger {
     
     /**
