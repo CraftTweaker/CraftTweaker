@@ -157,6 +157,23 @@ public class MCTag implements IIngredient {
         return false;
     }
     
+    
+    @ZenCodeType.Getter("isItemTag")
+    public boolean isItemTag() {
+        return getItemTag() != null;
+    }
+    
+    @ZenCodeType.Getter("isBlockTag")
+    public boolean isBlockTag() {
+        return getBlockTag() != null;
+    }
+    
+    @ZenCodeType.Getter("isEntityTypeTag")
+    public boolean isEntityTypeTag() {
+        return getEntityTypeTag() != null;
+    }
+    
+    
     @Override
     public Ingredient asVanillaIngredient() {
         return Ingredient.fromTag(getItemTag());
