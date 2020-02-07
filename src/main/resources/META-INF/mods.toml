@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[30,)"
+loaderVersion="[31,)"
 issueTrackerURL="https://github.com/CraftTweaker/CraftTweaker/issues"
 [[mods]]
 modId="crafttweaker"
@@ -9,15 +9,15 @@ displayURL="https://minecraft.curseforge.com/projects/crafttweaker"
 logoFile="logo.png"
 authors="Jaredlll08, Kindlich and StanH"
 description="Customize your minecraft experience!"
-[[dependencies.examplemod]]
+[[dependencies.crafttweaker]]
     modId="forge"
     mandatory=true
-    versionRange="[30,)"
+    versionRange="[31,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.examplemod]]
+[[dependencies.crafttweaker]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.1]"
+    versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"

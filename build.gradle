@@ -36,7 +36,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.15.1'
+archivesBaseName = 'CraftTweaker-1.15.2'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
