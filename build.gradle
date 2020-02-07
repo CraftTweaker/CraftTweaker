@@ -116,8 +116,8 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.15.1-30.0.30'
-    compile fg.deobf("mezz.jei:jei-1.15.1:6.0.0.1");
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.1'
+    compile fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2");
 }
 
 
