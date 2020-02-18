@@ -14,4 +14,23 @@ public class ExpandString {
         return new StringData(value);
     }
     
+    
+    @ZenCodeType.Caster()
+    public static int asInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch(NumberFormatException e) {
+            throw new NumberFormatException("\"" + value + "\" is not an integer!");
+        }
+    }
+    
+    @ZenCodeType.Caster()
+    public static double asDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch(NumberFormatException e) {
+            throw new NumberFormatException("\"" + value + "\" is not a double!");
+        }
+    }
+    
 }
