@@ -22,6 +22,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Map;
@@ -55,11 +56,13 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         MapData mapData = (MapData) data;
         JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.toJsonString(), JsonObject.class);
+        String recipeTypeKey = Registry.RECIPE_TYPE.getKey(getRecipeType()).toString();
+    
         if(recipeObject.has("type")) {
-            if(!recipeObject.get("type").getAsString().equals(getRecipeType().toString()))
-                throw new IllegalArgumentException("Cannot override recipe type! Given: \"" + recipeObject.get("type").getAsString() + "\", Expected: \"" + getRecipeType().toString() + "\"");
+            if(!recipeObject.get("type").getAsString().equals(recipeTypeKey))
+                throw new IllegalArgumentException("Cannot override recipe type! Given: \"" + recipeObject.get("type").getAsString() + "\", Expected: \"" + recipeTypeKey + "\"");
         } else {
-            recipeObject.addProperty("type", getRecipeType().toString());
+            recipeObject.addProperty("type", recipeTypeKey);
         }
         IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, iRecipe, ""));
