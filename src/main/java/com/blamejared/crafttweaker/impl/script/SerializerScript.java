@@ -10,17 +10,21 @@ public class SerializerScript extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     
     public ScriptRecipe read(ResourceLocation recipeId, JsonObject json) {
         // Please don't make scripts inside a datapack json 👀
-        return new ScriptRecipe(recipeId, json.get("fileName").getAsString(),json.get("content").getAsString());
+        return new ScriptRecipe(recipeId, json.get("fileName").getAsString(), json.get("content").getAsString());
     }
     
     public ScriptRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
         String fileName = buffer.readString();
-        String content = buffer.readString();
-        return new ScriptRecipe(recipeId, fileName, content);
+        String firstHalf = buffer.readString();
+        String secondHalf = buffer.readString();
+        return new ScriptRecipe(recipeId, fileName, firstHalf + secondHalf);
     }
     
     public void write(PacketBuffer buffer, ScriptRecipe recipe) {
         buffer.writeString(recipe.getFileName());
-        buffer.writeString(recipe.getContent());
+        final int middle = recipe.getContent().length() / 2;
+        String[] halves = {recipe.getContent().substring(0, middle), recipe.getContent().substring(middle)};
+        buffer.writeString(halves[0]);
+        buffer.writeString(halves[1]);
     }
 }
