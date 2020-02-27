@@ -22,7 +22,7 @@ public class StringData implements IData {
     
     @ZenCodeType.Constructor
     public StringData(String internal) {
-        this.internal = StringNBT.func_229705_a_(internal);
+        this.internal = StringNBT.valueOf(internal);
     }
     
     @Override

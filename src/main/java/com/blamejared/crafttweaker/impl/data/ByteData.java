@@ -23,7 +23,7 @@ public class ByteData implements INumberData {
     
     @ZenCodeType.Constructor
     public ByteData(byte internal) {
-        this.internal = ByteNBT.func_229671_a_(internal);
+        this.internal = ByteNBT.valueOf(internal);
     }
     
     @Override
