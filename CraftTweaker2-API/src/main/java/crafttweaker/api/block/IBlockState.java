@@ -43,4 +43,6 @@ public interface IBlockState extends IBlockProperties, IBlockStateMatcher {
     
     @ZenMethod
     IBlockStateMatcher matchBlock();
+
+    Object getInternal();
 }

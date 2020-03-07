@@ -194,4 +194,9 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     public String toCommandString() {
         return toString();
     }
+
+    @Override
+    public Object getInternal() {
+        return blockState;
+    }
 }
