@@ -204,6 +204,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onLivingDestroyBlock (IEventHandler<LivingDestroyBlockEvent> ev);
 
+    @ZenMethod
+    IEventHandle onLivingExperienceDrop (IEventHandler<LivingExperienceDropEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

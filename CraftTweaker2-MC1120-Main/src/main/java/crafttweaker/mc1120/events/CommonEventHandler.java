@@ -541,4 +541,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishLivingDestroyBlock(new MCLivingDestroyBlockEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onLivingExperienceDrop (LivingExperienceDropEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLivingExperienceDrop()) {
+            CrafttweakerImplementationAPI.events.publishLivingExperienceDrop(new MCLivingExperienceDropEvent(ev));
+        }
+    }
 }

@@ -113,6 +113,7 @@ public class MTEventManager implements IEventManager {
         elEntityTravelToDimension.clear();
         elItemTooltip.clear();
         elLivingDestroyBlock.clear();
+        elLivingExperienceDrop.clear();
     }
     
     // ##########################
@@ -1238,5 +1239,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishLivingDestroyBlock(LivingDestroyBlockEvent event) {
         elLivingDestroyBlock.publish(event);
+    }
+
+    // #################################
+    // ###  LivingExperienceDropEvent  ###
+    // #################################
+
+    private final EventList<LivingExperienceDropEvent> elLivingExperienceDrop = new EventList<>();
+
+    @Override
+    public IEventHandle onLivingExperienceDrop(IEventHandler<LivingExperienceDropEvent> ev) {
+        return elLivingExperienceDrop.add(ev);
+    }
+
+    public boolean hasLivingExperienceDrop() {
+        return elLivingExperienceDrop.hasHandlers();
+    }
+
+    public void publishLivingExperienceDrop(LivingExperienceDropEvent event) {
+        elLivingExperienceDrop.publish(event);
     }
 }
