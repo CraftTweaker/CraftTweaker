@@ -492,4 +492,16 @@ public class CommonEventHandler {
         if (CrafttweakerImplementationAPI.events.hasItemFished())
             CrafttweakerImplementationAPI.events.publishItemFished(new MCItemFishedEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onCropGrowPre (BlockEvent.CropGrowEvent.Pre ev) {
+        if (CrafttweakerImplementationAPI.events.hasCropGrowPre())
+            CrafttweakerImplementationAPI.events.publishCropGrowPre(new MCCropGrowEventPre(ev));
+    }
+
+    @SubscribeEvent
+    public void onCropGrowPost (BlockEvent.CropGrowEvent.Post ev) {
+        if (CrafttweakerImplementationAPI.events.hasCropGrowPost())
+            CrafttweakerImplementationAPI.events.publishCropGrowPost(new MCCropGrowEventPost(ev));
+    }
 }

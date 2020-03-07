@@ -105,6 +105,9 @@ public class MTEventManager implements IEventManager {
         elEntityMountEvent.clear();
         elExplosionStartEvent.clear();
         elExplosionDetonateEvent.clear();
+        elItemFishedEvent.clear();
+        elCropGrowPost.clear();
+        elCropGrowPre.clear();
     }
     
     // ##########################
@@ -1097,5 +1100,43 @@ public class MTEventManager implements IEventManager {
 
     public void publishItemFished(ItemFishedEvent event) {
         elItemFishedEvent.publish(event);
+    }
+
+    // ##########################
+    // ###  CropGrowEventPre  ###
+    // ##########################
+
+    private final EventList<CropGrowEventPre> elCropGrowPre = new EventList<>();
+
+    @Override
+    public IEventHandle onCropGrowPre(IEventHandler<CropGrowEventPre> ev) {
+        return elCropGrowPre.add(ev);
+    }
+
+    public boolean hasCropGrowPre() {
+        return elCropGrowPre.hasHandlers();
+    }
+
+    public void publishCropGrowPre(CropGrowEventPre event) {
+        elCropGrowPre.publish(event);
+    }
+
+    // ##########################
+    // ###  CropGrowEventPost  ###
+    // ##########################
+
+    private final EventList<CropGrowEventPost> elCropGrowPost = new EventList<>();
+
+    @Override
+    public IEventHandle onCropGrowPost(IEventHandler<CropGrowEventPost> ev) {
+        return elCropGrowPost.add(ev);
+    }
+
+    public boolean hasCropGrowPost() {
+        return elCropGrowPost.hasHandlers();
+    }
+
+    public void publishCropGrowPost(CropGrowEventPost event) {
+        elCropGrowPost.publish(event);
     }
 }

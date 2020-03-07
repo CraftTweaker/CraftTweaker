@@ -183,6 +183,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onItemFished (IEventHandler<ItemFishedEvent> ev);
 
+    @ZenMethod
+    IEventHandle onCropGrowPre (IEventHandler<CropGrowEventPre> ev);
+
+    @ZenMethod
+    IEventHandle onCropGrowPost (IEventHandler<CropGrowEventPost> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
