@@ -9,6 +9,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.CraftingInfo;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.MCEntity;
@@ -451,5 +452,11 @@ public class CommonEventHandler {
     public void onFarmlandTrampleEvent(BlockEvent.FarmlandTrampleEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasFarmlandTrample())
             CrafttweakerImplementationAPI.events.publishFarmlandTrample(new MCBlockFarmlandTrampleEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onCriticalHitEvent(CriticalHitEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasCriticalHit())
+            CrafttweakerImplementationAPI.events.publishCriticalHit(new MCCriticalHitEvent(ev));
     }
 }

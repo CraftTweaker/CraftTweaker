@@ -164,6 +164,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onFarmlandTrample(IEventHandler<BlockFarmlandTrampleEvent> ev);
+
+    @ZenMethod
+    IEventHandle onCriticalHit(IEventHandler<CriticalHitEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

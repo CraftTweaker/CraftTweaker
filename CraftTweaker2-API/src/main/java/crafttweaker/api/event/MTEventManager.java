@@ -980,4 +980,23 @@ public class MTEventManager implements IEventManager {
     public void publishFarmlandTrample(BlockFarmlandTrampleEvent event) {
         elFarmlandTrample.publish(event);
     }
+
+    // ##########################
+    // ###  CriticalHitEvent  ###
+    // ##########################
+
+    private final EventList<CriticalHitEvent> elCriticalHit = new EventList<>();
+
+    @Override
+    public IEventHandle onCriticalHit(IEventHandler<CriticalHitEvent> ev) {
+        return elCriticalHit.add(ev);
+    }
+
+    public boolean hasCriticalHit() {
+        return elCriticalHit.hasHandlers();
+    }
+
+    public void publishCriticalHit (CriticalHitEvent event) {
+        elCriticalHit.publish(event);
+    }
 }
