@@ -112,6 +112,7 @@ public class MTEventManager implements IEventManager {
         elMobGriefing.clear();
         elEntityTravelToDimension.clear();
         elItemTooltip.clear();
+        elLivingDestroyBlock.clear();
     }
     
     // ##########################
@@ -1218,5 +1219,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishItemTooltip(ItemTooltipEvent event) {
         elItemTooltip.publish(event);
+    }
+
+    // #################################
+    // ###  LivingDestroyBlockEvent  ###
+    // #################################
+
+    private final EventList<LivingDestroyBlockEvent> elLivingDestroyBlock = new EventList<>();
+
+    @Override
+    public IEventHandle onLivingDestroyBlock(IEventHandler<LivingDestroyBlockEvent> ev) {
+        return elLivingDestroyBlock.add(ev);
+    }
+
+    public boolean hasLivingDestroyBlock() {
+        return elLivingDestroyBlock.hasHandlers();
+    }
+
+    public void publishLivingDestroyBlock(LivingDestroyBlockEvent event) {
+        elLivingDestroyBlock.publish(event);
     }
 }

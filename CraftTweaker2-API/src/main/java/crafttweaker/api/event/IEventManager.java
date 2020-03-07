@@ -201,6 +201,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onItemTooltip (IEventHandler<ItemTooltipEvent> ev);
 
+    @ZenMethod
+    IEventHandle onLivingDestroyBlock (IEventHandler<LivingDestroyBlockEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

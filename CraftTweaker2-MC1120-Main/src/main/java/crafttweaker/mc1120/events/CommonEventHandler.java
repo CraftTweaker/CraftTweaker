@@ -534,4 +534,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishItemTooltip(new MCItemTooltipEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onLivingDestroyBlock (LivingDestroyBlockEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLivingDestroyBlock()) {
+            CrafttweakerImplementationAPI.events.publishLivingDestroyBlock(new MCLivingDestroyBlockEvent(ev));
+        }
+    }
 }
