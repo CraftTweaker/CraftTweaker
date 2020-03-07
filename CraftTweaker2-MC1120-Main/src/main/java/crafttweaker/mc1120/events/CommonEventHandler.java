@@ -42,6 +42,8 @@ import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.minecart.MinecartCollisionEvent;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -552,6 +554,20 @@ public class CommonEventHandler {
     public void onLootingLevel (LootingLevelEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasLootingLevel()) {
             CrafttweakerImplementationAPI.events.publishLootingLevel(new MCLootingLevelEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onMinecraftCollision (MinecartCollisionEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasMinecartCollision()) {
+            CrafttweakerImplementationAPI.events.publishMinecartCollision(new MCMinecartCollisionEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onMinecartInteract (MinecartInteractEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasMinecartInteract()) {
+            CrafttweakerImplementationAPI.events.publishMinecartInteract(new MCMinecartInteractEvent(ev));
         }
     }
 }

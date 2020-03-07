@@ -114,6 +114,8 @@ public class MTEventManager implements IEventManager {
         elLivingDestroyBlock.clear();
         elLivingExperienceDrop.clear();
         elLivingKnockBack.clear();
+        elMinecartCollision.clear();
+        elMinecartInteract.clear();
     }
     
     // ##########################
@@ -1277,5 +1279,43 @@ public class MTEventManager implements IEventManager {
 
     public void publishLootingLevel(LootingLevelEvent event) {
         elLootingLevel.publish(event);
+    }
+
+    // ################################
+    // ###  MinecartCollisionEvent  ###
+    // ################################
+
+    private final EventList<MinecartCollisionEvent> elMinecartCollision = new EventList<>();
+
+    @Override
+    public IEventHandle onMinecartCollision(IEventHandler<MinecartCollisionEvent> ev) {
+        return elMinecartCollision.add(ev);
+    }
+
+    public boolean hasMinecartCollision() {
+        return elMinecartCollision.hasHandlers();
+    }
+
+    public void publishMinecartCollision(MinecartCollisionEvent event) {
+        elMinecartCollision.publish(event);
+    }
+
+    // ###############################
+    // ###  MinecartInteractEvent  ###
+    // ###############################
+
+    private final EventList<MinecartInteractEvent> elMinecartInteract = new EventList<>();
+
+    @Override
+    public IEventHandle onMinecartInteract(IEventHandler<MinecartInteractEvent> ev) {
+        return elMinecartInteract.add(ev);
+    }
+
+    public boolean hasMinecartInteract() {
+        return elMinecartInteract.hasHandlers();
+    }
+
+    public void publishMinecartInteract(MinecartInteractEvent event) {
+        elMinecartInteract.publish(event);
     }
 }

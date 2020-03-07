@@ -210,6 +210,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onLootingLevel (IEventHandler<LootingLevelEvent> ev);
 
+    @ZenMethod
+    IEventHandle onMinecartCollision (IEventHandler<MinecartCollisionEvent> ev);
+
+    @ZenMethod
+    IEventHandle onMinecartInteract (IEventHandler<MinecartInteractEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
