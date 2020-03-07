@@ -110,6 +110,7 @@ public class MTEventManager implements IEventManager {
         elCropGrowPre.clear();
         elBlockPlace.clear();
         elMobGriefing.clear();
+        elEntityTravelToDimension.clear();
     }
     
     // ##########################
@@ -1178,5 +1179,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishMobGriefing(MobGriefingEvent event) {
         elMobGriefing.publish(event);
+    }
+
+    // #########################
+    // ###  EntityTravelToDimension ###
+    // #########################
+
+    private final EventList<EntityTravelToDimensionEvent> elEntityTravelToDimension = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityTravelToDimension(IEventHandler<EntityTravelToDimensionEvent> ev) {
+        return elEntityTravelToDimension.add(ev);
+    }
+
+    public boolean hasEntityTravelToDimension() {
+        return elEntityTravelToDimension.hasHandlers();
+    }
+
+    public void publishEntityTravelToDimension(EntityTravelToDimensionEvent event) {
+        elEntityTravelToDimension.publish(event);
     }
 }

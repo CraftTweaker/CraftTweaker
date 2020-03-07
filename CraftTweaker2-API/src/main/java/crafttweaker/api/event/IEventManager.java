@@ -195,6 +195,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onMobGriefing (IEventHandler<MobGriefingEvent> ev);
 
+    @ZenMethod
+    IEventHandle onEntityTravelToDimension (IEventHandler<EntityTravelToDimensionEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

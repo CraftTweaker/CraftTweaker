@@ -38,6 +38,7 @@ import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.EntityMobGriefingEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -516,5 +517,11 @@ public class CommonEventHandler {
     public void onMobGriefing (EntityMobGriefingEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasMobGriefing())
             CrafttweakerImplementationAPI.events.publishMobGriefing(new MCMobGriefingEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onEntityTravelToDimension (EntityTravelToDimensionEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityTravelToDimension())
+            CrafttweakerImplementationAPI.events.publishEntityTravelToDimension(new MCEntityTravelToDimensionEvent(ev));
     }
 }
