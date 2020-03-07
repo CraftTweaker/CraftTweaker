@@ -17,17 +17,7 @@ public class MCPlayerOpenContainerEvent implements PlayerOpenContainerEvent{
     public IContainer getContainer() {
         return CraftTweakerMC.getIContainer(event.getContainer());
     }
-    
-    @Override
-    public boolean isCanceled() {
-        return event.isCanceled();
-    }
-    
-    @Override
-    public void setCanceled(boolean canceled) {
-        event.setCanceled(canceled);
-    }
-    
+
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.getEntityPlayer());

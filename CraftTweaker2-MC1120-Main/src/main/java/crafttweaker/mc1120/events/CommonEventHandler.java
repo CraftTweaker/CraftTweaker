@@ -570,4 +570,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishMinecartInteract(new MCMinecartInteractEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerCloseContainer (PlayerContainerEvent.Close ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerCloseContainer()) {
+            CrafttweakerImplementationAPI.events.publishPlayerCloseContainer(new MCPlayerCloseContainerEvent(ev));
+        }
+    }
 }

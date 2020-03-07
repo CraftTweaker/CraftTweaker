@@ -216,6 +216,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onMinecartInteract (IEventHandler<MinecartInteractEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPlayerCloseContainer (IEventHandler<PlayerCloseContainerEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

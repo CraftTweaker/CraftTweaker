@@ -1318,4 +1318,23 @@ public class MTEventManager implements IEventManager {
     public void publishMinecartInteract(MinecartInteractEvent event) {
         elMinecartInteract.publish(event);
     }
+
+    // ###################################
+    // ###  PlayerCloseContainerEvent  ###
+    // ###################################
+
+    private final EventList<PlayerCloseContainerEvent> elPlayerCloseContainer = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerCloseContainer(IEventHandler<PlayerCloseContainerEvent> ev) {
+        return elPlayerCloseContainer.add(ev);
+    }
+
+    public boolean hasPlayerCloseContainer() {
+        return elPlayerCloseContainer.hasHandlers();
+    }
+
+    public void publishPlayerCloseContainer(PlayerCloseContainerEvent event) {
+        elPlayerCloseContainer.publish(event);
+    }
 }
