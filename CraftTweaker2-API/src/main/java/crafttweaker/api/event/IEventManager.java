@@ -167,6 +167,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onCriticalHit(IEventHandler<CriticalHitEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEnchantmentLevelSet(IEventHandler<EnchantmentLevelSetEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

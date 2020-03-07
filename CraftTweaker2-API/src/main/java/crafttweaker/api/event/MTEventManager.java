@@ -101,6 +101,7 @@ public class MTEventManager implements IEventManager {
         elPlayerRightClickBlock.clear();
         elAnimalTame.clear();
         elFarmlandTrample.clear();
+        elEnchantmentLevelSet.clear();
     }
     
     // ##########################
@@ -998,5 +999,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishCriticalHit (CriticalHitEvent event) {
         elCriticalHit.publish(event);
+    }
+
+    // ##################################
+    // ###  EnchantmentLevelSetEvent  ###
+    // ##################################
+
+    private final EventList<EnchantmentLevelSetEvent> elEnchantmentLevelSet = new EventList<>();
+
+    @Override
+    public IEventHandle onEnchantmentLevelSet(IEventHandler<EnchantmentLevelSetEvent> ev) {
+        return elEnchantmentLevelSet.add(ev);
+    }
+
+    public boolean hasEnchantmentLevelSet() {
+        return elEnchantmentLevelSet.hasHandlers();
+    }
+
+    public void publishEnchantmentLevelSet (EnchantmentLevelSetEvent event) {
+        elEnchantmentLevelSet.publish(event);
     }
 }
