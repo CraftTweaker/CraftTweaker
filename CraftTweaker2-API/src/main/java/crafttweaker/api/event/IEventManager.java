@@ -158,7 +158,9 @@ public interface IEventManager {
     
     @ZenMethod
     IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent> ev);
-    
+
+    @ZenMethod
+    IEventHandle onAnimalTame(IEventHandler<AnimalTameEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

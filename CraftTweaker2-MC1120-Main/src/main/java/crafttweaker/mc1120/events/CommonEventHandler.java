@@ -441,5 +441,9 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishAllowDespawn(new MCEntityLivingSpawnEvent(ev));
     }
     
-    
+    @SubscribeEvent
+    public void onAnimalTameEvent(AnimalTameEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasAnimalTame())
+            CrafttweakerImplementationAPI.events.publishAnimalTame(new MCAnimalTameEvent(ev));
+    }
 }

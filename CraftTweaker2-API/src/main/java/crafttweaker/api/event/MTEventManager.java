@@ -51,7 +51,8 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
-    
+    private final EventList<AnimalTameEvent> elAnimalTame = new EventList<>();
+
     
     /**
      * Clears all EventLists
@@ -100,6 +101,7 @@ public class MTEventManager implements IEventManager {
         elBlockHarvestDrops.clear();
         elPlayerBreakSpeed.clear();
         elPlayerRightClickBlock.clear();
+        elAnimalTame.clear();
     }
     
     // ##########################
@@ -942,5 +944,20 @@ public class MTEventManager implements IEventManager {
         elAllowDespawn.publish(event);
     }
     
-    
+    // ########################
+    // ### AnimalTameEvent  ###
+    // ########################
+
+    @Override
+    public IEventHandle onAnimalTame(IEventHandler<AnimalTameEvent> ev) {
+        return elAnimalTame.add(ev);
+    }
+
+    public boolean hasAnimalTame() {
+        return elAnimalTame.hasHandlers();
+    }
+
+    public void publishAnimalTame (AnimalTameEvent event) {
+        elAnimalTame.publish(event);
+    }
 }
