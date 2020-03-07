@@ -192,6 +192,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onBlockPlace (IEventHandler<BlockPlaceEvent> ev);
 
+    @ZenMethod
+    IEventHandle onMobGriefing (IEventHandler<MobGriefingEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

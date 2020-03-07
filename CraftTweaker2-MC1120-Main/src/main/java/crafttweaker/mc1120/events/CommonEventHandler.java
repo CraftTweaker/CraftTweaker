@@ -35,6 +35,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
+import net.minecraftforge.event.entity.EntityMobGriefingEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
@@ -509,5 +510,11 @@ public class CommonEventHandler {
     public void onBlockPlace (BlockEvent.PlaceEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasBlockPlace())
             CrafttweakerImplementationAPI.events.publishBlockPlace(new MCBlockPlaceEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onMobGriefing (EntityMobGriefingEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasMobGriefing())
+            CrafttweakerImplementationAPI.events.publishMobGriefing(new MCMobGriefingEvent(ev));
     }
 }

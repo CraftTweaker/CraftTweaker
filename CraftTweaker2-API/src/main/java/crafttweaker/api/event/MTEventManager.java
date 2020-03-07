@@ -109,6 +109,7 @@ public class MTEventManager implements IEventManager {
         elCropGrowPost.clear();
         elCropGrowPre.clear();
         elBlockPlace.clear();
+        elMobGriefing.clear();
     }
     
     // ##########################
@@ -1158,5 +1159,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishBlockPlace(BlockPlaceEvent event) {
         elBlockPlace.publish(event);
+    }
+
+    // #########################
+    // ###  MobGriefingEvent ###
+    // #########################
+
+    private final EventList<MobGriefingEvent> elMobGriefing = new EventList<>();
+
+    @Override
+    public IEventHandle onMobGriefing(IEventHandler<MobGriefingEvent> ev) {
+        return elMobGriefing.add(ev);
+    }
+
+    public boolean hasMobGriefing() {
+        return elMobGriefing.hasHandlers();
+    }
+
+    public void publishMobGriefing(MobGriefingEvent event) {
+        elMobGriefing.publish(event);
     }
 }
