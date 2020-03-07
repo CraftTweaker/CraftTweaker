@@ -199,9 +199,6 @@ public interface IEventManager {
     IEventHandle onEntityTravelToDimension (IEventHandler<EntityTravelToDimensionEvent> ev);
 
     @ZenMethod
-    IEventHandle onItemTooltip (IEventHandler<ItemTooltipEvent> ev);
-
-    @ZenMethod
     IEventHandle onLivingDestroyBlock (IEventHandler<LivingDestroyBlockEvent> ev);
 
     @ZenMethod
