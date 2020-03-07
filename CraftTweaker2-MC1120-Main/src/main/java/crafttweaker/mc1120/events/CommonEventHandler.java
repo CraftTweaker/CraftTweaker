@@ -50,6 +50,8 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -523,5 +525,13 @@ public class CommonEventHandler {
     public void onEntityTravelToDimension (EntityTravelToDimensionEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasEntityTravelToDimension())
             CrafttweakerImplementationAPI.events.publishEntityTravelToDimension(new MCEntityTravelToDimensionEvent(ev));
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT) // ???? TODO
+    public void onItemTooltip (ItemTooltipEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasItemTooltip()) {
+            CrafttweakerImplementationAPI.events.publishItemTooltip(new MCItemTooltipEvent(ev));
+        }
     }
 }

@@ -198,6 +198,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onEntityTravelToDimension (IEventHandler<EntityTravelToDimensionEvent> ev);
 
+    @ZenMethod
+    IEventHandle onItemTooltip (IEventHandler<ItemTooltipEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
