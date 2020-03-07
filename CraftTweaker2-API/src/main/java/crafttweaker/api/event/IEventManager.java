@@ -210,6 +210,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onLivingKnockBack (IEventHandler<LivingKnockBackEvent> ev);
 
+    @ZenMethod
+    IEventHandle onLootingLevel (IEventHandler<LootingLevelEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

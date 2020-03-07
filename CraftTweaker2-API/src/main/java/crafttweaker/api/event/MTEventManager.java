@@ -1279,4 +1279,23 @@ public class MTEventManager implements IEventManager {
     public void publishLivingKnockBack(LivingKnockBackEvent event) {
         elLivingKnockBack.publish(event);
     }
+
+    // ###########################
+    // ###  LootingLevelEvent  ###
+    // ###########################
+
+    private final EventList<LootingLevelEvent> elLootingLevel = new EventList<>();
+
+    @Override
+    public IEventHandle onLootingLevel(IEventHandler<LootingLevelEvent> ev) {
+        return elLootingLevel.add(ev);
+    }
+
+    public boolean hasLootingLevel() {
+        return elLootingLevel.hasHandlers();
+    }
+
+    public void publishLootingLevel(LootingLevelEvent event) {
+        elLootingLevel.publish(event);
+    }
 }

@@ -555,4 +555,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishLivingKnockBack(new MCLivingKnockBackEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onLootingLevel (LootingLevelEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLootingLevel()) {
+            CrafttweakerImplementationAPI.events.publishLootingLevel(new MCLootingLevelEvent(ev));
+        }
+    }
 }
