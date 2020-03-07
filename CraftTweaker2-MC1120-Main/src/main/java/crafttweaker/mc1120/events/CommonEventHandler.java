@@ -35,6 +35,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -465,5 +466,12 @@ public class CommonEventHandler {
     public void onEnchantmentLevelSet(EnchantmentLevelSetEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasEnchantmentLevelSet())
             CrafttweakerImplementationAPI.events.publishEnchantmentLevelSet(new MCEnchantmentLevelSetEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onEntityMount(EntityMountEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityMount())
+            CrafttweakerImplementationAPI.events.publishEntityMount(new MCEntityMountEvent(ev));
+
     }
 }

@@ -170,6 +170,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onEnchantmentLevelSet(IEventHandler<EnchantmentLevelSetEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityMount(IEventHandler<EntityMountEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

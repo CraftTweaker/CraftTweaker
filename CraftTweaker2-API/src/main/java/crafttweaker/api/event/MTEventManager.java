@@ -102,6 +102,7 @@ public class MTEventManager implements IEventManager {
         elAnimalTame.clear();
         elFarmlandTrample.clear();
         elEnchantmentLevelSet.clear();
+        elEntityMountEvent.clear();
     }
     
     // ##########################
@@ -1018,5 +1019,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishEnchantmentLevelSet (EnchantmentLevelSetEvent event) {
         elEnchantmentLevelSet.publish(event);
+    }
+
+    // ##########################
+    // ###  EntityMountEvent  ###
+    // ##########################
+
+    private final EventList<EntityMountEvent> elEntityMountEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityMount(IEventHandler<EntityMountEvent> ev) {
+        return elEntityMountEvent.add(ev);
+    }
+
+    public boolean hasEntityMount() {
+        return elEntityMountEvent.hasHandlers();
+    }
+
+    public void publishEntityMount(EntityMountEvent event) {
+        elEntityMountEvent.publish(event);
     }
 }
