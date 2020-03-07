@@ -189,6 +189,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onCropGrowPost (IEventHandler<CropGrowEventPost> ev);
 
+    @ZenMethod
+    IEventHandle onBlockPlace (IEventHandler<BlockPlaceEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

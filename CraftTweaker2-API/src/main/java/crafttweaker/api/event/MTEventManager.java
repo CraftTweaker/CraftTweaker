@@ -108,6 +108,7 @@ public class MTEventManager implements IEventManager {
         elItemFishedEvent.clear();
         elCropGrowPost.clear();
         elCropGrowPre.clear();
+        elBlockPlace.clear();
     }
     
     // ##########################
@@ -1121,9 +1122,9 @@ public class MTEventManager implements IEventManager {
         elCropGrowPre.publish(event);
     }
 
-    // ##########################
+    // ###########################
     // ###  CropGrowEventPost  ###
-    // ##########################
+    // ###########################
 
     private final EventList<CropGrowEventPost> elCropGrowPost = new EventList<>();
 
@@ -1138,5 +1139,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishCropGrowPost(CropGrowEventPost event) {
         elCropGrowPost.publish(event);
+    }
+
+    // #########################
+    // ###  BlockPlaceEvent  ###
+    // #########################
+
+    private final EventList<BlockPlaceEvent> elBlockPlace = new EventList<>();
+
+    @Override
+    public IEventHandle onBlockPlace(IEventHandler<BlockPlaceEvent> ev) {
+        return elBlockPlace.add(ev);
+    }
+
+    public boolean hasBlockPlace() {
+        return elBlockPlace.hasHandlers();
+    }
+
+    public void publishBlockPlace(BlockPlaceEvent event) {
+        elBlockPlace.publish(event);
     }
 }

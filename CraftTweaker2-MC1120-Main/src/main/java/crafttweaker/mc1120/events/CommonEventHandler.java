@@ -504,4 +504,10 @@ public class CommonEventHandler {
         if (CrafttweakerImplementationAPI.events.hasCropGrowPost())
             CrafttweakerImplementationAPI.events.publishCropGrowPost(new MCCropGrowEventPost(ev));
     }
+
+    @SubscribeEvent
+    public void onBlockPlace (BlockEvent.PlaceEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasBlockPlace())
+            CrafttweakerImplementationAPI.events.publishBlockPlace(new MCBlockPlaceEvent(ev));
+    }
 }
