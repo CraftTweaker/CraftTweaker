@@ -51,9 +51,7 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
-    private final EventList<AnimalTameEvent> elAnimalTame = new EventList<>();
 
-    
     /**
      * Clears all EventLists
      */
@@ -102,6 +100,7 @@ public class MTEventManager implements IEventManager {
         elPlayerBreakSpeed.clear();
         elPlayerRightClickBlock.clear();
         elAnimalTame.clear();
+        elFarmlandTrample.clear();
     }
     
     // ##########################
@@ -945,8 +944,10 @@ public class MTEventManager implements IEventManager {
     }
     
     // ########################
-    // ### AnimalTameEvent  ###
+    // ###  AnimalTameEvent ###
     // ########################
+
+    private final EventList<AnimalTameEvent> elAnimalTame = new EventList<>();
 
     @Override
     public IEventHandle onAnimalTame(IEventHandler<AnimalTameEvent> ev) {
@@ -959,5 +960,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishAnimalTame (AnimalTameEvent event) {
         elAnimalTame.publish(event);
+    }
+
+    // ##############################
+    // ###  FarmlandTrampleEvent  ###
+    // ##############################
+
+    private final EventList<BlockFarmlandTrampleEvent> elFarmlandTrample = new EventList<>();
+
+    @Override
+    public IEventHandle onFarmlandTrample(IEventHandler<BlockFarmlandTrampleEvent> ev) {
+        return elFarmlandTrample.add(ev);
+    }
+
+    public boolean hasFarmlandTrample() {
+        return elFarmlandTrample.hasHandlers();
+    }
+
+    public void publishFarmlandTrample(BlockFarmlandTrampleEvent event) {
+        elFarmlandTrample.publish(event);
     }
 }

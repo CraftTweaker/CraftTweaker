@@ -446,4 +446,10 @@ public class CommonEventHandler {
         if (CrafttweakerImplementationAPI.events.hasAnimalTame())
             CrafttweakerImplementationAPI.events.publishAnimalTame(new MCAnimalTameEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onFarmlandTrampleEvent(BlockEvent.FarmlandTrampleEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasFarmlandTrample())
+            CrafttweakerImplementationAPI.events.publishFarmlandTrample(new MCBlockFarmlandTrampleEvent(ev));
+    }
 }

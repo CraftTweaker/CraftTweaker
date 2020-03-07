@@ -161,6 +161,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onAnimalTame(IEventHandler<AnimalTameEvent> ev);
+
+    @ZenMethod
+    IEventHandle onFarmlandTrample(IEventHandler<BlockFarmlandTrampleEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
