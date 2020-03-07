@@ -207,6 +207,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onLivingExperienceDrop (IEventHandler<LivingExperienceDropEvent> ev);
 
+    @ZenMethod
+    IEventHandle onLivingKnockBack (IEventHandler<LivingKnockBackEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

@@ -548,4 +548,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishLivingExperienceDrop(new MCLivingExperienceDropEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onLivingKnockBackEvent (LivingKnockBackEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLivingKnockBack()) {
+            CrafttweakerImplementationAPI.events.publishLivingKnockBack(new MCLivingKnockBackEvent(ev));
+        }
+    }
 }

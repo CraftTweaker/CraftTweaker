@@ -114,6 +114,7 @@ public class MTEventManager implements IEventManager {
         elItemTooltip.clear();
         elLivingDestroyBlock.clear();
         elLivingExperienceDrop.clear();
+        elLivingKnockBack.clear();
     }
     
     // ##########################
@@ -1258,5 +1259,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishLivingExperienceDrop(LivingExperienceDropEvent event) {
         elLivingExperienceDrop.publish(event);
+    }
+
+    // ##############################
+    // ###  LivingKnockBackEvent  ###
+    // ##############################
+
+    private final EventList<LivingKnockBackEvent> elLivingKnockBack = new EventList<>();
+
+    @Override
+    public IEventHandle onLivingKnockBack(IEventHandler<LivingKnockBackEvent> ev) {
+        return elLivingKnockBack.add(ev);
+    }
+
+    public boolean hasLivingKnockBack() {
+        return elLivingKnockBack.hasHandlers();
+    }
+
+    public void publishLivingKnockBack(LivingKnockBackEvent event) {
+        elLivingKnockBack.publish(event);
     }
 }
