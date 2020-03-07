@@ -180,6 +180,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onExplosionDetonate(IEventHandler<ExplosionDetonateEvent> ev);
 
+    @ZenMethod
+    IEventHandle onItemFished (IEventHandler<ItemFishedEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

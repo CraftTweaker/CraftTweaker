@@ -1079,4 +1079,23 @@ public class MTEventManager implements IEventManager {
     public void publishExplosionDetonate(ExplosionDetonateEvent event) {
         elExplosionDetonateEvent.publish(event);
     }
+
+    // #########################
+    // ###  ItemFishedEvent  ###
+    // #########################
+
+    private final EventList<ItemFishedEvent> elItemFishedEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onItemFished(IEventHandler<ItemFishedEvent> ev) {
+        return elItemFishedEvent.add(ev);
+    }
+
+    public boolean hasItemFished() {
+        return elItemFishedEvent.hasHandlers();
+    }
+
+    public void publishItemFished(ItemFishedEvent event) {
+        elItemFishedEvent.publish(event);
+    }
 }

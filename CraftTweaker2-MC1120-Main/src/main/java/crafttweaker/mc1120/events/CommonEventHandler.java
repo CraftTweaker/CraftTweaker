@@ -486,4 +486,10 @@ public class CommonEventHandler {
         if (CrafttweakerImplementationAPI.events.hasExplosionStart())
             CrafttweakerImplementationAPI.events.publishExplosionStart(new MCExplosionStartEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onItemFished(ItemFishedEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasItemFished())
+            CrafttweakerImplementationAPI.events.publishItemFished(new MCItemFishedEvent(ev));
+    }
 }
