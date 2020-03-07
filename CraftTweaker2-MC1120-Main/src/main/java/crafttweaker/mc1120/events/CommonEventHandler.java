@@ -43,6 +43,7 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -472,6 +473,17 @@ public class CommonEventHandler {
     public void onEntityMount(EntityMountEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasEntityMount())
             CrafttweakerImplementationAPI.events.publishEntityMount(new MCEntityMountEvent(ev));
+    }
 
+    @SubscribeEvent
+    public void onExplosionDetonate(ExplosionEvent.Detonate ev) {
+        if (CrafttweakerImplementationAPI.events.hasExplosionDetonate())
+            CrafttweakerImplementationAPI.events.publishExplosionDetonate(new MCExplosionDetonateEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onExplosionStart(ExplosionEvent.Start ev) {
+        if (CrafttweakerImplementationAPI.events.hasExplosionStart())
+            CrafttweakerImplementationAPI.events.publishExplosionStart(new MCExplosionStartEvent(ev));
     }
 }

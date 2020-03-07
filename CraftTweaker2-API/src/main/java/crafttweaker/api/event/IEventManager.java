@@ -173,6 +173,13 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onEntityMount(IEventHandler<EntityMountEvent> ev);
+
+    @ZenMethod
+    IEventHandle onExplosionStart(IEventHandler<ExplosionStartEvent> ev);
+
+    @ZenMethod
+    IEventHandle onExplosionDetonate(IEventHandler<ExplosionDetonateEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

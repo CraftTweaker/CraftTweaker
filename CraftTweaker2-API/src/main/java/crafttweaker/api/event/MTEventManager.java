@@ -103,6 +103,8 @@ public class MTEventManager implements IEventManager {
         elFarmlandTrample.clear();
         elEnchantmentLevelSet.clear();
         elEntityMountEvent.clear();
+        elExplosionStartEvent.clear();
+        elExplosionDetonateEvent.clear();
     }
     
     // ##########################
@@ -1038,5 +1040,43 @@ public class MTEventManager implements IEventManager {
 
     public void publishEntityMount(EntityMountEvent event) {
         elEntityMountEvent.publish(event);
+    }
+
+    // #############################
+    // ###  ExplosionStartEvent  ###
+    // #############################
+
+    private final EventList<ExplosionStartEvent> elExplosionStartEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onExplosionStart(IEventHandler<ExplosionStartEvent> ev) {
+        return elExplosionStartEvent.add(ev);
+    }
+
+    public boolean hasExplosionStart() {
+        return elExplosionStartEvent.hasHandlers();
+    }
+
+    public void publishExplosionStart(ExplosionStartEvent event) {
+        elExplosionStartEvent.publish(event);
+    }
+
+    // ################################
+    // ###  ExplosionDetonateEvent  ###
+    // ################################
+
+    private final EventList<ExplosionDetonateEvent> elExplosionDetonateEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onExplosionDetonate(IEventHandler<ExplosionDetonateEvent> ev) {
+        return elExplosionDetonateEvent.add(ev);
+    }
+
+    public boolean hasExplosionDetonate() {
+        return elExplosionDetonateEvent.hasHandlers();
+    }
+
+    public void publishExplosionDetonate(ExplosionDetonateEvent event) {
+        elExplosionDetonateEvent.publish(event);
     }
 }
