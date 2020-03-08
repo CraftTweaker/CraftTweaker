@@ -228,6 +228,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerLeftClickBlock (IEventHandler<PlayerLeftClickBlockEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPlayerRightClickEmpty (IEventHandler<PlayerRightClickEmptyEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

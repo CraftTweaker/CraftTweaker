@@ -46,17 +46,7 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     public IBlockPos getPosition() {
         return CraftTweakerMC.getIBlockPos(event.getPos());
     }
-    
-    @Override
-    public boolean isCanceled() {
-        return event.isCanceled();
-    }
-    
-    @Override
-    public void setCanceled(boolean canceled) {
-        event.setCanceled(canceled);
-    }
-    
+
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.getEntityPlayer());

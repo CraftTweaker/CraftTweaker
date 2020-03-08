@@ -598,4 +598,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishPlayerLeftClickBlock(new MCPlayerLeftClickBlockEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerRightClickEmpty (PlayerInteractEvent.RightClickEmpty ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerRightClickEmpty()) {
+            CrafttweakerImplementationAPI.events.publishPlayerRightClickEmpty(new MCPlayerRightClickEmptyEvent(ev));
+        }
+    }
 }

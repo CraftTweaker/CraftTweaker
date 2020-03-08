@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
 /**
  * @author Stan
  */
-@ZenClass("crafttweaker.event.PlayerInteractEntityEvent")
+@ZenClass("crafttweaker.event.PlayerLeftClickBlockEvent")
 @ZenRegister
 public interface PlayerLeftClickBlockEvent extends PlayerInteractEvent {
     

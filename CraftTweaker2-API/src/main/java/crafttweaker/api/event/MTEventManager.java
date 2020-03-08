@@ -120,6 +120,7 @@ public class MTEventManager implements IEventManager {
         elPlayerItemPickup.clear();
         elPlayerVisibility.clear();
         elPlayerLeftClickBlock.clear();
+        elPlayerRightClickEmpty.clear();
     }
     
     // ##########################
@@ -1397,5 +1398,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerLeftClickBlock(PlayerLeftClickBlockEvent event) {
         elPlayerLeftClickBlock.publish(event);
+    }
+
+    // ###################################
+    // ###  PlayerRightClickEmptyEvent  ###
+    // ###################################
+
+    private final EventList<PlayerRightClickEmptyEvent> elPlayerRightClickEmpty = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerRightClickEmpty(IEventHandler<PlayerRightClickEmptyEvent> ev) {
+        return elPlayerRightClickEmpty.add(ev);
+    }
+
+    public boolean hasPlayerRightClickEmpty() {
+        return elPlayerRightClickEmpty.hasHandlers();
+    }
+
+    public void publishPlayerRightClickEmpty(PlayerRightClickEmptyEvent event) {
+        elPlayerRightClickEmpty.publish(event);
     }
 }

@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
+import crafttweaker.api.event.IEventCancelable;
 import crafttweaker.api.event.PlayerLeftClickBlockEvent;
 import crafttweaker.api.event.PlayerRightClickBlockEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -7,7 +8,7 @@ import crafttweaker.api.world.IVector3d;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class MCPlayerLeftClickBlockEvent extends MCPlayerInteractEvent implements PlayerLeftClickBlockEvent {
+public class MCPlayerLeftClickBlockEvent extends MCPlayerInteractEvent implements PlayerLeftClickBlockEvent, IEventCancelable {
 
     private final PlayerInteractEvent.LeftClickBlock event;
 
@@ -40,4 +41,15 @@ public class MCPlayerLeftClickBlockEvent extends MCPlayerInteractEvent implement
     public void setUseItem(String useItem) {
         event.setUseItem(Event.Result.valueOf(useItem));
     }
+
+    @Override
+    public boolean isCanceled() {
+        return event.isCanceled();
+    }
+
+    @Override
+    public void setCanceled(boolean canceled) {
+        event.setCanceled(canceled);
+    }
+
 }

@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.*;
  */
 @ZenClass("crafttweaker.event.PlayerInteractEvent")
 @ZenRegister
-public interface PlayerInteractEvent extends IEventCancelable, IPlayerEvent, IEventPositionable {
+public interface PlayerInteractEvent extends IPlayerEvent, IEventPositionable {
 
     @ZenMethod
     void damageItem(int amount);
