@@ -594,6 +594,8 @@ public class CommonEventHandler {
 
     @SubscribeEvent
     public void onPlayerLeftClickBlock (PlayerInteractEvent.LeftClickBlock ev) {
-
+        if (CrafttweakerImplementationAPI.events.hasPlayerLeftClickBlock()) {
+            CrafttweakerImplementationAPI.events.publishPlayerLeftClickBlock(new MCPlayerLeftClickBlockEvent(ev));
+        }
     }
 }
