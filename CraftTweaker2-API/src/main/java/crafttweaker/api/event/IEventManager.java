@@ -243,6 +243,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onSleepingTimeCheck (IEventHandler<SleepingTimeCheckEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPotionBrewPre (IEventHandler<PotionBrewPreEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionBrewPost (IEventHandler<PotionBrewPostEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

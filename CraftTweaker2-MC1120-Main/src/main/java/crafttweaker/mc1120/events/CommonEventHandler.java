@@ -34,6 +34,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
+import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.EntityMobGriefingEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
@@ -632,6 +633,20 @@ public class CommonEventHandler {
     public void onSleepingTimeCheck (SleepingTimeCheckEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasSleepingTimeCheck()) {
             CrafttweakerImplementationAPI.events.publishSleepingTimeCheck(new MCSleepingTimeCheckEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPotionBrewPre (PotionBrewEvent.Pre ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionBrewPre()) {
+            CrafttweakerImplementationAPI.events.publishPotionBrewPre(new MCPotionBrewPreEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPotionBrewPost (PotionBrewEvent.Post ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionBrewPost()) {
+            CrafttweakerImplementationAPI.events.publishPotionBrewPost(new MCPotionBrewPostEvent(ev));
         }
     }
 }

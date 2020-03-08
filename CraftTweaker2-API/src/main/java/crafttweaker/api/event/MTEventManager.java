@@ -125,6 +125,8 @@ public class MTEventManager implements IEventManager {
         elSaplingGrowTree.clear();
         elSleepingLocationCheck.clear();
         elSleepingTimeCheck.clear();
+        elPotionBrewPre.clear();
+        elPotionBrewPost.clear();
     }
     
     // ##########################
@@ -1480,9 +1482,9 @@ public class MTEventManager implements IEventManager {
         elSleepingLocationCheck.publish(event);
     }
 
-    // ####################################
+    // ################################
     // ###  SleepingTimeCheckEvent  ###
-    // ####################################
+    // ################################
 
     private final EventList<SleepingTimeCheckEvent> elSleepingTimeCheck = new EventList<>();
 
@@ -1497,5 +1499,43 @@ public class MTEventManager implements IEventManager {
 
     public void publishSleepingTimeCheck(SleepingTimeCheckEvent event) {
         elSleepingTimeCheck.publish(event);
+    }
+
+    // ############################
+    // ###  PotionBrewPreEvent  ###
+    // ############################
+
+    private final EventList<PotionBrewPreEvent> elPotionBrewPre = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionBrewPre(IEventHandler<PotionBrewPreEvent> ev) {
+        return elPotionBrewPre.add(ev);
+    }
+
+    public boolean hasPotionBrewPre() {
+        return elPotionBrewPre.hasHandlers();
+    }
+
+    public void publishPotionBrewPre(PotionBrewPreEvent event) {
+        elPotionBrewPre.publish(event);
+    }
+
+    // #############################
+    // ###  PotionBrewPostEvent  ###
+    // #############################
+
+    private final EventList<PotionBrewPostEvent> elPotionBrewPost = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionBrewPost(IEventHandler<PotionBrewPostEvent> ev) {
+        return elPotionBrewPost.add(ev);
+    }
+
+    public boolean hasPotionBrewPost() {
+        return elPotionBrewPost.hasHandlers();
+    }
+
+    public void publishPotionBrewPost(PotionBrewPostEvent event) {
+        elPotionBrewPost.publish(event);
     }
 }
