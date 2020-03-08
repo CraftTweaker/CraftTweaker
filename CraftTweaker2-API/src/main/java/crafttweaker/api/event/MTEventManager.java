@@ -122,6 +122,7 @@ public class MTEventManager implements IEventManager {
         elPlayerLeftClickBlock.clear();
         elPlayerRightClickEmpty.clear();
         elPlayerRightClickItem.clear();
+        elSaplingGrowTree.clear();
     }
     
     // ##########################
@@ -1437,5 +1438,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerRightClickItem(PlayerRightClickItemEvent event) {
         elPlayerRightClickItem.publish(event);
+    }
+
+    // ####################################
+    // ###  SaplingGrowTreeEvent  ###
+    // ####################################
+
+    private final EventList<SaplingGrowTreeEvent> elSaplingGrowTree = new EventList<>();
+
+    @Override
+    public IEventHandle onSaplingGrowTree(IEventHandler<SaplingGrowTreeEvent> ev) {
+        return elSaplingGrowTree.add(ev);
+    }
+
+    public boolean hasSaplingGrowTree() {
+        return elSaplingGrowTree.hasHandlers();
+    }
+
+    public void publishSaplingGrowTree(SaplingGrowTreeEvent event) {
+        elSaplingGrowTree.publish(event);
     }
 }

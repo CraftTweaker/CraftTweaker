@@ -234,7 +234,8 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerRightClickItem (IEventHandler<PlayerRightClickItemEvent> ev);
 
-
+    @ZenMethod
+    IEventHandle onSaplingGrowTree (IEventHandler<SaplingGrowTreeEvent> ev);
 
     /*
      *
