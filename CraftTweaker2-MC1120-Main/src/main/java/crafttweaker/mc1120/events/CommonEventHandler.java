@@ -591,4 +591,9 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishPlayerVisibility(new MCPlayerVisibilityEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerLeftClickBlock (PlayerInteractEvent.LeftClickBlock ev) {
+
+    }
 }

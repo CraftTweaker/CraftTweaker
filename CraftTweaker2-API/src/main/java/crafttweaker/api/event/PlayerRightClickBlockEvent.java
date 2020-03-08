@@ -22,6 +22,4 @@ public interface PlayerRightClickBlockEvent extends PlayerInteractEvent {
     
     @ZenSetter("useItem")
     void setUseItem(String useItem);
-    
-    
 }

@@ -119,6 +119,7 @@ public class MTEventManager implements IEventManager {
         elPlayerCloseContainer.clear();
         elPlayerItemPickup.clear();
         elPlayerVisibility.clear();
+        elPlayerLeftClickBlock.clear();
     }
     
     // ##########################
@@ -1377,5 +1378,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerVisibility(PlayerVisibilityEvent event) {
         elPlayerVisibility.publish(event);
+    }
+
+    // ###################################
+    // ###  PlayerLeftClickBlockEvent  ###
+    // ###################################
+
+    private final EventList<PlayerLeftClickBlockEvent> elPlayerLeftClickBlock = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerLeftClickBlock(IEventHandler<PlayerLeftClickBlockEvent> ev) {
+        return elPlayerLeftClickBlock.add(ev);
+    }
+
+    public boolean hasPlayerLeftClickBlock() {
+        return elPlayerLeftClickBlock.hasHandlers();
+    }
+
+    public void publishPlayerLeftClickBlock(PlayerLeftClickBlockEvent event) {
+        elPlayerLeftClickBlock.publish(event);
     }
 }
