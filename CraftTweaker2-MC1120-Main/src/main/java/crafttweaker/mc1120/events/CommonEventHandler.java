@@ -577,4 +577,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishPlayerCloseContainer(new MCPlayerCloseContainerEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerItemPickup (PlayerEvent.ItemPickupEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerItemPickup()) {
+            CrafttweakerImplementationAPI.events.publishPlayerItemPickup(new MCPlayerItemPickupEvent(ev));
+        }
+    }
 }

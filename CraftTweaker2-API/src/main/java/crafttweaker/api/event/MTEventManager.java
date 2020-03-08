@@ -116,6 +116,8 @@ public class MTEventManager implements IEventManager {
         elLivingKnockBack.clear();
         elMinecartCollision.clear();
         elMinecartInteract.clear();
+        elPlayerCloseContainer.clear();
+        elPlayerItemPickup.clear();
     }
     
     // ##########################
@@ -1336,5 +1338,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerCloseContainer(PlayerCloseContainerEvent event) {
         elPlayerCloseContainer.publish(event);
+    }
+
+    // ###################################
+    // ###  PlayerItemPickupEvent  ###
+    // ###################################
+
+    private final EventList<PlayerItemPickupEvent> elPlayerItemPickup = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerItemPickup(IEventHandler<PlayerItemPickupEvent> ev) {
+        return elPlayerItemPickup.add(ev);
+    }
+
+    public boolean hasPlayerItemPickup() {
+        return elPlayerItemPickup.hasHandlers();
+    }
+
+    public void publishPlayerItemPickup(PlayerItemPickupEvent event) {
+        elPlayerItemPickup.publish(event);
     }
 }

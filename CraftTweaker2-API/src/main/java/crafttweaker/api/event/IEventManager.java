@@ -219,6 +219,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerCloseContainer (IEventHandler<PlayerCloseContainerEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPlayerItemPickup (IEventHandler<PlayerItemPickupEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
