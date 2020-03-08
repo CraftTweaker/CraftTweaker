@@ -237,6 +237,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onSaplingGrowTree (IEventHandler<SaplingGrowTreeEvent> ev);
 
+    @ZenMethod
+    IEventHandle onSleepingLocationCheck (IEventHandler<SleepingLocationCheckEvent> ev);
+
+    @ZenMethod
+    IEventHandle onSleepingTimeCheck (IEventHandler<SleepingTimeCheckEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

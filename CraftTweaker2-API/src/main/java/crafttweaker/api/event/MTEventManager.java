@@ -123,6 +123,8 @@ public class MTEventManager implements IEventManager {
         elPlayerRightClickEmpty.clear();
         elPlayerRightClickItem.clear();
         elSaplingGrowTree.clear();
+        elSleepingLocationCheck.clear();
+        elSleepingTimeCheck.clear();
     }
     
     // ##########################
@@ -1440,9 +1442,9 @@ public class MTEventManager implements IEventManager {
         elPlayerRightClickItem.publish(event);
     }
 
-    // ####################################
+    // ##############################
     // ###  SaplingGrowTreeEvent  ###
-    // ####################################
+    // ##############################
 
     private final EventList<SaplingGrowTreeEvent> elSaplingGrowTree = new EventList<>();
 
@@ -1457,5 +1459,43 @@ public class MTEventManager implements IEventManager {
 
     public void publishSaplingGrowTree(SaplingGrowTreeEvent event) {
         elSaplingGrowTree.publish(event);
+    }
+
+    // ####################################
+    // ###  SleepingLocationCheckEvent  ###
+    // ####################################
+
+    private final EventList<SleepingLocationCheckEvent> elSleepingLocationCheck = new EventList<>();
+
+    @Override
+    public IEventHandle onSleepingLocationCheck(IEventHandler<SleepingLocationCheckEvent> ev) {
+        return elSleepingLocationCheck.add(ev);
+    }
+
+    public boolean hasSleepingLocationCheck() {
+        return elSleepingLocationCheck.hasHandlers();
+    }
+
+    public void publishSleepingLocationCheck(SleepingLocationCheckEvent event) {
+        elSleepingLocationCheck.publish(event);
+    }
+
+    // ####################################
+    // ###  SleepingTimeCheckEvent  ###
+    // ####################################
+
+    private final EventList<SleepingTimeCheckEvent> elSleepingTimeCheck = new EventList<>();
+
+    @Override
+    public IEventHandle onSleepingTimeCheck(IEventHandler<SleepingTimeCheckEvent> ev) {
+        return elSleepingTimeCheck.add(ev);
+    }
+
+    public boolean hasSleepingTimeCheck() {
+        return elSleepingTimeCheck.hasHandlers();
+    }
+
+    public void publishSleepingTimeCheck(SleepingTimeCheckEvent event) {
+        elSleepingTimeCheck.publish(event);
     }
 }

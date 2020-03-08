@@ -620,4 +620,18 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishSaplingGrowTree(new MCSaplingGrowTreeEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onSleepingLocationCheck (SleepingLocationCheckEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasSleepingLocationCheck()) {
+            CrafttweakerImplementationAPI.events.publishSleepingLocationCheck(new MCSleepingLocationCheckEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onSleepingTimeCheck (SleepingTimeCheckEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasSleepingTimeCheck()) {
+            CrafttweakerImplementationAPI.events.publishSleepingTimeCheck(new MCSleepingTimeCheckEvent(ev));
+        }
+    }
 }
