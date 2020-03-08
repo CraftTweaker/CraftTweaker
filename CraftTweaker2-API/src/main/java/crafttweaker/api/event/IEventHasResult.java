@@ -6,7 +6,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 import stanhebben.zenscript.annotations.ZenSetter;
 
-@ZenClass("crafttweaker.event.IEventCancelable")
+@ZenClass("crafttweaker.event.IEventHasResult")
 @ZenRegister
 public interface IEventHasResult {
     @ZenMethod
