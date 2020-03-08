@@ -36,10 +36,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
-import net.minecraftforge.event.entity.EntityMobGriefingEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
+import net.minecraftforge.event.entity.*;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -647,6 +644,27 @@ public class CommonEventHandler {
     public void onPotionBrewPost (PotionBrewEvent.Post ev) {
         if (CrafttweakerImplementationAPI.events.hasPotionBrewPost()) {
             CrafttweakerImplementationAPI.events.publishPotionBrewPost(new MCPotionBrewPostEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onProjectileImpactArrow (ProjectileImpactEvent.Arrow ev) {
+        if (CrafttweakerImplementationAPI.events.hasProjectileImpactArrow()) {
+            CrafttweakerImplementationAPI.events.publishProjectileImpactArrow(new MCProjectileImpactArrowEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onProjectileImpactFireball (ProjectileImpactEvent.Fireball ev) {
+        if (CrafttweakerImplementationAPI.events.hasProjectileImpactFireball()) {
+            CrafttweakerImplementationAPI.events.publishProjectileImpactFireball(new MCProjectileImpactFireballEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onProjectileImpactThrowable (ProjectileImpactEvent.Throwable ev) {
+        if (CrafttweakerImplementationAPI.events.hasProjectileImpactThrowable()) {
+            CrafttweakerImplementationAPI.events.publishProjectileImpactThrowable(new MCProjectileImpactThrowableEvent(ev));
         }
     }
 }

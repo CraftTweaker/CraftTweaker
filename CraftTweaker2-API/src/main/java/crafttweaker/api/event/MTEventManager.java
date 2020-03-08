@@ -127,6 +127,9 @@ public class MTEventManager implements IEventManager {
         elSleepingTimeCheck.clear();
         elPotionBrewPre.clear();
         elPotionBrewPost.clear();
+        elProjectileImpactArrow.clear();
+        elProjectileImpactFireball.clear();
+        elProjectileImpactThrowable.clear();
     }
     
     // ##########################
@@ -1537,5 +1540,62 @@ public class MTEventManager implements IEventManager {
 
     public void publishPotionBrewPost(PotionBrewPostEvent event) {
         elPotionBrewPost.publish(event);
+    }
+
+    // ####################################
+    // ###  ProjectileImpactArrowEvent  ###
+    // ####################################
+
+    private final EventList<ProjectileImpactArrowEvent> elProjectileImpactArrow = new EventList<>();
+
+    @Override
+    public IEventHandle onProjectileImpactArrow(IEventHandler<ProjectileImpactArrowEvent> ev) {
+        return elProjectileImpactArrow.add(ev);
+    }
+
+    public boolean hasProjectileImpactArrow() {
+        return elProjectileImpactArrow.hasHandlers();
+    }
+
+    public void publishProjectileImpactArrow(ProjectileImpactArrowEvent event) {
+        elProjectileImpactArrow.publish(event);
+    }
+
+    // #######################################
+    // ###  ProjectileImpactFireballEvent  ###
+    // #######################################
+
+    private final EventList<ProjectileImpactFireballEvent> elProjectileImpactFireball = new EventList<>();
+
+    @Override
+    public IEventHandle onProjectileImpactFireball(IEventHandler<ProjectileImpactFireballEvent> ev) {
+        return elProjectileImpactFireball.add(ev);
+    }
+
+    public boolean hasProjectileImpactFireball() {
+        return elProjectileImpactFireball.hasHandlers();
+    }
+
+    public void publishProjectileImpactFireball(ProjectileImpactFireballEvent event) {
+        elProjectileImpactFireball.publish(event);
+    }
+
+    // ########################################
+    // ###  ProjectileImpactThrowableEvent  ###
+    // ########################################
+
+    private final EventList<ProjectileImpactThrowableEvent> elProjectileImpactThrowable = new EventList<>();
+
+    @Override
+    public IEventHandle onProjectileImpactThrowable(IEventHandler<ProjectileImpactThrowableEvent> ev) {
+        return elProjectileImpactThrowable.add(ev);
+    }
+
+    public boolean hasProjectileImpactThrowable() {
+        return elProjectileImpactThrowable.hasHandlers();
+    }
+
+    public void publishProjectileImpactThrowable(ProjectileImpactThrowableEvent event) {
+        elProjectileImpactThrowable.publish(event);
     }
 }

@@ -249,6 +249,14 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPotionBrewPost (IEventHandler<PotionBrewPostEvent> ev);
 
+    @ZenMethod
+    IEventHandle onProjectileImpactArrow (IEventHandler<ProjectileImpactArrowEvent> ev);
+
+    @ZenMethod
+    IEventHandle onProjectileImpactFireball (IEventHandler<ProjectileImpactFireballEvent> ev);
+
+    @ZenMethod
+    IEventHandle onProjectileImpactThrowable (IEventHandler<ProjectileImpactThrowableEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
