@@ -222,6 +222,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerItemPickup (IEventHandler<PlayerItemPickupEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPlayerVisibility (IEventHandler<PlayerVisibilityEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

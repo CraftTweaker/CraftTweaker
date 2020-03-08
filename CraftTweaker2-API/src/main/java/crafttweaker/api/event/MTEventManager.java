@@ -118,6 +118,7 @@ public class MTEventManager implements IEventManager {
         elMinecartInteract.clear();
         elPlayerCloseContainer.clear();
         elPlayerItemPickup.clear();
+        elPlayerVisibility.clear();
     }
     
     // ##########################
@@ -1340,9 +1341,9 @@ public class MTEventManager implements IEventManager {
         elPlayerCloseContainer.publish(event);
     }
 
-    // ###################################
+    // ###############################
     // ###  PlayerItemPickupEvent  ###
-    // ###################################
+    // ###############################
 
     private final EventList<PlayerItemPickupEvent> elPlayerItemPickup = new EventList<>();
 
@@ -1357,5 +1358,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerItemPickup(PlayerItemPickupEvent event) {
         elPlayerItemPickup.publish(event);
+    }
+
+    // ###############################
+    // ###  PlayerVisibilityEvent  ###
+    // ###############################
+
+    private final EventList<PlayerVisibilityEvent> elPlayerVisibility = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerVisibility(IEventHandler<PlayerVisibilityEvent> ev) {
+        return elPlayerVisibility.add(ev);
+    }
+
+    public boolean hasPlayerVisibility() {
+        return elPlayerVisibility.hasHandlers();
+    }
+
+    public void publishPlayerVisibility(PlayerVisibilityEvent event) {
+        elPlayerVisibility.publish(event);
     }
 }

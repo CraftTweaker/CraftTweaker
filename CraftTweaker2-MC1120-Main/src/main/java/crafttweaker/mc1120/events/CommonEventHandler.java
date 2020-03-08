@@ -584,4 +584,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishPlayerItemPickup(new MCPlayerItemPickupEvent(ev));
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerVisibility (net.minecraftforge.event.entity.player.PlayerEvent.Visibility ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerVisibility()) {
+            CrafttweakerImplementationAPI.events.publishPlayerVisibility(new MCPlayerVisibilityEvent(ev));
+        }
+    }
 }
