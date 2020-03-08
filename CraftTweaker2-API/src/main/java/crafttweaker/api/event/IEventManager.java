@@ -231,6 +231,11 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerRightClickEmpty (IEventHandler<PlayerRightClickEmptyEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPlayerRightClickItem (IEventHandler<PlayerRightClickItemEvent> ev);
+
+
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
