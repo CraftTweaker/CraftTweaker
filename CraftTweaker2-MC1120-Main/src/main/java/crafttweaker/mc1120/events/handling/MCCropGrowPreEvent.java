@@ -1,13 +1,13 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.api.event.CropGrowEventPre;
+import crafttweaker.api.event.CropGrowPreEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class MCCropGrowEventPre extends MCBlockEvent implements CropGrowEventPre {
+public class MCCropGrowPreEvent extends MCBlockEvent implements CropGrowPreEvent {
   private BlockEvent.CropGrowEvent.Pre event;
 
-  public MCCropGrowEventPre(BlockEvent.CropGrowEvent.Pre event) {
+  public MCCropGrowPreEvent(BlockEvent.CropGrowEvent.Pre event) {
     super(event);
     this.event = event;
   }

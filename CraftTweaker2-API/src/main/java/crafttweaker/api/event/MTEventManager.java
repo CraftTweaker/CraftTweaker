@@ -1128,10 +1128,10 @@ public class MTEventManager implements IEventManager {
     // ###  CropGrowEventPre  ###
     // ##########################
 
-    private final EventList<CropGrowEventPre> elCropGrowPre = new EventList<>();
+    private final EventList<CropGrowPreEvent> elCropGrowPre = new EventList<>();
 
     @Override
-    public IEventHandle onCropGrowPre(IEventHandler<CropGrowEventPre> ev) {
+    public IEventHandle onCropGrowPre(IEventHandler<CropGrowPreEvent> ev) {
         return elCropGrowPre.add(ev);
     }
 
@@ -1139,7 +1139,7 @@ public class MTEventManager implements IEventManager {
         return elCropGrowPre.hasHandlers();
     }
 
-    public void publishCropGrowPre(CropGrowEventPre event) {
+    public void publishCropGrowPre(CropGrowPreEvent event) {
         elCropGrowPre.publish(event);
     }
 
@@ -1147,10 +1147,10 @@ public class MTEventManager implements IEventManager {
     // ###  CropGrowEventPost  ###
     // ###########################
 
-    private final EventList<CropGrowEventPost> elCropGrowPost = new EventList<>();
+    private final EventList<CropGrowPostEvent> elCropGrowPost = new EventList<>();
 
     @Override
-    public IEventHandle onCropGrowPost(IEventHandler<CropGrowEventPost> ev) {
+    public IEventHandle onCropGrowPost(IEventHandler<CropGrowPostEvent> ev) {
         return elCropGrowPost.add(ev);
     }
 
@@ -1158,7 +1158,7 @@ public class MTEventManager implements IEventManager {
         return elCropGrowPost.hasHandlers();
     }
 
-    public void publishCropGrowPost(CropGrowEventPost event) {
+    public void publishCropGrowPost(CropGrowPostEvent event) {
         elCropGrowPost.publish(event);
     }
 

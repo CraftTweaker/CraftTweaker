@@ -184,10 +184,10 @@ public interface IEventManager {
     IEventHandle onItemFished (IEventHandler<ItemFishedEvent> ev);
 
     @ZenMethod
-    IEventHandle onCropGrowPre (IEventHandler<CropGrowEventPre> ev);
+    IEventHandle onCropGrowPre (IEventHandler<CropGrowPreEvent> ev);
 
     @ZenMethod
-    IEventHandle onCropGrowPost (IEventHandler<CropGrowEventPost> ev);
+    IEventHandle onCropGrowPost (IEventHandler<CropGrowPostEvent> ev);
 
     @ZenMethod
     IEventHandle onBlockPlace (IEventHandler<BlockPlaceEvent> ev);
@@ -266,10 +266,6 @@ public interface IEventManager {
      * IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
      *
      * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
-     *
-     * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler ev);
-     *
-     * IEventHandle onMinecartInteract(IMinecartInteractEventHandler ev);
      *
      */
 }

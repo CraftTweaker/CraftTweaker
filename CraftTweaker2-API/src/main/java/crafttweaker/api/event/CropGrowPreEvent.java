@@ -5,5 +5,5 @@ import stanhebben.zenscript.annotations.ZenClass;
 
 @ZenClass("crafttweaker.event.CropGrowEventPre")
 @ZenRegister
-public interface CropGrowEventPre extends IBlockEvent, IEventHasResult {
+public interface CropGrowPreEvent extends IBlockEvent, IEventHasResult {
 }

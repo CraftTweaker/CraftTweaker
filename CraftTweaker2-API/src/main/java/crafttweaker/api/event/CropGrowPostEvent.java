@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenClass("crafttweaker.event.CropGrowEventPost")
 @ZenRegister
-public interface CropGrowEventPost extends IBlockEvent {
+public interface CropGrowPostEvent extends IBlockEvent {
   @ZenGetter("originalBlockState")
   IBlockState getOriginalBlockState();
 
