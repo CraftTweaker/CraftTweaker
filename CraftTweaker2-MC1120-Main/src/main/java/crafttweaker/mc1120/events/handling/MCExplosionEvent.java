@@ -43,14 +43,4 @@ public class MCExplosionEvent implements IExplosionEvent {
   public double getZ() {
     return pos.z;
   }
-
-  @Override
-  public boolean isCanceled() {
-    return event.isCanceled();
-  }
-
-  @Override
-  public void setCanceled(boolean canceled) {
-    event.setCanceled(canceled);
-  }
 }

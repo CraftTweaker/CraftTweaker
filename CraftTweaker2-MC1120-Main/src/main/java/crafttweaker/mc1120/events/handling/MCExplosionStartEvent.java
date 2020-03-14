@@ -10,4 +10,14 @@ public class MCExplosionStartEvent extends MCExplosionEvent implements Explosion
     super(event);
     this.event = event;
   }
+
+  @Override
+  public boolean isCanceled() {
+    return event.isCanceled();
+  }
+
+  @Override
+  public void setCanceled(boolean canceled) {
+    event.setCanceled(canceled);
+  }
 }
