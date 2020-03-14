@@ -42,6 +42,14 @@ public interface IItemStack extends IIngredient {
      */
     @ZenGetter("definition")
     IItemDefinition getDefinition();
+
+    /**
+     * Determine if the itemstack contains an itemblock.
+     *
+     * @return Whether or not the item linked to this stack is an itemblock.
+     */
+    @ZenGetter("isItemBlock")
+    boolean isItemBlock();
     
     /**
      * Gets the unlocalized item name.

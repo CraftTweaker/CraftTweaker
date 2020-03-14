@@ -106,7 +106,16 @@ public class MCItemStack implements IItemStack {
     public IItemDefinition getDefinition() {
         return new MCItemDefinition(stack.getItem().getRegistryName().toString(), stack.getItem());
     }
-    
+
+    @Override
+    public boolean isItemBlock() {
+        if (stack.isEmpty()) {
+            return false;
+        }
+
+        return stack.getItem() instanceof ItemBlock;
+    }
+
     @Override
     public String getName() {
         return stack.getUnlocalizedName();
