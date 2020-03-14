@@ -607,12 +607,12 @@ public class CommonEventHandler {
         }
     }
 
-    @SubscribeEvent
+/*    @SubscribeEvent
     public void onSaplingGrowTree (SaplingGrowTreeEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasSaplingGrowTree()) {
             CrafttweakerImplementationAPI.events.publishSaplingGrowTree(new MCSaplingGrowTreeEvent(ev));
         }
-    }
+    }*/
 
     @SubscribeEvent
     public void onSleepingLocationCheck (SleepingLocationCheckEvent ev) {

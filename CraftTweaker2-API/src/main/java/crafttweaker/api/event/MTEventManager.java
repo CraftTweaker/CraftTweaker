@@ -122,7 +122,7 @@ public class MTEventManager implements IEventManager {
         elPlayerLeftClickBlock.clear();
         elPlayerRightClickEmpty.clear();
         elPlayerRightClickItem.clear();
-        elSaplingGrowTree.clear();
+/*        elSaplingGrowTree.clear();*/
         elSleepingLocationCheck.clear();
         elSleepingTimeCheck.clear();
         elPotionBrewPre.clear();
@@ -1451,7 +1451,7 @@ public class MTEventManager implements IEventManager {
     // ###  SaplingGrowTreeEvent  ###
     // ##############################
 
-    private final EventList<SaplingGrowTreeEvent> elSaplingGrowTree = new EventList<>();
+/*    private final EventList<SaplingGrowTreeEvent> elSaplingGrowTree = new EventList<>();
 
     @Override
     public IEventHandle onSaplingGrowTree(IEventHandler<SaplingGrowTreeEvent> ev) {
@@ -1464,7 +1464,7 @@ public class MTEventManager implements IEventManager {
 
     public void publishSaplingGrowTree(SaplingGrowTreeEvent event) {
         elSaplingGrowTree.publish(event);
-    }
+    }*/
 
     // ####################################
     // ###  SleepingLocationCheckEvent  ###
