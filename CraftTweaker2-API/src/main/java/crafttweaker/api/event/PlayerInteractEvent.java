@@ -2,6 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -26,4 +27,10 @@ public interface PlayerInteractEvent extends IPlayerEvent, IEventPositionable {
     
     @ZenGetter("dimension")
     int getDimension();
+
+    @ZenGetter("hand")
+    String getHand();
+
+    @ZenGetter("item")
+    IItemStack getUsedItem();
 }

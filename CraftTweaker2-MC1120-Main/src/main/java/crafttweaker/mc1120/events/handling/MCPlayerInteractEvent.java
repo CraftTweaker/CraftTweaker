@@ -2,6 +2,7 @@ package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.block.*;
 import crafttweaker.api.event.PlayerInteractEvent;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.*;
@@ -41,7 +42,17 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     public int getDimension() {
         return getWorld().getDimension();
     }
-    
+
+    @Override
+    public String getHand() {
+        return String.valueOf(event.getHand());
+    }
+
+    @Override
+    public IItemStack getUsedItem() {
+        return CraftTweakerMC.getIItemStack(event.getItemStack());
+    }
+
     @Override
     public IBlockPos getPosition() {
         return CraftTweakerMC.getIBlockPos(event.getPos());
