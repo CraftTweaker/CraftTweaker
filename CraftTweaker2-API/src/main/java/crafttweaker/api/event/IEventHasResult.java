@@ -21,15 +21,12 @@ public interface IEventHasResult {
     @ZenGetter("isAllowed")
     boolean isAllowed();
 
-    @ZenMethod
-    @ZenGetter("deny")
+    @ZenMethod("deny")
     void setDenied ();
 
-    @ZenMethod
-    @ZenGetter("default")
+    @ZenMethod("default")
     void setDefault ();
 
-    @ZenMethod
-    @ZenGetter("allow")
+    @ZenMethod("allow")
     void setAllowed ();
 }

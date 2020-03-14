@@ -4,7 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.world.IVector3d;
 import stanhebben.zenscript.annotations.*;
 
-@ZenClass("crafttweaker.event.PlayerInteractBlockEvent")
+@ZenClass("crafttweaker.event.PlayerRightClickBlockEvent")
 @ZenRegister
 public interface PlayerRightClickBlockEvent extends PlayerInteractEvent {
     

@@ -28,7 +28,7 @@ public interface ProjectileImpactArrowEvent extends ProjectileImpactEvent, IEven
   @ZenSetter("knockbackStrength")
   void setKnockbackStrength (int knockbackStrength);
 
-  @ZenSetter("isCritical")
+  @ZenGetter("isCritical")
   boolean getIsCritical ();
 
   @ZenSetter("isCritical")

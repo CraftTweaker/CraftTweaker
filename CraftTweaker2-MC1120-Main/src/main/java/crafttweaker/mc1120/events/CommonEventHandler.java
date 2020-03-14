@@ -552,7 +552,7 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onMinecraftCollision (MinecartCollisionEvent ev) {
+    public void onMinecartCollision(MinecartCollisionEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasMinecartCollision()) {
             CrafttweakerImplementationAPI.events.publishMinecartCollision(new MCMinecartCollisionEvent(ev));
         }

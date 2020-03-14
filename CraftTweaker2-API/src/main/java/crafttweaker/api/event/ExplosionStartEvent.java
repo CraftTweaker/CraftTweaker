@@ -13,5 +13,5 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenClass("crafttweaker.event.ExplosionStartEvent")
 @ZenRegister
-public interface ExplosionStartEvent extends IExplosionEvent {
+public interface ExplosionStartEvent extends IEventCancelable, IExplosionEvent {
 }

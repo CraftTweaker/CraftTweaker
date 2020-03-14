@@ -11,7 +11,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  */
 @ZenClass("crafttweaker.event.IExplosionEvent")
 @ZenRegister
-public interface IExplosionEvent extends IEventCancelable {
+public interface IExplosionEvent {
     @ZenGetter("world")
     IWorld getWorld();
 

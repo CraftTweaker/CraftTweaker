@@ -14,8 +14,7 @@ public interface ItemFishedEvent extends IPlayerEvent, IEventCancelable {
   @ZenGetter("damage")
   int getRodDamage();
 
-  @ZenGetter("additionalDamage")
-  @ZenMethod
+  @ZenSetter("additionalDamage")
   void additionalDamage(int damage);
 
   @ZenGetter("drops")
