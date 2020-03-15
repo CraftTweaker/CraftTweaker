@@ -20,4 +20,14 @@ public class MCEntityTravelToDimensionEvent implements EntityTravelToDimensionEv
   public IEntity getEntity() {
     return CraftTweakerMC.getIEntity(event.getEntity());
   }
+
+  @Override
+  public boolean isCanceled() {
+    return event.isCanceled();
+  }
+
+  @Override
+  public void setCanceled(boolean canceled) {
+    event.setCanceled(canceled);
+  }
 }

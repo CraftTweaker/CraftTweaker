@@ -6,7 +6,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenClass("crafttweaker.event.EntityTravelToDimensionEvent")
 @ZenRegister
-public interface EntityTravelToDimensionEvent extends IEntityEvent {
+public interface EntityTravelToDimensionEvent extends IEntityEvent, IEventCancelable {
   @ZenGetter("dimension")
   int getDimension();
 }
