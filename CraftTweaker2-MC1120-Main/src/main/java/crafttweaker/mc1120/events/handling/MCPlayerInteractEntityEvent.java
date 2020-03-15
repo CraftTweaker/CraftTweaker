@@ -7,14 +7,14 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class MCPlayerInteractEntityEvent extends MCPlayerInteractEvent implements PlayerInteractEntityEvent, IEventCancelable {
-    
+
     private final PlayerInteractEvent.EntityInteract event;
-    
+
     public MCPlayerInteractEntityEvent(PlayerInteractEvent.EntityInteract event) {
         super(event);
         this.event = event;
     }
-    
+
     @Override
     public IEntity getTarget() {
         return CraftTweakerMC.getIEntity(event.getTarget());

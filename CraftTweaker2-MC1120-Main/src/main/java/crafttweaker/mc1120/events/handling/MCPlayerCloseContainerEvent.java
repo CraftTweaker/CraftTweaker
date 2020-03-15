@@ -2,7 +2,6 @@ package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.event.PlayerCloseContainerEvent;
-import crafttweaker.api.event.PlayerOpenContainerEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
@@ -13,7 +12,7 @@ public class MCPlayerCloseContainerEvent implements PlayerCloseContainerEvent {
     public MCPlayerCloseContainerEvent(PlayerContainerEvent.Close event) {
         this.event = event;
     }
-    
+
     @Override
     public IContainer getContainer() {
         return CraftTweakerMC.getIContainer(event.getContainer());

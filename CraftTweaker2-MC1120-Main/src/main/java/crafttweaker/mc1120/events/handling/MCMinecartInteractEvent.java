@@ -7,39 +7,39 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 
 public class MCMinecartInteractEvent implements MinecartInteractEvent {
-  private net.minecraftforge.event.entity.minecart.MinecartInteractEvent event;
+    private net.minecraftforge.event.entity.minecart.MinecartInteractEvent event;
 
-  public MCMinecartInteractEvent(net.minecraftforge.event.entity.minecart.MinecartInteractEvent event) {
-    this.event = event;
-  }
+    public MCMinecartInteractEvent(net.minecraftforge.event.entity.minecart.MinecartInteractEvent event) {
+        this.event = event;
+    }
 
-  @Override
-  public IPlayer getPlayer() {
-    return CraftTweakerMC.getIPlayer(event.getPlayer());
-  }
+    @Override
+    public IPlayer getPlayer() {
+        return CraftTweakerMC.getIPlayer(event.getPlayer());
+    }
 
-  @Override
-  public IItemStack getItem() {
-    return CraftTweakerMC.getIItemStack(event.getItem());
-  }
+    @Override
+    public IItemStack getItem() {
+        return CraftTweakerMC.getIItemStack(event.getItem());
+    }
 
-  @Override
-  public String getHand() {
-    return String.valueOf(event.getHand());
-  }
+    @Override
+    public String getHand() {
+        return String.valueOf(event.getHand());
+    }
 
-  @Override
-  public IEntity getEntity() {
-    return CraftTweakerMC.getIEntity(event.getEntity());
-  }
+    @Override
+    public IEntity getEntity() {
+        return CraftTweakerMC.getIEntity(event.getEntity());
+    }
 
-  @Override
-  public boolean isCanceled() {
-    return event.isCanceled();
-  }
+    @Override
+    public boolean isCanceled() {
+        return event.isCanceled();
+    }
 
-  @Override
-  public void setCanceled(boolean canceled) {
-    event.setCanceled(canceled);
-  }
+    @Override
+    public void setCanceled(boolean canceled) {
+        event.setCanceled(canceled);
+    }
 }

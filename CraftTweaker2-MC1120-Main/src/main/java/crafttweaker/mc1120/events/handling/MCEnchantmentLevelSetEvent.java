@@ -7,49 +7,49 @@ import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
 
 public class MCEnchantmentLevelSetEvent implements EnchantmentLevelSetEvent {
-  private net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent event;
+    private net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent event;
 
-  public MCEnchantmentLevelSetEvent(net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent event) {
-    this.event = event;
-  }
+    public MCEnchantmentLevelSetEvent(net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent event) {
+        this.event = event;
+    }
 
-  @Override
-  public IWorld getWorld() {
-    return CraftTweakerMC.getIWorld(event.getWorld());
-  }
+    @Override
+    public IWorld getWorld() {
+        return CraftTweakerMC.getIWorld(event.getWorld());
+    }
 
-  @Override
-  public int getEnchantRow() {
-    return event.getEnchantRow();
-  }
+    @Override
+    public int getEnchantRow() {
+        return event.getEnchantRow();
+    }
 
-  @Override
-  public int getPower() {
-    return event.getPower();
-  }
+    @Override
+    public int getPower() {
+        return event.getPower();
+    }
 
-  @Override
-  public IItemStack getItem() {
-    return CraftTweakerMC.getIItemStack(event.getItem());
-  }
+    @Override
+    public IItemStack getItem() {
+        return CraftTweakerMC.getIItemStack(event.getItem());
+    }
 
-  @Override
-  public int getOriginalLevel() {
-    return event.getOriginalLevel();
-  }
+    @Override
+    public int getOriginalLevel() {
+        return event.getOriginalLevel();
+    }
 
-  @Override
-  public int getLevel() {
-    return event.getLevel();
-  }
+    @Override
+    public int getLevel() {
+        return event.getLevel();
+    }
 
-  @Override
-  public void setLevel(int level) {
-    event.setLevel(Math.max(0, Math.min(30, level)));
-  }
+    @Override
+    public void setLevel(int level) {
+        event.setLevel(Math.max(0, Math.min(30, level)));
+    }
 
-  @Override
-  public IBlockPos getPosition() {
-    return CraftTweakerMC.getIBlockPos(event.getPos());
-  }
+    @Override
+    public IBlockPos getPosition() {
+        return CraftTweakerMC.getIBlockPos(event.getPos());
+    }
 }

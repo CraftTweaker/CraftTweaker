@@ -7,28 +7,28 @@ import crafttweaker.api.world.IBlockPos;
 import net.minecraftforge.event.world.ExplosionEvent;
 
 public class MCExplosionDetonateEvent extends MCExplosionEvent implements ExplosionDetonateEvent {
-  private ExplosionEvent.Detonate event;
-  private IEntity[] entities = null;
-  private IBlockPos[] blocks = null;
+    private ExplosionEvent.Detonate event;
+    private IEntity[] entities = null;
+    private IBlockPos[] blocks = null;
 
-  public MCExplosionDetonateEvent(ExplosionEvent.Detonate event) {
-    super(event);
-    this.event = event;
-  }
-
-  @Override
-  public IEntity[] getAffectedEntities() {
-    if (entities == null) {
-      entities = event.getAffectedEntities().stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
+    public MCExplosionDetonateEvent(ExplosionEvent.Detonate event) {
+        super(event);
+        this.event = event;
     }
-    return entities;
-  }
 
-  @Override
-  public IBlockPos[] getAffectedPositions() {
-    if (blocks == null) {
-      blocks = event.getAffectedBlocks().stream().map(CraftTweakerMC::getIBlockPos).toArray(IBlockPos[]::new);
+    @Override
+    public IEntity[] getAffectedEntities() {
+        if (entities == null) {
+            entities = event.getAffectedEntities().stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
+        }
+        return entities;
     }
-    return blocks;
-  }
+
+    @Override
+    public IBlockPos[] getAffectedPositions() {
+        if (blocks == null) {
+            blocks = event.getAffectedBlocks().stream().map(CraftTweakerMC::getIBlockPos).toArray(IBlockPos[]::new);
+        }
+        return blocks;
+    }
 }

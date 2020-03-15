@@ -8,19 +8,19 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 /**
  * @author Stan
  */
-public class MCPlayerRespawnEvent implements PlayerRespawnEvent{
-    
+public class MCPlayerRespawnEvent implements PlayerRespawnEvent {
+
     private final PlayerEvent.PlayerRespawnEvent event;
-    
+
     public MCPlayerRespawnEvent(PlayerEvent.PlayerRespawnEvent event) {
         this.event = event;
     }
-    
+
     @Override
     public boolean isEndConquered() {
         return event.isEndConquered();
     }
-    
+
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.player);

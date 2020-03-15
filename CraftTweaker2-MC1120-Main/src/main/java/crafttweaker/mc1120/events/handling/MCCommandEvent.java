@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.api.command.*;
+import crafttweaker.api.command.ICommand;
+import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.event.CommandEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 

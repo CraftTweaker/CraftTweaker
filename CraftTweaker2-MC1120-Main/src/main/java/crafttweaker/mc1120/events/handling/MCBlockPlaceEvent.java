@@ -7,40 +7,40 @@ import crafttweaker.api.player.IPlayer;
 import net.minecraftforge.event.world.BlockEvent;
 
 public class MCBlockPlaceEvent extends MCBlockEvent implements BlockPlaceEvent {
-  private BlockEvent.PlaceEvent event;
+    private BlockEvent.PlaceEvent event;
 
-  public MCBlockPlaceEvent(BlockEvent.PlaceEvent event) {
-    super(event);
-    this.event = event;
-  }
+    public MCBlockPlaceEvent(BlockEvent.PlaceEvent event) {
+        super(event);
+        this.event = event;
+    }
 
-  @Override
-  public IPlayer getPlayer() {
-    return CraftTweakerMC.getIPlayer(event.getPlayer());
-  }
+    @Override
+    public IPlayer getPlayer() {
+        return CraftTweakerMC.getIPlayer(event.getPlayer());
+    }
 
-  @Override
-  public IBlockState getCurrent() {
-    return CraftTweakerMC.getBlockState(event.getPlacedBlock());
-  }
+    @Override
+    public IBlockState getCurrent() {
+        return CraftTweakerMC.getBlockState(event.getPlacedBlock());
+    }
 
-  @Override
-  public IBlockState getPlacedAgainst() {
-    return CraftTweakerMC.getBlockState(event.getPlacedAgainst());
-  }
+    @Override
+    public IBlockState getPlacedAgainst() {
+        return CraftTweakerMC.getBlockState(event.getPlacedAgainst());
+    }
 
-  @Override
-  public String getHand() {
-    return String.valueOf(event.getHand());
-  }
+    @Override
+    public String getHand() {
+        return String.valueOf(event.getHand());
+    }
 
-  @Override
-  public boolean isCanceled() {
-    return event.isCanceled();
-  }
+    @Override
+    public boolean isCanceled() {
+        return event.isCanceled();
+    }
 
-  @Override
-  public void setCanceled(boolean canceled) {
-    event.setCanceled(canceled);
-  }
+    @Override
+    public void setCanceled(boolean canceled) {
+        event.setCanceled(canceled);
+    }
 }

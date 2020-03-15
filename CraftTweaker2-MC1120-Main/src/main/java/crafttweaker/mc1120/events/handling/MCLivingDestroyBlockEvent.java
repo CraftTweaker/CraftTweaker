@@ -7,34 +7,34 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
 
 public class MCLivingDestroyBlockEvent implements LivingDestroyBlockEvent {
-  private net.minecraftforge.event.entity.living.LivingDestroyBlockEvent event;
+    private net.minecraftforge.event.entity.living.LivingDestroyBlockEvent event;
 
-  public MCLivingDestroyBlockEvent(net.minecraftforge.event.entity.living.LivingDestroyBlockEvent event) {
-    this.event = event;
-  }
+    public MCLivingDestroyBlockEvent(net.minecraftforge.event.entity.living.LivingDestroyBlockEvent event) {
+        this.event = event;
+    }
 
-  @Override
-  public IBlockState getState() {
-    return CraftTweakerMC.getBlockState(event.getState());
-  }
+    @Override
+    public IBlockState getState() {
+        return CraftTweakerMC.getBlockState(event.getState());
+    }
 
-  @Override
-  public boolean isCanceled() {
-    return event.isCanceled();
-  }
+    @Override
+    public boolean isCanceled() {
+        return event.isCanceled();
+    }
 
-  @Override
-  public void setCanceled(boolean canceled) {
-    event.setCanceled(canceled);
-  }
+    @Override
+    public void setCanceled(boolean canceled) {
+        event.setCanceled(canceled);
+    }
 
-  @Override
-  public IBlockPos getPosition() {
-    return CraftTweakerMC.getIBlockPos(event.getPos());
-  }
+    @Override
+    public IBlockPos getPosition() {
+        return CraftTweakerMC.getIBlockPos(event.getPos());
+    }
 
-  @Override
-  public IEntityLivingBase getEntityLivingBase() {
-    return CraftTweakerMC.getIEntityLivingBase(event.getEntityLiving());
-  }
+    @Override
+    public IEntityLivingBase getEntityLivingBase() {
+        return CraftTweakerMC.getIEntityLivingBase(event.getEntityLiving());
+    }
 }

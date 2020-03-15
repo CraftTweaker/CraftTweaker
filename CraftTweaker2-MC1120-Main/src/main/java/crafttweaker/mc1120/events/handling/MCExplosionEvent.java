@@ -9,38 +9,38 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.world.ExplosionEvent;
 
 public class MCExplosionEvent implements IExplosionEvent {
-  private ExplosionEvent event;
-  private Vec3d pos;
-  private IBlockPos blockPos;
+    private ExplosionEvent event;
+    private Vec3d pos;
+    private IBlockPos blockPos;
 
-  public MCExplosionEvent(ExplosionEvent event) {
-    this.event = event;
-    this.pos = event.getExplosion().getPosition();
-    this.blockPos = CraftTweakerMC.getIBlockPos(new BlockPos(pos));
-  }
+    public MCExplosionEvent(ExplosionEvent event) {
+        this.event = event;
+        this.pos = event.getExplosion().getPosition();
+        this.blockPos = CraftTweakerMC.getIBlockPos(new BlockPos(pos));
+    }
 
-  @Override
-  public IWorld getWorld() {
-    return CraftTweakerMC.getIWorld(event.getWorld());
-  }
+    @Override
+    public IWorld getWorld() {
+        return CraftTweakerMC.getIWorld(event.getWorld());
+    }
 
-  @Override
-  public IBlockPos getPosition() {
-    return blockPos;
-  }
+    @Override
+    public IBlockPos getPosition() {
+        return blockPos;
+    }
 
-  @Override
-  public double getX() {
-    return pos.x;
-  }
+    @Override
+    public double getX() {
+        return pos.x;
+    }
 
-  @Override
-  public double getY() {
-    return pos.y;
-  }
+    @Override
+    public double getY() {
+        return pos.y;
+    }
 
-  @Override
-  public double getZ() {
-    return pos.z;
-  }
+    @Override
+    public double getZ() {
+        return pos.z;
+    }
 }
