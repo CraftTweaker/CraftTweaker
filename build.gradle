@@ -1,5 +1,14 @@
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
 apply plugin: 'base' // To add "clean" task to the root project.
 apply from: 'configuration.gradle'
+
+apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
+
+if (project.hasProperty('secretFile')) {
+    loadSecrets(new File((String) findProperty('secretFile')))
+}
 
 subprojects {
     apply from: rootProject.file('common.gradle')
@@ -95,3 +104,45 @@ assembleAll.group = CrtBuildGroup
 assembleMC1120.group = CrtBuildGroup
 assembleDevBase1120.group = CrtBuildGroup
 assembleDevFull1120.group = CrtBuildGroup
+
+artifacts {
+    archives assembleMC1120
+}
+
+task genGitChangelog() {
+    def stdout = new ByteArrayOutputStream()
+    // first commit to check from, in our case the first commit of the branch
+    String firstCommit = 'fc284aa2f3299408c40ee68ed1dbfbff330b7e5f';
+    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
+    // was having issues with grep and spaces in the regex
+    exec {
+        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{1}'
+        standardOutput = stdout
+    }
+    if (stdout.toString().trim().indexOf("\n") >= 0) {
+        firstCommit = stdout.toString().split("\n")[0].trim();
+    }
+    System.out.println("Last version hash: \"" + firstCommit + "\"");
+    stdout = new ByteArrayOutputStream()
+    def test = exec {
+        commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
+        standardOutput = stdout
+    }
+    File file = new File("changelog.md")
+    file.write("### Current version: " + project.version)
+    file.append("\n" + stdout.toString())
+    System.out.println("Changelog generated!")
+}
+
+curseforge {
+    apiKey = findProperty('curseforge_api_token') ?: 0
+    project {
+        id = "239197"
+        releaseType = 'release'
+        changelog = file("changelog.md")
+        changelogType = 'markdown'
+        addGameVersion '1.12.2'
+
+        mainArtifact assembleMC1120
+    }
+}
