@@ -12,7 +12,7 @@ public interface CropGrowPostEvent extends IBlockEvent {
   @ZenGetter("originalBlockState")
   IBlockState getOriginalBlockState();
 
-  @ZenGetter("getOriginalBlock")
+  @ZenGetter("originalBlock")
   default IBlock getOriginalBlock () {
     return getOriginalBlockState().getBlock();
   }
