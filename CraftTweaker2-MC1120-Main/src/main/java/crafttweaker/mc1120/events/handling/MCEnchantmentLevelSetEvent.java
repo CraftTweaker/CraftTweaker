@@ -45,7 +45,7 @@ public class MCEnchantmentLevelSetEvent implements EnchantmentLevelSetEvent {
 
   @Override
   public void setLevel(int level) {
-    event.setLevel(level);
+    event.setLevel(Math.max(0, Math.min(30, level)));
   }
 
   @Override

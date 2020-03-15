@@ -41,4 +41,14 @@ public class MCEntityMountEvent implements EntityMountEvent {
   public IEntity getEntity() {
     return getMountedEntity();
   }
+
+  @Override
+  public boolean isCanceled() {
+    return event.isCanceled();
+  }
+
+  @Override
+  public void setCanceled(boolean canceled) {
+    event.setCanceled(canceled);
+  }
 }

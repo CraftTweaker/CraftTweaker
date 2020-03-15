@@ -11,7 +11,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  */
 @ZenClass("crafttweaker.event.EntityMountEvent")
 @ZenRegister
-public interface EntityMountEvent extends IEntityEvent {
+public interface EntityMountEvent extends IEntityEvent, IEventCancelable {
   @ZenGetter("mountingEntity")
   IEntity getMountingEntity();
 
