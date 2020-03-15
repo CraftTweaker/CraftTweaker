@@ -6,7 +6,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenSetter;
 
-@ZenClass("crafttweaker.event.PlayerRightClickBlockEvent")
+@ZenClass("crafttweaker.event.PlayerInteractBlockEvent")
 @ZenRegister
 public interface PlayerRightClickBlockEvent extends PlayerInteractEvent {
 
