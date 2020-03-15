@@ -13,11 +13,11 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.ExplosionDetonateEvent")
 @ZenRegister
 public interface ExplosionDetonateEvent extends IExplosionEvent {
-  @ZenGetter("affectedEntities")
-  @ZenMethod
-  IEntity[] getAffectedEntities();
+    @ZenGetter("affectedEntities")
+    @ZenMethod
+    IEntity[] getAffectedEntities();
 
-  @ZenGetter("affectedPositions")
-  @ZenMethod
-  IBlockPos[] getAffectedPositions();
+    @ZenGetter("affectedPositions")
+    @ZenMethod
+    IBlockPos[] getAffectedPositions();
 }

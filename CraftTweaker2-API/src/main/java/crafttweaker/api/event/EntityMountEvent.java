@@ -12,18 +12,18 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.EntityMountEvent")
 @ZenRegister
 public interface EntityMountEvent extends IEntityEvent, IEventCancelable {
-  @ZenGetter("mountingEntity")
-  IEntity getMountingEntity();
+    @ZenGetter("mountingEntity")
+    IEntity getMountingEntity();
 
-  @ZenGetter("mountedEntity")
-  IEntity getMountedEntity();
+    @ZenGetter("mountedEntity")
+    IEntity getMountedEntity();
 
-  @ZenGetter("isMounting")
-  boolean isMounting();
+    @ZenGetter("isMounting")
+    boolean isMounting();
 
-  @ZenGetter("isDismounting")
-  boolean isDismounting();
+    @ZenGetter("isDismounting")
+    boolean isDismounting();
 
-  @ZenGetter("world")
-  IWorld getWorld();
+    @ZenGetter("world")
+    IWorld getWorld();
 }

@@ -10,12 +10,12 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.MinecartInteractEvent")
 @ZenRegister
 public interface MinecartInteractEvent extends IMinecartEvent, IEventCancelable {
-  @ZenGetter("player")
-  IPlayer getPlayer();
+    @ZenGetter("player")
+    IPlayer getPlayer();
 
-  @ZenGetter("item")
-  IItemStack getItem();
+    @ZenGetter("item")
+    IItemStack getItem();
 
-  @ZenGetter("hand")
-  String getHand();
+    @ZenGetter("hand")
+    String getHand();
 }

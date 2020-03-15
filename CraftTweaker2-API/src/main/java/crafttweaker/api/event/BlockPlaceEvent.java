@@ -12,15 +12,15 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.BlockPlaceEvent")
 @ZenRegister
 public interface BlockPlaceEvent extends IBlockEvent, IEventCancelable {
-  @ZenGetter("player")
-  IPlayer getPlayer();
+    @ZenGetter("player")
+    IPlayer getPlayer();
 
-  @ZenGetter("current")
-  IBlockState getCurrent();
+    @ZenGetter("current")
+    IBlockState getCurrent();
 
-  @ZenGetter("placedAgainst")
-  IBlockState getPlacedAgainst();
+    @ZenGetter("placedAgainst")
+    IBlockState getPlacedAgainst();
 
-  @ZenGetter("hand")
-  String getHand();
+    @ZenGetter("hand")
+    String getHand();
 }

@@ -8,9 +8,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.PlayerVisibilityEvent")
 @ZenRegister
 public interface PlayerVisibilityEvent extends IPlayerEvent {
-  @ZenMethod
-  void modifyVisibility (double modifier);
+    @ZenMethod
+    void modifyVisibility(double modifier);
 
-  @ZenGetter("modifier")
-  double getModifier();
+    @ZenGetter("modifier")
+    double getModifier();
 }

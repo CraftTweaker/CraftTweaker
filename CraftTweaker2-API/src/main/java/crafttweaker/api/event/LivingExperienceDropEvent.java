@@ -9,15 +9,15 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenClass("crafttweaker.event.LivingExperienceDropEvent")
 @ZenRegister
 public interface LivingExperienceDropEvent extends ILivingEvent, IEventCancelable {
-  @ZenGetter("droppedExperience")
-  int getDroppedExperience();
+    @ZenGetter("droppedExperience")
+    int getDroppedExperience();
 
-  @ZenSetter("droppedExperience")
-  void setDroppedExperience(int experience);
+    @ZenSetter("droppedExperience")
+    void setDroppedExperience(int experience);
 
-  @ZenGetter("player")
-  IPlayer getPlayer();
+    @ZenGetter("player")
+    IPlayer getPlayer();
 
-  @ZenGetter("originalExperience")
-  int getOriginalExperience();
+    @ZenGetter("originalExperience")
+    int getOriginalExperience();
 }

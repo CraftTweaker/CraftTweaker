@@ -1,7 +1,8 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.io.Closeable;
 
@@ -13,7 +14,7 @@ import java.io.Closeable;
 @ZenClass("crafttweaker.event.IEventHandler")
 @ZenRegister
 public interface IEventHandle extends Closeable {
-    
+
     /**
      * Closes the event listener (stops listening and unregisters the listener).
      */

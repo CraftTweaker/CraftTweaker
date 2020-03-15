@@ -9,12 +9,12 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.PotionBrewEvent")
 @ZenRegister
 public interface PotionBrewEvent {
-  @ZenGetter("length")
-  int getLength();
+    @ZenGetter("length")
+    int getLength();
 
-  @ZenMethod
-  IItemStack getItem(int index);
+    @ZenMethod
+    IItemStack getItem(int index);
 
-  @ZenMethod
-  void setItem(int index, IItemStack stack);
+    @ZenMethod
+    void setItem(int index, IItemStack stack);
 }

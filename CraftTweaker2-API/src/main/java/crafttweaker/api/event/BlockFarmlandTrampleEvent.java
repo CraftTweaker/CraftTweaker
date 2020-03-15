@@ -11,9 +11,9 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.BlockFarmlandTrampleEvent")
 @ZenRegister
 public interface BlockFarmlandTrampleEvent extends IBlockEvent, IEventCancelable {
-  @ZenGetter("entity")
-  IEntity getEntity();
+    @ZenGetter("entity")
+    IEntity getEntity();
 
-  @ZenGetter("fallDistance")
-  float getFallDistance();
+    @ZenGetter("fallDistance")
+    float getFallDistance();
 }

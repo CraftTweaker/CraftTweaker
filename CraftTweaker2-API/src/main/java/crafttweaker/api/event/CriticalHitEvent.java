@@ -12,18 +12,18 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenClass("crafttweaker.event.CriticalHitEvent")
 @ZenRegister
 public interface CriticalHitEvent extends IPlayerEvent, IEventHasResult {
-  @ZenGetter("target")
-  IEntity getTarget();
+    @ZenGetter("target")
+    IEntity getTarget();
 
-  @ZenGetter("damageModifier")
-  float getDamageModifier();
+    @ZenGetter("damageModifier")
+    float getDamageModifier();
 
-  @ZenSetter("damageModifier")
-  void setDamageModifier(float modifier);
+    @ZenSetter("damageModifier")
+    void setDamageModifier(float modifier);
 
-  @ZenGetter("oldDamageModifier")
-  float getOldDamageModifier();
+    @ZenGetter("oldDamageModifier")
+    float getOldDamageModifier();
 
-  @ZenGetter("isVanillaCrit")
-  boolean isVanillaCrit();
+    @ZenGetter("isVanillaCrit")
+    boolean isVanillaCrit();
 }

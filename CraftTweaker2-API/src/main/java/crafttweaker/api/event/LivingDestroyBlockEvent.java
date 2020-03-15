@@ -8,6 +8,6 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.LivingDestroyBlockEvent")
 @ZenRegister
 public interface LivingDestroyBlockEvent extends ILivingEvent, IEventPositionable, IEventCancelable {
-  @ZenGetter("state")
-  IBlockState getState();
+    @ZenGetter("state")
+    IBlockState getState();
 }

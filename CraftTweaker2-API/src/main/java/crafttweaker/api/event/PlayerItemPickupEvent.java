@@ -10,9 +10,9 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.PlayerItemPickupEvent")
 @ZenRegister
 public interface PlayerItemPickupEvent extends IPlayerEvent {
-  @ZenGetter("stackCopy")
-  IItemStack getStackCopy();
+    @ZenGetter("stackCopy")
+    IItemStack getStackCopy();
 
-  @ZenGetter("originalEntity")
-  IEntityItem getOriginalEntity();
+    @ZenGetter("originalEntity")
+    IEntityItem getOriginalEntity();
 }

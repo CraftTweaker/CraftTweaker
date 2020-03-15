@@ -12,9 +12,9 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.AnimalTameEvent")
 @ZenRegister
 public interface AnimalTameEvent extends IEventCancelable, IPlayerEvent {
-  @ZenGetter("animal")
-  IEntityAnimal getAnimal();
+    @ZenGetter("animal")
+    IEntityAnimal getAnimal();
 
-  @ZenGetter("tamer")
-  IPlayer getPlayer();
+    @ZenGetter("tamer")
+    IPlayer getPlayer();
 }

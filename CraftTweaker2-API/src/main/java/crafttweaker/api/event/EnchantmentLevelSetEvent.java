@@ -14,24 +14,24 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenClass("crafttweaker.event.EnchantmentLevelSetEvent")
 @ZenRegister
 public interface EnchantmentLevelSetEvent extends IEventPositionable {
-  @ZenGetter("world")
-  IWorld getWorld();
+    @ZenGetter("world")
+    IWorld getWorld();
 
-  @ZenGetter("enchantRow")
-  int getEnchantRow ();
+    @ZenGetter("enchantRow")
+    int getEnchantRow();
 
-  @ZenGetter("power")
-  int getPower ();
+    @ZenGetter("power")
+    int getPower();
 
-  @ZenGetter("item")
-  IItemStack getItem();
+    @ZenGetter("item")
+    IItemStack getItem();
 
-  @ZenGetter("originalLevel")
-  int getOriginalLevel();
+    @ZenGetter("originalLevel")
+    int getOriginalLevel();
 
-  @ZenGetter("level")
-  int getLevel();
+    @ZenGetter("level")
+    int getLevel();
 
-  @ZenSetter("level")
-  void setLevel(int level);
+    @ZenSetter("level")
+    void setLevel(int level);
 }

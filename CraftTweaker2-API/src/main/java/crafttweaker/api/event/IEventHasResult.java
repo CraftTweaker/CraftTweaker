@@ -4,7 +4,6 @@ import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenSetter;
 
 @ZenClass("crafttweaker.event.IEventHasResult")
 @ZenRegister
@@ -22,11 +21,11 @@ public interface IEventHasResult {
     boolean isAllowed();
 
     @ZenMethod("deny")
-    void setDenied ();
+    void setDenied();
 
     @ZenMethod("default")
-    void setDefault ();
+    void setDefault();
 
     @ZenMethod("allow")
-    void setAllowed ();
+    void setAllowed();
 }

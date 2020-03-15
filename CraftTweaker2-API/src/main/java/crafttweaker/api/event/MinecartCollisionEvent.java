@@ -8,6 +8,6 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.MinecartCollisionEvent")
 @ZenRegister
 public interface MinecartCollisionEvent extends IMinecartEvent {
-  @ZenGetter("collider")
-  IEntity getCollider();
+    @ZenGetter("collider")
+    IEntity getCollider();
 }

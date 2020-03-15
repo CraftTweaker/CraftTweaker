@@ -9,39 +9,39 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenClass("crafttweaker.event.LivingKnockBackEvent")
 @ZenRegister
 public interface LivingKnockBackEvent extends ILivingEvent, IEventCancelable {
-  @ZenGetter("attacker")
-  IEntity getAttacker ();
+    @ZenGetter("attacker")
+    IEntity getAttacker();
 
-  @ZenSetter("attacker")
-  void setAttacker(IEntity attacker);
+    @ZenSetter("attacker")
+    void setAttacker(IEntity attacker);
 
-  @ZenGetter("strength")
-  float getStrength();
+    @ZenGetter("strength")
+    float getStrength();
 
-  @ZenSetter("strength")
-  void setStrength (float strength);
+    @ZenSetter("strength")
+    void setStrength(float strength);
 
-  @ZenGetter("ratioX")
-  double getRatioX();
+    @ZenGetter("ratioX")
+    double getRatioX();
 
-  @ZenSetter("ratioX")
-  void setRatioX(double ratioX);
+    @ZenSetter("ratioX")
+    void setRatioX(double ratioX);
 
-  @ZenGetter("ratioZ")
-  double getRatioZ();
+    @ZenGetter("ratioZ")
+    double getRatioZ();
 
-  @ZenSetter("ratioZ")
-  void setRatioZ (double ratioZ);
+    @ZenSetter("ratioZ")
+    void setRatioZ(double ratioZ);
 
-  @ZenGetter("originalAttacker")
-  IEntity getOriginalAttacker();
+    @ZenGetter("originalAttacker")
+    IEntity getOriginalAttacker();
 
-  @ZenGetter("originalStrength")
-  float getOriginalStrength();
+    @ZenGetter("originalStrength")
+    float getOriginalStrength();
 
-  @ZenGetter("originalRatioX")
-  double getOriginalRatioX();
+    @ZenGetter("originalRatioX")
+    double getOriginalRatioX();
 
-  @ZenGetter("originalRatioZ")
-  double getOriginalRatioZ();
+    @ZenGetter("originalRatioZ")
+    double getOriginalRatioZ();
 }
