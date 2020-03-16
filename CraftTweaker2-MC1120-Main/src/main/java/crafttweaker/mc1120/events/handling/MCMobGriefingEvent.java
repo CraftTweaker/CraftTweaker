@@ -19,18 +19,8 @@ public class MCMobGriefingEvent implements MobGriefingEvent {
     }
 
     @Override
-    public boolean isDenied() {
-        return event.getResult() == Event.Result.DENY;
-    }
-
-    @Override
-    public boolean isDefault() {
-        return event.getResult() == Event.Result.DEFAULT;
-    }
-
-    @Override
-    public boolean isAllowed() {
-        return event.getResult() == Event.Result.ALLOW;
+    public String getResult() {
+        return String.valueOf(event.getResult());
     }
 
     @Override

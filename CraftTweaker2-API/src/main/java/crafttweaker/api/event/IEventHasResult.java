@@ -8,17 +8,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.IEventHasResult")
 @ZenRegister
 public interface IEventHasResult {
-    @ZenMethod
-    @ZenGetter("isDenied")
-    boolean isDenied();
-
-    @ZenMethod
-    @ZenGetter("isDefault")
-    boolean isDefault();
-
-    @ZenMethod
-    @ZenGetter("isAllowed")
-    boolean isAllowed();
+    @ZenGetter("result")
+    String getResult();
 
     @ZenMethod("deny")
     void setDenied();
