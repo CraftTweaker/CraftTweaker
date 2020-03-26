@@ -65,7 +65,7 @@ public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>
         IIngredient[] ingredients = new IIngredient[i];
         
         for(int j = 0; j < ingredients.length; ++j) {
-            ingredients[j] = new MCItemStack(Ingredient.read(buffer).getMatchingStacks()[0]);
+            ingredients[j] = IIngredient.fromIngredient(Ingredient.read(buffer));
         }
         
         ItemStack itemstack = buffer.readItemStack();
