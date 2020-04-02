@@ -230,13 +230,7 @@ public interface IEventManager {
     IEventHandle onPlayerLeftClickBlock(IEventHandler<PlayerLeftClickBlockEvent> ev);
 
     @ZenMethod
-    IEventHandle onPlayerRightClickEmpty(IEventHandler<PlayerRightClickEmptyEvent> ev);
-
-    @ZenMethod
     IEventHandle onPlayerRightClickItem(IEventHandler<PlayerRightClickItemEvent> ev);
-
-/*    @ZenMethod
-    IEventHandle onSaplingGrowTree (IEventHandler<SaplingGrowTreeEvent> ev);*/
 
     @ZenMethod
     IEventHandle onSleepingLocationCheck(IEventHandler<SleepingLocationCheckEvent> ev);

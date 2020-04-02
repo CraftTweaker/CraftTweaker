@@ -1,13 +1,12 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.api.event.IEventCancelable;
 import crafttweaker.api.event.PlayerLeftClickBlockEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IVector3d;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class MCPlayerLeftClickBlockEvent extends MCPlayerInteractEvent implements PlayerLeftClickBlockEvent, IEventCancelable {
+public class MCPlayerLeftClickBlockEvent extends MCPlayerInteractEvent implements PlayerLeftClickBlockEvent {
 
     private final PlayerInteractEvent.LeftClickBlock event;
 

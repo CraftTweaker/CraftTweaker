@@ -594,13 +594,6 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerRightClickEmpty (PlayerInteractEvent.RightClickEmpty ev) {
-        if (CrafttweakerImplementationAPI.events.hasPlayerRightClickEmpty()) {
-            CrafttweakerImplementationAPI.events.publishPlayerRightClickEmpty(new MCPlayerRightClickEmptyEvent(ev));
-        }
-    }
-
-    @SubscribeEvent
     public void onPlayerRightClickItem (PlayerInteractEvent.RightClickItem ev) {
         if (CrafttweakerImplementationAPI.events.hasPlayerRightClickItem()) {
             CrafttweakerImplementationAPI.events.publishPlayerRightClickItem(new MCPlayerRightClickItemEvent(ev));

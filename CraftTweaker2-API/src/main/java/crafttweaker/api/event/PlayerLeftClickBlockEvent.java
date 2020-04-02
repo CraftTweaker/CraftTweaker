@@ -11,7 +11,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
  */
 @ZenClass("crafttweaker.event.PlayerLeftClickBlockEvent")
 @ZenRegister
-public interface PlayerLeftClickBlockEvent extends PlayerInteractEvent {
+public interface PlayerLeftClickBlockEvent extends PlayerInteractEvent, IEventCancelable {
 
     @ZenGetter("hitVector")
     IVector3d getHitVector();
