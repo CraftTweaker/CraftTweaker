@@ -3,6 +3,7 @@ package crafttweaker.mc1120.events.handling;
 import crafttweaker.api.event.PlayerLeftClickBlockEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IVector3d;
+import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -50,4 +51,13 @@ public class MCPlayerLeftClickBlockEvent extends MCPlayerInteractEvent implement
         event.setCanceled(canceled);
     }
 
+    @Override
+    public String getCancellationResult() {
+        return event.getCancellationResult().name();
+    }
+
+    @Override
+    public void setCancellationResult(String value) {
+        event.setCancellationResult(EnumActionResult.valueOf(value));
+    }
 }

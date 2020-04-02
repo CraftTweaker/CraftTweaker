@@ -3,6 +3,7 @@ package crafttweaker.mc1120.events.handling;
 import crafttweaker.api.event.PlayerRightClickBlockEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IVector3d;
+import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -39,4 +40,16 @@ public class MCPlayerRightClickBlockEvent extends MCPlayerInteractEvent implemen
     public void setUseItem(String useItem) {
         event.setUseItem(Event.Result.valueOf(useItem));
     }
+
+    @Override
+    public String getCancellationResult() {
+        return event.getCancellationResult().name();
+    }
+
+    @Override
+    public void setCancellationResult(String value) {
+        event.setCancellationResult(EnumActionResult.valueOf(value));
+    }
+
+
 }
