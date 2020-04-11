@@ -13,16 +13,16 @@ pipeline {
             }
         }
         stage('Setup') {
-            withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
-                steps {
+            steps {
+                withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
                     echo 'Setting up Workspace'
                     sh './gradlew setupDecompWorkspaceAll'
                 }
             }
         }
         stage('Build') {
-            withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
-                steps {
+            steps {
+                withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
                     echo 'Building'
                     sh './gradlew assembleAll publish'
                 }
