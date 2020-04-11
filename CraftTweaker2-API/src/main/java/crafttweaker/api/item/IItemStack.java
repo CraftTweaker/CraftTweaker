@@ -49,7 +49,10 @@ public interface IItemStack extends IIngredient {
      * @return Whether or not the item linked to this stack is an itemblock.
      */
     @ZenGetter("isItemBlock")
-    boolean isItemBlock();
+    default boolean isItemBlock() {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesns't override IItemStack::isItemBlock!");
+        return false;
+    }
     
     /**
      * Gets the unlocalized item name.

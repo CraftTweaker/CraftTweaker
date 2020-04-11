@@ -109,10 +109,6 @@ public class MCItemStack implements IItemStack {
 
     @Override
     public boolean isItemBlock() {
-        if (stack.isEmpty()) {
-            return false;
-        }
-
         return stack.getItem() instanceof ItemBlock;
     }
 
