@@ -138,7 +138,7 @@ curseforge {
     apiKey = findProperty('curseforge_api_token') ?: 0
     project {
         id = "239197"
-        releaseType = 'release'
+        releaseType = 'beta'
         changelog = file("changelog.md")
         changelogType = 'markdown'
         addGameVersion '1.12.2'
