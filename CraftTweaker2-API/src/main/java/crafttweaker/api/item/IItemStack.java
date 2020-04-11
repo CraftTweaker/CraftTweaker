@@ -50,7 +50,7 @@ public interface IItemStack extends IIngredient {
      */
     @ZenGetter("isItemBlock")
     default boolean isItemBlock() {
-        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesns't override IItemStack::isItemBlock!");
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IItemStack::isItemBlock!");
         return false;
     }
     
