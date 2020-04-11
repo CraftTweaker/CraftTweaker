@@ -6,14 +6,14 @@ import crafttweaker.api.player.IPlayer;
 /**
  * @author Stan
  */
-public class MCPlayerLoggedInEvent  implements PlayerLoggedInEvent {
-    
+public class MCPlayerLoggedInEvent implements PlayerLoggedInEvent {
+
     private final IPlayer player;
-    
+
     public MCPlayerLoggedInEvent(IPlayer player) {
         this.player = player;
     }
-    
+
     @Override
     public IPlayer getPlayer() {
         return player;

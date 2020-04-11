@@ -12,24 +12,24 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
  * @author Stan Hebben
  */
 public class MCPlayerCraftedEvent implements PlayerCraftedEvent {
-    
+
     private final PlayerEvent.ItemCraftedEvent event;
-    
+
     public MCPlayerCraftedEvent(PlayerEvent.ItemCraftedEvent event) {
-    
+
         this.event = event;
     }
-    
+
     @Override
     public IItemStack getOutput() {
         return CraftTweakerMC.getIItemStack(event.crafting);
     }
-    
+
     @Override
     public ICraftingInventory getInventory() {
         return new MCCraftingInventorySquared(event.craftMatrix, getPlayer());
     }
-    
+
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.player);
