@@ -5,5 +5,5 @@ import stanhebben.zenscript.annotations.ZenClass;
 
 @ZenClass("crafttweaker.event.PotionBrewPostEvent")
 @ZenRegister
-public interface PotionBrewPostEvent extends PotionBrewEvent {
+public interface PotionBrewPostEvent extends IPotionBrewEvent {
 }

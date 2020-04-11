@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("crafttweaker.event.PotionBrewEvent")
 @ZenRegister
-public interface PotionBrewEvent {
+public interface IPotionBrewEvent {
     @ZenGetter("length")
     int getLength();
 

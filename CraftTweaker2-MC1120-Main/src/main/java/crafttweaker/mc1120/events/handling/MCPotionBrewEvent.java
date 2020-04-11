@@ -1,10 +1,10 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.api.event.PotionBrewEvent;
+import crafttweaker.api.event.IPotionBrewEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 
-public class MCPotionBrewEvent implements PotionBrewEvent {
+public class MCPotionBrewEvent implements IPotionBrewEvent {
     private net.minecraftforge.event.brewing.PotionBrewEvent event;
 
     public MCPotionBrewEvent(net.minecraftforge.event.brewing.PotionBrewEvent event) {
