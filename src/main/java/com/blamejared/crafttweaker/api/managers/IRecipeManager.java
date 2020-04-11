@@ -57,7 +57,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         MapData mapData = (MapData) data;
         JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.toJsonString(), JsonObject.class);
         String recipeTypeKey = Registry.RECIPE_TYPE.getKey(getRecipeType()).toString();
-    
+        
         if(recipeObject.has("type")) {
             if(!recipeObject.get("type").getAsString().equals(recipeTypeKey))
                 throw new IllegalArgumentException("Cannot override recipe type! Given: \"" + recipeObject.get("type").getAsString() + "\", Expected: \"" + recipeTypeKey + "\"");
@@ -105,6 +105,20 @@ public interface IRecipeManager extends CommandStringDisplayable {
     }
     
     /**
+     * Remove recipe based on Registry name modid with an added exclusion check, so you can remove the whole mod besides a few specified.
+     *
+     * @param modid   modid of the recipes to remove
+     * @param exclude recipes to exlude from being removed.
+     *
+     * @docParam modid "minecraft"
+     * @docParam exclude (name as string) => {return name == "orange_wool";}
+     */
+    @ZenCodeType.Method
+    default void removeByModid(String modid, RecipeFilter exclude) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(this, modid, exclude));
+    }
+    
+    /**
      * Remove recipe based on regex
      *
      * @param regex regex to match against
@@ -115,7 +129,6 @@ public interface IRecipeManager extends CommandStringDisplayable {
     default void removeByRegex(String regex) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex));
     }
-    
     
     /**
      * Remove all recipes in this registry
@@ -154,6 +167,13 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @FunctionalInterface
     @ZenRegister
+    interface RecipeFilter {
+        
+        boolean test(String name);
+    }
+    
+    @FunctionalInterface
+    @ZenRegister
     interface RecipeFunctionSingle {
         
         IItemStack process(IItemStack usualOut, IItemStack inputs);
@@ -172,7 +192,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
     }
-
+    
     @Override
     default String getCommandString() {
         return "<recipetype:" + getRecipeType().toString() + ">";

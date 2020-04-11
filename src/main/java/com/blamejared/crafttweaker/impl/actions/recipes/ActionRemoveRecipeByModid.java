@@ -10,15 +10,23 @@ import java.util.stream.Collectors;
 public class ActionRemoveRecipeByModid extends ActionRecipeBase {
     
     private final String modid;
+    private final IRecipeManager.RecipeFilter exclude;
     
     public ActionRemoveRecipeByModid(IRecipeManager manager, String modid) {
         super(manager);
         this.modid = modid;
+        this.exclude = name -> false;
+    }
+    
+    public ActionRemoveRecipeByModid(IRecipeManager manager, String modid, IRecipeManager.RecipeFilter exclude) {
+        super(manager);
+        this.modid = modid;
+        this.exclude = exclude;
     }
     
     @Override
     public void apply() {
-        List<ResourceLocation> list = getManager().getRecipes().keySet().stream().filter(resourceLocation -> resourceLocation.getNamespace().equals(modid)).collect(Collectors.toList());
+        List<ResourceLocation> list = getManager().getRecipes().keySet().stream().filter(resourceLocation -> resourceLocation.getNamespace().equals(modid)).filter(resourceLocation -> !exclude.test(resourceLocation.getPath())).collect(Collectors.toList());
         list.forEach(getManager().getRecipes()::remove);
     }
     
