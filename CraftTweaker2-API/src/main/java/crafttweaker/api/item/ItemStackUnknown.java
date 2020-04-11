@@ -23,6 +23,11 @@ public final class ItemStackUnknown implements IItemStack {
     }
 
     @Override
+    public boolean isItemBlock() {
+        throw new IllegalStateException("ItemStackUnknown is only supposed to be used internally!");
+    }
+
+    @Override
     public String getName() {
         throw new IllegalStateException("ItemStackUnknown is only supposed to be used internally!");
     }
