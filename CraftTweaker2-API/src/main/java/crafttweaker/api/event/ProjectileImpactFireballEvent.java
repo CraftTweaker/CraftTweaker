@@ -9,7 +9,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
 
 @ZenClass("crafttweaker.event.ProjectileImpactFireballEvent")
 @ZenRegister
-public interface ProjectileImpactFireballEvent extends ProjectileImpactEvent, IEventCancelable {
+public interface ProjectileImpactFireballEvent extends IProjectileImpactEvent, IEventCancelable {
     @ZenGetter("fireball")
     IEntity getFireball();
 

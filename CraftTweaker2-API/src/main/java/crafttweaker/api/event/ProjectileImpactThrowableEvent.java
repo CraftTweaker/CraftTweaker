@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenClass("crafttweaker.event.ProjectileImpactThrowableEvent")
 @ZenRegister
-public interface ProjectileImpactThrowableEvent extends ProjectileImpactEvent, IEventCancelable {
+public interface ProjectileImpactThrowableEvent extends IProjectileImpactEvent, IEventCancelable {
     @ZenGetter("throwable")
     IEntity getThrowable();
 

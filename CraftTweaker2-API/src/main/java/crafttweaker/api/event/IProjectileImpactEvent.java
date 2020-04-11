@@ -7,7 +7,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenClass("crafttweaker.event.ProjectileImpactEvent")
 @ZenRegister
-public interface ProjectileImpactEvent extends IEntityEvent {
+public interface IProjectileImpactEvent extends IEntityEvent {
     @ZenGetter("rayTrace")
     IRayTraceResult getRayTraceResult();
 }
