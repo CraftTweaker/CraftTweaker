@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.mods.MCMods;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
@@ -44,6 +45,9 @@ public class CraftTweakerAPI {
     
     @ZenCodeGlobals.Global
     public static ILogger logger;
+    
+    @ZenCodeGlobals.Global
+    public static MCMods mods = new MCMods();
     
     private static final List<IAction> ACTION_LIST = new ArrayList<>();
     private static final List<IAction> ACTION_LIST_INVALID = new ArrayList<>();
