@@ -94,6 +94,22 @@ public class CTCommands {
             }
             return 0;
         }));
+        registerCommand("hand", new CommandImpl("tags", "Outputs the tags of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
+            
+            Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
+            if(tags.isEmpty()) {
+                send(new StringTextComponent("Item has no tags"), player);
+                return 0;
+            }
+            send(copy(new FormattedTextComponent(color("Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
+            
+            tags.stream().map(resourceLocation -> new MCTag(resourceLocation).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
+            
+            if(player instanceof ServerPlayerEntity) {
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(tags.stream().map(MCTag::new).findFirst().get().getCommandString()));
+            }
+            return 0;
+        }));
         
         registerCommand(new CommandImpl("log", "Opens the log file", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("logs/crafttweaker.log").toURI().toString()));
