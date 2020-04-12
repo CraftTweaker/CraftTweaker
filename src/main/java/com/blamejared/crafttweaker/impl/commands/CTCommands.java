@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.commands;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
@@ -154,6 +155,16 @@ public class CTCommands {
         }));
         registerCommand(new CommandImpl("scripts", "Opens the scripts folder", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("scripts/").toURI().toString()));
+            return 0;
+        }));
+
+        registerCommand(new CommandImpl("syntax", "Checks the syntax of the scripts", (CommandCallerPlayer)(player, stack) -> {
+            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions());
+            return 0;
+        }));
+
+        registerCommand(new CommandImpl("format", "Checks the syntax of the scripts and formats them into another folder.", (CommandCallerPlayer)(player, stack) -> {
+            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().format());
             return 0;
         }));
         
