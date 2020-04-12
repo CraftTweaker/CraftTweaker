@@ -112,16 +112,24 @@ public class CraftTweakerAPI {
     }
     
     public static void loadScripts() {
+        loadScripts(new ScriptLoadingOptions().execute());
+    }
+
+    public static void loadScripts(ScriptLoadingOptions scriptLoadingOptions) {
         NO_BRAND = false;
         List<File> fileList = getScriptFiles();
         logInfo("Started loading Scripts!");
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(SCRIPT_DIR, file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
-        loadScripts(sourceFiles);
+        loadScripts(sourceFiles, scriptLoadingOptions);
         logInfo("Finished loading Scripts!");
     }
     
     public static void loadScripts(SourceFile[] sourceFiles) {
+        loadScripts(sourceFiles, new ScriptLoadingOptions().execute());
+    }
+
+    public static void loadScripts(SourceFile[] sourceFiles, ScriptLoadingOptions scriptLoadingOptions) {
         try {
             CraftTweakerAPI.reload();
             initEngine();
@@ -149,23 +157,23 @@ public class CraftTweakerAPI {
                 SCRIPTING_ENGINE.registerNativeProvided(module);
                 modules.add(module);
             }
-            
+
             // For expansions on ZenScript types (I.E. any[any], string, int) and just anything else that fails
             JavaNativeModule expansions = SCRIPTING_ENGINE.createNativeModule("expansions", "", modules.toArray(new JavaNativeModule[0]));
             CraftTweakerRegistry.getExpansions().values().stream().flatMap(Collection::stream).forEach(expansions::addClass);
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
-            
-            
+
+
             SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
-            
+
             if(!scripts.isValid()) {
                 CraftTweakerAPI.logger.error("Scripts are invalid!");
                 CraftTweaker.LOG.info("Scripts are invalid!");
                 return;
             }
-            boolean formatScripts = false;
+
             //  toggle this to format scripts, ideally this should be a command
-            if(formatScripts) {
+            if(scriptLoadingOptions.isFormat()) {
                 List<HighLevelDefinition> all = scripts.definitions.getAll();
                 ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
                 FileFormatter formatter = new FileFormatter(builder.build());
@@ -182,13 +190,18 @@ public class CraftTweakerAPI {
                     writer.close();
                 }
             }
+
+            if(!scriptLoadingOptions.isExecute()) {
+                return;
+            }
+
             SCRIPTING_ENGINE.registerCompiled(scripts);
             SCRIPTING_ENGINE.run(Collections.emptyMap(), CraftTweaker.class.getClassLoader());
         } catch(Exception e) {
             e.printStackTrace();
             CraftTweakerAPI.logger.throwingErr("Error running scripts", e);
         }
-        
+
         CraftTweakerAPI.endFirstRun();
     }
     
