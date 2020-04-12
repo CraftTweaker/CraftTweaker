@@ -114,9 +114,11 @@ public class CraftTweakerAPI {
     public static void loadScripts() {
         NO_BRAND = false;
         List<File> fileList = getScriptFiles();
+        logInfo("Started loading Scripts!");
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(SCRIPT_DIR, file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
         loadScripts(sourceFiles);
+        logInfo("Finished loading Scripts!");
     }
     
     public static void loadScripts(SourceFile[] sourceFiles) {
