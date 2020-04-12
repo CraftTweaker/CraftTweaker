@@ -111,6 +111,43 @@ public class CTCommands {
             return 0;
         }));
         
+        registerCommand(new CommandImpl("inventory", "Outputs the names of the item in your inventory", (CommandCallerPlayer) (player, stack) -> {
+            StringBuilder builder = new StringBuilder("Inventory items").append("\n");
+            for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack slot = player.inventory.getStackInSlot(i);
+                if(slot.isEmpty()) {
+                    continue;
+                }
+                builder.append(new MCItemStackMutable(slot).getCommandString()).append("\n");
+            }
+            CraftTweakerAPI.logDump(builder.toString());
+            send(new StringTextComponent(color("Inventory list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        }));
+        
+        registerCommand("inventory", new CommandImpl("tags", "Outputs the tags of the item in your inventory", (CommandCallerPlayer) (player, stack) -> {
+            StringBuilder builder = new StringBuilder("Inventory item tags").append("\n");
+            for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                ItemStack slot = player.inventory.getStackInSlot(i);
+                if(slot.isEmpty()) {
+                    continue;
+                }
+                builder.append(new MCItemStackMutable(slot).getCommandString()).append("\n");
+                
+                Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(slot.getItem());
+                if(tags.isEmpty()) {
+                    builder.append("- No tags").append("\n");
+                    continue;
+                }
+                tags.stream().map(resourceLocation -> new MCTag(resourceLocation).getCommandString()).forEach(s -> {
+                    builder.append("-").append(s).append("\n");
+                });
+            }
+            CraftTweakerAPI.logDump(builder.toString());
+            send(new StringTextComponent(color("Inventory tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        }));
+        
         registerCommand(new CommandImpl("log", "Opens the log file", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("logs/crafttweaker.log").toURI().toString()));
             return 0;
@@ -284,7 +321,7 @@ public class CTCommands {
     
     private static void send(TextComponent component, PlayerEntity player) {
         player.sendMessage(component);
-        CraftTweakerAPI.logDump(component.getFormattedText());
+        CraftTweakerAPI.logDump(component.getUnformattedComponentText());
     }
     
     public static class CommandImpl implements Comparable<CommandImpl> {
