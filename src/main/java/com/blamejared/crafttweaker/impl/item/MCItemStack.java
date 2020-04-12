@@ -12,9 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.function.Supplier;
+
 public class MCItemStack implements IItemStack {
     
     private final ItemStack internal;
+    
+    public static Supplier<MCItemStack> EMPTY = () -> new MCItemStack(ItemStack.EMPTY);
     
     public MCItemStack(ItemStack internal) {
         this.internal = internal.copy();
@@ -98,6 +102,6 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack[] getItems() {
-        return new IItemStack[]{this};
+        return new IItemStack[] {this};
     }
 }
