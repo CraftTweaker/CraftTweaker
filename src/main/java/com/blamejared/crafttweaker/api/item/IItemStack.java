@@ -39,6 +39,16 @@ public interface IItemStack extends IIngredient {
     }
     
     /**
+     * Gets owning mod for the Item in this IItemStack
+     *
+     * @return owning mod of the Item this IItemStack represents
+     */
+    @ZenCodeType.Getter("owner")
+    default String getOwner() {
+        return getInternal().getItem().getRegistryName().getNamespace();
+    }
+    
+    /**
      * Returns if the ItemStack is empty
      *
      * @return true if empty, false if not
@@ -227,7 +237,6 @@ public interface IItemStack extends IIngredient {
      * @param tag The tag to set.
      *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
-     *
      * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
@@ -297,13 +306,13 @@ public interface IItemStack extends IIngredient {
         IData stack2Data = NBTConverter.convert(stack2Tag);
         IData stack1Data = NBTConverter.convert(stack1Tag);
         // I think this is correct
-        if((stack2Data == null) != (stack1Data == null)){
+        if((stack2Data == null) != (stack1Data == null)) {
             return false;
         }
         if(stack2Data == null) {
             return true;
         }
-    
+        
         return stack2Data.contains(stack1Data);
     }
     
