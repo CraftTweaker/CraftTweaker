@@ -181,9 +181,11 @@ public class CraftTweakerAPI {
                 for(ScriptBlock block : blocks) {
                     String format = formatter.format(scripts.rootPackage, block, all);
                     File parent = new File("scriptsFormatted");
-                    parent.mkdirs();
-                    parent.mkdir();
                     File file = new File(parent, block.file.getFilename());
+
+                    if(!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+                        CraftTweakerAPI.logError("Could not find or create folder %s, aborting formatting task!", file.getParent());
+                    }
                     file.createNewFile();
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                     writer.write(format);
