@@ -42,6 +42,34 @@ public class FileAccessSingle {
         fillInMissingPreprocessors();
         applyPreprocessors();
     }
+
+    /**
+     * Constructs a new FileAccessSingle object
+     *
+     * <p>The file should be accessible, if an IOException occurs it will be logged and the content will remain empty</p>
+     * Provides the base scripts directory, file names will be resolved against that path.
+     *
+     * @throw IllegalArgumentException baseDirectory is no parent of file
+     */
+    public FileAccessSingle(File baseDirectory, File file, Collection<IPreprocessor> preprocessors) {
+        if(!file.getAbsolutePath().startsWith(baseDirectory.getAbsolutePath())) {
+            throw new IllegalArgumentException("Base directory is not parent of script file!");
+        }
+
+        this.registeredPreprocessors = new HashMap<>();
+        for (IPreprocessor preprocessor : preprocessors) {
+            this.registeredPreprocessors.put(preprocessor.getName().toLowerCase(Locale.ENGLISH), preprocessor);
+        }
+        this.fileName = file.getAbsolutePath().substring(baseDirectory.getAbsolutePath().length() + 1);
+        this.fileContents = new ArrayList<>();
+        try {
+            readFile(new FileReader(file));
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        fillInMissingPreprocessors();
+        applyPreprocessors();
+    }
     
     
     /**
