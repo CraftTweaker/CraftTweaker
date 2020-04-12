@@ -107,6 +107,30 @@ public class MCTag implements IIngredient {
         return returned.toArray(new MCEntityType[0]);
     }
     
+    @ZenCodeType.Getter("firstItem")
+    public IItemStack getFirstItem() {
+        if(getItemTag() == null) {
+            throw new IllegalArgumentException("\"" + getCommandString() + "\" is not an ItemTag!");
+        }
+        return getItems()[0];
+    }
+    
+    @ZenCodeType.Getter("firstBlock")
+    public MCBlock getFirstBlock() {
+        if(getBlockTag() == null) {
+            throw new IllegalArgumentException("\"" + getCommandString() + "\" is not a BlockTag!");
+        }
+        return getBlocks()[0];
+    }
+    
+    @ZenCodeType.Getter("firstEntityType")
+    public MCEntityType getFirstEntityType() {
+        if(getEntityTypeTag() == null) {
+            throw new IllegalArgumentException("\"" + getCommandString() + "\" is not an EntityTypeTag!");
+        }
+        return getEntityTypes()[0];
+    }
+    
     @ZenCodeType.Method
     public void addItems(IItemStack... items) {
         CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items)));
