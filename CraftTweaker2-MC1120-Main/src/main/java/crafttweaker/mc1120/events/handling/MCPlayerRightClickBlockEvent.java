@@ -51,5 +51,13 @@ public class MCPlayerRightClickBlockEvent extends MCPlayerInteractEvent implemen
         event.setCancellationResult(EnumActionResult.valueOf(value));
     }
 
+    @Override
+    public boolean isCanceled() {
+        return event.isCanceled();
+    }
 
+    @Override
+    public void setCanceled(boolean canceled) {
+        event.setCanceled(canceled);
+    }
 }
