@@ -47,7 +47,7 @@ public class CraftTweakerAPI {
     public static ILogger logger;
     
     @ZenCodeGlobals.Global
-    public static MCMods mods = new MCMods();
+    public static MCMods loadedMods = new MCMods();
     
     private static final List<IAction> ACTION_LIST = new ArrayList<>();
     private static final List<IAction> ACTION_LIST_INVALID = new ArrayList<>();
