@@ -246,6 +246,11 @@ curseforge {
         changelog = file("changelog.md")
         changelogType = 'markdown'
 
+        mainArtifact(jar) {
+            relations {
+                requiredLibrary "jeitweaker"
+            }
+        }
 //        addArtifact(sourcesJar)
 //        addArtifact(javadocJar)
         addArtifact(deobfJar)
