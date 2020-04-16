@@ -115,6 +115,10 @@ public class CraftTweakerAPI {
         NO_BRAND = false;
         List<File> fileList = getScriptFiles();
         logInfo("Started loading Scripts for Loader '%s'!", scriptLoadingOptions.getLoaderName());
+        if(!scriptLoadingOptions.isExecute()) {
+            logInfo("This is only a syntax check. Script changes will not be applied.");
+        }
+
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream()
                 .map(file -> new FileAccessSingle(SCRIPT_DIR, file, scriptLoadingOptions, CraftTweakerRegistry.getPreprocessors()))
@@ -281,5 +285,9 @@ public class CraftTweakerAPI {
         }
         
         return SCRIPTING_ENGINE;
+    }
+
+    public static String getDefaultLoaderName() {
+        return "crafttweaker";
     }
 }

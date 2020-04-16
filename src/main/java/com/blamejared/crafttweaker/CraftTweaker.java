@@ -2,10 +2,10 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
-import com.blamejared.crafttweaker.impl.events.CTEventManager;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
@@ -117,7 +117,8 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerRegistry.findClasses();
-        //CTEventManager.register(new CTEventManager.CTTooltipEvent(System.out::println));
+
+        CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName("setupCommon").execute());
     }
     
     private void setupClient(final FMLClientSetupEvent event) {
@@ -166,10 +167,12 @@ public class CraftTweaker {
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
     }
-    
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void startServer(FMLServerAboutToStartEvent event) {
         IReloadableResourceManager manager = event.getServer().getResourceManager();
+
+        //noinspection deprecation
         manager.addReloadListener((IResourceManagerReloadListener) resourceManager -> {
             event.getServer().getPlayerList().sendMessage(new StringTextComponent("CraftTweaker reload starting!"));
             //ImmutableMap of ImmutableMaps. Nice.
