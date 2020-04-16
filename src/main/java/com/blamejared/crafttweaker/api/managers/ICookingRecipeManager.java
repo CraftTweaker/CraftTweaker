@@ -37,7 +37,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      */
     @ZenCodeType.Method
     default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
-        validateRecipeName(name);
+        name = validateRecipeName(name);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, makeRecipe(name, output, input, xp, cookTime), ""));
     }
     
