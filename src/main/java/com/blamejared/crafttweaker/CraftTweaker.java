@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.custom_commands.CustomCommands;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
@@ -166,6 +167,7 @@ public class CraftTweaker {
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
+        CustomCommands.init(event.getCommandDispatcher());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
