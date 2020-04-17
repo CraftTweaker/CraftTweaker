@@ -3,7 +3,9 @@ package com.blamejared.crafttweaker.api;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraftforge.fml.ModList;
@@ -82,7 +84,7 @@ public class CraftTweakerRegistry {
      * @param data Scan data for a given class.
      */
     private static void addClass(ModFileScanData.AnnotationData data) {
-        
+
         if(data.getAnnotationData().containsKey("modDeps")) {
             List<String> modOnly = (List<String>) data.getAnnotationData().get("modDeps");
             for(String mod : modOnly) {
@@ -93,12 +95,17 @@ public class CraftTweakerRegistry {
         }
         CraftTweaker.LOG.info("Found ZenRegister: {}", data.getClassType().getClassName());
         try {
-            ZEN_CLASSES.add(Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader()));
+            final Class<?> clazz = Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader());
+            ZEN_CLASSES.add(clazz);
+
+            if(!clazz.isInterface() && IRecipeManager.class.isAssignableFrom(clazz)) {
+                RecipeTypeBracketHandler.registerRecipeManager(clazz);
+            }
         } catch(ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Sorts {@link CraftTweakerRegistry#ZEN_CLASSES} into their respective List/Maps.
      */

@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -56,7 +57,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         MapData mapData = (MapData) data;
         JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.toJsonString(), JsonObject.class);
-        String recipeTypeKey = Registry.RECIPE_TYPE.getKey(getRecipeType()).toString();
+        String recipeTypeKey = getBracketResourceLocation().toString();
         
         if(recipeObject.has("type")) {
             if(!recipeObject.get("type").getAsString().equals(recipeTypeKey))
@@ -151,7 +152,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
-        return CTCraftingTableManager.recipeManager.recipes.get(getRecipeType());
+        return CTCraftingTableManager.recipeManager.recipes.getOrDefault(getRecipeType(), Collections.emptyMap());
     }
     
     /**
@@ -164,7 +165,15 @@ public interface IRecipeManager extends CommandStringDisplayable {
             throw new IllegalArgumentException("Given name does not fit the \"[a-z0-9/._-]\" regex! Name: \"" + name + "\"");
         }
     }
-    
+
+    /**
+     * Gets the resource location to get this Recipe handler
+     * Default just looks up the Recipe Type key from the registry
+     */
+    default ResourceLocation getBracketResourceLocation() {
+        return Registry.RECIPE_TYPE.getKey(getRecipeType());
+    }
+
     @FunctionalInterface
     @ZenRegister
     interface RecipeFilter {

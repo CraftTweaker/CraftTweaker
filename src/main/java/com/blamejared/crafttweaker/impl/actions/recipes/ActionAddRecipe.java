@@ -23,7 +23,7 @@ public class ActionAddRecipe extends ActionRecipeBase {
     
     @Override
     public String describe() {
-        return "Adding \"" + Registry.RECIPE_TYPE.getKey(getManager().getRecipeType()) + "\" recipe" + getSubTypeDescription() + ", with name: \"" + recipe.getId() + "\" that outputs: " + new MCItemStackMutable(recipe.getRecipeOutput());
+        return "Adding \"" + getManager().getBracketResourceLocation() + "\" recipe" + getSubTypeDescription() + ", with name: \"" + recipe.getId() + "\" that outputs: " + new MCItemStackMutable(recipe.getRecipeOutput());
     }
     
     private String getSubTypeDescription() {

@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.mods.MCMods;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.google.common.collect.ImmutableList;
@@ -147,6 +148,7 @@ public class CraftTweakerAPI {
                 FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
                 bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
             }
+            bep.register("recipetype", new RecipeTypeBracketHandler());
             crafttweakerModule.registerBEP(bep);
             SCRIPTING_ENGINE.registerNativeProvided(crafttweakerModule);
             for(String key : CraftTweakerRegistry.getRootPackages()) {
