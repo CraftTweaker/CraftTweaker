@@ -7,10 +7,10 @@ import net.minecraft.util.registry.Registry;
 
 public class ActionAddRecipe extends ActionRecipeBase {
     
-    private final IRecipe recipe;
+    private final IRecipe<?> recipe;
     private final String subType;
     
-    public ActionAddRecipe(IRecipeManager recipeManager, IRecipe recipe, String subType) {
+    public ActionAddRecipe(IRecipeManager recipeManager, IRecipe<?> recipe, String subType) {
         super(recipeManager);
         this.recipe = recipe;
         this.subType = subType;
