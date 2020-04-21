@@ -107,7 +107,8 @@ public class BracketHandlers {
         return new MCTag(new ResourceLocation(tokens));
     }
     
-    @BracketResolver("recipetype")
+    //@BracketResolver("recipetype")
+    @ZenCodeType.Method
     public static IRecipeManager getRecipeManager(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("RecipeType BEP <recipetype:%s> does not seem to be lower-cased!", tokens);

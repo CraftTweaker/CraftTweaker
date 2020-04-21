@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.zencode;
 
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.*;
 
 import javax.annotation.*;
@@ -37,7 +38,7 @@ public interface IPreprocessor extends Comparator<FileAccessSingle> {
      *
      * @return {@code false} if the script is no longer eligible to be loaded
      */
-    boolean apply(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches);
+    boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches);
     
     
     /**

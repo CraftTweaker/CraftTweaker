@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.mods.MCMods;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.google.common.collect.ImmutableList;
@@ -110,23 +111,25 @@ public class CraftTweakerAPI {
         findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
         return fileList;
     }
-    
-    public static void loadScripts() {
-        loadScripts(new ScriptLoadingOptions().execute());
-    }
 
     public static void loadScripts(ScriptLoadingOptions scriptLoadingOptions) {
         NO_BRAND = false;
         List<File> fileList = getScriptFiles();
-        logInfo("Started loading Scripts!");
+        logInfo("Started loading Scripts for Loader '%s'!", scriptLoadingOptions.getLoaderName());
+        if(!scriptLoadingOptions.isExecute()) {
+            logInfo("This is only a syntax check. Script changes will not be applied.");
+        }
+
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
-        SourceFile[] sourceFiles = fileList.stream().map(file -> new FileAccessSingle(SCRIPT_DIR, file, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
+        SourceFile[] sourceFiles = fileList.stream()
+                .map(file -> new FileAccessSingle(SCRIPT_DIR, file, scriptLoadingOptions, CraftTweakerRegistry.getPreprocessors()))
+                .filter(FileAccessSingle::shouldBeLoaded)
+                .sorted(comparator)
+                .map(FileAccessSingle::getSourceFile)
+                .toArray(SourceFile[]::new);
+
         loadScripts(sourceFiles, scriptLoadingOptions);
         logInfo("Finished loading Scripts!");
-    }
-    
-    public static void loadScripts(SourceFile[] sourceFiles) {
-        loadScripts(sourceFiles, new ScriptLoadingOptions().execute());
     }
 
     public static void loadScripts(SourceFile[] sourceFiles, ScriptLoadingOptions scriptLoadingOptions) {
@@ -145,6 +148,7 @@ public class CraftTweakerAPI {
                 FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
                 bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
             }
+            bep.register("recipetype", new RecipeTypeBracketHandler());
             crafttweakerModule.registerBEP(bep);
             SCRIPTING_ENGINE.registerNativeProvided(crafttweakerModule);
             for(String key : CraftTweakerRegistry.getRootPackages()) {
@@ -234,7 +238,7 @@ public class CraftTweakerAPI {
     public static void logDump(String message, Object... formats) {
         logger.log(LogLevel.INFO, String.format(message, formats), false);
     }
-    
+
     public static void logInfo(String message, Object... formats) {
         logger.info(String.format(message, formats));
     }
@@ -283,5 +287,9 @@ public class CraftTweakerAPI {
         }
         
         return SCRIPTING_ENGINE;
+    }
+
+    public static String getDefaultLoaderName() {
+        return "crafttweaker";
     }
 }

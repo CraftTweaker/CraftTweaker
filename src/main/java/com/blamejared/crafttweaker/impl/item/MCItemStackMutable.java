@@ -19,7 +19,12 @@ public class MCItemStackMutable implements IItemStack {
     public MCItemStackMutable(ItemStack internal) {
         this.internal = internal;
     }
-    
+
+    @Override
+    public IItemStack copy() {
+        return new MCItemStackMutable(internal.copy());
+    }
+
     @Override
     public IItemStack setDisplayName(String name) {
         internal.setDisplayName(new StringTextComponent(name));

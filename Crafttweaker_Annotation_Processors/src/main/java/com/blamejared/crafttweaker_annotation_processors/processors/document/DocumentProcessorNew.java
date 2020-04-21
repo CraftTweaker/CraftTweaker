@@ -153,7 +153,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
         final Map<String, YAMLFolder> files = new HashMap<>();
         for(CrafttweakerDocumentationPage value : values) {
             
-            String path = value.getDocPath().substring(0, value.getDocPath().lastIndexOf("/"));
+            String path = value.getDocPath().contains("/") ? value.getDocPath().substring(0, value.getDocPath().lastIndexOf("/")) : value.getDocPath();
             String[] topFolders = path.split("/");
             for(int i = 0; i < topFolders.length; i++) {
                 topFolders[i] = topFolders[i].toUpperCase().charAt(0) + topFolders[i].substring(1);

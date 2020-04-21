@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.ingredients;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.google.gson.JsonObject;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
 public class IngredientNBT extends Ingredient {
@@ -37,7 +39,9 @@ public class IngredientNBT extends Ingredient {
     public IIngredientSerializer<? extends Ingredient> getSerializer() {
         return CraftTweaker.INGREDIENT_NBT_SERIALIZER;
     }
-    
+
+    @MethodsReturnNonnullByDefault
+    @ParametersAreNonnullByDefault
     public static class Serializer implements IIngredientSerializer<IngredientNBT> {
         
         @Override

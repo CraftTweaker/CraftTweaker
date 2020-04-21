@@ -23,7 +23,7 @@ public class DebugPreprocessor implements IPreprocessor {
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
         CraftTweakerAPI.DEBUG_MODE = true;
         return true;
     }

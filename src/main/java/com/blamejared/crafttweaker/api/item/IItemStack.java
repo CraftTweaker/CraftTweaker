@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
 import com.blamejared.crafttweaker.impl.food.MCFood;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
@@ -26,8 +27,14 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/items/IItemStack")
 @ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
 public interface IItemStack extends IIngredient {
-    
-    
+
+
+    /**
+     * Creates a copy
+     */
+    @ZenCodeType.Method
+    IItemStack copy();
+
     /**
      * Gets the registry name for the Item in this IItemStack
      *
@@ -359,12 +366,4 @@ public interface IItemStack extends IIngredient {
      * @return internal ItemStack
      */
     ItemStack getInternal();
-    
-    /**
-     * TETATETETEAETGFGDH
-     */
-    @ZenCodeType.Caster
-    default IItemStack asIItemStack() {
-        return this;
-    }
 }

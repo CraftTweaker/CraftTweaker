@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotations.Preprocessor;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -52,7 +53,7 @@ public class SnippingPreprocessor implements IPreprocessor {
 	}
 
 	@Override
-	public boolean apply(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+	public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
 		final SortedSet<Integer> starts = new TreeSet<>();
 		final SortedSet<Integer> ends = new TreeSet<>();
 

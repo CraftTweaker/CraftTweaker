@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
 import org.openzen.zencode.shared.SourceFile;
@@ -20,6 +21,7 @@ public class FileAccessSingle {
     private final Map<IPreprocessor, List<PreprocessorMatch>> matches = new HashMap<>();
     private final List<String> fileContents;
     private final Map<String, IPreprocessor> registeredPreprocessors;
+    private final ScriptLoadingOptions scriptLoadingOptions;
     private boolean shouldBeLoaded;
 
     /**
@@ -27,7 +29,8 @@ public class FileAccessSingle {
      *
      * <p>The file should be accessible, if an IOException occurs it will be logged and the content will remain empty</p>
      */
-    public FileAccessSingle(File file, Collection<IPreprocessor> preprocessors) {
+    public FileAccessSingle(File file, ScriptLoadingOptions scriptLoadingOptions, Collection<IPreprocessor> preprocessors) {
+        this.scriptLoadingOptions = scriptLoadingOptions;
         this.registeredPreprocessors = new HashMap<>();
         for (IPreprocessor preprocessor : preprocessors) {
             this.registeredPreprocessors.put(preprocessor.getName().toLowerCase(Locale.ENGLISH), preprocessor);
@@ -51,7 +54,8 @@ public class FileAccessSingle {
      *
      * @throw IllegalArgumentException baseDirectory is no parent of file
      */
-    public FileAccessSingle(File baseDirectory, File file, Collection<IPreprocessor> preprocessors) {
+    public FileAccessSingle(File baseDirectory, File file, ScriptLoadingOptions scriptLoadingOptions, Collection<IPreprocessor> preprocessors) {
+        this.scriptLoadingOptions = scriptLoadingOptions;
         if(!file.getAbsolutePath().startsWith(baseDirectory.getAbsolutePath())) {
             throw new IllegalArgumentException("Base directory is not parent of script file!");
         }
@@ -76,11 +80,14 @@ public class FileAccessSingle {
      * Constructs a new FileAccessSingle object from a string
      *
      */
-    public FileAccessSingle(String fileName, Reader reader, Collection<IPreprocessor> preprocessors) {
+    public FileAccessSingle(String fileName, Reader reader, ScriptLoadingOptions scriptLoadingOptions, Collection<IPreprocessor> preprocessors) {
+        this.scriptLoadingOptions = scriptLoadingOptions;
+
         this.registeredPreprocessors = new HashMap<>();
         for (IPreprocessor preprocessor : preprocessors) {
             this.registeredPreprocessors.put(preprocessor.getName().toLowerCase(Locale.ENGLISH), preprocessor);
         }
+
         this.fileName = fileName;
         this.fileContents = new ArrayList<>();
         readFile(reader);
@@ -114,7 +121,7 @@ public class FileAccessSingle {
         entries.sort(Comparator.comparingInt((Map.Entry<IPreprocessor, ?> e) -> e.getKey().getPriority()).reversed());
 
         for (Map.Entry<IPreprocessor, List<PreprocessorMatch>> entry : entries) {
-            shouldBeLoaded = entry.getKey().apply(this, entry.getValue());
+            shouldBeLoaded = entry.getKey().apply(this, scriptLoadingOptions, entry.getValue());
             if (!shouldBeLoaded)
                 return;
         }
@@ -176,5 +183,9 @@ public class FileAccessSingle {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public ScriptLoadingOptions getScriptLoadingOptions() {
+        return scriptLoadingOptions;
     }
 }

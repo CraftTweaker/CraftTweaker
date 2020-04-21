@@ -23,7 +23,12 @@ public class MCItemStack implements IItemStack {
     public MCItemStack(ItemStack internal) {
         this.internal = internal.copy();
     }
-    
+
+    @Override
+    public IItemStack copy() {
+        return new MCItemStack(internal.copy());
+    }
+
     @Override
     public IItemStack setDisplayName(String name) {
         ItemStack newStack = internal.copy();
