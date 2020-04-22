@@ -42,12 +42,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -159,12 +154,15 @@ public class CTCommands {
         }));
 
         registerCommand(new CommandImpl("syntax", "Checks the syntax of the scripts", (CommandCallerPlayer)(player, stack) -> {
-            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions());
+            //TODO: get loader name from '/ct syntax loaderName'?
+            //final String loaderName = CraftTweakerAPI.getDefaultLoaderName();
+            //CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(loaderName));
+            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setWildcardLoaderName());
             return 0;
         }));
 
         registerCommand(new CommandImpl("format", "Checks the syntax of the scripts and formats them into another folder.", (CommandCallerPlayer)(player, stack) -> {
-            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().format());
+            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setWildcardLoaderName().format());
             return 0;
         }));
         

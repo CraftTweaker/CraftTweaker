@@ -68,6 +68,10 @@ public interface IIngredient extends CommandStringDisplayable {
     IItemStack[] getItems();
     
     static IIngredient fromIngredient(Ingredient ingredient) {
+        if(ingredient instanceof IngredientVanillaPlus) {
+            return ((IngredientVanillaPlus) ingredient).getCrTIngredient();
+        }
+
         if(ingredient.hasNoMatchingItems()) {
             return new MCItemStack(ItemStack.EMPTY);
         } else {

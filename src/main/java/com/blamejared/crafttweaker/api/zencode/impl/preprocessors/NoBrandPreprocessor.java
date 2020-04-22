@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotations.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
@@ -25,7 +26,7 @@ public class NoBrandPreprocessor implements IPreprocessor {
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
         CraftTweakerAPI.NO_BRAND = true;
         return true;
     }
