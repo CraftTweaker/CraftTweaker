@@ -1,23 +1,27 @@
-package com.blamejared.crafttweaker.impl.custom_commands;
+package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.mojang.brigadier.tree.RootCommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.custom_commands.MCRootCommandNode")
-public class MCRootCommandNode extends MCCommandNode {
-    private final RootCommandNode<CommandSource> internal;
+@ZenCodeType.Name("crafttweaker.api.commands.custom.MCLiteralCommandNode")
+public class MCLiteralCommandNode extends MCCommandNode {
+    private final LiteralCommandNode<CommandSource> internal;
 
-    public MCRootCommandNode(RootCommandNode<CommandSource> internal) {
+    public MCLiteralCommandNode(LiteralCommandNode<CommandSource> internal) {
         super(internal);
         this.internal = internal;
     }
 
-    @Override
-    public RootCommandNode<CommandSource> getInternal() {
+    public LiteralCommandNode<CommandSource> getInternal() {
         return internal;
+    }
+
+    @ZenCodeType.Method
+    public String getLiteral() {
+        return internal.getLiteral();
     }
 
     @ZenCodeType.Method
@@ -27,8 +31,14 @@ public class MCRootCommandNode extends MCCommandNode {
 
     @ZenCodeType.Method
     @Override
+    public MCLiteralArgumentBuilder createBuilder() {
+        return new MCLiteralArgumentBuilder(internal.createBuilder());
+    }
+
+    @ZenCodeType.Method
+    @Override
     public boolean equals(final Object o) {
-        return o instanceof MCRootCommandNode && internal.equals(((MCRootCommandNode) o).internal);
+        return o instanceof MCLiteralCommandNode && internal.equals(((MCLiteralCommandNode) o).internal);
     }
 
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -51,5 +61,4 @@ public class MCRootCommandNode extends MCCommandNode {
     public String asString() {
         return toString();
     }
-
 }

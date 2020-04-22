@@ -1,56 +1,56 @@
-package com.blamejared.crafttweaker.impl.custom_commands;
+package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.mojang.brigadier.context.ParsedArgument;
+import com.mojang.brigadier.context.SuggestionContext;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.custom_commands.MCParsedArgument")
-public class MCParsedArgument {
-    private final ParsedArgument<CommandSource, ?> internal;
-
-    public MCParsedArgument(ParsedArgument<CommandSource, ?> internal) {
+@ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestionContext")
+public class MCSuggestionContext {
+    
+    private final SuggestionContext<CommandSource> internal;
+    
+    public MCSuggestionContext(SuggestionContext<CommandSource> internal) {
         this.internal = internal;
     }
-
-    public ParsedArgument<CommandSource, ?> getInternal() {
+    
+    public SuggestionContext<CommandSource> getInternal() {
         return internal;
     }
-
+    
     @ZenCodeType.Method
-    public MCStringRange getRange() {
-        return new MCStringRange(internal.getRange());
+    public MCCommandNode getParent() {
+        return MCCommandNode.convert(internal.parent);
     }
-
-    /*
-    public T getResult() {
-        return result;
+    
+    @ZenCodeType.Method
+    public int getStartPos() {
+        return internal.startPos;
     }
-     */
-
+    
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCParsedArgument && internal.equals(((MCParsedArgument) o).internal);
+        return o instanceof MCSuggestionContext && internal.equals(((MCSuggestionContext) o).internal);
     }
-
+    
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public boolean opEquals(final Object o) {
         return equals(o);
     }
-
+    
     @ZenCodeType.Method
     public int hashCode() {
         return internal.hashCode();
     }
-
+    
     @ZenCodeType.Method
     @Override
     public String toString() {
         return internal.toString();
     }
-
+    
     @ZenCodeType.Caster(implicit = true)
     public String asString() {
         return toString();
