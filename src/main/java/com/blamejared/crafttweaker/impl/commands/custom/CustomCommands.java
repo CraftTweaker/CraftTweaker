@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.custom_commands;
+package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -14,36 +14,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.custom_commands.CustomCommands")
-@Document("vanilla/api/custom_commands/CustomCommands")
+@ZenCodeType.Name("crafttweaker.api.commands.custom.CustomCommands")
+@Document("vanilla/api/commands/custom/CustomCommands")
 public class CustomCommands {
-
+    
     private static final List<LiteralArgumentBuilder<CommandSource>> BUILDERS = new ArrayList<>();
     private static boolean SERVER_STARTED = false;
-
+    
     private CustomCommands() {
     }
-
+    
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         SERVER_STARTED = true;
         BUILDERS.forEach(dispatcher::register);
     }
-
+    
     @ZenCodeType.Method
     public static void registerCommand(MCLiteralArgumentBuilder builder) {
-
+        
         if(SERVER_STARTED) {
             CraftTweakerAPI.logError("You can only add commands in '#loader setupCommon'!");
             return;
         }
         BUILDERS.add(builder.getInternal());
     }
-
+    
     @ZenCodeType.Method
     public static MCLiteralArgumentBuilder literal(String name) {
         return new MCLiteralArgumentBuilder(Commands.literal(name));
     }
-
+    
     @ZenCodeType.Method
     public static MCRequiredArgumentBuilder argument(String name) {
         return new MCRequiredArgumentBuilder(Commands.argument(name, StringReader::readString));

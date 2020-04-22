@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
-import com.blamejared.crafttweaker.impl.custom_commands.CustomCommands;
+import com.blamejared.crafttweaker.impl.commands.custom.CustomCommands;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
