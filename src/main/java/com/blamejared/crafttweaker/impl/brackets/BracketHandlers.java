@@ -14,7 +14,7 @@ import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.potion.MCEffect;
 import com.blamejared.crafttweaker.impl.potion.MCPotion;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
-import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
+import com.blamejared.crafttweaker.impl.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemStack;
@@ -123,6 +123,11 @@ public class BracketHandlers {
         } else {
             throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
         }
+    }
+    
+    @BracketResolver("resource")
+    public static MCResourceLocation getResourceLocation(String tokens) {
+        return new MCResourceLocation(new ResourceLocation(tokens));
     }
     
     @BracketDumper("recipetype")
