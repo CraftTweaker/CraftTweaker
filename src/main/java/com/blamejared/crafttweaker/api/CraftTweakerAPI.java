@@ -143,13 +143,9 @@ public class CraftTweakerAPI {
             CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
             modules.add(crafttweakerModule);
             PrefixedBracketParser bep = new PrefixedBracketParser(null);
-            for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
-                String name = method.getAnnotation(BracketResolver.class).value();
-                FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
-                bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
-            }
             bep.register("recipetype", new RecipeTypeBracketHandler());
             crafttweakerModule.registerBEP(bep);
+            
             SCRIPTING_ENGINE.registerNativeProvided(crafttweakerModule);
             for(String key : CraftTweakerRegistry.getRootPackages()) {
                 //module already registered
@@ -166,6 +162,20 @@ public class CraftTweakerAPI {
             JavaNativeModule expansions = SCRIPTING_ENGINE.createNativeModule("expansions", "", modules.toArray(new JavaNativeModule[0]));
             CraftTweakerRegistry.getExpansions().values().stream().flatMap(Collection::stream).forEach(expansions::addClass);
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
+            
+            final JavaNativeModule brackets = SCRIPTING_ENGINE.createNativeModule("brackets", "", expansions);
+    
+            for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
+                String name = method.getAnnotation(BracketResolver.class).value();
+                FunctionalMemberRef memberRef = brackets.loadStaticMethod(method);
+                bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
+                crafttweakerModule.getCompiled().setMethodInfo(memberRef.getTarget(), brackets.getCompiled().getMethodInfo(memberRef));
+            }
+            
+            SCRIPTING_ENGINE.registerNativeProvided(brackets);
+            
+    
+            
 
 
             SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
