@@ -74,6 +74,11 @@ public class CraftTweaker {
     private static Set<String> PATRON_LIST = new HashSet<>();
 
     public CraftTweaker() {
+        CraftTweakerAPI.SCRIPT_DIR.mkdirs();
+        CraftTweakerAPI.SCRIPT_DIR.mkdir();
+        CraftTweakerRegistry.findClasses();
+        CraftTweakerAPI.setupLoggers();
+        
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
@@ -115,13 +120,8 @@ public class CraftTweaker {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        LOG.info("{} has loaded successfully!", NAME);
-        CraftTweakerAPI.setupLoggers();
-        CraftTweakerAPI.SCRIPT_DIR.mkdirs();
-        CraftTweakerAPI.SCRIPT_DIR.mkdir();
-        CraftTweakerRegistry.findClasses();
-
         CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName("setupCommon").execute());
+        LOG.info("{} has loaded successfully!", NAME);
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
