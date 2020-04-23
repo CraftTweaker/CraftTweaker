@@ -366,4 +366,10 @@ public interface IItemStack extends IIngredient {
      * @return internal ItemStack
      */
     ItemStack getInternal();
+    
+    @ZenCodeType.Method
+    IItemStack mutable();
+    
+    @ZenCodeType.Getter("damage")
+    int getDamage();
 }
