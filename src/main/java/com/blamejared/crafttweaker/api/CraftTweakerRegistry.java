@@ -27,7 +27,7 @@ public class CraftTweakerRegistry {
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
-    private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
+    private static final Map<String, List<Method>> BRACKET_RESOLVERS = new HashMap<>();
     private static final Map<String, Supplier<Collection<String>>> BRACKET_DUMPERS = new HashMap<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
@@ -141,7 +141,11 @@ public class CraftTweakerRegistry {
         }
         Class<?>[] parameters = method.getParameterTypes();
         if(parameters.length == 1 && parameters[0].equals(String.class)) {
-            BRACKET_RESOLVERS.add(method);
+            Class<?> cls = method.getDeclaringClass();
+            final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
+            final String name = annotation == null ? cls.getCanonicalName() : annotation.value();
+            BRACKET_RESOLVERS.computeIfAbsent(name.split("[.]", 2)[0], s -> new ArrayList<>())
+                    .add(method);
         } else {
             CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
         }
@@ -264,8 +268,8 @@ public class CraftTweakerRegistry {
      *
      * @return ImmutableList of the Bracket Resolvers
      */
-    public static List<Method> getBracketResolvers() {
-        return ImmutableList.copyOf(BRACKET_RESOLVERS);
+    public static List<Method> getBracketResolvers(String rootPackage) {
+        return ImmutableList.copyOf(BRACKET_RESOLVERS.getOrDefault(rootPackage, Collections.emptyList()));
     }
     
     /**
