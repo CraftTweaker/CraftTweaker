@@ -67,8 +67,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
             return null;
         }
         final String s = CommentUtils.formatDocCommentForDisplay(element, environment);
-        final String docComment = environment.getElementUtils().getDocComment(element);
-        String docParamThis = CommentUtils.joinDocAnnotation(docComment, "docParam this", environment);
+        String docParamThis = CommentUtils.joinDocAnnotation(element, "docParam this", environment);
 
         if (docParamThis.isEmpty()) {
             docParamThis = null;
