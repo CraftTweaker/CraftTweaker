@@ -267,7 +267,7 @@ task updateVersionTracker {
     doLast {
         def body = [
                 'author'        : "${project.findProperty('versionTrackerAuthor')}",
-                'projectName'   : "${project.findProperty('mod_name').toLowerCase()}",
+                'projectName'   : "crafttweaker",
                 'gameVersion'   : "1.14.4",
                 'projectVersion': "${version}",
                 'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
