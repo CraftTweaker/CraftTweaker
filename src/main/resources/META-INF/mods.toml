@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="[31,)"
 issueTrackerURL="https://github.com/CraftTweaker/CraftTweaker/issues"
+updateJSONURL="https://updates.blamejared.com/get?n=crafttweaker&gv=1.15.2"
 [[mods]]
 modId="crafttweaker"
 version="${file.jarVersion}"
