@@ -13,7 +13,9 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
+import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,8 +27,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
@@ -67,6 +69,21 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, iRecipe, ""));
+    }
+    
+    @ZenCodeType.Method
+    default WrapperRecipe getRecipeByName(String name) {
+        IRecipe<?> recipe = getRecipes().get(new ResourceLocation(name));
+        if(recipe == null) {
+            throw new IllegalArgumentException("No recipe found with name: \"" + name + "\" in type: \"" + getRecipeType().toString() + "\"");
+        }
+        return new WrapperRecipe(recipe);
+    }
+    
+    //    @ZenCodeType.Method
+    //TODO I couldn't get this one to work in script form for some reason, but the code is here
+    default List<WrapperRecipe> getRecipesByOutput(IItemStack output) {
+        return getRecipes().values().stream().filter(iRecipe -> new MCItemStackMutable(iRecipe.getRecipeOutput()).matches(output)).map(WrapperRecipe::new).collect(Collectors.toList());
     }
     
     /**
@@ -194,7 +211,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         return fixed;
     }
-
+    
     /**
      * Gets the resource location to get this Recipe handler
      * Default just looks up the Recipe Type key from the registry
@@ -202,7 +219,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     default ResourceLocation getBracketResourceLocation() {
         return Registry.RECIPE_TYPE.getKey(getRecipeType());
     }
-
+    
     @FunctionalInterface
     @ZenRegister
     interface RecipeFilter {
