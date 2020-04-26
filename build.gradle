@@ -20,6 +20,8 @@ apply plugin: 'maven-publish'
 
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
 
+import groovy.json.JsonOutput
+
 if (project.hasProperty('secretFile')) {
     loadSecrets(new File((String) findProperty('secretFile')))
 }
