@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 public class BracketHandlers {
     
     @BracketResolver("item")
+    @ZenCodeType.Method
     public static IItemStack getItem(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Item BEP <item:%s> does not seem to be lower-cased!", tokens);
@@ -55,6 +56,7 @@ public class BracketHandlers {
     }
     
     @BracketResolver("potion")
+    @ZenCodeType.Method
     public static MCPotion getPotion(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Potion BEP <potion:%s> does not seem to be lower-cased!", tokens);
@@ -71,6 +73,7 @@ public class BracketHandlers {
     }
     
     @BracketResolver("effect")
+    @ZenCodeType.Method
     public static MCEffect getEffect(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Effect BEP <effect:%s> does not seem to be lower-cased!", tokens);
@@ -96,7 +99,7 @@ public class BracketHandlers {
         return result;
     }
     
-    
+    @ZenCodeType.Method
     @BracketResolver("tag")
     public static MCTag getTag(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
@@ -125,6 +128,7 @@ public class BracketHandlers {
         }
     }
     
+    @ZenCodeType.Method
     @BracketResolver("resource")
     public static MCResourceLocation getResourceLocation(String tokens) {
         return new MCResourceLocation(new ResourceLocation(tokens));
@@ -137,6 +141,7 @@ public class BracketHandlers {
         return result;
     }
     
+    @ZenCodeType.Method
     @BracketResolver("blockstate")
     public static MCBlockState getBlockState(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
@@ -178,6 +183,7 @@ public class BracketHandlers {
         return blockState;
     }
     
+    @ZenCodeType.Method
     @BracketResolver("entitytype")
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
@@ -201,6 +207,7 @@ public class BracketHandlers {
         return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entitytype:" + key + ">").collect(Collectors.toList());
     }
     
+    @ZenCodeType.Method
     @BracketResolver("entityclassification")
     public static MCEntityClassification getEntityClassification(String tokens) {
         final int length = tokens.split(":").length;
@@ -221,6 +228,7 @@ public class BracketHandlers {
         return Arrays.stream(EntityClassification.values()).map(key -> "<entityclassification:" + key.name().toLowerCase() + ">").collect(Collectors.toList());
     }
     
+    @ZenCodeType.Method
     @BracketResolver("directionaxis")
     public static MCDirectionAxis getDirectionAxis(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))

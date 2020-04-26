@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.ParseResults;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCParseResults")
+@Document("crafttweaker/api/commands/custom/MCParseResults")
 public class MCParseResults {
     
     private final ParseResults<CommandSource> internal;

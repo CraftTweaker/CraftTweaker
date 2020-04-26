@@ -1,11 +1,13 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.suggestion.Suggestion;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestion")
+@Document("crafttweaker/api/commands/custom/MCSuggestion")
 public class MCSuggestion {
     
     private final Suggestion internal;

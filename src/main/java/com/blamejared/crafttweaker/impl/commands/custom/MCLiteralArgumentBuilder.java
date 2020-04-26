@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
@@ -9,6 +10,7 @@ import java.util.function.Predicate;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCLiteralArgumentBuilder")
+@Document("crafttweaker/api/commands/custom/MCLiteralArgumentBuilder")
 public class MCLiteralArgumentBuilder extends MCArgumentBuilder {
     
     private final LiteralArgumentBuilder<CommandSource> internal;

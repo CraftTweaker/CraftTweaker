@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCRootCommandNode")
+@Document("crafttweaker/api/commands/custom/MCRootCommandNode")
 public class MCRootCommandNode extends MCCommandNode {
     
     private final RootCommandNode<CommandSource> internal;
