@@ -76,8 +76,8 @@ public class CraftTweaker {
     public CraftTweaker() {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
-        CraftTweakerRegistry.findClasses();
         CraftTweakerAPI.setupLoggers();
+        CraftTweakerRegistry.findClasses();
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
