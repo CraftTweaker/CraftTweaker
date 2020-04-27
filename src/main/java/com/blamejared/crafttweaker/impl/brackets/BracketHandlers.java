@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.impl.potion.MCEffect;
 import com.blamejared.crafttweaker.impl.potion.MCPotion;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.util.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemStack;
@@ -36,8 +37,15 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
+@Document("vanilla/api/BracketHandlers")
 public class BracketHandlers {
     
+    /**
+     * Gets the item based on registry name. Throws an error if it can't find the item.
+     * @param tokens The item's resource location
+     * @docParam tokens "minecraft:dirt"
+     * @return The found item
+     */
     @BracketResolver("item")
     @ZenCodeType.Method
     public static IItemStack getItem(String tokens) {
@@ -72,6 +80,12 @@ public class BracketHandlers {
         return new MCPotion(potion);
     }
     
+    /**
+     * Gets the effect based on registry name. Throws an error if it can't find the effect.
+     * @param tokens The effect's resource location
+     * @docParam tokens "minecraft:haste"
+     * @return The found effect
+     */
     @BracketResolver("effect")
     @ZenCodeType.Method
     public static MCEffect getEffect(String tokens) {
@@ -99,6 +113,13 @@ public class BracketHandlers {
         return result;
     }
     
+    /**
+     * Gets the tag based on registry name. Will create an empty Tag if none is found.<br>
+     * However, in such a case, you need to register the tag as its appropriate type
+     * @param tokens The tag's resource location
+     * @docParam tokens "tag:minecraft:wool"
+     * @return The found tag, or a newly created one
+     */
     @ZenCodeType.Method
     @BracketResolver("tag")
     public static MCTag getTag(String tokens) {
@@ -110,6 +131,18 @@ public class BracketHandlers {
         return new MCTag(new ResourceLocation(tokens));
     }
     
+    /**
+     * Gets the recipeManager based on registry name. Throws an error if it can't find the recipeManager.
+     * Throws an expcetion if the given recipeType is not found.
+     *
+     * This will always return IRecipeManager.<br>
+     * There is also a BEP for that but that works differently so it can't be automatically added to the docs here.
+     * But the BEP looks the same as the other ones: `<recipetype:minecraft:crafting>`
+     *
+     * @param tokens The recipeManager's resource location
+     * @docParam tokens "minecraft:crafting"
+     * @return The found recipeManager
+     */
     //@BracketResolver("recipetype")
     @ZenCodeType.Method
     public static IRecipeManager getRecipeManager(String tokens) {
@@ -128,6 +161,13 @@ public class BracketHandlers {
         }
     }
     
+    /**
+     * Creates a Resource location based on the tokens.
+     * Throws an error if the tokens are not a valid location.
+     * @param tokens The resource location
+     * @docParam tokens "minecraft:dirt"
+     * @return The location
+     */
     @ZenCodeType.Method
     @BracketResolver("resource")
     public static MCResourceLocation getResourceLocation(String tokens) {
@@ -141,6 +181,14 @@ public class BracketHandlers {
         return result;
     }
     
+    /**
+     * Creates a Blockstate based on the given inputs.
+     * Returns `null` if it cannot find the block, ignored invalid variants
+     * @param tokens The block's resource location and variants
+     * @docParam tokens "minecraft:acacia_planks"
+     * @docParam tokens "minecraft:furnace:facing=north,lit=false"
+     * @return The found BlockState
+     */
     @ZenCodeType.Method
     @BracketResolver("blockstate")
     public static MCBlockState getBlockState(String tokens) {
@@ -183,6 +231,12 @@ public class BracketHandlers {
         return blockState;
     }
     
+    /**
+     * Gets the entityType based on registry name. Logs an error and return `null` if it can't find the entityType.
+     * @param tokens The entityType's resource location
+     * @docParam tokens "minecraft:pig"
+     * @return The found entityType
+     */
     @ZenCodeType.Method
     @BracketResolver("entitytype")
     public static MCEntityType getEntityType(String tokens) {
@@ -207,6 +261,12 @@ public class BracketHandlers {
         return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entitytype:" + key + ">").collect(Collectors.toList());
     }
     
+    /**
+     * Gets the entityClassification based on registry name. Logs an error and returns `null` if it can't find the entityClassification.
+     * @param tokens The entityClassification's resource location
+     * @docParam tokens "monster"
+     * @return The found entityClassification
+     */
     @ZenCodeType.Method
     @BracketResolver("entityclassification")
     public static MCEntityClassification getEntityClassification(String tokens) {
@@ -228,6 +288,12 @@ public class BracketHandlers {
         return Arrays.stream(EntityClassification.values()).map(key -> "<entityclassification:" + key.name().toLowerCase() + ">").collect(Collectors.toList());
     }
     
+    /**
+     * Gets the direction Axis based on name. Throws an error if it can't find the direction Axis.
+     * @param tokens The direction Axis's resource location
+     * @docParam tokens "x"
+     * @return The found direction Axis
+     */
     @ZenCodeType.Method
     @BracketResolver("directionaxis")
     public static MCDirectionAxis getDirectionAxis(String tokens) {
