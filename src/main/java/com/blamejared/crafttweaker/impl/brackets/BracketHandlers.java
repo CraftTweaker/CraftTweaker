@@ -1,39 +1,28 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotations.BracketDumper;
-import com.blamejared.crafttweaker.api.annotations.BracketResolver;
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
-import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
-import com.blamejared.crafttweaker.impl.entity.MCEntityType;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
-import com.blamejared.crafttweaker.impl.potion.MCEffect;
-import com.blamejared.crafttweaker.impl.potion.MCPotion;
-import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker.api.*;
+import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.impl.blocks.*;
+import com.blamejared.crafttweaker.impl.entity.*;
+import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.managers.*;
+import com.blamejared.crafttweaker.impl.potion.*;
+import com.blamejared.crafttweaker.impl.tag.*;
 import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.openzen.zencode.java.ZenCodeType;
+import net.minecraft.block.*;
+import net.minecraft.entity.*;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.*;
+import net.minecraft.potion.*;
+import net.minecraft.util.*;
+import net.minecraft.util.registry.*;
+import net.minecraftforge.registries.*;
+import org.openzen.zencode.java.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -42,9 +31,10 @@ public class BracketHandlers {
     
     /**
      * Gets the item based on registry name. Throws an error if it can't find the item.
+     *
      * @param tokens The item's resource location
-     * @docParam tokens "minecraft:dirt"
      * @return The found item
+     * @docParam tokens "minecraft:dirt"
      */
     @BracketResolver("item")
     @ZenCodeType.Method
@@ -82,9 +72,10 @@ public class BracketHandlers {
     
     /**
      * Gets the effect based on registry name. Throws an error if it can't find the effect.
+     *
      * @param tokens The effect's resource location
-     * @docParam tokens "minecraft:haste"
      * @return The found effect
+     * @docParam tokens "minecraft:haste"
      */
     @BracketResolver("effect")
     @ZenCodeType.Method
@@ -104,21 +95,13 @@ public class BracketHandlers {
     }
     
     
-    @BracketDumper("item")
-    public static Collection<String> getItemBracketDump() {
-        final HashSet<String> result = new HashSet<>();
-        for(ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
-            result.add(String.format(Locale.ENGLISH, "<item:%s>", key));
-        }
-        return result;
-    }
-    
     /**
      * Gets the tag based on registry name. Will create an empty Tag if none is found.<br>
      * However, in such a case, you need to register the tag as its appropriate type
+     *
      * @param tokens The tag's resource location
-     * @docParam tokens "tag:minecraft:wool"
      * @return The found tag, or a newly created one
+     * @docParam tokens "tag:minecraft:wool"
      */
     @ZenCodeType.Method
     @BracketResolver("tag")
@@ -134,14 +117,14 @@ public class BracketHandlers {
     /**
      * Gets the recipeManager based on registry name. Throws an error if it can't find the recipeManager.
      * Throws an expcetion if the given recipeType is not found.
-     *
+     * <p>
      * This will always return IRecipeManager.<br>
      * There is also a BEP for that but that works differently so it can't be automatically added to the docs here.
      * But the BEP looks the same as the other ones: `<recipetype:minecraft:crafting>`
      *
      * @param tokens The recipeManager's resource location
-     * @docParam tokens "minecraft:crafting"
      * @return The found recipeManager
+     * @docParam tokens "minecraft:crafting"
      */
     //@BracketResolver("recipetype")
     @ZenCodeType.Method
@@ -152,7 +135,12 @@ public class BracketHandlers {
             // This is bound to cause issues, like: <recipetype:crafttweaker:scripts.removeAll(); Best to just fix it now
             throw new IllegalArgumentException("Nice try, but there's no reason you need to access the <recipetype:crafttweaker:scripts> recipe manager!");
         }
-        Optional<IRecipeType<?>> value = Registry.RECIPE_TYPE.getValue(new ResourceLocation(tokens));
+        final ResourceLocation key = new ResourceLocation(tokens);
+        if(RecipeTypeBracketHandler.containsCustomManager(key)) {
+            return RecipeTypeBracketHandler.getCustomManager(key);
+        }
+        
+        Optional<IRecipeType<?>> value = Registry.RECIPE_TYPE.getValue(key);
         
         if(value.isPresent()) {
             return new RecipeManagerWrapper(value.get());
@@ -164,9 +152,10 @@ public class BracketHandlers {
     /**
      * Creates a Resource location based on the tokens.
      * Throws an error if the tokens are not a valid location.
+     *
      * @param tokens The resource location
-     * @docParam tokens "minecraft:dirt"
      * @return The location
+     * @docParam tokens "minecraft:dirt"
      */
     @ZenCodeType.Method
     @BracketResolver("resource")
@@ -174,20 +163,15 @@ public class BracketHandlers {
         return new MCResourceLocation(new ResourceLocation(tokens));
     }
     
-    @BracketDumper("recipetype")
-    public static Collection<String> getRecipeTypeDump() {
-        final HashSet<String> result = new HashSet<>();
-        Registry.RECIPE_TYPE.keySet().stream().filter(rl -> !rl.toString().equals("crafttweaker:scripts")).forEach(rl -> result.add(String.format(Locale.ENGLISH, "<recipetype:%s>", rl)));
-        return result;
-    }
     
     /**
      * Creates a Blockstate based on the given inputs.
      * Returns `null` if it cannot find the block, ignored invalid variants
+     *
      * @param tokens The block's resource location and variants
+     * @return The found BlockState
      * @docParam tokens "minecraft:acacia_planks"
      * @docParam tokens "minecraft:furnace:facing=north,lit=false"
-     * @return The found BlockState
      */
     @ZenCodeType.Method
     @BracketResolver("blockstate")
@@ -233,9 +217,10 @@ public class BracketHandlers {
     
     /**
      * Gets the entityType based on registry name. Logs an error and return `null` if it can't find the entityType.
+     *
      * @param tokens The entityType's resource location
-     * @docParam tokens "minecraft:pig"
      * @return The found entityType
+     * @docParam tokens "minecraft:pig"
      */
     @ZenCodeType.Method
     @BracketResolver("entitytype")
@@ -256,16 +241,13 @@ public class BracketHandlers {
         return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
     }
     
-    @BracketDumper("entitytype")
-    public static Collection<String> getEntityTypeDump() {
-        return ForgeRegistries.ENTITIES.getKeys().stream().map(key -> "<entitytype:" + key + ">").collect(Collectors.toList());
-    }
     
     /**
      * Gets the entityClassification based on registry name. Logs an error and returns `null` if it can't find the entityClassification.
+     *
      * @param tokens The entityClassification's resource location
-     * @docParam tokens "monster"
      * @return The found entityClassification
+     * @docParam tokens "monster"
      */
     @ZenCodeType.Method
     @BracketResolver("entityclassification")
@@ -275,7 +257,9 @@ public class BracketHandlers {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
             return null;
         }
-        if(Arrays.stream(EntityClassification.values()).anyMatch(entityClassification -> entityClassification.name().equalsIgnoreCase(tokens))) {
+        if(Arrays.stream(EntityClassification.values())
+                .anyMatch(entityClassification -> entityClassification.name()
+                        .equalsIgnoreCase(tokens))) {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
             return null;
         }
@@ -283,16 +267,13 @@ public class BracketHandlers {
         return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
     }
     
-    @BracketDumper("entityclassification")
-    public static Collection<String> getEntityClassificationDump() {
-        return Arrays.stream(EntityClassification.values()).map(key -> "<entityclassification:" + key.name().toLowerCase() + ">").collect(Collectors.toList());
-    }
     
     /**
      * Gets the direction Axis based on name. Throws an error if it can't find the direction Axis.
+     *
      * @param tokens The direction Axis's resource location
-     * @docParam tokens "x"
      * @return The found direction Axis
+     * @docParam tokens "x"
      */
     @ZenCodeType.Method
     @BracketResolver("directionaxis")
@@ -310,9 +291,5 @@ public class BracketHandlers {
         return MCDirectionAxis.getAxis(Direction.Axis.byName(split[0]));
     }
     
-    @BracketDumper("directionaxis")
-    public static Collection<String> getDirectionAxisDump() {
-        return Arrays.stream(Direction.Axis.values()).map(key -> "<directionaxis:" + key + ">").collect(Collectors.toList());
-    }
     
 }

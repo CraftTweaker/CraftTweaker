@@ -78,6 +78,14 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
 
         return new ParsedNamedType(position, collect, ParsedStorageTag.NULL);
     }
+    
+    public static boolean containsCustomManager(ResourceLocation location) {
+        return registeredTypes.containsKey(location);
+    }
+    
+    public static IRecipeManager getCustomManager(ResourceLocation location) {
+        return registeredTypes.get(location);
+    }
 
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {

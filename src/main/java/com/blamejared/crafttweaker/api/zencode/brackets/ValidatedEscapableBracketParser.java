@@ -104,14 +104,14 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
                 boolean valid;
                 try {
                     valid = (boolean) validationMethod.invoke(null, value);
-                } catch(IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                    valid = false;
+                } catch(Exception e) {
+                    final String message = String.format("Could not validate Parameters to BEP %s: '<%s:%s>", name, name, value);
+                    return new ParsedExpressionInvalid(position, message);
                 }
                 
                 if(!valid) {
                     final String format = String.format("Invalid parameters to BEP %s: '<%s:%s>", name, name, value);
-                    throw new IllegalArgumentException(format);
+                    return new ParsedExpressionInvalid(position, format);
                 }
             }
         }
@@ -143,6 +143,26 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         @Override
         public boolean hasStrongType() {
             return true;
+        }
+    }
+    
+    public static final class ParsedExpressionInvalid extends ParsedExpression {
+    
+        private final String message;
+    
+        public ParsedExpressionInvalid(CodePosition position, String message) {
+            super(position);
+            this.message = message;
+        }
+    
+        @Override
+        public IPartialExpression compile(ExpressionScope scope) {
+            return new InvalidExpression(position, BasicTypeID.UNDETERMINED.stored(), CompileExceptionCode.INVALID_BRACKET_EXPRESSION, message);
+        }
+    
+        @Override
+        public boolean hasStrongType() {
+            return false;
         }
     }
 }
