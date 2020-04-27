@@ -20,6 +20,8 @@ apply plugin: 'maven-publish'
 
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
 
+import groovy.json.JsonOutput
+
 if (project.hasProperty('secretFile')) {
     loadSecrets(new File((String) findProperty('secretFile')))
 }
@@ -257,6 +259,37 @@ curseforge {
     }
 }
 
+task updateVersionTracker {
+
+    onlyIf {
+
+        project.hasProperty('versionTrackerAPI')
+    }
+
+    doLast {
+        def body = [
+                'author'        : "${project.findProperty('versionTrackerAuthor')}",
+                'projectName'   : "crafttweaker",
+                'gameVersion'   : "1.14.4",
+                'projectVersion': "${version}",
+                'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
+                'uid'           : "${project.findProperty('versionTrackerKey')}"
+        ]
+
+        // Opens a connection to the version tracker API and writes the payload JSON.
+        def req = new URL(project.findProperty('versionTrackerAPI')).openConnection()
+        req.setRequestMethod('POST')
+        req.setRequestProperty('Content-Type', 'application/json; charset=UTF-8')
+        req.setRequestProperty('User-Agent', "Crafttweaker Tracker Gradle")
+        req.setDoOutput(true)
+        req.getOutputStream().write(JsonOutput.toJson(body).getBytes("UTF-8"))
+
+        // We need to attempt a read in order to actually send the message.
+        println "VersionCheck Status code: ${req.getResponseCode()}"
+        println "VersionCheck Response: ${req.getInputStream().getText()}"
+    }
+
+}
 
 //compileJava {
 //    options.compilerArgs += ["-Xprefer:source", "-verbose"]
