@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.mods.MCMods;
+import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
@@ -142,14 +143,10 @@ public class CraftTweakerAPI {
             
             PrefixedBracketParser bep = new PrefixedBracketParser(null);
             bep.register("recipetype", new RecipeTypeBracketHandler());
-            crafttweakerModule.registerBEP(bep);
-            for(Method method : CraftTweakerRegistry.getBracketResolvers("crafttweaker")) {
-                String name = method.getAnnotation(BracketResolver.class).value();
-                FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
-                bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
-                crafttweakerModule.getCompiled().setMethodInfo(memberRef.getTarget(), crafttweakerModule.getCompiled().getMethodInfo(memberRef));
+            for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers("crafttweaker", SCRIPTING_ENGINE, crafttweakerModule)) {
+                bep.register(bracketResolver.getName(), bracketResolver);
             }
-            
+            crafttweakerModule.registerBEP(bep);
             
             CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
             CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
@@ -163,15 +160,9 @@ public class CraftTweakerAPI {
                 }
                 JavaNativeModule module = SCRIPTING_ENGINE.createNativeModule(key, key, crafttweakerModule);
                 module.registerBEP(bep);
-    
-                for(Method method : CraftTweakerRegistry.getBracketResolvers(key)) {
-                    String name = method.getAnnotation(BracketResolver.class).value();
-                    FunctionalMemberRef memberRef = module.loadStaticMethod(method);
-                    bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
-                    crafttweakerModule.getCompiled().setMethodInfo(memberRef.getTarget(), module.getCompiled().getMethodInfo(memberRef));
+                for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(key, SCRIPTING_ENGINE, module)) {
+                    bep.register(bracketResolver.getName(), bracketResolver);
                 }
-                
-                
                 CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
                 SCRIPTING_ENGINE.registerNativeProvided(module);
                 modules.add(module);
