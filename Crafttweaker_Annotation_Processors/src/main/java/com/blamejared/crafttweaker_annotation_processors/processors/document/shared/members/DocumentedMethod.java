@@ -123,10 +123,16 @@ public class DocumentedMethod implements Writable {
         }
         writer.println("```zenscript");
         if(bracketHandlerName != null) {
-            for(String example : parameterList.get(0).getExamples()) {
-                writer.printf("<%s:%s>%n", bracketHandlerName, example.replaceAll("\"", ""));
+            final DocumentedParameter documentedParameter = parameterList.get(0);
+            final String[] examples = documentedParameter.getExamples();
+            if(examples.length == 0) {
+                writer.printf("<%s:%s>%n", bracketHandlerName, documentedParameter.getName());
+            } else {
+                for(String example : examples) {
+                    writer.printf("<%s:%s>%n", bracketHandlerName, example.replaceAll("\"", ""));
+                }
+                writer.println();
             }
-            writer.println();
         }
         
         DocumentedParameter.printAllCalls(callee + "." + name, parameterList, writer);
