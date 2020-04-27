@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSingleRedirectModifier")
-@Document("crafttweaker/api/commands/custom/MCSingleRedirectModifier")
+@Document("vanilla/api/commands/custom/MCSingleRedirectModifier")
 public class MCSingleRedirectModifier {
     
     private final SingleRedirectModifier<CommandSource> internal;

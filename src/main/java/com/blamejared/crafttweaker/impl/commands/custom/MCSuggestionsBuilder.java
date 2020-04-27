@@ -8,7 +8,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestionsBuilder")
-@Document("crafttweaker/api/commands/custom/MCSuggestionsBuilder")
+@Document("vanilla/api/commands/custom/MCSuggestionsBuilder")
 public class MCSuggestionsBuilder {
     
     private final SuggestionsBuilder internal;

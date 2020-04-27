@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommandContext")
-@Document("crafttweaker/api/commands/custom/MCCommandContext")
+@Document("vanilla/api/commands/custom/MCCommandContext")
 public class MCCommandContext {
     
     private final CommandContext<CommandSource> internal;

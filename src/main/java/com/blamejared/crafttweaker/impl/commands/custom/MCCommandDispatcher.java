@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommandDispatcher")
-@Document("crafttweaker/api/commands/custom/MCCommandDispatcher")
+@Document("vanilla/api/commands/custom/MCCommandDispatcher")
 public class MCCommandDispatcher {
     
     private final CommandDispatcher<CommandSource> internal;

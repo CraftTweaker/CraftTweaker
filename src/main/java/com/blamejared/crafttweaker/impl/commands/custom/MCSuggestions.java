@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestions")
-@Document("crafttweaker/api/commands/custom/MCSuggestions")
+@Document("vanilla/api/commands/custom/MCSuggestions")
 public class MCSuggestions {
     
     private final Suggestions internal;

@@ -8,7 +8,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestionContext")
-@Document("crafttweaker/api/commands/custom/MCSuggestionContext")
+@Document("vanilla/api/commands/custom/MCSuggestionContext")
 public class MCSuggestionContext {
     
     private final SuggestionContext<CommandSource> internal;

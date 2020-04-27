@@ -6,7 +6,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCResultConsumer")
-@Document("crafttweaker/api/commands/custom/MCResultConsumer")
+@Document("vanilla/api/commands/custom/MCResultConsumer")
 @FunctionalInterface
 public interface MCResultConsumer {
     

@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommand")
-@Document("crafttweaker/api/commands/custom/MCCommand")
+@Document("vanilla/api/commands/custom/MCCommand")
 public class MCCommand {
     
     private final Command<CommandSource> internal;

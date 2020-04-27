@@ -11,7 +11,7 @@ import java.util.function.BiFunction;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestionProvider")
-@Document("crafttweaker/api/commands/custom/MCSuggestionProvider")
+@Document("vanilla/api/commands/custom/MCSuggestionProvider")
 public class MCSuggestionProvider {
     
     private final SuggestionProvider<CommandSource> internal;

@@ -8,7 +8,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCParsedCommandNode")
-@Document("crafttweaker/api/commands/custom/MCParsedCommandNode")
+@Document("vanilla/api/commands/custom/MCParsedCommandNode")
 public class MCParsedCommandNode {
     
     private final ParsedCommandNode<CommandSource> internal;

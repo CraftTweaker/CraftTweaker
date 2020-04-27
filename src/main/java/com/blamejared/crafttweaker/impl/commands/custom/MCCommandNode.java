@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommandNode")
-@Document("crafttweaker/api/commands/custom/MCCommandNode")
+@Document("vanilla/api/commands/custom/MCCommandNode")
 public class MCCommandNode {
     
     public static MCCommandNode convert(CommandNode<CommandSource> internal) {

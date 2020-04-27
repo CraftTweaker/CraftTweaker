@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCArgumentBuilder")
-@Document("crafttweaker/api/commands/custom/MCArgumentBuilder")
+@Document("vanilla/api/commands/custom/MCArgumentBuilder")
 public class MCArgumentBuilder {
     
     private final ArgumentBuilder<CommandSource, ?> internal;

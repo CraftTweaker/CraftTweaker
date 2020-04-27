@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCRequiredArgumentBuilder")
-@Document("crafttweaker/api/commands/custom/MCRequiredArgumentBuilder")
+@Document("vanilla/api/commands/custom/MCRequiredArgumentBuilder")
 public class MCRequiredArgumentBuilder extends MCArgumentBuilder {
     
     private final RequiredArgumentBuilder<CommandSource, ?> internal;

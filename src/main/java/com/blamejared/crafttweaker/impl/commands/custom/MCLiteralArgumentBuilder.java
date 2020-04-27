@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCLiteralArgumentBuilder")
-@Document("crafttweaker/api/commands/custom/MCLiteralArgumentBuilder")
+@Document("vanilla/api/commands/custom/MCLiteralArgumentBuilder")
 public class MCLiteralArgumentBuilder extends MCArgumentBuilder {
     
     private final LiteralArgumentBuilder<CommandSource> internal;

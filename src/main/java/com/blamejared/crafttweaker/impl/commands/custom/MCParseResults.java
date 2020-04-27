@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCParseResults")
-@Document("crafttweaker/api/commands/custom/MCParseResults")
+@Document("vanilla/api/commands/custom/MCParseResults")
 public class MCParseResults {
     
     private final ParseResults<CommandSource> internal;

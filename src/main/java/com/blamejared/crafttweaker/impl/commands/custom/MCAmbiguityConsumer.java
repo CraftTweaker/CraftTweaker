@@ -9,7 +9,7 @@ import java.util.Collection;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCAmbiguityConsumer")
 @FunctionalInterface
-@Document("crafttweaker/api/commands/custom/MCAmbiguityConsumer")
+@Document("vanilla/api/commands/custom/MCAmbiguityConsumer")
 public interface MCAmbiguityConsumer {
     
     @ZenCodeType.Method

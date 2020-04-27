@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCRedirectModifier")
-@Document("crafttweaker/api/commands/custom/MCRedirectModifier")
+@Document("vanilla/api/commands/custom/MCRedirectModifier")
 public class MCRedirectModifier {
     
     private final RedirectModifier<CommandSource> internal;

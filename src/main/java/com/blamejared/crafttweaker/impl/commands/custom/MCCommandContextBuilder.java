@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommandContextBuilder")
-@Document("crafttweaker/api/commands/custom/MCCommandContextBuilder")
+@Document("vanilla/api/commands/custom/MCCommandContextBuilder")
 public class MCCommandContextBuilder {
     
     private final CommandContextBuilder<CommandSource> internal;
