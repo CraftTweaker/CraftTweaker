@@ -41,6 +41,7 @@ public class MCResourceLocation implements CommandStringDisplayable {
 
 
     @ZenCodeType.Method
+    @ZenCodeType.Getter("path")
     public String getPath() {
         return (internal.getPath());
     }
@@ -54,11 +55,12 @@ public class MCResourceLocation implements CommandStringDisplayable {
 
     @ZenCodeType.Method
     public boolean equals(Object other) {
-        return other instanceof MCResourceLocation && internal.equals((other));
+        return other instanceof MCResourceLocation && internal.equals((((MCResourceLocation) other).getInternal()));
     }
 
 
     @ZenCodeType.Method
+    @ZenCodeType.Getter("namespace")
     public String getNamespace() {
         return (internal.getNamespace());
     }

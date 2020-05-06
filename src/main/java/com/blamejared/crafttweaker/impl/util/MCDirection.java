@@ -179,4 +179,14 @@ public class MCDirection {
     public Direction getInternal() {
         return internal;
     }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MCDirection && internal.equals(((MCDirection) obj).getInternal());
+    }
 }
