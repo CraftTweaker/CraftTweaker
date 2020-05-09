@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
@@ -10,6 +11,7 @@ import java.util.function.BiFunction;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestionProvider")
+@Document("vanilla/api/commands/custom/MCSuggestionProvider")
 public class MCSuggestionProvider {
     
     private final SuggestionProvider<CommandSource> internal;

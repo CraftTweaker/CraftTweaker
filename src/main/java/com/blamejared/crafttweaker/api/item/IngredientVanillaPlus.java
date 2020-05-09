@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.google.gson.JsonElement;
-import mezz.jei.api.MethodsReturnNonnullByDefault;
+import mcp.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.IIngredientSerializer;

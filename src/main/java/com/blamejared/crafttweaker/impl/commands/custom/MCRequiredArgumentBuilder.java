@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.command.CommandSource;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCRequiredArgumentBuilder")
+@Document("vanilla/api/commands/custom/MCRequiredArgumentBuilder")
 public class MCRequiredArgumentBuilder extends MCArgumentBuilder {
     
     private final RequiredArgumentBuilder<CommandSource, ?> internal;

@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestionsBuilder")
+@Document("vanilla/api/commands/custom/MCSuggestionsBuilder")
 public class MCSuggestionsBuilder {
     
     private final SuggestionsBuilder internal;

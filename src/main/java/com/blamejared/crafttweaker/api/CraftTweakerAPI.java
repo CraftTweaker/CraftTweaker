@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.mods.MCMods;
+import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
@@ -139,17 +140,18 @@ public class CraftTweakerAPI {
             //Register crafttweaker module first to assign deps
             JavaNativeModule crafttweakerModule = SCRIPTING_ENGINE.createNativeModule(CraftTweaker.MODID, "crafttweaker");
             List<JavaNativeModule> modules = new LinkedList<>();
+            
+            PrefixedBracketParser bep = new PrefixedBracketParser(null);
+            bep.register("recipetype", new RecipeTypeBracketHandler());
+            for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers("crafttweaker", SCRIPTING_ENGINE, crafttweakerModule)) {
+                bep.register(bracketResolver.getName(), bracketResolver);
+            }
+            crafttweakerModule.registerBEP(bep);
+            
             CraftTweakerRegistry.getClassesInPackage("crafttweaker").forEach(crafttweakerModule::addClass);
             CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
             modules.add(crafttweakerModule);
-            PrefixedBracketParser bep = new PrefixedBracketParser(null);
-            for(Method method : CraftTweakerRegistry.getBracketResolvers()) {
-                String name = method.getAnnotation(BracketResolver.class).value();
-                FunctionalMemberRef memberRef = crafttweakerModule.loadStaticMethod(method);
-                bep.register(name, new SimpleBracketParser(SCRIPTING_ENGINE.registry, memberRef));
-            }
-            bep.register("recipetype", new RecipeTypeBracketHandler());
-            crafttweakerModule.registerBEP(bep);
+            
             SCRIPTING_ENGINE.registerNativeProvided(crafttweakerModule);
             for(String key : CraftTweakerRegistry.getRootPackages()) {
                 //module already registered
@@ -157,6 +159,10 @@ public class CraftTweakerAPI {
                     continue;
                 }
                 JavaNativeModule module = SCRIPTING_ENGINE.createNativeModule(key, key, crafttweakerModule);
+                module.registerBEP(bep);
+                for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(key, SCRIPTING_ENGINE, module)) {
+                    bep.register(bracketResolver.getName(), bracketResolver);
+                }
                 CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
                 SCRIPTING_ENGINE.registerNativeProvided(module);
                 modules.add(module);
@@ -175,7 +181,7 @@ public class CraftTweakerAPI {
                 CraftTweaker.LOG.info("Scripts are invalid!");
                 return;
             }
-
+            
             //  toggle this to format scripts, ideally this should be a command
             if(scriptLoadingOptions.isFormat()) {
                 List<HighLevelDefinition> all = scripts.definitions.getAll();
@@ -198,6 +204,9 @@ public class CraftTweakerAPI {
             }
 
             if(!scriptLoadingOptions.isExecute()) {
+                if(DEBUG_MODE) {
+                    SCRIPTING_ENGINE.createRunUnit().dump(new File("classes"));
+                }
                 return;
             }
 

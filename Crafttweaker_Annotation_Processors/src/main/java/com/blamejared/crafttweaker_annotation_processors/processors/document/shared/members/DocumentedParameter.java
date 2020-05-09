@@ -51,7 +51,7 @@ public class DocumentedParameter {
                 .getDocComment(element.getEnclosingElement());
         final String[] examples = CommentUtils.findAllAnnotation(methodDocComment, "@docParam " + name);
 
-        final String description = CommentUtils.joinDocAnnotation(methodDocComment, "@param " + name, environment)
+        final String description = CommentUtils.joinDocAnnotation(element, "@param " + name, environment)
                 .trim();
 
 

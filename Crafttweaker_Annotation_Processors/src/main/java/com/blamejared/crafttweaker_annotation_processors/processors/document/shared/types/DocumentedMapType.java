@@ -22,4 +22,9 @@ public class DocumentedMapType extends DocumentedType {
     public String getZSShortName() {
         return keyType.getZSShortName() + valueType.getZSShortName() + "Map";
     }
+    
+    @Override
+    public String getDocParamThis() {
+        return "{} as " + getZSName();
+    }
 }

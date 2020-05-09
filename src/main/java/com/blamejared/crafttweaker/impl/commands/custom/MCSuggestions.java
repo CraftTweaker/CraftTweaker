@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import org.openzen.zencode.java.ZenCodeType;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCSuggestions")
+@Document("vanilla/api/commands/custom/MCSuggestions")
 public class MCSuggestions {
     
     private final Suggestions internal;

@@ -222,29 +222,37 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFilter")
+    @Document("vanilla/api/recipe/RecipeFilter")
     interface RecipeFilter {
-        
+        @ZenCodeType.Method
         boolean test(String name);
     }
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionSingle")
+    @Document("vanilla/api/recipe/RecipeFunctionSingle")
     interface RecipeFunctionSingle {
-        
+        @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack inputs);
     }
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionArray")
+    @Document("vanilla/api/recipe/RecipeFunctionArray")
     interface RecipeFunctionArray {
-        
+        @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[] inputs);
     }
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionMatrix")
+    @Document("vanilla/api/recipe/RecipeFunctionMatrix")
     interface RecipeFunctionMatrix {
-        
+        @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
     }
     

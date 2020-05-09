@@ -21,4 +21,9 @@ public class DocumentedArrayType extends DocumentedType {
     public String getZSShortName() {
         return base.getZSShortName() + "Array";
     }
+    
+    @Override
+    public String getDocParamThis() {
+        return "[] as " + getZSName();
+    }
 }
