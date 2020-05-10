@@ -26,9 +26,15 @@ public class ShortData implements INumberData {
         this.internal = new ShortNBT(internal);
     }
     
+    
     @Override
     public IData copy() {
         return new ShortData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new ShortData(getInternal().copy());
     }
     
     @Override

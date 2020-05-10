@@ -35,6 +35,11 @@ public class IntArrayData implements ICollectionData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new IntArrayData(getInternal().copy());
+    }
+    
+    @Override
     public IntArrayNBT getInternal() {
         return internal;
     }
