@@ -35,6 +35,11 @@ public class LongArrayData implements ICollectionData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new LongArrayData(getInternal().copy());
+    }
+    
+    @Override
     public LongArrayNBT getInternal() {
         return internal;
     }

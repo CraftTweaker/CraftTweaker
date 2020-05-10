@@ -93,7 +93,12 @@ public class ListData implements ICollectionData {
     }
     
     @Override
-    public INBT getInternal() {
+    public IData copyInternal() {
+        return new ListData(getInternal().copy());
+    }
+    
+    @Override
+    public ListNBT getInternal() {
         return internal;
     }
     
