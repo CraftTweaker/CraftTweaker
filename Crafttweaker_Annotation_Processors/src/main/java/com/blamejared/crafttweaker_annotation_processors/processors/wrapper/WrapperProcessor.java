@@ -153,14 +153,20 @@ public class WrapperProcessor extends AbstractProcessor {
 
         for (Element element : roundEnv.getElementsAnnotatedWith(ZenWrapper.class)) {
             final ZenWrapper annotation = element.getAnnotation(ZenWrapper.class);
-
+            final ExistingWrapperInfo wrapperInfo;
             if (element instanceof TypeElement) {
                 TypeElement typeElement = (TypeElement) element;
-                knownWrappers.add(new ExistingWrapperInfo(annotation.wrappedClass(), typeElement.getQualifiedName()
-                        .toString(), annotation.implementingClass()));
+                wrapperInfo = new ExistingWrapperInfo(annotation.wrappedClass(), typeElement
+                        .getQualifiedName()
+                        .toString(), annotation.implementingClass());
             } else {
-                knownWrappers.add(new ExistingWrapperInfo(annotation.wrappedClass(), element.toString(), annotation.implementingClass()));
+                wrapperInfo = new ExistingWrapperInfo(annotation.wrappedClass(), element
+                        .toString(), annotation.implementingClass());
             }
+            if(!annotation.creationMethodFormat().isEmpty()){
+                wrapperInfo.setWrappingFormat(annotation.creationMethodFormat());
+            }
+            knownWrappers.add(wrapperInfo);
         }
 
         final Set<Class<?>> typesAnnotatedWith = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()))
