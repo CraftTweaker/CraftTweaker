@@ -31,6 +31,11 @@ public class StringData implements IData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new StringData(getInternal().copy());
+    }
+    
+    @Override
     public StringNBT getInternal() {
         return internal;
     }
@@ -40,13 +45,14 @@ public class StringData implements IData {
     public boolean contains(IData data) {
         return asString().equals(data.asString());
     }
-
+    
     /**
      * Concatenates the two string Datas and returns the result.
      *
      * @param data The other data to append
-     * @docParam data new StringData("World")
+     *
      * @return A new StringData with the value concatenated.
+     * @docParam data new StringData("World")
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
     public StringData addTogether(StringData data) {
@@ -57,12 +63,12 @@ public class StringData implements IData {
     public String asString() {
         return quoteAndEscape(internal.getString()) + " as string";
     }
-
+    
     @Override
     public String toJsonString() {
         return quoteAndEscape(internal.getString());
     }
-
+    
     private String quoteAndEscape(String p_193588_0_) {
         StringBuilder stringbuilder = new StringBuilder("\"");
         

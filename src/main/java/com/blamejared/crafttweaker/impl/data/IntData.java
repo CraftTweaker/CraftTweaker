@@ -32,6 +32,11 @@ public class IntData implements INumberData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new IntData(getInternal().copy());
+    }
+    
+    @Override
     public IntNBT getInternal() {
         return internal;
     }

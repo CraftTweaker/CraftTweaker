@@ -38,6 +38,11 @@ public class ByteArrayData implements ICollectionData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new ByteArrayData((ByteArrayNBT) getInternal().copy());
+    }
+    
+    @Override
     public ByteArrayNBT getInternal() {
         return internal;
     }

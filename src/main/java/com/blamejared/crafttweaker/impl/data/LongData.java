@@ -32,6 +32,11 @@ public class LongData implements INumberData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new LongData(getInternal().copy());
+    }
+    
+    @Override
     public LongNBT getInternal() {
         return internal;
     }

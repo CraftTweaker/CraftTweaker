@@ -28,31 +28,31 @@ public class MCItemStack implements IItemStack {
     public IItemStack copy() {
         return new MCItemStack(internal.copy());
     }
-
+    
     @Override
     public IItemStack setDisplayName(String name) {
-        ItemStack newStack = internal.copy();
+        ItemStack newStack = getInternal().copy();
         newStack.setDisplayName(new StringTextComponent(name));
         return new MCItemStack(newStack);
     }
     
     @Override
     public IItemStack setAmount(int amount) {
-        ItemStack newStack = internal.copy();
+        ItemStack newStack = getInternal().copy();
         newStack.setCount(amount);
         return new MCItemStack(newStack);
     }
     
     @Override
     public IItemStack withDamage(int damage) {
-        final ItemStack copy = internal.copy();
+        final ItemStack copy = getInternal().copy();
         copy.setDamage(damage);
         return new MCItemStack(copy);
     }
     
     @Override
     public IItemStack withTag(IData tag) {
-        final ItemStack copy = internal.copy();
+        final ItemStack copy = getInternal().copy();
         if(!(tag instanceof MapData)) {
             tag = new MapData(tag.asMap());
         }
@@ -73,17 +73,24 @@ public class MCItemStack implements IItemStack {
     @Override
     public String getCommandString() {
         final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(internal.getItem().getRegistryName());
+        sb.append(getInternal().getItem().getRegistryName());
         sb.append(">");
         
-        if(internal.getTag() != null) {
-            sb.append(".withTag(");
-            sb.append(NBTConverter.convert(internal.getTag()).asString());
-            sb.append(")");
+        if(getInternal().getTag() != null) {
+            MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
+            //Damage is special case, if we have more special cases we can handle them here.
+            if(getInternal().isDamaged()) {
+                data.remove("Damage");
+            }
+            if(!data.isEmpty()) {
+                sb.append(".withTag(");
+                sb.append(data.asString());
+                sb.append(")");
+            }
         }
         
-        if(internal.getDamage() > 0)
-            sb.append(".withDamage(").append(internal.getDamage()).append(")");
+        if(getInternal().getDamage() > 0)
+            sb.append(".withDamage(").append(getInternal().getDamage()).append(")");
         
         if(getAmount() != 1)
             sb.append(" * ").append(getAmount());

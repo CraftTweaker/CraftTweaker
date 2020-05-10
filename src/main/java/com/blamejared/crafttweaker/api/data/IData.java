@@ -43,6 +43,13 @@ public interface IData {
     IData copy();
     
     /**
+     * Makes a copy of this IData with a copy of the internal INBT object.
+     *
+     * @return a copy of this IData with a copy of the internal INBT object.
+     */
+    IData copyInternal();
+    
+    /**
      * Gets the internal INBT stored in this IData.
      *
      * @return the vanilla INBT tag that this IData represents.
