@@ -7,13 +7,13 @@ import crafttweaker.api.player.IPlayer;
  * @author Stan
  */
 public class MCPlayerLoggedOutEvent implements PlayerLoggedOutEvent {
-    
+
     private final IPlayer player;
-    
+
     public MCPlayerLoggedOutEvent(IPlayer player) {
         this.player = player;
     }
-    
+
     @Override
     public IPlayer getPlayer() {
         return player;

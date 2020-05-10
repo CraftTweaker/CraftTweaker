@@ -67,8 +67,6 @@ public class Commands {
             
             @Override
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                List<ILiquidDefinition> liquids = CraftTweakerAPI.game.getLiquids();
-                liquids.sort(LIQUID_COMPARATOR);
                 
                 CraftTweakerAPI.logCommand("Foods:");
                 for(IItemDefinition item : CraftTweakerAPI.game.getItems()) {

@@ -5,4 +5,5 @@ import stanhebben.zenscript.annotations.ZenClass;
 
 @ZenRegister
 @ZenClass("crafttweaker.event.EntityLivingJumpEvent")
-public interface EntityLivingJumpEvent extends ILivingEvent {}
+public interface EntityLivingJumpEvent extends ILivingEvent {
+}

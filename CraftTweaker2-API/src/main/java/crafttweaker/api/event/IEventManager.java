@@ -2,7 +2,8 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.util.IEventHandler;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * 37 kinds of event handlers!
@@ -38,7 +39,7 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerAttackEntity(IEventHandler<PlayerAttackEntityEvent> ev);
-    
+
     @ZenMethod
     IEventHandle onPlayerAdvancement(IEventHandler<PlayerAdvancementEvent> ev);
 
@@ -143,22 +144,114 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerRightClickBlock(IEventHandler<PlayerRightClickBlockEvent> ev);
-    
+
     @ZenMethod
     IEventHandle onPlayerInteractBlock(IEventHandler<PlayerRightClickBlockEvent> ev);
 
     @ZenMethod
     IEventHandle onCommand(IEventHandler<CommandEvent> ev);
-    
+
     @ZenMethod
     IEventHandle onCheckSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
-    
+
     @ZenMethod
     IEventHandle onSpecialSpawn(IEventHandler<EntityLivingSpawnEvent.EntityLivingExtendedSpawnEvent> ev);
-    
+
     @ZenMethod
     IEventHandle onAllowDespawn(IEventHandler<EntityLivingSpawnEvent> ev);
-    
+
+    @ZenMethod
+    IEventHandle onAnimalTame(IEventHandler<AnimalTameEvent> ev);
+
+    @ZenMethod
+    IEventHandle onFarmlandTrample(IEventHandler<BlockFarmlandTrampleEvent> ev);
+
+    @ZenMethod
+    IEventHandle onCriticalHit(IEventHandler<CriticalHitEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEnchantmentLevelSet(IEventHandler<EnchantmentLevelSetEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityMount(IEventHandler<EntityMountEvent> ev);
+
+    @ZenMethod
+    IEventHandle onExplosionStart(IEventHandler<ExplosionStartEvent> ev);
+
+    @ZenMethod
+    IEventHandle onExplosionDetonate(IEventHandler<ExplosionDetonateEvent> ev);
+
+    @ZenMethod
+    IEventHandle onItemFished(IEventHandler<ItemFishedEvent> ev);
+
+    @ZenMethod
+    IEventHandle onCropGrowPre(IEventHandler<CropGrowPreEvent> ev);
+
+    @ZenMethod
+    IEventHandle onCropGrowPost(IEventHandler<CropGrowPostEvent> ev);
+
+    @ZenMethod
+    IEventHandle onBlockPlace(IEventHandler<BlockPlaceEvent> ev);
+
+    @ZenMethod
+    IEventHandle onMobGriefing(IEventHandler<MobGriefingEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityTravelToDimension(IEventHandler<EntityTravelToDimensionEvent> ev);
+
+    @ZenMethod
+    IEventHandle onLivingDestroyBlock(IEventHandler<LivingDestroyBlockEvent> ev);
+
+    @ZenMethod
+    IEventHandle onLivingExperienceDrop(IEventHandler<LivingExperienceDropEvent> ev);
+
+    @ZenMethod
+    IEventHandle onLivingKnockBack(IEventHandler<LivingKnockBackEvent> ev);
+
+    @ZenMethod
+    IEventHandle onLootingLevel(IEventHandler<LootingLevelEvent> ev);
+
+    @ZenMethod
+    IEventHandle onMinecartCollision(IEventHandler<MinecartCollisionEvent> ev);
+
+    @ZenMethod
+    IEventHandle onMinecartInteract(IEventHandler<MinecartInteractEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerCloseContainer(IEventHandler<PlayerCloseContainerEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerItemPickup(IEventHandler<PlayerItemPickupEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerVisibility(IEventHandler<PlayerVisibilityEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerLeftClickBlock(IEventHandler<PlayerLeftClickBlockEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerRightClickItem(IEventHandler<PlayerRightClickItemEvent> ev);
+
+    @ZenMethod
+    IEventHandle onSleepingLocationCheck(IEventHandler<SleepingLocationCheckEvent> ev);
+
+    @ZenMethod
+    IEventHandle onSleepingTimeCheck(IEventHandler<SleepingTimeCheckEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionBrewPre(IEventHandler<PotionBrewPreEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionBrewPost(IEventHandler<PotionBrewPostEvent> ev);
+
+    @ZenMethod
+    IEventHandle onProjectileImpactArrow(IEventHandler<ProjectileImpactArrowEvent> ev);
+
+    @ZenMethod
+    IEventHandle onProjectileImpactFireball(IEventHandler<ProjectileImpactFireballEvent> ev);
+
+    @ZenMethod
+    IEventHandle onProjectileImpactThrowable(IEventHandler<ProjectileImpactThrowableEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
@@ -168,10 +261,6 @@ public interface IEventManager {
      * IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
      *
      * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
-     *
-     * IEventHandle onMinecartCollision(IMinecartCollisionEventHandler ev);
-     *
-     * IEventHandle onMinecartInteract(IMinecartInteractEventHandler ev);
      *
      */
 }

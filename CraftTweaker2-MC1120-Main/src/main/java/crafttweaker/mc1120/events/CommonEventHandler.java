@@ -11,7 +11,6 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.recipes.CraftingInfo;
 import crafttweaker.mc1120.brackets.*;
 import crafttweaker.mc1120.damage.MCDamageSource;
-import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.events.handling.*;
 import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
@@ -20,7 +19,6 @@ import crafttweaker.mc1120.recipes.MCCraftingInventorySquared;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.runtime.ScriptLoader;
-import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -33,13 +31,19 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.event.brewing.PotionBrewEvent;
+import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
+import net.minecraftforge.event.entity.*;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.minecart.MinecartCollisionEvent;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
+import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -441,5 +445,214 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishAllowDespawn(new MCEntityLivingSpawnEvent(ev));
     }
     
-    
+    @SubscribeEvent
+    public void onAnimalTameEvent(AnimalTameEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasAnimalTame())
+            CrafttweakerImplementationAPI.events.publishAnimalTame(new MCAnimalTameEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onFarmlandTrampleEvent(BlockEvent.FarmlandTrampleEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasFarmlandTrample())
+            CrafttweakerImplementationAPI.events.publishFarmlandTrample(new MCBlockFarmlandTrampleEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onCriticalHitEvent(CriticalHitEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasCriticalHit())
+            CrafttweakerImplementationAPI.events.publishCriticalHit(new MCCriticalHitEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onEnchantmentLevelSet(EnchantmentLevelSetEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasEnchantmentLevelSet())
+            CrafttweakerImplementationAPI.events.publishEnchantmentLevelSet(new MCEnchantmentLevelSetEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onEntityMount(EntityMountEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityMount())
+            CrafttweakerImplementationAPI.events.publishEntityMount(new MCEntityMountEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onExplosionDetonate(ExplosionEvent.Detonate ev) {
+        if (CrafttweakerImplementationAPI.events.hasExplosionDetonate())
+            CrafttweakerImplementationAPI.events.publishExplosionDetonate(new MCExplosionDetonateEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onExplosionStart(ExplosionEvent.Start ev) {
+        if (CrafttweakerImplementationAPI.events.hasExplosionStart())
+            CrafttweakerImplementationAPI.events.publishExplosionStart(new MCExplosionStartEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onItemFished(ItemFishedEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasItemFished())
+            CrafttweakerImplementationAPI.events.publishItemFished(new MCItemFishedEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onCropGrowPre (BlockEvent.CropGrowEvent.Pre ev) {
+        if (CrafttweakerImplementationAPI.events.hasCropGrowPre())
+            CrafttweakerImplementationAPI.events.publishCropGrowPre(new MCCropGrowPreEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onCropGrowPost (BlockEvent.CropGrowEvent.Post ev) {
+        if (CrafttweakerImplementationAPI.events.hasCropGrowPost())
+            CrafttweakerImplementationAPI.events.publishCropGrowPost(new MCCropGrowPostEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onBlockPlace (BlockEvent.PlaceEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasBlockPlace())
+            CrafttweakerImplementationAPI.events.publishBlockPlace(new MCBlockPlaceEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onMobGriefing (EntityMobGriefingEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasMobGriefing())
+            CrafttweakerImplementationAPI.events.publishMobGriefing(new MCMobGriefingEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onEntityTravelToDimension (EntityTravelToDimensionEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityTravelToDimension())
+            CrafttweakerImplementationAPI.events.publishEntityTravelToDimension(new MCEntityTravelToDimensionEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onLivingDestroyBlock (LivingDestroyBlockEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLivingDestroyBlock()) {
+            CrafttweakerImplementationAPI.events.publishLivingDestroyBlock(new MCLivingDestroyBlockEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingExperienceDrop (LivingExperienceDropEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLivingExperienceDrop()) {
+            CrafttweakerImplementationAPI.events.publishLivingExperienceDrop(new MCLivingExperienceDropEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingKnockBackEvent (LivingKnockBackEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLivingKnockBack()) {
+            CrafttweakerImplementationAPI.events.publishLivingKnockBack(new MCLivingKnockBackEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onLootingLevel (LootingLevelEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasLootingLevel()) {
+            CrafttweakerImplementationAPI.events.publishLootingLevel(new MCLootingLevelEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onMinecartCollision(MinecartCollisionEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasMinecartCollision()) {
+            CrafttweakerImplementationAPI.events.publishMinecartCollision(new MCMinecartCollisionEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onMinecartInteract (MinecartInteractEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasMinecartInteract()) {
+            CrafttweakerImplementationAPI.events.publishMinecartInteract(new MCMinecartInteractEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerCloseContainer (PlayerContainerEvent.Close ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerCloseContainer()) {
+            CrafttweakerImplementationAPI.events.publishPlayerCloseContainer(new MCPlayerCloseContainerEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerItemPickup (PlayerEvent.ItemPickupEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerItemPickup()) {
+            CrafttweakerImplementationAPI.events.publishPlayerItemPickup(new MCPlayerItemPickupEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerVisibility (net.minecraftforge.event.entity.player.PlayerEvent.Visibility ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerVisibility()) {
+            CrafttweakerImplementationAPI.events.publishPlayerVisibility(new MCPlayerVisibilityEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLeftClickBlock (PlayerInteractEvent.LeftClickBlock ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerLeftClickBlock()) {
+            CrafttweakerImplementationAPI.events.publishPlayerLeftClickBlock(new MCPlayerLeftClickBlockEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRightClickItem (PlayerInteractEvent.RightClickItem ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerRightClickItem()) {
+            CrafttweakerImplementationAPI.events.publishPlayerRightClickItem(new MCPlayerRightClickItemEvent(ev));
+        }
+    }
+
+/*    @SubscribeEvent
+    public void onSaplingGrowTree (SaplingGrowTreeEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasSaplingGrowTree()) {
+            CrafttweakerImplementationAPI.events.publishSaplingGrowTree(new MCSaplingGrowTreeEvent(ev));
+        }
+    }*/
+
+    @SubscribeEvent
+    public void onSleepingLocationCheck (SleepingLocationCheckEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasSleepingLocationCheck()) {
+            CrafttweakerImplementationAPI.events.publishSleepingLocationCheck(new MCSleepingLocationCheckEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onSleepingTimeCheck (SleepingTimeCheckEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasSleepingTimeCheck()) {
+            CrafttweakerImplementationAPI.events.publishSleepingTimeCheck(new MCSleepingTimeCheckEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPotionBrewPre (PotionBrewEvent.Pre ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionBrewPre()) {
+            CrafttweakerImplementationAPI.events.publishPotionBrewPre(new MCPotionBrewPreEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPotionBrewPost (PotionBrewEvent.Post ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionBrewPost()) {
+            CrafttweakerImplementationAPI.events.publishPotionBrewPost(new MCPotionBrewPostEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onProjectileImpactArrow (ProjectileImpactEvent.Arrow ev) {
+        if (CrafttweakerImplementationAPI.events.hasProjectileImpactArrow()) {
+            CrafttweakerImplementationAPI.events.publishProjectileImpactArrow(new MCProjectileImpactArrowEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onProjectileImpactFireball (ProjectileImpactEvent.Fireball ev) {
+        if (CrafttweakerImplementationAPI.events.hasProjectileImpactFireball()) {
+            CrafttweakerImplementationAPI.events.publishProjectileImpactFireball(new MCProjectileImpactFireballEvent(ev));
+        }
+    }
+
+    @SubscribeEvent
+    public void onProjectileImpactThrowable (ProjectileImpactEvent.Throwable ev) {
+        if (CrafttweakerImplementationAPI.events.hasProjectileImpactThrowable()) {
+            CrafttweakerImplementationAPI.events.publishProjectileImpactThrowable(new MCProjectileImpactThrowableEvent(ev));
+        }
+    }
 }

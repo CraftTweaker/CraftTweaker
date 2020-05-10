@@ -42,6 +42,17 @@ public interface IItemStack extends IIngredient {
      */
     @ZenGetter("definition")
     IItemDefinition getDefinition();
+
+    /**
+     * Determine if the itemstack contains an itemblock.
+     *
+     * @return Whether or not the item linked to this stack is an itemblock.
+     */
+    @ZenGetter("isItemBlock")
+    default boolean isItemBlock() {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IItemStack::isItemBlock!");
+        return false;
+    }
     
     /**
      * Gets the unlocalized item name.

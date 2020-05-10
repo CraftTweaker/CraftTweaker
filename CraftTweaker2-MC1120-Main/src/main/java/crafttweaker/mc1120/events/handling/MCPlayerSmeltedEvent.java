@@ -7,21 +7,21 @@ import crafttweaker.api.player.IPlayer;
 /**
  * @author Stan
  */
-public class MCPlayerSmeltedEvent implements PlayerSmeltedEvent{
-    
+public class MCPlayerSmeltedEvent implements PlayerSmeltedEvent {
+
     private final IPlayer player;
     private final IItemStack output;
-    
+
     public MCPlayerSmeltedEvent(IPlayer player, IItemStack output) {
         this.player = player;
         this.output = output;
     }
-    
+
     @Override
     public IPlayer getPlayer() {
         return player;
     }
-    
+
     @Override
     public IItemStack getOutput() {
         return output;

@@ -4,7 +4,10 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.item.IItemStack;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
 
 import java.util.List;
 
@@ -14,19 +17,19 @@ import java.util.List;
 @ZenClass("crafttweaker.event.PlayerDeathDropsEvent")
 @ZenRegister
 public interface PlayerDeathDropsEvent extends IPlayerEvent {
-    
+
     @ZenGetter("items")
     List<IEntityItem> getItems();
-    
+
     @ZenSetter("items")
     void setItems(List<IEntityItem> items);
-    
+
     @ZenMethod
     void addItem(IItemStack item);
-    
+
     @ZenMethod
     void addItem(IEntityItem entityItem);
-    
+
     @ZenGetter("damageSource")
     IDamageSource getDamageSource();
 }

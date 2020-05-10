@@ -10,32 +10,32 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.EntityLivingSpawnEvent")
 @ZenRegister
 public interface EntityLivingSpawnEvent extends ILivingEvent {
-    
+
     @ZenGetter("world")
     IWorld getWorld();
-    
+
     @ZenGetter("x")
     float getX();
-    
+
     @ZenGetter("y")
     float getY();
-    
+
     @ZenGetter("z")
     float getZ();
-    
+
     @ZenMethod
     void allow();
-    
+
     @ZenMethod
     void deny();
-    
+
     @ZenMethod
     void pass();
-    
+
     @ZenClass("crafttweaker.event.EntityLivingExtendedSpawnEvent")
     @ZenRegister
     interface EntityLivingExtendedSpawnEvent extends EntityLivingSpawnEvent {
-        
+
         @ZenGetter("spawner")
         IMobSpawnerBaseLogic getSpawner();
     }

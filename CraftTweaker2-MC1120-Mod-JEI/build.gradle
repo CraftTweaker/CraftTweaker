@@ -8,6 +8,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -32,4 +33,82 @@ dependencies {
     compile(project(':CraftTweaker2-API'))
     compile project(':CraftTweaker2-MC1120-Main')
     deobfCompile "mezz.jei:jei_1.12.2:4.15.0.271"
+}
+
+processResources {
+
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+
+    description = 'Creates a JAR containing the source code.'
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+
+    description = 'Creates a JAR containing the JavaDocs.'
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+task deobfJar(type: Jar) {
+
+    description = 'Creates a JAR containing the non-obfuscated compiled code.'
+    from sourceSets.main.output
+    classifier = "deobf"
+}
+
+//Adds the artifact types added by this script to the actual artifacts list.
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+    archives deobfJar
+}
+
+publishing {
+
+    publications {
+
+        mavenJava(MavenPublication) {
+
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+
+            // Adds the various artifacts
+            artifact sourcesJar {
+
+                classifier 'sources'
+            }
+            artifact javadocJar {
+
+                classifier 'javadoc'
+            }
+            artifact deobfJar {
+
+                classifier 'deobf'
+            }
+        }
+    }
+
+    repositories {
+
+        maven {
+
+            url "file://" + System.getenv("local_maven")
+        }
+    }
 }

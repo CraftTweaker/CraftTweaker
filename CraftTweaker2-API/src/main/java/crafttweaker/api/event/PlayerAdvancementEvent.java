@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.PlayerAdvancementEvent")
 @ZenRegister
 public interface PlayerAdvancementEvent extends IPlayerEvent {
-    
+
     @ZenMethod
     @ZenGetter("id")
     String getId();

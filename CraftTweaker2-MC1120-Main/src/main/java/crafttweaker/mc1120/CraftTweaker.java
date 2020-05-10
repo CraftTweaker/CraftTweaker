@@ -35,8 +35,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.io.File;
+import java.io.*;
+import java.net.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,7 +47,7 @@ import org.apache.logging.log4j.Logger;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.1.19", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(modid = CraftTweaker.MODID, version = "4.1.20", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12]")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
@@ -60,7 +62,7 @@ public class CraftTweaker {
     @SidedProxy(clientSide = "crafttweaker.mc1120.proxies.ClientProxy", serverSide = "crafttweaker.mc1120.proxies.CommonProxy")
     public static CommonProxy PROXY;
     
-    
+    private static Set<String> PATRON_LIST = new HashSet<>();
     public static List<IAction> LATE_ACTIONS = new LinkedList<>();
     static {
         int ID = 0;
@@ -74,6 +76,20 @@ public class CraftTweaker {
     
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
+        new Thread(() -> {
+            try {
+                URL url = new URL("https://blamejared.com/patrons.txt");
+                URLConnection urlConnection = url.openConnection();
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setReadTimeout(15000);
+                urlConnection.setRequestProperty("User-Agent", "CraftTweaker|1.12.2");
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
+                    PATRON_LIST = reader.lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         CrafttweakerImplementationAPI.init(new MCOreDict(), recipes = new MCRecipeManager(), new MCFurnaceManager(), MCGame.INSTANCE, new MCLoadedMods(), new MCFormatter(), new MCVanilla(), new MCItemUtils(), new MCBrewing());
         CrafttweakerImplementationAPI.logger.addLogger(new MCLogger(new File("crafttweaker.log")));
         CrafttweakerImplementationAPI.platform = MCPlatformFunctions.INSTANCE;
@@ -117,7 +133,16 @@ public class CraftTweaker {
         if(CraftTweakerPlatformUtils.isClient()) {
             CraftTweakerAPI.client = new MCClient();
         }
-        
+        if(!PATRON_LIST.isEmpty()) {
+            StringBuilder builder = new StringBuilder("Thank you to the Patreon supporters below and others who make CraftTweaker possible!").append("\n");
+            List<String> temp = new ArrayList<>(PATRON_LIST);
+            Collections.shuffle(temp);
+            for(int i = 0; i < Math.min(20, temp.size()); i++) {
+                builder.append(temp.get(i)).append("\n");
+            }
+            builder.append("If you want to support the mod, checkout https://patreon.com/jaredlll08?s=crtmod").append("\n");
+            CraftTweakerAPI.getLogger().logInfo(builder.toString());
+        }
         IScriptProvider cascaded = new ScriptProviderCascade(scriptsGlobal);
         CrafttweakerImplementationAPI.setScriptProvider(cascaded);
         
@@ -158,9 +183,11 @@ public class CraftTweaker {
         if(!alreadyChangedThePlayer) {
             alreadyChangedThePlayer = true;
             RecipeBookClient.rebuildTable();
-            minecraft.populateSearchTreeManager();
-            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
-            ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+            if(CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION) {
+                minecraft.populateSearchTreeManager();
+                ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
+                ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+            }
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }
     }
