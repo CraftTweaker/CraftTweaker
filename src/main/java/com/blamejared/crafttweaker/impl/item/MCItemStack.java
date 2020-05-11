@@ -26,7 +26,7 @@ public class MCItemStack implements IItemStack {
 
     @Override
     public IItemStack copy() {
-        return new MCItemStack(internal.copy());
+        return new MCItemStack(getInternal().copy());
     }
     
     @Override
