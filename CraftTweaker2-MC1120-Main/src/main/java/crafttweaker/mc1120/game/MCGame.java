@@ -5,7 +5,7 @@ import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.game.IGame;
 import crafttweaker.api.item.IItemDefinition;
-import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.world.IBiome;
@@ -50,6 +50,11 @@ public class MCGame implements IGame {
     @Override
     public List<ILiquidDefinition> getLiquids() {
         return FluidRegistry.getRegisteredFluids().entrySet().stream().map(entry -> new MCLiquidDefinition(entry.getValue())).collect(Collectors.toList());
+    }
+    
+    @Override
+    public ILiquidStack getLiquid(String name) {
+        return BracketHandlerLiquid.getLiquid(name);
     }
     
     @Override
