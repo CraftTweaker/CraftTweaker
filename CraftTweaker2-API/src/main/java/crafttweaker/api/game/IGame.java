@@ -4,7 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemDefinition;
-import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.*;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.world.IBiome;
 import stanhebben.zenscript.annotations.*;
@@ -43,6 +43,16 @@ public interface IGame {
      */
     @ZenGetter("liquids")
     List<ILiquidDefinition> getLiquids();
+    
+    
+    /**
+     * Retrieves a liquid in the game from a string.
+     *
+     * @return game liquids
+     */
+    @ZenMethod()
+    ILiquidStack getLiquid(String name);
+    
     
     /**
      * Retrieves the biomes in this game.
