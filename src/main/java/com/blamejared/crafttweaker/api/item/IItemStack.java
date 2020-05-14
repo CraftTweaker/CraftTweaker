@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
 import com.blamejared.crafttweaker.impl.food.MCFood;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
@@ -27,14 +26,14 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/items/IItemStack")
 @ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
 public interface IItemStack extends IIngredient {
-
-
+    
+    
     /**
      * Creates a copy
      */
     @ZenCodeType.Method
     IItemStack copy();
-
+    
     /**
      * Gets the registry name for the Item in this IItemStack
      *
@@ -244,6 +243,7 @@ public interface IItemStack extends IIngredient {
      * @param tag The tag to set.
      *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
+     *
      * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
@@ -302,9 +302,6 @@ public interface IItemStack extends IIngredient {
         }
         CompoundNBT stack1Tag = stack1.getTag();
         CompoundNBT stack2Tag = stack2.getTag();
-        if(stack1.hasTag() != stack2.hasTag()) {
-            return false;
-        }
         if(stack1Tag == null && stack2Tag == null) {
             return true;
         }
@@ -312,15 +309,11 @@ public interface IItemStack extends IIngredient {
         // Lets just use the partial nbt
         IData stack2Data = NBTConverter.convert(stack2Tag);
         IData stack1Data = NBTConverter.convert(stack1Tag);
-        // I think this is correct
-        if((stack2Data == null) != (stack1Data == null)) {
-            return false;
-        }
-        if(stack2Data == null) {
+        if(stack1Data == null) {
             return true;
         }
         
-        return stack2Data.contains(stack1Data);
+        return stack2Data != null && stack2Data.contains(stack1Data);
     }
     
     

@@ -23,7 +23,7 @@ public class ShortData implements INumberData {
     
     @ZenCodeType.Constructor
     public ShortData(short internal) {
-        this.internal = new ShortNBT(internal);
+        this.internal = ShortNBT.valueOf(internal);
     }
     
     @Override

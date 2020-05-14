@@ -40,7 +40,7 @@ public class IntArrayData implements ICollectionData {
     @Override
     public IntData set(int index, IData value) {
         if(value instanceof NumberNBT) {
-            return new IntData(internal.set(index, new IntNBT(((INumberData) value).getInt())));
+            return new IntData(internal.set(index, IntNBT.valueOf(((INumberData) value).getInt())));
         } else {
             return null;
         }
@@ -50,14 +50,14 @@ public class IntArrayData implements ICollectionData {
     @Override
     public void add(int index, IData value) {
         if(value instanceof INumberData) {
-            internal.add(index, new IntNBT(((INumberData) value).getInt()));
+            internal.add(index, IntNBT.valueOf(((INumberData) value).getInt()));
         }
     }
     
     @Override
     public void add(IData value) {
         if(value instanceof INumberData) {
-            internal.add(new IntNBT(((INumberData) value).getInt()));
+            internal.add(IntNBT.valueOf(((INumberData) value).getInt()));
         }
     }
     

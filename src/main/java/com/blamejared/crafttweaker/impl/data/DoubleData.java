@@ -23,7 +23,7 @@ public class DoubleData implements INumberData {
     
     @ZenCodeType.Constructor
     public DoubleData(double internal) {
-        this.internal = new DoubleNBT(internal);
+        this.internal = DoubleNBT.valueOf(internal);
     }
     
     @Override

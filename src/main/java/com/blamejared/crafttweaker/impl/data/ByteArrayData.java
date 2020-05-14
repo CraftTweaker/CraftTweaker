@@ -45,7 +45,7 @@ public class ByteArrayData implements ICollectionData {
     @Override
     public IData set(int index, IData value) {
         if(value instanceof NumberNBT) {
-            return new ByteData(internal.set(index, new ByteNBT(((INumberData) value).getByte())));
+            return new ByteData(internal.set(index, ByteNBT.valueOf(((INumberData) value).getByte())));
         } else {
             return null;
         }
@@ -55,14 +55,14 @@ public class ByteArrayData implements ICollectionData {
     @Override
     public void add(int index, IData value) {
         if(value instanceof INumberData) {
-            internal.add(index, new ByteNBT(((INumberData) value).getByte()));
+            internal.add(index, ByteNBT.valueOf(((INumberData) value).getByte()));
         }
     }
     
     @Override
     public void add(IData value) {
         if(value instanceof INumberData) {
-            internal.add(new ByteNBT(((INumberData) value).getByte()));
+            internal.add(ByteNBT.valueOf(((INumberData) value).getByte()));
         }
     }
     
