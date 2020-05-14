@@ -34,20 +34,18 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.*;
+import org.apache.logging.log4j.*;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.1.20", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12]")
+@Mod(modid = CraftTweaker.MODID, version = "4.1.20", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12]", updateJSON = "https://updates.blamejared.com/get?n=crafttweaker&gv=1.12.2")
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
