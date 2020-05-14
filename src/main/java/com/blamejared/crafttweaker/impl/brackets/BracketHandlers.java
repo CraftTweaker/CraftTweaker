@@ -21,6 +21,7 @@ import net.minecraft.item.crafting.*;
 import net.minecraft.potion.*;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.*;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.registries.*;
 import org.openzen.zencode.java.*;
 
@@ -52,6 +53,13 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Error gettig blockmaterial <blockmaterial:" + tokens + ">!", e);
         }
         
+        try {
+            CraftTweakerAPI.logInfo("Trying to get blockmaterial '%s' via ObfuscationHelper", tokens);
+            final Field field = ObfuscationReflectionHelper.findField(Material.class, tokens.toUpperCase());
+            return new MCMaterial((Material) field.get(null), tokens);
+        } catch(Exception ignored) {
+        }
+    
         throw new IllegalArgumentException("Could not find blockmaterial <blockmaterial:" + tokens + ">!");
     }
     
