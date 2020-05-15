@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.mods.MCMods;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
@@ -142,7 +143,8 @@ public class CraftTweakerAPI {
             List<JavaNativeModule> modules = new LinkedList<>();
             
             PrefixedBracketParser bep = new PrefixedBracketParser(null);
-            bep.register("recipetype", new RecipeTypeBracketHandler());
+            final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
+            bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
             for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers("crafttweaker", SCRIPTING_ENGINE, crafttweakerModule)) {
                 bep.register(bracketResolver.getName(), bracketResolver);
             }
