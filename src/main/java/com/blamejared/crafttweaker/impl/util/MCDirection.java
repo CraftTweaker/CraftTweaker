@@ -97,6 +97,22 @@ public enum MCDirection {
         return DIRECTION_MAP.get(internal.getOpposite());
     }
     
+
+    //Once this is in 1.15
+//    /**
+//     * Rotates this direction around a given Axis
+//     *
+//     * @param axis the Axis to rotate around
+//     *
+//     * @return the rotated Direction
+//     *
+//     * @docParam axis <directionaxis:north>
+//     */
+//    @ZenCodeType.Method
+//    public MCDirection rotateAround(MCDirectionAxis axis) {
+//        return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
+//    }
+    
     /**
      * Rotates this direction on the Y axis
      *
