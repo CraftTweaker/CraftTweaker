@@ -72,11 +72,10 @@ public class DocumentedOperator implements Writable {
                             .value(), requiredOperands, methodParameters.size()));
         }
 
-        final String docComment = environment.getElementUtils().getDocComment(method);
         final List<DocumentedParameter> parameters;
         String callee = null;
         {
-            final String s = CommentUtils.joinDocAnnotation(docComment, "@docComment this", environment).trim();
+            final String s = CommentUtils.joinDocAnnotation(method, "@docComment this", environment).trim();
             if (!s.isEmpty()) {
                 callee = s;
             }
@@ -90,7 +89,7 @@ public class DocumentedOperator implements Writable {
             }
 
             if (callee == null) {
-                final String docParam_this = CommentUtils.joinDocAnnotation(docComment, "docParam " + methodParameters.get(0)
+                final String docParam_this = CommentUtils.joinDocAnnotation(method, "docParam " + methodParameters.get(0)
                         .getSimpleName(), environment).trim();
                 if (!docParam_this.isEmpty()) {
                     callee = docParam_this;

@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.RedirectModifier;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCRedirectModifier")
+@Document("vanilla/api/commands/custom/MCRedirectModifier")
 public class MCRedirectModifier {
     
     private final RedirectModifier<CommandSource> internal;

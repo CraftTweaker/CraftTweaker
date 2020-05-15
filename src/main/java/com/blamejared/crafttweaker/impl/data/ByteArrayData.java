@@ -10,6 +10,9 @@ import net.minecraft.nbt.ByteNBT;
 import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.*;
+import java.util.stream.*;
+
 /**
  * @docParam this [4, 1, 2]
  */
@@ -103,5 +106,15 @@ public class ByteArrayData implements ICollectionData {
         }
         result.append("]");
         return result.toString();
+    }
+    
+    @Override
+    public List<IData> asList() {
+        final byte[] byteArray = internal.getByteArray();
+        final List<IData> out = new ArrayList<>(byteArray.length);
+        for(byte b : byteArray) {
+            out.add(new ByteData(b));
+        }
+        return out;
     }
 }

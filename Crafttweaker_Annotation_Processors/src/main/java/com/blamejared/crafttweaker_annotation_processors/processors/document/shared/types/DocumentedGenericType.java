@@ -25,11 +25,16 @@ public class DocumentedGenericType extends DocumentedType {
     public String getClickableMarkdown() {
         return genericTypes.stream()
                 .map(DocumentedType::getClickableMarkdown)
-                .collect(Collectors.joining(", ", baseType.getClickableMarkdown() + "<", ">"));
+                .collect(Collectors.joining(", ", baseType.getClickableMarkdown() + "&lt;", "&gt;"));
     }
 
     @Override
     public String getZSShortName() {
         return baseType.getZSShortName();
+    }
+    
+    @Override
+    public String getDocParamThis() {
+        return "my" + baseType.getZSShortName();
     }
 }

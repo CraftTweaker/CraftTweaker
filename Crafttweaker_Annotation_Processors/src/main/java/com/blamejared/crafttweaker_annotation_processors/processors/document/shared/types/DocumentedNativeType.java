@@ -22,4 +22,9 @@ public class DocumentedNativeType extends DocumentedType {
     public String getZSShortName() {
         return ZSName;
     }
+    
+    @Override
+    public String getDocParamThis() {
+        return "my" + ZSName;
+    }
 }

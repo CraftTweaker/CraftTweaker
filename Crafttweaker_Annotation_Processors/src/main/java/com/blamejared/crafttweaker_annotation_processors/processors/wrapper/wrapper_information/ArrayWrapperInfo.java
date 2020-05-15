@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information;
 
-import java.util.Collection;
+import java.util.*;
 
 public class ArrayWrapperInfo extends WrapperInfo {
     private final WrapperInfo element;
@@ -16,6 +16,8 @@ public class ArrayWrapperInfo extends WrapperInfo {
 
     @Override
     public Collection<String> getImport() {
-        return element.getImport();
+        final List<String> imports = new ArrayList<>(element.getImport());
+        imports.add("import java.util.Arrays;");
+        return imports;
     }
 }

@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.recipes.wrappers;
 
+import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import net.minecraft.item.crafting.IRecipe;
@@ -8,6 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipes.WrapperRecipe")
 public class WrapperRecipe {
     

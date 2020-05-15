@@ -103,6 +103,16 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public int getDamage() {
+        return internal.getDamage();
+    }
+    
+    @Override
+    public IItemStack mutable() {
+        return new MCItemStackMutable(internal);
+    }
+    
+    @Override
     public Ingredient asVanillaIngredient() {
         return new IngredientNBT(getInternal());
     }

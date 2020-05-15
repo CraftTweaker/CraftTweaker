@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import net.minecraft.command.CommandSource;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommandDispatcher")
+@Document("vanilla/api/commands/custom/MCCommandDispatcher")
 public class MCCommandDispatcher {
     
     private final CommandDispatcher<CommandSource> internal;

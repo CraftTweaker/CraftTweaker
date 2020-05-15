@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.context.ParsedArgument;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCParsedArgument")
+@Document("vanilla/api/commands/custom/MCParsedArgument")
 public class MCParsedArgument {
     
     private final ParsedArgument<CommandSource, ?> internal;
