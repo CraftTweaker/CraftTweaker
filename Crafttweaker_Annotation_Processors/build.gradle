@@ -17,6 +17,7 @@ apply plugin: 'maven-publish'
 
 group = "com.blamejared.crafttweaker"
 version = "1.0.0"
+archivesBaseName = 'Crafttweaker_Annotation_Processors-1.14.4'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
