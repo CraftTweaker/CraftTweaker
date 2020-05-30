@@ -176,7 +176,7 @@ public class CraftTweakerAPI {
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
 
 
-            SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
+            SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE);
 
             if(!scripts.isValid()) {
                 CraftTweakerAPI.logger.error("Scripts are invalid!");
