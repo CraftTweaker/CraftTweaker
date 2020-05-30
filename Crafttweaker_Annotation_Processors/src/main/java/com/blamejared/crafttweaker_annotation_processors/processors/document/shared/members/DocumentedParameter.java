@@ -40,6 +40,10 @@ public class DocumentedParameter {
                     .printMessage(Diagnostic.Kind.ERROR, "Internal Error: Expected this to be a parameter!", element);
             return null;
         }
+    
+        if(element.asType().toString().startsWith("java.lang.Class")) {
+            return null;
+        }
 
         final DocumentedType type = DocumentedType.fromElement(element, environment);
         final String aDefault = getDefault(element);
@@ -86,7 +90,7 @@ public class DocumentedParameter {
                 return annotationMirror.getElementValues()
                         .values()
                         .stream()
-                        .map(Object::toString)
+                        .map(av -> av.getValue().toString())
                         .findAny()
                         //Not the best way since it does not distinct between floats and int numbers but whatever
                         .orElse(typeName.endsWith("Optional") ? "null" : "0");
@@ -95,29 +99,32 @@ public class DocumentedParameter {
         return null;
     }
 
-    public static void printAllCalls(String callee, List<DocumentedParameter> parameterList, PrintWriter writer) {
+    public static void printAllCalls(String callee, List<DocumentedParameter> parameterList, List<DocumentedTypeParameter> typeParameterList, PrintWriter writer) {
+        
         final String collect = parameterList.stream()
                 .map(DocumentedParameter::getZSDescription)
                 .collect(Collectors.joining(", "));
-        writer.printf("%s(%s);%n", callee, collect);
-
-        final int reduce = parameterList.stream()
-                .mapToInt(d -> d.getExamples().length)
-                .reduce((left, right) -> left * right).orElse(0);
-        if (reduce > 0) {
-            List<String> ss = new ArrayList<>();
-            List<String> lastCall = new ArrayList<>();
-
-            for (DocumentedParameter documentedParameter : parameterList) {
-                if (documentedParameter.isOptional()) {
-                    ss.add(String.join(", ", lastCall));
+        writer.printf("%s%s(%s);%n", callee, DocumentedTypeParameter.formatForDescriptionCall(typeParameterList), collect);
+    
+        for(String exampleTypeArgument : DocumentedTypeParameter.getExampleTypeArguments(typeParameterList)) {
+            final int reduce = parameterList.stream()
+                    .mapToInt(d -> d.getExamples().length)
+                    .reduce((left, right) -> left * right).orElse(0);
+            if (reduce > 0 || !typeParameterList.isEmpty()) {
+                List<String> ss = new ArrayList<>();
+                List<String> lastCall = new ArrayList<>();
+        
+                for (DocumentedParameter documentedParameter : parameterList) {
+                    if (documentedParameter.isOptional()) {
+                        ss.add(String.join(", ", lastCall));
+                    }
+                    lastCall.add(documentedParameter.getExamples()[0]);
                 }
-                lastCall.add(documentedParameter.getExamples()[0]);
-            }
-            ss.add(String.join(", ", lastCall));
-
-            for (String s : ss) {
-                writer.printf("%s(%s);%n", callee, s);
+                ss.add(String.join(", ", lastCall));
+        
+                for (String s : ss) {
+                    writer.printf("%s%s(%s);%n", callee, exampleTypeArgument, s);
+                }
             }
         }
     }
@@ -160,7 +167,7 @@ public class DocumentedParameter {
     void writeTable(PrintWriter writer, boolean containsOptionals) {
         final String desc = description == null ? "No description provided" : description;
         if (containsOptionals) {
-            writer.printf("| %s | %s | %s | %s | %s |%n", getName(), type.getClickableMarkdown(), desc, isOptional(), defaultValue);
+            writer.printf("| %s | %s | %s | %s | `%s` |%n", getName(), type.getClickableMarkdown(), desc, isOptional(), defaultValue);
         } else {
             writer.printf("| %s | %s | %s |%n", getName(), type.getClickableMarkdown(), desc);
         }

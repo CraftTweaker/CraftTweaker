@@ -25,8 +25,9 @@ public class DocumentedMethod implements Writable {
     private final String docComment;
     private final DocumentedType returnType;
     private final String bracketHandlerName;
+    private final List<DocumentedTypeParameter> typeParameters;
     
-    public DocumentedMethod(CrafttweakerDocumentationPage containingPage, String name, List<DocumentedParameter> parameterList, String callee, String docComment, DocumentedType returnType, String bracketHandlerName) {
+    public DocumentedMethod(CrafttweakerDocumentationPage containingPage, String name, List<DocumentedParameter> parameterList, List<DocumentedTypeParameter> documentedTypeParameters, String callee, String docComment, DocumentedType returnType, String bracketHandlerName) {
         this.containingPage = containingPage;
         this.name = name;
         this.parameterList = parameterList;
@@ -34,6 +35,7 @@ public class DocumentedMethod implements Writable {
         this.docComment = docComment;
         this.returnType = returnType;
         this.bracketHandlerName = bracketHandlerName;
+        typeParameters = documentedTypeParameters;
     }
     
     public DocumentedType getReturnType() {
@@ -57,8 +59,8 @@ public class DocumentedMethod implements Writable {
         
         final String name = methodAnnotation.value().isEmpty() ? method.getSimpleName()
                 .toString() : methodAnnotation.value();
-        
         final List<DocumentedParameter> parameterList = DocumentedParameter.getMethodParameters(method, environment, isExpansion);
+        final List<DocumentedTypeParameter> documentedTypeParameters = DocumentedTypeParameter.getMethodTypeParameters(method, environment, isExpansion);
         final boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
         if(isExpansion && !isStatic) {
             environment.getMessager()
@@ -94,7 +96,7 @@ public class DocumentedMethod implements Writable {
         final AnnotationMirror mirror = AnnotationMirrorUtil.getMirror(method, bracketHandlerAnnotation);
         final String bracketHandlerName = mirror == null ? null : AnnotationMirrorUtil.getAnnotationValue(mirror, "value");
     
-        return new DocumentedMethod(containingPage, name, parameterList, callee, CommentUtils.formatDocCommentForDisplay(method, environment), returnType, bracketHandlerName);
+        return new DocumentedMethod(containingPage, name, parameterList, documentedTypeParameters, callee, CommentUtils.formatDocCommentForDisplay(method, environment), returnType, bracketHandlerName);
         
     }
     
@@ -104,7 +106,7 @@ public class DocumentedMethod implements Writable {
     
     public DocumentedMethod withCallee(String c) {
         if(c != null) {
-            return new DocumentedMethod(containingPage, name, parameterList, c, docComment, returnType, bracketHandlerName);
+            return new DocumentedMethod(containingPage, name, parameterList, typeParameters, c, docComment, returnType, bracketHandlerName);
         }
         return this;
     }
@@ -118,7 +120,7 @@ public class DocumentedMethod implements Writable {
             writer.println();
         }
         if(returnType != null) {
-            writer.println("Returns " + returnType.getClickableMarkdown());
+            writer.println("Return type: " + returnType.getClickableMarkdown());
             writer.println();
         }
         writer.println("```zenscript");
@@ -135,9 +137,14 @@ public class DocumentedMethod implements Writable {
             }
         }
         
-        DocumentedParameter.printAllCalls(callee + "." + name, parameterList, writer);
+        DocumentedParameter.printAllCalls(callee + "." + name, parameterList, typeParameters, writer);
         writer.println("```");
         writer.println();
+        
+        if(!typeParameters.isEmpty()){
+            DocumentedTypeParameter.printTable(typeParameters, writer);
+            writer.println();
+        }
         
         if(!parameterList.isEmpty()) {
             DocumentedParameter.printTable(parameterList, writer);

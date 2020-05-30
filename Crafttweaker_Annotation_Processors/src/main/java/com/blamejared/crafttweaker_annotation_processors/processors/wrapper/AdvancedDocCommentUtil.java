@@ -204,7 +204,10 @@ public class AdvancedDocCommentUtil {
         try {
             final Field fileManager = JavacFiler.class.getDeclaredField("fileManager");
             fileManager.setAccessible(true);
-            JavacFileManager javacFileManager = (JavacFileManager) fileManager.get(environment.getFiler());
+            JavacFileManager javacFileManager = getFileManager(environment);
+            if(javacFileManager == null) {
+                return;
+            }
 
             final Field zipFileIndexCache = JavacFileManager.class.getDeclaredField("zipFileIndexCache");
             zipFileIndexCache.setAccessible(true);
@@ -238,9 +241,6 @@ public class AdvancedDocCommentUtil {
                     .filter(File::isFile)
                     .filter(f -> f.getAbsolutePath().endsWith("sources.jar"))
                     .forEach(sourceZip::add);
-
-            System.out.println();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -252,7 +252,7 @@ public class AdvancedDocCommentUtil {
             fileManager = JavacFiler.class.getDeclaredField("fileManager");
             fileManager.setAccessible(true);
             return (JavacFileManager) fileManager.get(environment.getFiler());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
             e.printStackTrace();
         }
 

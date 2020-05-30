@@ -35,20 +35,23 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     private final Set<DocumentedScriptingExample> examples = new HashSet<>();
     private final String ZSName;
     private final String docPath;
-    private final String docComment;
+    private String docComment;
     private final DocumentedClass superClass;
     private final String declaringModId;
     private final boolean isFunctionalInterface;
     private String docParamThis;
     
-    public DocumentedClass(String ZSName, String docPath, String docComment, DocumentedClass superClass, String docParamThis, String declaringModId, boolean isFunctionalInterface) {
+    public DocumentedClass(String ZSName, String docPath, DocumentedClass superClass, String docParamThis, String declaringModId, boolean isFunctionalInterface) {
         this.ZSName = ZSName;
         this.docPath = docPath;
-        this.docComment = docComment;
         this.superClass = superClass;
         this.docParamThis = docParamThis;
         this.declaringModId = declaringModId;
         this.isFunctionalInterface = isFunctionalInterface;
+    }
+    
+    public void setDocComment(String docComment) {
+        this.docComment = docComment;
     }
     
     public static DocumentedClass convertClass(TypeMirror type, ProcessingEnvironment environment) {
@@ -92,9 +95,11 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             }
         }
         final boolean isFunctionalInterface = element.getAnnotation(FunctionalInterface.class) != null;
-        
-        final DocumentedClass out = new DocumentedClass(zsName, docPath, CommentUtils.formatDocCommentForDisplay(element, environment), superClass, docParamThis, declaringModId, isFunctionalInterface);
+    
+        final DocumentedClass out = new DocumentedClass(zsName, docPath, superClass, docParamThis, declaringModId, isFunctionalInterface);
         knownTypes.put(element.toString(), out);
+        final String docComment = CommentUtils.formatDocCommentForDisplay(element, environment);
+        out.setDocComment(docComment);
         typesByZSName.put(zsName, element);
         
         for(final TypeMirror anInterface : element.getInterfaces()) {
