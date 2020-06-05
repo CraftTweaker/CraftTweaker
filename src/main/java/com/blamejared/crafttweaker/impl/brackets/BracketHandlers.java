@@ -43,6 +43,11 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("blockmaterial")
     public static MCMaterial getBlockMaterial(String tokens) {
+        final MCMaterial mcMaterial = MCMaterial.tryGet(tokens);
+        if(mcMaterial != null) {
+            return mcMaterial;
+        }
+        
         try {
             for(Field field : Material.class.getFields()) {
                 if(field.getName().equalsIgnoreCase(tokens)) {
@@ -241,7 +246,6 @@ public class BracketHandlers {
      * @return The found recipeManager
      * @docParam tokens "minecraft:crafting"
      */
-    //@BracketResolver("recipetype")
     @ZenCodeType.Method
     public static IRecipeManager getRecipeManager(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
