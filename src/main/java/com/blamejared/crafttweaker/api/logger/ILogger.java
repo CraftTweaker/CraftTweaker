@@ -9,8 +9,7 @@ import org.openzen.zencode.shared.logging.IZSLogger;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zenscript.validator.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 /**
  * Base class used to interface with the crafttweaker.log file and other loggers (such as the player logger).
@@ -100,17 +99,17 @@ public interface ILogger extends ScriptingEngineLogger {
     
     default void throwingErr(String message, Throwable throwable) {
         error(message);
+        final StringPrintStream errorStream = new StringPrintStream();
         throwable.printStackTrace(errorStream);
         log(LogLevel.ERROR, errorStream.getValue(), false);
     }
     
     default void throwingWarn(String message, Throwable throwable) {
         warning(message);
+        final StringPrintStream errorStream = new StringPrintStream();
         throwable.printStackTrace(errorStream);
         log(LogLevel.WARNING, errorStream.getValue(), false);
     }
-    
-    StringPrintStream errorStream = new StringPrintStream();
     
     class StringPrintStream extends PrintStream {
         
