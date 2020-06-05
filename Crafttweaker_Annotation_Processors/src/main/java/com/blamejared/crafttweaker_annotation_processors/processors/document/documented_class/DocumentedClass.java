@@ -35,10 +35,10 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     private final Set<DocumentedScriptingExample> examples = new HashSet<>();
     private final String ZSName;
     private final String docPath;
-    private String docComment;
     private final DocumentedClass superClass;
     private final String declaringModId;
     private final boolean isFunctionalInterface;
+    private String docComment;
     private String docParamThis;
     
     public DocumentedClass(String ZSName, String docPath, DocumentedClass superClass, String docParamThis, String declaringModId, boolean isFunctionalInterface) {
@@ -48,10 +48,6 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         this.docParamThis = docParamThis;
         this.declaringModId = declaringModId;
         this.isFunctionalInterface = isFunctionalInterface;
-    }
-    
-    public void setDocComment(String docComment) {
-        this.docComment = docComment;
     }
     
     public static DocumentedClass convertClass(TypeMirror type, ProcessingEnvironment environment) {
@@ -95,17 +91,26 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             }
         }
         final boolean isFunctionalInterface = element.getAnnotation(FunctionalInterface.class) != null;
-    
+        
         final DocumentedClass out = new DocumentedClass(zsName, docPath, superClass, docParamThis, declaringModId, isFunctionalInterface);
         knownTypes.put(element.toString(), out);
         final String docComment = CommentUtils.formatDocCommentForDisplay(element, environment);
         out.setDocComment(docComment);
         typesByZSName.put(zsName, element);
         
+        if(!(element.getSuperclass() instanceof NoType)) {
+            final DocumentedClass documentedClass = convertClass(element.getSuperclass(), environment);
+            if(documentedClass != null) {
+                out.implementedInterfaces.add(documentedClass);
+                out.implementedInterfaces.addAll(documentedClass.implementedInterfaces);
+            }
+        }
+        
         for(final TypeMirror anInterface : element.getInterfaces()) {
             final DocumentedClass documentedClass = convertClass(anInterface, environment);
             if(documentedClass != null) {
                 out.implementedInterfaces.add(documentedClass);
+                out.implementedInterfaces.addAll(documentedClass.implementedInterfaces);
             }
         }
         
@@ -191,6 +196,10 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         }
     }
     
+    public void setDocComment(String docComment) {
+        this.docComment = docComment;
+    }
+    
     @Override
     public String toString() {
         return ZSName;
@@ -249,6 +258,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
             writer.println();
             
             if(!implementedInterfaces.isEmpty()) {
+                
                 writer.println("## Implemented Interfaces");
                 writer.printf("%s implements the following interfaces. That means any method available to them can also be used on this class.  %n", this
                         .getZSShortName());
@@ -293,7 +303,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
                                 .collect(Collectors.joining(", ", "(", ") => "));
                         writer.print(collect);
                         final DocumentedType returnType = method.getReturnType();
-                        writer.println(returnType == null? "{}" : returnType.getDocParamThis());
+                        writer.println(returnType == null ? "{}" : returnType.getDocParamThis());
                         writer.println("```");
                     }
                 }
