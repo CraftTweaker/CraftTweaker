@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraftforge.fml.ModList;
@@ -14,7 +13,6 @@ import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
 import org.openzen.zencode.java.*;
 import org.openzen.zenscript.codemodel.member.ref.*;
-import org.openzen.zenscript.parser.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -39,6 +37,7 @@ public class CraftTweakerRegistry {
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
     private static final Map<String, List<Class>> EXPANSIONS = new HashMap<>();
+    private static final List<Class<? extends IRecipeManager>> RECIPE_MANAGERS = new ArrayList<>();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -102,13 +101,14 @@ public class CraftTweakerRegistry {
                 }
             }
         }
-        CraftTweaker.LOG.info("Found ZenRegister: {}", data.getClassType().getClassName());
+        CraftTweaker.LOG.debug("Found ZenRegister: {}", data.getClassType().getClassName());
         try {
             final Class<?> clazz = Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader());
             ZEN_CLASSES.add(clazz);
 
             if(!clazz.isInterface() && IRecipeManager.class.isAssignableFrom(clazz)) {
-                RecipeTypeBracketHandler.registerRecipeManager(clazz);
+                //noinspection unchecked
+                RECIPE_MANAGERS.add((Class<? extends IRecipeManager>) clazz);
             }
         } catch(ClassNotFoundException e) {
             e.printStackTrace();
@@ -360,6 +360,14 @@ public class CraftTweakerRegistry {
      */
     public static Map<String, Supplier<Collection<String>>> getBracketDumpers() {
         return ImmutableMap.copyOf(BRACKET_DUMPERS);
+    }
+    
+    /**
+     * Gets the found recipe managers
+     * @return ImmutableList of the recipe managers.
+     */
+    public static List<Class<? extends IRecipeManager>> getRecipeManagers() {
+        return ImmutableList.copyOf(RECIPE_MANAGERS);
     }
     
     public static List<IPreprocessor> getPreprocessors() {

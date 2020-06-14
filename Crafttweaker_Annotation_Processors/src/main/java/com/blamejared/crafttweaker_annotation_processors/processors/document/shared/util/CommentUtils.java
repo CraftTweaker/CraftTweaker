@@ -94,7 +94,11 @@ public class CommentUtils {
     
     private static DocumentedType getDocumentedType(String type, ProcessingEnvironment environment, Element documentedElement) {
         if(type.contains("#")) {
-            return getDocumentedType(type.split("#", 2)[0], environment, documentedElement);
+            if(documentedElement.getEnclosingElement().getKind() == ElementKind.PACKAGE) {
+                return getDocumentedType(documentedElement.asType().toString(), environment, documentedElement);
+            } else {
+                return getDocumentedType(type.split("#", 2)[0], environment, documentedElement);
+            }
         }
         
         if(type.isEmpty()) {
@@ -107,8 +111,6 @@ public class CommentUtils {
                 final DocumentedType documentedType = DocumentedType.fromElement(typeElement, environment);
                 if(documentedType != null) {
                     return documentedType;
-                } else {
-                    System.out.println();
                 }
             }
         }

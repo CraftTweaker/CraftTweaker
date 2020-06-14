@@ -23,12 +23,17 @@ public class DoubleData implements INumberData {
     
     @ZenCodeType.Constructor
     public DoubleData(double internal) {
-        this.internal = DoubleNBT.valueOf(internal);
+        this.internal = new DoubleNBT(internal);
     }
     
     @Override
     public IData copy() {
         return new DoubleData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new DoubleData(getInternal().copy());
     }
     
     @Override
@@ -46,6 +51,6 @@ public class DoubleData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getDouble() +"";
+        return internal.getDouble() + "";
     }
 }

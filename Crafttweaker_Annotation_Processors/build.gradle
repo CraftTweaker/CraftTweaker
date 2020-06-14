@@ -15,16 +15,57 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
+group = "com.blamejared.crafttweaker"
+version = "1.0.0"
+archivesBaseName = 'Crafttweaker_Annotation_Processors-1.15.2'
+if (System.getenv('BUILD_NUMBER') != null) {
+    version += "." + System.getenv('BUILD_NUMBER')
+}
+
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
 dependencies {
-	compile project(":Crafttweaker_Annotations");
-	compile project(":JavaAnnotations");
+    compile project(":Crafttweaker_Annotations");
+    compile project(":JavaAnnotations");
 
     compile 'org.jetbrains:annotations:17.0.0'
     compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
     compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
     compile files('libs/tools.jar')
+}
+
+publishing {
+
+    publications {
+
+        mavenJava(MavenPublication) {
+
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
+
+        }
+    }
+
+    repositories {
+
+        maven {
+
+            url "file://" + System.getenv("local_maven")
+        }
+    }
 }

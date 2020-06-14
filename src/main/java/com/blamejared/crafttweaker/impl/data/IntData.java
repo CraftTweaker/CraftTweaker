@@ -23,12 +23,17 @@ public class IntData implements INumberData {
     
     @ZenCodeType.Constructor
     public IntData(int internal) {
-        this.internal = IntNBT.valueOf(internal);
+        this.internal = new IntNBT(internal);
     }
     
     @Override
     public IData copy() {
         return new IntData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new IntData(getInternal().copy());
     }
     
     @Override

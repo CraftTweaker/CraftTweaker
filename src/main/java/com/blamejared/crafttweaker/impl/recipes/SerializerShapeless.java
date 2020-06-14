@@ -46,7 +46,7 @@ public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>
         NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
         IIngredient[] ingredients = new IIngredient[nonnulllist.size()];
         for(int i = 0; i < nonnulllist.size(); i++) {
-            ingredients[i] = new MCItemStack(nonnulllist.get(i).getMatchingStacks()[0]);
+            ingredients[i] = IIngredient.fromIngredient(nonnulllist.get(i));
         }
         if(nonnulllist.isEmpty()) {
             throw new JsonParseException("No ingredients for shapeless recipe");

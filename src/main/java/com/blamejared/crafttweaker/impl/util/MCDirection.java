@@ -1,14 +1,11 @@
 package com.blamejared.crafttweaker.impl.util;
 
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Util;
-import org.openzen.zencode.java.ZenCodeType;
+import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
+import net.minecraft.util.*;
+import org.openzen.zencode.java.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a cardinal direction (north, south, east, west) and (up and down).
@@ -18,22 +15,40 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.Direction")
 @Document("vanilla/api/util/Direction")
-@ZenWrapper(wrappedClass = "net.minecraft.util.Direction", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()")
-public class MCDirection {
+@ZenWrapper(wrappedClass = "net.minecraft.util.Direction", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()", creationMethodFormat = "MCDirection.get(%s)")
+public enum MCDirection {
+    
+    @ZenCodeType.Field north(Direction.NORTH),
+    
+    @ZenCodeType.Field south(Direction.SOUTH),
+    
+    @ZenCodeType.Field east(Direction.EAST),
+    
+    @ZenCodeType.Field west(Direction.WEST),
+    
+    @ZenCodeType.Field up(Direction.UP),
+    
+    @ZenCodeType.Field down(Direction.DOWN);
+    
+    @ZenCodeType.Field
+    public static final MCDirection[] sides = {north, south, west, east};
     
     private static final Map<Direction, MCDirection> DIRECTION_MAP = Util.make(new HashMap<>(), map -> {
-        map.put(Direction.NORTH, new MCDirection(Direction.NORTH));
-        map.put(Direction.SOUTH, new MCDirection(Direction.SOUTH));
-        map.put(Direction.EAST, new MCDirection(Direction.EAST));
-        map.put(Direction.WEST, new MCDirection(Direction.WEST));
-        map.put(Direction.UP, new MCDirection(Direction.UP));
-        map.put(Direction.DOWN, new MCDirection(Direction.DOWN));
+        map.put(Direction.NORTH, north);
+        map.put(Direction.SOUTH, south);
+        map.put(Direction.EAST, east);
+        map.put(Direction.WEST, west);
+        map.put(Direction.UP, up);
+        map.put(Direction.DOWN, down);
     });
+    private final Direction internal;
     
-    private Direction internal;
-    
-    public MCDirection(Direction internal) {
+    MCDirection(Direction internal) {
         this.internal = internal;
+    }
+    
+    public static MCDirection get(Direction internal) {
+        return DIRECTION_MAP.get(internal);
     }
     
     // TODO add this when we have an Entity wrapper
@@ -82,19 +97,21 @@ public class MCDirection {
         return DIRECTION_MAP.get(internal.getOpposite());
     }
     
-    /**
-     * Rotates this direction around a given Axis
-     *
-     * @param axis the Axis to rotate around
-     *
-     * @return the rotated Direction
-     *
-     * @docParam axis <directionaxis:north>
-     */
-    @ZenCodeType.Method
-    public MCDirection rotateAround(MCDirectionAxis axis) {
-        return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
-    }
+
+    //Once this is in 1.15
+//    /**
+//     * Rotates this direction around a given Axis
+//     *
+//     * @param axis the Axis to rotate around
+//     *
+//     * @return the rotated Direction
+//     *
+//     * @docParam axis <directionaxis:north>
+//     */
+//    @ZenCodeType.Method
+//    public MCDirection rotateAround(MCDirectionAxis axis) {
+//        return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
+//    }
     
     /**
      * Rotates this direction on the Y axis
@@ -178,15 +195,5 @@ public class MCDirection {
     
     public Direction getInternal() {
         return internal;
-    }
-    
-    @Override
-    public int hashCode() {
-        return internal.hashCode();
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof MCDirection && internal.equals(((MCDirection) obj).getInternal());
     }
 }

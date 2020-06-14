@@ -23,12 +23,17 @@ public class LongData implements INumberData {
     
     @ZenCodeType.Constructor
     public LongData(long internal) {
-        this.internal = LongNBT.valueOf(internal);
+        this.internal = new LongNBT(internal);
     }
     
     @Override
     public IData copy() {
         return new LongData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new LongData(getInternal().copy());
     }
     
     @Override

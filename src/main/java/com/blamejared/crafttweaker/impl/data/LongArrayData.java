@@ -38,14 +38,19 @@ public class LongArrayData implements ICollectionData {
     }
     
     @Override
+    public IData copyInternal() {
+        return new LongArrayData(getInternal().copy());
+    }
+    
+    @Override
     public LongArrayNBT getInternal() {
         return internal;
     }
     
     @Override
     public LongData set(int index, IData value) {
-        if(value instanceof NumberNBT) {
-            return new LongData(internal.set(index, LongNBT.valueOf(((INumberData) value).getLong())));
+        if(value instanceof INumberData) {
+            return new LongData(internal.set(index, new LongNBT(((INumberData) value).getLong())));
         } else {
             return null;
         }
@@ -55,14 +60,14 @@ public class LongArrayData implements ICollectionData {
     @Override
     public void add(int index, IData value) {
         if(value instanceof INumberData) {
-            internal.add(index, LongNBT.valueOf(((INumberData) value).getInt()));
+            internal.add(index, new LongNBT(((INumberData) value).getInt()));
         }
     }
     
     @Override
     public void add(IData value) {
         if(value instanceof INumberData) {
-            internal.add(LongNBT.valueOf(((INumberData) value).getInt()));
+            internal.add(new LongNBT(((INumberData) value).getInt()));
         }
     }
     

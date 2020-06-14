@@ -51,7 +51,7 @@ public class MapData implements IData {
     public void putAll(Map<String, IData> map) {
         map.forEach((s, iData) -> internal.put(s, iData.getInternal()));
     }
-
+    
     /**
      * Adds all entries from the given IData to this entry
      */
@@ -79,7 +79,6 @@ public class MapData implements IData {
      * @param value The value to set.
      *
      * @return The previous value if present, null otherwise
-     *
      * @docParam key "Hello"
      * @docParam value "Goodbye"
      */
@@ -94,7 +93,6 @@ public class MapData implements IData {
      * @param key The key to search for
      *
      * @return The value if present, null otherwise
-     *
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
@@ -108,7 +106,6 @@ public class MapData implements IData {
      * @param key The key to search for
      *
      * @return True if the Map contains the key
-     *
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
@@ -141,7 +138,6 @@ public class MapData implements IData {
      * @param other The other map.
      *
      * @return This map, after the merge
-     *
      * @docParam other {Doodle: "Do}
      */
     @ZenCodeType.Method
@@ -152,6 +148,11 @@ public class MapData implements IData {
     @Override
     public IData copy() {
         return new MapData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new MapData(getInternal().copy());
     }
     
     @Override
@@ -230,7 +231,7 @@ public class MapData implements IData {
     public Map<String, IData> castToMap() {
         return this.asMap();
     }
-
+    
     @Override
     public String toJsonString() {
         final StringJoiner sj = new StringJoiner(",", "{", "}");

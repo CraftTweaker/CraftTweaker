@@ -27,19 +27,19 @@ public class MCItemStackMutable implements IItemStack {
 
     @Override
     public IItemStack setDisplayName(String name) {
-        internal.setDisplayName(new StringTextComponent(name));
+        getInternal().setDisplayName(new StringTextComponent(name));
         return this;
     }
     
     @Override
     public IItemStack setAmount(int amount) {
-        internal.setCount(amount);
+        getInternal().setCount(amount);
         return this;
     }
     
     @Override
     public IItemStack withDamage(int damage) {
-        internal.setDamage(damage);
+        getInternal().setDamage(damage);
         return this;
     }
     @Override
@@ -58,10 +58,10 @@ public class MCItemStackMutable implements IItemStack {
             tag = new MapData(tag.asMap());
         }
         if(tag instanceof MapData)
-            internal.setTag(((MapData) tag).getInternal());
+            getInternal().setTag(((MapData) tag).getInternal());
         else {
             //TODO: What do we do if it's not a map?
-            internal.setTag(((MapData) tag.asMap()).getInternal());
+            getInternal().setTag(((MapData) tag.asMap()).getInternal());
         }
         return this;
     }
@@ -72,10 +72,17 @@ public class MCItemStackMutable implements IItemStack {
         sb.append(internal.getItem().getRegistryName());
         sb.append(">");
     
-        if(internal.getTag() != null) {
-            sb.append(".withTag(");
-            sb.append(NBTConverter.convert(internal.getTag()).asString());
-            sb.append(")");
+        if(getInternal().getTag() != null) {
+            MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
+            //Damage is special case, if we have more special cases we can handle them here.
+            if(getInternal().isDamaged()) {
+                data.remove("Damage");
+            }
+            if(!data.isEmpty()) {
+                sb.append(".withTag(");
+                sb.append(data.asString());
+                sb.append(")");
+            }
         }
     
         if(internal.getDamage() > 0)

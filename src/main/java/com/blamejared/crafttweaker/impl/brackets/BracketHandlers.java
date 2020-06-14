@@ -21,6 +21,7 @@ import net.minecraft.item.crafting.*;
 import net.minecraft.potion.*;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.*;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.registries.*;
 import org.openzen.zencode.java.*;
 
@@ -42,6 +43,11 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("blockmaterial")
     public static MCMaterial getBlockMaterial(String tokens) {
+        final MCMaterial mcMaterial = MCMaterial.tryGet(tokens);
+        if(mcMaterial != null) {
+            return mcMaterial;
+        }
+        
         try {
             for(Field field : Material.class.getFields()) {
                 if(field.getName().equalsIgnoreCase(tokens)) {
@@ -52,6 +58,12 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Error gettig blockmaterial <blockmaterial:" + tokens + ">!", e);
         }
         
+        try {
+            final Field field = ObfuscationReflectionHelper.findField(Material.class, tokens.toUpperCase());
+            return new MCMaterial((Material) field.get(null), tokens);
+        } catch(Exception ignored) {
+        }
+    
         throw new IllegalArgumentException("Could not find blockmaterial <blockmaterial:" + tokens + ">!");
     }
     
@@ -119,14 +131,14 @@ public class BracketHandlers {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
         
-        final String[] split = tokens.split(":");
-        if(split.length != 1)
+        if(tokens.contains(":"))
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Syntax is <directionaxis:axis>");
-        
-        if(Direction.Axis.byName(split[0]) != null) {
+    
+        final Direction.Axis axis = Direction.Axis.byName(tokens);
+        if(axis == null) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
-        return MCDirectionAxis.getAxis(Direction.Axis.byName(split[0]));
+        return MCDirectionAxis.getAxis(axis);
     }
     
     /**
@@ -151,6 +163,31 @@ public class BracketHandlers {
         }
         Effect effect = ForgeRegistries.POTIONS.getValue(key);
         return new MCEffect(effect);
+    }
+    
+    /**
+     * Gets the entityClassification based on registry name. Logs an error and returns `null` if it can't find the entityClassification.
+     *
+     * @param tokens The entityClassification's resource location
+     * @return The found entityClassification
+     * @docParam tokens "monster"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("entityclassification")
+    public static MCEntityClassification getEntityClassification(String tokens) {
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 1) {
+            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
+            return null;
+        }
+        if(Arrays.stream(EntityClassification.values())
+                .anyMatch(entityClassification -> entityClassification.name()
+                        .equalsIgnoreCase(tokens))) {
+            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
+            return null;
+        }
+        //Cannot be null since we checked containsKey
+        return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
     }
     
     /**
@@ -233,7 +270,6 @@ public class BracketHandlers {
      * @return The found recipeManager
      * @docParam tokens "minecraft:crafting"
      */
-    //@BracketResolver("recipetype")
     @ZenCodeType.Method
     public static IRecipeManager getRecipeManager(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
@@ -270,31 +306,6 @@ public class BracketHandlers {
         return new MCResourceLocation(new ResourceLocation(tokens));
     }
     
-    
-    /**
-     * Gets the entityClassification based on registry name. Logs an error and returns `null` if it can't find the entityClassification.
-     *
-     * @param tokens The entityClassification's resource location
-     * @return The found entityClassification
-     * @docParam tokens "monster"
-     */
-    @ZenCodeType.Method
-    @BracketResolver("entityclassification")
-    public static MCEntityClassification getEntityClassification(String tokens) {
-        final int length = tokens.split(":").length;
-        if(length == 0 || length > 1) {
-            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
-            return null;
-        }
-        if(Arrays.stream(EntityClassification.values())
-                .anyMatch(entityClassification -> entityClassification.name()
-                        .equalsIgnoreCase(tokens))) {
-            CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
-            return null;
-        }
-        //Cannot be null since we checked containsKey
-        return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
-    }
     
     
     /**

@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.mods.MCMods;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
@@ -142,7 +143,8 @@ public class CraftTweakerAPI {
             List<JavaNativeModule> modules = new LinkedList<>();
             
             PrefixedBracketParser bep = new PrefixedBracketParser(null);
-            bep.register("recipetype", new RecipeTypeBracketHandler());
+            final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
+            bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
             for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers("crafttweaker", SCRIPTING_ENGINE, crafttweakerModule)) {
                 bep.register(bracketResolver.getName(), bracketResolver);
             }
@@ -174,7 +176,7 @@ public class CraftTweakerAPI {
             SCRIPTING_ENGINE.registerNativeProvided(expansions);
 
 
-            SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE, compileError -> CraftTweakerAPI.logger.error(compileError.toString()), validationLogEntry -> CraftTweakerAPI.logger.error(validationLogEntry.toString()), sourceFile -> CraftTweakerAPI.logger.info("Loading " + sourceFile.getFilename()));
+            SemanticModule scripts = SCRIPTING_ENGINE.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE);
 
             if(!scripts.isValid()) {
                 CraftTweakerAPI.logger.error("Scripts are invalid!");

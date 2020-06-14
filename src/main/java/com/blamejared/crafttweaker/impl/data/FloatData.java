@@ -23,12 +23,17 @@ public class FloatData implements INumberData {
     
     @ZenCodeType.Constructor
     public FloatData(float internal) {
-        this.internal = FloatNBT.valueOf(internal);
+        this.internal = new FloatNBT(internal);
     }
     
     @Override
     public IData copy() {
         return new FloatData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new FloatData(getInternal().copy());
     }
     
     @Override

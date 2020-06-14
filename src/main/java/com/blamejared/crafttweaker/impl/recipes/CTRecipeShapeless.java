@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
 import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.*;
 
 
 @MethodsReturnNonnullByDefault
@@ -34,8 +36,23 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable IRecipeManager.RecipeFunctionArray function) {
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
-        this.ingredients = ingredients;
         this.function = function;
+        
+        boolean containsNull = false;
+        for(IIngredient ingredient : ingredients) {
+            if(ingredient == null) {
+                CraftTweakerAPI.logWarning("Shapeless recipe with ID '%s' contains null ingredient, removing entries!", resourceLocation);
+                containsNull = true;
+                break;
+            }
+        }
+        if(containsNull) {
+            ingredients = Arrays.stream(ingredients)
+                    .filter(Objects::nonNull)
+                    .toArray(IIngredient[]::new);
+        }
+        this.ingredients = ingredients;
+    
     }
     
     @Override
@@ -60,7 +77,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         
         final IItemStack[] stacks = new IItemStack[this.ingredients.length];
         
-        forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack);
+        forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack.setAmount(1));
         
         return this.function.process(this.output, stacks).getInternal();
     }

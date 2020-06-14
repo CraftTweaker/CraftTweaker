@@ -6,8 +6,15 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.Food;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.Util;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 @ZenCodeType.Name("crafttweaker.api.food.MCFood")
 @ZenRegister
@@ -16,6 +23,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class MCFood {
     
     private final Food internal;
+    private final Field effects = Util.make(() -> ObfuscationReflectionHelper.findField(Food.class, "field_221475_f"));
     
     public MCFood(Food internal) {
         this.internal = internal;
@@ -88,25 +96,34 @@ public class MCFood {
     
     @ZenCodeType.Method
     public void clearEffects() {
-        getInternal().effects.clear();
+       getEffects().clear();
     }
     
     @ZenCodeType.Method
     public MCFood addEffect(MCEffectInstance effect, float probability) {
         Food food = copyInternal();
-        food.effects.add(Pair.of(effect.getInternal(), probability));
+        getEffects().add(Pair.of(effect::getInternal, probability));
         return new MCFood(food);
     }
     
     @ZenCodeType.Method
     public MCFood removeEffect(MCEffectInstance effect) {
         Food food = copyInternal();
-        food.effects.removeIf(pair -> pair.getLeft().equals(effect.getInternal()));
+        getEffects().removeIf(pair -> pair.getLeft().get().equals(effect.getInternal()));
         return new MCFood(food);
     }
     
     public Food getInternal() {
         return internal;
+    }
+    
+    private List<Pair<Supplier<EffectInstance>, Float>> getEffects(){
+        try {
+            return (List<Pair<Supplier<EffectInstance>, Float>>) effects.get(getInternal());
+        } catch(IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
     
     private Food copyInternal() {

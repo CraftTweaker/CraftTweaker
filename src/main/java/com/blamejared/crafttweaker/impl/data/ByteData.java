@@ -23,12 +23,17 @@ public class ByteData implements INumberData {
     
     @ZenCodeType.Constructor
     public ByteData(byte internal) {
-        this.internal = ByteNBT.valueOf(internal);
+        this.internal = new ByteNBT(internal);
     }
     
     @Override
     public IData copy() {
         return new ByteData(internal);
+    }
+    
+    @Override
+    public IData copyInternal() {
+        return new ByteData(getInternal().copy());
     }
     
     @Override
@@ -46,7 +51,7 @@ public class ByteData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getByte()+"";
+        return internal.getByte() + "";
     }
     
 }
