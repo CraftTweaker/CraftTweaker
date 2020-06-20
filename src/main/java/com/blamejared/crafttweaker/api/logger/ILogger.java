@@ -3,11 +3,13 @@ package com.blamejared.crafttweaker.api.logger;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import org.openzen.zencode.java.IZSLogger;
+import org.openzen.zencode.java.logger.*;
+import org.openzen.zencode.shared.*;
+import org.openzen.zencode.shared.logging.IZSLogger;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zenscript.validator.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 /**
  * Base class used to interface with the crafttweaker.log file and other loggers (such as the player logger).
@@ -16,7 +18,7 @@ import java.io.PrintStream;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ILogger")
 @Document("vanilla/api/logger/ILogger")
-public interface ILogger extends IZSLogger {
+public interface ILogger extends ScriptingEngineLogger {
     
     /**
      * <p>
@@ -97,17 +99,17 @@ public interface ILogger extends IZSLogger {
     
     default void throwingErr(String message, Throwable throwable) {
         error(message);
+        final StringPrintStream errorStream = new StringPrintStream();
         throwable.printStackTrace(errorStream);
         log(LogLevel.ERROR, errorStream.getValue(), false);
     }
     
     default void throwingWarn(String message, Throwable throwable) {
         warning(message);
+        final StringPrintStream errorStream = new StringPrintStream();
         throwable.printStackTrace(errorStream);
         log(LogLevel.WARNING, errorStream.getValue(), false);
     }
-    
-    StringPrintStream errorStream = new StringPrintStream();
     
     class StringPrintStream extends PrintStream {
         
@@ -118,5 +120,26 @@ public interface ILogger extends IZSLogger {
         public String getValue() {
             return out.toString();
         }
+    }
+    
+    
+    @Override
+    default void logCompileException(CompileException exception) {
+        error(exception.getMessage());
+    }
+    
+    @Override
+    default void logSourceFile(SourceFile file) {
+        info("Loading file: " + file.getFilename());
+    }
+    
+    @Override
+    default void logValidationError(ValidationLogEntry errorEntry) {
+        error(errorEntry.position + " " + errorEntry.message);
+    }
+    
+    @Override
+    default void logValidationWarning(ValidationLogEntry warningEntry) {
+        error(warningEntry.position + " " + warningEntry.message);
     }
 }

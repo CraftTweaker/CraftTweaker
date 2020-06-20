@@ -11,8 +11,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.tools.Diagnostic;
 import java.io.PrintWriter;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class DocumentedConstructor implements Writable {
 
@@ -55,7 +54,7 @@ public class DocumentedConstructor implements Writable {
         }
 
         writer.println("```zenscript");
-        DocumentedParameter.printAllCalls("new " + containingClass.getZSName(), parameterList, writer);
+        DocumentedParameter.printAllCalls("new " + containingClass.getZSName(), parameterList, Collections.emptyList(), writer);
         writer.println("```");
 
         if (!parameterList.isEmpty()) {

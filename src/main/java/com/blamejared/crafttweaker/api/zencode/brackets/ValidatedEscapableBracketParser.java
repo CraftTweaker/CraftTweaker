@@ -105,12 +105,12 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
                 try {
                     valid = (boolean) validationMethod.invoke(null, value);
                 } catch(Exception e) {
-                    final String message = String.format("Could not validate Parameters to BEP %s: '<%s:%s>", name, name, value);
+                    final String message = String.format("Could not validate Parameters to BEP %s: '<%s:%s>%n%s", name, name, value, e);
                     return new ParsedExpressionInvalid(position, message);
                 }
                 
                 if(!valid) {
-                    final String format = String.format("Invalid parameters to BEP %s: '<%s:%s>", name, name, value);
+                    final String format = String.format("Invalid parameters to BEP %s: '<%s:%s>. There may be more information about this in the log.", name, name, value);
                     return new ParsedExpressionInvalid(position, format);
                 }
             }

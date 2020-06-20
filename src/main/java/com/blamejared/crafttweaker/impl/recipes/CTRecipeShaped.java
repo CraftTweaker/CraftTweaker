@@ -134,7 +134,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
                 if(ingredient == null)
                     continue;
                 final int slotIndex = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
-                stacks[rowIndex][columnIndex] = ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex)));
+                stacks[rowIndex][columnIndex] = new MCItemStack(inv.getStackInSlot(slotIndex)).setAmount(1);
             }
         }
         return function.process(this.output, stacks).getInternal().copy();

@@ -121,15 +121,6 @@ public class WrapperProcessor extends AbstractProcessor {
                 e.printStackTrace();
             }
             ((JavacFiler) processingEnv.getFiler()).getGeneratedSourceFileObjects().add(regularFile);
-
-            /*
-            System.out.printf("%n%n%n%n%n%n%n%n%n-----------------------%n");
-            final StringWriter out = new StringWriter();
-            WrappedClass.write(new PrintWriter(out), next, processingEnv);
-            System.out.println(out.getBuffer().toString());
-            System.out.printf("-----------------------%n%n%n%n%n%n%n%n%n");
-
-             */
         }
 
         return false;

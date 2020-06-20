@@ -101,7 +101,7 @@ public class CraftTweakerRegistry {
                 }
             }
         }
-        CraftTweaker.LOG.info("Found ZenRegister: {}", data.getClassType().getClassName());
+        CraftTweaker.LOG.debug("Found ZenRegister: {}", data.getClassType().getClassName());
         try {
             final Class<?> clazz = Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader());
             ZEN_CLASSES.add(clazz);

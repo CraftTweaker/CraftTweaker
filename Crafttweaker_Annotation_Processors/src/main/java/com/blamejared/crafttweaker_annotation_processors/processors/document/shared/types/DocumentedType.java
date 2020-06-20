@@ -79,7 +79,7 @@ public abstract class DocumentedType {
             showWarning = false;
         } else if(DocumentProcessorNew.tree != null) {
             //getTree( returns null if it's not part of the compilation tree, e.g. part of a lib
-            showWarning = DocumentProcessorNew.tree.getTree(element) != null;
+            showWarning = element == null || DocumentProcessorNew.tree.getTree(element) != null;
         }
         
         
