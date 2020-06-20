@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.sha
 
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Groups one or more methods with the same name.
@@ -18,10 +19,17 @@ public class DocumentedMethodGroup implements Writable {
     public DocumentedMethodGroup(String name, CrafttweakerDocumentationPage containingPage) {
         this.name = name;
         this.containingPage = containingPage;
-        this.methods = new TreeSet<>(Comparator.comparingInt(m -> m.getParameterList()
-                .size()));
+        this.methods = new TreeSet<>(Comparator.<DocumentedMethod> comparingInt(m -> m.getParameterList()
+                .size()).thenComparing(m -> m.getParameterList()
+                .stream()
+                .map(p -> p.getType().getZSName())
+                .collect(Collectors.joining())));
     }
-
+    
+    public Set<DocumentedMethod> getMethods() {
+        return methods;
+    }
+    
     public void add(DocumentedMethod method) {
         if (!Objects.equals(this.containingPage, method.getContainingPage())) {
             this.methods.add(method.withCallee(this.containingPage.getDocParamThis()));

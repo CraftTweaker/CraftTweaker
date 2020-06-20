@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformerSerializer;
 import com.google.gson.JsonObject;
-import mezz.jei.api.MethodsReturnNonnullByDefault;
+import mcp.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

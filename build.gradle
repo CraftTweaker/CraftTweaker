@@ -280,7 +280,7 @@ task updateVersionTracker {
         def req = new URL(project.findProperty('versionTrackerAPI')).openConnection()
         req.setRequestMethod('POST')
         req.setRequestProperty('Content-Type', 'application/json; charset=UTF-8')
-        req.setRequestProperty('User-Agent', "Crafttweaker Tracker Gradle")
+        req.setRequestProperty('User-Agent', "CraftTweaker Tracker Gradle")
         req.setDoOutput(true)
         req.getOutputStream().write(JsonOutput.toJson(body).getBytes("UTF-8"))
 

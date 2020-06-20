@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveAll;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
@@ -80,10 +80,9 @@ public interface IRecipeManager extends CommandStringDisplayable {
         return new WrapperRecipe(recipe);
     }
     
-    //    @ZenCodeType.Method
-    //TODO I couldn't get this one to work in script form for some reason, but the code is here
-    default List<WrapperRecipe> getRecipesByOutput(IItemStack output) {
-        return getRecipes().values().stream().filter(iRecipe -> new MCItemStackMutable(iRecipe.getRecipeOutput()).matches(output)).map(WrapperRecipe::new).collect(Collectors.toList());
+    @ZenCodeType.Method
+    default List<WrapperRecipe> getRecipesByOutput(IIngredient output) {
+        return getRecipes().values().stream().filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput()))).map(WrapperRecipe::new).collect(Collectors.toList());
     }
     
     /**
@@ -222,29 +221,37 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFilter")
+    @Document("vanilla/api/recipe/RecipeFilter")
     interface RecipeFilter {
-        
+        @ZenCodeType.Method
         boolean test(String name);
     }
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionSingle")
+    @Document("vanilla/api/recipe/RecipeFunctionSingle")
     interface RecipeFunctionSingle {
-        
+        @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack inputs);
     }
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionArray")
+    @Document("vanilla/api/recipe/RecipeFunctionArray")
     interface RecipeFunctionArray {
-        
+        @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[] inputs);
     }
     
     @FunctionalInterface
     @ZenRegister
+    @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionMatrix")
+    @Document("vanilla/api/recipe/RecipeFunctionMatrix")
     interface RecipeFunctionMatrix {
-        
+        @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
     }
     

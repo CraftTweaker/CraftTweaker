@@ -10,6 +10,9 @@ import net.minecraft.nbt.LongNBT;
 import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.*;
+import java.util.stream.*;
+
 /**
  * @docParam this [100000, 800000, 50000]
  */
@@ -46,7 +49,7 @@ public class LongArrayData implements ICollectionData {
     
     @Override
     public LongData set(int index, IData value) {
-        if(value instanceof NumberNBT) {
+        if(value instanceof INumberData) {
             return new LongData(internal.set(index, new LongNBT(((INumberData) value).getLong())));
         } else {
             return null;
@@ -104,5 +107,15 @@ public class LongArrayData implements ICollectionData {
         }
         result.append(']');
         return result.toString();
+    }
+    
+    @Override
+    public List<IData> asList() {
+        final long[] asLongArray = internal.getAsLongArray();
+        List<IData> list = new ArrayList<>(asLongArray.length);
+        for(long l : asLongArray) {
+            list.add(new LongData(l));
+        }
+        return list;
     }
 }

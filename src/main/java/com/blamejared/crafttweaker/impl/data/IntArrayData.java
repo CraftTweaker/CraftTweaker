@@ -1,14 +1,12 @@
 package com.blamejared.crafttweaker.impl.data;
 
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.data.ICollectionData;
-import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.INumberData;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.nbt.IntArrayNBT;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.nbt.NumberNBT;
-import org.openzen.zencode.java.ZenCodeType;
+import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.data.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
+import net.minecraft.nbt.*;
+import org.openzen.zencode.java.*;
+
+import java.util.*;
 
 /**
  * @docParam this [4, 128, 256, 1024]
@@ -103,5 +101,15 @@ public class IntArrayData implements ICollectionData {
         }
         result.append(']');
         return result.toString();
+    }
+    
+    @Override
+    public List<IData> asList() {
+        final int[] intArray = internal.getIntArray();
+        List<IData> list = new ArrayList<>(intArray.length);
+        for(int i : intArray) {
+            list.add(new IntData(i));
+        }
+        return list;
     }
 }

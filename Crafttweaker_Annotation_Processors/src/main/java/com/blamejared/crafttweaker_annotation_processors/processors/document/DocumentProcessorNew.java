@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.sun.source.util.*;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -39,6 +40,8 @@ public class DocumentProcessorNew extends AbstractProcessor {
     private static final File docsOut = new File("docsOut");
     private static final Set<CrafttweakerDocumentationPage> pages = new TreeSet<>(Comparator.comparing(CrafttweakerDocumentationPage::getDocumentTitle));
     public static Map<String, String> modIdByPackage = new HashMap<>();
+    public static Trees tree = null;
+    
     
     public static String getModIdForPackage(Element element, ProcessingEnvironment environment) {
         final String packageName = environment.getElementUtils().getPackageOf(element).getQualifiedName().toString();
@@ -48,6 +51,13 @@ public class DocumentProcessorNew extends AbstractProcessor {
             }
         }
         return null;
+    }
+    
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        
+        tree = Trees.instance(processingEnv);
     }
     
     @Override

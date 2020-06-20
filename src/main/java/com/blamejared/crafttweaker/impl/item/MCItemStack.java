@@ -23,7 +23,7 @@ public class MCItemStack implements IItemStack {
     public MCItemStack(ItemStack internal) {
         this.internal = internal.copy();
     }
-    
+
     @Override
     public IItemStack copy() {
         return new MCItemStack(getInternal().copy());
@@ -100,6 +100,16 @@ public class MCItemStack implements IItemStack {
     @Override
     public ItemStack getInternal() {
         return internal;
+    }
+    
+    @Override
+    public int getDamage() {
+        return internal.getDamage();
+    }
+    
+    @Override
+    public IItemStack mutable() {
+        return new MCItemStackMutable(internal);
     }
     
     @Override

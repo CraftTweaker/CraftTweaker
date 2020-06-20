@@ -1,13 +1,16 @@
 package com.blamejared.crafttweaker.impl.recipes.wrappers;
 
+import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.util.*;
 import net.minecraft.item.crafting.IRecipe;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipes.WrapperRecipe")
 public class WrapperRecipe {
     
@@ -18,8 +21,8 @@ public class WrapperRecipe {
     }
     
     @ZenCodeType.Getter("id")
-    public String getId() {
-        return getRecipe().getId().toString();
+    public MCResourceLocation getId() {
+        return new MCResourceLocation(getRecipe().getId());
     }
     
     @ZenCodeType.Getter("group")

@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IngredientVanillaPlus;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
 import com.google.gson.JsonElement;
-import mezz.jei.api.MethodsReturnNonnullByDefault;
+import mcp.*;
 
 @MethodsReturnNonnullByDefault
 public class IngredientTransformed<I extends IIngredient, T extends MCIngredientTransformed<I>> extends IngredientVanillaPlus {

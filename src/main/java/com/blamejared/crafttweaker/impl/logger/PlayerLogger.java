@@ -32,4 +32,13 @@ public class PlayerLogger implements ILogger {
         
     }
     
+    @Override
+    public void throwingErr(String message, Throwable throwable) {
+        error(String.format("%s: %s", message, throwable.getMessage()));
+    }
+    
+    @Override
+    public void throwingWarn(String message, Throwable throwable) {
+        warning(String.format("%s: %s", message, throwable.getMessage()));
+    }
 }

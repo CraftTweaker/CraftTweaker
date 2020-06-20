@@ -21,7 +21,7 @@ public class MCEntityClassification implements CommandStringDisplayable {
     
     @ZenCodeType.Getter("name")
     public String getName() {
-        return internal.func_220363_a();
+        return internal.name();
     }
     
     @ZenCodeType.Getter("maxNumberOfEntity")
@@ -47,6 +47,6 @@ public class MCEntityClassification implements CommandStringDisplayable {
 
     @Override
     public String getCommandString() {
-        return "<entityclassification:" + internal.func_220363_a() + ">";
+        return "<entityclassification:" + internal.name() + ">";
     }
 }

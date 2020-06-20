@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class ScriptLoadingOptions {
     private boolean format;

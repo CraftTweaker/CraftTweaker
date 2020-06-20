@@ -64,7 +64,7 @@ public interface IData {
      */
     @ZenCodeType.Method
     default String getString() {
-        return getInternal().toString();
+        return getInternal().getString();
     }
     
     /**

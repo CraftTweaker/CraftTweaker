@@ -5,14 +5,14 @@ import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
-import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.java.*;
+import org.openzen.zenscript.codemodel.member.ref.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -27,11 +27,17 @@ public class CraftTweakerRegistry {
     
     private static final List<Class> ZEN_CLASSES = new ArrayList<>();
     private static final List<Class> ZEN_GLOBALS = new ArrayList<>();
-    private static final List<Method> BRACKET_RESOLVERS = new ArrayList<>();
+    //Name to BEP methods
+    private static final Map<String, Method> BRACKET_RESOLVERS = new HashMap<>();
+    //Root package to BEP Names
+    private static final Map<String, Collection<String>> BRACKET_RESOLVERS_2 = new HashMap<>();
+    //BEP name to BEP validator method
+    private static final Map<String, Method> BRACKET_VALIDATORS = new HashMap<>();
     private static final Map<String, Supplier<Collection<String>>> BRACKET_DUMPERS = new HashMap<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
     private static final Map<String, List<Class>> EXPANSIONS = new HashMap<>();
+    private static final List<Class<? extends IRecipeManager>> RECIPE_MANAGERS = new ArrayList<>();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -76,6 +82,8 @@ public class CraftTweakerRegistry {
                 e.printStackTrace();
             }
         });
+        
+        validateBrackets();
     }
     
     /**
@@ -93,13 +101,14 @@ public class CraftTweakerRegistry {
                 }
             }
         }
-        CraftTweaker.LOG.info("Found ZenRegister: {}", data.getClassType().getClassName());
+        CraftTweaker.LOG.debug("Found ZenRegister: {}", data.getClassType().getClassName());
         try {
             final Class<?> clazz = Class.forName(data.getClassType().getClassName(), false, CraftTweaker.class.getClassLoader());
             ZEN_CLASSES.add(clazz);
 
             if(!clazz.isInterface() && IRecipeManager.class.isAssignableFrom(clazz)) {
-                RecipeTypeBracketHandler.registerRecipeManager(clazz);
+                //noinspection unchecked
+                RECIPE_MANAGERS.add((Class<? extends IRecipeManager>) clazz);
             }
         } catch(ClassNotFoundException e) {
             e.printStackTrace();
@@ -127,7 +136,40 @@ public class CraftTweakerRegistry {
             for(Method method : zenClass.getDeclaredMethods()) {
                 handleBracketResolver(method);
                 handleBracketDumper(method);
+                handleBracketValidator(method);
             }
+        }
+    }
+    
+    private static void handleBracketValidator(Method method) {
+        if(!method.isAnnotationPresent(BracketValidator.class)) {
+            return;
+        }
+        if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
+            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketValidator, but it is not public and static.", method.toString());
+            return;
+        }
+        boolean valid = true;
+    
+        final String value = method.getAnnotation(BracketValidator.class).value();
+        Class<?>[] parameters = method.getParameterTypes();
+        if(parameters.length == 1 && parameters[0].equals(String.class)) {
+            if(BRACKET_VALIDATORS.containsKey(value)) {
+                CraftTweakerAPI.logError("Bracket validator for bep name %s was found twice: %s and %s", value, BRACKET_VALIDATORS.get(value), method);
+                valid = false;
+            }
+        } else {
+            CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketValidator, but it does not have a String as it's only parameter.", method.toString());
+            valid = false;
+        }
+    
+        if(method.getReturnType() != boolean.class) {
+            CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketValidator, so it must return a boolean", method);
+            valid = false;
+        }
+        
+        if(valid){
+            BRACKET_VALIDATORS.put(value, method);
         }
     }
     
@@ -139,15 +181,39 @@ public class CraftTweakerRegistry {
             CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it is not public and static.", method.toString());
             return;
         }
+        
+        boolean isValid = true;
         Class<?>[] parameters = method.getParameterTypes();
-        if(parameters.length == 1 && parameters[0].equals(String.class)) {
-            BRACKET_RESOLVERS.add(method);
-        } else {
-            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
+        final String name = method.getAnnotation(BracketResolver.class).value();
+        
+        if(parameters.length != 1 || !parameters[0].equals(String.class)) {
+            //BRACKET_RESOLVERS.computeIfAbsent(name.split("[.]", 2)[0], s -> new ArrayList<>())
+            //        .add(method);
+            CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketResolver, but it does not have a String as it's only parameter.", method.toString());
+            isValid = false;
         }
 
         if(!CommandStringDisplayable.class.isAssignableFrom(method.getReturnType())){
-            CraftTweakerAPI.logWarning("Method \"%s\" is marked as a BracketResolver, so it should return something that implements %s.", method.toString(), CommandStringDisplayable.class.getSimpleName());
+            CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketResolver, so it should return something that implements %s.", method.toString(), CommandStringDisplayable.class.getSimpleName());
+            isValid = false;
+        }
+        
+        if(!BRACKET_RESOLVERS.getOrDefault(name, method).equals(method)) {
+            final Method other = BRACKET_RESOLVERS.get(name);
+            CraftTweakerAPI.logError("BracketResolve \"%s\" was registered twice: '%s' and '%s'", name, other, method);
+            isValid = false;
+        }
+        
+        if(isValid) {
+            BRACKET_RESOLVERS.put(name, method);
+    
+            final Class<?> cls = method.getDeclaringClass();
+            final String clsName = cls.isAnnotationPresent(ZenCodeType.Name.class)
+                    ? cls.getAnnotation(ZenCodeType.Name.class).value()
+                    : cls.getCanonicalName();
+            
+            BRACKET_RESOLVERS_2.computeIfAbsent(clsName.split("[.]", 2)[0], s -> new ArrayList<>())
+                    .add(name);
         }
     }
     
@@ -264,8 +330,28 @@ public class CraftTweakerRegistry {
      *
      * @return ImmutableList of the Bracket Resolvers
      */
-    public static List<Method> getBracketResolvers() {
-        return ImmutableList.copyOf(BRACKET_RESOLVERS);
+    public static List<ValidatedEscapableBracketParser> getBracketResolvers(String name, ScriptingEngine scriptingEngine, JavaNativeModule crafttweakerModule) {
+        final List<ValidatedEscapableBracketParser> validatedEscapableBracketParsers = new ArrayList<>();
+        for(String bepName : BRACKET_RESOLVERS_2.getOrDefault(name, Collections.emptyList())) {
+            final Method parserMethod = BRACKET_RESOLVERS.get(bepName);
+            final Method validatorMethod = CraftTweakerRegistry.getBracketValidator(bepName);
+            final FunctionalMemberRef functionalMemberRef = crafttweakerModule.loadStaticMethod(parserMethod);
+            final ValidatedEscapableBracketParser validated = new ValidatedEscapableBracketParser(bepName, functionalMemberRef, validatorMethod, scriptingEngine.registry);
+            validatedEscapableBracketParsers.add(validated);
+        }
+        return validatedEscapableBracketParsers;
+    }
+    
+    public static Method getBracketValidator(String bepName) {
+        return BRACKET_VALIDATORS.getOrDefault(bepName, null);
+    }
+    
+    private static void validateBrackets(){
+        for(String validatedBep : BRACKET_VALIDATORS.keySet()) {
+            if(!BRACKET_RESOLVERS.containsKey(validatedBep)) {
+                CraftTweakerAPI.logError("BEP %s has a validator but no BEP method", validatedBep);
+            }
+        }
     }
     
     /**
@@ -274,6 +360,14 @@ public class CraftTweakerRegistry {
      */
     public static Map<String, Supplier<Collection<String>>> getBracketDumpers() {
         return ImmutableMap.copyOf(BRACKET_DUMPERS);
+    }
+    
+    /**
+     * Gets the found recipe managers
+     * @return ImmutableList of the recipe managers.
+     */
+    public static List<Class<? extends IRecipeManager>> getRecipeManagers() {
+        return ImmutableList.copyOf(RECIPE_MANAGERS);
     }
     
     public static List<IPreprocessor> getPreprocessors() {
