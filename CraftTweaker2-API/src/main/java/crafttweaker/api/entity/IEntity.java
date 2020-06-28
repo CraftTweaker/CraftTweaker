@@ -503,4 +503,9 @@ public interface IEntity extends ICommandSender {
     default void update(IData data){
         CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
     }
+    
+    @ZenMethod
+    default boolean onGround(){
+        return false;
+    }
 }

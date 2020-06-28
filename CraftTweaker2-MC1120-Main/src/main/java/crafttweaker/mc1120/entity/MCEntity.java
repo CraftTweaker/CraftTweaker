@@ -10,7 +10,6 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
-import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.server.MCServer;
@@ -664,5 +663,10 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof MCEntity && entity.isEntityEqual(((MCEntity) obj).entity)) || super.equals(obj);
+    }
+    
+    @Override
+    public boolean onGround() {
+        return entity.onGround;
     }
 }
