@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.block;
 
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.block.*;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.entity.IEntity;
@@ -131,7 +132,7 @@ public class MCBlockDefinition implements IBlockDefinition {
     
     @Override
     public void setCreativeTab(ICreativeTab creativeTab) {
-        block.setCreativeTab((CreativeTabs) creativeTab.getInternal());
+        block.setCreativeTab(CraftTweakerMC.getCreativeTabs(creativeTab));
     }
     
     @Override
