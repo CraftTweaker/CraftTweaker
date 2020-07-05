@@ -27,7 +27,7 @@ public interface IOreDictEntry extends IIngredient {
     void addItems(IItemStack[] items);
 
     @ZenMethod
-    void addAll(IOreDictEntry entry);
+    void addAll(IOreDictEntry... entry);
 
     @ZenMethod
     void remove(IItemStack... items);
