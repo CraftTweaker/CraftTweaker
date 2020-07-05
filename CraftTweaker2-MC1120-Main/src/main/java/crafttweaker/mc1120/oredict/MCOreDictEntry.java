@@ -119,11 +119,13 @@ public class MCOreDictEntry implements IOreDictEntry {
     }
     
     @Override
-    public void addAll(IOreDictEntry entry) {
-        if(entry instanceof MCOreDictEntry) {
-            CraftTweakerAPI.apply(new ActionOreDictAddAll(id, ((MCOreDictEntry) entry).id));
-        } else {
-            CraftTweakerAPI.logError("not a valid entry");
+    public void addAll(IOreDictEntry... entries) {
+        for (IOreDictEntry entry : entries){
+            if(entry instanceof MCOreDictEntry) {
+                CraftTweakerAPI.apply(new ActionOreDictAddAll(id, ((MCOreDictEntry) entry).id));
+            } else {
+                CraftTweakerAPI.logError("not a valid entry! " + entry.toString());
+            }
         }
     }
     
