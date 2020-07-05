@@ -12,13 +12,11 @@ import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.*;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.*;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
  * @author Stan
@@ -179,27 +177,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     @Override
     public void give(IItemStack stack) {
         ItemStack itemstack = CraftTweakerMC.getItemStack(stack).copy();
-        boolean flag = player.inventory.addItemStackToInventory(itemstack);
-        
-        if(flag) {
-            player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-            player.inventoryContainer.detectAndSendChanges();
-        }
-        
-        if(flag && itemstack.isEmpty()) {
-            itemstack.setCount(1);
-            EntityItem entityitem1 = player.dropItem(itemstack, false);
-            if(entityitem1 != null) {
-                entityitem1.makeFakeItem();
-            }
-        } else {
-            EntityItem entityitem = player.dropItem(itemstack, false);
-            
-            if(entityitem != null) {
-                entityitem.setNoPickupDelay();
-                entityitem.setOwner(player.getName());
-            }
-        }
+        ItemHandlerHelper.giveItemToPlayer(player, itemstack);
     }
     
     @Override
