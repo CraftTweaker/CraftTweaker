@@ -124,7 +124,7 @@ dependencies {
 task genGitChangelog() {
     def stdout = new ByteArrayOutputStream()
     // first commit to check from, in our case the first commit of the branch
-    String firstCommit = "39f45343748414de06395a6e2a23b185f317452c";
+    String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5";
     String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
     // was having issues with grep and spaces in the regex
     exec {
