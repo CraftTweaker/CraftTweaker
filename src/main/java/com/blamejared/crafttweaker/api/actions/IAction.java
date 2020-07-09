@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.actions;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -58,7 +59,7 @@ public interface IAction {
      * @return true if this IAction be applied on the given side.
      */
     default boolean shouldApplyOn(LogicalSide side) {
-        return side.isServer();
+        return CraftTweaker.serverOverride || side.isServer();
     }
     
 }

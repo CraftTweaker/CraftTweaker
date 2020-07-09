@@ -49,7 +49,7 @@ public class MCEntityType implements CommandStringDisplayable {
     
     @ZenCodeType.Getter("name")
     public String getName() {
-        return getInternal().getName().getFormattedText();
+        return getInternal().getName().getString();
     }
     
     @ZenCodeType.Getter("lootTable")

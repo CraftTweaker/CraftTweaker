@@ -82,7 +82,7 @@ public interface IItemStack extends IIngredient {
      */
     @ZenCodeType.Getter("displayName")
     default String getDisplayName() {
-        return getInternal().getDisplayName().getFormattedText();
+        return getInternal().getDisplayName().getString();
     }
     
     /**

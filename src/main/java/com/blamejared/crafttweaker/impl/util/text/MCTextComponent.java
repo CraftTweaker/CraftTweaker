@@ -20,10 +20,6 @@ public class MCTextComponent {
         this.internal = internal;
     }
     
-    @ZenCodeType.Method
-    public static MCTextComponent copyWithoutSiblings(MCTextComponent textComponent) {
-        return new MCTextComponent(ITextComponent.copyWithoutSiblings(textComponent.getInternal()));
-    }
     
     public ITextComponent getInternal() {
         return internal;
@@ -31,8 +27,8 @@ public class MCTextComponent {
     
     @ZenCodeType.Method
     public MCTextComponent appendSibling(MCTextComponent component) {
-        ITextComponent set = internal.appendSibling(component.getInternal());
-        return internal == set ? this : new MCTextComponent(internal);
+        internal.getSiblings().add(component.getInternal());
+        return new MCTextComponent(internal);
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CAT)
@@ -63,14 +59,14 @@ public class MCTextComponent {
     }
     
     public MCTextComponent setStyle(MCStyle style) {
-        final ITextComponent set = internal.setStyle(style.getInternal());
-        return internal == set ? this : new MCTextComponent(internal);
+         internal.getStyle().mergeStyle(style.getInternal());
+        return  new MCTextComponent(internal);
     }
     
     @ZenCodeType.Method
     public MCTextComponent appendText(String text) {
-        final ITextComponent set = internal.appendText(text);
-        return internal == set ? this : new MCTextComponent(internal);
+        internal.getSiblings().add(new StringTextComponent(text));
+        return new MCTextComponent(internal);
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CAT)
@@ -115,12 +111,12 @@ public class MCTextComponent {
     
     @ZenCodeType.Getter("formattedText")
     public String getFormattedText() {
-        return internal.getFormattedText();
+        return internal.getString();
     }
     
     @ZenCodeType.Method
     public MCTextComponent shallowCopy() {
-        return new MCTextComponent(internal.shallowCopy());
+        return new MCTextComponent(internal.copyRaw());
     }
     
     @ZenCodeType.Method

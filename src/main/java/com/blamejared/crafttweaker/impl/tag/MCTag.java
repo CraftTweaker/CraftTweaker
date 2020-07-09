@@ -20,10 +20,9 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -38,10 +37,10 @@ import java.util.List;
 public class MCTag implements IIngredient {
     
     private final ResourceLocation id;
-    private Tag<Item> itemTag;
-    private Tag<Block> blockTag;
-    private Tag<EntityType<?>> entityTypeTag;
-    private Tag<Fluid> fluidTag;
+    private ITag<Item> itemTag;
+    private ITag<Block> blockTag;
+    private ITag<EntityType<?>> entityTypeTag;
+    private ITag<Fluid> fluidTag;
     
     public MCTag(ResourceLocation id) {
         this.id = id;
@@ -49,19 +48,19 @@ public class MCTag implements IIngredient {
     
     @ZenCodeType.Method
     public MCTag createItemTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(ItemTags.getCollection(), "Item", new Tag<>(id, Sets.newHashSet(), false)));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_232928_e_().func_232925_b_(), "Item",  Tag.func_241286_a_(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createBlockTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(BlockTags.getCollection(), "Block", new Tag<>(id, Sets.newHashSet(), false)));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_232928_e_().func_232923_a_(), "Block",  Tag.func_241286_a_(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createEntityTypeTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(EntityTypeTags.getCollection(), "EntityType", new Tag<>(id, Sets.newHashSet(), false)));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_232928_e_().func_232927_d_(), "EntityType",  Tag.func_241286_a_(Sets.newHashSet()), id));
         return this;
     }
     
@@ -133,33 +132,33 @@ public class MCTag implements IIngredient {
     
     @ZenCodeType.Method
     public void addItems(IItemStack... items) {
-        CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items)));
+        CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items), id));
     }
     
     @ZenCodeType.Method
     public void removeItems(IItemStack... items) {
-        CraftTweakerAPI.apply(new ActionTagRemove<>(getItemTag(), CraftTweakerHelper.getItems(items)));
+        CraftTweakerAPI.apply(new ActionTagRemove<>(getItemTag(), CraftTweakerHelper.getItems(items), id));
     }
     
     
     @ZenCodeType.Method
     public void addBlocks(MCBlock... blocks) {
-        CraftTweakerAPI.apply(new ActionTagAdd<Block>(getBlockTag(), CraftTweakerHelper.getBlocks(blocks)));
+        CraftTweakerAPI.apply(new ActionTagAdd<Block>(getBlockTag(), CraftTweakerHelper.getBlocks(blocks), id));
     }
     
     @ZenCodeType.Method
     public void removeBlocks(MCBlock... blocks) {
-        CraftTweakerAPI.apply(new ActionTagRemove<Block>(getBlockTag(), CraftTweakerHelper.getBlocks(blocks)));
+        CraftTweakerAPI.apply(new ActionTagRemove<Block>(getBlockTag(), CraftTweakerHelper.getBlocks(blocks), id));
     }
     
     @ZenCodeType.Method
     public void addEntityTypes(MCEntityType... entities) {
-        CraftTweakerAPI.apply(new ActionTagAdd<>(getEntityTypeTag(), CraftTweakerHelper.getEntityTypes(entities)));
+        CraftTweakerAPI.apply(new ActionTagAdd<>(getEntityTypeTag(), CraftTweakerHelper.getEntityTypes(entities), id));
     }
     
     @ZenCodeType.Method
     public void removeEntityTypes(MCEntityType... entities) {
-        CraftTweakerAPI.apply(new ActionTagRemove<>(getEntityTypeTag(), CraftTweakerHelper.getEntityTypes(entities)));
+        CraftTweakerAPI.apply(new ActionTagRemove<>(getEntityTypeTag(), CraftTweakerHelper.getEntityTypes(entities), id));
     }
     
     
@@ -203,23 +202,23 @@ public class MCTag implements IIngredient {
         return Ingredient.fromTag(getItemTag());
     }
     
-    public Tag<Item> getItemTag() {
+    public ITag<Item> getItemTag() {
         if(itemTag == null) {
-            itemTag = ItemTags.getCollection().get(id);
+            itemTag = TagCollectionManager.func_232928_e_().func_232925_b_().get(id);
         }
         return itemTag;
     }
     
-    public Tag<Block> getBlockTag() {
+    public ITag<Block> getBlockTag() {
         if(blockTag == null) {
-            blockTag = BlockTags.getCollection().get(id);
+            blockTag =  TagCollectionManager.func_232928_e_().func_232923_a_().get(id);
         }
         return blockTag;
     }
     
-    public Tag<EntityType<?>> getEntityTypeTag() {
+    public ITag<EntityType<?>> getEntityTypeTag() {
         if(entityTypeTag == null) {
-            entityTypeTag = EntityTypeTags.getCollection().get(id);
+            entityTypeTag =  TagCollectionManager.func_232928_e_().func_232927_d_().get(id);
         }
         return entityTypeTag;
     }

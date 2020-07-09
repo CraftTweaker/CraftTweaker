@@ -46,7 +46,7 @@ public class MCEffect implements CommandStringDisplayable {
     
     @ZenCodeType.Getter("displayName")
     public String getDisplayName() {
-        return internal.getDisplayName().getFormattedText();
+        return internal.getDisplayName().getString();
     }
     
     @ZenCodeType.Getter("liquidColor")

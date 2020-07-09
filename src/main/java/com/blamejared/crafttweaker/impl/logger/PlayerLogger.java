@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.logger;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.logger.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.util.text.*;
@@ -27,7 +28,7 @@ public class PlayerLogger implements ILogger {
     @Override
     public void log(LogLevel level, String message, boolean prefix) {
         if(this.logLevel.canLog(level)) {
-            this.player.sendMessage(new StringTextComponent(message));
+            this.player.sendMessage(new StringTextComponent(message), CraftTweaker.CRAFTTWEAKER_UUID);
         }
         
     }

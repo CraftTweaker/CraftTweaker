@@ -1,15 +1,16 @@
 package com.blamejared.crafttweaker.impl.actions.tags;
 
 import com.blamejared.crafttweaker.api.logger.ILogger;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class ActionTagModify<T extends ForgeRegistryEntry> extends ActionTag<T> {
     
     protected final T[] values;
     
-    public ActionTagModify(Tag<T> tag, T[] values) {
-        super(tag);
+    public ActionTagModify(ITag<T> tag, T[] values, ResourceLocation id) {
+        super(tag, id);
         this.values = values;
     }
     

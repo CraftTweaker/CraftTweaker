@@ -19,16 +19,11 @@ public class MCStyle {
     
     @ZenCodeType.Constructor
     public MCStyle() {
-        this(new Style());
+        this(Style.EMPTY);
     }
     
     public Style getInternal() {
         return this.internal;
-    }
-    
-    @ZenCodeType.Method
-    public String getFormattingCode() {
-        return internal.getFormattingCode();
     }
     
     /**
@@ -106,24 +101,6 @@ public class MCStyle {
     @ZenCodeType.Method
     public MCStyle setUnderlined(Boolean underlined) {
         Style set = internal.setUnderlined(underlined);
-        return set == internal ? this : new MCStyle(set);
-    }
-    
-    @ZenCodeType.Method
-    public MCStyle createShallowCopy() {
-        return new MCStyle(internal.createShallowCopy());
-    }
-    
-    
-    @ZenCodeType.Method
-    public MCStyle createDeepCopy() {
-        return new MCStyle(internal.createDeepCopy());
-    }
-    
-    
-    @ZenCodeType.Method
-    public MCStyle setParentStyle(MCStyle parent) {
-        Style set = internal.setParentStyle(parent.getInternal());
         return set == internal ? this : new MCStyle(set);
     }
     

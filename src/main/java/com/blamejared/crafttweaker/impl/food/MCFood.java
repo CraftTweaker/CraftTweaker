@@ -4,11 +4,11 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.potion.MCEffectInstance;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.item.Food;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Util;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import org.apache.commons.lang3.tuple.Pair;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.lang.reflect.Field;
@@ -109,7 +109,7 @@ public class MCFood {
     @ZenCodeType.Method
     public MCFood removeEffect(MCEffectInstance effect) {
         Food food = copyInternal();
-        getEffects().removeIf(pair -> pair.getLeft().get().equals(effect.getInternal()));
+        getEffects().removeIf(pair -> pair.getFirst().get().equals(effect.getInternal()));
         return new MCFood(food);
     }
     
@@ -137,7 +137,7 @@ public class MCFood {
         builder.saturation(getSaturation());
         builder.hunger(getHealing());
         for(Pair<EffectInstance, Float> effect : getInternal().getEffects()) {
-            builder.effect(effect.getKey(), effect.getRight());
+            builder.effect(effect.getFirst(), effect.getSecond());
         }
         return builder.build();
     }

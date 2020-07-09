@@ -2,19 +2,26 @@ package com.blamejared.crafttweaker.impl.actions.tags;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.logger.ILogger;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class ActionTag<T extends ForgeRegistryEntry> implements IRuntimeAction {
     
-    protected final Tag<T> tag;
+    protected final ITag<T> tag;
+    protected final ResourceLocation id;
     
-    public ActionTag(Tag<T> tag) {
+    public ActionTag(ITag<T> tag, ResourceLocation id) {
         this.tag = tag;
+        this.id = id;
     }
     
-    public Tag<T> getTag() {
+    public ITag<T> getTag() {
         return tag;
+    }
+    
+    public ResourceLocation getId() {
+        return id;
     }
     
     @Override
@@ -25,4 +32,7 @@ public abstract class ActionTag<T extends ForgeRegistryEntry> implements IRuntim
         }
         return true;
     }
+    
+    
+    
 }

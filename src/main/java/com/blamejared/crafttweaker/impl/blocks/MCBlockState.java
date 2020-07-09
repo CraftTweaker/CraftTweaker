@@ -8,7 +8,7 @@ import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public MCBlockState withProperty(String name, String value) {
-        IProperty property = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property property = getInternal().getBlock().getStateContainer().getProperty(name);
         if(property == null) {
             CraftTweakerAPI.logWarning("Invalid property name");
         } else {
@@ -88,7 +88,7 @@ public class MCBlockState implements CommandStringDisplayable {
     @ZenCodeType.Method
     public List<String> getPropertyNames() {
         List<String> props = new ArrayList<>();
-        for(IProperty prop : getInternal().getProperties()) {
+        for(Property prop : getInternal().func_235904_r_()) {
             props.add(prop.getName());
         }
         return ImmutableList.copyOf(props);
@@ -96,7 +96,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public String getPropertyValue(String name) {
-        IProperty prop = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property prop = getInternal().getBlock().getStateContainer().getProperty(name);
         if(prop != null) {
             return getInternal().get(prop).toString();
         }
@@ -106,7 +106,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public List<String> getAllowedValuesForProperty(String name) {
-        IProperty prop = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property prop = getInternal().getBlock().getStateContainer().getProperty(name);
         if(prop != null) {
             List<String> values = new ArrayList<>();
             prop.getAllowedValues().forEach(v -> values.add(v.toString()));
@@ -119,7 +119,7 @@ public class MCBlockState implements CommandStringDisplayable {
     @ZenCodeType.Method
     public Map<String, String> getProperties() {
         Map<String, String> props = new HashMap<>();
-        for(IProperty<?> key : getInternal().getProperties()) {
+        for(Property<?> key : getInternal().func_235904_r_()) {
             props.put(key.getName(), getInternal().get(key).toString());
         }
         return ImmutableMap.copyOf(props);
@@ -127,7 +127,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public boolean hasProperty(String name) {
-        IProperty prop = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property prop = getInternal().getBlock().getStateContainer().getProperty(name);
         return prop != null;
     }
     

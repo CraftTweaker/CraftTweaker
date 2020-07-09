@@ -190,7 +190,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("name")
     public String getName() {
-        return internal.getName();
+        return internal.getName2();
     }
     
     public Direction getInternal() {

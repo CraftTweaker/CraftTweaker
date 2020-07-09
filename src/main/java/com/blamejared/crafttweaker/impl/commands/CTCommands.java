@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.commands;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
@@ -30,7 +31,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -70,7 +73,7 @@ public class CTCommands {
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
             String string = new MCItemStackMutable(stack).getCommandString();
-            TextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
+            ITextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
             send(copy, player);
             if(player instanceof ServerPlayerEntity) {
                 PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
@@ -88,7 +91,7 @@ public class CTCommands {
         registerCommand("hand", new CommandImpl("registryName", "Outputs the registry name of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
             String string = stack.getItem().getRegistryName().toString();
-            TextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
+            ITextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
             send(copy, player);
             if(player instanceof ServerPlayerEntity) {
                 PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
@@ -328,13 +331,13 @@ public class CTCommands {
     }
     
     
-    private static void send(TextComponent component, CommandSource source) {
+    private static void send(ITextComponent component, CommandSource source) {
         source.sendFeedback(component, true);
-        CraftTweakerAPI.logDump(component.getFormattedText());
+        CraftTweakerAPI.logDump(component.getString());
     }
     
-    private static void send(TextComponent component, PlayerEntity player) {
-        player.sendMessage(component);
+    private static void send(ITextComponent component, PlayerEntity player) {
+        player.sendMessage(component, CraftTweaker.CRAFTTWEAKER_UUID);
         CraftTweakerAPI.logDump(component.getUnformattedComponentText());
     }
     
@@ -407,30 +410,26 @@ public class CTCommands {
         return string.substring(0, string.lastIndexOf("\n"));
     }
     
-    public static TextComponent copy(TextComponent base, String toCopy) {
-        base.applyTextStyle(style -> {
-            style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
-            style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
-        });
-        
-        return base;
+    public static ITextComponent copy(TextComponent base, String toCopy) {
+        Style style = base.getStyle();
+        style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
+        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
+        return base.func_230530_a_(style);
     }
     
-    public static TextComponent open(TextComponent base, String path) {
-        base.applyTextStyle(style -> {
-            style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to open [%s]", color(path, TextFormatting.GOLD))));
-            style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path));
-        });
-        
-        return base;
+    public static ITextComponent open(TextComponent base, String path) {
+        Style style = base.getStyle();
+        style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to open [%s]", color(path, TextFormatting.GOLD))));
+        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path));
+        return base.func_230530_a_(style);
     }
     
     
     public static TextComponent run(TextComponent base, String command) {
-        base.applyTextStyle(style -> {
-            style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to run [%s]", color(command, TextFormatting.GOLD))));
-            style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-        });
+        Style style = Style.EMPTY;
+        style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to run [%s]", color(command, TextFormatting.GOLD))));
+        style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        base.func_240703_c_(style);
         
         return base;
     }

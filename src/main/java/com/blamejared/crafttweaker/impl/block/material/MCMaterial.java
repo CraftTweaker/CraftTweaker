@@ -120,16 +120,6 @@ public class MCMaterial implements CommandStringDisplayable {
         return internal.isLiquid();
     }
     
-    
-    /**
-     * Returns true if the material can be harvested without a tool (or with the wrong tool)
-     */
-    @ZenCodeType.Method
-    public boolean isToolNotRequired() {
-        return internal.isToolNotRequired();
-    }
-    
-    
     /**
      * Returns whether the material can be replaced by other blocks when placed - eg snow, vines and tall grass.
      */
