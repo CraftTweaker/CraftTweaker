@@ -248,7 +248,7 @@ curseforge {
 
         mainArtifact(jar) {
             relations {
-                requiredLibrary "jeitweaker"
+//                requiredLibrary "jeitweaker"
             }
         }
 //        addArtifact(sourcesJar)
