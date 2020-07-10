@@ -6,9 +6,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ActionTagRemove<T extends ForgeRegistryEntry> extends ActionTagModify<T> {
     
@@ -20,8 +18,12 @@ public class ActionTagRemove<T extends ForgeRegistryEntry> extends ActionTagModi
     public void apply() {
         if(tag instanceof Tag) {
             List<T> list = new ArrayList<>(((Tag<T>) tag).field_241282_b_);
-            list.removeAll(Arrays.asList(getValues()));
+            Set<T> set = new HashSet<>(((Tag<T>) tag).field_241283_c_);
+            List<T> values = Arrays.asList(getValues());
+            list.removeAll(values);
+            set.removeAll(values);
             ((Tag<T>) tag).field_241282_b_ = ImmutableList.copyOf(list);
+            ((Tag<T>) tag).field_241283_c_ = set;
         } else {
             throw new RuntimeException("Only Tag's are supported right now, can't act on: " + tag);
         }
