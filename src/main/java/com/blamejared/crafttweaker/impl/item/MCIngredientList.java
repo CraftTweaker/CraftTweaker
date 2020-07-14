@@ -1,14 +1,20 @@
 package com.blamejared.crafttweaker.impl.item;
 
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.Ingredient;
+import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.item.IngredientList")
+@Document("vanilla/api/items/IngredientList")
 public class MCIngredientList implements IIngredient {
     
     private IIngredient[] ingredients;
@@ -34,8 +40,7 @@ public class MCIngredientList implements IIngredient {
     
     @Override
     public String getCommandString() {
-        // TODO not sure what to do here, since technically speaking there is no way to use it from a script yet
-        return "";
+        return Arrays.stream(ingredients).map(IIngredient::getCommandString).collect(Collectors.joining(" | "));
     }
     
     @Override
