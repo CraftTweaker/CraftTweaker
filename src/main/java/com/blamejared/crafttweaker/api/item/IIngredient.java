@@ -71,7 +71,7 @@ public interface IIngredient extends CommandStringDisplayable {
         if(ingredient instanceof IngredientVanillaPlus) {
             return ((IngredientVanillaPlus) ingredient).getCrTIngredient();
         }
-
+        
         if(ingredient.hasNoMatchingItems()) {
             return new MCItemStack(ItemStack.EMPTY);
         } else {
@@ -82,15 +82,21 @@ public interface IIngredient extends CommandStringDisplayable {
             }
         }
     }
-
+    
     @ZenCodeType.Caster(implicit = true)
     default MapData asMapData() {
         final IData data = this.asIData();
         return data instanceof MapData ? ((MapData) data) : new MapData();
     }
-
+    
     @ZenCodeType.Caster(implicit = true)
     default IData asIData() {
         return JSONConverter.convert(this.asVanillaIngredient().serialize());
     }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    default MCIngredientList or(IIngredient other) {
+        return new MCIngredientList(new IIngredient[]{this, other});
+    }
+    
 }
