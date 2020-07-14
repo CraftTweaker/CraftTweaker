@@ -110,6 +110,9 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public Ingredient asVanillaIngredient() {
+        if(getInternal().isEmpty()){
+            return Ingredient.EMPTY;
+        }
         return new IngredientNBT(getInternal());
     }
     

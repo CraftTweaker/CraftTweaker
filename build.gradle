@@ -117,7 +117,7 @@ dependencies {
     zenCodeDeps.collect { compile project(it) }
 
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.61'
-    //compile fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2");
+    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6");
 }
 
 
@@ -246,11 +246,11 @@ curseforge {
         changelog = file("changelog.md")
         changelogType = 'markdown'
 
-//        mainArtifact(jar) {
-//            relations {
-//                requiredLibrary "jeitweaker"
-//            }
-//        }
+        mainArtifact(jar) {
+            relations {
+                requiredLibrary "jeitweaker"
+            }
+        }
 //        addArtifact(sourcesJar)
 //        addArtifact(javadocJar)
         addArtifact(deobfJar)
