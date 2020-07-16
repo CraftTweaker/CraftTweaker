@@ -42,13 +42,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -194,10 +194,9 @@ public class CraftTweaker {
     
     
     @SubscribeEvent
-    public void serverStarting(FMLServerStartingEvent event) {
-        CTCommands.init(event.getCommandDispatcher());
-        CustomCommands.init(event.getCommandDispatcher());
-        event.getServer().getDataPackRegistries().func_240967_e_();
+    public void registerCommands(RegisterCommandsEvent event) {
+        CTCommands.init(event.getDispatcher());
+        CustomCommands.init(event.getDispatcher());
     }
     
     @SubscribeEvent(priority = EventPriority.LOW)
