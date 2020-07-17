@@ -9,45 +9,67 @@
 [![Discord](https://img.shields.io/badge/Discord-%237289DA?style=flat-square&logo=Discord&logoColor=white)](https://discord.blamejared.com/)
 [![](http://cf.way2muchnoise.eu/crafttweaker.svg?badge_style=flat)](https://minecraft.curseforge.com/projects/crafttweaker)
 
+## Table of Contents
 
-# CraftTweaker
+- [Introduction](#introduction)
+- [Feedback](#feedback)
+- [License](#license)
+- [Setup](#setup)
+- [Build](#build)
+- [Maven](#maven)
 
-Welcome to the Crafttweaker source! Crafttweaker is the official continuation of Minetweaker 3 and plans on staying updated for the latest Minecraft versions.
 
-## License and contributions
+## Introduction
 
-You are free to distribute the mod by itself and in modpacks as long as it is not being sold or redistributed on advertisement sponsored sites. You may create derivative works, but you may not redistribute it under an identical name.
+CraftTweaker is a Minecraft mod which allows modpacks and servers to customize the game. With CraftTweaker you can change recipes, script events, add new commands and even change item properties! When used with other mods the possibilities become endless. Ranging from custom machine recipes to entirely new blocks and items!
 
-Want to contribute? That's great! Contact me if you want to propose or discuss new features. Adding new mods is definitely welcome and doesn't need prior permission (just follow the existing structure, add it & make a pull request). Credit will be granted appropriately.
+## Feedback
 
-## Project structure and building
+If you're looking for help with the mod, or just want to come hang out, we have a [Discord](https://discord.blamejared.com). If you're running into a bug or have a feature request, please don't be afraid to make an [issue on the tracker](https://github.com/CraftTweaker/CraftTweaker/issues).
 
-The CraftTweaker 2 source is setup as a multi-project Gradle project:
+## License
 
-- ZenScript is the custom scripting engine
-- CraftTweaker2-API is the shared API for all CraftTweaker versions
-- CraftTweaker2-MCXYZ-Main are the main CraftTweaker implementations for Minecraft X.Y.Z
-- CraftTweaker2-MCXYZ-Mod-XXX are the mod support projects. They are compiled and obfuscated independently and then assembled later
+Distributed under the MIT License. See the [LICENSE](https://github.com/CraftTweaker/CraftTweaker/blob/1.16/LICENSE) file for more information.
 
-### Developing and running CraftTweaker from source
 
-Configuration settings are stored in configuration.gradle.
+## Setup
 
-In order to use the project, you have to execute the setupDecompWorkspaceAll. It will prepare all the subprojects for you. After that, you can simply run minecraft with the runClient task in CraftTweaker2-XYZ-Main project, which will run CraftTweaker (without mod support). Likewise, you can use the runClient task on any of its mod support library subprojects, which will run CraftTweaker with only the mod support for that specific mod.
+To set up the CraftTweaker development environment you must clone the repo and initialize the submodule. 
 
-The following global tasks are available:
+```bash
+git clone --recurse-submodules https://github.com/CraftTweaker/CraftTweaker.git
+```
 
-- setupDecompWorkspaceAll: sets up all workspaces in all subprojects
-- assembleAll: builds all versions of CraftTweaker
+After the project has been cloned and initialized you can directly import it into your IDE of choice.
 
-### Adding mod support
+## Build
 
-When starting a new mod support library, it is best to start from an existing one. For instance, copy the NEI support library, and remove the source files inside the src/java/main directory. Then you can work with it like any other support library. Make sure to update configuration.gradle to add the projects in there.
+Building the project is as easy as running a Gradle command!
+Simply run:
+```bash
+gradlew build
+```
+and the outputted `.jar` files will be put in `build/libs/`.
 
-### Building a release
+CraftTweaker also has automated markdown documentation, the output of that will be in the `docsOut/` folder.
 
-Use the assembleAll task to build all versions, or assembleMCxxx tasks to build a specific version. The files will be output in /build/libs .
+## Maven
 
-## Customized builds
 
-You may modify and redistribute your own customized version of CraftTweaker as long as you mark your own version of CraftTweaker as CUSTOMIZED (that is, put CUSTOMIZED in both the jar and mod name) and as long as you make the modified source code publicly available. Obviously, I cannot offer support for customized builds. Just be so kind to mention the original source and author (Stan) ;)
+Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use this builds in your project, simply use the following code in your build.gradle
+
+```gradle
+repositories {
+    maven { url 'https://maven.blamejared.com' }
+}
+
+dependencies {
+    runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.1:[VERSION]")
+}
+```
+
+Just replace `[VERSION]` with the latest released version, which is currently:
+
+ [![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.16.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
+
+ Simply remove the `v` and use that version, so `v7.0.0.0` becomes `7.0.0.0`
