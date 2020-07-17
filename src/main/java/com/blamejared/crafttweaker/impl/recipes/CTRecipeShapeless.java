@@ -34,10 +34,14 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     private final ResourceLocation resourceLocation;
     
     public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable IRecipeManager.RecipeFunctionArray function) {
-        this.resourceLocation = new ResourceLocation("crafttweaker", name);
+        this(new ResourceLocation("crafttweaker", name), output, ingredients, function);
+    }
+
+    public CTRecipeShapeless(ResourceLocation resourceLocation, IItemStack output, IIngredient[] ingredients, @Nullable IRecipeManager.RecipeFunctionArray function) {
+        this.resourceLocation = resourceLocation;
         this.output = output;
         this.function = function;
-        
+
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null) {
@@ -52,7 +56,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
                     .toArray(IIngredient[]::new);
         }
         this.ingredients = ingredients;
-    
+
     }
     
     @Override
