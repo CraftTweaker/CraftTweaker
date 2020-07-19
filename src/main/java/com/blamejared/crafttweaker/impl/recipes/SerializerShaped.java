@@ -31,7 +31,7 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
         
         boolean mirrored = buffer.readBoolean();
         ItemStack output = buffer.readItemStack();
-        return new CTRecipeShaped(recipeId, new MCItemStack(output), inputs, mirrored, null);
+        return new CTRecipeShaped(recipeId.getPath(), new MCItemStack(output), inputs, mirrored, null);
     }
     
     public void write(PacketBuffer buffer, CTRecipeShaped recipe) {
