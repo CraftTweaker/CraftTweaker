@@ -20,6 +20,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 /**
@@ -96,7 +97,7 @@ public interface IIngredient extends CommandStringDisplayable {
     }
     
     @ZenCodeType.Method
-    default MCIngredientConditioned<IIngredient> onlyIf(String uid, @ZenCodeType.Optional Function<IItemStack, Boolean> function) {
+    default MCIngredientConditioned<IIngredient> onlyIf(String uid, @ZenCodeType.Optional Predicate<IItemStack> function) {
         return new MCIngredientConditioned<>(this, new ConditionCustom<>(uid, function));
     }
     
