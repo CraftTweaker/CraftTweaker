@@ -24,9 +24,9 @@ public class MCIngredientList implements IIngredient {
     }
     
     @Override
-    public boolean matches(IItemStack stack) {
+    public boolean matches(IItemStack stack, boolean ignoreDamage) {
         for(IIngredient item : ingredients) {
-            if(item.matches(stack)){
+            if(item.matches(stack, ignoreDamage)){
                 return true;
             }
         }
