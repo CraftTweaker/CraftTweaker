@@ -12,16 +12,16 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ConditionCustom<T extends IIngredient> implements IIngredientCondition<T> {
     
-    public static final Map<String, Function<IItemStack, Boolean>> knownConditions = new HashMap<>();
+    public static final Map<String, Predicate<IItemStack>> knownConditions = new HashMap<>();
     
     private final String uid;
-    private Function<IItemStack, Boolean> function;
+    private Predicate<IItemStack> function;
     
-    public ConditionCustom(String uid, Function<IItemStack, Boolean> function) {
+    public ConditionCustom(String uid, Predicate<IItemStack> function) {
         this.uid = uid;
         this.function = function;
         
@@ -43,7 +43,7 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
             throw new IllegalStateException("No condition named '" + uid + "' known!");
         }
         
-        return function.apply(stack);
+        return function.test(stack);
     }
     
     @Override
