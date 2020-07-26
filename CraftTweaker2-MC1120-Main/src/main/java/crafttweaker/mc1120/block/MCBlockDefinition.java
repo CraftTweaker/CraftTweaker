@@ -149,4 +149,10 @@ public class MCBlockDefinition implements IBlockDefinition {
     public void setDefaultSlipperiness(float defaultSlipperiness) {
         block.setDefaultSlipperiness(defaultSlipperiness);
     }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return new MCBlockState(block.getStateFromMeta(meta));
+    }
+
 }

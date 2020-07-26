@@ -1,5 +1,6 @@
 package crafttweaker.api.block;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.entity.IEntity;
@@ -88,5 +89,11 @@ public interface IBlockDefinition {
     
     @ZenSetter("defaultSlipperiness")
     void setDefaultSlipperiness(float defaultSlipperiness);
+
+    @ZenMethod
+    default IBlockState getStateFromMeta(int meta) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::getStateFromMeta!");
+        return getDefaultState();
+    }
     
 }
