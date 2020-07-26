@@ -29,7 +29,7 @@ public class ConditionAnyDamage<T extends IIngredient> implements IIngredientCon
     
     @Override
     public IIngredientConditionSerializer getSerializer() {
-        return CraftTweakerRegistries.CONDITION_DAMAGE_SERIALIZER;
+        return CraftTweakerRegistries.CONDITION_ANY_DAMAGE_SERIALIZER;
     }
     
     public static final class ConditionAnyDamagedSerializer implements IIngredientConditionSerializer<ConditionAnyDamage<?>> {
