@@ -1,32 +1,42 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.impl.block.material.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
-import com.blamejared.crafttweaker.impl.entity.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.managers.*;
-import com.blamejared.crafttweaker.impl.potion.*;
-import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.block.*;
-import net.minecraft.block.material.*;
-import net.minecraft.entity.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.potion.*;
-import net.minecraft.util.*;
-import net.minecraft.util.registry.*;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.block.material.MCMaterial;
+import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
+import com.blamejared.crafttweaker.impl.potion.MCEffect;
+import com.blamejared.crafttweaker.impl.potion.MCPotion;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
+import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
+import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Optional;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -37,7 +47,9 @@ public class BracketHandlers {
      * Gets the given {@link MCMaterial}. Throws an Exception if not found.
      *
      * @param tokens What you would write in the BEP call.
+     *
      * @return The found {@link MCMaterial}
+     *
      * @docParam tokens "earth"
      */
     @ZenCodeType.Method
@@ -63,7 +75,7 @@ public class BracketHandlers {
             return new MCMaterial((Material) field.get(null), tokens);
         } catch(Exception ignored) {
         }
-    
+        
         throw new IllegalArgumentException("Could not find blockmaterial <blockmaterial:" + tokens + ">!");
     }
     
@@ -72,7 +84,9 @@ public class BracketHandlers {
      * Returns `null` if it cannot find the block, ignored invalid variants
      *
      * @param tokens The block's resource location and variants
+     *
      * @return The found BlockState
+     *
      * @docParam tokens "minecraft:acacia_planks"
      * @docParam tokens "minecraft:furnace:facing=north,lit=false"
      */
@@ -122,7 +136,9 @@ public class BracketHandlers {
      * Gets the direction Axis based on name. Throws an error if it can't find the direction Axis.
      *
      * @param tokens The direction Axis's resource location
+     *
      * @return The found direction Axis
+     *
      * @docParam tokens "x"
      */
     @ZenCodeType.Method
@@ -133,7 +149,7 @@ public class BracketHandlers {
         
         if(tokens.contains(":"))
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Syntax is <directionaxis:axis>");
-    
+        
         final Direction.Axis axis = Direction.Axis.byName(tokens);
         if(axis == null) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
@@ -145,7 +161,9 @@ public class BracketHandlers {
      * Gets the effect based on registry name. Throws an error if it can't find the effect.
      *
      * @param tokens The effect's resource location
+     *
      * @return The found effect
+     *
      * @docParam tokens "minecraft:haste"
      */
     @BracketResolver("effect")
@@ -169,7 +187,9 @@ public class BracketHandlers {
      * Gets the entityClassification based on registry name. Logs an error and returns `null` if it can't find the entityClassification.
      *
      * @param tokens The entityClassification's resource location
+     *
      * @return The found entityClassification
+     *
      * @docParam tokens "monster"
      */
     @ZenCodeType.Method
@@ -180,9 +200,7 @@ public class BracketHandlers {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
             return null;
         }
-        if(Arrays.stream(EntityClassification.values())
-                .anyMatch(entityClassification -> entityClassification.name()
-                        .equalsIgnoreCase(tokens))) {
+        if(Arrays.stream(EntityClassification.values()).anyMatch(entityClassification -> entityClassification.name().equalsIgnoreCase(tokens))) {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
             return null;
         }
@@ -194,7 +212,9 @@ public class BracketHandlers {
      * Gets the entityType based on registry name. Logs an error and return `null` if it can't find the entityType.
      *
      * @param tokens The entityType's resource location
+     *
      * @return The found entityType
+     *
      * @docParam tokens "minecraft:pig"
      */
     @ZenCodeType.Method
@@ -220,7 +240,9 @@ public class BracketHandlers {
      * Gets the item based on registry name. Throws an error if it can't find the item.
      *
      * @param tokens The item's resource location
+     *
      * @return The found item
+     *
      * @docParam tokens "minecraft:dirt"
      */
     @BracketResolver("item")
@@ -267,7 +289,9 @@ public class BracketHandlers {
      * But the BEP looks the same as the other ones: `<recipetype:minecraft:crafting>`
      *
      * @param tokens The recipeManager's resource location
+     *
      * @return The found recipeManager
+     *
      * @docParam tokens "minecraft:crafting"
      */
     @ZenCodeType.Method
@@ -297,7 +321,9 @@ public class BracketHandlers {
      * Throws an error if the tokens are not a valid location.
      *
      * @param tokens The resource location
+     *
      * @return The location
+     *
      * @docParam tokens "minecraft:dirt"
      */
     @ZenCodeType.Method
@@ -307,13 +333,14 @@ public class BracketHandlers {
     }
     
     
-    
     /**
      * Gets the tag based on registry name. Will create an empty Tag if none is found.<br>
      * However, in such a case, you need to register the tag as its appropriate type
      *
      * @param tokens The tag's resource location
+     *
      * @return The found tag, or a newly created one
+     *
      * @docParam tokens "tag:minecraft:wool"
      */
     @ZenCodeType.Method
@@ -326,4 +353,21 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get Tag with name: <tag:" + tokens + ">! Syntax is <tag:modid:tagname>");
         return new MCTag(new ResourceLocation(tokens));
     }
+    
+    @ZenCodeType.Method
+    @BracketResolver("formatting")
+    public static MCTextFormatting getTextFormatting(String tokens) {
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("Formatting BEP <formatting:%s> does not seem to be lower-cased!", tokens);
+        
+        final String[] split = tokens.split(":");
+        if(split.length != 1)
+            throw new IllegalArgumentException("Could not get format with name: <formatting:" + tokens + ">! Syntax is <formatting:format>");
+        
+        if(TextFormatting.getValueByName(split[0]) == null) {
+            throw new IllegalArgumentException("Could not get format with name: <formatting:" + tokens + ">! format does not appear to exist!");
+        }
+        return new MCTextFormatting(TextFormatting.getValueByName(split[0]));
+    }
+    
 }

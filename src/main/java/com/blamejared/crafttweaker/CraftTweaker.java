@@ -172,7 +172,6 @@ public class CraftTweaker {
                 .toArray(SourceFile[]::new);
         CraftTweakerAPI.loadScripts(sourceFiles, scriptLoadingOptions);
     }
-
     @SubscribeEvent
     public void serverStarting(FMLServerStartingEvent event) {
         CTCommands.init(event.getCommandDispatcher());
@@ -192,6 +191,8 @@ public class CraftTweaker {
             recipeManager.recipes = new HashMap<>(recipeManager.recipes);
             recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
             CTCraftingTableManager.recipeManager = recipeManager;
+            CTEventHandler.TOOLTIPS.clear();
+            
             CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().execute());
             List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
             scriptFiles.stream()
