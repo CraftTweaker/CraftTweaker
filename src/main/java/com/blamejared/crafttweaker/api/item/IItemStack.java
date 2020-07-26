@@ -5,15 +5,24 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddShiftedTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionClearTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionModifyTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionRemoveRegexTooltip;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.regex.Pattern;
 
 /**
  * This represents an item.
@@ -364,16 +373,42 @@ public interface IItemStack extends IIngredient {
         CraftTweakerAPI.apply(new ActionSetBurnTime(this, time));
     }
     
-    /**
-     * Gets the internal {@link ItemStack} for this IItemStack.
-     *
-     * @return internal ItemStack
-     */
-    ItemStack getInternal();
+    
+    @ZenCodeType.Method
+    default void clearTooltip() {
+        CraftTweakerAPI.apply(new ActionClearTooltip(this));
+    }
+    
+    @ZenCodeType.Method
+    default void addTooltip(MCTextComponent content) {
+        CraftTweakerAPI.apply(new ActionAddTooltip(this, content));
+    }
+    
+    @ZenCodeType.Method
+    default void addShiftTooltip(MCTextComponent content, @ZenCodeType.Optional MCTextComponent showMessage) {
+        CraftTweakerAPI.apply(new ActionAddShiftedTooltip(this, content, showMessage));
+    }
+    
+    @ZenCodeType.Method
+    default void modifyTooltip(ITooltipFunction function) {
+        CraftTweakerAPI.apply(new ActionModifyTooltip(this, function));
+    }
+    
+    @ZenCodeType.Method
+    default void removeTooltip(String regex) {
+        CraftTweakerAPI.apply(new ActionRemoveRegexTooltip(this, Pattern.compile(regex)));
+    }
     
     @ZenCodeType.Method
     IItemStack mutable();
     
     @ZenCodeType.Getter("damage")
     int getDamage();
+    
+    /**
+     * Gets the internal {@link ItemStack} for this IItemStack.
+     *
+     * @return internal ItemStack
+     */
+    ItemStack getInternal();
 }

@@ -88,7 +88,7 @@ public class MCBlockState implements CommandStringDisplayable {
     @ZenCodeType.Method
     public List<String> getPropertyNames() {
         List<String> props = new ArrayList<>();
-        for(Property prop : getInternal().func_235904_r_()) {
+        for(Property<?> prop : getInternal().getProperties()) {
             props.add(prop.getName());
         }
         return ImmutableList.copyOf(props);
@@ -96,7 +96,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public String getPropertyValue(String name) {
-        Property prop = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property<?> prop = getInternal().getBlock().getStateContainer().getProperty(name);
         if(prop != null) {
             return getInternal().get(prop).toString();
         }
@@ -106,7 +106,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public List<String> getAllowedValuesForProperty(String name) {
-        Property prop = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property<?> prop = getInternal().getBlock().getStateContainer().getProperty(name);
         if(prop != null) {
             List<String> values = new ArrayList<>();
             prop.getAllowedValues().forEach(v -> values.add(v.toString()));
@@ -119,7 +119,7 @@ public class MCBlockState implements CommandStringDisplayable {
     @ZenCodeType.Method
     public Map<String, String> getProperties() {
         Map<String, String> props = new HashMap<>();
-        for(Property<?> key : getInternal().func_235904_r_()) {
+        for(Property<?> key : getInternal().getProperties()) {
             props.put(key.getName(), getInternal().get(key).toString());
         }
         return ImmutableMap.copyOf(props);
@@ -127,7 +127,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     public boolean hasProperty(String name) {
-        Property prop = getInternal().getBlock().getStateContainer().getProperty(name);
+        Property<?> prop = getInternal().getBlock().getStateContainer().getProperty(name);
         return prop != null;
     }
     

@@ -192,7 +192,6 @@ public class CraftTweaker {
     }
     
     
-    
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         CTCommands.init(event.getDispatcher());
@@ -207,7 +206,8 @@ public class CraftTweaker {
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                 serverOverride = server == null;
-                CraftTweaker.tagManager = event.getDataPackRegistries().func_240966_d_();
+                CraftTweaker.tagManager = event.getDataPackRegistries().getTagManager();
+                CTEventHandler.TOOLTIPS.clear();
                 return null;
             }
             
@@ -215,7 +215,7 @@ public class CraftTweaker {
             protected void apply(Void objectIn, IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 giveFeedback(new StringTextComponent("CraftTweaker reload starting!"));
                 //ImmutableMap of ImmutableMaps. Nice.
-                RecipeManager recipeManager = event.getDataPackRegistries().func_240967_e_();
+                RecipeManager recipeManager = event.getDataPackRegistries().getRecipeManager();
                 recipeManager.recipes = new HashMap<>(recipeManager.recipes);
                 recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
                 CTCraftingTableManager.recipeManager = recipeManager;
@@ -232,7 +232,7 @@ public class CraftTweaker {
                     String name = PATRON_LIST.stream().skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size())).findFirst().orElse("");
                     if(!name.isEmpty()) {
                         msg = new StringTextComponent("This reload was made possible by " + name + " and more!" + TextFormatting.GREEN + " [Learn more!]");
-                        msg.func_230530_a_(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
+                        msg.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
                         giveFeedback(msg);
                     }
                 }

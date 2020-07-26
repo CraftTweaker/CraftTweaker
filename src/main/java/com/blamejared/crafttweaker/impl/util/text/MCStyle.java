@@ -1,9 +1,12 @@
 package com.blamejared.crafttweaker.impl.util.text;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.util.text.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.Style;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.text.MCStyle")
@@ -22,8 +25,49 @@ public class MCStyle {
         this(Style.EMPTY);
     }
     
-    public Style getInternal() {
-        return this.internal;
+    @ZenCodeType.Method
+    public boolean getBold() {
+        return internal.getBold();
+    }
+    
+    @ZenCodeType.Method
+    public MCStyle setBold(Boolean boldIn) {
+        return new MCStyle(internal.setBold(boldIn));
+    }
+    
+    @ZenCodeType.Method
+    public boolean getItalic() {
+        return internal.getItalic();
+    }
+    
+    @ZenCodeType.Method
+    public MCStyle setItalic(Boolean italic) {
+        return new MCStyle(internal.setItalic(italic));
+    }
+    
+    @ZenCodeType.Method
+    public boolean getStrikethrough() {
+        return internal.getStrikethrough();
+    }
+    
+    @ZenCodeType.Method
+    public MCStyle setStrikethrough(Boolean strikethrough) {
+        return new MCStyle(internal.setStrikethrough(strikethrough));
+    }
+    
+    @ZenCodeType.Method
+    public MCStyle setUnderlined(Boolean underlined) {
+        return new MCStyle(internal.setUnderlined(underlined));
+    }
+    
+    @ZenCodeType.Method
+    public boolean getObfuscated() {
+        return internal.getObfuscated();
+    }
+    
+    @ZenCodeType.Method
+    public MCStyle setObfuscated(Boolean obfuscated) {
+        return new MCStyle(internal.setObfuscated(obfuscated));
     }
     
     /**
@@ -35,62 +79,33 @@ public class MCStyle {
     }
     
     @ZenCodeType.Method
-    public boolean getBold() {
-        return internal.getBold();
+    public String getInsertion() {
+        return internal.getInsertion();
     }
     
     @ZenCodeType.Method
-    public MCStyle setBold(Boolean boldIn) {
-        Style set = internal.setBold(boldIn);
-        return set == internal ? this : new MCStyle(set);
+    public MCStyle setFontId(MCResourceLocation location) {
+        return new MCStyle(getInternal().setFontId(location.getInternal()));
     }
     
     @ZenCodeType.Method
-    public int hashCode() {
-        return internal.hashCode();
+    public MCResourceLocation getFontId() {
+        return new MCResourceLocation(getInternal().getFontId());
     }
     
     @ZenCodeType.Method
-    public boolean getObfuscated() {
-        return internal.getObfuscated();
+    public MCStyle setFormatting(MCTextFormatting formatting) {
+        return new MCStyle(internal.setFormatting(formatting.getInternal()));
     }
     
     @ZenCodeType.Method
-    public MCStyle setObfuscated(Boolean obfuscated) {
-        Style set = internal.setObfuscated(obfuscated);
-        return set == internal ? this : new MCStyle(set);
+    public MCStyle setColor(int colour) {
+        return new MCStyle(getInternal().setColor(Color.func_240743_a_(colour)));
     }
     
     @ZenCodeType.Method
-    public boolean equals(Object other) {
-        return other instanceof MCStyle && internal.equals(other);
-    }
-    
-    @ZenCodeType.Method
-    public boolean getItalic() {
-        return internal.getItalic();
-    }
-    
-    @ZenCodeType.Method
-    public MCStyle setItalic(Boolean italic) {
-        Style set = internal.setItalic(italic);
-        return set == internal ? this : new MCStyle(set);
-    }
-    
-    @ZenCodeType.Method
-    public String toString() {
-        return internal.toString();
-    }
-    
-    @ZenCodeType.Method
-    public boolean getStrikethrough() {
-        return internal.getStrikethrough();
-    }
-    
-    @ZenCodeType.Method
-    public MCStyle setStrikethrough(Boolean strikethrough) {
-        Style set = internal.setStrikethrough(strikethrough);
-        return set == internal ? this : new MCStyle(set);
+    public MCStyle setColor(MCTextFormatting formatting) {
+        return new MCStyle(getInternal().setColor(Color.func_240744_a_(formatting.getInternal())));
     }
     
     @ZenCodeType.Method
@@ -99,14 +114,19 @@ public class MCStyle {
     }
     
     @ZenCodeType.Method
-    public MCStyle setUnderlined(Boolean underlined) {
-        Style set = internal.setUnderlined(underlined);
-        return set == internal ? this : new MCStyle(set);
+    public MCStyle setUnderlined(boolean underlined) {
+        return new MCStyle(getInternal().setUnderlined(underlined));
     }
     
     @ZenCodeType.Method
-    public String getInsertion() {
-        return internal.getInsertion();
+    public boolean equals(Object other) {
+        return other instanceof MCStyle && internal.equals(other);
+    }
+    
+    
+    @ZenCodeType.Method
+    public MCStyle mergeStyle(MCStyle style) {
+        return new MCStyle(getInternal().mergeStyle(style.getInternal()));
     }
     
     /**
@@ -118,5 +138,18 @@ public class MCStyle {
         return set == internal ? this : new MCStyle(set);
     }
     
+    @ZenCodeType.Method
+    public int hashCode() {
+        return internal.hashCode();
+    }
+    
+    @ZenCodeType.Method
+    public String toString() {
+        return internal.toString();
+    }
+    
+    public Style getInternal() {
+        return this.internal;
+    }
     
 }

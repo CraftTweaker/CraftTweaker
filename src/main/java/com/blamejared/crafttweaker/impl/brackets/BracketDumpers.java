@@ -1,14 +1,20 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import net.minecraft.entity.*;
-import net.minecraft.util.*;
-import net.minecraft.util.registry.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.BracketDumper;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketDumpers")
@@ -53,5 +59,10 @@ public class BracketDumpers {
         return Arrays.stream(Direction.Axis.values())
                 .map(key -> "<directionaxis:" + key + ">")
                 .collect(Collectors.toList());
+    }
+    
+    @BracketDumper("formatting")
+    public static Collection<String> getTextFormattingDump() {
+        return Arrays.stream(TextFormatting.values()).map(key -> "<formatting:" + key.getFriendlyName() + ">").collect(Collectors.toList());
     }
 }
