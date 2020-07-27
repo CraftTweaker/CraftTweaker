@@ -113,6 +113,9 @@ public class MCItemStackMutable implements IItemStack {
         if(getInternal().isEmpty()){
             return Ingredient.EMPTY;
         }
+        if(!getInternal().hasTag()){
+            return Ingredient.fromStacks(getInternal());
+        }
         return new IngredientNBT(getInternal());
     }
     
