@@ -2,8 +2,9 @@ package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.events.CTEventHandler;
+import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.LinkedList;
 
@@ -20,7 +21,7 @@ public class ActionAddTooltip implements IRuntimeAction {
     @Override
     public void apply() {
         
-        CTEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>()).add((stack1, tooltip, isAdvanced) -> tooltip.add(content));
+        CTClientEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>()).add((stack1, tooltip, isAdvanced) -> tooltip.add(content));
     }
     
     @Override
@@ -28,4 +29,8 @@ public class ActionAddTooltip implements IRuntimeAction {
         return "Adding \"" + content + "\" to the tooltip for: " + stack.getCommandString();
     }
     
+    @Override
+    public boolean shouldApplyOn(LogicalSide side) {
+        return side.isClient();
+    }
 }
