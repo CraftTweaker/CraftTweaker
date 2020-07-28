@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.custom.CustomCommands;
+import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
@@ -125,6 +126,7 @@ public class CraftTweaker {
 
     private void setupClient(final FMLClientSetupEvent event) {
         LOG.info("{} client has loaded successfully!", NAME);
+        MinecraftForge.EVENT_BUS.register(new CTClientEventHandler());
     }
 
 
@@ -156,6 +158,8 @@ public class CraftTweaker {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
+        
+        CTClientEventHandler.TOOLTIPS.clear();
         CTCraftingTableManager.recipeManager = event.getRecipeManager();
         Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
         Collection<IRecipe<?>> recipes = map.values();
@@ -191,7 +195,6 @@ public class CraftTweaker {
             recipeManager.recipes = new HashMap<>(recipeManager.recipes);
             recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
             CTCraftingTableManager.recipeManager = recipeManager;
-            CTEventHandler.TOOLTIPS.clear();
             
             CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().execute());
             List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
