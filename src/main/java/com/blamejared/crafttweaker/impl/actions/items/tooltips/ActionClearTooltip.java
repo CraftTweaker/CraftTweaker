@@ -2,7 +2,8 @@ package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.events.CTEventHandler;
+import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.LinkedList;
 
@@ -17,7 +18,7 @@ public class ActionClearTooltip implements IRuntimeAction {
     @Override
     public void apply() {
         
-        CTEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>()).add((stack1, tooltip, isAdvanced) -> {
+        CTClientEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>()).add((stack1, tooltip, isAdvanced) -> {
             tooltip.clear();
         });
     }
@@ -27,4 +28,8 @@ public class ActionClearTooltip implements IRuntimeAction {
         return "Clearing the tooltip for: " + stack.getCommandString();
     }
     
+    @Override
+    public boolean shouldApplyOn(LogicalSide side) {
+        return side.isClient();
+    }
 }
