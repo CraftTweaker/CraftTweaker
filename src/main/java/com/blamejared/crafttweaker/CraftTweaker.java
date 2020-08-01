@@ -192,7 +192,6 @@ public class CraftTweaker {
     }
     
     
-    
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         CTCommands.init(event.getDispatcher());
@@ -228,7 +227,7 @@ public class CraftTweaker {
                 
                 TextComponent msg = new StringTextComponent("CraftTweaker reload complete!");
                 giveFeedback(msg);
-                if(!CraftTweakerAPI.NO_BRAND) {
+                if(scriptFiles.size() > 0 && !CraftTweakerAPI.NO_BRAND) {
                     String name = PATRON_LIST.stream().skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size())).findFirst().orElse("");
                     if(!name.isEmpty()) {
                         msg = new StringTextComponent("This reload was made possible by " + name + " and more!" + TextFormatting.GREEN + " [Learn more!]");
