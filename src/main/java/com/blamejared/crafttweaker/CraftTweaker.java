@@ -207,7 +207,7 @@ public class CraftTweaker {
             TextComponent msg = new StringTextComponent("CraftTweaker reload complete!");
             event.getServer().getPlayerList().sendMessage(msg);
 
-            if (!CraftTweakerAPI.NO_BRAND) {
+            if (scriptFiles.size() > 0 && !CraftTweakerAPI.NO_BRAND) {
                 String name = PATRON_LIST.stream()
                         .skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size()))
                         .findFirst()
