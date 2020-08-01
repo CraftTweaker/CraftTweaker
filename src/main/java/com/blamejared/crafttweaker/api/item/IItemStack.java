@@ -5,14 +5,24 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddShiftedTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionClearTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionModifyTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionRemoveRegexTooltip;
+import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.regex.Pattern;
 
 /**
  * This represents an item.
@@ -284,7 +294,7 @@ public interface IItemStack extends IIngredient {
     }
     
     @Override
-    default boolean matches(IItemStack stack) {
+    default boolean matches(IItemStack stack, boolean ignoreDamage) {
         ItemStack stack1 = getInternal();
         ItemStack stack2 = stack.getInternal();
         
@@ -297,8 +307,11 @@ public interface IItemStack extends IIngredient {
         if(stack1.getCount() > stack2.getCount()) {
             return false;
         }
-        if(stack1.getDamage() != stack2.getDamage()) {
-            return false;
+        // This is really just an early exit, since damage is NBT based, it is checked again in the NBT contains
+        if(!ignoreDamage) {
+            if(stack1.getDamage() != stack2.getDamage()) {
+                return false;
+            }
         }
         CompoundNBT stack1Tag = stack1.getTag();
         CompoundNBT stack2Tag = stack2.getTag();
@@ -307,12 +320,19 @@ public interface IItemStack extends IIngredient {
         }
         
         // Lets just use the partial nbt
-        IData stack2Data = NBTConverter.convert(stack2Tag);
-        IData stack1Data = NBTConverter.convert(stack1Tag);
+        MapData stack2Data = (MapData) NBTConverter.convert(stack2Tag);
+        MapData stack1Data = (MapData) NBTConverter.convert(stack1Tag);
         if(stack1Data == null) {
             return true;
         }
-        
+        if(ignoreDamage) {
+            stack1Data = (MapData) stack1Data.copyInternal();
+            stack1Data.remove("Damage");
+            if(stack2Data != null) {
+                stack2Data = (MapData) stack2Data.copyInternal();
+                stack2Data.remove("Damage");
+            }
+        }
         return stack2Data != null && stack2Data.contains(stack1Data);
     }
     
@@ -353,16 +373,42 @@ public interface IItemStack extends IIngredient {
         CraftTweakerAPI.apply(new ActionSetBurnTime(this, time));
     }
     
-    /**
-     * Gets the internal {@link ItemStack} for this IItemStack.
-     *
-     * @return internal ItemStack
-     */
-    ItemStack getInternal();
+    
+    @ZenCodeType.Method
+    default void clearTooltip() {
+        CraftTweakerAPI.apply(new ActionClearTooltip(this));
+    }
+    
+    @ZenCodeType.Method
+    default void addTooltip(MCTextComponent content) {
+        CraftTweakerAPI.apply(new ActionAddTooltip(this, content));
+    }
+    
+    @ZenCodeType.Method
+    default void addShiftTooltip(MCTextComponent content, @ZenCodeType.Optional MCTextComponent showMessage) {
+        CraftTweakerAPI.apply(new ActionAddShiftedTooltip(this, content, showMessage));
+    }
+    
+    @ZenCodeType.Method
+    default void modifyTooltip(ITooltipFunction function) {
+        CraftTweakerAPI.apply(new ActionModifyTooltip(this, function));
+    }
+    
+    @ZenCodeType.Method
+    default void removeTooltip(String regex) {
+        CraftTweakerAPI.apply(new ActionRemoveRegexTooltip(this, Pattern.compile(regex)));
+    }
     
     @ZenCodeType.Method
     IItemStack mutable();
     
     @ZenCodeType.Getter("damage")
     int getDamage();
+    
+    /**
+     * Gets the internal {@link ItemStack} for this IItemStack.
+     *
+     * @return internal ItemStack
+     */
+    ItemStack getInternal();
 }

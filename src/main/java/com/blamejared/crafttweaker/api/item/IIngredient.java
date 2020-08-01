@@ -5,8 +5,12 @@ import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.JSONConverter;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionAnyDamage;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionCustom;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamaged;
 import com.blamejared.crafttweaker.impl.item.MCIngredientList;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.conditions.MCIngredientConditioned;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.ItemStack;
@@ -15,6 +19,8 @@ import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 /**
@@ -36,7 +42,20 @@ public interface IIngredient extends CommandStringDisplayable {
      * @docParam stack <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
-    boolean matches(IItemStack stack);
+    default boolean matches(IItemStack stack) {
+        return matches(stack, false);
+    }
+    
+    /**
+     * Does the given stack match the ingredient?
+     *
+     * @param stack        The stack to check
+     * @param ignoreDamage Should damage be checked?
+     *
+     * @docParam stack <item:minecraft:iron_ingot>
+     */
+    @ZenCodeType.Method
+    boolean matches(IItemStack stack, boolean ignoreDamage);
     
     /**
      * Create a Vanilla ingredient matching this one.
@@ -66,6 +85,21 @@ public interface IIngredient extends CommandStringDisplayable {
     
     @ZenCodeType.Getter("items")
     IItemStack[] getItems();
+    
+    @ZenCodeType.Method
+    default MCIngredientConditioned<IIngredient> onlyDamaged() {
+        return new MCIngredientConditioned<>(this, new ConditionDamaged<>());
+    }
+    
+    @ZenCodeType.Method
+    default MCIngredientConditioned<IIngredient> anyDamage() {
+        return new MCIngredientConditioned<>(this, new ConditionAnyDamage<>());
+    }
+    
+    @ZenCodeType.Method
+    default MCIngredientConditioned<IIngredient> onlyIf(String uid, @ZenCodeType.Optional Predicate<IItemStack> function) {
+        return new MCIngredientConditioned<>(this, new ConditionCustom<>(uid, function));
+    }
     
     static IIngredient fromIngredient(Ingredient ingredient) {
         if(ingredient instanceof IngredientVanillaPlus) {

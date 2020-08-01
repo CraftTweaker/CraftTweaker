@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.custom.CustomCommands;
+import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
@@ -150,6 +151,7 @@ public class CraftTweaker {
     
     private void setupClient(final FMLClientSetupEvent event) {
         LOG.info("{} client has loaded successfully!", NAME);
+        MinecraftForge.EVENT_BUS.register(new CTClientEventHandler());
     }
     
     
@@ -180,6 +182,7 @@ public class CraftTweaker {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
+        CTClientEventHandler.TOOLTIPS.clear();
         serverOverride = false;
         CTCraftingTableManager.recipeManager = event.getRecipeManager();
         Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
@@ -206,7 +209,7 @@ public class CraftTweaker {
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                 serverOverride = server == null;
-                CraftTweaker.tagManager = event.getDataPackRegistries().func_240966_d_();
+                CraftTweaker.tagManager = event.getDataPackRegistries().getTagManager();
                 return null;
             }
             
@@ -214,7 +217,7 @@ public class CraftTweaker {
             protected void apply(Void objectIn, IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 giveFeedback(new StringTextComponent("CraftTweaker reload starting!"));
                 //ImmutableMap of ImmutableMaps. Nice.
-                RecipeManager recipeManager = event.getDataPackRegistries().func_240967_e_();
+                RecipeManager recipeManager = event.getDataPackRegistries().getRecipeManager();
                 recipeManager.recipes = new HashMap<>(recipeManager.recipes);
                 recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
                 CTCraftingTableManager.recipeManager = recipeManager;
@@ -231,7 +234,7 @@ public class CraftTweaker {
                     String name = PATRON_LIST.stream().skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size())).findFirst().orElse("");
                     if(!name.isEmpty()) {
                         msg = new StringTextComponent("This reload was made possible by " + name + " and more!" + TextFormatting.GREEN + " [Learn more!]");
-                        msg.func_230530_a_(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
+                        msg.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
                         giveFeedback(msg);
                     }
                 }

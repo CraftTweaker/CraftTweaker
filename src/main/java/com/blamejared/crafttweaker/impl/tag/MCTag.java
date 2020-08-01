@@ -169,10 +169,10 @@ public class MCTag implements IIngredient {
     //    }
     
     @Override
-    public boolean matches(IItemStack stack) {
+    public boolean matches(IItemStack stack, boolean ignoreDamage) {
         if(!stack.isEmpty()) {
             for(IItemStack item : getItems()) {
-                if(item.matches(stack)) {
+                if(item.matches(stack, ignoreDamage)) {
                     return true;
                 }
             }

@@ -52,7 +52,7 @@ public class FileAccessSingle {
      * <p>The file should be accessible, if an IOException occurs it will be logged and the content will remain empty</p>
      * Provides the base scripts directory, file names will be resolved against that path.
      *
-     * @throw IllegalArgumentException baseDirectory is no parent of file
+     * @throws IllegalArgumentException baseDirectory is no parent of file
      */
     public FileAccessSingle(File baseDirectory, File file, ScriptLoadingOptions scriptLoadingOptions, Collection<IPreprocessor> preprocessors) {
         this.scriptLoadingOptions = scriptLoadingOptions;
@@ -130,7 +130,7 @@ public class FileAccessSingle {
     private void readFile(Reader reader) {
         try (final BufferedReader bufferedReader = new BufferedReader(reader)) {
             int i = 0;
-            String line = "";
+            String line;
             if (bufferedReader.ready()) {
                 while((line =  bufferedReader.readLine()) !=null) {
                     this.checkPreprocessor(line, ++i);

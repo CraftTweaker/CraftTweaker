@@ -414,14 +414,14 @@ public class CTCommands {
         Style style = base.getStyle();
         style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
         style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
-        return base.func_230530_a_(style);
+        return base.setStyle(style);
     }
     
     public static ITextComponent open(TextComponent base, String path) {
         Style style = base.getStyle();
         style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to open [%s]", color(path, TextFormatting.GOLD))));
         style = style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path));
-        return base.func_230530_a_(style);
+        return base.setStyle(style);
     }
     
     
@@ -429,7 +429,7 @@ public class CTCommands {
         Style style = Style.EMPTY;
         style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to run [%s]", color(command, TextFormatting.GOLD))));
         style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-        base.func_240703_c_(style);
+        base.setStyle(style);
         
         return base;
     }
