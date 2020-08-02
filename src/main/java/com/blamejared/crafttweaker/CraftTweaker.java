@@ -23,7 +23,6 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponent;
@@ -93,12 +92,8 @@ public class CraftTweaker {
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPED_SERIALIZER);
         ForgeRegistries.RECIPE_SERIALIZERS.register(SCRIPT_SERIALIZER);
 
-        RECIPE_TYPE_SCRIPTS = Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MODID, "scripts"), new IRecipeType<ScriptRecipe>() {
-            @Override
-            public String toString() {
-                return MODID + ":scripts";
-            }
-        });
+        RECIPE_TYPE_SCRIPTS = IRecipeType.register(MODID + ":scripts");
+
         INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
         CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
         CraftTweakerRegistries.init();
