@@ -5,11 +5,17 @@ import javax.annotation.Nonnull;
 public class ScriptLoadingOptions {
     private boolean format;
     private boolean execute;
+    private boolean firstRun;
     private String loaderName = CraftTweakerAPI.getDefaultLoaderName();
 
     public ScriptLoadingOptions() {
     }
 
+    public ScriptLoadingOptions firstRun() {
+        this.firstRun = true;
+        return this;
+    }
+    
     public ScriptLoadingOptions format() {
         this.format = true;
         return this;
@@ -19,7 +25,16 @@ public class ScriptLoadingOptions {
         this.execute = true;
         return this;
     }
-
+    
+    public boolean isFirstRun() {
+        return firstRun;
+    }
+    
+    public ScriptLoadingOptions setFirstRun(boolean firstRun) {
+        this.firstRun = firstRun;
+        return this;
+    }
+    
     public boolean isFormat() {
         return format;
     }
