@@ -1,44 +1,26 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.api.actions.IAction;
-import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
-import com.blamejared.crafttweaker.api.actions.IUndoableAction;
-import com.blamejared.crafttweaker.api.annotations.BracketResolver;
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.logger.ILogger;
-import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.*;
+import com.blamejared.crafttweaker.api.actions.*;
+import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.logger.*;
 import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.api.mods.MCMods;
+import com.blamejared.crafttweaker.api.mods.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
-import com.blamejared.crafttweaker.impl.logger.FileLogger;
-import com.blamejared.crafttweaker.impl.logger.GroupLogger;
-import com.google.common.collect.ImmutableList;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
-import org.openzen.zencode.java.JavaNativeModule;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zencode.java.ZenCodeType;
-import org.openzen.zencode.shared.SourceFile;
-import org.openzen.zenscript.codemodel.FunctionParameter;
-import org.openzen.zenscript.codemodel.HighLevelDefinition;
-import org.openzen.zenscript.codemodel.ScriptBlock;
-import org.openzen.zenscript.codemodel.SemanticModule;
-import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
-import org.openzen.zenscript.formatter.FileFormatter;
-import org.openzen.zenscript.formatter.ScriptFormattingSettings;
-import org.openzen.zenscript.parser.PrefixedBracketParser;
-import org.openzen.zenscript.parser.SimpleBracketParser;
-import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
-import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
+import com.blamejared.crafttweaker.api.zencode.expands.*;
+import com.blamejared.crafttweaker.api.zencode.impl.*;
+import com.blamejared.crafttweaker.impl.brackets.*;
+import com.blamejared.crafttweaker.impl.logger.*;
+import com.google.common.collect.*;
+import net.minecraftforge.fml.common.thread.*;
+import org.openzen.zencode.java.*;
+import org.openzen.zencode.shared.*;
+import org.openzen.zenscript.codemodel.*;
+import org.openzen.zenscript.formatter.*;
+import org.openzen.zenscript.parser.*;
+import org.openzen.zenscript.parser.expression.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Method;
+import java.io.*;
 import java.util.*;
 
 @ZenRegister
@@ -113,7 +95,7 @@ public class CraftTweakerAPI {
         findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
         return fileList;
     }
-
+    
     public static void loadScripts(ScriptLoadingOptions scriptLoadingOptions) {
         NO_BRAND = false;
         List<File> fileList = getScriptFiles();
@@ -121,7 +103,7 @@ public class CraftTweakerAPI {
         if(!scriptLoadingOptions.isExecute()) {
             logInfo("This is only a syntax check. Script changes will not be applied.");
         }
-
+        
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream()
                 .map(file -> new FileAccessSingle(SCRIPT_DIR, file, scriptLoadingOptions, CraftTweakerRegistry.getPreprocessors()))
@@ -135,9 +117,18 @@ public class CraftTweakerAPI {
     }
 
     public static void loadScripts(SourceFile[] sourceFiles, ScriptLoadingOptions scriptLoadingOptions) {
+        if(scriptLoadingOptions.isFirstRun()) {
+            CraftTweakerAPI.startFirstRun();
+        }
+        
         try {
             CraftTweakerAPI.reload();
             initEngine();
+            
+            if(isFirstRun()) {
+                logDebug("This is a first run. All IActions will be applied.");
+            }
+            
             //Register crafttweaker module first to assign deps
             JavaNativeModule crafttweakerModule = SCRIPTING_ENGINE.createNativeModule(CraftTweaker.MODID, "crafttweaker");
             List<JavaNativeModule> modules = new LinkedList<>();
@@ -283,6 +274,14 @@ public class CraftTweakerAPI {
         return ImmutableList.copyOf(ACTION_LIST_INVALID);
     }
     
+    
+    /**
+     * Only used internally to specify when the first load of a loader is.
+     * You can use {@link ScriptLoadingOptions#firstRun()} to specify it for a load if you need to.
+     */
+    public static void startFirstRun() {
+        firstRun = true;
+    }
     
     public static void endFirstRun() {
         firstRun = false;
