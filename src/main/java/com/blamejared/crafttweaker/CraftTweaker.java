@@ -145,7 +145,11 @@ public class CraftTweaker {
     }
     
     private void setup(final FMLCommonSetupEvent event) {
-        CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName("setupCommon").execute());
+        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon")
+                .firstRun()
+                .execute();
+        CraftTweakerAPI.loadScripts(setupCommon);
+        
         LOG.info("{} has loaded successfully!", NAME);
     }
     
@@ -203,6 +207,7 @@ public class CraftTweaker {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void resourceReload(AddReloadListenerEvent event) {
+        CraftTweakerAPI.startFirstRun();
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         event.addListener(new ReloadListener<Void>() {
             @Override
