@@ -52,6 +52,6 @@ public class ShortData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getShort() + "";
+        return internal.getShort() + " as short";
     }
 }

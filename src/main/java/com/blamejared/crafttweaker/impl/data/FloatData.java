@@ -51,6 +51,6 @@ public class FloatData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getFloat() + "";
+        return internal.getFloat() + " as float";
     }
 }

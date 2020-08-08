@@ -51,6 +51,6 @@ public class IntData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getInt() + "";
+        return internal.getInt() + " as int";
     }
 }
