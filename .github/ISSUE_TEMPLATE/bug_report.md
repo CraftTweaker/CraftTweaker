@@ -20,11 +20,11 @@ Note: If this bug occurs in a modpack, please report this to the modpack author.
 
 
 
-#### Script used (Please Pastebin or gist your script, posting an unpasted or ungist'd script will automatically close this issue):
+#### Script used (Please pastebin.com or gist.github.com your script, posting an unpasted or ungist'd script will automatically close this issue. We are **NOT** going to download files, do **NOT** upload your file to this issue, please give us a link to a paste / gist of the file):
 
 
 
-#### crafttweaker.log file (Please Pastebin or gist your file, posting an unpasted or ungist'd file will automatically close this issue):
+#### crafttweaker.log file (Please pastebin.com or gist.github.com your file, posting an unpasted or ungist'd file will automatically close this issue. We are **NOT** going to download files, do **NOT** upload your file to this issue, please give us a link to a paste / gist of the file.):
 
 
 ____
@@ -36,6 +36,6 @@ ____
 - Using a server: 
 - If yes, does the client have the exact same scripts?
 
-#### Your most recent log file where the issue was present: 
+#### Your most recent log file where the issue was present (Please pastebin.com or gist.github.com your file, posting an unpasted or ungist'd file will automatically close this issue. We are **NOT** going to download files, do **NOT** upload your file to this issue, please give us a link to a paste / gist of the file.):
 
 [pastebin/gist/etc link here]
