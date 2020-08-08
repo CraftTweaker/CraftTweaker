@@ -123,7 +123,17 @@ dependencies {
     zenCodeDeps.collect { compile project(it) }
 
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.67'
-    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6");
+    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6")
+
+    testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
+    testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging{
+        events "PASSED", "FAILED", "SKIPPED"
+    }
 }
 
 
