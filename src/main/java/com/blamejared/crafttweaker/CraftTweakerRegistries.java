@@ -5,9 +5,7 @@ import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformerSe
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionAnyDamage;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionCustom;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamaged;
-import com.blamejared.crafttweaker.impl.ingredients.transform.TransformCustom;
-import com.blamejared.crafttweaker.impl.ingredients.transform.TransformDamage;
-import com.blamejared.crafttweaker.impl.ingredients.transform.TransformReplace;
+import com.blamejared.crafttweaker.impl.ingredients.transform.*;
 import com.blamejared.crafttweaker.impl.item.conditions.IngredientConditionedSerializer;
 import com.blamejared.crafttweaker.impl.item.transformed.IngredientTransformedSerializer;
 import com.mojang.serialization.Lifecycle;
@@ -29,6 +27,8 @@ public class CraftTweakerRegistries {
     public static TransformReplace.TransformReplaceTransformerSerializer TRANSFORM_REPLACE_SERIALIZER;
     public static TransformDamage.TransformDamageSerializer TRANSFORM_DAMAGE_SERIALIZER;
     public static TransformCustom.TransformCustomSerializer TRANSFORM_CUSTOM_SERIALIZER;
+    public static TransformReuse.TransformerReuseSerializer TRANSFORM_REUSE_SERIALIZER;
+
     
     public static ConditionDamaged.ConditionDamagedSerializer CONDITION_DAMAGE_SERIALIZER;
     public static ConditionAnyDamage.ConditionAnyDamagedSerializer CONDITION_ANY_DAMAGE_SERIALIZER;
@@ -55,6 +55,9 @@ public class CraftTweakerRegistries {
         
         TRANSFORM_CUSTOM_SERIALIZER = new TransformCustom.TransformCustomSerializer();
         REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_CUSTOM_SERIALIZER.getType()), TRANSFORM_CUSTOM_SERIALIZER);
+        
+        TRANSFORM_REUSE_SERIALIZER = new TransformReuse.TransformerReuseSerializer();
+        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_REUSE_SERIALIZER.getType()), TRANSFORM_REUSE_SERIALIZER);
         
         
         CONDITION_DAMAGE_SERIALIZER = new ConditionDamaged.ConditionDamagedSerializer();
