@@ -4,10 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
-import com.blamejared.crafttweaker.impl.ingredients.transform.TransformCustom;
-import com.blamejared.crafttweaker.impl.ingredients.transform.TransformDamage;
-import com.blamejared.crafttweaker.impl.ingredients.transform.TransformReplace;
-import com.blamejared.crafttweaker.impl.item.transformed.IngredientTransformed;
+import com.blamejared.crafttweaker.impl.ingredients.transform.*;
 import com.blamejared.crafttweaker.impl.item.transformed.MCIngredientTransformed;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -30,6 +27,11 @@ public class ExpandIIngredient {
     @ZenCodeType.Method
     public static MCIngredientTransformed<IIngredient> transformCustom(IIngredient _this, String uid, @ZenCodeType.Optional Function<IItemStack, IItemStack> function) {
         return new MCIngredientTransformed<>(_this, new TransformCustom<>(uid, function));
+    }
+    
+    @ZenCodeType.Method
+    public static MCIngredientTransformed<IIngredient> reuse(IIngredient _this) {
+        return new MCIngredientTransformed<>(_this, new TransformReuse<>());
     }
 
     /**
