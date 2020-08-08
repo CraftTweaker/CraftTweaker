@@ -51,6 +51,6 @@ public class DoubleData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getDouble() + "";
+        return internal.getDouble() + " as double";
     }
 }

@@ -51,6 +51,6 @@ public class LongData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getLong() + "";
+        return internal.getLong() + " as long";
     }
 }
