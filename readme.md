@@ -3,9 +3,9 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![GitHub issues](https://img.shields.io/github/issues/CraftTweaker/CraftTweaker?style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/issues)
-[![GitHub license](https://img.shields.io/github/license/CraftTweaker/CraftTweaker?color=0690ff&style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/blob/1.16/LICENSE)
-![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.blamejared.com%2Fjob%2FCraftTweaker%2Fjob%2F1.16%2F&style=flat-square)
-[![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.16.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
+[![GitHub license](https://img.shields.io/github/license/CraftTweaker/CraftTweaker?color=0690ff&style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/blob/1.15/LICENSE)
+![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.blamejared.com%2Fjob%2FCraftTweaker%2Fjob%2F1.15%2F&style=flat-square)
+[![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.15.2%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
 [![Discord](https://img.shields.io/badge/Discord-%237289DA?style=flat-square&logo=Discord&logoColor=white)](https://discord.blamejared.com/)
 [![](http://cf.way2muchnoise.eu/crafttweaker.svg?badge_style=flat)](https://minecraft.curseforge.com/projects/crafttweaker)
 
@@ -29,7 +29,7 @@ If you're looking for help with the mod, or just want to come hang out, we have 
 
 ## License
 
-Distributed under the MIT License. See the [LICENSE](https://github.com/CraftTweaker/CraftTweaker/blob/1.16/LICENSE) file for more information.
+Distributed under the MIT License. See the [LICENSE](https://github.com/CraftTweaker/CraftTweaker/blob/1.15/LICENSE) file for more information.
 
 
 ## Setup
@@ -64,12 +64,12 @@ repositories {
 }
 
 dependencies {
-    runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.1:[VERSION]")
+    runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.15.2:[VERSION]")
 }
 ```
 
 Just replace `[VERSION]` with the latest released version, which is currently:
 
- [![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.16.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
+ [![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.15.2%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
 
- Simply remove the `v` and use that version, so `v7.0.0.0` becomes `7.0.0.0`
+ Simply remove the `v` and use that version, so `v6.0.0.0` becomes `6.0.0.0`
