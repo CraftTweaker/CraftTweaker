@@ -186,6 +186,11 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
     
     @Override
+    public void changeDimension(int dimensionId) {
+        player.changeDimension(dimensionId);
+    }
+    
+    @Override
     public int getScore() {
         return player.getScore();
     }
