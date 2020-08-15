@@ -5,8 +5,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import java.util.Set;
 
@@ -31,6 +30,27 @@ public class PreprocessorAnnotationValidationProcessor extends AbstractProcessor
                                 .asType())) {
                     this.processingEnv.getMessager()
                             .printMessage(Diagnostic.Kind.ERROR, "Element is annotated as Preprocessor but is not assignable to " + preprocessorInterfaceCanonicalName + "!", element);
+                }
+    
+                //Not sure if the implicit no-arg constructor is already present here,
+                // so let's just check no other constructor was found
+                boolean anyConstructorFound = false;
+                boolean noArgPublicConstructorFound = false;
+                for(Element enclosedElement : element.getEnclosedElements()) {
+                    if(enclosedElement.getKind() == ElementKind.CONSTRUCTOR) {
+                        anyConstructorFound = true;
+                        ExecutableElement constructor = (ExecutableElement) enclosedElement;
+                        final boolean noArg = constructor.getParameters().size() == 0;
+                        final boolean isPublic = constructor.getModifiers().contains(Modifier.PUBLIC);
+                         if(noArg && isPublic) {
+                             noArgPublicConstructorFound = true;
+                             break;
+                         }
+                    }
+                }
+                
+                if(!noArgPublicConstructorFound && anyConstructorFound){
+                    this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Element is annotated as Preprocessor but has not public no-arg constructor!", element);
                 }
             }
         }
