@@ -40,7 +40,7 @@ public class PreprocessorAnnotationValidationProcessor extends AbstractProcessor
                     if(enclosedElement.getKind() == ElementKind.CONSTRUCTOR) {
                         anyConstructorFound = true;
                         ExecutableElement constructor = (ExecutableElement) enclosedElement;
-                        final boolean noArg = constructor.getParameters().size() == 0;
+                        final boolean noArg = constructor.getParameters().isEmpty();
                         final boolean isPublic = constructor.getModifiers().contains(Modifier.PUBLIC);
                          if(noArg && isPublic) {
                              noArgPublicConstructorFound = true;
@@ -50,7 +50,7 @@ public class PreprocessorAnnotationValidationProcessor extends AbstractProcessor
                 }
                 
                 if(!noArgPublicConstructorFound && anyConstructorFound){
-                    this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Element is annotated as Preprocessor but has not public no-arg constructor!", element);
+                    this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Element is annotated as Preprocessor but has no public no-arg constructor!", element);
                 }
             }
         }
