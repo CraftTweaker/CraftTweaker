@@ -8,10 +8,16 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.entity.MCEntity;
+import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import stanhebben.zenscript.annotations.Optional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -119,6 +125,14 @@ public class MCWorld extends MCBlockAccess implements IWorld {
     @Override
     public IRayTraceResult rayTraceBlocks(IVector3d begin, IVector3d ray, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
         return CraftTweakerMC.getIRayTraceResult(this.world.rayTraceBlocks(CraftTweakerMC.getVec3d(begin), CraftTweakerMC.getVec3d(ray), stopOnLiquid, ignoreBlockWithoutBoundingBox, returnLastUncollidableBlock));
+    }
+    
+    @Override
+    public List<IEntity> getEntitiesInArea(Position3f start, @Optional Position3f end) {
+        if(end == null) {
+            end = new MCPosition3f(start.getX() + 1, start.getY() + 1, start.getZ() + 1);
+        }
+        return this.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(((BlockPos) start.asBlockPos().getInternal()), ((BlockPos) end.asBlockPos().getInternal()))).stream().map(MCEntity::new).collect(Collectors.toList());
     }
     
     @Override

@@ -6,7 +6,10 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.util.Position3f;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
+
+import java.util.*;
 
 @ZenClass("crafttweaker.world.IWorld")
 @ZenRegister
@@ -89,5 +92,11 @@ public interface IWorld extends IBlockAccess {
     default IRayTraceResult rayTraceBlocks(IVector3d begin, IVector3d ray, @Optional boolean stopOnLiquid, @Optional boolean ignoreBlockWithoutBoundingBox, @Optional(valueBoolean = true) boolean returnLastUncollidableBlock) {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getRayTrace, tell the author to fix that.");
         return null;
+    }
+    
+    @ZenMethod
+    default List<IEntity> getEntitiesInArea(Position3f start, @Optional Position3f end) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getEntitiesInArea, tell the author to fix that.");
+        return new ArrayList<>();
     }
 }
