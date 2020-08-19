@@ -1,12 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.wrapper;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.wrapper.wrapper_information.*;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.processing.JavacFiler;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -160,11 +158,8 @@ public class WrapperProcessor extends AbstractProcessor {
             knownWrappers.add(wrapperInfo);
         }
 
-        final Set<Class<?>> typesAnnotatedWith = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()))
-                .getTypesAnnotatedWith(ZenWrapper.class);
-
         //Also scan the classPath (needed when CrT is added as dependency)
-        for (Class<?> aClass : typesAnnotatedWith) {
+        for (Class<?> aClass : ReflectionReader.getClassesWithZenWrapper(getClass().getClassLoader())) {
             final ZenWrapper annotation = aClass.getAnnotation(ZenWrapper.class);
             final ExistingWrapperInfo wrapperInfo = new ExistingWrapperInfo(annotation.wrappedClass(), aClass.getCanonicalName(), annotation
                     .implementingClass());
