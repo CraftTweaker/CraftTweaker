@@ -1,21 +1,16 @@
 package com.blamejared.crafttweaker_annotation_processors.processors;
 
-import com.blamejared.crafttweaker_annotations.annotations.AsIAction;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
-import org.openzen.zencode.java.ZenCodeType;
+import com.blamejared.crafttweaker_annotations.annotations.*;
+import org.openzen.zencode.java.*;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import javax.annotation.processing.*;
+import javax.lang.model.*;
 import javax.lang.model.element.*;
-import javax.lang.model.type.TypeMirror;
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.lang.model.type.*;
+import javax.tools.*;
+import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.AsIAction", "com.blamejared.crafttweaker_annotations.annotations.ZenWrapper"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -84,7 +79,15 @@ public class AsIActionProcessor extends AbstractProcessor {
         for (Element element : roundEnv.getElementsAnnotatedWith(ZenWrapper.class)) {
             this.annotationsByWrappedElement.put(element.getAnnotation(ZenWrapper.class).wrappedClass(), element);
         }
-
+    
+        
+        for(Class<?> wrapperClass : ReflectionReader.getClassesWithZenWrapper(getClass().getClassLoader())) {
+            final String name = wrapperClass.getAnnotation(ZenWrapper.class).wrappedClass();
+            final TypeElement typeElement = processingEnv.getElementUtils()
+                    .getTypeElement(wrapperClass.getCanonicalName());
+            annotationsByWrappedElement.put(name, typeElement);
+        }
+    
         if (annotations.isEmpty())
             return false;
 
@@ -100,14 +103,14 @@ public class AsIActionProcessor extends AbstractProcessor {
 
             if (!method.getModifiers().contains(Modifier.STATIC)) {
                 this.processingEnv.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, "AsIActionAnnotation requires the method to be static", method);
+                        .printMessage(Diagnostic.Kind.ERROR, "@AsIActionAnnotation requires the method to be static", method);
             }
 
             final Element enclosingElement = method.getEnclosingElement();
             final ZenCodeType.Name annotation = enclosingElement.getAnnotation(ZenCodeType.Name.class);
             if (annotation == null) {
                 this.processingEnv.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, "@Document requires a @ZenCodeType.Name on the declaring class " + enclosingElement, method);
+                        .printMessage(Diagnostic.Kind.ERROR, "@AsIAction requires a @ZenCodeType.Name on the declaring class " + enclosingElement, method);
                 continue;
             }
 
@@ -141,7 +144,7 @@ public class AsIActionProcessor extends AbstractProcessor {
                 writer.println();
 
                 writer.println("@com.blamejared.crafttweaker.api.annotations.ZenRegister");
-                writer.printf("@com.blamejared.crafttweaker_annotations.annotations.Document(\"%s\")%n", name);
+                writer.printf("@com.blamejared.crafttweaker_annotations.annotations.Document(\"%s\")%n", name.replace(".", File.separatorChar == '\\' ? "\\\\" : File.separator));
                 writer.printf("@org.openzen.zencode.java.ZenCodeType.Name(\"%s\")%n", name);
 
                 {
