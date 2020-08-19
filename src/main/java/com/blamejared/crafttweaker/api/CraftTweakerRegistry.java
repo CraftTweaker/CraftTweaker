@@ -1,23 +1,23 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
-import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.brackets.*;
+import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.api.zencode.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.ModFileScanData;
+import com.blamejared.crafttweaker.impl.commands.*;
+import com.google.common.collect.*;
+import net.minecraftforge.fml.*;
+import net.minecraftforge.forgespi.language.*;
 import org.objectweb.asm.Type;
 import org.openzen.zencode.java.*;
 import org.openzen.zenscript.codemodel.member.ref.*;
 
+import java.lang.invoke.*;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 public class CraftTweakerRegistry {
     
@@ -33,7 +33,7 @@ public class CraftTweakerRegistry {
     private static final Map<String, Collection<String>> BRACKET_RESOLVERS_2 = new HashMap<>();
     //BEP name to BEP validator method
     private static final Map<String, Method> BRACKET_VALIDATORS = new HashMap<>();
-    private static final Map<String, Supplier<Collection<String>>> BRACKET_DUMPERS = new HashMap<>();
+    private static final Map<String, BracketDumperInfo> BRACKET_DUMPERS = new HashMap<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
     private static final Map<String, List<Class>> EXPANSIONS = new HashMap<>();
@@ -236,23 +236,16 @@ public class CraftTweakerRegistry {
             return;
         }
     
-        final String value = method.getAnnotation(BracketDumper.class).value();
+        final BracketDumper annotation = method.getAnnotation(BracketDumper.class);
     
-        BRACKET_DUMPERS.merge(value, () -> {
-            try {
-                //noinspection unchecked
-                return (Collection<String>) method.invoke(null);
-            } catch(InvocationTargetException | IllegalAccessException ignored) {
-                return null;
-            }
-        }, (dumpFun1, dumpFun2) -> () -> {
-            final Collection<String> strings1 = dumpFun1.get();
-            final Collection<String> strings2 = dumpFun2.get();
-            final Collection<String> result = new HashSet<>(strings1.size() + strings2.size());
-            result.addAll(strings1);
-            result.addAll(strings2);
-            return result;
-        });
+        try {
+            final MethodHandle methodHandle = MethodHandles.publicLookup().unreflect(method);
+            final BracketDumperInfo dumperInfo = BRACKET_DUMPERS.computeIfAbsent(annotation.value(), bepName -> new BracketDumperInfo(bepName, annotation
+                    .subCommandName(), annotation.fileName()));
+            dumperInfo.addMethodHandle(methodHandle);
+        } catch(IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
     
     
@@ -358,8 +351,8 @@ public class CraftTweakerRegistry {
      * Gets the Bracket dumper Map
      * @return ImmutableMap of the Bracket dumpers
      */
-    public static Map<String, Supplier<Collection<String>>> getBracketDumpers() {
-        return ImmutableMap.copyOf(BRACKET_DUMPERS);
+    public static Map<String, BracketDumperInfo> getBracketDumpers() {
+        return BRACKET_DUMPERS;
     }
     
     /**

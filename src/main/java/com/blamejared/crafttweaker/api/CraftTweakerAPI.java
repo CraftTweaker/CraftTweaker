@@ -133,7 +133,7 @@ public class CraftTweakerAPI {
             JavaNativeModule crafttweakerModule = SCRIPTING_ENGINE.createNativeModule(CraftTweaker.MODID, "crafttweaker");
             List<JavaNativeModule> modules = new LinkedList<>();
             
-            PrefixedBracketParser bep = new PrefixedBracketParser(null);
+            IgnorePrefixCasingBracketParser bep = new IgnorePrefixCasingBracketParser();
             final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
             bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
             for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers("crafttweaker", SCRIPTING_ENGINE, crafttweakerModule)) {
