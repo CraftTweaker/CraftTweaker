@@ -5,6 +5,8 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
@@ -88,6 +90,12 @@ public interface IWorld extends IBlockAccess {
     @ZenMethod
     default IRayTraceResult rayTraceBlocks(IVector3d begin, IVector3d ray, @Optional boolean stopOnLiquid, @Optional boolean ignoreBlockWithoutBoundingBox, @Optional(valueBoolean = true) boolean returnLastUncollidableBlock) {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getRayTrace, tell the author to fix that.");
+        return null;
+    }
+
+    @ZenMethod
+    default IItemStack getPickedBlock(IBlockPos pos, IRayTraceResult rayTraceResult, IPlayer player) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
         return null;
     }
 }
