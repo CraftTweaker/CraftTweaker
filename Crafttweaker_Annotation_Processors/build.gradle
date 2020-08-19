@@ -26,14 +26,19 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
+def projectDeps = [":Crafttweaker_Annotations", ":JavaAnnotations"]
+
 dependencies {
-    compile project(":Crafttweaker_Annotations");
-    compile project(":JavaAnnotations");
+    projectDeps.collect {compile project(it)}
 
     compile 'org.jetbrains:annotations:17.0.0'
     compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
-    compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
     compile files('libs/tools.jar')
+}
+
+jar {
+    dependsOn.addAll(projectDeps.collect { "$it:compileJava" })
+    from files(projectDeps.collect {project(it).sourceSets.main.output})
 }
 
 publishing {
@@ -64,7 +69,6 @@ publishing {
     repositories {
 
         maven {
-
             url "file://" + System.getenv("local_maven")
         }
     }
