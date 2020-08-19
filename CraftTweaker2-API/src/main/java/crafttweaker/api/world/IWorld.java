@@ -5,6 +5,8 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
@@ -98,5 +100,11 @@ public interface IWorld extends IBlockAccess {
     default List<IEntity> getEntitiesInArea(Position3f start, @Optional Position3f end) {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getEntitiesInArea, tell the author to fix that.");
         return new ArrayList<>();
+    }
+
+    @ZenMethod
+    default IItemStack getPickedBlock(IBlockPos pos, IRayTraceResult rayTraceResult, IPlayer player) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
+        return null;
     }
 }

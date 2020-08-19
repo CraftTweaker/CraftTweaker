@@ -4,12 +4,15 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.util.MCPosition3f;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
@@ -171,4 +174,13 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 	public IWorldProvider getProvider() {
 		return new MCWorldProvider(world.provider);
 	}
+
+	@Override
+	public IItemStack getPickedBlock(IBlockPos pos, IRayTraceResult rayTraceResult, IPlayer player) {
+		BlockPos blockPos = CraftTweakerMC.getBlockPos(pos);
+		net.minecraft.block.state.IBlockState state = world.getBlockState(blockPos);
+		ItemStack stack = state.getBlock().getPickBlock(state, CraftTweakerMC.getRayTraceResult(rayTraceResult), world, blockPos, CraftTweakerMC.getPlayer(player));
+		return CraftTweakerMC.getIItemStack(stack);
+	}
+
 }
