@@ -71,6 +71,9 @@ repositories {
     maven {
         url 'https://dogforce-games.com/maven'
     }
+    maven {
+        url = 'https://dist.creeper.host/Sponge/maven'
+    }
 }
 
 minecraft {
@@ -136,6 +139,7 @@ dependencies {
 
     compile project(":Crafttweaker_Annotations");
     annotationProcessor project(":Crafttweaker_Annotation_Processors");
+    annotationProcessor 'org.spongepowered:mixin:0.8.1-SNAPSHOT:processor'
 
     zenCodeDeps.collect { compile project(it) }
 
