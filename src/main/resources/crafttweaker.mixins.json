@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "mixin",
+  "package": "com.blamejared.crafttweaker.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "crafttweaker.refmap.json",
   "mixins": [
