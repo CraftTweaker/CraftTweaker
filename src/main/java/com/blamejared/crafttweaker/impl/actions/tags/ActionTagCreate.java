@@ -21,9 +21,7 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     @Override
     public void apply() {
-//        if(collection.tagMap instanceof ImmutableMap)
-//            collection.tagMap = HashBiMap.create(collection.tagMap);
-//        collection.tagMap.put(getId(), tag);
+        collection.func_241833_a().put(getId(), tag);
     }
     
     @Override

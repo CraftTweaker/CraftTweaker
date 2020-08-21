@@ -4,19 +4,24 @@ buildscript {
             url = 'https://files.minecraftforge.net/maven'
         }
         maven {
-          url "https://plugins.gradle.org/m2/"
+            url = 'https://dist.creeper.host/Sponge/maven'
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
         }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
 
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
@@ -67,6 +72,7 @@ repositories {
         url 'https://dogforce-games.com/maven'
     }
 }
+
 minecraft {
     mappings channel: 'snapshot', version: '20200820-1.16.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -74,6 +80,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -87,6 +94,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -101,6 +109,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -116,6 +125,9 @@ minecraft {
     }
 }
 
+mixin {
+    add sourceSets.main, "crafttweaker.refmap.json"
+}
 
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
 
@@ -128,7 +140,7 @@ dependencies {
     zenCodeDeps.collect { compile project(it) }
 
     minecraft 'net.minecraftforge:forge:1.16.2-33.0.7'
-//    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6")
+    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
     testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
@@ -136,7 +148,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    testLogging{
+    testLogging {
         events "PASSED", "FAILED", "SKIPPED"
     }
 }
@@ -180,7 +192,8 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "CraftTweaker",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "crafttweaker.mixins.json"
         ])
     }
 }
@@ -272,8 +285,6 @@ curseforge {
                 requiredLibrary "jeitweaker"
             }
         }
-//        addArtifact(sourcesJar)
-//        addArtifact(javadocJar)
         addArtifact(deobfJar)
     }
 }

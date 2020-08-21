@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "crafttweaker.refmap.json",
+  "mixins": [
+    "MixinITagCollection"
+  ],
+  "minVersion": "0.8"
+}
