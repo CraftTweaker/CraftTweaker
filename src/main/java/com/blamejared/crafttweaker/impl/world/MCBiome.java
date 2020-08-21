@@ -1,15 +1,11 @@
 package com.blamejared.crafttweaker.impl.world;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.entity.MCEntityClassification;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.world.MCBiome")
@@ -33,16 +29,16 @@ public class MCBiome {
         return getInternal().getWaterFogColor();
     }
     
-    @ZenCodeType.Getter("defaultTemperature")
-    public float getDefaultTemperature() {
-        return getInternal().getDefaultTemperature();
-    }
+//    @ZenCodeType.Getter("defaultTemperature")
+//    public float getDefaultTemperature() {
+//        return getInternal().getDefaultTemperature();
+//    }
     
-    @ZenCodeType.Getter("translationKey")
-    public String getTranslationKey() {
-        return getInternal().getTranslationKey();
-    }
-    
+//    @ZenCodeType.Getter("translationKey")
+//    public String getTranslationKey() {
+//        return getInternal().getTranslationKey();
+//    }
+//
     @ZenCodeType.Getter("scale")
     public float getScale() {
         return getInternal().getScale();
@@ -58,45 +54,45 @@ public class MCBiome {
         return getInternal().getDepth();
     }
     
-    @ZenCodeType.Getter("spawningChange")
-    public float getSpawningChance() {
-        return getInternal().getSpawningChance();
-    }
+//    @ZenCodeType.Getter("spawningChange")
+//    public float getSpawningChance() {
+//        return getInternal().getSpawningChance();
+//    }
     
     @ZenCodeType.Getter("isHighHumidity")
     public boolean isHighHumidity() {
         return getInternal().isHighHumidity();
     }
     
-    @ZenCodeType.Getter("isMutation")
-    public boolean isMutation() {
-        return getInternal().isMutation();
-    }
+//    @ZenCodeType.Getter("isMutation")
+//    public boolean isMutation() {
+//        return getInternal().isMutation();
+//    }
     
     @ZenCodeType.Getter("category")
     public String getCategory() {
         return getInternal().getCategory().getName().toLowerCase();
     }
     
-    @ZenCodeType.Getter("isTempOcean")
-    public boolean isTempOcean() {
-        return getInternal().getTempCategory() == Biome.TempCategory.OCEAN;
-    }
-    
-    @ZenCodeType.Getter("isTempCold")
-    public boolean isTempCold() {
-        return getInternal().getTempCategory() == Biome.TempCategory.COLD;
-    }
-    
-    @ZenCodeType.Getter("isTempMedium")
-    public boolean isTempMedium() {
-        return getInternal().getTempCategory() == Biome.TempCategory.MEDIUM;
-    }
-    
-    @ZenCodeType.Getter("isTempWarm")
-    public boolean isTempWarm() {
-        return getInternal().getTempCategory() == Biome.TempCategory.WARM;
-    }
+//    @ZenCodeType.Getter("isTempOcean")
+//    public boolean isTempOcean() {
+//        return getInternal().getTempCategory() == Biome.TempCategory.OCEAN;
+//    }
+//
+//    @ZenCodeType.Getter("isTempCold")
+//    public boolean isTempCold() {
+//        return getInternal().getTempCategory() == Biome.TempCategory.COLD;
+//    }
+//
+//    @ZenCodeType.Getter("isTempMedium")
+//    public boolean isTempMedium() {
+//        return getInternal().getTempCategory() == Biome.TempCategory.MEDIUM;
+//    }
+//
+//    @ZenCodeType.Getter("isTempWarm")
+//    public boolean isTempWarm() {
+//        return getInternal().getTempCategory() == Biome.TempCategory.WARM;
+//    }
     
     @ZenCodeType.Getter("doesRain")
     public boolean doesRain() {
@@ -113,25 +109,25 @@ public class MCBiome {
         return getInternal().getPrecipitation().getName();
     }
     
-    @ZenCodeType.Getter("parent")
-    public String getParent() {
-        return getInternal().getParent();
-    }
-    
-    @ZenCodeType.Method
-    public String getTempCategory() {
-        return getInternal().getTempCategory().getName().toLowerCase();
-    }
+//    @ZenCodeType.Getter("parent")
+//    public String getParent() {
+//        return getInternal().getParent();
+//    }
+//
+//    @ZenCodeType.Method
+//    public String getTempCategory() {
+//        return getInternal().getTempCategory().getName().toLowerCase();
+//    }
     
     @ZenCodeType.Method
     public float getTemperature(MCBlockPos pos) {
         return getInternal().getTemperature(pos.getInternal());
     }
     
-    @ZenCodeType.Method
-    public List<MCBiomeSpawnEntry> getSpawns(MCEntityClassification classification) {
-        return getInternal().getSpawns(classification.getInternal()).stream().map(MCBiomeSpawnEntry::new).collect(Collectors.toList());
-    }
+//    @ZenCodeType.Method
+//    public List<MCBiomeSpawnEntry> getSpawns(MCEntityClassification classification) {
+//        return getInternal().getSpawns(classification.getInternal()).stream().map(MCBiomeSpawnEntry::new).collect(Collectors.toList());
+//    }
     
     /*
     TODO methods to add:

@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.block.material;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.block.material.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.block.material.Material;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.material.MCMaterial")

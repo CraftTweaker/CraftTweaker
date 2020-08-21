@@ -253,16 +253,16 @@ public class CTCommands {
         
         registerDump("tags", "Outputs the names of all registered tags (vanilla tag types)", (CommandCallerPlayer) (player, stack) -> {
             CraftTweakerAPI.logDump("Item Tags:\n");
-            ItemTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
+            ItemTags.getCollection().func_241833_a().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Block Tags:\n");
-            BlockTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
+            BlockTags.getCollection().func_241833_a().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Fluid Tags:\n");
-            FluidTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
+            FluidTags.getCollection().func_241833_a().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Entity Type Tags:\n");
-            EntityTypeTags.getCollection().getTagMap().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
+            EntityTypeTags.getCollection().func_241833_a().keySet().forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             send(new StringTextComponent(color("Tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;

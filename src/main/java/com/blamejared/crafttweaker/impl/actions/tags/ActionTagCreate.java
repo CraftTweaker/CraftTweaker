@@ -2,20 +2,18 @@ package com.blamejared.crafttweaker.impl.actions.tags;
 
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.tags.ITagCollection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> {
     
-    private final TagCollection<T> collection;
+    private final ITagCollection<T> collection;
     
     private final String type;
     
-    public ActionTagCreate(TagCollection<T> collection, String type, ITag<T> tag, ResourceLocation id) {
+    public ActionTagCreate(ITagCollection<T> collection, String type, ITag<T> tag, ResourceLocation id) {
         super(tag, id);
         this.collection = collection;
         this.type = type;
@@ -23,9 +21,9 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     @Override
     public void apply() {
-        if(collection.tagMap instanceof ImmutableMap)
-            collection.tagMap = HashBiMap.create(collection.tagMap);
-        collection.tagMap.put(getId(), tag);
+//        if(collection.tagMap instanceof ImmutableMap)
+//            collection.tagMap = HashBiMap.create(collection.tagMap);
+//        collection.tagMap.put(getId(), tag);
     }
     
     @Override

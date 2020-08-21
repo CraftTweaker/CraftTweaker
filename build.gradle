@@ -42,7 +42,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.16.1'
+archivesBaseName = 'CraftTweaker-1.16.2'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -58,8 +58,17 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
+
+repositories {
+    maven {
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url 'https://dogforce-games.com/maven'
+    }
+}
 minecraft {
-    mappings channel: 'snapshot', version: '20200723-1.16.1'
+    mappings channel: 'snapshot', version: '20200820-1.16.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -106,11 +115,7 @@ minecraft {
         }
     }
 }
-repositories {
-    maven {
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-}
+
 
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
 
@@ -122,8 +127,8 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.67'
-    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6")
+    minecraft 'net.minecraftforge:forge:1.16.2-33.0.7'
+//    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
     testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
@@ -284,7 +289,7 @@ task updateVersionTracker {
         def body = [
                 'author'        : "${project.findProperty('versionTrackerAuthor')}",
                 'projectName'   : "crafttweaker",
-                'gameVersion'   : "1.16.1",
+                'gameVersion'   : "1.16.2",
                 'projectVersion': "${version}",
                 'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
                 'uid'           : "${project.findProperty('versionTrackerKey')}"

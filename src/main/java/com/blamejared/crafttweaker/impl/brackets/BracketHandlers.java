@@ -36,7 +36,6 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Optional;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -307,10 +306,10 @@ public class BracketHandlers {
             return RecipeTypeBracketHandler.getCustomManager(key);
         }
         
-        Optional<IRecipeType<?>> value = Registry.RECIPE_TYPE.getValue(key);
+        IRecipeType<?> value = Registry.RECIPE_TYPE.getOrDefault(key);
         
-        if(value.isPresent()) {
-            return new RecipeManagerWrapper(value.get());
+        if(value != null) {
+            return new RecipeManagerWrapper(value);
         } else {
             throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
         }

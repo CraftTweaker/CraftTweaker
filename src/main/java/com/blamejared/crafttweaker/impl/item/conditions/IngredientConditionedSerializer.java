@@ -13,7 +13,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -36,13 +35,13 @@ public class IngredientConditionedSerializer implements IIngredientSerializer<In
     public IngredientConditioned<?, ?> parse(PacketBuffer buffer) {
         final IIngredient base = IIngredient.fromIngredient(Ingredient.read(buffer));
         final ResourceLocation type = buffer.readResourceLocation();
-        final Optional<IIngredientConditionSerializer<?>> value = CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER.getValue(type);
-        if(!value.isPresent()) {
+        final IIngredientConditionSerializer<?> value = CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER.getOrDefault(type);
+        if(value ==null) {
             throw new IllegalArgumentException("Invalid type: " + type);
         }
         
         // noinspection rawtypes,unchecked
-        return new IngredientConditioned(new MCIngredientConditioned(base, value.get().parse(buffer)));
+        return new IngredientConditioned(new MCIngredientConditioned(base, value.parse(buffer)));
     }
     
     @Override
@@ -52,13 +51,13 @@ public class IngredientConditionedSerializer implements IIngredientSerializer<In
         
         final JsonObject condition = json.getAsJsonObject("condition");
         final ResourceLocation type = new ResourceLocation(condition.get("type").getAsString());
-        final Optional<IIngredientConditionSerializer<?>> value = CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER.getValue(type);
-        if(!value.isPresent()) {
+        final IIngredientConditionSerializer<?> value = CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER.getOrDefault(type);
+        if(value == null) {
             throw new IllegalArgumentException("Invalid type: " + type);
         }
         
         // noinspection rawtypes,unchecked
-        return new IngredientConditioned(new MCIngredientConditioned(baseIngredient, value.get().parse(condition)));
+        return new IngredientConditioned(new MCIngredientConditioned(baseIngredient, value.parse(condition)));
     }
     
     @Override

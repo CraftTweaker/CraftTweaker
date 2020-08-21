@@ -48,19 +48,19 @@ public class MCTag implements IIngredient {
     
     @ZenCodeType.Method
     public MCTag createItemTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_232928_e_().func_232925_b_(), "Item",  Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a().func_241836_b(), "Item",  Tag.func_241286_a_(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createBlockTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_232928_e_().func_232923_a_(), "Block",  Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a().func_241835_a(), "Block",  Tag.func_241286_a_(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createEntityTypeTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_232928_e_().func_232927_d_(), "EntityType",  Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a().func_241838_d(), "EntityType",  Tag.func_241286_a_(Sets.newHashSet()), id));
         return this;
     }
     
@@ -204,21 +204,21 @@ public class MCTag implements IIngredient {
     
     public ITag<Item> getItemTag() {
         if(itemTag == null) {
-            itemTag = TagCollectionManager.func_232928_e_().func_232925_b_().get(id);
+            itemTag = TagCollectionManager.func_242178_a().func_241836_b().get(id);
         }
         return itemTag;
     }
     
     public ITag<Block> getBlockTag() {
         if(blockTag == null) {
-            blockTag =  TagCollectionManager.func_232928_e_().func_232923_a_().get(id);
+            blockTag =  TagCollectionManager.func_242178_a().func_241835_a().get(id);
         }
         return blockTag;
     }
     
     public ITag<EntityType<?>> getEntityTypeTag() {
         if(entityTypeTag == null) {
-            entityTypeTag =  TagCollectionManager.func_232928_e_().func_232927_d_().get(id);
+            entityTypeTag =  TagCollectionManager.func_242178_a().func_241838_d().get(id);
         }
         return entityTypeTag;
     }

@@ -25,7 +25,6 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
@@ -95,7 +94,6 @@ public class CraftTweaker {
     
     public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MODID.getBytes());
     public static boolean serverOverride = true;
-    public static NetworkTagManager tagManager;
     
     public CraftTweaker() {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
@@ -209,7 +207,6 @@ public class CraftTweaker {
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                 serverOverride = server == null;
-                CraftTweaker.tagManager = event.getDataPackRegistries().getTagManager();
                 return null;
             }
             
