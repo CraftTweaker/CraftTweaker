@@ -23,7 +23,12 @@ public class MCEntityLivingHurtEvent implements EntityLivingHurtEvent {
     public float getAmount() {
         return event.getAmount();
     }
-
+    
+    @Override
+    public void setAmount(float amount) {
+        event.setAmount(amount);
+    }
+    
     @Override
     public boolean isCanceled() {
         return event.isCanceled();

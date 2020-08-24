@@ -2,8 +2,7 @@ package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.damage.IDamageSource;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.event.EntityLivingHurtEvent")
 @ZenRegister
@@ -14,4 +13,7 @@ public interface EntityLivingHurtEvent extends ILivingEvent, IEventCancelable {
 
     @ZenGetter("amount")
     float getAmount();
+    
+    @ZenSetter
+    void setAmount(float amount);
 }
