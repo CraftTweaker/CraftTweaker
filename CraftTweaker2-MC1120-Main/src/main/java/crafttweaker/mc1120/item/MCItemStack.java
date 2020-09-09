@@ -222,7 +222,12 @@ public class MCItemStack implements IItemStack {
         out.matchTagExact = matchTagExact;
         return out;
     }
-    
+
+    @Override
+    public boolean getMatchTagExact() {
+        return matchTagExact;
+    }
+
     @Override
     public IItemStack withTag(IData tag) {
         return withTag(tag, true);
