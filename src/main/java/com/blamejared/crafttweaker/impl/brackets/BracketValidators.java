@@ -78,6 +78,24 @@ public class BracketValidators {
     }
     
     @ZenCodeType.Method
+    @BracketValidator("fluid")
+    public static boolean validateFluidStack(String tokens) {
+        final ResourceLocation resourceLocation = ResourceLocation.tryCreate(tokens);
+        if(resourceLocation == null) {
+            CraftTweakerAPI.logError("Could not get BEP <fluid:" + tokens + ">. Syntax is <fluid:modid:fluidname>");
+            return false;
+        }
+        
+        if(isRegistryUnlocked(ForgeRegistries.FLUIDS) || ForgeRegistries.FLUIDS.containsKey(resourceLocation)) {
+            return true;
+        }
+        
+        CraftTweakerAPI.logError("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
+        return false;
+        
+    }
+    
+    @ZenCodeType.Method
     @BracketValidator("item")
     public static boolean validateItemBracket(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
