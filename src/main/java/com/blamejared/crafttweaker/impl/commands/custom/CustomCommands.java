@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -46,6 +47,6 @@ public class CustomCommands {
     
     @ZenCodeType.Method
     public static MCRequiredArgumentBuilder argument(String name) {
-        return new MCRequiredArgumentBuilder(Commands.argument(name, StringReader::readString));
+        return new MCRequiredArgumentBuilder(Commands.argument(name, StringArgumentType.string()));
     }
 }

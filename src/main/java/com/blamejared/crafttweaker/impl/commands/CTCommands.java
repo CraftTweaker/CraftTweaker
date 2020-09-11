@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.network.*;
 import com.blamejared.crafttweaker.impl.network.messages.*;
 import com.blamejared.crafttweaker.impl.tag.*;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.*;
+import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.*;
 import com.mojang.brigadier.context.*;
 import com.mojang.brigadier.exceptions.*;
@@ -34,10 +34,11 @@ public class CTCommands {
     
     private static final Map<String, CommandImpl> COMMANDS = new TreeMap<>(String::compareTo);
     public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
+    private static final int commandsPerPage = 4;
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         root.then(Commands.literal("copy")
-                .then(Commands.argument("toCopy", StringReader::readString).executes(context -> {
+                .then(Commands.argument("toCopy", StringArgumentType.greedyString()).executes(context -> {
                     String toCopy = context.getArgument("toCopy", String.class);
                     ServerPlayerEntity entity = context.getSource().asPlayer();
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
@@ -266,12 +267,6 @@ public class CTCommands {
         });
         
         
-        root.then(Commands.literal("help")
-                .executes(context -> executeHelp(context, 0))
-                .then(Commands.argument("page", StringReader::readInt)
-                        .executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
-        
-        
         // Send an event to let others know that we are ready for SubCommands to be registered.
         // SubCommands registered earlier would throw a NPE (because the command itself would not exist yet)
         // SubCommands registered later would not be added to the Command system
@@ -290,6 +285,11 @@ public class CTCommands {
                 registerDump(subCommandName, dumperInfo.getDescription(), dumperInfo);
             }
         }
+    
+        root.then(Commands.literal("help")
+                .executes(context -> executeHelp(context, 0))
+                .then(Commands.argument("page", IntegerArgumentType.integer(0, COMMANDS.size() / commandsPerPage))
+                        .executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
         
         
         COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));
@@ -334,15 +334,14 @@ public class CTCommands {
         final CommandSource source = context.getSource();
         final List<String> keys = new ArrayList<>(COMMANDS.keySet());
         
-        final double commandsPerPage = 4;
-        final int numberOfPages = (int) (keys.size() / commandsPerPage);
+        final int highestPage = keys.size() / commandsPerPage;
         
         //The page we are on
-        final int shownPage = MathHelper.clamp(helpPage, 0, numberOfPages);
+        final int shownPage = MathHelper.clamp(helpPage, 0, highestPage);
         
         //The range of commands we show on this page, end exclusive
-        final int startCommandIndex = (int) (shownPage * commandsPerPage);
-        final int endCommandIndex = Math.min(startCommandIndex + (int) commandsPerPage, keys.size());
+        final int startCommandIndex = shownPage * commandsPerPage;
+        final int endCommandIndex = Math.min(startCommandIndex + commandsPerPage, keys.size());
         
         //Actually show the commands
         for(int i = startCommandIndex; i < endCommandIndex; i++) {
@@ -354,7 +353,7 @@ public class CTCommands {
         }
         
         //Which page are we on?
-        source.sendFeedback(new FormattedTextComponent("Page %s of %d", shownPage, numberOfPages), true);
+        source.sendFeedback(new FormattedTextComponent("Page %s of %d", shownPage, highestPage), true);
         return 0;
     }
     
