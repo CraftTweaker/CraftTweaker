@@ -1,11 +1,13 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.potion.*;
 import net.minecraft.entity.*;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.*;
 import net.minecraft.util.text.*;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.registries.*;
 import org.openzen.zencode.java.*;
 
@@ -36,6 +38,14 @@ public class BracketDumpers {
         return ForgeRegistries.ENTITIES.getKeys()
                 .stream()
                 .map(key -> "<entitytype:" + key + ">")
+                .collect(Collectors.toList());
+    }
+    
+    @BracketDumper("fluid")
+    public static Collection<String> getFluidStackDump() {
+        return ForgeRegistries.FLUIDS.getValues()
+                .stream()
+                .map(fluid -> new MCFluidStack(new FluidStack(fluid, 1)).getCommandString())
                 .collect(Collectors.toList());
     }
     
