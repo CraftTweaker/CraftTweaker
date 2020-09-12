@@ -52,8 +52,6 @@ public class MCFluidStackMutable implements IFluidStack {
         stringBuilder.append(fluid.getRegistryName());
         stringBuilder.append(">.mutable()");
         
-        //If a mul operator was used, we need to put it in parenthesis
-        //=> (<fluid:minecraft:water> * 1000).mutable()
         if(stack.getAmount() != 1) {
             stringBuilder.append(" * ");
             stringBuilder.append(stack.getAmount());

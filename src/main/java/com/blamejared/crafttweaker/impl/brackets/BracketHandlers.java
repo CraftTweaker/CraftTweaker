@@ -186,7 +186,7 @@ public class BracketHandlers {
             return null;
         }
         if(Arrays.stream(EntityClassification.values())
-                .anyMatch(entityClassification -> entityClassification.name()
+                .noneMatch(entityClassification -> entityClassification.name()
                         .equalsIgnoreCase(tokens))) {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
             return null;
