@@ -99,6 +99,7 @@ public class CraftTweaker {
         CraftTweakerAPI.SCRIPT_DIR.mkdirs();
         CraftTweakerAPI.SCRIPT_DIR.mkdir();
         CraftTweakerAPI.setupLoggers();
+        CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
         CraftTweakerRegistry.findClasses();
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

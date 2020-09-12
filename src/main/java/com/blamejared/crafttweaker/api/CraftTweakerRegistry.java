@@ -33,6 +33,8 @@ public class CraftTweakerRegistry {
     private static final Map<String, Collection<String>> BRACKET_RESOLVERS_2 = new HashMap<>();
     //BEP name to BEP validator method
     private static final Map<String, Method> BRACKET_VALIDATORS = new HashMap<>();
+    //BEP names of BEP validators without BEP Method. Needed when custom BEPs are registered
+    private static final Set<String> ADVANCED_BEP_NAMES = new HashSet<>();
     private static final Map<String, BracketDumperInfo> BRACKET_DUMPERS = new HashMap<>();
     private static final Map<String, Class> ZEN_CLASS_MAP = new HashMap<>();
     private static final List<IPreprocessor> PREPROCESSORS = new ArrayList<>();
@@ -339,9 +341,9 @@ public class CraftTweakerRegistry {
         return BRACKET_VALIDATORS.getOrDefault(bepName, null);
     }
     
-    private static void validateBrackets(){
+    private static void validateBrackets() {
         for(String validatedBep : BRACKET_VALIDATORS.keySet()) {
-            if(!BRACKET_RESOLVERS.containsKey(validatedBep)) {
+            if(!BRACKET_RESOLVERS.containsKey(validatedBep) && !ADVANCED_BEP_NAMES.contains(validatedBep)) {
                 CraftTweakerAPI.logError("BEP %s has a validator but no BEP method", validatedBep);
             }
         }
@@ -369,5 +371,14 @@ public class CraftTweakerRegistry {
     
     public static Map<String, List<Class>> getExpansions() {
         return EXPANSIONS;
+    }
+    
+    /**
+     * Adds a name as advanced BEP name.
+     * This means that a Bracket Validator may exist that has no matching BEP method in here.
+     * @param name The name to add
+     */
+    public static void addAdvancedBEPName(String name) {
+        ADVANCED_BEP_NAMES.add(name);
     }
 }
