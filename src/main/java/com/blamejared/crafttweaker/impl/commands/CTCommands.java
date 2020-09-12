@@ -287,8 +287,8 @@ public class CTCommands {
         }
     
         root.then(Commands.literal("help")
-                .executes(context -> executeHelp(context, 0))
-                .then(Commands.argument("page", IntegerArgumentType.integer(0, COMMANDS.size() / commandsPerPage))
+                .executes(context -> executeHelp(context, 1))
+                .then(Commands.argument("page", IntegerArgumentType.integer(1, (COMMANDS.size() / commandsPerPage) + 1))
                         .executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
         
         
@@ -330,17 +330,19 @@ public class CTCommands {
     }
     
     
-    private static int executeHelp(CommandContext<CommandSource> context, int helpPage) {
+    //helpPageNumber is 1 based, so we reduce it by 1 in clamping
+    private static int executeHelp(CommandContext<CommandSource> context, int helpPageNumber) {
         final CommandSource source = context.getSource();
         final List<String> keys = new ArrayList<>(COMMANDS.keySet());
         
-        final int highestPage = keys.size() / commandsPerPage;
+        final int highestPageIndex = (keys.size() / commandsPerPage);
         
-        //The page we are on
-        final int shownPage = MathHelper.clamp(helpPage, 0, highestPage);
+        //The page we are on (0 based)
+        //helpPageNumber is 1 based, so we reduce it by 1 in clamping
+        final int shownPageIndex = MathHelper.clamp(helpPageNumber - 1, 0, highestPageIndex);
         
         //The range of commands we show on this page, end exclusive
-        final int startCommandIndex = shownPage * commandsPerPage;
+        final int startCommandIndex = shownPageIndex * commandsPerPage;
         final int endCommandIndex = Math.min(startCommandIndex + commandsPerPage, keys.size());
         
         //Actually show the commands
@@ -353,7 +355,8 @@ public class CTCommands {
         }
         
         //Which page are we on?
-        source.sendFeedback(new FormattedTextComponent("Page %s of %d", shownPage, highestPage), true);
+        //We show it 1 based again, so we add 1 to the pages
+        source.sendFeedback(new FormattedTextComponent("Page %s of %d", shownPageIndex + 1, highestPageIndex + 1), true);
         return 0;
     }
     
