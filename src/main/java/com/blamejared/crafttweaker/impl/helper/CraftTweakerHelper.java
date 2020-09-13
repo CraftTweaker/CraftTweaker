@@ -3,9 +3,11 @@ package com.blamejared.crafttweaker.impl.helper;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.blocks.MCBlock;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -35,8 +37,11 @@ public class CraftTweakerHelper {
         return Arrays.stream(blocks).map(MCBlock::getInternal).toArray(Block[]::new);
     }
     
-    public static EntityType[] getEntityTypes(MCEntityType[] entities) {
+    public static EntityType<?>[] getEntityTypes(MCEntityType[] entities) {
         return Arrays.stream(entities).map(MCEntityType::getInternal).toArray(EntityType[]::new);
     }
     
+    public static Fluid[] getFluids(MCFluid[] fluids) {
+        return Arrays.stream(fluids).map(MCFluid::getInternal).toArray(Fluid[]::new);
+    }
 }
