@@ -31,7 +31,7 @@ public class ActionAddShiftedTooltip implements IRuntimeAction {
             
             final KeyBinding keyBindSneak = Minecraft.getInstance().gameSettings.keyBindSneak;
             
-            if(InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keyBindSneak.getKey().getKeyCode())) {
+            if(InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), keyBindSneak.getKey().getKeyCode())) {
                 tooltip.add(content);
             } else {
                 if(showMessage != null && !showMessage.getString().isEmpty()) {
