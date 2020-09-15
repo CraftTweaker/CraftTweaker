@@ -47,7 +47,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.16.2'
+archivesBaseName = 'CraftTweaker-1.16.3'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -143,8 +143,8 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.7'
-    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
+    minecraft 'net.minecraftforge:forge:1.16.3-34.0.5'
+//    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
     testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
@@ -304,7 +304,7 @@ task updateVersionTracker {
         def body = [
                 'author'        : "${project.findProperty('versionTrackerAuthor')}",
                 'projectName'   : "crafttweaker",
-                'gameVersion'   : "1.16.2",
+                'gameVersion'   : "1.16.3",
                 'projectVersion': "${version}",
                 'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
                 'uid'           : "${project.findProperty('versionTrackerKey')}"

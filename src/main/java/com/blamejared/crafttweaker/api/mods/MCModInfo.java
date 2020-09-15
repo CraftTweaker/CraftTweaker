@@ -59,7 +59,7 @@ public class MCModInfo {
     @ZenCodeType.Getter("items")
     public List<IItemStack> getItems() {
         return ForgeRegistries.ITEMS.getEntries().stream()
-                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().getNamespace().equals(getModId()))
+                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().func_240901_a_().getNamespace().equals(getModId()))
                 .map(Map.Entry::getValue)
                 .map(ItemStack::new)
                 .map(MCItemStack::new)
@@ -69,7 +69,7 @@ public class MCModInfo {
     @ZenCodeType.Getter("blocks")
     public List<MCBlock> getBlocks() {
         return ForgeRegistries.BLOCKS.getEntries().stream()
-                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().getNamespace().equals(getModId()))
+                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().func_240901_a_().getNamespace().equals(getModId()))
                 .map(Map.Entry::getValue)
                 .map(MCBlock::new)
                 .collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class MCModInfo {
     @ZenCodeType.Getter("entitytypes")
     public List<MCEntityType> getEntityTypes() {
         return ForgeRegistries.ENTITIES.getEntries().stream()
-                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().getNamespace().equals(getModId()))
+                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().func_240901_a_().getNamespace().equals(getModId()))
                 .map(Map.Entry::getValue)
                 .map(MCEntityType::new)
                 .collect(Collectors.toList());
