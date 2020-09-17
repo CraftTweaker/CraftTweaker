@@ -90,7 +90,7 @@ pipeline {
                                 sh "git config user.email $botEmail"
                                 sh 'git add -A'
                                 //Either nothing to commit, or we create a commit
-                                sh "git diff-index --quiet HEAD || git commit -m 'CI Doc export for build ${env.BRANCH_NAME}.${env.BUILD_NUMBER}\n\nMatches git commit ${env.GIT_COMMIT}'"
+                                sh "git diff-index --quiet HEAD || git commit -m 'CI Doc export for build ${env.BRANCH_NAME}-${env.BUILD_NUMBER}\n\nMatches git commit ${env.GIT_COMMIT}'"
                                 sh "git push origin $docsRepositoryBranch"
                             }
                         }
