@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
 
 def docsOutDir = 'docsOut'
-//TODO Change to CrT repo later
-def docsRepositoryUrl = 'git@github.com:kindlich/CraftTweaker-Documentation.git'
+def docsRepositoryUrl = 'git@github.com:CraftTweaker/CraftTweaker-Documentation.git'
 def docsRepositoryBranch = env.BRANCH_NAME
 def gitSshCredentialsId = 'crt_git_ssh_key'
 def botUsername = 'crtBot'
