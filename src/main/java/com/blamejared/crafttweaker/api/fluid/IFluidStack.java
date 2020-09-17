@@ -18,6 +18,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      *
      * @param amount The amount to multiply this stack
      * @return A new stack, or this stack, depending if this stack is mutable
+     * @docParam amount 1000
      */
     @ZenCodeType.Method
     IFluidStack setAmount(int amount);
@@ -28,6 +29,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      *
      * @param amount The amount to multiply this stack
      * @return A new stack, or this stack, depending if this stack is mutable
+     * @docParam amount 1000
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     IFluidStack multiply(int amount);
@@ -50,6 +52,7 @@ public interface IFluidStack extends CommandStringDisplayable {
     
     /**
      * Retrieves this fluid stack's fluid.
+     *
      * @return The fluid.
      */
     @ZenCodeType.Getter("fluid")

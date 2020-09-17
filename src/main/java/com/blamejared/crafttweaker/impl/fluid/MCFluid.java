@@ -24,6 +24,7 @@ public class MCFluid implements CommandStringDisplayable {
      * Creates a new {@link IFluidStack} with the given amount of fluid.
      *
      * @return a new (immutable) {@link IFluidStack}
+     * @docParam amount 1000
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     public IFluidStack multiply(int amount) {
@@ -34,6 +35,7 @@ public class MCFluid implements CommandStringDisplayable {
      * Creates a new {@link IFluidStack} with the given amount of fluid.
      *
      * @return a new (immutable) {@link IFluidStack}
+     * @docParam amount 1000
      */
     @ZenCodeType.Method
     public IFluidStack makeStack(int amount) {
@@ -47,6 +49,7 @@ public class MCFluid implements CommandStringDisplayable {
     
     /**
      * Moddevs, use this to get the Vanilla Fluid
+     *
      * @return The Vanilla Fluid
      */
     public Fluid getInternal() {
