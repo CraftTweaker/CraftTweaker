@@ -46,21 +46,21 @@ pipeline {
                 stage('Updating Version') {
                     steps {
                         echo 'Updating Version'
-                        //sh './gradlew updateVersionTracker'
+                        sh './gradlew updateVersionTracker'
                     }
                 }
 
                 stage('Deploying to Maven') {
                     steps {
                         echo 'Deploying to Maven'
-                        //sh './gradlew publish'
+                        sh './gradlew publish'
                     }
                 }
 
                 stage('Deploying to CurseForge') {
                     steps {
                         echo 'Deploying to CurseForge'
-                        //sh './gradlew curseforge'
+                        sh './gradlew curseforge'
                     }
                 }
 
