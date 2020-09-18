@@ -368,6 +368,13 @@ public interface IItemStack extends IIngredient {
         return ForgeHooks.getBurnTime(getInternal());
     }
     
+    /**
+     * Sets the burn time of this item, for use in the furnace and other machines
+     *
+     * @param time the new burn time
+     *
+     * @docParam time 500
+     */
     @ZenCodeType.Setter("burnTime")
     default void setBurnTime(int time) {
         CraftTweakerAPI.apply(new ActionSetBurnTime(this, time));
