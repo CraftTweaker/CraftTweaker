@@ -32,6 +32,7 @@ apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Co
 import groovy.json.JsonOutput
 
 if (project.hasProperty('secretFile')) {
+    //noinspection GroovyAssignabilityCheck
     loadSecrets(new File((String) findProperty('secretFile')))
 }
 
@@ -136,9 +137,8 @@ def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration',
 
 
 dependencies {
-
-    compile project(":Crafttweaker_Annotations");
-    annotationProcessor project(":Crafttweaker_Annotation_Processors");
+    compile project(":Crafttweaker_Annotations")
+    annotationProcessor project(":Crafttweaker_Annotation_Processors")
     annotationProcessor 'org.spongepowered:mixin:0.8.1-SNAPSHOT:processor'
 
     zenCodeDeps.collect { compile project(it) }
@@ -161,7 +161,7 @@ test {
 task genGitChangelog() {
     def stdout = new ByteArrayOutputStream()
     // first commit to check from, in our case the first commit of the branch
-    String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5";
+    String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
     String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
     // was having issues with grep and spaces in the regex
     exec {
@@ -169,11 +169,11 @@ task genGitChangelog() {
         standardOutput = stdout
     }
     if (stdout.toString().trim().indexOf("\n") >= 0) {
-        firstCommit = stdout.toString().split("\n")[0].trim();
+        firstCommit = stdout.toString().split("\n")[0].trim()
     }
-    System.out.println("Last version hash: \"" + firstCommit + "\"");
+    System.out.println("Last version hash: \"" + firstCommit + "\"")
     stdout = new ByteArrayOutputStream()
-    def test = exec {
+    exec {
         commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
         standardOutput = stdout
     }
@@ -252,24 +252,21 @@ publishing {
             }
 
             artifact sourcesJar {
-
                 classifier 'sources'
             }
-            artifact javadocJar {
 
+            artifact javadocJar {
                 classifier 'javadoc'
             }
-            artifact deobfJar {
 
+            artifact deobfJar {
                 classifier 'deobf'
             }
         }
     }
 
     repositories {
-
         maven {
-
             url "file://" + System.getenv("local_maven")
         }
     }
@@ -286,7 +283,7 @@ curseforge {
 
         mainArtifact(jar) {
             relations {
-                requiredLibrary "jeitweaker"
+                requiredDependency "jeitweaker"
             }
         }
         addArtifact(deobfJar)
@@ -335,7 +332,6 @@ sourceSets {
     main {
         java.srcDirs += "/src/generated/java/"
     }
-
 }
 
 idea {

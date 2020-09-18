@@ -139,16 +139,18 @@ public class DocumentProcessorNew extends AbstractProcessor {
     }
     
     private void writeToFiles() {
+        final File docsFolder = new File(docsOut, "docs");
+        
         //Create folder
-        if(!docsOut.exists() && !docsOut.mkdirs()) {
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsOut.getAbsolutePath());
+        if(!docsFolder.exists() && !docsFolder.mkdirs()) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not create folder " + docsFolder.getAbsolutePath());
             return;
         }
         
         //Create files
         try {
             for(CrafttweakerDocumentationPage page : pages) {
-                page.write(docsOut, processingEnv);
+                page.write(docsFolder, processingEnv);
             }
             writeYAML();
         } catch(IOException e) {
