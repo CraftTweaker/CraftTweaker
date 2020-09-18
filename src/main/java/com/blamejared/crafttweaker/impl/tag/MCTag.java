@@ -162,6 +162,13 @@ public class MCTag implements IIngredient {
         CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items), id));
     }
     
+    /**
+     * removes items from this tag, will fail if this is not a tag that can hold items
+     *
+     * @param items Items to remove from the tag
+     *
+     * @docParam items <item:minecraft:dirt>
+     */
     @ZenCodeType.Method
     public void removeItems(IItemStack... items) {
         CraftTweakerAPI.apply(new ActionTagRemove<>(getItemTag(), CraftTweakerHelper.getItems(items), id));
