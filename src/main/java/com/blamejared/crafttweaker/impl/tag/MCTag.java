@@ -150,6 +150,13 @@ public class MCTag implements IIngredient {
         return getEntityTypes()[0];
     }
     
+    /**
+     * Adds items to this tag, will fail if this is not a tag that can hold items
+     *
+     * @param items Items to add to the tag
+     *
+     * @docParam items <item:minecraft:dirt>
+     */
     @ZenCodeType.Method
     public void addItems(IItemStack... items) {
         CraftTweakerAPI.apply(new ActionTagAdd<Item>(getItemTag(), CraftTweakerHelper.getItems(items), id));
@@ -202,7 +209,6 @@ public class MCTag implements IIngredient {
         }
         return false;
     }
-    
     
     @ZenCodeType.Getter("isItemTag")
     public boolean isItemTag() {
