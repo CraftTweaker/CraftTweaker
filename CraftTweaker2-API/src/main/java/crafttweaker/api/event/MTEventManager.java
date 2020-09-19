@@ -136,6 +136,8 @@ public class MTEventManager implements IEventManager {
         elLootingLevel.clear();
         elPlayerAdvancement.clear();
         elSpecialSpawn.clear();
+        elArrowLoose.clear();
+        elArrowNock.clear();
     }
 
     // ##########################
@@ -1565,5 +1567,43 @@ public class MTEventManager implements IEventManager {
 
     public void publishProjectileImpactThrowable(ProjectileImpactThrowableEvent event) {
         elProjectileImpactThrowable.publish(event);
+    }
+
+    // #########################
+    // ###  ArrowLooseEvent  ###
+    // #########################
+
+    private final EventList<ArrowLooseEvent> elArrowLoose = new EventList<>();
+
+    @Override
+    public IEventHandle onArrowLoose(IEventHandler<ArrowLooseEvent> ev) {
+        return elArrowLoose.add(ev);
+    }
+
+    public boolean hasArrowLoose() {
+        return elArrowLoose.hasHandlers();
+    }
+
+    public void publishArrowLoose(ArrowLooseEvent event) {
+    	elArrowLoose.publish(event);
+    }
+
+    // ########################
+    // ###  ArrowNockEvent  ###
+    // ########################
+
+    private final EventList<ArrowNockEvent> elArrowNock = new EventList<>();
+
+    @Override
+    public IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev) {
+        return elArrowNock.add(ev);
+    }
+
+    public boolean hasArrowNock() {
+        return elArrowNock.hasHandlers();
+    }
+
+    public void publishArrowNock(ArrowNockEvent event) {
+    	elArrowNock.publish(event);
     }
 }

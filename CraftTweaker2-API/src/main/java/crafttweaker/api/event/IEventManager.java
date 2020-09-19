@@ -252,6 +252,12 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onProjectileImpactThrowable(IEventHandler<ProjectileImpactThrowableEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onArrowLoose(IEventHandler<ArrowLooseEvent> ev);
+
+    @ZenMethod
+    IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

@@ -7,6 +7,7 @@ import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
+import crafttweaker.api.world.IBlockPos;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -117,4 +118,6 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     @ZenSetter("canEdit")
     void setCanEdit(boolean canEdit);
     
+    @ZenGetter("bedLocation")
+    IBlockPos bedLocation();
 }
