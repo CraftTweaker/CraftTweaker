@@ -1,3 +1,4 @@
+
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.damage.IDamageSource;

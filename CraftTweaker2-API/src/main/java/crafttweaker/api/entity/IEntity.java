@@ -505,9 +505,7 @@ public interface IEntity extends ICommandSender {
     }
     
     @ZenMethod
-    @ZenGetter("onGround")
-    boolean onGround();
-    
-    @ZenMethod
-    void performHurtAnimation();
+    default boolean onGround(){
+        return false;
+    }
 }

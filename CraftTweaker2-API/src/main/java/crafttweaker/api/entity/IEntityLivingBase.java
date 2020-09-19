@@ -70,6 +70,9 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IPotionEffect getActivePotionEffect(IPotion potion);
+
+    @ZenMethod
+    void removePotionEffect(IPotion potion);
     
     @ZenMethod
     boolean isPotionEffectApplicable(IPotionEffect potionEffect);
@@ -121,27 +124,4 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IItemStack getItemInSlot(IEntityEquipmentSlot slot);
-    
-    @ZenMethod
-    void removePotionEffect(IPotion potion);
-    
-    @ZenMethod
-    @ZenGetter("elytraFlying")
-    boolean isElytraFlying();
-    
-    @ZenMethod
-    @ZenGetter("ticksElytraFlying")
-    int getTicksElytraFlying();
-    
-    @ZenMethod
-    @ZenGetter("activeItemStackBlocking")
-    boolean isActiveItemStackBlocking();
-    
-    @ZenMethod
-    @ZenGetter("activeHand")
-    String getActiveHand();
-    
-    @ZenMethod
-    @ZenGetter("swingInProgress")
-    boolean isSwingInProgress();
 }
