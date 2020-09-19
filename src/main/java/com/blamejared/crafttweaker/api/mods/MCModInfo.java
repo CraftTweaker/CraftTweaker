@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.blocks.MCBlock;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Holds information about a loaded mod
+ *
+ * @docParam this loadedMods.getMod("crafttweaker")
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.mods.ModInfo")
 @Document("vanilla/api/mods/ModInfo")
@@ -56,6 +62,14 @@ public class MCModInfo {
         return getModInfo().getVersion().toString();
     }
     
+    /**
+     * Gets all known items from that mod
+     * <p>
+     * Does not take "sub items" into account!
+     * That means, that it will e.g. find an enchanted book, but without tags, and only one!
+     *
+     * @return The items of the mod
+     */
     @ZenCodeType.Getter("items")
     public List<IItemStack> getItems() {
         return ForgeRegistries.ITEMS.getEntries().stream()
@@ -66,6 +80,11 @@ public class MCModInfo {
                 .collect(Collectors.toList());
     }
     
+    /**
+     * Finds all blocks registered for that mod.
+     *
+     * @return all blocks of the mod.
+     */
     @ZenCodeType.Getter("blocks")
     public List<MCBlock> getBlocks() {
         return ForgeRegistries.BLOCKS.getEntries().stream()
@@ -75,6 +94,11 @@ public class MCModInfo {
                 .collect(Collectors.toList());
     }
     
+    /**
+     * Finds all EntityTypes registered for that mod
+     *
+     * @return The EntityTypes for the mod.
+     */
     @ZenCodeType.Getter("entitytypes")
     public List<MCEntityType> getEntityTypes() {
         return ForgeRegistries.ENTITIES.getEntries().stream()
@@ -82,6 +106,21 @@ public class MCModInfo {
                 .map(Map.Entry::getValue)
                 .map(MCEntityType::new)
                 .collect(Collectors.toList());
+    }
+    
+    /**
+     * Finds all EntityTypes registered for that mod
+     *
+     * @return The EntityTypes for the mod.
+     */
+    @ZenCodeType.Getter("fluids")
+    public List<MCFluid> getFluids() {
+        return ForgeRegistries.FLUIDS.getEntries().stream()
+                .filter(registryKeyFluidEntry -> registryKeyFluidEntry.getKey().func_240901_a_().getNamespace().equals(getModId()))
+                .map(Map.Entry::getValue)
+                .map(MCFluid::new)
+                .collect(Collectors.toList());
+                
     }
     
     
