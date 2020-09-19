@@ -4,8 +4,8 @@ def docsOutDir = 'docsOut'
 def docsRepositoryUrl = 'git@github.com:CraftTweaker/CraftTweaker-Documentation.git'
 def docsRepositoryBranch = env.BRANCH_NAME
 def gitSshCredentialsId = 'crt_git_ssh_key'
-def botUsername = 'crtBot'
-def botEmail = 'crtbot@gmail.com'
+def botUsername = 'crafttweakerbot'
+def botEmail = 'crafttweakerbot@gmail.com'
 
 def documentationDir = 'CrafttweakerDocumentation'
 def exportDirInRepo = 'docs_exported/crafttweaker'
