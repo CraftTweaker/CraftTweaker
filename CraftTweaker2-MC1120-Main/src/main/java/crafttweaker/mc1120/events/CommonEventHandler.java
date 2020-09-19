@@ -655,4 +655,18 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishProjectileImpactThrowable(new MCProjectileImpactThrowableEvent(ev));
         }
     }
+    
+    @SubscribeEvent
+    public void onArrowLoose (ArrowLooseEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasArrowLoose()) {
+            CrafttweakerImplementationAPI.events.publishArrowLoose(new MCArrowLooseEvent(ev));
+        }
+    }
+    
+    @SubscribeEvent
+    public void onArrowNock (ArrowNockEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasArrowNock()) {
+            CrafttweakerImplementationAPI.events.publishArrowNock(new MCArrowNockEvent(ev));
+        }
+    }
 }

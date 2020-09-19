@@ -15,6 +15,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -206,5 +207,35 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     @Override
     public IItemStack getItemInSlot(IEntityEquipmentSlot slot) {
         return CraftTweakerMC.getIItemStack(entityLivingBase.getItemStackFromSlot(CraftTweakerMC.getEntityEquipmentSlot(slot)));
+    }
+    
+    @Override
+    public String getActiveHand()  {
+        return entityLivingBase.getActiveHand().name();
+    }
+    
+    @Override
+    public boolean isSwingInProgress()  {
+        return entityLivingBase.isSwingInProgress;
+    }
+    
+    @Override
+    public boolean isElytraFlying()  {
+        return entityLivingBase.isElytraFlying();
+    }
+    
+    @Override
+    public int getTicksElytraFlying()  {
+        return entityLivingBase.getTicksElytraFlying();
+    }
+    
+    @Override
+    public void removePotionEffect(IPotion potion) {
+        entityLivingBase.removePotionEffect(CraftTweakerMC.getPotion(potion));
+    }
+    
+    @Override
+    public boolean isActiveItemStackBlocking()  {
+        return entityLivingBase.isActiveItemStackBlocking();
     }
 }

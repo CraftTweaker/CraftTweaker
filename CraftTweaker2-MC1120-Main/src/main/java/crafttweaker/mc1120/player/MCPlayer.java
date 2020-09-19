@@ -8,6 +8,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
 import crafttweaker.api.util.Position3f;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
@@ -245,5 +246,10 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     @Override
     public void setCanEdit(boolean canEdit) {
         player.capabilities.allowEdit = canEdit;
+    }
+    
+    @Override
+    public IBlockPos bedLocation() {
+        return CraftTweakerMC.getIBlockPos(player.bedLocation);
     }
 }
