@@ -8,6 +8,12 @@ import org.openzen.zencode.java.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Holds information on all the mods that are registered.
+ * Can be accessed using the `loadedMods` global keyword
+ * 
+ * @docParam this loadedMods
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.mods.Mods")
 @Document("vanilla/api/mods/Mods")
