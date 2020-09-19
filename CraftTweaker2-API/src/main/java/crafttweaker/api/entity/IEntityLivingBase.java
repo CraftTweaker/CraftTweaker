@@ -70,6 +70,9 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IPotionEffect getActivePotionEffect(IPotion potion);
+
+    @ZenMethod
+    void removePotionEffect(IPotion potion);
     
     @ZenMethod
     boolean isPotionEffectApplicable(IPotionEffect potionEffect);

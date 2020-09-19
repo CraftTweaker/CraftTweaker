@@ -122,6 +122,11 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public IPotionEffect getActivePotionEffect(IPotion potion) {
         return CraftTweakerMC.getIPotionEffect(entityLivingBase.getActivePotionEffect(CraftTweakerMC.getPotion(potion)));
     }
+
+    @Override
+    public void removePotionEffect(IPotion potion) {
+        entityLivingBase.removePotionEffect(CraftTweakerMC.getPotion(potion));
+    }
     
     @Override
     public boolean isPotionEffectApplicable(IPotionEffect potionEffect) {
