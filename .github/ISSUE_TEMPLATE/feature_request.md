@@ -15,3 +15,6 @@ Why do you need this? / Why do you think this would be useful?
 
 **Feature request dependencies**
 Does the feature request require anything to be implemented? / Will this feature request only be useful when combined with another mod?
+
+**Game Version
+What game version do you want this feature for? (e.g. 1.12, 1.16)
