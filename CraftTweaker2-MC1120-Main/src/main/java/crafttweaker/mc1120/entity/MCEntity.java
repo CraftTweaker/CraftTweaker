@@ -669,9 +669,4 @@ public class MCEntity extends MCCommandSender implements IEntity {
     public boolean onGround() {
         return entity.onGround;
     }
-    
-    @Override
-    public void performHurtAnimation() {
-        entity.performHurtAnimation();
-    }
 }
