@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
 
 @ZenClass("crafttweaker.event.PlayerAnvilUpdateEvent")
 @ZenRegister
-public interface PlayerAnvilUpdateEvent extends IEventCancelable, IHasCancellationResult {
+public interface PlayerAnvilUpdateEvent extends IEventCancelable {
     
     @ZenGetter("leftItem")
     IItemStack getLeftItem();
