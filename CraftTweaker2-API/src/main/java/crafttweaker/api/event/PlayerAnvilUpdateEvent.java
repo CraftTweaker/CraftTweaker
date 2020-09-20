@@ -22,6 +22,9 @@ public interface PlayerAnvilUpdateEvent extends IEventCancelable {
     @ZenSetter("outputItem")
     void setOutputItem(IItemStack output);
     
+    @ZenGetter("itemName")
+    String getItemName();
+    
     @ZenGetter("xpCost")
     int getXPCost();
     
