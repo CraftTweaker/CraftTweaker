@@ -12,6 +12,7 @@ import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.*;
+import java.util.UUID;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -41,10 +42,19 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     
     @Override
     public String getUUID() {
-        String uuid = EntityPlayer.getUUID(player.getGameProfile()).toString().toLowerCase();
-        if (uuid != null && !uuid.equals(""))
-            return uuid;
-        return EntityPlayer.getOfflineUUID(player.getName()).toString().toLowerCase();
+        UUID uuid = null;
+        if (player.getGameProfile() != null) {
+            uuid = EntityPlayer.getUUID(player.getGameProfile());
+        }
+        if(uuid == null) {
+            uuid = EntityPlayer.getOfflineUUID(getName());
+        }
+        if(uuid == null) {
+            CraftTweakerAPI.logError("Could not get UUID for player " + getName());
+            return "";
+        }
+
+        return uuid.toString().toLowerCase();
     }
     
     @Override
