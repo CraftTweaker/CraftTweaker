@@ -258,6 +258,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev);
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

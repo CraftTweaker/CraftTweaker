@@ -669,4 +669,11 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishArrowNock(new MCArrowNockEvent(ev));
         }
     }
+    
+    @SubscribeEvent
+    public void onEntityJoinWorld (EntityJoinWorldEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasEntityJoinWorld()) {
+            CrafttweakerImplementationAPI.events.publishEntityJoinWorld(new MCEntityJoinWorldEvent(ev));
+        }
+    }
 }

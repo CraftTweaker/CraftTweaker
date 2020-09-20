@@ -138,6 +138,7 @@ public class MTEventManager implements IEventManager {
         elSpecialSpawn.clear();
         elArrowLoose.clear();
         elArrowNock.clear();
+        elEntityJoinWorld.clear();
     }
 
     // ##########################
@@ -1605,5 +1606,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishArrowNock(ArrowNockEvent event) {
     	elArrowNock.publish(event);
+    }
+    
+    // ########################
+    // ###  EntityJoinWorldEvent  ###
+    // ########################
+
+    private final EventList<EntityJoinWorldEvent> elEntityJoinWorld = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev) {
+        return elEntityJoinWorld.add(ev);
+    }
+
+    public boolean hasEntityJoinWorld() {
+        return elEntityJoinWorld.hasHandlers();
+    }
+
+    public void publishEntityJoinWorld(EntityJoinWorldEvent event) {
+    	elEntityJoinWorld.publish(event);
     }
 }
