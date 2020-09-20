@@ -3,6 +3,7 @@ package crafttweaker.api.player;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
@@ -116,5 +117,11 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenSetter("canEdit")
     void setCanEdit(boolean canEdit);
+    
+    @ZenMethod
+    IEntityItem dropItem(boolean dropAll);
+    
+    @ZenMethod
+    IEntityItem dropItem(IItemStack item);
     
 }
