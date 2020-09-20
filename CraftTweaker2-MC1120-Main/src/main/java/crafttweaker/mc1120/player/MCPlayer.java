@@ -3,6 +3,7 @@ package crafttweaker.mc1120.player;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -14,6 +15,7 @@ import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.*;
 import net.minecraft.entity.player.*;
+import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.*;
@@ -252,4 +254,9 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     public IBlockPos bedLocation() {
         return CraftTweakerMC.getIBlockPos(player.bedLocation);
     }
+
+	@Override
+	public IEntityFishHook fishHook() {
+		return CraftTweakerMC.getIEntityFishHook(player.fishEntity);
+	}
 }
