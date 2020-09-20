@@ -614,7 +614,7 @@ public class CraftTweakerMC {
         if(ingredient instanceof IOreDictEntry)
             return new OreIngredient(((IOreDictEntry) ingredient).getName());
         if(ingredient instanceof IItemStack)
-            if(((IItemStack) ingredient).hasTag())
+            if(((IItemStack) ingredient).hasTag() && ((IItemStack) ingredient).getMatchTagExact())
                 return new IngredientNBT(getItemStack(ingredient)){};
             else
                 return Ingredient.fromStacks(getItemStack((IItemStack) ingredient));
