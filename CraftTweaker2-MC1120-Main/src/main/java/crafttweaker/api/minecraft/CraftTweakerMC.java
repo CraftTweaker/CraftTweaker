@@ -39,7 +39,6 @@ import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -692,13 +691,11 @@ public class CraftTweakerMC {
             return getIEntityItem((EntityItem) entity);
         else if(entity instanceof EntityXPOrb)
             return getIEntityXp((EntityXPOrb) entity);
-        else if(entity instanceof EntityFishHook)
-            return getIEntityFishHook((EntityFishHook) entity);
         else
             return new MCEntity(entity);
     }
-
-	public static IEntityXp getIEntityXp(EntityXPOrb entityXPOrb) {
+    
+    public static IEntityXp getIEntityXp(EntityXPOrb entityXPOrb) {
         return entityXPOrb == null ? null : new MCEntityXp(entityXPOrb);
     }
     
@@ -950,8 +947,4 @@ public class CraftTweakerMC {
     public static Biome getBiome(IBiome biome) {
         return biome == null ? null : biome instanceof MCBiome ? ((MCBiome) biome).getInternal() : Biome.REGISTRY.getObject(new ResourceLocation(biome.getId()));
     }
-    
-    public static IEntityFishHook getIEntityFishHook(EntityFishHook entity) {
-		return entity == null ? null : new MCEntityFishHook(entity);
-	}
 }

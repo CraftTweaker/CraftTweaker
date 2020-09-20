@@ -3,7 +3,6 @@ package crafttweaker.api.player;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.data.IData;
-import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
@@ -121,7 +120,4 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenGetter("bedLocation")
     IBlockPos bedLocation();
-    
-    @ZenGetter("fishHook")
-    IEntityFishHook fishHook();
 }

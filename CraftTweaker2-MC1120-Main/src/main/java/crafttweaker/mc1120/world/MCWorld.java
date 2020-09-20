@@ -12,13 +12,11 @@ import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.util.MCPosition3f;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.List;
@@ -185,30 +183,4 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 		return CraftTweakerMC.getIItemStack(stack);
 	}
 
-	@Override
-	public boolean extinguishFire(IPlayer player, IBlockPos pos, String side) {
-		return world.extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf("side"));
-	}
-
-	@Override
-	public boolean isSpawnChunk(int x, int z) {
-		return world.isSpawnChunk(x, z) ;
-	}
-
-
-	@Override
-	public int getSeaLevel() {
-		return world.getSeaLevel();
-	}
-	
-	@Override
-	public IEntity createLightningBolt(double x, double y, double z, boolean effectOnly) {
-		EntityLightningBolt bolt = new EntityLightningBolt(world, x, y, z, effectOnly);
-		return CraftTweakerMC.getIEntity(bolt);
-	}
-	
-	@Override
-	public boolean addWeatherEffect(IEntity entity) {
-		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity));
-	}
 }

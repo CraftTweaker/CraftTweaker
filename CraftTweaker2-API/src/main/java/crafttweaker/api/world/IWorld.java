@@ -107,20 +107,4 @@ public interface IWorld extends IBlockAccess {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
         return null;
     }
-    
-    @ZenMethod
-    boolean extinguishFire(IPlayer player, IBlockPos pos, String side);
-    
-    @ZenMethod
-    boolean isSpawnChunk(int x, int z);
-    
-    @ZenGetter("seaLevel")
-    @ZenMethod
-    int getSeaLevel();
-    
-    @ZenMethod
-    boolean addWeatherEffect(IEntity entity);
-
-    @ZenMethod
-	IEntity createLightningBolt(double x, double y, double z, @Optional boolean effectOnly);
 }
