@@ -19,6 +19,9 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     @ZenGetter("name")
     String getName();
     
+    @ZenGetter("uuid")
+    String getUUID();
+    
     @ZenGetter("data")
     IData getData();
     
