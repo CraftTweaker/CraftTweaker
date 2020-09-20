@@ -40,6 +40,14 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
     
     @Override
+    public String getUUID() {
+        String uuid = EntityPlayer.getUUID(player.getGameProfile()).toString().toLowerCase();
+        if (uuid != null && !uuid.equals(""))
+            return uuid;
+        return EntityPlayer.getOfflineUUID(player.getName()).toString().toLowerCase();
+    }
+    
+    @Override
     public IData getData() {
         return NBTConverter.from(player.getEntityData(), true);
     }
