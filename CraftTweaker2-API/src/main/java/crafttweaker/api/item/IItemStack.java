@@ -237,6 +237,12 @@ public interface IItemStack extends IIngredient {
         CraftTweakerAPI.logError("Default method IItemStack#WithTag is not overwritten in " + getClass() + " please report to the author!");
         return withTag(tag);
     }
+
+    @ZenGetter("matchTagExact")
+    default boolean getMatchTagExact() {
+        CraftTweakerAPI.logError("Default method IItemStack#getMatchTagExact is not overwritten in " + getClass() + " please report to the author!");
+        return true;
+    }
     
     @Deprecated
     IItemStack withTag(IData tag);
