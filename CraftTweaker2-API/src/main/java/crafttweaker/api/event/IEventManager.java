@@ -262,7 +262,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev);
     
+    @ZenMethod
     IEventHandle onEntityLivingEquipmentChange(IEventHandler<EntityLivingEquipmentChangeEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev);
+    
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
@@ -272,6 +277,4 @@ public interface IEventManager {
      * IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
      *
      */
-
-	IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev);
 }

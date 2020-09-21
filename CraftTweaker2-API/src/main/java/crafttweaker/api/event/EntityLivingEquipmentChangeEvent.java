@@ -17,7 +17,7 @@ public interface EntityLivingEquipmentChangeEvent extends ILivingEvent {
     IItemStack getFrom();
 
     @ZenMethod
-    @ZenSetter("item")
+    @ZenGetter("item")
     IItemStack getTo();
 
     @ZenMethod

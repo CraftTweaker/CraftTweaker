@@ -5,6 +5,7 @@ import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.event.EntityLivingEquipmentChangeEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -675,5 +676,17 @@ public class CommonEventHandler {
         if (CrafttweakerImplementationAPI.events.hasEntityJoinWorld()) {
             CrafttweakerImplementationAPI.events.publishEntityJoinWorld(new MCEntityJoinWorldEvent(ev));
         }
+    }
+    
+    @SubscribeEvent
+    public void onEntityLivingDamage(LivingDamageEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasEntityLivingDamage())
+            CrafttweakerImplementationAPI.events.publishEntityLivingDamage(new MCEntityLivingDamageEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onEntityLivingEquipmentChange(LivingEquipmentChangeEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasEntityLivingEquipmentChange())
+            CrafttweakerImplementationAPI.events.publishEntityLivingEquipmentChange(new MCEntityLivingEquipmentChangeEvent(ev));
     }
 }

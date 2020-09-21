@@ -52,7 +52,6 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
-    private final EventList<EntityLivingDamageEvent> elEntityLivingDamage = new EventList<>();
 
     /**
      * Clears all EventLists
@@ -1652,6 +1651,8 @@ public class MTEventManager implements IEventManager {
     // ##########################
     // ### LivingEntityDamage ###
     // ##########################
+    
+    private final EventList<EntityLivingDamageEvent> elEntityLivingDamage = new EventList<>();
 
     @Override
     public IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev) {
