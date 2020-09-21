@@ -52,6 +52,7 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
+    private final EventList<EntityLivingDamageEvent> elEntityLivingDamage = new EventList<>();
 
     /**
      * Clears all EventLists
@@ -139,6 +140,8 @@ public class MTEventManager implements IEventManager {
         elArrowLoose.clear();
         elArrowNock.clear();
         elEntityJoinWorld.clear();
+        elEntityLivingEquipmentChange.clear();
+        elEntityLivingDamage.clear();
     }
 
     // ##########################
@@ -1608,9 +1611,9 @@ public class MTEventManager implements IEventManager {
     	elArrowNock.publish(event);
     }
     
-    // ########################
+    // ##############################
     // ###  EntityJoinWorldEvent  ###
-    // ########################
+    // ##############################
 
     private final EventList<EntityJoinWorldEvent> elEntityJoinWorld = new EventList<>();
 
@@ -1625,5 +1628,41 @@ public class MTEventManager implements IEventManager {
 
     public void publishEntityJoinWorld(EntityJoinWorldEvent event) {
     	elEntityJoinWorld.publish(event);
+    }
+    
+    // ##########################################
+    // ###  EntityLivingEquipmentChangeEvent  ###
+    // ##########################################
+
+    private final EventList<EntityLivingEquipmentChangeEvent> elEntityLivingEquipmentChange = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingEquipmentChange(IEventHandler<EntityLivingEquipmentChangeEvent> ev) {
+        return elEntityLivingEquipmentChange.add(ev);
+    }
+
+    public boolean hasEntityLivingEquipmentChange() {
+        return elEntityLivingEquipmentChange.hasHandlers();
+    }
+
+    public void publishEntityLivingEquipmentChange(EntityLivingEquipmentChangeEvent event) {
+    	elEntityLivingEquipmentChange.publish(event);
+    }
+    
+    // ##########################
+    // ### LivingEntityDamage ###
+    // ##########################
+
+    @Override
+    public IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev) {
+        return elEntityLivingDamage.add(ev);
+    }
+
+    public boolean hasEntityLivingDamage() {
+        return elEntityLivingDamage.hasHandlers();
+    }
+
+    public void publishEntityLivingDamage(EntityLivingDamageEvent event) {
+        elEntityLivingDamage.publish(event);
     }
 }
