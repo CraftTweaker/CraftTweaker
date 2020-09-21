@@ -141,6 +141,7 @@ public class MTEventManager implements IEventManager {
         elEntityJoinWorld.clear();
         elEntityLivingEquipmentChange.clear();
         elEntityLivingDamage.clear();
+        elEntityLivingHeal.clear();
     }
 
     // ##########################
@@ -1665,5 +1666,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishEntityLivingDamage(EntityLivingDamageEvent event) {
         elEntityLivingDamage.publish(event);
+    }
+    
+    // ########################
+    // ### LivingEntityHeal ###
+    // ########################
+    
+    private final EventList<EntityLivingHealEvent> elEntityLivingHeal = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev) {
+        return elEntityLivingHeal.add(ev);
+    }
+
+    public boolean hasEntityLivingHeal() {
+        return elEntityLivingHeal.hasHandlers();
+    }
+
+    public void publishEntityLivingHeal(EntityLivingHealEvent event) {
+        elEntityLivingHeal.publish(event);
     }
 }

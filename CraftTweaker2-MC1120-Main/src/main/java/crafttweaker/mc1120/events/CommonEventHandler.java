@@ -689,4 +689,10 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingEquipmentChange())
             CrafttweakerImplementationAPI.events.publishEntityLivingEquipmentChange(new MCEntityLivingEquipmentChangeEvent(ev));
     }
+    
+    @SubscribeEvent
+    public void onEntityLivingHeal(LivingHealEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasEntityLivingHeal())
+            CrafttweakerImplementationAPI.events.publishEntityLivingHeal(new MCEntityLivingHealEvent(ev));
+    }
 }
