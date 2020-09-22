@@ -1,28 +1,23 @@
 package com.blamejared.crafttweaker.api.item;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
-import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddShiftedTooltip;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddTooltip;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionClearTooltip;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionModifyTooltip;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionRemoveRegexTooltip;
-import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.food.MCFood;
-import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.ForgeHooks;
-import org.openzen.zencode.java.ZenCodeType;
+import com.blamejared.crafttweaker.api.*;
+import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.data.*;
+import com.blamejared.crafttweaker.api.item.tooltip.*;
+import com.blamejared.crafttweaker.impl.actions.items.*;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
+import com.blamejared.crafttweaker.impl.data.*;
+import com.blamejared.crafttweaker.impl.food.*;
+import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.util.text.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraftforge.common.*;
+import org.openzen.zencode.java.*;
 
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 /**
  * This represents an item.
@@ -96,6 +91,15 @@ public interface IItemStack extends IIngredient {
     }
     
     /**
+     * Sets the display name of the ItemStack
+     *
+     * @param name New name of the stack.
+     * @docParam name "totally not dirt"
+     */
+    @ZenCodeType.Method
+    IItemStack setDisplayName(String name);
+    
+    /**
      * Clears any custom name set for this ItemStack
      */
     @ZenCodeType.Method
@@ -154,16 +158,6 @@ public interface IItemStack extends IIngredient {
     }
     
     /**
-     * Sets the display name of the ItemStack
-     *
-     * @param name New name of the stack.
-     *
-     * @docParam name "totally not dirt"
-     */
-    @ZenCodeType.Method
-    IItemStack setDisplayName(String name);
-    
-    /**
      * Gets the amount of Items in the ItemStack
      *
      * @return ItemStack's amount
@@ -177,7 +171,6 @@ public interface IItemStack extends IIngredient {
      * Sets the amount of the ItemStack
      *
      * @param amount new amount
-     *
      * @docParam amount 3
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
@@ -198,7 +191,6 @@ public interface IItemStack extends IIngredient {
      * Sets the damage of the ItemStack
      *
      * @param damage the new damage value
-     *
      * @docParam damage 10
      */
     @ZenCodeType.Method
@@ -251,9 +243,7 @@ public interface IItemStack extends IIngredient {
      * Sets the tag for the ItemStack.
      *
      * @param tag The tag to set.
-     *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
-     *
      * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
@@ -372,7 +362,6 @@ public interface IItemStack extends IIngredient {
      * Sets the burn time of this item, for use in the furnace and other machines
      *
      * @param time the new burn time
-     *
      * @docParam time 500
      */
     @ZenCodeType.Setter("burnTime")
@@ -404,6 +393,16 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Method
     default void removeTooltip(String regex) {
         CraftTweakerAPI.apply(new ActionRemoveRegexTooltip(this, Pattern.compile(regex)));
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MOD)
+    default MCWeightedItemStack percent(int percentage) {
+        return weight(percentage / 100.0D);
+    }
+    
+    @ZenCodeType.Method
+    default MCWeightedItemStack weight(double weight) {
+        return new MCWeightedItemStack(this, weight);
     }
     
     @ZenCodeType.Method

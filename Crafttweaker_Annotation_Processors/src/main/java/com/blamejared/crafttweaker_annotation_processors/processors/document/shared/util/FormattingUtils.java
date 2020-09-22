@@ -16,7 +16,7 @@ public class FormattingUtils {
             case DIV:
                 return "%s / %s";
             case MOD:
-                return "%s % %s";
+                return "%s %% %s";
             case CAT:
                 return "%s ~ %s";
             case OR:
