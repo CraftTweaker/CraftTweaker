@@ -954,4 +954,8 @@ public class CraftTweakerMC {
     public static IEntityFishHook getIEntityFishHook(EntityFishHook entity) {
 		return entity == null ? null : new MCEntityFishHook(entity);
 	}
+    
+    public static IExplosion getIExplosion(Explosion explosion) {
+		return explosion == null ? null : new MCExplosion(explosion);
+	}
 }

@@ -123,4 +123,7 @@ public interface IWorld extends IBlockAccess {
 
     @ZenMethod
 	IEntity createLightningBolt(double x, double y, double z, @Optional boolean effectOnly);
+    
+    @ZenMethod
+ 	IExplosion newExplosion(IEntity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking);
 }

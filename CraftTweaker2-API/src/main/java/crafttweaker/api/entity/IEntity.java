@@ -509,8 +509,13 @@ public interface IEntity extends ICommandSender {
         return false;
     }
     
+    @ZenGetter("isLightningbolt")
     @ZenMethod
     default boolean isLightningbolt(){
         return false;
     }
+    
+    @ZenGetter("ticksExisted")
+    @ZenMethod
+    int ticksExisted();
 }
