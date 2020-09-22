@@ -675,10 +675,4 @@ public class MCEntity extends MCCommandSender implements IEntity {
     public boolean isLightningbolt() {
         return entity instanceof EntityLightningBolt;
     }
-    
-    @Override
-    public int ticksExisted() {
-        return entity.ticksExisted;
-    }
-    
 }

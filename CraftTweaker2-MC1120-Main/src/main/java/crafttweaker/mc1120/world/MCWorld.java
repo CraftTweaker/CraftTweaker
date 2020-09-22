@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import stanhebben.zenscript.annotations.Optional;
@@ -211,11 +210,5 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 	@Override
 	public boolean addWeatherEffect(IEntity entity) {
 		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity));
-	}
-
-	@Override
-	public IExplosion newExplosion(IEntity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking) {
-		Explosion explosion = world.newExplosion(CraftTweakerMC.getEntity(entityIn), x, y, z, strength, isFlaming, isSmoking);
-		return CraftTweakerMC.getIExplosion(explosion);
 	}
 }
