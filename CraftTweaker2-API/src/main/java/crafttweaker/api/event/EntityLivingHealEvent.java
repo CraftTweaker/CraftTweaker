@@ -3,7 +3,7 @@ package crafttweaker.api.event;
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.*;
 
-@ZenClass("crafttweaker.event.EntityLivingDamageEvent")
+@ZenClass("crafttweaker.event.EntityLivingHealEvent")
 @ZenRegister
 public interface EntityLivingHealEvent extends ILivingEvent, IEventCancelable {
 
