@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.impl.entity.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.helper.*;
 import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.google.common.collect.*;
 import net.minecraft.block.*;
@@ -227,6 +228,11 @@ public class MCTag implements IIngredient {
         return getBlockTag() != null;
     }
     
+    @ZenCodeType.Getter("isFluidTag")
+    public boolean isFluidTag() {
+        return getFluidTag() != null;
+    }
+    
     @ZenCodeType.Getter("isEntityTypeTag")
     public boolean isEntityTypeTag() {
         return getEntityTypeTag() != null;
@@ -266,6 +272,10 @@ public class MCTag implements IIngredient {
         return entityTypeTag;
     }
     
+    @ZenCodeType.Getter("id")
+    public MCResourceLocation getId() {
+        return new MCResourceLocation(id);
+    }
     
     @Override
     public String getCommandString() {
