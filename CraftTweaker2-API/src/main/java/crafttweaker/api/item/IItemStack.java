@@ -7,6 +7,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.IEnchantment;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
@@ -476,4 +477,7 @@ public interface IItemStack extends IIngredient {
     default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState){
         return -1;
     }
+    
+    @ZenMethod
+    void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot);
 }
