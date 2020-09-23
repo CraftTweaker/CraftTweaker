@@ -8,6 +8,7 @@ import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.*;
@@ -23,6 +24,7 @@ import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.*;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.item.VanillaIngredient;
@@ -35,6 +37,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -954,4 +957,13 @@ public class CraftTweakerMC {
     public static IEntityFishHook getIEntityFishHook(EntityFishHook entity) {
 		return entity == null ? null : new MCEntityFishHook(entity);
 	}
+    
+	public static AttributeModifier getAttributeModifier(IEntityAttributeModifier modifier) {
+		return modifier == null ? null : (AttributeModifier) modifier.getInternal();
+	}
+	
+    public static IEntityAttributeModifier getIEntityAttributeModifier(AttributeModifier modifier) {
+		return modifier == null ? null : new MCEntityAttributeModifier(modifier);
+	}
+
 }
