@@ -239,4 +239,24 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public boolean isActiveItemStackBlocking()  {
         return entityLivingBase.isActiveItemStackBlocking();
     }
+
+	@Override
+	public boolean isHandActive() {
+		return entityLivingBase.isHandActive();
+	}
+
+	@Override
+	public void resetActiveHand() {
+		entityLivingBase.resetActiveHand();
+	}
+
+	@Override
+	public void setActiveHand(String hand) {
+		entityLivingBase.setActiveHand(EnumHand.valueOf(hand));
+	}
+
+	@Override
+	public void stopActiveHand() {
+		entityLivingBase.stopActiveHand();
+	}
 }

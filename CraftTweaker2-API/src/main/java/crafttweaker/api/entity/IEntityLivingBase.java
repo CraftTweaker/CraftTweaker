@@ -144,4 +144,17 @@ public interface IEntityLivingBase extends IEntity {
     @ZenMethod
     @ZenGetter("swingInProgress")
     boolean isSwingInProgress();
+    
+    @ZenMethod
+    @ZenGetter("isHandActive")
+    boolean isHandActive();
+    
+    @ZenMethod
+    void resetActiveHand();
+    
+    @ZenMethod
+    void setActiveHand(String hand);
+    
+    @ZenMethod
+    void stopActiveHand();
 }
