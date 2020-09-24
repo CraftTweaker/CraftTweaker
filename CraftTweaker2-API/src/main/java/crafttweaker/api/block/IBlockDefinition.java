@@ -96,4 +96,6 @@ public interface IBlockDefinition {
         return getDefaultState();
     }
     
+    @ZenMethod
+    boolean isToolEffective(String type, IBlockState state);
 }
