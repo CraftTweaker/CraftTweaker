@@ -16,6 +16,7 @@ import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
@@ -674,5 +675,10 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public boolean isLightningbolt() {
         return entity instanceof EntityLightningBolt;
+    }
+    
+    @Override
+    public boolean isArmorstand() {
+        return entity instanceof EntityArmorStand;
     }
 }

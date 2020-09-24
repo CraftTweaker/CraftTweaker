@@ -42,7 +42,9 @@ import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -966,4 +968,11 @@ public class CraftTweakerMC {
 		return modifier == null ? null : new MCEntityAttributeModifier(modifier);
 	}
 
+    public static IEntityArrow getIEntityArrow(EntityArrow entity) {
+		return entity == null ? null : new MCEntityArrow(entity);
+	}
+    
+    public static IEntityThrowable getIEntityThrowable(EntityThrowable entity) {
+		return entity == null ? null : new MCEntityThrowable(entity);
+	}
 }

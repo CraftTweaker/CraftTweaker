@@ -4,6 +4,9 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityArrow;
+import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.entity.IEntityThrowable;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -11,8 +14,10 @@ import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntity;
+import crafttweaker.mc1120.entity.MCEntityThrowable;
 import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -209,6 +214,6 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 	
 	@Override
 	public boolean addWeatherEffect(IEntity entity) {
-		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity));
+		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity))
 	}
 }
