@@ -154,5 +154,9 @@ public class MCBlockDefinition implements IBlockDefinition {
     public IBlockState getStateFromMeta(int meta) {
         return new MCBlockState(block.getStateFromMeta(meta));
     }
-
+    
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return block.isToolEffective(type, CraftTweakerMC.getBlockState(state));   
+    }
 }
