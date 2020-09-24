@@ -214,6 +214,6 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 	
 	@Override
 	public boolean addWeatherEffect(IEntity entity) {
-		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity))
+		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity));
 	}
 }

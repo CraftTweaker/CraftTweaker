@@ -1,33 +1,39 @@
 package crafttweaker.mc1120.events.handling;
 
+import crafttweaker.api.event.ITickEvent;
 import crafttweaker.api.event.PlayerTickEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class MCPlayerTickEvent implements PlayerTickEvent {
+public class MCPlayerTickEvent implements PlayerTickEvent, ITickEvent {
+    private final net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent event;
 
-    private final IPlayer player;
-    private final String phase;
-
-
-    public MCPlayerTickEvent(IPlayer player, String phase) {
-        this.player = player;
-        this.phase = phase;
-    }
-
-    public MCPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-        this(CraftTweakerMC.getIPlayer(event.player), event.phase.name().toUpperCase());
+    public MCPlayerTickEvent(net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent event) {
+        this.event = event;
     }
 
     @Override
     public IPlayer getPlayer() {
-        return player;
+        return CraftTweakerMC.getIPlayer(event.player);
     }
-
 
     @Override
     public String getPhase() {
-        return phase;
+        return event.phase.toString();
     }
+
+	@Override
+	public String getSide() {
+		return event.side.toString();
+	}
+
+	@Override
+	public boolean isClient() {
+		return event.side.isClient();
+	}
+
+	@Override
+	public boolean isServer() {
+		return event.side.isServer();
+	}
 }

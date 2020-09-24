@@ -5,7 +5,6 @@ import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.event.EntityLivingEquipmentChangeEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -49,6 +48,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -388,7 +388,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerTickEvent(TickEvent.PlayerTickEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerTick())
-            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(CraftTweakerMC.getIPlayer(ev.player), ev.phase.name().toUpperCase()));
+            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(ev));
     }
     
     @SubscribeEvent
@@ -694,5 +694,11 @@ public class CommonEventHandler {
     public void onEntityLivingHeal(LivingHealEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingHeal())
             CrafttweakerImplementationAPI.events.publishEntityLivingHeal(new MCEntityLivingHealEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onWorldTick(WorldTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasWorldTick())
+            CrafttweakerImplementationAPI.events.publishWorldTick(new MCWorldTickEvent(ev));
     }
 }

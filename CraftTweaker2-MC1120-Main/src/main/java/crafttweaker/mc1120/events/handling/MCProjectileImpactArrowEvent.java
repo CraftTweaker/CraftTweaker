@@ -19,7 +19,7 @@ public class MCProjectileImpactArrowEvent extends MCProjectileImpactEvent implem
 
     @Override
     public IEntityArrow getArrow() {
-        return CraftTweakerMC.getIEntity(arrow);
+        return CraftTweakerMC.getIEntityArrow(arrow);
     }
 
     @Override
