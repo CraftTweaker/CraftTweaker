@@ -21,6 +21,12 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     @ZenGetter("name")
     String getName();
     
+    @ZenGetter("uuid")
+    default String getUUID() {
+        CraftTweakerAPI.logError("Default method IPlayer#getUUID is not overwritten in " + getClass() + " please report to the author!");
+        return "";
+    }
+    
     @ZenGetter("data")
     IData getData();
     
