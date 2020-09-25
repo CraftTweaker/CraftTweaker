@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
@@ -364,6 +365,12 @@ public class CommonEventHandler {
     public void onPlayerAnvilRepairEvent(AnvilRepairEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerAnvilRepair())
             CrafttweakerImplementationAPI.events.publishPlayerAnvilRepair(new MCPlayerAnvilRepairEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onPlayerAnvilUpdateEvent(AnvilUpdateEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerAnvilUpdate())
+            CrafttweakerImplementationAPI.events.publishPlayerAnvilUpdate(new MCPlayerAnvilUpdateEvent(ev));
     }
     
     @SubscribeEvent

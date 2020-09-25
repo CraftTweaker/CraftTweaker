@@ -44,6 +44,7 @@ public class MTEventManager implements IEventManager {
     private final EventList<ItemExpireEvent> elItemExpire = new EventList<>();
     private final EventList<ItemTossEvent> elItemToss = new EventList<>();
     private final EventList<PlayerAnvilRepairEvent> elPlayerAnvilRepair = new EventList<>();
+    private final EventList<PlayerAnvilUpdateEvent> elPlayerAnvilUpdate = new EventList<>();
     private final EventList<PlayerSetSpawnEvent> elPlayerSetSpawn = new EventList<>();
     private final EventList<PlayerDestroyItemEvent> elPlayerDestroyItem = new EventList<>();
     private final EventList<PlayerBrewedPotionEvent> elPlayerBrewedPotion = new EventList<>();
@@ -731,6 +732,26 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerAnvilRepair(PlayerAnvilRepairEvent event) {
         elPlayerAnvilRepair.publish(event);
     }
+    
+    
+    // #########################
+    // ### PlayerAnvilUpdate ###
+    // #########################
+
+    @Override
+    public IEventHandle onPlayerAnvilUpdate(IEventHandler<PlayerAnvilUpdateEvent> ev) {
+        return elPlayerAnvilUpdate.add(ev);
+    }
+
+    public boolean hasPlayerAnvilUpdate() {
+        return elPlayerAnvilUpdate.hasHandlers();
+    }
+
+    public void publishPlayerAnvilUpdate(PlayerAnvilUpdateEvent event) {
+        elPlayerAnvilUpdate.publish(event);
+    }
+    
+    
     // ######################
     // ### PlayerSetSpawn ###
     // ######################
