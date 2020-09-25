@@ -4,6 +4,7 @@ import crafttweaker.api.event.PlayerSleepInBedEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IBlockPos;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MCPlayerSleepInBedEvent implements PlayerSleepInBedEvent {
 
@@ -22,5 +23,15 @@ public class MCPlayerSleepInBedEvent implements PlayerSleepInBedEvent {
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
+    }
+    
+    @Override
+    public String getResult() {
+        return event.getResultStatus().name();
+    }
+    
+    @Override
+    public void setResult(String result) {
+        event.setResult(EntityPlayer.SleepResult.valueOf(result));
     }
 }
