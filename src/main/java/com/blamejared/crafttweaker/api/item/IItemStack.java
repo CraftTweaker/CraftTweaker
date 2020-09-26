@@ -405,6 +405,11 @@ public interface IItemStack extends IIngredient {
         return new MCWeightedItemStack(this, weight);
     }
     
+    @ZenCodeType.Caster(implicit = true)
+    default MCWeightedItemStack asWeightedItemStack() {
+        return weight(1.0D);
+    }
+    
     @ZenCodeType.Method
     IItemStack mutable();
     
