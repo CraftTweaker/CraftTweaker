@@ -90,7 +90,7 @@ public class MCBlockDefinition implements IBlockDefinition {
         if (state == null) {
             block.setHarvestLevel(toolClass, level);
         } else {
-            block.setHarvestLevel(toolClass, level, );
+            block.setHarvestLevel(toolClass, level, CraftTweakerMC.getBlockState(state));
         }
     }
     
