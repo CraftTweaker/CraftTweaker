@@ -7,7 +7,6 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
