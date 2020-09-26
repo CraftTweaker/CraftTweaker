@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.api.events;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraftforge.eventbus.api.Event;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Consumer;
 
-@ZenRegister()
+@ZenRegister
+@Document("vanilla/api/event/IEvent")
 @ZenCodeType.Name("crafttweaker.api.event.IEvent")
 public abstract class IEvent<E extends IEvent<E, V>, V extends Event> {
     

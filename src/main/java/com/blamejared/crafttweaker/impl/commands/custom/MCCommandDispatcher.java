@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.impl.commands.custom;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.StringReader;
 import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -42,22 +41,12 @@ public class MCCommandDispatcher {
     }
     
     @ZenCodeType.Method
-    public int execute(final StringReader input, final MCCommandSource source) throws Exception {
-        return internal.execute(input, source.getInternal());
-    }
-    
-    @ZenCodeType.Method
     public int execute(final MCParseResults parse) throws Exception {
         return internal.execute(parse.getInternal());
     }
     
     @ZenCodeType.Method
     public MCParseResults parse(final String command, final MCCommandSource source) {
-        return new MCParseResults(internal.parse(command, source.getInternal()));
-    }
-    
-    @ZenCodeType.Method
-    public MCParseResults parse(final StringReader command, final MCCommandSource source) {
         return new MCParseResults(internal.parse(command, source.getInternal()));
     }
     

@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.*;
-import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -52,8 +51,8 @@ public class MCSuggestions {
     }
     
     @ZenCodeType.Method
-    public List<Suggestion> getList() {
-        return internal.getList();
+    public List<MCSuggestion> getList() {
+        return internal.getList().stream().map(MCSuggestion::new).collect(Collectors.toList());
     }
     
     @ZenCodeType.Method

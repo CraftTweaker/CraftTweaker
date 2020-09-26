@@ -14,9 +14,9 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.BlockPos")
 @Document("vanilla/api/util/BlockPos")
-@ZenWrapper(wrappedClass = "net.minecraft.util.math.BlockPos", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getInternal.toString()")
+@ZenWrapper(wrappedClass = "net.minecraft.util.math.BlockPos", displayStringFormat = "%s.getInternal.toString()")
 public class MCBlockPos {
-    private BlockPos internal;
+    private final BlockPos internal;
 
     public MCBlockPos(BlockPos internal) {
         this.internal = internal;
@@ -80,7 +80,7 @@ public class MCBlockPos {
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
     public MCBlockPos add(MCBlockPos pos) {
-        return add(pos);
+        return new MCBlockPos(internal.add(pos.internal));
     }
 
     /**
@@ -105,8 +105,8 @@ public class MCBlockPos {
      * @return a new BlockPos that is one block higher than this BlockPos
      */
     @ZenCodeType.Method
-    public BlockPos up() {
-        return internal.up();
+    public MCBlockPos up() {
+        return new MCBlockPos(internal.up());
     }
 
     /**
@@ -117,8 +117,8 @@ public class MCBlockPos {
      * @docParam n 45
      */
     @ZenCodeType.Method
-    public BlockPos up(int n) {
-        return internal.up(n);
+    public MCBlockPos up(int n) {
+        return new MCBlockPos(internal.up(n));
     }
 
     /**
@@ -127,8 +127,8 @@ public class MCBlockPos {
      * @return a new BlockPos that is one block lower than this BlockPos
      */
     @ZenCodeType.Method
-    public BlockPos down() {
-        return internal.down();
+    public MCBlockPos down() {
+        return new MCBlockPos(internal.down());
     }
 
     /**
@@ -136,8 +136,9 @@ public class MCBlockPos {
      *
      * @return a new BlockPos that is n block(s) lower than this BlockPos
      */
-    public BlockPos down(int n) {
-        return internal.down(n);
+    @ZenCodeType.Method
+    public MCBlockPos down(int n) {
+        return new MCBlockPos(internal.down(n));
     }
 
     /**
@@ -146,8 +147,8 @@ public class MCBlockPos {
      * @return a new BlockPos that is one block north of this BlockPos
      */
     @ZenCodeType.Method
-    public BlockPos north() {
-        return internal.north();
+    public MCBlockPos north() {
+        return new MCBlockPos(internal.north());
     }
 
     /**
@@ -158,8 +159,8 @@ public class MCBlockPos {
      * @docParam n 10
      */
     @ZenCodeType.Method
-    public BlockPos north(int n) {
-        return internal.north(n);
+    public MCBlockPos north(int n) {
+        return new MCBlockPos(internal.north(n));
     }
 
     /**
@@ -168,8 +169,8 @@ public class MCBlockPos {
      * @return a new BlockPos that is one block south of this BlockPos
      */
     @ZenCodeType.Method
-    public BlockPos south() {
-        return internal.south();
+    public MCBlockPos south() {
+        return new MCBlockPos(internal.south());
     }
 
     /**
@@ -180,8 +181,8 @@ public class MCBlockPos {
      * @docParam n 12
      */
     @ZenCodeType.Method
-    public BlockPos south(int n) {
-        return internal.south(n);
+    public MCBlockPos south(int n) {
+        return new MCBlockPos(internal.south(n));
     }
 
     /**
@@ -190,8 +191,8 @@ public class MCBlockPos {
      * @return a new BlockPos that is one block west of this BlockPos
      */
     @ZenCodeType.Method
-    public BlockPos west() {
-        return internal.west();
+    public MCBlockPos west() {
+        return new MCBlockPos(internal.west());
     }
 
     /**
@@ -202,8 +203,8 @@ public class MCBlockPos {
      * @docParam n 120
      */
     @ZenCodeType.Method
-    public BlockPos west(int n) {
-        return internal.west(n);
+    public MCBlockPos west(int n) {
+        return new MCBlockPos(internal.west(n));
     }
 
     /**
@@ -212,8 +213,8 @@ public class MCBlockPos {
      * @return a new BlockPos that is one block east of this BlockPos
      */
     @ZenCodeType.Method
-    public BlockPos east() {
-        return internal.east();
+    public MCBlockPos east() {
+        return new MCBlockPos(internal.east());
     }
 
     /**
@@ -224,8 +225,8 @@ public class MCBlockPos {
      * @docParam n 2
      */
     @ZenCodeType.Method
-    public BlockPos east(int n) {
-        return internal.east(n);
+    public MCBlockPos east(int n) {
+        return new MCBlockPos(internal.east(n));
     }
 
     /**
