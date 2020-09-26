@@ -108,7 +108,12 @@ public class MCBlockDefinition implements IBlockDefinition {
     public String getHarvestTool() {
         return Optional.ofNullable(block.getHarvestTool(block.getDefaultState())).orElse("");
     }
-    
+
+    @Override
+    public String getHarvestTool(IBlockState state) {
+        return Optional.ofNullable(block.getHarvestTool(CraftTweakerMC.getBlockState(state))).orElse("");
+    }
+
     @Override
     public int tickRate(IWorld world) {
         return block.tickRate((World) world.getInternal());

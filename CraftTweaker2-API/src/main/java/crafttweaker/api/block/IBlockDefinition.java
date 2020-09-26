@@ -52,7 +52,11 @@ public interface IBlockDefinition {
     void setHarvestLevel(String toolClass, int level, @Optional IBlockState state);
     
     @ZenGetter("harvestLevel")
+    @ZenMethod
     int getHarvestLevel();
+
+    @ZenMethod
+    int getHarvestLevel(IBlockState state);
     
     @ZenGetter("harvestTool")
     @ZenMethod
