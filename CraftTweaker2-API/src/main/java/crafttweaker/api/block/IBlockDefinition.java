@@ -59,7 +59,7 @@ public interface IBlockDefinition {
     String getHarvestTool();
     
     @ZenMethod
-    String getHarvestTool();
+    String getHarvestTool(IBlockState state);
     
     @ZenMethod
     int tickRate(IWorld world);
