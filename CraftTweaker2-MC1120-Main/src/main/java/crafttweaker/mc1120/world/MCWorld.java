@@ -187,7 +187,7 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 
 	@Override
 	public boolean extinguishFire(IPlayer player, IBlockPos pos, String side) {
-		return world.extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf("side"));
+		return world.extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf(side));
 	}
 
 	@Override
