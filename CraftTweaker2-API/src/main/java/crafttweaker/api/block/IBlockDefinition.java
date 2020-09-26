@@ -49,12 +49,16 @@ public interface IBlockDefinition {
     void setTickRandomly(boolean tickRandomly);
     
     @ZenMethod
-    void setHarvestLevel(String toolClass, int level);
+    void setHarvestLevel(String toolClass, int level, @Optional IBlockState state);
     
     @ZenGetter("harvestLevel")
     int getHarvestLevel();
     
     @ZenGetter("harvestTool")
+    @ZenMethod
+    String getHarvestTool();
+    
+    @ZenMethod
     String getHarvestTool();
     
     @ZenMethod
