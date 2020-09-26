@@ -27,9 +27,9 @@ public abstract class CrafttweakerDocumentationPage {
 
         final CrafttweakerDocumentationPage documentationPage;
         if (element.getAnnotation(ZenCodeType.Name.class) != null) {
-            documentationPage = DocumentedClass.convertClass(element, environment);
+            documentationPage = DocumentedClass.convertClass(element, environment, false);
         } else if (element.getAnnotation(ZenCodeType.Expansion.class) != null) {
-            documentationPage = DocumentedExpansion.convertExpansion(element, environment);
+            documentationPage = DocumentedExpansion.convertExpansion(element, environment, false);
         } else {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "@Documented requires either @Expansion or @Name to be set as well!", element);

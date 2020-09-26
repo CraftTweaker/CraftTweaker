@@ -45,7 +45,7 @@ public class DocumentedParameter {
             return null;
         }
 
-        final DocumentedType type = DocumentedType.fromElement(element, environment);
+        final DocumentedType type = DocumentedType.fromElement(element, environment, false);
         final String aDefault = getDefault(element);
         final boolean optional = aDefault != null;
         final String name = element.getSimpleName().toString();

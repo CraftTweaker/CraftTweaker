@@ -102,13 +102,13 @@ public class CommentUtils {
         }
         
         if(type.isEmpty()) {
-            return DocumentedType.fromElement(documentedElement.getEnclosingElement(), environment);
+            return DocumentedType.fromElement(documentedElement.getEnclosingElement(), environment, true);
         }
         
         {
             TypeElement typeElement = environment.getElementUtils().getTypeElement(type);
             if(typeElement != null) {
-                final DocumentedType documentedType = DocumentedType.fromElement(typeElement, environment);
+                final DocumentedType documentedType = DocumentedType.fromElement(typeElement, environment, true);
                 if(documentedType != null) {
                     return documentedType;
                 }
@@ -119,7 +119,7 @@ public class CommentUtils {
                 .getPackageOf(documentedElement);
         for(Element enclosedElement : packageOf.getEnclosedElements()) {
             if(enclosedElement.getSimpleName().contentEquals(type)) {
-                final DocumentedType documentedType = DocumentedType.fromElement(enclosedElement, environment);
+                final DocumentedType documentedType = DocumentedType.fromElement(enclosedElement, environment, true);
                 if(documentedType != null) {
                     return documentedType;
                 }
@@ -143,7 +143,7 @@ public class CommentUtils {
                         .map(environment.getElementUtils()::getTypeElement)
                         .filter(Objects::nonNull) //not sure just in case
                         .filter(e -> e.getSimpleName().contentEquals(type))
-                        .map(e -> DocumentedType.fromElement(e, environment))
+                        .map(e -> DocumentedType.fromElement(e, environment, true))
                         .filter(Objects::nonNull)
                         .findAny();
                 if(any.isPresent()) {

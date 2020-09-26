@@ -47,7 +47,7 @@ public class DocumentedTypeParameter {
         final String[] examples = CommentUtils.findAllAnnotation(environment.getElementUtils()
                 .getDocComment(method), "@docParam " + name);
         for(TypeMirror bound : typeParameter.getBounds()) {
-            documentedBounds.add(DocumentedType.fromTypeMirror(bound, environment));
+            documentedBounds.add(DocumentedType.fromTypeMirror(bound, environment, false));
         }
         return new DocumentedTypeParameter(documentedBounds, name, examples);
     }
