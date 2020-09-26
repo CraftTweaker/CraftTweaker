@@ -6,6 +6,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
 import crafttweaker.api.util.Position3f;
@@ -259,4 +260,14 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
 	public IEntityFishHook fishHook() {
 		return CraftTweakerMC.getIEntityFishHook(player.fishEntity);
 	}
+  
+    @Override
+    public IEntityItem dropItem(boolean dropAll) {
+        return new MCEntityItem(player.dropItem(dropAll));
+    }
+    
+    @Override
+    public IEntityItem dropItem(IItemStack item) {
+        return new MCEntityItem(player.dropItem(CraftTweakerMC.getItemStack(item), false));
+    }
 }

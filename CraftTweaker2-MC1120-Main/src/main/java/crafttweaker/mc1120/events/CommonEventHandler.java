@@ -20,6 +20,7 @@ import crafttweaker.mc1120.recipes.MCCraftingInventorySquared;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.runtime.ScriptLoader;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -366,6 +367,12 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPlayerAnvilRepair())
             CrafttweakerImplementationAPI.events.publishPlayerAnvilRepair(new MCPlayerAnvilRepairEvent(ev));
     }
+  
+    @SubscribeEvent
+    public void onPlayerAnvilUpdateEvent(AnvilUpdateEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerAnvilUpdate())
+            CrafttweakerImplementationAPI.events.publishPlayerAnvilUpdate(new MCPlayerAnvilUpdateEvent(ev));
+    }
     
     @SubscribeEvent
     public void onPlayerSetSpawnEvent(PlayerSetSpawnEvent ev) {
@@ -695,4 +702,4 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingHeal())
             CrafttweakerImplementationAPI.events.publishEntityLivingHeal(new MCEntityLivingHealEvent(ev));
     }
-}
+ }
