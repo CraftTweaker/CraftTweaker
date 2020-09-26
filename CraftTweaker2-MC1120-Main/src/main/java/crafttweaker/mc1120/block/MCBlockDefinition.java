@@ -86,13 +86,22 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
-    public void setHarvestLevel(String toolClass, int level) {
-        block.setHarvestLevel(toolClass, level);
+    public void setHarvestLevel(String toolClass, int level, IBlockState state) {
+        if (state == null) {
+            block.setHarvestLevel(toolClass, level);
+        } else {
+            block.setHarvestLevel(toolClass, level, );
+        }
     }
     
     @Override
     public int getHarvestLevel() {
         return block.getHarvestLevel(block.getDefaultState());
+    }
+    
+    @Override
+    public int getHarvestLevel(IBlockState state) {
+        return block.getHarvestLevel(CraftTweakerMC.getBlockState(state));
     }
     
     @Override
