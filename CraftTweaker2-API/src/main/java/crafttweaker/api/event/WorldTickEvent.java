@@ -8,5 +8,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("crafttweaker.event.WorldTickEvent")
 @ZenRegister
-public interface WorldTickEvent extends ITickEvent {
+public interface WorldTickEvent extends ITickEvent, IWorldEvent {
+
 }
