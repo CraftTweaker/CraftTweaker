@@ -1,13 +1,10 @@
 package crafttweaker.mc1120.entity.attribute;
 
-import java.util.UUID;
-
-import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.mc1120.liquid.MCLiquidDefinition;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.effect.EntityLightningBolt;
+
+import java.util.UUID;
 
 public class MCEntityAttributeModifier implements IEntityAttributeModifier {
     private final AttributeModifier attributeModifier;
@@ -54,7 +51,7 @@ public class MCEntityAttributeModifier implements IEntityAttributeModifier {
 	}
 
 	@Override
-	public IEntityAttributeModifier setSaved(boolean saved) {
-		return CraftTweakerMC.getIEntityAttributeModifier(attributeModifier.setSaved(saved));
+	public void setSaved(boolean saved) {
+		attributeModifier.setSaved(saved);
 	}
 }

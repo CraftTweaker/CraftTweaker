@@ -5,7 +5,6 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IWorld;
-import stanhebben.zenscript.annotations.ZenGetter;
 
 public class MCArrowLooseEvent implements ArrowLooseEvent {
     private final net.minecraftforge.event.entity.player.ArrowLooseEvent event;

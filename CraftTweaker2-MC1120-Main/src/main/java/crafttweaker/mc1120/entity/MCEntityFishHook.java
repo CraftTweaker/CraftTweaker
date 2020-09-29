@@ -4,20 +4,24 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFishHook;
 
-public class MCEntityFishHook extends MCEntity implements IEntityFishHook{
+public class MCEntityFishHook extends MCEntity implements IEntityFishHook {
     private final EntityFishHook entityFishHook;
     
     public MCEntityFishHook(EntityFishHook entityFishHook) {
         super(entityFishHook);
         this.entityFishHook = entityFishHook;
     }
-    
+
 	@Override
-	public IEntity caughtEntity() {
+	public IEntity getCaughtEntity() {
 		return CraftTweakerMC.getIEntity(entityFishHook.caughtEntity);
+	}
+
+	@Override
+	public void setCaughtEntity(IEntity entity) {
+		entityFishHook.caughtEntity = CraftTweakerMC.getEntity(entity);
 	}
 
 	@Override

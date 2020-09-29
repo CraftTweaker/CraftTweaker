@@ -472,7 +472,6 @@ public interface IItemStack extends IIngredient {
         return -1;
     }
     
-    
     @ZenMethod
     default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState){
         return -1;

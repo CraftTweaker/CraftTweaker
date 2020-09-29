@@ -54,6 +54,9 @@ public interface IEntityDefinition {
     @ZenMethod
     IEntity spawnEntity(IWorld world, IBlockPos pos);
 
+    @ZenMethod
+    IEntityDefinition getEntityDefinitionFromString(String string);
+
     @Deprecated
     Map<IItemStack, IntegerRange> getDropsToAdd();
 

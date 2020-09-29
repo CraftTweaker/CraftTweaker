@@ -32,7 +32,7 @@ public interface IEntityAttributeModifier {
     
     @ZenMethod
     @ZenSetter("saved")
-    IEntityAttributeModifier setSaved(boolean saved);
+    void setSaved(boolean saved);
     
     @ZenMethod
     IEntityAttributeModifier createModifier(String name, double amount, int operation, @Optional String uuid);

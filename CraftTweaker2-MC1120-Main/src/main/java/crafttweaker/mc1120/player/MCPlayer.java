@@ -2,23 +2,27 @@ package crafttweaker.mc1120.player;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.chat.IChatMessage;
+import crafttweaker.api.container.IContainer;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.*;
+import crafttweaker.api.player.IFoodStats;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
-import crafttweaker.mc1120.network.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.entity.projectile.EntityFishHook;
+import crafttweaker.mc1120.network.MessageCopyClipboard;
+import crafttweaker.mc1120.network.MessageOpenBrowser;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
@@ -251,12 +255,32 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     }
     
     @Override
-    public IBlockPos bedLocation() {
+    public IBlockPos getBedLocation() {
         return CraftTweakerMC.getIBlockPos(player.bedLocation);
     }
 
 	@Override
-	public IEntityFishHook fishHook() {
+	public IEntityFishHook getFishHook() {
 		return CraftTweakerMC.getIEntityFishHook(player.fishEntity);
 	}
+
+    @Override
+    public IContainer getInventoryContainer() {
+        return CraftTweakerMC.getIContainer(player.inventoryContainer);
+    }
+
+    @Override
+    public boolean isSleeping() {
+        return player.isPlayerSleeping();
+    }
+
+    @Override
+    public boolean isFullyAsleep() {
+        return player.isPlayerFullyAsleep();
+    }
+
+    @Override
+    public int getSleepTimer() {
+        return player.getSleepTimer();
+    }
 }

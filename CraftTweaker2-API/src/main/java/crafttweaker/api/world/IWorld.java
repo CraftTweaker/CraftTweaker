@@ -5,9 +5,6 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.entity.IEntityArrow;
-import crafttweaker.api.entity.IEntityLivingBase;
-import crafttweaker.api.entity.IEntityThrowable;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
@@ -110,10 +107,10 @@ public interface IWorld extends IBlockAccess {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
         return null;
     }
-    
+
     @ZenMethod
     boolean extinguishFire(IPlayer player, IBlockPos pos, String side);
-    
+
     @ZenMethod
     boolean isSpawnChunk(int x, int z);
     

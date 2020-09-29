@@ -509,7 +509,4 @@ public interface IEntity extends ICommandSender {
     
     @ZenGetter
     boolean isLightningbolt();
-
-    @ZenGetter
-    boolean isArmorstand();
 }

@@ -9,23 +9,23 @@ public interface IEntityArrow extends IEntity {
     
 	@ZenMethod
 	@ZenSetter("damage")
-	IEntityArrow setDamage(double damage);
+	void setDamage(double damage);
     
 	@ZenMethod
     @ZenGetter("damage")
     double getDamage();
     
     @ZenMethod
-	@ZenSetter("critical")
-    IEntityArrow setIsCritical(boolean critical);
+	@ZenSetter("isCritical")
+    void setIsCritical(boolean critical);
     
     @ZenMethod
-    @ZenGetter("critical")
+    @ZenGetter("isCritical")
     boolean getIsCritical();
     
     @ZenMethod
 	@ZenSetter("knockbackStrength")
-    IEntityArrow setKnockbackStrength(int knockbackStrength);
+    void setKnockbackStrength(int knockbackStrength);
     
 	@ZenMethod
     @ZenGetter("shake")
@@ -33,7 +33,7 @@ public interface IEntityArrow extends IEntity {
 	
     @ZenMethod
 	@ZenSetter("shooter")
-    IEntityArrow setShooter(IEntity shooter);
+    void setShooter(IEntity shooter);
 	
 	@ZenMethod
     @ZenGetter("shooter")
@@ -45,14 +45,17 @@ public interface IEntityArrow extends IEntity {
 	
     @ZenMethod
 	@ZenSetter("pickupStatus")
-    IEntityArrow setPickupStatus(String pickupStatus);
+    void setPickupStatus(String pickupStatus);
 
     @ZenMethod
-    IEntityArrow setPickupDisallowed();
+    void setPickupDisallowed();
 
     @ZenMethod
-    IEntityArrow setPickupAllowed();
+    void setPickupAllowed();
 
     @ZenMethod
-    IEntityArrow setPickupCreativeOnly();
+    void setPickupCreativeOnly();
+
+    @ZenMethod
+    void shoot(IEntity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy);
 }

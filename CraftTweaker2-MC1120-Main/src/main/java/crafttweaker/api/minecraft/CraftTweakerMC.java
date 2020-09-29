@@ -1,8 +1,12 @@
 package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.*;
-import crafttweaker.api.command.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
+import crafttweaker.api.block.IMaterial;
+import crafttweaker.api.command.ICommand;
+import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
@@ -11,14 +15,17 @@ import crafttweaker.api.entity.*;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
-import crafttweaker.api.liquid.*;
+import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.potions.*;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
-import crafttweaker.mc1120.command.*;
+import crafttweaker.mc1120.command.MCCommand;
+import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
@@ -28,40 +35,54 @@ import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.item.VanillaIngredient;
-import crafttweaker.mc1120.liquid.*;
+import crafttweaker.mc1120.liquid.MCLiquidDefinition;
+import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.potions.*;
+import crafttweaker.mc1120.potions.MCPotion;
+import crafttweaker.mc1120.potions.MCPotionEfect;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.item.*;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
+import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.*;
-import net.minecraft.potion.*;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.IngredientNBT;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.oredict.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.OreIngredient;
 
 import java.util.*;
 
@@ -699,6 +720,8 @@ public class CraftTweakerMC {
             return getIEntityXp((EntityXPOrb) entity);
         else if(entity instanceof EntityFishHook)
             return getIEntityFishHook((EntityFishHook) entity);
+        else if(entity instanceof EntityArrow)
+            return getIEntityArrow((EntityArrow) entity);
         else
             return new MCEntity(entity);
     }
@@ -856,7 +879,6 @@ public class CraftTweakerMC {
         return container == null ? null : (Container) container.getInternal();
     }
     
-    
     public static IFacing getIFacing(EnumFacing sideHit) {
         return sideHit == null ? null : new MCFacing(sideHit);
     }
@@ -969,8 +991,17 @@ public class CraftTweakerMC {
 	}
 
     public static IEntityArrow getIEntityArrow(EntityArrow entity) {
-		return entity == null ? null : new MCEntityArrow(entity);
+        if(entity == null)
+            return null;
+        else if(entity instanceof EntityTippedArrow)
+            return getIEntityArrowTipped((EntityTippedArrow) entity);
+        else
+            return new MCEntityArrow(entity);
 	}
+
+    public static IEntityArrowTipped getIEntityArrowTipped(EntityTippedArrow entity) {
+        return entity == null ? null : new MCEntityArrowTipped(entity);
+    }
     
     public static IEntityThrowable getIEntityThrowable(EntityThrowable entity) {
 		return entity == null ? null : new MCEntityThrowable(entity);

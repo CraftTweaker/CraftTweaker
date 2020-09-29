@@ -20,4 +20,9 @@ public class MCEntityItem extends MCEntity implements IEntityItem {
     public IItemStack getItem() {
         return CraftTweakerMC.getIItemStack(item.getItem());
     }
+
+    @Override
+    public void setItem(IItemStack stack) {
+        item.setItem(CraftTweakerMC.getItemStack(stack));
+    }
 }

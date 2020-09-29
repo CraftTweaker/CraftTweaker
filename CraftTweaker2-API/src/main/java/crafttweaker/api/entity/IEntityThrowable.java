@@ -6,11 +6,12 @@ import stanhebben.zenscript.annotations.*;
 @ZenClass("crafttweaker.entity.IEntityThrowable")
 @ZenRegister
 public interface IEntityThrowable extends IEntity {
-    
+
+    @ZenMethod
     @ZenGetter("thrower")
     IEntityLivingBase getThrower();
     
 	@ZenMethod
     @ZenGetter("shake")
-    int throwableShake();
+    int getThrowableShake();
 }

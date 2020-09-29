@@ -2,20 +2,16 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.damage.IDamageSource;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityEquipmentSlot;
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.potions.*;
-import crafttweaker.mc1120.CraftTweaker;
-import crafttweaker.mc1120.damage.MCDamageSource;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
-import crafttweaker.mc1120.item.MCItemStack;
-import net.minecraft.entity.*;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 
 import java.util.List;
@@ -23,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
-    private EntityLivingBase entityLivingBase;
+    private final EntityLivingBase entityLivingBase;
     
     public MCEntityLivingBase(EntityLivingBase entity) {
         super(entity);
@@ -214,20 +210,30 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public String getActiveHand()  {
         return entityLivingBase.getActiveHand().name();
     }
-    
+
+    @Override
+    public IItemStack getActiveItemStack() {
+        return CraftTweakerMC.getIItemStack(entityLivingBase.getActiveItemStack());
+    }
+
     @Override
     public boolean isSwingInProgress()  {
         return entityLivingBase.isSwingInProgress;
     }
-    
+
+    @Override
+    public int getSwingProgress() {
+        return entityLivingBase.swingProgressInt;
+    }
+
+    @Override
+    public void setSwingProgress(int swingProgress) {
+        entityLivingBase.swingProgressInt = swingProgress;
+    }
+
     @Override
     public boolean isElytraFlying()  {
         return entityLivingBase.isElytraFlying();
-    }
-    
-    @Override
-    public int getTicksElytraFlying()  {
-        return entityLivingBase.getTicksElytraFlying();
     }
     
     @Override

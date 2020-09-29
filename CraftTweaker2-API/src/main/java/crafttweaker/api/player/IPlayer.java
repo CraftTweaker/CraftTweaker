@@ -2,6 +2,7 @@ package crafttweaker.api.player;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
+import crafttweaker.api.container.IContainer;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.entity.IEntityLivingBase;
@@ -120,8 +121,20 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     void setCanEdit(boolean canEdit);
     
     @ZenGetter("bedLocation")
-    IBlockPos bedLocation();
+    IBlockPos getBedLocation();
     
     @ZenGetter("fishHook")
-    IEntityFishHook fishHook();
+    IEntityFishHook getFishHook();
+
+    @ZenGetter("inventoryContainer")
+    IContainer getInventoryContainer();
+
+    @ZenGetter("isFullyAsleep")
+    boolean isFullyAsleep();
+
+    @ZenGetter("isSleeping")
+    boolean isSleeping();
+
+    @ZenGetter("sleepTimer")
+    int getSleepTimer();
 }

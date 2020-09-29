@@ -1,12 +1,10 @@
 package crafttweaker.mc1120.world;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.entity.IEntityArrow;
-import crafttweaker.api.entity.IEntityLivingBase;
-import crafttweaker.api.entity.IEntityThrowable;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -14,16 +12,15 @@ import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntity;
-import crafttweaker.mc1120.entity.MCEntityThrowable;
 import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.List;
@@ -192,7 +189,7 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 
 	@Override
 	public boolean extinguishFire(IPlayer player, IBlockPos pos, String side) {
-		return world.extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf("side"));
+		return world.extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf(side));
 	}
 
 	@Override

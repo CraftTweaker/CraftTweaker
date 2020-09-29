@@ -4,7 +4,6 @@ import crafttweaker.api.event.ArrowNockEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.ZenGetter;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class MCArrowNockEvent implements ArrowNockEvent {
