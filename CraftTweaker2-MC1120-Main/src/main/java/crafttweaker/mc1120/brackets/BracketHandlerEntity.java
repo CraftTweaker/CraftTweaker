@@ -30,8 +30,7 @@ public class BracketHandlerEntity implements IBracketHandler {
         entityNames.clear();
         CraftTweakerAPI.game.getEntities().forEach(ent -> entityNames.put(ent.getId(), ent));
     }
-    
-    @SuppressWarnings("unused")
+
     public static IEntityDefinition getEntity(String name) {
         return entityNames.get(name);
     }

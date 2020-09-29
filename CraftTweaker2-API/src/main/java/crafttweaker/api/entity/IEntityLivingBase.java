@@ -130,18 +130,39 @@ public interface IEntityLivingBase extends IEntity {
     boolean isElytraFlying();
     
     @ZenMethod
-    @ZenGetter("ticksElytraFlying")
-    int getTicksElytraFlying();
-    
-    @ZenMethod
     @ZenGetter("activeItemStackBlocking")
     boolean isActiveItemStackBlocking();
     
     @ZenMethod
     @ZenGetter("activeHand")
     String getActiveHand();
-    
+
+    @ZenMethod
+    @ZenGetter("activeItemStack")
+    IItemStack getActiveItemStack();
+
     @ZenMethod
     @ZenGetter("swingInProgress")
     boolean isSwingInProgress();
+
+    @ZenMethod
+    @ZenGetter("swingProgress")
+    int getSwingProgress();
+
+    @ZenMethod
+    @ZenSetter("swingProgress")
+    void setSwingProgress(int swingProgress);
+    
+    @ZenMethod
+    @ZenGetter("isHandActive")
+    boolean isHandActive();
+    
+    @ZenMethod
+    void resetActiveHand();
+    
+    @ZenMethod
+    void setActiveHand(String hand);
+    
+    @ZenMethod
+    void stopActiveHand();
 }

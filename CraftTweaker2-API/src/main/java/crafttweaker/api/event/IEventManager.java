@@ -273,6 +273,9 @@ public interface IEventManager {
 
     @ZenMethod
 	IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev);
+
+    @ZenMethod
+	IEventHandle onWorldTick(IEventHandler<WorldTickEvent> ev);
     
     /*
      *

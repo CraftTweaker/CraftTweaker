@@ -3,6 +3,7 @@ package crafttweaker.api.player;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
+import crafttweaker.api.container.IContainer;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.entity.IEntityFishHook;
@@ -28,7 +29,7 @@ public interface IPlayer extends IEntityLivingBase, IUser {
         CraftTweakerAPI.logError("Default method IPlayer#getUUID is not overwritten in " + getClass() + " please report to the author!");
         return "";
     }
-    
+
     @ZenGetter("data")
     IData getData();
     
@@ -126,19 +127,31 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenSetter("canEdit")
     void setCanEdit(boolean canEdit);
-  
+
     @ZenGetter("bedLocation")
-    IBlockPos bedLocation();
+    IBlockPos getBedLocation();
     
     @ZenGetter("fishHook")
-    IEntityFishHook fishHook();
-  
+    IEntityFishHook getFishHook();
+
+    @ZenGetter("inventoryContainer")
+    IContainer getInventoryContainer();
+
+    @ZenGetter("isFullyAsleep")
+    boolean isFullyAsleep();
+
+    @ZenGetter("isSleeping")
+    boolean isSleeping();
+
+    @ZenGetter("sleepTimer")
+    int getSleepTimer();
+
     @ZenMethod
     default IEntityItem dropItem(boolean dropAll) {
         CraftTweakerAPI.logError("Default method IPlayer#dropItem(bool) is not overwritten in " + getClass() + " please report to the author!");
         return null;
     }
-    
+
     @ZenMethod
     default IEntityItem dropItem(IItemStack item) {
         CraftTweakerAPI.logError("Default method IPlayer#dropItem(IItemStack) is not overwritten in " + getClass() + " please report to the author!");

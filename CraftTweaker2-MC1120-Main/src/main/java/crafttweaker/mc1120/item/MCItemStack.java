@@ -5,6 +5,7 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.data.*;
 import crafttweaker.api.enchantments.*;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -787,4 +788,9 @@ public class MCItemStack implements IItemStack {
     public int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState) {
         return stack.getItem().getHarvestLevel(stack, toolClass, CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockState(blockState));
     }
+    
+	@Override
+	public void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
+		stack.addAttributeModifier(attributeName, CraftTweakerMC.getAttributeModifier(modifier), CraftTweakerMC.getEntityEquipmentSlot(equipmentSlot));
+	}
 }

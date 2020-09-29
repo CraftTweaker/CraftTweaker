@@ -20,6 +20,11 @@ public interface IEntityItem extends IEntity {
      *
      * @return entity item
      */
+    @ZenMethod
     @ZenGetter("item")
     IItemStack getItem();
+
+    @ZenMethod
+    @ZenSetter("item")
+    void setItem(IItemStack stack);
 }

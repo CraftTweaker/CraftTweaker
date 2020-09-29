@@ -504,13 +504,9 @@ public interface IEntity extends ICommandSender {
         CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
     }
     
-    @ZenMethod
-    default boolean onGround(){
-        return false;
-    }
+    @ZenGetter
+    boolean onGround();
     
-    @ZenMethod
-    default boolean isLightningbolt(){
-        return false;
-    }
+    @ZenGetter
+    boolean isLightningbolt();
 }

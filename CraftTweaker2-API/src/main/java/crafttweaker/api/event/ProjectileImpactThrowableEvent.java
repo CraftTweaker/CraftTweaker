@@ -1,8 +1,8 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.entity.IEntityThrowable;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 
@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenRegister
 public interface ProjectileImpactThrowableEvent extends IProjectileImpactEvent, IEventCancelable {
     @ZenGetter("throwable")
-    IEntity getThrowable();
+    IEntityThrowable getThrowable();
 
     @ZenGetter("thrower")
     IEntityLivingBase getThrower();

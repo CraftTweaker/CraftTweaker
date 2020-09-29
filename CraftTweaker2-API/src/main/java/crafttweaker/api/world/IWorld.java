@@ -107,10 +107,10 @@ public interface IWorld extends IBlockAccess {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
         return null;
     }
-    
+
     @ZenMethod
     boolean extinguishFire(IPlayer player, IBlockPos pos, String side);
-    
+
     @ZenMethod
     boolean isSpawnChunk(int x, int z);
     

@@ -4,6 +4,7 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.*;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
@@ -436,4 +437,9 @@ throw new IllegalStateException("ItemStackUnknown is only supposed to be used in
     public IEntityItem createEntityItem(IWorld world, IBlockPos pos) {
         throw new IllegalStateException("ItemStackUnknown is only supposed to be used internally!");
     }
+
+	@Override
+	public void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
+		throw new IllegalStateException("ItemStackUnknown is only supposed to be used internally!");
+	}
 }

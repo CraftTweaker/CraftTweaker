@@ -47,7 +47,12 @@ public class MCVector3d implements IVector3d {
     public IVector3d subtract(IVector3d other) {
         return CraftTweakerMC.getIVector3d(vec.subtract(CraftTweakerMC.getVec3d(other)));
     }
-    
+
+    @Override
+    public IVector3d subtractReverse(IVector3d other) {
+        return CraftTweakerMC.getIVector3d(vec.subtractReverse(CraftTweakerMC.getVec3d(other)));
+    }
+
     @Override
     public IVector3d add(IVector3d other) {
         return CraftTweakerMC.getIVector3d(vec.add(CraftTweakerMC.getVec3d(other)));
