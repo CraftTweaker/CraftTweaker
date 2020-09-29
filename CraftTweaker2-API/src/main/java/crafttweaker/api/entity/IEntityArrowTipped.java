@@ -6,7 +6,7 @@ import crafttweaker.api.potions.IPotionEffect;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("crafttweaker.entity.IEntityArrow")
+@ZenClass("crafttweaker.entity.IEntityArrowTipped")
 @ZenRegister
 public interface IEntityArrowTipped extends IEntityArrow {
 
