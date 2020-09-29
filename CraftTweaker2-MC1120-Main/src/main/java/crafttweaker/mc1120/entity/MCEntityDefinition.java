@@ -10,7 +10,6 @@ import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
-import crafttweaker.mc1120.brackets.BracketHandlerEntity;
 import crafttweaker.util.IntegerRange;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 
@@ -105,11 +104,6 @@ public class MCEntityDefinition implements IEntityDefinition {
         out.setPosition(pos);
         world.spawnEntity(out);
         return out;
-    }
-
-    @Override
-    public IEntityDefinition getEntityDefinitionFromString(String string) {
-        return BracketHandlerEntity.getEntity(string);
     }
 
     @Override
