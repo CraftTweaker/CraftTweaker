@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.brackets;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.api.util.*;
 import net.minecraft.util.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
@@ -11,7 +12,6 @@ import org.openzen.zenscript.parser.*;
 import org.openzen.zenscript.parser.expression.*;
 import org.openzen.zenscript.parser.type.*;
 
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -58,37 +58,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return;
         }
         
-        IRecipeManager manager = null;
-        try {
-            final Optional<Field> any = Arrays.stream(managerClass.getDeclaredFields())
-                    .filter(f -> Modifier.isPublic(f.getModifiers()))
-                    .filter(f -> Modifier.isStatic(f.getModifiers()))
-                    .filter(f -> f.getType().equals(managerClass))
-                    .findAny();
-            if(any.isPresent()) {
-                manager = (IRecipeManager) any.get().get(null);
-            }
-        } catch(IllegalAccessException e) {
-            //e.printStackTrace();
-        }
-        
-        if(manager == null) {
-            try {
-                manager = managerClass.newInstance();
-            } catch(InstantiationException | IllegalAccessException e) {
-                //e.printStackTrace();
-            }
-        }
-        
-        if(manager == null) {
-            try {
-                final Constructor<? extends IRecipeManager> constructor = managerClass.getConstructor();
-                constructor.setAccessible(true);
-                manager = constructor.newInstance();
-            } catch(InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException ignored) {
-            }
-        }
-        
+        final IRecipeManager manager = InstantiationUtil.getOrCreateInstance(managerClass);
         if(manager == null) {
             CraftTweakerAPI.logError("Could not add RecipeManager for %s, please report to the author", managerClass);
             return;
