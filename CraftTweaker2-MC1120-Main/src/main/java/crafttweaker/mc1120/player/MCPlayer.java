@@ -265,16 +265,6 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
 	}
 
     @Override
-    public IEntityItem dropItem(boolean dropAll) {
-        return new MCEntityItem(player.dropItem(dropAll));
-    }
-
-    @Override
-    public IEntityItem dropItem(IItemStack item) {
-        return new MCEntityItem(player.dropItem(CraftTweakerMC.getItemStack(item), false));
-    }
-
-    @Override
     public IContainer getInventoryContainer() {
         return CraftTweakerMC.getIContainer(player.inventoryContainer);
     }

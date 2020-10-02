@@ -45,14 +45,14 @@ public interface IDamageSource {
 	@ZenMethod
 	@ZenGetter("damageAbsolute")
 	boolean isDamageAbsolute();
+
+	@ZenMethod
+	@ZenGetter("damageUnblockable")
+	boolean isDamageUnblockable();
 	
 	@ZenMethod
 	@ZenGetter("difficultyScaled")
 	boolean isDifficultyScaled();
-
-	@ZenMethod
-	@ZenGetter("unblockable")
-	boolean isUnblockable();
 
 	@ZenMethod
 	@ZenGetter("explosion")
@@ -71,35 +71,43 @@ public interface IDamageSource {
 	boolean isProjectile();
 
 	@ZenMethod
-	@ZenGetter("damageLocation")
+	@ZenGetter("getDamageLocation")
 	IVector3d getDamageLocation();
 	
 	@ZenMethod
+	@ZenGetter("setDamageAllowedInCreativeMode")
 	IDamageSource setDamageAllowedInCreativeMode();
 	
 	@ZenMethod
+	@ZenGetter("setDamageBypassesArmor")
 	IDamageSource setDamageBypassesArmor();
 	
 	@ZenMethod
+	@ZenGetter("setDamageIsAbsolute")
 	IDamageSource setDamageIsAbsolute();
 	
 	@ZenMethod
+	@ZenGetter("setDifficultyScaled")
 	IDamageSource setDifficultyScaled();
 	
 	@ZenMethod
+	@ZenGetter("setExplosion")
 	IDamageSource setExplosion();
 	
 	@ZenMethod
+	@ZenGetter("setFireDamage")
 	IDamageSource setFireDamage();
 	
 	@ZenMethod
+	@ZenGetter("setMagicDamage")
 	IDamageSource setMagicDamage();
 	
 	@ZenMethod
+	@ZenGetter("setProjectile")
 	IDamageSource setProjectile();
 
 	@ZenMethod
-	IDamageSource createEntityDamage(String damagetype, IEntity source);
+	IDamageSource createEntityDamage(String damagetype, @Optional IEntity source);
 
 	@ZenMethod
 	IDamageSource createIndirectDamage(String damagetype, IEntity source, @Optional IEntity indirectEntity);

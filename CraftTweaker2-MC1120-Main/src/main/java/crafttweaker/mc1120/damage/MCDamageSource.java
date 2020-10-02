@@ -59,13 +59,13 @@ public class MCDamageSource implements IDamageSource {
 	}
 
 	@Override
-	public boolean isDifficultyScaled() {
-		return source.isDamageAbsolute();
+	public boolean isDamageUnblockable() {
+		return source.isUnblockable();
 	}
 
 	@Override
-	public boolean isUnblockable() {
-		return source.isUnblockable();
+	public boolean isDifficultyScaled() {
+		return source.isDamageAbsolute();
 	}
 
 	@Override

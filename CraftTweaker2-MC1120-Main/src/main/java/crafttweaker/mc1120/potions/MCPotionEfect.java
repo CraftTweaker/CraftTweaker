@@ -79,7 +79,12 @@ public class MCPotionEfect implements IPotionEffect {
         if(entity.getInternal() instanceof EntityLivingBase)
             potionEffect.performEffect((EntityLivingBase) entity.getInternal());
     }
-    
+
+    @Override
+    public void combine(IPotionEffect other) {
+
+    }
+
     @Override
     public Object getInternal() {
         return potionEffect;

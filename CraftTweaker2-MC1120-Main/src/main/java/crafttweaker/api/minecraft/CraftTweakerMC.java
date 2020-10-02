@@ -717,16 +717,18 @@ public class CraftTweakerMC {
         else if(entity instanceof EntityItem)
             return getIEntityItem((EntityItem) entity);
         else if(entity instanceof EntityXPOrb)
-            return getIEntityXp((EntityXPOrb) entity);
+            return new MCEntityXp((EntityXPOrb) entity);
         else if(entity instanceof EntityFishHook)
-            return getIEntityFishHook((EntityFishHook) entity);
+            return new MCEntityFishHook((EntityFishHook) entity);
         else if(entity instanceof EntityArrow)
             return getIEntityArrow((EntityArrow) entity);
+        else if(entity instanceof EntityThrowable)
+            return new MCEntityThrowable((EntityThrowable) entity);
         else
             return new MCEntity(entity);
     }
 
-	public static IEntityXp getIEntityXp(EntityXPOrb entityXPOrb) {
+    public static IEntityXp getIEntityXp(EntityXPOrb entityXPOrb) {
         return entityXPOrb == null ? null : new MCEntityXp(entityXPOrb);
     }
     

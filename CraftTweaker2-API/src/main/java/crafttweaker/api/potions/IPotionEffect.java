@@ -46,6 +46,9 @@ public interface IPotionEffect {
     
     @ZenMethod
     void performEffect(IEntity entity);
-    
+
+    @ZenMethod
+    void combine(IPotionEffect other);
+
     Object getInternal();
 }
