@@ -1,7 +1,7 @@
 package crafttweaker.api.potions;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.*;
 
@@ -45,7 +45,7 @@ public interface IPotionEffect {
     void setIsPotionDurationMax(boolean potionDurationMax);
     
     @ZenMethod
-    void performEffect(IEntity entity);
+    void performEffect(IEntityLivingBase entity);
 
     @ZenMethod
     void combine(IPotionEffect other);

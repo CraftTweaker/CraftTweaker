@@ -1,10 +1,11 @@
 package crafttweaker.mc1120.potions;
 
-import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.potions.*;
+import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.mc1120.item.MCItemStack;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
@@ -75,14 +76,13 @@ public class MCPotionEfect implements IPotionEffect {
     }
     
     @Override
-    public void performEffect(IEntity entity) {
-        if(entity.getInternal() instanceof EntityLivingBase)
-            potionEffect.performEffect((EntityLivingBase) entity.getInternal());
+    public void performEffect(IEntityLivingBase entity) {
+        potionEffect.performEffect(CraftTweakerMC.getEntityLivingBase(entity));
     }
 
     @Override
     public void combine(IPotionEffect other) {
-
+        potionEffect.combine(CraftTweakerMC.getPotionEffect(other));
     }
 
     @Override
