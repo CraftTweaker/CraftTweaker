@@ -85,7 +85,6 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
 
     @Override
-    @Deprecated
     public void setHarvestLevel(String toolClass, int level) {
         setHarvestLevel(toolClass, level, null);
     }
