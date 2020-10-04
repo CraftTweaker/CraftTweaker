@@ -47,9 +47,15 @@ public interface IBlockDefinition {
     
     @ZenSetter("tickRandomly")
     void setTickRandomly(boolean tickRandomly);
+
+    @ZenMethod
+    @Deprecated
+    void setHarvestLevel(String toolClass, int level);
     
     @ZenMethod
-    void setHarvestLevel(String toolClass, int level, @Optional IBlockState state);
+    default void setHarvestLevel(String toolClass, int level, @Optional IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::setHarvestLevel!");
+    }
     
     @ZenGetter("harvestLevel")
     @ZenMethod

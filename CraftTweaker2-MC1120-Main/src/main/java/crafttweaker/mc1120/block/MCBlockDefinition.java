@@ -83,7 +83,13 @@ public class MCBlockDefinition implements IBlockDefinition {
     public void setTickRandomly(boolean tickRandomly) {
         block.setTickRandomly(tickRandomly);
     }
-    
+
+    @Override
+    @Deprecated
+    public void setHarvestLevel(String toolClass, int level) {
+        setHarvestLevel(toolClass, level, null);
+    }
+
     @Override
     public void setHarvestLevel(String toolClass, int level, IBlockState state) {
         if (state == null) {
