@@ -48,7 +48,6 @@ public interface IBlockDefinition {
     @ZenSetter("tickRandomly")
     void setTickRandomly(boolean tickRandomly);
 
-    @ZenMethod
     @Deprecated
     void setHarvestLevel(String toolClass, int level);
     
