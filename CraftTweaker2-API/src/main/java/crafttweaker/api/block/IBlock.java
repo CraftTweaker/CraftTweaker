@@ -1,6 +1,5 @@
 package crafttweaker.api.block;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.liquid.ILiquidDefinition;
