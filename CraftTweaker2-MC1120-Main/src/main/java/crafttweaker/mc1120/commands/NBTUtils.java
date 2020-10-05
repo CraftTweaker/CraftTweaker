@@ -119,7 +119,7 @@ public class NBTUtils {
     }
     
     private static void addNewLine(StringBuilder s, int indent) {
-        s.append("\n\u00A7e");
+        s.append("\n\u00A7e├");
         for(int j = 0; j < indent; j++) {
             s.append("\u00A7e    ");
         }
