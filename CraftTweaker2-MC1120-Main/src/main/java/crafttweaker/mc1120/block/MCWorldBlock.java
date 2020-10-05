@@ -40,11 +40,6 @@ public class MCWorldBlock implements IBlock {
 
     @Override
     public IData getTileData() {
-        return getTileDataInternal();
-    }
-
-    @Override
-    public IData getTileDataInternal() {
         TileEntity tileEntity = blocks.getTileEntity(pos);
         
         if(tileEntity == null)

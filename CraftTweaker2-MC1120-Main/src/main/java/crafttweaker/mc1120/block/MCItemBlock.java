@@ -34,11 +34,6 @@ public class MCItemBlock implements IBlock {
 
     @Override
     public IData getTileData() {
-        return getTileDataInternal();
-    }
-
-    @Override
-    public IData getTileDataInternal() {
         if(!item.isEmpty()) {
             return null;
         }

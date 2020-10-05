@@ -31,9 +31,4 @@ public interface IBlock extends IBlockPattern {
 
     @ZenGetter("fluid")
     ILiquidDefinition getFluid();
-
-    default IData getTileDataInternal() {
-        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IBlock::getTileDataInternal! It is a bug!");
-        return null;
-    }
 }
