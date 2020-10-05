@@ -32,7 +32,7 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
 
     @Override
     public IBlock getBlock() {
-        return getBlockState().getBlock();
+        return getWorld().getBlock(getPosition());
     }
 
     @Override
