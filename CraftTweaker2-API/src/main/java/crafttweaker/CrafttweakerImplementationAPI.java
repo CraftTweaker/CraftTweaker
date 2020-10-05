@@ -178,7 +178,7 @@ public class CrafttweakerImplementationAPI {
                 IBlock block = event.getBlock();
                 event.getPlayer().sendChat("Block Name: " + block.getDefinition().getId());
                 event.getPlayer().sendChat("Meta value: " + block.getMeta());
-                IData data = block.getTileData();
+                IData data =  block.getTileDataInternal();
                 if(data != null) {
                     event.getPlayer().sendChat("Tile entity data: " + data.asString());
                 }

@@ -31,9 +31,14 @@ public class MCItemBlock implements IBlock {
     public int getMeta() {
         return item.getItemDamage();
     }
-    
+
     @Override
     public IData getTileData() {
+        return getTileDataInternal();
+    }
+
+    @Override
+    public IData getTileDataInternal() {
         if(!item.isEmpty()) {
             return null;
         }

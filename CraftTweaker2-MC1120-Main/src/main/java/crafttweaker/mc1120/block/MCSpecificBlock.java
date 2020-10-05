@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.block;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.liquid.ILiquidDefinition;
@@ -39,9 +40,15 @@ public class MCSpecificBlock implements IBlock {
 
     @Override
     public IData getTileData() {
+        CraftTweakerAPI.logWarning("MCSpecificBlock::getTileData always returns null! If you want to access block NBT, please use `world.getBlock(x, y, z)` to get MCWorldBlock.");
+        return getTileDataInternal();
+    }
+
+    @Override
+    public IData getTileDataInternal() {
         return null;
     }
-    
+
     @Override
     public ILiquidDefinition getFluid() {
         return CraftTweakerMC.getILiquidDefinition(FluidRegistry.lookupFluidForBlock(block));
