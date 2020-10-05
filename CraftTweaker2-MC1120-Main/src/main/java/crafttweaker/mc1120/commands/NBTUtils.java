@@ -19,8 +19,8 @@ public class NBTUtils {
         boolean inQuotes = false;
         boolean isInValue = false;
         
-        stringBuilder.append("\u00A7e");
-        stringBuilderNonColor.append("\n");
+        stringBuilder.append("\u00A7e├");
+        stringBuilderNonColor.append("\n├");
         
         
         for(int i = 0; i < string.length(); i++) {
@@ -126,7 +126,7 @@ public class NBTUtils {
     }
     
     private static void addNewLineNoColor(StringBuilder s, int indent) {
-        s.append("\n");
+        s.append("\n├");
         for(int j = 0; j < indent; j++) {
             s.append("    ");
         }
