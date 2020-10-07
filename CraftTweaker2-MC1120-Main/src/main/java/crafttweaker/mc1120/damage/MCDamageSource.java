@@ -6,8 +6,6 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IVector3d;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
 
 import javax.annotation.Nullable;
 

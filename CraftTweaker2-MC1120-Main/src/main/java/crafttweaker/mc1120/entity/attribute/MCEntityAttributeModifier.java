@@ -33,18 +33,6 @@ public class MCEntityAttributeModifier implements IEntityAttributeModifier {
         return attributeModifier.getAmount();
     }
 
-    @Override
-    public Object getInternal() {
-        return attributeModifier;
-    }
-
-	@Override
-	public IEntityAttributeModifier createModifier(String name, double amount, int operation, String uuid) {
-		AttributeModifier modifier = (uuid == null) ? new AttributeModifier(name, amount, operation) : new AttributeModifier(UUID.fromString(uuid), name, amount, operation);
-		
-		return CraftTweakerMC.getIEntityAttributeModifier(modifier);
-	}
-
 	@Override
 	public boolean isSaved() {
 		return attributeModifier.isSaved();
@@ -54,4 +42,9 @@ public class MCEntityAttributeModifier implements IEntityAttributeModifier {
 	public void setSaved(boolean saved) {
 		attributeModifier.setSaved(saved);
 	}
+
+    @Override
+    public Object getInternal() {
+        return attributeModifier;
+    }
 }

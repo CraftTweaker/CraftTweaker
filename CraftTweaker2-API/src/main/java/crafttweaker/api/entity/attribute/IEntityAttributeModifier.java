@@ -1,7 +1,6 @@
 package crafttweaker.api.entity.attribute;
 
 import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -33,9 +32,7 @@ public interface IEntityAttributeModifier {
     @ZenMethod
     @ZenSetter("saved")
     void setSaved(boolean saved);
-    
-    @ZenMethod
-    IEntityAttributeModifier createModifier(String name, double amount, int operation, @Optional String uuid);
+
 
     Object getInternal();
 }
