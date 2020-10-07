@@ -3,7 +3,6 @@ package crafttweaker.api.damage;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.world.IVector3d;
-import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -106,12 +105,6 @@ public interface IDamageSource {
 	@ZenGetter("setProjectile")
 	IDamageSource setProjectile();
 
-	@ZenMethod
-	IDamageSource createEntityDamage(String damagetype, @Optional IEntity source);
-
-	@ZenMethod
-	IDamageSource createIndirectDamage(String damagetype, IEntity source, @Optional IEntity indirectEntity);
-    
     
     Object getInternal();
 }

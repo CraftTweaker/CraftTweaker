@@ -135,18 +135,6 @@ public class MCDamageSource implements IDamageSource {
 	}
 
 	@Override
-	public IDamageSource createEntityDamage(String damagetype, IEntity source) {
-		EntityDamageSource damageSource = new EntityDamageSource(damagetype, CraftTweakerMC.getEntity(source));
-		return new MCDamageSource(damageSource);
-	}
-
-	@Override
-	public IDamageSource createIndirectDamage(String damagetype, IEntity source, IEntity indirectEntity) {
-		EntityDamageSourceIndirect damageSource = new EntityDamageSourceIndirect(damagetype, CraftTweakerMC.getEntity(source), CraftTweakerMC.getEntity(indirectEntity));
-		return new MCDamageSource(damageSource);
-	}
-
-	@Override
     public Object getInternal() {
         return source;
     }
