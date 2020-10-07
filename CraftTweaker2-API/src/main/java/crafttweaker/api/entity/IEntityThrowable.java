@@ -8,6 +8,9 @@ import stanhebben.zenscript.annotations.*;
 public interface IEntityThrowable extends IEntity {
 
     @ZenMethod
+    void shoot(double x, double y, double z, float velocity, float inaccuracy);
+
+    @ZenMethod
     @ZenGetter("thrower")
     IEntityLivingBase getThrower();
     

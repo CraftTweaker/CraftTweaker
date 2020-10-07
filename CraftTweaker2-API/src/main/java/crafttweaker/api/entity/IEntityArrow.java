@@ -7,16 +7,16 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public interface IEntityArrow extends IEntity {
     
-	@ZenMethod
-	@ZenSetter("damage")
-	void setDamage(double damage);
+    @ZenMethod
+    @ZenSetter("damage")
+    void setDamage(double damage);
     
-	@ZenMethod
+    @ZenMethod
     @ZenGetter("damage")
     double getDamage();
     
     @ZenMethod
-	@ZenSetter("isCritical")
+    @ZenSetter("isCritical")
     void setIsCritical(boolean critical);
     
     @ZenMethod
@@ -24,27 +24,27 @@ public interface IEntityArrow extends IEntity {
     boolean getIsCritical();
     
     @ZenMethod
-	@ZenSetter("knockbackStrength")
+    @ZenSetter("knockbackStrength")
     void setKnockbackStrength(int knockbackStrength);
     
-	@ZenMethod
+    @ZenMethod
     @ZenGetter("shake")
     int arrowShake();
-	
+
     @ZenMethod
-	@ZenSetter("shooter")
+    @ZenSetter("shooter")
     void setShooter(IEntity shooter);
-	
-	@ZenMethod
+
+    @ZenMethod
     @ZenGetter("shooter")
     IEntity getShooter();
-	
-	@ZenMethod
+
+    @ZenMethod
     @ZenGetter("pickupStatus")
     String getPickupStatus();
-	
+
     @ZenMethod
-	@ZenSetter("pickupStatus")
+    @ZenSetter("pickupStatus")
     void setPickupStatus(String pickupStatus);
 
     @ZenMethod
@@ -58,4 +58,7 @@ public interface IEntityArrow extends IEntity {
 
     @ZenMethod
     void shoot(IEntity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy);
+
+    @ZenMethod
+    void shoot(double x, double y, double z, float velocity, float inaccuracy);
 }

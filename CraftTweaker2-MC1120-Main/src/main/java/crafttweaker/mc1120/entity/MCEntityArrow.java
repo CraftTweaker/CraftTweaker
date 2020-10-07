@@ -9,7 +9,7 @@ import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 
 import javax.annotation.Nullable;
 
-public class MCEntityArrow extends MCEntity implements IEntityArrow, IProjectile {
+public class MCEntityArrow extends MCEntity implements IEntityArrow {
     private final EntityArrow entityArrow;
     
     public MCEntityArrow(EntityArrow entityArrow) {

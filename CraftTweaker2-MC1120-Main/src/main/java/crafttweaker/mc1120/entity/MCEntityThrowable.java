@@ -8,7 +8,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 
 import javax.annotation.Nullable;
 
-public class MCEntityThrowable extends MCEntity implements IEntityThrowable, IProjectile {
+public class MCEntityThrowable extends MCEntity implements IEntityThrowable {
     private final EntityThrowable entityThrowable;
     
     public MCEntityThrowable(EntityThrowable entityThrowable) {
