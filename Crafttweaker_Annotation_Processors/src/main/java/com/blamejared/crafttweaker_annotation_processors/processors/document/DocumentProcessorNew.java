@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.google.gson.*;
+import com.google.gson.stream.*;
 import com.sun.source.util.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -15,10 +17,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -180,6 +179,37 @@ public class DocumentProcessorNew extends AbstractProcessor {
             }
             folder.addFile(new YAMLFile(value.getDocumentTitle(), value.getDocPath()));
         }
+        
+        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(YAMLFolder.class, new TypeAdapter<YAMLFolder>() {
+            @Override
+            public void write(JsonWriter out, YAMLFolder value) throws IOException {
+                out.beginObject();
+                for(YAMLObject yamlObject : value.getFiles()) {
+                    
+                    if(yamlObject instanceof YAMLFile) {
+                        YAMLFile file = (YAMLFile) yamlObject;
+                        out.name(file.getName()).value(file.getPath() + ".md");
+                    } else if(yamlObject instanceof YAMLFolder) {
+                        YAMLFolder folder = (YAMLFolder) yamlObject;
+                        out.name(folder.name);
+                        write(out, folder);
+                    }
+                }
+                ;
+                out.endObject();
+            }
+            
+            @Override
+            public YAMLFolder read(JsonReader in) throws IOException {
+                // We don't really need to read here...
+                return null;
+            }
+        }).create();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(docsOut, "docs.json")))) {
+            Map<String, Map<String, YAMLFolder>> nav = new HashMap<>();
+            nav.put("nav", files);
+            writer.write(gson.toJson(nav));
+        }
         final File mkdocsFile = new File(docsOut, "mkdocs.yml");
         try(final PrintWriter writer = new PrintWriter(new FileWriter(mkdocsFile))) {
             
@@ -243,9 +273,9 @@ public class DocumentProcessorNew extends AbstractProcessor {
             for(int i = 0; i < subLevel; i++) {
                 sb.append("  ");
             }
-            sb.append("- ").append(name).append(":\n");
+            sb.append("  ").append(name).append(":\n");
             for(YAMLObject file : getFiles()) {
-                sb.append("  ").append(file.getOutput(subLevel+1));
+                sb.append("  ").append(file.getOutput(subLevel + 1));
             }
             return sb.toString();
         }
@@ -259,9 +289,9 @@ public class DocumentProcessorNew extends AbstractProcessor {
             }
             return new YAMLFolder(name);
         }
-    
-        public boolean contains(String name) {
         
+        public boolean contains(String name) {
+            
             for(YAMLFolder object : files.stream().filter(yamlObject -> yamlObject instanceof YAMLFolder).map(yamlObject -> (YAMLFolder) yamlObject).collect(Collectors.toSet())) {
                 if(object.getName().equals(name)) {
                     return true;
@@ -271,7 +301,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
         }
         
         public void addFile(YAMLObject file) {
-            if(contains(file.getName())){
+            if(contains(file.getName())) {
                 return;
             }
             this.files.add(file);
@@ -314,7 +344,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
             for(int i = 0; i < subLevel; i++) {
                 subBuilder.append("  ");
             }
-            return subBuilder.toString() + String.format("- %s: '%s.md'%n", name, path);
+            return subBuilder.toString() + String.format("  %s: '%s.md'%n", name, path);
         }
         
         @Override
