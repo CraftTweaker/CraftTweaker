@@ -50,11 +50,11 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         this.isFunctionalInterface = isFunctionalInterface;
     }
     
-    public static DocumentedClass convertClass(TypeMirror type, ProcessingEnvironment environment) {
-        return convertClass((TypeElement) environment.getTypeUtils().asElement(type), environment);
+    public static DocumentedClass convertClass(TypeMirror type, ProcessingEnvironment environment, boolean forComment) {
+        return convertClass((TypeElement) environment.getTypeUtils().asElement(type), environment, forComment);
     }
     
-    public static DocumentedClass convertClass(TypeElement element, ProcessingEnvironment environment) {
+    public static DocumentedClass convertClass(TypeElement element, ProcessingEnvironment environment, boolean forComment) {
         if(element == null || element.equals(environment.getElementUtils()
                 .getTypeElement("java.lang.Object"))) {
             return null;
@@ -72,12 +72,12 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         final ZenCodeType.Name nameAnnotation = element.getAnnotation(ZenCodeType.Name.class);
         final String zsName = nameAnnotation != null ? nameAnnotation.value() : element.getQualifiedName()
                 .toString();
-        final String docPath = IDontKnowHowToNameThisUtil.getDocPath(element);
+        final String docPath = IDontKnowHowToNameThisUtil.getDocPath(element, environment, forComment);
         if(docPath == null) {
             return null;
         }
         
-        final DocumentedClass superClass = convertClass(element.getSuperclass(), environment);
+        final DocumentedClass superClass = convertClass(element.getSuperclass(), environment, forComment);
         //final String docComment = environment.getElementUtils().getDocComment(element);
         
         final String declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
@@ -99,7 +99,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         typesByZSName.put(zsName, element);
         
         if(!(element.getSuperclass() instanceof NoType)) {
-            final DocumentedClass documentedClass = convertClass(element.getSuperclass(), environment);
+            final DocumentedClass documentedClass = convertClass(element.getSuperclass(), environment, forComment);
             if(documentedClass != null) {
                 out.implementedInterfaces.add(documentedClass);
                 out.implementedInterfaces.addAll(documentedClass.implementedInterfaces);
@@ -107,7 +107,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         }
         
         for(final TypeMirror anInterface : element.getInterfaces()) {
-            final DocumentedClass documentedClass = convertClass(anInterface, environment);
+            final DocumentedClass documentedClass = convertClass(anInterface, environment, forComment);
             if(documentedClass != null) {
                 out.implementedInterfaces.add(documentedClass);
                 out.implementedInterfaces.addAll(documentedClass.implementedInterfaces);

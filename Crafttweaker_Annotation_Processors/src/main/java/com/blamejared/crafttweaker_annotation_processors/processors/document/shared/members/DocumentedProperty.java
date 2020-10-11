@@ -89,7 +89,7 @@ public class DocumentedProperty {
             name = field.getSimpleName().toString();
         }
         
-        final DocumentedType type = DocumentedType.fromTypeMirror(field.asType(), environment);
+        final DocumentedType type = DocumentedType.fromTypeMirror(field.asType(), environment, false);
         return new DocumentedProperty(containingClass, name, true, true, type);
     }
     
@@ -151,7 +151,7 @@ public class DocumentedProperty {
                     .printMessage(Diagnostic.Kind.ERROR, "Getter methods may not return void!", method);
         }
         
-        DocumentedType type = DocumentedType.fromTypeMirror(method.getReturnType(), environment);
+        DocumentedType type = DocumentedType.fromTypeMirror(method.getReturnType(), environment, false);
         return new DocumentedProperty(containingClass, name, true, false, type);
     }
     
@@ -180,7 +180,7 @@ public class DocumentedProperty {
         }
         
         DocumentedType type = DocumentedType.fromElement(method.getParameters()
-                .get(isExpansion ? 1 : 0), environment);
+                .get(isExpansion ? 1 : 0), environment, false);
         return new DocumentedProperty(containingClass, name, false, true, type);
     }
     

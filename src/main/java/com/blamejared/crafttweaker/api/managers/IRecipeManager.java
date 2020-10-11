@@ -85,6 +85,11 @@ public interface IRecipeManager extends CommandStringDisplayable {
         return getRecipes().values().stream().filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput()))).map(WrapperRecipe::new).collect(Collectors.toList());
     }
     
+    @ZenCodeType.Method
+    default List<WrapperRecipe> getAllRecipes() {
+        return getRecipes().values().stream().map(WrapperRecipe::new).collect(Collectors.toList());
+    }
+    
     /**
      * Remove a recipe based on it's output.
      *

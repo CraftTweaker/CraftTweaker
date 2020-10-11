@@ -43,83 +43,92 @@ public class MCCommandNode {
         return internal;
     }
     
+    @ZenCodeType.Method
     public MCCommand getCommand() {
         return new MCCommand(internal.getCommand());
     }
     
+    @ZenCodeType.Method
     public Collection<MCCommandNode> getChildren() {
         return internal.getChildren().stream().map(MCCommandNode::new).collect(Collectors.toList());
     }
     
+    @ZenCodeType.Method
     public MCCommandNode getChild(final String name) {
         return MCCommandNode.convert(internal.getChild(name));
     }
     
+    @ZenCodeType.Method
     public MCCommandNode getRedirect() {
         return MCCommandNode.convert(internal.getRedirect());
     }
     
+    @ZenCodeType.Method
     public MCRedirectModifier getRedirectModifier() {
         return new MCRedirectModifier(internal.getRedirectModifier());
     }
     
+    @ZenCodeType.Method
     public boolean canUse(final MCCommandSource source) {
         return internal.canUse(source.getInternal());
     }
     
+    @ZenCodeType.Method
     public void addChild(final MCCommandNode node) {
         internal.addChild(node.internal);
     }
     
+    @ZenCodeType.Method
     public void findAmbiguities(final MCAmbiguityConsumer consumer) {
         internal.findAmbiguities((parent, child, sibling, inputs) -> consumer.ambiguous(MCCommandNode.convert(parent), MCCommandNode.convert(child), MCCommandNode.convert(sibling), inputs));
     }
     
+    @ZenCodeType.Method
     public Predicate<MCCommandSource> getRequirement() {
         return mcCommandSource -> internal.getRequirement().test(mcCommandSource.getInternal());
     }
     
+    @ZenCodeType.Method
     public String getName() {
         return internal.getName();
     }
     
+    @ZenCodeType.Method
     public String getUsageText() {
         return internal.getUsageText();
     }
     
+    @ZenCodeType.Method
     public void parse(String input, MCCommandContextBuilder contextBuilder) throws Exception {
-        parse(new StringReader(input), contextBuilder);
+        internal.parse(new StringReader(input), contextBuilder.getInternal());
     }
     
-    public void parse(StringReader reader, MCCommandContextBuilder contextBuilder) throws Exception {
-        internal.parse(reader, contextBuilder.getInternal());
-    }
-    
+    @ZenCodeType.Method
     public MCSuggestions listSuggestions(MCCommandContext context, MCSuggestionsBuilder builder) throws Exception {
         return new MCSuggestions(internal.listSuggestions(context.getInternal(), builder.getInternal()));
     }
     
+    @ZenCodeType.Method
     public MCArgumentBuilder createBuilder() {
         return MCArgumentBuilder.convert(internal.createBuilder());
     }
     
-    
+    @ZenCodeType.Method
     public Collection<MCCommandNode> getRelevantNodes(final String input) {
-        return getRelevantNodes(new StringReader(input));
+        return internal.getRelevantNodes(new StringReader(input)).stream().map(MCCommandNode::new).collect(Collectors.toList());
     }
     
-    public Collection<MCCommandNode> getRelevantNodes(final StringReader input) {
-        return internal.getRelevantNodes(input).stream().map(MCCommandNode::new).collect(Collectors.toList());
-    }
-    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.COMPARE)
     public int compareTo(final MCCommandNode o) {
         return this.internal.compareTo(o.internal);
     }
     
+    @ZenCodeType.Method
     public boolean isFork() {
         return internal.isFork();
     }
     
+    @ZenCodeType.Method
     public Collection<String> getExamples() {
         return internal.getExamples();
     }

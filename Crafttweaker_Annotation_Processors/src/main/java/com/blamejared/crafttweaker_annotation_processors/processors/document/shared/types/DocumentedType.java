@@ -17,25 +17,25 @@ public abstract class DocumentedType {
     
     public static final Comparator<? super DocumentedType> byZSName = Comparator.comparing(DocumentedType::getZSName);
     
-    public static DocumentedType fromElement(Element element, ProcessingEnvironment environment) {
+    public static DocumentedType fromElement(Element element, ProcessingEnvironment environment, boolean forComment) {
         if(element instanceof TypeElement) {
-            final DocumentedClass documentedClass = DocumentedClass.convertClass((TypeElement) element, environment);
+            final DocumentedClass documentedClass = DocumentedClass.convertClass((TypeElement) element, environment, forComment);
             if(documentedClass != null)
                 return new DocumentedClassType(documentedClass);
         }
         if(element == null) {
             return null;
         }
-        return fromTypeMirror(element.asType(), environment);
+        return fromTypeMirror(element.asType(), environment, forComment);
     }
     
-    public static DocumentedType fromTypeMirror(TypeMirror typeMirror, ProcessingEnvironment environment) {
+    public static DocumentedType fromTypeMirror(TypeMirror typeMirror, ProcessingEnvironment environment, boolean forComment) {
         if(typeMirror.getKind().isPrimitive()) {
             return new DocumentedPrimitiveType(typeMirror);
         }
         
         if(typeMirror.getKind() == TypeKind.ARRAY) {
-            return new DocumentedArrayType(fromTypeMirror(((ArrayType) typeMirror).getComponentType(), environment));
+            return new DocumentedArrayType(fromTypeMirror(((ArrayType) typeMirror).getComponentType(), environment, forComment));
         }
         
         
@@ -46,19 +46,20 @@ public abstract class DocumentedType {
                 final TypeMirror erasure = environment.getTypeUtils().erasure(typeMirror);
                 
                 if(erasure.toString().equals("java.util.Map")) {
-                    return new DocumentedMapType(fromTypeMirror(typeArguments.get(0), environment), fromTypeMirror(typeArguments
-                            .get(1), environment));
+                    final DocumentedType keyType = fromTypeMirror(typeArguments.get(0), environment, forComment);
+                    final DocumentedType valueType = fromTypeMirror(typeArguments.get(1), environment, forComment);
+                    return new DocumentedMapType(keyType, valueType);
                 }
                 
-                final DocumentedType base = fromTypeMirror(erasure, environment);
+                final DocumentedType base = fromTypeMirror(erasure, environment, forComment);
                 
                 final List<DocumentedType> arguments = new ArrayList<>();
                 for(TypeMirror typeArgument : typeArguments) {
-                    arguments.add(fromTypeMirror(typeArgument, environment));
+                    arguments.add(fromTypeMirror(typeArgument, environment, forComment));
                 }
                 return new DocumentedGenericType(base, arguments);
             } else {
-                final DocumentedClass documentedClass = DocumentedClass.convertClass(typeMirror, environment);
+                final DocumentedClass documentedClass = DocumentedClass.convertClass(typeMirror, environment, forComment);
                 if(documentedClass != null) {
                     return new DocumentedClassType(documentedClass);
                 }

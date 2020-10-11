@@ -37,7 +37,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         this.declaringModId = declaringModId;
     }
 
-    public static DocumentedExpansion convertExpansion(TypeElement element, ProcessingEnvironment environment) {
+    public static DocumentedExpansion convertExpansion(TypeElement element, ProcessingEnvironment environment, boolean forComment) {
         if (knownTypes.containsKey(element.toString())) {
             final CrafttweakerDocumentationPage documentationPage = knownTypes.get(element.toString());
             if (!(documentationPage instanceof DocumentedExpansion)) {
@@ -62,7 +62,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
             return null;
         }
 
-        final String docPath = IDontKnowHowToNameThisUtil.getDocPath(element);
+        final String docPath = IDontKnowHowToNameThisUtil.getDocPath(element, environment, forComment);
         if (docPath == null) {
             return null;
         }
@@ -84,7 +84,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
 
     private static DocumentedType findExpandedType(TypeElement element, ZenCodeType.Expansion expansionAnnotation, ProcessingEnvironment environment) {
         if (typesByZSName.containsKey(expansionAnnotation.value())) {
-            return DocumentedType.fromElement(typesByZSName.get(expansionAnnotation.value()), environment);
+            return DocumentedType.fromElement(typesByZSName.get(expansionAnnotation.value()), environment, false);
         }
 
         for (Element enclosedElement : element.getEnclosedElements()) {
@@ -95,7 +95,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
                 }
 
                 final VariableElement variableElement = executableElement.getParameters().get(0);
-                final DocumentedType type = DocumentedType.fromElement(variableElement, environment);
+                final DocumentedType type = DocumentedType.fromElement(variableElement, environment, false);
                 if (type != null) {
                     if (!type.getZSName().equals(expansionAnnotation.value())) {
                         environment.getMessager()

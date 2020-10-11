@@ -2,10 +2,12 @@ package com.blamejared.crafttweaker.impl.util.text;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.util.text.TextFormatting;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@Document("vanilla/api/util/text/TextFormatting")
 @ZenCodeType.Name("crafttweaker.api.text.TextFormatting")
 public class MCTextFormatting implements CommandStringDisplayable {
     

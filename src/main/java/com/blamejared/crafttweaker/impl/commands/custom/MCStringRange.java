@@ -36,7 +36,7 @@ public class MCStringRange {
     
     @ZenCodeType.Method
     public boolean equals(Object o) {
-        return internal.equals((o));
+        return o instanceof MCStringRange && internal.equals(((MCStringRange) o).internal);
     }
     
     

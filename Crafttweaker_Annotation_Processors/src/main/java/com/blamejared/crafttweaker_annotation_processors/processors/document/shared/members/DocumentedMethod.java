@@ -91,7 +91,7 @@ public class DocumentedMethod implements Writable {
         }
         
         final DocumentedType returnType = method.getReturnType()
-                .getKind() == TypeKind.VOID ? null : DocumentedType.fromTypeMirror(method.getReturnType(), environment);
+                .getKind() == TypeKind.VOID ? null : DocumentedType.fromTypeMirror(method.getReturnType(), environment, false);
     
         final AnnotationMirror mirror = AnnotationMirrorUtil.getMirror(method, bracketHandlerAnnotation);
         final String bracketHandlerName = mirror == null ? null : AnnotationMirrorUtil.getAnnotationValue(mirror, "value");

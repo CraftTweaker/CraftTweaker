@@ -55,7 +55,7 @@ public class DocumentedCaster {
             return null;
         }
 
-        return new DocumentedCaster(DocumentedType.fromTypeMirror(element.getReturnType(), environment), caster.implicit());
+        return new DocumentedCaster(DocumentedType.fromTypeMirror(element.getReturnType(), environment, false), caster.implicit());
     }
 
     public static void printCasters(Collection<DocumentedCaster> casters, PrintWriter writer) {
