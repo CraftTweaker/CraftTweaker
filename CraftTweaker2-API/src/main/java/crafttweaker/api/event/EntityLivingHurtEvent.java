@@ -14,6 +14,6 @@ public interface EntityLivingHurtEvent extends ILivingEvent, IEventCancelable {
     @ZenGetter("amount")
     float getAmount();
     
-    @ZenSetter
+    @ZenSetter("amount")
     void setAmount(float amount);
 }
