@@ -124,45 +124,63 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IItemStack getItemInSlot(IEntityEquipmentSlot slot);
-    
+
     @ZenMethod
-    @ZenGetter("elytraFlying")
-    boolean isElytraFlying();
-    
+    @ZenGetter
+    default boolean isElytraFlying() {
+        return false;
+    }
+
     @ZenMethod
-    @ZenGetter("activeItemStackBlocking")
-    boolean isActiveItemStackBlocking();
-    
+    @ZenGetter
+    default boolean isActiveItemStackBlocking() {
+        return false;
+    }
+
     @ZenMethod
     @ZenGetter("activeHand")
-    String getActiveHand();
+    default String getActiveHand() {
+        return null;
+    }
 
     @ZenMethod
     @ZenGetter("activeItemStack")
-    IItemStack getActiveItemStack();
+    default IItemStack getActiveItemStack() {
+        return null;
+    }
 
     @ZenMethod
-    @ZenGetter("swingInProgress")
-    boolean isSwingInProgress();
+    @ZenGetter
+    default boolean isSwingInProgress() {
+        return false;
+    }
 
     @ZenMethod
     @ZenGetter("swingProgress")
-    int getSwingProgress();
+    default int getSwingProgress() {
+        return 0;
+    }
 
     @ZenMethod
     @ZenSetter("swingProgress")
-    void setSwingProgress(int swingProgress);
-    
+    default void setSwingProgress(int swingProgress) {
+    }
+
     @ZenMethod
     @ZenGetter("isHandActive")
-    boolean isHandActive();
-    
+    default boolean isHandActive() {
+        return false;
+    }
+
     @ZenMethod
-    void resetActiveHand();
-    
+    default void resetActiveHand() {
+    }
+
     @ZenMethod
-    void setActiveHand(String hand);
-    
+    default void setActiveHand(String hand) {
+    }
+
     @ZenMethod
-    void stopActiveHand();
+    default void stopActiveHand() {
+    }
 }

@@ -26,5 +26,6 @@ public interface IEntityItem extends IEntity {
 
     @ZenMethod
     @ZenSetter("item")
-    void setItem(IItemStack stack);
+    default void setItem(IItemStack stack) {
+    }
 }

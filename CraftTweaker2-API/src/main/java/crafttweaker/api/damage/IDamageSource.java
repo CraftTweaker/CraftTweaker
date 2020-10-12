@@ -24,10 +24,15 @@ public interface IDamageSource {
 	
 	@ZenMethod
 	String getDeathMessage(IEntity entity);
-	
+
 	@ZenMethod
-	@ZenGetter("hungerDamage")
+	@ZenGetter("hunderDamage")
 	float getHungerDamage();
+
+	@ZenGetter("hungerDamage")
+	default float getHungerDamageFixed() {
+		return 0.0f;
+	}
 	
 	@ZenMethod
 	@ZenGetter("immediateSource")

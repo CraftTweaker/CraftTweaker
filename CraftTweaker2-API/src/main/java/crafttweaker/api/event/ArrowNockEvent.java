@@ -9,6 +9,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.ArrowNockEvent")
 @ZenRegister
 public interface ArrowNockEvent extends IPlayerEvent, IEventHasResult {
+
     @ZenGetter("bow")
     IItemStack getBow();
     

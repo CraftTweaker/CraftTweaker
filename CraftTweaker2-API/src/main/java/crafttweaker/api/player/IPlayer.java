@@ -6,6 +6,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityFishHook;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
@@ -130,21 +131,45 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     @ZenSetter("canEdit")
     void setCanEdit(boolean canEdit);
 
+    @ZenMethod
+    default IEntityItem dropItem(boolean dropAll) {
+        CraftTweakerAPI.logError("Default method IPlayer#dropItem(bool) is not overwritten in " + getClass() + " please report to the author!");
+        return null;
+    }
+
+    @ZenMethod
+    default IEntityItem dropItem(IItemStack item) {
+        CraftTweakerAPI.logError("Default method IPlayer#dropItem(IItemStack) is not overwritten in " + getClass() + " please report to the author!");
+        return null;
+    }
+
     @ZenGetter("bedLocation")
-    IBlockPos getBedLocation();
-    
+    default IBlockPos getBedLocation() {
+        return null;
+    }
+
     @ZenGetter("fishHook")
-    IEntityFishHook getFishHook();
+    default IEntityFishHook getFishHook() {
+        return null;
+    }
 
     @ZenGetter("inventoryContainer")
-    IContainer getInventoryContainer();
+    default IContainer getInventoryContainer() {
+        return null;
+    }
 
-    @ZenGetter("isFullyAsleep")
-    boolean isFullyAsleep();
+    @ZenGetter
+    default boolean isFullyAsleep() {
+        return false;
+    }
 
-    @ZenGetter("isSleeping")
-    boolean isSleeping();
+    @ZenGetter
+    default boolean isSleeping() {
+        return false;
+    }
 
     @ZenGetter("sleepTimer")
-    int getSleepTimer();
+    default int getSleepTimer() {
+        return -1;
+    }
 }

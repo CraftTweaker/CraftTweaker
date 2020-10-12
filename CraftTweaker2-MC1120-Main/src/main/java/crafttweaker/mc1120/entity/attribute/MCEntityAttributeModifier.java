@@ -1,10 +1,7 @@
 package crafttweaker.mc1120.entity.attribute;
 
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-
-import java.util.UUID;
 
 public class MCEntityAttributeModifier implements IEntityAttributeModifier {
     private final AttributeModifier attributeModifier;

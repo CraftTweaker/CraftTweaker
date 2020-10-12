@@ -7,4 +7,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 @ZenClass("crafttweaker.event.PlayerTickEvent")
 @ZenRegister
 public interface PlayerTickEvent extends IPlayerEvent, ITickEvent {
+
+    @ZenGetter("phase")
+    String getPhase();
 }

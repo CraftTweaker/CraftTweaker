@@ -4,6 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethodStatic;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class ExpandEntityAttributeModifier {
 
     @ZenMethodStatic
-    public IEntityAttributeModifier createModifier(String name, double amount, int operation, String uuid) {
+    public IEntityAttributeModifier createModifier(String name, double amount, int operation, @Optional String uuid) {
         AttributeModifier modifier = (uuid == null) ? new AttributeModifier(name, amount, operation) : new AttributeModifier(UUID.fromString(uuid), name, amount, operation);
         return CraftTweakerMC.getIEntityAttributeModifier(modifier);
     }

@@ -109,18 +109,28 @@ public interface IWorld extends IBlockAccess {
     }
 
     @ZenMethod
-    boolean extinguishFire(IPlayer player, IBlockPos pos, String side);
+    default boolean extinguishFire(IPlayer player, IBlockPos pos, String side) {
+        return false;
+    }
 
     @ZenMethod
-    boolean isSpawnChunk(int x, int z);
-    
+    default boolean isSpawnChunk(int x, int z) {
+        return false;
+    }
+
     @ZenGetter("seaLevel")
     @ZenMethod
-    int getSeaLevel();
-    
-    @ZenMethod
-    boolean addWeatherEffect(IEntity entity);
+    default int getSeaLevel() {
+        return 0;
+    }
 
     @ZenMethod
-	IEntity createLightningBolt(double x, double y, double z, @Optional boolean effectOnly);
+    default boolean addWeatherEffect(IEntity entity) {
+        return false;
+    }
+
+    @ZenMethod
+    default IEntity createLightningBolt(double x, double y, double z, @Optional boolean effectOnly) {
+        return null;
+    }
 }

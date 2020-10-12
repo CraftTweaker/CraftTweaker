@@ -505,8 +505,12 @@ public interface IEntity extends ICommandSender {
     }
     
     @ZenGetter
-    boolean onGround();
+    default boolean onGround() {
+        return false;
+    }
     
     @ZenGetter
-    boolean isLightningbolt();
+    boolean isLightningbolt() {
+        return false;
+    }
 }

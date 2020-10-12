@@ -1,14 +1,14 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.api.event.ITickEvent;
 import crafttweaker.api.event.PlayerTickEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class MCPlayerTickEvent implements PlayerTickEvent, ITickEvent {
-    private final net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent event;
+public class MCPlayerTickEvent implements PlayerTickEvent {
+    private final TickEvent.PlayerTickEvent event;
 
-    public MCPlayerTickEvent(net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent event) {
+    public MCPlayerTickEvent(TickEvent.PlayerTickEvent event) {
         this.event = event;
     }
 

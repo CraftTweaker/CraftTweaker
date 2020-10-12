@@ -27,7 +27,6 @@ public class MCEntityJoinWorldEvent implements EntityJoinWorldEvent {
     public void setCanceled(boolean canceled) {
         event.setCanceled(canceled);
     }
-	
 
 	@Override
 	public IWorld getWorld() {

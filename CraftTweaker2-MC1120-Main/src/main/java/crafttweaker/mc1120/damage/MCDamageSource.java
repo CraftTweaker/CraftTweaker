@@ -7,8 +7,6 @@ import crafttweaker.api.world.IVector3d;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
-import javax.annotation.Nullable;
-
 public class MCDamageSource implements IDamageSource {
 	
 	private final DamageSource source;
@@ -33,6 +31,11 @@ public class MCDamageSource implements IDamageSource {
 
 	@Override
 	public float getHungerDamage() {
+		return source.getHungerDamage();
+	}
+
+	@Override
+	public float getHungerDamageFixed() {
 		return source.getHungerDamage();
 	}
 

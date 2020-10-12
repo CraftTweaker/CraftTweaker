@@ -9,8 +9,10 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("crafttweaker.event.IWorldEvent")
 @ZenRegister
 public interface IWorldEvent {
-	
+
 	@ZenMethod
-    @ZenGetter("world")
-	IWorld getWorld();
+	@ZenGetter("world")
+	default IWorld getWorld() {
+		return null;
+	}
 }

@@ -5,6 +5,7 @@ import crafttweaker.api.chat.IChatMessage;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityFishHook;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -14,6 +15,7 @@ import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.entity.MCEntityItem;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.network.MessageCopyClipboard;
 import crafttweaker.mc1120.network.MessageOpenBrowser;
@@ -24,6 +26,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.UUID;
 
 /**
  * @author Stan
@@ -252,6 +256,28 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     @Override
     public void setCanEdit(boolean canEdit) {
         player.capabilities.allowEdit = canEdit;
+    }
+
+    @Override
+    public String getUUID() {
+        UUID uuid = null;
+        if (player.getGameProfile() != null) {
+            uuid = EntityPlayer.getUUID(player.getGameProfile());
+        }
+        if(uuid == null) {
+            uuid = EntityPlayer.getOfflineUUID(getName());
+        }
+        if(uuid == null) {
+            CraftTweakerAPI.logError("Could not get UUID for player " + getName());
+            return "";
+        }
+
+        return uuid.toString().toLowerCase();
+    }
+
+    @Override
+    public IEntityItem dropItem(boolean dropAll) {
+        return new MCEntityItem(player.dropItem(dropAll));
     }
     
     @Override

@@ -24,14 +24,17 @@ public interface IEntityAttributeModifier {
     @ZenMethod
     @ZenGetter("amount")
     double getAmount();
-    
+
     @ZenMethod
     @ZenGetter("saved")
-    boolean isSaved();
-    
+    default boolean isSaved() {
+        return false;
+    }
+
     @ZenMethod
     @ZenSetter("saved")
-    void setSaved(boolean saved);
+    default void setSaved(boolean saved) {
+    }
 
 
     Object getInternal();

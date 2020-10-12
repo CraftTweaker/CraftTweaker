@@ -1,15 +1,14 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.entity.IEntityArrow;
 import crafttweaker.api.event.ProjectileImpactArrowEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 public class MCProjectileImpactArrowEvent extends MCProjectileImpactEvent implements ProjectileImpactArrowEvent {
-    private ProjectileImpactEvent.Arrow event;
-    private EntityArrow arrow;
+    private final ProjectileImpactEvent.Arrow event;
+    private final EntityArrow arrow;
 
     public MCProjectileImpactArrowEvent(ProjectileImpactEvent.Arrow event) {
         super(event);
@@ -18,8 +17,8 @@ public class MCProjectileImpactArrowEvent extends MCProjectileImpactEvent implem
     }
 
     @Override
-    public IEntityArrow getArrow() {
-        return CraftTweakerMC.getIEntityArrow(arrow);
+    public IEntity getArrow() {
+        return CraftTweakerMC.getIEntity(arrow);
     }
 
     @Override

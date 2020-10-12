@@ -6,7 +6,7 @@ import crafttweaker.api.event.WorldTickEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IWorld;
 
-public class MCWorldTickEvent implements WorldTickEvent, ITickEvent, IWorldEvent {
+public class MCWorldTickEvent implements WorldTickEvent {
     private final net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent event;
 
     public MCWorldTickEvent(net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent event) {

@@ -368,6 +368,12 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPlayerAnvilRepair())
             CrafttweakerImplementationAPI.events.publishPlayerAnvilRepair(new MCPlayerAnvilRepairEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onPlayerAnvilUpdateEvent(AnvilUpdateEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerAnvilUpdate())
+            CrafttweakerImplementationAPI.events.publishPlayerAnvilUpdate(new MCPlayerAnvilUpdateEvent(ev));
+    }
     
     @SubscribeEvent
     public void onPlayerSetSpawnEvent(PlayerSetSpawnEvent ev) {

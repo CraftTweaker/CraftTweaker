@@ -478,7 +478,8 @@ public interface IItemStack extends IIngredient {
     default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState){
         return -1;
     }
-    
+
     @ZenMethod
-    void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot);
+    default void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
+    }
 }

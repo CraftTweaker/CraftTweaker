@@ -29,8 +29,10 @@ public interface IFurnaceManager {
     int getFuel(IItemStack item);
 
     @ZenMethod
-    IItemStack getSmeltingResult(IItemStack stack);
-    
+    default IItemStack getSmeltingResult(IItemStack stack) {
+        return null;
+    }
+
     /**
      * Returns all crafting recipes.
      *

@@ -9,19 +9,27 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public interface ITickEvent {
 
-	@ZenMethod
+    @ZenMethod
     @ZenGetter("phase")
-    String getPhase();
-	
-	@ZenMethod
+    default String getPhase() {
+        return null;
+    }
+
+    @ZenMethod
     @ZenGetter("side")
-	String getSide();
+    default String getSide() {
+        return null;
+    }
     
-	@ZenMethod
+    @ZenMethod
     @ZenGetter("isClient")
-	boolean isClient();
+    default boolean isClient() {
+        return false;
+    }
     
-	@ZenMethod
+    @ZenMethod
     @ZenGetter("isServer")
-    boolean isServer();
+    default boolean isServer() {
+        return false;
+    }
 }

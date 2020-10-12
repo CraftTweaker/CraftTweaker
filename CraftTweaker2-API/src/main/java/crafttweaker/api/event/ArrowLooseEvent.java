@@ -11,6 +11,7 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenClass("crafttweaker.event.ArrowLooseEvent")
 @ZenRegister
 public interface ArrowLooseEvent extends IEventCancelable, IPlayerEvent {
+
     @ZenGetter("bow")
     IItemStack getBow();
 
