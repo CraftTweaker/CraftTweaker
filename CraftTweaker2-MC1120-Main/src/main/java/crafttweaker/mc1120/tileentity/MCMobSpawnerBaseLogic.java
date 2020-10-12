@@ -7,9 +7,13 @@ import crafttweaker.api.tileentity.IMobSpawnerBaseLogic;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.entity.MCEntityDefinition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class MCMobSpawnerBaseLogic implements IMobSpawnerBaseLogic {
     
@@ -17,6 +21,15 @@ public class MCMobSpawnerBaseLogic implements IMobSpawnerBaseLogic {
     
     public MCMobSpawnerBaseLogic(MobSpawnerBaseLogic mobSpawnerBaseLogic) {
         this.mobSpawnerBaseLogic = mobSpawnerBaseLogic;
+    }
+    
+    @Override
+    public IEntityDefinition getEntityDefinition() {
+        final Object entityId = ObfuscationReflectionHelper.findMethod(MobSpawnerBaseLogic.class, "func_190895_g", ResourceLocation.class).invoke(mobSpawnerBaseLogic);
+        if (entityId != null && entityId instanceof ResourceLocation && ForgeRegistries.ENTITIES.containsKey((ResourceLocation) entityId)) {
+            return new MCEntityDefinition(ForgeRegistries.ENTITIES.getValue((ResourceLocation) entityId));
+        }
+        return null;
     }
     
     @Override
