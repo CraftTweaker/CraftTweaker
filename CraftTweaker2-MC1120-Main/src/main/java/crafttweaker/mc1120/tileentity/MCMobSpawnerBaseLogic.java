@@ -25,9 +25,13 @@ public class MCMobSpawnerBaseLogic implements IMobSpawnerBaseLogic {
     
     @Override
     public IEntityDefinition getEntityDefinition() {
-        final Object entityId = ObfuscationReflectionHelper.findMethod(MobSpawnerBaseLogic.class, "func_190895_g", ResourceLocation.class).invoke(mobSpawnerBaseLogic);
-        if (entityId != null && entityId instanceof ResourceLocation && ForgeRegistries.ENTITIES.containsKey((ResourceLocation) entityId)) {
-            return new MCEntityDefinition(ForgeRegistries.ENTITIES.getValue((ResourceLocation) entityId));
+        try {
+            final Object entityId = ObfuscationReflectionHelper.findMethod(MobSpawnerBaseLogic.class, "func_190895_g", ResourceLocation.class).invoke(mobSpawnerBaseLogic);
+            if (entityId != null && entityId instanceof ResourceLocation && ForgeRegistries.ENTITIES.containsKey((ResourceLocation) entityId)) {
+                return new MCEntityDefinition(ForgeRegistries.ENTITIES.getValue((ResourceLocation) entityId));
+            }
+        } catch (Exception e) {
+            return null;
         }
         return null;
     }
