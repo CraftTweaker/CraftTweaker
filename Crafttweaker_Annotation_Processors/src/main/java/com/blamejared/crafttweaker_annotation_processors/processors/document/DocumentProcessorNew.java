@@ -1,40 +1,25 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
-import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.google.gson.*;
 import com.google.gson.stream.*;
 import com.sun.source.util.*;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
+import javax.annotation.processing.*;
+import javax.lang.model.*;
+import javax.lang.model.element.*;
+import javax.tools.*;
 import java.io.*;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.util.*;
+import java.util.stream.*;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DocumentProcessorNew extends AbstractProcessor {
+    
+    private final Collection<Element> allElements = new HashSet<>();
     
     private static final File docsOut = new File("docsOut");
     private static final Set<CrafttweakerDocumentationPage> pages = new TreeSet<>(Comparator.comparing(CrafttweakerDocumentationPage::getDocumentTitle));
@@ -55,39 +40,46 @@ public class DocumentProcessorNew extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        
         tree = Trees.instance(processingEnv);
     }
     
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         fillModIdInfo(roundEnv);
-        
-        for(Element element : roundEnv.getElementsAnnotatedWith(Document.class)) {
-            final Document document = element.getAnnotation(Document.class);
-            if(document == null) {
-                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Internal error! Document annotation null", element);
-                continue;
-            }
-            
-            if(!element.getKind().isClass() && !element.getKind().isInterface()) {
-                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "How is this annotated", element);
-                continue;
-            }
-            
-            
-            final TypeElement typeElement = (TypeElement) element;
-            final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
-            if(documentationPage != null) {
-                pages.add(documentationPage);
-            }
+        allElements.addAll(roundEnv.getElementsAnnotatedWith(Document.class));
+        if(!roundEnv.processingOver()) {
+            return false;
         }
-        
-        if(roundEnv.processingOver()) {
-            clearOutputDir();
-            writeToFiles();
-        }
+    
+        //Update each element to its latest state, then handle them all
+        allElements.stream()
+                .map(Object::toString) //Get names
+                .map(processingEnv.getElementUtils()::getTypeElement)
+                .forEach(this::handleElement);
+    
+        clearOutputDir();
+        writeToFiles();
+        allElements.clear();
         return false;
+    }
+    
+    private void handleElement(TypeElement typeElement) {
+        final Document document = typeElement.getAnnotation(Document.class);
+        if(document == null) {
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Internal error! Document annotation null", typeElement);
+            return;
+        }
+        
+        if(!typeElement.getKind().isClass() && !typeElement.getKind().isInterface()) {
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "How is this annotated", typeElement);
+            return;
+        }
+        
+        
+        final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
+        if(documentationPage != null) {
+            pages.add(documentationPage);
+        }
     }
     
     private void clearOutputDir() {
