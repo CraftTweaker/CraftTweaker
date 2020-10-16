@@ -715,7 +715,7 @@ public class CraftTweakerMC {
         else if(entity instanceof EntityLivingBase)
             return getIEntityLivingBase((EntityLivingBase) entity);
         else if(entity instanceof EntityItem)
-            return getIEntityItem((EntityItem) entity);
+            return new MCEntityItem(entityItem);
         else if(entity instanceof EntityXPOrb)
             return new MCEntityXp((EntityXPOrb) entity);
         else if(entity instanceof EntityFishHook)
@@ -996,7 +996,7 @@ public class CraftTweakerMC {
         if(entity == null)
             return null;
         else if(entity instanceof EntityTippedArrow)
-            return getIEntityArrowTipped((EntityTippedArrow) entity);
+            return new MCEntityArrowTipped(entity);
         else
             return new MCEntityArrow(entity);
 	}

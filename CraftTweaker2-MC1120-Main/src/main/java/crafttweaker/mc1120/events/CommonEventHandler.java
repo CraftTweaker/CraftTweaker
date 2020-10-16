@@ -709,4 +709,10 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasWorldTick())
             CrafttweakerImplementationAPI.events.publishWorldTick(new MCWorldTickEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onPotionEffectAdded(PotionAddedEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasPotionEffectAdded())
+            CrafttweakerImplementationAPI.events.publishPotionEffectAdded(new MCPotionEffectAddedEvent(ev));
+    }
 }

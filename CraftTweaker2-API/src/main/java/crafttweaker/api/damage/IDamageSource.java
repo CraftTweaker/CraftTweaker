@@ -75,7 +75,7 @@ public interface IDamageSource {
 	boolean isProjectile();
 
 	@ZenMethod
-	@ZenGetter("getDamageLocation")
+	@ZenGetter("damageLocation")
 	IVector3d getDamageLocation();
 	
 	@ZenMethod
@@ -95,7 +95,7 @@ public interface IDamageSource {
 	IDamageSource setDifficultyScaled();
 	
 	@ZenMethod
-	@ZenGetter("setExplosion")
+	@ZenGetter("setExplosionDamage")
 	IDamageSource setExplosion();
 	
 	@ZenMethod
@@ -107,7 +107,7 @@ public interface IDamageSource {
 	IDamageSource setMagicDamage();
 	
 	@ZenMethod
-	@ZenGetter("setProjectile")
+	@ZenGetter("setProjectileDamage")
 	IDamageSource setProjectile();
 
     

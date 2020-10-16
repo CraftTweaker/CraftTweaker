@@ -276,7 +276,10 @@ public interface IEventManager {
 
     @ZenMethod
 	IEventHandle onWorldTick(IEventHandler<WorldTickEvent> ev);
-    
+
+    @ZenMethod
+    IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

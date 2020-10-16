@@ -144,6 +144,7 @@ public class MTEventManager implements IEventManager {
         elEntityLivingDamage.clear();
         elEntityLivingHeal.clear();
         elWorldTick.clear();
+        elPotionEffectAdded.clear();
     }
 
     // ##########################
@@ -1726,5 +1727,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishWorldTick(WorldTickEvent event) {
         elWorldTick.publish(event);
+    }
+
+    // #########################
+    // ### PotionEffectAdded ###
+    // #########################
+
+    private final EventList<PotionEffectAddedEvent> elPotionEffectAdded = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev) {
+        return elPotionEffectAdded.add(ev);
+    }
+
+    public boolean hasPotionEffectAdded() {
+        return elPotionEffectAdded.hasHandlers();
+    }
+
+    public void publishPotionEffectAdded(PotionEffectAddedEvent event) {
+        elPotionEffectAdded.publish(event);
     }
 }
