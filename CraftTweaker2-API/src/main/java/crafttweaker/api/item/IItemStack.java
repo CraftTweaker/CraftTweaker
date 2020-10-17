@@ -194,7 +194,6 @@ public interface IItemStack extends IIngredient {
      * @return item stack with wildcard damage
      */
     @ZenMethod
-    @ZenGetter("anyDamage")
     IIngredient anyDamage();
     
     /**
@@ -225,7 +224,6 @@ public interface IItemStack extends IIngredient {
      */
     
     @ZenMethod
-    @ZenGetter("anyAmount")
     IItemStack anyAmount();
     
     /**

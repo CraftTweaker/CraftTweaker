@@ -31,7 +31,7 @@ public interface IDamageSource {
 
 	@ZenGetter("hungerDamage")
 	default float getHungerDamageFixed() {
-		return 0.0f;
+		return this.getHungerDamage();
 	}
 	
 	@ZenMethod
@@ -52,8 +52,10 @@ public interface IDamageSource {
 
 	@ZenMethod
 	@ZenGetter("damageUnblockable")
-	boolean isDamageUnblockable();
-	
+	default boolean isDamageUnblockable() {
+		return false;
+	}
+
 	@ZenMethod
 	@ZenGetter("difficultyScaled")
 	boolean isDifficultyScaled();
@@ -76,38 +78,32 @@ public interface IDamageSource {
 
 	@ZenMethod
 	@ZenGetter("damageLocation")
-	IVector3d getDamageLocation();
-	
+	default IVector3d getDamageLocation() {
+		return null;
+	}
+
 	@ZenMethod
-	@ZenGetter("setDamageAllowedInCreativeMode")
 	IDamageSource setDamageAllowedInCreativeMode();
 	
 	@ZenMethod
-	@ZenGetter("setDamageBypassesArmor")
 	IDamageSource setDamageBypassesArmor();
 	
 	@ZenMethod
-	@ZenGetter("setDamageIsAbsolute")
 	IDamageSource setDamageIsAbsolute();
 	
 	@ZenMethod
-	@ZenGetter("setDifficultyScaled")
 	IDamageSource setDifficultyScaled();
 	
 	@ZenMethod
-	@ZenGetter("setExplosionDamage")
 	IDamageSource setExplosion();
 	
 	@ZenMethod
-	@ZenGetter("setFireDamage")
 	IDamageSource setFireDamage();
 	
 	@ZenMethod
-	@ZenGetter("setMagicDamage")
 	IDamageSource setMagicDamage();
 	
 	@ZenMethod
-	@ZenGetter("setProjectileDamage")
 	IDamageSource setProjectile();
 
     

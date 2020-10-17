@@ -34,7 +34,6 @@ public interface IEntity extends ICommandSender {
      *
      * @return the current world of this entity
      */
-    
     @ZenSetter("world")
     void setWorld(IWorld world);
     
@@ -503,14 +502,15 @@ public interface IEntity extends ICommandSender {
     default void update(IData data){
         CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
     }
-    
+
+    @ZenMethod
     @ZenGetter
     default boolean onGround() {
         return false;
     }
     
     @ZenGetter
-    boolean isLightningbolt() {
+    default boolean isLightningbolt() {
         return false;
     }
 }
