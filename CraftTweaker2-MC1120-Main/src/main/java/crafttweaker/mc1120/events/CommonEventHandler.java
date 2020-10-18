@@ -394,7 +394,31 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onPlayerTickEvent(TickEvent.PlayerTickEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerTick())
-            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(CraftTweakerMC.getIPlayer(ev.player), ev.phase.name().toUpperCase()));
+            CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onClientTickEvent(TickEvent.ClientTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasClientTick())
+            CrafttweakerImplementationAPI.events.publishClientTick(new MCClientTickEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onServerTickEvent(TickEvent.ServerTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasServerTick())
+            CrafttweakerImplementationAPI.events.publishServerTick(new MCServerTickEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onRenderTickEvent(TickEvent.RenderTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasRenderTick())
+            CrafttweakerImplementationAPI.events.publishRenderTick(new MCRenderTickEvent(ev));
+    }
+    
+    @SubscribeEvent
+    public void onWorldTickEvent(TickEvent.WorldTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasWorldTick())
+            CrafttweakerImplementationAPI.events.publishWorldTick(new MCWorldTickEvent(ev));
     }
     
     @SubscribeEvent
