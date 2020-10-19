@@ -18,10 +18,21 @@ import java.util.List;
 @Document("vanilla/api/loot/MCLootModifier")
 @ZenWrapper(wrappedClass = "net.minecraftforge.common.loot.IGlobalLootModifier")
 public class MCLootModifier implements ILootModifier {
+    private static class DummyGlobalLootModifier implements IGlobalLootModifier {
+        private static final DummyGlobalLootModifier INSTANCE = new DummyGlobalLootModifier();
+
+        private DummyGlobalLootModifier() {}
+
+        @Override
+        public List<ItemStack> apply(List<ItemStack> generatedLoot, LootContext context) {
+            return generatedLoot;
+        }
+    }
+
     private final IGlobalLootModifier internal;
 
     public MCLootModifier(final IGlobalLootModifier internal) {
-        this.internal = internal;
+        this.internal = internal == null? DummyGlobalLootModifier.INSTANCE : internal;
     }
 
     public IGlobalLootModifier getInternal() {
