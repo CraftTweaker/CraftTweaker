@@ -1,0 +1,37 @@
+package com.blamejared.crafttweaker.impl.loot;
+
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.loot.ILootModifier;
+import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
+import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.List;
+
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.loot.MCLootModifier")
+@Document("vanilla/api/loot/MCLootModifier")
+@ZenWrapper(wrappedClass = "net.minecraftforge.common.loot.IGlobalLootModifier")
+public class MCLootModifier implements ILootModifier {
+    private final IGlobalLootModifier internal;
+
+    public MCLootModifier(final IGlobalLootModifier internal) {
+        this.internal = internal;
+    }
+
+    public IGlobalLootModifier getInternal() {
+        return this.internal;
+    }
+
+    @Override
+    public List<IItemStack> applyModifier(List<IItemStack> loot, MCLootContext currentContext) {
+        final List<ItemStack> unwrappedLoot = CraftTweakerHelper.getItemStacks(loot);
+        final LootContext unwrappedContext = currentContext.getInternal();
+        return CraftTweakerHelper.getIItemStacks(this.internal.apply(unwrappedLoot, unwrappedContext));
+    }
+}
