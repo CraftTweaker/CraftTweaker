@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.loot;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.api.loot.ILootModifier;
@@ -15,17 +16,19 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class CTLootModifier extends LootModifier {
+    private final String name;
     private final Predicate<MCLootContext> conditions;
     private final ILootModifier function;
 
-    public CTLootModifier(final List<ILootCondition> conditions, final ILootModifier function) {
+    public CTLootModifier(final String name, final List<ILootCondition> conditions, final ILootModifier function) {
         super(new net.minecraft.loot.conditions.ILootCondition[0]);
+        this.name = name;
         this.conditions = context -> conditions.stream().allMatch(it -> it.test(context));
         this.function = function;
     }
 
-    public CTLootModifier(final ILootCondition[] conditions, final ILootModifier function) {
-        this(conditions == null? new ArrayList<>() : Arrays.asList(conditions), function);
+    public CTLootModifier(final String name, final ILootCondition[] conditions, final ILootModifier function) {
+        this(name, conditions == null? new ArrayList<>() : Arrays.asList(conditions), function);
     }
 
     @Override
@@ -35,6 +38,11 @@ public class CTLootModifier extends LootModifier {
         final MCLootContext wrappedContext = new MCLootContext(context);
 
         if (!this.conditions.test(wrappedContext)) return generatedLoot;
-        return CraftTweakerHelper.getItemStacks(this.function.applyModifier(wrappedLoot, wrappedContext));
+        try {
+            return CraftTweakerHelper.getItemStacks(this.function.applyModifier(wrappedLoot, wrappedContext));
+        } catch (final Exception e) {
+            CraftTweakerAPI.logThrowing("An error occurred while trying to run loot modifier '%s': %s", e, this.name, e.getMessage());
+            return generatedLoot;
+        }
     }
 }

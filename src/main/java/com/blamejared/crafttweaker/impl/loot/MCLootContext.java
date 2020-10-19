@@ -16,6 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.MCLootContext")
 @Document("vanilla/api/loot/MCLootContext")
 @ZenWrapper(wrappedClass = "net.minecraft.loot.LootContext")
+@SuppressWarnings("unused")
 public class MCLootContext {
     private final LootContext nativeContext;
 
@@ -24,30 +25,38 @@ public class MCLootContext {
     }
 
     //@ZenCodeType.Getter("thisEntity")
+    //@ZenCodeType.Nullable
     //MCEntity getThisEntity();
 
     //@ZenCodeType.Getter("lastDamagePlayer")
+    //@ZenCodeType.Nullable
     //MCPlayer getLastDamagePlayer();
 
     //@ZenCodeType.Getter("damageSource")
+    //@ZenCodeType.Nullable
     //MCDamageSource getDamageSource();
 
     //@ZenCodeType.Getter("killerEntity")
+    //@ZenCodeType.Nullable
     //MCEntity getKillerEntity();
 
     //@ZenCodeType.Getter("directKillerEntity")
+    //@ZenCodeType.Nullable
     //MCEntity getDirectKillerEntity();
 
     //@ZenCodeType.Getter("origin")
+    //@ZenCodeType.Nullable
     //MCVector3d getOrigin();
 
     @ZenCodeType.Getter("blockState")
+    @ZenCodeType.Nullable
     public MCBlockState getBlockState() {
         final BlockState nativeState = this.nativeContext.get(LootParameters.BLOCK_STATE);
         return nativeState == null? null : new MCBlockState(nativeState);
     }
 
     //@ZenCodeType.Getter("tileEntity")
+    //@ZenCodeType.Nullable
     //MCTileEntity getTileEntity();
 
     @ZenCodeType.Getter("tool")
@@ -68,6 +77,7 @@ public class MCLootContext {
     }
 
     //@ZenCodeType.Getter("world")
+    //@ZenCodeType.Nullable
     //MCWorld getWorld();
 
     @ZenCodeType.Getter("luck")

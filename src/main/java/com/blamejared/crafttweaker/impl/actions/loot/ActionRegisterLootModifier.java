@@ -18,7 +18,7 @@ public class ActionRegisterLootModifier extends ActionLootModifier {
                                       final Supplier<Map<ResourceLocation, IGlobalLootModifier>> mapGetter) {
         super(mapGetter);
         this.name = name;
-        this.glm = () -> new CTLootModifier(conditions, function);
+        this.glm = () -> new CTLootModifier(this.name.toString(), conditions, function);
     }
 
     @Override
