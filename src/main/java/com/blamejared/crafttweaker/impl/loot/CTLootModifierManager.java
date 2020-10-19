@@ -21,6 +21,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -114,6 +115,9 @@ public class CTLootModifierManager {
             Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) LMM_MAP_GETTER.invokeExact(lmm);
             if (map instanceof ImmutableMap) LMM_MAP_SETTER.invokeExact(lmm, map = new HashMap<>(map)); // Let's "mutabilize" the map
             return map;
+        } catch (final IllegalStateException e) {
+            // LMM_GETTER.invokeExact() throws ISE if we're on the client and playing multiplayer
+            return Collections.emptyMap();
         } catch (final Throwable e) {
             throw new RuntimeException(e);
         }
