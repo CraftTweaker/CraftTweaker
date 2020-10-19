@@ -49,6 +49,10 @@ public class MTEventManager implements IEventManager {
     private final EventList<PlayerDestroyItemEvent> elPlayerDestroyItem = new EventList<>();
     private final EventList<PlayerBrewedPotionEvent> elPlayerBrewedPotion = new EventList<>();
     private final EventList<PlayerTickEvent> elPlayerTick = new EventList<>();
+    private final EventList<ClientTickEvent> elClientTick = new EventList<>();
+    private final EventList<ServerTickEvent> elServerTick = new EventList<>();
+    private final EventList<RenderTickEvent> elRenderTick = new EventList<>();
+    private final EventList<WorldTickEvent> elWorldTick = new EventList<>();
     private final EventList<BlockBreakEvent> elBlockBreak = new EventList<>();
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
@@ -97,6 +101,10 @@ public class MTEventManager implements IEventManager {
         elPlayerDestroyItem.clear();
         elPlayerBrewedPotion.clear();
         elPlayerTick.clear();
+        elClientTick.clear();
+        elServerTick.clear();
+        elRenderTick.clear();
+        elWorldTick.clear();
         elBlockBreak.clear();
         elBlockHarvestDrops.clear();
         elPlayerBreakSpeed.clear();
@@ -813,6 +821,7 @@ public class MTEventManager implements IEventManager {
         elPlayerBrewedPotion.publish(event);
     }
 
+
     // ##################
     // ### PlayerTick ###
     // ##################
@@ -829,6 +838,82 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerTick(PlayerTickEvent event) {
         elPlayerTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### ClientTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onClientTick(IEventHandler<ClientTickEvent> ev) {
+        return elClientTick.add(ev);
+    }
+
+    public boolean hasClientTick() {
+        return elClientTick.hasHandlers();
+    }
+
+    public void publishClientTick(ClientTickEvent event) {
+        elClientTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### ServerTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onServerTick(IEventHandler<ServerTickEvent> ev) {
+        return elServerTick.add(ev);
+    }
+
+    public boolean hasServerTick() {
+        return elServerTick.hasHandlers();
+    }
+
+    public void publishServerTick(ServerTickEvent event) {
+        elServerTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### RenderTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onRenderTick(IEventHandler<RenderTickEvent> ev) {
+        return elRenderTick.add(ev);
+    }
+
+    public boolean hasRenderTick() {
+        return elRenderTick.hasHandlers();
+    }
+
+    public void publishRenderTick(RenderTickEvent event) {
+        elRenderTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### WorldTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onWorldTick(IEventHandler<WorldTickEvent> ev) {
+        return elWorldTick.add(ev);
+    }
+
+    public boolean hasWorldTick() {
+        return elWorldTick.hasHandlers();
+    }
+
+    public void publishWorldTick(WorldTickEvent event) {
+        elWorldTick.publish(event);
     }
 
 

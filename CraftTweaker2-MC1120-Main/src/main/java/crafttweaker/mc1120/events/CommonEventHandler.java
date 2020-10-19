@@ -5,7 +5,6 @@ import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityDefinition;
-import crafttweaker.api.event.EntityLivingEquipmentChangeEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -20,7 +19,6 @@ import crafttweaker.mc1120.recipes.MCCraftingInventorySquared;
 import crafttweaker.mc1120.recipes.MCRecipeBase;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.runtime.ScriptLoader;
-import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
@@ -30,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
@@ -50,7 +49,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -368,7 +366,7 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPlayerAnvilRepair())
             CrafttweakerImplementationAPI.events.publishPlayerAnvilRepair(new MCPlayerAnvilRepairEvent(ev));
     }
-
+    
     @SubscribeEvent
     public void onPlayerAnvilUpdateEvent(AnvilUpdateEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerAnvilUpdate())
@@ -397,6 +395,30 @@ public class CommonEventHandler {
     public void onPlayerTickEvent(TickEvent.PlayerTickEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPlayerTick())
             CrafttweakerImplementationAPI.events.publishPlayerTick(new MCPlayerTickEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onClientTickEvent(TickEvent.ClientTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasClientTick())
+            CrafttweakerImplementationAPI.events.publishClientTick(new MCClientTickEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onServerTickEvent(TickEvent.ServerTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasServerTick())
+            CrafttweakerImplementationAPI.events.publishServerTick(new MCServerTickEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onRenderTickEvent(TickEvent.RenderTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasRenderTick())
+            CrafttweakerImplementationAPI.events.publishRenderTick(new MCRenderTickEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onWorldTickEvent(TickEvent.WorldTickEvent ev) {
+        if(CrafttweakerImplementationAPI.events.hasWorldTick())
+            CrafttweakerImplementationAPI.events.publishWorldTick(new MCWorldTickEvent(ev));
     }
     
     @SubscribeEvent
@@ -664,50 +686,44 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishProjectileImpactThrowable(new MCProjectileImpactThrowableEvent(ev));
         }
     }
-    
+
     @SubscribeEvent
     public void onArrowLoose (ArrowLooseEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasArrowLoose()) {
             CrafttweakerImplementationAPI.events.publishArrowLoose(new MCArrowLooseEvent(ev));
         }
     }
-    
+
     @SubscribeEvent
     public void onArrowNock (ArrowNockEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasArrowNock()) {
             CrafttweakerImplementationAPI.events.publishArrowNock(new MCArrowNockEvent(ev));
         }
     }
-    
+
     @SubscribeEvent
     public void onEntityJoinWorld (EntityJoinWorldEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasEntityJoinWorld()) {
             CrafttweakerImplementationAPI.events.publishEntityJoinWorld(new MCEntityJoinWorldEvent(ev));
         }
     }
-    
+
     @SubscribeEvent
     public void onEntityLivingDamage(LivingDamageEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingDamage())
             CrafttweakerImplementationAPI.events.publishEntityLivingDamage(new MCEntityLivingDamageEvent(ev));
     }
-    
+
     @SubscribeEvent
     public void onEntityLivingEquipmentChange(LivingEquipmentChangeEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingEquipmentChange())
             CrafttweakerImplementationAPI.events.publishEntityLivingEquipmentChange(new MCEntityLivingEquipmentChangeEvent(ev));
     }
-    
+
     @SubscribeEvent
     public void onEntityLivingHeal(LivingHealEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingHeal())
             CrafttweakerImplementationAPI.events.publishEntityLivingHeal(new MCEntityLivingHealEvent(ev));
-    }
-
-    @SubscribeEvent
-    public void onWorldTick(WorldTickEvent ev) {
-        if(CrafttweakerImplementationAPI.events.hasWorldTick())
-            CrafttweakerImplementationAPI.events.publishWorldTick(new MCWorldTickEvent(ev));
     }
 
     @SubscribeEvent

@@ -116,7 +116,7 @@ task genGitChangelog() {
     String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
     // was having issues with grep and spaces in the regex
     exec {
-        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{1}'
+        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{0}'
         standardOutput = stdout
     }
     if (stdout.toString().trim().indexOf("\n") >= 0) {

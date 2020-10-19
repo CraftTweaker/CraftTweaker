@@ -1,35 +1,19 @@
 package crafttweaker.api.event;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("crafttweaker.event.ITickEvent")
 @ZenRegister
 public interface ITickEvent {
 
-    @ZenMethod
-    @ZenGetter("phase")
-    default String getPhase() {
-        return null;
-    }
-
-    @ZenMethod
     @ZenGetter("side")
-    default String getSide() {
-        return null;
-    }
+    String getSide();
+
+    @ZenGetter("phase")
+    String getPhase();
     
-    @ZenMethod
-    @ZenGetter("isClient")
-    default boolean isClient() {
-        return false;
-    }
-    
-    @ZenMethod
-    @ZenGetter("isServer")
-    default boolean isServer() {
-        return false;
-    }
 }

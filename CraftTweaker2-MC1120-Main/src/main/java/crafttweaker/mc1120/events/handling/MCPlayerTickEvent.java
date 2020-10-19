@@ -5,16 +5,31 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class MCPlayerTickEvent extends MCTickEvent implements PlayerTickEvent {
+public class MCPlayerTickEvent implements PlayerTickEvent {
+
     private final TickEvent.PlayerTickEvent event;
 
+    @Deprecated
+    public MCPlayerTickEvent(IPlayer player, String phase) {
+        this(new TickEvent.PlayerTickEvent(CraftTweakerMC.getPlayer(player), TickEvent.Phase.valueOf(phase)));
+    }
+
     public MCPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-        super(event);
         this.event = event;
     }
 
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.player);
+    }
+
+    @Override
+    public String getSide() {
+        return event.side.name().toUpperCase();
+    }
+
+    @Override
+    public String getPhase() {
+        return event.phase.name().toUpperCase();
     }
 }
