@@ -21,6 +21,7 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.potions.IPotionEffect;
+import crafttweaker.api.potions.IPotionType;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
@@ -41,6 +42,7 @@ import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.MCPotion;
 import crafttweaker.mc1120.potions.MCPotionEfect;
+import crafttweaker.mc1120.potions.MCPotionType;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -65,6 +67,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionType;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
@@ -85,6 +88,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
 
 import java.util.*;
+
+@SuppressWarnings("unused")
 
 /**
  * CraftTweaker - MineCraft API bridge.
@@ -715,7 +720,7 @@ public class CraftTweakerMC {
         else if(entity instanceof EntityLivingBase)
             return getIEntityLivingBase((EntityLivingBase) entity);
         else if(entity instanceof EntityItem)
-            return new MCEntityItem(entityItem);
+            return new MCEntityItem((EntityItem) entity);
         else if(entity instanceof EntityXPOrb)
             return new MCEntityXp((EntityXPOrb) entity);
         else if(entity instanceof EntityFishHook)
@@ -996,7 +1001,7 @@ public class CraftTweakerMC {
         if(entity == null)
             return null;
         else if(entity instanceof EntityTippedArrow)
-            return new MCEntityArrowTipped(entity);
+            return new MCEntityArrowTipped((EntityTippedArrow) entity);
         else
             return new MCEntityArrow(entity);
 	}
@@ -1008,4 +1013,26 @@ public class CraftTweakerMC {
     public static IEntityThrowable getIEntityThrowable(EntityThrowable entity) {
 		return entity == null ? null : new MCEntityThrowable(entity);
 	}
+
+    public static IPotionEffect[] getIPotionEffects(List<PotionEffect> potionEffects) {
+        if(potionEffects == null)
+            return null;
+
+        IPotionEffect[] result = new IPotionEffect[potionEffects.size()];
+        for(int i = 0; i < result.length; i++) {
+            PotionEffect potionEffect = potionEffects.get(i);
+            if(potionEffect != null) {
+                result[i] = new MCPotionEfect(potionEffect);
+            }
+        }
+        return result;
+    }
+
+    public static PotionType getPotionType(IPotionType potionType) {
+        return potionType == null ? null : (PotionType) potionType.getInternal();
+    }
+
+    public static IPotionType getIPotionType(PotionType potionType) {
+        return potionType == null ? null : new MCPotionType(potionType);
+    }
 }

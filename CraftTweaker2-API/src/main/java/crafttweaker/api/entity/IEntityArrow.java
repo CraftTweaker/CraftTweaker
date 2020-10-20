@@ -5,7 +5,7 @@ import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.entity.IEntityArrow")
 @ZenRegister
-public interface IEntityArrow extends IEntity {
+public interface IEntityArrow extends IEntity, IProjectile {
     
     @ZenMethod
     @ZenSetter("damage")
@@ -58,7 +58,4 @@ public interface IEntityArrow extends IEntity {
 
     @ZenMethod
     void shoot(IEntity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy);
-
-    @ZenMethod
-    void shoot(double x, double y, double z, float velocity, float inaccuracy);
 }

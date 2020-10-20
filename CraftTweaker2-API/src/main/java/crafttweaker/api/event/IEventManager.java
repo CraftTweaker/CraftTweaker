@@ -287,9 +287,6 @@ public interface IEventManager {
 	IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev);
 
     @ZenMethod
-	IEventHandle onWorldTick(IEventHandler<WorldTickEvent> ev);
-
-    @ZenMethod
     IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
 
     /*

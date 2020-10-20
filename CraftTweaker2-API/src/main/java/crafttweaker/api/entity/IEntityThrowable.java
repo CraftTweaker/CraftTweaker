@@ -5,10 +5,7 @@ import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.entity.IEntityThrowable")
 @ZenRegister
-public interface IEntityThrowable extends IEntity {
-
-    @ZenMethod
-    void shoot(double x, double y, double z, float velocity, float inaccuracy);
+public interface IEntityThrowable extends IEntity, IProjectile {
 
     @ZenMethod
     @ZenGetter("thrower")
