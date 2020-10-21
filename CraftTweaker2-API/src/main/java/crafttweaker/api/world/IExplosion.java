@@ -5,7 +5,7 @@ import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IVector3d;
-import crafttweaker.api.util.IPosition3f;
+import crafttweaker.api.util.Position3f;
 import java.util.List;
 import java.util.Map;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -20,7 +20,7 @@ public interface IExplosion {
     IEntityLivingBase getExplosivePlacedBy();
 
     @ZenGetter("position")
-    IPosition3f getPosition();
+    Position3f getPosition();
 
     @ZenGetter("affectedBlockPositions")
     List<IBlockPos> getAffectedBlockPositions();

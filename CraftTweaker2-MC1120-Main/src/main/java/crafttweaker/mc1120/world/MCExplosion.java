@@ -1,10 +1,14 @@
 package crafttweakerutils.world;
 
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IExplosion;
 import crafttweaker.api.world.IVector3d;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.util.MCPosition3f;
 import crafttweaker.mc1120.world.MCBlockPos;
 import crafttweaker.mc1120.world.MCVector3d;
 import net.minecraft.world.Explosion;
@@ -28,8 +32,8 @@ public class MCExplosion implements IExplosion {
     }
 
     @Override
-    public IPosition3f getPosition() {
-        return new MCVector3d((float) explosion.getPosition().x,
+    public Position3f getPosition() {
+        return new MCPosition3f((float) explosion.getPosition().x,
                               (float) explosion.getPosition().y,
                               (float) explosion.getPosition().z);
     }

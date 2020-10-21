@@ -2,6 +2,7 @@ package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.event.RenderTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class MCRenderTickEvent implements RenderTickEvent {
 
@@ -14,6 +15,11 @@ public class MCRenderTickEvent implements RenderTickEvent {
     @Override
     public float getRenderTickTime() {
         return event.renderTickTime;
+    }
+    
+    @Override
+    public String getSide() {
+        return Side.CLIENT.name().toUpperCase();
     }
 
     @Override
