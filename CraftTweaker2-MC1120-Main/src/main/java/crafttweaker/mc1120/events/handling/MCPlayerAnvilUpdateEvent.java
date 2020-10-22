@@ -3,9 +3,7 @@ package crafttweaker.mc1120.events.handling;
 import crafttweaker.api.event.PlayerAnvilUpdateEvent;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class MCPlayerAnvilUpdateEvent implements PlayerAnvilUpdateEvent {
     

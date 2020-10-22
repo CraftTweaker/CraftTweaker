@@ -52,7 +52,7 @@ public class CraftTweakerHacks {
     private CraftTweakerHacks() {
     }
     
-    public static List getSeeds() {
+    public static List<WeightedRandom.Item> getSeeds() {
         return getPrivateStaticObject(ForgeHooks.class, "seedList");
     }
     
@@ -128,7 +128,7 @@ public class CraftTweakerHacks {
         return null;
     }
 
-    private static Field getField(Class cls, String... names) {
+    private static Field getField(Class<?> cls, String... names) {
         for(String name : names) {
             try {
                 Field field = cls.getDeclaredField(name);

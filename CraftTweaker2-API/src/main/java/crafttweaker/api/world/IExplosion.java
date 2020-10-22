@@ -3,8 +3,6 @@ package crafttweaker.api.world;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.IBlockPos;
-import crafttweaker.api.world.IVector3d;
 import crafttweaker.api.util.Position3f;
 import java.util.List;
 import java.util.Map;

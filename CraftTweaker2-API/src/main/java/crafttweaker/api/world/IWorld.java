@@ -104,7 +104,13 @@ public interface IWorld extends IBlockAccess {
 
     @ZenMethod
     default IItemStack getPickedBlock(IBlockPos pos, IRayTraceResult rayTraceResult, IPlayer player) {
-        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock, tell the author to fix that.");
+        return null;
+    }
+
+    @ZenMethod
+    default IExplosion newExplosion() {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.newExplosion, tell the author to fix that.");
         return null;
     }
 }

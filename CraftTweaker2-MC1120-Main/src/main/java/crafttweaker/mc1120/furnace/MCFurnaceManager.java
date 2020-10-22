@@ -9,9 +9,6 @@ import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;

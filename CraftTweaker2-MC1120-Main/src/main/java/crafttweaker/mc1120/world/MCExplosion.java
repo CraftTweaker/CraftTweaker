@@ -1,4 +1,4 @@
-package crafttweakerutils.world;
+package crafttweaker.mc1120.world;
 
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.player.IPlayer;
@@ -9,8 +9,6 @@ import crafttweaker.api.world.IVector3d;
 import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.util.MCPosition3f;
-import crafttweaker.mc1120.world.MCBlockPos;
-import crafttweaker.mc1120.world.MCVector3d;
 import net.minecraft.world.Explosion;
 
 import java.util.AbstractMap;
