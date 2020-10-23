@@ -947,4 +947,12 @@ public class CraftTweakerMC {
     public static Biome getBiome(IBiome biome) {
         return biome == null ? null : biome instanceof MCBiome ? ((MCBiome) biome).getInternal() : Biome.REGISTRY.getObject(new ResourceLocation(biome.getId()));
     }
+
+    public static IExplosion getIExplosion(Explosion explosion) {
+        return explosion == null ? null : new MCExplosion(explosion);
+    }
+
+    public static Explosion getExplosion(IExplosion explosion) {
+        return explosion != null && explosion instanceof MCExplosion ? (Explosion) explosion.getInternal() : null;
+    }
 }

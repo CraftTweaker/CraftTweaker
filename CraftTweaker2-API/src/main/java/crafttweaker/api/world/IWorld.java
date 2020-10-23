@@ -115,8 +115,14 @@ public interface IWorld extends IBlockAccess {
     }
 
     @ZenMethod
-    default IExplosion newExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
-        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.newExplosion, tell the author to fix that.");
+    default IExplosion performExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.performExplosion, tell the author to fix that.");
+        return null;
+    }
+
+    @ZenMethod
+    default IExplosion performExplosion(IExplosion explosion) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.performExplosion, tell the author to fix that.");
         return null;
     }
 }

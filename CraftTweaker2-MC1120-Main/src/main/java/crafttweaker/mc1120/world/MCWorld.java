@@ -186,12 +186,24 @@ public class MCWorld extends MCBlockAccess implements IWorld {
     
     @Override
     public IExplosion createExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
-        return new MCExplosion(new Explosion(world, CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
+        return CraftTweakerMC.getIExplosion(new Explosion(world, CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
     }
 
     @Override
-    public IExplosion newExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
-        return new MCExplosion(world.newExplosion(CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
+    public IExplosion performExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
+        return CraftTweakerMC.getIExplosion(world.newExplosion(CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
+    }
+
+    /**
+     * Overload for pre-made explosions. Copies vanilla's {@link World#newExplosion(net.minecraft.entity.Entity, double, double, double, float, boolean, boolean)}
+     * in favor of an already-constructed explosion.
+     */
+    @Override
+    public IExplosion performExplosion(IExplosion explosion) {
+        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, CraftTweakerMC.getExplosion(explosion))) return explosion;
+        explosion.doExplosionA();
+        explosion.doExplosionB(true);
+        return explosion;
     }
 
 }
