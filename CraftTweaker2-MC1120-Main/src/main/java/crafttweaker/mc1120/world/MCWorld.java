@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import stanhebben.zenscript.annotations.Optional;
 
@@ -181,6 +182,16 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 		net.minecraft.block.state.IBlockState state = world.getBlockState(blockPos);
 		ItemStack stack = state.getBlock().getPickBlock(state, CraftTweakerMC.getRayTraceResult(rayTraceResult), world, blockPos, CraftTweakerMC.getPlayer(player));
 		return CraftTweakerMC.getIItemStack(stack);
-	}
+    }
+    
+    @Override
+    public IExplosion createExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
+        return new MCExplosion(new Explosion(world, CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
+    }
+
+    @Override
+    public IExplosion newExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
+        return new MCExplosion(world.newExplosion(CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
+    }
 
 }

@@ -117,8 +117,6 @@ public interface IRecipeManager {
     void addHiddenShaped(String name, IItemStack output, IIngredient[][] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, @Optional boolean mirrored);
     /**
      * Removes all crafting recipes in the game
-     *
-     * @return amount of recipes removed.
      */
     @ZenMethod
     void removeAll();
@@ -135,7 +133,7 @@ public interface IRecipeManager {
     /**
      * Removes the recipe with the given registry name
      *
-     * @param recipeName: RegistryName of the recipe
+     * @param recipeName RegistryName of the recipe
      */
     @ZenMethod
     void removeByRecipeName(String recipeName, @Optional IItemStack outputFilter);
@@ -143,7 +141,7 @@ public interface IRecipeManager {
     /**
      * Removes all recipe which match the given regex String
      *
-     * @param regexString: Regex String to match to
+     * @param regexString Regex String to match to
      */
     @ZenMethod
     void removeByRegex(String regexString, @Optional IItemStack outputFilter);
@@ -151,7 +149,7 @@ public interface IRecipeManager {
     /**
      * Removes all recipe which match the given modid
      *
-     * @param modid: modid of recipes to remove
+     * @param modid modid of recipes to remove
      */
     @ZenMethod
     void removeByMod(String modid);

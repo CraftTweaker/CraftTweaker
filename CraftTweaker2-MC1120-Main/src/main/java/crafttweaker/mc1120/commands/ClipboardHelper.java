@@ -16,9 +16,9 @@ public class ClipboardHelper {
     /**
      * Sends the Player a Message where he can click on and copy the it
      *
-     * @param player:      Player to send the message to
-     * @param holeMessage: String that should be shown in chat
-     * @param copyMessage: String that is being copied when the player clicks on it
+     * @param player       Player to send the message to
+     * @param holeMessage  String that should be shown in chat
+     * @param copyMessage  String that is being copied when the player clicks on it
      */
     public static void sendMessageWithCopy(EntityPlayer player, String holeMessage, String copyMessage) {
         player.sendMessage(SpecialMessagesChat.getCopyMessage(holeMessage, copyMessage));

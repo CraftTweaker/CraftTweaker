@@ -469,9 +469,9 @@ public class CraftTweakerMC {
     /**
      * Retrieves the block from an item stack.
      *
-     * @param itemStack
+     * @param itemStack the itemstack to retrieve the block from
      *
-     * @return
+     * @return the block from the itemstack
      */
     public static Block getBlock(IItemStack itemStack) {
         if(itemStack == null)

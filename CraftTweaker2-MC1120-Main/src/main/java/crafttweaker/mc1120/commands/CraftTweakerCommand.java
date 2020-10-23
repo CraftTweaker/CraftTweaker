@@ -41,7 +41,7 @@ public abstract class CraftTweakerCommand {
     /**
      * Has to be overwritten by the Commands when they need subcommands below the first one
      *
-     * @param args: Args are only from past the initial command
+     * @param args Args are only from past the initial command
      *
      * @return Returns an empty List by default
      */
@@ -56,7 +56,7 @@ public abstract class CraftTweakerCommand {
     /**
      * Has to be overwritten by the commands
      *
-     * @param args: Has only the args after this original event
+     * @param args Has only the args after this original event
      */
     public abstract void executeCommand(MinecraftServer server, ICommandSender sender, String[] args);
     
