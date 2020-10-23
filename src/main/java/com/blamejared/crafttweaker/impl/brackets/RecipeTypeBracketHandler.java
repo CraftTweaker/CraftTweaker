@@ -34,7 +34,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
                 .map(s -> new ParsedNamedType.ParsedNamePart(s, null))
                 .collect(Collectors.toList());
         
-        return new ParsedNamedType(position, collect, ParsedStorageTag.NULL);
+        return new ParsedNamedType(position, collect);
     }
     
     public static boolean containsCustomManager(ResourceLocation location) {

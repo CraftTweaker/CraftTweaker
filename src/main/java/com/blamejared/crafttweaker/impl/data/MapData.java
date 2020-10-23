@@ -5,10 +5,6 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NumberNBT;
-import org.openzen.zencode.java.StorageTagType;
-import org.openzen.zencode.java.ZenCodeStorageTag;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
@@ -34,7 +30,7 @@ public class MapData implements IData {
     }
     
     @ZenCodeType.Constructor
-    public MapData(Map<@ZenCodeStorageTag(StorageTagType.STATIC) String, IData> map) {
+    public MapData(Map<String, IData> map) {
         this.internal = new CompoundNBT();
         putAll(map);
     }
