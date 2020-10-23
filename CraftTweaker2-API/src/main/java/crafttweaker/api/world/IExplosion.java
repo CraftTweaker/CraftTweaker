@@ -15,6 +15,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public interface IExplosion {
 
+    @ZenGetter("world")
+    IWorld getWorld();
+
     @ZenGetter("placedBy")
     IEntityLivingBase getExplosivePlacedBy();
 

@@ -29,6 +29,11 @@ public class MCExplosion implements IExplosion {
     }
 
     @Override
+    public IWorld getWorld() {
+        return CraftTweakerMC.getIWorld(explosion.world);
+    }
+
+    @Override
     public IEntityLivingBase getExplosivePlacedBy() {
         return new MCEntityLivingBase(explosion.getExplosivePlacedBy());
     }
