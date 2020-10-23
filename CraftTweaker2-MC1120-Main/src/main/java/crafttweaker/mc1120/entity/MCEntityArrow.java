@@ -2,12 +2,9 @@ package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityArrow;
-import crafttweaker.api.entity.IProjectile;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
-
-import javax.annotation.Nullable;
 
 public class MCEntityArrow extends MCEntity implements IEntityArrow {
     private final EntityArrow entityArrow;
@@ -58,7 +55,6 @@ public class MCEntityArrow extends MCEntity implements IEntityArrow {
 	}
 
 	@Override
-	@Nullable
 	public IEntity getShooter() {
 		return CraftTweakerMC.getIEntity(entityArrow.shootingEntity);
 	}

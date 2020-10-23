@@ -12,7 +12,7 @@ import stanhebben.zenscript.annotations.ZenMethodStatic;
 public class MCPotionTypeExpand {
 
     @ZenMethodStatic
-    public IPotionType fromString(String id) {
+    public static IPotionType fromString(String id) {
         return CraftTweakerMC.getIPotionType(PotionType.getPotionTypeForName(id));
     }
 }

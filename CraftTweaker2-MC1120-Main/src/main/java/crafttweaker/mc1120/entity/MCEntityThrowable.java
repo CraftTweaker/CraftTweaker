@@ -2,11 +2,8 @@ package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.entity.IEntityThrowable;
-import crafttweaker.api.entity.IProjectile;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.projectile.EntityThrowable;
-
-import javax.annotation.Nullable;
 
 public class MCEntityThrowable extends MCEntity implements IEntityThrowable {
     private final EntityThrowable entityThrowable;
@@ -22,7 +19,6 @@ public class MCEntityThrowable extends MCEntity implements IEntityThrowable {
 	}
 
 	@Override
-	@Nullable
 	public IEntityLivingBase getThrower() {
 		return CraftTweakerMC.getIEntityLivingBase(entityThrowable.getThrower());
 	}

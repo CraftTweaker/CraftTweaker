@@ -15,7 +15,7 @@ import java.util.UUID;
 public class ExpandEntityAttributeModifier {
 
     @ZenMethodStatic
-    public IEntityAttributeModifier createModifier(String name, double amount, int operation, @Optional String uuid) {
+    public static IEntityAttributeModifier createModifier(String name, double amount, int operation, @Optional String uuid) {
         AttributeModifier modifier = (uuid == null) ? new AttributeModifier(name, amount, operation) : new AttributeModifier(UUID.fromString(uuid), name, amount, operation);
         return CraftTweakerMC.getIEntityAttributeModifier(modifier);
     }

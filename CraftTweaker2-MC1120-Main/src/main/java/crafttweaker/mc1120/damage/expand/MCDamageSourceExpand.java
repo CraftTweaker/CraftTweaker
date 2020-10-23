@@ -16,13 +16,13 @@ import stanhebben.zenscript.annotations.*;
 public class MCDamageSourceExpand {
 
     @ZenMethodStatic
-    public IDamageSource createEntityDamage(String damagetype, IEntity source) {
+    public static IDamageSource createEntityDamage(String damagetype, IEntity source) {
         EntityDamageSource damageSource = new EntityDamageSource(damagetype, CraftTweakerMC.getEntity(source));
         return new MCDamageSource(damageSource);
     }
 
     @ZenMethodStatic
-    public IDamageSource createIndirectDamage(String damagetype, IEntity source, IEntity indirectEntity) {
+    public static IDamageSource createIndirectDamage(String damagetype, IEntity source, IEntity indirectEntity) {
         EntityDamageSourceIndirect damageSource = new EntityDamageSourceIndirect(damagetype, CraftTweakerMC.getEntity(source), CraftTweakerMC.getEntity(indirectEntity));
         return new MCDamageSource(damageSource);
     }

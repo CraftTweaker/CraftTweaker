@@ -724,10 +724,11 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasEntityLivingHeal())
             CrafttweakerImplementationAPI.events.publishEntityLivingHeal(new MCEntityLivingHealEvent(ev));
     }
-
+    /*
     @SubscribeEvent
     public void onPotionEffectAdded(PotionEvent.PotionAddedEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPotionEffectAdded())
             CrafttweakerImplementationAPI.events.publishPotionEffectAdded(new MCPotionEffectAddedEvent(ev));
     }
+    */
 }

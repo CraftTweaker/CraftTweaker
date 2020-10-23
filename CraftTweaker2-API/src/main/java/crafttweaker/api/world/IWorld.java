@@ -133,4 +133,8 @@ public interface IWorld extends IBlockAccess {
     default IEntity createLightningBolt(double x, double y, double z, @Optional boolean effectOnly) {
         return null;
     }
+
+    @ZenMethod
+    default void removeEntity(IEntity entity) {
+    }
 }

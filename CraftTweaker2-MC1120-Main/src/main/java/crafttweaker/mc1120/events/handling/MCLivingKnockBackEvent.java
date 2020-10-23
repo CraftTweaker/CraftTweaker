@@ -6,7 +6,7 @@ import crafttweaker.api.event.LivingKnockBackEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 
 public class MCLivingKnockBackEvent implements LivingKnockBackEvent {
-    private net.minecraftforge.event.entity.living.LivingKnockBackEvent event;
+    private final net.minecraftforge.event.entity.living.LivingKnockBackEvent event;
 
     public MCLivingKnockBackEvent(net.minecraftforge.event.entity.living.LivingKnockBackEvent event) {
         this.event = event;
