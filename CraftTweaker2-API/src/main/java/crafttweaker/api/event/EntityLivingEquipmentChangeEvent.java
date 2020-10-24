@@ -13,11 +13,11 @@ import stanhebben.zenscript.annotations.ZenSetter;
 public interface EntityLivingEquipmentChangeEvent extends ILivingEvent {
 
 	@ZenMethod
-    @ZenGetter("olditem")
+    @ZenGetter("oldItem")
     IItemStack getFrom();
 
     @ZenMethod
-    @ZenGetter("item")
+    @ZenGetter("newItem")
     IItemStack getTo();
 
     @ZenMethod

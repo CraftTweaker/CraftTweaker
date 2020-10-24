@@ -18,25 +18,25 @@ public class MCArrowLooseEvent implements ArrowLooseEvent {
         return CraftTweakerMC.getIItemStack(event.getBow());
     }
     
-	@Override
-	public void setCharge(int charge) {
-		event.setCharge(charge);
-	}
-	
-	@Override
-	public int getCharge() {
-		return event.getCharge();
-	}
+    @Override
+    public void setCharge(int charge) {
+        event.setCharge(charge);
+    }
 
-	@Override
-	public IWorld getWorld() {
-		return CraftTweakerMC.getIWorld(event.getWorld());
-	}
+    @Override
+    public int getCharge() {
+        return event.getCharge();
+    }
 
-	@Override
-	public IPlayer getPlayer() {
-		return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
-	}
+    @Override
+    public IWorld getWorld() {
+        return CraftTweakerMC.getIWorld(event.getWorld());
+    }
+
+    @Override
+    public IPlayer getPlayer() {
+        return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
+    }
 
     @Override
     public boolean isCanceled() {

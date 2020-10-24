@@ -20,18 +20,18 @@ public class MCEntityLivingEquipmentChangeEvent implements EntityLivingEquipment
         return CraftTweakerMC.getIEntityLivingBase(event.getEntityLiving());
     }
 
-	@Override
-	public IItemStack getFrom() {
-		return CraftTweakerMC.getIItemStack(event.getFrom());
-	}
+    @Override
+    public IItemStack getFrom() {
+        return CraftTweakerMC.getIItemStack(event.getFrom());
+    }
 
-	@Override
-	public IItemStack getTo() {
-		return CraftTweakerMC.getIItemStack(event.getTo());
-	}
+    @Override
+    public IItemStack getTo() {
+        return CraftTweakerMC.getIItemStack(event.getTo());
+    }
 
-	@Override
-	public IEntityEquipmentSlot getSlot() {
-		return CraftTweakerMC.getIEntityEquipmentSlot(event.getSlot());
-	}
+    @Override
+    public IEntityEquipmentSlot getSlot() {
+        return CraftTweakerMC.getIEntityEquipmentSlot(event.getSlot());
+    }
 }

@@ -284,7 +284,7 @@ public interface IEventManager {
     IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev);
 
     @ZenMethod
-	IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev);
+    IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev);
 
     /*
     @ZenMethod

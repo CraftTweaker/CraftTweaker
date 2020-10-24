@@ -23,10 +23,10 @@ public class MCArrowNockEvent implements ArrowNockEvent {
         return event.getHand().name();
     }
 
-	@Override
-	public IPlayer getPlayer() {
-		return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
-	}
+    @Override
+    public IPlayer getPlayer() {
+        return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
+    }
 
     @Override
     public String getResult() {

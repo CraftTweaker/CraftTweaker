@@ -28,8 +28,8 @@ public class MCEntityJoinWorldEvent implements EntityJoinWorldEvent {
         event.setCanceled(canceled);
     }
 
-	@Override
-	public IWorld getWorld() {
-		return CraftTweakerMC.getIWorld(event.getWorld());
-	}
+    @Override
+    public IWorld getWorld() {
+        return CraftTweakerMC.getIWorld(event.getWorld());
+    }
 }
