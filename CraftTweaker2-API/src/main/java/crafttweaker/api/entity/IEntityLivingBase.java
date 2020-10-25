@@ -132,6 +132,12 @@ public interface IEntityLivingBase extends IEntity {
     }
 
     @ZenMethod
+    @ZenGetter("activeItemStack")
+    default IItemStack getActiveItemStack() {
+        return null;
+    }
+
+    @ZenMethod
     @ZenGetter
     default boolean isActiveItemStackBlocking() {
         return false;
@@ -143,10 +149,23 @@ public interface IEntityLivingBase extends IEntity {
         return null;
     }
 
+    @ZenSetter("activeHand")
     @ZenMethod
-    @ZenGetter("activeItemStack")
-    default IItemStack getActiveItemStack() {
-        return null;
+    default void setActiveHand(String hand) {
+    }
+
+    @ZenMethod
+    @ZenGetter("isHandActive")
+    default boolean isHandActive() {
+        return false;
+    }
+
+    @ZenMethod
+    default void resetActiveHand() {
+    }
+
+    @ZenMethod
+    default void stopActiveHand() {
     }
 
     @ZenMethod
@@ -164,23 +183,5 @@ public interface IEntityLivingBase extends IEntity {
     @ZenMethod
     @ZenSetter("swingProgress")
     default void setSwingProgress(int swingProgress) {
-    }
-
-    @ZenMethod
-    @ZenGetter("isHandActive")
-    default boolean isHandActive() {
-        return false;
-    }
-
-    @ZenMethod
-    default void resetActiveHand() {
-    }
-
-    @ZenMethod
-    default void setActiveHand(String hand) {
-    }
-
-    @ZenMethod
-    default void stopActiveHand() {
     }
 }
