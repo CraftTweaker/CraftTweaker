@@ -57,5 +57,5 @@ public interface IEntityArrow extends IEntity, IProjectile {
     void setPickupCreativeOnly();
 
     @ZenMethod
-    void shoot(IEntity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy);
+    void shoot(IEntity shooter, float pitch, float yaw, float roll, float velocity, float inaccuracy);
 }

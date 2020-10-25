@@ -20,8 +20,8 @@ public class MCEntityArrow extends MCEntity implements IEntityArrow {
 	}
 
 	@Override
-	public void shoot(IEntity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy) {
-		entityArrow.shoot(CraftTweakerMC.getEntity(shooter), pitch, yaw, p_184547_4_, velocity, inaccuracy);
+	public void shoot(IEntity shooter, float pitch, float yaw, float roll, float velocity, float inaccuracy) {
+		entityArrow.shoot(CraftTweakerMC.getEntity(shooter), pitch, yaw, roll, velocity, inaccuracy);
 	}
 
 	@Override
