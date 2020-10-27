@@ -453,27 +453,31 @@ public interface IItemStack extends IIngredient {
     IEntityItem createEntityItem(IWorld world, IBlockPos pos);
     
     @ZenGetter("isFood")
-    default boolean isFood(){
+    default boolean isFood() {
         return false;
     }
     
     @ZenGetter("saturation")
-    default float getSaturation(){
+    default float getSaturation() {
         return 0;
     }
     
     @ZenGetter("healAmount")
-    default int getHealAmount(){
+    default int getHealAmount() {
         return 0;
+    }
+
+    @ZenMethod
+    default void setAlwaysEdible() {
     }
     
     @ZenMethod
-    default int getHarvestLevel(String toolClass){
+    default int getHarvestLevel(String toolClass) {
         return -1;
     }
     
     @ZenMethod
-    default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState){
+    default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState) {
         return -1;
     }
 

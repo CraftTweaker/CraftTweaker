@@ -778,6 +778,11 @@ public class MCItemStack implements IItemStack {
             return 0;
         }
     }
+
+    @Override
+    public void setAlwaysEdible() {
+        if(isFood()) ((ItemFood)stack.getItem()).setAlwaysEdible();
+    }
     
     @Override
     public int getHarvestLevel(String toolClass) {
