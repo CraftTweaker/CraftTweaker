@@ -15,6 +15,16 @@ public class MCEntityFishHook extends MCEntity implements IEntityFishHook {
     }
 
 	@Override
+	public String getState() {
+		return entityFishHook.currentState.name().toUpperCase();
+	}
+
+	@Override
+	public void setState(String state) {
+		entityFishHook.currentState = EntityFishHook.State.valueOf(state.toUpperCase());
+	}
+
+	@Override
 	public IEntity getCaughtEntity() {
 		return CraftTweakerMC.getIEntity(entityFishHook.caughtEntity);
 	}

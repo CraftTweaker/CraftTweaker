@@ -10,6 +10,14 @@ import stanhebben.zenscript.annotations.*;
 public interface IEntityFishHook extends IEntity {
 
     @ZenMethod
+    @ZenGetter("state")
+    String getState();
+
+    @ZenMethod
+    @ZenSetter("state")
+    void setState(String state);
+
+    @ZenMethod
     @ZenGetter("caughtEntity")
     IEntity getCaughtEntity();
 
