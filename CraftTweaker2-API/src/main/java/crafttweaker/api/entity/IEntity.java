@@ -510,7 +510,7 @@ public interface IEntity extends ICommandSender {
     }
     
     @ZenGetter
-    default boolean isLightningbolt() {
+    default boolean isLightningBolt() {
         return false;
     }
 }
