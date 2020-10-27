@@ -45,6 +45,11 @@ public class MCEntityArrow extends MCEntity implements IEntityArrow {
 	}
 
 	@Override
+	public int getKnockbackStrength() {
+		return entityArrow.knockbackStrength;
+	}
+
+	@Override
 	public void setKnockbackStrength(int knockbackStrength) {
 		entityArrow.setKnockbackStrength(knockbackStrength);
 	}

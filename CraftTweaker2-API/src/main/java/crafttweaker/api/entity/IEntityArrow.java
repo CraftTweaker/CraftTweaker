@@ -22,6 +22,10 @@ public interface IEntityArrow extends IEntity, IProjectile {
     @ZenMethod
     @ZenGetter("isCritical")
     boolean getIsCritical();
+
+    @ZenMethod
+    @ZenGetter("knockbackStrength")
+    int getKnockbackStrength();
     
     @ZenMethod
     @ZenSetter("knockbackStrength")
