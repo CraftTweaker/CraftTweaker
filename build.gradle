@@ -183,6 +183,10 @@ task genGitChangelog() {
     System.out.println("Changelog generated!")
 }
 
+processResources {
+    dependsOn(":StdLibs:zipItUp")
+    from files(evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs)
+}
 
 jar {
     dependsOn zenCodeDeps.collect { it + ":compileJava" }

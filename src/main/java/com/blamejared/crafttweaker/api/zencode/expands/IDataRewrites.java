@@ -26,12 +26,12 @@ public class IDataRewrites {
     
     
     public static IPartialExpression rewriteArray(ParsedExpressionArray parsedExpressionArray, ExpressionScope expressionScope) {
-        final List<StoredType> hints = expressionScope.hints;
+        final List<TypeID> hints = expressionScope.hints;
         if(hints.size() != 1) {
             return null;
         }
     
-        TypeID typeID = hints.get(0).type;
+        TypeID typeID = hints.get(0);
         if (!(typeID instanceof DefinitionTypeID && (((DefinitionTypeID) typeID).definition.name.equals("IData") || ((DefinitionTypeID) typeID).definition.name.equals("ListData")))) {
             return null;
         }
@@ -45,7 +45,7 @@ public class IDataRewrites {
         for(int i = 0; i < contents.size(); i++) {
             ParsedExpression content = contents.get(i);
             try {
-                cContent[i] = content.compile(expressionScope.withHint(iDataType.stored())).eval().castExplicit(position, expressionScope, iDataType.stored(), false);
+                cContent[i] = content.compile(expressionScope.withHint(iDataType)).eval().castExplicit(position, expressionScope, iDataType, false);
             } catch(CompileException e) {
                 return null;
             }
@@ -53,26 +53,25 @@ public class IDataRewrites {
     
         try {
             final ArrayExpression arrayExpression = new ArrayExpression(position, cContent, expressionScope.getTypeRegistry()
-                    .getArray(iDataType.stored(), 1)
-                    .stored());
+                    .getArray(iDataType, 1));
         
             final CallArguments arguments = new CallArguments(arrayExpression);
-            final FunctionalMemberRef constructor = expressionScope.getTypeMembers(listType.stored())
+            final FunctionalMemberRef constructor = expressionScope.getTypeMembers(listType)
                     .getOrCreateGroup(OperatorType.CONSTRUCTOR)
                     .selectMethod(position, expressionScope, arguments, true, true);
-            return new NewExpression(position, listType.stored(), constructor, arguments);
+            return new NewExpression(position, listType, constructor, arguments);
         } catch(CompileException e) {
             return null;
         }
     }
     
     public static IPartialExpression rewriteMap(ParsedExpressionMap parsedExpressionMap, ExpressionScope expressionScope) {
-        final List<StoredType> hints = expressionScope.hints;
+        final List<TypeID> hints = expressionScope.hints;
         if(hints.size() != 1) {
             return null;
         }
         
-        TypeID typeID = hints.get(0).type;
+        TypeID typeID = hints.get(0);
         if(!(typeID instanceof DefinitionTypeID) || !((DefinitionTypeID) typeID).definition.name.equals("IData") && ((DefinitionTypeID) typeID).definition.name
                 .equals("MapData")) {
             return null;
@@ -92,8 +91,8 @@ public class IDataRewrites {
             
             try {
                 cKeys[i] = parsedExpressionMap.keys.get(i)
-                        .compileKey(expressionScope.withHint(StringTypeID.STATIC));
-                cValues[i] = parsedExpressionMap.values.get(i).compile(expressionScope.withHint(iDataType.stored())).eval().castExplicit(position, expressionScope, iDataType.stored(), false);
+                        .compileKey(expressionScope.withHint(BasicTypeID.STRING));
+                cValues[i] = parsedExpressionMap.values.get(i).compile(expressionScope.withHint(iDataType)).eval().castExplicit(position, expressionScope, iDataType, false);
             } catch(CompileException e) {
                 return null;
             }
@@ -102,14 +101,13 @@ public class IDataRewrites {
         
         try {
             final MapExpression mapExpression = new MapExpression(position, cKeys, cValues, expressionScope.getTypeRegistry()
-                    .getAssociative(StringTypeID.STATIC, iDataType.stored())
-                    .stored());
+                    .getAssociative(BasicTypeID.STRING, iDataType));
             
             final CallArguments arguments = new CallArguments(mapExpression);
-            final FunctionalMemberRef constructor = expressionScope.getTypeMembers(mapDataType.stored())
+            final FunctionalMemberRef constructor = expressionScope.getTypeMembers(mapDataType)
                     .getOrCreateGroup(OperatorType.CONSTRUCTOR)
                     .selectMethod(position, expressionScope, arguments, true, true);
-            return new NewExpression(position, mapDataType.stored(), constructor, arguments);
+            return new NewExpression(position, mapDataType, constructor, arguments);
         } catch(CompileException e) {
             return null;
         }

@@ -1,41 +1,25 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
-import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.google.gson.*;
+import com.google.gson.stream.*;
 import com.sun.source.util.*;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import javax.annotation.processing.*;
+import javax.lang.model.*;
+import javax.lang.model.element.*;
+import javax.tools.*;
+import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.util.*;
+import java.util.stream.*;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DocumentProcessorNew extends AbstractProcessor {
+    
+    private final Collection<Element> allElements = new HashSet<>();
     
     private static final File docsOut = new File("docsOut");
     private static final Set<CrafttweakerDocumentationPage> pages = new TreeSet<>(Comparator.comparing(CrafttweakerDocumentationPage::getDocumentTitle));
@@ -56,39 +40,46 @@ public class DocumentProcessorNew extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        
         tree = Trees.instance(processingEnv);
     }
     
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         fillModIdInfo(roundEnv);
-        
-        for(Element element : roundEnv.getElementsAnnotatedWith(Document.class)) {
-            final Document document = element.getAnnotation(Document.class);
-            if(document == null) {
-                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Internal error! Document annotation null", element);
-                continue;
-            }
-            
-            if(!element.getKind().isClass() && !element.getKind().isInterface()) {
-                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "How is this annotated", element);
-                continue;
-            }
-            
-            
-            final TypeElement typeElement = (TypeElement) element;
-            final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
-            if(documentationPage != null) {
-                pages.add(documentationPage);
-            }
+        allElements.addAll(roundEnv.getElementsAnnotatedWith(Document.class));
+        if(!roundEnv.processingOver()) {
+            return false;
         }
-        
-        if(roundEnv.processingOver()) {
-            clearOutputDir();
-            writeToFiles();
-        }
+    
+        //Update each element to its latest state, then handle them all
+        allElements.stream()
+                .map(Object::toString) //Get names
+                .map(processingEnv.getElementUtils()::getTypeElement)
+                .forEach(this::handleElement);
+    
+        clearOutputDir();
+        writeToFiles();
+        allElements.clear();
         return false;
+    }
+    
+    private void handleElement(TypeElement typeElement) {
+        final Document document = typeElement.getAnnotation(Document.class);
+        if(document == null) {
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Internal error! Document annotation null", typeElement);
+            return;
+        }
+        
+        if(!typeElement.getKind().isClass() && !typeElement.getKind().isInterface()) {
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "How is this annotated", typeElement);
+            return;
+        }
+        
+        
+        final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
+        if(documentationPage != null) {
+            pages.add(documentationPage);
+        }
     }
     
     private void clearOutputDir() {
@@ -180,6 +171,37 @@ public class DocumentProcessorNew extends AbstractProcessor {
             }
             folder.addFile(new YAMLFile(value.getDocumentTitle(), value.getDocPath()));
         }
+        
+        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(YAMLFolder.class, new TypeAdapter<YAMLFolder>() {
+            @Override
+            public void write(JsonWriter out, YAMLFolder value) throws IOException {
+                out.beginObject();
+                for(YAMLObject yamlObject : value.getFiles()) {
+                    
+                    if(yamlObject instanceof YAMLFile) {
+                        YAMLFile file = (YAMLFile) yamlObject;
+                        out.name(file.getName()).value(file.getPath() + ".md");
+                    } else if(yamlObject instanceof YAMLFolder) {
+                        YAMLFolder folder = (YAMLFolder) yamlObject;
+                        out.name(folder.name);
+                        write(out, folder);
+                    }
+                }
+                ;
+                out.endObject();
+            }
+            
+            @Override
+            public YAMLFolder read(JsonReader in) throws IOException {
+                // We don't really need to read here...
+                return null;
+            }
+        }).create();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(docsOut, "docs.json")))) {
+            Map<String, Map<String, YAMLFolder>> nav = new HashMap<>();
+            nav.put("nav", files);
+            writer.write(gson.toJson(nav));
+        }
         final File mkdocsFile = new File(docsOut, "mkdocs.yml");
         try(final PrintWriter writer = new PrintWriter(new FileWriter(mkdocsFile))) {
             
@@ -243,9 +265,9 @@ public class DocumentProcessorNew extends AbstractProcessor {
             for(int i = 0; i < subLevel; i++) {
                 sb.append("  ");
             }
-            sb.append("- ").append(name).append(":\n");
+            sb.append("  ").append(name).append(":\n");
             for(YAMLObject file : getFiles()) {
-                sb.append("  ").append(file.getOutput(subLevel+1));
+                sb.append("  ").append(file.getOutput(subLevel + 1));
             }
             return sb.toString();
         }
@@ -259,9 +281,9 @@ public class DocumentProcessorNew extends AbstractProcessor {
             }
             return new YAMLFolder(name);
         }
-    
-        public boolean contains(String name) {
         
+        public boolean contains(String name) {
+            
             for(YAMLFolder object : files.stream().filter(yamlObject -> yamlObject instanceof YAMLFolder).map(yamlObject -> (YAMLFolder) yamlObject).collect(Collectors.toSet())) {
                 if(object.getName().equals(name)) {
                     return true;
@@ -271,7 +293,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
         }
         
         public void addFile(YAMLObject file) {
-            if(contains(file.getName())){
+            if(contains(file.getName())) {
                 return;
             }
             this.files.add(file);
@@ -314,7 +336,7 @@ public class DocumentProcessorNew extends AbstractProcessor {
             for(int i = 0; i < subLevel; i++) {
                 subBuilder.append("  ");
             }
-            return subBuilder.toString() + String.format("- %s: '%s.md'%n", name, path);
+            return subBuilder.toString() + String.format("  %s: '%s.md'%n", name, path);
         }
         
         @Override
