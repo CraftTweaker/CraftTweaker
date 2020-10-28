@@ -15,4 +15,14 @@ public class CraftTweakerGlobals {
     public static void print(String msg) {
         println(msg);
     }
+
+    @ZenCodeGlobals.Global
+    public static boolean isNull(Object obj) {
+        return obj == null;
+    }
+
+    @ZenCodeGlobals.Global
+    public static boolean nonNull(Object obj) {
+        return obj != null;
+    }
 }
