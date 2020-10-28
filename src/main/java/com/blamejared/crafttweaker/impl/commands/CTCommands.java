@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.commands;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.text.*;
+import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.network.*;
 import com.blamejared.crafttweaker.impl.network.messages.*;
@@ -167,15 +168,17 @@ public class CTCommands {
         
         registerCommand(new CommandImpl("syntax", "Checks the syntax of the scripts", (CommandCallerPlayer) (player, stack) -> {
             //TODO: get loader name from '/ct syntax loaderName'?
-            //final String loaderName = CraftTweakerAPI.getDefaultLoaderName();
-            //CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(loaderName));
-            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setWildcardLoaderName());
+            for(String knownLoaderName : LoaderActions.getKnownLoaderNames()) {
+                CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(knownLoaderName));
+            }
+            
             return 0;
         }));
         
         registerCommand(new CommandImpl("format", "Checks the syntax of the scripts and formats them into another folder.", (CommandCallerPlayer) (player, stack) -> {
-            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setWildcardLoaderName()
-                    .format());
+            for(String knownLoaderName : LoaderActions.getKnownLoaderNames()) {
+                CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(knownLoaderName).format());
+            }
             return 0;
         }));
         

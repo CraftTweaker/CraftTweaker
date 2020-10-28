@@ -39,7 +39,7 @@ public class LoaderPreprocessor implements IPreprocessor {
             CraftTweakerAPI.logWarning("Multiple Loaders found for file %s: %s", file.getFileName(), distinct);
         }
 
-        return scriptLoadingOptions.isWildcardLoader() || distinct.contains(scriptLoadingOptions.getLoaderName().toLowerCase());
+        return distinct.contains(scriptLoadingOptions.getLoaderName().toLowerCase());
 
     }
 }

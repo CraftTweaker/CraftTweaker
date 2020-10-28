@@ -54,7 +54,7 @@ public class ScriptLoadingOptions {
     }
 
     /**
-     * The current loader name, or <code>null</code> if {@link #isWildcardLoader()}
+     * The current loader name
      */
     public String getLoaderName() {
         return loaderName;
@@ -67,19 +67,5 @@ public class ScriptLoadingOptions {
     public ScriptLoadingOptions setLoaderName(@Nonnull String loaderName) {
         this.loaderName = loaderName;
         return this;
-    }
-
-    /**
-     * Use only in Syntax/Formatting calls, will make the
-     * {@link com.blamejared.crafttweaker.api.zencode.impl.preprocessors.LoaderPreprocessor}
-     * load the file regardless of the loader it is in.
-     */
-    public ScriptLoadingOptions setWildcardLoaderName() {
-        this.loaderName = null;
-        return this;
-    }
-
-    public boolean isWildcardLoader() {
-        return this.loaderName == null;
     }
 }
