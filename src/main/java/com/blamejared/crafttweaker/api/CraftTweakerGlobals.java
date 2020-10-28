@@ -18,11 +18,31 @@ public class CraftTweakerGlobals {
 
     @ZenCodeGlobals.Global
     public static boolean isNull(Object obj) {
-        return obj == null;
+        return isNull(obj, false);
     }
 
     @ZenCodeGlobals.Global
     public static boolean nonNull(Object obj) {
-        return obj != null;
+        return nonNull(obj, false);
+    }
+
+    @ZenCodeGlobals.Global
+    public static boolean isNull(Object obj, boolean checkInternal) {
+        if (!checkInternal) return obj == null;
+        if (obj == null) {
+            return true;
+        } else {
+            try {
+                return obj.getClass().getMethod("getInternal").invoke(obj) == null;
+            } catch (Exception e) {
+                CraftTweakerAPI.logError("%s doesn't have getInternal method!", obj.getClass().getCanonicalName());
+                return false;
+            }
+        }
+    }
+
+    @ZenCodeGlobals.Global
+    public static boolean nonNull(Object obj, boolean checkInternal) {
+        return !isNull(obj, checkInternal);
     }
 }
