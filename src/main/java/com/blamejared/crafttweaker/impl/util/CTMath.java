@@ -157,12 +157,6 @@ public class CTMath {
     }
 
     @ZenCodeType.Method
-    public static double random()
-    {
-        return Math.random();
-    }
-
-    @ZenCodeType.Method
     public static int round(float f1)
     {
         return Math.round(f1);
