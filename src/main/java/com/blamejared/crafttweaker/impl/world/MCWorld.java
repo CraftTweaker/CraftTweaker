@@ -41,7 +41,7 @@ public class MCWorld {
         return internal.isNightTime();
     }
 
-    @ZenCodeType.Getter("time")
+    @ZenCodeType.Getter("gameTime")
     public long getTime() {
         return internal.getGameTime();
     }
@@ -54,6 +54,31 @@ public class MCWorld {
     @ZenCodeType.Getter("raining")
     public boolean isRaining() {
         return internal.isRaining();
+    }
+
+    @ZenCodeType.Getter("thundering")
+    public boolean isThundering() {
+        return internal.isThundering();
+    }
+
+    @ZenCodeType.Getter("hardcore")
+    public boolean isHardcore() {
+        return internal.getWorldInfo().isHardcore();
+    }
+
+    @ZenCodeType.Getter("difficulty")
+    public String getDifficulty() {
+        return internal.getWorldInfo().getDifficulty().getTranslationKey();
+    }
+
+    @ZenCodeType.Getter("difficultyLocked")
+    public boolean isDifficultyLocked() {
+        return internal.getWorldInfo().isDifficultyLocked();
+    }
+
+    @ZenCodeType.Getter("dimension")
+    public String getDimension() {
+        return internal.getDimensionKey().getRegistryName().toString();
     }
 
     @ZenCodeType.Method
