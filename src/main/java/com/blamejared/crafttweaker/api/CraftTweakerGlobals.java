@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker.api;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import org.openzen.zencode.java.ZenCodeGlobals;
 
+import java.lang.reflect.InvocationTargetException;
+
 @ZenRegister
 public class CraftTweakerGlobals {
     
@@ -34,8 +36,16 @@ public class CraftTweakerGlobals {
         } else {
             try {
                 return obj.getClass().getMethod("getInternal").invoke(obj) == null;
-            } catch (Exception e) {
+            } catch (NoSuchMethodException e) {
                 CraftTweakerAPI.logError("%s doesn't have getInternal method!", obj.getClass().getCanonicalName());
+                e.printStackTrace();
+                return false;
+            } catch (IllegalAccessException e) {
+                CraftTweakerAPI.logError("%s#getInternal is not accessible!", obj.getClass().getCanonicalName());
+                e.printStackTrace();
+                return false;
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
                 return false;
             }
         }
