@@ -1,10 +1,12 @@
 package com.blamejared.crafttweaker.impl.util;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.Math")
+@Document("vanilla/api/util/Math")
 public class CTMath {
     @ZenCodeType.Field
     public static final double PI = Math.PI;
