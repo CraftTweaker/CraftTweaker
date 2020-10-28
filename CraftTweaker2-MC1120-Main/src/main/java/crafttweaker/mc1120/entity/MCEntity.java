@@ -675,4 +675,9 @@ public class MCEntity extends MCCommandSender implements IEntity {
     public boolean isLightningBolt() {
         return entity instanceof EntityLightningBolt;
     }
+
+    @Override
+    public String getUUID() {
+        return entity.getCachedUniqueIdString();
+    }
 }

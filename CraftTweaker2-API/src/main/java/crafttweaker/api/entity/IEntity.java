@@ -513,4 +513,9 @@ public interface IEntity extends ICommandSender {
     default boolean isLightningBolt() {
         return false;
     }
+
+    @ZenGetter("UUID")
+    default String getUUID() {
+        return "";
+    }
 }
