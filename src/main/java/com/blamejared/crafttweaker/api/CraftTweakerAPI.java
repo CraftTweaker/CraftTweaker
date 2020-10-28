@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api;
 
+import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.actions.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.logger.*;
@@ -8,7 +9,10 @@ import com.blamejared.crafttweaker.api.zencode.expands.*;
 import com.blamejared.crafttweaker.api.zencode.impl.*;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
 import com.blamejared.crafttweaker.impl.logger.*;
+import com.blamejared.crafttweaker.impl.script.*;
 import com.google.common.collect.*;
+import net.minecraft.item.crafting.*;
+import net.minecraft.util.*;
 import net.minecraftforge.fml.common.thread.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
@@ -115,6 +119,31 @@ public class CraftTweakerAPI {
         }
         
         logInfo("Finished loading Scripts!");
+    }
+    
+    /**
+     *
+     * Gets the source files that were sent to the client as IRecipes and executes them with the given loadingOptions
+     * CrT uses this method during the RecipesUpdatedEvent on the Client to get the serverside scripts.
+     *
+     * @param recipeManager The world's RecipeManager.
+     * @param scriptLoadingOptions The loadingOptions, used for the Preprocessors
+     */
+    public static void loadScriptsFromRecipeManager(RecipeManager recipeManager, ScriptLoadingOptions scriptLoadingOptions) {
+        Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
+        Collection<IRecipe<?>> recipes = map.values();
+        CraftTweakerAPI.NO_BRAND = false;
+        
+        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
+        final SourceFile[] sourceFiles = recipes.stream()
+                .map(iRecipe -> (ScriptRecipe) iRecipe)
+                .map(recipe -> new FileAccessSingle(recipe.getFileName(), new StringReader(recipe.getContent()), scriptLoadingOptions, CraftTweakerRegistry
+                        .getPreprocessors()))
+                .filter(FileAccessSingle::shouldBeLoaded)
+                .sorted(comparator)
+                .map(FileAccessSingle::getSourceFile)
+                .toArray(SourceFile[]::new);
+        loadScripts(sourceFiles, scriptLoadingOptions);
     }
     
     /**

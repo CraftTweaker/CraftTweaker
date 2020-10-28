@@ -55,9 +55,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.SourceFile;
 
+import javax.annotation.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -183,13 +183,8 @@ public class CraftTweaker {
         CTClientEventHandler.TOOLTIPS.clear();
         serverOverride = false;
         CTCraftingTableManager.recipeManager = event.getRecipeManager();
-        Map<ResourceLocation, IRecipe<?>> map = event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
-        Collection<IRecipe<?>> recipes = map.values();
-        CraftTweakerAPI.NO_BRAND = false;
         final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions().execute();
-        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
-        SourceFile[] sourceFiles = recipes.stream().map(iRecipe -> (ScriptRecipe) iRecipe).map(recipe -> new FileAccessSingle(recipe.getFileName(), new StringReader(recipe.getContent()), scriptLoadingOptions, CraftTweakerRegistry.getPreprocessors())).filter(FileAccessSingle::shouldBeLoaded).sorted(comparator).map(FileAccessSingle::getSourceFile).toArray(SourceFile[]::new);
-        CraftTweakerAPI.loadScripts(sourceFiles, scriptLoadingOptions);
+        CraftTweakerAPI.loadScriptsFromRecipeManager(event.getRecipeManager(), scriptLoadingOptions);
     }
     
     
@@ -201,8 +196,11 @@ public class CraftTweaker {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void resourceReload(AddReloadListenerEvent event) {
+        
         event.addListener(new ReloadListener<Void>() {
             @Override
+            @Nonnull
+            @ParametersAreNonnullByDefault
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                 serverOverride = server == null;
@@ -210,6 +208,7 @@ public class CraftTweaker {
             }
             
             @Override
+            @ParametersAreNonnullByDefault
             protected void apply(Void objectIn, IResourceManager resourceManagerIn, IProfiler profilerIn) {
                 giveFeedback(new StringTextComponent("CraftTweaker reload starting!"));
                 //ImmutableMap of ImmutableMaps. Nice.
@@ -250,9 +249,9 @@ public class CraftTweaker {
     
     
     public String readContents(File file) {
-        try {
-            return new BufferedReader(new FileReader(file)).lines().collect(Collectors.joining("\r\n"));
-        } catch(FileNotFoundException e) {
+        try(final BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            return bufferedReader.lines().collect(Collectors.joining("\r\n"));
+        } catch(IOException e) {
             e.printStackTrace();
         }
         return "";
