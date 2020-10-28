@@ -14,7 +14,6 @@ import net.minecraft.util.ResourceLocationException;
 import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
-import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.lang.invoke.MethodHandle;
@@ -33,8 +32,7 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/loot/LootModifierManager")
 @SuppressWarnings("unused")
 public class CTLootModifierManager {
-    @ZenCodeGlobals.Global("lootModifiers")
-    public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
+    static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
 
     private static final MethodHandle LMM_GETTER;
     private static final MethodHandle LMM_MAP_GETTER;
@@ -63,28 +61,28 @@ public class CTLootModifierManager {
     }
 
     @ZenCodeType.Method
-    public void registerModifier(final String name, final ILootCondition[] conditions, final ILootModifier modifier) {
+    public void register(final String name, final ILootCondition[] conditions, final ILootModifier modifier) {
         CraftTweakerAPI.apply(new ActionRegisterLootModifier(this.fromName(name), conditions == null? new ILootCondition[0] : conditions, modifier, this::getLmmMap));
     }
 
     @ZenCodeType.Method
-    public void registerUnconditionalModifier(final String name, final ILootModifier modifier) {
-        this.registerModifier(name, new ILootCondition[0], modifier);
+    public void registerUnconditional(final String name, final ILootModifier modifier) {
+        this.register(name, new ILootCondition[0], modifier);
     }
 
     @ZenCodeType.Method
-    public ILootModifier getModifierByName(final String name) {
+    public ILootModifier getByName(final String name) {
         return new MCLootModifier(this.getLmmMap().get(this.fromName(name)));
     }
 
     @ZenCodeType.Method
-    public List<String> getAllModifierNames() {
+    public List<String> getAllNames() {
         return this.getLmmMap().keySet().stream().map(ResourceLocation::toString).collect(Collectors.toList());
     }
 
     @ZenCodeType.Method
-    public List<ILootModifier> getAllModifiers() {
-        return this.getAllModifierNames().stream().map(this::getModifierByName).collect(Collectors.toList());
+    public List<ILootModifier> getAll() {
+        return this.getAllNames().stream().map(this::getByName).collect(Collectors.toList());
     }
 
     @ZenCodeType.Method
