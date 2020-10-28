@@ -10,6 +10,7 @@ import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
 import org.openzen.zenscript.formatter.*;
+import org.openzen.zenscript.lexer.*;
 
 import java.io.*;
 import java.util.*;
@@ -19,6 +20,7 @@ public class ScriptRun {
     private final ScriptLoadingOptions scriptLoadingOptions;
     private final SourceFile[] sourceFiles;
     private final ScriptingEngine scriptingEngine;
+    private IgnorePrefixCasingBracketParser bep;
     
     public ScriptRun(ScriptLoadingOptions scriptLoadingOptions, SourceFile[] sourceFiles) {
         this.scriptLoadingOptions = scriptLoadingOptions;
@@ -30,10 +32,6 @@ public class ScriptRun {
     }
     
     public LoaderActions getLoaderActions() {
-        if(scriptLoadingOptions.isWildcardLoader()) {
-            throw new IllegalStateException("Cannot get LoaderActions for wildcard loader");
-        }
-        
         return LoaderActions.getActionForLoader(scriptLoadingOptions.getLoaderName());
     }
     
@@ -74,49 +72,19 @@ public class ScriptRun {
             CraftTweakerAPI.logDebug("This is a first run. All IActions will be applied.");
         }
         
-        //Register crafttweaker module first to assign deps
-        JavaNativeModule crafttweakerModule = scriptingEngine.createNativeModule(CraftTweaker.MODID, "crafttweaker");
-        List<JavaNativeModule> modules = new LinkedList<>();
+        initializeBep();
+        registerModules();
+        readAndExecuteScripts();
         
-        IgnorePrefixCasingBracketParser bep = new IgnorePrefixCasingBracketParser();
+    }
+    
+    private void initializeBep() {
+        this.bep = new IgnorePrefixCasingBracketParser();
         final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
-        bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
-        for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers("crafttweaker", scriptingEngine, crafttweakerModule)) {
-            bep.register(bracketResolver.getName(), bracketResolver);
-        }
-        crafttweakerModule.registerBEP(bep);
-        
-        CraftTweakerRegistry.getClassesInPackage("crafttweaker")
-                .forEach(crafttweakerModule::addClass);
-        CraftTweakerRegistry.getZenGlobals().forEach(crafttweakerModule::addGlobals);
-        modules.add(crafttweakerModule);
-        
-        scriptingEngine.registerNativeProvided(crafttweakerModule);
-        for(String key : CraftTweakerRegistry.getRootPackages()) {
-            //module already registered
-            if(key.equals("crafttweaker")) {
-                continue;
-            }
-            JavaNativeModule module = scriptingEngine.createNativeModule(key, key, crafttweakerModule);
-            module.registerBEP(bep);
-            for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(key, scriptingEngine, module)) {
-                bep.register(bracketResolver.getName(), bracketResolver);
-            }
-            CraftTweakerRegistry.getClassesInPackage(key).forEach(module::addClass);
-            scriptingEngine.registerNativeProvided(module);
-            modules.add(module);
-        }
-        
-        // For expansions on ZenScript types (I.E. any[any], string, int) and just anything else that fails
-        JavaNativeModule expansions = scriptingEngine.createNativeModule("expansions", "", modules.toArray(new JavaNativeModule[0]));
-        CraftTweakerRegistry.getExpansions()
-                .values()
-                .stream()
-                .flatMap(Collection::stream)
-                .forEach(expansions::addClass);
-        scriptingEngine.registerNativeProvided(expansions);
-        
-        
+        this.bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
+    }
+    
+    private void readAndExecuteScripts() throws ParseException, IOException {
         SemanticModule scripts = scriptingEngine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE);
         
         if(!scripts.isValid()) {
@@ -134,7 +102,8 @@ public class ScriptRun {
             //Now that we execute, we increment the runCount and therefore it's no longer a first run
             final LoaderActions loaderActions = getLoaderActions();
             loaderActions.incrementRunCount();
-            CraftTweakerAPI.logDebug("This is loader '%s' run #%s", scriptLoadingOptions.getLoaderName(), loaderActions.getRunCount());
+            CraftTweakerAPI.logDebug("This is loader '%s' run #%s", scriptLoadingOptions.getLoaderName(), loaderActions
+                    .getRunCount());
             
             scriptingEngine.registerCompiled(scripts);
             scriptingEngine.run(Collections.emptyMap(), CraftTweaker.class.getClassLoader());
@@ -142,6 +111,48 @@ public class ScriptRun {
         } else if(CraftTweakerAPI.DEBUG_MODE) {
             scriptingEngine.createRunUnit().dump(new File("classes"));
         }
+    }
+    
+    private void registerModules() throws CompileException {
+        final List<JavaNativeModule> modules = new LinkedList<>();
+        
+        //Register crafttweaker module first to assign deps
+        final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, "crafttweaker");
+        for(Class<?> aClass : CraftTweakerRegistry.getZenGlobals()) {
+            crafttweakerModule.addGlobals(aClass);
+        }
+        scriptingEngine.registerNativeProvided(crafttweakerModule);
+        modules.add(crafttweakerModule);
+        
+        final HashSet<String> rootPackages = new HashSet<>(CraftTweakerRegistry.getRootPackages());
+        rootPackages.remove("crafttweaker");
+        for(String rootPackage : rootPackages) {
+            final JavaNativeModule module = createModule(bep, rootPackage, rootPackage, crafttweakerModule);
+            scriptingEngine.registerNativeProvided(module);
+            modules.add(module);
+        }
+        
+        
+        final JavaNativeModule expModule = createModule(bep, "expansions", "", modules.toArray(new JavaNativeModule[0]));
+        for(List<Class<?>> expansionList : CraftTweakerRegistry.getExpansions().values()) {
+            for(Class<?> expansionClass : expansionList) {
+                final HighLevelDefinition highLevelDefinition = expModule.addClass(expansionClass);
+            }
+        }
+        scriptingEngine.registerNativeProvided(expModule);
+    }
+    
+    private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeModule... dependencies) {
+        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies);
+        for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(moduleName, scriptingEngine, module)) {
+            bep.register(bracketResolver.getName(), bracketResolver);
+        }
+        module.registerBEP(bep);
+        
+        for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
+            final HighLevelDefinition highLevelDefinition = module.addClass(aClass);
+        }
+        return module;
     }
     
     private void writeFormattedFiles(SemanticModule scripts) throws IOException {
@@ -158,7 +169,6 @@ public class ScriptRun {
                 CraftTweakerAPI.logError("Could not find or create folder %s, aborting formatting task!", file
                         .getParent());
             }
-            file.createNewFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(format);
             writer.close();

@@ -201,8 +201,6 @@ public class CraftTweaker {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void resourceReload(AddReloadListenerEvent event) {
-        CraftTweakerAPI.startFirstRun();
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         event.addListener(new ReloadListener<Void>() {
             @Override
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
