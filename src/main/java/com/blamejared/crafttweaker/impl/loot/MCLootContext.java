@@ -4,12 +4,17 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.util.MCDamageSource;
+import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
+import com.blamejared.crafttweaker.impl.util.math.vector.MCVector3d;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.vector.Vector3d;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -32,9 +37,12 @@ public class MCLootContext {
     //@ZenCodeType.Nullable
     //MCPlayer getLastDamagePlayer();
 
-    //@ZenCodeType.Getter("damageSource")
-    //@ZenCodeType.Nullable
-    //MCDamageSource getDamageSource();
+    @ZenCodeType.Getter("damageSource")
+    @ZenCodeType.Nullable
+    public MCDamageSource getDamageSource() {
+        final DamageSource nativeSource = this.nativeContext.get(LootParameters.DAMAGE_SOURCE);
+        return nativeSource == null? null : new MCDamageSource(nativeSource);
+    }
 
     //@ZenCodeType.Getter("killerEntity")
     //@ZenCodeType.Nullable
@@ -44,9 +52,12 @@ public class MCLootContext {
     //@ZenCodeType.Nullable
     //MCEntity getDirectKillerEntity();
 
-    //@ZenCodeType.Getter("origin")
-    //@ZenCodeType.Nullable
-    //MCVector3d getOrigin();
+    @ZenCodeType.Getter("origin")
+    @ZenCodeType.Nullable
+    public MCVector3d getOrigin() {
+        final Vector3d nativeOrigin = this.nativeContext.get(LootParameters.field_237457_g_);
+        return nativeOrigin == null? null : new MCVector3d(nativeOrigin);
+    }
 
     @ZenCodeType.Getter("blockState")
     @ZenCodeType.Nullable
@@ -83,6 +94,11 @@ public class MCLootContext {
     @ZenCodeType.Getter("luck")
     public float getLuck() {
         return this.nativeContext.getLuck();
+    }
+
+    @ZenCodeType.Getter("lootTableId")
+    public MCResourceLocation getLootTableId() {
+        return null; // TODO("Pending Forge PR")
     }
 
     public LootContext getInternal() {
