@@ -159,14 +159,15 @@ public class BracketResolverRegistry {
         boolean valid = true;
     
         final String value = method.getAnnotation(BracketValidator.class).value();
-        Class<?>[] parameters = method.getParameterTypes();
-        if(parameters.length == 1 && parameters[0].equals(String.class)) {
-            if(bracketValidators.containsKey(value)) {
-                CraftTweakerAPI.logError("Bracket validator for bep name %s was found twice: %s and %s", value, bracketValidators.get(value), method);
-                valid = false;
-            }
-        } else {
+        final Class<?>[] parameters = method.getParameterTypes();
+        if(parameters.length != 1 || !parameters[0].equals(String.class)) {
             CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketValidator, but it does not have a String as it's only parameter.", method.toString());
+            valid = false;
+        }
+        
+        if(bracketValidators.containsKey(value)) {
+            CraftTweakerAPI.logError("Bracket validator for bep name %s was found twice: %s and %s", value, bracketValidators
+                    .get(value), method);
             valid = false;
         }
     

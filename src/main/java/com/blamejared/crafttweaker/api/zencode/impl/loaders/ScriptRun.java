@@ -93,7 +93,7 @@ public class ScriptRun {
             return;
         }
         
-        //  toggle this to format scripts, ideally this should be a command
+        //  toggle this to format scripts. Set by /ct format
         if(scriptLoadingOptions.isFormat()) {
             writeFormattedFiles(scripts);
         }
@@ -117,7 +117,7 @@ public class ScriptRun {
         final List<JavaNativeModule> modules = new LinkedList<>();
         
         //Register crafttweaker module first to assign deps
-        final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, "crafttweaker");
+        final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, CraftTweaker.MODID);
         for(Class<?> aClass : CraftTweakerRegistry.getZenGlobals()) {
             crafttweakerModule.addGlobals(aClass);
         }
@@ -125,7 +125,7 @@ public class ScriptRun {
         modules.add(crafttweakerModule);
         
         final HashSet<String> rootPackages = new HashSet<>(CraftTweakerRegistry.getRootPackages());
-        rootPackages.remove("crafttweaker");
+        rootPackages.remove(CraftTweaker.MODID);
         for(String rootPackage : rootPackages) {
             final JavaNativeModule module = createModule(bep, rootPackage, rootPackage, crafttweakerModule);
             scriptingEngine.registerNativeProvided(module);
@@ -136,7 +136,7 @@ public class ScriptRun {
         final JavaNativeModule expModule = createModule(bep, "expansions", "", modules.toArray(new JavaNativeModule[0]));
         for(List<Class<?>> expansionList : CraftTweakerRegistry.getExpansions().values()) {
             for(Class<?> expansionClass : expansionList) {
-                final HighLevelDefinition highLevelDefinition = expModule.addClass(expansionClass);
+                expModule.addClass(expansionClass);
             }
         }
         scriptingEngine.registerNativeProvided(expModule);
@@ -150,7 +150,7 @@ public class ScriptRun {
         module.registerBEP(bep);
         
         for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
-            final HighLevelDefinition highLevelDefinition = module.addClass(aClass);
+            module.addClass(aClass);
         }
         return module;
     }

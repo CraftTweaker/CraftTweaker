@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.commands;
 
-import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.text.*;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
@@ -165,19 +165,25 @@ public class CTCommands {
                     .toString()));
             return 0;
         }));
-        
+    
         registerCommand(new CommandImpl("syntax", "Checks the syntax of the scripts", (CommandCallerPlayer) (player, stack) -> {
             //TODO: get loader name from '/ct syntax loaderName'?
             for(String knownLoaderName : LoaderActions.getKnownLoaderNames()) {
-                CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(knownLoaderName));
+                final String message = color("Starting loading scripts for loader '" + knownLoaderName + "'", TextFormatting.YELLOW);
+                send(new StringTextComponent(message), player);
+                final ScriptLoadingOptions options = new ScriptLoadingOptions().setLoaderName(knownLoaderName);
+                CraftTweakerAPI.loadScripts(options);
             }
-            
+        
             return 0;
         }));
-        
+    
         registerCommand(new CommandImpl("format", "Checks the syntax of the scripts and formats them into another folder.", (CommandCallerPlayer) (player, stack) -> {
             for(String knownLoaderName : LoaderActions.getKnownLoaderNames()) {
-                CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(knownLoaderName).format());
+                final String message = color("Loading and formatting scripts for loader '" + knownLoaderName + "'", TextFormatting.YELLOW);
+                send(new StringTextComponent(message), player);
+                final ScriptLoadingOptions options = new ScriptLoadingOptions().setLoaderName(knownLoaderName);
+                CraftTweakerAPI.loadScripts(options.format());
             }
             return 0;
         }));

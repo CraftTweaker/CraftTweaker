@@ -24,7 +24,7 @@ public class ZenClassRegistry {
     private final List<Class<?>> zenGlobals = new ArrayList<>();
     
     /**
-     * All Classes with @Name, sorted by @Name#value
+     * All Classes with @Name, key is @Name#value
      */
     private final Map<String, Class<?>> zenClasses = new HashMap<>();
     
