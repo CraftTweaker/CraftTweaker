@@ -514,7 +514,7 @@ public interface IEntity extends ICommandSender {
         return false;
     }
 
-    @ZenGetter("UUID")
+    @ZenGetter("uuid")
     default String getUUID() {
         return "";
     }
