@@ -21,6 +21,7 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
@@ -141,5 +142,13 @@ public class MCGame {
                 .stream()
                 .map(MCTag::new)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * @return a localized String
+     */
+    @ZenCodeType.Method
+    public String localize(String translationKey) {
+        return LanguageMap.getInstance().func_230503_a_(translationKey);
     }
 }
