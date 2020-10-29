@@ -46,7 +46,7 @@ import java.util.Objects;
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
 @Document("vanilla/api/BracketHandlers")
 public class BracketHandlers {
-    
+
     /**
      * Gets the give {@link Block}. Throws an Exception if not found
      *
@@ -59,7 +59,7 @@ public class BracketHandlers {
     public static Block getBlock(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Block BEP <block:%s> does not seem to be lower-cased!", tokens);
-        
+
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
@@ -67,10 +67,10 @@ public class BracketHandlers {
         if(!ForgeRegistries.BLOCKS.containsKey(key)) {
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!");
         }
-        
+
         return ForgeRegistries.BLOCKS.getValue(key);
     }
-    
+
     /**
      * Gets the given {@link Material}. Throws an Exception if not found.
      *
@@ -85,7 +85,7 @@ public class BracketHandlers {
         if(material != null) {
             return material;
         }
-        
+
         try {
             for(Field field : Material.class.getFields()) {
                 if(field.getName().equalsIgnoreCase(tokens)) {
@@ -95,16 +95,16 @@ public class BracketHandlers {
         } catch(IllegalAccessException e) {
             throw new IllegalArgumentException("Error getting blockmaterial <blockmaterial:" + tokens + ">!", e);
         }
-        
+
         try {
             final Field field = ObfuscationReflectionHelper.findField(Material.class, tokens.toUpperCase());
             return (Material) field.get(null);
         } catch(Exception ignored) {
         }
-        
+
         throw new IllegalArgumentException("Could not find blockmaterial <blockmaterial:" + tokens + ">!");
     }
-    
+
     /**
      * Creates a Blockstate based on the given inputs.
      * Returns `null` if it cannot find the block, ignored invalid variants
@@ -120,7 +120,7 @@ public class BracketHandlers {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("BlockState BEP <blockstate:%s> does not seem to be lower-cased!", tokens);
         String[] split = tokens.split(":", 4);
-        
+
         if(split.length > 1) {
             String blockName = split[0] + ":" + split[1];
             String properties = split.length > 2 ? split[2] : "";
@@ -133,14 +133,13 @@ public class BracketHandlers {
         CraftTweakerAPI.logThrowing("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">!"));
         return null;
     }
-    
+
     public static BlockState getBlockState(String name, String properties) {
-        
         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
         if(block == null) {
             return null;
         }
-        
+
         BlockState blockState = block.getDefaultState();
         if(properties != null && !properties.isEmpty()) {
             for(String propertyPair : properties.split(",")) {
@@ -152,10 +151,10 @@ public class BracketHandlers {
                 blockState = ExpandBlockState.withProperty(blockState, splitPair[0], splitPair[1]);
             }
         }
-        
+
         return blockState;
     }
-    
+
     /**
      * Gets the direction Axis based on name. Throws an error if it can't find the direction Axis.
      *
@@ -168,17 +167,17 @@ public class BracketHandlers {
     public static Direction.Axis getDirectionAxis(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
-        
+
         if(tokens.contains(":"))
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Syntax is <directionaxis:axis>");
-        
+
         final Direction.Axis axis = Direction.Axis.byName(tokens);
         if(axis == null) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
         return axis;
     }
-    
+
     /**
      * Gets the effect based on registry name. Throws an error if it can't find the effect.
      *
@@ -191,7 +190,7 @@ public class BracketHandlers {
     public static Effect getEffect(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Effect BEP <effect:%s> does not seem to be lower-cased!", tokens);
-        
+
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get effect with name: <effect:" + tokens + ">! Syntax is <effect:modid:potionname>");
@@ -201,7 +200,33 @@ public class BracketHandlers {
         }
         return ForgeRegistries.POTIONS.getValue(key);
     }
-    
+
+    /**
+     * Gets the enchantment based on registry name. Throws an error if it can't find the enchantment.
+     * @param tokens The enchantment's registry name
+     * @return The found enchantment
+     * @docParam tokens "minecraft:riptide"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("enchantment")
+    public static MCEnchantment getEnchantment(String tokens) {
+        if (!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
+            CraftTweakerAPI.logWarning("Enchantment BEP <enchantment:%s> does not seem to be lower-case!", tokens);
+        }
+
+        final String[] split = tokens.split(":");
+        if (split.length != 2) {
+            throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': not a valid bracket handler, syntax is <enchantment:modid:name>");
+        }
+
+        final ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        if (!ForgeRegistries.ENCHANTMENTS.containsKey(key)) {
+            throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment isn't registered");
+        }
+
+        return new MCEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(key));
+    }
+
     /**
      * Gets the entityClassification based on registry name. Logs an error and returns `null` if it can't find the entityClassification.
      *
@@ -226,7 +251,7 @@ public class BracketHandlers {
         //Cannot be null since we checked containsKey
         return EntityClassification.valueOf(tokens.toUpperCase());
     }
-    
+
     /**
      * Gets the entityType based on registry name. Logs an error and return `null` if it can't find the entityType.
      *
@@ -248,10 +273,10 @@ public class BracketHandlers {
             CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
             return null;
         }
-        
+
         return new MCEntityType(Objects.requireNonNull(ForgeRegistries.ENTITIES.getValue(resourceLocation)));
     }
-    
+
     /**
      * Gets the fluid Stack based on registry name. Throws an error if it can't find the fluid.
      *
@@ -266,17 +291,16 @@ public class BracketHandlers {
         if(resourceLocation == null) {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Syntax is <fluid:modid:fluidname>");
         }
-        
+
         if(!ForgeRegistries.FLUIDS.containsKey(resourceLocation)) {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
         }
-        
-        
+
         //We know it's not null, because we checked with containsKey
         //noinspection ConstantConditions
         return new MCFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(resourceLocation), 1));
     }
-    
+
     /**
      * Gets the item based on registry name. Throws an error if it can't find the item.
      *
@@ -289,7 +313,7 @@ public class BracketHandlers {
     public static IItemStack getItem(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Item BEP <item:%s> does not seem to be lower-cased!", tokens);
-        
+
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
@@ -300,13 +324,13 @@ public class BracketHandlers {
         final ItemStack value = new ItemStack(ForgeRegistries.ITEMS.getValue(key));
         return new MCItemStack(value);
     }
-    
+
     @BracketResolver("potion")
     @ZenCodeType.Method
     public static Potion getPotion(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Potion BEP <potion:%s> does not seem to be lower-cased!", tokens);
-        
+
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Syntax is <potion:modid:potionname>");
@@ -316,8 +340,7 @@ public class BracketHandlers {
         }
         return ForgeRegistries.POTION_TYPES.getValue(key);
     }
-    
-    
+
     /**
      * Gets the recipeManager based on registry name. Throws an error if it can't find the recipeManager.
      * Throws an expcetion if the given recipeType is not found.
@@ -342,16 +365,16 @@ public class BracketHandlers {
         if(RecipeTypeBracketHandler.containsCustomManager(key)) {
             return RecipeTypeBracketHandler.getCustomManager(key);
         }
-        
+
         IRecipeType<?> value = Registry.RECIPE_TYPE.getOrDefault(key);
-        
+
         if(value != null) {
             return new RecipeManagerWrapper(value);
         } else {
             throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
         }
     }
-    
+
     /**
      * Creates a Resource location based on the tokens.
      * Throws an error if the tokens are not a valid location.
@@ -365,23 +388,23 @@ public class BracketHandlers {
     public static ResourceLocation getResourceLocation(String tokens) {
         return new ResourceLocation(tokens);
     }
-    
+
     @ZenCodeType.Method
     @BracketResolver("formatting")
     public static MCTextFormatting getTextFormatting(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Formatting BEP <formatting:%s> does not seem to be lower-cased!", tokens);
-        
+
         final String[] split = tokens.split(":");
         if(split.length != 1)
             throw new IllegalArgumentException("Could not get format with name: <formatting:" + tokens + ">! Syntax is <formatting:format>");
-        
+
         if(TextFormatting.getValueByName(split[0]) == null) {
             throw new IllegalArgumentException("Could not get format with name: <formatting:" + tokens + ">! format does not appear to exist!");
         }
         return new MCTextFormatting(TextFormatting.getValueByName(split[0]));
     }
-    
+
     /**
      * Gets the villager profession based on registry name. Logs an error and return `null` if it can't find the profession.
      *
@@ -403,8 +426,7 @@ public class BracketHandlers {
             CraftTweakerAPI.logError("Could not get profession <profession:%s>", tokens);
             return null;
         }
-        
+
         return ForgeRegistries.PROFESSIONS.getValue(resourceLocation);
     }
-    
 }
