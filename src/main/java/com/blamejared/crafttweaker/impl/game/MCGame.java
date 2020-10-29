@@ -30,6 +30,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Holds general game information.
+ * Can be accessed using the `game` global keyword
+ *
+ * @docParam this game
+ */
+
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.game.MCGame")
 @Document("vanilla/api/game/MCGame")
