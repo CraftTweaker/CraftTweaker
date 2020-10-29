@@ -299,7 +299,8 @@ public interface IEntity extends ICommandSender {
     
     @ZenGetter
     boolean canBePushed();
-    
+
+    @ZenGetter("nbt")
     @ZenMethod
     IData getNBT();
     
