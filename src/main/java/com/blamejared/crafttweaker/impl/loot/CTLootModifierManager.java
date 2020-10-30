@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.api.loot.ILootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRegisterLootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRemoveLootModifier;
+import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.ResourceLocation;
@@ -63,6 +64,11 @@ public class CTLootModifierManager {
     @ZenCodeType.Method
     public void register(final String name, final ILootCondition[] conditions, final ILootModifier modifier) {
         CraftTweakerAPI.apply(new ActionRegisterLootModifier(this.fromName(name), conditions == null? new ILootCondition[0] : conditions, modifier, this::getLmmMap));
+    }
+
+    @ZenCodeType.Method
+    public void register(final String name, final CTLootConditionBuilder builder, final ILootModifier modifier) {
+        this.register(name, builder.build(), modifier);
     }
 
     @ZenCodeType.Method
