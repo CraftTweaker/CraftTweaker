@@ -23,6 +23,7 @@ import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.api.potions.IPotionType;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
 import crafttweaker.mc1120.command.MCCommand;
@@ -43,6 +44,7 @@ import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.MCPotion;
 import crafttweaker.mc1120.potions.MCPotionEfect;
 import crafttweaker.mc1120.potions.MCPotionType;
+import crafttweaker.mc1120.util.MCAxisAlignedBB;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -73,6 +75,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -1034,5 +1037,13 @@ public class CraftTweakerMC {
 
     public static IPotionType getIPotionType(PotionType potionType) {
         return potionType == null ? null : new MCPotionType(potionType);
+    }
+
+    public static AxisAlignedBB getAxisAlignedBB(IAxisAlignedBB aabb) {
+        return aabb == null ? null : (AxisAlignedBB) aabb.getInternal();
+    }
+
+    public static IAxisAlignedBB getIAxisAlignedBB(AxisAlignedBB aabb) {
+        return aabb == null ? null : new MCAxisAlignedBB(aabb);
     }
 }
