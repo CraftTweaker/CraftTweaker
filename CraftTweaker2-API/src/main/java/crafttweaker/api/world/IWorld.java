@@ -7,6 +7,7 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.*;
@@ -136,5 +137,10 @@ public interface IWorld extends IBlockAccess {
 
     @ZenMethod
     default void removeEntity(IEntity entity) {
+    }
+
+    @ZenMethod
+    default IEntity[] getEntitiesWithinAABB(IAxisAlignedBB aabb) {
+        return null;
     }
 }

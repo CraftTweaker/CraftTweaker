@@ -1046,4 +1046,18 @@ public class CraftTweakerMC {
     public static IAxisAlignedBB getIAxisAlignedBB(AxisAlignedBB aabb) {
         return aabb == null ? null : new MCAxisAlignedBB(aabb);
     }
+
+    public static IEntity[] getIEntities(List<Entity> entities) {
+        if(entities == null)
+            return null;
+
+        IEntity[] result = new IEntity[entities.size()];
+        for(int i = 0; i < result.length; i++) {
+            Entity entity = entities.get(i);
+            if(entity != null) {
+                result[i] = new MCEntity(entity);
+            }
+        }
+        return result;
+    }
 }

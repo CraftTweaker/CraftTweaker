@@ -8,11 +8,13 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.util.MCPosition3f;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -197,7 +199,6 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 		return world.isSpawnChunk(x, z) ;
 	}
 
-
 	@Override
 	public int getSeaLevel() {
 		return world.getSeaLevel();
@@ -216,6 +217,11 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 
 	@Override
 	public void removeEntity(IEntity entity) {
-    	world.removeEntity(CraftTweakerMC.getEntity(entity));
+		world.removeEntity(CraftTweakerMC.getEntity(entity));
+	}
+
+	@Override
+	public IEntity[] getEntitiesWithinAABB(IAxisAlignedBB aabb) {
+		return CraftTweakerMC.getIEntities(world.getEntitiesWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb)));
 	}
 }
