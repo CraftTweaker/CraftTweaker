@@ -2,7 +2,8 @@ package crafttweaker.api.world;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
@@ -10,9 +11,12 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @ZenClass("crafttweaker.world.IWorld")
 @ZenRegister
@@ -141,6 +145,11 @@ public interface IWorld extends IBlockAccess {
 
     @ZenMethod
     default IEntity[] getEntitiesWithinAABB(IAxisAlignedBB aabb) {
+        return null;
+    }
+
+    @ZenMethod
+    default IEntity[] getEntitiesWithinAABBExcludingEntity(IAxisAlignedBB aabb, IEntity entity){
         return null;
     }
 }

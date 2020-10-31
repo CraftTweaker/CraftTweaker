@@ -222,6 +222,11 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 
 	@Override
 	public IEntity[] getEntitiesWithinAABB(IAxisAlignedBB aabb) {
-		return CraftTweakerMC.getIEntities(world.getEntitiesWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb)));
+		return world.getEntitiesWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb)).stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
+	}
+
+	@Override
+	public IEntity[] getEntitiesWithinAABBExcludingEntity(IAxisAlignedBB aabb, IEntity entity) {
+		return world.getEntitiesWithinAABBExcludingEntity(CraftTweakerMC.getEntity(entity), CraftTweakerMC.getAxisAlignedBB(aabb)).stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
 	}
 }
