@@ -149,7 +149,12 @@ public interface IWorld extends IBlockAccess {
     }
 
     @ZenMethod
-    default IEntity[] getEntitiesWithinAABBExcludingEntity(IAxisAlignedBB aabb, IEntity entity){
+    default IEntity[] getEntitiesWithinAABBExcludingEntity(IAxisAlignedBB aabb, IEntity entity) {
+        return null;
+    }
+
+    @ZenMethod
+    default IEntity findNearestEntityWithinAABB(IAxisAlignedBB aabb, IEntity closestTo) {
         return null;
     }
 }
