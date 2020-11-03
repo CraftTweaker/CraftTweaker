@@ -8,6 +8,7 @@ import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
@@ -518,5 +519,14 @@ public interface IEntity extends ICommandSender {
     @ZenGetter("uuid")
     default String getUUID() {
         return "";
+    }
+
+    @ZenGetter("boundingBox")
+    default IAxisAlignedBB getBoundingBox() {
+        return null;
+    }
+
+    @ZenSetter("boundingBox")
+    default void setBoundingBox(IAxisAlignedBB aabb) {
     }
 }

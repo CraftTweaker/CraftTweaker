@@ -8,6 +8,7 @@ import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.command.MCCommandSender;
@@ -679,5 +680,15 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public String getUUID() {
         return entity.getCachedUniqueIdString();
+    }
+
+    @Override
+    public IAxisAlignedBB getBoundingBox() {
+        return CraftTweakerMC.getIAxisAlignedBB(entity.getEntityBoundingBox());
+    }
+
+    @Override
+    public void setBoundingBox(IAxisAlignedBB aabb) {
+        entity.setEntityBoundingBox(CraftTweakerMC.getAxisAlignedBB(aabb));
     }
 }
