@@ -14,24 +14,25 @@ public class CustomNetworkTagManager extends NetworkTagManager {
     public ITagCollectionSupplier func_242231_a() {
         return new ITagCollectionSupplier() {
             @Override
-            public ITagCollection<Block> func_241835_a() {
+            public ITagCollection<Block> getBlockTags() {
                 return null;
             }
-    
+            
             @Override
-            public ITagCollection<Item> func_241836_b() {
+            public ITagCollection<Item> getItemTags() {
                 return null;
             }
-    
+            
             @Override
-            public ITagCollection<Fluid> func_241837_c() {
+            public ITagCollection<Fluid> getFluidTags() {
                 return null;
             }
-    
+            
             @Override
-            public ITagCollection<EntityType<?>> func_241838_d() {
+            public ITagCollection<EntityType<?>> getEntityTypeTags() {
                 return null;
             }
+            
         };
     }
     

@@ -17,13 +17,13 @@ public class ActionTagRemove<T extends ForgeRegistryEntry> extends ActionTagModi
     @Override
     public void apply() {
         if(tag instanceof Tag) {
-            List<T> list = new ArrayList<>(((Tag<T>) tag).field_241282_b_);
-            Set<T> set = new HashSet<>(((Tag<T>) tag).field_241283_c_);
+            List<T> list = new ArrayList<>(((Tag<T>) tag).immutableContents);
+            Set<T> set = new HashSet<>(((Tag<T>) tag).contents);
             List<T> values = Arrays.asList(getValues());
             list.removeAll(values);
             set.removeAll(values);
-            ((Tag<T>) tag).field_241282_b_ = ImmutableList.copyOf(list);
-            ((Tag<T>) tag).field_241283_c_ = set;
+            ((Tag<T>) tag).immutableContents = ImmutableList.copyOf(list);
+            ((Tag<T>) tag).contents = set;
         } else {
             throw new RuntimeException("Only Tag's are supported right now, can't act on: " + tag);
         }

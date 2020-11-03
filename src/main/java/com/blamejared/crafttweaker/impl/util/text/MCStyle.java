@@ -100,12 +100,12 @@ public class MCStyle {
     
     @ZenCodeType.Method
     public MCStyle setColor(int colour) {
-        return new MCStyle(getInternal().setColor(Color.func_240743_a_(colour)));
+        return new MCStyle(getInternal().setColor(Color.fromInt(colour)));
     }
     
     @ZenCodeType.Method
     public MCStyle setColor(MCTextFormatting formatting) {
-        return new MCStyle(getInternal().setColor(Color.func_240744_a_(formatting.getInternal())));
+        return new MCStyle(getInternal().setColor(Color.fromTextFormatting(formatting.getInternal())));
     }
     
     @ZenCodeType.Method
