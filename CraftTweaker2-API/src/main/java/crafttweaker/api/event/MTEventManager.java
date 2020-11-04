@@ -1793,6 +1793,26 @@ public class MTEventManager implements IEventManager {
     public void publishEntityLivingHeal(EntityLivingHealEvent event) {
         elEntityLivingHeal.publish(event);
     }
+
+    // ###############################
+    // ### EntityLivingUpdateEvent ###
+    // ###############################
+
+    private final EventList<EntityLivingUpdateEvent> elEntityLivingUpdateEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingUpdate(IEventHandler<EntityLivingUpdateEvent> ev) {
+        return elEntityLivingUpdateEvent.add(ev);
+    }
+
+    public boolean hasEntityLivingUpdateEvent() {
+        return elEntityLivingUpdateEvent.hasHandlers();
+    }
+
+    public void publishEntityLivingUpdateEvent(EntityLivingUpdateEvent event) {
+        elEntityLivingUpdateEvent.publish(event);
+    }
+
     /*
     // #########################
     // ### PotionEffectAdded ###
