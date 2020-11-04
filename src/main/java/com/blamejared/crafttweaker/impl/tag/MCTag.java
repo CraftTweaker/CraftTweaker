@@ -286,4 +286,9 @@ public class MCTag implements IIngredient {
     public String toString() {
         return getCommandString();
     }
+    
+    
+    public ResourceLocation getInternalID(){
+        return this.id;
+    }
 }
