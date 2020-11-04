@@ -99,7 +99,7 @@ public class MCTag implements IIngredient {
     @ZenCodeType.Getter("fluids")
     public MCFluid[] getFluids() {
         if(getFluidTag() == null) {
-            CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not a BlockTag!");
+            CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not a FluidTag!");
             return new MCFluid[0];
         }
         return getFluidTag().getAllElements().stream().map(MCFluid::new).toArray(MCFluid[]::new);
