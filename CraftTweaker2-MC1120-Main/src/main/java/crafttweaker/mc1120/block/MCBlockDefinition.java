@@ -7,7 +7,6 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -84,10 +83,19 @@ public class MCBlockDefinition implements IBlockDefinition {
     public void setTickRandomly(boolean tickRandomly) {
         block.setTickRandomly(tickRandomly);
     }
-    
+
     @Override
     public void setHarvestLevel(String toolClass, int level) {
-        block.setHarvestLevel(toolClass, level);
+        setHarvestLevel(toolClass, level, null);
+    }
+
+    @Override
+    public void setHarvestLevel(String toolClass, int level, IBlockState state) {
+        if (state == null) {
+            block.setHarvestLevel(toolClass, level);
+        } else {
+            block.setHarvestLevel(toolClass, level, CraftTweakerMC.getBlockState(state));
+        }
     }
     
     @Override
@@ -96,10 +104,20 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
     
     @Override
+    public int getHarvestLevel(IBlockState state) {
+        return block.getHarvestLevel(CraftTweakerMC.getBlockState(state));
+    }
+    
+    @Override
     public String getHarvestTool() {
         return Optional.ofNullable(block.getHarvestTool(block.getDefaultState())).orElse("");
     }
-    
+
+    @Override
+    public String getHarvestTool(IBlockState state) {
+        return Optional.ofNullable(block.getHarvestTool(CraftTweakerMC.getBlockState(state))).orElse("");
+    }
+
     @Override
     public int tickRate(IWorld world) {
         return block.tickRate((World) world.getInternal());
@@ -154,5 +172,9 @@ public class MCBlockDefinition implements IBlockDefinition {
     public IBlockState getStateFromMeta(int meta) {
         return new MCBlockState(block.getStateFromMeta(meta));
     }
-
+    
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return block.isToolEffective(type, CraftTweakerMC.getBlockState(state));   
+    }
 }

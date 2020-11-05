@@ -136,7 +136,7 @@ public class MCWorld extends MCBlockAccess implements IWorld {
         if(end == null) {
             end = new MCPosition3f(start.getX() + 1, start.getY() + 1, start.getZ() + 1);
         }
-        return this.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(((BlockPos) start.asBlockPos().getInternal()), ((BlockPos) end.asBlockPos().getInternal()))).stream().map(MCEntity::new).collect(Collectors.toList());
+        return this.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(((BlockPos) start.asBlockPos().getInternal()), ((BlockPos) end.asBlockPos().getInternal()))).stream().map(CraftTweakerMC::getIEntity).collect(Collectors.toList());
     }
     
     @Override

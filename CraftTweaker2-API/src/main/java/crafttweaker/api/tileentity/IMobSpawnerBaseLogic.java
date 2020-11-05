@@ -11,6 +11,11 @@ import stanhebben.zenscript.annotations.*;
 @ZenRegister
 public interface IMobSpawnerBaseLogic {
     
+    @ZenGetter("entityDefinition")
+    default IEntityDefinition getEntityDefinition() {
+        return null;
+    }
+    
     @ZenSetter("entityDefinition")
     void setEntityDefinition(IEntityDefinition entityDefinition);
     
