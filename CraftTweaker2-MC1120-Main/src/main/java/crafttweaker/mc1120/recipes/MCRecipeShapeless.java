@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeHooks;
 
 import java.util.*;
 
-public class MCRecipeShapeless extends MCRecipeBase implements IRecipe {
+public class MCRecipeShapeless extends MCRecipeBase {
 
     private final IIngredient ingredients[];
 

@@ -11,7 +11,7 @@ public class MCPlayerTickEvent implements PlayerTickEvent {
 
     @Deprecated
     public MCPlayerTickEvent(IPlayer player, String phase) {
-        this(new TickEvent.PlayerTickEvent(CraftTweakerMC.getPlayer(player), TickEvent.Phase.valueOf(phase)));
+        this(new TickEvent.PlayerTickEvent(TickEvent.Phase.valueOf(phase), CraftTweakerMC.getPlayer(player)));
     }
 
     public MCPlayerTickEvent(TickEvent.PlayerTickEvent event) {

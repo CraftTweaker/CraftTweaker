@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class MCSeedRegistry implements ISeedRegistry {
     
-    public static final List SEEDS = CraftTweakerHacks.getSeeds();
+    public static final List<WeightedRandom.Item> SEEDS = CraftTweakerHacks.getSeeds();
     
     @Override
     public void addSeed(WeightedItemStack item) {

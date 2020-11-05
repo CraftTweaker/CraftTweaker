@@ -6,15 +6,8 @@ import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.*;
-import crafttweaker.mc1120.CraftTweaker;
-import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
-import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.entity.*;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 
 import java.util.List;
 import java.util.stream.Collectors;

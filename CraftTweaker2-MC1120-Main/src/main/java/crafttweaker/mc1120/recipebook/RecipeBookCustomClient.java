@@ -1,10 +1,6 @@
 package crafttweaker.mc1120.recipebook;
 
 import net.minecraft.client.util.RecipeBookClient;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author BloodWorkXGaming

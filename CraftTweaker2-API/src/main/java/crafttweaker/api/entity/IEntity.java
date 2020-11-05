@@ -30,9 +30,9 @@ public interface IEntity extends ICommandSender {
     
     
     /**
-     * Retrieves the world this entity is in.
+     * Sets the world this entity is in.
      *
-     * @return the current world of this entity
+     * @param world the current world of this entity
      */
     
     @ZenSetter("world")
@@ -47,6 +47,11 @@ public interface IEntity extends ICommandSender {
     @ZenMethod
     int getDimension();
     
+    /**
+     * Sets the dimension id this entity is in.
+     * 
+     * @param dimensionID dimension id
+     */
     @ZenSetter("dimension")
     void setDimension(int dimensionID);
     

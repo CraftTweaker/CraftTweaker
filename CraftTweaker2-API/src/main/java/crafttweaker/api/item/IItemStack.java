@@ -329,7 +329,7 @@ public interface IItemStack extends IIngredient {
      * Gets the item's container ItemStack.
      * Use the IItemDefinition if you want to set it.
      *
-     * @return
+     * @return item's container's ItemStack
      */
     @ZenGetter("containerItem")
     IItemStack getContainerItem();
@@ -428,7 +428,7 @@ public interface IItemStack extends IIngredient {
     /**
      * Checks if the IItemStack either has an amount of 0 or represents the AIR item.
      *
-     * @return
+     * @return whether the item is empty or is air
      */
     @ZenGetter("isEmpty")
     boolean isEmpty();
