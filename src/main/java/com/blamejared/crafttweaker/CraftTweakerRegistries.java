@@ -42,8 +42,8 @@ public class CraftTweakerRegistries {
         ResourceLocation conditionSerializerRL = new ResourceLocation(CraftTweaker.MODID, "condition_serializer");
         
         MutableRegistry registry = (MutableRegistry) Registry.REGISTRY;
-        REGISTRY_TRANSFORMER_SERIALIZER = (SimpleRegistry<IIngredientTransformerSerializer<?>>) registry.register(RegistryKey.func_240904_a_(transformerSerializerRL), new SimpleRegistry<>(RegistryKey.func_240904_a_(transformerSerializerRL), Lifecycle.stable()), Lifecycle.stable());
-        REGISTRY_CONDITIONER_SERIALIZER = (SimpleRegistry<IIngredientConditionSerializer<?>>) registry.register(RegistryKey.func_240904_a_(conditionSerializerRL), new SimpleRegistry<>(RegistryKey.func_240904_a_(conditionSerializerRL), Lifecycle.stable()), Lifecycle.stable());
+        REGISTRY_TRANSFORMER_SERIALIZER = (SimpleRegistry<IIngredientTransformerSerializer<?>>) registry.register(RegistryKey.getOrCreateRootKey(transformerSerializerRL), new SimpleRegistry<>(RegistryKey.getOrCreateRootKey(transformerSerializerRL), Lifecycle.stable()), Lifecycle.stable());
+        REGISTRY_CONDITIONER_SERIALIZER = (SimpleRegistry<IIngredientConditionSerializer<?>>) registry.register(RegistryKey.getOrCreateRootKey(conditionSerializerRL), new SimpleRegistry<>(RegistryKey.getOrCreateRootKey(conditionSerializerRL), Lifecycle.stable()), Lifecycle.stable());
         INGREDIENT_TRANSFORMED_SERIALIZER = new IngredientTransformedSerializer();
         INGREDIENT_CONDITIONED_SERIALIZER = new IngredientConditionedSerializer();
         
@@ -51,25 +51,25 @@ public class CraftTweakerRegistries {
         CraftingHelper.register(new ResourceLocation(CraftTweaker.MODID, "ingredient_conditioned_serializer"), INGREDIENT_CONDITIONED_SERIALIZER);
         
         TRANSFORM_REPLACE_SERIALIZER = new TransformReplace.TransformReplaceTransformerSerializer();
-        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_TRANSFORMER_SERIALIZER.func_243578_f(), TRANSFORM_REPLACE_SERIALIZER.getType()), TRANSFORM_REPLACE_SERIALIZER, Lifecycle.stable());
+        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_REPLACE_SERIALIZER.getType()), TRANSFORM_REPLACE_SERIALIZER, Lifecycle.stable());
         
         TRANSFORM_DAMAGE_SERIALIZER = new TransformDamage.TransformDamageSerializer();
-        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_TRANSFORMER_SERIALIZER.func_243578_f(), TRANSFORM_DAMAGE_SERIALIZER.getType()), TRANSFORM_DAMAGE_SERIALIZER, Lifecycle.stable());
+        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_DAMAGE_SERIALIZER.getType()), TRANSFORM_DAMAGE_SERIALIZER, Lifecycle.stable());
         
         TRANSFORM_CUSTOM_SERIALIZER = new TransformCustom.TransformCustomSerializer();
-        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_TRANSFORMER_SERIALIZER.func_243578_f(), TRANSFORM_CUSTOM_SERIALIZER.getType()), TRANSFORM_CUSTOM_SERIALIZER, Lifecycle.stable());
+        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_CUSTOM_SERIALIZER.getType()), TRANSFORM_CUSTOM_SERIALIZER, Lifecycle.stable());
         
         TRANSFORM_REUSE_SERIALIZER = new TransformReuse.TransformerReuseSerializer();
-        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_TRANSFORMER_SERIALIZER.func_243578_f(), TRANSFORM_REUSE_SERIALIZER.getType()), TRANSFORM_REUSE_SERIALIZER, Lifecycle.stable());
+        REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_REUSE_SERIALIZER.getType()), TRANSFORM_REUSE_SERIALIZER, Lifecycle.stable());
         
         
         CONDITION_DAMAGE_SERIALIZER = new ConditionDamaged.ConditionDamagedSerializer();
-        REGISTRY_CONDITIONER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_CONDITIONER_SERIALIZER.func_243578_f(), CONDITION_DAMAGE_SERIALIZER.getType()), CONDITION_DAMAGE_SERIALIZER, Lifecycle.stable());
+        REGISTRY_CONDITIONER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_CONDITIONER_SERIALIZER.getRegistryKey(), CONDITION_DAMAGE_SERIALIZER.getType()), CONDITION_DAMAGE_SERIALIZER, Lifecycle.stable());
         
         CONDITION_ANY_DAMAGE_SERIALIZER = new ConditionAnyDamage.ConditionAnyDamagedSerializer();
-        REGISTRY_CONDITIONER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_CONDITIONER_SERIALIZER.func_243578_f(), CONDITION_ANY_DAMAGE_SERIALIZER.getType()), CONDITION_ANY_DAMAGE_SERIALIZER, Lifecycle.stable());
+        REGISTRY_CONDITIONER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_CONDITIONER_SERIALIZER.getRegistryKey(), CONDITION_ANY_DAMAGE_SERIALIZER.getType()), CONDITION_ANY_DAMAGE_SERIALIZER, Lifecycle.stable());
         
         CONDITION_CUSTOM_SERIALIZER = new ConditionCustom.ConditionCustomSerializer();
-        REGISTRY_CONDITIONER_SERIALIZER.register(RegistryKey.func_240903_a_(REGISTRY_CONDITIONER_SERIALIZER.func_243578_f(), CONDITION_CUSTOM_SERIALIZER.getType()), CONDITION_CUSTOM_SERIALIZER, Lifecycle.stable());
+        REGISTRY_CONDITIONER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_CONDITIONER_SERIALIZER.getRegistryKey(), CONDITION_CUSTOM_SERIALIZER.getType()), CONDITION_CUSTOM_SERIALIZER, Lifecycle.stable());
     }
 }

@@ -42,29 +42,29 @@ public class MCTag implements IIngredient {
     
     @ZenCodeType.Method
     public MCTag createItemTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a()
-                .func_241836_b(), "Item", Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.getManager()
+                .getItemTags(), "Item", Tag.getTagFromContents(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createBlockTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a()
-                .func_241835_a(), "Block", Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.getManager()
+                .getBlockTags(), "Block", Tag.getTagFromContents(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createFluidTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a()
-                .func_241838_d(), "Fluid", Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.getManager()
+                .getFluidTags(), "Fluid", Tag.getTagFromContents(Sets.newHashSet()), id));
         return this;
     }
     
     @ZenCodeType.Method
     public MCTag createEntityTypeTag() {
-        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.func_242178_a()
-                .func_241838_d(), "EntityType", Tag.func_241286_a_(Sets.newHashSet()), id));
+        CraftTweakerAPI.apply(new ActionTagCreate<>(TagCollectionManager.getManager()
+                .getEntityTypeTags(), "EntityType", Tag.getTagFromContents(Sets.newHashSet()), id));
         return this;
     }
     
@@ -99,7 +99,7 @@ public class MCTag implements IIngredient {
     @ZenCodeType.Getter("fluids")
     public MCFluid[] getFluids() {
         if(getFluidTag() == null) {
-            CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not a BlockTag!");
+            CraftTweakerAPI.logError("\"" + getCommandString() + "\" is not a FluidTag!");
             return new MCFluid[0];
         }
         return getFluidTag().getAllElements().stream().map(MCFluid::new).toArray(MCFluid[]::new);
@@ -246,28 +246,28 @@ public class MCTag implements IIngredient {
     
     public ITag<Item> getItemTag() {
         if(itemTag == null) {
-            itemTag = TagCollectionManager.func_242178_a().func_241836_b().get(id);
+            itemTag = TagCollectionManager.getManager().getItemTags().get(id);
         }
         return itemTag;
     }
     
     public ITag<Block> getBlockTag() {
         if(blockTag == null) {
-            blockTag = TagCollectionManager.func_242178_a().func_241835_a().get(id);
+            blockTag = TagCollectionManager.getManager().getBlockTags().get(id);
         }
         return blockTag;
     }
     
     public ITag<Fluid> getFluidTag() {
         if(fluidTag == null) {
-            fluidTag = TagCollectionManager.func_242178_a().func_241837_c().get(id);
+            fluidTag = TagCollectionManager.getManager().getFluidTags().get(id);
         }
         return fluidTag;
     }
     
     public ITag<EntityType<?>> getEntityTypeTag() {
         if(entityTypeTag == null) {
-            entityTypeTag = TagCollectionManager.func_242178_a().func_241838_d().get(id);
+            entityTypeTag = TagCollectionManager.getManager().getEntityTypeTags().get(id);
         }
         return entityTypeTag;
     }
@@ -285,5 +285,10 @@ public class MCTag implements IIngredient {
     @Override
     public String toString() {
         return getCommandString();
+    }
+    
+    
+    public ResourceLocation getInternalID(){
+        return this.id;
     }
 }

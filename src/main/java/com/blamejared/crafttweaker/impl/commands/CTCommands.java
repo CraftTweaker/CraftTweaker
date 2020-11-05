@@ -241,25 +241,25 @@ public class CTCommands {
         registerDump("tags", "Outputs the names of all registered tags (vanilla tag types)", (CommandCallerPlayer) (player, stack) -> {
             CraftTweakerAPI.logDump("Item Tags:\n");
             ItemTags.getCollection()
-                    .func_241833_a()
+                    .getIDTagMap()
                     .keySet()
                     .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Block Tags:\n");
             BlockTags.getCollection()
-                    .func_241833_a()
+                    .getIDTagMap()
                     .keySet()
                     .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Fluid Tags:\n");
             FluidTags.getCollection()
-                    .func_241833_a()
+                    .getIDTagMap()
                     .keySet()
                     .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             
             CraftTweakerAPI.logDump("Entity Type Tags:\n");
             EntityTypeTags.getCollection()
-                    .func_241833_a()
+                    .getIDTagMap()
                     .keySet()
                     .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
             

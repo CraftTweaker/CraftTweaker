@@ -48,7 +48,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.16.3'
+archivesBaseName = 'CraftTweaker-1.16.4'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -78,7 +78,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200820-1.16.1'
+    mappings channel: 'snapshot', version: '20201028-1.16.3'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -143,7 +143,7 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.16.3-34.0.5'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
 //    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
@@ -301,7 +301,7 @@ task updateVersionTracker {
         def body = [
                 'author'        : "${project.findProperty('versionTrackerAuthor')}",
                 'projectName'   : "crafttweaker",
-                'gameVersion'   : "1.16.3",
+                'gameVersion'   : "1.16.4",
                 'projectVersion': "${version}",
                 'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
                 'uid'           : "${project.findProperty('versionTrackerKey')}"
