@@ -27,7 +27,7 @@ public interface IBlock extends IBlockPattern {
     
     @ZenGetter("data")
     IData getTileData();
-    
+
     @ZenGetter("fluid")
     ILiquidDefinition getFluid();
 }
