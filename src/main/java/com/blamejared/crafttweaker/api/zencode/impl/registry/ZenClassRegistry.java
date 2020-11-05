@@ -39,7 +39,7 @@ public class ZenClassRegistry {
         //noinspection unchecked
         return allRegisteredClasses.stream()
                 .filter(IRecipeManager.class::isAssignableFrom)
-                .filter(cls -> !cls.isInterface())
+                .filter(cls -> !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers()))
                 .map(cls -> (Class<? extends IRecipeManager>) cls)
                 .collect(Collectors.toList());
     }
