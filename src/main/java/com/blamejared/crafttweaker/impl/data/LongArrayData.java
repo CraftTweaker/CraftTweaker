@@ -48,7 +48,7 @@ public class LongArrayData implements ICollectionData {
     }
     
     @Override
-    public LongData set(int index, IData value) {
+    public LongData setAt(int index, IData value) {
         if(value instanceof NumberNBT) {
             return new LongData(internal.set(index, LongNBT.valueOf(((INumberData) value).getLong())));
         } else {
@@ -77,7 +77,7 @@ public class LongArrayData implements ICollectionData {
     }
     
     @Override
-    public IData get(int index) {
+    public IData getAt(int index) {
         return new LongData(internal.get(index));
     }
     

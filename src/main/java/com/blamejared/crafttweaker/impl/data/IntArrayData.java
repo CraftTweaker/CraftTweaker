@@ -43,7 +43,7 @@ public class IntArrayData implements ICollectionData {
     }
     
     @Override
-    public IntData set(int index, IData value) {
+    public IntData setAt(int index, IData value) {
         if(value instanceof NumberNBT) {
             return new IntData(internal.set(index, IntNBT.valueOf(((INumberData) value).getInt())));
         } else {
@@ -72,7 +72,7 @@ public class IntArrayData implements ICollectionData {
     }
     
     @Override
-    public IData get(int index) {
+    public IData getAt(int index) {
         return new IntData(internal.get(index));
     }
     

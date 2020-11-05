@@ -92,7 +92,7 @@ public class MapData implements IData {
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
-    public IData get(String key) {
+    public IData getAt(String key) {
         return NBTConverter.convert(internal.get(key));
     }
     
@@ -159,7 +159,7 @@ public class MapData implements IData {
     @Override
     public Map<String, IData> asMap() {
         Map<String, IData> newMap = new HashMap<>();
-        internal.keySet().forEach(s -> newMap.put(s, get(s)));
+        internal.keySet().forEach(s -> newMap.put(s, getAt(s)));
         return newMap;
     }
     
@@ -191,7 +191,7 @@ public class MapData implements IData {
         result.append('{');
         boolean first = true;
         for(String key : internal.keySet()) {
-            IData value = this.get(key);
+            IData value = this.getAt(key);
             if(first) {
                 first = false;
             } else {

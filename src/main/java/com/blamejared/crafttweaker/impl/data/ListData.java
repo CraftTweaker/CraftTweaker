@@ -53,7 +53,7 @@ public class ListData implements ICollectionData {
     
     
     @Override
-    public IData set(int index, IData value) {
+    public IData setAt(int index, IData value) {
         return NBTConverter.convert(internal.set(index, value.getInternal()));
     }
     
@@ -73,7 +73,7 @@ public class ListData implements ICollectionData {
     }
     
     @Override
-    public IData get(int index) {
+    public IData getAt(int index) {
         return NBTConverter.convert(internal.get(index));
     }
     

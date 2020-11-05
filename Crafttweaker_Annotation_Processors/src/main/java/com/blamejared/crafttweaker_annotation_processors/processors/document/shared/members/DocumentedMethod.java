@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.*;
 import org.openzen.zencode.java.*;
 
 import javax.annotation.processing.*;
@@ -59,6 +60,8 @@ public class DocumentedMethod implements Writable {
         
         final String name = methodAnnotation.value().isEmpty() ? method.getSimpleName()
                 .toString() : methodAnnotation.value();
+        ZenCodeKeywordUtil.checkName(name, method, environment);
+        
         final List<DocumentedParameter> parameterList = DocumentedParameter.getMethodParameters(method, environment, isExpansion);
         final List<DocumentedTypeParameter> documentedTypeParameters = DocumentedTypeParameter.getMethodTypeParameters(method, environment, isExpansion);
         final boolean isStatic = method.getModifiers().contains(Modifier.STATIC);

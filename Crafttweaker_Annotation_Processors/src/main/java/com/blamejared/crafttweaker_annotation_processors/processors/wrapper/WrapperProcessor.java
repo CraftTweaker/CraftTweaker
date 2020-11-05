@@ -15,10 +15,12 @@ import java.util.regex.*;
 
 @SupportedAnnotationTypes({"net.minecraftforge.fml.common.Mod", "com.blamejared.crafttweaker_annotations.annotations.ZenWrapper"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedOptions(WrapperProcessor.LOCATION_OPTION_NAME)
 public class WrapperProcessor extends AbstractProcessor {
     
+    public static final String LOCATION_OPTION_NAME = "wrappedClassesCsvLocation";
+    
     private static final String defaultLocation = "wrappedClasses.csv";
-    private static final String locationOptionName = "wrappedClassesCsvLocation";
     private static final Collection<WrapperInfo> wrappedInfo = new HashSet<>();
     private static final Collection<WrapperInfo> knownWrappers = new HashSet<>();
     private File location;
@@ -77,7 +79,7 @@ public class WrapperProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         final Map<String, String> options = processingEnv.getOptions();
-        final String orDefault = options.getOrDefault(locationOptionName, defaultLocation);
+        final String orDefault = options.getOrDefault(LOCATION_OPTION_NAME, defaultLocation);
         
         location = new File(orDefault);
         if(!location.exists()) {
