@@ -128,21 +128,6 @@ public class MCWorld {
         return new MCBiome(internal.getBiome(pos.getInternal()));
     }
 
-    @ZenCodeType.Method
-    public int nextRandomInt() {
-        return internal.rand.nextInt();
-    }
-
-    @ZenCodeType.Method
-    public int nextRandomInt(int bound) {
-        return internal.rand.nextInt(bound);
-    }
-
-    @ZenCodeType.Method
-    public boolean nextRandomBoolean() {
-        return internal.rand.nextBoolean();
-    }
-
     public World getInternal() {
         return internal;
     }
