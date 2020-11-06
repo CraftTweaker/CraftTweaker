@@ -35,11 +35,6 @@ public class MCDamageSource implements IDamageSource {
     }
 
     @Override
-    public float getHungerDamageFixed() {
-        return source.getHungerDamage();
-    }
-
-    @Override
     public IEntity getImmediateSource() {
         return CraftTweakerMC.getIEntity(source.getImmediateSource());
     }

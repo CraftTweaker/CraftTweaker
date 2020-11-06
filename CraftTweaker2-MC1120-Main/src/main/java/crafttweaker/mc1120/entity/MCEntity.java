@@ -691,4 +691,14 @@ public class MCEntity extends MCCommandSender implements IEntity {
     public void setBoundingBox(IAxisAlignedBB aabb) {
         entity.setEntityBoundingBox(CraftTweakerMC.getAxisAlignedBB(aabb));
     }
+
+    @Override
+    public float getStepHeight() {
+        return entity.stepHeight;
+    }
+
+    @Override
+    public void setStepHeight(float stepHeight) {
+        entity.stepHeight = stepHeight;
+    }
 }

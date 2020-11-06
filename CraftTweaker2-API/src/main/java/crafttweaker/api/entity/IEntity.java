@@ -501,8 +501,14 @@ public interface IEntity extends ICommandSender {
     }
     
     @ZenMethod
-    default void update(IData data){
+    default void update(IData data) {
         CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
+    }
+
+    @ZenSetter("nbt")
+    @ZenMethod
+    default void setNBT(IData data) {
+        this.update(data);
     }
 
     @ZenMethod
@@ -528,5 +534,14 @@ public interface IEntity extends ICommandSender {
 
     @ZenSetter("boundingBox")
     default void setBoundingBox(IAxisAlignedBB aabb) {
+    }
+
+    @ZenGetter("stepHeight")
+    default float getStepHeight() {
+        return 0.0f;
+    }
+
+    @ZenSetter("stepHeight")
+    default void setStepHeight(float stepHeight) {
     }
 }
