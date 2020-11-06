@@ -62,7 +62,7 @@ public class MCGame {
         return ForgeRegistries.ENTITIES.getValues()
                 .stream()
                 .map(MCEntityType::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("fluids")
@@ -70,21 +70,21 @@ public class MCGame {
         return ForgeRegistries.FLUIDS.getValues()
                 .stream()
                 .map(MCFluid::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("entityClassifications")
     public Collection<MCEntityClassification> getMCEntityClassification() {
         return Arrays.stream(EntityClassification.values())
                 .map(MCEntityClassification::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("formattings")
     public Collection<MCTextFormatting> getMCTextFormatting() {
         return Arrays.stream(TextFormatting.values())
                 .map(MCTextFormatting::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("items")
@@ -93,7 +93,7 @@ public class MCGame {
                 .stream()
                 .map(ItemStack::new)
                 .map(MCItemStack::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("potions")
@@ -117,7 +117,7 @@ public class MCGame {
     @ZenCodeType.Getter("itemTags")
     public Collection<MCTag> getMCItemTags() {
         return ItemTags.getCollection()
-                .func_241833_a()
+                .getIDTagMap()
                 .keySet()
                 .stream()
                 .map(MCTag::new)
@@ -127,7 +127,7 @@ public class MCGame {
     @ZenCodeType.Getter("blockTags")
     public Collection<MCTag> getMCBlockTags() {
         return BlockTags.getCollection()
-                .func_241833_a()
+                .getIDTagMap()
                 .keySet()
                 .stream()
                 .map(MCTag::new)
@@ -137,7 +137,7 @@ public class MCGame {
     @ZenCodeType.Getter("entityTags")
     public Collection<MCTag> getMCEntityTags() {
         return EntityTypeTags.getCollection()
-                .func_241833_a()
+                .getIDTagMap()
                 .keySet()
                 .stream()
                 .map(MCTag::new)
