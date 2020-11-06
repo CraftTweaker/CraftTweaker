@@ -11,4 +11,9 @@ public interface PotionEffectAddedEvent extends IPotionEffectEvent, ILivingEvent
 
     @ZenGetter("oldEffect")
     IPotionEffect getOldEffect();
+
+    @ZenGetter("newEffect")
+    default IPotionEffect getNewEffect() {
+        return getPotionEffect();
+    }
 }

@@ -151,7 +151,8 @@ public class MTEventManager implements IEventManager {
         elEntityLivingEquipmentChange.clear();
         elEntityLivingDamage.clear();
         elEntityLivingHeal.clear();
-        // elPotionEffectAdded.clear();
+        elEntityLivingUpdateEvent.clear();
+        elPotionEffectAdded.clear();
     }
 
     // ##########################
@@ -1813,7 +1814,6 @@ public class MTEventManager implements IEventManager {
         elEntityLivingUpdateEvent.publish(event);
     }
 
-    /*
     // #########################
     // ### PotionEffectAdded ###
     // #########################
@@ -1832,5 +1832,4 @@ public class MTEventManager implements IEventManager {
     public void publishPotionEffectAdded(PotionEffectAddedEvent event) {
         elPotionEffectAdded.publish(event);
     }
-    */
 }

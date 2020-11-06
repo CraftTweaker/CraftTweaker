@@ -731,11 +731,9 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishEntityLivingUpdateEvent(new MCEntityLivingUpdateEvent(ev));
     }
 
-    /*
     @SubscribeEvent
     public void onPotionEffectAdded(PotionEvent.PotionAddedEvent ev) {
         if(CrafttweakerImplementationAPI.events.hasPotionEffectAdded())
             CrafttweakerImplementationAPI.events.publishPotionEffectAdded(new MCPotionEffectAddedEvent(ev));
     }
-    */
 }

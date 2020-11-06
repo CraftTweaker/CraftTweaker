@@ -289,10 +289,8 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onEntityLivingUpdate(IEventHandler<EntityLivingUpdateEvent> ev);
 
-    /*
     @ZenMethod
     IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
-    */
 
     /*
      *

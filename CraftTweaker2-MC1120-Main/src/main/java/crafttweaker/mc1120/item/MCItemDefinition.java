@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
  */
 public class MCItemDefinition implements IItemDefinition {
 
-    public final String id;
-    public final Item item;
+    private final String id;
+    private final Item item;
     
     public MCItemDefinition(String id, Item item) {
         this.id = id;
