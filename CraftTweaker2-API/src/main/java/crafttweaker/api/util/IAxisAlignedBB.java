@@ -1,7 +1,6 @@
 package crafttweaker.api.util;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IVector3d;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
@@ -12,18 +11,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface IAxisAlignedBB {
 
     Object getInternal();
-
-    @ZenMethod
-    IAxisAlignedBB create(double minX, double minY, double minZ, double maxX, double maxY, double maxZ);
-
-    @ZenMethod
-    IAxisAlignedBB create(IBlockPos pos);
-
-    @ZenMethod
-    IAxisAlignedBB create(IBlockPos pos1, IBlockPos pos2);
-
-    @ZenMethod
-    IAxisAlignedBB create(IVector3d min, IVector3d max);
 
     @ZenGetter("minX")
     double getMinX();

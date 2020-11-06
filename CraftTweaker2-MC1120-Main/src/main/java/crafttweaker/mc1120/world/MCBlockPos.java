@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class MCBlockPos implements IBlockPos{
 	
-	private BlockPos blockPos;
+	private final BlockPos blockPos;
 
     public MCBlockPos(BlockPos blockPos) {
         this.blockPos = blockPos;
@@ -39,7 +39,6 @@ public class MCBlockPos implements IBlockPos{
 	public IBlockPos getOffset(IFacing direction, int offset) {
 		return new MCBlockPos(blockPos.offset((EnumFacing) direction.getInternal(), offset));
 	}
-	
 
     @Override
 	public Position3f asPosition3f() {
@@ -50,6 +49,4 @@ public class MCBlockPos implements IBlockPos{
 	public Object getInternal() {
 		return blockPos;
 	}
-	
-
 }
