@@ -21,7 +21,7 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     @Override
     public void apply() {
-        collection.func_241833_a().put(getId(), tag);
+        collection.getIDTagMap().put(getId(), tag);
     }
     
     @Override

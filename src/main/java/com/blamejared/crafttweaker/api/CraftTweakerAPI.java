@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.mods.*;
 import com.blamejared.crafttweaker.api.zencode.expands.*;
 import com.blamejared.crafttweaker.api.zencode.impl.*;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
+import com.blamejared.crafttweaker.impl.game.MCGame;
 import com.blamejared.crafttweaker.impl.logger.*;
 import com.blamejared.crafttweaker.impl.script.*;
 import com.google.common.collect.*;
@@ -31,6 +32,10 @@ public class CraftTweakerAPI {
     
     @ZenCodeGlobals.Global
     public static MCMods loadedMods = new MCMods();
+
+    @ZenCodeGlobals.Global
+    public static MCGame game = new MCGame();
+    
     public static boolean DEBUG_MODE = false;
     public static boolean NO_BRAND = false;
     

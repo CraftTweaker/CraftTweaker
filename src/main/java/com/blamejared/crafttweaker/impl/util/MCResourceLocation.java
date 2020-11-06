@@ -67,6 +67,6 @@ public class MCResourceLocation implements CommandStringDisplayable {
     
     @ZenCodeType.Getter("commandString")
     public String getCommandString() {
-        return "<resource" + internal + ">";
+        return "<resource:" + internal + ">";
     }
 }

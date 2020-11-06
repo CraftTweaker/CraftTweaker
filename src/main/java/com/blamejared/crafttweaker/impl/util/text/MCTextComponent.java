@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -35,6 +36,21 @@ public class MCTextComponent {
             formatted.setStyle(internal.getStyle().mergeStyle(style.getInternal()));
         }
         return new MCTextComponent(internal);
+    }
+
+    @ZenCodeType.Method
+    public static MCTextComponent createStringTextComponent(String text) {
+        return new MCTextComponent(new StringTextComponent(text));
+    }
+
+    @ZenCodeType.Method
+    public static MCTextComponent createTranslationTextComponent(String translationKey) {
+        return new MCTextComponent(new TranslationTextComponent(translationKey));
+    }
+
+    @ZenCodeType.Method
+    public static MCTextComponent createTranslationTextComponent(String translationKey, Object... args) {
+        return new MCTextComponent(new TranslationTextComponent(translationKey, args));
     }
     
     @ZenCodeType.Method
