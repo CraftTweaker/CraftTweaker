@@ -1,7 +1,8 @@
 package crafttweaker.mc1120.world;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
@@ -11,7 +12,6 @@ import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
-import crafttweaker.mc1120.entity.MCEntity;
 import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -21,7 +21,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import stanhebben.zenscript.annotations.Optional;
@@ -251,8 +250,6 @@ public class MCWorld extends MCBlockAccess implements IWorld {
         explosion.doExplosionB(true);
         return explosion;
     }
-
-}
 
 	@Override
 	public IEntity findNearestEntityWithinAABB(IAxisAlignedBB aabb, IEntity closestTo) {

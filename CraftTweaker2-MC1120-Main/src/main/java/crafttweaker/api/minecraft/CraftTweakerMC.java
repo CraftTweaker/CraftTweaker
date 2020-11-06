@@ -1,8 +1,12 @@
 package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.*;
-import crafttweaker.api.command.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
+import crafttweaker.api.block.IMaterial;
+import crafttweaker.api.command.ICommand;
+import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
@@ -11,15 +15,19 @@ import crafttweaker.api.entity.*;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
-import crafttweaker.api.liquid.*;
+import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.potions.*;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
+import crafttweaker.api.potions.IPotionType;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
-import crafttweaker.mc1120.command.*;
+import crafttweaker.mc1120.command.MCCommand;
+import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
@@ -29,10 +37,14 @@ import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.item.VanillaIngredient;
-import crafttweaker.mc1120.liquid.*;
+import crafttweaker.mc1120.liquid.MCLiquidDefinition;
+import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
-import crafttweaker.mc1120.potions.*;
+import crafttweaker.mc1120.potions.MCPotion;
+import crafttweaker.mc1120.potions.MCPotionEfect;
+import crafttweaker.mc1120.potions.MCPotionType;
+import crafttweaker.mc1120.util.MCAxisAlignedBB;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -67,14 +79,17 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.IngredientNBT;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.oredict.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.OreIngredient;
 
 import java.util.*;
 
@@ -979,9 +994,8 @@ public class CraftTweakerMC {
     }
 
     public static Explosion getExplosion(IExplosion explosion) {
-        return explosion != null && explosion instanceof MCExplosion ? (Explosion) explosion.getInternal() : null;
+        return explosion instanceof MCExplosion ? (Explosion) explosion.getInternal() : null;
     }
-}
 
     public static IEntityFishHook getIEntityFishHook(EntityFishHook entity) {
 		return entity == null ? null : new MCEntityFishHook(entity);
@@ -1040,19 +1054,5 @@ public class CraftTweakerMC {
 
     public static IAxisAlignedBB getIAxisAlignedBB(AxisAlignedBB aabb) {
         return aabb == null ? null : new MCAxisAlignedBB(aabb);
-    }
-
-    public static IEntity[] getIEntities(List<Entity> entities) {
-        if(entities == null)
-            return null;
-
-        IEntity[] result = new IEntity[entities.size()];
-        for(int i = 0; i < result.length; i++) {
-            Entity entity = entities.get(i);
-            if(entity != null) {
-                result[i] = new MCEntity(entity);
-            }
-        }
-        return result;
     }
 }
