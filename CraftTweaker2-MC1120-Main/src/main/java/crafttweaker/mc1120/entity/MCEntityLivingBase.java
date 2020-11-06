@@ -1,18 +1,18 @@
-
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.damage.IDamageSource;
-import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.entity.IEntityEquipmentSlot;
-import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.entity.*;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.potions.IPotion;
-import crafttweaker.api.potions.IPotionEffect;
+import crafttweaker.api.potions.*;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumHand;
+import crafttweaker.mc1120.item.MCItemStack;
+import net.minecraft.entity.*;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -205,7 +205,7 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public IItemStack getItemInSlot(IEntityEquipmentSlot slot) {
         return CraftTweakerMC.getIItemStack(entityLivingBase.getItemStackFromSlot(CraftTweakerMC.getEntityEquipmentSlot(slot)));
     }
-    
+
     @Override
     public String getActiveHand()  {
         return entityLivingBase.getActiveHand().name();
@@ -235,12 +235,12 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public boolean isElytraFlying()  {
         return entityLivingBase.isElytraFlying();
     }
-    
+
     @Override
     public void removePotionEffect(IPotion potion) {
         entityLivingBase.removePotionEffect(CraftTweakerMC.getPotion(potion));
     }
-    
+
     @Override
     public boolean isActiveItemStackBlocking()  {
         return entityLivingBase.isActiveItemStackBlocking();

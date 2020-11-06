@@ -3,9 +3,7 @@ package crafttweaker.mc1120.entity;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
-import crafttweaker.mc1120.world.MCBlockPos;
 import net.minecraft.entity.*;
-import net.minecraft.util.math.BlockPos;
 
 public class MCEntityCreature extends MCEntityLiving implements IEntityCreature {
     

@@ -47,15 +47,34 @@ public interface IBlockDefinition {
     
     @ZenSetter("tickRandomly")
     void setTickRandomly(boolean tickRandomly);
-    
-    @ZenMethod
+
+    @Deprecated
     void setHarvestLevel(String toolClass, int level);
     
+    @ZenMethod
+    default void setHarvestLevel(String toolClass, int level, @Optional IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::setHarvestLevel!");
+    }
+    
     @ZenGetter("harvestLevel")
+    @ZenMethod
     int getHarvestLevel();
+
+    @ZenMethod
+    default int getHarvestLevel(IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + "doesn't override IBlockDefinition::setHarvestLevel! It is a bug!");
+        return 0;
+    }
     
     @ZenGetter("harvestTool")
+    @ZenMethod
     String getHarvestTool();
+    
+    @ZenMethod
+    default String getHarvestTool(IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + "doesn't override IBlockDefinition::setHarvestTool! It is a bug!");
+        return "";
+    }
     
     @ZenMethod
     int tickRate(IWorld world);
@@ -96,4 +115,9 @@ public interface IBlockDefinition {
         return getDefaultState();
     }
     
+    @ZenMethod
+    default boolean isToolEffective(String type, IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + "doesn't override IBlockDefinition::isToolEffective! It is a bug!");
+        return false;
+    }
 }

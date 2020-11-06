@@ -1,12 +1,11 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.event.IEventCancelable;
 import crafttweaker.api.event.PlayerInteractEntityEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class MCPlayerInteractEntityEvent extends MCPlayerInteractEvent implements PlayerInteractEntityEvent, IEventCancelable {
+public class MCPlayerInteractEntityEvent extends MCPlayerInteractEvent implements PlayerInteractEntityEvent {
 
     private final PlayerInteractEvent.EntityInteract event;
 

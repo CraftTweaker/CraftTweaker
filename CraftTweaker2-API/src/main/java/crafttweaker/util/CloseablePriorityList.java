@@ -16,7 +16,7 @@ public class CloseablePriorityList<T> implements Iterable<T> {
      *
      * @param value
      *
-     * @return
+     * @return entry added to the list
      */
     public Closeable add(T value) {
         if(first == null) {

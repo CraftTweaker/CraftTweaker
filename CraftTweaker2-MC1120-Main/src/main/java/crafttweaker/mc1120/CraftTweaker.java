@@ -24,7 +24,9 @@ import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.IScriptProvider;
 import crafttweaker.runtime.providers.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.recipebook.RecipeList;
 import net.minecraft.client.util.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.*;
@@ -115,7 +117,7 @@ public class CraftTweaker {
         PROXY.registerEvents();
         ev.getAsmData().getAll(ZenRegister.class.getCanonicalName()).forEach(clazz -> {
             try {
-                Class claz = Class.forName(clazz.getClassName(), false, CraftTweaker.class.getClassLoader());
+                Class<?> claz = Class.forName(clazz.getClassName(), false, CraftTweaker.class.getClassLoader());
                 if(claz.isAnnotationPresent(ModOnly.class)) {
                     if(Loader.isModLoaded(((ModOnly) claz.getAnnotation(ModOnly.class)).value())) {
                         CraftTweakerAPI.registerClass(claz);
@@ -183,8 +185,8 @@ public class CraftTweaker {
             RecipeBookClient.rebuildTable();
             if(CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION) {
                 minecraft.populateSearchTreeManager();
-                ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
-                ((SearchTree) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+                ((SearchTree<ItemStack>) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
+                ((SearchTree<RecipeList>) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
             }
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }

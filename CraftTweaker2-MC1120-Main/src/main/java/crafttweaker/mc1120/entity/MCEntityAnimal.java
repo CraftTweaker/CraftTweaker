@@ -4,10 +4,7 @@ import crafttweaker.api.entity.IEntityAnimal;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.mc1120.player.MCPlayer;
 import net.minecraft.entity.passive.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.ItemStack;
 
 public class MCEntityAnimal extends MCEntityAgeable implements IEntityAnimal {
     
