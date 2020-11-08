@@ -134,6 +134,7 @@ public class PreprocessorManager {
         manager.registerPreprocessorAction("priority", PriorityPreprocessor::new);
         manager.registerPreprocessorAction("ikwid", NoWarnPreprocessor::new);
         manager.registerPreprocessorAction("profile", ProfilePreprocessor::new);
+        manager.registerPreprocessorAction(SearchTreePreprocessor.PREPROCESSOR_NAME, SearchTreePreprocessor::new);
         
         manager.registerPreprocessorAction(SideOnlyPreprocessor.PREPROCESSOR_NAME, SideOnlyPreprocessor::new);
     }

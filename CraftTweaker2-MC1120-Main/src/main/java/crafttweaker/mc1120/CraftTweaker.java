@@ -184,9 +184,13 @@ public class CraftTweaker {
             alreadyChangedThePlayer = true;
             RecipeBookClient.rebuildTable();
             if(CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION) {
-                minecraft.populateSearchTreeManager();
-                ((SearchTree<ItemStack>) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
-                ((SearchTree<RecipeList>) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+                try {
+                    minecraft.populateSearchTreeManager();
+                    ((SearchTree<ItemStack>) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
+                    ((SearchTree<RecipeList>) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+                } catch (Exception ex) {
+                    CraftTweakerAPI.logError("Error repopulating the SearchTree Managers. If this problem occurs more often you can disable it with '#disable_search_tree' in any CrT script.", ex);
+                }
             }
             CraftTweakerAPI.logInfo("Fixed the RecipeBook");
         }
