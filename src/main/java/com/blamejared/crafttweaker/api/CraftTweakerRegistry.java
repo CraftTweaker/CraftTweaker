@@ -5,7 +5,11 @@ import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.zencode.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.*;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.*;
 import com.blamejared.crafttweaker.impl.commands.*;
+import com.blamejared.crafttweaker.impl.tag.manager.*;
+import com.blamejared.crafttweaker.impl.tag.registry.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraftforge.fml.*;
 import net.minecraftforge.forgespi.language.*;
 import org.objectweb.asm.*;
@@ -20,17 +24,22 @@ public class CraftTweakerRegistry {
     private static final BracketResolverRegistry BRACKET_RESOLVER_REGISTRY = new BracketResolverRegistry();
     private static final PreprocessorRegistry PREPROCESSOR_REGISTRY = new PreprocessorRegistry();
     private static final ZenClassRegistry ZEN_CLASS_REGISTRY = new ZenClassRegistry();
+    private static final WrapperRegistry WRAPPER_REGISTRY = new WrapperRegistry();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
         getAllTypesWith(ZenRegister.class).forEach(ZEN_CLASS_REGISTRY::addType);
-    
+        
         BRACKET_RESOLVER_REGISTRY.addClasses(ZEN_CLASS_REGISTRY.getAllRegisteredClasses());
         BRACKET_RESOLVER_REGISTRY.validateBrackets();
-    
+        
         getAllTypesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addType);
+        getAllTypesWith(ZenWrapper.class).forEach(WRAPPER_REGISTRY::addType);
+        
+        ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
+                .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
     }
     
     private static Stream<Type> getAllTypesWith(Class<? extends Annotation> annotationCls) {
@@ -151,6 +160,18 @@ public class CraftTweakerRegistry {
     // #########################################
     public static List<IPreprocessor> getPreprocessors() {
         return PREPROCESSOR_REGISTRY.getPreprocessors();
+    }
+    //</editor-fold>
+    
+    //</editor-fold>
+    
+    
+    //<editor-fold desc="WrapperRegistry">
+    // #########################################
+    // ### WrapperRegistry ###
+    // #########################################
+    public static WrapperRegistry getWrapperRegistry() {
+        return WRAPPER_REGISTRY;
     }
     //</editor-fold>
 }

@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.zencode.impl.registry;
 import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.impl.tag.*;
 import net.minecraftforge.fml.*;
 import org.objectweb.asm.Type;
 import org.openzen.zencode.java.*;
@@ -35,12 +36,16 @@ public class ZenClassRegistry {
     
     
     public List<Class<? extends IRecipeManager>> getRecipeManagers() {
+        return getImplementationsOf(IRecipeManager.class);
+    }
+    
+    public <T> List<Class<? extends T>> getImplementationsOf(Class<T> checkFor) {
         //Cast okay because of isAssignableFrom
         //noinspection unchecked
         return allRegisteredClasses.stream()
-                .filter(IRecipeManager.class::isAssignableFrom)
+                .filter(checkFor::isAssignableFrom)
                 .filter(cls -> !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers()))
-                .map(cls -> (Class<? extends IRecipeManager>) cls)
+                .map(cls -> (Class<? extends T>) cls)
                 .collect(Collectors.toList());
     }
     
