@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.impl.util.text.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.util.*;
 import net.minecraftforge.common.*;
 import org.openzen.zencode.java.*;
 
@@ -46,7 +47,7 @@ public interface IItemStack extends IIngredient {
      */
     @ZenCodeType.Getter("registryName")
     default String getRegistryName() {
-        return getInternal().getItem().getRegistryName().toString();
+        return String.valueOf(getInternal().getItem().getRegistryName());
     }
     
     /**
@@ -56,7 +57,8 @@ public interface IItemStack extends IIngredient {
      */
     @ZenCodeType.Getter("owner")
     default String getOwner() {
-        return getInternal().getItem().getRegistryName().getNamespace();
+        final ResourceLocation registryName = getInternal().getItem().getRegistryName();
+        return registryName == null ? "error" : registryName.getNamespace();
     }
     
     /**
@@ -408,6 +410,13 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Caster(implicit = true)
     default MCWeightedItemStack asWeightedItemStack() {
         return weight(1.0D);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("definition")
+    @ZenCodeType.Caster(implicit = true)
+    default MCItemDefinition getDefinition() {
+        return new MCItemDefinition(getInternal().getItem());
     }
     
     @ZenCodeType.Method
