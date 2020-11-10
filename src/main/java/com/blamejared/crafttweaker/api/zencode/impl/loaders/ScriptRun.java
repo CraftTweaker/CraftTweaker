@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.impl.brackets.*;
 import com.blamejared.crafttweaker.impl.logger.*;
+import com.blamejared.crafttweaker.impl.tag.registry.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
@@ -82,6 +83,7 @@ public class ScriptRun {
         this.bep = new IgnorePrefixCasingBracketParser();
         final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
         this.bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
+        this.bep.register("tagManager", new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE));
     }
     
     private void readAndExecuteScripts() throws ParseException, IOException {

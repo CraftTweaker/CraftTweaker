@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.potion.MCEffect;
 import com.blamejared.crafttweaker.impl.potion.MCPotion;
-import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -113,36 +112,37 @@ public class MCGame {
                 .map(RecipeManagerWrapper::new)
                 .collect(Collectors.toList());
     }
-
+    /*
     @ZenCodeType.Getter("itemTags")
-    public Collection<MCTag> getMCItemTags() {
+    public Collection<MCItemTag> getMCItemTags() {
         return ItemTags.getCollection()
                 .getIDTagMap()
                 .keySet()
                 .stream()
-                .map(MCTag::new)
+                .map(MCItemTag::new)
                 .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("blockTags")
-    public Collection<MCTag> getMCBlockTags() {
+    public Collection<MCBlockTag> getMCBlockTags() {
         return BlockTags.getCollection()
                 .getIDTagMap()
                 .keySet()
                 .stream()
-                .map(MCTag::new)
+                .map(MCBlockTag::new)
                 .collect(Collectors.toList());
     }
 
     @ZenCodeType.Getter("entityTags")
-    public Collection<MCTag> getMCEntityTags() {
+    public Collection<MCEntityTag> getMCEntityTags() {
         return EntityTypeTags.getCollection()
                 .getIDTagMap()
                 .keySet()
                 .stream()
-                .map(MCTag::new)
+                .map(MCEntityTag::new)
                 .collect(Collectors.toList());
     }
+    */
 
     /**
      * @return a localized String

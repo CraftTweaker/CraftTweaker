@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.util.*;
+import com.blamejared.crafttweaker.impl.brackets.util.*;
 import net.minecraft.util.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
@@ -27,14 +28,6 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         for(Class<? extends IRecipeManager> recipeManager : recipeManagers) {
             registerRecipeManager(recipeManager);
         }
-    }
-    
-    private static IParsedType readParsedType(String name, CodePosition position) {
-        final List<ParsedNamedType.ParsedNamePart> collect = Arrays.stream(name.split("[.]"))
-                .map(s -> new ParsedNamedType.ParsedNamePart(s, null))
-                .collect(Collectors.toList());
-        
-        return new ParsedNamedType(position, collect);
     }
     
     public static boolean containsCustomManager(ResourceLocation location) {
@@ -107,7 +100,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         
         
         final String nameContent = manager.getClass().getAnnotation(ZenCodeType.Name.class).value();
-        final IParsedType parsedType = readParsedType(nameContent, position);
+        final IParsedType parsedType = ParseUtil.readParsedType(nameContent, position);
         final ParsedCallArguments arguments = new ParsedCallArguments(Collections.singletonList(parsedType), Collections
                 .singletonList(new ParsedExpressionString(position, location, false)));
         final ParsedExpressionCall parsedExpressionCall = new ParsedExpressionCall(position, getRecipeManager, arguments);

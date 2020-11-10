@@ -12,7 +12,6 @@ import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.managers.*;
 import com.blamejared.crafttweaker.impl.potion.*;
-import com.blamejared.crafttweaker.impl.tag.*;
 import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker.impl.util.text.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
@@ -235,12 +234,12 @@ public class BracketHandlers {
         if(resourceLocation == null) {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Syntax is <fluid:modid:fluidname>");
         }
-    
+        
         if(!ForgeRegistries.FLUIDS.containsKey(resourceLocation)) {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
         }
-    
-    
+        
+        
         //We know it's not null, because we checked with containsKey
         //noinspection ConstantConditions
         return new MCFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(resourceLocation), 1));
@@ -337,24 +336,27 @@ public class BracketHandlers {
     }
     
     
-    /**
+    
+    /*
      * Gets the tag based on registry name. Will create an empty Tag if none is found.<br>
      * However, in such a case, you need to register the tag as its appropriate type
      *
      * @param tokens The tag's resource location
      * @return The found tag, or a newly created one
      * @docParam tokens "tag:minecraft:wool"
-     */
+     *//*
     @ZenCodeType.Method
     @BracketResolver("tag")
-    public static MCTag getTag(String tokens) {
+    public static MCTag<MCItemDefinition> getTag(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Tag BEP <tag:%s> does not seem to be lower-cased!", tokens);
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get Tag with name: <tag:" + tokens + ">! Syntax is <tag:modid:tagname>");
-        return new MCTag(new ResourceLocation(tokens));
+        return new MCTag<>(TagCollectionManager.getManager().getItemTags(), new ResourceLocation(tokens));
     }
+    */
+    
     
     @ZenCodeType.Method
     @BracketResolver("formatting")

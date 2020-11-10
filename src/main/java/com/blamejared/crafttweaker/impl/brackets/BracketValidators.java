@@ -127,12 +127,13 @@ public class BracketValidators {
     public static boolean validateResourceBracket(String tokens) {
         return ResourceLocation.tryCreate(tokens) != null;
     }
-    
+    /*
     @ZenCodeType.Method
     @BracketValidator("tag")
     public static boolean validateTagBracket(String tokens) {
         return validateBracket("tag", tokens, BracketHandlers::getTag);
     }
+    */
     
     public static boolean validateBracket(String bracketName, String tokens, Function<String, ?> bracketMethod, boolean logError) {
         try {

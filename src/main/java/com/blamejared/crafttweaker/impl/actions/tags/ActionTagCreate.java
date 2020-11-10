@@ -13,6 +13,8 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     private final String type;
     
+    private MCTag<?> theTag;
+    
     public ActionTagCreate(ITagCollection<T> collection, String type, ITag<T> tag, ResourceLocation id) {
         super(tag, id);
         this.collection = collection;
@@ -35,6 +37,6 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     @Override
     public String describe() {
-        return "Registering new " + type + " tag with name " + new MCTag(getId());
+        return "Registering new " + type + " tag with name " + theTag;
     }
 }
