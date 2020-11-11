@@ -3,17 +3,26 @@ package com.blamejared.crafttweaker.api.zencode.impl.loaders;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.actions.*;
 import com.google.common.collect.*;
+import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.thread.*;
 
 import java.util.*;
 
 public class LoaderActions {
+    
     private static final Map<String, LoaderActions> allActionsByLoaderName = new HashMap<>();
     
     private final String loaderName;
-    private final List<IAction> actionList = new ArrayList<>();
-    private final List<IAction> actionListInvalid = new ArrayList<>();
+    private final List<IAction> actionListServer = new ArrayList<>();
+    private final List<IAction> actionListClient = new ArrayList<>();
+    
+    private final List<IAction> actionListInvalidClient = new ArrayList<>();
+    private final List<IAction> actionListInvalidServer = new ArrayList<>();
     private int runCount = 0;
+    
+    private LoaderActions(String loaderName) {
+        this.loaderName = loaderName;
+    }
     
     public static LoaderActions getActionForLoader(String loaderName) {
         return allActionsByLoaderName.computeIfAbsent(loaderName, LoaderActions::new);
@@ -23,31 +32,28 @@ public class LoaderActions {
         return ImmutableSet.copyOf(allActionsByLoaderName.keySet());
     }
     
-    private LoaderActions(String loaderName) {
-        this.loaderName = loaderName;
-    }
-    
     public String getLoaderName() {
         return loaderName;
     }
     
     public List<IAction> getActionList() {
-        return actionList;
+        return EffectiveSide.get() == LogicalSide.CLIENT ? actionListClient : actionListServer;
     }
     
     public List<IAction> getActionListInvalid() {
-        return actionListInvalid;
+        return EffectiveSide.get() == LogicalSide.CLIENT ? actionListInvalidClient : actionListInvalidServer;
     }
     
     public void addValidAction(IAction action) {
-        actionList.add(action);
+        getActionList().add(action);
     }
     
     public void addInvalidAction(IAction action) {
-        actionListInvalid.add(action);
+        getActionListInvalid().add(action);
     }
     
     public void reload() {
+        final List<IAction> actionList = getActionList();
         actionList.stream()
                 .filter(iAction -> iAction instanceof IUndoableAction)
                 .filter(iAction -> iAction.shouldApplyOn(EffectiveSide.get()))
@@ -56,11 +62,8 @@ public class LoaderActions {
                     CraftTweakerAPI.logInfo(iUndoableAction.describeUndo());
                     iUndoableAction.undo();
                 });
-    
-        //We use the removeIf for SinglePlayer, where there are two runs with the different Effective Sides.
-        //If we used 'clear' then the 2nd side would not be able to undo the changes on their side.
-        actionList.removeIf(iAction -> iAction.shouldApplyOn(EffectiveSide.get()));
-        actionListInvalid.clear();
+        actionList.clear();
+        getActionListInvalid().clear();
     }
     
     public boolean isFirstRun() {

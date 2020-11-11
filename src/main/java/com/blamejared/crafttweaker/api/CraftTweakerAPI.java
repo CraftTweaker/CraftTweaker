@@ -58,7 +58,11 @@ public class CraftTweakerAPI {
         
         final LoaderActions currentLoaderActions = currentRun.getLoaderActions();
         try {
-            if(action.shouldApplyOn(EffectiveSide.get()) && action.validate(logger)) {
+            if(action.shouldApplyOn(EffectiveSide.get())) {
+                return;
+            }
+            
+            if(action.validate(logger)) {
                 String describe = action.describe();
                 if(describe != null && !describe.isEmpty()) {
                     logInfo(describe);
