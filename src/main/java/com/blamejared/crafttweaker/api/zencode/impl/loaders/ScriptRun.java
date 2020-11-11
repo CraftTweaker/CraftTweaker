@@ -2,12 +2,8 @@ package com.blamejared.crafttweaker.api.zencode.impl.loaders;
 
 import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.blamejared.crafttweaker.impl.brackets.*;
-import com.blamejared.crafttweaker.impl.brackets.tags.*;
 import com.blamejared.crafttweaker.impl.logger.*;
-import com.blamejared.crafttweaker.impl.tag.registry.*;
 import net.minecraftforge.common.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;

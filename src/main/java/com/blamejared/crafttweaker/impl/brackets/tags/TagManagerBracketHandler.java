@@ -1,13 +1,16 @@
-package com.blamejared.crafttweaker.impl.brackets;
+package com.blamejared.crafttweaker.impl.brackets.tags;
 
+import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.impl.brackets.util.*;
 import com.blamejared.crafttweaker.impl.tag.registry.*;
+import net.minecraftforge.fml.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.lexer.*;
 import org.openzen.zenscript.parser.*;
 import org.openzen.zenscript.parser.expression.*;
 import org.openzen.zenscript.parser.type.*;
 
+import javax.annotation.*;
 import java.util.*;
 
 public class TagManagerBracketHandler implements BracketExpressionParser {
@@ -20,15 +23,30 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
     
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
-        final String tagFolder = readContent(tokens);
-        if(!tagRegistry.hasTagManager(tagFolder)) {
-            throw new IllegalArgumentException("Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
-        }
+        final String tagFolder = ParseUtil.readContent(tokens);
+        return getParsedExpression(position, tagFolder);
+    }
+    
+    @Nonnull
+    ParsedExpression getParsedExpression(CodePosition position, String tagFolder) {
+        confirmTagFolderExists(tagFolder);
         
         if(tagRegistry.isSynthetic(tagFolder)) {
             return createCallSynthetic(tagFolder, position);
         }
         return createCallImplementation(tagFolder, position);
+    }
+    
+    void confirmTagFolderExists(String tagFolder) {
+        if(!tagRegistry.hasTagManager(tagFolder)) {
+            if(ModList.get().isLoaded(tagFolder)) {
+                //User _probably_ used <tag:minecraft:bedrock> instead of <tag:item:minecraft:bedrock>
+                //Logging a warning hopefully reduces the amount of Issues we receive.
+                CraftTweakerAPI.logWarning("Used ModID as tagFolder. The Tag BEP changed from an older version, read the changelog!");
+            }
+            
+            throw new IllegalArgumentException("Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
+        }
     }
     
     private ParsedExpression createCallImplementation(String tagFolder, CodePosition position) {
@@ -50,15 +68,7 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
         final IParsedType elementType = ParseUtil.readParsedType(type, position);
         final List<IParsedType> typeParam = Collections.singletonList(elementType);
         
-        return new ParsedExpressionCall(position, member, new ParsedCallArguments(typeParam, Collections.emptyList()));
-    }
-    
-    private String readContent(ZSTokenParser tokens) throws ParseException {
-        StringBuilder builder = new StringBuilder();
-        while(tokens.optional(ZSTokenType.T_GREATER) == null) {
-            builder.append(tokens.next().content);
-            builder.append(tokens.getLastWhitespace());
-        }
-        return builder.toString();
+        return new ParsedExpressionCall(position, member, new ParsedCallArguments(typeParam, Collections
+                .emptyList()));
     }
 }

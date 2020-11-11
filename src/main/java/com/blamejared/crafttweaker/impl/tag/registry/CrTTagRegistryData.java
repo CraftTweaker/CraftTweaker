@@ -51,10 +51,19 @@ public final class CrTTagRegistryData {
     }
     
     private void register(TagManager<?> tagManager) {
+        final String tagFolder = tagManager.getTagFolder();
+        if(getAllInstances().containsKey(tagFolder)) {
+            final String message = "There are two tagManagers registered for tagfolder %s! Classes are '%s' and '%s'.";
+            final String nameA = tagManager.getClass().getCanonicalName();
+            final String nameB = getAllInstances().get(tagFolder).getClass().getCanonicalName();
+            CraftTweakerAPI.logError(message, nameA, nameB);
+            return;
+        }
+        
         if(tagManager instanceof TagManagerWrapper) {
-            syntheticInstances.put(tagManager.getTagFolder(), (TagManagerWrapper<?>) tagManager);
+            syntheticInstances.put(tagFolder, (TagManagerWrapper<?>) tagManager);
         } else {
-            registeredInstances.put(tagManager.getTagFolder(), tagManager);
+            registeredInstances.put(tagFolder, tagManager);
         }
         tagFolderByCrTElementType.put(tagManager.getElementClass(), tagManager);
     }

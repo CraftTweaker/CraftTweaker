@@ -10,7 +10,7 @@ import java.util.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.tags.CrTTagRegistryData")
-public class CrTTagRegistry {
+public final class CrTTagRegistry {
     
     public static final String GLOBAL_NAME = "tags";
     

@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.brackets.util;
 
 import org.openzen.zencode.shared.*;
+import org.openzen.zenscript.lexer.*;
 import org.openzen.zenscript.parser.type.*;
 
 import java.util.*;
@@ -15,5 +16,14 @@ public class ParseUtil {
                 .collect(Collectors.toList());
     
         return new ParsedNamedType(position, collect);
+    }
+    
+    public static String readContent(ZSTokenParser tokens) throws ParseException {
+        StringBuilder builder = new StringBuilder();
+        while(tokens.optional(ZSTokenType.T_GREATER) == null) {
+            builder.append(tokens.next().content);
+            builder.append(tokens.getLastWhitespace());
+        }
+        return builder.toString();
     }
 }

@@ -9,10 +9,12 @@ import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.util.MCResourceLocation")
+@ZenCodeType.Name(MCResourceLocation.ZC_CLASS_NAME)
 @Document("vanilla/api/util/MCResourceLocation")
-@ZenWrapper(wrappedClass = "net.minecraft.util.ResourceLocation", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.toString()")
+@ZenWrapper(wrappedClass = "net.minecraft.util.ResourceLocation", displayStringFormat = "%s.toString()")
 public class MCResourceLocation implements CommandStringDisplayable {
+    public static final String ZC_CLASS_NAME = "crafttweaker.api.util.MCResourceLocation";
+    
     private final ResourceLocation internal;
     
     public MCResourceLocation(ResourceLocation internal){
