@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.zencode.brackets;
 
+import com.blamejared.crafttweaker.api.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.lexer.*;
 import org.openzen.zenscript.parser.*;
@@ -29,6 +30,12 @@ public class IgnorePrefixCasingBracketParser implements BracketExpressionParser 
      * @param parser The BEP
      */
     public void register(String name, BracketExpressionParser parser) {
+        if(subParsers.containsKey(name)) {
+            final BracketExpressionParser existing = subParsers.get(name);
+            final String existingClassname = existing.getClass().getCanonicalName();
+            final String newClassName = parser.getClass().getCanonicalName();
+            CraftTweakerAPI.logInfo("Overriding BEP '%s' of type '%s' with one of type '%s'", name, existingClassname, newClassName);
+        }
         subParsers.put(name.toLowerCase(), parser);
     }
     
@@ -62,5 +69,9 @@ public class IgnorePrefixCasingBracketParser implements BracketExpressionParser 
             throw new ParseException(position, "Invalid bracket expression: no prefix " + prefix.content);
         
         return subParser.parse(position, tokens);
+    }
+    
+    public Set<String> getSubParsersName() {
+        return subParsers.keySet();
     }
 }

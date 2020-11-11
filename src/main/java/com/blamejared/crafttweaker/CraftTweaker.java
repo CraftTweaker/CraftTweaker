@@ -2,6 +2,10 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.logger.*;
+import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.api.zencode.brackets.*;
+import com.blamejared.crafttweaker.impl.brackets.*;
+import com.blamejared.crafttweaker.impl.brackets.tags.*;
 import com.blamejared.crafttweaker.impl.commands.*;
 import com.blamejared.crafttweaker.impl.commands.custom.*;
 import com.blamejared.crafttweaker.impl.events.*;
@@ -167,6 +171,16 @@ public class CraftTweaker {
         CTCraftingTableManager.recipeManager = event.getRecipeManager();
         final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions().execute();
         CraftTweakerAPI.loadScriptsFromRecipeManager(event.getRecipeManager(), scriptLoadingOptions);
+    }
+    
+    @SubscribeEvent
+    public void registerBracketExpressionParsers(CTRegisterBEPEvent event) {
+        final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
+        event.registerBEP("recipetype", new RecipeTypeBracketHandler(recipeManagers));
+        
+        final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
+        event.registerBEP("tagManager", tagManagerBEP);
+        event.registerBEP("tag", new TagBracketHandler(tagManagerBEP));
     }
     
     

@@ -5,8 +5,10 @@ import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.managers.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.impl.brackets.*;
+import com.blamejared.crafttweaker.impl.brackets.tags.*;
 import com.blamejared.crafttweaker.impl.logger.*;
 import com.blamejared.crafttweaker.impl.tag.registry.*;
+import net.minecraftforge.common.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
@@ -26,7 +28,7 @@ public class ScriptRun {
     public ScriptRun(ScriptLoadingOptions scriptLoadingOptions, SourceFile[] sourceFiles) {
         this.scriptLoadingOptions = scriptLoadingOptions;
         this.sourceFiles = sourceFiles;
-    
+        
         //Init Engine
         this.scriptingEngine = new ScriptingEngine(CraftTweakerAPI.logger);
         this.scriptingEngine.debug = CraftTweakerAPI.DEBUG_MODE;
@@ -81,9 +83,7 @@ public class ScriptRun {
     
     private void initializeBep() {
         this.bep = new IgnorePrefixCasingBracketParser();
-        final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
-        this.bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
-        this.bep.register("tagManager", new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE));
+        MinecraftForge.EVENT_BUS.post(new CTRegisterBEPEvent(bep));
     }
     
     private void readAndExecuteScripts() throws ParseException, IOException {
