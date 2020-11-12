@@ -196,4 +196,10 @@ public interface IEntityLivingBase extends IEntity {
     default void setSwingProgress(int swingProgress) {
         CraftTweakerAPI.logError("Default method IEntityLivingBase#setSwingProgress is not overwritten in " + getClass() + " please report to the author!");
     }
+
+    @ZenMethod
+    default boolean attemptTeleport(double x, double y, double z) {
+        CraftTweakerAPI.logError("Default method IEntityLivingBase#attemptTeleport is not overwritten in " + getClass() + " please report to the author!");
+        return false;
+    }
 }

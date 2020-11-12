@@ -264,4 +264,9 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
 	public void stopActiveHand() {
 		entityLivingBase.stopActiveHand();
 	}
+
+    @Override
+    public boolean attemptTeleport(double x, double y, double z) {
+        return entityLivingBase.attemptTeleport(x, y, z);
+    }
 }
