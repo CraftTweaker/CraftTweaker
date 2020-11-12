@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.expands.*;
 import com.blamejared.crafttweaker.api.zencode.impl.*;
 import com.blamejared.crafttweaker.impl.brackets.*;
+import com.blamejared.crafttweaker.impl.game.MCGame;
 import com.blamejared.crafttweaker.impl.logger.*;
 import com.google.common.collect.*;
 import net.minecraftforge.fml.common.thread.*;
@@ -33,6 +34,9 @@ public class CraftTweakerAPI {
     
     @ZenCodeGlobals.Global
     public static MCMods loadedMods = new MCMods();
+
+    @ZenCodeGlobals.Global
+    public static MCGame game = new MCGame();
     
     private static final List<IAction> ACTION_LIST = new ArrayList<>();
     private static final List<IAction> ACTION_LIST_INVALID = new ArrayList<>();

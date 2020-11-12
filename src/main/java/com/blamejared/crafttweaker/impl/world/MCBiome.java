@@ -128,14 +128,22 @@ public class MCBiome {
 //    public List<MCBiomeSpawnEntry> getSpawns(MCEntityClassification classification) {
 //        return getInternal().getSpawns(classification.getInternal()).stream().map(MCBiomeSpawnEntry::new).collect(Collectors.toList());
 //    }
-    
-    /*
-    TODO methods to add:
-    - Requires a MCWorld
-     boolean doesWaterFreeze(IWorldReader worldIn, BlockPos pos)
-     boolean doesWaterFreeze(IWorldReader worldIn, BlockPos water, boolean mustBeAtEdge)
-     boolean doesSnowGenerate(IWorldReader worldIn, BlockPos pos)
-     */
+
+    @ZenCodeType.Method
+    public boolean doesWaterFreeze(MCWorld world, MCBlockPos pos) {
+        return internal.doesWaterFreeze(world.getInternal(), pos.getInternal());
+    }
+
+    @ZenCodeType.Method
+    public boolean doesWaterFreeze(MCWorld world, MCBlockPos pos, boolean mustBeAtEdge) {
+        return internal.doesWaterFreeze(world.getInternal(), pos.getInternal(), mustBeAtEdge);
+    }
+
+    @ZenCodeType.Method
+    public boolean doesSnowFreeze(MCWorld world, MCBlockPos pos) {
+        return internal.doesSnowGenerate(world.getInternal(), pos.getInternal());
+    }
+
     public Biome getInternal() {
         return internal;
     }

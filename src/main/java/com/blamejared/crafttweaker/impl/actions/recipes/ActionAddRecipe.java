@@ -3,11 +3,10 @@ package com.blamejared.crafttweaker.impl.actions.recipes;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.registry.Registry;
 
 public class ActionAddRecipe extends ActionRecipeBase {
     
-    private final IRecipe<?> recipe;
+    protected final IRecipe<?> recipe;
     private final String subType;
     
     public ActionAddRecipe(IRecipeManager recipeManager, IRecipe<?> recipe, String subType) {
@@ -23,7 +22,11 @@ public class ActionAddRecipe extends ActionRecipeBase {
     
     @Override
     public String describe() {
-        return "Adding \"" + getManager().getBracketResourceLocation() + "\" recipe" + getSubTypeDescription() + ", with name: \"" + recipe.getId() + "\" that outputs: " + new MCItemStackMutable(recipe.getRecipeOutput());
+        return "Adding \"" + getManager().getBracketResourceLocation() + "\" recipe" + getSubTypeDescription() + ", with name: \"" + recipe.getId() + "\" that outputs: " + describeOutputs();
+    }
+
+    protected String describeOutputs() {
+        return new MCItemStackMutable(recipe.getRecipeOutput()).toString();
     }
     
     private String getSubTypeDescription() {
