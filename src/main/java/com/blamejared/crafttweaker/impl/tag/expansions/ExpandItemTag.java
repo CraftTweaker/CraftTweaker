@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.tag.expansions;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.impl.ingredients.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.tag.*;
 import com.blamejared.crafttweaker.impl.tag.manager.*;
@@ -24,6 +25,6 @@ public class ExpandItemTag {
             return MCItemStack.EMPTY.get();
         }
         final Ingredient ingredient = Ingredient.fromTag(internal);
-        return IIngredient.fromIngredient(ingredient);
+        return new IIngredientWrapped(ingredient, _this.getCommandString());
     }
 }
