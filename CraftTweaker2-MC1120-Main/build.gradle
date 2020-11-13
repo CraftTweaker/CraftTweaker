@@ -84,6 +84,9 @@ artifacts {
     archives deobfJar
 }
 
+publish.dependsOn(project.tasks.getByName("assemble"))
+publish.mustRunAfter(project.tasks.getByName("build"))
+
 publishing {
 
     publications {
