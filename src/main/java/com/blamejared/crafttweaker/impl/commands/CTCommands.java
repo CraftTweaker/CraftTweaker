@@ -39,7 +39,7 @@ public class CTCommands {
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         root.then(Commands.literal("copy")
-                .then(Commands.argument("toCopy", StringArgumentType.greedyString()).executes(context -> {
+                .then(Commands.argument("toCopy", StringArgumentType.string()).executes(context -> {
                     String toCopy = context.getArgument("toCopy", String.class);
                     ServerPlayerEntity entity = context.getSource().asPlayer();
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
