@@ -20,7 +20,7 @@ public class ActionTagRemove<T extends ForgeRegistryEntry<?>> extends ActionTagM
     
     @Override
     public String describe() {
-        return "Removing: " + describeValues() + " from tag: " + getId();
+        return "Removing: " + describeValues() + " from tag: " + mcTag;
     }
     
 }

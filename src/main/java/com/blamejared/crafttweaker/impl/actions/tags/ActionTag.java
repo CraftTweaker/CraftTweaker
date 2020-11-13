@@ -32,7 +32,7 @@ public abstract class ActionTag<T extends ForgeRegistryEntry<?>> implements IRun
     @Override
     public boolean validate(ILogger logger) {
         if(getTag() == null) {
-            logger.throwingErr("Tag cannot be null!", new NullPointerException("Tag cannot be null!"));
+            logger.throwingErr("Tag " + mcTag + " does not exist!", new NullPointerException("Internal tag was null!"));
             return false;
         }
         return true;

@@ -22,7 +22,7 @@ public class ActionTagCreate<T extends ForgeRegistryEntry<?>> extends ActionTag<
     @Override
     public boolean validate(ILogger logger) {
         if(collection.get(getId()) != null) {
-            logger.error(getType() + " Tag: " + getId() + " already exists!");
+            logger.error(getType() + " Tag: " + mcTag + " already exists!");
             return false;
         }
         return true;

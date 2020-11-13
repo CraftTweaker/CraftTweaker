@@ -23,7 +23,7 @@ public class ActionTagAdd<T extends ForgeRegistryEntry<?>> extends ActionTagModi
     
     @Override
     public String describe() {
-        return "Adding: " + describeValues() + " to tag: " + getId();
+        return "Adding: " + describeValues() + " to tag: " + mcTag;
     }
     
 }
