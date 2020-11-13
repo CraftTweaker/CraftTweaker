@@ -68,16 +68,6 @@ public final class MCTag<T extends CommandStringDisplayable> implements CommandS
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("first")
-    public T getFirst() {
-        final List<T> elements = getElements();
-        if(elements.isEmpty()) {
-            throw new NoSuchElementException("Cannot get first element of empty or nonexistent tag!");
-        }
-        return elements.get(0);
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Getter("manager")
     public TagManager<T> getManager() {
         return manager;
