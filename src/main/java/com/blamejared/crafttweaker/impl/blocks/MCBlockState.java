@@ -162,4 +162,21 @@ public class MCBlockState implements CommandStringDisplayable {
     public MCBlock getInternalBlock() {
         return internalBlock;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCBlockState that = (MCBlockState) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

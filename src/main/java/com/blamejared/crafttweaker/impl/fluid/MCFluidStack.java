@@ -59,4 +59,21 @@ public class MCFluidStack implements IFluidStack {
     public FluidStack getInternal() {
         return stack;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCFluidStack that = (MCFluidStack) o;
+    
+        return stack.equals(that.stack);
+    }
+    
+    @Override
+    public int hashCode() {
+        return stack.hashCode();
+    }
 }

@@ -112,4 +112,21 @@ public class MCDirectionAxis implements CommandStringDisplayable {
     public String getCommandString() {
         return "<directionaxis:" + internal.getName2() + ">";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCDirectionAxis that = (MCDirectionAxis) o;
+    
+        return internal == that.internal;
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

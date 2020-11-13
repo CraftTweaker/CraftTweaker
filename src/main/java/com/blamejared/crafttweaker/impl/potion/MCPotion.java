@@ -46,4 +46,21 @@ public class MCPotion implements CommandStringDisplayable {
     public String getCommandString() {
         return "<potion:" + internal.getRegistryName() + ">";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCPotion mcPotion = (MCPotion) o;
+    
+        return internal.equals(mcPotion.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

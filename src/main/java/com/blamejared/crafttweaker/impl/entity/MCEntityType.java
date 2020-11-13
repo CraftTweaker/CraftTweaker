@@ -73,8 +73,24 @@ public class MCEntityType implements CommandStringDisplayable {
         return "<entityType:" + internal.getRegistryName() + ">";
     }
     
-    public EntityType getInternal() {
+    public EntityType<?> getInternal() {
         return internal;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCEntityType that = (MCEntityType) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

@@ -66,4 +66,25 @@ public class MCIngredientConditioned<T extends IIngredient> implements IIngredie
     public IData asIData() {
         return base.asIData();
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCIngredientConditioned<?> that = (MCIngredientConditioned<?>) o;
+        
+        if(!base.equals(that.base))
+            return false;
+        return condition.equals(that.condition);
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = base.hashCode();
+        result = 31 * result + condition.hashCode();
+        return result;
+    }
 }

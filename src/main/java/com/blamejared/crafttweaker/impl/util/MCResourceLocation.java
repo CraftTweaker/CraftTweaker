@@ -53,11 +53,16 @@ public class MCResourceLocation implements CommandStringDisplayable {
     public String toString() {
         return (internal.toString());
     }
-
-
+    
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
+    public boolean equals(MCResourceLocation other) {
+        return internal.equals(other.getInternal());
+    }
+    
     @ZenCodeType.Method
     public boolean equals(Object other) {
-        return other instanceof MCResourceLocation && internal.equals((((MCResourceLocation) other).getInternal()));
+        return other instanceof MCResourceLocation && equals((MCResourceLocation) other);
     }
 
 

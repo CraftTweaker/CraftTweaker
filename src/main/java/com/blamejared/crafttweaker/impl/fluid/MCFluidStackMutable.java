@@ -59,4 +59,21 @@ public class MCFluidStackMutable implements IFluidStack {
         
         return stringBuilder.toString();
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCFluidStackMutable that = (MCFluidStackMutable) o;
+    
+        return stack.equals(that.stack);
+    }
+    
+    @Override
+    public int hashCode() {
+        return stack.hashCode();
+    }
 }

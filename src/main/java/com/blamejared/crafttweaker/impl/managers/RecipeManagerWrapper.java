@@ -15,4 +15,21 @@ public class RecipeManagerWrapper implements IRecipeManager {
     public IRecipeType getRecipeType() {
         return recipeType;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        RecipeManagerWrapper that = (RecipeManagerWrapper) o;
+    
+        return recipeType.equals(that.recipeType);
+    }
+    
+    @Override
+    public int hashCode() {
+        return recipeType.hashCode();
+    }
 }

@@ -72,4 +72,21 @@ public class MCEffect implements CommandStringDisplayable {
     public String getCommandString() {
         return "<effect:" + internal.getRegistryName() + ">";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCEffect mcEffect = (MCEffect) o;
+    
+        return internal.equals(mcEffect.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

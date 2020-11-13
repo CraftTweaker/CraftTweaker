@@ -55,4 +55,21 @@ public class MCFluid implements CommandStringDisplayable {
     public Fluid getInternal() {
         return fluid;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCFluid mcFluid = (MCFluid) o;
+        
+        return fluid.equals(mcFluid.fluid);
+    }
+    
+    @Override
+    public int hashCode() {
+        return fluid.hashCode();
+    }
 }

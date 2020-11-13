@@ -132,4 +132,21 @@ public class MCItemStack implements IItemStack {
     public IItemStack[] getItems() {
         return new IItemStack[] {this};
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCItemStack that = (MCItemStack) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

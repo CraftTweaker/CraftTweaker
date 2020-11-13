@@ -36,4 +36,21 @@ public class MCItemDefinition implements CommandStringDisplayable {
     public Item getInternal() {
         return internal;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCItemDefinition that = (MCItemDefinition) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

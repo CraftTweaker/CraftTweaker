@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/items/IngredientList")
 public class MCIngredientList implements IIngredient {
     
-    private IIngredient[] ingredients;
+    private final IIngredient[] ingredients;
     
     public MCIngredientList(IIngredient[] ingredients) {
         this.ingredients = ingredients;
@@ -48,5 +48,23 @@ public class MCIngredientList implements IIngredient {
         List<IItemStack> stacks = new ArrayList<>();
         Arrays.stream(ingredients).map(ing -> Arrays.asList(ing.getItems())).forEach(stacks::addAll);
         return stacks.toArray(new IItemStack[0]);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCIngredientList that = (MCIngredientList) o;
+        
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(ingredients, that.ingredients);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(ingredients);
     }
 }

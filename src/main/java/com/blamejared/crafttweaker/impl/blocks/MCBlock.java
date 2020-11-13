@@ -52,4 +52,21 @@ public class MCBlock implements CommandStringDisplayable {
     public String getCommandString() {
         return "<block:" + internal.getRegistryName() + ">";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCBlock mcBlock = (MCBlock) o;
+    
+        return internal.equals(mcBlock.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }
