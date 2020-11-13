@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.brackets.*;
 import com.blamejared.crafttweaker.impl.actions.tags.*;
 import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.util.*;
+import com.google.common.collect.*;
 import net.minecraft.tags.*;
 import net.minecraft.util.*;
 import net.minecraftforge.common.*;
@@ -40,7 +40,7 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
         return elementClass;
     }
     
-    private ITagCollection<?> getTagCollection() {
+    public ITagCollection<?> getTagCollection() {
         final Map<ResourceLocation, ITagCollection<?>> customTagTypes = ForgeTagHandler.getCustomTagTypes();
         if(customTagTypes.containsKey(tagTypeName)) {
             return customTagTypes.get(tagTypeName);
@@ -52,20 +52,6 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
         }
         
         throw new IllegalArgumentException("Could not find TagCollection for '" + tagTypeName + '\'');
-    }
-    
-    @Override
-    public boolean exists(MCResourceLocation location) {
-        return getTagCollection().get(location.getInternal()) != null;
-    }
-    
-    @Override
-    public List<MCTag<T>> getAllTags() {
-        return getTagCollection().getIDTagMap()
-                .keySet()
-                .stream()
-                .map(location -> new MCTag<>(location, this))
-                .collect(Collectors.toList());
     }
     
     @Override
@@ -86,12 +72,13 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void addElements(MCTag<T> to, List<T> toAdd) {
         final ITag<?> internal = getInternal(to);
+        final List<ForgeRegistryEntry> entries = convertEntries(toAdd);
         if(internal == null) {
-            //TODO: Create tag
-            return;
+            final Tag<?> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(entries));
+            CraftTweakerAPI.apply(new ActionTagCreate(getTagCollection(), tagFromContents, to));
+        } else {
+            CraftTweakerAPI.apply(new ActionTagAdd(internal, entries, to));
         }
-        
-        CraftTweakerAPI.apply(new ActionTagAdd(internal, convertEntries(toAdd), to.getIdInternal()));
     }
     
     @Override
@@ -102,11 +89,11 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
             throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
         }
         
-        CraftTweakerAPI.apply(new ActionTagRemove(internal, convertEntries(toRemove), from.getIdInternal()));
+        CraftTweakerAPI.apply(new ActionTagRemove(internal, convertEntries(toRemove), from));
     }
     
     @SuppressWarnings({"rawtypes"})
-    private ForgeRegistryEntry[] convertEntries(List<T> list) {
+    private List<ForgeRegistryEntry> convertEntries(List<T> list) {
         return list.stream().map(t -> {
             try {
                 return (ForgeRegistryEntry) unwrapperHandle.invoke(t);
@@ -114,7 +101,7 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
                 CraftTweakerAPI.logThrowing("Could not convert element for synthetic TagManager: ", throwable);
                 return null;
             }
-        }).filter(Objects::nonNull).toArray(ForgeRegistryEntry[]::new);
+        }).filter(Objects::nonNull).collect(Collectors.toList());
     }
     
     @Override
@@ -135,11 +122,5 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
         }).filter(Objects::nonNull).collect(Collectors.toList());
         
         
-    }
-    
-    @Nullable
-    @Override
-    public ITag<?> getInternal(MCTag<T> theTag) {
-        return getTagCollection().get(theTag.getIdInternal());
     }
 }

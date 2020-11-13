@@ -1,24 +1,17 @@
 package com.blamejared.crafttweaker.impl.actions.tags;
 
-import com.blamejared.crafttweaker.api.logger.ILogger;
-import com.blamejared.crafttweaker.impl.tag.MCTag;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ITagCollection;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistryEntry;
+import com.blamejared.crafttweaker.api.logger.*;
+import com.blamejared.crafttweaker.impl.tag.*;
+import net.minecraft.tags.*;
+import net.minecraftforge.registries.*;
 
-public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> {
+public class ActionTagCreate<T extends ForgeRegistryEntry<?>> extends ActionTag<T> {
     
     private final ITagCollection<T> collection;
     
-    private final String type;
-    
-    private MCTag<?> theTag;
-    
-    public ActionTagCreate(ITagCollection<T> collection, String type, ITag<T> tag, ResourceLocation id) {
-        super(tag, id);
+    public ActionTagCreate(ITagCollection<T> collection, ITag<T> tag, MCTag<?> theTag) {
+        super(tag, theTag);
         this.collection = collection;
-        this.type = type;
     }
     
     @Override
@@ -29,7 +22,7 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     @Override
     public boolean validate(ILogger logger) {
         if(collection.get(getId()) != null) {
-            logger.error(type + " Tag: " + getId() + " already exists!");
+            logger.error(getType() + " Tag: " + getId() + " already exists!");
             return false;
         }
         return true;
@@ -37,6 +30,6 @@ public class ActionTagCreate<T extends ForgeRegistryEntry> extends ActionTag<T> 
     
     @Override
     public String describe() {
-        return "Registering new " + type + " tag with name " + theTag;
+        return "Registering new " + getType() + " tag with name " + mcTag;
     }
 }

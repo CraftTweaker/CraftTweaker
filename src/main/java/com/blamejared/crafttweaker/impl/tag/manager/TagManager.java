@@ -11,6 +11,7 @@ import org.openzen.zencode.java.*;
 
 import javax.annotation.*;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * TagManagers are used to handle the different types of Tags within the game.
@@ -73,14 +74,22 @@ public interface TagManager<T extends CommandStringDisplayable> extends CommandS
      * @param location The resource location to check for
      * @return Whether or not this tag already exists
      */
-    boolean exists(MCResourceLocation location);
+    default boolean exists(MCResourceLocation location) {
+        return getTagCollection().getIDTagMap().containsKey(location.getInternal());
+    }
     
     /**
      * Retrieves a list of all tags currently registered.
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("all")
-    List<MCTag<T>> getAllTags();
+    default List<MCTag<T>> getAllTags() {
+        return getTagCollection().getIDTagMap()
+                .keySet()
+                .stream()
+                .map(itemITag -> new MCTag<>(itemITag, this))
+                .collect(Collectors.toList());
+    }
     
     /**
      * Get the tag type. In a Bracket call, this will used to determine which TagManager to use.
@@ -133,8 +142,16 @@ public interface TagManager<T extends CommandStringDisplayable> extends CommandS
      * Return the tag object of this element.
      * It is also recommended to replace the ? with the actual type in implementations ^^
      *
-     * @return The MC tag type
+     * @return The MC tag type, or null if it does not exist
      */
     @Nullable
-    ITag<?> getInternal(MCTag<T> theTag);
+    default ITag<?> getInternal(MCTag<T> theTag) {
+        return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
+    }
+    
+    /**
+     * Returns the tag collection for this manager
+     * It is also recommended to replace the ? with the actual type in implementations ^^
+     */
+    ITagCollection<?> getTagCollection();
 }

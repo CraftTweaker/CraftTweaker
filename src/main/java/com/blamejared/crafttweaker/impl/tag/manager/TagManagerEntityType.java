@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.impl.actions.tags.*;
 import com.blamejared.crafttweaker.impl.entity.*;
 import com.blamejared.crafttweaker.impl.helper.*;
 import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.google.common.collect.*;
 import net.minecraft.entity.*;
 import net.minecraft.item.*;
 import net.minecraft.tags.*;
@@ -34,22 +34,6 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     }
     
     @Override
-    public boolean exists(MCResourceLocation location) {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.get(location.getInternal()) != null;
-    }
-    
-    @Override
-    public List<MCTag<MCEntityType>> getAllTags() {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.getIDTagMap()
-                .keySet()
-                .stream()
-                .map(itemITag -> new MCTag<>(itemITag, this))
-                .collect(Collectors.toList());
-    }
-    
-    @Override
     public String getTagFolder() {
         return "entity_type";
     }
@@ -57,20 +41,21 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     @Override
     public void addElements(MCTag<MCEntityType> to, List<MCEntityType> toAdd) {
         final ITag<EntityType<?>> internal = getInternal(to);
+        final List<EntityType<?>> entityTypes = CraftTweakerHelper.getEntityTypes(toAdd);
         if(internal == null) {
-            //TODO: Add tag
-            return;
+            final Tag<EntityType<?>> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(entityTypes));
+            CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
+        } else {
+            CraftTweakerAPI.apply(new ActionTagAdd<>(internal, entityTypes, to));
         }
         
-        final EntityType<?>[] itemsFromDefinitions = CraftTweakerHelper.getEntityTypes(toAdd.toArray(new MCEntityType[0]));
-        CraftTweakerAPI.apply(new ActionTagAdd<>(internal, itemsFromDefinitions, to.getIdInternal()));
     }
     
     @Override
     public void removeElements(MCTag<MCEntityType> from, List<MCEntityType> toRemove) {
         final ITag<EntityType<?>> internal = getInternal(from);
-        final EntityType<?>[] itemsFromDefinitions = CraftTweakerHelper.getEntityTypes(toRemove.toArray(new MCEntityType[0]));
-        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, itemsFromDefinitions, from.getIdInternal()));
+        final List<EntityType<?>> entityTypes = CraftTweakerHelper.getEntityTypes(toRemove);
+        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, entityTypes, from));
     }
     
     @Override
@@ -86,10 +71,14 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
                 .collect(Collectors.toList());
     }
     
+    @Nullable
     @Override
     public ITag<EntityType<?>> getInternal(MCTag<MCEntityType> theTag) {
-        final ITagCollection<EntityType<?>> blockTags = TagCollectionManager.getManager()
-                .getEntityTypeTags();
-        return blockTags.get(theTag.getIdInternal());
+        return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
+    }
+    
+    @Override
+    public ITagCollection<EntityType<?>> getTagCollection() {
+        return TagCollectionManager.getManager().getEntityTypeTags();
     }
 }

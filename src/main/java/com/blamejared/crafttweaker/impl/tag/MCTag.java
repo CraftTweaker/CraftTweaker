@@ -33,9 +33,21 @@ public final class MCTag<T extends CommandStringDisplayable> implements CommandS
         this.manager = manager;
     }
     
+    @SafeVarargs
+    @ZenCodeType.Method
+    public final void add(T... items) {
+        add(Arrays.asList(items));
+    }
+    
     @ZenCodeType.Method
     public void add(List<T> items) {
         manager.addElements(this, items);
+    }
+    
+    @SafeVarargs
+    @ZenCodeType.Method
+    public final void remove(T... items){
+        remove(Arrays.asList(items));
     }
     
     @ZenCodeType.Method
@@ -71,6 +83,12 @@ public final class MCTag<T extends CommandStringDisplayable> implements CommandS
         return manager;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
+    public boolean contains(T element) {
+        return getElements().contains(element);
+    }
+    
     @Override
     public String getCommandString() {
         return "<tag:" + manager.getTagFolder() + ":" + id + ">";
@@ -102,7 +120,29 @@ public final class MCTag<T extends CommandStringDisplayable> implements CommandS
     }
     
     @Override
+    @ZenCodeType.Caster(implicit = true)
     public String toString() {
         return getCommandString();
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCTag<?> mcTag = (MCTag<?>) o;
+        
+        if(!id.equals(mcTag.id))
+            return false;
+        return manager.equals(mcTag.manager);
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + manager.hashCode();
+        return result;
     }
 }

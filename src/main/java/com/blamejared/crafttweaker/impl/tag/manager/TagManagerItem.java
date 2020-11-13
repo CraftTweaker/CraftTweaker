@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.impl.actions.tags.*;
 import com.blamejared.crafttweaker.impl.helper.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.google.common.collect.*;
 import net.minecraft.item.*;
 import net.minecraft.tags.*;
 import org.openzen.zencode.java.*;
@@ -27,24 +27,9 @@ public class TagManagerItem implements TagManager<MCItemDefinition> {
     }
     
     @Override
-    public @Nonnull Class<MCItemDefinition> getElementClass() {
+    public @Nonnull
+    Class<MCItemDefinition> getElementClass() {
         return MCItemDefinition.class;
-    }
-    
-    @Override
-    public boolean exists(MCResourceLocation location) {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.get(location.getInternal()) != null;
-    }
-    
-    @Override
-    public List<MCTag<MCItemDefinition>> getAllTags() {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.getIDTagMap()
-                .keySet()
-                .stream()
-                .map(itemITag -> new MCTag<>(itemITag, this))
-                .collect(Collectors.toList());
     }
     
     @Override
@@ -55,20 +40,20 @@ public class TagManagerItem implements TagManager<MCItemDefinition> {
     @Override
     public void addElements(MCTag<MCItemDefinition> to, List<MCItemDefinition> toAdd) {
         final ITag<Item> internal = getInternal(to);
+        final List<Item> items = CraftTweakerHelper.getItemsFromDefinitions(toAdd);
         if(internal == null) {
-            //TODO: Add tag
-            return;
+            final Tag<Item> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(items));
+            CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
+        } else {
+            CraftTweakerAPI.apply(new ActionTagAdd<>(internal, items, to));
         }
-        
-        final Item[] itemsFromDefinitions = CraftTweakerHelper.getItemsFromDefinitions(toAdd);
-        CraftTweakerAPI.apply(new ActionTagAdd<>(internal, itemsFromDefinitions, to.getIdInternal()));
     }
     
     @Override
     public void removeElements(MCTag<MCItemDefinition> from, List<MCItemDefinition> toRemove) {
         final ITag<Item> internal = getInternal(from);
-        final Item[] itemsFromDefinitions = CraftTweakerHelper.getItemsFromDefinitions(toRemove);
-        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, itemsFromDefinitions, from.getIdInternal()));
+        final List<Item> itemsFromDefinitions = CraftTweakerHelper.getItemsFromDefinitions(toRemove);
+        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, itemsFromDefinitions, from));
     }
     
     @Override
@@ -86,7 +71,11 @@ public class TagManagerItem implements TagManager<MCItemDefinition> {
     
     @Override
     public ITag<Item> getInternal(MCTag<MCItemDefinition> theTag) {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.get(theTag.getIdInternal());
+        return getTagCollection().get(theTag.getIdInternal());
+    }
+    
+    @Override
+    public ITagCollection<Item> getTagCollection() {
+        return TagCollectionManager.getManager().getItemTags();
     }
 }

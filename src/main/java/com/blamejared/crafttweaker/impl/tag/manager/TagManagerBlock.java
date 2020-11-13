@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.impl.actions.tags.*;
 import com.blamejared.crafttweaker.impl.blocks.*;
 import com.blamejared.crafttweaker.impl.helper.*;
 import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.google.common.collect.*;
 import net.minecraft.block.*;
 import net.minecraft.item.*;
 import net.minecraft.tags.*;
@@ -34,22 +34,6 @@ public class TagManagerBlock implements TagManager<MCBlock> {
     }
     
     @Override
-    public boolean exists(MCResourceLocation location) {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.get(location.getInternal()) != null;
-    }
-    
-    @Override
-    public List<MCTag<MCBlock>> getAllTags() {
-        final ITagCollection<Item> itemTags = TagCollectionManager.getManager().getItemTags();
-        return itemTags.getIDTagMap()
-                .keySet()
-                .stream()
-                .map(itemITag -> new MCTag<>(itemITag, this))
-                .collect(Collectors.toList());
-    }
-    
-    @Override
     public String getTagFolder() {
         return "block";
     }
@@ -57,20 +41,21 @@ public class TagManagerBlock implements TagManager<MCBlock> {
     @Override
     public void addElements(MCTag<MCBlock> to, List<MCBlock> toAdd) {
         final ITag<Block> internal = getInternal(to);
-        if(internal == null) {
-            //TODO: Add tag
-            return;
-        }
+        final List<Block> blocks = CraftTweakerHelper.getBlocks(toAdd);
         
-        final Block[] itemsFromDefinitions = CraftTweakerHelper.getBlocks(toAdd.toArray(new MCBlock[0]));
-        CraftTweakerAPI.apply(new ActionTagAdd<>(internal, itemsFromDefinitions, to.getIdInternal()));
+        if(internal == null) {
+            final Tag<Block> tag = Tag.getTagFromContents(Sets.newHashSet(blocks));
+            CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tag, to));
+        } else {
+            CraftTweakerAPI.apply(new ActionTagAdd<>(internal, blocks, to));
+        }
     }
     
     @Override
     public void removeElements(MCTag<MCBlock> from, List<MCBlock> toRemove) {
         final ITag<Block> internal = getInternal(from);
-        final Block[] itemsFromDefinitions = CraftTweakerHelper.getBlocks(toRemove.toArray(new MCBlock[0]));
-        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, itemsFromDefinitions, from.getIdInternal()));
+        final List<Block> blocks = CraftTweakerHelper.getBlocks(toRemove);
+        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, blocks, from));
     }
     
     @Override
@@ -83,9 +68,14 @@ public class TagManagerBlock implements TagManager<MCBlock> {
         return internal.getAllElements().stream().map(MCBlock::new).collect(Collectors.toList());
     }
     
+    @Nullable
     @Override
     public ITag<Block> getInternal(MCTag<MCBlock> theTag) {
-        final ITagCollection<Block> blockTags = TagCollectionManager.getManager().getBlockTags();
-        return blockTags.get(theTag.getIdInternal());
+        return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
+    }
+    
+    @Override
+    public ITagCollection<Block> getTagCollection() {
+        return TagCollectionManager.getManager().getBlockTags();
     }
 }

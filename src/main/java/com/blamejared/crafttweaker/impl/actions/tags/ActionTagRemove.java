@@ -1,37 +1,26 @@
 package com.blamejared.crafttweaker.impl.actions.tags;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistryEntry;
+import com.blamejared.crafttweaker.impl.tag.*;
+import net.minecraft.tags.*;
+import net.minecraftforge.registries.*;
 
 import java.util.*;
 
-public class ActionTagRemove<T extends ForgeRegistryEntry> extends ActionTagModify<T> {
+public class ActionTagRemove<T extends ForgeRegistryEntry<?>> extends ActionTagModify<T> {
     
-    public ActionTagRemove(ITag<T> tag, T[] values, ResourceLocation id) {
-        super(tag, values, id);
+    public ActionTagRemove(ITag<T> tag, List<T> values, MCTag<?> mcTag) {
+        super(tag, values, mcTag);
     }
     
     @Override
-    public void apply() {
-        if(tag instanceof Tag) {
-            List<T> list = new ArrayList<>(((Tag<T>) tag).immutableContents);
-            Set<T> set = new HashSet<>(((Tag<T>) tag).contents);
-            List<T> values = Arrays.asList(getValues());
-            list.removeAll(values);
-            set.removeAll(values);
-            ((Tag<T>) tag).immutableContents = ImmutableList.copyOf(list);
-            ((Tag<T>) tag).contents = set;
-        } else {
-            throw new RuntimeException("Only Tag's are supported right now, can't act on: " + tag);
-        }
+    protected void applyTo(List<T> immutableContents, Set<T> contents) {
+        immutableContents.removeAll(values);
+        contents.removeAll(values);
     }
     
     @Override
     public String describe() {
-        return "Removing: " + Arrays.toString(getValues()) + " from tag: " + getId();
+        return "Removing: " + describeValues() + " from tag: " + getId();
     }
     
 }
