@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.api.zencode.impl.loaders;
 
+import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.actions.*;
 import com.google.common.collect.*;
-import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.thread.*;
 
 import java.util.*;
@@ -18,7 +18,8 @@ public class LoaderActions {
     
     private final List<IAction> actionListInvalidClient = new ArrayList<>();
     private final List<IAction> actionListInvalidServer = new ArrayList<>();
-    private int runCount = 0;
+    private int runCountClient = 0;
+    private int runCountServer = 0;
     
     private LoaderActions(String loaderName) {
         this.loaderName = loaderName;
@@ -37,11 +38,15 @@ public class LoaderActions {
     }
     
     public List<IAction> getActionList() {
-        return EffectiveSide.get() == LogicalSide.CLIENT ? actionListClient : actionListServer;
+        return isServer() ? actionListServer : actionListClient;
     }
     
     public List<IAction> getActionListInvalid() {
-        return EffectiveSide.get() == LogicalSide.CLIENT ? actionListInvalidClient : actionListInvalidServer;
+        return isServer() ? actionListInvalidServer : actionListInvalidClient;
+    }
+    
+    private boolean isServer() {
+        return EffectiveSide.get().isServer() || CraftTweaker.serverOverride;
     }
     
     public void addValidAction(IAction action) {
@@ -71,10 +76,14 @@ public class LoaderActions {
     }
     
     public int getRunCount() {
-        return runCount;
+        return isServer() ? runCountClient : runCountServer;
     }
     
     public void incrementRunCount() {
-        runCount++;
+        if(isServer()) {
+            runCountClient++;
+        } else {
+            runCountServer++;
+        }
     }
 }

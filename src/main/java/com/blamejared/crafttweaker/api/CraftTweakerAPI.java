@@ -58,20 +58,21 @@ public class CraftTweakerAPI {
         
         final LoaderActions currentLoaderActions = currentRun.getLoaderActions();
         try {
-            if(action.shouldApplyOn(EffectiveSide.get())) {
+            if(!action.shouldApplyOn(EffectiveSide.get())) {
+                return;
+            }
+    
+            if(!action.validate(logger)) {
+                currentLoaderActions.addInvalidAction(action);
                 return;
             }
             
-            if(action.validate(logger)) {
-                String describe = action.describe();
-                if(describe != null && !describe.isEmpty()) {
-                    logInfo(describe);
-                }
-                action.apply();
-                currentLoaderActions.addValidAction(action);
-            } else {
-                currentLoaderActions.addInvalidAction(action);
+            final String describe = action.describe();
+            if(describe != null && !describe.isEmpty()) {
+                logInfo(describe);
             }
+            action.apply();
+            currentLoaderActions.addValidAction(action);
         } catch(Exception e) {
             logThrowing("Error running action", e);
         }
