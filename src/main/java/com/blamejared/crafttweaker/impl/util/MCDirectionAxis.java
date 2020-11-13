@@ -19,7 +19,7 @@ import java.util.Map;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.DirectionAxis")
 @Document("vanilla/api/util/DirectionAxis")
-@ZenWrapper(wrappedClass = "net.minecraft.util.Direction.Axis", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
+@ZenWrapper(wrappedClass = "net.minecraft.util.Direction.Axis", displayStringFormat = "%s.getCommandString()")
 public class MCDirectionAxis implements CommandStringDisplayable {
     
     private static final Map<Direction.Axis, MCDirectionAxis> AXIS_MAP = Util.make(new HashMap<>(), map -> {
@@ -28,7 +28,7 @@ public class MCDirectionAxis implements CommandStringDisplayable {
         map.put(Direction.Axis.Z, new MCDirectionAxis(Direction.Axis.Z));
     });
     
-    private Direction.Axis internal;
+    private final Direction.Axis internal;
     
     public MCDirectionAxis(Direction.Axis internal) {
         this.internal = internal;
@@ -110,7 +110,7 @@ public class MCDirectionAxis implements CommandStringDisplayable {
 
     @Override
     public String getCommandString() {
-        return "<directionaxis:" + internal.getName2() + ">";
+        return "<directionAxis:" + internal.getName2() + ">";
     }
     
     @Override

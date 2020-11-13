@@ -10,13 +10,13 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityType")
 @Document("vanilla/api/entities/MCEntityType")
-@ZenWrapper(wrappedClass = "net.minecraft.entity.EntityType", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
+@ZenWrapper(wrappedClass = "net.minecraft.entity.EntityType", displayStringFormat = "%s.getCommandString()")
 public class MCEntityType implements CommandStringDisplayable {
     
-    private final EntityType internal;
+    private final EntityType<?> internal;
     private final MCEntityClassification classification;
     
-    public MCEntityType(EntityType internal) {
+    public MCEntityType(EntityType<?> internal) {
         this.internal = internal;
         this.classification = new MCEntityClassification(internal.getClassification());
     }

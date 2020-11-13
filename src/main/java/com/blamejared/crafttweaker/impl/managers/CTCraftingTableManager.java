@@ -9,8 +9,7 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.item.crafting.*;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -88,7 +87,7 @@ public class CTCraftingTableManager implements IRecipeManager {
     }
     
     @Override
-    public IRecipeType getRecipeType() {
+    public IRecipeType<ICraftingRecipe> getRecipeType() {
         return IRecipeType.CRAFTING;
     }
     
