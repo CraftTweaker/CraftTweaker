@@ -49,6 +49,10 @@ public class MCIngredientList implements IIngredient {
         Arrays.stream(ingredients).map(ing -> Arrays.asList(ing.getItems())).forEach(stacks::addAll);
         return stacks.toArray(new IItemStack[0]);
     }
+
+    public IIngredient[] getIngredients() {
+        return ingredients;
+    }
     
     @Override
     public boolean equals(Object o) {

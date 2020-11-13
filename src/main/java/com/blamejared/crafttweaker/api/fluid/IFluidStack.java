@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.fluid;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.brackets.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
+import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraftforge.fluids.*;
 import org.openzen.zencode.java.*;
@@ -12,9 +13,39 @@ import org.openzen.zencode.java.*;
 @Document("vanilla/api/fluid/IFluidStack")
 @ZenWrapper(wrappedClass = "net.minecraftforge.fluids.FluidStack", displayStringFormat = "%.getCommandString()", creationMethodFormat = "new MCFluidStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.fluid.MCFluidStack")
 public interface IFluidStack extends CommandStringDisplayable {
+
+    /**
+     * Gets the registry name for the fluid this stack is representing.
+     *
+     * @return A MCResourceLocation representing the registry name.
+     */
+    @ZenCodeType.Getter("registryName")
+    default MCResourceLocation getRegistryName() {
+        return new MCResourceLocation(getInternal().getFluid().getRegistryName());
+    }
+
+    /**
+     * Gets whether or not this fluid stack is empty.
+     *
+     * @return {@code true} if this stack is empty, {@code false} otherwise.
+     */
+    @ZenCodeType.Getter("empty")
+    default boolean isEmpty() {
+        return getInternal().isEmpty();
+    }
+
+    /**
+     * Gets the fluid amount in MilliBuckets (mB).
+     *
+     * @return The amount of this fluid
+     */
+    @ZenCodeType.Getter("amount")
+    default int getAmount() {
+        return getInternal().getAmount();
+    }
     
     /**
-     * Sets the fluid amount in MilliBuckets (MB)
+     * Sets the fluid amount in MilliBuckets (mB)
      *
      * @param amount The amount to multiply this stack
      * @return A new stack, or this stack, depending if this stack is mutable
