@@ -34,7 +34,7 @@ public class TagManagerItem implements TagManager<MCItemDefinition> {
     
     @Override
     public String getTagFolder() {
-        return "item";
+        return "items";
     }
     
     @Override

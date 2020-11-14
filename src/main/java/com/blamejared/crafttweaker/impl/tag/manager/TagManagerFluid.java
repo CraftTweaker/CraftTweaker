@@ -34,7 +34,7 @@ public class TagManagerFluid implements TagManager<MCFluid> {
     
     @Override
     public String getTagFolder() {
-        return "fluid";
+        return "fluids";
     }
     
     @Override

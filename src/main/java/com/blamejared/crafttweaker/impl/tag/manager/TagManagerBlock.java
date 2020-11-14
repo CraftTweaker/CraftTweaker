@@ -35,7 +35,7 @@ public class TagManagerBlock implements TagManager<MCBlock> {
     
     @Override
     public String getTagFolder() {
-        return "block";
+        return "blocks";
     }
     
     @Override

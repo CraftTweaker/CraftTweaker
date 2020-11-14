@@ -35,7 +35,7 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     
     @Override
     public String getTagFolder() {
-        return "entity_type";
+        return "entity_types";
     }
     
     @Override
