@@ -76,8 +76,10 @@ public class CraftTweaker {
         }
         CraftTweakerAPI.setupLoggers();
         CraftTweakerAPI.logger.setLogLevel(LogLevel.DEBUG);
+        CraftTweakerAPI.logInfo("Starting building internal Registries");
         CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
         CraftTweakerRegistry.findClasses();
+        CraftTweakerAPI.logInfo("Completed building internal Registries");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
@@ -121,7 +123,9 @@ public class CraftTweaker {
      * Subscribed to at highest priority to allow other mods to call CrT methods that use tags from within that event.
      */
     private void handleTags(RegistryEvent<Block> ignored) {
+        CraftTweakerAPI.logDebug("Setting up Tag Managers");
         CrTTagRegistryData.INSTANCE.registerForgeTags();
+        CraftTweakerAPI.logDebug("Finished setting up Tag Managers");
     }
     
     private void setup(final FMLCommonSetupEvent event) {
