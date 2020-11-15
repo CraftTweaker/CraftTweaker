@@ -202,4 +202,9 @@ public interface IEntityLivingBase extends IEntity {
         CraftTweakerAPI.logError("Default method IEntityLivingBase#attemptTeleport is not overwritten in " + getClass() + " please report to the author!");
         return false;
     }
+
+    @ZenGetter("creatureAttribute")
+    default String getCreatureAttribute() {
+        return "";
+    }
 }

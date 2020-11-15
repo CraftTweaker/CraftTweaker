@@ -269,4 +269,9 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public boolean attemptTeleport(double x, double y, double z) {
         return entityLivingBase.attemptTeleport(x, y, z);
     }
+
+    @Override
+    public String getCreatureAttribute()  {
+        return entityLivingBase.getCreatureAttribute().name();
+    }
 }
