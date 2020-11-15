@@ -292,6 +292,9 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
 
+    @ZenMethod
+    IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);

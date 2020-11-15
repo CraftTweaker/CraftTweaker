@@ -736,4 +736,10 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPotionEffectAdded())
             CrafttweakerImplementationAPI.events.publishPotionEffectAdded(new MCPotionEffectAddedEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone ev) {
+        if(CrafttweakerImplementationAPI.events.hasPlayerCloneEvent())
+            CrafttweakerImplementationAPI.events.publishPlayerCloneEvent(new MCPlayerCloneEvent(ev));
+    }
 }

@@ -153,6 +153,7 @@ public class MTEventManager implements IEventManager {
         elEntityLivingHeal.clear();
         elEntityLivingUpdateEvent.clear();
         elPotionEffectAdded.clear();
+        elPlayerCloneEvent.clear();
     }
 
     // ##########################
@@ -1831,5 +1832,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPotionEffectAdded(PotionEffectAddedEvent event) {
         elPotionEffectAdded.publish(event);
+    }
+
+    // ########################
+    // ### PlayerCloneEvent ###
+    // ########################
+
+    private final EventList<PlayerCloneEvent> elPlayerCloneEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev) {
+        return elPlayerCloneEvent.add(ev);
+    }
+
+    public boolean hasPlayerCloneEvent() {
+        return elPlayerCloneEvent.hasHandlers();
+    }
+
+    public void publishPlayerCloneEvent(PlayerCloneEvent event) {
+        elPlayerCloneEvent.publish(event);
     }
 }
