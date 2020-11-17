@@ -68,15 +68,9 @@ public final class CrTTagRegistryData {
         tagFolderByCrTElementType.put(tagManager.getElementClass(), tagManager);
     }
     
-    private Set<ResourceLocation> getAllTagTypeNames() {
-        final Set<ResourceLocation> result = new HashSet<>(ForgeTagHandler.getCustomTagTypeNames());
-        result.addAll(TagRegistryManager.idToRegistryMap.keySet());
-        return result;
-    }
-    
     public void registerForgeTags() {
         final RegistryManager registryManager = RegistryManager.ACTIVE;
-        for(final ResourceLocation key : getAllTagTypeNames()) {
+        for(final ResourceLocation key : ForgeTagHandler.getCustomTagTypeNames()) {
             if(registryManager.getRegistry(key) == null) {
                 CraftTweakerAPI.logWarning("Unsupported TagCollection without registry: " + key);
                 continue;

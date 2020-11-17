@@ -28,8 +28,8 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
     }
     
     @Nonnull
-    ParsedExpression getParsedExpression(CodePosition position, String tagFolder) {
-        confirmTagFolderExists(tagFolder);
+    ParsedExpression getParsedExpression(CodePosition position, String tagFolder) throws ParseException {
+        confirmTagFolderExists(tagFolder, position);
         
         if(tagRegistry.isSynthetic(tagFolder)) {
             return createCallSynthetic(tagFolder, position);
@@ -37,15 +37,14 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
         return createCallImplementation(tagFolder, position);
     }
     
-    void confirmTagFolderExists(String tagFolder) {
+    void confirmTagFolderExists(String tagFolder, CodePosition position) throws ParseException {
         if(!tagRegistry.hasTagManager(tagFolder)) {
             if(ModList.get().isLoaded(tagFolder)) {
                 //User _probably_ used <tag:minecraft:bedrock> instead of <tag:item:minecraft:bedrock>
                 //Logging a warning hopefully reduces the amount of Issues we receive.
                 CraftTweakerAPI.logWarning("Used ModID as tagFolder. The Tag BEP changed from an older version, read the changelog!");
             }
-            
-            throw new IllegalArgumentException("Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
+            throw new ParseException(position, "Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
         }
     }
     

@@ -27,7 +27,7 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
     @Nonnull
     private final MethodHandle wrapperHandle;
     
-    public TagManagerWrapper(Class<T> elementClass, ResourceLocation tagTypeName, MethodHandle unwrapperHandle, MethodHandle wrapperHandle) {
+    public TagManagerWrapper(Class<T> elementClass, ResourceLocation tagTypeName, MethodHandle wrapperHandle, MethodHandle unwrapperHandle) {
         this.elementClass = elementClass;
         this.tagTypeName = tagTypeName;
         this.unwrapperHandle = unwrapperHandle;

@@ -21,24 +21,24 @@ public class TagBracketHandler implements BracketExpressionParser {
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
         if(tokens.optional(ZSTokenType.T_GREATER) != null) {
-            throw new IllegalArgumentException("Invalid Bracket handler, expected tagFolder here");
+            throw new ParseException(position, "Invalid Bracket handler, expected tagFolder here");
         }
         final String tagFolder = tokens.next().getContent();
-        tagManagerBracketHandler.confirmTagFolderExists(tagFolder);
+        tagManagerBracketHandler.confirmTagFolderExists(tagFolder, position);
         
         tokens.required(ZSTokenType.T_COLON, "Expected ':', followed by Tag Name");
         
         final String tagName = ParseUtil.readContent(tokens);
         final ResourceLocation resourceLocation = ResourceLocation.tryCreate(tagName);
         if(resourceLocation == null) {
-            throw new IllegalArgumentException("Invalid Tag Name '" + tagName + "', must be a valid resource location");
+            throw new ParseException(position, "Invalid Tag Name '" + tagName + "', must be a valid resource location");
         }
         
         return createCall(position, tagFolder, resourceLocation);
         
     }
     
-    private ParsedExpression createCall(CodePosition position, String tagFolder, ResourceLocation location) {
+    private ParsedExpression createCall(CodePosition position, String tagFolder, ResourceLocation location) throws ParseException {
         final ParsedExpression tagManager = tagManagerBracketHandler.getParsedExpression(position, tagFolder);
         final ParsedExpressionMember getTag = new ParsedExpressionMember(position, tagManager, "getTag", null);
         final ParsedNewExpression newExpression = createMCResourceLocationArgument(position, location);
