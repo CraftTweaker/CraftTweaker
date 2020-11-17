@@ -50,6 +50,7 @@ public class MCResourceLocation implements CommandStringDisplayable {
 
 
     @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
     public String toString() {
         return (internal.toString());
     }

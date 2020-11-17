@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
 import com.blamejared.crafttweaker.impl.data.*;
 import com.blamejared.crafttweaker.impl.food.*;
 import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker.impl.util.text.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.item.*;
@@ -18,6 +19,7 @@ import net.minecraft.util.*;
 import net.minecraftforge.common.*;
 import org.openzen.zencode.java.*;
 
+import java.util.*;
 import java.util.regex.*;
 
 /**
@@ -46,8 +48,8 @@ public interface IItemStack extends IIngredient {
      * @return registry name of the Item this IItemStack represents
      */
     @ZenCodeType.Getter("registryName")
-    default String getRegistryName() {
-        return String.valueOf(getInternal().getItem().getRegistryName());
+    default MCResourceLocation getRegistryName() {
+        return new MCResourceLocation(Objects.requireNonNull(getInternal().getItem().getRegistryName()));
     }
     
     /**
