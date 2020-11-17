@@ -87,7 +87,7 @@ public interface TagManager<T extends CommandStringDisplayable> extends CommandS
         return getTagCollection().getIDTagMap()
                 .keySet()
                 .stream()
-                .map(itemITag -> new MCTag<>(itemITag, this))
+                .map(tagLocation -> new MCTag<>(tagLocation, this))
                 .collect(Collectors.toList());
     }
     
@@ -146,7 +146,7 @@ public interface TagManager<T extends CommandStringDisplayable> extends CommandS
      */
     @Nullable
     default ITag<?> getInternal(MCTag<T> theTag) {
-        return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
+        return getTagCollection().get(theTag.getIdInternal());
     }
     
     /**

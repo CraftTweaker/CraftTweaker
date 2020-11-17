@@ -50,7 +50,7 @@ public final class CrTTagRegistry {
     }
     
     @ZenCodeType.Method
-    public <T extends CommandStringDisplayable> TagManager<T> getByTagFolder(String location) {
-        return data.getByTagFolder(location);
+    public <T extends CommandStringDisplayable> TagManager<T> getByTagFolder(String tagFolder) {
+        return data.getByTagFolder(tagFolder);
     }
 }

@@ -41,7 +41,8 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
     }
     
     public ITagCollection<?> getTagCollection() {
-        final Map<ResourceLocation, ITagCollection<?>> customTagTypes = ForgeTagHandler.getCustomTagTypes();
+        
+        final Map<ResourceLocation, ITagCollection<?>> customTagTypes = TagCollectionManager.getManager().getCustomTagTypes();
         if(customTagTypes.containsKey(tagTypeName)) {
             return customTagTypes.get(tagTypeName);
         }
