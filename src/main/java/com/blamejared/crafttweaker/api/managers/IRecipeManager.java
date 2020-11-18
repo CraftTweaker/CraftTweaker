@@ -173,7 +173,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
-        return CTCraftingTableManager.recipeManager.recipes.getOrDefault(getRecipeType(), Collections.emptyMap());
+        return CTCraftingTableManager.recipeManager.recipes.getOrDefault(getRecipeType(), new HashMap<>());
     }
     
     /**
