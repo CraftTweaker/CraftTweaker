@@ -1,19 +1,20 @@
 package com.blamejared.crafttweaker.api.fluid;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.*;
-import com.blamejared.crafttweaker.impl.fluid.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraftforge.fluids.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.impl.fluid.MCFluid;
+import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraftforge.fluids.FluidStack;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.IFluidStack")
 @Document("vanilla/api/fluid/IFluidStack")
 @ZenWrapper(wrappedClass = "net.minecraftforge.fluids.FluidStack", displayStringFormat = "%.getCommandString()", creationMethodFormat = "new MCFluidStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.fluid.MCFluidStack")
 public interface IFluidStack extends CommandStringDisplayable {
-
+    
     /**
      * Gets the registry name for the fluid this stack is representing.
      *
@@ -23,7 +24,20 @@ public interface IFluidStack extends CommandStringDisplayable {
     default MCResourceLocation getRegistryName() {
         return new MCResourceLocation(getInternal().getFluid().getRegistryName());
     }
-
+    
+    /**
+     * Checks if this IFluidStack, contains the given IFluidStack by checking if the fluids are the same, and if this fluid's amount is bigger than the given fluid's amount
+     *
+     * @param other other IFluidStack to compare against
+     *
+     * @return true if this fluid contains the other fluid
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
+    default boolean containsOther(IFluidStack other) {
+        return this.getInternal().containsFluid(other.getInternal());
+    }
+    
     /**
      * Gets whether or not this fluid stack is empty.
      *
@@ -33,7 +47,7 @@ public interface IFluidStack extends CommandStringDisplayable {
     default boolean isEmpty() {
         return getInternal().isEmpty();
     }
-
+    
     /**
      * Gets the fluid amount in MilliBuckets (mB).
      *
@@ -48,7 +62,9 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the fluid amount in MilliBuckets (mB)
      *
      * @param amount The amount to multiply this stack
+     *
      * @return A new stack, or this stack, depending if this stack is mutable
+     *
      * @docParam amount 1000
      */
     @ZenCodeType.Method
@@ -59,7 +75,9 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the fluid amount in MilliBuckets (MB)
      *
      * @param amount The amount to multiply this stack
+     *
      * @return A new stack, or this stack, depending if this stack is mutable
+     *
      * @docParam amount 1000
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
