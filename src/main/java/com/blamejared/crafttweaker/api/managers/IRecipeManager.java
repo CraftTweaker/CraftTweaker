@@ -5,7 +5,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveAll;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
@@ -27,7 +28,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -173,7 +176,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
-        return CTCraftingTableManager.recipeManager.recipes.getOrDefault(getRecipeType(), new HashMap<>());
+        return CTCraftingTableManager.recipeManager.recipes.computeIfAbsent(getRecipeType(), iRecipeType -> new HashMap<>());
     }
     
     /**
@@ -229,6 +232,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFilter")
     @Document("vanilla/api/recipe/RecipeFilter")
     interface RecipeFilter {
+        
         @ZenCodeType.Method
         boolean test(String name);
     }
@@ -238,6 +242,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionSingle")
     @Document("vanilla/api/recipe/RecipeFunctionSingle")
     interface RecipeFunctionSingle {
+        
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack inputs);
     }
@@ -247,6 +252,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionArray")
     @Document("vanilla/api/recipe/RecipeFunctionArray")
     interface RecipeFunctionArray {
+        
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[] inputs);
     }
@@ -256,6 +262,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Name("crafttweaker.api.recipe.RecipeFunctionMatrix")
     @Document("vanilla/api/recipe/RecipeFunctionMatrix")
     interface RecipeFunctionMatrix {
+        
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
     }
