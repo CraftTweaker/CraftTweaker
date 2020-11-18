@@ -12,6 +12,8 @@ import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.attribute.IEntityAttribute;
+import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
@@ -33,6 +35,8 @@ import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.*;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttribute;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
@@ -51,6 +55,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
@@ -1054,5 +1060,13 @@ public class CraftTweakerMC {
 
     public static IAxisAlignedBB getIAxisAlignedBB(AxisAlignedBB aabb) {
         return aabb == null ? null : new MCAxisAlignedBB(aabb);
+    }
+
+    public static IEntityAttribute getIEntityAttribute(IAttribute attribute) {
+        return attribute == null ? null : new MCEntityAttribute(attribute);
+    }
+
+    public static IEntityAttributeInstance getIEntityAttributeInstance(IAttributeInstance attribute) {
+        return attribute == null ? null : new MCEntityAttributeInstance(attribute);
     }
 }
