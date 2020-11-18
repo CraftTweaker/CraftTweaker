@@ -484,4 +484,9 @@ public interface IItemStack extends IIngredient {
     @ZenMethod
     default void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
     }
+
+    @ZenGetter("maxItemUseDuration")
+    default int getMaxItemUseDuration() {
+        return 0;
+    }
 }

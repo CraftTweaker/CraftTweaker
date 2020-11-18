@@ -798,4 +798,9 @@ public class MCItemStack implements IItemStack {
 	public void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
 		stack.addAttributeModifier(attributeName, CraftTweakerMC.getAttributeModifier(modifier), CraftTweakerMC.getEntityEquipmentSlot(equipmentSlot));
 	}
+
+    @Override
+    public int getMaxItemUseDuration() {
+        return stack.getMaxItemUseDuration();
+    }
 }
