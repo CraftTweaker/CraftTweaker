@@ -82,7 +82,7 @@ public class ScriptRun {
         MinecraftForge.EVENT_BUS.post(new CTRegisterBEPEvent(bep));
     }
     
-    private void readAndExecuteScripts() throws ParseException, IOException {
+    private void readAndExecuteScripts() throws ParseException {
         SemanticModule scripts = scriptingEngine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE);
         
         if(!scripts.isValid()) {
@@ -153,7 +153,7 @@ public class ScriptRun {
         return module;
     }
     
-    private void writeFormattedFiles(SemanticModule scripts) throws IOException {
+    private void writeFormattedFiles(SemanticModule scripts) {
         List<HighLevelDefinition> all = scripts.definitions.getAll();
         ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
         FileFormatter formatter = new FileFormatter(builder.build());
@@ -167,9 +167,11 @@ public class ScriptRun {
                 CraftTweakerAPI.logError("Could not find or create folder %s, aborting formatting task!", file
                         .getParent());
             }
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(format);
-            writer.close();
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(format);
+            } catch(IOException e) {
+                CraftTweakerAPI.logThrowing("Could not write formatted files", e);
+            }
         }
     }
 }

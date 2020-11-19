@@ -112,37 +112,6 @@ public class MCGame {
                 .map(RecipeManagerWrapper::new)
                 .collect(Collectors.toList());
     }
-    /*
-    @ZenCodeType.Getter("itemTags")
-    public Collection<MCItemTag> getMCItemTags() {
-        return ItemTags.getCollection()
-                .getIDTagMap()
-                .keySet()
-                .stream()
-                .map(MCItemTag::new)
-                .collect(Collectors.toList());
-    }
-
-    @ZenCodeType.Getter("blockTags")
-    public Collection<MCBlockTag> getMCBlockTags() {
-        return BlockTags.getCollection()
-                .getIDTagMap()
-                .keySet()
-                .stream()
-                .map(MCBlockTag::new)
-                .collect(Collectors.toList());
-    }
-
-    @ZenCodeType.Getter("entityTags")
-    public Collection<MCEntityTag> getMCEntityTags() {
-        return EntityTypeTags.getCollection()
-                .getIDTagMap()
-                .keySet()
-                .stream()
-                .map(MCEntityTag::new)
-                .collect(Collectors.toList());
-    }
-    */
 
     /**
      * @return a localized String
