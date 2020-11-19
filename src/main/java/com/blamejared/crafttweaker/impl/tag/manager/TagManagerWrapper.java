@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.impl.tag.*;
 import com.google.common.collect.*;
 import net.minecraft.tags.*;
 import net.minecraft.util.*;
-import net.minecraftforge.common.*;
 import net.minecraftforge.registries.*;
 
 import javax.annotation.*;
@@ -42,7 +41,8 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
     
     public ITagCollection<?> getTagCollection() {
         
-        final Map<ResourceLocation, ITagCollection<?>> customTagTypes = TagCollectionManager.getManager().getCustomTagTypes();
+        final Map<ResourceLocation, ITagCollection<?>> customTagTypes = TagCollectionManager.getManager()
+                .getCustomTagTypes();
         if(customTagTypes.containsKey(tagTypeName)) {
             return customTagTypes.get(tagTypeName);
         }
@@ -71,6 +71,20 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
     
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
+    public List<MCTag<T>> getAllTagsFor(T element) {
+        final ITagCollection tagCollection = getTagCollection();
+        final ForgeRegistryEntry itemIn = convertEntry(element);
+        if(itemIn == null) {
+            return Collections.emptyList();
+        }
+        final Collection<ResourceLocation> owningTags = tagCollection.getOwningTags(itemIn);
+        return owningTags.stream()
+                .map(location -> new MCTag<T>(location, this))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void addElements(MCTag<T> to, List<T> toAdd) {
         final ITag<?> internal = getInternal(to);
         final List<ForgeRegistryEntry> entries = convertEntries(toAdd);
@@ -95,14 +109,20 @@ public class TagManagerWrapper<T extends CommandStringDisplayable> implements Ta
     
     @SuppressWarnings({"rawtypes"})
     private List<ForgeRegistryEntry> convertEntries(List<T> list) {
-        return list.stream().map(t -> {
-            try {
-                return (ForgeRegistryEntry) unwrapperHandle.invoke(t);
-            } catch(Throwable throwable) {
-                CraftTweakerAPI.logThrowing("Could not convert element for synthetic TagManager: ", throwable);
-                return null;
-            }
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        return list.stream()
+                .map(this::convertEntry)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+    
+    @SuppressWarnings("rawtypes")
+    private ForgeRegistryEntry convertEntry(T entry) {
+        try {
+            return (ForgeRegistryEntry) unwrapperHandle.invoke(entry);
+        } catch(Throwable throwable) {
+            CraftTweakerAPI.logThrowing("Could not convert element for synthetic TagManager: ", throwable);
+            return null;
+        }
     }
     
     @Override

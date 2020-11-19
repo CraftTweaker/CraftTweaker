@@ -38,6 +38,14 @@ public class TagManagerFluid implements TagManager<MCFluid> {
     }
     
     @Override
+    public List<MCTag<MCFluid>> getAllTagsFor(MCFluid element) {
+        return getTagCollection().getOwningTags(element.getInternal())
+                .stream()
+                .map(location -> new MCTag<>(location, this))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
     public void addElements(MCTag<MCFluid> to, List<MCFluid> toAdd) {
         final ITag<Fluid> internal = getInternal(to);
         final List<Fluid> itemsFromDefinitions = CraftTweakerHelper.getFluids(toAdd);

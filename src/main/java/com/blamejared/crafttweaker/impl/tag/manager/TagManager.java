@@ -92,6 +92,20 @@ public interface TagManager<T extends CommandStringDisplayable> extends CommandS
     }
     
     /**
+     * Retrieves all tags contain the provided element
+     *
+     * @param element The element whose tags should be returned
+     */
+    @ZenCodeType.Method
+    default List<MCTag<T>> getAllTagsFor(T element) {
+        //While this is a working implementation, using TagCollection#getOwningTags would probably be more efficient ^^
+        //Therefore the CrT TagManagers override this impl
+        return getAllTags().stream()
+                .filter(tag -> tag.contains(element))
+                .collect(Collectors.toList());
+    }
+    
+    /**
      * Get the tag type. In a Bracket call, this will used to determine which TagManager to use.
      * <p>
      * {@code <tag:{tag_type}:tag_location:tag_name>} <br>

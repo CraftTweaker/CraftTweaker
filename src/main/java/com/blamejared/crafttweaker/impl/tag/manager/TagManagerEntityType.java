@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.impl.tag.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.google.common.collect.*;
 import net.minecraft.entity.*;
-import net.minecraft.item.*;
 import net.minecraft.tags.*;
 import org.openzen.zencode.java.*;
 
@@ -36,6 +35,14 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     @Override
     public String getTagFolder() {
         return "entity_types";
+    }
+    
+    @Override
+    public List<MCTag<MCEntityType>> getAllTagsFor(MCEntityType element) {
+        return getTagCollection().getOwningTags(element.getInternal())
+                .stream()
+                .map(location -> new MCTag<>(location, this))
+                .collect(Collectors.toList());
     }
     
     @Override

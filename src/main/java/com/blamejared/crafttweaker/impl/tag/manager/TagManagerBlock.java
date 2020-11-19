@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.impl.tag.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.google.common.collect.*;
 import net.minecraft.block.*;
-import net.minecraft.item.*;
 import net.minecraft.tags.*;
 import org.openzen.zencode.java.*;
 
@@ -36,6 +35,14 @@ public class TagManagerBlock implements TagManager<MCBlock> {
     @Override
     public String getTagFolder() {
         return "blocks";
+    }
+    
+    @Override
+    public List<MCTag<MCBlock>> getAllTagsFor(MCBlock element) {
+        return getTagCollection().getOwningTags(element.getInternal())
+                .stream()
+                .map(location -> new MCTag<>(location, this))
+                .collect(Collectors.toList());
     }
     
     @Override

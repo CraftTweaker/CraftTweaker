@@ -38,6 +38,14 @@ public class TagManagerItem implements TagManager<MCItemDefinition> {
     }
     
     @Override
+    public List<MCTag<MCItemDefinition>> getAllTagsFor(MCItemDefinition element) {
+        return getTagCollection().getOwningTags(element.getInternal())
+                .stream()
+                .map(location -> new MCTag<>(location, this))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
     public void addElements(MCTag<MCItemDefinition> to, List<MCItemDefinition> toAdd) {
         final ITag<Item> internal = getInternal(to);
         final List<Item> items = CraftTweakerHelper.getItemsFromDefinitions(toAdd);
