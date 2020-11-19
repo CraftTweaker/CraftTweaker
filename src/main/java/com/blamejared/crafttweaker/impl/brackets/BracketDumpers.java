@@ -4,10 +4,14 @@ import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.impl.blocks.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.potion.*;
+import com.blamejared.crafttweaker.impl.tag.*;
+import com.blamejared.crafttweaker.impl.tag.registry.*;
 import net.minecraft.entity.*;
+import net.minecraft.tags.*;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.*;
 import net.minecraft.util.text.*;
+import net.minecraftforge.common.*;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.registries.*;
 import org.openzen.zencode.java.*;
@@ -96,5 +100,13 @@ public class BracketDumpers {
                 .filter(rl -> !rl.toString().equals("crafttweaker:scripts"))
                 .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl))
                 .collect(Collectors.toList());
+    }
+    
+    @BracketDumper("tag")
+    public static Collection<String> getTagDump() {
+        return CrTTagRegistry.instance.getAllManagers().stream()
+                .flatMap(tagManager -> tagManager.getAllTags().stream())
+                .map(MCTag::getCommandString)
+                .collect(Collectors.toSet());
     }
 }
