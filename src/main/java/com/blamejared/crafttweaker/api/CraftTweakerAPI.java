@@ -116,7 +116,6 @@ public class CraftTweakerAPI {
      * @param scriptLoadingOptions The options with which to load.
      */
     public static void loadScripts(SourceFile[] sourceFiles, ScriptLoadingOptions scriptLoadingOptions) {
-        //currentLoadingOptions = scriptLoadingOptions;
         currentRun = new ScriptRun(scriptLoadingOptions, sourceFiles);
         logInfo("Started loading Scripts for Loader '%s'!", scriptLoadingOptions.getLoaderName());
         
