@@ -72,12 +72,12 @@ public class BracketResolverRegistry {
      *
      * @return ImmutableList of the Bracket Resolvers
      */
-    public List<ValidatedEscapableBracketParser> getBracketResolvers(String name, ScriptingEngine scriptingEngine, JavaNativeModule crafttweakerModule) {
+    public List<ValidatedEscapableBracketParser> getBracketResolvers(String name, ScriptingEngine scriptingEngine, JavaNativeModule owningModule) {
         final List<ValidatedEscapableBracketParser> validatedEscapableBracketParsers = new ArrayList<>();
         for(String bepName : bracketNamesByRootPackage.getOrDefault(name, Collections.emptyList())) {
             final Method parserMethod = bracketResolvers.get(bepName);
             final Method validatorMethod = getBracketValidator(bepName);
-            final FunctionalMemberRef functionalMemberRef = crafttweakerModule.loadStaticMethod(parserMethod);
+            final FunctionalMemberRef functionalMemberRef = owningModule.loadStaticMethod(parserMethod);
             final ValidatedEscapableBracketParser validated = new ValidatedEscapableBracketParser(bepName, functionalMemberRef, validatorMethod, scriptingEngine.registry);
             validatedEscapableBracketParsers.add(validated);
         }

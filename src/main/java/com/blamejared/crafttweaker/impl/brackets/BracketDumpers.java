@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.impl.blocks.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.potion.*;
 import net.minecraft.entity.*;
@@ -17,6 +18,14 @@ import java.util.stream.*;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketDumpers")
 public class BracketDumpers {
+    
+    @BracketDumper("block")
+    public static Collection<String> getBlockDump() {
+        return ForgeRegistries.BLOCKS.getValues()
+                .stream()
+                .map(block -> new MCBlock(block).getCommandString())
+                .collect(Collectors.toSet());
+    }
     
     @BracketDumper("directionAxis")
     public static Collection<String> getDirectionAxisDump() {

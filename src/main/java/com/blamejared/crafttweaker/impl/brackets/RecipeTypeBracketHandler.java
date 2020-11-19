@@ -14,7 +14,6 @@ import org.openzen.zenscript.parser.expression.*;
 import org.openzen.zenscript.parser.type.*;
 
 import java.util.*;
-import java.util.stream.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")

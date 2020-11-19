@@ -38,6 +38,29 @@ import java.util.*;
 public class BracketHandlers {
     
     /**
+     * Gets the give {@link MCBlock}. Throws an Exception if not found
+     * @param tokens What you would write in the BEP call.
+     * @return The found {@link MCBlock}
+     * @docParam tokens "minecraft:dirt"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("block")
+    public static MCBlock getBlock(String tokens) {
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("Block BEP <block:%s> does not seem to be lower-cased!", tokens);
+    
+        final String[] split = tokens.split(":");
+        if(split.length != 2)
+            throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
+        ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        if(!ForgeRegistries.BLOCKS.containsKey(key)) {
+            throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!");
+        }
+        
+        return new MCBlock(ForgeRegistries.BLOCKS.getValue(key));
+    }
+    
+    /**
      * Gets the given {@link MCMaterial}. Throws an Exception if not found.
      *
      * @param tokens What you would write in the BEP call.
@@ -334,29 +357,6 @@ public class BracketHandlers {
     public static MCResourceLocation getResourceLocation(String tokens) {
         return new MCResourceLocation(new ResourceLocation(tokens));
     }
-    
-    
-    
-    /*
-     * Gets the tag based on registry name. Will create an empty Tag if none is found.<br>
-     * However, in such a case, you need to register the tag as its appropriate type
-     *
-     * @param tokens The tag's resource location
-     * @return The found tag, or a newly created one
-     * @docParam tokens "tag:minecraft:wool"
-     *//*
-    @ZenCodeType.Method
-    @BracketResolver("tag")
-    public static MCTag<MCItemDefinition> getTag(String tokens) {
-        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
-            CraftTweakerAPI.logWarning("Tag BEP <tag:%s> does not seem to be lower-cased!", tokens);
-        final String[] split = tokens.split(":");
-        if(split.length != 2)
-            throw new IllegalArgumentException("Could not get Tag with name: <tag:" + tokens + ">! Syntax is <tag:modid:tagname>");
-        return new MCTag<>(TagCollectionManager.getManager().getItemTags(), new ResourceLocation(tokens));
-    }
-    */
-    
     
     @ZenCodeType.Method
     @BracketResolver("formatting")

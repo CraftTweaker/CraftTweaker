@@ -18,6 +18,12 @@ public class BracketValidators {
     }
     
     @ZenCodeType.Method
+    @BracketValidator("block")
+    public static boolean validateBlockBracket(String tokens) {
+        return validateBracket("block", tokens, BracketHandlers::getBlock);
+    }
+    
+    @ZenCodeType.Method
     @BracketValidator("blockmaterial")
     public static boolean validateBlockMaterialBracket(String tokens) {
         return validateBracket("blockmaterial", tokens, BracketHandlers::getBlockMaterial);
