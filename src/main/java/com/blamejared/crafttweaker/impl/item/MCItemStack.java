@@ -11,7 +11,9 @@ import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
+import org.openzen.zencode.java.*;
 
+import java.util.*;
 import java.util.function.Supplier;
 
 public class MCItemStack implements IItemStack {
@@ -134,19 +136,39 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public boolean equals(Object o) {
         if(this == o)
             return true;
         if(o == null || getClass() != o.getClass())
             return false;
         
-        MCItemStack that = (MCItemStack) o;
-    
-        return internal.equals(that.internal);
+        //Implemented manually instead of using ItemStack.areItemStacksEqual to ensure it
+        // stays the same as hashCode even if MC's impl would change
+        final ItemStack thatStack = ((MCItemStack) o).internal;
+        final ItemStack thisStack = this.internal;
+        
+        if(thisStack.isEmpty()) {
+            return thatStack.isEmpty();
+        }
+        
+        if(thisStack.getCount() != thatStack.getCount()) {
+            return false;
+        }
+        
+        if(!Objects.equals(thisStack.getItem(), thatStack.getItem())) {
+            return false;
+        }
+        
+        if(!Objects.equals(thisStack.getTag(), thatStack.getTag())) {
+            return false;
+        }
+        
+        return thisStack.areCapsCompatible(thatStack);
     }
     
     @Override
     public int hashCode() {
-        return internal.hashCode();
+        return Objects.hash(internal.getCount(), internal.getItem(), internal.getTag());
     }
 }

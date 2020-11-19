@@ -90,6 +90,11 @@ public final class MCTag<T extends CommandStringDisplayable> implements CommandS
         return new MCResourceLocation(id);
     }
     
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
+    public boolean equals(MCTag<T> other){
+        return id.equals(other.id) && manager.equals(other.manager);
+    }
+    
     public ResourceLocation getIdInternal() {
         return id;
     }
