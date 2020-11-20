@@ -42,7 +42,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '7.0.0'
+version = '7.1.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -352,5 +352,6 @@ sourceSets {
 idea {
     module {
         generatedSourceDirs += file("src/generated/java")
+        excludeDirs += [file("run"), file("runServer")]
     }
 }
