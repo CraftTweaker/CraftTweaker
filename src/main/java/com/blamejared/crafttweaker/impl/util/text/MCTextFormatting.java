@@ -50,4 +50,21 @@ public class MCTextFormatting implements CommandStringDisplayable {
     public String getCommandString() {
         return "<formatting:" + getInternal().getFriendlyName() + ">";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCTextFormatting that = (MCTextFormatting) o;
+    
+        return internal == that.internal;
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
+    }
 }

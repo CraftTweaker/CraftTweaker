@@ -33,7 +33,7 @@ public class CTBlastFurnaceManager implements ICookingRecipeManager {
     }
     
     @Override
-    public IRecipeType getRecipeType() {
+    public IRecipeType<BlastingRecipe> getRecipeType() {
         return IRecipeType.BLASTING;
     }
     

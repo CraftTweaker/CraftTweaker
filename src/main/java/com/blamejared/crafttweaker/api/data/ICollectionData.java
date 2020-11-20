@@ -26,7 +26,7 @@ public interface ICollectionData extends IData {
      * @return The replaced value
      */
     @ZenCodeType.Method
-    IData set(int index, IData value);
+    IData setAt(int index, IData value);
 
     /**
      * @param index The index to add to. Subsequent items will be moved one index higher
@@ -60,7 +60,7 @@ public interface ICollectionData extends IData {
      * @return The {@link IData}
      */
     @ZenCodeType.Method
-    IData get(int index);
+    IData getAt(int index);
     
     @ZenCodeType.Getter("size")
     int size();

@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.sh
 import com.blamejared.crafttweaker_annotation_processors.processors.document.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.*;
 import org.openzen.zencode.java.*;
 
 import javax.annotation.processing.*;
@@ -72,21 +73,20 @@ public class DocumentedProperty {
                     .printMessage(Diagnostic.Kind.ERROR, "Internal error: Expected this to be a field!", field);
             return null;
         }
-        
-        
-        if(!field.getModifiers().contains(Modifier.PUBLIC)) {
-            environment.getMessager()
-                    .printMessage(Diagnostic.Kind.ERROR, "ZenFields need to be public!", field);
-            return null;
-        }
-        
-        
+    
         final ZenCodeType.Field annotation = field.getAnnotation(ZenCodeType.Field.class);
         final String name;
         if(annotation != null && !annotation.value().isEmpty()) {
             name = annotation.value();
         } else {
             name = field.getSimpleName().toString();
+        }
+    
+        ZenCodeKeywordUtil.checkName(name, field, environment);
+        if(!field.getModifiers().contains(Modifier.PUBLIC)) {
+            environment.getMessager()
+                    .printMessage(Diagnostic.Kind.ERROR, "ZenFields need to be public!", field);
+            return null;
         }
         
         final DocumentedType type = DocumentedType.fromTypeMirror(field.asType(), environment, false);
@@ -134,6 +134,7 @@ public class DocumentedProperty {
             name = method.getSimpleName().toString();
         }
         
+        ZenCodeKeywordUtil.checkName(name, method, environment);
         if(!method.getModifiers().contains(Modifier.PUBLIC)) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Getter methods need to be public!", method);
@@ -163,6 +164,7 @@ public class DocumentedProperty {
             name = method.getSimpleName().toString();
         }
         
+        ZenCodeKeywordUtil.checkName(name, method, environment);
         if(!method.getModifiers().contains(Modifier.PUBLIC)) {
             environment.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Setter methods need to be public!", method);

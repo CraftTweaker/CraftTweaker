@@ -33,7 +33,7 @@ public class CTCampfireManager implements ICookingRecipeManager {
     }
     
     @Override
-    public IRecipeType getRecipeType() {
+    public IRecipeType<CampfireCookingRecipe> getRecipeType() {
         return IRecipeType.CAMPFIRE_COOKING;
     }
     

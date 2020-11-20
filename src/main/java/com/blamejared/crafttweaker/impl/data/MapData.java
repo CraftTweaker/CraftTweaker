@@ -5,10 +5,6 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NumberNBT;
-import org.openzen.zencode.java.StorageTagType;
-import org.openzen.zencode.java.ZenCodeStorageTag;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
@@ -34,7 +30,7 @@ public class MapData implements IData {
     }
     
     @ZenCodeType.Constructor
-    public MapData(Map<@ZenCodeStorageTag(StorageTagType.STATIC) String, IData> map) {
+    public MapData(Map<String, IData> map) {
         this.internal = new CompoundNBT();
         putAll(map);
     }
@@ -96,7 +92,7 @@ public class MapData implements IData {
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
-    public IData get(String key) {
+    public IData getAt(String key) {
         return NBTConverter.convert(internal.get(key));
     }
     
@@ -163,7 +159,7 @@ public class MapData implements IData {
     @Override
     public Map<String, IData> asMap() {
         Map<String, IData> newMap = new HashMap<>();
-        internal.keySet().forEach(s -> newMap.put(s, get(s)));
+        internal.keySet().forEach(s -> newMap.put(s, getAt(s)));
         return newMap;
     }
     
@@ -195,7 +191,7 @@ public class MapData implements IData {
         result.append('{');
         boolean first = true;
         for(String key : internal.keySet()) {
-            IData value = this.get(key);
+            IData value = this.getAt(key);
             if(first) {
                 first = false;
             } else {

@@ -48,7 +48,6 @@ public interface ILogger extends ScriptingEngineLogger {
     
     void log(LogLevel level, String message, boolean prefix);
     
-    
     default void log(LogLevel level, String message) {
         log(level, message, true);
     }
@@ -59,6 +58,7 @@ public interface ILogger extends ScriptingEngineLogger {
      * @param message message to be logged.
      * @docParam message "message"
      */
+    @Override
     @ZenCodeType.Method
     default void info(String message) {
         log(LogLevel.INFO, message);
@@ -70,6 +70,7 @@ public interface ILogger extends ScriptingEngineLogger {
      * @param message message to be logged.
      * @docParam message "message"
      */
+    @Override
     @ZenCodeType.Method
     default void debug(String message) {
         log(LogLevel.DEBUG, message);
@@ -81,6 +82,7 @@ public interface ILogger extends ScriptingEngineLogger {
      * @param message message to be logged.
      * @docParam message "message"
      */
+    @Override
     @ZenCodeType.Method
     default void warning(String message) {
         log(LogLevel.WARNING, message);
@@ -92,11 +94,25 @@ public interface ILogger extends ScriptingEngineLogger {
      * @param message message to be logged.
      * @docParam message "message"
      */
+    @Override
     @ZenCodeType.Method
     default void error(String message) {
         log(LogLevel.ERROR, message);
     }
     
+    /**
+     * Logs a trace message.
+     *
+     * @param message message to be logged
+     * @docParam message "message"
+     */
+    @Override
+    @ZenCodeType.Method
+    default void trace(String message) {
+        log(LogLevel.TRACE, message);
+    }
+    
+    @Override
     default void throwingErr(String message, Throwable throwable) {
         error(message);
         final StringPrintStream errorStream = new StringPrintStream();
@@ -104,6 +120,7 @@ public interface ILogger extends ScriptingEngineLogger {
         log(LogLevel.ERROR, errorStream.getValue(), false);
     }
     
+    @Override
     default void throwingWarn(String message, Throwable throwable) {
         warning(message);
         final StringPrintStream errorStream = new StringPrintStream();

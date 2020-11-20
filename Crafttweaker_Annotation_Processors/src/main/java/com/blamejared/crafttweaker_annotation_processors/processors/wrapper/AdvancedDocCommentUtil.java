@@ -19,7 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class AdvancedDocCommentUtil {
-    private static List<File> sourceZip = new ArrayList<>();
+    private static final List<File> sourceZip = new ArrayList<>();
     private static boolean created = false;
 
     public static String safeGetDocComment(ProcessingEnvironment environment, Element element) {
@@ -37,10 +37,7 @@ public class AdvancedDocCommentUtil {
             return docComment;
         }
         getZipLocation(environment);
-        if (sourceZip == null) {
-            return null;
-        }
-
+    
         final Element enclosingElement = element.getEnclosingElement();
         if (!(enclosingElement instanceof TypeElement)) {
             //Nope, not gonna deal with nested shit.
@@ -78,14 +75,14 @@ public class AdvancedDocCommentUtil {
         //  AND let Javac know that it is new
 
         if (element instanceof ExecutableElement) {
-            return getExecutable(((ExecutableElement) element), typeElement, fileContent, environment);
+            return getExecutable(((ExecutableElement) element), typeElement, fileContent);
         }
 
 
         return null;
     }
 
-    private static String getExecutable(ExecutableElement executable, TypeElement containingType, List<String> fileContent, ProcessingEnvironment environment) {
+    private static String getExecutable(ExecutableElement executable, TypeElement containingType, List<String> fileContent) {
         final StringBuilder patternBuilder = new StringBuilder("\\s*");
         final Set<Modifier> modifiers = executable.getModifiers();
 
@@ -180,7 +177,7 @@ public class AdvancedDocCommentUtil {
             }
         }
 
-        final String collect = subList
+        return subList
                 .stream()
                 .map(String::trim)
                 //Throw out all the " * " at the beginning of each line
@@ -189,10 +186,6 @@ public class AdvancedDocCommentUtil {
                 .filter(s -> !s.isEmpty())
                 //TODO: modify strings (comments et al)
                 .collect(Collectors.joining(System.lineSeparator()));
-
-        return collect;
-
-
     }
 
     public static void getZipLocation(ProcessingEnvironment environment) {

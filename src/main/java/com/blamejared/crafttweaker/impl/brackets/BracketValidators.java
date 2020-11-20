@@ -18,6 +18,12 @@ public class BracketValidators {
     }
     
     @ZenCodeType.Method
+    @BracketValidator("block")
+    public static boolean validateBlockBracket(String tokens) {
+        return validateBracket("block", tokens, BracketHandlers::getBlock);
+    }
+    
+    @ZenCodeType.Method
     @BracketValidator("blockmaterial")
     public static boolean validateBlockMaterialBracket(String tokens) {
         return validateBracket("blockmaterial", tokens, BracketHandlers::getBlockMaterial);
@@ -126,12 +132,6 @@ public class BracketValidators {
     @BracketValidator("resource")
     public static boolean validateResourceBracket(String tokens) {
         return ResourceLocation.tryCreate(tokens) != null;
-    }
-    
-    @ZenCodeType.Method
-    @BracketValidator("tag")
-    public static boolean validateTagBracket(String tokens) {
-        return validateBracket("tag", tokens, BracketHandlers::getTag);
     }
     
     public static boolean validateBracket(String bracketName, String tokens, Function<String, ?> bracketMethod, boolean logError) {

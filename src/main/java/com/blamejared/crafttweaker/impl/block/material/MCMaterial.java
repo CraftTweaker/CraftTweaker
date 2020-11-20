@@ -148,4 +148,25 @@ public class MCMaterial implements CommandStringDisplayable {
     public String getName() {
         return this.name;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCMaterial that = (MCMaterial) o;
+        
+        if(!internal.equals(that.internal))
+            return false;
+        return name.equals(that.name);
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = internal.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

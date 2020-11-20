@@ -43,8 +43,7 @@ public class CTStoneCutterManager implements IRecipeManager {
     }
     
     @Override
-    public IRecipeType getRecipeType() {
+    public IRecipeType<StonecuttingRecipe> getRecipeType() {
         return IRecipeType.STONECUTTING;
     }
-    
 }

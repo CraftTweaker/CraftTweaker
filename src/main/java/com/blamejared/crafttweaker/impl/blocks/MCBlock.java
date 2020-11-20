@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.blocks;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.*;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.block.Block;
@@ -9,8 +10,8 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlock")
 @Document("vanilla/api/blocks/MCBlock")
-@ZenWrapper(wrappedClass = "net.minecraft.block.Block", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.asString()")
-public class MCBlock {
+@ZenWrapper(wrappedClass = "net.minecraft.block.Block", displayStringFormat = "%s.asString()")
+public class MCBlock implements CommandStringDisplayable {
     
     private final Block internal;
     
@@ -38,12 +39,34 @@ public class MCBlock {
         return getInternal().getTranslationKey();
     }
     
-    @ZenCodeType.Caster(implicit = false)
+    @ZenCodeType.Caster()
     public String asString() {
         return internal.toString();
     }
     
     public Block getInternal() {
         return internal;
+    }
+    
+    @Override
+    public String getCommandString() {
+        return "<block:" + internal.getRegistryName() + ">";
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCBlock mcBlock = (MCBlock) o;
+    
+        return internal.equals(mcBlock.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
     }
 }

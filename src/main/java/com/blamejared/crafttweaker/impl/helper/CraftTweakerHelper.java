@@ -1,19 +1,17 @@
 package com.blamejared.crafttweaker.impl.helper;
 
-import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.blocks.MCBlock;
-import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.api.item.*;
+import com.blamejared.crafttweaker.impl.blocks.*;
+import com.blamejared.crafttweaker.impl.entity.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
+import com.blamejared.crafttweaker.impl.item.*;
+import net.minecraft.block.*;
+import net.minecraft.entity.*;
 import net.minecraft.fluid.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 public class CraftTweakerHelper {
     
@@ -21,27 +19,29 @@ public class CraftTweakerHelper {
         return Arrays.stream(items).map(IItemStack::getInternal).toArray(ItemStack[]::new);
     }
     
-    public static IItemStack[] getIItemStacks(ItemStack[] items) {
-        return Arrays.stream(items).map(MCItemStack::new).toArray(IItemStack[]::new);
-    }
-    
     public static List<IItemStack> getIItemStacks(List<ItemStack> items) {
         return items.stream().map(MCItemStack::new).collect(Collectors.toList());
     }
     
     public static Item[] getItems(IItemStack[] items) {
-        return Arrays.stream(items).map(iItemStack -> iItemStack.getInternal().getItem()).toArray(Item[]::new);
+        return Arrays.stream(items)
+                .map(iItemStack -> iItemStack.getInternal().getItem())
+                .toArray(Item[]::new);
     }
     
-    public static Block[] getBlocks(MCBlock[] blocks) {
-        return Arrays.stream(blocks).map(MCBlock::getInternal).toArray(Block[]::new);
+    public static List<Item> getItemsFromDefinitions(List<MCItemDefinition> definitions) {
+        return definitions.stream().map(MCItemDefinition::getInternal).collect(Collectors.toList());
     }
     
-    public static EntityType<?>[] getEntityTypes(MCEntityType[] entities) {
-        return Arrays.stream(entities).map(MCEntityType::getInternal).toArray(EntityType[]::new);
+    public static List<Block> getBlocks(List<MCBlock> toAdd) {
+        return toAdd.stream().map(MCBlock::getInternal).collect(Collectors.toList());
     }
     
-    public static Fluid[] getFluids(MCFluid[] fluids) {
-        return Arrays.stream(fluids).map(MCFluid::getInternal).toArray(Fluid[]::new);
+    public static List<EntityType<?>> getEntityTypes(List<MCEntityType> toAdd) {
+        return toAdd.stream().map(MCEntityType::getInternal).collect(Collectors.toList());
+    }
+    
+    public static List<Fluid> getFluids(List<MCFluid> toRemove) {
+        return toRemove.stream().map(MCFluid::getInternal).collect(Collectors.toList());
     }
 }

@@ -42,7 +42,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '7.0.0'
+version = '7.1.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -183,6 +183,10 @@ task genGitChangelog() {
     System.out.println("Changelog generated!")
 }
 
+processResources {
+    dependsOn(":StdLibs:zipItUp")
+    from files(evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs)
+}
 
 jar {
     dependsOn zenCodeDeps.collect { it + ":compileJava" }
@@ -325,20 +329,29 @@ task updateVersionTracker {
 
 }
 
-//compileJava {
-//    options.compilerArgs += ["-Xprefer:source", "-verbose"]
-//    //options.fork = true
-//    //options.forkOptions.executable = 'javac'
-//}
+compileJava {
+    source("wrappedClasses.csv")
+    //options.compilerArgs += ["-Xprefer:source", "-verbose"]
+    //options.fork = true
+    //options.forkOptions.executable = 'javac'
+    def csv = file("wrappedClasses.csv")
+    options.annotationProcessorGeneratedSourcesDirectory = project.file("/src/generated/java")
+    if(csv.exists()) {
+        options.compilerArgs += "-AwrappedClassesCsvLocation=${csv.absolutePath}"
+    }
+}
 
 sourceSets {
     main {
-        java.srcDirs += "/src/generated/java/"
+        java {
+            srcDirs += "/src/generated/java/"
+        }
     }
 }
 
 idea {
     module {
         generatedSourceDirs += file("src/generated/java")
+        excludeDirs += [file("run"), file("runServer")]
     }
 }

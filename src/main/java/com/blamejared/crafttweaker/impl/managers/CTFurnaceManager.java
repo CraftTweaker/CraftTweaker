@@ -33,7 +33,7 @@ public class CTFurnaceManager implements ICookingRecipeManager {
     }
     
     @Override
-    public IRecipeType getRecipeType() {
+    public IRecipeType<FurnaceRecipe> getRecipeType() {
         return IRecipeType.SMELTING;
     }
     

@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.script;
 
 import com.blamejared.crafttweaker.CraftTweaker;
+import mcp.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -8,7 +9,10 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import javax.annotation.*;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ScriptRecipe implements IRecipe<DummyInventory> {
     
     private final ResourceLocation id;
@@ -62,5 +66,10 @@ public class ScriptRecipe implements IRecipe<DummyInventory> {
     
     public String getFileName() {
         return fileName;
+    }
+    
+    @Override
+    public boolean isDynamic() {
+        return true;
     }
 }

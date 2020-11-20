@@ -33,7 +33,7 @@ public class CTSmokerManager implements ICookingRecipeManager {
     }
     
     @Override
-    public IRecipeType getRecipeType() {
+    public IRecipeType<SmokingRecipe> getRecipeType() {
         return IRecipeType.SMOKING;
     }
     

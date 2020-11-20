@@ -105,6 +105,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      * @return The fluid.
      */
     @ZenCodeType.Getter("fluid")
+    @ZenCodeType.Caster(implicit = true)
     MCFluid getFluid();
     
     /**

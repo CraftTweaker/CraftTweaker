@@ -51,7 +51,7 @@ public class MCSuggestion {
     }
     
     @ZenCodeType.Method
-    public MCSuggestion expand(final String command, final MCStringRange range) {
+    public MCSuggestion expandWith(final String command, final MCStringRange range) {
         return new MCSuggestion(internal.expand(command, range.getInternal()));
     }
     

@@ -70,4 +70,25 @@ public class MCIngredientTransformed<T extends IIngredient> implements IIngredie
     public IData asIData() {
         return base.asIData();
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCIngredientTransformed<?> that = (MCIngredientTransformed<?>) o;
+        
+        if(!base.equals(that.base))
+            return false;
+        return transformer.equals(that.transformer);
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = base.hashCode();
+        result = 31 * result + transformer.hashCode();
+        return result;
+    }
 }

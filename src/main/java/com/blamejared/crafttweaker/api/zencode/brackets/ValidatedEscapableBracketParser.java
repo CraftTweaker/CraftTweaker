@@ -135,7 +135,7 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         
         @Override
         public IPartialExpression compile(ExpressionScope scope) throws CompileException {
-            final Expression methodCall = call.compile(scope.withHint(StringTypeID.AUTO)).eval();
+            final Expression methodCall = call.compile(scope.withHint(BasicTypeID.STRING)).eval();
             final CallArguments arguments = new CallArguments(methodCall);
             return new CallStaticExpression(position, targetType, method, method.getHeader(), arguments);
         }
@@ -157,7 +157,7 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
     
         @Override
         public IPartialExpression compile(ExpressionScope scope) {
-            return new InvalidExpression(position, BasicTypeID.UNDETERMINED.stored(), CompileExceptionCode.INVALID_BRACKET_EXPRESSION, message);
+            return new InvalidExpression(position, BasicTypeID.UNDETERMINED, CompileExceptionCode.INVALID_BRACKET_EXPRESSION, message);
         }
     
         @Override

@@ -15,7 +15,7 @@ import java.util.List;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffect")
 @Document("vanilla/api/potions/MCPotionEffect")
-@ZenWrapper(wrappedClass = "net.minecraft.potion.Effect", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
+@ZenWrapper(wrappedClass = "net.minecraft.potion.Effect", displayStringFormat = "%s.getCommandString()")
 public class MCEffect implements CommandStringDisplayable {
     
     private final Effect internal;
@@ -71,5 +71,22 @@ public class MCEffect implements CommandStringDisplayable {
     @Override
     public String getCommandString() {
         return "<effect:" + internal.getRegistryName() + ">";
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCEffect mcEffect = (MCEffect) o;
+    
+        return internal.equals(mcEffect.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
     }
 }

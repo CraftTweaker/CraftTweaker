@@ -3,6 +3,9 @@ package com.blamejared.crafttweaker.impl.fluid;
 import com.blamejared.crafttweaker.api.fluid.*;
 import net.minecraft.fluid.*;
 import net.minecraftforge.fluids.*;
+import org.openzen.zencode.java.*;
+
+import java.util.*;
 
 public class MCFluidStackMutable implements IFluidStack {
     
@@ -58,5 +61,36 @@ public class MCFluidStackMutable implements IFluidStack {
         }
         
         return stringBuilder.toString();
+    }
+    
+    @Override
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        final FluidStack thatStack = ((MCFluidStackMutable) o).stack;
+        final FluidStack thisStack = this.stack;
+        
+        if(thisStack.isEmpty()) {
+            return thatStack.isEmpty();
+        }
+        
+        if(thisStack.getAmount() != thatStack.getAmount()) {
+            return false;
+        }
+        
+        if(!Objects.equals(thisStack.getFluid(), thatStack.getFluid())) {
+            return false;
+        }
+        
+        return Objects.equals(thisStack.getTag(), thatStack.getTag());
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(stack.getAmount(), stack.getFluid(), stack.getTag());
     }
 }

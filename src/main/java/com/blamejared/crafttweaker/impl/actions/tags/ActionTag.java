@@ -2,18 +2,19 @@ package com.blamejared.crafttweaker.impl.actions.tags;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.impl.tag.*;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class ActionTag<T extends ForgeRegistryEntry> implements IRuntimeAction {
+public abstract class ActionTag<T extends ForgeRegistryEntry<?>> implements IRuntimeAction {
     
     protected final ITag<T> tag;
-    protected final ResourceLocation id;
+    protected final MCTag<?> mcTag;
     
-    public ActionTag(ITag<T> tag, ResourceLocation id) {
+    public ActionTag(ITag<T> tag, MCTag<?> mcTag) {
         this.tag = tag;
-        this.id = id;
+        this.mcTag = mcTag;
     }
     
     public ITag<T> getTag() {
@@ -21,13 +22,17 @@ public abstract class ActionTag<T extends ForgeRegistryEntry> implements IRuntim
     }
     
     public ResourceLocation getId() {
-        return id;
+        return mcTag.getIdInternal();
+    }
+    
+    public String getType(){
+        return mcTag.getManager().getTagFolder();
     }
     
     @Override
     public boolean validate(ILogger logger) {
         if(getTag() == null) {
-            logger.throwingErr("Tag cannot be null!", new NullPointerException("Tag cannot be null!"));
+            logger.throwingErr("Tag " + mcTag + " does not exist!", new NullPointerException("Internal tag was null!"));
             return false;
         }
         return true;
