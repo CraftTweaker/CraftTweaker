@@ -335,7 +335,7 @@ compileJava {
     //options.fork = true
     //options.forkOptions.executable = 'javac'
     def csv = file("wrappedClasses.csv")
-    options.annotationProcessorGeneratedSourcesDirectory = project.file("/src/generated/java")
+    options.annotationProcessorGeneratedSourcesDirectory = project.file("src/generated/java")
     if(csv.exists()) {
         options.compilerArgs += "-AwrappedClassesCsvLocation=${csv.absolutePath}"
     }
@@ -344,7 +344,7 @@ compileJava {
 sourceSets {
     main {
         java {
-            srcDirs += "/src/generated/java/"
+            srcDirs += "src/generated/java/"
         }
     }
 }
