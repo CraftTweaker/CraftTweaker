@@ -1,6 +1,8 @@
 package crafttweaker.mc1120.item;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.entity.IEntityEquipmentSlot;
+import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemBlock;
@@ -17,5 +19,14 @@ public class ExpandItemStack {
     public static boolean isBlock(IItemStack value) {
         return CraftTweakerMC.getItemStack(value).getItem() instanceof ItemBlock;
     }
-}
 
+    @ZenMethod
+    public void addAttributeModifier(IItemStack stack, String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
+        CraftTweakerMC.getItemStack(stack).addAttributeModifier(attributeName, CraftTweakerMC.getAttributeModifier(modifier), CraftTweakerMC.getEntityEquipmentSlot(equipmentSlot));
+    }
+
+    @ZenGetter("maxItemUseDuration")
+    public int getMaxItemUseDuration(IItemStack stack) {
+        return CraftTweakerMC.getItemStack(stack).getMaxItemUseDuration();
+    }
+}

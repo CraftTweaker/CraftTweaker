@@ -2,20 +2,22 @@ package crafttweaker.api.item;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.IEnchantment;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
-import crafttweaker.api.entity.*;
-import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
-import stanhebben.zenscript.annotations.Optional;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Contains an item stack. An item stack consists of an item definition, a meta
@@ -356,8 +358,6 @@ public interface IItemStack extends IIngredient {
     
     /**
      * Writes the repairCost to the NBT-Tag
-     *
-     * @param repairCost
      */
     @ZenSetter("repairCost")
     void setRepairCost(int repairCost);
@@ -479,14 +479,5 @@ public interface IItemStack extends IIngredient {
     @ZenMethod
     default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState) {
         return -1;
-    }
-
-    @ZenMethod
-    default void addAttributeModifier(String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
-    }
-
-    @ZenGetter("maxItemUseDuration")
-    default int getMaxItemUseDuration() {
-        return 0;
     }
 }
