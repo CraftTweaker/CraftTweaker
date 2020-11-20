@@ -1,12 +1,15 @@
 package crafttweaker.api.entity;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.potions.*;
-import stanhebben.zenscript.annotations.*;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
 
 import java.util.List;
 
@@ -71,9 +74,6 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IPotionEffect getActivePotionEffect(IPotion potion);
-
-    @ZenMethod
-    void removePotionEffect(IPotion potion);
     
     @ZenMethod
     boolean isPotionEffectApplicable(IPotionEffect potionEffect);
@@ -125,86 +125,4 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IItemStack getItemInSlot(IEntityEquipmentSlot slot);
-
-    @ZenMethod
-    @ZenGetter
-    default boolean isElytraFlying() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#isElytraFlying is not overwritten in " + getClass() + " please report to the author!");
-        return false;
-    }
-
-    @ZenMethod
-    @ZenGetter("activeItemStack")
-    default IItemStack getActiveItemStack() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#getActiveItemStack is not overwritten in " + getClass() + " please report to the author!");
-        return null;
-    }
-
-    @ZenMethod
-    @ZenGetter
-    default boolean isActiveItemStackBlocking() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#isActiveItemStackBlocking is not overwritten in " + getClass() + " please report to the author!");
-        return false;
-    }
-
-    @ZenMethod
-    @ZenGetter("activeHand")
-    default String getActiveHand() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#getActiveHand is not overwritten in " + getClass() + " please report to the author!");
-        return "";
-    }
-
-    @ZenSetter("activeHand")
-    @ZenMethod
-    default void setActiveHand(String hand) {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#setActiveHand is not overwritten in " + getClass() + " please report to the author!");
-    }
-
-    @ZenMethod
-    @ZenGetter("isHandActive")
-    default boolean isHandActive() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#isHandActive is not overwritten in " + getClass() + " please report to the author!");
-        return false;
-    }
-
-    @ZenMethod
-    default void resetActiveHand() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#resetActiveHand is not overwritten in " + getClass() + " please report to the author!");
-    }
-
-    @ZenMethod
-    default void stopActiveHand() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#stopActiveHand is not overwritten in " + getClass() + " please report to the author!");
-    }
-
-    @ZenMethod
-    @ZenGetter
-    default boolean isSwingInProgress() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#isSwingInProgress is not overwritten in " + getClass() + " please report to the author!");
-        return false;
-    }
-
-    @ZenMethod
-    @ZenGetter("swingProgress")
-    default int getSwingProgress() {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#getSwingProgress is not overwritten in " + getClass() + " please report to the author!");
-        return 0;
-    }
-
-    @ZenMethod
-    @ZenSetter("swingProgress")
-    default void setSwingProgress(int swingProgress) {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#setSwingProgress is not overwritten in " + getClass() + " please report to the author!");
-    }
-
-    @ZenMethod
-    default boolean attemptTeleport(double x, double y, double z) {
-        CraftTweakerAPI.logError("Default method IEntityLivingBase#attemptTeleport is not overwritten in " + getClass() + " please report to the author!");
-        return false;
-    }
-
-    @ZenGetter("creatureAttribute")
-    default String getCreatureAttribute() {
-        return "";
-    }
 }

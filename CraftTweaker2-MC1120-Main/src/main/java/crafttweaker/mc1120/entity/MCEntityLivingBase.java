@@ -11,7 +11,6 @@ import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumHand;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,7 +118,7 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     public IPotionEffect getActivePotionEffect(IPotion potion) {
         return CraftTweakerMC.getIPotionEffect(entityLivingBase.getActivePotionEffect(CraftTweakerMC.getPotion(potion)));
     }
-    
+
     @Override
     public boolean isPotionEffectApplicable(IPotionEffect potionEffect) {
         return entityLivingBase.isPotionApplicable(CraftTweakerMC.getPotionEffect(potionEffect));
@@ -203,75 +202,5 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     @Override
     public IItemStack getItemInSlot(IEntityEquipmentSlot slot) {
         return CraftTweakerMC.getIItemStack(entityLivingBase.getItemStackFromSlot(CraftTweakerMC.getEntityEquipmentSlot(slot)));
-    }
-
-    @Override
-    public String getActiveHand()  {
-        return entityLivingBase.getActiveHand().name();
-    }
-
-    @Override
-    public IItemStack getActiveItemStack() {
-        return CraftTweakerMC.getIItemStack(entityLivingBase.getActiveItemStack());
-    }
-
-    @Override
-    public boolean isSwingInProgress()  {
-        return entityLivingBase.isSwingInProgress;
-    }
-
-    @Override
-    public int getSwingProgress() {
-        return entityLivingBase.swingProgressInt;
-    }
-
-    @Override
-    public void setSwingProgress(int swingProgress) {
-        entityLivingBase.swingProgressInt = swingProgress;
-    }
-
-    @Override
-    public boolean isElytraFlying()  {
-        return entityLivingBase.isElytraFlying();
-    }
-
-    @Override
-    public void removePotionEffect(IPotion potion) {
-        entityLivingBase.removePotionEffect(CraftTweakerMC.getPotion(potion));
-    }
-
-    @Override
-    public boolean isActiveItemStackBlocking()  {
-        return entityLivingBase.isActiveItemStackBlocking();
-    }
-
-	@Override
-	public boolean isHandActive() {
-		return entityLivingBase.isHandActive();
-	}
-
-	@Override
-	public void resetActiveHand() {
-		entityLivingBase.resetActiveHand();
-	}
-
-	@Override
-	public void setActiveHand(String hand) {
-		entityLivingBase.setActiveHand(EnumHand.valueOf(hand));
-	}
-
-	@Override
-	public void stopActiveHand() {
-		entityLivingBase.stopActiveHand();
-	}
-
-    @Override
-    public boolean attemptTeleport(double x, double y, double z) {
-        return entityLivingBase.attemptTeleport(x, y, z);
-    }
-
-    @Override
-    public String getCreatureAttribute()  {
-        return entityLivingBase.getCreatureAttribute().name();
     }
 }
