@@ -137,11 +137,6 @@ public class MCItemDefinition implements IItemDefinition {
     }
 
     @Override
-    public boolean isArrow() {
-        return item instanceof ItemArrow;
-    }
-
-    @Override
     public Object getInternal() {
         return item;
     }

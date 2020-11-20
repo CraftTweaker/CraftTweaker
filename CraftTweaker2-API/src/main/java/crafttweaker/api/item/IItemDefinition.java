@@ -99,10 +99,5 @@ public interface IItemDefinition {
     @ZenMethod
     int getItemBurnTime(IItemStack itemStack);
 
-    @ZenGetter
-    default boolean isArrow() {
-        return false;
-    }
-
     Object getInternal();
 }
