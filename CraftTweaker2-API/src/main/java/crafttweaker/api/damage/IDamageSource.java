@@ -2,7 +2,6 @@ package crafttweaker.api.damage;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.world.IVector3d;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -30,8 +29,8 @@ public interface IDamageSource {
 	float getHungerDamage();
 
 	@ZenGetter("hungerDamage")
-	default float getHungerDamageFixed() {
-		return this.getHungerDamage();
+	default float getHungerDamageNew() {
+		return getHungerDamage();
 	}
 	
 	@ZenMethod
@@ -49,12 +48,6 @@ public interface IDamageSource {
 	@ZenMethod
 	@ZenGetter("damageAbsolute")
 	boolean isDamageAbsolute();
-
-	@ZenMethod
-	@ZenGetter("damageUnblockable")
-	default boolean isDamageUnblockable() {
-		return false;
-	}
 
 	@ZenMethod
 	@ZenGetter("difficultyScaled")
@@ -75,12 +68,6 @@ public interface IDamageSource {
 	@ZenMethod
 	@ZenGetter("projectile")
 	boolean isProjectile();
-
-	@ZenMethod
-	@ZenGetter("damageLocation")
-	default IVector3d getDamageLocation() {
-		return null;
-	}
 
 	@ZenMethod
 	IDamageSource setDamageAllowedInCreativeMode();

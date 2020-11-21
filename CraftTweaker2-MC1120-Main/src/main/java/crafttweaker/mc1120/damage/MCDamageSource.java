@@ -3,7 +3,6 @@ package crafttweaker.mc1120.damage;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.world.IVector3d;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
@@ -55,11 +54,6 @@ public class MCDamageSource implements IDamageSource {
     }
 
     @Override
-    public boolean isDamageUnblockable() {
-        return source.isUnblockable();
-    }
-
-    @Override
     public boolean isDifficultyScaled() {
         return source.isDamageAbsolute();
     }
@@ -82,11 +76,6 @@ public class MCDamageSource implements IDamageSource {
     @Override
     public boolean isProjectile() {
         return source.isProjectile();
-    }
-
-    @Override
-    public IVector3d getDamageLocation() {
-        return CraftTweakerMC.getIVector3d(source.getDamageLocation());
     }
 
     @Override
