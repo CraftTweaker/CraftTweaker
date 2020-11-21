@@ -101,19 +101,19 @@ public final class CrTTagRegistryData {
         final WrapperRegistry wrapperRegistry = CraftTweakerRegistry.getWrapperRegistry();
         final WrapperRegistryEntry entry = wrapperRegistry.getEntryFor(registry.getRegistrySuperType());
         if(entry == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name %s. No ZenWrapper found.", name);
+            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No ZenWrapper found.", name, registry.getTagFolder());
             return;
         }
         
         final MethodHandle wrapperHandle = entry.getWrapperHandle();
         if(wrapperHandle == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name %s. No Wrapper MethodHandle found.", name);
+            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No Wrapper MethodHandle found.", name, registry.getTagFolder());
             return;
         }
         
         final MethodHandle unwrapperHandle = entry.getUnwrapperHandle();
         if(unwrapperHandle == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name %s. No Unwrapper MethodHandle found.", name);
+            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No Unwrapper MethodHandle found.", name, registry.getTagFolder());
             return;
         }
         

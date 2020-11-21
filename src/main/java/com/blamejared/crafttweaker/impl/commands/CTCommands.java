@@ -249,35 +249,6 @@ public class CTCommands {
             return 0;
         });
         
-        registerDump("tags", "Outputs the names of all registered tags (vanilla tag types)", (CommandCallerPlayer) (player, stack) -> {
-            CraftTweakerAPI.logDump("Item Tags:\n");
-            ItemTags.getCollection()
-                    .getIDTagMap()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            CraftTweakerAPI.logDump("Block Tags:\n");
-            BlockTags.getCollection()
-                    .getIDTagMap()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            CraftTweakerAPI.logDump("Fluid Tags:\n");
-            FluidTags.getCollection()
-                    .getIDTagMap()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            CraftTweakerAPI.logDump("Entity Type Tags:\n");
-            EntityTypeTags.getCollection()
-                    .getIDTagMap()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            send(new StringTextComponent(color("Tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
-            return 0;
-        });
-        
         
         // Send an event to let others know that we are ready for SubCommands to be registered.
         // SubCommands registered earlier would throw a NPE (because the command itself would not exist yet)
