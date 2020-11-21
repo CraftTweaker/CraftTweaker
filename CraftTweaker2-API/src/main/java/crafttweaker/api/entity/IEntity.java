@@ -2,15 +2,18 @@ package crafttweaker.api.entity;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IMaterial;
 import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IRayTraceResult;
+import crafttweaker.api.world.IVector3d;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -514,39 +517,5 @@ public interface IEntity extends ICommandSender {
     @ZenMethod
     default void setNBT(IData data) {
         this.update(data);
-    }
-
-    @ZenMethod
-    @ZenGetter
-    default boolean onGround() {
-        return false;
-    }
-    
-    @ZenGetter
-    default boolean isLightningBolt() {
-        return false;
-    }
-
-    @ZenGetter("uuid")
-    default String getUUID() {
-        return "";
-    }
-
-    @ZenGetter("boundingBox")
-    default IAxisAlignedBB getBoundingBox() {
-        return null;
-    }
-
-    @ZenSetter("boundingBox")
-    default void setBoundingBox(IAxisAlignedBB aabb) {
-    }
-
-    @ZenGetter("stepHeight")
-    default float getStepHeight() {
-        return 0.0f;
-    }
-
-    @ZenSetter("stepHeight")
-    default void setStepHeight(float stepHeight) {
     }
 }
