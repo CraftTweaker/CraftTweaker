@@ -6,6 +6,7 @@ import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -13,20 +14,23 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenExpansion("crafttweaker.item.IItemStack")
 @ZenRegister
 public class ExpandItemStack {
-    
+    private static ItemStack getInternal(IItemStack expanded) {
+        return CraftTweakerMC.getItemStack(expanded);
+    }
+
     @ZenMethod
     @ZenGetter("isBlock")
     public static boolean isBlock(IItemStack value) {
-        return CraftTweakerMC.getItemStack(value).getItem() instanceof ItemBlock;
+        return getInternal(value).getItem() instanceof ItemBlock;
     }
 
     @ZenMethod
     public void addAttributeModifier(IItemStack stack, String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
-        CraftTweakerMC.getItemStack(stack).addAttributeModifier(attributeName, CraftTweakerMC.getAttributeModifier(modifier), CraftTweakerMC.getEntityEquipmentSlot(equipmentSlot));
+        getInternal(stack).addAttributeModifier(attributeName, CraftTweakerMC.getAttributeModifier(modifier), CraftTweakerMC.getEntityEquipmentSlot(equipmentSlot));
     }
 
     @ZenGetter("maxItemUseDuration")
     public int getMaxItemUseDuration(IItemStack stack) {
-        return CraftTweakerMC.getItemStack(stack).getMaxItemUseDuration();
+        return getInternal(stack).getMaxItemUseDuration();
     }
 }

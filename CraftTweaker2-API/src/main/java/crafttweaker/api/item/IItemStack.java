@@ -468,10 +468,6 @@ public interface IItemStack extends IIngredient {
     }
 
     @ZenMethod
-    default void setAlwaysEdible() {
-    }
-    
-    @ZenMethod
     default int getHarvestLevel(String toolClass) {
         return -1;
     }

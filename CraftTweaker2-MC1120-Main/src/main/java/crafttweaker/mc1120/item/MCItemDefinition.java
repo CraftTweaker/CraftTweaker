@@ -9,7 +9,6 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
