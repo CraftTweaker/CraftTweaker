@@ -3,15 +3,12 @@ package crafttweaker.api.player;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.chat.IChatMessage;
-import crafttweaker.api.container.IContainer;
 import crafttweaker.api.data.IData;
-import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
-import crafttweaker.api.world.IBlockPos;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -141,35 +138,5 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     default IEntityItem dropItem(IItemStack item) {
         CraftTweakerAPI.logError("Default method IPlayer#dropItem(IItemStack) is not overwritten in " + getClass() + " please report to the author!");
         return null;
-    }
-
-    @ZenGetter("bedLocation")
-    default IBlockPos getBedLocation() {
-        return null;
-    }
-
-    @ZenGetter("fishHook")
-    default IEntityFishHook getFishHook() {
-        return null;
-    }
-
-    @ZenGetter("inventoryContainer")
-    default IContainer getInventoryContainer() {
-        return null;
-    }
-
-    @ZenGetter
-    default boolean isFullyAsleep() {
-        return false;
-    }
-
-    @ZenGetter
-    default boolean isSleeping() {
-        return false;
-    }
-
-    @ZenGetter("sleepTimer")
-    default int getSleepTimer() {
-        return -1;
     }
 }
