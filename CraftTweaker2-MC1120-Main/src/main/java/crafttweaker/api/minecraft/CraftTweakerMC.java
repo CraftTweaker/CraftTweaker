@@ -38,6 +38,7 @@ import crafttweaker.mc1120.entity.*;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttribute;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
+import crafttweaker.mc1120.entity.expand.ExpandEntityEquipmentSlot;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.item.VanillaIngredient;
@@ -80,6 +81,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -703,7 +705,7 @@ public class CraftTweakerMC {
         if(internal.getTagCompound() == null && stack.getTagCompound() != null) {
             return false;
         }
-        if(internal.getTagCompound() == null && stack.getTagCompound() == null) {
+        if(internal.getTagCompound() == null) {
             return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
         }
         if(internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
@@ -1068,5 +1070,23 @@ public class CraftTweakerMC {
 
     public static IEntityAttributeInstance getIEntityAttributeInstance(IAttributeInstance attribute) {
         return attribute == null ? null : new MCEntityAttributeInstance(attribute);
+    }
+
+    public static EnumHand getHand(IEntityEquipmentSlot hand) {
+        if (hand == null) return null;
+        switch (getEntityEquipmentSlot(hand)) {
+            case MAINHAND: return EnumHand.MAIN_HAND;
+            case OFFHAND: return EnumHand.OFF_HAND;
+            default: return null;
+        }
+    }
+
+    public static IEntityEquipmentSlot getIEntityEquipmentSlot(EnumHand hand) {
+        if (hand == null) return null;
+        switch (hand) {
+            case MAIN_HAND: return ExpandEntityEquipmentSlot.mainHand();
+            case OFF_HAND: return ExpandEntityEquipmentSlot.offhand();
+            default: return null;
+        }
     }
 }

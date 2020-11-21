@@ -1,6 +1,7 @@
-package crafttweaker.mc1120.item;
+package crafttweaker.mc1120.entity.expand;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.entity.IEntityEquipmentSlot;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -35,14 +36,15 @@ public class ExpandEntityLivingBase {
 
     @ZenMethod
     @ZenGetter("activeHand")
-    public String getActiveHand(IEntityLivingBase entityLivingBase) {
-        return CraftTweakerMC.getEntityLivingBase(entityLivingBase).getActiveHand().name();
+    public IEntityEquipmentSlot getActiveHand(IEntityLivingBase entityLivingBase) {
+        return CraftTweakerMC.getIEntityEquipmentSlot(CraftTweakerMC.getEntityLivingBase(entityLivingBase).getActiveHand());
     }
 
     @ZenSetter("activeHand")
     @ZenMethod
-    public void setActiveHand(IEntityLivingBase entityLivingBase, String hand) {
-        CraftTweakerMC.getEntityLivingBase(entityLivingBase).setActiveHand(EnumHand.valueOf(hand));
+    public void setActiveHand(IEntityLivingBase entityLivingBase, IEntityEquipmentSlot hand) {
+        EnumHand enumHand = CraftTweakerMC.getHand(hand);
+        if (enumHand != null) CraftTweakerMC.getEntityLivingBase(entityLivingBase).setActiveHand(enumHand);
     }
 
     @ZenMethod
