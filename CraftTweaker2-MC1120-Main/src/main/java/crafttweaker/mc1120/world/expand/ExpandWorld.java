@@ -6,10 +6,10 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IFacing;
 import crafttweaker.api.world.IWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.util.EnumFacing;
 import stanhebben.zenscript.annotations.*;
 
 @ZenExpansion("crafttweaker.world.IWorld")
@@ -22,8 +22,8 @@ public class ExpandWorld {
     }
 
     @ZenMethod
-    public boolean extinguishFire(IWorld world, IPlayer player, IBlockPos pos, String side) {
-        return CraftTweakerMC.getWorld(world).extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf(side));
+    public boolean extinguishFire(IWorld world, IPlayer player, IBlockPos pos, IFacing side) {
+        return CraftTweakerMC.getWorld(world).extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), CraftTweakerMC.getFacing(side));
     }
 
     @ZenMethod

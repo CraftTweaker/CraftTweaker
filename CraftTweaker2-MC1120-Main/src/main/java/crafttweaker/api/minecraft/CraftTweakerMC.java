@@ -1089,4 +1089,8 @@ public class CraftTweakerMC {
             default: return null;
         }
     }
+
+    public static EnumFacing getFacing(IFacing facing) {
+        return facing == null ? null : (EnumFacing) facing.getInternal();
+    }
 }
