@@ -47,4 +47,10 @@ public class ExpandEntity {
     public void setStepHeight(IEntity internal, float stepHeight) {
         getInternal(internal).getCachedUniqueIdString();
     }
+
+    @ZenMethod
+    public void removeFromWorld(IEntity internal) {
+        Entity entity = getInternal(internal);
+        entity.world.removeEntity(entity);
+    }
 }
