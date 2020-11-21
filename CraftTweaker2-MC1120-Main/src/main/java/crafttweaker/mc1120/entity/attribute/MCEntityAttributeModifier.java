@@ -30,16 +30,6 @@ public class MCEntityAttributeModifier implements IEntityAttributeModifier {
         return attributeModifier.getAmount();
     }
 
-	@Override
-	public boolean isSaved() {
-		return attributeModifier.isSaved();
-	}
-
-	@Override
-	public void setSaved(boolean saved) {
-		attributeModifier.setSaved(saved);
-	}
-
     @Override
     public Object getInternal() {
         return attributeModifier;
