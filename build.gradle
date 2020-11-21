@@ -192,6 +192,9 @@ jar {
     dependsOn zenCodeDeps.collect { it + ":compileJava" }
     from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
 
+    dependsOn ":Crafttweaker_Annotation_Processors:compileJava"
+    from project(":Crafttweaker_Annotations").sourceSets.main.output
+
     manifest {
         attributes([
                 "Specification-Title"     : "crafttweaker",
