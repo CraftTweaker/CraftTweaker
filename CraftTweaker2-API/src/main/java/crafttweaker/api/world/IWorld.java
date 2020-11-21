@@ -8,7 +8,6 @@ import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -128,51 +127,6 @@ public interface IWorld extends IBlockAccess {
     @ZenMethod
     default IExplosion performExplosion(IExplosion explosion) {
         CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.performExplosion, tell the author to fix that.");
-        return null;
-    }
-
-    @ZenMethod
-    default boolean extinguishFire(IPlayer player, IBlockPos pos, String side) {
-        return false;
-    }
-
-    @ZenMethod
-    default boolean isSpawnChunk(int x, int z) {
-        return false;
-    }
-
-    @ZenGetter("seaLevel")
-    @ZenMethod
-    default int getSeaLevel() {
-        return 0;
-    }
-
-    @ZenMethod
-    default boolean addWeatherEffect(IEntity entity) {
-        return false;
-    }
-
-    @ZenMethod
-    default IEntity createLightningBolt(double x, double y, double z, @Optional boolean effectOnly) {
-        return null;
-    }
-
-    @ZenMethod
-    default void removeEntity(IEntity entity) {
-    }
-
-    @ZenMethod
-    default IEntity[] getEntitiesWithinAABB(IAxisAlignedBB aabb) {
-        return null;
-    }
-
-    @ZenMethod
-    default IEntity[] getEntitiesWithinAABBExcludingEntity(IAxisAlignedBB aabb, IEntity entity) {
-        return null;
-    }
-
-    @ZenMethod
-    default IEntity findNearestEntityWithinAABB(IAxisAlignedBB aabb, IEntity closestTo) {
         return null;
     }
 }

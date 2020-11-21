@@ -8,17 +8,13 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.util.Position3f;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.util.MCPosition3f;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -194,46 +190,6 @@ public class MCWorld extends MCBlockAccess implements IWorld {
         return CraftTweakerMC.getIExplosion(new Explosion(world, CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
     }
 
-	@Override
-	public boolean extinguishFire(IPlayer player, IBlockPos pos, String side) {
-		return world.extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), EnumFacing.valueOf(side));
-	}
-
-	@Override
-	public boolean isSpawnChunk(int x, int z) {
-		return world.isSpawnChunk(x, z) ;
-	}
-
-	@Override
-	public int getSeaLevel() {
-		return world.getSeaLevel();
-	}
-
-	@Override
-	public IEntity createLightningBolt(double x, double y, double z, boolean effectOnly) {
-		EntityLightningBolt bolt = new EntityLightningBolt(world, x, y, z, effectOnly);
-		return CraftTweakerMC.getIEntity(bolt);
-	}
-
-	@Override
-	public boolean addWeatherEffect(IEntity entity) {
-		return world.addWeatherEffect(CraftTweakerMC.getEntity(entity));
-	}
-
-	@Override
-	public void removeEntity(IEntity entity) {
-		world.removeEntity(CraftTweakerMC.getEntity(entity));
-	}
-
-	@Override
-	public IEntity[] getEntitiesWithinAABB(IAxisAlignedBB aabb) {
-		return world.getEntitiesWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb)).stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
-	}
-
-	@Override
-	public IEntity[] getEntitiesWithinAABBExcludingEntity(IAxisAlignedBB aabb, IEntity entity) {
-		return world.getEntitiesWithinAABBExcludingEntity(CraftTweakerMC.getEntity(entity), CraftTweakerMC.getAxisAlignedBB(aabb)).stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
-	}
     @Override
     public IExplosion performExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
         return CraftTweakerMC.getIExplosion(world.newExplosion(CraftTweakerMC.getEntity(exploder), x, y, z, strength, causesFire, damagesTerrain));
@@ -250,9 +206,4 @@ public class MCWorld extends MCBlockAccess implements IWorld {
         explosion.doExplosionB(true);
         return explosion;
     }
-
-	@Override
-	public IEntity findNearestEntityWithinAABB(IAxisAlignedBB aabb, IEntity closestTo) {
-		return CraftTweakerMC.getIEntity(world.findNearestEntityWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb), CraftTweakerMC.getEntity(closestTo)));
-	}
 }
