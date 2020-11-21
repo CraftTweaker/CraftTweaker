@@ -209,6 +209,7 @@ jar {
 task sourcesJar(type: Jar, dependsOn: classes) {
     description = 'Creates a JAR containing the source code.'
     from sourceSets.main.allSource
+    from project(":Crafttweaker_Annotations").sourceSets.main.allSource
     from files(zenCodeDeps.collect { project(it).sourceSets.main.allSource })
     classifier = 'sources'
 }
@@ -216,6 +217,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     description = 'Creates a JAR containing the JavaDocs.'
     from javadoc.destinationDir
+    from project(":Crafttweaker_Annotations").javadoc.destinationDir
     from files(zenCodeDeps.collect { project(it).javadoc.destinationDir })
     classifier = 'javadoc'
 }
@@ -223,6 +225,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task deobfJar(type: Jar) {
     description = 'Creates a JAR containing the non-obfuscated compiled code.'
     from sourceSets.main.output
+    from project(":Crafttweaker_Annotations").sourceSets.main.output
     from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
     classifier = "deobf"
 }
