@@ -70,7 +70,7 @@ public class CraftTweaker {
     public static boolean serverOverride = true;
     
     public CraftTweaker() {
-        if(!CraftTweakerAPI.SCRIPT_DIR.exists() && (!CraftTweakerAPI.SCRIPT_DIR.mkdirs() || !CraftTweakerAPI.SCRIPT_DIR.mkdir())) {
+        if(!CraftTweakerAPI.SCRIPT_DIR.exists() && !CraftTweakerAPI.SCRIPT_DIR.mkdirs() && !CraftTweakerAPI.SCRIPT_DIR.mkdir()) {
             final String path = CraftTweakerAPI.SCRIPT_DIR.getAbsolutePath();
             throw new IllegalStateException("Could not create Directory " + path);
         }
