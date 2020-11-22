@@ -28,19 +28,6 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         targetType = registry.getForDefinition(parserMethod.getTarget().definition);
     }
     
-    private static ParsedExpression createCallee(String methodFull, CodePosition position) {
-        ParsedExpression expression = null;
-        for(String s : methodFull.split("[.]")) {
-            if(expression == null) {
-                expression = new ParsedExpressionVariable(position, s, null);
-            } else {
-                expression = new ParsedExpressionMember(position, expression, s, null);
-            }
-        }
-        
-        return expression;
-    }
-    
     public String getName() {
         return name;
     }
@@ -105,13 +92,13 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
                 try {
                     valid = (boolean) validationMethod.invoke(null, value);
                 } catch(Exception e) {
-                    final String message = String.format("Could not validate Parameters to BEP %s: '<%s:%s>%n%s", name, name, value, e);
-                    return new ParsedExpressionInvalid(position, message);
+                    final String message = String.format("Invalid parameters to BEP %s: '<%s:%s>", name, name, value);
+                    throw new ParseException(position, message, e);
                 }
                 
                 if(!valid) {
                     final String format = String.format("Invalid parameters to BEP %s: '<%s:%s>. There may be more information about this in the log.", name, name, value);
-                    return new ParsedExpressionInvalid(position, format);
+                    throw new ParseException(position, format);
                 }
             }
         }
@@ -146,23 +133,4 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         }
     }
     
-    public static final class ParsedExpressionInvalid extends ParsedExpression {
-    
-        private final String message;
-    
-        public ParsedExpressionInvalid(CodePosition position, String message) {
-            super(position);
-            this.message = message;
-        }
-    
-        @Override
-        public IPartialExpression compile(ExpressionScope scope) {
-            return new InvalidExpression(position, BasicTypeID.UNDETERMINED, CompileExceptionCode.INVALID_BRACKET_EXPRESSION, message);
-        }
-    
-        @Override
-        public boolean hasStrongType() {
-            return false;
-        }
-    }
 }
