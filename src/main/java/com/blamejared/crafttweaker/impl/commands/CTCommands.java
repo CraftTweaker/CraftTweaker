@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.commands;
 
-import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.text.*;
+import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.network.*;
 import com.blamejared.crafttweaker.impl.network.messages.*;
 import com.blamejared.crafttweaker.impl.tag.*;
+import com.blamejared.crafttweaker.impl.tag.manager.*;
 import com.mojang.brigadier.*;
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.*;
@@ -34,18 +36,19 @@ import java.util.stream.*;
 public class CTCommands {
     
     private static final Map<String, CommandImpl> COMMANDS = new TreeMap<>(String::compareTo);
-    public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
     private static final int commandsPerPage = 4;
+    public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         root.then(Commands.literal("copy")
-                .then(Commands.argument("toCopy", StringArgumentType.greedyString()).executes(context -> {
-                    String toCopy = context.getArgument("toCopy", String.class);
-                    ServerPlayerEntity entity = context.getSource().asPlayer();
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
-                    send(new StringTextComponent("Copied!"), entity);
-                    return 0;
-                })));
+                .then(Commands.argument("toCopy", StringArgumentType.string())
+                        .executes(context -> {
+                            String toCopy = context.getArgument("toCopy", String.class);
+                            ServerPlayerEntity entity = context.getSource().asPlayer();
+                            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
+                            send(new StringTextComponent("Copied!"), entity);
+                            return 0;
+                        })));
         
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
@@ -67,7 +70,7 @@ public class CTCommands {
                     .collect(Collectors.joining(", "))), player);
             
             tags.stream()
-                    .map(resourceLocation -> new MCTag(resourceLocation).getCommandString())
+                    .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
                     .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
             
             return 0;
@@ -99,14 +102,14 @@ public class CTCommands {
                     .collect(Collectors.joining(", "))), player);
             
             tags.stream()
-                    .map(resourceLocation -> new MCTag(resourceLocation).getCommandString())
+                    .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
                     .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
             
             if(player instanceof ServerPlayerEntity) {
                 //noinspection OptionalGetWithoutIsPresent
                 PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(tags
                         .stream()
-                        .map(MCTag::new)
+                        .map(location -> new MCTag<>(location, TagManagerItem.INSTANCE))
                         .findFirst()
                         .get()
                         .getCommandString()));
@@ -144,7 +147,7 @@ public class CTCommands {
                     continue;
                 }
                 tags.stream()
-                        .map(resourceLocation -> new MCTag(resourceLocation).getCommandString())
+                        .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
                         .forEach(s -> builder.append("-").append(s).append("\n"));
             }
             CraftTweakerAPI.logDump(builder.toString());
@@ -167,15 +170,23 @@ public class CTCommands {
         
         registerCommand(new CommandImpl("syntax", "Checks the syntax of the scripts", (CommandCallerPlayer) (player, stack) -> {
             //TODO: get loader name from '/ct syntax loaderName'?
-            //final String loaderName = CraftTweakerAPI.getDefaultLoaderName();
-            //CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(loaderName));
-            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setWildcardLoaderName());
+            for(String knownLoaderName : LoaderActions.getKnownLoaderNames()) {
+                final String message = color("Starting loading scripts for loader '" + knownLoaderName + "'", TextFormatting.YELLOW);
+                send(new StringTextComponent(message), player);
+                final ScriptLoadingOptions options = new ScriptLoadingOptions().setLoaderName(knownLoaderName);
+                CraftTweakerAPI.loadScripts(options);
+            }
+            
             return 0;
         }));
         
         registerCommand(new CommandImpl("format", "Checks the syntax of the scripts and formats them into another folder.", (CommandCallerPlayer) (player, stack) -> {
-            CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setWildcardLoaderName()
-                    .format());
+            for(String knownLoaderName : LoaderActions.getKnownLoaderNames()) {
+                final String message = color("Loading and formatting scripts for loader '" + knownLoaderName + "'", TextFormatting.YELLOW);
+                send(new StringTextComponent(message), player);
+                final ScriptLoadingOptions options = new ScriptLoadingOptions().setLoaderName(knownLoaderName);
+                CraftTweakerAPI.loadScripts(options.format());
+            }
             return 0;
         }));
         
@@ -238,35 +249,6 @@ public class CTCommands {
             return 0;
         });
         
-        registerDump("tags", "Outputs the names of all registered tags (vanilla tag types)", (CommandCallerPlayer) (player, stack) -> {
-            CraftTweakerAPI.logDump("Item Tags:\n");
-            ItemTags.getCollection()
-                    .func_241833_a()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            CraftTweakerAPI.logDump("Block Tags:\n");
-            BlockTags.getCollection()
-                    .func_241833_a()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            CraftTweakerAPI.logDump("Fluid Tags:\n");
-            FluidTags.getCollection()
-                    .func_241833_a()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            CraftTweakerAPI.logDump("Entity Type Tags:\n");
-            EntityTypeTags.getCollection()
-                    .func_241833_a()
-                    .keySet()
-                    .forEach(resourceLocation -> CraftTweakerAPI.logDump("-" + resourceLocation.toString()));
-            
-            send(new StringTextComponent(color("Tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
-            return 0;
-        });
-        
         
         // Send an event to let others know that we are ready for SubCommands to be registered.
         // SubCommands registered earlier would throw a NPE (because the command itself would not exist yet)
@@ -286,7 +268,7 @@ public class CTCommands {
                 registerDump(subCommandName, dumperInfo.getDescription(), dumperInfo);
             }
         }
-    
+        
         root.then(Commands.literal("help")
                 .executes(context -> executeHelp(context, 1))
                 .then(Commands.argument("page", IntegerArgumentType.integer(1, (COMMANDS.size() / commandsPerPage) + 1))

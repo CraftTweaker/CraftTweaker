@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 @ZenCodeType.Name("crafttweaker.api.food.MCFood")
 @ZenRegister
 @Document("vanilla/api/food/MCFood")
-@ZenWrapper(wrappedClass = "net.minecraft.item.food", conversionMethodFormat = "%s.getInternal()")
+@ZenWrapper(wrappedClass = "net.minecraft.item.Food", conversionMethodFormat = "%s.getInternal()")
 public class MCFood {
     
     private final Food internal;

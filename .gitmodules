@@ -1,4 +1,4 @@
 [submodule "ZenCode"]
 	path = ZenCode
-	url = https://git.openzen.org/jared/ZenScript.git
+	url = https://github.com/ZenCodeLang/ZenCode.git
 	branch = development

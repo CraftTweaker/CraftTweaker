@@ -42,13 +42,13 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '7.0.0'
+version = '7.1.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.16.3'
+archivesBaseName = 'CraftTweaker-1.16.4'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -78,7 +78,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200820-1.16.1'
+    mappings channel: 'snapshot', version: '20201028-1.16.3'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -143,7 +143,7 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.16.3-34.0.5'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
 //    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
@@ -183,10 +183,17 @@ task genGitChangelog() {
     System.out.println("Changelog generated!")
 }
 
+processResources {
+    dependsOn(":StdLibs:zipItUp")
+    from files(evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs)
+}
 
 jar {
     dependsOn zenCodeDeps.collect { it + ":compileJava" }
     from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
+
+    dependsOn ":Crafttweaker_Annotation_Processors:compileJava"
+    from project(":Crafttweaker_Annotations").sourceSets.main.output
 
     manifest {
         attributes([
@@ -205,6 +212,7 @@ jar {
 task sourcesJar(type: Jar, dependsOn: classes) {
     description = 'Creates a JAR containing the source code.'
     from sourceSets.main.allSource
+    from project(":Crafttweaker_Annotations").sourceSets.main.allSource
     from files(zenCodeDeps.collect { project(it).sourceSets.main.allSource })
     classifier = 'sources'
 }
@@ -212,6 +220,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     description = 'Creates a JAR containing the JavaDocs.'
     from javadoc.destinationDir
+    from project(":Crafttweaker_Annotations").javadoc.destinationDir
     from files(zenCodeDeps.collect { project(it).javadoc.destinationDir })
     classifier = 'javadoc'
 }
@@ -219,6 +228,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task deobfJar(type: Jar) {
     description = 'Creates a JAR containing the non-obfuscated compiled code.'
     from sourceSets.main.output
+    from project(":Crafttweaker_Annotations").sourceSets.main.output
     from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
     classifier = "deobf"
 }
@@ -228,6 +238,9 @@ artifacts {
     archives javadocJar
     archives deobfJar
 }
+
+publish.dependsOn(project.tasks.getByName("assemble"))
+publish.mustRunAfter(project.tasks.getByName("build"))
 
 publishing {
 
@@ -301,7 +314,7 @@ task updateVersionTracker {
         def body = [
                 'author'        : "${project.findProperty('versionTrackerAuthor')}",
                 'projectName'   : "crafttweaker",
-                'gameVersion'   : "1.16.3",
+                'gameVersion'   : "1.16.4",
                 'projectVersion': "${version}",
                 'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
                 'uid'           : "${project.findProperty('versionTrackerKey')}"
@@ -322,20 +335,29 @@ task updateVersionTracker {
 
 }
 
-//compileJava {
-//    options.compilerArgs += ["-Xprefer:source", "-verbose"]
-//    //options.fork = true
-//    //options.forkOptions.executable = 'javac'
-//}
+compileJava {
+    source("wrappedClasses.csv")
+    //options.compilerArgs += ["-Xprefer:source", "-verbose"]
+    //options.fork = true
+    //options.forkOptions.executable = 'javac'
+    def csv = file("wrappedClasses.csv")
+    options.annotationProcessorGeneratedSourcesDirectory = project.file("src/generated/java")
+    if(csv.exists()) {
+        options.compilerArgs += "-AwrappedClassesCsvLocation=${csv.absolutePath}"
+    }
+}
 
 sourceSets {
     main {
-        java.srcDirs += "/src/generated/java/"
+        java {
+            srcDirs += "src/generated/java/"
+        }
     }
 }
 
 idea {
     module {
         generatedSourceDirs += file("src/generated/java")
+        excludeDirs += [file("run"), file("runServer")]
     }
 }

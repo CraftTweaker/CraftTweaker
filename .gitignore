@@ -19,6 +19,7 @@
 /.metadata/*
 *.eml
 /run
+/runServer
 *.stackdump
 *.log
 */.settings

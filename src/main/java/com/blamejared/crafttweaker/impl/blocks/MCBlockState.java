@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.block.MCBlockState")
 @Document("vanilla/api/blocks/MCBlockState")
-@ZenWrapper(wrappedClass = "net.minecraft.block.BlockState", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()")
+@ZenWrapper(wrappedClass = "net.minecraft.block.BlockState", displayStringFormat = "%s.getCommandString()")
 public class MCBlockState implements CommandStringDisplayable {
     
     private final BlockState internal;
@@ -71,6 +71,7 @@ public class MCBlockState implements CommandStringDisplayable {
     
     
     @ZenCodeType.Method
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public MCBlockState withProperty(String name, String value) {
         Property property = getInternal().getBlock().getStateContainer().getProperty(name);
         if(property == null) {
@@ -132,7 +133,7 @@ public class MCBlockState implements CommandStringDisplayable {
     }
     
     
-    @ZenCodeType.Caster(implicit = false)
+    @ZenCodeType.Caster
     public String asString() {
         return internal.toString();
     }
@@ -146,7 +147,7 @@ public class MCBlockState implements CommandStringDisplayable {
     @Override
     public String getCommandString() {
         StringBuilder builder = new StringBuilder("<blockstate:");
-        builder.append(getBlock().getInternal().getRegistryName().toString());
+        builder.append(getBlock().getInternal().getRegistryName());
         if(!getProperties().isEmpty()) {
             builder.append(":");
             builder.append(getProperties().entrySet().stream().map(kv -> kv.getKey() + "=" + kv.getValue()).collect(Collectors.joining(",")));
@@ -161,5 +162,22 @@ public class MCBlockState implements CommandStringDisplayable {
     
     public MCBlock getInternalBlock() {
         return internalBlock;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        MCBlockState that = (MCBlockState) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        return internal.hashCode();
     }
 }

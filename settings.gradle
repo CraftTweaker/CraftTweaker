@@ -6,13 +6,26 @@ include("Crafttweaker_Annotation_Processors")
 // Find the directories containing a "build.gradle" file in the root directory
 // of the project. That is, every directory containing a "build.gradle" will
 // be automatically the subproject of this project.
+def excludedProjects = [
+        "ModuleDeserializer",
+        "ModuleSerializationShared",
+        "ModuleSerializer",
+        "JavaSource",
+        "JavaSourceCompiler",
+        "IDE",
+        "Constructor",
+        "DrawableGui",
+        "DrawableGuiIconConverter",
+        "CompilerShared"
+]
+
 
 def subDirs = new File(rootDir, "ZenCode").listFiles(new FileFilter() {
     boolean accept(File file) {
         if (!file.isDirectory()) {
             return false
         }
-        if (file.name == 'ModuleDeserializer' || file.name == "ModuleSerializationShared" || file.name == "ModuleSerializer") {
+        if (excludedProjects.contains(file.name)) {
             return false
         }
         return new File(file, 'build.gradle').isFile()

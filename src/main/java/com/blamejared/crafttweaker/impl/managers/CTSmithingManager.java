@@ -48,7 +48,7 @@ public class CTSmithingManager implements IRecipeManager {
     }
     
     @Override
-    public IRecipeType<?> getRecipeType() {
+    public IRecipeType<SmithingRecipe> getRecipeType() {
         return IRecipeType.SMITHING;
     }
 }

@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker.impl.brackets;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.api.util.*;
+import com.blamejared.crafttweaker.impl.brackets.util.*;
 import net.minecraft.util.*;
 import org.openzen.zencode.java.*;
 import org.openzen.zencode.shared.*;
@@ -11,9 +13,7 @@ import org.openzen.zenscript.parser.*;
 import org.openzen.zenscript.parser.expression.*;
 import org.openzen.zenscript.parser.type.*;
 
-import java.lang.reflect.*;
 import java.util.*;
-import java.util.stream.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")
@@ -27,14 +27,6 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         for(Class<? extends IRecipeManager> recipeManager : recipeManagers) {
             registerRecipeManager(recipeManager);
         }
-    }
-    
-    private static IParsedType readParsedType(String name, CodePosition position) {
-        final List<ParsedNamedType.ParsedNamePart> collect = Arrays.stream(name.split("[.]"))
-                .map(s -> new ParsedNamedType.ParsedNamePart(s, null))
-                .collect(Collectors.toList());
-        
-        return new ParsedNamedType(position, collect, ParsedStorageTag.NULL);
     }
     
     public static boolean containsCustomManager(ResourceLocation location) {
@@ -58,37 +50,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return;
         }
         
-        IRecipeManager manager = null;
-        try {
-            final Optional<Field> any = Arrays.stream(managerClass.getDeclaredFields())
-                    .filter(f -> Modifier.isPublic(f.getModifiers()))
-                    .filter(f -> Modifier.isStatic(f.getModifiers()))
-                    .filter(f -> f.getType().equals(managerClass))
-                    .findAny();
-            if(any.isPresent()) {
-                manager = (IRecipeManager) any.get().get(null);
-            }
-        } catch(IllegalAccessException e) {
-            //e.printStackTrace();
-        }
-        
-        if(manager == null) {
-            try {
-                manager = managerClass.newInstance();
-            } catch(InstantiationException | IllegalAccessException e) {
-                //e.printStackTrace();
-            }
-        }
-        
-        if(manager == null) {
-            try {
-                final Constructor<? extends IRecipeManager> constructor = managerClass.getConstructor();
-                constructor.setAccessible(true);
-                manager = constructor.newInstance();
-            } catch(InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException ignored) {
-            }
-        }
-        
+        final IRecipeManager manager = InstantiationUtil.getOrCreateInstance(managerClass);
         if(manager == null) {
             CraftTweakerAPI.logError("Could not add RecipeManager for %s, please report to the author", managerClass);
             return;
@@ -137,7 +99,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         
         
         final String nameContent = manager.getClass().getAnnotation(ZenCodeType.Name.class).value();
-        final IParsedType parsedType = readParsedType(nameContent, position);
+        final IParsedType parsedType = ParseUtil.readParsedType(nameContent, position);
         final ParsedCallArguments arguments = new ParsedCallArguments(Collections.singletonList(parsedType), Collections
                 .singletonList(new ParsedExpressionString(position, location, false)));
         final ParsedExpressionCall parsedExpressionCall = new ParsedExpressionCall(position, getRecipeManager, arguments);

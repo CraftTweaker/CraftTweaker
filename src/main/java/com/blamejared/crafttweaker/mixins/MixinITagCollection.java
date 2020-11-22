@@ -16,7 +16,7 @@ public abstract class MixinITagCollection<T> {
     @Shadow(aliases = "val$bimap")
     private BiMap<ResourceLocation, ITag<T>> bimap;
     
-    @Inject(method = "func_241833_a", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getIDTagMap", at = @At("RETURN"), cancellable = true)
     private void func_241833_a(CallbackInfoReturnable<Map<ResourceLocation, ITag<T>>> cir) {
         if(bimap instanceof ImmutableBiMap) {
             bimap = HashBiMap.create(bimap);

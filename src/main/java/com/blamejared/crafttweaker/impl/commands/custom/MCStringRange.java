@@ -23,7 +23,7 @@ public class MCStringRange {
     }
     
     @ZenCodeType.Method
-    public String get(MCImmutableStringReader reader) {
+    public String getFrom(MCImmutableStringReader reader) {
         return (internal.get((reader).getInternal()));
     }
     
@@ -83,7 +83,7 @@ public class MCStringRange {
     
     
     @ZenCodeType.Method
-    public String get(String string) {
+    public String getFrom(String string) {
         return (internal.get((string)));
     }
     

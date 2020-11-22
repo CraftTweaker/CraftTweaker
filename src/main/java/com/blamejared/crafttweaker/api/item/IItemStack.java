@@ -10,13 +10,16 @@ import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
 import com.blamejared.crafttweaker.impl.data.*;
 import com.blamejared.crafttweaker.impl.food.*;
 import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker.impl.util.text.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.util.*;
 import net.minecraftforge.common.*;
 import org.openzen.zencode.java.*;
 
+import java.util.*;
 import java.util.regex.*;
 
 /**
@@ -45,8 +48,8 @@ public interface IItemStack extends IIngredient {
      * @return registry name of the Item this IItemStack represents
      */
     @ZenCodeType.Getter("registryName")
-    default String getRegistryName() {
-        return getInternal().getItem().getRegistryName().toString();
+    default MCResourceLocation getRegistryName() {
+        return new MCResourceLocation(Objects.requireNonNull(getInternal().getItem().getRegistryName()));
     }
     
     /**
@@ -56,7 +59,8 @@ public interface IItemStack extends IIngredient {
      */
     @ZenCodeType.Getter("owner")
     default String getOwner() {
-        return getInternal().getItem().getRegistryName().getNamespace();
+        final ResourceLocation registryName = getInternal().getItem().getRegistryName();
+        return registryName == null ? "error" : registryName.getNamespace();
     }
     
     /**
@@ -408,6 +412,13 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Caster(implicit = true)
     default MCWeightedItemStack asWeightedItemStack() {
         return weight(1.0D);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("definition")
+    @ZenCodeType.Caster(implicit = true)
+    default MCItemDefinition getDefinition() {
+        return new MCItemDefinition(getInternal().getItem());
     }
     
     @ZenCodeType.Method
