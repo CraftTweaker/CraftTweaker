@@ -40,7 +40,7 @@ public class CraftTweakerGlobals {
                 String methodName = clazz.getAnnotation(ZenWrapper.class).conversionMethodFormat();
                 methodName = methodName.substring(3, methodName.length() - 2);
                 try {
-                    return obj.getClass().getMethod(methodName).invoke(obj) == null;
+                    return clazz.getMethod(methodName).invoke(obj) == null;
                 } catch (NoSuchMethodException | IllegalAccessException e) {
                     CraftTweakerAPI.logError("%s doesn't have a proper conversion method!", obj.getClass().getCanonicalName());
                     e.printStackTrace();
