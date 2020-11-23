@@ -99,12 +99,12 @@ public class ScriptRun {
         if(scriptLoadingOptions.isExecute()) {
             //Now that we execute, we increment the runCount and therefore it's no longer a first run
             final LoaderActions loaderActions = getLoaderActions();
-            loaderActions.incrementRunCount();
             CraftTweakerAPI.logDebug("This is loader '%s' run #%s", scriptLoadingOptions.getLoaderName(), loaderActions
-                    .getRunCount());
+                    .getRunCount() + 1);
             
             scriptingEngine.registerCompiled(scripts);
             scriptingEngine.run(Collections.emptyMap(), CraftTweaker.class.getClassLoader());
+            loaderActions.incrementRunCount();
             
         } else if(CraftTweakerAPI.DEBUG_MODE) {
             scriptingEngine.createRunUnit().dump(new File("classes"));
