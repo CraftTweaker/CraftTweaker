@@ -35,7 +35,7 @@ public class ScriptRun {
     }
     
     public boolean isFirstRun() {
-        return scriptLoadingOptions.isFirstRun() || getLoaderActions().isFirstRun();
+        return getLoaderActions().isFirstRun();
     }
     
     public ScriptingEngine getEngine() {

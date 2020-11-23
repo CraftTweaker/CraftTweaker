@@ -129,9 +129,7 @@ public class CraftTweaker {
     }
     
     private void setup(final FMLCommonSetupEvent event) {
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon")
-                .firstRun()
-                .execute();
+        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon").execute();
         CraftTweakerAPI.loadScripts(setupCommon);
         
         LOG.info("{} has loaded successfully!", NAME);

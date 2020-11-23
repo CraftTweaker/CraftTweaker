@@ -120,7 +120,6 @@ class SnippingPreprocessorTest {
     
     private FileAccessSingle getFile(String content) {
         return new FileAccessSingle("test.zs", new StringReader(content), new ScriptLoadingOptions()
-                .firstRun()
                 .execute()
                 .setLoaderName("crafttweaker"), Collections.singletonList(preprocessorUnderTest));
     }
