@@ -6,11 +6,11 @@ import com.blamejared.crafttweaker.impl.data.ByteData;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Expansion("byte?")
+@ZenCodeType.Expansion("byte")
 public class ExpandByte {
     
     @ZenCodeType.Caster(implicit = true)
-    public static IData asData(Byte value) {
+    public static IData asData(byte value) {
         return new ByteData(value);
     }
     
