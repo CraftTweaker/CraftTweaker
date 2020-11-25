@@ -91,6 +91,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.IngredientNBT;
@@ -1096,5 +1097,9 @@ public class CraftTweakerMC {
 
     public static Item getItem(IItemDefinition itemDefinition) {
         return itemDefinition == null ? null : (Item) itemDefinition.getInternal();
+    }
+
+    public static BiomeDictionary.Type getBiomeType(IBiomeType biomeType) {
+        return biomeType == null ? null : (BiomeDictionary.Type) biomeType.getInternal();
     }
 }
