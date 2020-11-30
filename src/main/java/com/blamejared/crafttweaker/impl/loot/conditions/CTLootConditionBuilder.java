@@ -105,6 +105,11 @@ public final class CTLootConditionBuilder {
 
     // Usage
     @ZenCodeType.Method
+    public <T extends ILootConditionTypeBuilder> CTLootConditionBuilder add(final Class<T> reifiedType) {
+        return this.add(reifiedType, ignore -> {});
+    }
+
+    @ZenCodeType.Method
     public <T extends ILootConditionTypeBuilder> CTLootConditionBuilder add(final Class<T> reifiedType, final Consumer<T> lender) {
         final ILootCondition built = this.make(reifiedType, "main loot builder", lender);
         if (built != null) this.conditions.add(built);
