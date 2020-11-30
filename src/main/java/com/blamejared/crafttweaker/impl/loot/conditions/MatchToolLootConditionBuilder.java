@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.loot.conditions;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -44,7 +45,7 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
         //noinspection ConstantConditions
         if (this.tool != null) {
             // crt
-            return context -> context.getTool().matches(this.tool, this.ignoreDamage);
+            return context -> ExpandLootContext.getTool(context).matches(this.tool, this.ignoreDamage);
         } else {
             // TODO("Vanilla Condition")
             // vanilla

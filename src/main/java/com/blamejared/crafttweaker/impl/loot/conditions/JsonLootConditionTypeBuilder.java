@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.data.StringData;
 import com.blamejared.crafttweaker.impl.loot.MCLootCondition;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import net.minecraft.loot.LootSerializers;
@@ -16,16 +15,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.Json")
 @Document("vanilla/api/loot/condition/Json")
-public class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+public final class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     private static final Gson GSON = LootSerializers.func_237387_b_().disableHtmlEscaping().create();
 
-    private MCResourceLocation name;
+    private ResourceLocation name;
     private IData json;
 
     JsonLootConditionTypeBuilder() {}
 
     @ZenCodeType.Method
-    public static ILootCondition create(final MCResourceLocation type, final IData json) {
+    public static ILootCondition create(final ResourceLocation type, final IData json) {
         return CTLootConditionBuilder.makeJson(type, json);
     }
 
@@ -35,7 +34,7 @@ public class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     }
 
     @ZenCodeType.Method
-    public JsonLootConditionTypeBuilder withJson(final MCResourceLocation type, final IData json) {
+    public JsonLootConditionTypeBuilder withJson(final ResourceLocation type, final IData json) {
         this.name = type;
         this.json = json;
         return this;
@@ -43,7 +42,7 @@ public class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
 
     @ZenCodeType.Method
     public JsonLootConditionTypeBuilder withJson(final String type, final IData json) {
-        return this.withJson(new MCResourceLocation(new ResourceLocation(type)), json);
+        return this.withJson(new ResourceLocation(type), json);
     }
 
     @Override
@@ -55,8 +54,8 @@ public class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
         }
 
         final MapData data = (MapData) jsonData;
-        final String type = this.name.getInternal().toString();
-        final IData jsonType = data.get("condition");
+        final String type = this.name.toString();
+        final IData jsonType = data.getAt("condition");
         if (jsonType != null && !(jsonType instanceof StringData)) {
             throw new IllegalStateException("Json condition type isn't a string: expected '" + type + "', but found '" + jsonType + "'");
         }

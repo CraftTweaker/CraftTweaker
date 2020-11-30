@@ -56,7 +56,7 @@ public class ExpandDamageSource {
 	 * @return The amount of exhaustion to add to the player's hunger bar.
 	 */
 	@ZenCodeType.Method
-	@ZenCodeType.Getter("hungerDamage")
+	@ZenCodeType.Getter("hunger")
 	public static float getHungerDamage(DamageSource internal) {
 		return internal.getHungerDamage();
 	}
@@ -140,4 +140,38 @@ public class ExpandDamageSource {
 	public static Entity getTrueSource(DamageSource internal) {
 		return internal.getTrueSource();
 	}
+    
+    /**
+     * Gets whether the damage changes strength based on the current difficulty.
+     *
+     * @return Whether the damage changes strength according to difficulty.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("difficultyScaled")
+    public static boolean isDifficultyScaled(final DamageSource $this) {
+        return $this.isDifficultyScaled();
+    }
+
+    /**
+     * Gets whether the damage was inflicted by a creative player.
+     *
+     * @return Whether the damage was inflicted by a creative player.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("creativePlayer")
+    public static boolean isCreativePlayer(final DamageSource $this) {
+        return $this.isCreativePlayer();
+    }
+    
+    /**
+     * Gets the location where the damage occurred.
+     *
+     * @return The location of the damage.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("location")
+    @ZenCodeType.Nullable
+    public static Vector3d getDamageLocation(final DamageSource $this) {
+        return $this.getDamageLocation();
+    }
 }

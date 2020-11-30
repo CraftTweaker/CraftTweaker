@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -18,8 +19,8 @@ public class MCLootCondition implements ILootCondition {
     }
 
     @Override
-    public boolean test(MCLootContext context) {
-        return this.wrapped.test(context.getInternal());
+    public boolean test(LootContext context) {
+        return this.wrapped.test(context);
     }
 
     public net.minecraft.loot.conditions.ILootCondition getInternal() {

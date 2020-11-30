@@ -19,6 +19,7 @@
 /.metadata/*
 *.eml
 /run
+/run_server
 /runServer
 *.stackdump
 *.log
@@ -37,6 +38,7 @@ secrets.json
 
 docsOut/
 src/generated
+src/main/generated/
 src/main/resources/__StdLibs__/
 CrafttweakerDocumentation/
 lsp

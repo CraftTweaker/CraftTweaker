@@ -34,6 +34,6 @@ public final class RandomChanceLootConditionBuilder implements ILootConditionTyp
                     this.chance
             );
         }
-        return context -> context.getInternal().getRandom().nextFloat() < this.chance;
+        return context -> context.getRandom().nextFloat() < this.chance;
     }
 }

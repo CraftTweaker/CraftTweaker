@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.loot.conditions;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -11,8 +12,8 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class SurvivesExplosionLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     static final SurvivesExplosionLootConditionTypeBuilder INSTANCE = new SurvivesExplosionLootConditionTypeBuilder();
     private static final ILootCondition SURVIVES_EXPLOSION = context -> {
-        final float radius = context.getExplosionRadius();
-        return radius > 0.0F && context.getInternal().getRandom().nextFloat() <= (1.0F / radius);
+        final float radius = ExpandLootContext.getExplosionRadius(context);
+        return radius > 0.0F && context.getRandom().nextFloat() <= (1.0F / radius);
     };
 
     private SurvivesExplosionLootConditionTypeBuilder() {}

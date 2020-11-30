@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.api.loot;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.loot.MCLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -14,5 +14,5 @@ import java.util.List;
 @Document("vanilla/api/loot/ILootModifier")
 public interface ILootModifier {
     @ZenCodeType.Method
-    List<IItemStack> applyModifier(List<IItemStack> loot, MCLootContext currentContext);
+    List<IItemStack> applyModifier(List<IItemStack> loot, LootContext currentContext);
 }

@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/loot/conditions/KilledByPlayer")
 public final class KilledByPlayerLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     static final KilledByPlayerLootConditionTypeBuilder INSTANCE = new KilledByPlayerLootConditionTypeBuilder();
-    private static final ILootCondition KILLED_BY_PLAYER = context -> context.getInternal().has(LootParameters.LAST_DAMAGE_PLAYER);
+    private static final ILootCondition KILLED_BY_PLAYER = context -> context.has(LootParameters.LAST_DAMAGE_PLAYER);
 
     private KilledByPlayerLootConditionTypeBuilder() {}
 

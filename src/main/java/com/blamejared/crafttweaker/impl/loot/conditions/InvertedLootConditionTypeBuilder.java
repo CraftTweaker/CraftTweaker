@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.Inverted")
 @Document("vanilla/api/loot/conditions/Inverted")
 public final class InvertedLootConditionTypeBuilder implements ILootConditionTypeBuilder {
-    private CTLootConditionBuilder parent;
+    private final CTLootConditionBuilder parent;
     private ILootCondition sub;
 
     InvertedLootConditionTypeBuilder(final CTLootConditionBuilder parent) {

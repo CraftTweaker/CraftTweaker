@@ -77,7 +77,7 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
                 .collect(Collectors.toList());
 
         return context -> {
-            final Entity entity = this.targetedEntity.getDiscriminator().apply(context).getInternal();
+            final Entity entity = this.targetedEntity.getDiscriminator().apply(context);
             if (entity == null) return false;
 
             final Scoreboard scoreboard = entity.getEntityWorld().getScoreboard();

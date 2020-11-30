@@ -4,7 +4,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.enchantment.MCEnchantment;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
@@ -15,13 +17,13 @@ import java.util.Arrays;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.TableBonus")
 @Document("vanilla/api/loot/conditions/TableBonus")
 public final class TableBonusLootConditionTypeBuilder implements ILootConditionTypeBuilder {
-    private MCEnchantment enchantment;
+    private Enchantment enchantment;
     private float[] chances;
 
     TableBonusLootConditionTypeBuilder() {}
 
     @ZenCodeType.Method
-    public TableBonusLootConditionTypeBuilder withEnchantment(final MCEnchantment enchantment) {
+    public TableBonusLootConditionTypeBuilder withEnchantment(final Enchantment enchantment) {
         this.enchantment = enchantment;
         return this;
     }
@@ -64,10 +66,10 @@ public final class TableBonusLootConditionTypeBuilder implements ILootConditionT
         }
 
         return context -> {
-            final ItemStack stack = context.getTool().getInternal();
-            final int chancesIndex = stack == null? 0 : EnchantmentHelper.getEnchantmentLevel(this.enchantment.getInternal(), stack);
+            final ItemStack stack = ExpandLootContext.getTool(context).getInternal();
+            final int chancesIndex = stack == null? 0 : EnchantmentHelper.getEnchantmentLevel(this.enchantment, stack);
             final float chance = this.chances[Math.min(chancesIndex, this.chances.length - 1)];
-            return context.getInternal().getRandom().nextFloat() < chance;
+            return context.getRandom().nextFloat() < chance;
         };
     }
 }

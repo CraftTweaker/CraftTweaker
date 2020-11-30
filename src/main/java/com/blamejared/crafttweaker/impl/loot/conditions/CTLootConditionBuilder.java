@@ -4,8 +4,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public final class CTLootConditionBuilder {
     }
 
     @ZenCodeType.Method
-    public static ILootCondition makeJson(final MCResourceLocation type, final IData data) {
+    public static ILootCondition makeJson(final ResourceLocation type, final IData data) {
         return makeSingle(JsonLootConditionTypeBuilder.class, builder -> builder.withJson(type, data));
     }
 

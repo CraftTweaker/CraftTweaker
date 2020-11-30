@@ -47,6 +47,6 @@ public final class RandomChanceWithLootingLootConditionBuilder implements ILootC
                     this.lootingMultiplier
             );
         }
-        return context -> context.getInternal().getRandom().nextFloat() < (this.chance + context.getLootingModifier() * this.lootingMultiplier);
+        return context -> context.getRandom().nextFloat() < (this.chance + context.getLootingModifier() * this.lootingMultiplier);
     }
 }

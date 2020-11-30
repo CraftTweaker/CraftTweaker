@@ -2,8 +2,9 @@ package com.blamejared.crafttweaker.impl.loot.conditions;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.impl.world.MCWorld;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -54,7 +55,7 @@ public final class WeatherCheckLootConditionTypeBuilder implements ILootConditio
             throw new IllegalStateException("At least one between raining and thundering must be set to a value, but they're both unset");
         }
         return context -> {
-            final MCWorld world = context.getWorld();
+            final World world = ExpandLootContext.getWorld(context);
             if (this.raining != TriState.UNSET) {
                 final boolean rain = this.raining == TriState.TRUE;
                 if (rain != world.isRaining()) return false;

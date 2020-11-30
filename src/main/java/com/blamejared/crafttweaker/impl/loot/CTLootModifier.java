@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 
 public class CTLootModifier extends LootModifier {
     private final String name;
-    private final Predicate<MCLootContext> conditions;
+    private final Predicate<LootContext> conditions;
     private final ILootModifier function;
 
     public CTLootModifier(final String name, final List<ILootCondition> conditions, final ILootModifier function) {
@@ -35,11 +35,10 @@ public class CTLootModifier extends LootModifier {
     @Nonnull
     public final List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
         final List<IItemStack> wrappedLoot = CraftTweakerHelper.getIItemStacks(generatedLoot);
-        final MCLootContext wrappedContext = new MCLootContext(context);
 
-        if (!this.conditions.test(wrappedContext)) return generatedLoot;
+        if (!this.conditions.test(context)) return generatedLoot;
         try {
-            return CraftTweakerHelper.getItemStacks(this.function.applyModifier(wrappedLoot, wrappedContext));
+            return CraftTweakerHelper.getItemStacks(this.function.applyModifier(wrappedLoot, context));
         } catch (final Exception e) {
             CraftTweakerAPI.logThrowing("An error occurred while trying to run loot modifier '%s': %s", e, this.name, e.getMessage());
             return generatedLoot;

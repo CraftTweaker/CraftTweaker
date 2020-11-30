@@ -2,9 +2,9 @@ package com.blamejared.crafttweaker.impl.loot.conditions;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.impl.blocks.MCBlock;
-import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
@@ -23,9 +23,9 @@ import java.util.function.BiPredicate;
 public final class BlockStatePropertyLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     // Two options: either custom CraftTweaker or the vanilla way
     // OPTION 1: CraftTweaker
-    private MCBlockState state;
+    private BlockState state;
     // OPTION 2: Vanilla
-    private MCBlock block;
+    private Block block;
     private final Map<String, BiPredicate<StateHolder<?, ?>, Property<?>>> matchers;
 
     BlockStatePropertyLootConditionTypeBuilder() {
@@ -33,13 +33,13 @@ public final class BlockStatePropertyLootConditionTypeBuilder implements ILootCo
     }
 
     @ZenCodeType.Method
-    public BlockStatePropertyLootConditionTypeBuilder withState(final MCBlockState state) {
+    public BlockStatePropertyLootConditionTypeBuilder withState(final BlockState state) {
         this.state = state;
         return this;
     }
 
     @ZenCodeType.Method
-    public BlockStatePropertyLootConditionTypeBuilder withBlock(final MCBlock block) {
+    public BlockStatePropertyLootConditionTypeBuilder withBlock(final Block block) {
         this.block = block;
         return this;
     }
@@ -91,15 +91,15 @@ public final class BlockStatePropertyLootConditionTypeBuilder implements ILootCo
         }
         if (this.state == null) {
             // vanilla way
-            return context -> this.match(Objects.requireNonNull(context.getBlockState()).getInternal());
+            return context -> this.match(Objects.requireNonNull(ExpandLootContext.getBlockState(context)));
         } else {
             // CrT way
-            return context -> Objects.requireNonNull(context.getBlockState()).getInternal().equals(this.state.getInternal());
+            return context -> Objects.requireNonNull(ExpandLootContext.getBlockState(context)).equals(this.state);
         }
     }
 
     private boolean match(final BlockState state) {
-        return state.getBlock() == this.block.getInternal() && this.matchProperties(state.getBlock().getStateContainer(), state);
+        return state.getBlock() == this.block && this.matchProperties(state.getBlock().getStateContainer(), state);
     }
 
     private <S extends StateHolder<?, S>> boolean matchProperties(final StateContainer<?, S> state, final S blockState) {

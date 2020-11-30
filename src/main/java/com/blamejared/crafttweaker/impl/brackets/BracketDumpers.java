@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketDumpers")
 public class BracketDumpers {
-    
+
     @BracketDumper("block")
     public static Collection<String> getBlockDump() {
         return ForgeRegistries.BLOCKS.getValues()
@@ -35,7 +35,7 @@ public class BracketDumpers {
                 .map(ExpandBlock::getCommandString)
                 .collect(Collectors.toSet());
     }
-    
+
     @BracketDumper("directionAxis")
     public static Collection<String> getDirectionAxisDump() {
         return Arrays.stream(Direction.Axis.values())
@@ -114,7 +114,7 @@ public class BracketDumpers {
                 .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl))
                 .collect(Collectors.toList());
     }
-    
+
     @BracketDumper("tag")
     public static Collection<String> getTagDump() {
         return CrTTagRegistry.instance.getAllManagers()

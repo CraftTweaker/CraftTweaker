@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.impl.loot.conditions;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -13,21 +12,21 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/loot/conditions/Reference")
 public final class ReferenceLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     // vanilla
-    private MCResourceLocation predicateName;
+    private ResourceLocation predicateName;
     // crt
     private ILootCondition referenced;
 
     ReferenceLootConditionTypeBuilder() {}
 
     @ZenCodeType.Method
-    public ReferenceLootConditionTypeBuilder withName(final MCResourceLocation name) {
+    public ReferenceLootConditionTypeBuilder withName(final ResourceLocation name) {
         this.predicateName = name;
         return this;
     }
 
     @ZenCodeType.Method
     public ReferenceLootConditionTypeBuilder withName(final String name) {
-        return this.withName(new MCResourceLocation(new ResourceLocation(name)));
+        return this.withName(new ResourceLocation(name));
     }
 
     @ZenCodeType.Method
@@ -52,12 +51,12 @@ public final class ReferenceLootConditionTypeBuilder implements ILootConditionTy
         if (this.predicateName != null) {
             // vanilla
             return context -> {
-                final net.minecraft.loot.conditions.ILootCondition vanillaCondition = context.getInternal().getLootCondition(this.predicateName.getInternal());
-                if (context.getInternal().addCondition(vanillaCondition)) {
+                final net.minecraft.loot.conditions.ILootCondition vanillaCondition = context.getLootCondition(this.predicateName);
+                if (context.addCondition(vanillaCondition)) {
                     try {
-                        return vanillaCondition.test(context.getInternal());
+                        return vanillaCondition.test(context);
                     } finally {
-                        context.getInternal().removeCondition(vanillaCondition);
+                        context.removeCondition(vanillaCondition);
                     }
                 } else {
                     CraftTweakerAPI.logError("Prevented infinite loop from ensuing with predicate '{}' referenced by a 'Reference' loot condition", this.predicateName);

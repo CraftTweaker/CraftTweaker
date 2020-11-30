@@ -40,9 +40,8 @@ public class MCLootModifier implements ILootModifier {
     }
 
     @Override
-    public List<IItemStack> applyModifier(List<IItemStack> loot, MCLootContext currentContext) {
+    public List<IItemStack> applyModifier(List<IItemStack> loot, LootContext currentContext) {
         final List<ItemStack> unwrappedLoot = CraftTweakerHelper.getItemStacks(loot);
-        final LootContext unwrappedContext = currentContext.getInternal();
-        return CraftTweakerHelper.getIItemStacks(this.internal.apply(unwrappedLoot, unwrappedContext));
+        return CraftTweakerHelper.getIItemStacks(this.internal.apply(unwrappedLoot, currentContext));
     }
 }

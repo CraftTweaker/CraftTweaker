@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.ItemStack;
@@ -203,13 +204,14 @@ public class BracketHandlers {
 
     /**
      * Gets the enchantment based on registry name. Throws an error if it can't find the enchantment.
+     *
      * @param tokens The enchantment's registry name
      * @return The found enchantment
      * @docParam tokens "minecraft:riptide"
      */
     @ZenCodeType.Method
     @BracketResolver("enchantment")
-    public static MCEnchantment getEnchantment(String tokens) {
+    public static Enchantment getEnchantment(String tokens) {
         if (!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Enchantment BEP <enchantment:%s> does not seem to be lower-case!", tokens);
         }
@@ -224,7 +226,7 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment isn't registered");
         }
 
-        return new MCEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(key));
+        return ForgeRegistries.ENCHANTMENTS.getValue(key);
     }
 
     /**

@@ -3,8 +3,9 @@ package com.blamejared.crafttweaker.impl.loot.conditions;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.impl.world.MCWorld;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -48,7 +49,7 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
             CraftTweakerAPI.logWarning("A 'TimeCheck' condition has a minimum value that is bigger than the maximum (min: {}, max: {}): it will never pass!", this.min, this.max);
         }
         return context -> {
-            final MCWorld world = context.getWorld();
+            final World world = ExpandLootContext.getWorld(context);
             final long time = world.getDayTime();
             final long actualTime = this.hasPeriod? time % this.timePeriod : time;
             return this.min <= actualTime && actualTime <= this.max;

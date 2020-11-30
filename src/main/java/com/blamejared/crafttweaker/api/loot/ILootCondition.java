@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.loot;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.loot.MCLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
 @FunctionalInterface
@@ -11,5 +11,5 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/loot/ILootCondition")
 public interface ILootCondition {
     @ZenCodeType.Method
-    boolean test(final MCLootContext context);
+    boolean test(final LootContext context);
 }
