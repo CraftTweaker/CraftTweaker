@@ -1,7 +1,9 @@
 package crafttweaker.api.command;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
@@ -23,6 +25,11 @@ public interface ICommandSender {
     
     @ZenMethod
     void sendMessage(String text);
+
+    @ZenMethod
+    default void sendMessage(ITextComponent text) {
+        CraftTweakerAPI.logError(this.getClass().getCanonicalName() + "doesn't override ICommandSender#sendMessage method! It is a bug!");
+    }
     
     Object getInternal();
 }

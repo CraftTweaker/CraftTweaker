@@ -5,6 +5,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
 import crafttweaker.api.server.AbstractServer;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.CraftTweaker;
@@ -83,7 +84,12 @@ public class MCServer extends AbstractServer {
     public void sendMessage(String text) {
         server.sendMessage(new TextComponentString(text));
     }
-    
+
+    @Override
+    public void sendMessage(ITextComponent text) {
+        server.sendMessage(CraftTweakerMC.getITextComponent(text));
+    }
+
     @Override
     public MinecraftServer getInternal() {
         return server;

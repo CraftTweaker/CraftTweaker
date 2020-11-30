@@ -1,6 +1,8 @@
 package crafttweaker.mc1120.command;
 
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.world.*;
@@ -39,7 +41,12 @@ public class MCCommandSender implements crafttweaker.api.command.ICommandSender 
     public void sendMessage(String text) {
         sender.sendMessage(new TextComponentString(text));
     }
-    
+
+    @Override
+    public void sendMessage(ITextComponent text) {
+        sender.sendMessage(CraftTweakerMC.getITextComponent(text));
+    }
+
     @Override
     public ICommandSender getInternal() {
         return sender;

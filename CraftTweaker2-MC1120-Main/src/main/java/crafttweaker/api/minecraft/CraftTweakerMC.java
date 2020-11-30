@@ -15,6 +15,8 @@ import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.potions.*;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.text.IStyle;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
 import crafttweaker.mc1120.command.*;
@@ -30,6 +32,8 @@ import crafttweaker.mc1120.liquid.*;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.*;
+import crafttweaker.mc1120.text.MCStyle;
+import crafttweaker.mc1120.text.MCTextComponent;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -48,6 +52,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
+import net.minecraft.util.text.Style;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
@@ -954,5 +959,21 @@ public class CraftTweakerMC {
 
     public static Explosion getExplosion(IExplosion explosion) {
         return explosion != null && explosion instanceof MCExplosion ? (Explosion) explosion.getInternal() : null;
+    }
+
+    public static IStyle getIStyle(Style style) {
+        return style == null ? null : new MCStyle(style);
+    }
+
+    public static Style getStyle(IStyle style) {
+        return style == null ? null : (Style) style.getInternal();
+    }
+
+    public static ITextComponent getITextComponent(net.minecraft.util.text.ITextComponent textComponent) {
+        return textComponent == null ? null : new MCTextComponent(textComponent);
+    }
+
+    public static net.minecraft.util.text.ITextComponent getITextComponent(ITextComponent textComponent) {
+        return textComponent == null ? null : (net.minecraft.util.text.ITextComponent) textComponent.getInternal();
     }
 }

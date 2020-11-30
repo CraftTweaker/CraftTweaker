@@ -1,7 +1,9 @@
 package crafttweaker.mc1120.player;
 
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.world.*;
@@ -43,7 +45,12 @@ public class CommandBlockPlayer implements IUser {
     public void sendMessage(String text) {
         sender.sendMessage(new TextComponentString(text));
     }
-    
+
+    @Override
+    public void sendMessage(ITextComponent text) {
+        sender.sendMessage(CraftTweakerMC.getITextComponent(text));
+    }
+
     @Override
     public Object getInternal() {
         return sender;
