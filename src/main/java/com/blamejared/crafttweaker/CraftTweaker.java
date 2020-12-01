@@ -170,6 +170,11 @@ public class CraftTweaker {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
+        //ImmutableMap of ImmutableMaps. Nice.
+        RecipeManager recipeManager = event.getRecipeManager();
+        recipeManager.recipes = new HashMap<>(recipeManager.recipes);
+        recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
+        
         CTClientEventHandler.TOOLTIPS.clear();
         serverOverride = false;
         CTCraftingTableManager.recipeManager = event.getRecipeManager();
