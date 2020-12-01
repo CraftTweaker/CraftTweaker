@@ -21,24 +21,22 @@ public interface ITextComponent {
         return append(text);
     }
 
-    @ZenMethod
     @ZenSetter("style")
     void setStyle(IStyle style);
 
-    @ZenMethod
     @ZenGetter("style")
     IStyle getStyle();
 
-    @ZenMethod
+    @ZenGetter("unformattedComponentText")
     String getUnformattedComponentText();
 
-    @ZenMethod
+    @ZenGetter("unformattedText")
     String getUnformattedText();
 
-    @ZenMethod
+    @ZenGetter("formattedText")
     String getFormattedText();
 
-    @ZenMethod
+    @ZenGetter("siblings")
     List<ITextComponent> getSiblings();
 
     @ZenMethod
