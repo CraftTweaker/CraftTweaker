@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.text.expand;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.data.DataList;
 import crafttweaker.api.data.DataMap;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -33,10 +34,10 @@ public class ExpandTextComponent {
 
     @ZenMethodStatic
     public static ITextComponent fromData(IData data) {
-        if (data instanceof DataMap) {
+        if (data instanceof DataMap || data instanceof DataList) {
             return CraftTweakerMC.getITextComponent(net.minecraft.util.text.ITextComponent.Serializer.fromJsonLenient(data.asString()));
         } else {
-            throw new IllegalArgumentException("data argument must be DataMap!");
+            throw new IllegalArgumentException("data argument must be DataMap or DataList!");
         }
     }
 }
