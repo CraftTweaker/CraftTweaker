@@ -20,7 +20,7 @@ public class MCTextComponent implements ITextComponent {
     @Override
     public ITextComponent append(ITextComponent text) {
         this.text.appendSibling(CraftTweakerMC.getITextComponent(text));
-        return this;
+        return CraftTweakerMC.getITextComponent(this.text);
     }
 
     @Override
