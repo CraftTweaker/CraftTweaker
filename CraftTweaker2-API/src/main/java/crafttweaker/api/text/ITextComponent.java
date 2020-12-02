@@ -1,7 +1,6 @@
 package crafttweaker.api.text;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.data.IData;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;

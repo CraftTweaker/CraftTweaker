@@ -1,7 +1,6 @@
 package crafttweaker.mc1120.text;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.formatting.IFormatter;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.text.IStyle;
 import net.minecraft.util.text.Style;
