@@ -131,7 +131,12 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     public void sendStatusMessage(IFormattedText message, boolean hotBar) {
         this.player.sendStatusMessage(new TextComponentString(message.getText()), hotBar);
     }
-    
+
+    @Override
+    public void sendStatusMessage(crafttweaker.api.text.ITextComponent message, boolean hotBar) {
+        this.player.sendStatusMessage(CraftTweakerMC.getITextComponent(message), hotBar);
+    }
+
     @Override
     public int getHotbarSize() {
         return 9;

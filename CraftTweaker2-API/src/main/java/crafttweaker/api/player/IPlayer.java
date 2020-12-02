@@ -8,6 +8,7 @@ import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.*;
 
@@ -53,6 +54,11 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenMethod
     void sendStatusMessage(IFormattedText message, boolean hotBar);
+
+    @ZenMethod
+    default void sendStatusMessage(ITextComponent message, boolean hotBar) {
+        CraftTweakerAPI.logError(this.getClass().getCanonicalName() + " doesn't override sendStatusMessage(Lcrafttweaker/api/text/ITextComponent)! This is a bug!");
+    }
     
     @ZenGetter("hotbarSize")
     int getHotbarSize();
