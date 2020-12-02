@@ -17,12 +17,6 @@ public class ExpandEntity {
         return CraftTweakerMC.getEntity(expanded);
     }
 
-    @ZenMethod
-    @ZenGetter
-    public boolean onGround(IEntity internal) {
-        return getInternal(internal).onGround;
-    }
-
     @ZenGetter("uuid")
     public String getUUID(IEntity internal) {
         return getInternal(internal).getCachedUniqueIdString();

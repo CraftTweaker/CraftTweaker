@@ -24,6 +24,8 @@ public class ExpandItemDefinition {
 
     @ZenMethod
     public void setAlwaysEdible(IItemDefinition item) {
-        if (item instanceof ItemFood) ((ItemFood)getInternal(item)).setAlwaysEdible();
+        Item food = getInternal(item);
+        if (food instanceof ItemFood)
+            ((ItemFood)food).setAlwaysEdible();
     }
 }

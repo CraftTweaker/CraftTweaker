@@ -518,4 +518,10 @@ public interface IEntity extends ICommandSender {
     default void setNBT(IData data) {
         this.update(data);
     }
+
+    @ZenGetter
+    @ZenMethod
+    default boolean onGround(){
+        return false;
+    }
 }
