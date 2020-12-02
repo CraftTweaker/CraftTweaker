@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.formatting;
 
 import crafttweaker.api.formatting.IFormattedText;
+import crafttweaker.api.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Arrays;
@@ -63,5 +64,20 @@ public class FormattedStringJoin implements IMCFormattedString {
     @Override
     public String getText() {
         return getTooltipString();
+    }
+
+    @Override
+    public ITextComponent asTextComponent() {
+        boolean first = true;
+        ITextComponent textComponent = null;
+        for (IMCFormattedString value : values) {
+            if (first) {
+                textComponent = value.asTextComponent();
+                first = false;
+            } else {
+                textComponent = textComponent.append(value.asTextComponent());
+            }
+        }
+        return textComponent;
     }
 }

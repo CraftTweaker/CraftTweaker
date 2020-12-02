@@ -88,7 +88,7 @@ public class MCStyle implements IStyle {
 
     @Override
     public String getColor() {
-        return style.getColor() == null ? "null" : style.getColor().toString();
+        return style.getColor() == null ? "null" : style.getColor().name();
     }
 
     @Override
