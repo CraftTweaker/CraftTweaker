@@ -1,7 +1,6 @@
 package crafttweaker.api.text;
 
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.formatting.IFormatter;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenSetter;
@@ -12,6 +11,9 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenRegister
 @ZenClass("crafttweaker.text.IStyle")
 public interface IStyle {
+    @ZenGetter("parent")
+    IStyle getParent();
+
     @ZenSetter("parent")
     void setParent(IStyle style);
 

@@ -18,6 +18,11 @@ public class MCStyle implements IStyle {
     }
 
     @Override
+    public IStyle getParent() {
+        return CraftTweakerMC.getIStyle(this.style.getParent());
+    }
+
+    @Override
     public void setParent(IStyle style) {
         this.style.setParentStyle(CraftTweakerMC.getStyle(style));
     }
