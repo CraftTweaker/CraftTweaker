@@ -103,6 +103,16 @@ public class MCStyle implements IStyle {
     }
 
     @Override
+    public IStyle createDeepCopy() {
+        return CraftTweakerMC.getIStyle(style.createDeepCopy());
+    }
+
+    @Override
+    public IStyle createShallowCopy() {
+        return CraftTweakerMC.getIStyle(style.createShallowCopy());
+    }
+
+    @Override
     public Object getInternal() {
         return style;
     }

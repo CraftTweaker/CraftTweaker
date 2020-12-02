@@ -3,6 +3,7 @@ package crafttweaker.api.text;
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 import stanhebben.zenscript.annotations.ZenSetter;
 
 /**
@@ -58,6 +59,12 @@ public interface IStyle {
 
     @ZenSetter("color")
     void setColor(String color);
+
+    @ZenMethod
+    IStyle createShallowCopy();
+
+    @ZenMethod
+    IStyle createDeepCopy();
 
     Object getInternal();
 }
