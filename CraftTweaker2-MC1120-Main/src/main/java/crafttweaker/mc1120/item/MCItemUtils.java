@@ -213,7 +213,7 @@ public class MCItemUtils implements IItemUtils {
                 .filter(Objects::nonNull)
                 .toArray(IItemStack[]::new);
     }
-    
+
     @Override
     public IItemStack getItem(String location, @Optional int meta) {
         return BracketHandlerItem.getItem(location, meta);

@@ -26,11 +26,7 @@ public class GlobalFunctions {
         CraftTweakerAPI.tweaker.enableDebug();
     }
     
-    
-    public static boolean isNull(Object any){
+    public static boolean isNull(Object any) {
         return any == null;
     }
-    
-    
-    
 }

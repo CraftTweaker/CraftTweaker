@@ -4,8 +4,12 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.potions.*;
-import stanhebben.zenscript.annotations.*;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
 
 import java.util.List;
 
@@ -70,9 +74,6 @@ public interface IEntityLivingBase extends IEntity {
     
     @ZenMethod
     IPotionEffect getActivePotionEffect(IPotion potion);
-
-    @ZenMethod
-    void removePotionEffect(IPotion potion);
     
     @ZenMethod
     boolean isPotionEffectApplicable(IPotionEffect potionEffect);

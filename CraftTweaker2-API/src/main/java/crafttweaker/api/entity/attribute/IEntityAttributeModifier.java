@@ -24,5 +24,6 @@ public interface IEntityAttributeModifier {
     @ZenGetter("amount")
     double getAmount();
 
+
     Object getInternal();
 }

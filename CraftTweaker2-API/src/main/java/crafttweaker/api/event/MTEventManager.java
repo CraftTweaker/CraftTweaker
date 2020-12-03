@@ -145,6 +145,15 @@ public class MTEventManager implements IEventManager {
         elLootingLevel.clear();
         elPlayerAdvancement.clear();
         elSpecialSpawn.clear();
+        elArrowLoose.clear();
+        elArrowNock.clear();
+        elEntityJoinWorld.clear();
+        elEntityLivingEquipmentChange.clear();
+        elEntityLivingDamage.clear();
+        elEntityLivingHeal.clear();
+        elEntityLivingUpdateEvent.clear();
+        elPotionEffectAdded.clear();
+        elPlayerCloneEvent.clear();
     }
 
     // ##########################
@@ -1671,5 +1680,176 @@ public class MTEventManager implements IEventManager {
 
     public void publishProjectileImpactThrowable(ProjectileImpactThrowableEvent event) {
         elProjectileImpactThrowable.publish(event);
+    }
+
+    // #########################
+    // ###  ArrowLooseEvent  ###
+    // #########################
+
+    private final EventList<ArrowLooseEvent> elArrowLoose = new EventList<>();
+
+    @Override
+    public IEventHandle onArrowLoose(IEventHandler<ArrowLooseEvent> ev) {
+        return elArrowLoose.add(ev);
+    }
+
+    public boolean hasArrowLoose() {
+        return elArrowLoose.hasHandlers();
+    }
+
+    public void publishArrowLoose(ArrowLooseEvent event) {
+    	elArrowLoose.publish(event);
+    }
+
+    // ########################
+    // ###  ArrowNockEvent  ###
+    // ########################
+
+    private final EventList<ArrowNockEvent> elArrowNock = new EventList<>();
+
+    @Override
+    public IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev) {
+        return elArrowNock.add(ev);
+    }
+
+    public boolean hasArrowNock() {
+        return elArrowNock.hasHandlers();
+    }
+
+    public void publishArrowNock(ArrowNockEvent event) {
+    	elArrowNock.publish(event);
+    }
+    
+    // ##############################
+    // ###  EntityJoinWorldEvent  ###
+    // ##############################
+
+    private final EventList<EntityJoinWorldEvent> elEntityJoinWorld = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev) {
+        return elEntityJoinWorld.add(ev);
+    }
+
+    public boolean hasEntityJoinWorld() {
+        return elEntityJoinWorld.hasHandlers();
+    }
+
+    public void publishEntityJoinWorld(EntityJoinWorldEvent event) {
+    	elEntityJoinWorld.publish(event);
+    }
+    
+    // ##########################################
+    // ###  EntityLivingEquipmentChangeEvent  ###
+    // ##########################################
+
+    private final EventList<EntityLivingEquipmentChangeEvent> elEntityLivingEquipmentChange = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingEquipmentChange(IEventHandler<EntityLivingEquipmentChangeEvent> ev) {
+        return elEntityLivingEquipmentChange.add(ev);
+    }
+
+    public boolean hasEntityLivingEquipmentChange() {
+        return elEntityLivingEquipmentChange.hasHandlers();
+    }
+
+    public void publishEntityLivingEquipmentChange(EntityLivingEquipmentChangeEvent event) {
+    	elEntityLivingEquipmentChange.publish(event);
+    }
+    
+    // ##########################
+    // ### LivingEntityDamage ###
+    // ##########################
+    
+    private final EventList<EntityLivingDamageEvent> elEntityLivingDamage = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev) {
+        return elEntityLivingDamage.add(ev);
+    }
+
+    public boolean hasEntityLivingDamage() {
+        return elEntityLivingDamage.hasHandlers();
+    }
+
+    public void publishEntityLivingDamage(EntityLivingDamageEvent event) {
+        elEntityLivingDamage.publish(event);
+    }
+    
+    // ########################
+    // ### LivingEntityHeal ###
+    // ########################
+    
+    private final EventList<EntityLivingHealEvent> elEntityLivingHeal = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev) {
+        return elEntityLivingHeal.add(ev);
+    }
+
+    public boolean hasEntityLivingHeal() {
+        return elEntityLivingHeal.hasHandlers();
+    }
+
+    public void publishEntityLivingHeal(EntityLivingHealEvent event) {
+        elEntityLivingHeal.publish(event);
+    }
+
+    // ###############################
+    // ### EntityLivingUpdateEvent ###
+    // ###############################
+
+    private final EventList<EntityLivingUpdateEvent> elEntityLivingUpdateEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingUpdate(IEventHandler<EntityLivingUpdateEvent> ev) {
+        return elEntityLivingUpdateEvent.add(ev);
+    }
+
+    public boolean hasEntityLivingUpdateEvent() {
+        return elEntityLivingUpdateEvent.hasHandlers();
+    }
+
+    public void publishEntityLivingUpdateEvent(EntityLivingUpdateEvent event) {
+        elEntityLivingUpdateEvent.publish(event);
+    }
+
+    // #########################
+    // ### PotionEffectAdded ###
+    // #########################
+
+    private final EventList<PotionEffectAddedEvent> elPotionEffectAdded = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev) {
+        return elPotionEffectAdded.add(ev);
+    }
+
+    public boolean hasPotionEffectAdded() {
+        return elPotionEffectAdded.hasHandlers();
+    }
+
+    public void publishPotionEffectAdded(PotionEffectAddedEvent event) {
+        elPotionEffectAdded.publish(event);
+    }
+
+    // ########################
+    // ### PlayerCloneEvent ###
+    // ########################
+
+    private final EventList<PlayerCloneEvent> elPlayerCloneEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev) {
+        return elPlayerCloneEvent.add(ev);
+    }
+
+    public boolean hasPlayerCloneEvent() {
+        return elPlayerCloneEvent.hasHandlers();
+    }
+
+    public void publishPlayerCloneEvent(PlayerCloneEvent event) {
+        elPlayerCloneEvent.publish(event);
     }
 }

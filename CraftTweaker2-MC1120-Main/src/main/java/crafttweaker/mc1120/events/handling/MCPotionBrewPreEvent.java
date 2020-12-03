@@ -4,7 +4,7 @@ import crafttweaker.api.event.PotionBrewPreEvent;
 import net.minecraftforge.event.brewing.PotionBrewEvent;
 
 public class MCPotionBrewPreEvent extends MCPotionBrewEvent implements PotionBrewPreEvent {
-    private PotionBrewEvent.Pre event;
+    private final PotionBrewEvent.Pre event;
 
     public MCPotionBrewPreEvent(PotionBrewEvent.Pre event) {
         super(event);

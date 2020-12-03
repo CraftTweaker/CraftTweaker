@@ -7,8 +7,8 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 public class MCProjectileImpactArrowEvent extends MCProjectileImpactEvent implements ProjectileImpactArrowEvent {
-    private ProjectileImpactEvent.Arrow event;
-    private EntityArrow arrow;
+    private final ProjectileImpactEvent.Arrow event;
+    private final EntityArrow arrow;
 
     public MCProjectileImpactArrowEvent(ProjectileImpactEvent.Arrow event) {
         super(event);

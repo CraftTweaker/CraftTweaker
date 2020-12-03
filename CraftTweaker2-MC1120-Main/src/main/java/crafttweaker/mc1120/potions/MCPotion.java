@@ -60,7 +60,12 @@ public class MCPotion implements IPotion {
     public boolean isBeneficial() {
         return potion.isBeneficial();
     }
-    
+
+    @Override
+    public void setBeneficial() {
+        potion.setBeneficial();
+    }
+
     @Override
     public boolean isInstant() {
         return potion.isInstant();

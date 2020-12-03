@@ -4,16 +4,19 @@ import crafttweaker.api.world.IBiomeType;
 import net.minecraftforge.common.BiomeDictionary;
 
 public class MCBiomeType implements IBiomeType {
-    
+
     private final BiomeDictionary.Type type;
     
     public MCBiomeType(BiomeDictionary.Type type) {
         this.type = type;
+    }
+
+    public BiomeDictionary.Type getInternal() {
+        return type;
     }
     
     @Override
     public String getName() {
         return type.getName();
     }
-    
 }

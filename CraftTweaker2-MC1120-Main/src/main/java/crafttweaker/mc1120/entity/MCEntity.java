@@ -1,15 +1,21 @@
 package crafttweaker.mc1120.entity;
 
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IMaterial;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.util.Position3f;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IRayTraceResult;
+import crafttweaker.api.world.IVector3d;
+import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.server.MCServer;
@@ -17,10 +23,14 @@ import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.*;
-import net.minecraftforge.fml.common.registry.*;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MCEntity extends MCCommandSender implements IEntity {
@@ -659,14 +669,14 @@ public class MCEntity extends MCCommandSender implements IEntity {
     public void update(IData data) {
         NBTConverter.updateMap(entity.getEntityData(), data);
     }
-    
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof MCEntity && entity.isEntityEqual(((MCEntity) obj).entity)) || super.equals(obj);
-    }
-    
+
     @Override
     public boolean onGround() {
         return entity.onGround;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof MCEntity && entity.isEntityEqual(((MCEntity) obj).entity)) || super.equals(obj);
     }
 }

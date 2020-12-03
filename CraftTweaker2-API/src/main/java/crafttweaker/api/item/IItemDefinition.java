@@ -98,6 +98,6 @@ public interface IItemDefinition {
     
     @ZenMethod
     int getItemBurnTime(IItemStack itemStack);
-    
+
     Object getInternal();
 }

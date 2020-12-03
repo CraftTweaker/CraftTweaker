@@ -8,8 +8,8 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 public class MCProjectileImpactThrowableEvent extends MCProjectileImpactEvent implements ProjectileImpactThrowableEvent {
-    private ProjectileImpactEvent.Throwable event;
-    private EntityThrowable throwable;
+    private final ProjectileImpactEvent.Throwable event;
+    private final EntityThrowable throwable;
 
     public MCProjectileImpactThrowableEvent(ProjectileImpactEvent.Throwable event) {
         super(event);
