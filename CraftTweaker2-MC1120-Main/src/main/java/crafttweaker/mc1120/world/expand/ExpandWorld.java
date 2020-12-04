@@ -22,50 +22,50 @@ public class ExpandWorld {
     }
 
     @ZenMethod
-    public boolean extinguishFire(IWorld world, IPlayer player, IBlockPos pos, IFacing side) {
+    public static boolean extinguishFire(IWorld world, IPlayer player, IBlockPos pos, IFacing side) {
         return CraftTweakerMC.getWorld(world).extinguishFire(CraftTweakerMC.getPlayer(player), CraftTweakerMC.getBlockPos(pos), CraftTweakerMC.getFacing(side));
     }
 
     @ZenMethod
-    public boolean isSpawnChunk(IWorld world, int x, int z) {
+    public static boolean isSpawnChunk(IWorld world, int x, int z) {
         return CraftTweakerMC.getWorld(world).isSpawnChunk(x, z) ;
     }
 
     @ZenMethod
-    @ZenGetter
-    public int getSeaLevel(IWorld world) {
+    @ZenGetter("seaLevel")
+    public static int getSeaLevel(IWorld world) {
         return CraftTweakerMC.getWorld(world).getSeaLevel();
     }
 
     @ZenMethod
-    public IEntity createLightningBolt(IWorld world, double x, double y, double z, @Optional boolean effectOnly) {
+    public static IEntity createLightningBolt(IWorld world, double x, double y, double z, @Optional boolean effectOnly) {
         return CraftTweakerMC.getIEntity(new EntityLightningBolt(CraftTweakerMC.getWorld(world), x, y, z, effectOnly));
     }
 
     @ZenMethod
-    public boolean addWeatherEffect(IWorld world, IEntity entity) {
+    public static boolean addWeatherEffect(IWorld world, IEntity entity) {
         return CraftTweakerMC.getWorld(world).addWeatherEffect(CraftTweakerMC.getEntity(entity));
     }
 
     @ZenMethod
-    public IEntity summonLightningBolt(IWorld world, double x, double y, double z, @Optional boolean effectOnly) {
+    public static IEntity summonLightningBolt(IWorld world, double x, double y, double z, @Optional boolean effectOnly) {
         EntityLightningBolt bolt = new EntityLightningBolt(CraftTweakerMC.getWorld(world), x, y, z, effectOnly);
         CraftTweakerMC.getWorld(world).addWeatherEffect(bolt);
         return CraftTweakerMC.getIEntity(bolt);
     }
 
     @ZenMethod
-    public IEntity[] getEntitiesWithinAABB(IWorld world, IAxisAlignedBB aabb) {
+    public static IEntity[] getEntitiesWithinAABB(IWorld world, IAxisAlignedBB aabb) {
         return CraftTweakerMC.getWorld(world).getEntitiesWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb)).stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
     }
 
     @ZenMethod
-    public IEntity[] getEntitiesWithinAABBExcludingEntity(IWorld world, IAxisAlignedBB aabb, IEntity entity) {
+    public static IEntity[] getEntitiesWithinAABBExcludingEntity(IWorld world, IAxisAlignedBB aabb, IEntity entity) {
         return CraftTweakerMC.getWorld(world).getEntitiesWithinAABBExcludingEntity(CraftTweakerMC.getEntity(entity), CraftTweakerMC.getAxisAlignedBB(aabb)).stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
     }
 
     @ZenMethod
-    public IEntity findNearestEntityWithinAABB(IWorld world, IAxisAlignedBB aabb, IEntity closestTo) {
+    public static IEntity findNearestEntityWithinAABB(IWorld world, IAxisAlignedBB aabb, IEntity closestTo) {
         return CraftTweakerMC.getIEntity(CraftTweakerMC.getWorld(world).findNearestEntityWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb), CraftTweakerMC.getEntity(closestTo)));
     }
 }

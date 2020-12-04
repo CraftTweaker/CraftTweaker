@@ -14,25 +14,25 @@ import stanhebben.zenscript.annotations.ZenMethodStatic;
 public class ExpandAxisAlignedBB {
 
     @ZenMethodStatic
-    public IAxisAlignedBB create(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+    public static IAxisAlignedBB create(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         AxisAlignedBB aabb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
         return CraftTweakerMC.getIAxisAlignedBB(aabb);
     }
 
     @ZenMethodStatic
-    public IAxisAlignedBB create(IBlockPos pos) {
+    public static IAxisAlignedBB create(IBlockPos pos) {
         AxisAlignedBB aabb = new AxisAlignedBB(CraftTweakerMC.getBlockPos(pos));
         return CraftTweakerMC.getIAxisAlignedBB(aabb);
     }
 
     @ZenMethodStatic
-    public IAxisAlignedBB create(IBlockPos pos1, IBlockPos pos2) {
+    public static IAxisAlignedBB create(IBlockPos pos1, IBlockPos pos2) {
         AxisAlignedBB aabb = new AxisAlignedBB(CraftTweakerMC.getBlockPos(pos1), CraftTweakerMC.getBlockPos(pos2));
         return CraftTweakerMC.getIAxisAlignedBB(aabb);
     }
 
     @ZenMethodStatic
-    public IAxisAlignedBB create(IVector3d min, IVector3d max) {
+    public static IAxisAlignedBB create(IVector3d min, IVector3d max) {
         AxisAlignedBB aabb = new AxisAlignedBB(CraftTweakerMC.getVec3d(min), CraftTweakerMC.getVec3d(max));
         return CraftTweakerMC.getIAxisAlignedBB(aabb);
     }

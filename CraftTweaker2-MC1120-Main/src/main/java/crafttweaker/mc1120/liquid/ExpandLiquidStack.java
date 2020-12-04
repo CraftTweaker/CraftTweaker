@@ -18,7 +18,7 @@ public class ExpandLiquidStack {
      * @return weighted liquid stack
      */
     @ZenOperator(OperatorType.MOD)
-    WeightedLiquidStack percent(ILiquidStack thisStack, float p) {
+    public static WeightedLiquidStack percent(ILiquidStack thisStack, float p) {
         return new WeightedLiquidStack(thisStack, p * 0.01f);
     }
     
@@ -30,7 +30,7 @@ public class ExpandLiquidStack {
      * @return weighted liquid stack
      */
     @ZenMethod
-    WeightedLiquidStack weight(ILiquidStack thisStack, float p) {
+    public static WeightedLiquidStack weight(ILiquidStack thisStack, float p) {
         return new WeightedLiquidStack(thisStack, p);
     }
 }
