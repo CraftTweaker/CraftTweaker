@@ -92,7 +92,6 @@ public class ExpandEntityLivingBase {
     }
 
     @ZenMethod
-    @ZenGetter
     public void removePotionEffect(IEntityLivingBase entityLivingBase, IPotion potion) {
         CraftTweakerMC.getEntityLivingBase(entityLivingBase).removePotionEffect(CraftTweakerMC.getPotion(potion));
     }
