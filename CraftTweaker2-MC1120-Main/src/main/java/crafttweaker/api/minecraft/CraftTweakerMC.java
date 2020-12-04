@@ -107,13 +107,12 @@ import net.minecraftforge.oredict.OreIngredient;
 
 import java.util.*;
 
-@SuppressWarnings("unused")
-
 /**
  * CraftTweaker - MineCraft API bridge.
  *
  * @author Stan Hebben
  */
+@SuppressWarnings({"unused", "rawtypes"})
 public class CraftTweakerMC {
     
     public static final IBiome[] biomes;
@@ -209,8 +208,8 @@ public class CraftTweakerMC {
     /**
      * Constructs an item stack with wildcard size.
      *
-     * @param item
-     * @param meta
+     * @param item stack item
+     * @param meta stack meta
      *
      * @return crafttweaker stack
      */
