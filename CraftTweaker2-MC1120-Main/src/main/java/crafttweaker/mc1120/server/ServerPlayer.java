@@ -44,10 +44,6 @@ public class ServerPlayer implements IUser {
     }
 
     @Override
-    public void sendMessage(ITextComponent text) {
-    }
-
-    @Override
     public Object getInternal() {
         return null;
     }

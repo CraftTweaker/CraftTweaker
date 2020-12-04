@@ -25,11 +25,6 @@ public interface ICommandSender {
     
     @ZenMethod
     void sendMessage(String text);
-
-    @ZenMethod
-    default void sendMessage(ITextComponent text) {
-        CraftTweakerAPI.logError(this.getClass().getCanonicalName() + "doesn't override sendMessage(Lcrafttwealer/api/text/ITextComponent) method! It is a bug!");
-    }
     
     Object getInternal();
 }

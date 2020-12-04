@@ -86,11 +86,6 @@ public class MCServer extends AbstractServer {
     }
 
     @Override
-    public void sendMessage(ITextComponent text) {
-        server.sendMessage(CraftTweakerMC.getITextComponent(text));
-    }
-
-    @Override
     public MinecraftServer getInternal() {
         return server;
     }

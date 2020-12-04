@@ -47,11 +47,6 @@ public class CommandBlockPlayer implements IUser {
     }
 
     @Override
-    public void sendMessage(ITextComponent text) {
-        sender.sendMessage(CraftTweakerMC.getITextComponent(text));
-    }
-
-    @Override
     public Object getInternal() {
         return sender;
     }

@@ -43,11 +43,6 @@ public class MCCommandSender implements crafttweaker.api.command.ICommandSender 
     }
 
     @Override
-    public void sendMessage(ITextComponent text) {
-        sender.sendMessage(CraftTweakerMC.getITextComponent(text));
-    }
-
-    @Override
     public ICommandSender getInternal() {
         return sender;
     }
