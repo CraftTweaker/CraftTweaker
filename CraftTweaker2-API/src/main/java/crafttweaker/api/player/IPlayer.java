@@ -9,10 +9,7 @@ import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
 
 /**
  * @author Stan
@@ -52,10 +49,10 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     void sendChat(String message);
     
     @ZenMethod
-    void sendStatusMessage(String message, boolean hotBar);
+    void sendStatusMessage(String message, @Optional(valueBoolean = true) boolean hotBar);
     
     @ZenMethod
-    void sendStatusMessage(IFormattedText message, boolean hotBar);
+    void sendStatusMessage(IFormattedText message, @Optional(valueBoolean = true) boolean hotBar);
     
     @ZenGetter("hotbarSize")
     int getHotbarSize();
