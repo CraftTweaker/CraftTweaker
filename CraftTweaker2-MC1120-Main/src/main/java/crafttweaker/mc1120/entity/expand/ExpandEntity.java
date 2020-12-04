@@ -18,32 +18,37 @@ public class ExpandEntity {
     }
 
     @ZenGetter("uuid")
-    public String getUUID(IEntity internal) {
+    @ZenMethod
+    public static String getUUID(IEntity internal) {
         return getInternal(internal).getCachedUniqueIdString();
     }
 
     @ZenGetter("boundingBox")
-    public IAxisAlignedBB getBoundingBox(IEntity internal) {
+    @ZenMethod
+    public static IAxisAlignedBB getBoundingBox(IEntity internal) {
         return CraftTweakerMC.getIAxisAlignedBB(getInternal(internal).getEntityBoundingBox());
     }
 
     @ZenSetter("boundingBox")
-    public void setBoundingBox(IEntity internal, IAxisAlignedBB aabb) {
+    @ZenMethod
+    public static void setBoundingBox(IEntity internal, IAxisAlignedBB aabb) {
         getInternal(internal).setEntityBoundingBox(CraftTweakerMC.getAxisAlignedBB(aabb));
     }
 
     @ZenGetter("stepHeight")
-    public float getStepHeight(IEntity internal) {
+    @ZenMethod
+    public static float getStepHeight(IEntity internal) {
         return getInternal(internal).stepHeight;
     }
 
     @ZenSetter("stepHeight")
-    public void setStepHeight(IEntity internal, float stepHeight) {
-        getInternal(internal).getCachedUniqueIdString();
+    @ZenMethod
+    public static void setStepHeight(IEntity internal, float stepHeight) {
+        getInternal(internal).stepHeight = stepHeight;
     }
 
     @ZenMethod
-    public void removeFromWorld(IEntity internal) {
+    public static void removeFromWorld(IEntity internal) {
         Entity entity = getInternal(internal);
         entity.world.removeEntity(entity);
     }

@@ -46,7 +46,8 @@ public class ExpandFacing {
     public static IFacing down() {
         return DOWN;
     }
-    
+
+    @ZenMethodStatic
     public static IFacing fromString(String name) {
         return new MCFacing(EnumFacing.valueOf(name));
     }

@@ -174,13 +174,13 @@ public class MCDamageSourceExpand {
 
     @ZenMethod
     @ZenGetter("damageUnblockable")
-    public boolean isDamageUnblockable(IDamageSource source) {
+    public static boolean isDamageUnblockable(IDamageSource source) {
         return getInternal(source).isUnblockable();
     }
 
     @ZenMethod
     @ZenGetter("damageLocation")
-    public IVector3d getDamageLocation(IDamageSource source) {
+    public static IVector3d getDamageLocation(IDamageSource source) {
         return CraftTweakerMC.getIVector3d(getInternal(source).getDamageLocation());
     }
 }

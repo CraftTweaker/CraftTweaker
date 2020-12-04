@@ -18,12 +18,13 @@ public class ExpandItemDefinition {
     }
 
     @ZenGetter
-    public boolean isArrow(IItemDefinition item) {
+    @ZenMethod
+    public static boolean isArrow(IItemDefinition item) {
         return item instanceof ItemArrow;
     }
 
     @ZenMethod
-    public void setAlwaysEdible(IItemDefinition item) {
+    public static void setAlwaysEdible(IItemDefinition item) {
         Item food = getInternal(item);
         if (food instanceof ItemFood)
             ((ItemFood)food).setAlwaysEdible();

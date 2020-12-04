@@ -9,6 +9,7 @@ import crafttweaker.api.world.IBlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("crafttweaker.player.IPlayer")
 @ZenRegister
@@ -18,31 +19,37 @@ public class ExpandPlayer {
     }
 
     @ZenGetter("bedLocation")
-    public IBlockPos getBedLocation(IPlayer player) {
+    @ZenMethod
+    public static IBlockPos getBedLocation(IPlayer player) {
         return CraftTweakerMC.getIBlockPos(getInternal(player).bedLocation);
     }
 
     @ZenGetter("fishHook")
-    public IEntityFishHook getFishHook(IPlayer player) {
+    @ZenMethod
+    public static IEntityFishHook getFishHook(IPlayer player) {
         return CraftTweakerMC.getIEntityFishHook(getInternal(player).fishEntity);
     }
 
     @ZenGetter("inventoryContainer")
-    public IContainer getInventoryContainer(IPlayer player) {
+    @ZenMethod
+    public static IContainer getInventoryContainer(IPlayer player) {
         return CraftTweakerMC.getIContainer(getInternal(player).inventoryContainer);
     }
 
     @ZenGetter
-    public boolean isSleeping(IPlayer player) {
+    @ZenMethod
+    public static boolean isSleeping(IPlayer player) {
         return getInternal(player).isPlayerSleeping();
     }
 
     @ZenGetter
-    public boolean isFullyAsleep(IPlayer player) {
+    @ZenMethod
+    public static boolean isFullyAsleep(IPlayer player) {
         return getInternal(player).isPlayerFullyAsleep();
     }
 
     @ZenGetter("sleepTimer")
+    @ZenMethod
     public int getSleepTimer(IPlayer player) {
         return getInternal(player).getSleepTimer();
     }
