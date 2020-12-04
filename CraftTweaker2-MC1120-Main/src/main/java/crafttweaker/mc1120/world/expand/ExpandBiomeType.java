@@ -8,6 +8,7 @@ import crafttweaker.mc1120.world.MCBiome;
 import net.minecraftforge.common.BiomeDictionary;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ public class ExpandBiomeType {
     }
 
     @ZenGetter("biomes")
+    @ZenMethod
     public static List<IBiome> getBiomes(IBiomeType biomeType) {
         return BiomeDictionary.getBiomes(getInternal(biomeType)).stream().map(MCBiome::new).collect(Collectors.toList());
     }

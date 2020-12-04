@@ -4,10 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.ZenExpansion;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethodStatic;
+import stanhebben.zenscript.annotations.*;
 
 import java.util.UUID;
 
@@ -25,12 +22,14 @@ public class ExpandEntityAttributeModifier {
     }
 
     @ZenGetter("saved")
-    public boolean isSaved(IEntityAttributeModifier attributeModifier) {
+    @ZenMethod
+    public static boolean isSaved(IEntityAttributeModifier attributeModifier) {
         return getInternal(attributeModifier).isSaved();
     }
 
-    @ZenGetter("saved")
-    public void setSaved(IEntityAttributeModifier attributeModifier, boolean saved) {
+    @ZenSetter("saved")
+    @ZenMethod
+    public static void setSaved(IEntityAttributeModifier attributeModifier, boolean saved) {
         getInternal(attributeModifier).setSaved(saved);
     }
 }

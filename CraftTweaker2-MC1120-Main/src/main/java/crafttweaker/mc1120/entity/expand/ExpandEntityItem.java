@@ -14,7 +14,7 @@ public class ExpandEntityItem {
 
     @ZenSetter("item")
     @ZenMethod
-    public void setItem(IEntityItem itemEntity, IItemStack stack) {
+    public static void setItem(IEntityItem itemEntity, IItemStack stack) {
         CraftTweakerMC.getEntityItem(itemEntity).setItem(CraftTweakerMC.getItemStack(stack));
     }
 }

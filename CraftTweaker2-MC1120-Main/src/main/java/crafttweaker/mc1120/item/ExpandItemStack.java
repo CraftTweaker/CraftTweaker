@@ -25,12 +25,13 @@ public class ExpandItemStack {
     }
 
     @ZenMethod
-    public void addAttributeModifier(IItemStack stack, String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
+    public static void addAttributeModifier(IItemStack stack, String attributeName, IEntityAttributeModifier modifier, IEntityEquipmentSlot equipmentSlot) {
         getInternal(stack).addAttributeModifier(attributeName, CraftTweakerMC.getAttributeModifier(modifier), CraftTweakerMC.getEntityEquipmentSlot(equipmentSlot));
     }
 
     @ZenGetter("maxItemUseDuration")
-    public int getMaxItemUseDuration(IItemStack stack) {
+    @ZenMethod
+    public static int getMaxItemUseDuration(IItemStack stack) {
         return getInternal(stack).getMaxItemUseDuration();
     }
 }
