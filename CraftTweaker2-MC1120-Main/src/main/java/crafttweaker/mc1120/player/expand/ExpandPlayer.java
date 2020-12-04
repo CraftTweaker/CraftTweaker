@@ -5,6 +5,7 @@ import crafttweaker.api.container.IContainer;
 import crafttweaker.api.entity.IEntityFishHook;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.IBlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -34,6 +35,11 @@ public class ExpandPlayer {
     @ZenMethod
     public static IContainer getInventoryContainer(IPlayer player) {
         return CraftTweakerMC.getIContainer(getInternal(player).inventoryContainer);
+    }
+
+    @ZenMethod
+    public static void sendRichTextStatusMessage(IPlayer player, ITextComponent textComponent, boolean hotbar) {
+        getInternal(player).sendStatusMessage(CraftTweakerMC.getITextComponent(textComponent), hotbar);
     }
 
     @ZenGetter

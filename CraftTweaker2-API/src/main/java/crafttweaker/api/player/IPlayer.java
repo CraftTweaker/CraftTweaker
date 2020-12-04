@@ -57,11 +57,6 @@ public interface IPlayer extends IEntityLivingBase, IUser {
     
     @ZenMethod
     void sendStatusMessage(IFormattedText message, boolean hotBar);
-
-    @ZenMethod
-    default void sendStatusMessage(ITextComponent message, boolean hotBar) {
-        CraftTweakerAPI.logError(this.getClass().getCanonicalName() + " doesn't override sendStatusMessage(Lcrafttweaker/api/text/ITextComponent)! This is a bug!");
-    }
     
     @ZenGetter("hotbarSize")
     int getHotbarSize();
