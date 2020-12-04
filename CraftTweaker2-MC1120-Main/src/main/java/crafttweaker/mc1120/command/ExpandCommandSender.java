@@ -4,7 +4,6 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.text.ITextComponent;
-import crafttweaker.mc1120.CraftTweaker;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
 
