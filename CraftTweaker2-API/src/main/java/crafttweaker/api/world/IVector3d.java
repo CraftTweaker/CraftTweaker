@@ -27,7 +27,12 @@ public interface IVector3d {
     
     @ZenMethod
     IVector3d subtract(IVector3d other);
-    
+
+    @ZenMethod
+    default IVector3d subtractReverse(IVector3d other) {
+        return null;
+    }
+
     @ZenMethod
     IVector3d add(IVector3d other);
     

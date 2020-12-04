@@ -1,7 +1,9 @@
 package crafttweaker.api.event;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityArrow;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -10,7 +12,14 @@ import stanhebben.zenscript.annotations.ZenSetter;
 @ZenClass("crafttweaker.event.ProjectileImpactArrowEvent")
 @ZenRegister
 public interface ProjectileImpactArrowEvent extends IProjectileImpactEvent, IEventCancelable {
+
     @ZenGetter("arrow")
+    default IEntityArrow getArrowNew() {
+        CraftTweakerAPI.logError("Class " + getClass() + " doesn't override ProjectileImpactArrowEvent#getArrowNew");
+        return null;
+    }
+
+    @Deprecated
     IEntity getArrow();
 
     @ZenGetter("shooter")

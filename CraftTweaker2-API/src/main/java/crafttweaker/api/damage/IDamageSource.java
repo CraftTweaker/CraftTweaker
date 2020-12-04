@@ -23,10 +23,15 @@ public interface IDamageSource {
 	
 	@ZenMethod
 	String getDeathMessage(IEntity entity);
-	
+
 	@ZenMethod
 	@ZenGetter("hunderDamage")
 	float getHungerDamage();
+
+	@ZenGetter("hungerDamage")
+	default float getHungerDamageNew() {
+		return getHungerDamage();
+	}
 	
 	@ZenMethod
 	@ZenGetter("immediateSource")
@@ -43,7 +48,7 @@ public interface IDamageSource {
 	@ZenMethod
 	@ZenGetter("damageAbsolute")
 	boolean isDamageAbsolute();
-	
+
 	@ZenMethod
 	@ZenGetter("difficultyScaled")
 	boolean isDifficultyScaled();
@@ -63,7 +68,7 @@ public interface IDamageSource {
 	@ZenMethod
 	@ZenGetter("projectile")
 	boolean isProjectile();
-	
+
 	@ZenMethod
 	IDamageSource setDamageAllowedInCreativeMode();
 	
@@ -87,7 +92,7 @@ public interface IDamageSource {
 	
 	@ZenMethod
 	IDamageSource setProjectile();
-    
+
     
     Object getInternal();
 }

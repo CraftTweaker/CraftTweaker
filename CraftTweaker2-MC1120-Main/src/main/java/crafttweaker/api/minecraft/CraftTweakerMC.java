@@ -1,36 +1,57 @@
 package crafttweaker.api.minecraft;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.*;
-import crafttweaker.api.command.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
+import crafttweaker.api.block.IMaterial;
+import crafttweaker.api.command.ICommand;
+import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.attribute.IEntityAttribute;
+import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
+import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.*;
-import crafttweaker.api.liquid.*;
+import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.potions.*;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
+import crafttweaker.api.potions.IPotionType;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.text.IStyle;
 import crafttweaker.api.text.ITextComponent;
+import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
-import crafttweaker.mc1120.command.*;
+import crafttweaker.mc1120.command.MCCommand;
+import crafttweaker.mc1120.command.MCCommandSender;
 import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.entity.*;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttribute;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
+import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
+import crafttweaker.mc1120.entity.expand.ExpandEntityEquipmentSlot;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.item.VanillaIngredient;
-import crafttweaker.mc1120.liquid.*;
+import crafttweaker.mc1120.liquid.MCLiquidDefinition;
+import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
+import crafttweaker.mc1120.potions.MCPotion;
+import crafttweaker.mc1120.potions.MCPotionEfect;
+import crafttweaker.mc1120.potions.MCPotionType;
+import crafttweaker.mc1120.util.MCAxisAlignedBB;
 import crafttweaker.mc1120.potions.*;
 import crafttweaker.mc1120.text.MCStyle;
 import crafttweaker.mc1120.text.MCTextComponent;
@@ -39,30 +60,57 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
-import net.minecraft.entity.item.*;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.*;
-import net.minecraft.potion.*;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionType;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.IngredientNBT;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.oredict.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.OreIngredient;
 
 import java.util.*;
+
+@SuppressWarnings("unused")
 
 /**
  * CraftTweaker - MineCraft API bridge.
@@ -666,7 +714,7 @@ public class CraftTweakerMC {
         if(internal.getTagCompound() == null && stack.getTagCompound() != null) {
             return false;
         }
-        if(internal.getTagCompound() == null && stack.getTagCompound() == null) {
+        if(internal.getTagCompound() == null) {
             return stack.getItem() == internal.getItem() && (internal.getMetadata() == 32767 || stack.getMetadata() == internal.getMetadata());
         }
         if(internal.getTagCompound().getKeySet().equals(stack.getTagCompound().getKeySet())) {
@@ -693,13 +741,19 @@ public class CraftTweakerMC {
         else if(entity instanceof EntityLivingBase)
             return getIEntityLivingBase((EntityLivingBase) entity);
         else if(entity instanceof EntityItem)
-            return getIEntityItem((EntityItem) entity);
+            return new MCEntityItem((EntityItem) entity);
         else if(entity instanceof EntityXPOrb)
-            return getIEntityXp((EntityXPOrb) entity);
+            return new MCEntityXp((EntityXPOrb) entity);
+        else if(entity instanceof EntityFishHook)
+            return new MCEntityFishHook((EntityFishHook) entity);
+        else if(entity instanceof EntityArrow)
+            return getIEntityArrow((EntityArrow) entity);
+        else if(entity instanceof EntityThrowable)
+            return new MCEntityThrowable((EntityThrowable) entity);
         else
             return new MCEntity(entity);
     }
-    
+
     public static IEntityXp getIEntityXp(EntityXPOrb entityXPOrb) {
         return entityXPOrb == null ? null : new MCEntityXp(entityXPOrb);
     }
@@ -852,8 +906,7 @@ public class CraftTweakerMC {
     public static Container getContainer(IContainer container) {
         return container == null ? null : (Container) container.getInternal();
     }
-    
-    
+
     public static IFacing getIFacing(EnumFacing sideHit) {
         return sideHit == null ? null : new MCFacing(sideHit);
     }
@@ -958,7 +1011,104 @@ public class CraftTweakerMC {
     }
 
     public static Explosion getExplosion(IExplosion explosion) {
-        return explosion != null && explosion instanceof MCExplosion ? (Explosion) explosion.getInternal() : null;
+        return explosion instanceof MCExplosion ? (Explosion) explosion.getInternal() : null;
+    }
+
+    public static IEntityFishHook getIEntityFishHook(EntityFishHook entity) {
+		return entity == null ? null : new MCEntityFishHook(entity);
+	}
+
+	public static AttributeModifier getAttributeModifier(IEntityAttributeModifier modifier) {
+		return modifier == null ? null : (AttributeModifier) modifier.getInternal();
+	}
+
+    public static IEntityAttributeModifier getIEntityAttributeModifier(AttributeModifier modifier) {
+		return modifier == null ? null : new MCEntityAttributeModifier(modifier);
+	}
+
+    public static IEntityArrow getIEntityArrow(EntityArrow entity) {
+        if(entity == null)
+            return null;
+        else if(entity instanceof EntityTippedArrow)
+            return new MCEntityArrowTipped((EntityTippedArrow) entity);
+        else
+            return new MCEntityArrow(entity);
+	}
+
+    public static IEntityArrowTipped getIEntityArrowTipped(EntityTippedArrow entity) {
+        return entity == null ? null : new MCEntityArrowTipped(entity);
+    }
+
+    public static IEntityThrowable getIEntityThrowable(EntityThrowable entity) {
+		return entity == null ? null : new MCEntityThrowable(entity);
+	}
+
+    public static IPotionEffect[] getIPotionEffects(List<PotionEffect> potionEffects) {
+        if(potionEffects == null)
+            return null;
+
+        IPotionEffect[] result = new IPotionEffect[potionEffects.size()];
+        for(int i = 0; i < result.length; i++) {
+            PotionEffect potionEffect = potionEffects.get(i);
+            if(potionEffect != null) {
+                result[i] = new MCPotionEfect(potionEffect);
+            }
+        }
+        return result;
+    }
+
+    public static PotionType getPotionType(IPotionType potionType) {
+        return potionType == null ? null : (PotionType) potionType.getInternal();
+    }
+
+    public static IPotionType getIPotionType(PotionType potionType) {
+        return potionType == null ? null : new MCPotionType(potionType);
+    }
+
+    public static AxisAlignedBB getAxisAlignedBB(IAxisAlignedBB aabb) {
+        return aabb == null ? null : (AxisAlignedBB) aabb.getInternal();
+    }
+
+    public static IAxisAlignedBB getIAxisAlignedBB(AxisAlignedBB aabb) {
+        return aabb == null ? null : new MCAxisAlignedBB(aabb);
+    }
+
+    public static IEntityAttribute getIEntityAttribute(IAttribute attribute) {
+        return attribute == null ? null : new MCEntityAttribute(attribute);
+    }
+
+    public static IEntityAttributeInstance getIEntityAttributeInstance(IAttributeInstance attribute) {
+        return attribute == null ? null : new MCEntityAttributeInstance(attribute);
+    }
+
+    public static EnumHand getHand(IEntityEquipmentSlot hand) {
+        if (hand == null) return null;
+        switch (getEntityEquipmentSlot(hand)) {
+            case MAINHAND: return EnumHand.MAIN_HAND;
+            case OFFHAND: return EnumHand.OFF_HAND;
+            default: return null;
+        }
+    }
+
+    public static IEntityEquipmentSlot getIEntityEquipmentSlot(EnumHand hand) {
+        if (hand == null) return null;
+        switch (hand) {
+            case MAIN_HAND: return ExpandEntityEquipmentSlot.mainHand();
+            case OFF_HAND: return ExpandEntityEquipmentSlot.offhand();
+            default: return null;
+        }
+    }
+
+    public static EnumFacing getFacing(IFacing facing) {
+        return facing == null ? null : (EnumFacing) facing.getInternal();
+    }
+
+    public static Item getItem(IItemDefinition itemDefinition) {
+        return itemDefinition == null ? null : (Item) itemDefinition.getInternal();
+    }
+
+    public static BiomeDictionary.Type getBiomeType(IBiomeType biomeType) {
+        return biomeType == null ? null : (BiomeDictionary.Type) biomeType.getInternal();
     }
 
     public static IStyle getIStyle(Style style) {

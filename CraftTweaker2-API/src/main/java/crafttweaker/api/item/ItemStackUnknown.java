@@ -1,13 +1,18 @@
 package crafttweaker.api.item;
 
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
-import crafttweaker.api.enchantments.*;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IWorld;
 
 import java.util.List;
 

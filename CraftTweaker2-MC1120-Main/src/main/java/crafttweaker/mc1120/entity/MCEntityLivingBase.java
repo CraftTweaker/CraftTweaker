@@ -1,20 +1,23 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.api.damage.IDamageSource;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityEquipmentSlot;
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.potions.*;
+import crafttweaker.api.potions.IPotion;
+import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityLivingBase;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
-    private EntityLivingBase entityLivingBase;
+    private final EntityLivingBase entityLivingBase;
     
     public MCEntityLivingBase(EntityLivingBase entity) {
         super(entity);
@@ -116,11 +119,6 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
         return CraftTweakerMC.getIPotionEffect(entityLivingBase.getActivePotionEffect(CraftTweakerMC.getPotion(potion)));
     }
 
-    @Override
-    public void removePotionEffect(IPotion potion) {
-        entityLivingBase.removePotionEffect(CraftTweakerMC.getPotion(potion));
-    }
-    
     @Override
     public boolean isPotionEffectApplicable(IPotionEffect potionEffect) {
         return entityLivingBase.isPotionApplicable(CraftTweakerMC.getPotionEffect(potionEffect));

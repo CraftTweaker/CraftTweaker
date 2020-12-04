@@ -67,6 +67,11 @@ public class MCFurnaceManager implements IFurnaceManager {
     }
 
     @Override
+    public IItemStack getSmeltingResult(IItemStack stack) {
+        return CraftTweakerMC.getIItemStack(FurnaceRecipes.instance().getSmeltingResult(CraftTweakerMC.getItemStack(stack)));
+    }
+
+    @Override
     public List<IFurnaceRecipe> getAll() {
         return FurnaceRecipes.instance()
                 .getSmeltingList().entrySet().stream()

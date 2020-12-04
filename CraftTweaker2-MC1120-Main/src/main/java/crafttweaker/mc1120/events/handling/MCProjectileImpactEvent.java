@@ -4,11 +4,12 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.event.IProjectileImpactEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IRayTraceResult;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 public class MCProjectileImpactEvent implements IProjectileImpactEvent {
-    private net.minecraftforge.event.entity.ProjectileImpactEvent event;
+    private final ProjectileImpactEvent event;
 
-    public MCProjectileImpactEvent(net.minecraftforge.event.entity.ProjectileImpactEvent event) {
+    public MCProjectileImpactEvent(ProjectileImpactEvent event) {
         this.event = event;
     }
 

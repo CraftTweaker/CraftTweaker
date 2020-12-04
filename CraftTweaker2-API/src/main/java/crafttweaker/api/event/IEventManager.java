@@ -267,6 +267,34 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onProjectileImpactThrowable(IEventHandler<ProjectileImpactThrowableEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onArrowLoose(IEventHandler<ArrowLooseEvent> ev);
+
+    @ZenMethod
+    IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingEquipmentChange(IEventHandler<EntityLivingEquipmentChangeEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityLivingUpdate(IEventHandler<EntityLivingUpdateEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
@@ -274,8 +302,6 @@ public interface IEventManager {
      * IEventHandle onTimerSingle(int millis, ITimerEventHandler ev);
      *
      * IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
-     *
-     * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
      *
      */
 }

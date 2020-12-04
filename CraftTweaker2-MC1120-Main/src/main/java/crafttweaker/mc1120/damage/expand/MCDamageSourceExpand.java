@@ -2,16 +2,36 @@ package crafttweaker.mc1120.damage.expand;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.damage.IDamageSource;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
+import crafttweaker.api.world.IVector3d;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import stanhebben.zenscript.annotations.*;
 
 @ZenExpansion("crafttweaker.damage.IDamageSource")
 @ZenRegister
 public class MCDamageSourceExpand {
+    private static DamageSource getInternal(IDamageSource expanded) {
+        return CraftTweakerMC.getDamageSource(expanded);
+    }
+
+    @ZenMethodStatic
+    public static IDamageSource createEntityDamage(String damagetype, IEntity source) {
+        EntityDamageSource damageSource = new EntityDamageSource(damagetype, CraftTweakerMC.getEntity(source));
+        return new MCDamageSource(damageSource);
+    }
+
+    @ZenMethodStatic
+    public static IDamageSource createIndirectDamage(String damagetype, IEntity source, IEntity indirectEntity) {
+        EntityDamageSourceIndirect damageSource = new EntityDamageSourceIndirect(damagetype, CraftTweakerMC.getEntity(source), CraftTweakerMC.getEntity(indirectEntity));
+        return new MCDamageSource(damageSource);
+    }
+
     @ZenMethodStatic
     public static IDamageSource createMobDamage(IEntityLivingBase mob) {
         return new MCDamageSource(DamageSource.causeMobDamage(CraftTweakerMC.getEntityLivingBase(mob)));
@@ -51,7 +71,6 @@ public class MCDamageSourceExpand {
     public static IDamageSource createOfType(String type) {
         return new MCDamageSource(new DamageSource(type));
     }
-    
 
     @ZenMethodStatic
     public static IDamageSource IN_FIRE() {
@@ -151,5 +170,17 @@ public class MCDamageSourceExpand {
     @ZenMethodStatic
     public static IDamageSource FIREWORKS() {
         return new MCDamageSource(DamageSource.FIREWORKS);
+    }
+
+    @ZenMethod
+    @ZenGetter("damageUnblockable")
+    public boolean isDamageUnblockable(IDamageSource source) {
+        return getInternal(source).isUnblockable();
+    }
+
+    @ZenMethod
+    @ZenGetter("damageLocation")
+    public IVector3d getDamageLocation(IDamageSource source) {
+        return CraftTweakerMC.getIVector3d(getInternal(source).getDamageLocation());
     }
 }
