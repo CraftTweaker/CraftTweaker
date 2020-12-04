@@ -8,7 +8,6 @@ import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.formatting.IFormattedText;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;

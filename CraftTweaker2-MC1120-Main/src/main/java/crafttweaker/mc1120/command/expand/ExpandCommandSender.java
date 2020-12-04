@@ -1,4 +1,4 @@
-package crafttweaker.mc1120.command;
+package crafttweaker.mc1120.command.expand;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.command.ICommandSender;
