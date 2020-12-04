@@ -7,11 +7,11 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IBlockPos;
 import net.minecraft.entity.player.EntityPlayer;
-import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("crafttweaker.player.IPlayer")
+@ZenExpansion("crafttweaker.player.IPlayer")
 @ZenRegister
 public class ExpandPlayer {
     private static EntityPlayer getInternal(IPlayer expanded) {
@@ -50,7 +50,7 @@ public class ExpandPlayer {
 
     @ZenGetter("sleepTimer")
     @ZenMethod
-    public int getSleepTimer(IPlayer player) {
+    public static int getSleepTimer(IPlayer player) {
         return getInternal(player).getSleepTimer();
     }
 }
