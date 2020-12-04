@@ -22,8 +22,5 @@ public interface IFormattedText {
 
     @ZenCaster
     @ZenMethod
-    default ITextComponent asTextComponent() {
-        CraftTweakerAPI.logError(this.getClass().getCanonicalName() + " doesn't override IFormattedText#asTextComponent! It is a bug!");
-        return null;
-    }
+    ITextComponent asTextComponent();
 }

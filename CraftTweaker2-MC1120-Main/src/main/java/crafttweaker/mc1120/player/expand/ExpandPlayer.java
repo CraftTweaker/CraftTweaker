@@ -8,6 +8,7 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.IBlockPos;
 import net.minecraft.entity.player.EntityPlayer;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -38,7 +39,7 @@ public class ExpandPlayer {
     }
 
     @ZenMethod
-    public static void sendRichTextStatusMessage(IPlayer player, ITextComponent textComponent, boolean hotbar) {
+    public static void sendRichTextStatusMessage(IPlayer player, ITextComponent textComponent, @Optional(valueBoolean = true) boolean hotbar) {
         getInternal(player).sendStatusMessage(CraftTweakerMC.getITextComponent(textComponent), hotbar);
     }
 

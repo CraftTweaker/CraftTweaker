@@ -1,9 +1,7 @@
 package crafttweaker.api.command;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.server.IServer;
-import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
