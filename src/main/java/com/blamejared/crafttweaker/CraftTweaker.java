@@ -195,6 +195,7 @@ public class CraftTweaker {
     public void addExampleScriptFiles(ExampleCollectionEvent event) {
         event.addResource(new ResourceLocation(MODID, "crafttweaker_hello_world"));
         event.addResource(new ResourceLocation(MODID, "crafttweaker_crafting_recipes"));
+        event.addResource(new ResourceLocation(MODID, "crafttweaker_tags"));
     }
     
     
