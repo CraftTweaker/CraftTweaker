@@ -39,3 +39,4 @@ changelog.md
 secrets.json
 
 /.theia
+runServer
