@@ -13,7 +13,7 @@ public class MTLogger implements ILogger {
     
     private final List<ILogger> loggers = new ArrayList<>();
     private final List<IPlayer> players = new ArrayList<>();
-    private final List<String> unprocessed = new ArrayList<>();
+    private final List<ErrorMessage> unprocessed = new ArrayList<>();
     private boolean isDefaultDisabled = false;
     
     public void addLogger(ILogger logger) {
@@ -27,9 +27,9 @@ public class MTLogger implements ILogger {
     public void addPlayer(IPlayer player) {
         players.add(player);
         if(!unprocessed.isEmpty()) {
-            if(!CraftTweakerAPI.noWarn) {
-                unprocessed.forEach(player::sendChat);
-            }
+            unprocessed.stream()
+                    .filter(errorMessage -> !(CraftTweakerAPI.noWarn && errorMessage.isWarning))
+                    .forEach(errorMessage -> player.sendChat(errorMessage.message));
         }
     }
     
@@ -63,7 +63,7 @@ public class MTLogger implements ILogger {
         
         String message2 = "WARNING: " + message;
         if(players.isEmpty()) {
-            unprocessed.add(message2);
+            unprocessed.add(new ErrorMessage(message2, true));
         } else {
             if(!CraftTweakerAPI.noWarn) {
                 for(IPlayer player : players) {
@@ -86,13 +86,9 @@ public class MTLogger implements ILogger {
         
         String message2 = "ERROR: " + message;
         if(players.isEmpty()) {
-            unprocessed.add(message2);
+            unprocessed.add(new ErrorMessage(message2, false));
         } else {
-            if(!CraftTweakerAPI.noWarn) {
-                for(IPlayer player : players) {
-                    player.sendChat(message2);
-                }
-            }
+            players.forEach(player -> player.sendChat(message2));
         }
     }
     
@@ -115,5 +111,15 @@ public class MTLogger implements ILogger {
     @Override
     public void setLogDisabled(boolean logDisabled) {
         this.isDefaultDisabled = logDisabled;
+    }
+
+    private static class ErrorMessage {
+        final String message;
+        final boolean isWarning;
+
+        public ErrorMessage(String message, boolean isWarning) {
+            this.message = message;
+            this.isWarning = isWarning;
+        }
     }
 }
