@@ -23,14 +23,10 @@ public class MTLogger implements ILogger {
     public void removeLogger(ILogger logger) {
         loggers.remove(logger);
     }
-    
+
     public void addPlayer(IPlayer player) {
         players.add(player);
-        if(!unprocessed.isEmpty()) {
-            unprocessed.stream()
-                    .filter(errorMessage -> !(CraftTweakerAPI.noWarn && errorMessage.isWarning))
-                    .forEach(errorMessage -> player.sendChat(errorMessage.message));
-        }
+        logPlayer(player);
     }
     
     public void removePlayer(IPlayer player) {
@@ -61,14 +57,12 @@ public class MTLogger implements ILogger {
             logger.logWarning(message);
         }
         
-        String message2 = "WARNING: " + message;
+        String message2 = "\u00a7eWARNING: " + message;
         if(players.isEmpty()) {
             unprocessed.add(new ErrorMessage(message2, true));
         } else {
-            if(!CraftTweakerAPI.noWarn) {
-                for(IPlayer player : players) {
-                    player.sendChat(message2);
-                }
+            if(!CraftTweakerAPI.isSuppressingWarnings()) {
+                players.forEach(player -> player.sendChat(message2));
             }
         }
     }
@@ -84,17 +78,25 @@ public class MTLogger implements ILogger {
             logger.logError(message, exception);
         }
         
-        String message2 = "ERROR: " + message;
+        String message2 = "\u00a7cERROR: " + message;
         if(players.isEmpty()) {
             unprocessed.add(new ErrorMessage(message2, false));
         } else {
-            players.forEach(player -> player.sendChat(message2));
+            if (!CraftTweakerAPI.isSuppressingErrors()) {
+                players.forEach(player -> player.sendChat(message2));
+            }
         }
     }
     
     @Override
     public void logPlayer(IPlayer player) {
-    
+        for (ErrorMessage errorMessage : unprocessed) {
+            if (errorMessage.isWarning && !CraftTweakerAPI.isSuppressingWarnings()) {
+                player.sendChat(errorMessage.message);
+            } else if (!errorMessage.isWarning && !CraftTweakerAPI.isSuppressingErrors()) {
+                player.sendChat(errorMessage.message);
+            }
+        }
     }
     
     @Override

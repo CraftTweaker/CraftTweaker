@@ -106,11 +106,14 @@ public class CrTTweaker implements ITweaker {
     }
     
     private boolean loadScript(boolean isSyntaxCommand, ScriptLoader loader, List<SingleError> parseExceptions, boolean isLinter) {
+        if (isSyntaxCommand) {
+            CraftTweakerAPI.suppressWarnAndErrorFlag |= 0b100;
+        }
+
         if(loader == null) {
             CraftTweakerAPI.logError("Error when trying to load with a null loader");
             return false;
         }
-        
         CraftTweakerAPI.logInfo("Loading scripts for loader with names " + loader.toString());
         if(loader.isLoaded() && !isSyntaxCommand) {
             CraftTweakerAPI.logDefault("Skipping loading for loader " + loader + " since it's already been loaded");

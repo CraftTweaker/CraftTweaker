@@ -91,11 +91,14 @@ public class CraftTweakerAPI {
      * Access point to the brewing handler
      */
     public static IBrewingManager brewingManager = null;
-    
+
     /**
-     * If true warnings sent to the log won't print to the player's chat
+     * 3 bits flag.
+     * if the highest bit is 1, errors and warnings must print to player's chat, ignoring the two other bits.
+     * if the middle bit is 1, errors won't print to the player's chat.
+     * if the lowest bit is 1, warnings won't.
      */
-    public static boolean noWarn = false;
+    public static byte suppressWarnAndErrorFlag = 0b000;
     
     // Here shadows pls use
     public static boolean ENABLE_SEARCH_TREE_RECALCULATION = true;
@@ -216,6 +219,20 @@ public class CraftTweakerAPI {
      */
     public static void logDefault(String message) {
         getLogger().logDefault(message);
+    }
+
+    /**
+     * @return if errors sent to log won't print to player's chat
+     */
+    public static boolean isSuppressingErrors() {
+        return (suppressWarnAndErrorFlag & 0b100) == 0 && (suppressWarnAndErrorFlag & 0b10) != 0;
+    }
+
+    /**
+     * @return if warnings sent to log won't print to player's chat
+     */
+    public static boolean isSuppressingWarnings() {
+        return (suppressWarnAndErrorFlag & 0b100) == 0 && (suppressWarnAndErrorFlag & 0b01) != 0;
     }
     
     // ###################################
