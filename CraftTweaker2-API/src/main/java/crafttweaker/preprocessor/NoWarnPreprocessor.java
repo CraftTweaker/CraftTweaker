@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.runtime.ScriptFile;
 
 /**
+ * Putting the #nowarn preprocessor on a script file will make it that Logger warnings aren't printed to the player chat
  * @author youyihj
  */
 public class NoWarnPreprocessor extends PreprocessorActionBase {
