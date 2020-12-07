@@ -65,6 +65,6 @@ for tag in forge_gems.elements {
 var pickaxeAll = <tag:items:crafttweaker:all_pickaxes>;
 //Then you can do something like 1 Cobblestone Stairs turns into 3 Cobblestone, but it needs a pickaxe, and it consumed 2 durability.
 
-craftingTable.addShapeless("stairs to cobble", <item:minecraft:cobblestone>*3, [<item:minecraft:cobblestone_stairs>, pickaxeAll.asIIngredient().transformDamage(2)]);
+craftingTable.addShapeless("stairs_to_cobble", <item:minecraft:cobblestone> * 3, [<item:minecraft:cobblestone_stairs>, pickaxeAll.asIIngredient().transformDamage(2)]);
 
 //Have fun with your tags!
