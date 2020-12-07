@@ -2,7 +2,6 @@ package crafttweaker.api.item;
 
 import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.IEnchantment;
-import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.potions.IPotionEffect;
 import stanhebben.zenscript.annotations.*;

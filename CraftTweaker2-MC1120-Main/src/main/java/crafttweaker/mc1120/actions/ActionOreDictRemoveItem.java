@@ -1,7 +1,6 @@
 package crafttweaker.mc1120.actions;
 
 import crafttweaker.IAction;
-import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 

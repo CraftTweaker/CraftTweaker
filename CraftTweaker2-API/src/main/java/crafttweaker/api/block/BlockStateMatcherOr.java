@@ -4,7 +4,6 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.util.ArrayUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BlockStateMatcherOr implements IBlockStateMatcher {
 

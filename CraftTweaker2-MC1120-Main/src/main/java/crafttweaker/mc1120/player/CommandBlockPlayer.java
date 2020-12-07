@@ -1,9 +1,7 @@
 package crafttweaker.mc1120.player;
 
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
-import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.world.*;

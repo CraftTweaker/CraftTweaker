@@ -3,7 +3,6 @@ package crafttweaker.mc1120.server;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.player.IUser;
 import crafttweaker.api.server.IServer;
-import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.world.MCBlockPos;
 import net.minecraft.util.math.BlockPos;

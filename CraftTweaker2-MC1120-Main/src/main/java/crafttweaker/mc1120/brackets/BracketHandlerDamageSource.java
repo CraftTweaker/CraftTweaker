@@ -3,7 +3,6 @@ package crafttweaker.mc1120.brackets;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.*;
 import crafttweaker.api.damage.IDamageSource;
-import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.damage.expand.MCDamageSourceExpand;
 import crafttweaker.zenscript.*;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;

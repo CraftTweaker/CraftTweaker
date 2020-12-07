@@ -1,7 +1,6 @@
 package crafttweaker.mc1120.commands;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.recipes.FurnaceRecipe;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.data.NBTConverter;
 import net.minecraft.command.ICommandSender;
@@ -11,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.*;

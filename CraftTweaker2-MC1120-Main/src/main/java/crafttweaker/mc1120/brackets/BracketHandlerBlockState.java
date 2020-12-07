@@ -6,7 +6,6 @@ import crafttweaker.api.block.IBlockState;
 import crafttweaker.mc1120.block.MCBlockState;
 import crafttweaker.zenscript.IBracketHandler;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;

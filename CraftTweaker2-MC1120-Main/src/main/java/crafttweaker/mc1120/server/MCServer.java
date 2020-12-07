@@ -5,7 +5,6 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
 import crafttweaker.api.server.AbstractServer;
 import crafttweaker.api.server.IServer;
-import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IWorld;
 import crafttweaker.mc1120.CraftTweaker;
