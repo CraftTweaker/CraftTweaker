@@ -12,6 +12,7 @@ import crafttweaker.api.recipes.*;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.vanilla.IVanilla;
 import crafttweaker.runtime.*;
+import crafttweaker.util.SuppressErrorFlag;
 import crafttweaker.zenscript.*;
 import stanhebben.zenscript.annotations.*;
 import stanhebben.zenscript.symbols.*;
@@ -93,12 +94,10 @@ public class CraftTweakerAPI {
     public static IBrewingManager brewingManager = null;
 
     /**
-     * 3 bits flag.
-     * if the highest bit is 1, errors and warnings must print to player's chat, ignoring the two other bits.
-     * if the middle bit is 1, errors won't print to the player's chat.
-     * if the lowest bit is 1, warnings won't.
+     * whether errors and warnings are printed to players' log or not.
+     * @see SuppressErrorFlag
      */
-    public static byte suppressWarnAndErrorFlag = 0b000;
+    private static SuppressErrorFlag suppressErrorFlag = SuppressErrorFlag.DEFAULT;
     
     // Here shadows pls use
     public static boolean ENABLE_SEARCH_TREE_RECALCULATION = true;
@@ -222,17 +221,27 @@ public class CraftTweakerAPI {
     }
 
     /**
-     * @return if errors sent to log won't print to player's chat
+     * Set whether errors and warnings printed to players' log or not.
+     * @param flag to set
      */
-    public static boolean isSuppressingErrors() {
-        return (suppressWarnAndErrorFlag & 0b100) == 0 && (suppressWarnAndErrorFlag & 0b10) != 0;
+    public static void setSuppressErrorFlag(SuppressErrorFlag flag) {
+        if (suppressErrorFlag.isForced())
+            return;
+        suppressErrorFlag = flag;
     }
 
     /**
-     * @return if warnings sent to log won't print to player's chat
+     * @return if errors sent to log won't be printed to player's chat
+     */
+    public static boolean isSuppressingErrors() {
+        return suppressErrorFlag.isSuppressingErrors();
+    }
+
+    /**
+     * @return if warnings sent to log won't be printed to player's chat
      */
     public static boolean isSuppressingWarnings() {
-        return (suppressWarnAndErrorFlag & 0b100) == 0 && (suppressWarnAndErrorFlag & 0b01) != 0;
+        return suppressErrorFlag.isSuppressingWarnings();
     }
     
     // ###################################

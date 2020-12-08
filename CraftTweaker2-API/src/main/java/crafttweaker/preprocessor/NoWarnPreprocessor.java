@@ -2,6 +2,7 @@ package crafttweaker.preprocessor;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.runtime.ScriptFile;
+import crafttweaker.util.SuppressErrorFlag;
 
 /**
  * Putting the #nowarn preprocessor on a script file will make it that Logger warnings aren't printed to the player chat
@@ -16,7 +17,7 @@ public class NoWarnPreprocessor extends PreprocessorActionBase {
 
     @Override
     public void executeActionOnFind(ScriptFile scriptFile) {
-        CraftTweakerAPI.suppressWarnAndErrorFlag |= 0b01;
+        CraftTweakerAPI.setSuppressErrorFlag(SuppressErrorFlag.ONLY_WARNINGS);
     }
 
     @Override

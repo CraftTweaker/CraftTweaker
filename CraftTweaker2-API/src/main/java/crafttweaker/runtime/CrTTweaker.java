@@ -107,7 +107,7 @@ public class CrTTweaker implements ITweaker {
     
     private boolean loadScript(boolean isSyntaxCommand, ScriptLoader loader, List<SingleError> parseExceptions, boolean isLinter) {
         if (isSyntaxCommand) {
-            CraftTweakerAPI.suppressWarnAndErrorFlag |= 0b100;
+            CraftTweakerAPI.setSuppressErrorFlag(SuppressErrorFlag.FORCED);
         }
 
         if(loader == null) {
