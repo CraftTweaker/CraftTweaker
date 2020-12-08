@@ -6,7 +6,7 @@ package crafttweaker.util;
 public enum SuppressErrorFlag {
 
     /**
-     * All errors and warnings sent to log will be printed  to players' chat.
+     * All errors and warnings sent to log will be printed to players' chat.
      */
     DEFAULT,
 
