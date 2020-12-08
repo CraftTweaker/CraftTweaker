@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.FluidStack;
@@ -132,7 +133,7 @@ public class MCLiquidStack implements ILiquidStack {
     public List<IItemStack> getItems() {
         final IItemStack stack = CraftTweakerMC.getIItemStack(FluidUtil.getFilledBucket(this.stack.copy()));
         if(stack != null) {
-            final String name = String.format("Any container with %s * %d", this.stack.getLocalizedName(), this.getAmount());
+            final String name = I18n.translateToLocalFormatted("crafttweaker.any_liquid_container", this.stack.getLocalizedName(), this.getAmount());
             return Collections.singletonList(stack.withDisplayName(name));
         }
         return Collections.emptyList();
@@ -142,7 +143,7 @@ public class MCLiquidStack implements ILiquidStack {
     public IItemStack[] getItemArray() {
         final IItemStack stack = CraftTweakerMC.getIItemStack(FluidUtil.getFilledBucket(this.stack.copy()));
         if(stack != null) {
-            final String name = String.format("Any container with %s * %d", this.stack.getLocalizedName(), this.getAmount());
+            final String name = I18n.translateToLocalFormatted("crafttweaker.any_liquid_container", this.stack.getLocalizedName(), this.getAmount());
             return new IItemStack[]{stack.withDisplayName(name)};
         }
         return new IItemStack[0];
