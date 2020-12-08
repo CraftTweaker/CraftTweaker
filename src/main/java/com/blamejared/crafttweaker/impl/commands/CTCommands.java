@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.text.*;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
+import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
 import com.blamejared.crafttweaker.impl.item.*;
 import com.blamejared.crafttweaker.impl.network.*;
 import com.blamejared.crafttweaker.impl.network.messages.*;
@@ -162,7 +163,7 @@ public class CTCommands {
             return 0;
         }));
         registerCommand(new CommandImpl("scripts", "Opens the scripts folder", (CommandCallerPlayer) (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("scripts/")
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(CraftTweakerAPI.SCRIPT_DIR
                     .toURI()
                     .toString()));
             return 0;
@@ -227,6 +228,7 @@ public class CTCommands {
             return 0;
         }));
         
+        registerCommand(new ExamplesCommand());
         
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
             send(new StringTextComponent("Dump types: "), player);

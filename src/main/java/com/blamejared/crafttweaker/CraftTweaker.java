@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.brackets.*;
 import com.blamejared.crafttweaker.impl.brackets.tags.*;
 import com.blamejared.crafttweaker.impl.commands.*;
 import com.blamejared.crafttweaker.impl.commands.custom.*;
+import com.blamejared.crafttweaker.impl.commands.script_examples.ExampleCollectionEvent;
 import com.blamejared.crafttweaker.impl.events.*;
 import com.blamejared.crafttweaker.impl.ingredients.*;
 import com.blamejared.crafttweaker.impl.logger.*;
@@ -129,9 +130,7 @@ public class CraftTweaker {
     }
     
     private void setup(final FMLCommonSetupEvent event) {
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon")
-                .firstRun()
-                .execute();
+        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon").execute();
         CraftTweakerAPI.loadScripts(setupCommon);
         
         LOG.info("{} has loaded successfully!", NAME);
@@ -190,6 +189,13 @@ public class CraftTweaker {
         final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
         event.registerBEP("tagManager", tagManagerBEP);
         event.registerBEP("tag", new TagBracketHandler(tagManagerBEP));
+    }
+    
+    @SubscribeEvent
+    public void addExampleScriptFiles(ExampleCollectionEvent event) {
+        event.addResource(new ResourceLocation(MODID, "crafttweaker_hello_world"));
+        event.addResource(new ResourceLocation(MODID, "crafttweaker_crafting_recipes"));
+        event.addResource(new ResourceLocation(MODID, "crafttweaker_tags"));
     }
     
     

@@ -1,19 +1,24 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.api.util.*;
-import com.blamejared.crafttweaker.impl.brackets.util.*;
-import net.minecraft.util.*;
-import org.openzen.zencode.java.*;
-import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.lexer.*;
-import org.openzen.zenscript.parser.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.InstantiationUtil;
+import com.blamejared.crafttweaker.impl.brackets.util.ParseUtil;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.shared.CodePosition;
+import org.openzen.zenscript.lexer.ParseException;
+import org.openzen.zenscript.lexer.ZSTokenParser;
+import org.openzen.zenscript.parser.BracketExpressionParser;
 import org.openzen.zenscript.parser.expression.*;
-import org.openzen.zenscript.parser.type.*;
+import org.openzen.zenscript.parser.type.IParsedType;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")
@@ -63,18 +68,22 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
-        StringBuilder builder = new StringBuilder();
-        while(tokens.optional(ZSTokenType.T_GREATER) == null) {
-            builder.append(tokens.next().content);
-            builder.append(tokens.getLastWhitespace());
+        final String name = ParseUtil.readContent(tokens);
+        final ResourceLocation resourceLocation = ResourceLocation.tryCreate(name);
+        if(resourceLocation == null) {
+            throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");
         }
         
-        final ResourceLocation resourceLocation = new ResourceLocation(builder.toString());
         if(registeredTypes.containsKey(resourceLocation)) {
-            return getCall(builder.toString(), registeredTypes.get(resourceLocation), position);
-        } else {
-            return getCallFallback(builder.toString(), position);
+            return getCall(name, registeredTypes.get(resourceLocation), position);
         }
+        
+        if(Registry.RECIPE_TYPE.containsKey(resourceLocation)) {
+            return getCallFallback(name, position);
+        }
+        
+        //Unknown BEP
+        throw new ParseException(position, String.format("Unknown RecipeType: <recipetype:%s>", name));
     }
     
     private ParsedExpression getCallFallback(String location, CodePosition position) {

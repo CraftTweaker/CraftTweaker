@@ -2,7 +2,11 @@ package com.blamejared.crafttweaker.api.actions;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import net.minecraftforge.fml.LogicalSide;
+import org.openzen.zencode.shared.CodePosition;
+
+import javax.annotation.Nonnull;
 
 /**
  * Any and all {@link org.openzen.zencode.java.ZenCodeType.Method} methods should create an instance of this class or one of it's subclasses, this is to make reloading actually work without breaking everything.
@@ -62,4 +66,17 @@ public interface IAction {
         return CraftTweaker.serverOverride || side.isServer();
     }
     
+    
+    /**
+     * Used to retrieve the script file an line that this action was created on.
+     * Uses the Stacktrace, so will not work if the action is staged an this method is called from another context.
+     *
+     * The created CodePosition's file will always be a virtual one, so its content cannot be accessed!
+     *
+     * @return The found CodePosition, or {@link CodePosition#UNKNOWN}, never {@code null}.
+     */
+    @Nonnull
+    default CodePosition getDeclaredScriptPosition() {
+        return PositionUtil.getZCScriptPositionFromStackTrace();
+    }
 }

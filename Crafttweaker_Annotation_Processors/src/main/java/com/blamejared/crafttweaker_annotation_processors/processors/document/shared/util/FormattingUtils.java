@@ -36,7 +36,7 @@ public class FormattingUtils {
             case INDEXGET:
                 return "[%s]";
             case CONTAINS:
-                return "%s in %s";
+                return "%2$s in %1$s";
             case COMPARE:
                 return "%s compare %s";
             case MEMBERGETTER:
