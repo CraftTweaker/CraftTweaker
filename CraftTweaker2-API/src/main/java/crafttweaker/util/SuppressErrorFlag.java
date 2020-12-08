@@ -11,7 +11,7 @@ public enum SuppressErrorFlag {
     DEFAULT,
 
     /**
-     * Only errors sent to log won't be printed to players' chat. In other words, suppress warnings.
+     * Only errors sent to log will be printed to players' chat. In other words, suppress warnings.
      * Used for #nowarn preprocessor
      */
     ONLY_WARNINGS,
