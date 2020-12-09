@@ -3,9 +3,12 @@ package com.blamejared.crafttweaker.api.zencode.impl.loaders;
 import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.zencode.brackets.*;
+import com.blamejared.crafttweaker.api.zencode.impl.native_types.CrTJavaNativeConverterBuilder;
 import com.blamejared.crafttweaker.impl.logger.*;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.*;
 import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zencode.shared.*;
 import org.openzen.zenscript.codemodel.*;
 import org.openzen.zenscript.formatter.*;
@@ -119,6 +122,7 @@ public class ScriptRun {
         for(Class<?> aClass : CraftTweakerRegistry.getZenGlobals()) {
             crafttweakerModule.addGlobals(aClass);
         }
+        crafttweakerModule.addClass(ItemStack.class);
         scriptingEngine.registerNativeProvided(crafttweakerModule);
         modules.add(crafttweakerModule);
         
@@ -141,7 +145,9 @@ public class ScriptRun {
     }
     
     private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeModule... dependencies) {
-        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies);
+        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, new CrTJavaNativeConverterBuilder());
+        
+        
         for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(moduleName, scriptingEngine, module)) {
             bep.register(bracketResolver.getName(), bracketResolver);
         }

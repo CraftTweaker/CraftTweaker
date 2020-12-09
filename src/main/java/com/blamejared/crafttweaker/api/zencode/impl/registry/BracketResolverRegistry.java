@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.impl.commands.*;
 import com.google.common.collect.*;
 import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zenscript.codemodel.member.ref.*;
 
 import java.lang.invoke.*;

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.*;
 import net.minecraftforge.forgespi.language.*;
 import org.objectweb.asm.*;
 import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.module.JavaNativeModule;
 
 import java.lang.annotation.*;
 import java.util.*;
