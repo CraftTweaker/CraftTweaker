@@ -433,5 +433,7 @@ public interface IItemStack extends IIngredient {
      *
      * @return internal ItemStack
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
     ItemStack getInternal();
 }

@@ -5,8 +5,7 @@ import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.fluid.*;
 import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.impl.block.material.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
+import com.blamejared.crafttweaker.impl_native.blocks.*;
 import com.blamejared.crafttweaker.impl.entity.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.item.*;
@@ -14,6 +13,9 @@ import com.blamejared.crafttweaker.impl.managers.*;
 import com.blamejared.crafttweaker.impl.potion.*;
 import com.blamejared.crafttweaker.impl.util.*;
 import com.blamejared.crafttweaker.impl.util.text.*;
+import com.blamejared.crafttweaker.impl_native.block.ExpandMaterial;
+import com.blamejared.crafttweaker.impl_native.entity.MCEntityClassification;
+import com.blamejared.crafttweaker.impl_native.entity.MCEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;
@@ -38,14 +40,14 @@ import java.util.*;
 public class BracketHandlers {
     
     /**
-     * Gets the give {@link MCBlock}. Throws an Exception if not found
+     * Gets the give {@link ExpandBlock}. Throws an Exception if not found
      * @param tokens What you would write in the BEP call.
-     * @return The found {@link MCBlock}
+     * @return The found {@link ExpandBlock}
      * @docParam tokens "minecraft:dirt"
      */
     @ZenCodeType.Method
     @BracketResolver("block")
-    public static MCBlock getBlock(String tokens) {
+    public static Block getBlock(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Block BEP <block:%s> does not seem to be lower-cased!", tokens);
     
@@ -57,7 +59,7 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!");
         }
         
-        return new MCBlock(ForgeRegistries.BLOCKS.getValue(key));
+        return ForgeRegistries.BLOCKS.getValue(key);
     }
     
     /**
@@ -69,25 +71,25 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("blockmaterial")
-    public static MCMaterial getBlockMaterial(String tokens) {
-        final MCMaterial mcMaterial = MCMaterial.tryGet(tokens);
-        if(mcMaterial != null) {
-            return mcMaterial;
+    public static Material getBlockMaterial(String tokens) {
+        final Material material = ExpandMaterial.tryGet(tokens);
+        if(material != null) {
+            return material;
         }
         
         try {
             for(Field field : Material.class.getFields()) {
                 if(field.getName().equalsIgnoreCase(tokens)) {
-                    return new MCMaterial((Material) field.get(null), field.getName());
+                    return (Material) field.get(null);
                 }
             }
         } catch(IllegalAccessException e) {
-            throw new IllegalArgumentException("Error gettig blockmaterial <blockmaterial:" + tokens + ">!", e);
+            throw new IllegalArgumentException("Error getting blockmaterial <blockmaterial:" + tokens + ">!", e);
         }
         
         try {
             final Field field = ObfuscationReflectionHelper.findField(Material.class, tokens.toUpperCase());
-            return new MCMaterial((Material) field.get(null), tokens);
+            return (Material) field.get(null);
         } catch(Exception ignored) {
         }
         
@@ -105,7 +107,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("blockstate")
-    public static MCBlockState getBlockState(String tokens) {
+    public static BlockState getBlockState(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("BlockState BEP <blockstate:%s> does not seem to be lower-cased!", tokens);
         String[] split = tokens.split(":", 4);
@@ -123,14 +125,14 @@ public class BracketHandlers {
         return null;
     }
     
-    public static MCBlockState getBlockState(String name, String properties) {
+    public static BlockState getBlockState(String name, String properties) {
         
         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
         if(block == null) {
             return null;
         }
         
-        MCBlockState blockState = new MCBlockState(block.getDefaultState());
+        BlockState blockState = block.getDefaultState();
         if(properties != null && !properties.isEmpty()) {
             for(String propertyPair : properties.split(",")) {
                 String[] splitPair = propertyPair.split("=");
@@ -138,7 +140,7 @@ public class BracketHandlers {
                     CraftTweakerAPI.logWarning("Invalid blockstate property format '" + propertyPair + "'. Using default property value.");
                     continue;
                 }
-                blockState = blockState.withProperty(splitPair[0], splitPair[1]);
+                blockState = ExpandBlockState.withProperty(blockState, splitPair[0], splitPair[1]);
             }
         }
         

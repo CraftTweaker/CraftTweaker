@@ -28,10 +28,17 @@ public class CrTNativeTypeRegistration {
     }
     
     /**
-     * Registers a native type as "crafttweaker.<SimpleClassName>"
-     * TODO: Remove me?
+     * Simple way to register a type.
+     * Converts the MC name to a CrT one.
      */
     private static void registerType(NativeTypeRegistry registry, Class<?> clazz) {
-        registry.addNativeType(clazz, "crafttweaker." + clazz.getSimpleName());
+        final String crtName;
+        if(clazz.getCanonicalName().startsWith("net.minecraft")) {
+            crtName = "crafttweaker.api" + clazz.getCanonicalName().substring(13);
+        } else {
+            crtName = "crafttweaker." + clazz.getSimpleName();
+        }
+        
+        registry.addNativeType(clazz, crtName);
     }
 }

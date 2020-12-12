@@ -1,10 +1,11 @@
 package com.blamejared.crafttweaker.impl.helper;
 
 import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
+import com.blamejared.crafttweaker.impl_native.blocks.*;
 import com.blamejared.crafttweaker.impl.entity.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.item.*;
+import com.blamejared.crafttweaker.impl_native.entity.MCEntityType;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.fluid.*;
@@ -33,8 +34,8 @@ public class CraftTweakerHelper {
         return definitions.stream().map(MCItemDefinition::getInternal).collect(Collectors.toList());
     }
     
-    public static List<Block> getBlocks(List<MCBlock> toAdd) {
-        return toAdd.stream().map(MCBlock::getInternal).collect(Collectors.toList());
+    public static List<Block> getBlocks(List<ExpandBlock> toAdd) {
+        return toAdd.stream().map(ExpandBlock::getInternal).collect(Collectors.toList());
     }
     
     public static List<EntityType<?>> getEntityTypes(List<MCEntityType> toAdd) {

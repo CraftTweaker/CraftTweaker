@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.world;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker.impl.blocks.MCBlockState;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
@@ -109,13 +109,13 @@ public class MCWorld {
     }
 
     @ZenCodeType.Method
-    public boolean setBlockState(MCBlockPos pos, MCBlockState state) {
+    public boolean setBlockState(MCBlockPos pos, ExpandBlockState state) {
         return internal.setBlockState(pos.getInternal(), state.getInternal());
     }
 
     @ZenCodeType.Method
-    public MCBlockState getBlockState(MCBlockPos pos) {
-        return new MCBlockState(internal.getBlockState(pos.getInternal()));
+    public ExpandBlockState getBlockState(MCBlockPos pos) {
+        return new ExpandBlockState(internal.getBlockState(pos.getInternal()));
     }
 
     @ZenCodeType.Method

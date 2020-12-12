@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
+import com.blamejared.crafttweaker.impl_native.blocks.*;
 import net.minecraft.util.*;
 import net.minecraftforge.registries.*;
 import org.openzen.zencode.java.*;
@@ -45,7 +45,7 @@ public class BracketValidators {
         }
         
         final String properties = split.length == 3 ? split[2] : "";
-        final MCBlockState blockState = BracketHandlers.getBlockState(resourceLocation, properties);
+        final ExpandBlockState blockState = BracketHandlers.getBlockState(resourceLocation, properties);
         return blockState != null || isRegistryUnlocked(ForgeRegistries.BLOCKS);
     }
     

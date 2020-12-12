@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.brackets.*;
 import com.blamejared.crafttweaker.api.util.*;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.*;
 import com.blamejared.crafttweaker.impl.tag.manager.*;
-import net.minecraft.tags.*;
 import net.minecraft.util.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.registries.*;

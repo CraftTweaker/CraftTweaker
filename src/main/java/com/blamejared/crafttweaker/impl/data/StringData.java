@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/data/StringData")
 public class StringData implements IData {
     
-    private StringNBT internal;
+    private final StringNBT internal;
     
     public StringData(StringNBT internal) {
         this.internal = internal;

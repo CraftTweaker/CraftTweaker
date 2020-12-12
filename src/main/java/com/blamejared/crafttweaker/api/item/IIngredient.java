@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 
@@ -60,6 +59,8 @@ public interface IIngredient extends CommandStringDisplayable {
     /**
      * Create a Vanilla ingredient matching this one.
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
     Ingredient asVanillaIngredient();
     
     /**

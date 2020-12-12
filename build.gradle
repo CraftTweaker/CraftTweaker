@@ -336,28 +336,13 @@ task updateVersionTracker {
 }
 
 compileJava {
-    source("wrappedClasses.csv")
     //options.compilerArgs += ["-Xprefer:source", "-verbose"]
     //options.fork = true
     //options.forkOptions.executable = 'javac'
-    def csv = file("wrappedClasses.csv")
-    options.annotationProcessorGeneratedSourcesDirectory = project.file("src/generated/java")
-    if(csv.exists()) {
-        options.compilerArgs += "-AwrappedClassesCsvLocation=${csv.absolutePath}"
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs += "src/generated/java/"
-        }
-    }
 }
 
 idea {
     module {
-        generatedSourceDirs += file("src/generated/java")
         excludeDirs += [file("run"), file("runServer")]
     }
 }

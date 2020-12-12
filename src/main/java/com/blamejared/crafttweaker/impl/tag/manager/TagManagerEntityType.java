@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.impl.actions.tags.*;
 import com.blamejared.crafttweaker.impl.entity.*;
 import com.blamejared.crafttweaker.impl.helper.*;
 import com.blamejared.crafttweaker.impl.tag.*;
+import com.blamejared.crafttweaker.impl_native.entity.MCEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.google.common.collect.*;
 import net.minecraft.entity.*;

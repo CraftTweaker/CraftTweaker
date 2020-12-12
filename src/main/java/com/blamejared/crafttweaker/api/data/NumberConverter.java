@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.impl.data.*;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 public class NumberConverter {
     public static IData convertNumber(Number number) {

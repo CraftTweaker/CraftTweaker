@@ -1,17 +1,15 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
+import com.blamejared.crafttweaker.impl_native.blocks.*;
 import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.potion.*;
 import com.blamejared.crafttweaker.impl.tag.*;
 import com.blamejared.crafttweaker.impl.tag.registry.*;
 import net.minecraft.entity.*;
-import net.minecraft.tags.*;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.*;
 import net.minecraft.util.text.*;
-import net.minecraftforge.common.*;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.registries.*;
 import org.openzen.zencode.java.*;
@@ -27,7 +25,7 @@ public class BracketDumpers {
     public static Collection<String> getBlockDump() {
         return ForgeRegistries.BLOCKS.getValues()
                 .stream()
-                .map(block -> new MCBlock(block).getCommandString())
+                .map(block -> new ExpandBlock(block).getCommandString())
                 .collect(Collectors.toSet());
     }
     
