@@ -54,8 +54,8 @@ public class MCFluidStack implements IFluidStack {
     }
     
     @Override
-    public MCFluid getFluid() {
-        return new MCFluid(stack.getFluid());
+    public Fluid getFluid() {
+        return stack.getFluid();
     }
     
     @Override

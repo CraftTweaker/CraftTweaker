@@ -22,7 +22,7 @@ import java.util.stream.*;
 @ZenRegister
 @Document("vanilla/api/tags/TagManager")
 @ZenCodeType.Name("crafttweaker.api.tag.TagManager")
-public interface TagManager<T extends CommandStringDisplayable> extends CommandStringDisplayable {
+public interface TagManager<T> extends CommandStringDisplayable {
     
     @Nonnull
     Class<T> getElementClass();

@@ -2,10 +2,10 @@ package com.blamejared.crafttweaker.api.fluid;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
-import com.blamejared.crafttweaker.impl.fluid.MCFluid;
 import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -106,7 +106,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("fluid")
     @ZenCodeType.Caster(implicit = true)
-    MCFluid getFluid();
+    Fluid getFluid();
     
     /**
      * Moddevs, use this to get the Vanilla version.

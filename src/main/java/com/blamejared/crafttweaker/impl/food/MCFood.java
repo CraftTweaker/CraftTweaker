@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.food;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.potion.MCEffectInstance;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.mojang.datafixers.util.Pair;
@@ -19,7 +18,7 @@ import java.util.function.Supplier;
 @ZenCodeType.Name("crafttweaker.api.food.MCFood")
 @ZenRegister
 @Document("vanilla/api/food/MCFood")
-@ZenWrapper(wrappedClass = "net.minecraft.item.Food", conversionMethodFormat = "%s.getInternal()")
+@ZenWrapper(wrappedClass = "net.minecraft.item.Food")
 public class MCFood {
     
     private final Food internal;
@@ -96,20 +95,20 @@ public class MCFood {
     
     @ZenCodeType.Method
     public void clearEffects() {
-       getEffects().clear();
+        getEffects().clear();
     }
     
     @ZenCodeType.Method
-    public MCFood addEffect(MCEffectInstance effect, float probability) {
+    public MCFood addEffect(EffectInstance effect, float probability) {
         Food food = copyInternal();
-        getEffects().add(Pair.of(effect::getInternal, probability));
+        getEffects().add(Pair.of(() -> effect, probability));
         return new MCFood(food);
     }
     
     @ZenCodeType.Method
-    public MCFood removeEffect(MCEffectInstance effect) {
+    public MCFood removeEffect(EffectInstance effect) {
         Food food = copyInternal();
-        getEffects().removeIf(pair -> pair.getFirst().get().equals(effect.getInternal()));
+        getEffects().removeIf(pair -> pair.getFirst().get().equals(effect));
         return new MCFood(food);
     }
     
@@ -117,8 +116,9 @@ public class MCFood {
         return internal;
     }
     
-    private List<Pair<Supplier<EffectInstance>, Float>> getEffects(){
+    private List<Pair<Supplier<EffectInstance>, Float>> getEffects() {
         try {
+            //noinspection unchecked
             return (List<Pair<Supplier<EffectInstance>, Float>>) effects.get(getInternal());
         } catch(IllegalAccessException e) {
             e.printStackTrace();
@@ -137,14 +137,14 @@ public class MCFood {
         builder.saturation(getSaturation());
         builder.hunger(getHealing());
         for(Pair<EffectInstance, Float> effect : getInternal().getEffects()) {
-            builder.effect(effect.getFirst(), effect.getSecond());
+            builder.effect(effect::getFirst, effect.getSecond());
         }
         return builder.build();
     }
     
     // TODO When we have a Pair implementation in ZS/CRT, uncomment this
     //    @ZenCodeType.Getter("effects")
-    //    public List<Pair<MCEffectInstance, Float>> getEffects() {
-    //        return internal.getEffects().stream().map(pair -> Pair.of(new MCEffectInstance(pair.getLeft()), pair.getRight())).collect(Collectors.toList());
+    //    public List<Pair<ExpandEffectInstance, Float>> getEffects() {
+    //        return internal.getEffects().stream().map(pair -> Pair.of(new ExpandEffectInstance(pair.getLeft()), pair.getRight())).collect(Collectors.toList());
     //    }
 }

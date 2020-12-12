@@ -7,7 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @NativeExpansion(EntityClassification.class)
-public class MCEntityClassification {
+public class ExpandEntityClassification {
     
     
     @ZenCodeType.Getter("name")

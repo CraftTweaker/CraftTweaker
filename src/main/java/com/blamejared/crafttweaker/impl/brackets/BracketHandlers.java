@@ -1,38 +1,42 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.fluid.*;
-import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.impl_native.blocks.*;
-import com.blamejared.crafttweaker.impl.entity.*;
-import com.blamejared.crafttweaker.impl.fluid.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.managers.*;
-import com.blamejared.crafttweaker.impl.potion.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker.impl.util.text.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
+import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
+import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
+import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker.impl_native.block.ExpandMaterial;
-import com.blamejared.crafttweaker.impl_native.entity.MCEntityClassification;
-import com.blamejared.crafttweaker.impl_native.entity.MCEntityType;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.block.*;
-import net.minecraft.block.material.*;
-import net.minecraft.entity.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.potion.*;
-import net.minecraft.util.*;
-import net.minecraft.util.registry.*;
-import net.minecraft.util.text.*;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Locale;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -41,6 +45,7 @@ public class BracketHandlers {
     
     /**
      * Gets the give {@link ExpandBlock}. Throws an Exception if not found
+     *
      * @param tokens What you would write in the BEP call.
      * @return The found {@link ExpandBlock}
      * @docParam tokens "minecraft:dirt"
@@ -50,7 +55,7 @@ public class BracketHandlers {
     public static Block getBlock(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Block BEP <block:%s> does not seem to be lower-cased!", tokens);
-    
+        
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
@@ -63,10 +68,10 @@ public class BracketHandlers {
     }
     
     /**
-     * Gets the given {@link MCMaterial}. Throws an Exception if not found.
+     * Gets the given {@link Material}. Throws an Exception if not found.
      *
      * @param tokens What you would write in the BEP call.
-     * @return The found {@link MCMaterial}
+     * @return The found {@link Material}
      * @docParam tokens "earth"
      */
     @ZenCodeType.Method
@@ -179,7 +184,7 @@ public class BracketHandlers {
      */
     @BracketResolver("effect")
     @ZenCodeType.Method
-    public static MCEffect getEffect(String tokens) {
+    public static Effect getEffect(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Effect BEP <effect:%s> does not seem to be lower-cased!", tokens);
         
@@ -190,8 +195,7 @@ public class BracketHandlers {
         if(!ForgeRegistries.POTIONS.containsKey(key)) {
             throw new IllegalArgumentException("Could not get effect with name: <potion:" + tokens + ">! Effect does not appear to exist!");
         }
-        Effect effect = ForgeRegistries.POTIONS.getValue(key);
-        return new MCEffect(effect);
+        return ForgeRegistries.POTIONS.getValue(key);
     }
     
     /**
@@ -203,7 +207,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("entityclassification")
-    public static MCEntityClassification getEntityClassification(String tokens) {
+    public static EntityClassification getEntityClassification(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 1) {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
@@ -216,7 +220,7 @@ public class BracketHandlers {
             return null;
         }
         //Cannot be null since we checked containsKey
-        return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
+        return EntityClassification.valueOf(tokens.toUpperCase());
     }
     
     /**
@@ -228,7 +232,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("entitytype")
-    public static MCEntityType getEntityType(String tokens) {
+    public static EntityType<?> getEntityType(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
             CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
@@ -240,9 +244,7 @@ public class BracketHandlers {
             return null;
         }
         
-        //Cannot be null since we checked containsKey
-        //noinspection ConstantConditions
-        return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
+        return ForgeRegistries.ENTITIES.getValue(resourceLocation);
     }
     
     /**
@@ -296,7 +298,7 @@ public class BracketHandlers {
     
     @BracketResolver("potion")
     @ZenCodeType.Method
-    public static MCPotion getPotion(String tokens) {
+    public static Potion getPotion(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Potion BEP <potion:%s> does not seem to be lower-cased!", tokens);
         
@@ -307,8 +309,7 @@ public class BracketHandlers {
         if(!ForgeRegistries.POTIONS.containsKey(key)) {
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!");
         }
-        Potion potion = ForgeRegistries.POTION_TYPES.getValue(key);
-        return new MCPotion(potion);
+        return ForgeRegistries.POTION_TYPES.getValue(key);
     }
     
     

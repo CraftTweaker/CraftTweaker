@@ -1,10 +1,10 @@
-package com.blamejared.crafttweaker.impl.potion;
+package com.blamejared.crafttweaker.impl_native.potion;
 
+import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -12,78 +12,67 @@ import java.util.Arrays;
 import java.util.List;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.potion.MCPotionEffectInstance")
-@Document("vanilla/api/potions/MCPotionEffectInstance")
-@ZenWrapper(wrappedClass = "net.minecraft.potion.EffectInstance", conversionMethodFormat = "%s.getInternal()")
-public class MCEffectInstance {
-    
-    private final EffectInstance internal;
-    
-    public MCEffectInstance(EffectInstance internal) {
-        this.internal = internal;
-    }
+@NativeExpansion(EffectInstance.class)
+public class ExpandEffectInstance {
     
     @ZenCodeType.Method
-    public boolean combine(MCEffectInstance effect) {
-        return internal.combine(effect.getInternal());
+    public static boolean combine(EffectInstance internal, EffectInstance effect) {
+        return internal.combine(effect);
     }
     
     @ZenCodeType.Getter("potion")
-    public MCEffect getPotion() {
-        return new MCEffect(internal.getPotion());
+    public static Effect getPotion(EffectInstance internal) {
+        return internal.getPotion();
     }
     
     @ZenCodeType.Getter("duration")
-    public int getDuration() {
+    public static int getDuration(EffectInstance internal) {
         return internal.getDuration();
     }
     
     @ZenCodeType.Getter("amplifier")
-    public int getAmplifier() {
+    public static int getAmplifier(EffectInstance internal) {
         return internal.getAmplifier();
     }
     
     @ZenCodeType.Getter("ambient")
-    public boolean isAmbient() {
+    public static boolean isAmbient(EffectInstance internal) {
         return internal.isAmbient();
     }
     
     @ZenCodeType.Getter("showParticles")
-    public boolean doesShowParticles() {
+    public static boolean doesShowParticles(EffectInstance internal) {
         return internal.doesShowParticles();
     }
     
     @ZenCodeType.Getter("showIcon")
-    public boolean isShowIcon() {
+    public static boolean isShowIcon(EffectInstance internal) {
         return internal.isShowIcon();
     }
     
     @ZenCodeType.Getter("effectName")
-    public String getEffectName() {
+    public static String getEffectName(EffectInstance internal) {
         return internal.getEffectName();
     }
     
     @ZenCodeType.Method
-    public List<IItemStack> getCurativeItems() {
+    public static List<IItemStack> getCurativeItems(EffectInstance internal) {
         return CraftTweakerHelper.getIItemStacks(internal.getCurativeItems());
     }
     
     @ZenCodeType.Method
-    public void setCurativeItems(IItemStack[] items) {
+    public static void setCurativeItems(EffectInstance internal, IItemStack[] items) {
         internal.setCurativeItems(Arrays.asList(CraftTweakerHelper.getItemStacks(items)));
     }
     
     @ZenCodeType.Method
-    public boolean isCurativeItem(IItemStack stack) {
+    public static boolean isCurativeItem(EffectInstance internal, IItemStack stack) {
         return internal.isCurativeItem(stack.getInternal());
     }
     
     @ZenCodeType.Method
-    public void addCurativeItem(IItemStack stack) {
+    public static void addCurativeItem(EffectInstance internal, IItemStack stack) {
         internal.addCurativeItem(stack.getInternal());
     }
     
-    public EffectInstance getInternal() {
-        return internal;
-    }
 }

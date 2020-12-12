@@ -23,7 +23,7 @@ import java.util.*;
 @ZenRegister
 @Document("vanilla/api/tags/MCTag")
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
-public final class MCTag<T extends CommandStringDisplayable> implements CommandStringDisplayable {
+public final class MCTag<T> implements CommandStringDisplayable {
     
     private final ResourceLocation id;
     private final TagManager<T> manager;

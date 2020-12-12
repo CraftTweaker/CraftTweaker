@@ -1,18 +1,14 @@
 package com.blamejared.crafttweaker.impl.helper;
 
-import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.impl_native.blocks.*;
-import com.blamejared.crafttweaker.impl.entity.*;
-import com.blamejared.crafttweaker.impl.fluid.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl_native.entity.MCEntityType;
-import net.minecraft.block.*;
-import net.minecraft.entity.*;
-import net.minecraft.fluid.*;
-import net.minecraft.item.*;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemDefinition;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CraftTweakerHelper {
     
@@ -32,17 +28,5 @@ public class CraftTweakerHelper {
     
     public static List<Item> getItemsFromDefinitions(List<MCItemDefinition> definitions) {
         return definitions.stream().map(MCItemDefinition::getInternal).collect(Collectors.toList());
-    }
-    
-    public static List<Block> getBlocks(List<ExpandBlock> toAdd) {
-        return toAdd.stream().map(ExpandBlock::getInternal).collect(Collectors.toList());
-    }
-    
-    public static List<EntityType<?>> getEntityTypes(List<MCEntityType> toAdd) {
-        return toAdd.stream().map(MCEntityType::getInternal).collect(Collectors.toList());
-    }
-    
-    public static List<Fluid> getFluids(List<MCFluid> toRemove) {
-        return toRemove.stream().map(MCFluid::getInternal).collect(Collectors.toList());
     }
 }
