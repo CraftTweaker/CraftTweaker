@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +24,7 @@ public class CrTNativeTypeRegistration {
         registerType(registry, LivingEntity.class);
         registerType(registry, Entity.class);
         registerType(registry, CapabilityProvider.class);
+        registerType(registry, Material.class);
     }
     
     /**

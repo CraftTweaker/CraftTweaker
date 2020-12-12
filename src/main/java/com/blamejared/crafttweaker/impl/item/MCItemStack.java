@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
+import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
@@ -64,7 +65,8 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public MCFood getFood() {
-        return new MCFood(getInternal().getItem().getFood());
+        final Food food = getInternal().getItem().getFood();
+        return food == null ? null : new MCFood(food);
     }
     
     @Override

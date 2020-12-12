@@ -1,19 +1,26 @@
 package com.blamejared.crafttweaker.api.zencode.impl.registry;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
-import com.blamejared.crafttweaker.impl.tag.*;
-import net.minecraftforge.fml.*;
+import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeRegistration;
+import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import net.minecraftforge.fml.ModList;
 import org.objectweb.asm.Type;
-import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ZenClassRegistry {
+    
+    private final NativeTypeRegistry nativeTypeRegistry = new NativeTypeRegistry();
     
     /**
      * All classes with @ZenRegister and their modDeps fulfilled
@@ -87,11 +94,30 @@ public class ZenClassRegistry {
         }
         
         if(cls.isAnnotationPresent(ZenCodeType.Expansion.class)) {
-            addExpansion(cls);
+            final String expandedClassName = cls.getAnnotation(ZenCodeType.Expansion.class).value();
+            addExpansion(cls, expandedClassName);
+        }
+        
+        if(cls.isAnnotationPresent(NativeExpansion.class)) {
+            addNativeAnnotation(cls);
         }
         
         if(hasGlobals(cls)) {
             zenGlobals.add(cls);
+        }
+    }
+    
+    private void addNativeAnnotation(Class<?> cls) {
+        final NativeExpansion annotation = cls.getAnnotation(NativeExpansion.class);
+        final Class<?> expandedNativeType = annotation.value();
+        if(nativeTypeRegistry.hasInfoFor(expandedNativeType)){
+            final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedNativeType);
+            addExpansion(cls, expandedClassName);
+        } else if (expandedNativeType.isAnnotationPresent(ZenCodeType.Name.class)) {
+            final String expandedClassName = expandedNativeType.getAnnotation(ZenCodeType.Name.class).value();
+            addExpansion(cls, expandedClassName);
+        }else {
+            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedNativeType.getCanonicalName());
         }
     }
     
@@ -106,12 +132,11 @@ public class ZenClassRegistry {
         zenClasses.put(annotation.value(), cls);
     }
     
-    private void addExpansion(Class<?> cls) {
-        final ZenCodeType.Expansion annotation = cls.getAnnotation(ZenCodeType.Expansion.class);
-        if(!expansionsByExpandedName.containsKey(annotation.value())) {
-            expansionsByExpandedName.put(annotation.value(), new ArrayList<>());
+    private void addExpansion(Class<?> cls, String expandedClassName) {
+        if(!expansionsByExpandedName.containsKey(expandedClassName)) {
+            expansionsByExpandedName.put(expandedClassName, new ArrayList<>());
         }
-        expansionsByExpandedName.get(annotation.value()).add(cls);
+        expansionsByExpandedName.get(expandedClassName).add(cls);
     }
     
     private boolean hasGlobals(Class<?> cls) {
@@ -119,10 +144,6 @@ public class ZenClassRegistry {
                 .filter(member -> member.isAnnotationPresent(ZenCodeGlobals.Global.class))
                 .filter(member -> Modifier.isPublic(member.getModifiers()))
                 .anyMatch(member -> Modifier.isStatic(member.getModifiers()));
-    }
-    
-    public void addNativeType(CrTNativeTypeInfo nativeTypeInfo) {
-        zenClasses.put(nativeTypeInfo.getCraftTweakerName(), nativeTypeInfo.getVanillaClass());
     }
     
     public List<Class<?>> getClassesInPackage(String name) {
@@ -138,5 +159,16 @@ public class ZenClassRegistry {
                 .stream()
                 .map(key -> key.split("\\.", 2)[0])
                 .collect(Collectors.toSet());
+    }
+    
+    public void initNativeTypes() {
+        CrTNativeTypeRegistration.registerNativeTypes(nativeTypeRegistry);
+        for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
+            zenClasses.put(nativeTypeInfo.getCraftTweakerName(), nativeTypeInfo.getVanillaClass());
+        }
+    }
+    
+    public NativeTypeRegistry getNativeTypeRegistry() {
+        return nativeTypeRegistry;
     }
 }

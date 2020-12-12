@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,9 @@ public class NativeTypeRegistry {
     private final Map<Class<?>, CrTNativeTypeInfo> nativeTypeInfos = new HashMap<>();
     
     public void addNativeType(Class<?> vanillaClass, String crtName) {
-        if(nativeTypeInfos.containsKey(vanillaClass) && !nativeTypeInfos.get(vanillaClass).getCraftTweakerName().equals(crtName)) {
+        if(nativeTypeInfos.containsKey(vanillaClass) && !nativeTypeInfos.get(vanillaClass)
+                .getCraftTweakerName()
+                .equals(crtName)) {
             final String format = "Trying to register vanilla class '%s' twice with different names: '%s' and '%s'";
             final CrTNativeTypeInfo existingNativeTypeInfo = nativeTypeInfos.get(vanillaClass);
             CraftTweakerAPI.logError(format, existingNativeTypeInfo.getCraftTweakerName(), crtName);
@@ -32,7 +34,7 @@ public class NativeTypeRegistry {
         return nativeTypeInfos.get(clazz).getCraftTweakerName();
     }
     
-    public void addTo(ZenClassRegistry zenClassRegistry) {
-        nativeTypeInfos.values().forEach(zenClassRegistry::addNativeType);
+    public Collection<CrTNativeTypeInfo> getNativeTypeInfos() {
+        return nativeTypeInfos.values();
     }
 }

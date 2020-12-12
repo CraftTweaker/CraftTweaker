@@ -1,26 +1,31 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.*;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.*;
-import com.blamejared.crafttweaker.impl.commands.*;
-import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeRegistration;
+import com.blamejared.crafttweaker.api.annotations.Preprocessor;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.brackets.ValidatedEscapableBracketParser;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketResolverRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.PreprocessorRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.WrapperRegistry;
+import com.blamejared.crafttweaker.impl.commands.BracketDumperInfo;
 import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
-import com.blamejared.crafttweaker.impl.tag.manager.*;
-import com.blamejared.crafttweaker.impl.tag.registry.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraftforge.fml.*;
-import net.minecraftforge.forgespi.language.*;
-import org.objectweb.asm.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
+import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistryData;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.ModFileScanData;
+import org.objectweb.asm.Type;
+import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 
-import java.lang.annotation.*;
-import java.util.*;
-import java.util.stream.*;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class CraftTweakerRegistry {
     
@@ -28,12 +33,13 @@ public class CraftTweakerRegistry {
     private static final PreprocessorRegistry PREPROCESSOR_REGISTRY = new PreprocessorRegistry();
     private static final ZenClassRegistry ZEN_CLASS_REGISTRY = new ZenClassRegistry();
     private static final WrapperRegistry WRAPPER_REGISTRY = new WrapperRegistry();
-    private static final NativeTypeRegistry NATIVE_TYPE_REGISTRY = new NativeTypeRegistry();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
+        ZEN_CLASS_REGISTRY.initNativeTypes();
+        
         getAllTypesWith(ZenRegister.class).forEach(ZEN_CLASS_REGISTRY::addType);
         
         BRACKET_RESOLVER_REGISTRY.addClasses(ZEN_CLASS_REGISTRY.getAllRegisteredClasses());
@@ -41,9 +47,6 @@ public class CraftTweakerRegistry {
         
         getAllTypesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addType);
         getAllTypesWith(ZenWrapper.class).forEach(WRAPPER_REGISTRY::addType);
-    
-        CrTNativeTypeRegistration.registerNativeTypes(NATIVE_TYPE_REGISTRY);
-        NATIVE_TYPE_REGISTRY.addTo(ZEN_CLASS_REGISTRY);
         
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
@@ -182,13 +185,7 @@ public class CraftTweakerRegistry {
     }
     //</editor-fold>
     
-    
-    //<editor-fold desc="NativeTypeRegistry">
-    // #########################################
-    // ### NativeTypeRegistry ###
-    // #########################################
     public static NativeTypeRegistry getNativeTypeRegistry() {
-        return NATIVE_TYPE_REGISTRY;
+        return ZEN_CLASS_REGISTRY.getNativeTypeRegistry();
     }
-    //</editor-fold>
 }
