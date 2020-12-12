@@ -15,7 +15,7 @@ import java.util.*;
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker.api.annotations.BracketResolver"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BracketHandlerCheckValidationProcessor extends AbstractProcessor {
-    private static final String BEPReturnTypeCanonicalName = "com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable";
+    //private static final String BEPReturnTypeCanonicalName = "com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable";
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -53,6 +53,8 @@ public class BracketHandlerCheckValidationProcessor extends AbstractProcessor {
                             .printMessage(Diagnostic.Kind.ERROR, "\nElement is annotated as BEP but does not accept a String as its only parameter.", element, annotationMirror);
                 }
 
+                /*
+                TODO: Allow non-commandstringDisplayables (vanilla types!)
                 if (!this.processingEnv.getTypeUtils()
                         .isAssignable(executableElement.getReturnType(), this.processingEnv.getElementUtils()
                                 .getTypeElement(BEPReturnTypeCanonicalName)
@@ -60,6 +62,7 @@ public class BracketHandlerCheckValidationProcessor extends AbstractProcessor {
                     this.processingEnv.getMessager()
                             .printMessage(Diagnostic.Kind.ERROR, "\nElement is annotated as BEP but does not return " + BEPReturnTypeCanonicalName + " or any subtype.", element, annotationMirror);
                 }
+                 */
             }
         }
 
