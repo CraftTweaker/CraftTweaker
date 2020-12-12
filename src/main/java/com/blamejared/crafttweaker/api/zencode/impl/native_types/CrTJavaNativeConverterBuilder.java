@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
-import org.openzen.zencode.java.module.JavaNativeModule;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.*;
 

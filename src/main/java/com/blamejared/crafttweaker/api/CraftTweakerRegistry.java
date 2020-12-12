@@ -7,6 +7,8 @@ import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.*;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.*;
 import com.blamejared.crafttweaker.impl.commands.*;
+import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeRegistration;
+import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
 import com.blamejared.crafttweaker.impl.tag.manager.*;
 import com.blamejared.crafttweaker.impl.tag.registry.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
@@ -26,6 +28,7 @@ public class CraftTweakerRegistry {
     private static final PreprocessorRegistry PREPROCESSOR_REGISTRY = new PreprocessorRegistry();
     private static final ZenClassRegistry ZEN_CLASS_REGISTRY = new ZenClassRegistry();
     private static final WrapperRegistry WRAPPER_REGISTRY = new WrapperRegistry();
+    private static final NativeTypeRegistry NATIVE_TYPE_REGISTRY = new NativeTypeRegistry();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -38,6 +41,9 @@ public class CraftTweakerRegistry {
         
         getAllTypesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addType);
         getAllTypesWith(ZenWrapper.class).forEach(WRAPPER_REGISTRY::addType);
+    
+        CrTNativeTypeRegistration.registerNativeTypes(NATIVE_TYPE_REGISTRY);
+        NATIVE_TYPE_REGISTRY.addTo(ZEN_CLASS_REGISTRY);
         
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
@@ -173,6 +179,16 @@ public class CraftTweakerRegistry {
     // #########################################
     public static WrapperRegistry getWrapperRegistry() {
         return WRAPPER_REGISTRY;
+    }
+    //</editor-fold>
+    
+    
+    //<editor-fold desc="NativeTypeRegistry">
+    // #########################################
+    // ### NativeTypeRegistry ###
+    // #########################################
+    public static NativeTypeRegistry getNativeTypeRegistry() {
+        return NATIVE_TYPE_REGISTRY;
     }
     //</editor-fold>
 }

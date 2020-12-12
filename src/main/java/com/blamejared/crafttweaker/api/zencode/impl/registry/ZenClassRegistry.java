@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.zencode.impl.registry;
 import com.blamejared.crafttweaker.*;
 import com.blamejared.crafttweaker.api.annotations.*;
 import com.blamejared.crafttweaker.api.managers.*;
+import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
 import com.blamejared.crafttweaker.impl.tag.*;
 import net.minecraftforge.fml.*;
 import org.objectweb.asm.Type;
@@ -118,6 +119,10 @@ public class ZenClassRegistry {
                 .filter(member -> member.isAnnotationPresent(ZenCodeGlobals.Global.class))
                 .filter(member -> Modifier.isPublic(member.getModifiers()))
                 .anyMatch(member -> Modifier.isStatic(member.getModifiers()));
+    }
+    
+    public void addNativeType(CrTNativeTypeInfo nativeTypeInfo) {
+        zenClasses.put(nativeTypeInfo.getCraftTweakerName(), nativeTypeInfo.getVanillaClass());
     }
     
     public List<Class<?>> getClassesInPackage(String name) {
