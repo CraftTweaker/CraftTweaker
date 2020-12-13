@@ -35,11 +35,12 @@ public class CrTNativeTypeRegistration {
     
     public static void registerNativeTypes(NativeTypeRegistry registry) {
         registry.addNativeType(Item.class, "crafttweaker.api.item.MCItemDefinition");
+        registry.addNativeType(PlayerEntity.class, "crafttweaker.api.player.MCPlayerEntity");
+        registry.addNativeType(LivingEntity.class, "crafttweaker.api.entity.MCLivingEntity");
+        registry.addNativeType(Entity.class, "crafttweaker.api.entity.MCEntity");
+        
         registerType(registry, ItemStack.class);
         registerType(registry, Ingredient.class);
-        registerType(registry, PlayerEntity.class);
-        registerType(registry, LivingEntity.class);
-        registerType(registry, Entity.class);
         registerType(registry, CapabilityProvider.class);
         registerType(registry, Material.class);
         

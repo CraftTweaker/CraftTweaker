@@ -21,7 +21,7 @@ public class MCEntityType implements CommandStringDisplayable {
     private final EntityType<?> internal;
     
     public MCEntityType(@Nonnull EntityType<?> internal) {
-        this.internal = internal;
+        this.internal = Objects.requireNonNull(internal);
     }
     
     @ZenCodeType.Getter("classification")
