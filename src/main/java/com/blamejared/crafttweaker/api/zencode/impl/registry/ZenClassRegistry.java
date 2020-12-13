@@ -130,6 +130,7 @@ public class ZenClassRegistry {
     private void addZenClass(Class<?> cls) {
         final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
         zenClasses.put(annotation.value(), cls);
+        CraftTweakerAPI.logDebug("Registering %s", annotation.value());
     }
     
     private void addExpansion(Class<?> cls, String expandedClassName) {
@@ -165,6 +166,7 @@ public class ZenClassRegistry {
         CrTNativeTypeRegistration.registerNativeTypes(nativeTypeRegistry);
         for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
             zenClasses.put(nativeTypeInfo.getCraftTweakerName(), nativeTypeInfo.getVanillaClass());
+            CraftTweakerAPI.logDebug("Registering %s", nativeTypeInfo.getCraftTweakerName());
         }
     }
     

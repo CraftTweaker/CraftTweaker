@@ -44,10 +44,15 @@ public class IDontKnowHowToNameThisUtil {
             
             if(element.getAnnotation(ZenCodeType.Name.class) != null || element.getAnnotation(ZenCodeType.Expansion.class) != null) {
                 messager.printMessage(Diagnostic.Kind.ERROR, "ZenType/Expansion without a Document annotation!", element);
-            } else if(!isInternalClass(element)) {
+            }
+            /*
+            //TODO: do we still need this?
+            else if(!isInternalClass(element)) {
+                
                 messager.printMessage(Diagnostic.Kind.ERROR, "Custom Type without Zen annotations used! " + element
                         .getQualifiedName(), element);
             }
+            */
             return null;
         }
         

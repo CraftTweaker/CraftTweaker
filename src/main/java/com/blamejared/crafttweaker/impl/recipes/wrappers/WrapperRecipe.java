@@ -8,7 +8,9 @@ import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.item.crafting.IRecipe;
 import org.openzen.zencode.java.ZenCodeType;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -18,8 +20,8 @@ public class WrapperRecipe {
     
     private final IRecipe<?> recipe;
     
-    public WrapperRecipe(IRecipe<?> recipe) {
-        this.recipe = recipe;
+    public WrapperRecipe(@Nonnull IRecipe<?> recipe) {
+        this.recipe = Objects.requireNonNull(recipe);
     }
     
     @ZenCodeType.Getter("id")

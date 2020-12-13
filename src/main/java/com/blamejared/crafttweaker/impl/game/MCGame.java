@@ -3,18 +3,17 @@ package com.blamejared.crafttweaker.impl.game;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.impl_native.entity.ExpandEntityClassification;
-import com.blamejared.crafttweaker.impl_native.entity.ExpandEntityType;
-import com.blamejared.crafttweaker.impl_native.fluid.ExpandFluid;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
-import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
-import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
 import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.LanguageMap;
@@ -38,51 +37,44 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.game.MCGame")
 @Document("vanilla/api/game/MCGame")
 public class MCGame {
+    
     @ZenCodeType.Getter("directionAxises")
     public Collection<MCDirectionAxis> getMCDirectionAxis() {
         return Arrays.stream(Direction.Axis.values())
                 .map(MCDirectionAxis::new)
                 .collect(Collectors.toList());
     }
-
+    
     @ZenCodeType.Getter("effects")
-    public Collection<ExpandEffect> getMCEffects() {
-        return ForgeRegistries.POTIONS.getValues()
-                .stream()
-                .map(ExpandEffect::new)
-                .collect(Collectors.toList());
+    public Collection<Effect> getMCEffects() {
+        return ForgeRegistries.POTIONS.getValues();
     }
-
+    
     @ZenCodeType.Getter("entityTypes")
-    public Collection<ExpandEntityType> getMCEntityTypes() {
+    public Collection<MCEntityType> getMCEntityTypes() {
         return ForgeRegistries.ENTITIES.getValues()
                 .stream()
-                .map(ExpandEntityType::new)
+                .map(MCEntityType::new)
                 .collect(Collectors.toList());
     }
-
+    
     @ZenCodeType.Getter("fluids")
-    public Collection<ExpandFluid> getMCFluids() {
-        return ForgeRegistries.FLUIDS.getValues()
-                .stream()
-                .map(ExpandFluid::new)
-                .collect(Collectors.toList());
+    public Collection<Fluid> getMCFluids() {
+        return ForgeRegistries.FLUIDS.getValues();
     }
-
+    
     @ZenCodeType.Getter("entityClassifications")
-    public Collection<ExpandEntityClassification> getMCEntityClassification() {
-        return Arrays.stream(EntityClassification.values())
-                .map(ExpandEntityClassification::new)
-                .collect(Collectors.toList());
+    public Collection<EntityClassification> getMCEntityClassification() {
+        return Arrays.asList(EntityClassification.values());
     }
-
+    
     @ZenCodeType.Getter("formattings")
     public Collection<MCTextFormatting> getMCTextFormatting() {
         return Arrays.stream(TextFormatting.values())
                 .map(MCTextFormatting::new)
                 .collect(Collectors.toList());
     }
-
+    
     @ZenCodeType.Getter("items")
     public Collection<IItemStack> getMCItemStacks() {
         return ForgeRegistries.ITEMS.getValues()
@@ -91,15 +83,12 @@ public class MCGame {
                 .map(MCItemStack::new)
                 .collect(Collectors.toList());
     }
-
+    
     @ZenCodeType.Getter("potions")
-    public Collection<ExpandPotion> getMCPotions() {
-        return ForgeRegistries.POTION_TYPES.getValues()
-                .stream()
-                .map(ExpandPotion::new)
-                .collect(Collectors.toList());
+    public Collection<Potion> getMCPotions() {
+        return ForgeRegistries.POTION_TYPES.getValues();
     }
-
+    
     @ZenCodeType.Getter("recipeTypes")
     public Collection<IRecipeManager> getRecipeTypes() {
         return Registry.RECIPE_TYPE.getEntries()
@@ -109,7 +98,7 @@ public class MCGame {
                 .map(RecipeManagerWrapper::new)
                 .collect(Collectors.toList());
     }
-
+    
     /**
      * @return a localized String
      */

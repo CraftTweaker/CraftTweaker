@@ -30,7 +30,7 @@ public final class CrTTagRegistryData {
     private final Map<String, TagManagerWrapper<?>> syntheticInstances = new HashMap<>();
     
     /**
-     * Maps the ZC type -> TagManager implementation, e.g. ExpandItem -> {@link TagManagerItem}
+     * Maps the ZC type -> TagManager implementation, e.g. MCItemDefinition -> {@link TagManagerItem}
      */
     private final Map<Class<?>, TagManager<?>> tagFolderByCrTElementType = new HashMap<>();
     
@@ -97,26 +97,9 @@ public final class CrTTagRegistryData {
     
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry) {
-        final WrapperRegistry wrapperRegistry = CraftTweakerRegistry.getWrapperRegistry();
-        final WrapperRegistryEntry entry = wrapperRegistry.getEntryFor(registry.getRegistrySuperType());
-        if(entry == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No ZenWrapper found.", name, registry.getTagFolder());
-            return;
-        }
+        final Class<?> registrySuperType = registry.getRegistrySuperType();
         
-        final MethodHandle wrapperHandle = entry.getWrapperHandle();
-        if(wrapperHandle == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No Wrapper MethodHandle found.", name, registry.getTagFolder());
-            return;
-        }
-        
-        final MethodHandle unwrapperHandle = entry.getUnwrapperHandle();
-        if(unwrapperHandle == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No Unwrapper MethodHandle found.", name, registry.getTagFolder());
-            return;
-        }
-        
-        register(new TagManagerWrapper(entry.getWrapperClass(), name, wrapperHandle, unwrapperHandle));
+        register(new TagManagerWrapper(registrySuperType, name));
     }
     
     
@@ -132,7 +115,7 @@ public final class CrTTagRegistryData {
     }
     
     /**
-     * {@code TagRegistry.get<ExpandItem>()}
+     * {@code TagRegistry.get<Item>()}
      */
     @SuppressWarnings({"unchecked"})
     <T extends CommandStringDisplayable> TagManager<T> getForElementType(Class<T> cls) {
@@ -140,7 +123,7 @@ public final class CrTTagRegistryData {
     }
     
     /**
-     * {@code TagRegistry.get<ExpandItem>("minecraft:item")}
+     * {@code TagRegistry.get<Item>("minecraft:item")}
      */
     <T extends CommandStringDisplayable> TagManager<T> getForRegistry(ResourceLocation location) {
         @SuppressWarnings("rawtypes") final ForgeRegistry registry = RegistryManager.ACTIVE.getRegistry(location);

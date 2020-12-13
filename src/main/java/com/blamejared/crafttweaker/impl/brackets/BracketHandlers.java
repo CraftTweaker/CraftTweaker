@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
@@ -13,14 +14,12 @@ import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker.impl_native.block.ExpandMaterial;
-import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
@@ -37,6 +36,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
@@ -44,10 +44,10 @@ import java.util.Locale;
 public class BracketHandlers {
     
     /**
-     * Gets the give {@link ExpandBlock}. Throws an Exception if not found
+     * Gets the give {@link Block}. Throws an Exception if not found
      *
      * @param tokens What you would write in the BEP call.
-     * @return The found {@link ExpandBlock}
+     * @return The found {@link Block}
      * @docParam tokens "minecraft:dirt"
      */
     @ZenCodeType.Method
@@ -231,8 +231,9 @@ public class BracketHandlers {
      * @docParam tokens "minecraft:pig"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Nullable
     @BracketResolver("entitytype")
-    public static EntityType<?> getEntityType(String tokens) {
+    public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
             CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
@@ -244,7 +245,7 @@ public class BracketHandlers {
             return null;
         }
         
-        return ForgeRegistries.ENTITIES.getValue(resourceLocation);
+        return new MCEntityType(Objects.requireNonNull(ForgeRegistries.ENTITIES.getValue(resourceLocation)));
     }
     
     /**

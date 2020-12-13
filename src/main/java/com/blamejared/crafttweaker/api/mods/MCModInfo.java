@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.mods;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
@@ -107,7 +108,7 @@ public class MCModInfo {
      * @return The EntityTypes for the mod.
      */
     @ZenCodeType.Getter("entitytypes")
-    public List<EntityType<?>> getEntityTypes() {
+    public List<MCEntityType> getEntityTypes() {
         return ForgeRegistries.ENTITIES.getEntries()
                 .stream()
                 .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
@@ -115,6 +116,7 @@ public class MCModInfo {
                         .getNamespace()
                         .equals(getModId()))
                 .map(Map.Entry::getValue)
+                .map(MCEntityType::new)
                 .collect(Collectors.toList());
     }
     

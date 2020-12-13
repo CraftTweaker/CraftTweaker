@@ -70,6 +70,7 @@ public class ExpandMaterial {
      * Retrieves the color index of the block. This is is the same color used by vanilla maps to represent this block.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("color")
     public static MaterialColor getColor(Material internal) {
         return internal.getColor();
     }

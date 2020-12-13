@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker.impl.helper;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -23,5 +25,9 @@ public class CraftTweakerHelper {
         return Arrays.stream(items)
                 .map(iItemStack -> iItemStack.getInternal().getItem())
                 .toArray(Item[]::new);
+    }
+    
+    public static List<EntityType<?>> getEntityTypes(List<MCEntityType> entityTypes) {
+        return entityTypes.stream().map(MCEntityType::getInternal).collect(Collectors.toList());
     }
 }

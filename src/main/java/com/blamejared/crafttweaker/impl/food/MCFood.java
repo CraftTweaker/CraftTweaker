@@ -10,6 +10,7 @@ import net.minecraft.util.Util;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.openzen.zencode.java.ZenCodeType;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class MCFood {
     private final Food internal;
     private final Field effects = Util.make(() -> ObfuscationReflectionHelper.findField(Food.class, "field_221475_f"));
     
-    public MCFood(Food internal) {
+    public MCFood(@Nonnull Food internal) {
         this.internal = internal;
     }
     

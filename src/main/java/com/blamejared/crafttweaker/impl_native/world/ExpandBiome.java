@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.world;
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -122,17 +123,17 @@ public class ExpandBiome {
     //    }
     
     @ZenCodeType.Method
-    public static boolean doesWaterFreeze(Biome internal, ExpandWorld world, MCBlockPos pos) {
-        return internal.doesWaterFreeze(world.getInternal(), pos.getInternal());
+    public static boolean doesWaterFreeze(Biome internal, World world, MCBlockPos pos) {
+        return internal.doesWaterFreeze(world, pos.getInternal());
     }
     
     @ZenCodeType.Method
-    public static boolean doesWaterFreeze(Biome internal, ExpandWorld world, MCBlockPos pos, boolean mustBeAtEdge) {
-        return internal.doesWaterFreeze(world.getInternal(), pos.getInternal(), mustBeAtEdge);
+    public static boolean doesWaterFreeze(Biome internal, World world, MCBlockPos pos, boolean mustBeAtEdge) {
+        return internal.doesWaterFreeze(world, pos.getInternal(), mustBeAtEdge);
     }
     
     @ZenCodeType.Method
-    public static boolean doesSnowFreeze(Biome internal, ExpandWorld world, MCBlockPos pos) {
-        return internal.doesSnowGenerate(world.getInternal(), pos.getInternal());
+    public static boolean doesSnowFreeze(Biome internal, World world, MCBlockPos pos) {
+        return internal.doesSnowGenerate(world, pos.getInternal());
     }
 }
