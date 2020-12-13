@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.brackets.tags.TagBracketHandler;
 import com.blamejared.crafttweaker.impl.brackets.tags.TagManagerBracketHandler;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.commands.custom.CustomCommands;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExampleCollectionEvent;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
