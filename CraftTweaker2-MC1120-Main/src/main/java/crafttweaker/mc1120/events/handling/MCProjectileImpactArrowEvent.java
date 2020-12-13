@@ -1,6 +1,7 @@
 package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityArrow;
 import crafttweaker.api.event.ProjectileImpactArrowEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -19,6 +20,11 @@ public class MCProjectileImpactArrowEvent extends MCProjectileImpactEvent implem
     @Override
     public IEntity getArrow() {
         return CraftTweakerMC.getIEntity(arrow);
+    }
+
+    @Override
+    public IEntityArrow getArrowNew() {
+        return CraftTweakerMC.getIEntityArrow(arrow);
     }
 
     @Override
