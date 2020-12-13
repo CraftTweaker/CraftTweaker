@@ -1,25 +1,30 @@
 package com.blamejared.crafttweaker.impl.tag.manager;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.impl.actions.tags.*;
-import com.blamejared.crafttweaker.impl.helper.*;
-import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl_native.fluid.ExpandFluid;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import com.google.common.collect.*;
-import net.minecraft.fluid.*;
-import net.minecraft.tags.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.actions.tags.ActionTagAdd;
+import com.blamejared.crafttweaker.impl.actions.tags.ActionTagCreate;
+import com.blamejared.crafttweaker.impl.actions.tags.ActionTagRemove;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.google.common.collect.Sets;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ITagCollection;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollectionManager;
+import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.*;
-import java.util.*;
-import java.util.stream.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @Document("vanilla/api/tags/TagManagerFluid")
 @ZenCodeType.Name("crafttweaker.api.tag.TagManagerFluid")
-public class TagManagerFluid implements TagManager<ExpandFluid> {
+public class TagManagerFluid implements TagManager<Fluid> {
     
     public static final TagManagerFluid INSTANCE = new TagManagerFluid();
     
@@ -28,8 +33,8 @@ public class TagManagerFluid implements TagManager<ExpandFluid> {
     
     @Nonnull
     @Override
-    public Class<ExpandFluid> getElementClass() {
-        return ExpandFluid.class;
+    public Class<Fluid> getElementClass() {
+        return Fluid.class;
     }
     
     @Override
@@ -38,45 +43,43 @@ public class TagManagerFluid implements TagManager<ExpandFluid> {
     }
     
     @Override
-    public List<MCTag<ExpandFluid>> getAllTagsFor(ExpandFluid element) {
-        return getTagCollection().getOwningTags(element.getInternal())
+    public List<MCTag<Fluid>> getAllTagsFor(Fluid element) {
+        return getTagCollection().getOwningTags(element)
                 .stream()
                 .map(location -> new MCTag<>(location, this))
                 .collect(Collectors.toList());
     }
     
     @Override
-    public void addElements(MCTag<ExpandFluid> to, List<ExpandFluid> toAdd) {
+    public void addElements(MCTag<Fluid> to, List<Fluid> toAdd) {
         final ITag<Fluid> internal = getInternal(to);
-        final List<Fluid> itemsFromDefinitions = CraftTweakerHelper.getFluids(toAdd);
         if(internal == null) {
-            final Tag<Fluid> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(itemsFromDefinitions));
+            final Tag<Fluid> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(toAdd));
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
         } else {
-            CraftTweakerAPI.apply(new ActionTagAdd<>(internal, itemsFromDefinitions, to));
+            CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));
         }
     }
     
     @Override
-    public void removeElements(MCTag<ExpandFluid> from, List<ExpandFluid> toRemove) {
+    public void removeElements(MCTag<Fluid> from, List<Fluid> toRemove) {
         final ITag<Fluid> internal = getInternal(from);
-        final List<Fluid> fluids = CraftTweakerHelper.getFluids(toRemove);
-        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, fluids, from));
+        CraftTweakerAPI.apply(new ActionTagRemove<>(internal, toRemove, from));
     }
     
     @Override
-    public List<ExpandFluid> getElementsInTag(MCTag<ExpandFluid> theTag) {
+    public List<Fluid> getElementsInTag(MCTag<Fluid> theTag) {
         final ITag<Fluid> internal = getInternal(theTag);
         if(internal == null) {
             return Collections.emptyList();
         }
         
-        return internal.getAllElements().stream().map(ExpandFluid::new).collect(Collectors.toList());
+        return internal.getAllElements();
     }
     
     @Nullable
     @Override
-    public ITag<Fluid> getInternal(MCTag<ExpandFluid> theTag) {
+    public ITag<Fluid> getInternal(MCTag<Fluid> theTag) {
         return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
     }
     

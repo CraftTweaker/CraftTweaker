@@ -1,26 +1,29 @@
 package com.blamejared.crafttweaker.api.item;
 
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.data.*;
-import com.blamejared.crafttweaker.api.item.tooltip.*;
-import com.blamejared.crafttweaker.impl.actions.items.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
 import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
-import com.blamejared.crafttweaker.impl.data.*;
-import com.blamejared.crafttweaker.impl.food.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker.impl.util.text.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
-import net.minecraft.util.*;
-import net.minecraftforge.common.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.food.MCFood;
+import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
+import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeHooks;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * This represents an item.
@@ -49,7 +52,8 @@ public interface IItemStack extends IIngredient {
      */
     @ZenCodeType.Getter("registryName")
     default MCResourceLocation getRegistryName() {
-        return new MCResourceLocation(Objects.requireNonNull(getInternal().getItem().getRegistryName()));
+        return new MCResourceLocation(Objects.requireNonNull(getInternal().getItem()
+                .getRegistryName()));
     }
     
     /**
@@ -352,8 +356,7 @@ public interface IItemStack extends IIngredient {
     }
     
     @ZenCodeType.Getter("food")
-    @ZenCodeType.Nullable
-    MCFood getFood();
+    @ZenCodeType.Nullable MCFood getFood();
     
     @ZenCodeType.Setter("food")
     void setFood(MCFood food);
@@ -418,8 +421,8 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Method
     @ZenCodeType.Getter("definition")
     @ZenCodeType.Caster(implicit = true)
-    default MCItemDefinition getDefinition() {
-        return new MCItemDefinition(getInternal().getItem());
+    default Item getDefinition() {
+        return getInternal().getItem();
     }
     
     @ZenCodeType.Method

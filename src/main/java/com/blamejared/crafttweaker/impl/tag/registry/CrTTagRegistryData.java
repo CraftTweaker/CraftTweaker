@@ -30,7 +30,7 @@ public final class CrTTagRegistryData {
     private final Map<String, TagManagerWrapper<?>> syntheticInstances = new HashMap<>();
     
     /**
-     * Maps the ZC type -> TagManager implementation, e.g. MCItemDefinition -> {@link TagManagerItem}
+     * Maps the ZC type -> TagManager implementation, e.g. ExpandItem -> {@link TagManagerItem}
      */
     private final Map<Class<?>, TagManager<?>> tagFolderByCrTElementType = new HashMap<>();
     
@@ -132,7 +132,7 @@ public final class CrTTagRegistryData {
     }
     
     /**
-     * {@code TagRegistry.get<MCItemDefinition>()}
+     * {@code TagRegistry.get<ExpandItem>()}
      */
     @SuppressWarnings({"unchecked"})
     <T extends CommandStringDisplayable> TagManager<T> getForElementType(Class<T> cls) {
@@ -140,7 +140,7 @@ public final class CrTTagRegistryData {
     }
     
     /**
-     * {@code TagRegistry.get<MCItemDefinition>("minecraft:item")}
+     * {@code TagRegistry.get<ExpandItem>("minecraft:item")}
      */
     <T extends CommandStringDisplayable> TagManager<T> getForRegistry(ResourceLocation location) {
         @SuppressWarnings("rawtypes") final ForgeRegistry registry = RegistryManager.ACTIVE.getRegistry(location);

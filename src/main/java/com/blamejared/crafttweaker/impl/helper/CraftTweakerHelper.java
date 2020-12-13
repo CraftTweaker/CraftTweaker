@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.helper;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.item.MCItemDefinition;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,9 +23,5 @@ public class CraftTweakerHelper {
         return Arrays.stream(items)
                 .map(iItemStack -> iItemStack.getInternal().getItem())
                 .toArray(Item[]::new);
-    }
-    
-    public static List<Item> getItemsFromDefinitions(List<MCItemDefinition> definitions) {
-        return definitions.stream().map(MCItemDefinition::getInternal).collect(Collectors.toList());
     }
 }
