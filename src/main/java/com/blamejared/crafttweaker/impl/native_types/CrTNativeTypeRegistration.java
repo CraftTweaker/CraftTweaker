@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -17,20 +16,13 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.capabilities.CapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.extensions.IForgeItem;
-import net.minecraftforge.common.extensions.IForgeItemStack;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.registries.ForgeRegistryEntry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * Helper class to register Native types
@@ -40,78 +32,45 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 public class CrTNativeTypeRegistration {
     
     public static void registerNativeTypes(NativeTypeRegistry registry) {
+        registerNormalTypes(registry);
+        registerEventTypes(registry);
+    }
+    
+    private static void registerNormalTypes(NativeTypeRegistry registry) {
         registry.addNativeType(Item.class, "crafttweaker.api.item.MCItemDefinition");
         registry.addNativeType(PlayerEntity.class, "crafttweaker.api.player.MCPlayerEntity");
         registry.addNativeType(LivingEntity.class, "crafttweaker.api.entity.MCLivingEntity");
         registry.addNativeType(Entity.class, "crafttweaker.api.entity.MCEntity");
+        registry.addNativeType(EntityClassification.class, "crafttweaker.api.entity.MCEntityClassification");
         
-        registerType(registry, ItemStack.class);
-        registerType(registry, Ingredient.class);
-        registerType(registry, CapabilityProvider.class);
-        registerType(registry, Material.class);
-        registerType(registry, MaterialColor.class);
+        registry.addNativeType(ItemStack.class, "crafttweaker.api.item.ItemStack");
+        registry.addNativeType(Ingredient.class, "crafttweaker.api.item.Ingredient");
         
-        registerType(registry, Enchantment.class);
+        registry.addNativeType(Potion.class, "crafttweaker.api.potion.MCPotion");
+        registry.addNativeType(Effect.class, "crafttweaker.api.potion.MCPotionEffect");
+        registry.addNativeType(EffectInstance.class, "crafttweaker.api.potion.MCPotionEffectInstance");
         
-        registerType(registry, AbstractBlock.class);
-        registerType(registry, Block.class);
-        registerType(registry, BlockState.class);
-        registerType(registry, EntityClassification.class);
-        registerType(registry, Fluid.class);
-        registerType(registry, Effect.class);
-        registerType(registry, EffectInstance.class);
-        registerType(registry, Potion.class);
-        registerType(registry, IItemProvider.class);
-        registerType(registry, Biome.class);
-        registerType(registry, World.class);
-        registerType(registry, ICapabilityProvider.class);
-        registerType(registry, IForgeItem.class);
-        registerType(registry, IForgeItemStack.class);
-        registerType(registry, ForgeRegistryEntry.class);
-        registerType(registry, IForgeRegistryEntry.class);
+        registry.addNativeType(Material.class, "crafttweaker.api.block.material.MCMaterial");
+        registry.addNativeType(MaterialColor.class, "crafttweaker.api.block.material.MCMaterialColor");
         
-        registerEvents(registry);
+        registry.addNativeType(Block.class, "crafttweaker.api.blocks.MCBlock");
+        registry.addNativeType(BlockState.class, "crafttweaker.api.blocks.MCBlockState");
+        registry.addNativeType(Fluid.class, "crafttweaker.api.fluid.MCFluid");
+        
+        registry.addNativeType(Biome.class, "crafttweaker.api.world.MCBiome");
+        registry.addNativeType(World.class, "crafttweaker.api.world.MCWorld");
+        
+        registry.addNativeType(Enchantment.class, "crafttweaker.api.enchantment.MCEnchantment");
     }
     
-    /**
-     * Simple way to register a type.
-     * Converts the MC name to a CrT one.
-     */
-    private static void registerType(NativeTypeRegistry registry, Class<?> clazz) {
-        final String crtName;
-        final String canonicalName = clazz.getCanonicalName();
-        if(canonicalName.startsWith("net.minecraftforge")) {
-            crtName = "crafttweaker.api" + canonicalName.substring(18);
-        } else if(canonicalName.startsWith("net.minecraft")) {
-            crtName = "crafttweaker.api" + canonicalName.substring(13);
-        } else {
-            crtName = "crafttweaker." + clazz.getSimpleName();
-        }
-        
-        registry.addNativeType(clazz, crtName);
-    }
     
-    private static void registerEvents(NativeTypeRegistry registry) {
+    private static void registerEventTypes(NativeTypeRegistry registry) {
         
         registry.addNativeType(Event.class, "crafttweaker.api.event.MCEvent");
-        registerEvent(registry, EntityEvent.class);
-        registerEvent(registry, LivingEvent.class);
-        registerEvent(registry, PlayerEvent.class);
-        registerEvent(registry, AnvilRepairEvent.class);
+        registry.addNativeType(EntityEvent.class, "crafttweaker.api.event.entity.MCEntityEvent");
+        registry.addNativeType(LivingEvent.class, "crafttweaker.api.event.entity.MCLivingEvent");
+        registry.addNativeType(PlayerEvent.class, "crafttweaker.api.event.entity.player.MCPlayerEvent");
+        registry.addNativeType(AnvilRepairEvent.class, "crafttweaker.api.event.entity.player.MCAnvilRepairEvent");
     }
     
-    private static void registerEvent(NativeTypeRegistry registry, Class<?> cls) {
-        final String packageName = cls.getPackage().getName();
-        final String crTPackage;
-        if(packageName.startsWith("net.minecraftforge")) {
-            crTPackage = "crafttweaker.api" + packageName.substring(18);
-        } else if(packageName.startsWith("net.minecraft")) {
-            crTPackage = "crafttweaker.api" + packageName.substring(13);
-        } else {
-            crTPackage = "crafttweaker." + packageName;
-        }
-        
-        final String fullName = crTPackage + ".MC" + cls.getSimpleName();
-        registry.addNativeType(cls, fullName);
-    }
 }
