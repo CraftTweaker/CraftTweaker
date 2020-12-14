@@ -8,12 +8,13 @@ import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.google.common.collect.Sets;
 import net.minecraft.tags.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistry;
-import net.minecraftforge.registries.RegistryManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
@@ -24,9 +25,13 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     @Nonnull
     private final ResourceLocation tagTypeName;
     
-    public TagManagerWrapper(Class<T> elementClass, ResourceLocation tagTypeName) {
+    @Nonnull
+    private final String tagFolder;
+    
+    public TagManagerWrapper(Class<T> elementClass, ResourceLocation tagTypeName, String tagFolder) {
         this.elementClass = elementClass;
         this.tagTypeName = tagTypeName;
+        this.tagFolder = tagFolder;
     }
     
     @Nonnull
@@ -51,18 +56,10 @@ public class TagManagerWrapper<T> implements TagManager<T> {
         throw new IllegalArgumentException("Could not find TagCollection for '" + tagTypeName + '\'');
     }
     
+    @Nonnull
     @Override
     public String getTagFolder() {
-        final Optional<String> o = Optional.ofNullable(RegistryManager.ACTIVE.getRegistry(tagTypeName))
-                .map(ForgeRegistry::getTagFolder);
-        if(o.isPresent()) {
-            return o.get();
-        } else if(tagTypeName.getNamespace().equals("minecraft")) {
-            return tagTypeName.getPath();
-        } else {
-            //Fallback, just in case :thinking:
-            return tagTypeName.toString();
-        }
+        return tagFolder;
     }
     
     @Override

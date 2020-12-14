@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
@@ -49,6 +50,8 @@ public class CrTNativeTypeRegistration {
         registerType(registry, CapabilityProvider.class);
         registerType(registry, Material.class);
         registerType(registry, MaterialColor.class);
+        
+        registerType(registry, Enchantment.class);
         
         registerType(registry, AbstractBlock.class);
         registerType(registry, Block.class);

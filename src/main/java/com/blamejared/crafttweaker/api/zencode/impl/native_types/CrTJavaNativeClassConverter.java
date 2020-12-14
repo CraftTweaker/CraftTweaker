@@ -21,7 +21,7 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
         }
         
         if(cls.getCanonicalName().startsWith("net.minecraft")){
-            CraftTweakerAPI.logDebug("Minecraft Type referenced but not registered: " + cls.getCanonicalName());
+            CraftTweakerAPI.logger.trace("Minecraft Type referenced but not registered: " + cls.getCanonicalName());
         }
         
         return super.getNameForScripts(cls);

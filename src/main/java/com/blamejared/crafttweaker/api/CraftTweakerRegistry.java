@@ -8,12 +8,11 @@ import com.blamejared.crafttweaker.api.zencode.brackets.ValidatedEscapableBracke
 import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketResolverRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.PreprocessorRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.WrapperRegistry;
 import com.blamejared.crafttweaker.impl.commands.BracketDumperInfo;
 import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
 import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistryData;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import com.google.common.collect.BiMap;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
@@ -21,10 +20,7 @@ import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class CraftTweakerRegistry {
@@ -32,7 +28,6 @@ public class CraftTweakerRegistry {
     private static final BracketResolverRegistry BRACKET_RESOLVER_REGISTRY = new BracketResolverRegistry();
     private static final PreprocessorRegistry PREPROCESSOR_REGISTRY = new PreprocessorRegistry();
     private static final ZenClassRegistry ZEN_CLASS_REGISTRY = new ZenClassRegistry();
-    private static final WrapperRegistry WRAPPER_REGISTRY = new WrapperRegistry();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
@@ -46,7 +41,6 @@ public class CraftTweakerRegistry {
         BRACKET_RESOLVER_REGISTRY.validateBrackets();
         
         getAllTypesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addType);
-        getAllTypesWith(ZenWrapper.class).forEach(WRAPPER_REGISTRY::addType);
         
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
@@ -76,7 +70,7 @@ public class CraftTweakerRegistry {
      *
      * @return Map of String -> Class for ZenName -> Java class
      */
-    public static Map<String, Class<?>> getZenClassMap() {
+    public static BiMap<String, Class<?>> getZenClassMap() {
         return ZEN_CLASS_REGISTRY.getZenClasses();
     }
     
@@ -121,6 +115,17 @@ public class CraftTweakerRegistry {
      */
     public static Map<String, List<Class<?>>> getExpansions() {
         return ZEN_CLASS_REGISTRY.getExpansionsByExpandedName();
+    }
+    
+    /**
+     * Returns the ZenCode name for the given Java Class.
+     * Contains registered native types (e.g. ItemStack)
+     *
+     * @param cls The class to check for
+     * @return An optional that contains the class, if found
+     */
+    public static Optional<String> tryGetZenClassNameFor(Class<?> cls) {
+       return ZEN_CLASS_REGISTRY.tryGetNameFor(cls);
     }
     
     /**
@@ -170,18 +175,6 @@ public class CraftTweakerRegistry {
     // #########################################
     public static List<IPreprocessor> getPreprocessors() {
         return PREPROCESSOR_REGISTRY.getPreprocessors();
-    }
-    //</editor-fold>
-    
-    //</editor-fold>
-    
-    
-    //<editor-fold desc="WrapperRegistry">
-    // #########################################
-    // ### WrapperRegistry ###
-    // #########################################
-    public static WrapperRegistry getWrapperRegistry() {
-        return WRAPPER_REGISTRY;
     }
     //</editor-fold>
     

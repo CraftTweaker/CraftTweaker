@@ -8,6 +8,8 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeRegistration;
 import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import net.minecraftforge.fml.ModList;
 import org.objectweb.asm.Type;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -35,7 +37,7 @@ public class ZenClassRegistry {
     /**
      * All Classes with @Name, key is @Name#value
      */
-    private final Map<String, Class<?>> zenClasses = new HashMap<>();
+    private final BiMap<String, Class<?>> zenClasses = HashBiMap.create();
     
     /**
      * All classes with @Expansion, grouped by @Expansion#value
@@ -45,6 +47,21 @@ public class ZenClassRegistry {
     
     public List<Class<? extends IRecipeManager>> getRecipeManagers() {
         return getImplementationsOf(IRecipeManager.class);
+    }
+    
+    public boolean isRegistered(Class<?> cls) {
+        return zenClasses.inverse().containsKey(cls);
+    }
+    
+    public String getNameFor(Class<?> cls) {
+        return zenClasses.inverse().get(cls);
+    }
+    
+    public Optional<String> tryGetNameFor(Class<?> cls) {
+        if(isRegistered(cls)) {
+            return Optional.ofNullable(getNameFor(cls));
+        }
+        return Optional.empty();
     }
     
     public <T> List<Class<? extends T>> getImplementationsOf(Class<T> checkFor) {
@@ -65,7 +82,7 @@ public class ZenClassRegistry {
         return zenGlobals;
     }
     
-    public Map<String, Class<?>> getZenClasses() {
+    public BiMap<String, Class<?>> getZenClasses() {
         return zenClasses;
     }
     
