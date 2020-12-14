@@ -110,14 +110,16 @@ public class ZenClassRegistry {
     private void addNativeAnnotation(Class<?> cls) {
         final NativeExpansion annotation = cls.getAnnotation(NativeExpansion.class);
         final Class<?> expandedNativeType = annotation.value();
-        if(nativeTypeRegistry.hasInfoFor(expandedNativeType)){
+        if(nativeTypeRegistry.hasInfoFor(expandedNativeType)) {
             final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedNativeType);
             addExpansion(cls, expandedClassName);
-        } else if (expandedNativeType.isAnnotationPresent(ZenCodeType.Name.class)) {
-            final String expandedClassName = expandedNativeType.getAnnotation(ZenCodeType.Name.class).value();
+        } else if(expandedNativeType.isAnnotationPresent(ZenCodeType.Name.class)) {
+            final String expandedClassName = expandedNativeType.getAnnotation(ZenCodeType.Name.class)
+                    .value();
             addExpansion(cls, expandedClassName);
-        }else {
-            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedNativeType.getCanonicalName());
+        } else {
+            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedNativeType
+                    .getCanonicalName());
         }
     }
     
@@ -165,8 +167,11 @@ public class ZenClassRegistry {
     public void initNativeTypes() {
         CrTNativeTypeRegistration.registerNativeTypes(nativeTypeRegistry);
         for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
-            zenClasses.put(nativeTypeInfo.getCraftTweakerName(), nativeTypeInfo.getVanillaClass());
-            CraftTweakerAPI.logDebug("Registering %s", nativeTypeInfo.getCraftTweakerName());
+            final String craftTweakerName = nativeTypeInfo.getCraftTweakerName();
+            final String vanillaClass = nativeTypeInfo.getVanillaClass().getCanonicalName();
+            
+            zenClasses.put(craftTweakerName, nativeTypeInfo.getVanillaClass());
+            CraftTweakerAPI.logDebug("Registering %s for native type '%s'", craftTweakerName, vanillaClass);
         }
     }
     

@@ -4,9 +4,9 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -23,6 +23,11 @@ import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.common.extensions.IForgeItemStack;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -43,6 +48,7 @@ public class CrTNativeTypeRegistration {
         registerType(registry, Ingredient.class);
         registerType(registry, CapabilityProvider.class);
         registerType(registry, Material.class);
+        registerType(registry, MaterialColor.class);
         
         registerType(registry, AbstractBlock.class);
         registerType(registry, Block.class);
@@ -60,6 +66,8 @@ public class CrTNativeTypeRegistration {
         registerType(registry, IForgeItemStack.class);
         registerType(registry, ForgeRegistryEntry.class);
         registerType(registry, IForgeRegistryEntry.class);
+        
+        registerEvents(registry);
     }
     
     /**
@@ -78,5 +86,29 @@ public class CrTNativeTypeRegistration {
         }
         
         registry.addNativeType(clazz, crtName);
+    }
+    
+    private static void registerEvents(NativeTypeRegistry registry) {
+        
+        registry.addNativeType(Event.class, "crafttweaker.api.event.MCEvent");
+        registerEvent(registry, EntityEvent.class);
+        registerEvent(registry, LivingEvent.class);
+        registerEvent(registry, PlayerEvent.class);
+        registerEvent(registry, AnvilRepairEvent.class);
+    }
+    
+    private static void registerEvent(NativeTypeRegistry registry, Class<?> cls) {
+        final String packageName = cls.getPackage().getName();
+        final String crTPackage;
+        if(packageName.startsWith("net.minecraftforge")) {
+            crTPackage = "crafttweaker.api" + packageName.substring(18);
+        } else if(packageName.startsWith("net.minecraft")) {
+            crTPackage = "crafttweaker.api" + packageName.substring(13);
+        } else {
+            crTPackage = "crafttweaker." + packageName;
+        }
+        
+        final String fullName = crTPackage + ".MC" + cls.getSimpleName();
+        registry.addNativeType(cls, fullName);
     }
 }

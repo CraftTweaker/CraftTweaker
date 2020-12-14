@@ -30,6 +30,7 @@ public class ExpandEntityClassification {
         return internal.getAnimal();
     }
     
+    @ZenCodeType.Getter("commandString")
     public static String getCommandString(EntityClassification internal) {
         return "<entityclassification:" + internal.getName() + ">";
     }

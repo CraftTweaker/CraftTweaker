@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,8 +21,8 @@ import java.util.Map;
 public class ExpandLivingEntity {
     
     @ZenCodeType.Method
-    public static boolean canAttack(LivingEntity internal, EntityType<?> typeIn) {
-        return internal.canAttack(typeIn);
+    public static boolean canAttack(LivingEntity internal, MCEntityType typeIn) {
+        return internal.canAttack(typeIn.getInternal());
     }
     
     @ZenCodeType.Method

@@ -20,7 +20,7 @@ public class ExpandItem {
         return new MCItemStack(internal.getDefaultInstance());
     }
     
-    
+    @ZenCodeType.Getter("commandString")
     public static String getCommandString(Item internal) {
         return "<item:" + internal.getRegistryName() + ">.definition";
     }

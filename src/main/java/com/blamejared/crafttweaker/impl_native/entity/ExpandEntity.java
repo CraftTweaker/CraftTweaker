@@ -208,6 +208,12 @@ public class ExpandEntity {
         internal.addVelocity(x, y, z);
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("name")
+    public static String getName(Entity internal) {
+        return internal.getName().getString();
+    }
+    
     //TODO: Add the other methods
     // Tip: Use IDE's "delegate" method and go from there
 }

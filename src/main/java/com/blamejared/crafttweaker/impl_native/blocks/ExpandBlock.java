@@ -35,6 +35,7 @@ public class ExpandBlock {
         return internal.toString();
     }
     
+    @ZenCodeType.Getter("commandString")
     public static String getCommandString(Block internal) {
         return "<block:" + internal.getRegistryName() + ">";
     }

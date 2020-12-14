@@ -35,6 +35,7 @@ public class ExpandFluid {
         return new MCFluidStack(new FluidStack(internal, amount));
     }
     
+    @ZenCodeType.Getter("commandString")
     public static String getCommandString(Fluid internal) {
         return "<fluid:" + internal.getRegistryName() + ">.fluid";
     }

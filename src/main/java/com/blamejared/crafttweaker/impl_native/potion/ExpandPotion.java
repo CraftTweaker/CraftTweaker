@@ -29,6 +29,7 @@ public class ExpandPotion {
         return internal.hasInstantEffect();
     }
     
+    @ZenCodeType.Getter("commandString")
     public static String getCommandString(Potion internal) {
         return "<potion:" + internal.getRegistryName() + ">";
     }
