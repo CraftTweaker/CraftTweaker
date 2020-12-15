@@ -1,21 +1,35 @@
 package com.blamejared.crafttweaker.api.zencode.impl.loaders;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.zencode.brackets.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.zencode.brackets.CTRegisterBEPEvent;
+import com.blamejared.crafttweaker.api.zencode.brackets.IgnorePrefixCasingBracketParser;
+import com.blamejared.crafttweaker.api.zencode.brackets.ValidatedEscapableBracketParser;
 import com.blamejared.crafttweaker.api.zencode.impl.native_types.CrTJavaNativeConverterBuilder;
-import com.blamejared.crafttweaker.impl.logger.*;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import net.minecraftforge.common.MinecraftForge;
+import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
-import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.codemodel.*;
-import org.openzen.zenscript.formatter.*;
-import org.openzen.zenscript.lexer.*;
+import org.openzen.zencode.shared.CompileException;
+import org.openzen.zencode.shared.SourceFile;
+import org.openzen.zenscript.codemodel.FunctionParameter;
+import org.openzen.zenscript.codemodel.HighLevelDefinition;
+import org.openzen.zenscript.codemodel.ScriptBlock;
+import org.openzen.zenscript.codemodel.SemanticModule;
+import org.openzen.zenscript.formatter.FileFormatter;
+import org.openzen.zenscript.formatter.ScriptFormattingSettings;
+import org.openzen.zenscript.lexer.ParseException;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ScriptRun {
     
@@ -122,7 +136,6 @@ public class ScriptRun {
         for(Class<?> aClass : CraftTweakerRegistry.getZenGlobals()) {
             crafttweakerModule.addGlobals(aClass);
         }
-        crafttweakerModule.addClass(ItemStack.class);
         scriptingEngine.registerNativeProvided(crafttweakerModule);
         modules.add(crafttweakerModule);
         

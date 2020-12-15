@@ -14,5 +14,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NativeExpansion {
     
+    /**
+     * The expanded class, e.g. IItemStack, Block, ...
+     * Can be either a CraftTweaker wrapper or a (registered) vanilla type
+     */
     Class<?> value();
 }
