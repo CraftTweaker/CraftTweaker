@@ -1,9 +1,13 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.*;
+import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.codemodel.HighLevelDefinition;
+import org.openzen.zenscript.codemodel.Module;
+import org.openzen.zenscript.codemodel.definition.ClassDefinition;
 
 class CrTJavaNativeConverter extends JavaNativeConverter {
     
@@ -13,10 +17,15 @@ class CrTJavaNativeConverter extends JavaNativeConverter {
     
     @Override
     public HighLevelDefinition addClass(Class<?> cls) {
-        if(cls.isAnnotationPresent(NativeExpansion.class)) {
-            return expansionConverter.convertExpansion(cls);
+        try {
+            if(cls.isAnnotationPresent(NativeExpansion.class)) {
+                return expansionConverter.convertExpansion(cls);
+            }
+            
+            return super.addClass(cls);
+        } catch(Throwable e) {
+            CraftTweakerAPI.logThrowing("Error while registering class, this is most likely a compatibility issue:", e);
+            return null;
         }
-        
-        return super.addClass(cls);
     }
 }

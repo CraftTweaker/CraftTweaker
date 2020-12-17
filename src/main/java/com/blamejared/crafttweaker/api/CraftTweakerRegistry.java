@@ -198,4 +198,8 @@ public class CraftTweakerRegistry {
     public static NativeTypeRegistry getNativeTypeRegistry() {
         return ZEN_CLASS_REGISTRY.getNativeTypeRegistry();
     }
+    
+    public static ZenClassRegistry getZenClassRegistry() {
+        return ZEN_CLASS_REGISTRY;
+    }
 }

@@ -30,6 +30,11 @@ public class ZenClassRegistry {
     private final List<Class<?>> allRegisteredClasses = new ArrayList<>();
     
     /**
+     * All classes that caused errors when evaluating
+     */
+    private final List<Class<?>> blacklistedClasses = new ArrayList<>();
+    
+    /**
      * All classes that have at least one global field
      */
     private final List<Class<?>> zenGlobals = new ArrayList<>();
@@ -103,8 +108,12 @@ public class ZenClassRegistry {
             return;
         }
         
+        if(!isCompatible(cls)) {
+            blacklistedClasses.add(cls);
+            return;
+        }
+        
         allRegisteredClasses.add(cls);
-        CraftTweaker.LOG.debug("Found ZenRegister: {}", cls.getCanonicalName());
         
         if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
             addZenClass(cls);
@@ -121,6 +130,23 @@ public class ZenClassRegistry {
         
         if(hasGlobals(cls)) {
             zenGlobals.add(cls);
+        }
+    }
+    
+    /**
+     * Checks that the class does not have any fields or methods that would cause errors when converting in the JavaNativeModule.
+     * Does so by simply calling the declaredMethods and fields getters.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private boolean isCompatible(Class<?> cls) {
+        try {
+            cls.getDeclaredFields();
+            cls.getDeclaredMethods();
+            return true;
+        } catch(Throwable t) {
+            CraftTweakerAPI.logThrowing("Could not register class '%s'! This is most likely a compatibility issue!", t, cls
+                    .getCanonicalName());
+            return false;
         }
     }
     
@@ -194,5 +220,9 @@ public class ZenClassRegistry {
     
     public NativeTypeRegistry getNativeTypeRegistry() {
         return nativeTypeRegistry;
+    }
+    
+    public boolean isBlacklisted(Class<?> cls) {
+        return blacklistedClasses.contains(cls);
     }
 }
