@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -9,6 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nonnull;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(AnvilRepairEvent.class)
 public class ExpandAnvilRepairEvent {
     

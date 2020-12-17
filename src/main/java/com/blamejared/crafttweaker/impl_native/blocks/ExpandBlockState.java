@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.blocks;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(BlockState.class)
 public class ExpandBlockState {
     

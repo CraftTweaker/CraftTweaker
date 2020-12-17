@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.fluid;
 
 import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.*;
 import com.blamejared.crafttweaker.api.fluid.*;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
 import com.blamejared.crafttweaker_annotations.annotations.*;
@@ -10,6 +9,7 @@ import net.minecraftforge.fluids.*;
 import org.openzen.zencode.java.*;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(Fluid.class)
 public class ExpandFluid {
     

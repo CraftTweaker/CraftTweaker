@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.entity;
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.openzen.zencode.java.ZenCodeType;
@@ -10,6 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Set;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(Entity.class)
 public class ExpandEntity {
     

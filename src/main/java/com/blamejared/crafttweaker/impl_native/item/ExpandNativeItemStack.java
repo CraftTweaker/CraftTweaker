@@ -6,10 +6,12 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(ItemStack.class)
 public class ExpandNativeItemStack {
     

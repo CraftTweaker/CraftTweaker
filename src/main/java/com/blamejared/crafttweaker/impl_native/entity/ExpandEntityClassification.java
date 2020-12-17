@@ -2,10 +2,12 @@ package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.entity.EntityClassification;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(EntityClassification.class)
 public class ExpandEntityClassification {
     

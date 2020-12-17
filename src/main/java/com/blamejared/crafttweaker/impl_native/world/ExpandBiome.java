@@ -3,11 +3,13 @@ package com.blamejared.crafttweaker.impl_native.world;
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(Biome.class)
 public class ExpandBiome {
     

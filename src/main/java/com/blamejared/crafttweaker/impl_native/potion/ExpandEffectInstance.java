@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import org.openzen.zencode.java.ZenCodeType;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(EffectInstance.class)
 public class ExpandEffectInstance {
     

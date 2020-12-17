@@ -2,11 +2,13 @@ package com.blamejared.crafttweaker.impl_native.blocks;
 
 import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@DocumentAsType
 @NativeExpansion(Block.class)
 public class ExpandBlock {
     
