@@ -2,20 +2,20 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLFile;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLFolder;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLObject;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLTypeAdapter;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.sun.source.util.Trees;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -194,42 +194,14 @@ public class DocumentProcessorNew extends AbstractProcessor {
         }
         
         Gson gson = new GsonBuilder().setPrettyPrinting()
-                .registerTypeAdapter(YAMLFolder.class, new TypeAdapter<YAMLFolder>() {
-                    @Override
-                    public void write(JsonWriter out, YAMLFolder value) throws IOException {
-                        out.beginObject();
-                        for(YAMLObject yamlObject : value.getFiles()) {
-                            
-                            if(yamlObject instanceof YAMLFile) {
-                                YAMLFile file = (YAMLFile) yamlObject;
-                                out.name(file.getName()).value(file.getPath() + ".md");
-                            } else if(yamlObject instanceof YAMLFolder) {
-                                YAMLFolder folder = (YAMLFolder) yamlObject;
-                                out.name(folder.getName());
-                                write(out, folder);
-                            }
-                        }
-                        out.endObject();
-                    }
-                    
-                    @Override
-                    public YAMLFolder read(JsonReader in) {
-                        // We don't really need to read here...
-                        return null;
-                    }
-                })
+                .registerTypeAdapter(YAMLFolder.class, new YAMLTypeAdapter())
                 .create();
+        
+        
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(docsOut, "docs.json")))) {
             Map<String, Map<String, YAMLFolder>> nav = new HashMap<>();
             nav.put("nav", files);
             writer.write(gson.toJson(nav));
-        }
-        final File mkdocsFile = new File(docsOut, "mkdocs.yml");
-        try(final PrintWriter writer = new PrintWriter(new FileWriter(mkdocsFile))) {
-            
-            for(String s : files.keySet()) {
-                writer.println(files.get(s).getOutput(0));
-            }
         }
     }
     
