@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLFile;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLFolder;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLTypeAdapter;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.files.DeletingPathVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,11 +17,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
@@ -92,29 +90,19 @@ public class DocumentProcessorNew extends AbstractProcessor {
     }
     
     private void clearOutputDir() {
-        if(docsOut.exists()) {
-            if(!docsOut.isDirectory()) {
-                throw new IllegalStateException("File " + docsOut + " exists and is not a directory!");
-            }
-            
-            try {
-                Files.walkFileTree(docsOut.getAbsoluteFile()
-                        .toPath(), new SimpleFileVisitor<Path>() {
-                    @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        Files.delete(file);
-                        return super.visitFile(file, attrs);
-                    }
-                    
-                    @Override
-                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                        Files.delete(dir);
-                        return super.postVisitDirectory(dir, exc);
-                    }
-                });
-            } catch(IOException e) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
-            }
+        if(!docsOut.exists()) {
+            return;
+        }
+        
+        if(!docsOut.isDirectory()) {
+            throw new IllegalStateException("File " + docsOut + " exists and is not a directory!");
+        }
+        
+        try {
+            final Path outputPath = docsOut.getAbsoluteFile().toPath();
+            Files.walkFileTree(outputPath, new DeletingPathVisitor());
+        } catch(IOException e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
         }
     }
     
