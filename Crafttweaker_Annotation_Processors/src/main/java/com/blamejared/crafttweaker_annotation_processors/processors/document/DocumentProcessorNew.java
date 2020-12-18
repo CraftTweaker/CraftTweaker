@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.AnnotationMirrorUtil;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLFile;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLFolder;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.yaml.YAMLTypeAdapter;
@@ -11,7 +12,11 @@ import com.sun.source.util.Trees;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,14 +33,13 @@ public class DocumentProcessorNew extends AbstractProcessor {
     private static final File docsOut = new File("docsOut");
     private static final Set<CrafttweakerDocumentationPage> pages = new TreeSet<>(Comparator.comparing(CrafttweakerDocumentationPage::getDocumentTitle));
     public static Map<String, String> modIdByPackage = new HashMap<>();
-    public static Trees tree = null;
+    public static Trees tree;
     private final Collection<Element> allElements = new HashSet<>();
     
     public static String getModIdForPackage(Element element, ProcessingEnvironment environment) {
-        final String packageName = environment.getElementUtils()
-                .getPackageOf(element)
-                .getQualifiedName()
-                .toString();
+        final PackageElement elementPackage = environment.getElementUtils().getPackageOf(element);
+        final String packageName = elementPackage.getQualifiedName().toString();
+        
         for(String knownPackName : modIdByPackage.keySet()) {
             if(packageName.startsWith(knownPackName)) {
                 return modIdByPackage.get(knownPackName);
@@ -107,31 +111,15 @@ public class DocumentProcessorNew extends AbstractProcessor {
     }
     
     private void fillModIdInfo(RoundEnvironment roundEnv) {
-        final TypeElement typeElement = processingEnv.getElementUtils()
-                .getTypeElement("net.minecraftforge.fml.common.Mod");
-        outer:
+        final Elements elementUtils = processingEnv.getElementUtils();
+        final TypeElement typeElement = elementUtils.getTypeElement("net.minecraftforge.fml.common.Mod");
+        
         for(Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
-            for(AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-                if(annotationMirror.getAnnotationType().asElement().equals(typeElement)) {
-                    final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror
-                            .getElementValues();
-                    
-                    for(ExecutableElement executableElement : elementValues.keySet()) {
-                        if(executableElement.getSimpleName().toString().equals("value")) {
-                            final String packageName = processingEnv.getElementUtils()
-                                    .getPackageOf(element)
-                                    .getQualifiedName()
-                                    .toString();
-                            modIdByPackage.put(packageName, elementValues.get(executableElement)
-                                    .getValue()
-                                    .toString());
-                            continue outer;
-                        }
-                    }
-                }
-            }
-            processingEnv.getMessager()
-                    .printMessage(Diagnostic.Kind.ERROR, "Internal error: Could not find mod-id for this element!", element);
+            final AnnotationMirror modAnnotation = AnnotationMirrorUtil.getMirror(element, typeElement);
+            final String modId = AnnotationMirrorUtil.getAnnotationValue(modAnnotation, "value");
+            
+            final PackageElement modPackage = elementUtils.getPackageOf(element);
+            modIdByPackage.put(modPackage.getQualifiedName().toString(), modId);
         }
     }
     
