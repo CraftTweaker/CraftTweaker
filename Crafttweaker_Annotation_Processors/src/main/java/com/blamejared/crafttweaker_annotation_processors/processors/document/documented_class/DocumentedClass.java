@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.sha
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import org.openzen.zencode.java.*;
 
 import javax.annotation.processing.*;
@@ -80,7 +81,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         final DocumentedClass superClass = convertClass(element.getSuperclass(), environment, forComment);
         //final String docComment = environment.getElementUtils().getDocComment(element);
         
-        final String declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+        final String declaringModId = KnownModList.getInstance().getModIdForPackage(element);
         String docParamThis = null;
         
         {

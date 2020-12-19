@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_expansion;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentProcessorNew;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
@@ -72,7 +72,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         if (docParamThis.isEmpty()) {
             docParamThis = null;
         }
-        final String declaringModId = DocumentProcessorNew.getModIdForPackage(element, environment);
+        final String declaringModId = KnownModList.getInstance().getModIdForPackage(element);
         final DocumentedExpansion out = new DocumentedExpansion(docPath, (s == null || s.isEmpty()) ? null : s, expandedType, docParamThis, declaringModId);
         knownTypes.put(element.toString(), out);
 

@@ -1,6 +1,4 @@
-package com.blamejared.crafttweaker.api.annotations;
-
-import org.openzen.zencode.java.ZenCodeType.Expansion;
+package com.blamejared.crafttweaker_annotations.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used instead of {@link Expansion} if you don't know the zs name of the type.
+ * Used instead of org.openzen.zencode.java.ZenCodeType.Expansion if you don't know the zs name of the type.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

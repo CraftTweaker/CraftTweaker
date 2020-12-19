@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl_native.potion;
 
 
-import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
+import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
 import net.minecraft.potion.EffectInstance;

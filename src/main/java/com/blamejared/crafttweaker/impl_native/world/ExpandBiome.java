@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
-import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
+import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;

@@ -1,13 +1,10 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotations.NativeExpansion;
+import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.*;
-import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.codemodel.HighLevelDefinition;
-import org.openzen.zenscript.codemodel.Module;
-import org.openzen.zenscript.codemodel.definition.ClassDefinition;
 
 class CrTJavaNativeConverter extends JavaNativeConverter {
     
