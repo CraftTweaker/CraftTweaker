@@ -69,6 +69,6 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     
     @Override
     public IFacing getFace() {
-        return new MCFacing(event.getFace());
+        return CraftTweakerMC.getIFacing(event.getFace());
     }
 }
