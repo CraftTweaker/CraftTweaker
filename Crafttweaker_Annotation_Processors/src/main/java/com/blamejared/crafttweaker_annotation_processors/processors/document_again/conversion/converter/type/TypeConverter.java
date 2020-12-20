@@ -4,7 +4,9 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.PrimitiveTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.TypePageTypeInfo;
+import org.openzen.zencode.java.ZenCodeType;
 
 import javax.lang.model.type.TypeMirror;
 import java.util.Optional;
@@ -23,13 +25,15 @@ public class TypeConverter {
         if(pageInfoByName.isPresent()) {
             return new TypePageTypeInfo(pageInfoByName.get());
         }
-        throw new UnsupportedOperationException("TODO");
+        throw new UnsupportedOperationException("TODO: " + name.getZenCodeName());
     }
     
     public AbstractTypeInfo convertType(TypeMirror typeMirror) {
-        if(typeMirror.getKind().isPrimitive()) {
-        
+        if(typeMirror.getAnnotation(ZenCodeType.Name.class) != null) {
+            final ZenCodeType.Name annotation = typeMirror.getAnnotation(ZenCodeType.Name.class);
+            return convertByName(new TypeName(annotation.value()));
         }
-        return null;
+        
+        return new PrimitiveTypeInfo(typeMirror.toString());
     }
 }

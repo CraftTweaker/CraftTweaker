@@ -40,13 +40,6 @@ public class AnnotatedElementCollection {
         if(!typeElement.getKind().isClass() && !typeElement.getKind().isInterface()) {
             this.processingEnv.getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "How is this annotated", typeElement);
-            return;
-        }
-        
-        
-        final CrafttweakerDocumentationPage documentationPage = CrafttweakerDocumentationPage.convertType(typeElement, this.processingEnv);
-        if(documentationPage != null) {
-            pages.add(documentationPage);
         }
     }
 }

@@ -1,6 +1,7 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member;
+package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member.ExpansionCasterConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member.ExpansionMethodConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.HeaderConverter;

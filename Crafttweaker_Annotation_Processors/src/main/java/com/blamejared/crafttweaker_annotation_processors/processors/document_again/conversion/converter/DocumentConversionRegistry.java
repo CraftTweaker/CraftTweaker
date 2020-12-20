@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.DocumentRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.expansion.ExpansionConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.GenericParameterConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.NamedTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 
@@ -20,6 +22,7 @@ public class DocumentConversionRegistry {
         this.documentRegistry = documentRegistry;
         //TODO: Add converters
         converters.add(new ExpansionConverter(knownModList, commentConverter, documentRegistry, typeConverter));
+        converters.add(new NamedTypeConverter(knownModList, commentConverter, documentRegistry, typeConverter, new GenericParameterConverter(typeConverter, commentConverter)));
     }
     
     public void convert(TypeElement typeElement) {

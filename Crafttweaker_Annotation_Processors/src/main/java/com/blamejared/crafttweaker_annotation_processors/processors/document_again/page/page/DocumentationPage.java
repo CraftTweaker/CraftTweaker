@@ -29,7 +29,7 @@ public abstract class DocumentationPage {
     protected abstract void writeTitle(PrintWriter writer);
     
     protected void writeDescription(PrintWriter writer) {
-        pageInfo.getClassComment().ifPresent(writer::println);
+        pageInfo.getClassComment().getOptionalDescription().ifPresent(writer::println);
     }
     
     protected abstract void writeOwnerModId(PrintWriter writer);

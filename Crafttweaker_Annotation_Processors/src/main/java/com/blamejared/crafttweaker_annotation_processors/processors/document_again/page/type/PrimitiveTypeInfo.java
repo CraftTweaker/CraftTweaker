@@ -12,4 +12,9 @@ public class PrimitiveTypeInfo extends AbstractTypeInfo {
     public String getDisplayName() {
         return name;
     }
+    
+    @Override
+    public String getClickableMarkdown() {
+        return getDisplayName();
+    }
 }

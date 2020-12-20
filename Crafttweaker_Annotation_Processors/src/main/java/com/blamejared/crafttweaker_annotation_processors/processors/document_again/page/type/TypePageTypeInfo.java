@@ -14,4 +14,9 @@ public class TypePageTypeInfo extends AbstractTypeInfo {
     public String getDisplayName() {
         return pageInfo.zenCodeName.getSimpleName();
     }
+    
+    @Override
+    public String getClickableMarkdown() {
+        return String.format("[%s](%s)", pageInfo.getSimpleName(), pageInfo.getOutputPath());
+    }
 }

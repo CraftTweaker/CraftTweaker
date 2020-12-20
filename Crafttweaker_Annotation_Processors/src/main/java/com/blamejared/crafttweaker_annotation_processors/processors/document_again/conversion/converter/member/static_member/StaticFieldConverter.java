@@ -21,7 +21,7 @@ public class StaticFieldConverter extends AbstractEnclosedElementConverter<Docum
     
     @Override
     public boolean canConvert(Element enclosedElement) {
-        return enclosedElement.getAnnotation(ZenCodeType.Field.class) != null;
+        return isAnnotationPresentOn(ZenCodeType.Field.class, enclosedElement);
     }
     
     @Override

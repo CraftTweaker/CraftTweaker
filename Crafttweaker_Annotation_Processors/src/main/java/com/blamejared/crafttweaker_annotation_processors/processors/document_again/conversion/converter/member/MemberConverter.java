@@ -6,12 +6,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
 public abstract class MemberConverter<T> {
     
-    private final EnumMap<ElementKind, List<AbstractEnclosedElementConverter<?>>> elementConverters = new EnumMap<>(ElementKind.class);
+    private final EnumMap<ElementKind, List<AbstractEnclosedElementConverter<T>>> elementConverters = new EnumMap<>(ElementKind.class);
     
     protected abstract boolean isCandidate(Element enclosedElement);
     
@@ -33,7 +34,7 @@ public abstract class MemberConverter<T> {
         }
         
         final ElementKind kind = enclosedElement.getKind();
-        final List<AbstractEnclosedElementConverter<?>> converters = elementConverters.get(kind);
+        final List<AbstractEnclosedElementConverter<T>> converters = getConvertersFor(kind);
         for(AbstractEnclosedElementConverter converter : converters) {
             if(converter.canConvert(enclosedElement)) {
                 converter.convertAndAddTo(enclosedElement, result, pageInfo);
@@ -42,7 +43,11 @@ public abstract class MemberConverter<T> {
         }
     }
     
-    protected void addElementConverter(ElementKind kind, AbstractEnclosedElementConverter<?> expansionMethodConverter) {
+    private List<AbstractEnclosedElementConverter<T>> getConvertersFor(ElementKind kind) {
+        return elementConverters.getOrDefault(kind, Collections.emptyList());
+    }
+    
+    protected void addElementConverter(ElementKind kind, AbstractEnclosedElementConverter<T> expansionMethodConverter) {
         elementConverters.computeIfAbsent(kind, ignored -> new ArrayList<>())
                 .add(expansionMethodConverter);
     }

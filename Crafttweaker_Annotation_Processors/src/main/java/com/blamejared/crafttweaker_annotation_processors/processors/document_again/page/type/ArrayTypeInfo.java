@@ -12,4 +12,9 @@ public class ArrayTypeInfo extends AbstractTypeInfo {
     public String getDisplayName() {
         return base.getDisplayName() + "[]";
     }
+    
+    @Override
+    public String getClickableMarkdown() {
+        return base.getClickableMarkdown() + "[]";
+    }
 }

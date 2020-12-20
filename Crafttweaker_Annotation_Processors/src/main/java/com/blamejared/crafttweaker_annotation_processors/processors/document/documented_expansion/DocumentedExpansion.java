@@ -72,7 +72,7 @@ public class DocumentedExpansion extends CrafttweakerDocumentationPage {
         if (docParamThis.isEmpty()) {
             docParamThis = null;
         }
-        final String declaringModId = KnownModList.getInstance().getModIdForPackage(element);
+        final String declaringModId = "KnownModList.getInstance().getModIdForPackage(element)";
         final DocumentedExpansion out = new DocumentedExpansion(docPath, (s == null || s.isEmpty()) ? null : s, expandedType, docParamThis, declaringModId);
         knownTypes.put(element.toString(), out);
 

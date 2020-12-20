@@ -1,21 +1,29 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.CrafttweakerDocumentationPage;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.documented_class.members.DocumentedConstructor;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.DocumentedScriptingExample;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.Writable;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.members.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedClassType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.types.DocumentedType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.CommentUtils;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.shared.util.IDontKnowHowToNameThisUtil;
+import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.processing.*;
-import javax.lang.model.element.*;
-import javax.lang.model.type.*;
-import javax.tools.*;
-import java.io.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 /**
  * The main part of this.
@@ -52,7 +60,8 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
     }
     
     public static DocumentedClass convertClass(TypeMirror type, ProcessingEnvironment environment, boolean forComment) {
-        return convertClass((TypeElement) environment.getTypeUtils().asElement(type), environment, forComment);
+        return convertClass((TypeElement) environment.getTypeUtils()
+                .asElement(type), environment, forComment);
     }
     
     public static DocumentedClass convertClass(TypeElement element, ProcessingEnvironment environment, boolean forComment) {
@@ -81,7 +90,7 @@ public class DocumentedClass extends CrafttweakerDocumentationPage {
         final DocumentedClass superClass = convertClass(element.getSuperclass(), environment, forComment);
         //final String docComment = environment.getElementUtils().getDocComment(element);
         
-        final String declaringModId = KnownModList.getInstance().getModIdForPackage(element);
+        final String declaringModId = "KnownModList.getInstance().getModIdForPackage(element)";
         String docParamThis = null;
         
         {

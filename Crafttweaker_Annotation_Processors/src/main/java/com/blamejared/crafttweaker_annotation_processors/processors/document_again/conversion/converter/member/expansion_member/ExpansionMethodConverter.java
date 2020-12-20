@@ -32,7 +32,7 @@ public class ExpansionMethodConverter extends AbstractEnclosedElementConverter<D
     
     @Override
     public boolean canConvert(Element enclosedElement) {
-        return enclosedElement.getAnnotation(ZenCodeType.Method.class) != null;
+        return isAnnotationPresentOn(ZenCodeType.Method.class, enclosedElement);
     }
     
     @Override

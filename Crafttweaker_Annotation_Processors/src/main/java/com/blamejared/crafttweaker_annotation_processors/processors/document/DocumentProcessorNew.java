@@ -20,20 +20,16 @@ public class DocumentProcessorNew extends AbstractProcessor {
     //private final Collection<Element> allElements = new HashSet<>();
     
     private AnnotatedElementCollection annotatedElementCollection;
-    private FileHandler fileHandler;
     
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         tree = Trees.instance(processingEnv);
-        KnownModList.initializeInstance(processingEnv);
         annotatedElementCollection = new AnnotatedElementCollection(processingEnv);
-        fileHandler = new FileHandler(processingEnv, docsOut);
     }
     
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        KnownModList.getInstance().fillModIdInfo(roundEnv);
         annotatedElementCollection.addRound(roundEnv);
         
         if(!roundEnv.processingOver()) {
@@ -42,9 +38,6 @@ public class DocumentProcessorNew extends AbstractProcessor {
         
         annotatedElementCollection.handleElements();
         
-        fileHandler.clearOutputDir();
-        fileHandler.writeToFiles();
-        allElements.clear();
         return false;
     }
     

@@ -33,4 +33,8 @@ public class DocumentationPageInfo {
         final int i = outputPath.lastIndexOf(File.separator);
         return outputPath.substring(i);
     }
+    
+    public String getOutputPath() {
+        return outputPath;
+    }
 }

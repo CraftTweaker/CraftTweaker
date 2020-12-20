@@ -28,7 +28,14 @@ public class PageWriter {
     }
     
     private void clearOutputDirectory() throws IOException {
+        ensureOutputDirectoryExists();
         Files.walkFileTree(outputDirectory.getAbsoluteFile().toPath(), new DeletingPathVisitor());
+    }
+    
+    private void ensureOutputDirectoryExists() {
+        if(!outputDirectory.exists() && !outputDirectory.mkdirs()) {
+            throw new IllegalStateException("Could not create output directory");
+        }
     }
     
     private void writePages() throws IOException {

@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.page;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.DocumentedGenericParameter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.static_member.DocumentedStaticMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
@@ -16,13 +16,13 @@ public final class TypePage extends DocumentationPage {
     private final TypePageInfo pageInfo;
     
     @Nullable
-    private final TypePage superType;
-    private final List<TypePage> implementedTypes;
+    private final AbstractTypeInfo superType;
+    private final List<AbstractTypeInfo> implementedTypes;
     private final List<DocumentedGenericParameter> genericParameters;
     
-    public TypePage(DocumentationPageInfo pageInfo, DocumentedVirtualMembers members, TypePageInfo pageInfo1, @Nullable TypePage superType, List<TypePage> implementedTypes, DocumentedStaticMembers staticMembers, List<DocumentedGenericParameter> genericParameters) {
+    public TypePage(TypePageInfo pageInfo, DocumentedVirtualMembers members, @Nullable AbstractTypeInfo superType, List<AbstractTypeInfo> implementedTypes, DocumentedStaticMembers staticMembers, List<DocumentedGenericParameter> genericParameters) {
         super(pageInfo, members, staticMembers);
-        this.pageInfo = pageInfo1;
+        this.pageInfo = pageInfo;
         this.superType = superType;
         this.implementedTypes = implementedTypes;
         this.genericParameters = genericParameters;

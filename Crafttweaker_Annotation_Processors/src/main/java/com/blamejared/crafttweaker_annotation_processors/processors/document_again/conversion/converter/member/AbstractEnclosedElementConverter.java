@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 
 import javax.lang.model.element.Element;
+import java.lang.annotation.Annotation;
 
 public abstract class AbstractEnclosedElementConverter<T> {
     
@@ -11,6 +12,10 @@ public abstract class AbstractEnclosedElementConverter<T> {
     
     protected AbstractEnclosedElementConverter(TypeConverter typeConverter) {
         this.typeConverter = typeConverter;
+    }
+    
+    protected boolean isAnnotationPresentOn(Class<? extends Annotation> annotationClass, Element element) {
+        return element.getAnnotation(annotationClass) != null;
     }
     
     public abstract boolean canConvert(Element enclosedElement);

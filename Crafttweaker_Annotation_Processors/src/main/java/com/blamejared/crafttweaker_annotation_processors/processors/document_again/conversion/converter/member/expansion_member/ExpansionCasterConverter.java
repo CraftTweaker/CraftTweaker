@@ -31,7 +31,7 @@ public class ExpansionCasterConverter extends AbstractEnclosedElementConverter<D
     
     @Override
     public boolean canConvert(Element enclosedElement) {
-        return enclosedElement.getAnnotation(ZenCodeType.Caster.class) != null;
+        return isAnnotationPresentOn(ZenCodeType.Caster.class, enclosedElement);
     }
     
     @Override
