@@ -1,10 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.DocumentRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.DocumentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.GenericParameterConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.member.NamedTypeVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
@@ -25,11 +24,15 @@ import java.util.stream.Collectors;
 public class NamedTypeConverter extends DocumentConverter {
     
     private final GenericParameterConverter genericParameterConverter;
+    private final SuperTypeConverter superTypeConverter;
+    private final NamedTypeVirtualMemberConverter namedTypeVirtualMemberConverter;
     
-    public NamedTypeConverter(KnownModList knownModList, CommentConverter commentConverter, DocumentRegistry documentRegistry, TypeConverter typeConverter, GenericParameterConverter genericParameterConverter) {
+    public NamedTypeConverter(KnownModList knownModList, CommentConverter commentConverter, GenericParameterConverter genericParameterConverter, SuperTypeConverter superTypeConverter, NamedTypeVirtualMemberConverter namedTypeVirtualMemberConverter) {
         super(knownModList, commentConverter);
-    
+        
         this.genericParameterConverter = genericParameterConverter;
+        this.superTypeConverter = superTypeConverter;
+        this.namedTypeVirtualMemberConverter = namedTypeVirtualMemberConverter;
     }
     
     @Override
@@ -61,7 +64,7 @@ public class NamedTypeConverter extends DocumentConverter {
     }
     
     private DocumentedVirtualMembers convertVirtualMembers(TypeElement typeElement, TypePageInfo typePageInfo) {
-        return null;
+        return namedTypeVirtualMemberConverter.convertFor(typeElement, typePageInfo);
     }
     
     private DocumentedStaticMembers convertStaticMembers(TypeElement typeElement, TypePageInfo typePageInfo) {
@@ -69,7 +72,7 @@ public class NamedTypeConverter extends DocumentConverter {
     }
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
-        return null;
+        return superTypeConverter.convertSuperTypeFor(typeElement);
     }
     
     private List<AbstractTypeInfo> convertImplementations(TypeElement typeElement) {

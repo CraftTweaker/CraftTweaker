@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member;
+package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.expansion.member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;

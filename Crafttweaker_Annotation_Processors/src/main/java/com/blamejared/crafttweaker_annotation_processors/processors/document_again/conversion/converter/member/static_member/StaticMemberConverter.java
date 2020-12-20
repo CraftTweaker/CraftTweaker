@@ -1,8 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member.StaticFieldConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.virtual_member.VirtualMethodConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.static_member.DocumentedStaticMembers;
 

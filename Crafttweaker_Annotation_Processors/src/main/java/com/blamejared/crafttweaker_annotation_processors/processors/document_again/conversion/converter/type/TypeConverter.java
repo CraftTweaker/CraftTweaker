@@ -34,6 +34,7 @@ public class TypeConverter {
             return convertByName(new TypeName(annotation.value()));
         }
         
+        //FIXME Do proper checks for primitives, generics and the like here
         return new PrimitiveTypeInfo(typeMirror.toString());
     }
 }
