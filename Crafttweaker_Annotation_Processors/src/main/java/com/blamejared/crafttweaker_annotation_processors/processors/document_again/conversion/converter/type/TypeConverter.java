@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.TypePageTypeInfo;
 import org.openzen.zencode.java.ZenCodeType;
 
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.Optional;
 
@@ -29,6 +30,10 @@ public class TypeConverter {
     }
     
     public AbstractTypeInfo convertType(TypeMirror typeMirror) {
+        if(typeMirror.getKind() == TypeKind.NONE) {
+            return new PrimitiveTypeInfo("void");
+        }
+        
         if(typeMirror.getAnnotation(ZenCodeType.Name.class) != null) {
             final ZenCodeType.Name annotation = typeMirror.getAnnotation(ZenCodeType.Name.class);
             return convertByName(new TypeName(annotation.value()));

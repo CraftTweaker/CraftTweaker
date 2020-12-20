@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ExampleData {
     
@@ -29,5 +30,9 @@ public class ExampleData {
     
     public Example getExampleFor(String name) {
         return examples.get(name);
+    }
+    
+    public Optional<Example> tryGetExampleFor(String name) {
+        return Optional.ofNullable(getExampleFor(name));
     }
 }

@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 
 public class ConstructorMember extends AbstractVirtualMember implements Comparable<ConstructorMember> {
     
-    public ConstructorMember(MemberHeader header, Example aThis, @Nullable DocumentationComment description) {
+    public ConstructorMember(MemberHeader header, @Nullable DocumentationComment description) {
         super(header, description);
     }
     

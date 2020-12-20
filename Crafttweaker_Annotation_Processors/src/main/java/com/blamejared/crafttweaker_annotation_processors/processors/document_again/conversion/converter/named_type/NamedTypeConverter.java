@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.DocumentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.GenericParameterConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member.StaticMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.member.NamedTypeVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
@@ -26,13 +27,17 @@ public class NamedTypeConverter extends DocumentConverter {
     private final GenericParameterConverter genericParameterConverter;
     private final SuperTypeConverter superTypeConverter;
     private final NamedTypeVirtualMemberConverter namedTypeVirtualMemberConverter;
+    private final ImplementationConverter implementationConverter;
+    private final StaticMemberConverter staticMemberConverter;
     
-    public NamedTypeConverter(KnownModList knownModList, CommentConverter commentConverter, GenericParameterConverter genericParameterConverter, SuperTypeConverter superTypeConverter, NamedTypeVirtualMemberConverter namedTypeVirtualMemberConverter) {
+    public NamedTypeConverter(KnownModList knownModList, CommentConverter commentConverter, GenericParameterConverter genericParameterConverter, SuperTypeConverter superTypeConverter, NamedTypeVirtualMemberConverter namedTypeVirtualMemberConverter, ImplementationConverter implementationConverter, StaticMemberConverter staticMemberConverter) {
         super(knownModList, commentConverter);
         
         this.genericParameterConverter = genericParameterConverter;
         this.superTypeConverter = superTypeConverter;
         this.namedTypeVirtualMemberConverter = namedTypeVirtualMemberConverter;
+        this.implementationConverter = implementationConverter;
+        this.staticMemberConverter = staticMemberConverter;
     }
     
     @Override
@@ -68,7 +73,7 @@ public class NamedTypeConverter extends DocumentConverter {
     }
     
     private DocumentedStaticMembers convertStaticMembers(TypeElement typeElement, TypePageInfo typePageInfo) {
-        return null;
+        return staticMemberConverter.convertFor(typeElement, typePageInfo);
     }
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
@@ -76,7 +81,7 @@ public class NamedTypeConverter extends DocumentConverter {
     }
     
     private List<AbstractTypeInfo> convertImplementations(TypeElement typeElement) {
-        return null;
+        return implementationConverter.convertInterfacesFor(typeElement);
     }
     
     private List<DocumentedGenericParameter> convertGenericParameters(TypeElement typeElement) {

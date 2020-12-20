@@ -8,6 +8,13 @@ public class DocumentedTypeVirtualMembers extends DocumentedVirtualMembers {
     
     public final Set<ConstructorMember> constructors = new TreeSet<>();
     
+    public DocumentedTypeVirtualMembers() {
+    }
+    
+    public void addConstructor(ConstructorMember constructorMember) {
+        this.constructors.add(constructorMember);
+    }
+    
     @Override
     public void write(PrintWriter writer) {
         writeConstructors(writer);

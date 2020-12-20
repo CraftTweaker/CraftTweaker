@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import javax.annotation.Nullable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 public class SuperTypeConverter {
     
@@ -29,6 +30,11 @@ public class SuperTypeConverter {
     }
     
     private boolean hasSuperType(TypeElement element) {
-        return element.getSuperclass().getKind() != TypeKind.NONE;
+        final TypeMirror superclass = element.getSuperclass();
+        return !superTypeIsObject(superclass) && superclass.getKind() != TypeKind.NONE;
+    }
+    
+    private boolean superTypeIsObject(TypeMirror superclass) {
+        return superclass.toString().equals("java.lang.Object");
     }
 }

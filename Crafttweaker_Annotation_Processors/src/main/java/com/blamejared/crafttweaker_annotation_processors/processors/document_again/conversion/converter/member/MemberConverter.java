@@ -16,10 +16,10 @@ public abstract class MemberConverter<T> {
     
     protected abstract boolean isCandidate(Element enclosedElement);
     
-    protected abstract T createResultObject();
+    protected abstract T createResultObject(DocumentationPageInfo pageInfo);
     
     public T convertFor(TypeElement typeElement, DocumentationPageInfo pageInfo) {
-        final T result = createResultObject();
+        final T result = createResultObject(pageInfo);
         for(Element enclosedElement : typeElement.getEnclosedElements()) {
             convertMemberFor(enclosedElement, result, pageInfo);
         }
@@ -38,7 +38,6 @@ public abstract class MemberConverter<T> {
         for(AbstractEnclosedElementConverter converter : converters) {
             if(converter.canConvert(enclosedElement)) {
                 converter.convertAndAddTo(enclosedElement, result, pageInfo);
-                return;
             }
         }
     }

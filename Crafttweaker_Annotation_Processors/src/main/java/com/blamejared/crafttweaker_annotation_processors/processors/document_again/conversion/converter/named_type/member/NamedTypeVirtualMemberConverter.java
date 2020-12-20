@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedTypeVirtualMembers;
 
 import javax.lang.model.element.Element;
@@ -11,8 +12,7 @@ import javax.lang.model.element.Modifier;
 public class NamedTypeVirtualMemberConverter extends MemberConverter<DocumentedTypeVirtualMembers> {
     
     public NamedTypeVirtualMemberConverter(DependencyContainer dependencyContainer) {
-        //TODO: Add converters
-        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualMethodConverter.class));
+        addConverters(dependencyContainer);
     }
     
     @Override
@@ -20,12 +20,33 @@ public class NamedTypeVirtualMemberConverter extends MemberConverter<DocumentedT
         return isVirtual(enclosedElement);
     }
     
-    private boolean isVirtual(Element enclosedElement) {
-        return !enclosedElement.getModifiers().contains(Modifier.STATIC);
+    @Override
+    protected DocumentedTypeVirtualMembers createResultObject(DocumentationPageInfo pageInfo) {
+        return new DocumentedTypeVirtualMembers();
     }
     
-    @Override
-    protected DocumentedTypeVirtualMembers createResultObject() {
-        return new DocumentedTypeVirtualMembers();
+    private void addConverters(DependencyContainer dependencyContainer) {
+        addMethodConverters(dependencyContainer);
+        addFieldConverters(dependencyContainer);
+        addConstructorConverters(dependencyContainer);
+    }
+    
+    private void addMethodConverters(DependencyContainer dependencyContainer) {
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualMethodConverter.class));
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualCasterConverter.class));
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualGetterSetterConverter.class));
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualOperatorConverter.class));
+    }
+    
+    private void addFieldConverters(DependencyContainer dependencyContainer) {
+        addElementConverter(ElementKind.FIELD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualFieldConverter.class));
+    }
+    
+    private void addConstructorConverters(DependencyContainer dependencyContainer) {
+        addElementConverter(ElementKind.CONSTRUCTOR, dependencyContainer.getInstanceOfClass(NamedTypeVirtualConstructorConverter.class));
+    }
+    
+    private boolean isVirtual(Element enclosedElement) {
+        return !enclosedElement.getModifiers().contains(Modifier.STATIC);
     }
 }

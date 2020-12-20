@@ -21,6 +21,12 @@ public class CommentConverter {
         return convertElement(typeElement);
     }
     
+    public DocumentationComment convertForConstructor(ExecutableElement constructor, DocumentationPageInfo pageInfo) {
+        final DocumentationComment comment = convertElement(constructor);
+        fillExampleForThisParameterFromPageInfo(comment, pageInfo);
+        return comment;
+    }
+    
     public DocumentationComment convertForMethod(ExecutableElement method, DocumentationPageInfo pageInfo) {
         final DocumentationComment comment = convertElement(method);
         fillExampleForThisParameterFromPageInfo(comment, pageInfo);

@@ -6,15 +6,14 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.VirtualMethodMember;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 import org.openzen.zencode.java.ZenCodeType;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import java.util.Collections;
 import java.util.List;
@@ -23,10 +22,12 @@ public class ExpansionMethodConverter extends AbstractEnclosedElementConverter<D
     
     private final CommentConverter commentConverter;
     private final HeaderConverter headerConverter;
+    private final TypeConverter typeConverter;
     
-    public ExpansionMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter) {
+    public ExpansionMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter) {
         this.commentConverter = commentConverter;
         this.headerConverter = headerConverter;
+        this.typeConverter = typeConverter;
     }
     
     @Override
@@ -38,7 +39,13 @@ public class ExpansionMethodConverter extends AbstractEnclosedElementConverter<D
     public void convertAndAddTo(Element enclosedElement, DocumentedVirtualMembers result, DocumentationPageInfo pageInfo) {
         final ExecutableElement method = (ExecutableElement) enclosedElement;
         final VirtualMethodMember convertedMethod = convert(method, pageInfo);
-        result.addMethod(convertedMethod);
+        final AbstractTypeInfo ownerTypeInfo = getOwnerTypeInfo(pageInfo);
+        
+        result.addMethod(convertedMethod, ownerTypeInfo);
+    }
+    
+    private AbstractTypeInfo getOwnerTypeInfo(DocumentationPageInfo pageInfo) {
+        return typeConverter.convertByName(((TypePageInfo) pageInfo).zenCodeName);
     }
     
     private VirtualMethodMember convert(ExecutableElement method, DocumentationPageInfo pageInfo) {

@@ -31,6 +31,8 @@ public class ZenClassRegistry {
     
     /**
      * All classes that caused errors when evaluating
+     * Used to skip incompatible classes instead of throwing multiple Errors
+     * (One error will always be thrown when validating at the beginning!)
      */
     private final List<Class<?>> blacklistedClasses = new ArrayList<>();
     

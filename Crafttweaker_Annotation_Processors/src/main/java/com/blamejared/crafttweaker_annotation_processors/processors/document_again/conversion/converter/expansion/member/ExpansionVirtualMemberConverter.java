@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
 
 import javax.lang.model.element.Element;
@@ -17,7 +19,7 @@ public class ExpansionVirtualMemberConverter extends MemberConverter<DocumentedV
     }
     
     @Override
-    protected DocumentedVirtualMembers createResultObject() {
+    protected DocumentedVirtualMembers createResultObject(DocumentationPageInfo pageInfo) {
         return new DocumentedVirtualMembers();
     }
     

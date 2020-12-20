@@ -10,12 +10,14 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OperatorMember extends AbstractVirtualMember implements Comparable<OperatorMember> {
     
     private final ZenCodeType.OperatorType type;
     
-    public OperatorMember(MemberHeader header, Example aThis, @Nullable DocumentationComment description, ZenCodeType.OperatorType type) {
+    public OperatorMember(MemberHeader header, @Nullable DocumentationComment description, ZenCodeType.OperatorType type) {
         super(header, description);
         this.type = type;
     }
@@ -27,11 +29,30 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     public void write(PrintWriter writer) {
         final String operatorFormat = FormattingUtils.getOperatorFormat(type);
-        final Object[] parameters = header.parameters.stream()
-                .map(DocumentedParameter::formatForSignatureExample)
-                .toArray(Object[]::new);
+        final Object[] parameters = getParameters();
         
         writer.printf(operatorFormat, parameters);
         writer.println();
+    }
+    
+    @Nonnull
+    private Object[] getParameters() {
+        final List<Object> parametersFromHeader = getParametersFromHeader();
+        final Object callee = getCallee();
+        
+        parametersFromHeader.add(0, callee);
+        
+        return parametersFromHeader.toArray();
+    }
+    
+    @Nonnull
+    private List<Object> getParametersFromHeader() {
+        return header.parameters.stream()
+                .map(DocumentedParameter::formatForSignatureExample)
+                .collect(Collectors.toList());
+    }
+    
+    private String getCallee() {
+        return "TODO_THIS";
     }
 }

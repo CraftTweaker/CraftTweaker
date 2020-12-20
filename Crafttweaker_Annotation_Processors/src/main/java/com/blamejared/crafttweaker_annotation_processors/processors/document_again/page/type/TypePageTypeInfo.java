@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 
 public class TypePageTypeInfo extends AbstractTypeInfo {
@@ -18,5 +19,9 @@ public class TypePageTypeInfo extends AbstractTypeInfo {
     @Override
     public String getClickableMarkdown() {
         return String.format("[%s](%s)", pageInfo.getSimpleName(), pageInfo.getOutputPath());
+    }
+    
+     public TypeName getZenCodeName() {
+         return pageInfo.zenCodeName;
     }
 }

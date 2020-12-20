@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.static_member.DocumentedStaticMembers;
 
 import javax.lang.model.element.Element;
@@ -15,7 +16,7 @@ public class StaticMemberConverter extends MemberConverter<DocumentedStaticMembe
     }
     
     @Override
-    protected DocumentedStaticMembers createResultObject() {
+    protected DocumentedStaticMembers createResultObject(DocumentationPageInfo pageInfo) {
         return new DocumentedStaticMembers();
     }
     

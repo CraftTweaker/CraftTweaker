@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.PropertyMember;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 
 import java.io.PrintWriter;
 import java.util.Map;
@@ -15,12 +16,15 @@ public class DocumentedVirtualMembers {
     protected final Set<OperatorMember> operators = new TreeSet<>();
     protected final Map<String, PropertyMember> properties = new TreeMap<>();
     
+    public DocumentedVirtualMembers() {
+    }
+    
     public void addCaster(CasterMember casterMember) {
         casters.add(casterMember);
     }
     
-    public void addMethod(VirtualMethodMember methodMember) {
-        final VirtualMethodGroup group = methodGroups.computeIfAbsent(methodMember.getName(), VirtualMethodGroup::new);
+    public void addMethod(VirtualMethodMember methodMember, AbstractTypeInfo ownerType) {
+        final VirtualMethodGroup group = methodGroups.computeIfAbsent(methodMember.getName(), name -> new VirtualMethodGroup(name, ownerType));
         group.addMethod(methodMember);
     }
     
