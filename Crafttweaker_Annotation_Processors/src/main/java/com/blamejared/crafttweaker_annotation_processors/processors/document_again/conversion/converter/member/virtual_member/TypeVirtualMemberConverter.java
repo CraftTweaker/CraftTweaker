@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.virtual_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedTypeVirtualMembers;
 
 import javax.lang.model.element.Element;
@@ -10,8 +10,9 @@ import javax.lang.model.element.Modifier;
 
 public class TypeVirtualMemberConverter extends MemberConverter<DocumentedTypeVirtualMembers> {
     
-    public TypeVirtualMemberConverter(TypeConverter typeConverter) {
-        addElementConverter(ElementKind.METHOD, new VirtualMethodConverter(typeConverter));
+    public TypeVirtualMemberConverter(DependencyContainer dependencyContainer) {
+        //TODO: Add converters
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(VirtualMethodConverter.class));
     }
     
     @Override

@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.ElementConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.element.KnownElementList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.SingletonDependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.file.PageWriter;
 
 import javax.annotation.processing.*;
@@ -20,14 +20,22 @@ public class DocumentProcessor extends AbstractProcessor {
     
     private static final File outputDirectory = new File("docsOut");
     
+    private final DependencyContainer dependencyContainer = new SingletonDependencyContainer();
     private KnownElementList knownElementList;
     private KnownModList knownModList;
     
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        knownElementList = new KnownElementList(processingEnv);
-        knownModList = new KnownModList(processingEnv);
+        setupDependencyContainer(processingEnv);
+        
+        knownElementList = dependencyContainer.getInstanceOfClass(KnownElementList.class);
+        knownModList = dependencyContainer.getInstanceOfClass(KnownModList.class);
+    }
+    
+    private void setupDependencyContainer(ProcessingEnvironment processingEnv) {
+        dependencyContainer.addInstanceAs(processingEnv, ProcessingEnvironment.class);
+        dependencyContainer.addInstanceAs(dependencyContainer, DependencyContainer.class);
     }
     
     @Override
@@ -47,15 +55,13 @@ public class DocumentProcessor extends AbstractProcessor {
     }
     
     public void handleLastRound() {
-        final DocumentRegistry documentRegistry = new DocumentRegistry();
-        convertPages(documentRegistry);
+        final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
+        convertPages();
         writePages(documentRegistry);
     }
     
-    private void convertPages(DocumentRegistry documentRegistry) {
-        final TypeConverter typeConverter = new TypeConverter(documentRegistry);
-        final CommentConverter commentConverter = new CommentConverter(processingEnv);
-        final ElementConverter elementConverter = new ElementConverter(knownModList, documentRegistry, commentConverter, typeConverter);
+    private void convertPages() {
+        final ElementConverter elementConverter = dependencyContainer.getInstanceOfClass(ElementConverter.class);
         elementConverter.handleElements(knownElementList);
     }
     

@@ -5,9 +5,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member.ExpansionVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member.StaticMemberConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.GenericParameterConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.HeaderConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.ParameterConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
@@ -25,13 +22,13 @@ public class ExpansionConverter extends DocumentConverter {
     
     private final StaticMemberConverter staticMemberConverter;
     private final ExpansionVirtualMemberConverter virtualMemberConverter;
+    private final TypeConverter typeConverter;
     
-    public ExpansionConverter(KnownModList knownModList, CommentConverter commentConverter, DocumentRegistry documentRegistry, TypeConverter typeConverter) {
-        super(knownModList, commentConverter, documentRegistry, typeConverter);
-        this.staticMemberConverter = new StaticMemberConverter(typeConverter);
-        
-        final HeaderConverter headerConverter = new HeaderConverter(typeConverter, new ParameterConverter(commentConverter, typeConverter), new GenericParameterConverter(typeConverter, commentConverter));
-        this.virtualMemberConverter = new ExpansionVirtualMemberConverter(typeConverter, commentConverter, headerConverter);
+    public ExpansionConverter(KnownModList knownModList, CommentConverter commentConverter, DocumentRegistry documentRegistry, TypeConverter typeConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter) {
+        super(knownModList, commentConverter);
+        this.staticMemberConverter = staticMemberConverter;
+        this.virtualMemberConverter = virtualMemberConverter;
+        this.typeConverter = typeConverter;
     }
     
     @Override

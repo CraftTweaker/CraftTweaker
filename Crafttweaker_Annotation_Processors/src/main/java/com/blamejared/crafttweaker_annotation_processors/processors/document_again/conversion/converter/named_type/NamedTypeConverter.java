@@ -27,7 +27,7 @@ public class NamedTypeConverter extends DocumentConverter {
     private final GenericParameterConverter genericParameterConverter;
     
     public NamedTypeConverter(KnownModList knownModList, CommentConverter commentConverter, DocumentRegistry documentRegistry, TypeConverter typeConverter, GenericParameterConverter genericParameterConverter) {
-        super(knownModList, commentConverter, documentRegistry, typeConverter);
+        super(knownModList, commentConverter);
     
         this.genericParameterConverter = genericParameterConverter;
     }

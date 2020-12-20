@@ -23,8 +23,7 @@ public class ExpansionCasterConverter extends AbstractEnclosedElementConverter<D
     private final HeaderConverter headerConverter;
     private final CommentConverter commentConverter;
     
-    public ExpansionCasterConverter(TypeConverter typeConverter, HeaderConverter headerConverter, CommentConverter commentConverter) {
-        super(typeConverter);
+    public ExpansionCasterConverter(HeaderConverter headerConverter, CommentConverter commentConverter) {
         this.headerConverter = headerConverter;
         this.commentConverter = commentConverter;
     }

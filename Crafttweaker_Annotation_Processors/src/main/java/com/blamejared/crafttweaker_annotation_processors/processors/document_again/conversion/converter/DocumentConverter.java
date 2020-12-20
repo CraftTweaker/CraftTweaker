@@ -1,8 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.DocumentRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
@@ -15,14 +13,10 @@ public abstract class DocumentConverter {
     
     protected final KnownModList knownModList;
     protected final CommentConverter commentConverter;
-    protected final DocumentRegistry documentRegistry;
-    protected final TypeConverter typeConverter;
     
-    protected DocumentConverter(KnownModList knownModList, CommentConverter commentConverter, DocumentRegistry documentRegistry, TypeConverter typeConverter) {
+    protected DocumentConverter(KnownModList knownModList, CommentConverter commentConverter) {
         this.knownModList = knownModList;
         this.commentConverter = commentConverter;
-        this.documentRegistry = documentRegistry;
-        this.typeConverter = typeConverter;
     }
     
     public abstract boolean canConvert(TypeElement typeElement);

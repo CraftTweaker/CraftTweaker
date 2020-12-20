@@ -15,8 +15,10 @@ import javax.lang.model.type.TypeMirror;
 public class StaticFieldConverter extends AbstractEnclosedElementConverter<DocumentedStaticMembers> {
     
     
+    private final TypeConverter typeConverter;
+    
     public StaticFieldConverter(TypeConverter typeConverter) {
-        super(typeConverter);
+        this.typeConverter = typeConverter;
     }
     
     @Override

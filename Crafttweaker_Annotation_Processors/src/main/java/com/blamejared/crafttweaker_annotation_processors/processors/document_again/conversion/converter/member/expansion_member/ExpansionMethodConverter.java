@@ -24,8 +24,7 @@ public class ExpansionMethodConverter extends AbstractEnclosedElementConverter<D
     private final CommentConverter commentConverter;
     private final HeaderConverter headerConverter;
     
-    public ExpansionMethodConverter(TypeConverter typeConverter, CommentConverter commentConverter, HeaderConverter headerConverter) {
-        super(typeConverter);
+    public ExpansionMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter) {
         this.commentConverter = commentConverter;
         this.headerConverter = headerConverter;
     }

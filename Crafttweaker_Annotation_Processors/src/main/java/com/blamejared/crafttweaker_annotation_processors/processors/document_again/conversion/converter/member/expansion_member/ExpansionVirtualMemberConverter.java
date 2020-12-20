@@ -1,11 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.MemberConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member.ExpansionCasterConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.expansion_member.ExpansionMethodConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.HeaderConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
 
 import javax.lang.model.element.Element;
@@ -14,9 +10,10 @@ import javax.lang.model.element.Modifier;
 
 public class ExpansionVirtualMemberConverter extends MemberConverter<DocumentedVirtualMembers> {
     
-    public ExpansionVirtualMemberConverter(TypeConverter typeConverter, CommentConverter commentConverter, HeaderConverter headerConverter) {
-        addElementConverter(ElementKind.METHOD, new ExpansionMethodConverter(typeConverter, commentConverter, headerConverter));
-        addElementConverter(ElementKind.METHOD, new ExpansionCasterConverter(typeConverter, headerConverter, commentConverter));
+    public ExpansionVirtualMemberConverter(DependencyContainer dependencyContainer) {
+        //TODO: Add converters
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionMethodConverter.class));
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionCasterConverter.class));
     }
     
     @Override

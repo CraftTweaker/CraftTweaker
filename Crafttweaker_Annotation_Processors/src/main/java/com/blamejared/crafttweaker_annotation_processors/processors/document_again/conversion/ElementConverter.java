@@ -14,8 +14,8 @@ public class ElementConverter {
     
     private final DocumentConversionRegistry conversionRegistry;
     
-    public ElementConverter(KnownModList knownModList, DocumentRegistry documentRegistry, CommentConverter commentConverter, TypeConverter typeConverter) {
-        this.conversionRegistry = new DocumentConversionRegistry(knownModList, documentRegistry, commentConverter, typeConverter);
+    public ElementConverter(DocumentConversionRegistry conversionRegistry) {
+        this.conversionRegistry = conversionRegistry;
     }
     
     public void handleElements(KnownElementList knownElementList) {
