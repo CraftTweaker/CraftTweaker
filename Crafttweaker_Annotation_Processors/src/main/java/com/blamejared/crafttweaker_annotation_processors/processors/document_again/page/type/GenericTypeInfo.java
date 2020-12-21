@@ -17,7 +17,7 @@ public class GenericTypeInfo extends AbstractTypeInfo {
     public String getDisplayName() {
         final String arguments = typeArguments.stream()
                 .map(AbstractTypeInfo::getDisplayName)
-                .collect(Collectors.joining(",", "&lt;", "&gt;"));
+                .collect(Collectors.joining(",", "<", ">"));
         return baseClass.getDisplayName() + arguments;
     }
     

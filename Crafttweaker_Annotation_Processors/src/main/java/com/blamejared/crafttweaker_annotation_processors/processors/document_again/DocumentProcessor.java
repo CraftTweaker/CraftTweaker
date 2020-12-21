@@ -10,6 +10,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -34,8 +36,11 @@ public class DocumentProcessor extends AbstractProcessor {
     }
     
     private void setupDependencyContainer(ProcessingEnvironment processingEnv) {
-        dependencyContainer.addInstanceAs(processingEnv, ProcessingEnvironment.class);
         dependencyContainer.addInstanceAs(dependencyContainer, DependencyContainer.class);
+        dependencyContainer.addInstanceAs(processingEnv, ProcessingEnvironment.class);
+        dependencyContainer.addInstanceAs(processingEnv.getMessager(), Messager.class);
+        dependencyContainer.addInstanceAs(processingEnv.getElementUtils(), Elements.class);
+        dependencyContainer.addInstanceAs(processingEnv.getTypeUtils(), Types.class);
     }
     
     @Override

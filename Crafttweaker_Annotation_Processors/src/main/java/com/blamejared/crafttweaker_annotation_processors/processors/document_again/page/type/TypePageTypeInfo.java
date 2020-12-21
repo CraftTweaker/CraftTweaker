@@ -18,7 +18,7 @@ public class TypePageTypeInfo extends AbstractTypeInfo {
     
     @Override
     public String getClickableMarkdown() {
-        return String.format("[%s](%s)", pageInfo.getSimpleName(), pageInfo.getOutputPath());
+        return String.format("[%s](/%s)", pageInfo.getSimpleName(), pageInfo.getOutputPath());
     }
     
      public TypeName getZenCodeName() {

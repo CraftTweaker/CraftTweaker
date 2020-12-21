@@ -9,6 +9,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.TypeMirror;
 
 public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedElementConverter<DocumentedTypeVirtualMembers> {
     
@@ -25,22 +27,22 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedTypeVirtualMembers result, DocumentationPageInfo pageInfo) {
-        final PropertyMember propertyMember = convertMember(enclosedElement);
+        final ExecutableElement method = (ExecutableElement) enclosedElement;
+        final PropertyMember propertyMember = convertMember(method);
         
         result.addProperty(propertyMember);
     }
     
-    private PropertyMember convertMember(Element enclosedElement) {
-        final String name = convertName(enclosedElement);
-        final AbstractTypeInfo typeInfo = convertType(enclosedElement);
-        final boolean hasGetter = convertHasGetter(enclosedElement);
-        final boolean hasSetter = convertHasSetter(enclosedElement);
-        
+    private PropertyMember convertMember(ExecutableElement method) {
+        final String name = convertName(method);
+        final AbstractTypeInfo typeInfo = convertType(method);
+        final boolean hasGetter = convertHasGetter(method);
+        final boolean hasSetter = convertHasSetter(method);
         
         return new PropertyMember(name, typeInfo, hasGetter, hasSetter);
     }
     
-    private String convertName(Element enclosedElement) {
+    private String convertName(ExecutableElement enclosedElement) {
         if(isAnnotationPresentOn(ZenCodeType.Getter.class, enclosedElement)) {
             return enclosedElement.getAnnotation(ZenCodeType.Getter.class).value();
         } else {
@@ -48,15 +50,16 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
         }
     }
     
-    private AbstractTypeInfo convertType(Element enclosedElement) {
-        return typeConverter.convertType(enclosedElement.asType());
+    private AbstractTypeInfo convertType(ExecutableElement enclosedElement) {
+        final TypeMirror returnType = enclosedElement.getReturnType();
+        return typeConverter.convertType(returnType);
     }
     
-    private boolean convertHasGetter(Element enclosedElement) {
+    private boolean convertHasGetter(ExecutableElement enclosedElement) {
         return isAnnotationPresentOn(ZenCodeType.Getter.class, enclosedElement);
     }
     
-    private boolean convertHasSetter(Element enclosedElement) {
+    private boolean convertHasSetter(ExecutableElement enclosedElement) {
         return isAnnotationPresentOn(ZenCodeType.Setter.class, enclosedElement);
     }
 }

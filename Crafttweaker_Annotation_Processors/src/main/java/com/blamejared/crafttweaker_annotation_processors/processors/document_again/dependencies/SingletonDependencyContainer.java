@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class SingletonDependencyContainer implements DependencyContainer {
@@ -27,19 +28,36 @@ public class SingletonDependencyContainer implements DependencyContainer {
     }
     
     @SuppressWarnings("unchecked")
-    private <T> T getInstance(Class<T> cls) {
-        return (T) alreadyExistingInstances.get(cls);
+    private <Type> Type getInstance(Class<Type> cls) {
+        return (Type) alreadyExistingInstances.get(cls);
     }
     
-    private <T> void initializeInstanceIfNotExists(Class<T> cls) {
+    private <Type> void initializeInstanceIfNotExists(Class<Type> cls) {
         if(!instanceAlreadyExists(cls)) {
+            verifyClassCanBeInitialized(cls);
             initializeInstance(cls);
+            callPostInitSteps(cls);
         }
     }
     
-    private <T> void initializeInstance(Class<T> cls) {
-        final Optional<T> instance = Arrays.stream(cls.getConstructors())
-                .<T> map(this::tryCreateInstanceWith)
+    private <Type> void verifyClassCanBeInitialized(Class<Type> cls) {
+        if(cls.isInterface()) {
+            throw new IllegalArgumentException("Cannot instantiate interface!");
+        }
+        if(Modifier.isAbstract(cls.getModifiers())) {
+            throw new IllegalArgumentException("Cannot instantiate abstract class!");
+        }
+    }
+    
+    private <Type> void callPostInitSteps(Class<Type> cls) {
+        final Type instanceOfClass = getInstanceOfClass(cls);
+        if(instanceOfClass instanceof IHasPostCreationCall) {
+            ((IHasPostCreationCall) instanceOfClass).afterCreation();
+        }
+    }
+    
+    private <Type> void initializeInstance(Class<Type> cls) {
+        final Optional<Type> instance = Arrays.stream(cls.getConstructors()).<Type> map(this::tryCreateInstanceWith)
                 .filter(Objects::nonNull)
                 .findFirst();
         
@@ -51,10 +69,10 @@ public class SingletonDependencyContainer implements DependencyContainer {
     }
     
     @SuppressWarnings("unchecked")
-    private <T> T tryCreateInstanceWith(Constructor<?> constructor) {
+    private <Type> Type tryCreateInstanceWith(Constructor<?> constructor) {
         try {
             final Object[] arguments = getArguments(constructor);
-            return (T) constructor.newInstance(arguments);
+            return (Type) constructor.newInstance(arguments);
         } catch(Exception ignored) {
             return null;
         }
@@ -67,7 +85,7 @@ public class SingletonDependencyContainer implements DependencyContainer {
                 .toArray(Object[]::new);
     }
     
-    private <T> void insertInstanceAs(T instance, Class<T> as) {
+    private <Type> void insertInstanceAs(Type instance, Class<Type> as) {
         alreadyExistingInstances.put(as, instance);
     }
     
