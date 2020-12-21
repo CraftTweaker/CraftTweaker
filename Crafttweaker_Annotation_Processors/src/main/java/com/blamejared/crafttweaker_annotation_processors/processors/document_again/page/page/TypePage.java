@@ -31,12 +31,12 @@ public final class TypePage extends DocumentationPage {
     @Override
     protected void writeTitle(PrintWriter writer) {
         if(genericParameters.isEmpty()) {
-            writer.printf("# %s%n%n", pageInfo.zenCodeName.getSimpleName());
+            writer.printf("# %s%n%n", getSimpleName());
         } else {
             final String genericParameters = this.genericParameters.stream()
                     .map(DocumentedGenericParameter::formatForSignatureExample)
                     .collect(Collectors.joining(", "));
-            writer.printf("# %s<%s>%n%n", pageInfo.zenCodeName.getSimpleName(), genericParameters);
+            writer.printf("# %s<%s>%n%n", getSimpleName(), genericParameters);
         }
     }
     
@@ -73,15 +73,29 @@ public final class TypePage extends DocumentationPage {
             return;
         }
         
-        //TODO
-        writer.println("TODO: Write superClass");
+        writer.printf("## Extending %s%n%n", superType.getDisplayName());
+        final String simpleName = getSimpleName();
+        final String superTypeMarkDown = superType.getClickableMarkdown();
+        
+        final String format = "%1$s extends %2$s. That means all methods available in %2$s are also available in %1$s%n%n";
+        writer.printf(format, simpleName, superTypeMarkDown);
     }
     
     private void writeImplementedInterfaces(PrintWriter writer) {
         if(implementedTypes.isEmpty()) {
             return;
         }
-        //TODO
-        writer.println("TODO: Write Implemented interfaces");
+        
+        writer.println("## Implemented Interfaces");
+        final String format = "%1$s implements the following interfaces. That means all methods defined in these interfaces are also available in %1$s%n%n";
+        writer.printf(format, getSimpleName());
+    
+        for(AbstractTypeInfo implementedType : implementedTypes) {
+            writer.printf("- %s%n", implementedType.getClickableMarkdown());
+        }
+    }
+    
+    private String getSimpleName() {
+        return pageInfo.getSimpleName();
     }
 }
