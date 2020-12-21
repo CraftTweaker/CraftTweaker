@@ -54,6 +54,7 @@ public class DocumentedVirtualMembers {
         for(CasterMember caster : casters) {
             caster.writeTableRow(writer);
         }
+        writer.println();
     }
     
     protected void writeMethods(PrintWriter writer) {
@@ -65,6 +66,7 @@ public class DocumentedVirtualMembers {
         for(VirtualMethodGroup value : methodGroups.values()) {
             value.writeVirtualMethods(writer);
         }
+        writer.println();
     }
     
     protected void writeOperators(PrintWriter writer) {
@@ -76,6 +78,7 @@ public class DocumentedVirtualMembers {
         for(OperatorMember operator : operators) {
             operator.write(writer);
         }
+        writer.println();
     }
     
     protected void writeProperties(PrintWriter writer) {
@@ -89,6 +92,7 @@ public class DocumentedVirtualMembers {
         for(PropertyMember value : properties.values()) {
             value.writeTableRow(writer);
         }
+        writer.println();
     }
     
     

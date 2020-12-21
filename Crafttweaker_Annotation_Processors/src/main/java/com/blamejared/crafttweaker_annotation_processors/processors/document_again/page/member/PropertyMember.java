@@ -30,7 +30,7 @@ public class PropertyMember {
     }
     
     public void writeTableRow(PrintWriter writer) {
-        writer.printf("| %s | %s | %s | %s |", name, type.getClickableMarkdown(), hasGetter, hasSetter);
+        writer.printf("| %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter);
     }
     
     public String getName() {

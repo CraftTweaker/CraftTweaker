@@ -23,6 +23,6 @@ public class CasterMember extends AbstractVirtualMember implements Comparable<Ca
     }
     
     public void writeTableRow(PrintWriter writer) {
-        writer.printf("| %s | %s |", header.returnType.getClickableMarkdown(), isImplicit);
+        writer.printf("| %s | %s |%n", header.returnType.getClickableMarkdown(), isImplicit);
     }
 }

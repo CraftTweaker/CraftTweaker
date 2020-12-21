@@ -16,6 +16,7 @@ public class ExpansionVirtualMemberConverter extends MemberConverter<DocumentedV
         //TODO: Add converters
         addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionMethodConverter.class));
         addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionCasterConverter.class));
+        addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionGetterSetterConverter.class));
     }
     
     @Override
