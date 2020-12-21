@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.native_registration;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.NativeConversionRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.DocumentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.expansion.member.ExpansionVirtualMemberConverter;
@@ -18,9 +19,15 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.page.DocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.page.TypePage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.TypePageTypeInfo;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 
+import javax.annotation.Nonnull;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +38,20 @@ public class NativeRegistrationConverter extends DocumentConverter {
     private final TypeConverter typeConverter;
     private final SuperTypeConverter superTypeConverter;
     private final GenericParameterConverter genericParameterConverter;
+    private final NativeConversionRegistry nativeConversionRegistry;
+    private final Elements elementUtils;
+    private final Types typeUtils;
     
-    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter, TypeConverter typeConverter, SuperTypeConverter superTypeConverter, GenericParameterConverter genericParameterConverter) {
+    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter, TypeConverter typeConverter, SuperTypeConverter superTypeConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Elements elementUtils, Types typeUtils) {
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
         this.virtualMemberConverter = virtualMemberConverter;
         this.typeConverter = typeConverter;
         this.superTypeConverter = superTypeConverter;
         this.genericParameterConverter = genericParameterConverter;
+        this.nativeConversionRegistry = nativeConversionRegistry;
+        this.elementUtils = elementUtils;
+        this.typeUtils = typeUtils;
     }
     
     @Override
@@ -51,7 +64,35 @@ public class NativeRegistrationConverter extends DocumentConverter {
     }
     
     @Override
-    protected DocumentationPageInfo prepareConversion(TypeElement element) {
+    protected TypePageInfo prepareConversion(TypeElement element) {
+        final TypePageInfo typePageInfo = createTypePageInfo(element);
+        registerNativeType(element, typePageInfo);
+        return typePageInfo;
+    }
+    
+    private void registerNativeType(TypeElement element, TypePageInfo typePageInfo) {
+        final AbstractTypeInfo typeInfo = new TypePageTypeInfo(typePageInfo);
+        final TypeElement nativeType = getNativeType(element);
+        
+        nativeConversionRegistry.addNativeConversion(nativeType, typeInfo);
+    }
+    
+    private TypeElement getNativeType(TypeElement element) {
+        try {
+            final NativeTypeRegistration nativeAnnotation = getNativeAnnotation(element);
+            return getNativeTypeFromClass(nativeAnnotation.value());
+        } catch(MirroredTypeException exception) {
+            final TypeMirror typeMirror = exception.getTypeMirror();
+            return (TypeElement) typeUtils.asElement(typeMirror);
+        }
+    }
+    
+    private TypeElement getNativeTypeFromClass(Class<?> cls) {
+        return elementUtils.getTypeElement(cls.getCanonicalName());
+    }
+    
+    @Nonnull
+    private TypePageInfo createTypePageInfo(TypeElement element) {
         final DocumentationPageInfo documentationPageInfo = super.prepareConversion(element);
         
         final TypeName name = new TypeName(getNativeAnnotation(element).zenCodeName());

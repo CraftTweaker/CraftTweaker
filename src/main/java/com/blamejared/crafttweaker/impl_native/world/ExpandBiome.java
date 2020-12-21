@@ -2,12 +2,14 @@ package com.blamejared.crafttweaker.impl_native.world;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@Document("vanilla/api/world/MCBiome")
 @NativeTypeRegistration(value = Biome.class, zenCodeName = "crafttweaker.api.world.MCBiome")
 public class ExpandBiome {
     

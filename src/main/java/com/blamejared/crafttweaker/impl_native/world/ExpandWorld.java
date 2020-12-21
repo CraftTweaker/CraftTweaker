@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,6 +16,7 @@ import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@Document("vanilla/api/world/MCWorld")
 @NativeTypeRegistration(value = World.class, zenCodeName = "crafttweaker.api.world.MCWorld")
 public class ExpandWorld {
     

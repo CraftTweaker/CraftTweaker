@@ -1,6 +1,7 @@
-package com.blamejared.crafttweaker.impl_native.block;
+package com.blamejared.crafttweaker.impl_native.block.material;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -9,6 +10,7 @@ import net.minecraft.block.material.MaterialColor;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
+@Document("vanilla/api/block/material/MCMaterial")
 @NativeTypeRegistration(value = Material.class, zenCodeName = "crafttweaker.api.block.material.MCMaterial")
 public class ExpandMaterial {
     

@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
@@ -9,6 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nonnull;
 
 @ZenRegister
+@Document("vanilla/api/event/player/MCAnvilRepairEvent")
 @NativeTypeRegistration(value = AnvilRepairEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.MCAnvilRepairEvent")
 public class ExpandAnvilRepairEvent {
     

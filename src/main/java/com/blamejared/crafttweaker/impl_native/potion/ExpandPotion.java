@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.potion;
 
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
@@ -10,6 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 
 @ZenRegister
+@Document("vanilla/api/potion/MCPotion")
 @NativeTypeRegistration(value = Potion.class, zenCodeName = "crafttweaker.api.potion.MCPotion")
 public class ExpandPotion {
     

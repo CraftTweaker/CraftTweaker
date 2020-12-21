@@ -13,7 +13,7 @@ import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
-import com.blamejared.crafttweaker.impl_native.block.ExpandMaterial;
+import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
