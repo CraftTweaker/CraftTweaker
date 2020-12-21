@@ -11,7 +11,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.TypePageTypeInfo;
 
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import java.util.ArrayList;
@@ -42,12 +41,15 @@ public class TypeConverter implements IHasPostCreationCall {
     }
     
     public AbstractTypeInfo convertType(TypeMirror typeMirror) {
+        return tryConvertType(typeMirror).orElseThrow(() -> new IllegalArgumentException("Could not convert " + typeMirror));
+    }
+    
+    public Optional<AbstractTypeInfo> tryConvertType(TypeMirror typeMirror) {
         return rules.stream()
                 .filter(rule -> rule.canConvert(typeMirror))
                 .map(rule -> rule.convert(typeMirror))
                 .filter(Objects::nonNull)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Could not convert " + typeMirror));
+                .findFirst();
     }
     
     @Override
@@ -56,6 +58,7 @@ public class TypeConverter implements IHasPostCreationCall {
     }
     
     private void addConversionRules() {
+        addConversionRule(TypeParameterConversionRule.class);
         addConversionRule(VoidConversionRule.class);
         addConversionRule(MapConversionRule.class);
         addConversionRule(NativeTypeConversionRule.class);

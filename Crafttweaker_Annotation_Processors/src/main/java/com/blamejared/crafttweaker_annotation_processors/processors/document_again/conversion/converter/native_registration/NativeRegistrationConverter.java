@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.expansion.member.ExpansionVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.GenericParameterConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member.StaticMemberConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.ImplementationConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.SuperTypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
@@ -35,19 +35,19 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     private final StaticMemberConverter staticMemberConverter;
     private final ExpansionVirtualMemberConverter virtualMemberConverter;
-    private final TypeConverter typeConverter;
     private final SuperTypeConverter superTypeConverter;
+    private final ImplementationConverter implementationConverter;
     private final GenericParameterConverter genericParameterConverter;
     private final NativeConversionRegistry nativeConversionRegistry;
     private final Elements elementUtils;
     private final Types typeUtils;
     
-    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter, TypeConverter typeConverter, SuperTypeConverter superTypeConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Elements elementUtils, Types typeUtils) {
+    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Elements elementUtils, Types typeUtils) {
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
         this.virtualMemberConverter = virtualMemberConverter;
-        this.typeConverter = typeConverter;
         this.superTypeConverter = superTypeConverter;
+        this.implementationConverter = implementationConverter;
         this.genericParameterConverter = genericParameterConverter;
         this.nativeConversionRegistry = nativeConversionRegistry;
         this.elementUtils = elementUtils;
@@ -118,14 +118,13 @@ public class NativeRegistrationConverter extends DocumentConverter {
     }
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
-        return superTypeConverter.convertSuperTypeFor(typeElement);
+        final TypeElement nativeType = getNativeType(typeElement);
+        return superTypeConverter.convertSuperTypeFor(nativeType);
     }
     
     private List<AbstractTypeInfo> convertImplementedInterfaces(TypeElement typeElement) {
-        return typeElement.getInterfaces()
-                .stream()
-                .map(typeConverter::convertType)
-                .collect(Collectors.toList());
+        final TypeElement nativeType = getNativeType(typeElement);
+        return implementationConverter.convertInterfacesFor(nativeType);
     }
     
     private DocumentedStaticMembers convertStaticMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {

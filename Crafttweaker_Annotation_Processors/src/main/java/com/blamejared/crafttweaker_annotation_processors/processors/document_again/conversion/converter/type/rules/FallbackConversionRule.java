@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConversionRule;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.ExistingTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.PrimitiveTypeInfo;
 
 import javax.annotation.Nullable;
@@ -30,6 +31,6 @@ public class FallbackConversionRule implements TypeConversionRule {
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
         messager.printMessage(Diagnostic.Kind.WARNING, "Unsupported type found: " + mirror);
-        return new PrimitiveTypeInfo(mirror.toString());
+        return new ExistingTypeInfo(mirror.toString());
     }
 }
