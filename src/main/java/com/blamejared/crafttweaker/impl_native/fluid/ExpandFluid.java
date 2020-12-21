@@ -1,16 +1,15 @@
 package com.blamejared.crafttweaker.impl_native.fluid;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.fluid.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.fluid.*;
-import net.minecraftforge.fluids.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.fluid.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(Fluid.class)
+@NativeTypeRegistration(value = Fluid.class, zenCodeName = "crafttweaker.api.fluid.MCFluid")
 public class ExpandFluid {
     
     /**

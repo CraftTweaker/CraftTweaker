@@ -1,8 +1,7 @@
 package com.blamejared.crafttweaker.impl_native.block;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.block.material.Material;
@@ -10,8 +9,7 @@ import net.minecraft.block.material.MaterialColor;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(Material.class)
+@NativeTypeRegistration(value = Material.class, zenCodeName = "crafttweaker.api.block.material.MCMaterial")
 public class ExpandMaterial {
     
     private static final BiMap<String, Material> hardcodedMaterials = HashBiMap.create();

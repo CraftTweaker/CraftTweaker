@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.Preprocessor;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
@@ -20,10 +21,7 @@ import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,30 +37,41 @@ public class CraftTweakerRegistry {
      */
     public static void findClasses() {
         final CraftTweakerModList craftTweakerModList = new CraftTweakerModList();
-        final List<Type> collect = getAllTypesWith(ZenRegister.class, craftTweakerModList::add).collect(Collectors
-                .toList());
+        final List<Class<?>> collect = getAllClassesWith(ZenRegister.class, craftTweakerModList::add)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         craftTweakerModList.printToLog();
         
+        collect.forEach(ZEN_CLASS_REGISTRY::addNativeType);
         ZEN_CLASS_REGISTRY.initNativeTypes();
-        collect.forEach(ZEN_CLASS_REGISTRY::addType);
+        collect.forEach(ZEN_CLASS_REGISTRY::addClass);
         
         
         BRACKET_RESOLVER_REGISTRY.addClasses(ZEN_CLASS_REGISTRY.getAllRegisteredClasses());
         BRACKET_RESOLVER_REGISTRY.validateBrackets();
         
-        getAllTypesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addType);
+        getAllClassesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addClass);
         
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
     }
     
+    private static Class<?> getClassFromType(Type type) {
+        try {
+            return Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     @SuppressWarnings("SameParameterValue")
-    private static Stream<Type> getAllTypesWith(Class<? extends Annotation> annotationCls) {
-        return getAllTypesWith(annotationCls, ignored -> {
+    private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls) {
+        return getAllClassesWith(annotationCls, ignored -> {
         });
     }
     
-    private static Stream<Type> getAllTypesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer) {
+    private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer) {
         final Type annotationType = Type.getType(annotationCls);
         return ModList.get()
                 .getAllScanData()
@@ -71,7 +80,9 @@ public class CraftTweakerRegistry {
                         .stream()
                         .filter(a -> annotationType.equals(a.getAnnotationType()))
                         .peek(ignored -> consumer.accept(scanData))
-                        .map(ModFileScanData.AnnotationData::getClassType));
+                        .map(ModFileScanData.AnnotationData::getClassType))
+                .map(CraftTweakerRegistry::getClassFromType)
+                .filter(Objects::nonNull);
     }
     
     

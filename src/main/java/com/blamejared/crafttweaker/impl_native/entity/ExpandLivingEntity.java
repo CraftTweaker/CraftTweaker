@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -18,8 +17,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(LivingEntity.class)
+@NativeTypeRegistration(value = LivingEntity.class, zenCodeName = "crafttweaker.api.entity.MCLivingEntity")
 public class ExpandLivingEntity {
     
     @ZenCodeType.Method

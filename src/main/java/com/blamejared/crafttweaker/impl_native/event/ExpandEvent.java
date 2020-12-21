@@ -1,14 +1,12 @@
 package com.blamejared.crafttweaker.impl_native.event;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.eventbus.api.Event;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(Event.class)
+@NativeTypeRegistration(value = Event.class, zenCodeName = "crafttweaker.api.event.MCEvent")
 public class ExpandEvent {
     
     @ZenCodeType.Method

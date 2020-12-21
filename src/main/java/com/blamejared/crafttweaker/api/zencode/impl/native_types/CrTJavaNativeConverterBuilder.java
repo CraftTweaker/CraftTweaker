@@ -17,8 +17,7 @@ public class CrTJavaNativeConverterBuilder extends JavaNativeConverterBuilder {
     
     @Override
     protected JavaNativeExpansionConverter getExpansionConverter(JavaNativePackageInfo packageInfo, IZSLogger logger, JavaNativeTypeConversionContext typeConversionContext, JavaNativeTypeConverter typeConverter, JavaNativeHeaderConverter headerConverter, JavaNativeMemberConverter memberConverter) {
-        final NativeTypeRegistry nativeTypeRegistry = CraftTweakerRegistry.getNativeTypeRegistry();
-        return new CrTJavaNativeExpansionConverter(typeConverter, logger, packageInfo, memberConverter, typeConversionContext, headerConverter, nativeTypeRegistry);
+        return new CrTJavaNativeExpansionConverter(typeConverter, logger, packageInfo, memberConverter, typeConversionContext, headerConverter);
     }
     
     @Override

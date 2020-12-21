@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.DocumentRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.expansion.ExpansionConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.native_registration.NativeRegistrationConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.NamedTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
 
@@ -17,7 +18,9 @@ public class DocumentConversionRegistry {
     
     public DocumentConversionRegistry(DocumentRegistry documentRegistry, DependencyContainer dependencyContainer) {
         this.documentRegistry = documentRegistry;
-        //TODO: Add converters
+        //
+        // TODO: Add converters
+        converters.add(dependencyContainer.getInstanceOfClass(NativeRegistrationConverter.class));
         converters.add(dependencyContainer.getInstanceOfClass(ExpansionConverter.class));
         converters.add(dependencyContainer.getInstanceOfClass(NamedTypeConverter.class));
     }

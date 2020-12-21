@@ -1,13 +1,12 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -16,8 +15,7 @@ import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(World.class)
+@NativeTypeRegistration(value = World.class, zenCodeName = "crafttweaker.api.world.MCWorld")
 public class ExpandWorld {
     
     @ZenCodeType.Getter("remote")

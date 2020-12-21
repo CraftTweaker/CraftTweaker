@@ -1,13 +1,15 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.element;
 
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,15 +58,14 @@ public class KnownElementList {
     }
     
     private boolean isElementForTypeDocumentation(TypeElement element) {
-        return element.getAnnotation(ZenCodeType.Name.class) != null || element.getAnnotation(DocumentAsType.class) != null;
+        return isAnnotationPresent(element, ZenCodeType.Name.class) || isAnnotationPresent(element, NativeTypeRegistration.class);
     }
     
     private boolean isElementForExpansionDocumentation(TypeElement element) {
-        if(element.getAnnotation(DocumentAsType.class) != null) {
-            return false;
-        }
-        
-        return element.getAnnotation(ZenCodeType.Expansion.class) != null || element.getAnnotation(NativeExpansion.class) != null;
-        
+        return isAnnotationPresent(element, ZenCodeType.Expansion.class) || isAnnotationPresent(element, TypedExpansion.class);
+    }
+    
+    private boolean isAnnotationPresent(Element element, Class<? extends Annotation> annotation) {
+        return element.getAnnotation(annotation) != null;
     }
 }

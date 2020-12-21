@@ -1,15 +1,13 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(PlayerEntity.class)
+@NativeTypeRegistration(value = PlayerEntity.class, zenCodeName = "crafttweaker.api.player.MCPlayerEntity")
 public class ExpandPlayerEntity {
     
     @ZenCodeType.Method

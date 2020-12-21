@@ -37,40 +37,39 @@ public class CrTNativeTypeRegistration {
     }
     
     private static void registerNormalTypes(NativeTypeRegistry registry) {
-        registry.addNativeType(Item.class, "crafttweaker.api.item.MCItemDefinition");
-        registry.addNativeType(PlayerEntity.class, "crafttweaker.api.player.MCPlayerEntity");
-        registry.addNativeType(LivingEntity.class, "crafttweaker.api.entity.MCLivingEntity");
-        registry.addNativeType(Entity.class, "crafttweaker.api.entity.MCEntity");
-        registry.addNativeType(EntityClassification.class, "crafttweaker.api.entity.MCEntityClassification");
+        ///registry.addNativeType(Item.class, "crafttweaker.api.item.MCItemDefinition");
+        ///registry.addNativeType(PlayerEntity.class, "crafttweaker.api.player.MCPlayerEntity");
+        ///registry.addNativeType(LivingEntity.class, "crafttweaker.api.entity.MCLivingEntity");
+        ///registry.addNativeType(Entity.class, "crafttweaker.api.entity.MCEntity");
+        ///registry.addNativeType(EntityClassification.class, "crafttweaker.api.entity.MCEntityClassification");
         
-        registry.addNativeType(ItemStack.class, "crafttweaker.api.item.ItemStack");
-        registry.addNativeType(Ingredient.class, "crafttweaker.api.item.Ingredient");
+        ///registry.addNativeType(ItemStack.class, "crafttweaker.api.item.ItemStack");
+        ///registry.addNativeType(Ingredient.class, "crafttweaker.api.item.Ingredient");
         
-        registry.addNativeType(Potion.class, "crafttweaker.api.potion.MCPotion");
-        registry.addNativeType(Effect.class, "crafttweaker.api.potion.MCPotionEffect");
-        registry.addNativeType(EffectInstance.class, "crafttweaker.api.potion.MCPotionEffectInstance");
+        ///registry.addNativeType(Potion.class, "crafttweaker.api.potion.MCPotion");
+        ///registry.addNativeType(Effect.class, "crafttweaker.api.potion.MCPotionEffect");
+        ///registry.addNativeType(EffectInstance.class, "crafttweaker.api.potion.MCPotionEffectInstance");
         
-        registry.addNativeType(Material.class, "crafttweaker.api.block.material.MCMaterial");
-        registry.addNativeType(MaterialColor.class, "crafttweaker.api.block.material.MCMaterialColor");
+        ///registry.addNativeType(Material.class, "crafttweaker.api.block.material.MCMaterial");
+        ///registry.addNativeType(MaterialColor.class, "crafttweaker.api.block.material.MCMaterialColor");
         
-        registry.addNativeType(Block.class, "crafttweaker.api.blocks.MCBlock");
-        registry.addNativeType(BlockState.class, "crafttweaker.api.blocks.MCBlockState");
-        registry.addNativeType(Fluid.class, "crafttweaker.api.fluid.MCFluid");
+        ///registry.addNativeType(Block.class, "crafttweaker.api.blocks.MCBlock");
+        ///registry.addNativeType(BlockState.class, "crafttweaker.api.blocks.MCBlockState");
+        ///registry.addNativeType(Fluid.class, "crafttweaker.api.fluid.MCFluid");
         
-        registry.addNativeType(Biome.class, "crafttweaker.api.world.MCBiome");
-        registry.addNativeType(World.class, "crafttweaker.api.world.MCWorld");
+        ///registry.addNativeType(Biome.class, "crafttweaker.api.world.MCBiome");
+        ///registry.addNativeType(World.class, "crafttweaker.api.world.MCWorld");
         
-        registry.addNativeType(Enchantment.class, "crafttweaker.api.enchantment.MCEnchantment");
+        ///registry.addNativeType(Enchantment.class, "crafttweaker.api.enchantment.MCEnchantment");
     }
-    
     
     private static void registerEventTypes(NativeTypeRegistry registry) {
         
-        registry.addNativeType(Event.class, "crafttweaker.api.event.MCEvent");
-        registry.addNativeType(EntityEvent.class, "crafttweaker.api.event.entity.MCEntityEvent");
-        registry.addNativeType(LivingEvent.class, "crafttweaker.api.event.entity.MCLivingEvent");
-        registry.addNativeType(PlayerEvent.class, "crafttweaker.api.event.entity.player.MCPlayerEvent");
-        registry.addNativeType(AnvilRepairEvent.class, "crafttweaker.api.event.entity.player.MCAnvilRepairEvent");
+        ///registry.addNativeType(Event.class, "crafttweaker.api.event.MCEvent");
+        ///registry.addNativeType(EntityEvent.class, "crafttweaker.api.event.entity.MCEntityEvent");
+        ///registry.addNativeType(LivingEvent.class, "crafttweaker.api.event.entity.MCLivingEvent");
+        ///registry.addNativeType(PlayerEvent.class, "crafttweaker.api.event.entity.player.MCPlayerEvent");
+        ///registry.addNativeType(AnvilRepairEvent.class, "crafttweaker.api.event.entity.player.MCAnvilRepairEvent");
     }
     
 }

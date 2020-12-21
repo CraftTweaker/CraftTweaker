@@ -1,18 +1,16 @@
 package com.blamejared.crafttweaker.impl_native.item;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(ItemStack.class)
+@NativeTypeRegistration(value = ItemStack.class, zenCodeName = "crafttweaker.api.item.ItemStack")
 public class ExpandNativeItemStack {
     
     @ZenCodeType.Method

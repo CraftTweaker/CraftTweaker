@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker.impl_native.blocks;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
@@ -15,8 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(BlockState.class)
+@NativeTypeRegistration(value = BlockState.class, zenCodeName = "crafttweaker.api.blocks.MCBlockState")
 public class ExpandBlockState {
     
     @ZenCodeType.Getter("block")

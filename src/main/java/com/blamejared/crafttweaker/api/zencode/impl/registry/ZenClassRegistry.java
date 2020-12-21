@@ -1,17 +1,15 @@
 package com.blamejared.crafttweaker.api.zencode.impl.registry;
 
-import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
-import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeRegistration;
 import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraftforge.fml.ModList;
-import org.objectweb.asm.Type;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -97,20 +95,14 @@ public class ZenClassRegistry {
         return expansionsByExpandedName;
     }
     
-    public void addType(Type type) {
-        try {
-            addClass(Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader()));
-        } catch(ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void addClass(Class<?> cls) {
-        if(!areModsPresent(cls.getAnnotation(ZenRegister.class))) {
+    public void addClass(Class<?> cls) {
+        if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
+            final String canonicalName = cls.getCanonicalName();
+            CraftTweakerAPI.logDebug("Skipping class '%s' since its Mod dependencies are not fulfilled", canonicalName);
             return;
         }
         
-        if(!isCompatible(cls)) {
+        if(isIncompatible(cls)) {
             blacklistedClasses.add(cls);
             return;
         }
@@ -126,8 +118,8 @@ public class ZenClassRegistry {
             addExpansion(cls, expandedClassName);
         }
         
-        if(cls.isAnnotationPresent(NativeExpansion.class)) {
-            addNativeAnnotation(cls);
+        if(cls.isAnnotationPresent(TypedExpansion.class)) {
+            addTypedExpansion(cls);
         }
         
         if(hasGlobals(cls)) {
@@ -140,36 +132,45 @@ public class ZenClassRegistry {
      * Does so by simply calling the declaredMethods and fields getters.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private boolean isCompatible(Class<?> cls) {
+    private boolean isIncompatible(Class<?> cls) {
         try {
             cls.getDeclaredFields();
             cls.getDeclaredMethods();
-            return true;
+            return false;
         } catch(Throwable t) {
             CraftTweakerAPI.logThrowing("Could not register class '%s'! This is most likely a compatibility issue!", t, cls
                     .getCanonicalName());
-            return false;
+            return true;
+        }
+    }
+    
+    private void addTypedExpansion(Class<?> cls) {
+        final TypedExpansion annotation = cls.getAnnotation(TypedExpansion.class);
+        final Class<?> expandedType = annotation.value();
+        
+        if(nativeTypeRegistry.hasInfoFor(expandedType)) {
+            final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedType);
+            addExpansion(cls, expandedClassName);
+        } else if(expandedType.isAnnotationPresent(ZenCodeType.Name.class)) {
+            final String expandedClassName = expandedType.getAnnotation(ZenCodeType.Name.class)
+                    .value();
+            addExpansion(cls, expandedClassName);
+        } else {
+            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedType
+                    .getCanonicalName());
         }
     }
     
     private void addNativeAnnotation(Class<?> cls) {
-        final NativeExpansion annotation = cls.getAnnotation(NativeExpansion.class);
+        final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
         final Class<?> expandedNativeType = annotation.value();
-        if(nativeTypeRegistry.hasInfoFor(expandedNativeType)) {
-            final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedNativeType);
-            addExpansion(cls, expandedClassName);
-        } else if(expandedNativeType.isAnnotationPresent(ZenCodeType.Name.class)) {
-            final String expandedClassName = expandedNativeType.getAnnotation(ZenCodeType.Name.class)
-                    .value();
-            addExpansion(cls, expandedClassName);
-        } else {
-            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedNativeType
-                    .getCanonicalName());
-        }
+        final String zenCodeName = annotation.zenCodeName();
+        nativeTypeRegistry.addNativeType(expandedNativeType, zenCodeName);
+        addExpansion(cls, zenCodeName);
     }
     
-    private boolean areModsPresent(ZenRegister register) {
-        return register != null && Arrays.stream(register.modDeps())
+    private boolean areModsMissing(ZenRegister register) {
+        return register == null || !Arrays.stream(register.modDeps())
                 .filter(modId -> modId != null && !modId.isEmpty())
                 .allMatch(ModList.get()::isLoaded);
     }
@@ -209,8 +210,17 @@ public class ZenClassRegistry {
                 .collect(Collectors.toSet());
     }
     
+    public void addNativeType(Class<?> cls) {
+        if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
+            return;
+        }
+        
+        if(cls.isAnnotationPresent(NativeTypeRegistration.class)) {
+            addNativeAnnotation(cls);
+        }
+    }
+    
     public void initNativeTypes() {
-        CrTNativeTypeRegistration.registerNativeTypes(nativeTypeRegistry);
         for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
             final String craftTweakerName = nativeTypeInfo.getCraftTweakerName();
             final String vanillaClass = nativeTypeInfo.getVanillaClass().getCanonicalName();

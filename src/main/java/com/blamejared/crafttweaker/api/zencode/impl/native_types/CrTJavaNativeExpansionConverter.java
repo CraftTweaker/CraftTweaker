@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
-import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.*;
 import org.openzen.zencode.shared.logging.IZSLogger;
@@ -11,11 +10,9 @@ import java.lang.reflect.Method;
 
 class CrTJavaNativeExpansionConverter extends JavaNativeExpansionConverter {
     
-    private final NativeTypeRegistry nativeTypeRegistry;
     
-    public CrTJavaNativeExpansionConverter(JavaNativeTypeConverter typeConverter, IZSLogger logger, JavaNativePackageInfo packageInfo, JavaNativeMemberConverter memberConverter, JavaNativeTypeConversionContext typeConversionContext, JavaNativeHeaderConverter headerConverter, NativeTypeRegistry nativeTypeRegistry) {
+    public CrTJavaNativeExpansionConverter(JavaNativeTypeConverter typeConverter, IZSLogger logger, JavaNativePackageInfo packageInfo, JavaNativeMemberConverter memberConverter, JavaNativeTypeConversionContext typeConversionContext, JavaNativeHeaderConverter headerConverter) {
         super(typeConverter, logger, packageInfo, memberConverter, typeConversionContext, headerConverter);
-        this.nativeTypeRegistry = nativeTypeRegistry;
     }
     
     @Override
@@ -25,15 +22,15 @@ class CrTJavaNativeExpansionConverter extends JavaNativeExpansionConverter {
     
     @Override
     protected String getExpandedName(Class<?> cls) {
-        if(cls.isAnnotationPresent(NativeExpansion.class)) {
-            final NativeExpansion annotation = cls.getAnnotation(NativeExpansion.class);
-            return nativeTypeRegistry.getCrTNameFor(annotation.value());
+        if(cls.isAnnotationPresent(NativeTypeRegistration.class)) {
+            final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
+            return annotation.zenCodeName();
         }
         return super.getExpandedName(cls);
     }
     
     @Override
     protected boolean doesClassNotHaveAnnotation(Class<?> cls) {
-        return !cls.isAnnotationPresent(NativeExpansion.class) && super.doesClassNotHaveAnnotation(cls);
+        return !cls.isAnnotationPresent(NativeTypeRegistration.class) && super.doesClassNotHaveAnnotation(cls);
     }
 }

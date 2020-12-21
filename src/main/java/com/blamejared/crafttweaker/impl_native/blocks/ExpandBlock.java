@@ -1,15 +1,13 @@
 package com.blamejared.crafttweaker.impl_native.blocks;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeExpansion;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker_annotations.annotations.DocumentAsType;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@DocumentAsType
-@NativeExpansion(Block.class)
+@NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
 public class ExpandBlock {
     
     @ZenCodeType.Method
