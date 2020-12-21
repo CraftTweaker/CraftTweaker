@@ -6,14 +6,19 @@ import java.util.Optional;
 
 public class ExampleData {
     
-    private final Map<String, Example> examples = new HashMap<>(1);
+    private final Map<String, Example> examples;
+    
+    public ExampleData() {
+        this.examples = new HashMap<>(1);
+    }
     
     public ExampleData(Example example) {
+        this();
         this.examples.put(example.getName(), example);
     }
     
-    public ExampleData() {
-    
+    public ExampleData(Map<String, Example> examples) {
+        this.examples = examples;
     }
     
     public void addExample(Example example) {
@@ -21,7 +26,7 @@ public class ExampleData {
     }
     
     public int numberOfExamples() {
-        return examples.size();
+        return examples.values().stream().mapToInt(Example::numberOfExamples).min().orElse(0);
     }
     
     public boolean hasExampleFor(String name) {
@@ -34,5 +39,9 @@ public class ExampleData {
     
     public Optional<Example> tryGetExampleFor(String name) {
         return Optional.ofNullable(getExampleFor(name));
+    }
+    
+    public Map<String, Example> getExampleMap() {
+        return examples;
     }
 }

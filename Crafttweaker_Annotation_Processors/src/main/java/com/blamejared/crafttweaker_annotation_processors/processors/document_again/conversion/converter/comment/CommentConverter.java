@@ -2,9 +2,9 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.Example;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
@@ -12,9 +12,15 @@ import javax.lang.model.element.*;
 public class CommentConverter {
     
     private final ProcessingEnvironment processingEnv;
+    private final CommentMerger commentMerger;
+    private final ExampleDataConverter exampleDataConverter;
+    private final DescriptionConverter descriptionConverter;
     
-    public CommentConverter(ProcessingEnvironment processingEnv) {
+    public CommentConverter(ProcessingEnvironment processingEnv, CommentMerger commentMerger, ExampleDataConverter exampleDataConverter, DescriptionConverter descriptionConverter) {
         this.processingEnv = processingEnv;
+        this.commentMerger = commentMerger;
+        this.exampleDataConverter = exampleDataConverter;
+        this.descriptionConverter = descriptionConverter;
     }
     
     public DocumentationComment convertForType(TypeElement typeElement) {
@@ -29,34 +35,7 @@ public class CommentConverter {
     
     public DocumentationComment convertForMethod(ExecutableElement method, DocumentationPageInfo pageInfo) {
         final DocumentationComment comment = convertElement(method);
-        fillExampleForThisParameterFromPageInfo(comment, pageInfo);
-        return comment;
-    }
-    
-    private void fillExampleForThisParameterFromPageInfo(DocumentationComment comment, DocumentationPageInfo pageInfo) {
-        final ExampleData examples = comment.getExamples();
-        if(!examples.hasExampleFor("this")) {
-            final DocumentationComment classComment = pageInfo.getClassComment();
-            final ExampleData pageInfoExampleData = classComment.getExamples();
-            examples.addExample(pageInfoExampleData.getExampleFor("this"));
-        }
-    }
-    
-    private DocumentationComment convertElement(Element element) {
-        final String docComment = processingEnv.getElementUtils().getDocComment(element);
-        final String description = extractDescriptionFrom(docComment);
-        final ExampleData exampleData = extractExampleDataFrom(docComment);
-        
-        return new DocumentationComment(description, exampleData);
-    }
-    
-    @Nullable
-    private String extractDescriptionFrom(@Nullable String docComment) {
-        return docComment;
-    }
-    
-    private ExampleData extractExampleDataFrom(String docComment) {
-        return new ExampleData(new Example("this", "TODO"));
+        return fillExampleForThisParameterFromPageInfo(comment, pageInfo);
     }
     
     public DocumentationComment convertForParameter(VariableElement variableElement) {
@@ -67,5 +46,52 @@ public class CommentConverter {
     public DocumentationComment convertForTypeParameter(TypeParameterElement typeParameterElement) {
         //1 Layer up -> Method
         return convertElement(typeParameterElement.getEnclosingElement());
+    }
+    
+    private DocumentationComment convertElement(Element element) {
+        final DocumentationComment comment = getCommentForElement(element);
+        final DocumentationComment enclosingElementComment = getCommentFromEnclosingElement(element);
+        return mergeComments(comment, enclosingElementComment);
+    }
+    
+    @Nonnull
+    private DocumentationComment getCommentForElement(Element element) {
+        final String docComment = processingEnv.getElementUtils().getDocComment(element);
+        final String description = extractDescriptionFrom(docComment);
+        final ExampleData exampleData = extractExampleDataFrom(docComment);
+        
+        return new DocumentationComment(description, exampleData);
+    }
+    
+    @Nullable
+    private String extractDescriptionFrom(@Nullable String docComment) {
+        return descriptionConverter.convertFromCommentString(docComment);
+    }
+    
+    private ExampleData extractExampleDataFrom(String docComment) {
+        return exampleDataConverter.convertFromCommentString(docComment);
+    }
+    
+    private DocumentationComment getCommentFromEnclosingElement(Element element) {
+        final Element enclosingElement = element.getEnclosingElement();
+        if(enclosingElement == null) {
+            return emptyComment();
+        }
+        
+        return getCommentForElement(enclosingElement);
+    }
+    
+    private DocumentationComment mergeComments(DocumentationComment comment, DocumentationComment enclosingElementComment) {
+        return commentMerger.merge(comment, enclosingElementComment);
+    }
+    
+    private DocumentationComment fillExampleForThisParameterFromPageInfo(DocumentationComment comment, DocumentationPageInfo pageInfo) {
+        final DocumentationComment classComment = pageInfo.getClassComment();
+        return mergeComments(comment, classComment);
+    }
+    
+    @Nonnull
+    private DocumentationComment emptyComment() {
+        return new DocumentationComment(null, new ExampleData());
     }
 }

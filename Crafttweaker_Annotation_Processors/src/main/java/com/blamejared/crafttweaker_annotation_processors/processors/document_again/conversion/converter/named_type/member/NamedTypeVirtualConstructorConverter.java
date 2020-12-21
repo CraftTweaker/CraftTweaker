@@ -67,6 +67,6 @@ public class NamedTypeVirtualConstructorConverter extends AbstractEnclosedElemen
     }
     
     private DocumentationComment convertComment(ExecutableElement enclosedElement, DocumentationPageInfo pageInfo) {
-        return commentConverter.convertForMethod(enclosedElement, pageInfo);
+        return commentConverter.convertForConstructor(enclosedElement, pageInfo);
     }
 }

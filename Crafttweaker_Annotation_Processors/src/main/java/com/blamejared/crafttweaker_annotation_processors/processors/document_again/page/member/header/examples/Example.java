@@ -15,6 +15,10 @@ public class Example {
         this.name = name;
     }
     
+    public int numberOfExamples() {
+        return textValues.size();
+    }
+    
     public String getName() {
         return name;
     }
