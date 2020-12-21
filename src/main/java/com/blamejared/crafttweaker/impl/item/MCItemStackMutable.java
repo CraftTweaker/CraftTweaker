@@ -75,7 +75,7 @@ public class MCItemStackMutable implements IItemStack {
         if(getInternal().getTag() != null) {
             MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
             //Damage is special case, if we have more special cases we can handle them here.
-            if(getInternal().isDamaged()) {
+            if(getInternal().getItem().isDamageable()) {
                 data.remove("Damage");
             }
             if(!data.isEmpty()) {
