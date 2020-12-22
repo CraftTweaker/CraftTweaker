@@ -72,7 +72,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     @Override
     protected Example getFallbackThisInformationFor(TypeElement typeElement) {
-        final String text = "my" + getName(typeElement);
+        final String text = "my" + getName(typeElement).getSimpleName();
         return new Example("this", text);
     }
     

@@ -30,7 +30,7 @@ public class DescriptionConverter {
     private String convertNonNullCommentString(String docComment, Element element) {
         docComment = replaceLinkTagsWithClickableMarkdown(docComment, element);
         docComment = removeDocumentationParameters(docComment);
-        return docComment;
+        return docComment.trim();
     }
     
     private String replaceLinkTagsWithClickableMarkdown(String docComment, Element element) {
