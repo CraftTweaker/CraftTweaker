@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.SingletonDependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.file.PageWriter;
+import com.sun.source.util.Trees;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -41,6 +42,9 @@ public class DocumentProcessor extends AbstractProcessor {
         dependencyContainer.addInstanceAs(processingEnv.getMessager(), Messager.class);
         dependencyContainer.addInstanceAs(processingEnv.getElementUtils(), Elements.class);
         dependencyContainer.addInstanceAs(processingEnv.getTypeUtils(), Types.class);
+    
+        final Trees instance = Trees.instance(processingEnv);
+        dependencyContainer.addInstanceAs(instance, Trees.class);
     }
     
     @Override

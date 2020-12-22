@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.DocumentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
@@ -25,7 +26,7 @@ public class DocumentRegistry {
     }
     
     public DocumentationPageInfo getPageInfoFor(TypeElement typeElement) {
-        if(elementsToInfo.containsKey(typeElement)) {
+        if(hasPageInfoFor(typeElement)) {
             return elementsToInfo.get(typeElement);
         }
         
@@ -42,7 +43,7 @@ public class DocumentRegistry {
     }
     
     public DocumentationPage getPage(DocumentationPageInfo info) {
-        if(documentationPages.containsKey(info)) {
+        if(hasPageFor(info)) {
             return documentationPages.get(info);
         }
         
@@ -51,5 +52,13 @@ public class DocumentRegistry {
     
     public Collection<DocumentationPage> getAllPages() {
         return documentationPages.values();
+    }
+    
+    public boolean hasPageFor(DocumentationPageInfo info) {
+        return documentationPages.containsKey(info);
+    }
+    
+    public boolean hasPageInfoFor(TypeElement typeElement) {
+        return elementsToInfo.containsKey(typeElement);
     }
 }

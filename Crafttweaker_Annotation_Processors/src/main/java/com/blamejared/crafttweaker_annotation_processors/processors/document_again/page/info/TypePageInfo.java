@@ -8,8 +8,8 @@ public class TypePageInfo extends DocumentationPageInfo implements Comparable<Ty
     
     public final TypeName zenCodeName;
     
-    public TypePageInfo(String declaringModId, String outputPath, DocumentationComment classComment, TypeName zenCodeName) {
-        super(declaringModId, outputPath, classComment);
+    public TypePageInfo(String declaringModId, String outputPath, TypeName zenCodeName) {
+        super(declaringModId, outputPath);
         this.zenCodeName = zenCodeName;
     }
     

@@ -31,7 +31,12 @@ public abstract class DocumentConverter {
         
         final String outputPath = annotation.value();
         final String declaringModId = knownModList.getModIdForPackage(element);
-        final DocumentationComment typeComment = commentConverter.convertForType(element);
-        return new DocumentationPageInfo(declaringModId, outputPath, typeComment);
+        return new DocumentationPageInfo(declaringModId, outputPath);
+    }
+    
+    
+    public void setDocumentationCommentTo(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        final DocumentationComment typeComment = commentConverter.convertForType(typeElement);
+        pageInfo.setTypeComment(typeComment);
     }
 }

@@ -57,15 +57,15 @@ public class CommentConverter {
     @Nonnull
     private DocumentationComment getCommentForElement(Element element) {
         final String docComment = processingEnv.getElementUtils().getDocComment(element);
-        final String description = extractDescriptionFrom(docComment);
+        final String description = extractDescriptionFrom(docComment, element);
         final ExampleData exampleData = extractExampleDataFrom(docComment);
         
         return new DocumentationComment(description, exampleData);
     }
     
     @Nullable
-    private String extractDescriptionFrom(@Nullable String docComment) {
-        return descriptionConverter.convertFromCommentString(docComment);
+    private String extractDescriptionFrom(@Nullable String docComment, Element element) {
+        return descriptionConverter.convertFromCommentString(docComment, element);
     }
     
     private ExampleData extractExampleDataFrom(String docComment) {

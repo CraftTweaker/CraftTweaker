@@ -37,6 +37,8 @@ public class TypeConverter implements IHasPostCreationCall {
         if(pageInfoByName.isPresent()) {
             return new TypePageTypeInfo(pageInfoByName.get());
         }
+        
+        //Problem: When preparing the ATIs we already convert the comments :thinking:
         throw new UnsupportedOperationException("TODO: " + name.getZenCodeName());
     }
     

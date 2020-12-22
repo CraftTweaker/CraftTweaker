@@ -98,8 +98,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
         final TypeName name = new TypeName(getNativeAnnotation(element).zenCodeName());
         final String declaringModId = documentationPageInfo.declaringModId;
         final String outputPath = documentationPageInfo.getOutputPath();
-        final DocumentationComment classComment = documentationPageInfo.getClassComment();
-        return new TypePageInfo(declaringModId, outputPath, classComment, name);
+        return new TypePageInfo(declaringModId, outputPath, name);
     }
     
     @Override
