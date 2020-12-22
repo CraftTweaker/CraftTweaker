@@ -3,11 +3,14 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.HeaderConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedTypeVirtualMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.OperatorMember;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.lang.model.element.Element;
@@ -21,10 +24,12 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     
     private final CommentConverter commentConverter;
     private final HeaderConverter headerConverter;
+    private final TypeConverter typeConverter;
     
-    public NamedTypeVirtualOperatorConverter(CommentConverter commentConverter, HeaderConverter headerConverter) {
+    public NamedTypeVirtualOperatorConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter) {
         this.commentConverter = commentConverter;
         this.headerConverter = headerConverter;
+        this.typeConverter = typeConverter;
     }
     
     @Override
@@ -44,8 +49,17 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
         final MemberHeader header = convertHeader(method);
         final DocumentationComment comment = convertComment(method, pageInfo);
         final ZenCodeType.OperatorType type = convertType(method);
+        final AbstractTypeInfo ownerType = convertOwnerType(pageInfo);
         
-        return new OperatorMember(header, comment, type);
+        return new OperatorMember(header, comment, type, ownerType);
+    }
+    
+    private AbstractTypeInfo convertOwnerType(DocumentationPageInfo pageInfo) {
+        if(pageInfo instanceof TypePageInfo) {
+            return typeConverter.convertByName(((TypePageInfo) pageInfo).zenCodeName);
+        }
+        
+        throw new IllegalArgumentException("Cannot get ownerType from " + pageInfo.getSimpleName());
     }
     
     private MemberHeader convertHeader(ExecutableElement method) {
