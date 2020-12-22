@@ -9,11 +9,11 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.ImplementationConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.SuperTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.DocumentedGenericParameter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.Example;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.static_member.DocumentedStaticMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.page.DocumentationPage;
@@ -70,6 +70,12 @@ public class NativeRegistrationConverter extends DocumentConverter {
         return typePageInfo;
     }
     
+    @Override
+    protected Example getFallbackThisInformationFor(TypeElement typeElement) {
+        final String text = "my" + getName(typeElement);
+        return new Example("this", text);
+    }
+    
     private void registerNativeType(TypeElement element, TypePageInfo typePageInfo) {
         final AbstractTypeInfo typeInfo = new TypePageTypeInfo(typePageInfo);
         final TypeElement nativeType = getNativeType(element);
@@ -95,10 +101,15 @@ public class NativeRegistrationConverter extends DocumentConverter {
     private TypePageInfo createTypePageInfo(TypeElement element) {
         final DocumentationPageInfo documentationPageInfo = super.prepareConversion(element);
         
-        final TypeName name = new TypeName(getNativeAnnotation(element).zenCodeName());
+        final TypeName name = getName(element);
         final String declaringModId = documentationPageInfo.declaringModId;
         final String outputPath = documentationPageInfo.getOutputPath();
         return new TypePageInfo(declaringModId, outputPath, name);
+    }
+    
+    @Nonnull
+    private TypeName getName(TypeElement element) {
+        return new TypeName(getNativeAnnotation(element).zenCodeName());
     }
     
     @Override

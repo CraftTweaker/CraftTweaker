@@ -8,11 +8,31 @@ public class Example {
     private final List<String> textValues;
     private final String name;
     
+    private Example(String name) {
+        this.name = name;
+        this.textValues = new ArrayList<>();
+    }
     
     public Example(String name, String text) {
-        this.textValues = new ArrayList<>(1);
+        this.textValues = new ArrayList<>();
         this.textValues.add(text);
         this.name = name;
+    }
+    
+    public static Example merge(Example left, Example right) {
+        if(!left.name.equals(right.name)) {
+            throw new IllegalArgumentException("Names do not match! " + left.name + " != " + right.name);
+        }
+        
+        final Example result = new Example(left.name);
+        result.textValues.addAll(left.textValues);
+        result.textValues.addAll(right.textValues);
+        
+        return result;
+    }
+    
+    public void addTextValue(String textValue) {
+        this.textValues.add(textValue);
     }
     
     public int numberOfExamples() {

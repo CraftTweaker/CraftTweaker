@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.linktag;
 
+import javax.annotation.Nonnull;
 import javax.lang.model.element.Element;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -16,6 +17,15 @@ public class LinkTagReplacer {
     }
     
     public String replaceLinkTagsFrom(String docComment, Element element) {
+        if(docComment == null) {
+            return null;
+        }
+        
+        return replaceLinkTagsFromNonNullComment(docComment, element);
+    }
+    
+    @Nonnull
+    private String replaceLinkTagsFromNonNullComment(String docComment, Element element) {
         final Matcher matcher = linkPattern.matcher(docComment);
         return replaceLinksWithMatcher(matcher, element);
     }

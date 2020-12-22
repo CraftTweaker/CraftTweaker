@@ -1,11 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
 
-import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Optional;
 
 public class DocumentationPageInfo {
     
@@ -16,11 +13,7 @@ public class DocumentationPageInfo {
     public DocumentationPageInfo(String declaringModId, String outputPath) {
         this.declaringModId = declaringModId;
         this.outputPath = outputPath;
-        this.classComment = emptyComment();
-    }
-    
-    private DocumentationComment emptyComment() {
-        return new DocumentationComment(null, new ExampleData());
+        this.classComment = DocumentationComment.empty();
     }
     
     public DocumentationComment getClassComment() {

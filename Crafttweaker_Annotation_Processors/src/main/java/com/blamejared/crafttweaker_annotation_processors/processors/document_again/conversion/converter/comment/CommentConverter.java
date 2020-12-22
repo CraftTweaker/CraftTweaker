@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.example.ExampleDataConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
@@ -58,7 +59,7 @@ public class CommentConverter {
     private DocumentationComment getCommentForElement(Element element) {
         final String docComment = processingEnv.getElementUtils().getDocComment(element);
         final String description = extractDescriptionFrom(docComment, element);
-        final ExampleData exampleData = extractExampleDataFrom(docComment);
+        final ExampleData exampleData = extractExampleDataFrom(docComment, element);
         
         return new DocumentationComment(description, exampleData);
     }
@@ -68,14 +69,14 @@ public class CommentConverter {
         return descriptionConverter.convertFromCommentString(docComment, element);
     }
     
-    private ExampleData extractExampleDataFrom(String docComment) {
-        return exampleDataConverter.convertFromCommentString(docComment);
+    private ExampleData extractExampleDataFrom(String docComment, Element element) {
+        return exampleDataConverter.convertFromCommentString(docComment, element);
     }
     
     private DocumentationComment getCommentFromEnclosingElement(Element element) {
         final Element enclosingElement = element.getEnclosingElement();
         if(enclosingElement == null) {
-            return emptyComment();
+            return DocumentationComment.empty();
         }
         
         return getCommentForElement(enclosingElement);
@@ -88,10 +89,5 @@ public class CommentConverter {
     private DocumentationComment fillExampleForThisParameterFromPageInfo(DocumentationComment comment, DocumentationPageInfo pageInfo) {
         final DocumentationComment classComment = pageInfo.getClassComment();
         return mergeComments(comment, classComment);
-    }
-    
-    @Nonnull
-    private DocumentationComment emptyComment() {
-        return new DocumentationComment(null, new ExampleData());
     }
 }

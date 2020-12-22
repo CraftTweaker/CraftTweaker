@@ -14,6 +14,10 @@ public class DocumentationComment {
         this.exampleData = exampleData;
     }
     
+    public static DocumentationComment empty() {
+        return new DocumentationComment(null, ExampleData.empty());
+    }
+    
     public ExampleData getExamples() {
         return exampleData;
     }

@@ -8,7 +8,7 @@ public class ExampleData {
     
     private final Map<String, Example> examples;
     
-    public ExampleData() {
+    private ExampleData() {
         this.examples = new HashMap<>(1);
     }
     
@@ -19,6 +19,10 @@ public class ExampleData {
     
     public ExampleData(Map<String, Example> examples) {
         this.examples = examples;
+    }
+    
+    public static ExampleData empty() {
+        return new ExampleData();
     }
     
     public void addExample(Example example) {
@@ -34,11 +38,14 @@ public class ExampleData {
     }
     
     public Example getExampleFor(String name) {
-        return examples.get(name);
+        return tryGetExampleFor(name).orElseThrow(() -> new IllegalArgumentException("No example registered for: " + name));
     }
     
     public Optional<Example> tryGetExampleFor(String name) {
-        return Optional.ofNullable(getExampleFor(name));
+        if(hasExampleFor(name)) {
+            return Optional.of(examples.get(name));
+        }
+        return Optional.empty();
     }
     
     public Map<String, Example> getExampleMap() {

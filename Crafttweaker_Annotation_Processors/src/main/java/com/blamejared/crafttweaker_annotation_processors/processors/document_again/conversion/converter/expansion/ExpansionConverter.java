@@ -7,9 +7,11 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member.StaticMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.Example;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.static_member.DocumentedStaticMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.page.DocumentationPage;
@@ -63,20 +65,36 @@ public class ExpansionConverter extends DocumentConverter {
         return virtualMemberConverter.convertFor(typeElement, pageInfo);
     }
     
-    private DocumentationPageInfo getPageInfoForType(AbstractTypeInfo expandedType) {
+    private TypePageInfo getPageInfoForType(AbstractTypeInfo expandedType) {
         if(expandedType instanceof TypePageTypeInfo) {
-            return getPageInfo((TypePageTypeInfo)expandedType);
+            return getPageInfo((TypePageTypeInfo) expandedType);
         }
         throw new IllegalArgumentException("Invalid expanded type! " + expandedType);
     }
     
-    private DocumentationPageInfo getPageInfo(TypePageTypeInfo expandedType) {
+    private TypePageInfo getPageInfo(TypePageTypeInfo expandedType) {
         final TypeName zenCodeName = expandedType.getZenCodeName();
         final Optional<TypePageInfo> pageInfoByName = documentRegistry.getPageInfoByName(zenCodeName);
-        return pageInfoByName.orElseThrow(() -> new IllegalArgumentException("Invalid Expanded Type! " +zenCodeName));
+        return pageInfoByName.orElseThrow(() -> new IllegalArgumentException("Invalid Expanded Type! " + zenCodeName));
     }
     
     private DocumentedStaticMembers getStaticMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
         return staticMemberConverter.convertFor(typeElement, pageInfo);
+    }
+    
+    @Override
+    public void setDocumentationCommentTo(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        super.setDocumentationCommentTo(typeElement, pageInfo);
+    }
+    
+    @Override
+    protected Example getFallbackThisInformationFor(TypeElement typeElement) {
+        return getExpandedTypeThisExample(typeElement);
+    }
+    
+    private Example getExpandedTypeThisExample(TypeElement typeElement) {
+        final TypePageInfo pageInfoForType = getPageInfoForType(getExpandedType(typeElement));
+        final DocumentationComment classComment = pageInfoForType.getClassComment();
+        return classComment.getExamples().getExampleFor("this");
     }
 }

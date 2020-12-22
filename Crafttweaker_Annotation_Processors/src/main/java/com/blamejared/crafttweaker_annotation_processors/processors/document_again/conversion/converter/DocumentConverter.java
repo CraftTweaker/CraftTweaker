@@ -4,6 +4,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.Example;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.page.DocumentationPage;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 
@@ -37,6 +39,17 @@ public abstract class DocumentConverter {
     
     public void setDocumentationCommentTo(TypeElement typeElement, DocumentationPageInfo pageInfo) {
         final DocumentationComment typeComment = commentConverter.convertForType(typeElement);
+        addThisInformationIfNotPresent(typeComment, typeElement);
         pageInfo.setTypeComment(typeComment);
     }
+    
+    private void addThisInformationIfNotPresent(DocumentationComment commentFor, TypeElement typeElement) {
+        final ExampleData examples = commentFor.getExamples();
+        if(!examples.hasExampleFor("this")) {
+            final Example expandedTypeThisExample = getFallbackThisInformationFor(typeElement);
+            examples.addExample(expandedTypeThisExample);
+        }
+    }
+    
+    protected abstract Example getFallbackThisInformationFor(TypeElement typeElement);
 }
