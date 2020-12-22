@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.MemberHeader;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nonnull;
@@ -33,6 +32,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         writeComment(writer);
         writeReturnType(writer);
         writeCodeBlockWithExamples(writer, ownerType);
+        writeParameterDescriptionTable(writer);
     }
     
     private void writeComment(PrintWriter writer) {
@@ -58,6 +58,10 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType) {
         final String callee = ownerType.getDisplayName();
         writer.printf("%s.%s%s%n", callee, name, header.formatForSignatureExample());
+    }
+    
+    private void writeParameterDescriptionTable(PrintWriter writer) {
+        header.writeParameterDescriptionTable(writer);
     }
     
     public String getName() {

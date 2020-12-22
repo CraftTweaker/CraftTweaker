@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.example.ExampleDataConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
@@ -16,12 +17,14 @@ public class CommentConverter {
     private final CommentMerger commentMerger;
     private final ExampleDataConverter exampleDataConverter;
     private final DescriptionConverter descriptionConverter;
+    private final ParameterDescriptionConverter parameterDescriptionConverter;
     
-    public CommentConverter(ProcessingEnvironment processingEnv, CommentMerger commentMerger, ExampleDataConverter exampleDataConverter, DescriptionConverter descriptionConverter) {
+    public CommentConverter(ProcessingEnvironment processingEnv, CommentMerger commentMerger, ExampleDataConverter exampleDataConverter, DescriptionConverter descriptionConverter, ParameterDescriptionConverter parameterDescriptionConverter) {
         this.processingEnv = processingEnv;
         this.commentMerger = commentMerger;
         this.exampleDataConverter = exampleDataConverter;
         this.descriptionConverter = descriptionConverter;
+        this.parameterDescriptionConverter = parameterDescriptionConverter;
     }
     
     public DocumentationComment convertForType(TypeElement typeElement) {
@@ -40,13 +43,19 @@ public class CommentConverter {
     }
     
     public DocumentationComment convertForParameter(VariableElement variableElement) {
-        //1 Layer up -> Method
-        return convertElement(variableElement.getEnclosingElement());
+        final DocumentationComment parameterDescription = convertParameterDescription(variableElement);
+        final DocumentationComment comment = convertElement(variableElement.getEnclosingElement());
+        return mergeComments(parameterDescription, comment);
+    }
+    
+    private DocumentationComment convertParameterDescription(Element element) {
+        return parameterDescriptionConverter.convertDescriptionOf(element);
     }
     
     public DocumentationComment convertForTypeParameter(TypeParameterElement typeParameterElement) {
-        //1 Layer up -> Method
-        return convertElement(typeParameterElement.getEnclosingElement());
+        final DocumentationComment parameterDescription = convertParameterDescription(typeParameterElement);
+        final DocumentationComment comment = convertElement(typeParameterElement.getEnclosingElement());
+        return mergeComments(parameterDescription, comment);
     }
     
     private DocumentationComment convertElement(Element element) {
@@ -79,7 +88,7 @@ public class CommentConverter {
             return DocumentationComment.empty();
         }
         
-        return getCommentForElement(enclosingElement);
+        return convertElement(enclosingElement);
     }
     
     private DocumentationComment mergeComments(DocumentationComment comment, DocumentationComment enclosingElementComment) {

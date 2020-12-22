@@ -1,14 +1,12 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.ExampleData;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.examples.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.*;
 
-import javax.annotation.Nonnull;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import javax.annotation.*;
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
 
 public class MemberHeader {
     
@@ -84,9 +82,7 @@ public class MemberHeader {
     
     @Nonnull
     public String getExampleArgument(int exampleIndex) {
-        return parameters.stream()
-                .map(parameters -> parameters.getExample(exampleIndex))
-                .collect(Collectors.joining(", "));
+        return parameters.stream().map(parameters -> parameters.getExample(exampleIndex)).collect(Collectors.joining(", "));
     }
     
     @Nonnull
@@ -95,20 +91,52 @@ public class MemberHeader {
             return "";
         }
         
-        return genericParameters.stream()
-                .map(parameters -> parameters.getExample(exampleIndex))
-                .collect(Collectors.joining(", ", "<", ">"));
+        return genericParameters.stream().map(parameters -> parameters.getExample(exampleIndex)).collect(Collectors.joining(", ", "<", ">"));
     }
     
     public int getNumberOfUsableExamples() {
-        final IntStream parameterExampleCount = parameters.stream()
-                .mapToInt(DocumentedParameter::numberOfExamples);
-        final IntStream genericParameterExampleCount = genericParameters.stream()
-                .mapToInt(DocumentedGenericParameter::numberOfExamples);
+        final IntStream parameterExampleCount = parameters.stream().mapToInt(DocumentedParameter::numberOfExamples);
+        final IntStream genericParameterExampleCount = genericParameters.stream().mapToInt(DocumentedGenericParameter::numberOfExamples);
         
-        return IntStream.concat(parameterExampleCount, genericParameterExampleCount)
-                .min()
-                .orElse(1);
+        return IntStream.concat(parameterExampleCount, genericParameterExampleCount).min().orElse(1);
     }
     
+    public void writeParameterDescriptionTable(PrintWriter writer) {
+        if(parameters.isEmpty() && genericParameters.isEmpty()) {
+            return;
+        }
+        if(hasOptionalTypes()) {
+            writeParameterDescriptionTableWithOptionals(writer);
+        } else {
+            writeParameterDescriptionTableWithoutOptionals(writer);
+        }
+    }
+    
+    private void writeParameterDescriptionTableWithoutOptionals(PrintWriter writer) {
+        writer.println("| Parameter | Type | Description |");
+        writer.println("|-----------|------|-------------|");
+        for(DocumentedParameter parameter : parameters) {
+            parameter.writeParameterInfoExcludeOptionality(writer);
+        }
+        
+        for(DocumentedGenericParameter genericParameter : genericParameters) {
+            genericParameter.writeParameterInfoExcludeOptionality(writer);
+        }
+    }
+    
+    private void writeParameterDescriptionTableWithOptionals(PrintWriter writer) {
+        writer.println("| Parameter | Type | Description | Optional | DefaultValue |");
+        writer.println("|-----------|------|-------------|----------|--------------|");
+        for(DocumentedParameter parameter : parameters) {
+            parameter.writeParameterInfoIncludeOptionality(writer);
+        }
+        
+        for(DocumentedGenericParameter parameter : genericParameters) {
+            parameter.writeParameterInfoIncludeOptionality(writer);
+        }
+    }
+    
+    private boolean hasOptionalTypes() {
+        return parameters.stream().anyMatch(DocumentedParameter::isOptional);
+    }
 }

@@ -35,11 +35,11 @@ public class DocumentedParameter {
     }
     
     public void writeParameterInfoIncludeOptionality(PrintWriter writer) {
-        writer.printf("| %s | %s | %s | %s | %s |", name, type.getClickableMarkdown(), getDescription(), false, "");
+        writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), getDescription(), false, "");
     }
     
     public void writeParameterInfoExcludeOptionality(PrintWriter writer) {
-        writer.printf("| %s | %s | %s |", name, type.getClickableMarkdown(), getDescription());
+        writer.printf("| %s | %s | %s |%n", name, type.getClickableMarkdown(), getDescription());
     }
     
     public String getExample(int index) {

@@ -2,7 +2,9 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import org.jetbrains.annotations.*;
 
+import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,9 +28,16 @@ public class DocumentedGenericParameter {
         }
         
         final String prefix = name + " : ";
-        return bounds.stream()
-                .map(AbstractTypeInfo::getDisplayName)
-                .collect(Collectors.joining(", ", prefix, ""));
+        return prefix + getDisplayNameBounds();
+    }
+    
+    @NotNull
+    private String getDisplayNameBounds() {
+        return bounds.stream().map(AbstractTypeInfo::getDisplayName).collect(Collectors.joining(", "));
+    }
+    @NotNull
+    private String getClickableMarkdownBounds() {
+        return bounds.stream().map(AbstractTypeInfo::getClickableMarkdown).collect(Collectors.joining(", "));
     }
     
     public int numberOfExamples() {
@@ -41,5 +50,13 @@ public class DocumentedGenericParameter {
     
     public String getExample(int exampleIndex) {
         return comment.getExamples().getExampleFor(name).getTextValue(exampleIndex);
+    }
+    
+    public void writeParameterInfoIncludeOptionality(PrintWriter writer) {
+        writer.printf("| %s | %s | %s | N/A | N/A |%n", name, getClickableMarkdownBounds(), getDescription());
+    }
+    
+    public void writeParameterInfoExcludeOptionality(PrintWriter writer) {
+        writer.printf("| %s | %s | %s |%n", name, getClickableMarkdownBounds(), getDescription());
     }
 }
