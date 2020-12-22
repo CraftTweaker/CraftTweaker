@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies;
 
 import javax.annotation.Nonnull;
+import javax.annotation.processing.*;
+import javax.tools.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -73,7 +75,9 @@ public class SingletonDependencyContainer implements DependencyContainer {
         try {
             final Object[] arguments = getArguments(constructor);
             return (Type) constructor.newInstance(arguments);
-        } catch(Exception ignored) {
+        } catch(Exception e) {
+            final Messager instanceOfClass = getInstanceOfClass(Messager.class);
+            instanceOfClass.printMessage(Diagnostic.Kind.ERROR, e.getMessage());
             return null;
         }
     }

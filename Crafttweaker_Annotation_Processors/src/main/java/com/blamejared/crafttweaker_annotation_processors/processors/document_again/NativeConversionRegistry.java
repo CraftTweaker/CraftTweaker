@@ -1,15 +1,13 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.IHasPostCreationCall;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.native_types.JavaLangNativeTypeProvider;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.native_types.NativeTypeProvider;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.native_types.StdLibsNativeTypeProvider;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.native_types.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.*;
 
-import javax.lang.model.element.TypeElement;
-import java.util.HashMap;
-import java.util.Map;
+import javax.lang.model.element.*;
+import java.util.*;
+import java.util.function.*;
 
 public class NativeConversionRegistry implements IHasPostCreationCall {
     
@@ -40,6 +38,7 @@ public class NativeConversionRegistry implements IHasPostCreationCall {
     private void addCodedNativeTypes() {
         addNativeTypeInformationFrom(StdLibsNativeTypeProvider.class);
         addNativeTypeInformationFrom(JavaLangNativeTypeProvider.class);
+        addNativeTypeInformationFrom(ModDependencyTypeProvider.class);
     }
     
     private void addNativeTypeInformationFrom(Class<? extends NativeTypeProvider> providerClass) {
@@ -50,5 +49,21 @@ public class NativeConversionRegistry implements IHasPostCreationCall {
     private void addNativeTypeInformationFrom(NativeTypeProvider provider) {
         final Map<TypeElement, AbstractTypeInfo> typeInfos = provider.getTypeInfos();
         nativeTypeToTypeInfo.putAll(typeInfos);
+    }
+    
+    public boolean hasNativeTypeInfoWithName(TypeName name) {
+        return tryGetNativeTypeInfoWithName(name).isPresent();
+    }
+    
+    private Predicate<AbstractTypeInfo> typeNameMatches(TypeName name) {
+        return typeInfo -> typeInfo instanceof TypePageTypeInfo && ((TypePageTypeInfo) typeInfo).getZenCodeName().equals(name);
+    }
+    
+    public AbstractTypeInfo getNativeTypeInfoWithName(TypeName name) {
+        return tryGetNativeTypeInfoWithName(name).orElseThrow(() -> new IllegalArgumentException("Could not find type with name: " + name));
+    }
+    
+    public Optional<AbstractTypeInfo> tryGetNativeTypeInfoWithName(TypeName name) {
+        return nativeTypeToTypeInfo.values().stream().filter(typeNameMatches(name)).findFirst();
     }
 }

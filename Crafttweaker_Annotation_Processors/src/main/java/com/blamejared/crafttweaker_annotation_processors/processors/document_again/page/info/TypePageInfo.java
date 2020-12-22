@@ -1,8 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
-
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 public class TypePageInfo extends DocumentationPageInfo implements Comparable<TypePageInfo> {
     

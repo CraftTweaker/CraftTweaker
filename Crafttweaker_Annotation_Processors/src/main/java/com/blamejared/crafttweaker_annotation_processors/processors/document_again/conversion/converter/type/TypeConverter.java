@@ -1,33 +1,27 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.DocumentRegistry;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.rules.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.rules.generic.GenericTypeConversionRule;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.rules.generic.MapConversionRule;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.DependencyContainer;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.IHasPostCreationCall;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.TypePageTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.rules.generic.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.dependencies.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.*;
 
-import javax.lang.model.type.TypeMirror;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import javax.lang.model.type.*;
+import java.util.*;
 
 public class TypeConverter implements IHasPostCreationCall {
     
+    private final NativeConversionRegistry nativeConversionRegistry;
     private final DocumentRegistry registry;
     private final DependencyContainer dependencyContainer;
     private final List<TypeConversionRule> rules = new ArrayList<>();
     
-    public TypeConverter(DocumentRegistry registry, DependencyContainer dependencyContainer) {
+    public TypeConverter(NativeConversionRegistry nativeConversionRegistry, DocumentRegistry registry, DependencyContainer dependencyContainer) {
+        this.nativeConversionRegistry = nativeConversionRegistry;
         this.registry = registry;
         this.dependencyContainer = dependencyContainer;
     }
-    
     
     public AbstractTypeInfo convertByName(TypeName name) {
         final Optional<TypePageInfo> pageInfoByName = registry.getPageInfoByName(name);
@@ -35,8 +29,21 @@ public class TypeConverter implements IHasPostCreationCall {
             return new TypePageTypeInfo(pageInfoByName.get());
         }
         
+        if(hasNativePageInfo(name)) {
+            return getNativePageInfo(name);
+        }
+        
         //Problem: When preparing the ATIs we already convert the comments :thinking:
         throw new UnsupportedOperationException("TODO: " + name.getZenCodeName());
+    }
+    
+    private AbstractTypeInfo getNativePageInfo(TypeName name) {
+        return nativeConversionRegistry.getNativeTypeInfoWithName(name);
+    }
+    
+    
+    private boolean hasNativePageInfo(TypeName name) {
+        return nativeConversionRegistry.hasNativeTypeInfoWithName(name);
     }
     
     public AbstractTypeInfo convertType(TypeMirror typeMirror) {
@@ -44,11 +51,7 @@ public class TypeConverter implements IHasPostCreationCall {
     }
     
     public Optional<AbstractTypeInfo> tryConvertType(TypeMirror typeMirror) {
-        return rules.stream()
-                .filter(rule -> rule.canConvert(typeMirror))
-                .map(rule -> rule.convert(typeMirror))
-                .filter(Objects::nonNull)
-                .findFirst();
+        return rules.stream().filter(rule -> rule.canConvert(typeMirror)).map(rule -> rule.convert(typeMirror)).filter(Objects::nonNull).findFirst();
     }
     
     @Override
