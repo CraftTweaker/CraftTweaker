@@ -27,7 +27,6 @@ public abstract class MemberConverter<T> {
         return result;
     }
     
-    @SuppressWarnings({"rawtypes", "unchecked"})
     private void convertMemberFor(Element enclosedElement, T result, DocumentationPageInfo pageInfo) {
         if(!isCandidate(enclosedElement)) {
             return;
@@ -35,7 +34,7 @@ public abstract class MemberConverter<T> {
         
         final ElementKind kind = enclosedElement.getKind();
         final List<AbstractEnclosedElementConverter<T>> converters = getConvertersFor(kind);
-        for(AbstractEnclosedElementConverter converter : converters) {
+        for(AbstractEnclosedElementConverter<T> converter : converters) {
             if(converter.canConvert(enclosedElement)) {
                 converter.convertAndAddTo(enclosedElement, result, pageInfo);
             }

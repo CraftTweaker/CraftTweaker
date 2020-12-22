@@ -11,14 +11,16 @@ import java.io.PrintWriter;
 public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
     private final String name;
-    private final MemberHeader header;
-    @Nullable
+    protected final MemberHeader header;
     private final DocumentationComment methodComment;
+    @Nullable
+    private final String returnTypeInfo;
     
-    public StaticMethodMember(String name, MemberHeader header, @Nullable DocumentationComment methodComment) {
+    public StaticMethodMember(String name, MemberHeader header, DocumentationComment methodComment, @Nullable String returnTypeInfo) {
         this.name = name;
         this.header = header;
         this.methodComment = methodComment;
+        this.returnTypeInfo = returnTypeInfo;
     }
     
     @Override
@@ -38,14 +40,18 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     }
     
     private void writeReturnType(PrintWriter writer) {
-        writer.printf("Returns %s%n%n", header.returnType.getClickableMarkdown());
+        writer.printf("Return Type: %s%n%n", header.returnType.getClickableMarkdown());
     }
     
     private void writeCodeBlockWithExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
         writer.println("```zenscript");
+        writeExampleBlockContent(writer, ownerType);
+        writer.println("```");
+    }
+    
+    protected void writeExampleBlockContent(PrintWriter writer, AbstractTypeInfo ownerType) {
         writeSignatureExample(writer, ownerType);
         writeExamples(writer, ownerType);
-        writer.println("```");
     }
     
     private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType) {
@@ -59,9 +65,28 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     }
     
     private void writeComment(PrintWriter writer) {
-        if(methodComment != null) {
-            writer.println(methodComment);
+        writeDescription(writer);
+        writeReturnTypeInfo(writer);
+    }
+    
+    private void writeReturnTypeInfo(PrintWriter writer) {
+        if(returnTypeInfoPresent()) {
+            writer.printf("Returns: %s%n", returnTypeInfo);
+        }
+    }
+    
+    private boolean returnTypeInfoPresent() {
+        return returnTypeInfo != null;
+    }
+    
+    private void writeDescription(PrintWriter writer) {
+        if(methodComment.hasDescription()) {
+            writer.println(methodComment.getDescription());
             writer.println();
         }
+    }
+    
+    public String getName() {
+        return name;
     }
 }

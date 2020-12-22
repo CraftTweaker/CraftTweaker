@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.static_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.PropertyMember;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 
 import java.io.PrintWriter;
 import java.util.Map;
@@ -44,5 +45,10 @@ public class DocumentedStaticMembers {
     
     public void addProperty(PropertyMember propertyMember) {
         properties.put(propertyMember.getName(), propertyMember);
+    }
+    
+    public void addMethod(StaticMethodMember staticMethodMember, AbstractTypeInfo ownerType) {
+        final StaticMethodGroup group = methodGroups.computeIfAbsent(staticMethodMember.getName(), name -> new StaticMethodGroup(name, ownerType));
+        group.addMethod(staticMethodMember);
     }
 }

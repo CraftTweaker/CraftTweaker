@@ -27,6 +27,10 @@ public class DocumentationComment {
         return getOptionalDescription().orElse("No Description Provided");
     }
     
+    public boolean hasDescription() {
+        return getOptionalDescription().isPresent();
+    }
+    
     public Optional<String> getOptionalDescription() {
         return Optional.ofNullable(description);
     }

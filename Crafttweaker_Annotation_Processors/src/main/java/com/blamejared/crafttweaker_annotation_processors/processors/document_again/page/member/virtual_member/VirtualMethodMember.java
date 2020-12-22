@@ -45,7 +45,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     }
     
     private void writeReturnType(PrintWriter writer) {
-        writer.printf("Returns %s%n%n", header.returnType.getClickableMarkdown());
+        writer.printf("Return Type: %s%n%n", header.returnType.getClickableMarkdown());
     }
     
     private void writeCodeBlockWithExamples(PrintWriter writer, AbstractTypeInfo ownerType) {

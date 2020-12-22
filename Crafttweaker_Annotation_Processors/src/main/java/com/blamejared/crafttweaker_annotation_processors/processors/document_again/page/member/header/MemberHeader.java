@@ -79,14 +79,14 @@ public class MemberHeader {
     private String getExample(int exampleIndex) {
         final String exampleTypeArgument = getExampleTypeArgument(exampleIndex);
         final String exampleArgument = getExampleArgument(exampleIndex);
-        return exampleTypeArgument + exampleArgument;
+        return String.format("%s(%s)", exampleTypeArgument, exampleArgument);
     }
     
     @Nonnull
-    private String getExampleArgument(int exampleIndex) {
+    public String getExampleArgument(int exampleIndex) {
         return parameters.stream()
                 .map(parameters -> parameters.getExample(exampleIndex))
-                .collect(Collectors.joining(", ", "(", ")"));
+                .collect(Collectors.joining(", "));
     }
     
     @Nonnull
@@ -100,7 +100,7 @@ public class MemberHeader {
                 .collect(Collectors.joining(", ", "<", ">"));
     }
     
-    private int getNumberOfUsableExamples() {
+    public int getNumberOfUsableExamples() {
         final IntStream parameterExampleCount = parameters.stream()
                 .mapToInt(DocumentedParameter::numberOfExamples);
         final IntStream genericParameterExampleCount = genericParameters.stream()

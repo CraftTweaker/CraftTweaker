@@ -51,6 +51,6 @@ public class ImportedTypeLinkConversionRule implements LinkConversionRule {
     }
     
     private boolean doesImportMatchLink(String importedType, String link) {
-        return importedType.endsWith(link);
+        return importedType.endsWith("." + link);
     }
 }

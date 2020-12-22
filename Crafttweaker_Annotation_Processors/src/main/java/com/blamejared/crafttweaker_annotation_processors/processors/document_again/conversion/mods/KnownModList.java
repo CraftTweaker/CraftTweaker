@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.AnnotationMirrorUtil;
+
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.element.AnnotationMirrorUtil;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -14,11 +15,14 @@ import java.util.Map;
 
 public class KnownModList {
     
-    private final ProcessingEnvironment environment;
     private final Map<String, String> modIdByPackage = new HashMap<>();
     
-    public KnownModList(ProcessingEnvironment environment) {
+    private final ProcessingEnvironment environment;
+    private final AnnotationMirrorUtil annotationMirrorUtil;
+    
+    public KnownModList(ProcessingEnvironment environment, AnnotationMirrorUtil annotationMirrorUtil) {
         this.environment = environment;
+        this.annotationMirrorUtil = annotationMirrorUtil;
     }
     
     public String getModIdForPackage(Element element) {
@@ -38,8 +42,8 @@ public class KnownModList {
         final TypeElement typeElement = elementUtils.getTypeElement("net.minecraftforge.fml.common.Mod");
         
         for(Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
-            final AnnotationMirror modAnnotation = AnnotationMirrorUtil.getMirror(element, typeElement);
-            final String modId = AnnotationMirrorUtil.getAnnotationValue(modAnnotation, "value");
+            final AnnotationMirror modAnnotation = annotationMirrorUtil.getMirror(element, typeElement);
+            final String modId = annotationMirrorUtil.getAnnotationValue(modAnnotation, "value");
             
             final PackageElement modPackage = elementUtils.getPackageOf(element);
             modIdByPackage.put(modPackage.getQualifiedName().toString(), modId);
