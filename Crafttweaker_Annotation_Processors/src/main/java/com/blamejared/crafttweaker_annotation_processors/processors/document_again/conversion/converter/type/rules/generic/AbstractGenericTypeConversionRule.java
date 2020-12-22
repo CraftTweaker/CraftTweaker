@@ -20,11 +20,6 @@ public abstract class AbstractGenericTypeConversionRule implements TypeConversio
         this.typeUtils = typeUtils;
     }
     
-    @Override
-    public boolean canConvert(TypeMirror mirror) {
-        return isGenericType(mirror);
-    }
-    
     protected boolean isGenericType(TypeMirror mirror) {
         return isDeclaredType(mirror) && isGenericMirror((DeclaredType) mirror);
         

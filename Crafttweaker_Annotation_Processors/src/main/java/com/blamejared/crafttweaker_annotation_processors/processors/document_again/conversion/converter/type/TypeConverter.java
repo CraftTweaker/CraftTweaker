@@ -12,7 +12,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.TypePageTypeInfo;
 
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,12 +22,10 @@ public class TypeConverter implements IHasPostCreationCall {
     private final DocumentRegistry registry;
     private final DependencyContainer dependencyContainer;
     private final List<TypeConversionRule> rules = new ArrayList<>();
-    private final Elements elements;
     
-    public TypeConverter(DocumentRegistry registry, DependencyContainer dependencyContainer, Elements elements) {
+    public TypeConverter(DocumentRegistry registry, DependencyContainer dependencyContainer) {
         this.registry = registry;
         this.dependencyContainer = dependencyContainer;
-        this.elements = elements;
     }
     
     

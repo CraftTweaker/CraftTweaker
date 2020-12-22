@@ -15,6 +15,11 @@ public class GenericTypeConversionRule extends AbstractGenericTypeConversionRule
         super(typeConverter, typeUtils);
     }
     
+    @Override
+    public boolean canConvert(TypeMirror mirror) {
+        return isGenericType(mirror);
+    }
+    
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
