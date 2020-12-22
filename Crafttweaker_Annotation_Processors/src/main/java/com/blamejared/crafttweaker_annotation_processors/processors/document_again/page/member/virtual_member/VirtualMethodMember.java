@@ -45,7 +45,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     private void writeCodeBlockWithExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
         writer.println("```zenscript");
         writeSignatureExample(writer, ownerType);
-        header.writeVirtualExamples(writer, getComment().getExamples());
+        header.writeVirtualExamples(writer, getComment().getExamples(), name);
         writer.println("```");
     }
     

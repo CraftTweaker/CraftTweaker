@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 /**
  * This is IIngredient!!!
  *
- * @docParam this <tag:ingotIron>
+ * @docParam this <tag:items:forge:ingots>
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IIngredient")

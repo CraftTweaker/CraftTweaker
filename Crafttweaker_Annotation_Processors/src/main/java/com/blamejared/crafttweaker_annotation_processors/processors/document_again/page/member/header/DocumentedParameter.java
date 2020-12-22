@@ -23,7 +23,7 @@ public class DocumentedParameter {
     }
     
     public int numberOfExamples() {
-        return comment.numberOfExamples();
+        return comment.numberOfExamplesFor(name);
     }
     
     public String getDescription() {
@@ -40,5 +40,9 @@ public class DocumentedParameter {
     
     public void writeParameterInfoExcludeOptionality(PrintWriter writer) {
         writer.printf("| %s | %s | %s |", name, type.getClickableMarkdown(), getDescription());
+    }
+    
+    public String getExample(int index) {
+        return comment.getExamples().getExampleFor(name).getTextValue(index);
     }
 }

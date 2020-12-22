@@ -33,6 +33,8 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
         
         writer.printf(operatorFormat, parameters);
         writer.println();
+        
+        //TODO: Examples
     }
     
     @Nonnull
@@ -53,6 +55,6 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     }
     
     private String getCallee() {
-        return "TODO_THIS";
+        return getComment().getExamples().getExampleFor("this").getAnyTextValue();
     }
 }

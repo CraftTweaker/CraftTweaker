@@ -85,10 +85,10 @@ public class ParameterReader {
     }
     
     private String getParameterNameFromMatchResult(MatchResult toMatchResult) {
-        return toMatchResult.group(1);
+        return toMatchResult.group(1).trim();
     }
     
     private String getParameterTextFromMatchResult(MatchResult toMatchResult) {
-        return toMatchResult.group(2);
+        return toMatchResult.group(2).trim();
     }
 }

@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DocumentedGenericParameter {
@@ -33,10 +32,14 @@ public class DocumentedGenericParameter {
     }
     
     public int numberOfExamples() {
-        return comment.numberOfExamples();
+        return comment.numberOfExamplesFor(name);
     }
     
     public String getDescription() {
         return comment.getDescription();
+    }
+    
+    public String getExample(int exampleIndex) {
+        return comment.getExamples().getExampleFor(name).getTextValue(exampleIndex);
     }
 }

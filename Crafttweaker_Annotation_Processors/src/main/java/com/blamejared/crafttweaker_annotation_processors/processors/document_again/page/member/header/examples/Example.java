@@ -44,6 +44,10 @@ public class Example {
     }
     
     public String getAnyTextValue() {
-        return textValues.get(0);
+        return getTextValue(0);
+    }
+    
+    public String getTextValue(int index) {
+        return textValues.get(index);
     }
 }
