@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class LinkTagReplacer {
     
-    private static final Pattern linkPattern = Pattern.compile("\\{@link ([\\w.]+)}");
+    private static final Pattern linkPattern = Pattern.compile("\\{@link ([^}]+)}");
     
     private final LinkConverter linkConverter;
     

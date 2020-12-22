@@ -29,5 +29,7 @@ public class DocumentedTypeVirtualMembers extends DocumentedVirtualMembers {
         for(ConstructorMember constructor : constructors) {
             constructor.write(writer);
         }
+        
+        writer.println();
     }
 }

@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
+import java.util.Optional;
 
 public class VirtualMethodMember extends AbstractVirtualMember implements Comparable<VirtualMethodMember> {
     
@@ -35,7 +36,12 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     }
     
     private void writeComment(PrintWriter writer) {
-        getComment().getOptionalDescription().ifPresent(writer::println);
+        final Optional<String> optionalDescription = getComment().getOptionalDescription();
+    
+        if(optionalDescription.isPresent()) {
+            writer.println(optionalDescription.get());
+            writer.println();
+        }
     }
     
     private void writeReturnType(PrintWriter writer) {

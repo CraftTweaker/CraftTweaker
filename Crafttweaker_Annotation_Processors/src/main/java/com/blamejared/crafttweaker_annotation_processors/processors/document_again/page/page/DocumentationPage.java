@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedVirtualMembers;
 
 import java.io.PrintWriter;
+import java.util.Optional;
 
 public abstract class DocumentationPage {
     
@@ -29,7 +30,12 @@ public abstract class DocumentationPage {
     protected abstract void writeTitle(PrintWriter writer);
     
     protected void writeDescription(PrintWriter writer) {
-        pageInfo.getClassComment().getOptionalDescription().ifPresent(writer::println);
+        final Optional<String> description = pageInfo.getClassComment().getOptionalDescription();
+        
+        if(description.isPresent()) {
+            writer.println(description.get());
+            writer.println();
+        }
     }
     
     protected abstract void writeOwnerModId(PrintWriter writer);
