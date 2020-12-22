@@ -1,35 +1,33 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.member;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.AbstractEnclosedElementConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.HeaderConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypePageInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.MemberHeader;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedTypeVirtualMembers;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.VirtualMethodMember;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
-import org.openzen.zencode.java.ZenCodeType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.*;
+import org.openzen.zencode.java.*;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import java.util.List;
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
+import javax.lang.model.util.*;
+import java.util.*;
 
 public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConverter<DocumentedTypeVirtualMembers> {
     
     private final TypeConverter typeConverter;
     private final HeaderConverter headerConverter;
     private final CommentConverter commentConverter;
+    private final Types typeUtils;
     
-    public NamedTypeVirtualMethodConverter(TypeConverter typeConverter, HeaderConverter headerConverter, CommentConverter commentConverter) {
+    public NamedTypeVirtualMethodConverter(TypeConverter typeConverter, HeaderConverter headerConverter, CommentConverter commentConverter, Types typeUtils) {
         this.typeConverter = typeConverter;
         this.headerConverter = headerConverter;
         this.commentConverter = commentConverter;
+        this.typeUtils = typeUtils;
     }
     
     @Override
@@ -58,11 +56,39 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     }
     
     private MemberHeader convertHeader(ExecutableElement enclosedElement) {
-        final List<? extends VariableElement> parameters = enclosedElement.getParameters();
+        final List<? extends VariableElement> parameters = getParameters(enclosedElement);
         final List<? extends TypeParameterElement> typeParameters = enclosedElement.getTypeParameters();
         final TypeMirror returnType = enclosedElement.getReturnType();
         
         return headerConverter.convertHeaderFor(parameters, typeParameters, returnType);
+    }
+    
+    private List<? extends VariableElement> getParameters(ExecutableElement enclosedElement) {
+        final List<? extends VariableElement> parameters = new ArrayList<>(enclosedElement.getParameters());
+        final int size = enclosedElement.getTypeParameters().size();
+        removeClassParametersIfPresent(parameters, size);
+        
+        return parameters;
+    }
+    
+    private void removeClassParametersIfPresent(List<? extends VariableElement> parameters, int maximumNumberOfParameters) {
+        for(int i = 0; i < maximumNumberOfParameters; i++) {
+            final VariableElement variableElement = parameters.get(0);
+            final Element element = typeUtils.asElement(variableElement.asType());
+            if(isNoClassParameter(element)) {
+                return;
+            } else {
+                parameters.remove(0);
+            }
+        }
+    }
+    
+    private boolean isNoClassParameter(Element element) {
+        return !(element instanceof TypeElement) || !isClassType((TypeElement) element);
+    }
+    
+    private boolean isClassType(TypeElement element) {
+        return element.getQualifiedName().toString().equals(Class.class.getCanonicalName());
     }
     
     private String convertName(ExecutableElement enclosedElement) {

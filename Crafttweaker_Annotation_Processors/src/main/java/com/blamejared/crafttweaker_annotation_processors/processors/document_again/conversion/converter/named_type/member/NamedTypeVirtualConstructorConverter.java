@@ -1,21 +1,17 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.member;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.AbstractEnclosedElementConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.HeaderConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.DocumentationComment;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.MemberHeader;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.ConstructorMember;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.DocumentedTypeVirtualMembers;
-import org.openzen.zencode.java.ZenCodeType;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.comment.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.header.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.member.virtual_member.*;
+import org.openzen.zencode.java.*;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import java.util.List;
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
+import java.util.*;
 
 public class NamedTypeVirtualConstructorConverter extends AbstractEnclosedElementConverter<DocumentedTypeVirtualMembers> {
     
@@ -62,8 +58,8 @@ public class NamedTypeVirtualConstructorConverter extends AbstractEnclosedElemen
         return constructor.getTypeParameters();
     }
     
-    private TypeMirror convertReturnType(ExecutableElement constructor) {
-        return constructor.getReturnType();
+    private TypeMirror convertReturnType(ExecutableElement element) {
+        return element.getEnclosingElement().asType();
     }
     
     private DocumentationComment convertComment(ExecutableElement enclosedElement, DocumentationPageInfo pageInfo) {
