@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nonnull;
 
 @ZenRegister
-@Document("vanilla/api/event/player/MCAnvilRepairEvent")
+@Document("vanilla/api/event/entity/player/MCAnvilRepairEvent")
 @NativeTypeRegistration(value = AnvilRepairEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.MCAnvilRepairEvent")
 public class ExpandAnvilRepairEvent {
     
