@@ -26,7 +26,7 @@ public class DocumentedStaticMembers {
         writer.printf("## Methods%n%n");
         
         for(StaticMethodGroup value : methodGroups.values()) {
-            value.writeVirtualMethods(writer);
+            value.writeStaticMethods(writer);
         }
     }
     

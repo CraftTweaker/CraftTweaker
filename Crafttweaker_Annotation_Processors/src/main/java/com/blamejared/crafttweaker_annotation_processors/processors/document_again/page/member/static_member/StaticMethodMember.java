@@ -37,6 +37,11 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         writeComment(writer);
         writeReturnType(writer);
         writeCodeBlockWithExamples(writer, ownerType);
+        writeParameterDescriptionTable(writer);
+    }
+    
+    private void writeParameterDescriptionTable(PrintWriter writer) {
+        header.writeParameterDescriptionTable(writer);
     }
     
     private void writeReturnType(PrintWriter writer) {
@@ -61,7 +66,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     }
     
     private void writeExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
-        header.writeStaticExamples(writer, ownerType);
+        header.writeStaticExamples(writer, ownerType, name);
     }
     
     private void writeComment(PrintWriter writer) {

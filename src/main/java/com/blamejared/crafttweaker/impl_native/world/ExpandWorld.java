@@ -4,13 +4,13 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
@@ -77,49 +77,49 @@ public class ExpandWorld {
     }
     
     @ZenCodeType.Method
-    public static boolean isRainingAt(World internal, MCBlockPos pos) {
-        return internal.isRainingAt(pos.getInternal());
+    public static boolean isRainingAt(World internal, BlockPos pos) {
+        return internal.isRainingAt(pos);
     }
     
     @ZenCodeType.Method
-    public static int getStrongPower(World internal, MCBlockPos pos) {
-        return internal.getStrongPower(pos.getInternal());
+    public static int getStrongPower(World internal, BlockPos pos) {
+        return internal.getStrongPower(pos);
     }
     
     @ZenCodeType.Method
-    public static int getRedstonePower(World internal, MCBlockPos pos, MCDirection direction) {
-        return internal.getRedstonePower(pos.getInternal(), direction.getInternal());
+    public static int getRedstonePower(World internal, BlockPos pos, MCDirection direction) {
+        return internal.getRedstonePower(pos, direction.getInternal());
     }
     
     @ZenCodeType.Method
-    public static int getRedstonePowerFromNeighbors(World internal, MCBlockPos pos) {
-        return internal.getRedstonePowerFromNeighbors(pos.getInternal());
+    public static int getRedstonePowerFromNeighbors(World internal, BlockPos pos) {
+        return internal.getRedstonePowerFromNeighbors(pos);
     }
     
     @ZenCodeType.Method
-    public static IData getTileData(World internal, MCBlockPos pos) {
+    public static IData getTileData(World internal, BlockPos pos) {
         CompoundNBT nbt = new CompoundNBT();
-        TileEntity te = internal.getTileEntity(pos.getInternal());
+        TileEntity te = internal.getTileEntity(pos);
         return te == null ? new MapData() : NBTConverter.convert(te.write(nbt));
     }
     
     @ZenCodeType.Method
-    public static boolean setBlockState(World internal, MCBlockPos pos, BlockState state) {
-        return internal.setBlockState(pos.getInternal(), state);
+    public static boolean setBlockState(World internal, BlockPos pos, BlockState state) {
+        return internal.setBlockState(pos, state);
     }
     
     @ZenCodeType.Method
-    public static BlockState getBlockState(World internal, MCBlockPos pos) {
-        return internal.getBlockState(pos.getInternal());
+    public static BlockState getBlockState(World internal, BlockPos pos) {
+        return internal.getBlockState(pos);
     }
     
     @ZenCodeType.Method
-    public static boolean isBlockPowered(World internal, MCBlockPos pos) {
-        return internal.isBlockPowered(pos.getInternal());
+    public static boolean isBlockPowered(World internal, BlockPos pos) {
+        return internal.isBlockPowered(pos);
     }
     
     @ZenCodeType.Method
-    public static Biome getBiome(World internal, MCBlockPos pos) {
-        return internal.getBiome(pos.getInternal());
+    public static Biome getBiome(World internal, BlockPos pos) {
+        return internal.getBiome(pos);
     }
 }

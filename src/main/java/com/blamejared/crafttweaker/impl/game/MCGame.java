@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
-import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
+import com.blamejared.crafttweaker.impl_native.util.ExpandDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.EntityClassification;
@@ -39,9 +39,8 @@ import java.util.stream.Collectors;
 public class MCGame {
     
     @ZenCodeType.Getter("directionAxises")
-    public Collection<MCDirectionAxis> getMCDirectionAxis() {
+    public Collection<Direction.Axis> getMCDirectionAxis() {
         return Arrays.stream(Direction.Axis.values())
-                .map(MCDirectionAxis::new)
                 .collect(Collectors.toList());
     }
     

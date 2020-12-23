@@ -45,9 +45,9 @@ public class MemberHeader {
         return stringJoiner.toString();
     }
     
-    public void writeStaticExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
+    public void writeStaticExamples(PrintWriter writer, AbstractTypeInfo ownerType, String name) {
         final String callee = ownerType.getDisplayName();
-        writeCallTo(writer, callee);
+        writeCallTo(writer, String.format("%s.%s", callee, name));
     }
     
     public void writeVirtualExamples(PrintWriter writer, ExampleData aThis, String name) {

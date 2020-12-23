@@ -66,7 +66,7 @@ public interface IIngredient extends CommandStringDisplayable {
     /**
      * When this ingredient stack is crafted, what will remain in the grid?
      * Does not check if the stack matches though!
-     * Used e.g. in CrT's {@link net.minecraft.item.crafting.ICraftingRecipe#getRemainingItems}
+     * Used e.g. in Crafting Table recipes.
      *
      * @param stack The stack to provide for this ingredient.
      *

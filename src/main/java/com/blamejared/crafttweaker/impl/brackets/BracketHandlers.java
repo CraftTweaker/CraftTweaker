@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
-import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
@@ -37,6 +36,11 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * This class contains the "simple" Bracket handlers from CraftTweaker.
+ * However, some Bracket handlers, like for recipeTypes, tags, tagManagers, won't be shown here as
+ * they use a different internal structure.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
 @Document("vanilla/api/BracketHandlers")
@@ -160,7 +164,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("directionaxis")
-    public static MCDirectionAxis getDirectionAxis(String tokens) {
+    public static Direction.Axis getDirectionAxis(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
         
@@ -171,7 +175,7 @@ public class BracketHandlers {
         if(axis == null) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
-        return MCDirectionAxis.getAxis(axis);
+        return axis;
     }
     
     /**

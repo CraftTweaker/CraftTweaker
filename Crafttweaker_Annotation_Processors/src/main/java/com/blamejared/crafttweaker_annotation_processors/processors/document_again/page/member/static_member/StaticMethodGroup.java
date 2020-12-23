@@ -21,10 +21,18 @@ public class StaticMethodGroup {
         this.staticMethods.add(member);
     }
     
-    public void writeVirtualMethods(PrintWriter writer) {
-        writer.printf("### %s%n%n", name);
+    public void writeStaticMethods(PrintWriter writer) {
+        writeTitle(writer);
+        writeMethods(writer);
+    }
+    
+    private void writeMethods(PrintWriter writer) {
         for(StaticMethodMember method : staticMethods) {
             method.write(writer, ownerType);
         }
+    }
+    
+    private void writeTitle(PrintWriter writer) {
+        writer.printf("### %s%n%n", name);
     }
 }

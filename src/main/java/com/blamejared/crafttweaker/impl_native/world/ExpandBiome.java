@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.util.MCBlockPos;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.openzen.zencode.java.ZenCodeType;
@@ -115,8 +115,8 @@ public class ExpandBiome {
     //    }
     
     @ZenCodeType.Method
-    public static float getTemperature(Biome internal, MCBlockPos pos) {
-        return internal.getTemperature(pos.getInternal());
+    public static float getTemperature(Biome internal, BlockPos pos) {
+        return internal.getTemperature(pos);
     }
     
     //    @ZenCodeType.Method
@@ -125,17 +125,17 @@ public class ExpandBiome {
     //    }
     
     @ZenCodeType.Method
-    public static boolean doesWaterFreeze(Biome internal, World world, MCBlockPos pos) {
-        return internal.doesWaterFreeze(world, pos.getInternal());
+    public static boolean doesWaterFreeze(Biome internal, World world, BlockPos pos) {
+        return internal.doesWaterFreeze(world, pos);
     }
     
     @ZenCodeType.Method
-    public static boolean doesWaterFreeze(Biome internal, World world, MCBlockPos pos, boolean mustBeAtEdge) {
-        return internal.doesWaterFreeze(world, pos.getInternal(), mustBeAtEdge);
+    public static boolean doesWaterFreeze(Biome internal, World world, BlockPos pos, boolean mustBeAtEdge) {
+        return internal.doesWaterFreeze(world, pos, mustBeAtEdge);
     }
     
     @ZenCodeType.Method
-    public static boolean doesSnowFreeze(Biome internal, World world, MCBlockPos pos) {
-        return internal.doesSnowGenerate(world, pos.getInternal());
+    public static boolean doesSnowFreeze(Biome internal, World world, BlockPos pos) {
+        return internal.doesSnowGenerate(world, pos);
     }
 }

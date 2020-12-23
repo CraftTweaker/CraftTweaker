@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("vanilla/api/util/MCResourceLocation")
-@NativeTypeRegistration(value = ResourceLocation.class, zenCodeName = ExpandResourceLocation.ZC_CLASS_NAME, constructors = @NativeConstructor({@NativeConstructor.ConstructorParameter(name = "namespace", type = String.class, description = "Usually a ModId"), @NativeConstructor.ConstructorParameter(name = "path", type = String.class, description = "May only contain alphanumeric values, as well as / and _")}))
+@NativeTypeRegistration(value = ResourceLocation.class, zenCodeName = ExpandResourceLocation.ZC_CLASS_NAME, constructors = @NativeConstructor({@NativeConstructor.ConstructorParameter(name = "namespace", type = String.class, description = "Usually a ModId"), @NativeConstructor.ConstructorParameter(name = "path", type = String.class, description = "May only contain lower-cased alphanumeric values, as well as / and _")}))
 public class ExpandResourceLocation {
     
     public static final String ZC_CLASS_NAME = "crafttweaker.api.util.MCResourceLocation";

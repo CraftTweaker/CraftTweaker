@@ -23,6 +23,11 @@ public class ConstructorMember extends AbstractVirtualMember implements Comparab
     public void write(PrintWriter writer) {
         writeDescription(writer);
         writeCodeBlock(writer);
+        writeParameterDescriptionTable(writer);
+    }
+    
+    private void writeParameterDescriptionTable(PrintWriter writer) {
+        header.writeParameterDescriptionTable(writer);
     }
     
     private void writeDescription(PrintWriter writer) {

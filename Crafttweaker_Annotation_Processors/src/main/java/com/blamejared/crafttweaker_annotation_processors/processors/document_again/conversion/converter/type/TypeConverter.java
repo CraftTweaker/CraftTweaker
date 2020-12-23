@@ -64,8 +64,8 @@ public class TypeConverter implements IHasPostCreationCall {
         addConversionRule(TypeParameterConversionRule.class);
         addConversionRule(VoidConversionRule.class);
         addConversionRule(MapConversionRule.class);
-        addConversionRule(NativeTypeConversionRule.class);
         addConversionRule(GenericTypeConversionRule.class);
+        addConversionRule(NativeTypeConversionRule.class);
         addConversionRule(ArrayConversionRule.class);
         addConversionRule(NamedTypeConversionRule.class);
         addConversionRule(JavaLangConversionRule.class);

@@ -25,6 +25,21 @@ public class JavaLangConversionRule implements TypeConversionRule {
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
         final Element element = typeUtils.asElement(mirror);
+        if(isString(element)) {
+            return getStringTypeInfo();
+        }
+        return getExistingTypeInfo(element);
+    }
+    
+    private AbstractTypeInfo getStringTypeInfo() {
+        return new PrimitiveTypeInfo("string");
+    }
+    
+    private AbstractTypeInfo getExistingTypeInfo(Element element) {
         return new ExistingTypeInfo(element.getSimpleName().toString());
+    }
+    
+    private boolean isString(Element mirror) {
+        return mirror.getSimpleName().contentEquals(String.class.getSimpleName());
     }
 }

@@ -1,15 +1,10 @@
-package com.blamejared.crafttweaker.impl.util;
+package com.blamejared.crafttweaker.impl_native.util;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Util;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents a direction axis (X, Y, Z)
@@ -17,30 +12,17 @@ import java.util.Map;
  * @docParam this <directionaxis:x>
  */
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.util.DirectionAxis")
+@NativeTypeRegistration(value = Direction.Axis.class, zenCodeName = "crafttweaker.api.util.DirectionAxis")
 @Document("vanilla/api/util/DirectionAxis")
-@ZenWrapper(wrappedClass = "net.minecraft.util.Direction.Axis", displayStringFormat = "%s.getCommandString()")
-public class MCDirectionAxis implements CommandStringDisplayable {
-    
-    private static final Map<Direction.Axis, MCDirectionAxis> AXIS_MAP = Util.make(new HashMap<>(), map -> {
-        map.put(Direction.Axis.X, new MCDirectionAxis(Direction.Axis.X));
-        map.put(Direction.Axis.Y, new MCDirectionAxis(Direction.Axis.Y));
-        map.put(Direction.Axis.Z, new MCDirectionAxis(Direction.Axis.Z));
-    });
-    
-    private final Direction.Axis internal;
-    
-    public MCDirectionAxis(Direction.Axis internal) {
-        this.internal = internal;
-    }
+public class ExpandDirectionAxis {
     
     @ZenCodeType.Getter("vertical")
-    public boolean isVertical() {
+    public static boolean isVertical(Direction.Axis internal) {
         return internal.isVertical();
     }
     
     @ZenCodeType.Getter("horizontal")
-    public boolean isHorizontal() {
+    public static boolean isHorizontal(Direction.Axis internal) {
         return internal.isHorizontal();
     }
     
@@ -50,15 +32,13 @@ public class MCDirectionAxis implements CommandStringDisplayable {
      * @param x x value of the coordinate
      * @param y y value of the coordinate
      * @param z z value of the coordinate
-     *
      * @return value of the coordinate
-     *
      * @docParam x 1
      * @docParam y 2
      * @docParam z 3
      */
     @ZenCodeType.Method
-    public int getCoordinate(int x, int y, int z) {
+    public static int getCoordinate(Direction.Axis internal, int x, int y, int z) {
         return internal.getCoordinate(x, y, z);
     }
     
@@ -68,15 +48,13 @@ public class MCDirectionAxis implements CommandStringDisplayable {
      * @param x x value of the coordinate
      * @param y y value of the coordinate
      * @param z z value of the coordinate
-     *
      * @return value of the coordinate
-     *
      * @docParam x 1.2
      * @docParam y 2.5
      * @docParam z 3.87
      */
     @ZenCodeType.Method
-    public double getCoordinate(double x, double y, double z) {
+    public static double getCoordinate(Direction.Axis internal, double x, double y, double z) {
         return internal.getCoordinate(x, y, z);
     }
     
@@ -86,7 +64,7 @@ public class MCDirectionAxis implements CommandStringDisplayable {
      * @return "X", "Y" or "Z"
      */
     @ZenCodeType.Getter("name")
-    public String name() {
+    public static String name(Direction.Axis internal) {
         return internal.name();
     }
     
@@ -96,37 +74,26 @@ public class MCDirectionAxis implements CommandStringDisplayable {
      * @return 0 for X, 1 for Y, 2 for Z
      */
     @ZenCodeType.Getter("ordinal")
-    public int ordinal() {
+    public static int ordinal(Direction.Axis internal) {
         return internal.ordinal();
     }
     
-    public Direction.Axis getInternal() {
-        return internal;
-    }
     
-    public static MCDirectionAxis getAxis(Direction.Axis axis) {
-        return AXIS_MAP.get(axis);
-    }
-
-    @Override
-    public String getCommandString() {
+    @ZenCodeType.Getter("commandString")
+    public static String getCommandString(Direction.Axis internal) {
         return "<directionAxis:" + internal.getName2() + ">";
     }
     
-    @Override
-    public boolean equals(Object o) {
-        if(this == o)
-            return true;
-        if(o == null || getClass() != o.getClass())
-            return false;
-        
-        MCDirectionAxis that = (MCDirectionAxis) o;
-    
-        return internal == that.internal;
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
+    public static boolean equals(Direction.Axis internal, Object o) {
+        return internal.equals(o);
     }
     
-    @Override
-    public int hashCode() {
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("hashCode")
+    public static int hashCode(Direction.Axis internal) {
         return internal.hashCode();
     }
 }
