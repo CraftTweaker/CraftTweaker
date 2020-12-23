@@ -60,7 +60,7 @@ public final class TypePage extends DocumentationPage {
     
     private void writeImport(PrintWriter writer) {
         writer.printf("## Importing the class%n%n");
-        writer.println("It might be required for you to import the package if you encounter any issues (like casting an Array), so better be safe than sorry and add the import.");
+        writer.println("It might be required for you to import the package if you encounter any issues (like casting an Array), so better be safe than sorry and add the import at the very top of the file.");
         writer.println("```zenscript");
         writer.printf("import %s;%n", pageInfo.zenCodeName.getZenCodeName());
         writer.println("```");
