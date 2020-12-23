@@ -3,11 +3,11 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.NativeConversionRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.DocumentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.comment.CommentConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.expansion.member.ExpansionVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.header.GenericParameterConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.member.static_member.StaticMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.ImplementationConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.named_type.SuperTypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.native_registration.member.NativeTypeVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.info.TypeName;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class NativeRegistrationConverter extends DocumentConverter {
     
     private final StaticMemberConverter staticMemberConverter;
-    private final ExpansionVirtualMemberConverter virtualMemberConverter;
+    private final NativeTypeVirtualMemberConverter virtualMemberConverter;
     private final SuperTypeConverter superTypeConverter;
     private final ImplementationConverter implementationConverter;
     private final GenericParameterConverter genericParameterConverter;
@@ -42,7 +42,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
     private final Elements elementUtils;
     private final Types typeUtils;
     
-    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Elements elementUtils, Types typeUtils) {
+    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Elements elementUtils, Types typeUtils) {
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
         this.virtualMemberConverter = virtualMemberConverter;
@@ -129,7 +129,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
         final TypeElement nativeType = getNativeType(typeElement);
-        return superTypeConverter.convertSuperTypeFor(nativeType);
+        return superTypeConverter.convertSuperTypeFor(nativeType).orElse(null);
     }
     
     private List<AbstractTypeInfo> convertImplementedInterfaces(TypeElement typeElement) {

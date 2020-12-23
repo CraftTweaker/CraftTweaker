@@ -1,17 +1,18 @@
 package com.blamejared.crafttweaker.impl.tag.manager;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.*;
-import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.tags.*;
-import net.minecraft.util.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ITagCollection;
+import net.minecraft.util.ResourceLocation;
+import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.*;
-import java.util.*;
-import java.util.stream.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TagManagers are used to handle the different types of Tags within the game.
@@ -39,7 +40,7 @@ public interface TagManager<T> extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default MCTag<T> getTag(String name) {
-        return getTag(new MCResourceLocation(new ResourceLocation(name)));
+        return getTag(new ResourceLocation(name));
     }
     
     /**
@@ -53,8 +54,8 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * @return A Tag object.
      */
     @ZenCodeType.Method
-    default MCTag<T> getTag(MCResourceLocation location) {
-        return new MCTag<>(location.getInternal(), this);
+    default MCTag<T> getTag(ResourceLocation location) {
+        return new MCTag<>(location, this);
     }
     
     /**
@@ -64,8 +65,9 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * @return Whether or not this tag already exists
      */
     @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     default boolean exists(String name) {
-        return exists(new MCResourceLocation(new ResourceLocation(name)));
+        return exists(new ResourceLocation(name));
     }
     
     /**
@@ -74,8 +76,10 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * @param location The resource location to check for
      * @return Whether or not this tag already exists
      */
-    default boolean exists(MCResourceLocation location) {
-        return getTagCollection().getIDTagMap().containsKey(location.getInternal());
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
+    default boolean exists(ResourceLocation location) {
+        return getTagCollection().getIDTagMap().containsKey(location);
     }
     
     /**

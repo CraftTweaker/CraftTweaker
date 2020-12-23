@@ -8,7 +8,7 @@ public class Example {
     private final List<String> textValues;
     private final String name;
     
-    private Example(String name) {
+    public Example(String name) {
         this.name = name;
         this.textValues = new ArrayList<>();
     }

@@ -176,11 +176,6 @@ public class ExpandLivingEntity {
         return internal.getTotalArmorValue();
     }
     
-    @ZenCodeType.Method
-    public static CombatTracker getCombatTracker(LivingEntity internal) {
-        return internal.getCombatTracker();
-    }
-    
     @Nullable
     @ZenCodeType.Method
     public static LivingEntity getAttackingEntity(LivingEntity internal) {

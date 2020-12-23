@@ -1,15 +1,15 @@
 package com.blamejared.crafttweaker.impl.tag;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.*;
-import com.blamejared.crafttweaker.impl.tag.manager.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.tags.*;
-import net.minecraft.util.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A reference to a Tag object.
@@ -46,7 +46,7 @@ public final class MCTag<T> implements CommandStringDisplayable {
     
     @SafeVarargs
     @ZenCodeType.Method
-    public final void remove(T... items){
+    public final void remove(T... items) {
         remove(Arrays.asList(items));
     }
     
@@ -86,12 +86,12 @@ public final class MCTag<T> implements CommandStringDisplayable {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("id")
-    public MCResourceLocation getId() {
-        return new MCResourceLocation(id);
+    public ResourceLocation getId() {
+        return id;
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
-    public boolean equals(MCTag<T> other){
+    public boolean equals(MCTag<T> other) {
         return id.equals(other.id) && manager.equals(other.manager);
     }
     

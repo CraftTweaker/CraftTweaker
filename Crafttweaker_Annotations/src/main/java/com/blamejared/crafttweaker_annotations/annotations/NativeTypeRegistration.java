@@ -19,4 +19,9 @@ public @interface NativeTypeRegistration {
      * The name that this type should be registered as
      */
     String zenCodeName();
+    
+    /**
+     * The constructors that should be registered
+     */
+    NativeConstructor[] constructors() default {};
 }

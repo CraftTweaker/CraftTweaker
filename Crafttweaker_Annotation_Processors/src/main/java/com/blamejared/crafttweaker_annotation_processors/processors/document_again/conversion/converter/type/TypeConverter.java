@@ -47,7 +47,8 @@ public class TypeConverter implements IHasPostCreationCall {
     }
     
     public AbstractTypeInfo convertType(TypeMirror typeMirror) {
-        return tryConvertType(typeMirror).orElseThrow(() -> new IllegalArgumentException("Could not convert " + typeMirror));
+        return tryConvertType(typeMirror)
+                .orElseThrow(() -> new IllegalArgumentException("Could not convert " + typeMirror));
     }
     
     public Optional<AbstractTypeInfo> tryConvertType(TypeMirror typeMirror) {
@@ -68,8 +69,9 @@ public class TypeConverter implements IHasPostCreationCall {
         addConversionRule(ArrayConversionRule.class);
         addConversionRule(NamedTypeConversionRule.class);
         addConversionRule(JavaLangConversionRule.class);
+        addConversionRule(JavaFunctionConversionRule.class);
         addConversionRule(PrimitiveConversionRule.class);
-        addConversionRule(FallbackConversionRule.class);
+        //addConversionRule(FallbackConversionRule.class);
     }
     
     private void addConversionRule(Class<? extends TypeConversionRule> ruleClass) {

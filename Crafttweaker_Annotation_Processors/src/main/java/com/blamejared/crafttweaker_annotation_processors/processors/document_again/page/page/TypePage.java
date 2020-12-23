@@ -36,7 +36,7 @@ public final class TypePage extends DocumentationPage {
             final String genericParameters = this.genericParameters.stream()
                     .map(DocumentedGenericParameter::formatForSignatureExample)
                     .collect(Collectors.joining(", "));
-            writer.printf("# %s<%s>%n%n", getSimpleName(), genericParameters);
+            writer.printf("# %s&LT;%s&GT;%n%n", getSimpleName(), genericParameters);
         }
     }
     

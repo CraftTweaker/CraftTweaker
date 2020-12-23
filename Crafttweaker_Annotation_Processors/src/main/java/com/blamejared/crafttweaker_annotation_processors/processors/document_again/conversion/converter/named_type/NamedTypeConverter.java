@@ -88,7 +88,7 @@ public class NamedTypeConverter extends DocumentConverter {
     }
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
-        return superTypeConverter.convertSuperTypeFor(typeElement);
+        return superTypeConverter.convertSuperTypeFor(typeElement).orElse(null);
     }
     
     private List<AbstractTypeInfo> convertImplementations(TypeElement typeElement) {

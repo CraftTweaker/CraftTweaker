@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.util.Optional;
 
 public class SuperTypeConverter {
     
@@ -16,17 +17,16 @@ public class SuperTypeConverter {
         this.typeConverter = typeConverter;
     }
     
-    @Nullable
-    public AbstractTypeInfo convertSuperTypeFor(TypeElement element) {
+    public Optional<AbstractTypeInfo> convertSuperTypeFor(TypeElement element) {
         if(!hasSuperType(element)) {
-            return null;
+            return Optional.empty();
         }
         
         return convertSuperType(element);
     }
     
-    private AbstractTypeInfo convertSuperType(TypeElement element) {
-        return typeConverter.convertType(element.getSuperclass());
+    private Optional<AbstractTypeInfo> convertSuperType(TypeElement element) {
+        return typeConverter.tryConvertType(element.getSuperclass());
     }
     
     private boolean hasSuperType(TypeElement element) {

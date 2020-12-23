@@ -1,14 +1,13 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.rules.generic;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConversionRule;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.*;
+import org.jetbrains.annotations.*;
 
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.lang.model.type.*;
+import javax.lang.model.util.*;
+import java.util.*;
+import java.util.stream.*;
 
 public abstract class AbstractGenericTypeConversionRule implements TypeConversionRule {
     
@@ -34,9 +33,9 @@ public abstract class AbstractGenericTypeConversionRule implements TypeConversio
     }
     
     
-    protected AbstractTypeInfo convertBaseClass(TypeMirror mirror) {
+    protected Optional<AbstractTypeInfo> convertBaseClass(TypeMirror mirror) {
         final TypeMirror baseTypeMirror = getBaseType(mirror);
-        return typeConverter.convertType(baseTypeMirror);
+        return typeConverter.tryConvertType(baseTypeMirror);
     }
     
     protected TypeMirror getBaseType(TypeMirror mirror) {
@@ -47,9 +46,27 @@ public abstract class AbstractGenericTypeConversionRule implements TypeConversio
         return getBaseType(mirror).toString().equals(cls.getCanonicalName());
     }
     
-    protected List<AbstractTypeInfo> convertTypeArguments(TypeMirror mirror) {
+    protected Optional<List<AbstractTypeInfo>> convertTypeArguments(TypeMirror mirror) {
         final List<? extends TypeMirror> typeArguments = getTypeArguments(mirror);
-        return typeArguments.stream().map(typeConverter::convertType).collect(Collectors.toList());
+        final List<Optional<AbstractTypeInfo>> typeArgumentOptionalList = getTypeArgumentOptionalList(typeArguments);
+        return unwrapOptionalList(typeArgumentOptionalList);
+    }
+    
+    private Optional<List<AbstractTypeInfo>> unwrapOptionalList(List<Optional<AbstractTypeInfo>> typeArgumentOptionalList) {
+        final List<AbstractTypeInfo> result = new ArrayList<>();
+        for(Optional<AbstractTypeInfo> abstractTypeInfo : typeArgumentOptionalList) {
+            if(abstractTypeInfo.isPresent()) {
+                result.add(abstractTypeInfo.get());
+            } else {
+                return Optional.empty();
+            }
+        }
+        return Optional.of(result);
+    }
+    
+    @NotNull
+    private List<Optional<AbstractTypeInfo>> getTypeArgumentOptionalList(List<? extends TypeMirror> typeArguments) {
+        return typeArguments.stream().map(typeConverter::tryConvertType).collect(Collectors.toList());
     }
     
     private List<? extends TypeMirror> getTypeArguments(TypeMirror mirror) {

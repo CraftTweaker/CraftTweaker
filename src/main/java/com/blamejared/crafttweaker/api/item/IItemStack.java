@@ -11,7 +11,6 @@ import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
@@ -22,7 +21,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -35,7 +33,7 @@ import java.util.regex.Pattern;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
 @Document("vanilla/api/items/IItemStack")
-@ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
+@ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
 public interface IItemStack extends IIngredient {
     
     
@@ -51,9 +49,8 @@ public interface IItemStack extends IIngredient {
      * @return registry name of the Item this IItemStack represents
      */
     @ZenCodeType.Getter("registryName")
-    default MCResourceLocation getRegistryName() {
-        return new MCResourceLocation(Objects.requireNonNull(getInternal().getItem()
-                .getRegistryName()));
+    default ResourceLocation getRegistryName() {
+        return getInternal().getItem().getRegistryName();
     }
     
     /**

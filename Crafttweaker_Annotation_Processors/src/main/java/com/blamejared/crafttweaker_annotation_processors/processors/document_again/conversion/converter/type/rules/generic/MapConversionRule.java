@@ -3,12 +3,12 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document_ag
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.AbstractTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document_again.page.type.MapTypeInfo;
+import org.jetbrains.annotations.*;
 
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MapConversionRule extends AbstractGenericTypeConversionRule {
     
@@ -29,7 +29,13 @@ public class MapConversionRule extends AbstractGenericTypeConversionRule {
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
-        final List<AbstractTypeInfo> typeArguments = convertTypeArguments(mirror);
+        final Optional<List<AbstractTypeInfo>> typeArguments = convertTypeArguments(mirror);
+        return typeArguments.map(this::getMapTypeInfo).orElse(null);
+    
+    }
+    
+    @NotNull
+    private MapTypeInfo getMapTypeInfo(List<AbstractTypeInfo> typeArguments) {
         final AbstractTypeInfo keyType = getKeyTypeFrom(typeArguments);
         final AbstractTypeInfo valueType = getValueTypeFrom(typeArguments);
         

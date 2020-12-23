@@ -1,11 +1,13 @@
 package com.blamejared.crafttweaker.impl.recipes.wrappers;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
@@ -25,8 +27,8 @@ public class WrapperRecipe {
     }
     
     @ZenCodeType.Getter("id")
-    public MCResourceLocation getId() {
-        return new MCResourceLocation(getRecipe().getId());
+    public ResourceLocation getId() {
+        return getRecipe().getId();
     }
     
     @ZenCodeType.Getter("group")
@@ -56,7 +58,10 @@ public class WrapperRecipe {
     
     @ZenCodeType.Getter("ingredients")
     public List<IIngredient> getIngredients() {
-        return getRecipe().getIngredients().stream().map(IIngredient::fromIngredient).collect(Collectors.toList());
+        return getRecipe().getIngredients()
+                .stream()
+                .map(IIngredient::fromIngredient)
+                .collect(Collectors.toList());
     }
     
     public IRecipe<?> getRecipe() {

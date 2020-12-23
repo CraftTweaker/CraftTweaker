@@ -11,7 +11,6 @@ import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.util.MCDirectionAxis;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
@@ -358,8 +357,8 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("resource")
-    public static MCResourceLocation getResourceLocation(String tokens) {
-        return new MCResourceLocation(new ResourceLocation(tokens));
+    public static ResourceLocation getResourceLocation(String tokens) {
+        return new ResourceLocation(tokens);
     }
     
     @ZenCodeType.Method

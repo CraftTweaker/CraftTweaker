@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document_aga
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import java.util.List;
+import java.util.*;
 
 public class GenericTypeConversionRule extends AbstractGenericTypeConversionRule {
     
@@ -23,8 +23,12 @@ public class GenericTypeConversionRule extends AbstractGenericTypeConversionRule
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
-        final AbstractTypeInfo baseClass = convertBaseClass(mirror);
-        final List<AbstractTypeInfo> typeArguments = convertTypeArguments(mirror);
-        return new GenericTypeInfo(baseClass, typeArguments);
+        final Optional<AbstractTypeInfo> baseClass = convertBaseClass(mirror);
+        final Optional<List<AbstractTypeInfo>> typeArguments = convertTypeArguments(mirror);
+        if(!baseClass.isPresent() || !typeArguments.isPresent()) {
+            return null;
+        }
+        
+        return new GenericTypeInfo(baseClass.get(), typeArguments.get());
     }
 }
