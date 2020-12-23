@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.SingletonDependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.DocsJsonWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
 import com.sun.source.util.Trees;
 import org.reflections.*;
@@ -81,9 +82,19 @@ public class DocumentProcessor extends AbstractProcessor {
     }
     
     public void handleLastRound() {
-        final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
         convertPages();
-        writePages(documentRegistry);
+        writePages();
+        writeDocsJsonFile();
+    }
+    
+    private void writeDocsJsonFile() {
+        final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
+        final DocsJsonWriter docsJsonWriter = new DocsJsonWriter(outputDirectory, documentRegistry);
+        try {
+            docsJsonWriter.write();
+        }catch(IOException exception) {
+            exception.printStackTrace();
+        }
     }
     
     private void convertPages() {
@@ -91,7 +102,8 @@ public class DocumentProcessor extends AbstractProcessor {
         elementConverter.handleElements(knownElementList);
     }
     
-    private void writePages(DocumentRegistry documentRegistry) {
+    private void writePages() {
+        final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
         final PageWriter pageWriter = new PageWriter(documentRegistry, outputDirectory);
         try {
             pageWriter.write();

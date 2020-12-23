@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.DocumentationPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.ExpansionPage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.GenericTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.TypePageTypeInfo;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -50,7 +51,7 @@ public class ExpansionConverter extends DocumentConverter {
         final DocumentedVirtualMembers virtualMembers = getVirtualMembers(typeElement, expandedType);
         final DocumentedStaticMembers staticMembers = getStaticMembers(typeElement, pageInfo);
         
-        return new ExpansionPage(expandedType, prepareConversion(typeElement), virtualMembers, staticMembers);
+        return new ExpansionPage(expandedType, pageInfo, virtualMembers, staticMembers);
     }
     
     private AbstractTypeInfo getExpandedType(TypeElement typeElement) {
@@ -68,6 +69,9 @@ public class ExpansionConverter extends DocumentConverter {
     private TypePageInfo getPageInfoForType(AbstractTypeInfo expandedType) {
         if(expandedType instanceof TypePageTypeInfo) {
             return getPageInfo((TypePageTypeInfo) expandedType);
+        }
+        if(expandedType instanceof GenericTypeInfo) {
+            return getPageInfoForType(((GenericTypeInfo) expandedType).getBaseClass());
         }
         throw new IllegalArgumentException("Invalid expanded type! " + expandedType);
     }

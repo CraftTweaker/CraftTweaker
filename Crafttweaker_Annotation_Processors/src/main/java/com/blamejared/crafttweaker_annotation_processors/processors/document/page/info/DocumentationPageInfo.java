@@ -28,8 +28,11 @@ public class DocumentationPageInfo {
     }
     
     public String getSimpleName() {
-        final int i = outputPath.lastIndexOf(File.separator);
-        return outputPath.substring(i);
+        final int i = outputPath.lastIndexOf("/");
+        if(i < 1) {
+            return outputPath;
+        }
+        return outputPath.substring(i + 1);
     }
     
     public String getOutputPath() {

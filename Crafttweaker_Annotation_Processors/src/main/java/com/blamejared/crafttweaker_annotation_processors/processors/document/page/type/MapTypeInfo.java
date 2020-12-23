@@ -16,6 +16,11 @@ public class MapTypeInfo extends AbstractTypeInfo {
     }
     
     @Override
+    public String getSimpleMarkdown() {
+        return String.format("%s[%s]", valueType.getSimpleMarkdown(), keyType.getSimpleMarkdown());
+    }
+    
+    @Override
     public String getClickableMarkdown() {
         return String.format("%s[%s]", valueType.getClickableMarkdown(), keyType.getClickableMarkdown());
     }

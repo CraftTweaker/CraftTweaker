@@ -12,7 +12,7 @@ import java.nio.file.Files;
 
 public class PageWriter {
     
-    private static final String extension = ".md";
+    public static final String extension = ".md";
     
     private final DocumentRegistry documentRegistry;
     private final File outputDirectory;

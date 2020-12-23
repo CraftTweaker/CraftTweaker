@@ -18,7 +18,7 @@ public final class ExpansionPage extends DocumentationPage {
     
     @Override
     protected void writeTitle(PrintWriter writer) {
-        writer.printf("# Expansion for %s%n%n", expandedType.getDisplayName());
+        writer.printf("# Expansion for %s%n%n", expandedType.getSimpleMarkdown());
     }
     
     @Override

@@ -17,4 +17,9 @@ public class ArrayTypeInfo extends AbstractTypeInfo {
     public String getClickableMarkdown() {
         return base.getClickableMarkdown() + "[]";
     }
+    
+    @Override
+    public String getSimpleMarkdown() {
+        return base.getSimpleMarkdown() + "[]";
+    }
 }

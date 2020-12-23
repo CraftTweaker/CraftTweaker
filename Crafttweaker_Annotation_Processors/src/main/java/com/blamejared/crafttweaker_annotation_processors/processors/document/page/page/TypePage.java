@@ -73,7 +73,7 @@ public final class TypePage extends DocumentationPage {
             return;
         }
         
-        writer.printf("## Extending %s%n%n", superType.getDisplayName());
+        writer.printf("## Extending %s%n%n", superType.getSimpleMarkdown());
         final String simpleName = getSimpleName();
         final String superTypeMarkDown = superType.getClickableMarkdown();
         
