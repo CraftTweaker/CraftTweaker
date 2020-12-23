@@ -10,8 +10,8 @@ import java.io.PrintWriter;
 
 public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
-    private final String name;
     protected final MemberHeader header;
+    private final String name;
     private final DocumentationComment methodComment;
     @Nullable
     private final String returnTypeInfo;
@@ -30,7 +30,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
             return compareName;
         }
         
-        return this.header.parameters.size() - other.header.parameters.size();
+        return this.header.compareTo(other.header);
     }
     
     public void write(PrintWriter writer, AbstractTypeInfo ownerType) {

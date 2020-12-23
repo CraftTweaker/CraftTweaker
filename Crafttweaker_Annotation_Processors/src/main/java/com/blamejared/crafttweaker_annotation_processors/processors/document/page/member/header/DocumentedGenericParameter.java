@@ -4,11 +4,12 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 import org.jetbrains.annotations.*;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DocumentedGenericParameter {
+public class DocumentedGenericParameter implements Comparable<DocumentedGenericParameter> {
     
     
     private final String name;
@@ -33,11 +34,16 @@ public class DocumentedGenericParameter {
     
     @NotNull
     private String getDisplayNameBounds() {
-        return bounds.stream().map(AbstractTypeInfo::getDisplayName).collect(Collectors.joining(", "));
+        return bounds.stream()
+                .map(AbstractTypeInfo::getDisplayName)
+                .collect(Collectors.joining(", "));
     }
+    
     @NotNull
     private String getClickableMarkdownBounds() {
-        return bounds.stream().map(AbstractTypeInfo::getClickableMarkdown).collect(Collectors.joining(", "));
+        return bounds.stream()
+                .map(AbstractTypeInfo::getClickableMarkdown)
+                .collect(Collectors.joining(", "));
     }
     
     private String getExampleName() {
@@ -62,5 +68,27 @@ public class DocumentedGenericParameter {
     
     public void writeParameterInfoExcludeOptionality(PrintWriter writer) {
         writer.printf("| %s | %s | %s |%n", name, getClickableMarkdownBounds(), getDescription());
+    }
+    
+    @Override
+    public int compareTo(@Nonnull DocumentedGenericParameter other) {
+        int temp = this.name.compareTo(other.name);
+        if(temp != 0) {
+            return temp;
+        }
+        
+        temp = this.bounds.size() - other.bounds.size();
+        if(temp != 0) {
+            return temp;
+        }
+        
+        for(int i = 0; i < this.bounds.size(); i++) {
+            temp = this.bounds.get(i).compareTo(other.bounds.get(i));
+            if(temp != 0) {
+                return temp;
+            }
+        }
+        
+        return 0;
     }
 }

@@ -25,7 +25,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
             return compareName;
         }
         
-        return this.header.parameters.size() - other.header.parameters.size();
+        return this.header.compareTo(other.header);
     }
     
     public void write(PrintWriter writer, AbstractTypeInfo ownerType) {
@@ -37,7 +37,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     
     private void writeComment(PrintWriter writer) {
         final Optional<String> optionalDescription = getComment().getOptionalDescription();
-    
+        
         if(optionalDescription.isPresent()) {
             writer.println(optionalDescription.get());
             writer.println();

@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
-public class MemberHeader {
+public class MemberHeader implements Comparable<MemberHeader> {
     
     public final AbstractTypeInfo returnType;
     public final List<DocumentedParameter> parameters;
@@ -110,6 +110,7 @@ public class MemberHeader {
         } else {
             writeParameterDescriptionTableWithoutOptionals(writer);
         }
+        writer.println();
     }
     
     private void writeParameterDescriptionTableWithoutOptionals(PrintWriter writer) {
@@ -138,5 +139,32 @@ public class MemberHeader {
     
     private boolean hasOptionalTypes() {
         return parameters.stream().anyMatch(DocumentedParameter::isOptional);
+    }
+    
+    @Override
+    public int compareTo(@Nonnull MemberHeader other) {
+        int temp = this.parameters.size() - other.parameters.size();
+        if(temp != 0) {
+            return temp;
+        }
+        temp = this.genericParameters.size() - other.genericParameters.size();
+        if(temp != 0) {
+            return temp;
+        }
+    
+        for(int i = 0; i < this.parameters.size(); i++) {
+            temp = this.parameters.get(i).compareTo(other.parameters.get(i));
+            if(temp != 0) {
+                return temp;
+            }
+        }
+    
+        for(int i = 0; i < this.genericParameters.size(); i++) {
+            temp = this.genericParameters.get(i).compareTo(other.genericParameters.get(i));
+            if(temp != 0) {
+                return temp;
+            }
+        }
+        return 0;
     }
 }

@@ -3,9 +3,10 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.pa
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
+import javax.annotation.Nonnull;
 import java.io.PrintWriter;
 
-public class DocumentedParameter {
+public class DocumentedParameter implements Comparable<DocumentedParameter> {
     
     protected final String name;
     protected final AbstractTypeInfo type;
@@ -43,5 +44,15 @@ public class DocumentedParameter {
     
     public String getExample(int index) {
         return comment.getExamples().getExampleFor(name).getTextValue(index);
+    }
+    
+    @Override
+    public int compareTo(@Nonnull DocumentedParameter other) {
+        int temp = this.name.compareTo(other.name);
+        if(temp != 0) {
+            return temp;
+        }
+        
+        return this.type.compareTo(other.type);
     }
 }
