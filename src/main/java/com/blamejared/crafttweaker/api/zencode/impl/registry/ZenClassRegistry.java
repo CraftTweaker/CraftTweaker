@@ -163,9 +163,8 @@ public class ZenClassRegistry {
     
     private void addNativeAnnotation(Class<?> cls) {
         final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
-        final Class<?> expandedNativeType = annotation.value();
         final String zenCodeName = annotation.zenCodeName();
-        nativeTypeRegistry.addNativeType(expandedNativeType, zenCodeName);
+        nativeTypeRegistry.addNativeType(annotation);
         addExpansion(cls, zenCodeName);
     }
     

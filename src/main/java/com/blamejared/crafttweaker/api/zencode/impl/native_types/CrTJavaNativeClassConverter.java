@@ -1,13 +1,16 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
+import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
 import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.*;
-import org.openzen.zenscript.codemodel.HighLevelDefinition;
-import org.openzen.zenscript.javashared.JavaClass;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
@@ -24,7 +27,7 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
             return getNativeTypeRegistry().getCrTNameFor(cls);
         }
         
-        if(cls.getCanonicalName().startsWith("net.minecraft")){
+        if(cls.getCanonicalName().startsWith("net.minecraft")) {
             CraftTweakerAPI.logger.trace("Minecraft Type referenced but not registered: " + cls.getCanonicalName());
         }
         
@@ -43,4 +46,44 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
         }
         return super.shouldLoadClass(cls);
     }
+    
+    @Override
+    protected ZenCodeType.Constructor getConstructorAnnotation(Constructor<?> constructor) {
+        final Class<?> declaringClass = constructor.getDeclaringClass();
+        if(getNativeTypeRegistry().hasInfoFor(declaringClass)) {
+            final ZenCodeType.Constructor result = getNativeConstructorAnnotation(constructor);
+            if(result != null) {
+                return result;
+            }
+        }
+        
+        return super.getConstructorAnnotation(constructor);
+    }
+    
+    private ZenCodeType.Constructor getNativeConstructorAnnotation(Constructor<?> constructor) {
+        final CrTNativeTypeInfo typeInfo = getNativeTypeRegistry().getTypeInfoFor(constructor.getDeclaringClass());
+        if(isConstructorRegisteredFor(constructor)) {
+            return createConstructorAnnotation();
+        }
+        return null;
+    }
+    
+    private boolean isConstructorRegisteredFor(Constructor<?> constructor) {
+        final Class<?>[] parameterTypes = constructor.getParameterTypes();
+        final CrTNativeTypeInfo typeInfoFor = getNativeTypeRegistry().getTypeInfoFor(constructor.getDeclaringClass());
+        return typeInfoFor.getConstructors()
+                .stream()
+                .anyMatch(arguments -> Arrays.equals(arguments, parameterTypes));
+    }
+    
+    private ZenCodeType.Constructor createConstructorAnnotation() {
+        return new ZenCodeType.Constructor() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return ZenCodeType.Constructor.class;
+            }
+        };
+    }
+    
+    
 }
