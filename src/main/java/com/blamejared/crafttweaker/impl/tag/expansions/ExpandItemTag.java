@@ -18,6 +18,12 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This expansion specifically targets itemTags.
+ * It adds implicit casters to IIngredient and IData, so that you can use them wherever you can use IIngredient.
+ *
+ * Only downside is that if you want to use Ingredient Transformers, you will need to call `asIIngredient()` first.
+ */
 @ZenRegister
 @Document("vanilla/api/tags/ExpandItemTag")
 @ZenCodeType.Expansion("crafttweaker.api.tag.MCTag<crafttweaker.api.item.MCItemDefinition>")

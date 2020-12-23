@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 
 @ZenRegister
-@Document("vanilla/api/potion/MCPotionEffect")
+@Document("vanilla/api/potions/MCPotionEffect")
 @NativeTypeRegistration(value = Effect.class, zenCodeName = "crafttweaker.api.potion.MCPotionEffect")
 public class ExpandEffect {
     

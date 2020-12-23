@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 
 @ZenRegister
-@Document("vanilla/api/potion/MCPotion")
+@Document("vanilla/api/potions/MCPotion")
 @NativeTypeRegistration(value = Potion.class, zenCodeName = "crafttweaker.api.potion.MCPotion")
 public class ExpandPotion {
     

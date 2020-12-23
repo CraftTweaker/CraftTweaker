@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.impl_native.util;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.impl.data.StringData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -37,6 +39,12 @@ public class ExpandResourceLocation {
     @ZenCodeType.Caster(implicit = true)
     public static String toString(ResourceLocation internal) {
         return (internal.toString());
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public static IData asData(ResourceLocation internal) {
+        return new StringData(toString(internal));
     }
     
     

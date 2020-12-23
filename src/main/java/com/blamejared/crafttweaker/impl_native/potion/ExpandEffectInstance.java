@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @ZenRegister
-@Document("vanilla/api/potion/MCPotionEffectInstance")
+@Document("vanilla/api/potions/MCPotionEffectInstance")
 @NativeTypeRegistration(value = EffectInstance.class, zenCodeName = "crafttweaker.api.potion.MCPotionEffectInstance")
 public class ExpandEffectInstance {
     
