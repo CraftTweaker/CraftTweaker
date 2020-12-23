@@ -20,6 +20,8 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nullable;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NamedTypeStaticMethodConverter extends AbstractEnclosedElementConverter<DocumentedStaticMembers> {
@@ -31,13 +33,15 @@ public class NamedTypeStaticMethodConverter extends AbstractEnclosedElementConve
     private final TypeConverter typeConverter;
     private final AnnotationMirrorUtil annotationMirrorUtil;
     private final ReturnTypeInfoReader returnTypeInfoReader;
+    private final Types typeUtils;
     
-    public NamedTypeStaticMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter, AnnotationMirrorUtil annotationMirrorUtil, ReturnTypeInfoReader returnTypeInfoReader) {
+    public NamedTypeStaticMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter, AnnotationMirrorUtil annotationMirrorUtil, ReturnTypeInfoReader returnTypeInfoReader, Types typeUtils) {
         this.commentConverter = commentConverter;
         this.headerConverter = headerConverter;
         this.typeConverter = typeConverter;
         this.annotationMirrorUtil = annotationMirrorUtil;
         this.returnTypeInfoReader = returnTypeInfoReader;
+        this.typeUtils = typeUtils;
     }
     
     @Override

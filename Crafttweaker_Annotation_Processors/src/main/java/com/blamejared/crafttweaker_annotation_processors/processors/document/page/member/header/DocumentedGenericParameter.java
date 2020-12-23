@@ -40,8 +40,12 @@ public class DocumentedGenericParameter {
         return bounds.stream().map(AbstractTypeInfo::getClickableMarkdown).collect(Collectors.joining(", "));
     }
     
+    private String getExampleName() {
+        return "<" + name + ">";
+    }
+    
     public int numberOfExamples() {
-        return comment.numberOfExamplesFor(name);
+        return comment.numberOfExamplesFor(getExampleName());
     }
     
     public String getDescription() {
@@ -49,7 +53,7 @@ public class DocumentedGenericParameter {
     }
     
     public String getExample(int exampleIndex) {
-        return comment.getExamples().getExampleFor(name).getTextValue(exampleIndex);
+        return comment.getExamples().getExampleFor(getExampleName()).getTextValue(exampleIndex);
     }
     
     public void writeParameterInfoIncludeOptionality(PrintWriter writer) {

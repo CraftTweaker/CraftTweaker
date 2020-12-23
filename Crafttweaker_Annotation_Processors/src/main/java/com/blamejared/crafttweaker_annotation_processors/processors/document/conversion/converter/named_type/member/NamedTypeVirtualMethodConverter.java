@@ -1,20 +1,25 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.member;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.HeaderConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypePageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.DocumentedTypeVirtualMembers;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.VirtualMethodMember;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
+import org.openzen.zencode.java.ZenCodeType;
 
-import javax.lang.model.element.*;
-import javax.lang.model.type.*;
-import javax.lang.model.util.*;
-import java.util.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
+import java.util.List;
 
 public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConverter<DocumentedTypeVirtualMembers> {
     
@@ -64,31 +69,7 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     }
     
     private List<? extends VariableElement> getParameters(ExecutableElement enclosedElement) {
-        final List<? extends VariableElement> parameters = new ArrayList<>(enclosedElement.getParameters());
-        final int size = enclosedElement.getTypeParameters().size();
-        removeClassParametersIfPresent(parameters, size);
-        
-        return parameters;
-    }
-    
-    private void removeClassParametersIfPresent(List<? extends VariableElement> parameters, int maximumNumberOfParameters) {
-        for(int i = 0; i < maximumNumberOfParameters; i++) {
-            final VariableElement variableElement = parameters.get(0);
-            final Element element = typeUtils.asElement(variableElement.asType());
-            if(isNoClassParameter(element)) {
-                return;
-            } else {
-                parameters.remove(0);
-            }
-        }
-    }
-    
-    private boolean isNoClassParameter(Element element) {
-        return !(element instanceof TypeElement) || !isClassType((TypeElement) element);
-    }
-    
-    private boolean isClassType(TypeElement element) {
-        return element.getQualifiedName().toString().equals(Class.class.getCanonicalName());
+        return enclosedElement.getParameters();
     }
     
     private String convertName(ExecutableElement enclosedElement) {

@@ -8,8 +8,9 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.dep
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.DocsJsonWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
 import com.sun.source.util.Trees;
-import org.reflections.*;
-import org.reflections.util.*;
+import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -45,17 +46,18 @@ public class DocumentProcessor extends AbstractProcessor {
         dependencyContainer.addInstanceAs(processingEnv.getMessager(), Messager.class);
         dependencyContainer.addInstanceAs(processingEnv.getElementUtils(), Elements.class);
         dependencyContainer.addInstanceAs(processingEnv.getTypeUtils(), Types.class);
-    
+        
         setupTrees(processingEnv);
         setupReflections();
     }
     
     private void setupReflections() {
-        final ConfigurationBuilder configuration = new ConfigurationBuilder()
-                .addUrls(ClasspathHelper.forJavaClassPath())
-                .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass().getClassLoader())
+        final ConfigurationBuilder configuration = new ConfigurationBuilder().addUrls(ClasspathHelper
+                .forJavaClassPath())
+                .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
+                        .getClassLoader())
                 .addUrls(ClasspathHelper.forClassLoader());
-    
+        
         final Reflections reflections = new Reflections(configuration);
         dependencyContainer.addInstanceAs(reflections, Reflections.class);
     }
@@ -92,7 +94,7 @@ public class DocumentProcessor extends AbstractProcessor {
         final DocsJsonWriter docsJsonWriter = new DocsJsonWriter(outputDirectory, documentRegistry);
         try {
             docsJsonWriter.write();
-        }catch(IOException exception) {
+        } catch(IOException exception) {
             exception.printStackTrace();
         }
     }
@@ -104,7 +106,7 @@ public class DocumentProcessor extends AbstractProcessor {
     
     private void writePages() {
         final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
-        final PageWriter pageWriter = new PageWriter(documentRegistry, outputDirectory);
+        final PageWriter pageWriter = new PageWriter(documentRegistry, new File(outputDirectory, "docs"));
         try {
             pageWriter.write();
         } catch(IOException exception) {

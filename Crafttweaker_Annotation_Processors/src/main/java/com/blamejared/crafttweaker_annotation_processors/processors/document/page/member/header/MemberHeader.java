@@ -71,7 +71,7 @@ public class MemberHeader {
     
     private void writeExample(PrintWriter writer, String callee, int i) {
         final String arguments = getExample(i);
-        writer.printf("%s%s%n", callee, arguments);
+        writer.printf("%s%s;%n", callee, arguments);
     }
     
     private String getExample(int exampleIndex) {

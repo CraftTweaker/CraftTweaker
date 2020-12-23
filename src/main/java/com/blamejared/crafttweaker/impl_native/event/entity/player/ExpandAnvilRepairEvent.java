@@ -1,9 +1,10 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -17,22 +18,22 @@ public class ExpandAnvilRepairEvent {
     @Nonnull
     @ZenCodeType.Method
     @ZenCodeType.Getter("itemResult")
-    public static ItemStack getItemResult(AnvilRepairEvent internal) {
-        return internal.getItemResult();
+    public static IItemStack getItemResult(AnvilRepairEvent internal) {
+        return new MCItemStack(internal.getItemResult());
     }
     
     @Nonnull
     @ZenCodeType.Method
     @ZenCodeType.Getter("itemInput")
-    public static ItemStack getItemInput(AnvilRepairEvent internal) {
-        return internal.getItemInput();
+    public static IItemStack getItemInput(AnvilRepairEvent internal) {
+        return new MCItemStack(internal.getItemInput());
     }
     
     @Nonnull
     @ZenCodeType.Method
     @ZenCodeType.Getter("ingredientInput")
-    public static ItemStack getIngredientInput(AnvilRepairEvent internal) {
-        return internal.getIngredientInput();
+    public static IItemStack getIngredientInput(AnvilRepairEvent internal) {
+        return new MCItemStack(internal.getIngredientInput());
     }
     
     @ZenCodeType.Method
