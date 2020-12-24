@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.tag.registry;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.brackets.*;
-import com.blamejared.crafttweaker.impl.tag.manager.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
+import net.minecraft.util.ResourceLocation;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.tags.CrTTagRegistryData")
@@ -45,12 +47,12 @@ public final class CrTTagRegistry {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     
     @ZenCodeType.Method
-    public <T extends CommandStringDisplayable> TagManager<T> getForRegistry(MCResourceLocation location) {
-        return data.getForRegistry(location.getInternal());
+    public <T> TagManager<T> getForRegistry(ResourceLocation location) {
+        return data.getForRegistry(location);
     }
     
     @ZenCodeType.Method
-    public <T extends CommandStringDisplayable> TagManager<T> getByTagFolder(String tagFolder) {
+    public <T> TagManager<T> getByTagFolder(String tagFolder) {
         return data.getByTagFolder(tagFolder);
     }
 }

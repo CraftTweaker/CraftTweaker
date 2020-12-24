@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.impl.tag.*;
 import com.google.common.collect.*;
 import net.minecraft.tags.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.*;

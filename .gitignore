@@ -39,3 +39,5 @@ docsOut/
 src/generated
 src/main/resources/__StdLibs__/
 CrafttweakerDocumentation/
+lsp
+docsRepo

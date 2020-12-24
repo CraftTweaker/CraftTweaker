@@ -1,18 +1,22 @@
 package com.blamejared.crafttweaker.impl.tag.registry;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.brackets.*;
-import com.blamejared.crafttweaker.api.util.*;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.*;
-import com.blamejared.crafttweaker.impl.tag.manager.*;
-import net.minecraft.tags.*;
-import net.minecraft.util.*;
-import net.minecraftforge.common.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.util.InstantiationUtil;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManagerWrapper;
+import com.google.common.collect.BiMap;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeTagHandler;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.invoke.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 public final class CrTTagRegistryData {
@@ -53,10 +57,7 @@ public final class CrTTagRegistryData {
     private void register(TagManager<?> tagManager) {
         final String tagFolder = tagManager.getTagFolder();
         if(getAllInstances().containsKey(tagFolder)) {
-            final String message = "There are two tagManagers registered for tagfolder %s! Classes are '%s' and '%s'.";
-            final String nameA = tagManager.getClass().getCanonicalName();
-            final String nameB = getAllInstances().get(tagFolder).getClass().getCanonicalName();
-            CraftTweakerAPI.logError(message, nameA, nameB);
+            handleDuplicateTagManager(tagManager, tagFolder);
             return;
         }
         
@@ -66,6 +67,13 @@ public final class CrTTagRegistryData {
             registeredInstances.put(tagFolder, tagManager);
         }
         tagFolderByCrTElementType.put(tagManager.getElementClass(), tagManager);
+    }
+    
+    private void handleDuplicateTagManager(TagManager<?> tagManager, String tagFolder) {
+        final String message = "There are two tagManagers registered for tagfolder %s! Classes are '%s' and '%s'.";
+        final String nameA = tagManager.getClass().getCanonicalName();
+        final String nameB = getAllInstances().get(tagFolder).getClass().getCanonicalName();
+        CraftTweakerAPI.logError(message, tagFolder, nameA, nameB);
     }
     
     public void registerForgeTags() {
@@ -83,6 +91,7 @@ public final class CrTTagRegistryData {
                     tagFolder = key.getPath();
                 } else {
                     CraftTweakerAPI.logWarning("Could not find tagFolder for registry '%s'", key);
+                    continue;
                 }
             }
             
@@ -91,33 +100,22 @@ public final class CrTTagRegistryData {
                 continue;
             }
             CraftTweakerAPI.logDebug("Creating Wrapper TagManager for type '%s' with tag folder '%s'", key, tagFolder);
-            registerTagManagerFromRegistry(key, registry);
+            registerTagManagerFromRegistry(key, registry, tagFolder);
         }
     }
     
     
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry) {
-        final WrapperRegistry wrapperRegistry = CraftTweakerRegistry.getWrapperRegistry();
-        final WrapperRegistryEntry entry = wrapperRegistry.getEntryFor(registry.getRegistrySuperType());
-        if(entry == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No ZenWrapper found.", name, registry.getTagFolder());
+    public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry, String tagFolder) {
+        final Class<?> registrySuperType = registry.getRegistrySuperType();
+        final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(registrySuperType);
+        if(!s.isPresent()) {
+            CraftTweakerAPI.logDebug("Could not register tag manager for " + tagFolder);
             return;
         }
         
-        final MethodHandle wrapperHandle = entry.getWrapperHandle();
-        if(wrapperHandle == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No Wrapper MethodHandle found.", name, registry.getTagFolder());
-            return;
-        }
+        register(new TagManagerWrapper(registrySuperType, name, tagFolder));
         
-        final MethodHandle unwrapperHandle = entry.getUnwrapperHandle();
-        if(unwrapperHandle == null) {
-            CraftTweakerAPI.logDebug("Could not register synthetic TagManager for name '%s' and folder '%s'. No Unwrapper MethodHandle found.", name, registry.getTagFolder());
-            return;
-        }
-        
-        register(new TagManagerWrapper(entry.getWrapperClass(), name, wrapperHandle, unwrapperHandle));
     }
     
     
@@ -133,18 +131,19 @@ public final class CrTTagRegistryData {
     }
     
     /**
-     * {@code TagRegistry.get<MCItemDefinition>()}
+     * {@code TagRegistry.get<Item>()}
      */
     @SuppressWarnings({"unchecked"})
-    <T extends CommandStringDisplayable> TagManager<T> getForElementType(Class<T> cls) {
+    <T> TagManager<T> getForElementType(Class<T> cls) {
         return (TagManager<T>) tagFolderByCrTElementType.get(cls);
     }
     
     /**
-     * {@code TagRegistry.get<MCItemDefinition>("minecraft:item")}
+     * {@code TagRegistry.get<Item>("minecraft:item")}
      */
-    <T extends CommandStringDisplayable> TagManager<T> getForRegistry(ResourceLocation location) {
-        @SuppressWarnings("rawtypes") final ForgeRegistry registry = RegistryManager.ACTIVE.getRegistry(location);
+    @SuppressWarnings("rawtypes")
+    <T> TagManager<T> getForRegistry(ResourceLocation location) {
+        final ForgeRegistry registry = RegistryManager.ACTIVE.getRegistry(location);
         if(registry == null) {
             throw new IllegalArgumentException("Unknown registry name: " + location);
         }
@@ -168,17 +167,14 @@ public final class CrTTagRegistryData {
     
     public String getElementZCTypeFor(String tagFolder) {
         
-        if(!syntheticInstances.containsKey(tagFolder)) {
+        final Map<String, TagManager<?>> allInstances = getAllInstances();
+        if(!allInstances.containsKey(tagFolder)) {
             throw new IllegalArgumentException("Could not find registry for name " + tagFolder);
         }
         
-        final Class<?> elementClass = syntheticInstances.get(tagFolder).getElementClass();
-        final WrapperRegistry wrapperRegistry = CraftTweakerRegistry.getWrapperRegistry();
-        final WrapperRegistryEntry wrapperEntry = wrapperRegistry.getEntryFor(elementClass);
-        if(wrapperEntry == null) {
-            throw new IllegalArgumentException("Could not find element type for " + tagFolder);
-        }
-        return wrapperEntry.getWrapperClassZCName();
+        final Class<?> elementClass = allInstances.get(tagFolder).getElementClass();
+        final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(elementClass);
+        return s.orElseThrow(() -> new IllegalArgumentException("Cannot find ZC type for name " + tagFolder));
     }
     
     public String getImplementationZCTypeFor(String location) {
@@ -189,7 +185,7 @@ public final class CrTTagRegistryData {
     }
     
     @SuppressWarnings("unchecked")
-    public <T extends CommandStringDisplayable> TagManager<T> getByTagFolder(String location) {
+    public <T> TagManager<T> getByTagFolder(String location) {
         for(TagManager<?> value : getAllInstances().values()) {
             if(value.getTagFolder().equals(location)) {
                 return (TagManager<T>) value;
