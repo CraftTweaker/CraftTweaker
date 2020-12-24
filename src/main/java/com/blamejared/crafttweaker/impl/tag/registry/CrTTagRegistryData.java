@@ -73,7 +73,7 @@ public final class CrTTagRegistryData {
         final String message = "There are two tagManagers registered for tagfolder %s! Classes are '%s' and '%s'.";
         final String nameA = tagManager.getClass().getCanonicalName();
         final String nameB = getAllInstances().get(tagFolder).getClass().getCanonicalName();
-        CraftTweakerAPI.logError(message, nameA, nameB);
+        CraftTweakerAPI.logError(message, tagFolder, nameA, nameB);
     }
     
     public void registerForgeTags() {
@@ -174,10 +174,7 @@ public final class CrTTagRegistryData {
         
         final Class<?> elementClass = allInstances.get(tagFolder).getElementClass();
         final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(elementClass);
-        if(s.isPresent()) {
-            return s.get();
-        }
-        throw new IllegalArgumentException("Cannot find ZC type for name " + tagFolder);
+        return s.orElseThrow(() -> new IllegalArgumentException("Cannot find ZC type for name " + tagFolder));
     }
     
     public String getImplementationZCTypeFor(String location) {
