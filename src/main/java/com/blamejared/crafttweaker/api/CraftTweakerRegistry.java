@@ -31,26 +31,49 @@ public class CraftTweakerRegistry {
      */
     public static void findClasses() {
         getAllTypesWith(ZenRegister.class).forEach(ZEN_CLASS_REGISTRY::addType);
+        final CraftTweakerModList craftTweakerModList = new CraftTweakerModList();
+        final List<Class<?>> collect = getAllClassesWith(ZenRegister.class, craftTweakerModList::add)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        craftTweakerModList.printToLog();
         
+        collect.forEach(ZEN_CLASS_REGISTRY::addClass);
         BRACKET_RESOLVER_REGISTRY.addClasses(ZEN_CLASS_REGISTRY.getAllRegisteredClasses());
         BRACKET_RESOLVER_REGISTRY.validateBrackets();
         
-        getAllTypesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addType);
-        getAllTypesWith(ZenWrapper.class).forEach(WRAPPER_REGISTRY::addType);
+        getAllClassesWith(Preprocessor.class).forEach(PREPROCESSOR_REGISTRY::addClass);
         
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
     }
     
-    private static Stream<Type> getAllTypesWith(Class<? extends Annotation> annotationCls) {
+    private static Class<?> getClassFromType(Type type) {
+        try {
+            return Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    @SuppressWarnings("SameParameterValue")
+    private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls) {
+        return getAllClassesWith(annotationCls, ignored -> {
+        });
+    }
+    
+    private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer) {
         final Type annotationType = Type.getType(annotationCls);
         return ModList.get()
                 .getAllScanData()
                 .stream()
-                .map(ModFileScanData::getAnnotations)
-                .flatMap(Collection::stream)
-                .filter(a -> annotationType.equals(a.getAnnotationType()))
-                .map(ModFileScanData.AnnotationData::getClassType);
+                .flatMap(scanData -> scanData.getAnnotations()
+                        .stream()
+                        .filter(a -> annotationType.equals(a.getAnnotationType()))
+                        .peek(ignored -> consumer.accept(scanData))
+                        .map(ModFileScanData.AnnotationData::getClassType))
+                .map(CraftTweakerRegistry::getClassFromType)
+                .filter(Objects::nonNull);
     }
     
     
@@ -59,6 +82,10 @@ public class CraftTweakerRegistry {
     // ### ZenClassRegistry Delegates ###
     // ##################################
     
+    public static ZenClassRegistry getZenClassRegistry() {
+        return ZEN_CLASS_REGISTRY;
+    }
+    
     /**
      * Gets an ImmutableMap of the classMap.
      * <p>
@@ -66,7 +93,7 @@ public class CraftTweakerRegistry {
      *
      * @return Map of String -> Class for ZenName -> Java class
      */
-    public static Map<String, Class<?>> getZenClassMap() {
+    public static BiMap<String, Class<?>> getZenClassMap() {
         return ZEN_CLASS_REGISTRY.getZenClasses();
     }
     
@@ -111,6 +138,17 @@ public class CraftTweakerRegistry {
      */
     public static Map<String, List<Class<?>>> getExpansions() {
         return ZEN_CLASS_REGISTRY.getExpansionsByExpandedName();
+    }
+    
+    /**
+     * Returns the ZenCode name for the given Java Class.
+     * Contains registered native types (e.g. ItemStack)
+     *
+     * @param cls The class to check for
+     * @return An optional that contains the class, if found
+     */
+    public static Optional<String> tryGetZenClassNameFor(Class<?> cls) {
+        return ZEN_CLASS_REGISTRY.tryGetNameFor(cls);
     }
     
     /**

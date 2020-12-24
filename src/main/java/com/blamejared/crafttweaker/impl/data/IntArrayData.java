@@ -16,7 +16,7 @@ import java.util.*;
 @Document("vanilla/api/data/IntArrayData")
 public class IntArrayData implements ICollectionData {
     
-    private IntArrayNBT internal;
+    private final IntArrayNBT internal;
     
     public IntArrayData(IntArrayNBT internal) {
         this.internal = internal;

@@ -11,7 +11,6 @@ import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
-import java.util.stream.*;
 
 /**
  * @docParam this [100000, 800000, 50000]
@@ -21,7 +20,7 @@ import java.util.stream.*;
 @Document("vanilla/api/data/LongArrayData")
 public class LongArrayData implements ICollectionData {
     
-    private LongArrayNBT internal;
+    private final LongArrayNBT internal;
     
     public LongArrayData(LongArrayNBT internal) {
         this.internal = internal;

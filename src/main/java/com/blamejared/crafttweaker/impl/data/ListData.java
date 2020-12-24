@@ -21,7 +21,7 @@ import java.util.List;
 @Document("vanilla/api/data/ListData")
 public class ListData implements ICollectionData {
     
-    private ListNBT internal;
+    private final ListNBT internal;
     
     public ListData(ListNBT internal) {
         this.internal = internal;

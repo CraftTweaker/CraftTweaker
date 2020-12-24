@@ -11,7 +11,6 @@ import net.minecraft.nbt.NumberNBT;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
-import java.util.stream.*;
 
 /**
  * @docParam this [4, 1, 2]
@@ -21,7 +20,7 @@ import java.util.stream.*;
 @Document("vanilla/api/data/ByteArrayData")
 public class ByteArrayData implements ICollectionData {
     
-    private ByteArrayNBT internal;
+    private final ByteArrayNBT internal;
     
     public ByteArrayData(ByteArrayNBT internal) {
         this.internal = internal;

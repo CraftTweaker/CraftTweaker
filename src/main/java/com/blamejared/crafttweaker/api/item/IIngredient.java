@@ -19,14 +19,13 @@ import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 
 /**
  * This is IIngredient!!!
  *
- * @docParam this <tag:ingotIron>
+ * @docParam this <tag:items:forge:ingots>
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IIngredient")

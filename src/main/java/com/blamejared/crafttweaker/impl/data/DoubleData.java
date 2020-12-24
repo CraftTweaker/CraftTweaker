@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/data/DoubleData")
 public class DoubleData implements INumberData {
     
-    private DoubleNBT internal;
+    private final DoubleNBT internal;
     
     public DoubleData(DoubleNBT internal) {
         this.internal = internal;

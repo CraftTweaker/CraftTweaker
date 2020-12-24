@@ -1,16 +1,20 @@
 package com.blamejared.crafttweaker.api.zencode.impl.registry;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.impl.tag.*;
-import net.minecraftforge.fml.*;
-import org.objectweb.asm.Type;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import net.minecraftforge.fml.ModList;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ZenClassRegistry {
     
@@ -20,6 +24,13 @@ public class ZenClassRegistry {
     private final List<Class<?>> allRegisteredClasses = new ArrayList<>();
     
     /**
+     * All classes that caused errors when evaluating
+     * Used to skip incompatible classes instead of throwing multiple Errors
+     * (One error will always be thrown when validating at the beginning!)
+     */
+    private final Set<Class<?>> blacklistedClasses = new HashSet<>();
+    
+    /**
      * All classes that have at least one global field
      */
     private final List<Class<?>> zenGlobals = new ArrayList<>();
@@ -27,7 +38,7 @@ public class ZenClassRegistry {
     /**
      * All Classes with @Name, key is @Name#value
      */
-    private final Map<String, Class<?>> zenClasses = new HashMap<>();
+    private final BiMap<String, Class<?>> zenClasses = HashBiMap.create();
     
     /**
      * All classes with @Expansion, grouped by @Expansion#value
@@ -37,6 +48,21 @@ public class ZenClassRegistry {
     
     public List<Class<? extends IRecipeManager>> getRecipeManagers() {
         return getImplementationsOf(IRecipeManager.class);
+    }
+    
+    public boolean isRegistered(Class<?> cls) {
+        return zenClasses.inverse().containsKey(cls);
+    }
+    
+    public String getNameFor(Class<?> cls) {
+        return zenClasses.inverse().get(cls);
+    }
+    
+    public Optional<String> tryGetNameFor(Class<?> cls) {
+        if(isRegistered(cls)) {
+            return Optional.ofNullable(getNameFor(cls));
+        }
+        return Optional.empty();
     }
     
     public <T> List<Class<? extends T>> getImplementationsOf(Class<T> checkFor) {
@@ -57,7 +83,7 @@ public class ZenClassRegistry {
         return zenGlobals;
     }
     
-    public Map<String, Class<?>> getZenClasses() {
+    public BiMap<String, Class<?>> getZenClasses() {
         return zenClasses;
     }
     
@@ -65,28 +91,31 @@ public class ZenClassRegistry {
         return expansionsByExpandedName;
     }
     
-    public void addType(Type type) {
-        try {
-            addClass(Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader()));
-        } catch(ClassNotFoundException e) {
-            e.printStackTrace();
+    public void addClass(Class<?> cls) {
+        if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
+            final String canonicalName = cls.getCanonicalName();
+            CraftTweakerAPI.logDebug("Skipping class '%s' since its Mod dependencies are not fulfilled", canonicalName);
+            return;
         }
-    }
-    
-    private void addClass(Class<?> cls) {
-        if(!areModsPresent(cls.getAnnotation(ZenRegister.class))) {
+        
+        if(isIncompatible(cls)) {
+            blacklistedClasses.add(cls);
             return;
         }
         
         allRegisteredClasses.add(cls);
-        CraftTweaker.LOG.debug("Found ZenRegister: {}", cls.getCanonicalName());
         
         if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
             addZenClass(cls);
         }
         
         if(cls.isAnnotationPresent(ZenCodeType.Expansion.class)) {
-            addExpansion(cls);
+            final String expandedClassName = cls.getAnnotation(ZenCodeType.Expansion.class).value();
+            addExpansion(cls, expandedClassName);
+        }
+        
+        if(cls.isAnnotationPresent(TypedExpansion.class)) {
+            addTypedExpansion(cls);
         }
         
         if(hasGlobals(cls)) {
@@ -94,8 +123,41 @@ public class ZenClassRegistry {
         }
     }
     
-    private boolean areModsPresent(ZenRegister register) {
-        return register != null && Arrays.stream(register.modDeps())
+    /**
+     * Checks that the class does not have any fields or methods that would cause errors when converting in the JavaNativeModule.
+     * Does so by simply calling the declaredMethods and fields getters.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private boolean isIncompatible(Class<?> cls) {
+        try {
+            cls.getDeclaredFields();
+            cls.getFields();
+            cls.getDeclaredMethods();
+            cls.getMethods();
+            cls.getConstructors();
+            cls.getDeclaredConstructors();
+            return false;
+        } catch(Throwable t) {
+            CraftTweakerAPI.logThrowing("Could not register class '%s'! This is most likely a compatibility issue!", t, cls
+                    .getCanonicalName());
+            return true;
+        }
+    }
+    
+    private void addTypedExpansion(Class<?> cls) {
+        final TypedExpansion annotation = cls.getAnnotation(TypedExpansion.class);
+        final Class<?> expandedType = annotation.value();
+        if(expandedType.isAnnotationPresent(ZenCodeType.Name.class)) {
+            final String expandedClassName = expandedType.getAnnotation(ZenCodeType.Name.class)
+                    .value();
+            addExpansion(cls, expandedClassName);
+        } else {
+            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedType
+                    .getCanonicalName());
+        }
+    }
+    private boolean areModsMissing(ZenRegister register) {
+        return register == null || !Arrays.stream(register.modDeps())
                 .filter(modId -> modId != null && !modId.isEmpty())
                 .allMatch(ModList.get()::isLoaded);
     }
@@ -103,14 +165,14 @@ public class ZenClassRegistry {
     private void addZenClass(Class<?> cls) {
         final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
         zenClasses.put(annotation.value(), cls);
+        CraftTweakerAPI.logDebug("Registering %s", annotation.value());
     }
     
-    private void addExpansion(Class<?> cls) {
-        final ZenCodeType.Expansion annotation = cls.getAnnotation(ZenCodeType.Expansion.class);
-        if(!expansionsByExpandedName.containsKey(annotation.value())) {
-            expansionsByExpandedName.put(annotation.value(), new ArrayList<>());
+    private void addExpansion(Class<?> cls, String expandedClassName) {
+        if(!expansionsByExpandedName.containsKey(expandedClassName)) {
+            expansionsByExpandedName.put(expandedClassName, new ArrayList<>());
         }
-        expansionsByExpandedName.get(annotation.value()).add(cls);
+        expansionsByExpandedName.get(expandedClassName).add(cls);
     }
     
     private boolean hasGlobals(Class<?> cls) {
@@ -133,5 +195,8 @@ public class ZenClassRegistry {
                 .stream()
                 .map(key -> key.split("\\.", 2)[0])
                 .collect(Collectors.toSet());
+    }
+    public boolean isBlacklisted(Class<?> cls) {
+        return blacklistedClasses.contains(cls);
     }
 }

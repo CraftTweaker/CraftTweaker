@@ -51,7 +51,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     private void registerRecipeManager(Class<? extends IRecipeManager> managerClass) {
         if(managerInstances.containsKey(managerClass)) {
             final IRecipeManager manager = managerInstances.get(managerClass);
-            registeredTypes.put(manager.getBracketResourceLocation(), manager);
+            registerInstance(manager);
             return;
         }
         
@@ -61,8 +61,20 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return;
         }
         
-        final ResourceLocation bracketResourceLocation = manager.getBracketResourceLocation();
         managerInstances.put(managerClass, manager);
+        registerInstance(manager);
+    }
+    
+    private void registerInstance(IRecipeManager manager) {
+        final ResourceLocation bracketResourceLocation = manager.getBracketResourceLocation();
+        final Class<? extends IRecipeManager> managerClass = manager.getClass();
+        
+        if(managerClass.getAnnotation(ZenCodeType.Name.class) == null) {
+            final String canonicalName = managerClass.getCanonicalName();
+            CraftTweakerAPI.logWarning("No Name Annotation found on manager '%s', it will not be registered!", canonicalName);
+            return;
+        }
+        
         registeredTypes.put(bracketResourceLocation, manager);
     }
     

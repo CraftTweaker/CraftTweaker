@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.logger.*;
 import org.openzen.zencode.shared.*;
-import org.openzen.zencode.shared.logging.IZSLogger;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zenscript.validator.*;
 
