@@ -1,23 +1,27 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
-import com.blamejared.crafttweaker.impl.fluid.*;
-import com.blamejared.crafttweaker.impl.potion.*;
-import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.tag.registry.*;
-import net.minecraft.entity.*;
-import net.minecraft.tags.*;
-import net.minecraft.util.*;
-import net.minecraft.util.registry.*;
-import net.minecraft.util.text.*;
-import net.minecraftforge.common.*;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.BracketDumper;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
+import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
+import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketDumpers")
@@ -27,7 +31,7 @@ public class BracketDumpers {
     public static Collection<String> getBlockDump() {
         return ForgeRegistries.BLOCKS.getValues()
                 .stream()
-                .map(block -> new MCBlock(block).getCommandString())
+                .map(ExpandBlock::getCommandString)
                 .collect(Collectors.toSet());
     }
     
@@ -42,7 +46,7 @@ public class BracketDumpers {
     public static Collection<String> getEffectDump() {
         return ForgeRegistries.POTIONS.getValues()
                 .stream()
-                .map(effect -> new MCEffect(effect).getCommandString())
+                .map(ExpandEffect::getCommandString)
                 .collect(Collectors.toSet());
     }
     
@@ -89,7 +93,7 @@ public class BracketDumpers {
     public static Collection<String> getPotionTypeDump() {
         return ForgeRegistries.POTION_TYPES.getValues()
                 .stream()
-                .map(potionType -> new MCPotion(potionType).getCommandString())
+                .map(ExpandPotion::getCommandString)
                 .collect(Collectors.toList());
     }
     
@@ -104,7 +108,8 @@ public class BracketDumpers {
     
     @BracketDumper("tag")
     public static Collection<String> getTagDump() {
-        return CrTTagRegistry.instance.getAllManagers().stream()
+        return CrTTagRegistry.instance.getAllManagers()
+                .stream()
                 .flatMap(tagManager -> tagManager.getAllTags().stream())
                 .map(MCTag::getCommandString)
                 .collect(Collectors.toSet());

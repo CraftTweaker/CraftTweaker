@@ -1,11 +1,11 @@
 package com.blamejared.crafttweaker.impl.fluid;
 
-import com.blamejared.crafttweaker.api.fluid.*;
-import net.minecraft.fluid.*;
-import net.minecraftforge.fluids.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
+import net.minecraft.fluid.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.Objects;
 
 public class MCFluidStackMutable implements IFluidStack {
     
@@ -33,8 +33,8 @@ public class MCFluidStackMutable implements IFluidStack {
     }
     
     @Override
-    public MCFluid getFluid() {
-        return new MCFluid(stack.getFluid());
+    public Fluid getFluid() {
+        return stack.getFluid();
     }
     
     @Override

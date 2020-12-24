@@ -6,12 +6,14 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
 import com.blamejared.crafttweaker.impl.ingredients.transform.*;
 import com.blamejared.crafttweaker.impl.item.transformed.MCIngredientTransformed;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Function;
 
-@ZenCodeType.Expansion("crafttweaker.api.item.IIngredient")
 @ZenRegister
+@ZenCodeType.Expansion("crafttweaker.api.item.IIngredient")
+@Document("vanilla/api/items/ExpandIIngredientTransformers")
 public class ExpandIIngredient {
 
     @ZenCodeType.Method

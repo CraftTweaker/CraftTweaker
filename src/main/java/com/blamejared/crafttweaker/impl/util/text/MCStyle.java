@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.impl.util.text;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.Style;
 import org.openzen.zencode.java.ZenCodeType;
@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.text.MCStyle")
 @Document("vanilla/api/util/text/MCStyle")
-@ZenWrapper(wrappedClass = "net.minecraft.util.text.Style", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.toString()")
+@ZenWrapper(wrappedClass = "net.minecraft.util.text.Style", displayStringFormat = "%s.toString()")
 public class MCStyle {
     
     private final Style internal;
@@ -56,11 +56,6 @@ public class MCStyle {
     }
     
     @ZenCodeType.Method
-    public MCStyle setUnderlined(Boolean underlined) {
-        return new MCStyle(internal.setUnderlined(underlined));
-    }
-    
-    @ZenCodeType.Method
     public boolean getObfuscated() {
         return internal.getObfuscated();
     }
@@ -83,14 +78,23 @@ public class MCStyle {
         return internal.getInsertion();
     }
     
+    /**
+     * Set a text to be inserted into Chat when the component is shift-clicked
+     */
     @ZenCodeType.Method
-    public MCStyle setFontId(MCResourceLocation location) {
-        return new MCStyle(getInternal().setFontId(location.getInternal()));
+    public MCStyle setInsertion(String insertion) {
+        Style set = internal.setInsertion(insertion);
+        return set == internal ? this : new MCStyle(set);
     }
     
     @ZenCodeType.Method
-    public MCResourceLocation getFontId() {
-        return new MCResourceLocation(getInternal().getFontId());
+    public ResourceLocation getFontId() {
+        return getInternal().getFontId();
+    }
+    
+    @ZenCodeType.Method
+    public MCStyle setFontId(ResourceLocation location) {
+        return new MCStyle(getInternal().setFontId(location));
     }
     
     @ZenCodeType.Method
@@ -114,6 +118,11 @@ public class MCStyle {
     }
     
     @ZenCodeType.Method
+    public MCStyle setUnderlined(Boolean underlined) {
+        return new MCStyle(internal.setUnderlined(underlined));
+    }
+    
+    @ZenCodeType.Method
     public MCStyle setUnderlined(boolean underlined) {
         return new MCStyle(getInternal().setUnderlined(underlined));
     }
@@ -123,19 +132,9 @@ public class MCStyle {
         return other instanceof MCStyle && internal.equals(other);
     }
     
-    
     @ZenCodeType.Method
     public MCStyle mergeStyle(MCStyle style) {
         return new MCStyle(getInternal().mergeStyle(style.getInternal()));
-    }
-    
-    /**
-     * Set a text to be inserted into Chat when the component is shift-clicked
-     */
-    @ZenCodeType.Method
-    public MCStyle setInsertion(String insertion) {
-        Style set = internal.setInsertion(insertion);
-        return set == internal ? this : new MCStyle(set);
     }
     
     @ZenCodeType.Method

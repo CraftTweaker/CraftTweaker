@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.util;
 
 import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.impl_native.util.ExpandDirectionAxis;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.util.*;
 import org.openzen.zencode.java.*;
@@ -109,7 +110,7 @@ public enum MCDirection {
 //     * @docParam axis <directionaxis:north>
 //     */
 //    @ZenCodeType.Method
-//    public MCDirection rotateAround(MCDirectionAxis axis) {
+//    public MCDirection rotateAround(ExpandDirectionAxis axis) {
 //        return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
 //    }
     
@@ -166,11 +167,11 @@ public enum MCDirection {
     /**
      * Gets the direction axis of this direction
      *
-     * @return a {@link MCDirectionAxis} of this axis
+     * @return a {@link ExpandDirectionAxis} of this axis
      */
     @ZenCodeType.Getter("axis")
-    public MCDirectionAxis getAxis() {
-        return MCDirectionAxis.getAxis(internal.getAxis());
+    public Direction.Axis getAxis() {
+        return internal.getAxis();
     }
     
     /**

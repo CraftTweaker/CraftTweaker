@@ -2,11 +2,12 @@ package com.blamejared.crafttweaker.api.mods;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.blocks.MCBlock;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
-import com.blamejared.crafttweaker.impl.fluid.*;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -72,8 +73,12 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("items")
     public List<IItemStack> getItems() {
-        return ForgeRegistries.ITEMS.getEntries().stream()
-                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().getLocation().getNamespace().equals(getModId()))
+        return ForgeRegistries.ITEMS.getEntries()
+                .stream()
+                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
+                        .getLocation()
+                        .getNamespace()
+                        .equals(getModId()))
                 .map(Map.Entry::getValue)
                 .map(ItemStack::new)
                 .map(MCItemStack::new)
@@ -86,11 +91,14 @@ public class MCModInfo {
      * @return all blocks of the mod.
      */
     @ZenCodeType.Getter("blocks")
-    public List<MCBlock> getBlocks() {
-        return ForgeRegistries.BLOCKS.getEntries().stream()
-                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().getLocation().getNamespace().equals(getModId()))
+    public List<Block> getBlocks() {
+        return ForgeRegistries.BLOCKS.getEntries()
+                .stream()
+                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
+                        .getLocation()
+                        .getNamespace()
+                        .equals(getModId()))
                 .map(Map.Entry::getValue)
-                .map(MCBlock::new)
                 .collect(Collectors.toList());
     }
     
@@ -101,8 +109,12 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("entitytypes")
     public List<MCEntityType> getEntityTypes() {
-        return ForgeRegistries.ENTITIES.getEntries().stream()
-                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey().getLocation().getNamespace().equals(getModId()))
+        return ForgeRegistries.ENTITIES.getEntries()
+                .stream()
+                .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
+                        .getLocation()
+                        .getNamespace()
+                        .equals(getModId()))
                 .map(Map.Entry::getValue)
                 .map(MCEntityType::new)
                 .collect(Collectors.toList());
@@ -114,13 +126,16 @@ public class MCModInfo {
      * @return The EntityTypes for the mod.
      */
     @ZenCodeType.Getter("fluids")
-    public List<MCFluid> getFluids() {
-        return ForgeRegistries.FLUIDS.getEntries().stream()
-                .filter(registryKeyFluidEntry -> registryKeyFluidEntry.getKey().getLocation().getNamespace().equals(getModId()))
+    public List<Fluid> getFluids() {
+        return ForgeRegistries.FLUIDS.getEntries()
+                .stream()
+                .filter(registryKeyFluidEntry -> registryKeyFluidEntry.getKey()
+                        .getLocation()
+                        .getNamespace()
+                        .equals(getModId()))
                 .map(Map.Entry::getValue)
-                .map(MCFluid::new)
                 .collect(Collectors.toList());
-                
+        
     }
     
     

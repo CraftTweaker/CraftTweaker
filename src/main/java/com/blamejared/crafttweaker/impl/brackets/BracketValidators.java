@@ -1,14 +1,17 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
-import net.minecraft.util.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.BracketValidator;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Locale;
+import java.util.function.Function;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketValidators")
@@ -45,7 +48,7 @@ public class BracketValidators {
         }
         
         final String properties = split.length == 3 ? split[2] : "";
-        final MCBlockState blockState = BracketHandlers.getBlockState(resourceLocation, properties);
+        final BlockState blockState = BracketHandlers.getBlockState(resourceLocation, properties);
         return blockState != null || isRegistryUnlocked(ForgeRegistries.BLOCKS);
     }
     
