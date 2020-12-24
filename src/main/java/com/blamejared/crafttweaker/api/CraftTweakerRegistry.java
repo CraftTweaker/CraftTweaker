@@ -209,16 +209,4 @@ public class CraftTweakerRegistry {
         return PREPROCESSOR_REGISTRY.getPreprocessors();
     }
     //</editor-fold>
-    
-    //</editor-fold>
-    
-    
-    //<editor-fold desc="WrapperRegistry">
-    // #########################################
-    // ### WrapperRegistry ###
-    // #########################################
-    public static WrapperRegistry getWrapperRegistry() {
-        return WRAPPER_REGISTRY;
-    }
-    //</editor-fold>
 }
