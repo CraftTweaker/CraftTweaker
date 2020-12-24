@@ -157,12 +157,12 @@ public class ZenClassRegistry {
             final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedType);
             addExpansion(cls, expandedClassName);
         } else if(expandedType.isAnnotationPresent(ZenCodeType.Name.class)) {
-            final String expandedClassName = expandedType.getAnnotation(ZenCodeType.Name.class)
-                    .value();
+            final ZenCodeType.Name nameAnnotation = expandedType.getAnnotation(ZenCodeType.Name.class);
+            final String expandedClassName = nameAnnotation.value();
             addExpansion(cls, expandedClassName);
         } else {
-            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as it's not registered as native type!", expandedType
-                    .getCanonicalName());
+            final String expandedTypeClassName = expandedType.getCanonicalName();
+            CraftTweakerAPI.logError("Cannot add Expansion for '%s' as the expanded type is not registered!", expandedTypeClassName);
         }
     }
     
