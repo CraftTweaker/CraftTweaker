@@ -1,43 +1,52 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.*;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.wrapper.*;
-import com.blamejared.crafttweaker.impl.commands.*;
-import com.blamejared.crafttweaker.impl.tag.manager.*;
-import com.blamejared.crafttweaker.impl.tag.registry.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraftforge.fml.*;
-import net.minecraftforge.forgespi.language.*;
-import org.objectweb.asm.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.annotations.Preprocessor;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.brackets.ValidatedEscapableBracketParser;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketResolverRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.PreprocessorRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
+import com.blamejared.crafttweaker.impl.commands.BracketDumperInfo;
+import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
+import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistryData;
+import com.google.common.collect.BiMap;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.ModFileScanData;
+import org.objectweb.asm.Type;
+import org.openzen.zencode.java.ScriptingEngine;
+import org.openzen.zencode.java.module.JavaNativeModule;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.stream.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CraftTweakerRegistry {
     
     private static final BracketResolverRegistry BRACKET_RESOLVER_REGISTRY = new BracketResolverRegistry();
     private static final PreprocessorRegistry PREPROCESSOR_REGISTRY = new PreprocessorRegistry();
     private static final ZenClassRegistry ZEN_CLASS_REGISTRY = new ZenClassRegistry();
-    private static final WrapperRegistry WRAPPER_REGISTRY = new WrapperRegistry();
     
     /**
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
-        getAllTypesWith(ZenRegister.class).forEach(ZEN_CLASS_REGISTRY::addType);
         final CraftTweakerModList craftTweakerModList = new CraftTweakerModList();
         final List<Class<?>> collect = getAllClassesWith(ZenRegister.class, craftTweakerModList::add)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         craftTweakerModList.printToLog();
         
+        collect.forEach(ZEN_CLASS_REGISTRY::addNativeType);
+        ZEN_CLASS_REGISTRY.initNativeTypes();
         collect.forEach(ZEN_CLASS_REGISTRY::addClass);
+        
+        
         BRACKET_RESOLVER_REGISTRY.addClasses(ZEN_CLASS_REGISTRY.getAllRegisteredClasses());
         BRACKET_RESOLVER_REGISTRY.validateBrackets();
         

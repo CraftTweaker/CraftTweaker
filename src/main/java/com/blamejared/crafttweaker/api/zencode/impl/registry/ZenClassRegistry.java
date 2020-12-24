@@ -3,6 +3,9 @@ package com.blamejared.crafttweaker.api.zencode.impl.registry;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
+import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ZenClassRegistry {
+    
+    private final NativeTypeRegistry nativeTypeRegistry = new NativeTypeRegistry();
     
     /**
      * All classes with @ZenRegister and their modDeps fulfilled
@@ -147,7 +152,11 @@ public class ZenClassRegistry {
     private void addTypedExpansion(Class<?> cls) {
         final TypedExpansion annotation = cls.getAnnotation(TypedExpansion.class);
         final Class<?> expandedType = annotation.value();
-        if(expandedType.isAnnotationPresent(ZenCodeType.Name.class)) {
+        
+        if(nativeTypeRegistry.hasInfoFor(expandedType)) {
+            final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedType);
+            addExpansion(cls, expandedClassName);
+        } else if(expandedType.isAnnotationPresent(ZenCodeType.Name.class)) {
             final String expandedClassName = expandedType.getAnnotation(ZenCodeType.Name.class)
                     .value();
             addExpansion(cls, expandedClassName);
@@ -156,6 +165,14 @@ public class ZenClassRegistry {
                     .getCanonicalName());
         }
     }
+    
+    private void addNativeAnnotation(Class<?> cls) {
+        final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
+        final String zenCodeName = annotation.zenCodeName();
+        nativeTypeRegistry.addNativeType(annotation);
+        addExpansion(cls, zenCodeName);
+    }
+    
     private boolean areModsMissing(ZenRegister register) {
         return register == null || !Arrays.stream(register.modDeps())
                 .filter(modId -> modId != null && !modId.isEmpty())
@@ -196,6 +213,31 @@ public class ZenClassRegistry {
                 .map(key -> key.split("\\.", 2)[0])
                 .collect(Collectors.toSet());
     }
+    
+    public void addNativeType(Class<?> cls) {
+        if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
+            return;
+        }
+        
+        if(cls.isAnnotationPresent(NativeTypeRegistration.class)) {
+            addNativeAnnotation(cls);
+        }
+    }
+    
+    public void initNativeTypes() {
+        for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
+            final String craftTweakerName = nativeTypeInfo.getCraftTweakerName();
+            final String vanillaClass = nativeTypeInfo.getVanillaClass().getCanonicalName();
+            
+            zenClasses.put(craftTweakerName, nativeTypeInfo.getVanillaClass());
+            CraftTweakerAPI.logDebug("Registering %s for native type '%s'", craftTweakerName, vanillaClass);
+        }
+    }
+    
+    public NativeTypeRegistry getNativeTypeRegistry() {
+        return nativeTypeRegistry;
+    }
+    
     public boolean isBlacklisted(Class<?> cls) {
         return blacklistedClasses.contains(cls);
     }
