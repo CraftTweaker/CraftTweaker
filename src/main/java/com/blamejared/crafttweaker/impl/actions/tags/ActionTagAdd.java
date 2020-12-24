@@ -1,10 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.tags;
 
 import com.blamejared.crafttweaker.impl.tag.*;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.*;
