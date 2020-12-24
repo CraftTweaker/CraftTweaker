@@ -4,8 +4,13 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import com.google.common.base.Preconditions;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import org.openzen.zencode.java.ZenCodeType;
+
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityType")
@@ -14,16 +19,14 @@ import org.openzen.zencode.java.ZenCodeType;
 public class MCEntityType implements CommandStringDisplayable {
     
     private final EntityType<?> internal;
-    private final MCEntityClassification classification;
     
-    public MCEntityType(EntityType<?> internal) {
-        this.internal = internal;
-        this.classification = new MCEntityClassification(internal.getClassification());
+    public MCEntityType(@Nonnull EntityType<?> internal) {
+        this.internal = Objects.requireNonNull(internal);
     }
     
     @ZenCodeType.Getter("classification")
-    public MCEntityClassification getClassification() {
-        return classification;
+    public EntityClassification getClassification() {
+        return internal.getClassification();
     }
     
     
@@ -66,7 +69,7 @@ public class MCEntityType implements CommandStringDisplayable {
     public float getHeight() {
         return getInternal().getHeight();
     }
-
+    
     @ZenCodeType.Getter("commandString")
     @Override
     public String getCommandString() {
@@ -85,7 +88,7 @@ public class MCEntityType implements CommandStringDisplayable {
             return false;
         
         MCEntityType that = (MCEntityType) o;
-    
+        
         return internal.equals(that.internal);
     }
     

@@ -2,11 +2,11 @@ package com.blamejared.crafttweaker.impl.commands.custom;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.entity.player.MCPlayerEntity;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -16,7 +16,7 @@ import java.util.Collection;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommandSource")
 @Document("vanilla/api/commands/custom/MCCommandSource")
-@ZenWrapper(wrappedClass = "net.minecraft.command.CommandSource", conversionMethodFormat = "%s.getInternal()", displayStringFormat = "%s.toString()")
+@ZenWrapper(wrappedClass = "net.minecraft.command.CommandSource", displayStringFormat = "%s.toString()")
 public class MCCommandSource {
     
     private final CommandSource internal;
@@ -82,9 +82,9 @@ public class MCCommandSource {
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    public MCPlayerEntity getPlayer() {
+    public PlayerEntity getPlayer() {
         try {
-            return new MCPlayerEntity(internal.asPlayer());
+            return internal.asPlayer();
         } catch(CommandSyntaxException e) {
             CraftTweakerAPI.logError("Could not get Player: %s", e);
             return null;

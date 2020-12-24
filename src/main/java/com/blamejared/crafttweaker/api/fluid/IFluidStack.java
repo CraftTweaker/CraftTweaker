@@ -2,10 +2,10 @@ package com.blamejared.crafttweaker.api.fluid;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
-import com.blamejared.crafttweaker.impl.fluid.MCFluid;
-import com.blamejared.crafttweaker.impl.util.MCResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -21,15 +21,14 @@ public interface IFluidStack extends CommandStringDisplayable {
      * @return A MCResourceLocation representing the registry name.
      */
     @ZenCodeType.Getter("registryName")
-    default MCResourceLocation getRegistryName() {
-        return new MCResourceLocation(getInternal().getFluid().getRegistryName());
+    default ResourceLocation getRegistryName() {
+        return getFluid().getRegistryName();
     }
     
     /**
      * Checks if this IFluidStack, contains the given IFluidStack by checking if the fluids are the same, and if this fluid's amount is bigger than the given fluid's amount
      *
      * @param other other IFluidStack to compare against
-     *
      * @return true if this fluid contains the other fluid
      */
     @ZenCodeType.Method
@@ -62,9 +61,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the fluid amount in MilliBuckets (mB)
      *
      * @param amount The amount to multiply this stack
-     *
      * @return A new stack, or this stack, depending if this stack is mutable
-     *
      * @docParam amount 1000
      */
     @ZenCodeType.Method
@@ -75,9 +72,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the fluid amount in MilliBuckets (MB)
      *
      * @param amount The amount to multiply this stack
-     *
      * @return A new stack, or this stack, depending if this stack is mutable
-     *
      * @docParam amount 1000
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
@@ -106,7 +101,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("fluid")
     @ZenCodeType.Caster(implicit = true)
-    MCFluid getFluid();
+    Fluid getFluid();
     
     /**
      * Moddevs, use this to get the Vanilla version.

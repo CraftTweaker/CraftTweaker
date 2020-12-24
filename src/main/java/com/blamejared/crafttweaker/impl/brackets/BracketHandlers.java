@@ -1,54 +1,64 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.fluid.*;
-import com.blamejared.crafttweaker.api.item.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.impl.block.material.*;
-import com.blamejared.crafttweaker.impl.blocks.*;
-import com.blamejared.crafttweaker.impl.entity.*;
-import com.blamejared.crafttweaker.impl.fluid.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.managers.*;
-import com.blamejared.crafttweaker.impl.potion.*;
-import com.blamejared.crafttweaker.impl.util.*;
-import com.blamejared.crafttweaker.impl.util.text.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.block.*;
-import net.minecraft.block.material.*;
-import net.minecraft.entity.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.potion.*;
-import net.minecraft.util.*;
-import net.minecraft.util.registry.*;
-import net.minecraft.util.text.*;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.registries.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.BracketResolver;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
+import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
+import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Objects;
 
+/**
+ * This class contains the "simple" Bracket handlers from CraftTweaker.
+ * However, some Bracket handlers, like for recipeTypes, tags, tagManagers, won't be shown here as
+ * they use a different internal structure.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
 @Document("vanilla/api/BracketHandlers")
 public class BracketHandlers {
     
     /**
-     * Gets the give {@link MCBlock}. Throws an Exception if not found
+     * Gets the give {@link Block}. Throws an Exception if not found
+     *
      * @param tokens What you would write in the BEP call.
-     * @return The found {@link MCBlock}
+     * @return The found {@link Block}
      * @docParam tokens "minecraft:dirt"
      */
     @ZenCodeType.Method
     @BracketResolver("block")
-    public static MCBlock getBlock(String tokens) {
+    public static Block getBlock(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Block BEP <block:%s> does not seem to be lower-cased!", tokens);
-    
+        
         final String[] split = tokens.split(":");
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
@@ -57,37 +67,37 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!");
         }
         
-        return new MCBlock(ForgeRegistries.BLOCKS.getValue(key));
+        return ForgeRegistries.BLOCKS.getValue(key);
     }
     
     /**
-     * Gets the given {@link MCMaterial}. Throws an Exception if not found.
+     * Gets the given {@link Material}. Throws an Exception if not found.
      *
      * @param tokens What you would write in the BEP call.
-     * @return The found {@link MCMaterial}
+     * @return The found {@link Material}
      * @docParam tokens "earth"
      */
     @ZenCodeType.Method
     @BracketResolver("blockmaterial")
-    public static MCMaterial getBlockMaterial(String tokens) {
-        final MCMaterial mcMaterial = MCMaterial.tryGet(tokens);
-        if(mcMaterial != null) {
-            return mcMaterial;
+    public static Material getBlockMaterial(String tokens) {
+        final Material material = ExpandMaterial.tryGet(tokens);
+        if(material != null) {
+            return material;
         }
         
         try {
             for(Field field : Material.class.getFields()) {
                 if(field.getName().equalsIgnoreCase(tokens)) {
-                    return new MCMaterial((Material) field.get(null), field.getName());
+                    return (Material) field.get(null);
                 }
             }
         } catch(IllegalAccessException e) {
-            throw new IllegalArgumentException("Error gettig blockmaterial <blockmaterial:" + tokens + ">!", e);
+            throw new IllegalArgumentException("Error getting blockmaterial <blockmaterial:" + tokens + ">!", e);
         }
         
         try {
             final Field field = ObfuscationReflectionHelper.findField(Material.class, tokens.toUpperCase());
-            return new MCMaterial((Material) field.get(null), tokens);
+            return (Material) field.get(null);
         } catch(Exception ignored) {
         }
         
@@ -105,7 +115,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("blockstate")
-    public static MCBlockState getBlockState(String tokens) {
+    public static BlockState getBlockState(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("BlockState BEP <blockstate:%s> does not seem to be lower-cased!", tokens);
         String[] split = tokens.split(":", 4);
@@ -123,14 +133,14 @@ public class BracketHandlers {
         return null;
     }
     
-    public static MCBlockState getBlockState(String name, String properties) {
+    public static BlockState getBlockState(String name, String properties) {
         
         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
         if(block == null) {
             return null;
         }
         
-        MCBlockState blockState = new MCBlockState(block.getDefaultState());
+        BlockState blockState = block.getDefaultState();
         if(properties != null && !properties.isEmpty()) {
             for(String propertyPair : properties.split(",")) {
                 String[] splitPair = propertyPair.split("=");
@@ -138,7 +148,7 @@ public class BracketHandlers {
                     CraftTweakerAPI.logWarning("Invalid blockstate property format '" + propertyPair + "'. Using default property value.");
                     continue;
                 }
-                blockState = blockState.withProperty(splitPair[0], splitPair[1]);
+                blockState = ExpandBlockState.withProperty(blockState, splitPair[0], splitPair[1]);
             }
         }
         
@@ -154,7 +164,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("directionaxis")
-    public static MCDirectionAxis getDirectionAxis(String tokens) {
+    public static Direction.Axis getDirectionAxis(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
         
@@ -165,7 +175,7 @@ public class BracketHandlers {
         if(axis == null) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
-        return MCDirectionAxis.getAxis(axis);
+        return axis;
     }
     
     /**
@@ -177,7 +187,7 @@ public class BracketHandlers {
      */
     @BracketResolver("effect")
     @ZenCodeType.Method
-    public static MCEffect getEffect(String tokens) {
+    public static Effect getEffect(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Effect BEP <effect:%s> does not seem to be lower-cased!", tokens);
         
@@ -188,8 +198,7 @@ public class BracketHandlers {
         if(!ForgeRegistries.POTIONS.containsKey(key)) {
             throw new IllegalArgumentException("Could not get effect with name: <potion:" + tokens + ">! Effect does not appear to exist!");
         }
-        Effect effect = ForgeRegistries.POTIONS.getValue(key);
-        return new MCEffect(effect);
+        return ForgeRegistries.POTIONS.getValue(key);
     }
     
     /**
@@ -201,7 +210,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("entityclassification")
-    public static MCEntityClassification getEntityClassification(String tokens) {
+    public static EntityClassification getEntityClassification(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 1) {
             CraftTweakerAPI.logError("Could not get EntityClassification <entityclassification:%s>", tokens);
@@ -214,7 +223,7 @@ public class BracketHandlers {
             return null;
         }
         //Cannot be null since we checked containsKey
-        return new MCEntityClassification(EntityClassification.valueOf(tokens.toUpperCase()));
+        return EntityClassification.valueOf(tokens.toUpperCase());
     }
     
     /**
@@ -225,6 +234,7 @@ public class BracketHandlers {
      * @docParam tokens "minecraft:pig"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Nullable
     @BracketResolver("entitytype")
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
@@ -238,9 +248,7 @@ public class BracketHandlers {
             return null;
         }
         
-        //Cannot be null since we checked containsKey
-        //noinspection ConstantConditions
-        return new MCEntityType(ForgeRegistries.ENTITIES.getValue(resourceLocation));
+        return new MCEntityType(Objects.requireNonNull(ForgeRegistries.ENTITIES.getValue(resourceLocation)));
     }
     
     /**
@@ -294,7 +302,7 @@ public class BracketHandlers {
     
     @BracketResolver("potion")
     @ZenCodeType.Method
-    public static MCPotion getPotion(String tokens) {
+    public static Potion getPotion(String tokens) {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("Potion BEP <potion:%s> does not seem to be lower-cased!", tokens);
         
@@ -305,8 +313,7 @@ public class BracketHandlers {
         if(!ForgeRegistries.POTIONS.containsKey(key)) {
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!");
         }
-        Potion potion = ForgeRegistries.POTION_TYPES.getValue(key);
-        return new MCPotion(potion);
+        return ForgeRegistries.POTION_TYPES.getValue(key);
     }
     
     
@@ -354,8 +361,8 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("resource")
-    public static MCResourceLocation getResourceLocation(String tokens) {
-        return new MCResourceLocation(new ResourceLocation(tokens));
+    public static ResourceLocation getResourceLocation(String tokens) {
+        return new ResourceLocation(tokens);
     }
     
     @ZenCodeType.Method

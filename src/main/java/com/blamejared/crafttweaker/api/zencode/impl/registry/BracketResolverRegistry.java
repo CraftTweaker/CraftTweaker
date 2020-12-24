@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.zencode.brackets.*;
 import com.blamejared.crafttweaker.impl.commands.*;
 import com.google.common.collect.*;
 import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zenscript.codemodel.member.ref.*;
 
 import java.lang.invoke.*;
@@ -99,10 +100,10 @@ public class BracketResolverRegistry {
             isValid = false;
         }
     
-        if(!CommandStringDisplayable.class.isAssignableFrom(method.getReturnType())){
-            CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketResolver, so it should return something that implements %s.", method.toString(), CommandStringDisplayable.class.getSimpleName());
-            isValid = false;
-        }
+        //if(!CommandStringDisplayable.class.isAssignableFrom(method.getReturnType())){
+        //    CraftTweakerAPI.logError("Method \"%s\" is marked as a BracketResolver, so it should return something that implements %s.", method.toString(), CommandStringDisplayable.class.getSimpleName());
+        //    isValid = false;
+        //}
     
         if(!bracketResolvers.getOrDefault(name, method).equals(method)) {
             final Method other = bracketResolvers.get(name);
