@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/data/IntData")
 public class IntData implements INumberData {
     
-    private IntNBT internal;
+    private final IntNBT internal;
     
     public IntData(IntNBT internal) {
         this.internal = internal;

@@ -14,15 +14,7 @@ public class PreprocessorRegistry {
     private final List<IPreprocessor> preprocessors = new ArrayList<>();
     
     
-    public void addType(Type type) {
-        try {
-            addClass(Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader()));
-        } catch(ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void addClass(Class<?> cls) {
+    public void addClass(Class<?> cls) {
         if(!IPreprocessor.class.isAssignableFrom(cls)) {
             CraftTweakerAPI.logWarning("Preprocessor: \"%s\" does not implement IPreprocessor!", cls
                     .getCanonicalName());

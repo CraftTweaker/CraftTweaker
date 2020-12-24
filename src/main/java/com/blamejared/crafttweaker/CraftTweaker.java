@@ -1,50 +1,70 @@
 package com.blamejared.crafttweaker;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.logger.*;
-import com.blamejared.crafttweaker.api.managers.*;
-import com.blamejared.crafttweaker.api.zencode.brackets.*;
-import com.blamejared.crafttweaker.impl.brackets.*;
-import com.blamejared.crafttweaker.impl.brackets.tags.*;
-import com.blamejared.crafttweaker.impl.commands.*;
-import com.blamejared.crafttweaker.impl.commands.custom.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.api.zencode.brackets.CTRegisterBEPEvent;
+import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.impl.brackets.tags.TagBracketHandler;
+import com.blamejared.crafttweaker.impl.brackets.tags.TagManagerBracketHandler;
+import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.commands.custom.CustomCommands;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExampleCollectionEvent;
-import com.blamejared.crafttweaker.impl.events.*;
-import com.blamejared.crafttweaker.impl.ingredients.*;
-import com.blamejared.crafttweaker.impl.logger.*;
-import com.blamejared.crafttweaker.impl.managers.*;
-import com.blamejared.crafttweaker.impl.network.*;
-import com.blamejared.crafttweaker.impl.recipes.*;
-import com.blamejared.crafttweaker.impl.script.*;
-import com.blamejared.crafttweaker.impl.tag.registry.*;
-import net.minecraft.block.*;
-import net.minecraft.client.resources.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.profiler.*;
-import net.minecraft.resources.*;
-import net.minecraft.server.*;
-import net.minecraft.util.*;
+import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
+import com.blamejared.crafttweaker.impl.events.CTEventHandler;
+import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
+import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
+import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
+import com.blamejared.crafttweaker.impl.network.PacketHandler;
+import com.blamejared.crafttweaker.impl.recipes.SerializerShaped;
+import com.blamejared.crafttweaker.impl.recipes.SerializerShapeless;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.blamejared.crafttweaker.impl.script.SerializerScript;
+import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistryData;
+import net.minecraft.block.Block;
+import net.minecraft.client.resources.ReloadListener;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.*;
-import net.minecraftforge.api.distmarker.*;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.common.*;
-import net.minecraftforge.common.crafting.*;
-import net.minecraftforge.event.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.event.lifecycle.*;
-import net.minecraftforge.fml.javafmlmod.*;
-import net.minecraftforge.fml.server.*;
-import net.minecraftforge.registries.*;
-import org.apache.logging.log4j.*;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.*;
-import java.net.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 @Mod(CraftTweaker.MODID)
 public class CraftTweaker {
@@ -54,24 +74,21 @@ public class CraftTweaker {
     public static final String VERSION = "6.0.0";
     
     public static final Logger LOG = LogManager.getLogger(NAME);
-    
-    
+    public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MODID.getBytes());
     @SuppressWarnings("rawtypes")
     public static IRecipeSerializer SHAPELESS_SERIALIZER;
     @SuppressWarnings("rawtypes")
     public static IRecipeSerializer SHAPED_SERIALIZER;
     @SuppressWarnings("rawtypes")
     public static IRecipeSerializer SCRIPT_SERIALIZER;
-    
     public static IIngredientSerializer<?> INGREDIENT_NBT_SERIALIZER;
     public static IRecipeType<ScriptRecipe> RECIPE_TYPE_SCRIPTS;
+    public static boolean serverOverride = true;
     private static Set<String> PATRON_LIST = new HashSet<>();
     
-    public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MODID.getBytes());
-    public static boolean serverOverride = true;
-    
     public CraftTweaker() {
-        if(!CraftTweakerAPI.SCRIPT_DIR.exists() && !CraftTweakerAPI.SCRIPT_DIR.mkdirs() && !CraftTweakerAPI.SCRIPT_DIR.mkdir()) {
+        if(!CraftTweakerAPI.SCRIPT_DIR.exists() && !CraftTweakerAPI.SCRIPT_DIR.mkdirs() && !CraftTweakerAPI.SCRIPT_DIR
+                .mkdir()) {
             final String path = CraftTweakerAPI.SCRIPT_DIR.getAbsolutePath();
             throw new IllegalStateException("Could not create Directory " + path);
         }
@@ -84,7 +101,9 @@ public class CraftTweaker {
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, EventPriority.HIGHEST, this::handleTags);
+        FMLJavaModLoadingContext.get()
+                .getModEventBus()
+                .addGenericListener(Block.class, EventPriority.HIGHEST, this::handleTags);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new CTEventHandler());
         PacketHandler.init();
@@ -111,12 +130,23 @@ public class CraftTweaker {
                 urlConnection.setReadTimeout(15000);
                 urlConnection.setRequestProperty("User-Agent", "CraftTweaker|1.16.4");
                 try(BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
-                    PATRON_LIST = reader.lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+                    PATRON_LIST = reader.lines()
+                            .filter(s -> !s.isEmpty())
+                            .collect(Collectors.toSet());
                 }
             } catch(IOException e) {
                 e.printStackTrace();
             }
         }).start();
+    }
+    
+    private static void giveFeedback(ITextComponent msg) {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if(server != null) {
+            server.getPlayerList().func_232641_a_(msg, ChatType.SYSTEM, CRAFTTWEAKER_UUID);
+        } else {
+            System.out.println(msg.getString());
+        }
     }
     
     /**
@@ -130,7 +160,8 @@ public class CraftTweaker {
     }
     
     private void setup(final FMLCommonSetupEvent event) {
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon").execute();
+        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon")
+                .execute();
         CraftTweakerAPI.loadScripts(setupCommon);
         
         LOG.info("{} has loaded successfully!", NAME);
@@ -140,7 +171,6 @@ public class CraftTweaker {
         LOG.info("{} client has loaded successfully!", NAME);
         MinecraftForge.EVENT_BUS.register(new CTClientEventHandler());
     }
-    
     
     @SubscribeEvent
     public void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -165,7 +195,8 @@ public class CraftTweaker {
          *
          * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
          */
-        if(event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>()).size() == 0) {
+        if(event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>())
+                .size() == 0) {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
@@ -198,7 +229,6 @@ public class CraftTweaker {
         event.addResource(new ResourceLocation(MODID, "crafttweaker_tags"));
     }
     
-    
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         CTCommands.init(event.getDispatcher());
@@ -229,18 +259,27 @@ public class CraftTweaker {
                 CTCraftingTableManager.recipeManager = recipeManager;
                 CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().execute());
                 List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
-                scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
-                    Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
-                    map.put(scriptRecipe.getId(), scriptRecipe);
-                });
+                scriptFiles.stream()
+                        .map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath()
+                                .substring("scripts\\".length())
+                                .replaceAll("[^a-z0-9_.-]", "_")), file.getPath()
+                                .substring("scripts\\".length()), readContents(file)))
+                        .forEach(scriptRecipe -> {
+                            Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
+                            map.put(scriptRecipe.getId(), scriptRecipe);
+                        });
                 
                 TextComponent msg = new StringTextComponent("CraftTweaker reload complete!");
                 giveFeedback(msg);
                 if(scriptFiles.size() > 0 && !CraftTweakerAPI.NO_BRAND) {
-                    String name = PATRON_LIST.stream().skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size())).findFirst().orElse("");
+                    String name = PATRON_LIST.stream()
+                            .skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size()))
+                            .findFirst()
+                            .orElse("");
                     if(!name.isEmpty()) {
                         msg = new StringTextComponent("This reload was made possible by " + name + " and more!" + TextFormatting.GREEN + " [Learn more!]");
-                        msg.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
+                        msg.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod"))
+                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
                         giveFeedback(msg);
                     }
                 }
@@ -248,16 +287,6 @@ public class CraftTweaker {
         });
         
     }
-    
-    private static void giveFeedback(ITextComponent msg) {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if(server != null) {
-            server.getPlayerList().func_232641_a_(msg, ChatType.SYSTEM, CRAFTTWEAKER_UUID);
-        } else {
-            System.out.println(msg.getString());
-        }
-    }
-    
     
     public String readContents(File file) {
         try(final BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {

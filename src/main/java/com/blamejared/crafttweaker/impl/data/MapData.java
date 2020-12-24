@@ -18,7 +18,7 @@ import java.util.*;
 @Document("vanilla/api/data/MapData")
 public class MapData implements IData {
     
-    private CompoundNBT internal;
+    private final CompoundNBT internal;
     
     public MapData(CompoundNBT internal) {
         this.internal = internal;

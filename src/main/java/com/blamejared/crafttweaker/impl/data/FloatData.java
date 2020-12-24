@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/data/FloatData")
 public class FloatData implements INumberData {
     
-    private FloatNBT internal;
+    private final FloatNBT internal;
     
     public FloatData(FloatNBT internal) {
         this.internal = internal;

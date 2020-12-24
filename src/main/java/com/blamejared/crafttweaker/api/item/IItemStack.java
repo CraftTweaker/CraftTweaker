@@ -352,7 +352,7 @@ public interface IItemStack extends IIngredient {
     }
     
     @ZenCodeType.Getter("food")
-    MCFood getFood();
+    @ZenCodeType.Nullable MCFood getFood();
     
     @ZenCodeType.Setter("food")
     void setFood(MCFood food);

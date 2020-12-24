@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
+import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
@@ -47,7 +48,8 @@ public class MCItemStackMutable implements IItemStack {
     }
     @Override
     public MCFood getFood() {
-        return new MCFood(getInternal().getItem().getFood());
+        final Food food = getInternal().getItem().getFood();
+        return food == null ? null : new MCFood(food);
     }
     
     @Override
@@ -73,7 +75,7 @@ public class MCItemStackMutable implements IItemStack {
         if(getInternal().getTag() != null) {
             MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
             //Damage is special case, if we have more special cases we can handle them here.
-            if(getInternal().isDamaged()) {
+            if(getInternal().getItem().isDamageable()) {
                 data.remove("Damage");
             }
             if(!data.isEmpty()) {
