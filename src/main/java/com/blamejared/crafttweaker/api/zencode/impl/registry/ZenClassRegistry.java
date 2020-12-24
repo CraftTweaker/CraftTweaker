@@ -13,6 +13,7 @@ import net.minecraftforge.fml.ModList;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class ZenClassRegistry {
      * Used to skip incompatible classes instead of throwing multiple Errors
      * (One error will always be thrown when validating at the beginning!)
      */
-    private final List<Class<?>> blacklistedClasses = new ArrayList<>();
+    private final Set<Class<?>> blacklistedClasses = new HashSet<>();
     
     /**
      * All classes that have at least one global field
@@ -135,7 +136,11 @@ public class ZenClassRegistry {
     private boolean isIncompatible(Class<?> cls) {
         try {
             cls.getDeclaredFields();
+            cls.getFields();
             cls.getDeclaredMethods();
+            cls.getMethods();
+            cls.getConstructors();
+            cls.getDeclaredConstructors();
             return false;
         } catch(Throwable t) {
             CraftTweakerAPI.logThrowing("Could not register class '%s'! This is most likely a compatibility issue!", t, cls

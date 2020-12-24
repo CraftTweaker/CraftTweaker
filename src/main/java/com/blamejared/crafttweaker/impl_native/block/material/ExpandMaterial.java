@@ -127,6 +127,6 @@ public class ExpandMaterial {
     }
     
     public static Material tryGet(String tokens) {
-        return hardcodedMaterials.get(tokens);
+        return hardcodedMaterials.get(tokens.toUpperCase());
     }
 }
