@@ -22,21 +22,4 @@ public class AnnotationMirrorUtil {
         return getMirror(element, typeElement.getQualifiedName().toString());
     }
     
-    public static AnnotationMirror getMirror(Element element, Class<?> cls) {
-        return getMirror(element, cls.getCanonicalName());
-    }
-    
-    public static String getAnnotationValue(AnnotationMirror annotationMirror, String name) {
-        return getAnnotationValueObject(annotationMirror, name).toString();
-    }
-    
-    public static Object getAnnotationValueObject(AnnotationMirror annotationMirror, String name) {
-        return annotationMirror.getElementValues()
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().getSimpleName().contentEquals(name))
-                .map(entry -> entry.getValue().getValue())
-                .findAny()
-                .orElse(null);
-    }
 }
