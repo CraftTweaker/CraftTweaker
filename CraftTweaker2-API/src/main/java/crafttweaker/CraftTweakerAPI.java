@@ -221,7 +221,7 @@ public class CraftTweakerAPI {
     }
 
     /**
-     * Set whether errors and warnings printed to players' log or not.
+     * Set whether errors and warnings printed to players' chat or not.
      * @param flag to set
      */
     public static void setSuppressErrorFlag(SuppressErrorFlag flag) {
