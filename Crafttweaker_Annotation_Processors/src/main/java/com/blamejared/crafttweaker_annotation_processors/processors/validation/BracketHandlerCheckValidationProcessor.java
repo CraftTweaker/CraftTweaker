@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.validation;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.AnnotationMirrorUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.annotations.AnnotationMirrorUtil;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -16,13 +16,14 @@ import java.util.Set;
 @SupportedAnnotationTypes({"com.blamejared.crafttweaker.api.annotations.BracketResolver"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BracketHandlerCheckValidationProcessor extends AbstractProcessor {
+    private final AnnotationMirrorUtil annotationMirrorUtil= new AnnotationMirrorUtil();
     
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for(TypeElement annotation : annotations) {
             for(Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
                 
-                final AnnotationMirror annotationMirror = AnnotationMirrorUtil.getMirror(element, annotation);
+                final AnnotationMirror annotationMirror = annotationMirrorUtil.getMirror(element, annotation);
                 
                 if(annotationMirror == null) {
                     processingEnv.getMessager()

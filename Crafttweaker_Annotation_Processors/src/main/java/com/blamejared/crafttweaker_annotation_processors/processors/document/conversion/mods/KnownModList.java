@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods;
 
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.AnnotationMirrorUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.annotations.AnnotationMirrorUtil;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;

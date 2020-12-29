@@ -4,12 +4,15 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class KeywordValidator extends AbstractProcessor {
     
     private final ZenCodeKeywordUtil keywordUtil = new ZenCodeKeywordUtil();

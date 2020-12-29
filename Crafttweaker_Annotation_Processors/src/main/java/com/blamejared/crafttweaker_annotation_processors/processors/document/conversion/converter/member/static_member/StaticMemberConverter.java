@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.MemberConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.IHasPostCreationCall;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.IHasPostCreationCall;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member.DocumentedStaticMembers;
 

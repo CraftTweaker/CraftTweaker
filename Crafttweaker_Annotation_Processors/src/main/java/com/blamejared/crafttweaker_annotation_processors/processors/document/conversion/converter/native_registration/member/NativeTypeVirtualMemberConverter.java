@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.member.ExpansionVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypePageInfo;

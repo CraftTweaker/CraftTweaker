@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.HeaderConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.AnnotationMirrorUtil;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.annotations.AnnotationMirrorUtil;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypeName;
@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class NamedTypeStaticMethodConverter extends AbstractEnclosedElementConverter<DocumentedStaticMembers> {

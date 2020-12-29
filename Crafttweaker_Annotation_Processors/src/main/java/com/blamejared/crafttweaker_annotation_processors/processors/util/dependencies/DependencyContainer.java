@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies;
+package com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies;
 
 public interface DependencyContainer {
     

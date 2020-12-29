@@ -13,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
 /**
  * This is the vanilla ItemStack.
  * It is recommended that you use {@link IItemStack} whenever possible
- *
+ * <p>
  * They can be cast from each other, though.
  */
 @ZenRegister

@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies;
+package com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies;
 
 /**
  * Causes the {@link DependencyContainer} to call this method after the constructor has been invoked
