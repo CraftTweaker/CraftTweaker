@@ -17,6 +17,7 @@ public class NoWarnPreprocessor extends PreprocessorActionBase {
 
     @Override
     public void executeActionOnFind(ScriptFile scriptFile) {
+        CraftTweakerAPI.logInfo("nowarn preprocessor is found in " + scriptFile.getEffectiveName() + ", warnings aren't printed to the players' chat.");
         CraftTweakerAPI.setSuppressErrorFlag(SuppressErrorFlag.ONLY_WARNINGS);
     }
 

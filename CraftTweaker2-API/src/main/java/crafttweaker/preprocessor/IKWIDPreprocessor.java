@@ -17,6 +17,7 @@ public class IKWIDPreprocessor extends PreprocessorActionBase{
     
     @Override
     public void executeActionOnFind(ScriptFile scriptFile) {
+        CraftTweakerAPI.logInfo("ikwid preprocessor is found in " + scriptFile.getEffectiveName() + ", warnings and errors aren't printed to the players' chat.");
         CraftTweakerAPI.setSuppressErrorFlag(SuppressErrorFlag.ALL);
     }
     
