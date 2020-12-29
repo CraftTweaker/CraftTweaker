@@ -94,7 +94,7 @@ public class CraftTweakerAPI {
     public static IBrewingManager brewingManager = null;
 
     /**
-     * whether errors and warnings are printed to players' log or not.
+     * whether errors and warnings are printed to players' chat or not.
      * @see SuppressErrorFlag
      */
     private static SuppressErrorFlag suppressErrorFlag = SuppressErrorFlag.DEFAULT;
