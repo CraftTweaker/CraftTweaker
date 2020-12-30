@@ -57,6 +57,8 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
+    private final EventList<BlockNeighbourNotifyEvent> elBlockNeighbourNotify = new EventList<>();
+    private final EventList<PortalSpawnEvent> elPortalSpawn = new EventList<>();
 
     /**
      * Clears all EventLists
@@ -154,6 +156,8 @@ public class MTEventManager implements IEventManager {
         elEntityLivingUpdateEvent.clear();
         elPotionEffectAdded.clear();
         elPlayerCloneEvent.clear();
+        elBlockNeighbourNotify.clear();
+        elPortalSpawn.clear();
     }
 
     // ##########################
@@ -1851,5 +1855,40 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerCloneEvent(PlayerCloneEvent event) {
         elPlayerCloneEvent.publish(event);
+    }
+
+    // #################################
+    // ### BlockNeighbourNotifyEvent ###
+    // #################################
+
+    @Override
+    public IEventHandle onBlockNeighbourNotify(IEventHandler<BlockNeighbourNotifyEvent> ev) {
+        return elBlockNeighbourNotify.add(ev);
+    }
+
+    public boolean hasBlockNeighbourNotifyEvent() {
+        return elBlockNeighbourNotify.hasHandlers();
+    }
+
+    public void publishBlockNeighbourNotifyEvent(BlockNeighbourNotifyEvent ev) {
+        elBlockNeighbourNotify.publish(ev);
+    }
+
+    // ########################
+    // ### PortalSpawnEvent ###
+    // ########################
+
+
+    @Override
+    public IEventHandle onPortalSpawn(IEventHandler<PortalSpawnEvent> ev) {
+        return elPortalSpawn.add(ev);
+    }
+
+    public boolean hasPortalSpawnEvent() {
+        return elPortalSpawn.hasHandlers();
+    }
+
+    public void publishPortalSpawnEvent(PortalSpawnEvent ev) {
+        elPortalSpawn.publish(ev);
     }
 }

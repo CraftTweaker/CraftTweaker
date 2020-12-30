@@ -295,6 +295,12 @@ public interface IEventManager {
     @ZenMethod
     IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev);
 
+    @ZenMethod
+    IEventHandle onBlockNeighbourNotify(IEventHandler<BlockNeighbourNotifyEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPortalSpawn(IEventHandler<PortalSpawnEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
