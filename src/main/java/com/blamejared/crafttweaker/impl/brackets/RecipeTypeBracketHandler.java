@@ -15,10 +15,7 @@ import org.openzen.zenscript.parser.BracketExpressionParser;
 import org.openzen.zenscript.parser.expression.*;
 import org.openzen.zenscript.parser.type.IParsedType;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")
@@ -40,6 +37,10 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     public static IRecipeManager getCustomManager(ResourceLocation location) {
         return registeredTypes.get(location);
+    }
+    
+    public static Collection<IRecipeManager> getManagerInstances() {
+        return managerInstances.values();
     }
     
     @ZenCodeType.Method
