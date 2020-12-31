@@ -1,6 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
-import crafttweaker.api.event.BlockNeighbourNotifyEvent;
+import crafttweaker.api.event.BlockNeighborNotifyEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IFacing;
 import net.minecraftforge.event.world.BlockEvent;
@@ -8,10 +8,10 @@ import net.minecraftforge.event.world.BlockEvent;
 /**
  * @author youyihj
  */
-public class MCBlockNeighbourNotifyEvent extends MCBlockEvent implements BlockNeighbourNotifyEvent {
+public class MCBlockNeighborNotifyEvent extends MCBlockEvent implements BlockNeighborNotifyEvent {
     private final BlockEvent.NeighborNotifyEvent event;
 
-    public MCBlockNeighbourNotifyEvent(BlockEvent.NeighborNotifyEvent event) {
+    public MCBlockNeighborNotifyEvent(BlockEvent.NeighborNotifyEvent event) {
         super(event);
         this.event = event;
     }

@@ -57,7 +57,7 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
-    private final EventList<BlockNeighbourNotifyEvent> elBlockNeighbourNotify = new EventList<>();
+    private final EventList<BlockNeighborNotifyEvent> elBlockNeighborNotify = new EventList<>();
     private final EventList<PortalSpawnEvent> elPortalSpawn = new EventList<>();
 
     /**
@@ -156,7 +156,7 @@ public class MTEventManager implements IEventManager {
         elEntityLivingUpdateEvent.clear();
         elPotionEffectAdded.clear();
         elPlayerCloneEvent.clear();
-        elBlockNeighbourNotify.clear();
+        elBlockNeighborNotify.clear();
         elPortalSpawn.clear();
     }
 
@@ -1858,20 +1858,20 @@ public class MTEventManager implements IEventManager {
     }
 
     // #################################
-    // ### BlockNeighbourNotifyEvent ###
+    // ### BlockNeighborNotifyEvent ###
     // #################################
 
     @Override
-    public IEventHandle onBlockNeighbourNotify(IEventHandler<BlockNeighbourNotifyEvent> ev) {
-        return elBlockNeighbourNotify.add(ev);
+    public IEventHandle onBlockNeighborNotify(IEventHandler<BlockNeighborNotifyEvent> ev) {
+        return elBlockNeighborNotify.add(ev);
     }
 
-    public boolean hasBlockNeighbourNotifyEvent() {
-        return elBlockNeighbourNotify.hasHandlers();
+    public boolean hasBlockNeighborNotifyEvent() {
+        return elBlockNeighborNotify.hasHandlers();
     }
 
-    public void publishBlockNeighbourNotifyEvent(BlockNeighbourNotifyEvent ev) {
-        elBlockNeighbourNotify.publish(ev);
+    public void publishBlockNeighborNotifyEvent(BlockNeighborNotifyEvent ev) {
+        elBlockNeighborNotify.publish(ev);
     }
 
     // ########################

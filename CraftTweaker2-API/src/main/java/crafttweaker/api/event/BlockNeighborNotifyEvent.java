@@ -9,8 +9,8 @@ import stanhebben.zenscript.annotations.ZenGetter;
  * @author youyihj
  */
 @ZenRegister
-@ZenClass("crafttweaker.event.BlockNeighbourNotifyEvent")
-public interface BlockNeighbourNotifyEvent extends IBlockEvent, IEventCancelable {
+@ZenClass("crafttweaker.event.BlockNeighborNotifyEvent")
+public interface BlockNeighborNotifyEvent extends IBlockEvent, IEventCancelable {
     @ZenGetter("forceRedstoneUpdate")
     boolean getForceRedstoneUpdate();
 

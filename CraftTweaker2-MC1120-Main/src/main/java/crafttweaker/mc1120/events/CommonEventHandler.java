@@ -744,9 +744,9 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onBlockNeighbourNotify(BlockEvent.NeighborNotifyEvent ev) {
-        if (CrafttweakerImplementationAPI.events.hasBlockNeighbourNotifyEvent())
-            CrafttweakerImplementationAPI.events.publishBlockNeighbourNotifyEvent(new MCBlockNeighbourNotifyEvent(ev));
+    public void onBlockNeighborNotify(BlockEvent.NeighborNotifyEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasBlockNeighborNotifyEvent())
+            CrafttweakerImplementationAPI.events.publishBlockNeighborNotifyEvent(new MCBlockNeighborNotifyEvent(ev));
     }
 
     @SubscribeEvent
