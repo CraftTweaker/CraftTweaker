@@ -48,13 +48,16 @@ public class GenericRecipesManager {
     public static final GenericRecipesManager recipes = new GenericRecipesManager();
     
     /**
-     * Add a new recipe based on the given recipe datapack
+     * Add a new recipe based on the given recipe in a valid DataPack JSON format.
+     *
+     * Unlike the addJSONRecipe method in {@link IRecipeManager} you **must** set the type of the recipe within the JSON yourself.
+     * This allows you to explicitly specify a serializer if their name does not match the RecipeType name.
      *
      * @param name The recipe's resource path
      * @param data The recipe in JSON format
      * @docParam name "recipe_name"
      * @docParam data {
-     * type: "minecraft:smoking"
+     * type: "minecraft:smoking",
      * ingredient: <item:minecraft:gold_ore>,
      * result: <item:minecraft:cooked_porkchop>,
      * experience:0.35 as float,
@@ -100,10 +103,11 @@ public class GenericRecipesManager {
     }
     
     /**
-     * Removes all recipes from the provided mod
+     * Removes all recipes from the provided mod.
+     * Chooses the recipes based on their full recipe name, not based on output item!
      *
-     * @param modId The mod's modid
-     * @docParam modId crafttweaker
+     * @param modId The mod's modId
+     * @docParam modId "crafttweaker"
      */
     @ZenCodeType.Method
     public void removeByModId(String modId) {
@@ -114,11 +118,13 @@ public class GenericRecipesManager {
      * Removes all recipes from the provided mod.
      * Allows a function to exclude certain recipe names from being removed.
      * In the example below, only the recipe for the white bed would remain.
+     * Since the recipe's namespace is already fixed based on the modId argument,
+     * the recipe filter will only check the resource path!
      *
      * @param modId   The mod's modid
      * @param exclude Function that returns `true` if the recipe should remain in the registry.
-     * @docParam modId minecraft
-     * @docParam exclude (recipeName as string) => recipeName == "bed_white"
+     * @docParam modId "minecraft"
+     * @docParam exclude (recipeName as string) => recipeName == "white_bed"
      */
     @ZenCodeType.Method
     public void removeByModId(String modId, IRecipeManager.RecipeFilter exclude) {

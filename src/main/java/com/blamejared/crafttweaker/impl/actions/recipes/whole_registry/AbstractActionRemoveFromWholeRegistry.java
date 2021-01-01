@@ -1,27 +1,35 @@
 package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.IntSummaryStatistics;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 public abstract class AbstractActionRemoveFromWholeRegistry extends AbstractActionWholeRegistry {
     
     @Override
     public void apply() {
-        final IntSummaryStatistics removalStatistics = getRecipesByType().values()
-                .stream()
-                .mapToInt(this::applyToRegistry)
-                .filter(i -> i != 0)
-                .summaryStatistics();
+        final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
+        int numberOfRemovedRecipes = 0;
         
-        final long numberOfRecipesRemoved = removalStatistics.getSum();
-        final long numberOfManagersThatOwnedTheRecipes = removalStatistics.getCount();
-        CraftTweakerAPI.logInfo("Removed %s recipes registered in %s recipe managers", numberOfRecipesRemoved, numberOfManagersThatOwnedTheRecipes);
+        final Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> recipesByType = getRecipesByType();
+        for(IRecipeType<?> recipeType : recipesByType.keySet()) {
+            int removedRecipes = applyToRegistry(recipesByType.get(recipeType));
+            if(removedRecipes > 0) {
+                final String commandString = new RecipeManagerWrapper(recipeType).getCommandString();
+                numberOfRemovedRecipesByType.put(commandString, removedRecipes);
+                numberOfRemovedRecipes += removedRecipes;
+            }
+        }
+        final int numberOfRecipeTypes = numberOfRemovedRecipesByType.size();
+        final String recipeTypeList = makeRecipeList(numberOfRemovedRecipesByType);
+        CraftTweakerAPI.logInfo("Removed %s recipes registered in these %s recipe managers: %s", numberOfRemovedRecipes, numberOfRecipeTypes, recipeTypeList);
     }
     
     private int applyToRegistry(Map<ResourceLocation, IRecipe<?>> registry) {

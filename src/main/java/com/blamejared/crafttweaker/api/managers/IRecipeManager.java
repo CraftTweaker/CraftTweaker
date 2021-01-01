@@ -308,7 +308,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @Override
     default String getCommandString() {
-        return "<recipetype:" + getRecipeType().toString() + ">";
+        return "<recipetype:" + getBracketResourceLocation() + ">";
     }
     
 }

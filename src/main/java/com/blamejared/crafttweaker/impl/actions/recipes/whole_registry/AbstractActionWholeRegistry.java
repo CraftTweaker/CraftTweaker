@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class AbstractActionWholeRegistry implements IRuntimeAction {
     
@@ -21,5 +22,11 @@ public abstract class AbstractActionWholeRegistry implements IRuntimeAction {
         final HashMap<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> result = new HashMap<>(getRecipeManager().recipes);
         result.remove(CraftTweaker.RECIPE_TYPE_SCRIPTS);
         return result;
+    }
+    
+    protected String makeRecipeList(Map<String, Integer> recipeTypes) {
+        return recipeTypes.entrySet().stream()
+                .map(entry -> String.format("%s: %s", entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 }

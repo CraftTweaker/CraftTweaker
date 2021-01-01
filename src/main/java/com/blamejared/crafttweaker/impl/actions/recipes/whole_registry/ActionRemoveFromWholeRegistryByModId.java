@@ -27,6 +27,6 @@ public class ActionRemoveFromWholeRegistryByModId extends AbstractActionRemoveFr
             return false;
         }
         
-        return exclude == null || exclude.test(id.getPath());
+        return exclude == null || !exclude.test(id.getPath());
     }
 }
