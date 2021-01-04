@@ -13,7 +13,7 @@ public class MTLogger implements ILogger {
     
     private final List<ILogger> loggers = new ArrayList<>();
     private final List<IPlayer> players = new ArrayList<>();
-    private final List<String> unprocessed = new ArrayList<>();
+    private final List<ErrorMessage> unprocessed = new ArrayList<>();
     private boolean isDefaultDisabled = false;
     
     public void addLogger(ILogger logger) {
@@ -23,14 +23,10 @@ public class MTLogger implements ILogger {
     public void removeLogger(ILogger logger) {
         loggers.remove(logger);
     }
-    
+
     public void addPlayer(IPlayer player) {
         players.add(player);
-        if(!unprocessed.isEmpty()) {
-            if(!CraftTweakerAPI.noWarn) {
-                unprocessed.forEach(player::sendChat);
-            }
-        }
+        logPlayer(player);
     }
     
     public void removePlayer(IPlayer player) {
@@ -61,14 +57,12 @@ public class MTLogger implements ILogger {
             logger.logWarning(message);
         }
         
-        String message2 = "WARNING: " + message;
+        String message2 = "\u00a7eWARNING: " + message;
         if(players.isEmpty()) {
-            unprocessed.add(message2);
+            unprocessed.add(new ErrorMessage(message2, true));
         } else {
-            if(!CraftTweakerAPI.noWarn) {
-                for(IPlayer player : players) {
-                    player.sendChat(message2);
-                }
+            if(!CraftTweakerAPI.isSuppressingWarnings()) {
+                players.forEach(player -> player.sendChat(message2));
             }
         }
     }
@@ -84,21 +78,25 @@ public class MTLogger implements ILogger {
             logger.logError(message, exception);
         }
         
-        String message2 = "ERROR: " + message;
+        String message2 = "\u00a7cERROR: " + message;
         if(players.isEmpty()) {
-            unprocessed.add(message2);
+            unprocessed.add(new ErrorMessage(message2, false));
         } else {
-            if(!CraftTweakerAPI.noWarn) {
-                for(IPlayer player : players) {
-                    player.sendChat(message2);
-                }
+            if (!CraftTweakerAPI.isSuppressingErrors()) {
+                players.forEach(player -> player.sendChat(message2));
             }
         }
     }
     
     @Override
     public void logPlayer(IPlayer player) {
-    
+        for (ErrorMessage errorMessage : unprocessed) {
+            if (errorMessage.isWarning && !CraftTweakerAPI.isSuppressingWarnings()) {
+                player.sendChat(errorMessage.message);
+            } else if (!errorMessage.isWarning && !CraftTweakerAPI.isSuppressingErrors()) {
+                player.sendChat(errorMessage.message);
+            }
+        }
     }
     
     @Override
@@ -115,5 +113,15 @@ public class MTLogger implements ILogger {
     @Override
     public void setLogDisabled(boolean logDisabled) {
         this.isDefaultDisabled = logDisabled;
+    }
+
+    private static class ErrorMessage {
+        final String message;
+        final boolean isWarning;
+
+        public ErrorMessage(String message, boolean isWarning) {
+            this.message = message;
+            this.isWarning = isWarning;
+        }
     }
 }
