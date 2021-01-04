@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element;
 
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -25,8 +26,9 @@ public class ClassTypeConverter {
     }
     
     private TypeMirror getFromTypeNotPresentException(TypeNotPresentException exception) {
-        final String typeName = exception.typeName();
-        return elementUtils.getTypeElement(typeName).asType();
+        final String typeName = exception.typeName().replace('$', '.');
+        final TypeElement typeElement = elementUtils.getTypeElement(typeName);
+        return typeElement.asType();
     }
     
     private TypeMirror getFromMirroredTypeException(MirroredTypeException exception) {
