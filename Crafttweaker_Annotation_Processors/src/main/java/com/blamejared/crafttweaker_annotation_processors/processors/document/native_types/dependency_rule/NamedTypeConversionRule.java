@@ -1,17 +1,21 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.native_types.dependency_rule;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import org.jetbrains.annotations.*;
-import org.openzen.zencode.java.*;
-import org.reflections.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypeName;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypePageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.TypePageTypeInfo;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import org.jetbrains.annotations.NotNull;
+import org.openzen.zencode.java.ZenCodeType;
+import org.reflections.Reflections;
 
-import javax.lang.model.element.*;
-import javax.lang.model.util.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class NamedTypeConversionRule implements ModDependencyConversionRule {
     
@@ -25,12 +29,15 @@ public class NamedTypeConversionRule implements ModDependencyConversionRule {
     
     @Override
     public Map<TypeElement, AbstractTypeInfo> getAll() {
-        return getClasses().stream().filter(this::isDocumented).collect(createTypeInfoMap());
+        return getClasses().stream()
+                .map(this::getTypeElementFromClass)
+                .filter(this::isDocumented)
+                .collect(createTypeInfoMap());
     }
     
-    private Collector<Class<?>, ?, Map<TypeElement, AbstractTypeInfo>> createTypeInfoMap() {
-        final Function<Class<?>, TypeElement> keyMapper = this::getTypeElementFromClass;
-        final Function<Class<?>, AbstractTypeInfo> valueMapper = this::getTypeInfoFromClass;
+    private Collector<TypeElement, ?, Map<TypeElement, AbstractTypeInfo>> createTypeInfoMap() {
+        final Function<TypeElement, TypeElement> keyMapper = Function.identity();
+        final Function<TypeElement, AbstractTypeInfo> valueMapper = this::getTypeInfoFromClass;
         
         return Collectors.toMap(keyMapper, valueMapper);
     }
@@ -39,30 +46,30 @@ public class NamedTypeConversionRule implements ModDependencyConversionRule {
         return elements.getTypeElement(documentedClass.getCanonicalName());
     }
     
-    private AbstractTypeInfo getTypeInfoFromClass(Class<?> documentedClass) {
+    private AbstractTypeInfo getTypeInfoFromClass(TypeElement documentedClass) {
         final TypePageInfo pageInfo = getPageInfoFromClass(documentedClass);
         return new TypePageTypeInfo(pageInfo);
     }
     
     @NotNull
-    private TypePageInfo getPageInfoFromClass(Class<?> documentedClass) {
+    private TypePageInfo getPageInfoFromClass(TypeElement documentedClass) {
         final TypeName typeName = getTypeNameFromClass(documentedClass);
         final String path = getDocPathFromClass(documentedClass);
         
         return new TypePageInfo("unknown", path, typeName);
     }
     
-    private TypeName getTypeNameFromClass(Class<?> documentedClass) {
+    private TypeName getTypeNameFromClass(TypeElement documentedClass) {
         final ZenCodeType.Name annotation = documentedClass.getAnnotation(ZenCodeType.Name.class);
         return new TypeName(annotation.value());
     }
     
-    private String getDocPathFromClass(Class<?> documentedClass) {
+    private String getDocPathFromClass(TypeElement documentedClass) {
         return documentedClass.getAnnotation(Document.class).value();
     }
     
-    private boolean isDocumented(Class<?> aClass) {
-        return aClass.isAnnotationPresent(Document.class);
+    private boolean isDocumented(TypeElement element) {
+        return element.getAnnotation(Document.class) != null;
     }
     
     

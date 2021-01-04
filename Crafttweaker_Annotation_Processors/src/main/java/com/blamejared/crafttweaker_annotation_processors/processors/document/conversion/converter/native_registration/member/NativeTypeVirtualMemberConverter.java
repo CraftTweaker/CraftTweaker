@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.member.ExpansionVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.ClassTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
@@ -20,9 +21,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 
 import javax.annotation.Nonnull;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,12 +30,12 @@ import java.util.stream.Collectors;
 public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConverter {
     
     private final TypeConverter typeConverter;
-    private final Elements elementUtils;
+    private final ClassTypeConverter classTypeConverter;
     
-    public NativeTypeVirtualMemberConverter(DependencyContainer dependencyContainer, TypeConverter typeConverter, Elements elementUtils) {
+    public NativeTypeVirtualMemberConverter(DependencyContainer dependencyContainer, TypeConverter typeConverter, ClassTypeConverter classTypeConverter) {
         super(dependencyContainer);
         this.typeConverter = typeConverter;
-        this.elementUtils = elementUtils;
+        this.classTypeConverter = classTypeConverter;
     }
     
     @Override
@@ -99,8 +98,8 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
     }
     
     private AbstractTypeInfo getParameterType(NativeConstructor.ConstructorParameter constructorParameter) {
-        final TypeMirror mirror = getParameterTypeMirror(constructorParameter);
-        return typeConverter.convertType(mirror);
+        final TypeMirror nativeType = classTypeConverter.getTypeMirror(constructorParameter, NativeConstructor.ConstructorParameter::type);
+        return typeConverter.convertType(nativeType);
     }
     
     private DocumentationComment getParameterDescription(NativeConstructor.ConstructorParameter constructorParameter) {
@@ -122,19 +121,6 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
             result.addTextValue(textValue);
         }
         return result;
-    }
-    
-    private TypeMirror getParameterTypeMirror(NativeConstructor.ConstructorParameter constructorParameter) {
-        try {
-            final Class<?> type = constructorParameter.type();
-            return getTypeMirrorFromClass(type);
-        } catch(MirroredTypeException exception) {
-            return exception.getTypeMirror();
-        }
-    }
-    
-    private TypeMirror getTypeMirrorFromClass(Class<?> type) {
-        return elementUtils.getTypeElement(type.getCanonicalName()).asType();
     }
     
     private String getParameterName(NativeConstructor.ConstructorParameter constructorParameter) {

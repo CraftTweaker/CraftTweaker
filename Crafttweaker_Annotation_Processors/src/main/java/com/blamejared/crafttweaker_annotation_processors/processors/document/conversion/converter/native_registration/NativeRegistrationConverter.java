@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.ImplementationConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.SuperTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.native_registration.member.NativeTypeVirtualMemberConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.ClassTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypeName;
@@ -23,10 +24,9 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 
 import javax.annotation.Nonnull;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,10 +39,10 @@ public class NativeRegistrationConverter extends DocumentConverter {
     private final ImplementationConverter implementationConverter;
     private final GenericParameterConverter genericParameterConverter;
     private final NativeConversionRegistry nativeConversionRegistry;
-    private final Elements elementUtils;
     private final Types typeUtils;
+    private final ClassTypeConverter classTypeConverter;
     
-    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Elements elementUtils, Types typeUtils) {
+    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Types typeUtils, ClassTypeConverter classTypeConverter) {
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
         this.virtualMemberConverter = virtualMemberConverter;
@@ -50,8 +50,8 @@ public class NativeRegistrationConverter extends DocumentConverter {
         this.implementationConverter = implementationConverter;
         this.genericParameterConverter = genericParameterConverter;
         this.nativeConversionRegistry = nativeConversionRegistry;
-        this.elementUtils = elementUtils;
         this.typeUtils = typeUtils;
+        this.classTypeConverter = classTypeConverter;
     }
     
     @Override
@@ -84,17 +84,18 @@ public class NativeRegistrationConverter extends DocumentConverter {
     }
     
     private TypeElement getNativeType(TypeElement element) {
-        try {
-            final NativeTypeRegistration nativeAnnotation = getNativeAnnotation(element);
-            return getNativeTypeFromClass(nativeAnnotation.value());
-        } catch(MirroredTypeException exception) {
-            final TypeMirror typeMirror = exception.getTypeMirror();
-            return (TypeElement) typeUtils.asElement(typeMirror);
-        }
+        final NativeTypeRegistration annotation = getNativeAnnotation(element);
+        final TypeMirror nativeType = classTypeConverter.getTypeMirror(annotation, NativeTypeRegistration::value);
+        return getTypeElementFromMirror(nativeType);
     }
     
-    private TypeElement getNativeTypeFromClass(Class<?> cls) {
-        return elementUtils.getTypeElement(cls.getCanonicalName());
+    private TypeElement getTypeElementFromMirror(TypeMirror nativeType) {
+        final Element element = typeUtils.asElement(nativeType);
+        if(element instanceof TypeElement) {
+            return (TypeElement) element;
+        }
+        
+        throw new IllegalArgumentException("Could not get typeElement from mirror: " + nativeType);
     }
     
     @Nonnull
