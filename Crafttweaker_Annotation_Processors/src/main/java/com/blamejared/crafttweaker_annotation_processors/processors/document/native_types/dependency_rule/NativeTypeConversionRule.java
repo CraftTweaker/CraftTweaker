@@ -37,8 +37,8 @@ public class NativeTypeConversionRule implements ModDependencyConversionRule {
     @Override
     public Map<TypeElement, AbstractTypeInfo> getAll() {
         return getNativeExpansionClasses().stream()
-                .map(this::getTypeElementFromClass)
                 .filter(this::isDocumented)
+                .map(this::getTypeElementFromClass)
                 .collect(createTypeInfoMap());
     }
     
@@ -88,7 +88,7 @@ public class NativeTypeConversionRule implements ModDependencyConversionRule {
         return reflections.getTypesAnnotatedWith(NativeTypeRegistration.class);
     }
     
-    private boolean isDocumented(TypeElement nativeRegistrationClass) {
-        return getNativeAnnotation(nativeRegistrationClass) != null;
+    private boolean isDocumented(Class<?> nativeRegistrationClass) {
+        return nativeRegistrationClass.isAnnotationPresent(Document.class);
     }
 }
