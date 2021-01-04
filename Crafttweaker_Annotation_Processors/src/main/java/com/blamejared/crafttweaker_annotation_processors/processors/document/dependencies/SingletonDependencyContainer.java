@@ -77,7 +77,7 @@ public class SingletonDependencyContainer implements DependencyContainer {
             return (Type) constructor.newInstance(arguments);
         } catch(Exception e) {
             final Messager instanceOfClass = getInstanceOfClass(Messager.class);
-            instanceOfClass.printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+            instanceOfClass.printMessage(Diagnostic.Kind.ERROR, e.toString());
             return null;
         }
     }

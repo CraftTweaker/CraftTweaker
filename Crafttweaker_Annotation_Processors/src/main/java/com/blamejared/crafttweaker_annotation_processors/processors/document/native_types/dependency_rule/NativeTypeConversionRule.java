@@ -23,13 +23,11 @@ import java.util.stream.Collectors;
 public class NativeTypeConversionRule implements ModDependencyConversionRule {
     
     private final Reflections reflections;
-    private final Elements elementUtils;
     private final Types typeUtils;
     private final ClassTypeConverter classTypeConverter;
     
-    public NativeTypeConversionRule(Reflections reflections, Elements elementUtils, Types typeUtils, ClassTypeConverter classTypeConverter) {
+    public NativeTypeConversionRule(Reflections reflections, Types typeUtils, ClassTypeConverter classTypeConverter) {
         this.reflections = reflections;
-        this.elementUtils = elementUtils;
         this.typeUtils = typeUtils;
         this.classTypeConverter = classTypeConverter;
     }
@@ -38,49 +36,46 @@ public class NativeTypeConversionRule implements ModDependencyConversionRule {
     public Map<TypeElement, AbstractTypeInfo> getAll() {
         return getNativeExpansionClasses().stream()
                 .filter(this::isDocumented)
-                .map(this::getTypeElementFromClass)
                 .collect(createTypeInfoMap());
     }
     
-    private Collector<TypeElement, ?, Map<TypeElement, AbstractTypeInfo>> createTypeInfoMap() {
-        final Function<TypeElement, TypeElement> keyMapper = Function.identity();
-        final Function<TypeElement, AbstractTypeInfo> valueMapper = this::getTypeInfoFromClass;
+    private Collector<Class<?>, ?, Map<TypeElement, AbstractTypeInfo>> createTypeInfoMap() {
+        final Function<Class<?>, TypeElement> keyMapper = this::getTypeElementFromClass;
+        final Function<Class<?>, AbstractTypeInfo> valueMapper = this::getTypeInfoFromClass;
         
         return Collectors.toMap(keyMapper, valueMapper);
     }
     
     private TypeElement getTypeElementFromClass(Class<?> documentedClass) {
-        final TypeElement expansionTypeElement = elementUtils.getTypeElement(documentedClass.getCanonicalName());
-        
-        final NativeTypeRegistration nativeAnnotation = getNativeAnnotation(expansionTypeElement);
+        final NativeTypeRegistration nativeAnnotation = getNativeAnnotation(documentedClass);
         final TypeMirror nativeType = classTypeConverter.getTypeMirror(nativeAnnotation, NativeTypeRegistration::value);
         
         return (TypeElement) typeUtils.asElement(nativeType);
     }
     
-    private AbstractTypeInfo getTypeInfoFromClass(TypeElement documentedClass) {
+    private AbstractTypeInfo getTypeInfoFromClass(Class<?> documentedClass) {
         final TypePageInfo pageInfo = getPageInfoFromClass(documentedClass);
         return new TypePageTypeInfo(pageInfo);
     }
     
     @NotNull
-    private TypePageInfo getPageInfoFromClass(TypeElement documentedClass) {
+    private TypePageInfo getPageInfoFromClass(Class<?> documentedClass) {
         final TypeName typeName = getTypeNameFromClass(documentedClass);
         final String path = getDocPathFromClass(documentedClass);
         
         return new TypePageInfo("unknown", path, typeName);
     }
     
-    private TypeName getTypeNameFromClass(TypeElement documentedClass) {
+    private TypeName getTypeNameFromClass(Class<?> documentedClass) {
         final NativeTypeRegistration annotation = getNativeAnnotation(documentedClass);
         return new TypeName(annotation.zenCodeName());
     }
     
-    private NativeTypeRegistration getNativeAnnotation(TypeElement documentedClass) {
+    private NativeTypeRegistration getNativeAnnotation(Class<?> documentedClass) {
         return documentedClass.getAnnotation(NativeTypeRegistration.class);
     }
     
-    private String getDocPathFromClass(TypeElement documentedClass) {
+    private String getDocPathFromClass(Class<?> documentedClass) {
         return documentedClass.getAnnotation(Document.class).value();
     }
     
