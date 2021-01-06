@@ -43,11 +43,12 @@ public class SingletonDependencyContainer implements DependencyContainer {
     }
     
     private <Type> void verifyClassCanBeInitialized(Class<Type> cls) {
+        final String canonicalName = cls.getCanonicalName();
         if(cls.isInterface()) {
-            throw new IllegalArgumentException("Cannot instantiate interface!");
+            throw new IllegalArgumentException("Cannot instantiate interface: " + canonicalName);
         }
         if(Modifier.isAbstract(cls.getModifiers())) {
-            throw new IllegalArgumentException("Cannot instantiate abstract class!");
+            throw new IllegalArgumentException("Cannot instantiate abstract class: " + canonicalName);
         }
     }
     

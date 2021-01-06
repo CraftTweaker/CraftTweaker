@@ -1,54 +1,71 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.AbstractCraftTweakerProcessor;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.ElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.KnownElementList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.SingletonDependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.DocsJsonWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.sun.source.util.Trees;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import javax.annotation.processing.*;
-import javax.lang.model.SourceVersion;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
-@SupportedAnnotationTypes({"com.blamejared.crafttweaker_annotations.annotations.Document", "net.minecraftforge.fml.common.Mod"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class DocumentProcessor extends AbstractProcessor {
+public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     
     private static final File outputDirectory = new File("docsOut");
     
-    private final DependencyContainer dependencyContainer = new SingletonDependencyContainer();
     private KnownElementList knownElementList;
     private KnownModList knownModList;
     
     @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        setupDependencyContainer(processingEnv);
-        
+    public Set<String> getSupportedAnnotationTypes() {
+        final HashSet<String> result = new HashSet<>(2);
+        result.add(Document.class.getCanonicalName());
+        result.add("net.minecraftforge.fml.common.Mod");
+        return result;
+    }
+    
+    @Override
+    public Collection<Class<? extends Annotation>> getSupportedAnnotationClasses() {
+        //Ignored since we need the other method here, due to @Mod
+        throw new IllegalStateException("Should not be called!");
+    }
+    
+    @Override
+    protected void setupDependencyContainer(ProcessingEnvironment processingEnv) {
+        super.setupDependencyContainer(processingEnv);
+        setupTrees(processingEnv);
+        setupReflections();
+    }
+    
+    @Override
+    protected void performInitialization() {
         knownElementList = dependencyContainer.getInstanceOfClass(KnownElementList.class);
         knownModList = dependencyContainer.getInstanceOfClass(KnownModList.class);
     }
     
-    private void setupDependencyContainer(ProcessingEnvironment processingEnv) {
-        dependencyContainer.addInstanceAs(dependencyContainer, DependencyContainer.class);
-        dependencyContainer.addInstanceAs(processingEnv, ProcessingEnvironment.class);
-        dependencyContainer.addInstanceAs(processingEnv.getMessager(), Messager.class);
-        dependencyContainer.addInstanceAs(processingEnv.getElementUtils(), Elements.class);
-        dependencyContainer.addInstanceAs(processingEnv.getTypeUtils(), Types.class);
+    @Override
+    protected boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        if(roundEnv.processingOver()) {
+            handleLastRound();
+        } else {
+            handleIntermediateRound(roundEnv);
+        }
         
-        setupTrees(processingEnv);
-        setupReflections();
+        return false;
     }
     
     private void setupReflections() {
@@ -63,19 +80,15 @@ public class DocumentProcessor extends AbstractProcessor {
     }
     
     private void setupTrees(ProcessingEnvironment processingEnv) {
-        final Trees instance = Trees.instance(processingEnv);
-        dependencyContainer.addInstanceAs(instance, Trees.class);
-    }
-    
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if(roundEnv.processingOver()) {
-            handleLastRound();
-        } else {
-            handleIntermediateRound(roundEnv);
+        final String environmentClassName = processingEnv.getClass().getName();
+        
+        if(!environmentClassName.equals("com.sun.tools.javac.processing.JavacProcessingEnvironment")) {
+            //Let's throw the exception ourselves, since Trees.instance just throws an empty IllegalArgumentException which is harder to trace down
+            throw new IllegalArgumentException("Processing environment must be JavacProcessingEnvironment, but is " + environmentClassName + "! Make sure you use gradle for compilation.");
         }
         
-        return false;
+        final Trees instance = Trees.instance(processingEnv);
+        dependencyContainer.addInstanceAs(instance, Trees.class);
     }
     
     public void handleIntermediateRound(RoundEnvironment roundEnvironment) {
