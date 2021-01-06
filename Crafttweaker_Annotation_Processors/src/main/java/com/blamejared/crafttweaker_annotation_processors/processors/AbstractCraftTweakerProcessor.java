@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.SingletonDependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.SingletonDependencyContainer;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.annotation.processing.AbstractProcessor;
@@ -31,7 +31,8 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     @Override
     public final synchronized void init(ProcessingEnvironment processingEnv) {
         try {
-            setupDependencyContainer(processingEnv);
+            super.init(processingEnv);
+            setupDependencyContainer();
             performInitialization();
             this.initializedCorrectly = true;
         } catch(Exception exception) {
@@ -66,7 +67,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     }
     
     @OverridingMethodsMustInvokeSuper
-    protected void setupDependencyContainer(ProcessingEnvironment processingEnv) {
+    protected void setupDependencyContainer() {
         dependencyContainer.addInstanceAs(dependencyContainer, DependencyContainer.class);
         dependencyContainer.addInstanceAs(processingEnv, ProcessingEnvironment.class);
         dependencyContainer.addInstanceAs(processingEnv.getMessager(), Messager.class);
@@ -76,8 +77,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     
     public abstract Collection<Class<? extends Annotation>> getSupportedAnnotationClasses();
     
-    protected void performInitialization() {
-    }
+    protected abstract void performInitialization();
     
     protected abstract boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv);
 }

@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.native_types;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.native_types.dependency_rule.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.*;
 

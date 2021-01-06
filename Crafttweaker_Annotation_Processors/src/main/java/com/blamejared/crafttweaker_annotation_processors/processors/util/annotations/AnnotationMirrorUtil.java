@@ -1,9 +1,10 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element;
+package com.blamejared.crafttweaker_annotation_processors.processors.util.annotations;
 
 import javax.annotation.Nonnull;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.lang.annotation.Annotation;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -32,6 +33,10 @@ public class AnnotationMirrorUtil {
     
     public AnnotationMirror getMirror(Element element, TypeElement typeElement) {
         return getMirror(element, typeElement.getQualifiedName().toString());
+    }
+    
+    public AnnotationMirror getMirror(Element element, Class<? extends Annotation> annotationClass) {
+        return getMirror(element, annotationClass.getCanonicalName());
     }
     
     public String getAnnotationValue(AnnotationMirror annotationMirror, String name) {

@@ -21,7 +21,6 @@ public class KnownElementList {
     private Collection<TypeElement> knownElements;
     
     public KnownElementList(ProcessingEnvironment processingEnv) {
-        
         this.processingEnv = processingEnv;
         this.knownElements = new HashSet<>();
     }

@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 import com.blamejared.crafttweaker_annotation_processors.processors.document.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.rules.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.rules.generic.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.*;
 

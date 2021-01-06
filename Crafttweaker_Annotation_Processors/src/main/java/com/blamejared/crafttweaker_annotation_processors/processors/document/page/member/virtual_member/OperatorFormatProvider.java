@@ -37,7 +37,7 @@ public class OperatorFormatProvider {
             case CONTAINS:
                 return "%2$s in %1$s";
             case COMPARE:
-                return "%s compare %s";
+                return "%s < %s";
             case MEMBERGETTER:
                 return "%s.%s";
             case MEMBERSETTER:

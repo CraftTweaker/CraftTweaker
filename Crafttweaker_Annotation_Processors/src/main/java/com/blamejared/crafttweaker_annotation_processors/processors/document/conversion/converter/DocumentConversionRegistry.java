@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.Doc
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.ExpansionConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.NamedTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.native_registration.NativeRegistrationConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
 
 import javax.annotation.Nonnull;
 import javax.lang.model.element.TypeElement;

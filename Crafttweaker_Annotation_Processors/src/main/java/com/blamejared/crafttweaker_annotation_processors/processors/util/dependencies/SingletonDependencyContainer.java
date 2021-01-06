@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies;
+package com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies;
 
 import javax.annotation.Nonnull;
 import javax.annotation.processing.*;
@@ -43,11 +43,12 @@ public class SingletonDependencyContainer implements DependencyContainer {
     }
     
     private <Type> void verifyClassCanBeInitialized(Class<Type> cls) {
-        final String canonicalName = cls.getCanonicalName();
         if(cls.isInterface()) {
+            final String canonicalName = cls.getCanonicalName();
             throw new IllegalArgumentException("Cannot instantiate interface: " + canonicalName);
         }
         if(Modifier.isAbstract(cls.getModifiers())) {
+            final String canonicalName = cls.getCanonicalName();
             throw new IllegalArgumentException("Cannot instantiate abstract class: " + canonicalName);
         }
     }

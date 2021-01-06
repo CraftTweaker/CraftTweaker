@@ -61,7 +61,6 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     }
     
     private ZenCodeType.Constructor getNativeConstructorAnnotation(Constructor<?> constructor) {
-        final CrTNativeTypeInfo typeInfo = getNativeTypeRegistry().getTypeInfoFor(constructor.getDeclaringClass());
         if(isConstructorRegisteredFor(constructor)) {
             return createConstructorAnnotation();
         }

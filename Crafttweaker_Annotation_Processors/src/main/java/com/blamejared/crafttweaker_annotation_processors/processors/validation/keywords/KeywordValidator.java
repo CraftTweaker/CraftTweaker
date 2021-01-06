@@ -4,8 +4,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.AbstractCraf
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
@@ -15,7 +13,12 @@ import java.util.Set;
 
 public class KeywordValidator extends AbstractCraftTweakerProcessor {
     
-    private final ZenCodeKeywordUtil keywordUtil = new ZenCodeKeywordUtil();
+    private ZenCodeKeywordUtil keywordUtil;
+    
+    @Override
+    protected void performInitialization() {
+        this.keywordUtil = dependencyContainer.getInstanceOfClass(ZenCodeKeywordUtil.class);
+    }
     
     @Override
     public Collection<Class<? extends Annotation>> getSupportedAnnotationClasses() {

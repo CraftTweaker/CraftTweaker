@@ -4,8 +4,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.linktag.rules.ImportedTypeLinkConversionRule;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.linktag.rules.QualifiedNameLinkConversionRule;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.linktag.rules.ThisTypeConversionRule;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.DependencyContainer;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.dependencies.IHasPostCreationCall;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
+import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.IHasPostCreationCall;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.Element;

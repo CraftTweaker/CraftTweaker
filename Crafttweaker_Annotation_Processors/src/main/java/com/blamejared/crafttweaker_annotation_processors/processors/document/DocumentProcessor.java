@@ -15,7 +15,6 @@ import org.reflections.util.ConfigurationBuilder;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -45,8 +44,8 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     }
     
     @Override
-    protected void setupDependencyContainer(ProcessingEnvironment processingEnv) {
-        super.setupDependencyContainer(processingEnv);
+    protected void setupDependencyContainer() {
+        super.setupDependencyContainer();
         setupTrees(processingEnv);
         setupReflections();
     }
