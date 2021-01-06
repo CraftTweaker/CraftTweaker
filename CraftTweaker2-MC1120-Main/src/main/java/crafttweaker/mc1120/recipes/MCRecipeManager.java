@@ -264,6 +264,8 @@ public final class MCRecipeManager implements IRecipeManager {
         }
         
         ItemStack[] iContents = new ItemStack[width * height];
+        Arrays.fill(iContents, ItemStack.EMPTY);
+        
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < contents[i].length; j++) {
                 if(contents[i][j] != null) {
