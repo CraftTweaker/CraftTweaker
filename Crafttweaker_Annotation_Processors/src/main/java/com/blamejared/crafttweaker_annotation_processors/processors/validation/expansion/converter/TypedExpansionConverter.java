@@ -1,19 +1,18 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.converter;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.ClassTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.info.ExpansionInfo;
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 
 public class TypedExpansionConverter {
     
-    private final Elements elementUtils;
+    private final ClassTypeConverter classTypeConverter;
     
-    public TypedExpansionConverter(Elements elementUtils) {
-        this.elementUtils = elementUtils;
+    public TypedExpansionConverter(ClassTypeConverter classTypeConverter) {
+        this.classTypeConverter = classTypeConverter;
     }
     
     public ExpansionInfo convertTypedExpansion(TypeElement expansionType) {
@@ -23,17 +22,6 @@ public class TypedExpansionConverter {
     
     private TypeMirror getExpandedType(TypeElement expansionType) {
         final TypedExpansion annotation = expansionType.getAnnotation(TypedExpansion.class);
-        
-        try {
-            return getTypeMirrorFromClass(annotation.value());
-        } catch(MirroredTypeException exception) {
-            return exception.getTypeMirror();
-        }
+        return classTypeConverter.getTypeMirror(annotation, TypedExpansion::value);
     }
-    
-    private TypeMirror getTypeMirrorFromClass(Class<?> value) {
-        return elementUtils.getTypeElement(value.getCanonicalName()).asType();
-    }
-    
-    
 }
