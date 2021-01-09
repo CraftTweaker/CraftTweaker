@@ -277,10 +277,7 @@ public class CraftTweaker {
                             .findFirst()
                             .orElse("");
                     if(!name.isEmpty()) {
-                        msg = new StringTextComponent("This reload was made possible by " + name + " and more!" + TextFormatting.GREEN + " [Learn more!]");
-                        msg.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://patreon.com/jaredlll08?s=crtmod"))
-                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(TextFormatting.GREEN + "Click to learn more!"))));
-                        giveFeedback(msg);
+                        CraftTweakerAPI.logInfo("This reload was made possible by " + name + " and more! Become a patron at https://patreon.com/jaredlll08?s=crtmod");
                     }
                 }
             }
