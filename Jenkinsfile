@@ -59,14 +59,14 @@ pipeline {
                 stage('Deploying to CurseForge (Disabled)') {
                     steps {
                         echo 'Deploying to CurseForge'
-                        //sh './gradlew curseforge'
+                        sh './gradlew curseforge'
                     }
                 }
 
                 stage('Exporting Documentation (Disabled)') {
                     steps {
                         echo "Cloning Repository at Branch $docsRepositoryBranch"
-                        /*
+
                         dir(documentationDir) {
                             git credentialsId: gitSshCredentialsId, url: docsRepositoryUrl, branch: docsRepositoryBranch, changelog: false
                         }
@@ -94,7 +94,6 @@ pipeline {
                                 sh "git push origin $docsRepositoryBranch"
                             }
                         }
-                         */
                     }
                 }
             }
