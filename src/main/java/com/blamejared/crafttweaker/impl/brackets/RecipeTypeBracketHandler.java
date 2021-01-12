@@ -90,7 +90,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return getCall(name, registeredTypes.get(resourceLocation), position);
         }
         
-        if(Registry.RECIPE_TYPE.containsKey(resourceLocation)) {
+        if(Registry.RECIPE_TYPE.keySet().contains(resourceLocation)) {
             return getCallFallback(name, position);
         }
         
