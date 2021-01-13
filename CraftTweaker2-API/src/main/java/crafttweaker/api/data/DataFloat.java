@@ -17,7 +17,7 @@ public class DataFloat implements IData {
     
     @Override
     public boolean asBool() {
-        return value != 0.0f;
+        return value == 1.0f;
     }
     
     @Override

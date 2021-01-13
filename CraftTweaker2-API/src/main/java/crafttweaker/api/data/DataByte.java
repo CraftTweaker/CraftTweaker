@@ -17,7 +17,7 @@ public class DataByte implements IData {
     
     @Override
     public boolean asBool() {
-        return value != 0;
+        return value == 1;
     }
     
     @Override

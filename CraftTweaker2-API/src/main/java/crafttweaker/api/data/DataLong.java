@@ -17,7 +17,7 @@ public class DataLong implements IData {
     
     @Override
     public boolean asBool() {
-        return value != 0;
+        return value == 1L;
     }
     
     @Override

@@ -17,7 +17,7 @@ public class DataDouble implements IData {
     
     @Override
     public boolean asBool() {
-        return value != 0.0;
+        return value == 1.0;
     }
     
     @Override
