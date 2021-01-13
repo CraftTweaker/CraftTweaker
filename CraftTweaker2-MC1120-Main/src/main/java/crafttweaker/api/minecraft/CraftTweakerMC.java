@@ -123,6 +123,8 @@ public class CraftTweakerMC {
         }
         
         for(CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY) {
+            if (tab == null)
+                continue;
             String label;
             label = tab.tabLabel;
             creativeTabs.put(label, new MCCreativeTab(tab, label));
