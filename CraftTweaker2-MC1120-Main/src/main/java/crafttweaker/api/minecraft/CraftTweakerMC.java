@@ -47,7 +47,7 @@ import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.MCPotion;
-import crafttweaker.mc1120.potions.MCPotionEfect;
+import crafttweaker.mc1120.potions.MCPotionEffect;
 import crafttweaker.mc1120.potions.MCPotionType;
 import crafttweaker.mc1120.util.MCAxisAlignedBB;
 import crafttweaker.mc1120.world.*;
@@ -123,6 +123,8 @@ public class CraftTweakerMC {
         }
         
         for(CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY) {
+            if (tab == null)
+                continue;
             String label;
             label = tab.tabLabel;
             creativeTabs.put(label, new MCCreativeTab(tab, label));
@@ -861,7 +863,7 @@ public class CraftTweakerMC {
     }
     
     public static IPotionEffect getIPotionEffect(PotionEffect potionEffect) {
-        return potionEffect == null ? null : new MCPotionEfect(potionEffect);
+        return potionEffect == null ? null : new MCPotionEffect(potionEffect);
     }
     
     public static PotionEffect getPotionEffect(IPotionEffect potionEffect) {
@@ -1043,7 +1045,7 @@ public class CraftTweakerMC {
         for(int i = 0; i < result.length; i++) {
             PotionEffect potionEffect = potionEffects.get(i);
             if(potionEffect != null) {
-                result[i] = new MCPotionEfect(potionEffect);
+                result[i] = new MCPotionEffect(potionEffect);
             }
         }
         return result;

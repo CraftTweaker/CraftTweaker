@@ -17,7 +17,7 @@ public class DataByte implements IData {
     
     @Override
     public boolean asBool() {
-        throw new IllegalDataException("Cannot cast a byte to a bool");
+        return value == 1;
     }
     
     @Override

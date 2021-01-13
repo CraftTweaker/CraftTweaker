@@ -7,6 +7,8 @@ import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Objects;
+
 
 public class MCBlockPos implements IBlockPos{
 	
@@ -48,5 +50,18 @@ public class MCBlockPos implements IBlockPos{
 	@Override
 	public Object getInternal() {
 		return blockPos;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MCBlockPos that = (MCBlockPos) o;
+		return Objects.equals(blockPos, that.blockPos);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(blockPos);
 	}
 }

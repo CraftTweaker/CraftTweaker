@@ -17,7 +17,7 @@ public class DataFloat implements IData {
     
     @Override
     public boolean asBool() {
-        throw new IllegalDataException("Cannot cast a float to a bool");
+        return value == 1.0f;
     }
     
     @Override

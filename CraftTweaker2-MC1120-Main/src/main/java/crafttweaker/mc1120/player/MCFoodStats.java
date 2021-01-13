@@ -60,6 +60,6 @@ public class MCFoodStats implements IFoodStats {
     
     @Override
     public void setSaturationLevel(float saturationLevel) {
-        foodStats.setFoodSaturationLevel(saturationLevel);
+        foodStats.addExhaustion(saturationLevel - getSaturationLevel());
     }
 }

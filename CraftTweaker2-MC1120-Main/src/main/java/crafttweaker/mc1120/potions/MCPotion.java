@@ -38,12 +38,12 @@ public class MCPotion implements IPotion {
     
     @Override
     public IPotionEffect makePotionEffect(int duration, int amplifier) {
-        return new MCPotionEfect(new PotionEffect(potion, duration, amplifier));
+        return new MCPotionEffect(new PotionEffect(potion, duration, amplifier));
     }
     
     @Override
     public IPotionEffect makePotionEffect(int duration, int amplifier, boolean ambient, boolean showParticles) {
-        return new MCPotionEfect((new PotionEffect(potion, duration, amplifier, ambient, showParticles)));
+        return new MCPotionEffect((new PotionEffect(potion, duration, amplifier, ambient, showParticles)));
     }
     
     @Override
