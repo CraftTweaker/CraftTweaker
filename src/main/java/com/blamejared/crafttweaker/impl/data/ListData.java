@@ -33,14 +33,14 @@ public class ListData implements ICollectionData {
     }
     
     @ZenCodeType.Constructor
-    public ListData(@ZenCodeType.Optional List<IData> list) {
+    public ListData(List<IData> list) {
         this.internal = new ListNBT();
         if(list != null)
             list.forEach(iData -> internal.add(iData.getInternal()));
     }
     
     @ZenCodeType.Constructor
-    public ListData(@ZenCodeType.Optional IData... array) {
+    public ListData(IData... array) {
         this(getArraySafe(array));
     }
     
