@@ -12,6 +12,7 @@ import crafttweaker.api.recipes.*;
 import crafttweaker.api.server.IServer;
 import crafttweaker.api.vanilla.IVanilla;
 import crafttweaker.runtime.*;
+import crafttweaker.util.SuppressErrorFlag;
 import crafttweaker.zenscript.*;
 import stanhebben.zenscript.annotations.*;
 import stanhebben.zenscript.symbols.*;
@@ -91,11 +92,12 @@ public class CraftTweakerAPI {
      * Access point to the brewing handler
      */
     public static IBrewingManager brewingManager = null;
-    
+
     /**
-     * If true warnings sent to the log won't print to the player's chat
+     * whether errors and warnings are printed to players' chat or not.
+     * @see SuppressErrorFlag
      */
-    public static boolean noWarn = false;
+    private static SuppressErrorFlag suppressErrorFlag = SuppressErrorFlag.DEFAULT;
     
     // Here shadows pls use
     public static boolean ENABLE_SEARCH_TREE_RECALCULATION = true;
@@ -216,6 +218,30 @@ public class CraftTweakerAPI {
      */
     public static void logDefault(String message) {
         getLogger().logDefault(message);
+    }
+
+    /**
+     * Set whether errors and warnings printed to players' chat or not.
+     * @param flag to set
+     */
+    public static void setSuppressErrorFlag(SuppressErrorFlag flag) {
+        if (suppressErrorFlag.isForced())
+            return;
+        suppressErrorFlag = flag;
+    }
+
+    /**
+     * @return if errors sent to log won't be printed to player's chat
+     */
+    public static boolean isSuppressingErrors() {
+        return suppressErrorFlag.isSuppressingErrors();
+    }
+
+    /**
+     * @return if warnings sent to log won't be printed to player's chat
+     */
+    public static boolean isSuppressingWarnings() {
+        return suppressErrorFlag.isSuppressingWarnings();
     }
     
     // ###################################

@@ -1,17 +1,27 @@
 package crafttweaker.mc1120.item;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.block.*;
-import crafttweaker.api.data.*;
-import crafttweaker.api.enchantments.*;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
+import crafttweaker.api.data.DataMap;
+import crafttweaker.api.data.DataString;
+import crafttweaker.api.data.IData;
+import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.*;
-import crafttweaker.mc1120.actions.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IWorld;
+import crafttweaker.mc1120.actions.ActionSetBlockHardness;
+import crafttweaker.mc1120.actions.ActionSetStackMaxDamage;
+import crafttweaker.mc1120.actions.ActionSetStackSize;
+import crafttweaker.mc1120.actions.ActionSetStackTranslation;
 import crafttweaker.mc1120.block.MCItemBlock;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.enchantments.MCEnchantment;
@@ -22,14 +32,23 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -222,7 +241,12 @@ public class MCItemStack implements IItemStack {
         out.matchTagExact = matchTagExact;
         return out;
     }
-    
+
+    @Override
+    public boolean getMatchTagExact() {
+        return matchTagExact;
+    }
+
     @Override
     public IItemStack withTag(IData tag) {
         return withTag(tag, true);

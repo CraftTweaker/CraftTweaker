@@ -6,7 +6,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraftforge.event.world.BlockEvent;
 
 public class MCBlockFarmlandTrampleEvent extends MCBlockEvent implements BlockFarmlandTrampleEvent {
-    private BlockEvent.FarmlandTrampleEvent event;
+    private final BlockEvent.FarmlandTrampleEvent event;
 
     public MCBlockFarmlandTrampleEvent(BlockEvent.FarmlandTrampleEvent event) {
         super(event);

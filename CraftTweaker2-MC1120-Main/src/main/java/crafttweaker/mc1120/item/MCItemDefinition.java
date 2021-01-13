@@ -16,13 +16,14 @@ import stanhebben.zenscript.annotations.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * @author Stan
  */
 public class MCItemDefinition implements IItemDefinition {
-    
+
     private final String id;
     private final Item item;
     
@@ -133,7 +134,7 @@ public class MCItemDefinition implements IItemDefinition {
     public int getItemBurnTime(IItemStack itemStack) {
         return item.getItemBurnTime(CraftTweakerMC.getItemStack(itemStack));
     }
-    
+
     @Override
     public Object getInternal() {
         return item;
@@ -159,6 +160,6 @@ public class MCItemDefinition implements IItemDefinition {
             return false;
         }
         final MCItemDefinition other = (MCItemDefinition) obj;
-        return !(this.item != other.item && (this.item == null || !this.item.equals(other.item)));
+        return Objects.equals(this.item, other.item);
     }
 }

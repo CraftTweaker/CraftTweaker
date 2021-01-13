@@ -7,7 +7,9 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IFacing;
 import crafttweaker.api.world.IWorld;
+import crafttweaker.mc1120.world.MCFacing;
 
 /**
  * @author Stan
@@ -32,7 +34,7 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
 
     @Override
     public IBlock getBlock() {
-        return getBlockState().getBlock();
+        return getWorld().getBlock(getPosition());
     }
 
     @Override
@@ -63,5 +65,10 @@ public class MCPlayerInteractEvent implements PlayerInteractEvent {
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.getEntityPlayer());
+    }
+    
+    @Override
+    public IFacing getFace() {
+        return new MCFacing(event.getFace());
     }
 }

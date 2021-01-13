@@ -111,7 +111,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         
         @Override
         public String describe() {
-            return "Setting " + fluid.getName() + " luminosity to " + newValue;
+            return "Setting " + fluid.getName() + " luminosity from " + oldValue + " to " + newValue;
         }
         
     }
@@ -133,7 +133,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         
         @Override
         public String describe() {
-            return "Setting " + fluid.getName() + " density to " + newValue;
+            return "Setting " + fluid.getName() + " density from " + oldValue + " to " + newValue;
         }
     }
     
@@ -155,7 +155,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         
         @Override
         public String describe() {
-            return "Setting " + fluid.getName() + " temperature to " + newValue;
+            return "Setting " + fluid.getName() + " temperature from " + oldValue + " to " + newValue;
         }
     }
     
@@ -176,7 +176,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         
         @Override
         public String describe() {
-            return "Setting " + fluid.getName() + " viscosity to " + newValue;
+            return "Setting " + fluid.getName() + " viscosity from " + oldValue + " to " + newValue;
         }
     }
     
@@ -197,7 +197,7 @@ public class MCLiquidDefinition implements ILiquidDefinition {
         
         @Override
         public String describe() {
-            return "Setting " + fluid.getName() + " gaseous to " + newValue;
+            return "Setting " + fluid.getName() + " gaseous from " + oldValue + " to " + newValue;
         }
         
     }

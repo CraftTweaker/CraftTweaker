@@ -44,10 +44,15 @@ public class MTEventManager implements IEventManager {
     private final EventList<ItemExpireEvent> elItemExpire = new EventList<>();
     private final EventList<ItemTossEvent> elItemToss = new EventList<>();
     private final EventList<PlayerAnvilRepairEvent> elPlayerAnvilRepair = new EventList<>();
+    private final EventList<PlayerAnvilUpdateEvent> elPlayerAnvilUpdate = new EventList<>();
     private final EventList<PlayerSetSpawnEvent> elPlayerSetSpawn = new EventList<>();
     private final EventList<PlayerDestroyItemEvent> elPlayerDestroyItem = new EventList<>();
     private final EventList<PlayerBrewedPotionEvent> elPlayerBrewedPotion = new EventList<>();
     private final EventList<PlayerTickEvent> elPlayerTick = new EventList<>();
+    private final EventList<ClientTickEvent> elClientTick = new EventList<>();
+    private final EventList<ServerTickEvent> elServerTick = new EventList<>();
+    private final EventList<RenderTickEvent> elRenderTick = new EventList<>();
+    private final EventList<WorldTickEvent> elWorldTick = new EventList<>();
     private final EventList<BlockBreakEvent> elBlockBreak = new EventList<>();
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
@@ -96,6 +101,10 @@ public class MTEventManager implements IEventManager {
         elPlayerDestroyItem.clear();
         elPlayerBrewedPotion.clear();
         elPlayerTick.clear();
+        elClientTick.clear();
+        elServerTick.clear();
+        elRenderTick.clear();
+        elWorldTick.clear();
         elBlockBreak.clear();
         elBlockHarvestDrops.clear();
         elPlayerBreakSpeed.clear();
@@ -136,6 +145,15 @@ public class MTEventManager implements IEventManager {
         elLootingLevel.clear();
         elPlayerAdvancement.clear();
         elSpecialSpawn.clear();
+        elArrowLoose.clear();
+        elArrowNock.clear();
+        elEntityJoinWorld.clear();
+        elEntityLivingEquipmentChange.clear();
+        elEntityLivingDamage.clear();
+        elEntityLivingHeal.clear();
+        elEntityLivingUpdateEvent.clear();
+        elPotionEffectAdded.clear();
+        elPlayerCloneEvent.clear();
     }
 
     // ##########################
@@ -731,6 +749,26 @@ public class MTEventManager implements IEventManager {
     public void publishPlayerAnvilRepair(PlayerAnvilRepairEvent event) {
         elPlayerAnvilRepair.publish(event);
     }
+    
+    
+    // #########################
+    // ### PlayerAnvilUpdate ###
+    // #########################
+
+    @Override
+    public IEventHandle onPlayerAnvilUpdate(IEventHandler<PlayerAnvilUpdateEvent> ev) {
+        return elPlayerAnvilUpdate.add(ev);
+    }
+
+    public boolean hasPlayerAnvilUpdate() {
+        return elPlayerAnvilUpdate.hasHandlers();
+    }
+
+    public void publishPlayerAnvilUpdate(PlayerAnvilUpdateEvent event) {
+        elPlayerAnvilUpdate.publish(event);
+    }
+    
+    
     // ######################
     // ### PlayerSetSpawn ###
     // ######################
@@ -784,6 +822,7 @@ public class MTEventManager implements IEventManager {
         elPlayerBrewedPotion.publish(event);
     }
 
+
     // ##################
     // ### PlayerTick ###
     // ##################
@@ -800,6 +839,82 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerTick(PlayerTickEvent event) {
         elPlayerTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### ClientTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onClientTick(IEventHandler<ClientTickEvent> ev) {
+        return elClientTick.add(ev);
+    }
+
+    public boolean hasClientTick() {
+        return elClientTick.hasHandlers();
+    }
+
+    public void publishClientTick(ClientTickEvent event) {
+        elClientTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### ServerTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onServerTick(IEventHandler<ServerTickEvent> ev) {
+        return elServerTick.add(ev);
+    }
+
+    public boolean hasServerTick() {
+        return elServerTick.hasHandlers();
+    }
+
+    public void publishServerTick(ServerTickEvent event) {
+        elServerTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### RenderTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onRenderTick(IEventHandler<RenderTickEvent> ev) {
+        return elRenderTick.add(ev);
+    }
+
+    public boolean hasRenderTick() {
+        return elRenderTick.hasHandlers();
+    }
+
+    public void publishRenderTick(RenderTickEvent event) {
+        elRenderTick.publish(event);
+    }
+
+    
+    // ##################
+    // ### WorldTick ###
+    // ##################
+
+
+    @Override
+    public IEventHandle onWorldTick(IEventHandler<WorldTickEvent> ev) {
+        return elWorldTick.add(ev);
+    }
+
+    public boolean hasWorldTick() {
+        return elWorldTick.hasHandlers();
+    }
+
+    public void publishWorldTick(WorldTickEvent event) {
+        elWorldTick.publish(event);
     }
 
 
@@ -1565,5 +1680,176 @@ public class MTEventManager implements IEventManager {
 
     public void publishProjectileImpactThrowable(ProjectileImpactThrowableEvent event) {
         elProjectileImpactThrowable.publish(event);
+    }
+
+    // #########################
+    // ###  ArrowLooseEvent  ###
+    // #########################
+
+    private final EventList<ArrowLooseEvent> elArrowLoose = new EventList<>();
+
+    @Override
+    public IEventHandle onArrowLoose(IEventHandler<ArrowLooseEvent> ev) {
+        return elArrowLoose.add(ev);
+    }
+
+    public boolean hasArrowLoose() {
+        return elArrowLoose.hasHandlers();
+    }
+
+    public void publishArrowLoose(ArrowLooseEvent event) {
+    	elArrowLoose.publish(event);
+    }
+
+    // ########################
+    // ###  ArrowNockEvent  ###
+    // ########################
+
+    private final EventList<ArrowNockEvent> elArrowNock = new EventList<>();
+
+    @Override
+    public IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev) {
+        return elArrowNock.add(ev);
+    }
+
+    public boolean hasArrowNock() {
+        return elArrowNock.hasHandlers();
+    }
+
+    public void publishArrowNock(ArrowNockEvent event) {
+    	elArrowNock.publish(event);
+    }
+    
+    // ##############################
+    // ###  EntityJoinWorldEvent  ###
+    // ##############################
+
+    private final EventList<EntityJoinWorldEvent> elEntityJoinWorld = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev) {
+        return elEntityJoinWorld.add(ev);
+    }
+
+    public boolean hasEntityJoinWorld() {
+        return elEntityJoinWorld.hasHandlers();
+    }
+
+    public void publishEntityJoinWorld(EntityJoinWorldEvent event) {
+    	elEntityJoinWorld.publish(event);
+    }
+    
+    // ##########################################
+    // ###  EntityLivingEquipmentChangeEvent  ###
+    // ##########################################
+
+    private final EventList<EntityLivingEquipmentChangeEvent> elEntityLivingEquipmentChange = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingEquipmentChange(IEventHandler<EntityLivingEquipmentChangeEvent> ev) {
+        return elEntityLivingEquipmentChange.add(ev);
+    }
+
+    public boolean hasEntityLivingEquipmentChange() {
+        return elEntityLivingEquipmentChange.hasHandlers();
+    }
+
+    public void publishEntityLivingEquipmentChange(EntityLivingEquipmentChangeEvent event) {
+    	elEntityLivingEquipmentChange.publish(event);
+    }
+    
+    // ##########################
+    // ### LivingEntityDamage ###
+    // ##########################
+    
+    private final EventList<EntityLivingDamageEvent> elEntityLivingDamage = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev) {
+        return elEntityLivingDamage.add(ev);
+    }
+
+    public boolean hasEntityLivingDamage() {
+        return elEntityLivingDamage.hasHandlers();
+    }
+
+    public void publishEntityLivingDamage(EntityLivingDamageEvent event) {
+        elEntityLivingDamage.publish(event);
+    }
+    
+    // ########################
+    // ### LivingEntityHeal ###
+    // ########################
+    
+    private final EventList<EntityLivingHealEvent> elEntityLivingHeal = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev) {
+        return elEntityLivingHeal.add(ev);
+    }
+
+    public boolean hasEntityLivingHeal() {
+        return elEntityLivingHeal.hasHandlers();
+    }
+
+    public void publishEntityLivingHeal(EntityLivingHealEvent event) {
+        elEntityLivingHeal.publish(event);
+    }
+
+    // ###############################
+    // ### EntityLivingUpdateEvent ###
+    // ###############################
+
+    private final EventList<EntityLivingUpdateEvent> elEntityLivingUpdateEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onEntityLivingUpdate(IEventHandler<EntityLivingUpdateEvent> ev) {
+        return elEntityLivingUpdateEvent.add(ev);
+    }
+
+    public boolean hasEntityLivingUpdateEvent() {
+        return elEntityLivingUpdateEvent.hasHandlers();
+    }
+
+    public void publishEntityLivingUpdateEvent(EntityLivingUpdateEvent event) {
+        elEntityLivingUpdateEvent.publish(event);
+    }
+
+    // #########################
+    // ### PotionEffectAdded ###
+    // #########################
+
+    private final EventList<PotionEffectAddedEvent> elPotionEffectAdded = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev) {
+        return elPotionEffectAdded.add(ev);
+    }
+
+    public boolean hasPotionEffectAdded() {
+        return elPotionEffectAdded.hasHandlers();
+    }
+
+    public void publishPotionEffectAdded(PotionEffectAddedEvent event) {
+        elPotionEffectAdded.publish(event);
+    }
+
+    // ########################
+    // ### PlayerCloneEvent ###
+    // ########################
+
+    private final EventList<PlayerCloneEvent> elPlayerCloneEvent = new EventList<>();
+
+    @Override
+    public IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev) {
+        return elPlayerCloneEvent.add(ev);
+    }
+
+    public boolean hasPlayerCloneEvent() {
+        return elPlayerCloneEvent.hasHandlers();
+    }
+
+    public void publishPlayerCloneEvent(PlayerCloneEvent event) {
+        elPlayerCloneEvent.publish(event);
     }
 }

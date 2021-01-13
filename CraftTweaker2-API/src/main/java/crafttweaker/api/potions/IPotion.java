@@ -36,7 +36,11 @@ public interface IPotion {
     
     @ZenGetter
     boolean isBeneficial();
-    
+
+    @ZenMethod
+    default void setBeneficial() {
+    }
+
     @ZenGetter
     boolean isInstant();
     

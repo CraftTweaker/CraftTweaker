@@ -3,6 +3,7 @@ package crafttweaker.api.event;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.world.IBlockPos;
+import java.util.List;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -15,9 +16,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public interface ExplosionDetonateEvent extends IExplosionEvent {
     @ZenGetter("affectedEntities")
     @ZenMethod
-    IEntity[] getAffectedEntities();
+    List<IEntity> getAffectedEntities();
 
     @ZenGetter("affectedPositions")
     @ZenMethod
-    IBlockPos[] getAffectedPositions();
+    List<IBlockPos> getAffectedPositions();
 }

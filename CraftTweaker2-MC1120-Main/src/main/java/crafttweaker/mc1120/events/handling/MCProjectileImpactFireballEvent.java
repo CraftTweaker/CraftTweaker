@@ -8,8 +8,8 @@ import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 public class MCProjectileImpactFireballEvent extends MCProjectileImpactEvent implements ProjectileImpactFireballEvent {
-    private ProjectileImpactEvent.Fireball event;
-    private EntityFireball fireball;
+    private final ProjectileImpactEvent.Fireball event;
+    private final EntityFireball fireball;
 
     public MCProjectileImpactFireballEvent(ProjectileImpactEvent.Fireball event) {
         super(event);

@@ -41,7 +41,7 @@ public interface IItemUtils {
      *             enchantments into the existing list.
      * @param enchantments List of enchantments, the result of (eg):
      *                     <enchantment:minecraft:protection>.makeEnchantment(3);
-     * @return returns the {@IItemStack} of the item with new enchantments.
+     * @return returns the {@link IItemStack} of the item with new enchantments.
      */
     @ZenMethod
     IItemStack enchantItem (IItemStack item, IEnchantment... enchantments);
@@ -49,7 +49,7 @@ public interface IItemUtils {
     /**
      * @param enchantments List of enchantment, the result of (eg):
      *                     <enchantment:minecraft:protection>.makeEnchantment(3);
-     * @return returns the {@IItemStack} of the enchanted book.
+     * @return returns the {@link IItemStack} of the enchanted book.
      */
     @ZenMethod
     IItemStack createEnchantedBook(IEnchantment... enchantments);
@@ -60,7 +60,9 @@ public interface IItemUtils {
      *                is specifically for Enchanted Books.
      * @param enchantments Contains the enchantment to combine, result of (eg):
      *                     <enchantment:minecraft:protection>.makeEnchantment(3)
-     * @return
+     * @return A combined list of enchantments as though you had manually combined using
+     * makeTag. This unoverloaded method allows for specifying the base key, unlike its 
+     * overloaded counterpart.
      */
     @ZenMethod
     IData combineEnchantments (String baseKey, IEnchantment... enchantments);

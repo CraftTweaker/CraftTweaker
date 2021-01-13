@@ -4,12 +4,14 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.event.ExplosionDetonateEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
+import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraftforge.event.world.ExplosionEvent;
 
 public class MCExplosionDetonateEvent extends MCExplosionEvent implements ExplosionDetonateEvent {
     private ExplosionEvent.Detonate event;
-    private IEntity[] entities = null;
-    private IBlockPos[] blocks = null;
+    private List<IEntity> entities = null;
+    private List<IBlockPos> blocks = null;
 
     public MCExplosionDetonateEvent(ExplosionEvent.Detonate event) {
         super(event);
@@ -17,17 +19,21 @@ public class MCExplosionDetonateEvent extends MCExplosionEvent implements Explos
     }
 
     @Override
-    public IEntity[] getAffectedEntities() {
+    public List<IEntity> getAffectedEntities() {
         if (entities == null) {
-            entities = event.getAffectedEntities().stream().map(CraftTweakerMC::getIEntity).toArray(IEntity[]::new);
+            entities = event.getAffectedEntities().stream()
+                                .map(CraftTweakerMC::getIEntity)
+                                .collect(Collectors.toList());
         }
         return entities;
     }
 
     @Override
-    public IBlockPos[] getAffectedPositions() {
+    public List<IBlockPos> getAffectedPositions() {
         if (blocks == null) {
-            blocks = event.getAffectedBlocks().stream().map(CraftTweakerMC::getIBlockPos).toArray(IBlockPos[]::new);
+            blocks = event.getAffectedBlocks().stream()
+                                .map(CraftTweakerMC::getIBlockPos)
+                                .collect(Collectors.toList());
         }
         return blocks;
     }

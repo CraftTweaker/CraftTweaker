@@ -7,27 +7,29 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class MCPlayerTickEvent implements PlayerTickEvent {
 
-    private final IPlayer player;
-    private final String phase;
+    private final TickEvent.PlayerTickEvent event;
 
-
+    @Deprecated
     public MCPlayerTickEvent(IPlayer player, String phase) {
-        this.player = player;
-        this.phase = phase;
+        this(new TickEvent.PlayerTickEvent(TickEvent.Phase.valueOf(phase), CraftTweakerMC.getPlayer(player)));
     }
 
     public MCPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-        this(CraftTweakerMC.getIPlayer(event.player), event.phase.name().toUpperCase());
+        this.event = event;
     }
 
     @Override
     public IPlayer getPlayer() {
-        return player;
+        return CraftTweakerMC.getIPlayer(event.player);
     }
 
+    @Override
+    public String getSide() {
+        return event.side.name().toUpperCase();
+    }
 
     @Override
     public String getPhase() {
-        return phase;
+        return event.phase.name().toUpperCase();
     }
 }

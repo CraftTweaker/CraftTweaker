@@ -13,7 +13,6 @@ import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.mc1120.brackets.BracketHandlerItem;
 import crafttweaker.mc1120.commands.Commands;
 import crafttweaker.mc1120.data.NBTConverter;
-import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ShortOpenHashMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -26,7 +25,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
-import scala.collection.mutable.OpenHashMap;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.*;
@@ -215,7 +213,7 @@ public class MCItemUtils implements IItemUtils {
                 .filter(Objects::nonNull)
                 .toArray(IItemStack[]::new);
     }
-    
+
     @Override
     public IItemStack getItem(String location, @Optional int meta) {
         return BracketHandlerItem.getItem(location, meta);

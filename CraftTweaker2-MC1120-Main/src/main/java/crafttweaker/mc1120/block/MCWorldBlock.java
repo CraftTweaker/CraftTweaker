@@ -37,7 +37,7 @@ public class MCWorldBlock implements IBlock {
     public int getMeta() {
         return blocks.getBlockState(pos).getBlock().getMetaFromState(blocks.getBlockState(pos));
     }
-    
+
     @Override
     public IData getTileData() {
         TileEntity tileEntity = blocks.getTileEntity(pos);

@@ -120,6 +120,9 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerAnvilRepair(IEventHandler<PlayerAnvilRepairEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onPlayerAnvilUpdate(IEventHandler<PlayerAnvilUpdateEvent> ev);
 
     @ZenMethod
     IEventHandle onPlayerSetSpawn(IEventHandler<PlayerSetSpawnEvent> ev);
@@ -132,6 +135,18 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onPlayerTick(IEventHandler<PlayerTickEvent> ev);
+
+    @ZenMethod
+    IEventHandle onClientTick(IEventHandler<ClientTickEvent> ev);
+
+    @ZenMethod
+    IEventHandle onServerTick(IEventHandler<ServerTickEvent> ev);
+
+    @ZenMethod
+    IEventHandle onRenderTick(IEventHandler<RenderTickEvent> ev);
+
+    @ZenMethod
+    IEventHandle onWorldTick(IEventHandler<WorldTickEvent> ev);
 
     @ZenMethod
     IEventHandle onBlockBreak(IEventHandler<BlockBreakEvent> ev);
@@ -252,6 +267,34 @@ public interface IEventManager {
 
     @ZenMethod
     IEventHandle onProjectileImpactThrowable(IEventHandler<ProjectileImpactThrowableEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onArrowLoose(IEventHandler<ArrowLooseEvent> ev);
+
+    @ZenMethod
+    IEventHandle onArrowNock(IEventHandler<ArrowNockEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityJoinWorld(IEventHandler<EntityJoinWorldEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingEquipmentChange(IEventHandler<EntityLivingEquipmentChangeEvent> ev);
+    
+    @ZenMethod
+    IEventHandle onEntityLivingDamage(IEventHandler<EntityLivingDamageEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityLivingHeal(IEventHandler<EntityLivingHealEvent> ev);
+
+    @ZenMethod
+    IEventHandle onEntityLivingUpdate(IEventHandler<EntityLivingUpdateEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev);
+
     /*
      *
      * IEventHandle onPlayerChat(IPlayerChatEventHandler ev);
@@ -259,8 +302,6 @@ public interface IEventManager {
      * IEventHandle onTimerSingle(int millis, ITimerEventHandler ev);
      *
      * IEventHandle onTimerRepeat(int millis, ITimerEventHandler ev);
-     *
-     * IEventHandle onEntityJoinWorld(IEntityJoinWorldEventHandler ev);
      *
      */
 }

@@ -81,7 +81,7 @@ public class IngredientTransform {
      *
      * @param ingredient
      *
-     * @return
+     * @return no return transformer
      */
     @ZenMethod
     public static IIngredient noReturn(IIngredient ingredient) {
@@ -95,7 +95,7 @@ public class IngredientTransform {
      * @param ingredient
      * @param givenItem
      *
-     * @return
+     * @return give back transformer
      */
     @ZenMethod
     public static IIngredient giveBack(IIngredient ingredient, @Optional final IItemStack givenItem) {
@@ -106,8 +106,10 @@ public class IngredientTransform {
     
     /**
      * Leaves the item in the crafting grid.
+     * 
      * @param ingredient
-     * @return
+     * 
+     * @return reuse transformer
      */
     
     @ZenMethod

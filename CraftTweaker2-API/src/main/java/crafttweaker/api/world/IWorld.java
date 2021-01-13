@@ -2,16 +2,20 @@ package crafttweaker.api.world;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
 import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @ZenClass("crafttweaker.world.IWorld")
 @ZenRegister
@@ -104,7 +108,25 @@ public interface IWorld extends IBlockAccess {
 
     @ZenMethod
     default IItemStack getPickedBlock(IBlockPos pos, IRayTraceResult rayTraceResult, IPlayer player) {
-        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock!");
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.getPickedBlock, tell the author to fix that.");
+        return null;
+    }
+
+    @ZenMethod
+    default IExplosion createExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.createExplosion, tell the author to fix that.");
+        return null;
+    }
+
+    @ZenMethod
+    default IExplosion performExplosion(IEntity exploder, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.performExplosion, tell the author to fix that.");
+        return null;
+    }
+
+    @ZenMethod
+    default IExplosion performExplosion(IExplosion explosion) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.performExplosion, tell the author to fix that.");
         return null;
     }
 }

@@ -2,14 +2,18 @@ package crafttweaker.api.entity;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IMaterial;
 import crafttweaker.api.command.ICommandSender;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.util.Position3f;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IRayTraceResult;
+import crafttweaker.api.world.IVector3d;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.List;
@@ -30,11 +34,10 @@ public interface IEntity extends ICommandSender {
     
     
     /**
-     * Retrieves the world this entity is in.
+     * Sets the world this entity is in.
      *
-     * @return the current world of this entity
+     * @param world the current world of this entity
      */
-    
     @ZenSetter("world")
     void setWorld(IWorld world);
     
@@ -47,6 +50,11 @@ public interface IEntity extends ICommandSender {
     @ZenMethod
     int getDimension();
     
+    /**
+     * Sets the dimension id this entity is in.
+     * 
+     * @param dimensionID dimension id
+     */
     @ZenSetter("dimension")
     void setDimension(int dimensionID);
     
@@ -300,7 +308,8 @@ public interface IEntity extends ICommandSender {
     
     @ZenGetter
     boolean canBePushed();
-    
+
+    @ZenGetter("nbt")
     @ZenMethod
     IData getNBT();
     
@@ -500,10 +509,17 @@ public interface IEntity extends ICommandSender {
     }
     
     @ZenMethod
-    default void update(IData data){
+    default void update(IData data) {
         CraftTweakerAPI.logError("IEntity#update not overwritten by implementation " + this.getClass() + "!");
     }
-    
+
+    @ZenSetter("nbt")
+    @ZenMethod
+    default void setNBT(IData data) {
+        this.update(data);
+    }
+
+    @ZenGetter
     @ZenMethod
     default boolean onGround(){
         return false;

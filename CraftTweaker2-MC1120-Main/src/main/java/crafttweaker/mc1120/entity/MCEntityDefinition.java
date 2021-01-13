@@ -1,15 +1,21 @@
 package crafttweaker.mc1120.entity;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityDefinition;
+import crafttweaker.api.entity.IEntityDrop;
+import crafttweaker.api.entity.IEntityDropFunction;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IWorld;
 import crafttweaker.util.IntegerRange;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +50,7 @@ public class MCEntityDefinition implements IEntityDefinition {
     @Override
     public void addDrop(IItemStack stack, int min, int max, float chance) {
         if (min < 0 || max < 0 || chance < 0 || chance > 1) {
-            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s).", entityName, stack, min, max, Float.toString(chance)));
+            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addDrop(%s, %d, %d, %s).", entityName, stack, min, max, chance));
             return;
         }
         drops.add(new EntityDrop(stack, min, max, chance));
@@ -60,7 +66,7 @@ public class MCEntityDefinition implements IEntityDefinition {
     @Override
     public void addPlayerOnlyDrop(IItemStack stack, int min, int max, float chance) {
         if (min < 0 || max < 0 || chance < 0 || chance > 1) {
-            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addPlayerOnlyDrop(%s, %d, %d, %s).", entityName, stack, min, max, Float.toString(chance)));
+            CraftTweakerAPI.logError(String.format("Invalid value provided: <entity:%s>.addPlayerOnlyDrop(%s, %d, %d, %s).", entityName, stack, min, max, chance));
             return;
         }
         drops.add(new EntityDrop(stack, min, max, chance, true));
@@ -99,7 +105,7 @@ public class MCEntityDefinition implements IEntityDefinition {
         world.spawnEntity(out);
         return out;
     }
-    
+
     @Override
     public Map<IItemStack, IntegerRange> getDropsToAdd() {
         return drops.stream().filter(drop -> !drop.isPlayerOnly()).collect(Collectors.toMap(IEntityDrop::getItemStack, IEntityDrop::getRange));

@@ -2,19 +2,22 @@ package crafttweaker.api.item;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.block.*;
+import crafttweaker.api.block.IBlock;
+import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.enchantments.IEnchantment;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
-import crafttweaker.api.entity.*;
+import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.entity.IEntityItem;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.*;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IWorld;
 import stanhebben.zenscript.annotations.*;
-import stanhebben.zenscript.annotations.Optional;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Contains an item stack. An item stack consists of an item definition, a meta
@@ -237,6 +240,12 @@ public interface IItemStack extends IIngredient {
         CraftTweakerAPI.logError("Default method IItemStack#WithTag is not overwritten in " + getClass() + " please report to the author!");
         return withTag(tag);
     }
+
+    @ZenGetter("matchTagExact")
+    default boolean getMatchTagExact() {
+        CraftTweakerAPI.logError("Default method IItemStack#getMatchTagExact is not overwritten in " + getClass() + " please report to the author!");
+        return true;
+    }
     
     @Deprecated
     IItemStack withTag(IData tag);
@@ -323,7 +332,7 @@ public interface IItemStack extends IIngredient {
      * Gets the item's container ItemStack.
      * Use the IItemDefinition if you want to set it.
      *
-     * @return
+     * @return item's container's ItemStack
      */
     @ZenGetter("containerItem")
     IItemStack getContainerItem();
@@ -349,8 +358,6 @@ public interface IItemStack extends IIngredient {
     
     /**
      * Writes the repairCost to the NBT-Tag
-     *
-     * @param repairCost
      */
     @ZenSetter("repairCost")
     void setRepairCost(int repairCost);
@@ -422,7 +429,7 @@ public interface IItemStack extends IIngredient {
     /**
      * Checks if the IItemStack either has an amount of 0 or represents the AIR item.
      *
-     * @return
+     * @return whether the item is empty or is air
      */
     @ZenGetter("isEmpty")
     boolean isEmpty();
@@ -446,28 +453,27 @@ public interface IItemStack extends IIngredient {
     IEntityItem createEntityItem(IWorld world, IBlockPos pos);
     
     @ZenGetter("isFood")
-    default boolean isFood(){
+    default boolean isFood() {
         return false;
     }
     
     @ZenGetter("saturation")
-    default float getSaturation(){
+    default float getSaturation() {
         return 0;
     }
     
     @ZenGetter("healAmount")
-    default int getHealAmount(){
+    default int getHealAmount() {
         return 0;
     }
-    
+
     @ZenMethod
-    default int getHarvestLevel(String toolClass){
+    default int getHarvestLevel(String toolClass) {
         return -1;
     }
     
-    
     @ZenMethod
-    default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState){
+    default int getHarvestLevel(String toolClass, IPlayer player, IBlockState blockState) {
         return -1;
     }
 }
