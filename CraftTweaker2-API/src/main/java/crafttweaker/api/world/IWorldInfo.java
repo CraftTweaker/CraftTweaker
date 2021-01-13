@@ -124,10 +124,22 @@ public interface IWorldInfo {
     @ZenGetter("boderLerpTarget")
     double getBoderLerpTarget();
     
-    
     @ZenMethod
     @ZenGetter("boderLerpTime")
     long getBoderLerpTime();
+    
+    
+    @ZenMethod
+    @ZenGetter("borderLerpTarget")
+    default double getBorderLerpTarget() {
+        return getBoderLerpTarget();
+    }
+    
+    @ZenMethod
+    @ZenGetter("borderLerpTime")
+    default long getBorderLerpTime(){
+        return getBoderLerpTime();
+    }
     
     @ZenMethod
     @ZenGetter("difficultyLocked")
