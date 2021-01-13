@@ -17,7 +17,7 @@ public class DataShort implements IData {
     
     @Override
     public boolean asBool() {
-        throw new IllegalDataException("Cannot cast a short to a bool");
+        return value != 0;
     }
     
     @Override

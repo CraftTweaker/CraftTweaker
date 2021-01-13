@@ -17,7 +17,7 @@ public class DataInt implements IData {
     
     @Override
     public boolean asBool() {
-        throw new RuntimeException("Cannot cast an int to a bool");
+        return value != 0;
     }
     
     @Override

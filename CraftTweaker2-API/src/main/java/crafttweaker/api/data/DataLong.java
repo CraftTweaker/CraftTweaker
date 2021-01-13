@@ -17,7 +17,7 @@ public class DataLong implements IData {
     
     @Override
     public boolean asBool() {
-        throw new IllegalDataException("Cannot cast a long to a bool");
+        return value != 0;
     }
     
     @Override
