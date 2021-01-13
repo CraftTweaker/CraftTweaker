@@ -6,7 +6,11 @@ import com.blamejared.crafttweaker.impl.actions.tags.ActionTagCreate;
 import com.blamejared.crafttweaker.impl.actions.tags.ActionTagRemove;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.google.common.collect.Sets;
-import net.minecraft.tags.*;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ITagCollection;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollectionManager;
+import net.minecraft.tags.TagRegistryManager;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -78,7 +82,7 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     public void addElements(MCTag<T> to, List<T> toAdd) {
         final ITag<?> internal = getInternal(to);
         if(internal == null) {
-            final Tag<?> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(toAdd));
+            final Tag<?> tagFromContents = new Tag<>(Sets.newHashSet(toAdd), getElementClass());
             CraftTweakerAPI.apply(new ActionTagCreate(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd(internal, toAdd, to));

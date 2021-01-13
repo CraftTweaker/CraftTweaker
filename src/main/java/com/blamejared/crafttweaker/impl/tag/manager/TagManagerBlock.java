@@ -55,7 +55,7 @@ public class TagManagerBlock implements TagManager<Block> {
         final ITag<Block> internal = getInternal(to);
         
         if(internal == null) {
-            final Tag<Block> tag = Tag.getTagFromContents(Sets.newHashSet(toAdd));
+            final Tag<Block> tag = new Tag<>(Sets.newHashSet(toAdd), Block.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tag, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));

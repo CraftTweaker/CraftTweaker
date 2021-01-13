@@ -54,7 +54,7 @@ public class TagManagerFluid implements TagManager<Fluid> {
     public void addElements(MCTag<Fluid> to, List<Fluid> toAdd) {
         final ITag<Fluid> internal = getInternal(to);
         if(internal == null) {
-            final Tag<Fluid> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(toAdd));
+            final Tag<Fluid> tagFromContents = new Tag<>(Sets.newHashSet(toAdd), Fluid.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));

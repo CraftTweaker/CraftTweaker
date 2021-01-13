@@ -53,7 +53,7 @@ public class TagManagerItem implements TagManager<Item> {
     public void addElements(MCTag<Item> to, List<Item> toAdd) {
         final ITag<Item> internal = getInternal(to);
         if(internal == null) {
-            final Tag<Item> tagFromContents = Tag.getTagFromContents(Sets.newHashSet(toAdd));
+            final Tag<Item> tagFromContents = new Tag<>(Sets.newHashSet(toAdd), Item.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));
