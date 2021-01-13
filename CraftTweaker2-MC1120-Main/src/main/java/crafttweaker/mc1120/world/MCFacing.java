@@ -35,4 +35,19 @@ public class MCFacing implements IFacing {
     public IFacing rotateY() {
         return new MCFacing(facing.rotateY());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCFacing mcFacing = (MCFacing) o;
+        return facing == mcFacing.facing;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + (this.facing != null ? this.facing.hashCode() : 0);
+        return hash;
+    }
 }

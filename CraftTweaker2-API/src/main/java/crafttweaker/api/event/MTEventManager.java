@@ -57,6 +57,8 @@ public class MTEventManager implements IEventManager {
     private final EventList<BlockHarvestDropsEvent> elBlockHarvestDrops = new EventList<>();
     private final EventList<PlayerBreakSpeedEvent> elPlayerBreakSpeed = new EventList<>();
     private final EventList<PlayerRightClickBlockEvent> elPlayerRightClickBlock = new EventList<>();
+    private final EventList<BlockNeighborNotifyEvent> elBlockNeighborNotify = new EventList<>();
+    private final EventList<PortalSpawnEvent> elPortalSpawn = new EventList<>();
 
     /**
      * Clears all EventLists
@@ -154,6 +156,8 @@ public class MTEventManager implements IEventManager {
         elEntityLivingUpdateEvent.clear();
         elPotionEffectAdded.clear();
         elPlayerCloneEvent.clear();
+        elBlockNeighborNotify.clear();
+        elPortalSpawn.clear();
     }
 
     // ##########################
@@ -1851,5 +1855,40 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerCloneEvent(PlayerCloneEvent event) {
         elPlayerCloneEvent.publish(event);
+    }
+
+    // #################################
+    // ### BlockNeighborNotifyEvent ###
+    // #################################
+
+    @Override
+    public IEventHandle onBlockNeighborNotify(IEventHandler<BlockNeighborNotifyEvent> ev) {
+        return elBlockNeighborNotify.add(ev);
+    }
+
+    public boolean hasBlockNeighborNotifyEvent() {
+        return elBlockNeighborNotify.hasHandlers();
+    }
+
+    public void publishBlockNeighborNotifyEvent(BlockNeighborNotifyEvent ev) {
+        elBlockNeighborNotify.publish(ev);
+    }
+
+    // ########################
+    // ### PortalSpawnEvent ###
+    // ########################
+
+
+    @Override
+    public IEventHandle onPortalSpawn(IEventHandler<PortalSpawnEvent> ev) {
+        return elPortalSpawn.add(ev);
+    }
+
+    public boolean hasPortalSpawnEvent() {
+        return elPortalSpawn.hasHandlers();
+    }
+
+    public void publishPortalSpawnEvent(PortalSpawnEvent ev) {
+        elPortalSpawn.publish(ev);
     }
 }

@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenClass("crafttweaker.event.IBlockEvent")
 @ZenRegister
-public interface IBlockEvent extends IEventPositionable {
+public interface IBlockEvent extends IEventPositionable, IWorldEvent {
 
     @ZenGetter("world")
     IWorld getWorld();
@@ -20,6 +20,6 @@ public interface IBlockEvent extends IEventPositionable {
 
     @ZenGetter("block")
     default IBlock getBlock() {
-        return getBlockState().getBlock();
+        return getWorld().getBlock(getPosition());
     }
 }

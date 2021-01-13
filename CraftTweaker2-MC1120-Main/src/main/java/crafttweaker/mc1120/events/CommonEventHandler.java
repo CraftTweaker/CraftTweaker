@@ -742,4 +742,16 @@ public class CommonEventHandler {
         if(CrafttweakerImplementationAPI.events.hasPlayerCloneEvent())
             CrafttweakerImplementationAPI.events.publishPlayerCloneEvent(new MCPlayerCloneEvent(ev));
     }
+
+    @SubscribeEvent
+    public void onBlockNeighborNotify(BlockEvent.NeighborNotifyEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasBlockNeighborNotifyEvent())
+            CrafttweakerImplementationAPI.events.publishBlockNeighborNotifyEvent(new MCBlockNeighborNotifyEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onPortalSpawn(BlockEvent.PortalSpawnEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPortalSpawnEvent())
+            CrafttweakerImplementationAPI.events.publishPortalSpawnEvent(new MCPortalSpawnEvent(ev));
+    }
 }
