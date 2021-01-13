@@ -229,6 +229,9 @@ public class CraftTweakerAPI {
         return currentRun;
     }
     
+    public static boolean isServer() {
+        return CraftTweaker.serverOverride || EffectiveSide.get().isServer();
+    }
     
     public static ScriptingEngine getEngine() {
         //I don't see why one would want an engine without a run being present
