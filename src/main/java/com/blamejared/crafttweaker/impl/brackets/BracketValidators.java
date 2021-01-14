@@ -132,6 +132,18 @@ public class BracketValidators {
     }
     
     @ZenCodeType.Method
+    @BracketValidator("profession")
+    public static boolean validateProfessionBracket(String tokens) {
+        if(isRegistryUnlocked(ForgeRegistries.PROFESSIONS) && tokens.split(":").length != 2) {
+            CraftTweakerAPI.logError("Invalid Bracket Syntax: <profession:" + tokens + ">! Syntax is <profession:modid:profession_name>");
+            return false;
+        }
+        
+        return validateBracket("profession", tokens, BracketHandlers::getProfession);
+    }
+    
+    
+    @ZenCodeType.Method
     @BracketValidator("resource")
     public static boolean validateResourceBracket(String tokens) {
         return ResourceLocation.tryCreate(tokens) != null;

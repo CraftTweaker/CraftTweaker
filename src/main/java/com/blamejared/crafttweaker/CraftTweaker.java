@@ -34,9 +34,10 @@ import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
@@ -60,10 +61,20 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Mod(CraftTweaker.MODID)
@@ -87,8 +98,7 @@ public class CraftTweaker {
     private static Set<String> PATRON_LIST = new HashSet<>();
     
     public CraftTweaker() {
-        if(!CraftTweakerAPI.SCRIPT_DIR.exists() && !CraftTweakerAPI.SCRIPT_DIR.mkdirs() && !CraftTweakerAPI.SCRIPT_DIR
-                .mkdir()) {
+        if(!CraftTweakerAPI.SCRIPT_DIR.exists() && !CraftTweakerAPI.SCRIPT_DIR.mkdirs() && !CraftTweakerAPI.SCRIPT_DIR.mkdir()) {
             final String path = CraftTweakerAPI.SCRIPT_DIR.getAbsolutePath();
             throw new IllegalStateException("Could not create Directory " + path);
         }
@@ -101,9 +111,7 @@ public class CraftTweaker {
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-        FMLJavaModLoadingContext.get()
-                .getModEventBus()
-                .addGenericListener(Block.class, EventPriority.HIGHEST, this::handleTags);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, EventPriority.HIGHEST, this::handleTags);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new CTEventHandler());
         PacketHandler.init();
@@ -130,9 +138,7 @@ public class CraftTweaker {
                 urlConnection.setReadTimeout(15000);
                 urlConnection.setRequestProperty("User-Agent", "CraftTweaker|1.16.4");
                 try(BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
-                    PATRON_LIST = reader.lines()
-                            .filter(s -> !s.isEmpty())
-                            .collect(Collectors.toSet());
+                    PATRON_LIST = reader.lines().filter(s -> !s.isEmpty()).collect(Collectors.toSet());
                 }
             } catch(IOException e) {
                 e.printStackTrace();
@@ -160,8 +166,7 @@ public class CraftTweaker {
     }
     
     private void setup(final FMLCommonSetupEvent event) {
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon")
-                .execute();
+        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon").execute();
         CraftTweakerAPI.loadScripts(setupCommon);
         
         LOG.info("{} has loaded successfully!", NAME);
@@ -195,8 +200,7 @@ public class CraftTweaker {
          *
          * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
          */
-        if(event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>())
-                .size() == 0) {
+        if(event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>()).size() == 0) {
             // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
             return;
         }
@@ -259,27 +263,20 @@ public class CraftTweaker {
                 CTCraftingTableManager.recipeManager = recipeManager;
                 CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().execute());
                 List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
-                scriptFiles.stream()
-                        .map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath()
-                                .substring("scripts\\".length())
-                                .replaceAll("[^a-z0-9_.-]", "_")), file.getPath()
-                                .substring("scripts\\".length()), readContents(file)))
-                        .forEach(scriptRecipe -> {
-                            Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
-                            map.put(scriptRecipe.getId(), scriptRecipe);
-                        });
+                scriptFiles.stream().map(file -> new ScriptRecipe(new ResourceLocation(MODID, file.getPath().substring("scripts\\".length()).replaceAll("[^a-z0-9_.-]", "_")), file.getPath().substring("scripts\\".length()), readContents(file))).forEach(scriptRecipe -> {
+                    Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.computeIfAbsent(RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
+                    map.put(scriptRecipe.getId(), scriptRecipe);
+                });
                 
                 TextComponent msg = new StringTextComponent("CraftTweaker reload complete!");
                 giveFeedback(msg);
                 if(scriptFiles.size() > 0 && !CraftTweakerAPI.NO_BRAND) {
-                    String name = PATRON_LIST.stream()
-                            .skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size()))
-                            .findFirst()
-                            .orElse("");
+                    String name = PATRON_LIST.stream().skip(PATRON_LIST.isEmpty() ? 0 : new Random().nextInt(PATRON_LIST.size())).findFirst().orElse("");
                     if(!name.isEmpty()) {
                         CraftTweakerAPI.logInfo("This reload was made possible by " + name + " and more! Become a patron at https://patreon.com/jaredlll08?s=crtmod");
                     }
                 }
+                
             }
         });
         

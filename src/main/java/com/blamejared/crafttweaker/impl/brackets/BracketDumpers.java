@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -114,4 +115,13 @@ public class BracketDumpers {
                 .map(MCTag::getCommandString)
                 .collect(Collectors.toSet());
     }
+    
+    @BracketDumper("profession")
+    public static Collection<String> getProfessionDump() {
+        return ForgeRegistries.PROFESSIONS.getValues()
+                .stream()
+                .map(VillagerProfession::toString)
+                .collect(Collectors.toList());
+    }
+    
 }

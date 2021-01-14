@@ -18,6 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
@@ -379,6 +380,31 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get format with name: <formatting:" + tokens + ">! format does not appear to exist!");
         }
         return new MCTextFormatting(TextFormatting.getValueByName(split[0]));
+    }
+    
+    /**
+     * Gets the villager profession based on registry name. Logs an error and return `null` if it can't find the profession.
+     *
+     * @param tokens The profession's resource location
+     * @return The found profession
+     * @docParam tokens "minecraft:armorer"
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    @BracketResolver("profession")
+    public static VillagerProfession getProfession(String tokens) {
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 2) {
+            CraftTweakerAPI.logError("Could not get profession <profession:%s>", tokens);
+            return null;
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        if(!ForgeRegistries.PROFESSIONS.containsKey(resourceLocation)) {
+            CraftTweakerAPI.logError("Could not get profession <profession:%s>", tokens);
+            return null;
+        }
+        
+        return ForgeRegistries.PROFESSIONS.getValue(resourceLocation);
     }
     
 }
