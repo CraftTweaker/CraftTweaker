@@ -79,7 +79,7 @@ public class BracketValidators {
     @BracketValidator("entitytype")
     public static boolean validateEntityType(String tokens) {
         if(isRegistryUnlocked(ForgeRegistries.ENTITIES) && ResourceLocation.tryCreate(tokens) == null) {
-            CraftTweakerAPI.logError("Invalid Bracket Syntax: <entitytype:" + tokens + ">! Syntax is <entitytype:modid:potionname>");
+            CraftTweakerAPI.logError("Invalid Bracket Syntax: <entitytype:" + tokens + ">! Syntax is <entitytype:modid:entity_type_name>");
             return false;
         }
         
