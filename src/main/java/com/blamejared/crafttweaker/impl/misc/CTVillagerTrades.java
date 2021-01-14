@@ -5,7 +5,9 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.villagers.ITradeRemover;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddTrade;
+import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddWanderingTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveTrade;
+import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveWanderingTrade;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
@@ -279,12 +281,62 @@ public class CTVillagerTrades {
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.SuspiciousStewForEmeraldTrade);
     }
     
+    
+    /**
+     * Adds a Wandering Trader Trade for emeralds for an Item. An example being, giving a Wandering Trader 2 emeralds for an arrow.
+     *
+     * @param rarity    The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param emeralds  The amount of Emeralds.
+     * @param forSale   What Itemstack is being sold (by the Wandering Trader).
+     * @param maxTrades How many times can this trade be done.
+     * @param xp        How much Experience is given by trading.
+     *
+     * @docParam rarity 1
+     * @docParam emeralds 16
+     * @docParam forSale <item:minecraft:diamond>
+     * @docParam maxTrades 16
+     * @docParam xp 2
+     */
+    @ZenCodeType.Method
+    public void addWanderingTrade(int rarity, int emeralds, ItemStack forSale, int maxTrades, int xp) {
+        BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, 1);
+        addWanderingTradeInternal(rarity, trade);
+    }
+    
+    /**
+     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emaralds for an Arrow.
+     *
+     * @param rarity     The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param tradeFor   What Itemstack is being sold (by the Villager).
+     *
+     * @docParam rarity 2
+     * @docParam tradeFor <item:minecraft:arrow>
+     */
+    @ZenCodeType.Method
+    public void removeWanderingTrade(int rarity, IItemStack tradeFor) {
+        removeWanderingTradeInternal(rarity, trade -> {
+            if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
+                return tradeFor.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
+            }
+            return false;
+        });
+    }
+    
+    
     private void addTradeInternal(VillagerProfession profession, int villagerLevel, BasicTrade trade) {
         CraftTweakerAPI.apply(new ActionAddTrade(profession, villagerLevel, trade));
     }
     
+    private void addWanderingTradeInternal(int villagerLevel, BasicTrade trade) {
+        CraftTweakerAPI.apply(new ActionAddWanderingTrade(villagerLevel, trade));
+    }
+    
     private void removeTradeInternal(VillagerProfession profession, int villagerLevel, ITradeRemover remover) {
         CraftTweakerAPI.apply(new ActionRemoveTrade(profession, villagerLevel, remover));
+    }
+    
+    private void removeWanderingTradeInternal(int villagerLevel, ITradeRemover remover) {
+        CraftTweakerAPI.apply(new ActionRemoveWanderingTrade(villagerLevel, remover));
     }
     
 }

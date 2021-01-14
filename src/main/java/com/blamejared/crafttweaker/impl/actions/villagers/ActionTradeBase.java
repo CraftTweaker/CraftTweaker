@@ -12,8 +12,12 @@ import java.util.List;
 
 public abstract class ActionTradeBase implements IUndoableAction {
     
-    protected final VillagerProfession profession;
+    protected VillagerProfession profession;
     protected final int level;
+    
+    public ActionTradeBase(int level) {
+        this.level = level;
+    }
     
     public ActionTradeBase(VillagerProfession profession, int level) {
         this.profession = profession;
