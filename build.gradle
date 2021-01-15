@@ -48,7 +48,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 group = 'com.blamejared.crafttweaker'
-archivesBaseName = 'CraftTweaker-1.16.4'
+archivesBaseName = 'CraftTweaker-1.16.5'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -143,7 +143,7 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.0.0'
 //    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
@@ -157,31 +157,6 @@ test {
     }
 }
 
-
-task genGitChangelog() {
-    def stdout = new ByteArrayOutputStream()
-    // first commit to check from, in our case the first commit of the branch
-    String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
-    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
-    // was having issues with grep and spaces in the regex
-    exec {
-        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{0}'
-        standardOutput = stdout
-    }
-    if (stdout.toString().trim().indexOf("\n") >= 0) {
-        firstCommit = stdout.toString().split("\n")[0].trim()
-    }
-    System.out.println("Last version hash: \"" + firstCommit + "\"")
-    stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
-        standardOutput = stdout
-    }
-    File file = new File("changelog.md")
-    file.write("### Current version: " + project.version)
-    file.append("\n" + stdout.toString())
-    System.out.println("Changelog generated!")
-}
 
 processResources {
     dependsOn(":StdLibs:zipItUp")
@@ -204,7 +179,7 @@ jar {
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "CraftTweaker",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "crafttweaker.mixins.json"
+                "MixinConfigs"            : "crafttweaker.mixins.json"
         ])
     }
 }
@@ -314,7 +289,7 @@ task updateVersionTracker {
         def body = [
                 'author'        : "${project.findProperty('versionTrackerAuthor')}",
                 'projectName'   : "crafttweaker",
-                'gameVersion'   : "1.16.4",
+                'gameVersion'   : "1.16.5",
                 'projectVersion': "${version}",
                 'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
                 'uid'           : "${project.findProperty('versionTrackerKey')}"
@@ -345,4 +320,29 @@ idea {
     module {
         excludeDirs += [file("run"), file("runServer")]
     }
+}
+
+task genGitChangelog() {
+    def stdout = new ByteArrayOutputStream()
+    // first commit to check from, in our case the first commit of the branch
+    String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
+    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
+    // was having issues with grep and spaces in the regex
+    exec {
+        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{0}'
+        standardOutput = stdout
+    }
+    if (stdout.toString().trim().indexOf("\n") >= 0) {
+        firstCommit = stdout.toString().split("\n")[0].trim()
+    }
+    System.out.println("Last version hash: \"" + firstCommit + "\"")
+    stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
+        standardOutput = stdout
+    }
+    File file = new File("changelog.md")
+    file.write("### Current version: " + project.version)
+    file.append("\n" + stdout.toString())
+    System.out.println("Changelog generated!")
 }
