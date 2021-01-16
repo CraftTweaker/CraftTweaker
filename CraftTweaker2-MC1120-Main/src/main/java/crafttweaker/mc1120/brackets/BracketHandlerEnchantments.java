@@ -7,7 +7,6 @@ import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.mc1120.enchantments.MCEnchantmentDefinition;
 import crafttweaker.zenscript.IBracketHandler;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.ExpressionCallStatic;
 import stanhebben.zenscript.expression.ExpressionString;

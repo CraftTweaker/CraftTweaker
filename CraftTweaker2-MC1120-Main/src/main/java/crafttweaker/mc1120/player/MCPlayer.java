@@ -44,7 +44,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     public String getName() {
         return player.getName();
     }
-    
+
     @Override
     public IData getData() {
         return NBTConverter.from(player.getEntityData(), true);
@@ -117,7 +117,7 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
     public void sendStatusMessage(IFormattedText message, boolean hotBar) {
         this.player.sendStatusMessage(new TextComponentString(message.getText()), hotBar);
     }
-    
+
     @Override
     public int getHotbarSize() {
         return 9;

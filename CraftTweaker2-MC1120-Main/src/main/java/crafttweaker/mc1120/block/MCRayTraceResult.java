@@ -1,11 +1,8 @@
 package crafttweaker.mc1120.block;
 
-import crafttweaker.api.world.IRayTraceResult;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.*;
-import crafttweaker.mc1120.CraftTweaker;
-import crafttweaker.mc1120.world.MCFacing;
 import net.minecraft.util.math.RayTraceResult;
 
 public class MCRayTraceResult implements IRayTraceResult {

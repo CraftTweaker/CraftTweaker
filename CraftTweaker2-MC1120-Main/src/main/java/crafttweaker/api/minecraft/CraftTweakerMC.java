@@ -25,6 +25,8 @@ import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.potions.IPotionEffect;
 import crafttweaker.api.potions.IPotionType;
 import crafttweaker.api.server.IServer;
+import crafttweaker.api.text.IStyle;
+import crafttweaker.api.text.ITextComponent;
 import crafttweaker.api.util.IAxisAlignedBB;
 import crafttweaker.api.world.*;
 import crafttweaker.mc1120.block.*;
@@ -49,6 +51,8 @@ import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.potions.MCPotion;
 import crafttweaker.mc1120.potions.MCPotionEffect;
 import crafttweaker.mc1120.potions.MCPotionType;
+import crafttweaker.mc1120.text.MCStyle;
+import crafttweaker.mc1120.text.MCTextComponent;
 import crafttweaker.mc1120.util.MCAxisAlignedBB;
 import crafttweaker.mc1120.world.*;
 import net.minecraft.block.Block;
@@ -87,6 +91,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -102,13 +107,12 @@ import net.minecraftforge.oredict.OreIngredient;
 
 import java.util.*;
 
-@SuppressWarnings("unused")
-
 /**
  * CraftTweaker - MineCraft API bridge.
  *
  * @author Stan Hebben
  */
+@SuppressWarnings({"unused", "rawtypes"})
 public class CraftTweakerMC {
     
     public static final IBiome[] biomes;
@@ -206,8 +210,8 @@ public class CraftTweakerMC {
     /**
      * Constructs an item stack with wildcard size.
      *
-     * @param item
-     * @param meta
+     * @param item stack item
+     * @param meta stack meta
      *
      * @return crafttweaker stack
      */
@@ -1103,5 +1107,21 @@ public class CraftTweakerMC {
 
     public static BiomeDictionary.Type getBiomeType(IBiomeType biomeType) {
         return biomeType == null ? null : (BiomeDictionary.Type) biomeType.getInternal();
+    }
+
+    public static IStyle getIStyle(Style style) {
+        return style == null ? null : new MCStyle(style);
+    }
+
+    public static Style getStyle(IStyle style) {
+        return style == null ? null : (Style) style.getInternal();
+    }
+
+    public static ITextComponent getITextComponent(net.minecraft.util.text.ITextComponent textComponent) {
+        return textComponent == null ? null : new MCTextComponent(textComponent);
+    }
+
+    public static net.minecraft.util.text.ITextComponent getITextComponent(ITextComponent textComponent) {
+        return textComponent == null ? null : (net.minecraft.util.text.ITextComponent) textComponent.getInternal();
     }
 }

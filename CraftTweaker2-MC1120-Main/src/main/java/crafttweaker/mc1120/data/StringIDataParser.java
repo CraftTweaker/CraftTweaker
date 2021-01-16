@@ -2,7 +2,6 @@ package crafttweaker.mc1120.data;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.data.*;
-import crafttweaker.mc1120.CraftTweaker;
 import stanhebben.zenscript.ZenTokener;
 import stanhebben.zenscript.parser.Token;
 

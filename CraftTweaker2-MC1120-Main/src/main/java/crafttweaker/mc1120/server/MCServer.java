@@ -83,7 +83,7 @@ public class MCServer extends AbstractServer {
     public void sendMessage(String text) {
         server.sendMessage(new TextComponentString(text));
     }
-    
+
     @Override
     public MinecraftServer getInternal() {
         return server;

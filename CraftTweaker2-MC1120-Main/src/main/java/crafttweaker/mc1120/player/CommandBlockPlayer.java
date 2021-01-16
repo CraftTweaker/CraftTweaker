@@ -43,7 +43,7 @@ public class CommandBlockPlayer implements IUser {
     public void sendMessage(String text) {
         sender.sendMessage(new TextComponentString(text));
     }
-    
+
     @Override
     public Object getInternal() {
         return sender;

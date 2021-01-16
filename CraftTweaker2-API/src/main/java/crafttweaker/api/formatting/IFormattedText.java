@@ -1,6 +1,8 @@
 package crafttweaker.api.formatting;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.text.ITextComponent;
 import stanhebben.zenscript.annotations.*;
 
 /**
@@ -17,4 +19,11 @@ public interface IFormattedText {
     IFormattedText cat(IFormattedText other);
     
     String getText();
+
+    @ZenCaster
+    @ZenMethod
+    default ITextComponent asTextComponent() {
+        CraftTweakerAPI.logError(this.getClass().getCanonicalName() + " doesn't override IFormattedText#asTextComponent! It is a bug!");
+        return null;
+    }
 }

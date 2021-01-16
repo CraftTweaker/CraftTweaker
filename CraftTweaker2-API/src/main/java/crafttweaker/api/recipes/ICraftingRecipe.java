@@ -3,13 +3,9 @@ package crafttweaker.api.recipes;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.*;
 import crafttweaker.api.player.IPlayer;
-import stanhebben.zenscript.annotations.OperatorType;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenOperator;
-
-import java.util.List;
 
 /**
  * @author Stan
