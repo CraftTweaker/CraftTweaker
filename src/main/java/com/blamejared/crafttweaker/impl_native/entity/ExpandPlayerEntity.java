@@ -1,11 +1,15 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.util.text.*;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.UUID;
 
 @ZenRegister
 @Document("vanilla/api/entity/MCPlayerEntity")
@@ -81,4 +85,10 @@ public class ExpandPlayerEntity {
     public static boolean canUseCommandBlock(PlayerEntity internal) {
         return internal.canUseCommandBlock();
     }
+    
+    @ZenCodeType.Method
+    public static void sendMessage(PlayerEntity internal, MCTextComponent text){
+        internal.sendMessage(text.getInternal(), CraftTweaker.CRAFTTWEAKER_UUID);
+    }
+    
 }
