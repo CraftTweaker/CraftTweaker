@@ -19,6 +19,7 @@ import java.util.List;
  * A tag will be created as soon as you add
  *
  * @param <T> The elements within this tag.
+ * @docParam this <tag:items:forge:gems>
  */
 @ZenRegister
 @Document("vanilla/api/tags/MCTag")
@@ -33,12 +34,25 @@ public final class MCTag<T> implements CommandStringDisplayable {
         this.manager = manager;
     }
     
+    /**
+     * Adds the given items to the tag. Creates the tag if it does not exist.
+     *
+     * @param items The items to add. Can be one or more items.
+     * @docParam items <item:minecraft:bedrock>
+     * @docParam items <item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>
+     * @docParam items [<item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>]
+     */
     @SafeVarargs
     @ZenCodeType.Method
     public final void add(T... items) {
         add(Arrays.asList(items));
     }
     
+    /**
+     * Adds the given items to the tag. Creates the tag if it does not exist.
+     *
+     * @param items The items to add. Provided as list.
+     */
     @ZenCodeType.Method
     public void add(List<T> items) {
         manager.addElements(this, items);
