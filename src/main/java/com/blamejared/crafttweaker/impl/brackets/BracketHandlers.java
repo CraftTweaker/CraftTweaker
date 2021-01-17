@@ -223,7 +223,7 @@ public class BracketHandlers {
 
         final ResourceLocation key = new ResourceLocation(split[0], split[1]);
         if (!ForgeRegistries.ENCHANTMENTS.containsKey(key)) {
-            throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment isn't registered");
+            throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment does not appear to exist");
         }
 
         return ForgeRegistries.ENCHANTMENTS.getValue(key);

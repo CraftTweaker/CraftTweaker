@@ -1,8 +1,10 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -11,8 +13,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.Alternative")
-@Document("vanilla/api/loot/conditions/Alternative")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.Alternative")
+@Document("vanilla/api/loot/conditions/vanilla/Alternative")
 public final class AlternativeLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     private final CTLootConditionBuilder parent;
     private final List<ILootCondition> subConditions;

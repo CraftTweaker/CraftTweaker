@@ -4,6 +4,10 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.CraftTweakerLootConditionTypeBuilderRegistrationHandler;
+import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.JsonLootConditionTypeBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.AlternativeLootConditionTypeBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.VanillaLootConditionTypesBuilderRegistrationHandler;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -42,27 +46,8 @@ public final class CTLootConditionBuilder {
     }
 
     static {
-        // Vanilla
-        register(InvertedLootConditionTypeBuilder.class, InvertedLootConditionTypeBuilder::new);
-        register(AlternativeLootConditionTypeBuilder.class, AlternativeLootConditionTypeBuilder::new);
-        register(RandomChanceLootConditionBuilder.class, RandomChanceLootConditionBuilder::new);
-        register(RandomChanceWithLootingLootConditionBuilder.class, RandomChanceWithLootingLootConditionBuilder::new);
-        // TODO("ENTITY_PROPERTIES")
-        register(KilledByPlayerLootConditionTypeBuilder.class, () -> KilledByPlayerLootConditionTypeBuilder.INSTANCE);
-        register(EntityScoresLootConditionTypeBuilder.class, EntityScoresLootConditionTypeBuilder::new);
-        register(BlockStatePropertyLootConditionTypeBuilder.class, BlockStatePropertyLootConditionTypeBuilder::new);
-        register(MatchToolLootConditionBuilder.class, MatchToolLootConditionBuilder::new);
-        register(TableBonusLootConditionTypeBuilder.class, TableBonusLootConditionTypeBuilder::new);
-        register(SurvivesExplosionLootConditionTypeBuilder.class, () -> SurvivesExplosionLootConditionTypeBuilder.INSTANCE);
-        // TODO("DAMAGE_SOURCE_PROPERTIES")
-        // TODO("LOCATION_CHECK")
-        register(WeatherCheckLootConditionTypeBuilder.class, WeatherCheckLootConditionTypeBuilder::new);
-        register(ReferenceLootConditionTypeBuilder.class, ReferenceLootConditionTypeBuilder::new);
-        register(TimeCheckLootConditionTypeBuilder.class, TimeCheckLootConditionTypeBuilder::new);
-        // TODO("LOOT_TABLE_ID, pending Forge PR")
-
-        // CrT
-        register(JsonLootConditionTypeBuilder.class, JsonLootConditionTypeBuilder::new);
+        VanillaLootConditionTypesBuilderRegistrationHandler.registerVanillaLootConditionTypes();
+        CraftTweakerLootConditionTypeBuilderRegistrationHandler.registerCraftTweakerLootConditionTypes();
     }
 
     // Creation
@@ -116,7 +101,7 @@ public final class CTLootConditionBuilder {
         return this;
     }
 
-    final <T extends ILootConditionTypeBuilder> ILootCondition make(final Class<T> type, final String id, final Consumer<T> lender) {
+    public final <T extends ILootConditionTypeBuilder> ILootCondition make(final Class<T> type, final String id, final Consumer<T> lender) {
         final T builder;
         try {
             builder = this.findFor(type);
@@ -144,7 +129,7 @@ public final class CTLootConditionBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    final <T extends ILootConditionTypeBuilder> T findFor(final Class<T> type) {
+    public final <T extends ILootConditionTypeBuilder> T findFor(final Class<T> type) {
         final Function<CTLootConditionBuilder, ? extends ILootConditionTypeBuilder> builderCreator = BUILDERS.get(type);
         return Objects.requireNonNull((T) builderCreator.apply(this));
     }
@@ -154,7 +139,7 @@ public final class CTLootConditionBuilder {
         return this.conditions.toArray(new ILootCondition[0]);
     }
 
-    ILootCondition single() {
+    public ILootCondition single() {
         return this.conditions.size() != 1? null : this.conditions.get(0);
     }
 }

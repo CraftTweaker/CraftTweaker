@@ -1,16 +1,17 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.TimeCheck")
-@Document("vanilla/api/loot/conditions/TimeCheck")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.TimeCheck")
+@Document("vanilla/api/loot/conditions/vanilla/TimeCheck")
 public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     private boolean hasPeriod;
     private long timePeriod;

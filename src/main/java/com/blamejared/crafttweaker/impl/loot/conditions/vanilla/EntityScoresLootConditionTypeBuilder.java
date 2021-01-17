@@ -1,8 +1,10 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.IntRange;
 import com.blamejared.crafttweaker.impl.loot.conditions.predicate.TargetedEntity;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.Entity;
@@ -17,24 +19,10 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.EntityScores")
-@Document("vanilla/api/loot/conditions/EntityScores")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.EntityScores")
+@Document("vanilla/api/loot/conditions/vanilla/EntityScores")
 public final class EntityScoresLootConditionTypeBuilder implements ILootConditionTypeBuilder {
-    private static final class IntPair {
-        private final int min;
-        private final int max;
-
-        private IntPair(final int min, final int max) {
-            this.min = min;
-            this.max = max;
-        }
-
-        public boolean match(final int target) {
-            return this.min <= target && target <= this.max;
-        }
-    }
-
-    private final Map<String, IntPair> ranges;
+    private final Map<String, IntRange> ranges;
     private TargetedEntity targetedEntity;
 
     EntityScoresLootConditionTypeBuilder() {
@@ -49,7 +37,7 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
 
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withScore(final String name, final int min, final int max) {
-        this.ranges.put(name, new IntPair(min, max));
+        this.ranges.put(name, new IntRange(min, max));
         return this;
     }
 
@@ -65,9 +53,6 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
         }
         if (this.ranges.isEmpty()) {
             CraftTweakerAPI.logWarning("An 'EntityScores' condition has an empty set of scores to check: this will always pass!");
-        }
-        if (this.ranges.values().stream().anyMatch(it -> it.min > it.max)) {
-            CraftTweakerAPI.logWarning("An 'EntityScores' condition has a score value whose minimum is higher than the maximum: this will never pass! Map: {}", this.ranges);
         }
 
         final List<BiPredicate<Entity, Scoreboard>> matchers = this.ranges
@@ -85,11 +70,11 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
         };
     }
 
-    private BiPredicate<Entity, Scoreboard> convertToMatcher(final Map.Entry<String, IntPair> entry) {
+    private BiPredicate<Entity, Scoreboard> convertToMatcher(final Map.Entry<String, IntRange> entry) {
         return this.makeMatcher(entry.getKey(), entry.getValue());
     }
 
-    private BiPredicate<Entity, Scoreboard> makeMatcher(final String name, final IntPair range) {
+    private BiPredicate<Entity, Scoreboard> makeMatcher(final String name, final IntRange range) {
         return (entity, scoreboard) -> {
             final ScoreObjective objective = scoreboard.getObjective(name);
             if (objective == null) return false;

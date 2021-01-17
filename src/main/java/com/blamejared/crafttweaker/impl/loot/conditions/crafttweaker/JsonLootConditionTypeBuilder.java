@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
@@ -6,6 +6,8 @@ import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.data.StringData;
 import com.blamejared.crafttweaker.impl.loot.MCLootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import net.minecraft.loot.LootSerializers;
@@ -13,8 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.Json")
-@Document("vanilla/api/loot/condition/Json")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.Json")
+@Document("vanilla/api/loot/condition/crafttweaker/Json")
 public final class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     private static final Gson GSON = LootSerializers.func_237387_b_().disableHtmlEscaping().create();
 

@@ -1,22 +1,18 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.TriState;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.WeatherCheck")
-@Document("vanilla/api/loot/conditions/WeatherCheck")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.WeatherCheck")
+@Document("vanilla/api/loot/conditions/vanilla/WeatherCheck")
 public final class WeatherCheckLootConditionTypeBuilder implements ILootConditionTypeBuilder {
-    private enum TriState {
-        TRUE,
-        FALSE,
-        UNSET
-    }
-
     private TriState raining;
     private TriState thundering;
 

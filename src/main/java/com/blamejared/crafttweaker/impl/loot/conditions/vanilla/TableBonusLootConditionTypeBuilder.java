@@ -1,9 +1,9 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.impl.enchantment.MCEnchantment;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.enchantment.Enchantment;
@@ -14,8 +14,8 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Arrays;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.TableBonus")
-@Document("vanilla/api/loot/conditions/TableBonus")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.TableBonus")
+@Document("vanilla/api/loot/conditions/vanilla/TableBonus")
 public final class TableBonusLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     private Enchantment enchantment;
     private float[] chances;

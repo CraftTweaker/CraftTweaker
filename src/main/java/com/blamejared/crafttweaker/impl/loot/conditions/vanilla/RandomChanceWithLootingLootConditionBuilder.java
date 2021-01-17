@@ -1,14 +1,15 @@
-package com.blamejared.crafttweaker.impl.loot.conditions;
+package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.RandomChanceWithLooting")
-@Document("vanilla/api/loot/conditions/RandomChanceWithLooting")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.RandomChanceWithLooting")
+@Document("vanilla/api/loot/conditions/vanilla/RandomChanceWithLooting")
 public final class RandomChanceWithLootingLootConditionBuilder implements ILootConditionTypeBuilder {
     private float chance;
     private float lootingMultiplier;
