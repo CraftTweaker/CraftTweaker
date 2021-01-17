@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.FakePlayer;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.UUID;
@@ -15,6 +16,12 @@ import java.util.UUID;
 @Document("vanilla/api/entity/MCPlayerEntity")
 @NativeTypeRegistration(value = PlayerEntity.class, zenCodeName = "crafttweaker.api.player.MCPlayerEntity")
 public class ExpandPlayerEntity {
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("fake")
+    public static boolean isFake(PlayerEntity internal) {
+        return internal instanceof FakePlayer;
+    }
     
     @ZenCodeType.Method
     public static boolean isSecondaryUseActive(PlayerEntity internal) {
@@ -87,7 +94,7 @@ public class ExpandPlayerEntity {
     }
     
     @ZenCodeType.Method
-    public static void sendMessage(PlayerEntity internal, MCTextComponent text){
+    public static void sendMessage(PlayerEntity internal, MCTextComponent text) {
         internal.sendMessage(text.getInternal(), CraftTweaker.CRAFTTWEAKER_UUID);
     }
     
