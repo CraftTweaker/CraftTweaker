@@ -1,5 +1,9 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
+import javax.annotation.Nullable;
+
+import org.openzen.zencode.java.ZenCodeType;
+
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
@@ -7,6 +11,7 @@ import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,10 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-
-import javax.annotation.Nullable;
-
-import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Worlds represent a dimension within the game. They are used to interact with 
@@ -161,6 +162,7 @@ public class ExpandWorld {
      * 
      * @param pos The position to check.
      * @return Whether or not it is raining at the current position.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -173,6 +175,7 @@ public class ExpandWorld {
      * 
      * @param pos The position to check.
      * @return The highest strong (direct) redstone signal of all directly neighboring blocks.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -186,6 +189,7 @@ public class ExpandWorld {
      * @param pos The position to check.
      * @param direction The direction to query.
      * @return The redstone signal strength available from that direction.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam direction <direction:north>
      */
@@ -198,6 +202,7 @@ public class ExpandWorld {
      * Gets the highest redstone signal available to a position from any of it's neighbors.
      * @param pos The position to check.
      * @return The highest redstone signal available to the position.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -210,6 +215,7 @@ public class ExpandWorld {
      * 
      * @param pos The position of the tile entity.
      * @return The data of the tile entity.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -225,6 +231,7 @@ public class ExpandWorld {
      * @param pos The position to set the block at.
      * @param state The new state of the block.
      * @return Whether or not the block was changed.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam state <blockstate:minecraft:iron_block>
      */
@@ -238,6 +245,7 @@ public class ExpandWorld {
      * 
      * @param pos The position to look up.
      * @return The block state at the position.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -250,6 +258,7 @@ public class ExpandWorld {
      * 
      * @param pos The position to check.
      * @return Whether or not the position is receiving a redstone signal.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -262,6 +271,7 @@ public class ExpandWorld {
      * 
      * @param pos The position to look up.
      * @return The biome at the given position.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -275,6 +285,7 @@ public class ExpandWorld {
      * @param pos The position of the block.
      * @param doDrops Whether or not the block drops itself and it's loot.
      * @return Whether or not the block was changed.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam doDrops true
      */
@@ -290,6 +301,7 @@ public class ExpandWorld {
      * @param doDrops Whether or not the block drops itself and it's loot.
      * @param breaker The entity to break the block.
      * @return Whether or not the block was changed.
+     * 
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam doDrops true
      * @docParam breaker player
@@ -333,5 +345,29 @@ public class ExpandWorld {
      */
     public static void playEvent(World internal, @Nullable PlayerEntity excluded, int eventId, BlockPos pos, int data) {
     	internal.playEvent(excluded, eventId, pos, data);
+    }
+    
+    /**
+     * Checks if the block at a given position is air.
+     * 
+     * @param pos The position to look up.
+     * @return Whether or not the block is air.
+     * 
+     * @docParam pos new BlockPos(0, 1, 2)
+     */
+    public static boolean isAir(World internal, BlockPos pos) {
+    	return internal.isAirBlock(pos);
+    }
+    
+    /**
+     * Checks if the block at a given position is in a loaded chunk.
+     * 
+     * @param pos The position to look up.
+     * @return Whether or not the position is in a loaded chunk.
+     * 
+     * @docParam pos new BlockPos(0, 1, 2)
+     */
+    public static boolean isLoaded(World internal, BlockPos pos) {
+    	return internal.isBlockLoaded(pos);
     }
 }
