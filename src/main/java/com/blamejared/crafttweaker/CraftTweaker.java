@@ -183,8 +183,9 @@ public class CraftTweaker {
         called on singleplayer join on the client
         Called on multiplayer login on the server
          */
-        
-        ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+        if(event.getPlayer().canUseCommandBlock()) {
+            ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+        }
     }
     
     @SubscribeEvent
