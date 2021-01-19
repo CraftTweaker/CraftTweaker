@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerWorld;
 
 /**
  * Worlds represent a dimension within the game. They are used to interact with 
@@ -31,6 +32,12 @@ import net.minecraft.world.biome.Biome;
 @Document("vanilla/api/world/MCWorld")
 @NativeTypeRegistration(value = World.class, zenCodeName = "crafttweaker.api.world.MCWorld")
 public class ExpandWorld {
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = false)
+    public static ServerWorld asServerWorld(World internal) {
+        return (ServerWorld) internal;
+    }
     
     /**
      * Checks if the world is remote. This is always true on the rendering
