@@ -8,11 +8,15 @@ import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+
+import javax.annotation.Nullable;
+
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -262,5 +266,35 @@ public class ExpandWorld {
     @ZenCodeType.Method
     public static Biome getBiome(World internal, BlockPos pos) {
         return internal.getBiome(pos);
+    }
+    
+    /**
+     * Destroys a block within the world.
+     * 
+     * @param pos The position of the block.
+     * @param doDrops Whether or not the block drops itself and it's loot.
+     * @return Whether or not the block was changed.
+     * @docParam pos new BlockPos(0, 1, 2)
+     * @docParam doDrops true
+     */
+    @ZenCodeType.Method
+    public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops) { 
+    	return internal.destroyBlock(pos, doDrops);
+    }
+    
+    /**
+     * Destroys a block within the world.
+     * 
+     * @param pos The position of the block.
+     * @param doDrops Whether or not the block drops itself and it's loot.
+     * @param breaker The entity to break the block.
+     * @return Whether or not the block was changed.
+     * @docParam pos new BlockPos(0, 1, 2)
+     * @docParam doDrops true
+     * @docParam breaker player
+     */
+    @ZenCodeType.Method
+    public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops, @Nullable Entity breaker) { 
+    	return internal.destroyBlock(pos, doDrops, breaker);
     }
 }
