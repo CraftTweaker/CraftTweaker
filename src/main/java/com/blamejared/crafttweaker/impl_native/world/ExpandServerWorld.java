@@ -67,4 +67,13 @@ public class ExpandServerWorld {
     public static void setTimeToMidnight(ServerWorld internal) {
         internal.setDayTime(18000);
     }
+    
+    /**
+     * Gets the random seed of the world.
+     * @return The random seed of the world.
+     */
+    @ZenCodeType.Getter("seed")
+    public static long getSeed(ServerWorld internal) {
+    	return internal.getSeed();
+    }
 }
