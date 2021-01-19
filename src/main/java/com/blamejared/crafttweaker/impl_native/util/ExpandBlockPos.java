@@ -24,12 +24,18 @@ public class ExpandBlockPos {
         return internal.toLong();
     }
     
+    @ZenCodeType.Caster(implicit = true)
+    public static String toString(BlockPos internal) {
+        return internal.toString();
+    }
+    
     /**
      * Adds the given values to this position, and returns a new position with the new values.
      *
      * @param x x value to add
      * @param y y value to add
      * @param z z value to add
+     *
      * @return a new position based on values of provided values and this position
      * @docParam x 50.21
      * @docParam y -20.8
@@ -46,6 +52,7 @@ public class ExpandBlockPos {
      * @param x x value to add
      * @param y y value to add
      * @param z z value to add
+     *
      * @return a new position based on values of provided values and this position
      * @docParam x 50
      * @docParam y -20
@@ -60,6 +67,7 @@ public class ExpandBlockPos {
      * Adds two positions together and returns the result.
      *
      * @param pos other position to add
+     *
      * @return new {@link BlockPos} with the added values.
      * @docParam pos new BlockPos(3, 2, 1)
      */
@@ -73,6 +81,7 @@ public class ExpandBlockPos {
      * Subtracts two positions together and returns the result.
      *
      * @param pos other position to remove
+     *
      * @return new {@link BlockPos} with the removed values.
      * @docParam pos new BlockPos(2, 1, 3)
      */
@@ -235,6 +244,7 @@ public class ExpandBlockPos {
      * Creates a new BlockPos based on the cross product of this position, and the given position
      *
      * @param pos BlockPos to cross product
+     *
      * @return a new BlockPos based on the cross product of this BlockPos and the given BlockPos
      * @docParam pos new BlockPos(5, 8, 2);
      */
@@ -263,6 +273,7 @@ public class ExpandBlockPos {
      *
      * @param pos      BlockPos to check if it is within the distance
      * @param distance distance to check within
+     *
      * @return true if the given BlockPos is within the given distance of this BlockPos
      * @docParam pos new BlockPos(80, 75, 54);
      * @docParam distance 10
@@ -276,6 +287,7 @@ public class ExpandBlockPos {
      * Gets the squared distance of this position to the specified BlockPos, using the center of the BlockPos
      *
      * @param to BlockPos to check against
+     *
      * @return the squared distance of this current position and the given BlockPos.
      * @docParam to new BlockPos(256, 128, 10);
      * @docParam useCenter true
@@ -290,6 +302,7 @@ public class ExpandBlockPos {
      *
      * @param to        BlockPos to check against
      * @param useCenter should the center of the coordinate be used? (adds 0.5 to each value)
+     *
      * @return the squared distance of this current position and the given BlockPos.
      * @docParam to new BlockPos(256, 128, 10);
      * @docParam useCenter true
@@ -306,6 +319,7 @@ public class ExpandBlockPos {
      * @param y         y position to check against
      * @param z         z position to check against
      * @param useCenter should the center of the coordinate be used? (adds 0.5 to each value)
+     *
      * @return the squared distance of this current position and the given coordinates.
      * @docParam x 500.25
      * @docParam y 250.75
@@ -321,6 +335,7 @@ public class ExpandBlockPos {
      * Gets the Manhattan Distance of this pos compared to a different position
      *
      * @param other other position to get the distance to
+     *
      * @return The manhattan distance of the positions
      * @docParam other new BlockPos(4, 5, 6)
      */

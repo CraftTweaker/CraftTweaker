@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Set;
@@ -14,6 +15,13 @@ import java.util.Set;
 @Document("vanilla/api/entity/MCEntity")
 @NativeTypeRegistration(value = Entity.class, zenCodeName = "crafttweaker.api.entity.MCEntity")
 public class ExpandEntity {
+    
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("world")
+    public static World getWorld(Entity internal) {
+        return internal.world;
+    }
     
     @ZenCodeType.Method
     public static boolean isSpectator(Entity internal) {

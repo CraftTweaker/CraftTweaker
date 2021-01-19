@@ -39,17 +39,16 @@ public class CTCommands {
     private static final Map<String, CommandImpl> COMMANDS = new TreeMap<>(String::compareTo);
     private static final int commandsPerPage = 4;
     public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
+    public static LiteralArgumentBuilder<CommandSource> rootAlternative = Commands.literal("crafttweaker");
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
-        root.then(Commands.literal("copy")
-                .then(Commands.argument("toCopy", StringArgumentType.string())
-                        .executes(context -> {
-                            String toCopy = context.getArgument("toCopy", String.class);
-                            ServerPlayerEntity entity = context.getSource().asPlayer();
-                            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
-                            send(new StringTextComponent("Copied!"), entity);
-                            return 0;
-                        })));
+        registerCustomCommand(Commands.literal("copy").then(Commands.argument("toCopy", StringArgumentType.string()).executes(context -> {
+            String toCopy = context.getArgument("toCopy", String.class);
+            ServerPlayerEntity entity = context.getSource().asPlayer();
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
+            send(new StringTextComponent("Copied!"), entity);
+            return 0;
+        })));
         
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
@@ -271,15 +270,18 @@ public class CTCommands {
             }
         }
         
-        root.then(Commands.literal("help")
+        
+        registerCustomCommand(Commands.literal("help")
                 .executes(context -> executeHelp(context, 1))
                 .then(Commands.argument("page", IntegerArgumentType.integer(1, (COMMANDS.size() / commandsPerPage) + 1))
                         .executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
         
-        
         COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));
+        COMMANDS.forEach((s, command) -> registerCommandInternal(rootAlternative, command));
+    
+    
         LiteralCommandNode<CommandSource> rootNode = dispatcher.register(root);
-        dispatcher.register(Commands.literal("crafttweaker").redirect(rootNode));
+        LiteralCommandNode<CommandSource> rootAltNode = dispatcher.register(rootAlternative);
         
         /*
          * For anyone about to make a PR adding /minetweaker or /mt aliases, keep in mind:
@@ -345,6 +347,10 @@ public class CTCommands {
         return 0;
     }
     
+    private static void registerCustomCommand(LiteralArgumentBuilder<CommandSource> literal){
+        root.then(literal);
+        rootAlternative.then(literal);
+    }
     
     private static void send(ITextComponent component, CommandSource source) {
         source.sendFeedback(component, true);
