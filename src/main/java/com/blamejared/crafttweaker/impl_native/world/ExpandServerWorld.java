@@ -6,6 +6,8 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 
+import net.minecraft.util.SharedSeedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
 /**
@@ -70,10 +72,50 @@ public class ExpandServerWorld {
     
     /**
      * Gets the random seed of the world.
+     * 
      * @return The random seed of the world.
      */
     @ZenCodeType.Getter("seed")
     public static long getSeed(ServerWorld internal) {
     	return internal.getSeed();
+    }
+    
+    /**
+     * Checks if a position is within a village.
+     * 
+     * @param pos The position to look up.
+     * @return Whether or not the position was inside a village.
+     * 
+     * @docParem pos new BlockPos(0, 1, 2)
+     */
+    @ZenCodeType.Method
+    public static boolean isVillage(ServerWorld internal, BlockPos pos) {
+    	return internal.isVillage(pos);
+    }
+    
+    /**
+     * Checks if a position is within an active raid.
+     * 
+     * @param pos The position to look up.
+     * @return Whether or not the position was inside an active raid.
+     * 
+     * @docParam pos new BlockPos(0, 1, 2)
+     */
+    @ZenCodeType.Method
+    public static boolean isRaid(ServerWorld internal, BlockPos pos) {
+    	return internal.hasRaid(pos);
+    }
+    
+    /**
+     * Checks if a position is within a chunk that is considered a slime chunk.
+     * 
+     * @param pos The position to look up.
+     * @return Whether or not the position was inside a slime chunk.
+     * 
+     * @docParam pos new BlockPos(0, 1, 2)
+     */
+    @ZenCodeType.Method
+    public static boolean isSlimeChunk(ServerWorld internal, BlockPos pos) {
+    	return SharedSeedRandom.seedSlimeChunk(pos.getX() >> 4, pos.getZ() >> 4, internal.getSeed(), 987234911L).nextInt(10) == 0;
     }
 }
