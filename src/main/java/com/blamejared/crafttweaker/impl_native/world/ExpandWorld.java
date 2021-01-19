@@ -324,6 +324,7 @@ public class ExpandWorld {
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam data 0
      */
+    @ZenCodeType.Method
     public static void playEvent(World internal, int eventId, BlockPos pos, int data) {
     	internal.playEvent(eventId, pos, data);
     }
@@ -343,6 +344,7 @@ public class ExpandWorld {
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam data 0
      */
+    @ZenCodeType.Method
     public static void playEvent(World internal, @Nullable PlayerEntity excluded, int eventId, BlockPos pos, int data) {
     	internal.playEvent(excluded, eventId, pos, data);
     }
@@ -355,6 +357,7 @@ public class ExpandWorld {
      * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
+    @ZenCodeType.Method
     public static boolean isAir(World internal, BlockPos pos) {
     	return internal.isAirBlock(pos);
     }
@@ -367,6 +370,7 @@ public class ExpandWorld {
      * 
      * @docParam pos new BlockPos(0, 1, 2)
      */
+    @ZenCodeType.Method
     public static boolean isLoaded(World internal, BlockPos pos) {
     	return internal.isBlockLoaded(pos);
     }
