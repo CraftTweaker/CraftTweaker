@@ -323,27 +323,28 @@ idea {
 }
 
 task genGitChangelog() {
-    def stdout = new ByteArrayOutputStream()
-    // first commit to check from, in our case the first commit of the branch
-    String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
-    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
-    // was having issues with grep and spaces in the regex
-    exec {
-        commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{0}'
-        standardOutput = stdout
-    }
-    if (stdout.toString().trim().indexOf("\n") >= 0) {
-        firstCommit = stdout.toString().split("\n")[0].trim()
-    }
-    System.out.println("Last version hash: \"" + firstCommit + "\"")
-    stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
-        standardOutput = stdout
-    }
-    File file = new File("changelog.md")
-    
-    if (file.canWrite()) {
+
+    doLast {
+        def stdout = new ByteArrayOutputStream()
+        // first commit to check from, in our case the first commit of the branch
+        String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
+        String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
+        // was having issues with grep and spaces in the regex
+        exec {
+            commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{0}'
+            standardOutput = stdout
+        }
+        if (stdout.toString().trim().indexOf("\n") >= 0) {
+            firstCommit = stdout.toString().split("\n")[0].trim()
+        }
+        System.out.println("Last version hash: \"" + firstCommit + "\"")
+        stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
+            standardOutput = stdout
+        }
+        File file = new File("changelog.md")
+
         file.write("### Current version: " + project.version)
         file.append("\n" + stdout.toString())
         System.out.println("Changelog generated!")
