@@ -19,7 +19,7 @@ import net.minecraft.world.server.ServerWorld;
  */
 @ZenRegister
 @Document("vanilla/api/world/MCServerWorld")
-@NativeTypeRegistration(value = ServerWorld.class, zenCodeName = "crafttweaker.api.world.ServerMCWorld")
+@NativeTypeRegistration(value = ServerWorld.class, zenCodeName = "crafttweaker.api.world.MCServerWorld")
 public class ExpandServerWorld {
 	
 	/**
