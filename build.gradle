@@ -342,7 +342,10 @@ task genGitChangelog() {
         standardOutput = stdout
     }
     File file = new File("changelog.md")
-    file.write("### Current version: " + project.version)
-    file.append("\n" + stdout.toString())
-    System.out.println("Changelog generated!")
+    
+    if (file.canWrite()) {
+        file.write("### Current version: " + project.version)
+        file.append("\n" + stdout.toString())
+        System.out.println("Changelog generated!")
+    }
 }
