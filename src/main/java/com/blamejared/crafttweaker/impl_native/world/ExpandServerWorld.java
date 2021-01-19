@@ -15,7 +15,7 @@ import net.minecraft.world.server.ServerWorld;
  * limited to dedicated servers, they exist in single player worlds as part of
  * the integrated server.
  * 
- * @docParam this world
+ * @docParam this world as MCServerWorld
  */
 @ZenRegister
 @Document("vanilla/api/world/MCServerWorld")
@@ -36,7 +36,7 @@ public class ExpandServerWorld {
 
     /**
      * Sets the time of the Minecraft day to day. This is like using the
-     * "time set day" command.
+     * "time set day" command or setting the time to 1000.
      */
     @ZenCodeType.Method
     public static void setTimeToDay(ServerWorld internal) {
@@ -45,7 +45,7 @@ public class ExpandServerWorld {
     
     /**
      * Sets the time of the Minecraft day to noon. This is like using the
-     * "time set noon" command.
+     * "time set noon" command or setting the time to 6000.
      */
     @ZenCodeType.Method
     public static void setTimeToNoon(ServerWorld internal) {
@@ -54,16 +54,16 @@ public class ExpandServerWorld {
     
     /**
      * Sets the time of the Minecraft day to night. This is like using the
-     * "time set night" command.
+     * "time set night" command or setting the time to 13000.
      */
     @ZenCodeType.Method
     public static void setTimeToNight(ServerWorld internal) {
-        internal.setDayTime(6000);
+        internal.setDayTime(13000);
     }
     
     /**
      * Sets the time of the Minecraft day to midnight. This is like using the
-     * "time set midnight" command.
+     * "time set midnight" command or setting the time to 18000.
      */
     @ZenCodeType.Method
     public static void setTimeToMidnight(ServerWorld internal) {
