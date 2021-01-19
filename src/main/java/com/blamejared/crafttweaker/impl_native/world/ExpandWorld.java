@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -296,5 +297,41 @@ public class ExpandWorld {
     @ZenCodeType.Method
     public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops, @Nullable Entity breaker) { 
     	return internal.destroyBlock(pos, doDrops, breaker);
+    }
+
+    /**
+     * Triggers a predetermined event on the client. Using this on a server
+     * or integrated server will send the event to all nearby players.
+     * 
+     * @param eventId The ID of the event to play.
+     * @param pos The position of the event.
+     * @param data Four bytes of additional data encoded as an integer. This
+     *        is generally unused.
+     *        
+     * @docParam eventId 2005
+     * @docParam pos new BlockPos(0, 1, 2)
+     * @docParam data 0
+     */
+    public static void playEvent(World internal, int eventId, BlockPos pos, int data) {
+    	internal.playEvent(eventId, pos, data);
+    }
+    
+    /**
+     * Triggers a predetermined event on the client. Using this on a server
+     * or integrated server will send the event to all nearby players.
+     * 
+     * @param excluded An excluded player who will not receive the event.
+     * @param eventId The ID of the event to play.
+     * @param pos The position of the event.
+     * @param data Four bytes of additional data encoded as an integer. This
+     *        is generally unused.
+     *        
+     * @docParam excluded player
+     * @docParam eventId 2005
+     * @docParam pos new BlockPos(0, 1, 2)
+     * @docParam data 0
+     */
+    public static void playEvent(World internal, @Nullable PlayerEntity excluded, int eventId, BlockPos pos, int data) {
+    	internal.playEvent(excluded, eventId, pos, data);
     }
 }
