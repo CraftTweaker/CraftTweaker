@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.predicate.PlayerPredicate")
 @Document("vanilla/api/loot/conditions/predicate/PlayerPredicate")
 public final class PlayerPredicate {
-    private static final MethodHandle PREDICATE_CONSTRUCTOR;
-
     private final Map<Pair<ResourceLocation, ResourceLocation>, IntRange> statistics;
     private final Map<String, Boolean> recipes;
     private final Map<String, AdvancementPredicate> advancements;
@@ -41,24 +39,6 @@ public final class PlayerPredicate {
         this.statistics = new LinkedHashMap<>();
         this.recipes = new LinkedHashMap<>();
         this.advancements = new LinkedHashMap<>();
-    }
-
-    static {
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-
-            final Class<?> predicateClass = net.minecraft.advancements.criterion.PlayerPredicate.class;
-
-            final Constructor<?> predicateConstructor = predicateClass.getDeclaredConstructor(MinMaxBounds.IntBound.class, GameType.class,
-                    Map.class, Object2BooleanMap.class, Map.class);
-
-            predicateConstructor.setAccessible(true);
-
-            PREDICATE_CONSTRUCTOR = lookup.unreflectConstructor(predicateConstructor);
-        } catch (final ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     @ZenCodeType.Method
@@ -116,7 +96,7 @@ public final class PlayerPredicate {
     public net.minecraft.advancements.criterion.PlayerPredicate toVanilla() {
         if (this.isAny()) return net.minecraft.advancements.criterion.PlayerPredicate.ANY;
         try {
-            return (net.minecraft.advancements.criterion.PlayerPredicate) PREDICATE_CONSTRUCTOR.invokeExact(
+            return new net.minecraft.advancements.criterion.PlayerPredicate(
                     this.toVanilla(this.experienceLevels),
                     this.toVanilla(this.gameMode),
                     this.toVanillaStats(this.statistics),
@@ -160,7 +140,7 @@ public final class PlayerPredicate {
         return vanilla;
     }
 
-    private Map<ResourceLocation, ?> toVanillaAdvancements(final Map<String, AdvancementPredicate> predicateMap) {
+    private Map<ResourceLocation, net.minecraft.advancements.criterion.PlayerPredicate.IAdvancementPredicate> toVanillaAdvancements(final Map<String, AdvancementPredicate> predicateMap) {
         return predicateMap.entrySet().stream()
                 .filter(it -> !it.getValue().isAny())
                 .map(it -> new AbstractMap.SimpleImmutableEntry<>(new ResourceLocation(it.getKey()), it.getValue().toVanilla()))

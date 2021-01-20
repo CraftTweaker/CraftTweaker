@@ -53,41 +53,12 @@ final class StateBasedPredicateHelper {
         }
     }
 
-    private static final MethodHandle PREDICATE_CONSTRUCTOR;
-    private static final MethodHandle EXACT_MATCHER_CONSTRUCTOR;
-    private static final MethodHandle RANGED_MATCHER_CONSTRUCTOR;
-
     private final Map<String, Raw> rawMatchers;
     private final Map<String, BiPredicate<StateHolder<?, ?>, Property<?>>> matchers;
 
     StateBasedPredicateHelper() {
         this.rawMatchers = new LinkedHashMap<>();
         this.matchers = new LinkedHashMap<>();
-    }
-
-    static {
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-
-            final Class<?> statePropertiesPredicateClass = StatePropertiesPredicate.class;
-            final Class<?> exactMatcherClass = Class.forName("net.minecraft.advancements.criterion.StatePropertiesPredicate$ExactMatcher");
-            @SuppressWarnings("SpellCheckingInspection") // -.-
-            final Class<?> rangedMatcherClass = Class.forName("net.minecraft.advancements.criterion.StatePropertiesPredicate$RangedMacher");
-
-            final Constructor<?> statePropertiesConstructor = statePropertiesPredicateClass.getDeclaredConstructor(List.class);
-            final Constructor<?> exactMatcherConstructor = exactMatcherClass.getDeclaredConstructor(String.class, String.class);
-            final Constructor<?> rangedMatcherConstructor = rangedMatcherClass.getDeclaredConstructor(String.class, String.class, String.class);
-
-            statePropertiesConstructor.setAccessible(true);
-            exactMatcherConstructor.setAccessible(true);
-            rangedMatcherConstructor.setAccessible(true);
-
-            PREDICATE_CONSTRUCTOR = lookup.unreflectConstructor(statePropertiesConstructor);
-            EXACT_MATCHER_CONSTRUCTOR = lookup.unreflectConstructor(exactMatcherConstructor);
-            RANGED_MATCHER_CONSTRUCTOR = lookup.unreflectConstructor(rangedMatcherConstructor);
-        } catch (final ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     boolean isAny() {
@@ -108,24 +79,24 @@ final class StateBasedPredicateHelper {
         return !this.matchers.isEmpty();
     }
 
-    net.minecraft.advancements.criterion.StatePropertiesPredicate toVanilla() {
+    StatePropertiesPredicate toVanilla() {
         if (this.isAny()) return StatePropertiesPredicate.EMPTY;
-        final List<Object> vanillaMatchers = this.rawMatchers.entrySet().stream().map(this::toVanilla).collect(Collectors.toList());
+        final List<StatePropertiesPredicate.Matcher> vanillaMatchers = this.rawMatchers.entrySet().stream().map(this::toVanilla).collect(Collectors.toList());
         try {
-            return (StatePropertiesPredicate) PREDICATE_CONSTRUCTOR.invokeExact(vanillaMatchers);
+            return new StatePropertiesPredicate(vanillaMatchers);
         } catch (final Throwable e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Object toVanilla(final Map.Entry<String, Raw> rawEntry) {
+    private StatePropertiesPredicate.Matcher toVanilla(final Map.Entry<String, Raw> rawEntry) {
         // Note: using 'invoke' instead of 'invokeExact' due to the lack of being able to specify return type
         // This is slightly slower, but it should still be faster:tm: than pure reflection
         try {
             if (rawEntry.getValue().isRange()) {
-                return RANGED_MATCHER_CONSTRUCTOR.invoke(rawEntry.getKey(), rawEntry.getValue().getMin(), rawEntry.getValue().getMax());
+                return new StatePropertiesPredicate.RangedMacher(rawEntry.getKey(), rawEntry.getValue().getMin(), rawEntry.getValue().getMax());
             } else {
-                return EXACT_MATCHER_CONSTRUCTOR.invoke(rawEntry.getKey(), rawEntry.getValue().getVal());
+                return new StatePropertiesPredicate.ExactMatcher(rawEntry.getKey(), rawEntry.getValue().getVal());
             }
         } catch (final Throwable t) {
             throw new RuntimeException(t);

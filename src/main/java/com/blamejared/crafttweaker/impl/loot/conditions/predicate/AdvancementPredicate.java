@@ -7,9 +7,6 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,9 +14,6 @@ import java.util.Map;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.predicate.AdvancementPredicate")
 @Document("vanilla/api/loot/conditions/predicate/AdvancementPredicate")
 public final class AdvancementPredicate {
-    private static final MethodHandle COMPLETED_CONSTRUCTOR;
-    private static final MethodHandle CRITERIA_CONSTRUCTOR;
-
     private final Map<String, Boolean> criteria;
 
     private TriState passed;
@@ -27,26 +21,6 @@ public final class AdvancementPredicate {
     public AdvancementPredicate() {
         this.criteria = new LinkedHashMap<>();
         this.passed = TriState.UNSET;
-    }
-
-    static {
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-
-            final Class<?> completedClass = Class.forName("net.minecraft.advancements.criterion.PlayerPredicate$CompletedAdvancementPredicate");
-            final Class<?> criteriaClass = Class.forName("net.minecraft.advancements.criterion.PlayerPredicate$CriteriaPredicate");
-
-            final Constructor<?> completedConstructor = completedClass.getDeclaredConstructor(boolean.class);
-            final Constructor<?> criteriaConstructor = criteriaClass.getDeclaredConstructor(Object2BooleanMap.class);
-
-            completedConstructor.setAccessible(true);
-            criteriaConstructor.setAccessible(true);
-
-            COMPLETED_CONSTRUCTOR = lookup.unreflectConstructor(completedConstructor);
-            CRITERIA_CONSTRUCTOR = lookup.unreflectConstructor(criteriaConstructor);
-        } catch (final ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @ZenCodeType.Method
@@ -77,16 +51,15 @@ public final class AdvancementPredicate {
         return this.passed == TriState.UNSET && this.criteria.isEmpty();
     }
 
-    Object toVanilla() {
+    net.minecraft.advancements.criterion.PlayerPredicate.IAdvancementPredicate toVanilla() {
         if (this.passed != TriState.UNSET && !this.criteria.isEmpty()) {
             throw new IllegalStateException("An advancement can be checked only for full completion or criteria, not both");
         }
         try {
             if (this.passed != TriState.UNSET) {
-                //noinspection UnnecessaryUnboxing
-                return COMPLETED_CONSTRUCTOR.invoke(this.passed.toBoolean().booleanValue());
+                return new net.minecraft.advancements.criterion.PlayerPredicate.CompletedAdvancementPredicate(this.passed.toBoolean());
             } else {
-                return CRITERIA_CONSTRUCTOR.invoke(this.toVanilla(this.criteria));
+                return new net.minecraft.advancements.criterion.PlayerPredicate.CriteriaPredicate(this.toVanilla(this.criteria));
             }
         } catch (final Throwable e) {
             throw new RuntimeException(e);
