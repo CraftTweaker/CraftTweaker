@@ -4,8 +4,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.IntRange;
-import com.blamejared.crafttweaker.impl.loot.conditions.predicate.TargetedEntity;
+import com.blamejared.crafttweaker.impl.predicate.IntRangePredicate;
+import com.blamejared.crafttweaker.impl.predicate.TargetedEntity;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.EntityScores")
 @Document("vanilla/api/loot/conditions/vanilla/EntityScores")
 public final class EntityScoresLootConditionTypeBuilder implements ILootConditionTypeBuilder {
-    private final Map<String, IntRange> ranges;
+    private final Map<String, IntRangePredicate> ranges;
     private TargetedEntity targetedEntity;
 
     EntityScoresLootConditionTypeBuilder() {
@@ -36,14 +36,26 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
     }
 
     @ZenCodeType.Method
-    public EntityScoresLootConditionTypeBuilder withScore(final String name, final int min, final int max) {
-        this.ranges.put(name, new IntRange(min, max));
+    public EntityScoresLootConditionTypeBuilder withMinimumScore(final String name, final int min) {
+        this.ranges.put(name, IntRangePredicate.lowerBounded(min));
         return this;
     }
 
     @ZenCodeType.Method
-    public EntityScoresLootConditionTypeBuilder withScore(final String name, final int value) {
-        return this.withScore(name, value, value);
+    public EntityScoresLootConditionTypeBuilder withMaximumScore(final String name, final int max) {
+        this.ranges.put(name, IntRangePredicate.upperBounded(max));
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public EntityScoresLootConditionTypeBuilder withRangedScore(final String name, final int min, final int max) {
+        this.ranges.put(name, IntRangePredicate.bounded(min, max));
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public EntityScoresLootConditionTypeBuilder withExactScore(final String name, final int value) {
+        return this.withRangedScore(name, value, value);
     }
 
     @Override
@@ -62,7 +74,7 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
                 .collect(Collectors.toList());
 
         return context -> {
-            final Entity entity = this.targetedEntity.getDiscriminator().apply(context);
+            final Entity entity = this.targetedEntity.getLootContextDiscriminator().apply(context);
             if (entity == null) return false;
 
             final Scoreboard scoreboard = entity.getEntityWorld().getScoreboard();
@@ -70,11 +82,11 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
         };
     }
 
-    private BiPredicate<Entity, Scoreboard> convertToMatcher(final Map.Entry<String, IntRange> entry) {
+    private BiPredicate<Entity, Scoreboard> convertToMatcher(final Map.Entry<String, IntRangePredicate> entry) {
         return this.makeMatcher(entry.getKey(), entry.getValue());
     }
 
-    private BiPredicate<Entity, Scoreboard> makeMatcher(final String name, final IntRange range) {
+    private BiPredicate<Entity, Scoreboard> makeMatcher(final String name, final IntRangePredicate range) {
         return (entity, scoreboard) -> {
             final ScoreObjective objective = scoreboard.getObjective(name);
             if (objective == null) return false;

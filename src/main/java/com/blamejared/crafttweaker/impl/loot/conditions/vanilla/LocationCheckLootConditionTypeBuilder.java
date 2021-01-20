@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.predicate.LocationPredicate;
+import com.blamejared.crafttweaker.impl.predicate.LocationPredicate;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.math.BlockPos;
@@ -57,7 +57,7 @@ public final class LocationCheckLootConditionTypeBuilder implements ILootConditi
 
     @Override
     public ILootCondition finish() {
-        final net.minecraft.advancements.criterion.LocationPredicate predicate = this.predicate.toVanilla();
+        final net.minecraft.advancements.criterion.LocationPredicate predicate = this.predicate.toVanillaPredicate();
         return context -> {
             final Vector3d origin = ExpandLootContext.getOrigin(context);
             final World world = ExpandLootContext.getWorld(context);

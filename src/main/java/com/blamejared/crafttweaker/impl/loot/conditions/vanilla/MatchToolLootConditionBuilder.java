@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.predicate.ItemPredicate;
+import com.blamejared.crafttweaker.impl.predicate.ItemPredicate;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
@@ -38,7 +38,7 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
 
     @Override
     public ILootCondition finish() {
-        final net.minecraft.advancements.criterion.ItemPredicate vanilla = this.predicate.toVanilla();
+        final net.minecraft.advancements.criterion.ItemPredicate vanilla = this.predicate.toVanillaPredicate();
         return context -> {
             final IItemStack stack = ExpandLootContext.getTool(context);
             return stack != null && stack.getInternal() != null && vanilla.test(stack.getInternal());

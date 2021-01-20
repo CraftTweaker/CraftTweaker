@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.predicate.DamageSourcePredicate;
+import com.blamejared.crafttweaker.impl.predicate.DamageSourcePredicate;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.DamageSource;
@@ -34,13 +34,12 @@ public final class DamageSourcePropertiesLootConditionTypeBuilder implements ILo
 
     @Override
     public ILootCondition finish() {
-        final net.minecraft.advancements.criterion.DamageSourcePredicate vanilla = this.predicate.toVanilla();
+        final net.minecraft.advancements.criterion.DamageSourcePredicate vanilla = this.predicate.toVanillaPredicate();
         return context -> {
             final DamageSource source = ExpandLootContext.getDamageSource(context);
             final Vector3d origin = ExpandLootContext.getOrigin(context);
             final World world = ExpandLootContext.getWorld(context);
-            return source != null && origin != null && world instanceof ServerWorld
-                    && vanilla.test((ServerWorld) world, origin, source);
+            return source != null && origin != null && world instanceof ServerWorld && vanilla.test((ServerWorld) world, origin, source);
         };
     }
 }

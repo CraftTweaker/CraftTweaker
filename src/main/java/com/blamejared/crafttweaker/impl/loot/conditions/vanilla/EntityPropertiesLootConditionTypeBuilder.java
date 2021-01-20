@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.predicate.EntityPredicate;
-import com.blamejared.crafttweaker.impl.loot.conditions.predicate.TargetedEntity;
+import com.blamejared.crafttweaker.impl.predicate.EntityPredicate;
+import com.blamejared.crafttweaker.impl.predicate.TargetedEntity;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.Entity;
@@ -45,9 +45,9 @@ public final class EntityPropertiesLootConditionTypeBuilder implements ILootCond
         if (this.targetedEntity == null) {
             throw new IllegalStateException("Targeted entity not defined for an 'EntityScores' condition");
         }
-        final net.minecraft.advancements.criterion.EntityPredicate vanilla = this.predicate.toVanilla();
+        final net.minecraft.advancements.criterion.EntityPredicate vanilla = this.predicate.toVanillaPredicate();
         return context -> {
-            final Entity entity = this.targetedEntity.getDiscriminator().apply(context);
+            final Entity entity = this.targetedEntity.getLootContextDiscriminator().apply(context);
             final Vector3d origin = ExpandLootContext.getOrigin(context);
             final World world = ExpandLootContext.getWorld(context);
             return world instanceof ServerWorld && vanilla.test((ServerWorld) world, origin, entity);

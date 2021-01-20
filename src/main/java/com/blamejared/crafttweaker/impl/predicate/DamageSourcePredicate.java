@@ -1,16 +1,16 @@
-package com.blamejared.crafttweaker.impl.loot.conditions.predicate;
+package com.blamejared.crafttweaker.impl.predicate;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.loot.conditions.TriState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.predicate.DamageSourcePredicate")
-@Document("vanilla/api/loot/conditions/predicate/DamageSourcePredicate")
-public final class DamageSourcePredicate {
+@ZenCodeType.Name("crafttweaker.api.predicate.DamageSourcePredicate")
+@Document("vanilla/api/predicate/DamageSourcePredicate")
+public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.DamageSourcePredicate> {
     private TriState bypassesArmor;
     private TriState bypassesInvulnerability;
     private TriState bypassesMagic;
@@ -23,6 +23,7 @@ public final class DamageSourcePredicate {
     private EntityPredicate sourceEntity;
 
     public DamageSourcePredicate() {
+        super(net.minecraft.advancements.criterion.DamageSourcePredicate.ANY);
         this.bypassesArmor = TriState.UNSET;
         this.bypassesInvulnerability = TriState.UNSET;
         this.bypassesMagic = TriState.UNSET;
@@ -147,16 +148,14 @@ public final class DamageSourcePredicate {
         return this;
     }
 
-    boolean isAny() {
-        return this.bypassesArmor == TriState.UNSET && this.bypassesInvulnerability == TriState.UNSET && this.bypassesMagic == TriState.UNSET
-                && this.isExplosion == TriState.UNSET && this.isFire == TriState.UNSET && this.isMagic == TriState.UNSET
-                && this.isProjectile == TriState.UNSET && this.isLightning == TriState.UNSET && this.directEntity.isAny()
-                && this.sourceEntity.isAny();
+    @Override
+    public boolean isAny() {
+        return Stream.of(this.bypassesArmor, this.bypassesInvulnerability, this.bypassesMagic, this.isExplosion, this.isFire, this.isMagic, this.isProjectile, this.isLightning)
+                .allMatch(it -> it == TriState.UNSET) && this.directEntity.isAny() && this.sourceEntity.isAny();
     }
 
+    @Override
     public net.minecraft.advancements.criterion.DamageSourcePredicate toVanilla() {
-        if (this.isAny()) return net.minecraft.advancements.criterion.DamageSourcePredicate.ANY;
-
         return new net.minecraft.advancements.criterion.DamageSourcePredicate(
                 this.isProjectile.toBoolean(),
                 this.isExplosion.toBoolean(),
@@ -166,8 +165,8 @@ public final class DamageSourcePredicate {
                 this.isFire.toBoolean(),
                 this.isMagic.toBoolean(),
                 this.isLightning.toBoolean(),
-                this.directEntity.toVanilla(),
-                this.sourceEntity.toVanilla()
+                this.directEntity.toVanillaPredicate(),
+                this.sourceEntity.toVanillaPredicate()
         );
     }
 }

@@ -1,13 +1,8 @@
-package com.blamejared.crafttweaker.impl.loot.conditions.predicate;
+package com.blamejared.crafttweaker.impl.predicate;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.loot.conditions.FloatRange;
-import com.blamejared.crafttweaker.impl.loot.conditions.IntRange;
-import com.blamejared.crafttweaker.impl.loot.conditions.TriState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.criterion.LightPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -21,56 +16,98 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.function.Consumer;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.predicate.LocationPredicate")
-@Document("vanilla/api/loot/conditions/predicate/LocationPredicate")
-public final class LocationPredicate {
-    private FloatRange x;
-    private FloatRange y;
-    private FloatRange z;
+@ZenCodeType.Name("crafttweaker.api.predicate.LocationPredicate")
+@Document("vanilla/api/predicate/LocationPredicate")
+public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.LocationPredicate> {
+    private FloatRangePredicate x;
+    private FloatRangePredicate y;
+    private FloatRangePredicate z;
     private ResourceLocation dimension;
     private String feature;
     @SuppressWarnings("SpellCheckingInspection") private ResourceLocation biome;
     private TriState aboveCampfire;
-    private IntRange lightLevel;
+    private LightPredicate lightLevel;
     private BlockPredicate block;
     private FluidPredicate fluid;
 
     public LocationPredicate() {
+        super(net.minecraft.advancements.criterion.LocationPredicate.ANY);
+        this.x = FloatRangePredicate.unlimited();
+        this.y = FloatRangePredicate.unlimited();
+        this.z = FloatRangePredicate.unlimited();
         this.aboveCampfire = TriState.UNSET;
+        this.lightLevel = new LightPredicate();
         this.block = new BlockPredicate();
+        this.fluid = new FluidPredicate();
     }
 
     @ZenCodeType.Method
-    public LocationPredicate withXPositionRange(final int min, final int max) {
-        this.x = new FloatRange(min, max);
+    public LocationPredicate withMinimumXPosition(final float min) {
+        this.x = FloatRangePredicate.lowerBounded(min);
         return this;
     }
 
     @ZenCodeType.Method
-    public LocationPredicate withXPosition(final int x) {
-        return this.withXPositionRange(x, x);
-    }
-
-    @ZenCodeType.Method
-    public LocationPredicate withYPositionRange(final int min, final int max) {
-        this.y = new FloatRange(min, max);
+    public LocationPredicate withMaximumXPosition(final float max) {
+        this.x = FloatRangePredicate.upperBounded(max);
         return this;
     }
 
     @ZenCodeType.Method
-    public LocationPredicate withYPosition(final int y) {
-        return this.withXPositionRange(y, y);
-    }
-
-    @ZenCodeType.Method
-    public LocationPredicate withZPositionRange(final int min, final int max) {
-        this.z = new FloatRange(min, max);
+    public LocationPredicate withRangedXPosition(final float min, final float max) {
+        this.x = FloatRangePredicate.bounded(min, max);
         return this;
     }
 
     @ZenCodeType.Method
-    public LocationPredicate withZPosition(final int z) {
-        return this.withXPositionRange(z, z);
+    public LocationPredicate withExactXPosition(final float x) {
+        return this.withRangedXPosition(x, x);
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withMinimumYPosition(final float min) {
+        this.y = FloatRangePredicate.lowerBounded(min);
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withMaximumYPosition(final float max) {
+        this.y = FloatRangePredicate.upperBounded(max);
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withRangedYPosition(final float min, final float max) {
+        this.y = FloatRangePredicate.bounded(min, max);
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withExactYPosition(final int y) {
+        return this.withRangedYPosition(y, y);
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withMinimumZPosition(final float min) {
+        this.z = FloatRangePredicate.lowerBounded(min);
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withMaximumZPosition(final float max) {
+        this.z = FloatRangePredicate.upperBounded(max);
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withRangedZPosition(final float min, final float max) {
+        this.z = FloatRangePredicate.bounded(min, max);
+        return this;
+    }
+
+    @ZenCodeType.Method
+    public LocationPredicate withExactZPosition(final int z) {
+        return this.withRangedZPosition(z, z);
     }
 
     @ZenCodeType.Method
@@ -105,14 +142,11 @@ public final class LocationPredicate {
     }
 
     @ZenCodeType.Method
-    public LocationPredicate withLightLevel(final int min, final int max) {
-        this.lightLevel = new IntRange(min, max);
+    public LocationPredicate withLightPredicate(final Consumer<LightPredicate> builder) {
+        final LightPredicate predicate = new LightPredicate();
+        builder.accept(predicate);
+        this.lightLevel = predicate;
         return this;
-    }
-
-    @ZenCodeType.Method
-    public LocationPredicate withLightLevel(final int value) {
-        return this.withLightLevel(value, value);
     }
 
     @ZenCodeType.Method
@@ -131,47 +165,32 @@ public final class LocationPredicate {
         return this;
     }
 
-    boolean isAny() {
-        return this.x == null && this.y == null && this.z == null && this.dimension == null && this.feature == null
-                && this.biome == null && this.aboveCampfire == TriState.UNSET && this.lightLevel == null && this.block.isAny()
+    @Override
+    public boolean isAny() {
+        return this.x.isAny() && this.y.isAny() && this.z.isAny() && this.dimension == null && this.feature == null
+                && this.biome == null && this.aboveCampfire == TriState.UNSET && this.lightLevel.isAny() && this.block.isAny()
                 && this.fluid.isAny();
     }
 
+    @Override
     public net.minecraft.advancements.criterion.LocationPredicate toVanilla() {
-        if (this.isAny()) return net.minecraft.advancements.criterion.LocationPredicate.ANY;
         return new net.minecraft.advancements.criterion.LocationPredicate(
-                this.toVanilla(this.x),
-                this.toVanilla(this.y),
-                this.toVanilla(this.z),
+                this.x.toVanillaPredicate(),
+                this.y.toVanillaPredicate(),
+                this.z.toVanillaPredicate(),
                 this.toVanilla(this.getRegistryKey(ForgeRegistries.BIOMES), this.biome),
-                this.toVanilla(this.feature),
+                this.feature == null? null : Structure.NAME_STRUCTURE_BIMAP.get(this.feature),
                 this.toVanilla(Registry.WORLD_KEY, this.dimension),
                 this.aboveCampfire.toBoolean(),
-                this.toVanilla(this.lightLevel),
-                this.block.toVanilla(),
-                this.fluid.toVanilla()
+                this.lightLevel.toVanillaPredicate(),
+                this.block.toVanillaPredicate(),
+                this.fluid.toVanillaPredicate()
         );
-    }
-
-    private MinMaxBounds.FloatBound toVanilla(final FloatRange range) {
-        return range == null? MinMaxBounds.FloatBound.UNBOUNDED : range.toVanillaFloatBound();
     }
 
     private <T> RegistryKey<T> toVanilla(final RegistryKey<? extends Registry<T>> registry, final ResourceLocation name) {
         if (name == null) return null;
         return RegistryKey.getOrCreateKey(registry, name);
-    }
-
-    private Structure<?> toVanilla(final String name) {
-        return name == null? null : Structure.NAME_STRUCTURE_BIMAP.get(name);
-    }
-
-    private LightPredicate toVanilla(final IntRange range) {
-        final MinMaxBounds.IntBound bounds = range == null? MinMaxBounds.IntBound.UNBOUNDED : range.toVanillaIntBound();
-        final JsonObject object = new JsonObject();
-        object.add("light", bounds.serialize());
-        // Round trip part two
-        return LightPredicate.deserialize(object);
     }
 
     @SuppressWarnings("SameParameterValue")

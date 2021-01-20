@@ -3,9 +3,11 @@ package com.blamejared.crafttweaker.impl.helper;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.ITag;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +36,13 @@ public class CraftTweakerHelper {
                 .map(iItemStack -> iItemStack.getInternal().getItem())
                 .toArray(Item[]::new);
     }
-    
+
     public static List<EntityType<?>> getEntityTypes(List<MCEntityType> entityTypes) {
         return entityTypes.stream().map(MCEntityType::getInternal).collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T, U> ITag<U> getITag(final MCTag<T> tag) {
+        return (ITag<U>) tag.getInternal();
     }
 }

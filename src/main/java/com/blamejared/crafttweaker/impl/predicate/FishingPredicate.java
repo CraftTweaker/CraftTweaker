@@ -1,17 +1,17 @@
-package com.blamejared.crafttweaker.impl.loot.conditions.predicate;
+package com.blamejared.crafttweaker.impl.predicate;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.loot.conditions.TriState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.predicate.FishingPredicate")
-@Document("vanilla/api/loot/conditions/predicate/FishingPredicate")
-public final class FishingPredicate {
+@ZenCodeType.Name("crafttweaker.api.predicate.FishingPredicate")
+@Document("vanilla/api/predicate/FishingPredicate")
+public final class FishingPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.loot.FishingPredicate> {
     private TriState inOpenWater;
 
     public FishingPredicate() {
+        super(net.minecraft.loot.FishingPredicate.field_234635_a_);
         this.inOpenWater = TriState.UNSET;
     }
 
@@ -27,11 +27,13 @@ public final class FishingPredicate {
         return this;
     }
 
-    boolean isAny() {
+    @Override
+    public boolean isAny() {
         return this.inOpenWater == TriState.UNSET;
     }
 
+    @Override
     public net.minecraft.loot.FishingPredicate toVanilla() {
-        return this.isAny()? net.minecraft.loot.FishingPredicate.field_234635_a_ : net.minecraft.loot.FishingPredicate.func_234640_a_(this.inOpenWater.toBoolean());
+        return net.minecraft.loot.FishingPredicate.func_234640_a_(this.inOpenWater.toBoolean());
     }
 }

@@ -1,19 +1,19 @@
-package com.blamejared.crafttweaker.impl.loot.conditions.predicate;
+package com.blamejared.crafttweaker.impl.predicate;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.loot.conditions.TriState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
+import net.minecraft.advancements.criterion.PlayerPredicate;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.predicate.AdvancementPredicate")
-@Document("vanilla/api/loot/conditions/predicate/AdvancementPredicate")
-public final class AdvancementPredicate {
+@ZenCodeType.Name("crafttweaker.api.predicate.AdvancementPredicate")
+@Document("vanilla/api/predicate/AdvancementPredicate")
+public final class AdvancementPredicate implements IVanillaWrappingPredicate<PlayerPredicate.IAdvancementPredicate> {
     private final Map<String, Boolean> criteria;
 
     private TriState passed;
@@ -47,22 +47,19 @@ public final class AdvancementPredicate {
         return this;
     }
 
-    boolean isAny() {
+    public boolean isAny() {
         return this.passed == TriState.UNSET && this.criteria.isEmpty();
     }
 
-    net.minecraft.advancements.criterion.PlayerPredicate.IAdvancementPredicate toVanilla() {
+    @Override
+    public net.minecraft.advancements.criterion.PlayerPredicate.IAdvancementPredicate toVanillaPredicate() {
         if (this.passed != TriState.UNSET && !this.criteria.isEmpty()) {
             throw new IllegalStateException("An advancement can be checked only for full completion or criteria, not both");
         }
-        try {
-            if (this.passed != TriState.UNSET) {
-                return new net.minecraft.advancements.criterion.PlayerPredicate.CompletedAdvancementPredicate(this.passed.toBoolean());
-            } else {
-                return new net.minecraft.advancements.criterion.PlayerPredicate.CriteriaPredicate(this.toVanilla(this.criteria));
-            }
-        } catch (final Throwable e) {
-            throw new RuntimeException(e);
+        if (this.passed != TriState.UNSET) {
+            return new net.minecraft.advancements.criterion.PlayerPredicate.CompletedAdvancementPredicate(this.passed.toBoolean());
+        } else {
+            return new net.minecraft.advancements.criterion.PlayerPredicate.CriteriaPredicate(this.toVanilla(this.criteria));
         }
     }
 
