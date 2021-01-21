@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.data.StringData;
 import com.blamejared.crafttweaker.impl.loot.conditions.MCLootCondition;

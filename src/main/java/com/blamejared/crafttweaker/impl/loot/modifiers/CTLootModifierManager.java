@@ -1,10 +1,10 @@
-package com.blamejared.crafttweaker.impl.loot.modifier;
+package com.blamejared.crafttweaker.impl.loot.modifiers;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.api.loot.ILootModifier;
+import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
+import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRegisterLootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRemoveLootModifier;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.modifier.LootModifierManager")
-@Document("vanilla/api/loot/modifier/LootModifierManager")
+@ZenCodeType.Name("crafttweaker.api.loot.modifiers.LootModifierManager")
+@Document("vanilla/api/loot/modifiers/LootModifierManager")
 @SuppressWarnings("unused")
 public class CTLootModifierManager {
     public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();

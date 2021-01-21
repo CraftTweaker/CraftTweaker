@@ -90,7 +90,7 @@ public class ExpandVector3d {
 
     @ZenCodeType.Method("getCoordinate")
     @ZenCodeType.Operator(ZenCodeType.OperatorType.INDEXGET)
-    public static double get(final Vector3d $this, final int index) {
+    public static double getCoordinate(final Vector3d $this, final int index) {
         switch (index) {
             case 0: return $this.getX();
             case 1: return $this.getY();
@@ -101,7 +101,7 @@ public class ExpandVector3d {
 
     @ZenCodeType.Method("getCoordinate")
     @ZenCodeType.Operator(ZenCodeType.OperatorType.INDEXGET)
-    public static double get(final Vector3d $this, final Direction.Axis axis) {
+    public static double getCoordinate(final Vector3d $this, final Direction.Axis axis) {
         return $this.getCoordinate(axis);
     }
 

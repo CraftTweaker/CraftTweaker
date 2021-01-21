@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.loot.ILootCondition;
+import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;

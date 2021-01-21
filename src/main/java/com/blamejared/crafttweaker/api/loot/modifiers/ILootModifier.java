@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.loot;
+package com.blamejared.crafttweaker.api.loot.modifiers;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -10,8 +10,8 @@ import java.util.List;
 
 @FunctionalInterface
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.ILootModifier")
-@Document("vanilla/api/loot/ILootModifier")
+@ZenCodeType.Name("crafttweaker.api.loot.modifiers.ILootModifier")
+@Document("vanilla/api/loot/modifiers/ILootModifier")
 public interface ILootModifier {
     @ZenCodeType.Method
     List<IItemStack> applyModifier(List<IItemStack> loot, LootContext currentContext);

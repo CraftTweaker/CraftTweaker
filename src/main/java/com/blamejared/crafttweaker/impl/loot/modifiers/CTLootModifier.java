@@ -1,9 +1,9 @@
-package com.blamejared.crafttweaker.impl.loot.modifier;
+package com.blamejared.crafttweaker.impl.loot.modifiers;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.loot.ILootCondition;
-import com.blamejared.crafttweaker.api.loot.ILootModifier;
+import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
+import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
