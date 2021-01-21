@@ -34,6 +34,7 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
         super(net.minecraft.advancements.criterion.ItemPredicate.ANY);
         this.amount = IntRangePredicate.unlimited();
         this.damage = IntRangePredicate.unlimited();
+        this.data = new NBTPredicate();
         this.enchantments = new ArrayList<>();
         this.storedEnchantments = new ArrayList<>();
     }

@@ -12,8 +12,8 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.function.Consumer;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.MatchTool")
-@Document("vanilla/api/loot/conditions/MatchTool")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.MatchTool")
+@Document("vanilla/api/loot/conditions/vanilla/MatchTool")
 public final class MatchToolLootConditionBuilder implements ILootConditionTypeBuilder {
     private ItemPredicate predicate;
 
