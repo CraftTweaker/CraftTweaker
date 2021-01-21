@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot;
+package com.blamejared.crafttweaker.impl.loot.modifier;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -14,9 +14,8 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.MCLootModifier")
-@Document("vanilla/api/loot/MCLootModifier")
-@ZenWrapper(wrappedClass = "net.minecraftforge.common.loot.IGlobalLootModifier")
+@ZenCodeType.Name("crafttweaker.api.loot.modifier.MCLootModifier")
+@Document("vanilla/api/loot/modifier/MCLootModifier")
 public class MCLootModifier implements ILootModifier {
     private static class DummyGlobalLootModifier implements IGlobalLootModifier {
         private static final DummyGlobalLootModifier INSTANCE = new DummyGlobalLootModifier();

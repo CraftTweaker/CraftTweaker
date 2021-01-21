@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot;
+package com.blamejared.crafttweaker.impl.loot.modifier;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;

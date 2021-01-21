@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot;
+package com.blamejared.crafttweaker.impl.loot.modifier;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.LootModifierManager")
-@Document("vanilla/api/loot/LootModifierManager")
+@ZenCodeType.Name("crafttweaker.api.loot.modifier.LootModifierManager")
+@Document("vanilla/api/loot/modifier/LootModifierManager")
 @SuppressWarnings("unused")
 public class CTLootModifierManager {
-    static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
+    public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
 
     private static final MethodHandle LMM_GETTER;
     private static final MethodHandle LMM_MAP_GETTER;

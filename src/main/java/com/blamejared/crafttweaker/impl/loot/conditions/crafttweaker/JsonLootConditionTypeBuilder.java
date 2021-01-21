@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.data.StringData;
-import com.blamejared.crafttweaker.impl.loot.MCLootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.MCLootCondition;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;

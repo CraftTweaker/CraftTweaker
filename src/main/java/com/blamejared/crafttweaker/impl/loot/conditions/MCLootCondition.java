@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot;
+package com.blamejared.crafttweaker.impl.loot.conditions;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
@@ -8,9 +8,8 @@ import net.minecraft.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.MCLootCondition")
-@Document("vanilla/api/loot/MCLootCondition")
-@ZenWrapper(wrappedClass = "net.minecraft.loot.conditions.ILootCondition")
+@ZenCodeType.Name("crafttweaker.api.loot.condition.MCLootCondition")
+@Document("vanilla/api/loot/condition/MCLootCondition")
 public class MCLootCondition implements ILootCondition {
     private final net.minecraft.loot.conditions.ILootCondition wrapped;
 

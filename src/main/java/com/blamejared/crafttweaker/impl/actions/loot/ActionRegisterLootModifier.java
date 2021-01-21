@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.actions.loot;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.loot.ILootCondition;
 import com.blamejared.crafttweaker.api.loot.ILootModifier;
-import com.blamejared.crafttweaker.impl.loot.CTLootModifier;
+import com.blamejared.crafttweaker.impl.loot.modifier.CTLootModifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 
