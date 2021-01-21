@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
 import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -81,9 +82,14 @@ public class CTCommands {
             }
             if(stack.getItem() instanceof BlockItem){
                 BlockItem item = (BlockItem) stack.getItem();
+                string = ExpandBlock.getCommandString(item.getBlock());
+                copy = copy(new FormattedTextComponent("Block: %s", color(string, TextFormatting.GREEN)), string);
+                send(copy, player);
+                
                 string = ExpandBlockState.getCommandString(item.getBlock().getDefaultState());
                 copy = copy(new FormattedTextComponent("BlockState: %s", color(string, TextFormatting.GREEN)), string);
                 send(copy, player);
+                
             }
             
             Collection<ResourceLocation> tags = ItemTags.getCollection()
