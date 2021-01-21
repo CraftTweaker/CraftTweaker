@@ -1,37 +1,58 @@
 package com.blamejared.crafttweaker.impl.commands;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.text.*;
-import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
+import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
-import com.blamejared.crafttweaker.impl.item.*;
-import com.blamejared.crafttweaker.impl.network.*;
-import com.blamejared.crafttweaker.impl.network.messages.*;
-import com.blamejared.crafttweaker.impl.tag.*;
-import com.blamejared.crafttweaker.impl.tag.manager.*;
-import com.mojang.brigadier.*;
-import com.mojang.brigadier.arguments.*;
-import com.mojang.brigadier.builder.*;
-import com.mojang.brigadier.context.*;
-import com.mojang.brigadier.exceptions.*;
-import com.mojang.brigadier.tree.*;
-import net.minecraft.command.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.tags.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.util.registry.*;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.*;
-import net.minecraftforge.common.*;
-import net.minecraftforge.fml.network.*;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.network.PacketHandler;
+import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
+import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class CTCommands {
@@ -58,6 +79,13 @@ public class CTCommands {
             if(player instanceof ServerPlayerEntity) {
                 PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
             }
+            if(stack.getItem() instanceof BlockItem){
+                BlockItem item = (BlockItem) stack.getItem();
+                string = ExpandBlockState.getCommandString(item.getBlock().getDefaultState());
+                copy = copy(new FormattedTextComponent("BlockState: %s", color(string, TextFormatting.GREEN)), string);
+                send(copy, player);
+            }
+            
             Collection<ResourceLocation> tags = ItemTags.getCollection()
                     .getOwningTags(stack.getItem());
             if(tags.isEmpty()) {
