@@ -265,7 +265,7 @@ curseforge {
     apiKey = findProperty('curseforge_api_token') ?: 0
     project {
         id = "239197"
-        releaseType = 'beta'
+        releaseType = 'release'
         changelog = file("changelog.md")
         changelogType = 'markdown'
 
