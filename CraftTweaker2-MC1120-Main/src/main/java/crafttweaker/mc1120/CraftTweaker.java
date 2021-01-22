@@ -154,8 +154,15 @@ public class CraftTweaker {
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
+        long a = System.currentTimeMillis();
         try {
             MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+            if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
+                CraftTweakerAPI.recipes.getAll().forEach(recipe -> {
+                    MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.setCurrentModifiedRecipe(recipe);
+                    MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.apply();
+                });
+            }
             CraftTweakerAPI.apply(MCRecipeManager.actionRemoveRecipesNoIngredients);
             MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
             MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
@@ -170,6 +177,8 @@ public class CraftTweaker {
             CraftTweaker.LOG.catching(e);
             CraftTweakerAPI.logError("Error while applying actions", e);
         }
+        long b = System.currentTimeMillis();
+        CraftTweakerAPI.logInfo("crt took " + (b - a) + " ms");
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
     }
     
