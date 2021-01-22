@@ -396,7 +396,7 @@ public final class MCRecipeManager implements IRecipeManager {
 
             if (this.recipeModified) {
                 CraftTweakerAPI.recipes.removeByRecipeName(this.currentModifiedRecipe.getFullResourceName(), null);
-                String name = this.currentModifiedRecipe.getName() + "_modified";
+                String name = this.currentModifiedRecipe.getResourceDomain() + "_" + this.currentModifiedRecipe.getName() + "_modified";
                 IItemStack out = this.currentModifiedRecipe.getOutput();
                 if (this.currentModifiedRecipe.isShaped()) {
                     CraftTweakerAPI.recipes.addShaped(name, out, ingredients2D, null, null);
