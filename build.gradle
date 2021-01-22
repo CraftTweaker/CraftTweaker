@@ -144,7 +144,7 @@ dependencies {
     zenCodeDeps.collect { compile project(it) }
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.0.0'
-//    compile fg.deobf("mezz.jei:jei-1.16.2:7.1.0.11")
+    compile fg.deobf("mezz.jei:jei-1.16.4:7.6.1.65")
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
     testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
