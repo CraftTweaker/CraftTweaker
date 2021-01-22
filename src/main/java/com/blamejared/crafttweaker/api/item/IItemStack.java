@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 @ZenCodeType.Name("crafttweaker.api.item.IItemStack")
 @Document("vanilla/api/items/IItemStack")
 @ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
-public interface IItemStack extends IIngredient {
+public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     
     /**
@@ -436,4 +436,9 @@ public interface IItemStack extends IIngredient {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     ItemStack getInternal();
+    
+    @Override
+    default IItemStack getIngredient() {
+        return this;
+    }
 }

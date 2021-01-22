@@ -28,7 +28,7 @@ public class OperatorParameterCountValidationRule implements ExpansionInfoValida
         if(parameterCountInvalid(enclosedElement)) {
             final int expectedNumberOfParameters = getExpectedNumberOfParameters(enclosedElement);
             final String msg = String.format("This operator requires %s parameters", expectedNumberOfParameters);
-            messager.printMessage(Diagnostic.Kind.ERROR, msg);
+            messager.printMessage(Diagnostic.Kind.ERROR, msg, enclosedElement);
         }
     }
     

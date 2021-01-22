@@ -4,7 +4,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.ingredients.ExpandIIngredient;
 import com.blamejared.crafttweaker.impl.ingredients.IIngredientWrapped;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * This expansion specifically targets itemTags.
  * It adds implicit casters to IIngredient and IData, so that you can use them wherever you can use IIngredient.
- *
+ * <p>
  * Only downside is that if you want to use Ingredient Transformers, you will need to call `asIIngredient()` first.
  */
 @ZenRegister
@@ -51,5 +53,12 @@ public class ExpandItemTag {
     @ZenCodeType.Method
     public static void add(MCTag<Item> _this, List<IItemStack> items) {
         _this.add(items.stream().map(IItemStack::getDefinition).collect(Collectors.toList()));
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public static IIngredientWithAmount asIIngredientWithAmount(MCTag<Item> _this) {
+        final IIngredient iIngredient = asIIngredient(_this);
+        return ExpandIIngredient.asIIngredientWithAmount(iIngredient);
     }
 }

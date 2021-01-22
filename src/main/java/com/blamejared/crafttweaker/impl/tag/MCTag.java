@@ -109,6 +109,18 @@ public final class MCTag<T> implements CommandStringDisplayable {
         return id.equals(other.id) && manager.equals(other.manager);
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
+    public MCTagWithAmount<T> withAmount(int amount) {
+        return new MCTagWithAmount<>(this, amount);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public MCTagWithAmount<T> asTagWithAmount() {
+        return withAmount(1);
+    }
+    
     public ResourceLocation getIdInternal() {
         return id;
     }
