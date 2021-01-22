@@ -321,6 +321,8 @@ public final class MCRecipeManager implements IRecipeManager {
             if (ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe != null) {
                 if (forOutput == null || forOutput.contains(ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe.getOutput())) {
                     if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
+                        if (replaceWith == null)
+                            return; //No null's in shapeless recipes... We can't do anything, so we just won't modify the recipe.
                         for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
                             if (toReplace.contains(ActionReplaceAllOccurences.INSTANCE.ingredients1D[i])) {
                                 ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = replaceWith;
