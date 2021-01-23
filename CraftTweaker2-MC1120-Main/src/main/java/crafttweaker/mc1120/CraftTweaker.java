@@ -245,15 +245,15 @@ public class CraftTweaker {
     private void applyActions(List<? extends IAction> actions, String applyingMessage, String errorMessage) {
         if (!actions.isEmpty()) {
             ProgressManager.ProgressBar progressBar = ProgressManager.push(applyingMessage, actions.size());
-            try {
-                actions.forEach(action -> {
-                    progressBar.step(action.describe());
+            actions.forEach(action -> {
+                progressBar.step(action.describe());
+                try {
                     CraftTweakerAPI.apply(action);
-                });
-            } catch (Exception e) {
-                CraftTweaker.LOG.catching(e);
-                CraftTweakerAPI.logError(errorMessage, e);
-            }
+                } catch (Exception e) {
+                    CraftTweaker.LOG.catching(e);
+                    CraftTweakerAPI.logError(errorMessage + " at action " + action.describe(), e);
+                }
+            });
             ProgressManager.pop(progressBar);
         }
     }
