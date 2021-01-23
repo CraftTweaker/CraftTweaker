@@ -14,7 +14,7 @@ import net.minecraftforge.event.entity.player.AdvancementEvent;
  * This event is fired every time the player earns an advancement. This happens
  * after the advancement has already been earned so it can not be prevented.
  * 
- * @docParam event
+ * @docParam this event
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/MCAdvancementEvent")
