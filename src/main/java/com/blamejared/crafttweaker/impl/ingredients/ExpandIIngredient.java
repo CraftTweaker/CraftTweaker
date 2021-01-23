@@ -63,6 +63,9 @@ public class ExpandIIngredient {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredientWithAmount asIIngredientWithAmount(IIngredient _this) {
+        if(_this instanceof IIngredientWithAmount){
+            return (IIngredientWithAmount) _this;
+        }
         return mul(_this, 1);
     }
 }
