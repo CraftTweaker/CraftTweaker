@@ -156,10 +156,9 @@ public class CraftTweaker {
     public void onPostInit(FMLPostInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
         MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-        ProgressManager.ProgressBar progressBar;
         if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
             List<ICraftingRecipe> recipes = CraftTweakerAPI.recipes.getAll();
-            progressBar = ProgressManager.push("Applying replace all occurences action", recipes.size());
+            ProgressManager.ProgressBar progressBar = ProgressManager.push("Applying replace all occurences action", recipes.size());
             try {
                 for (ICraftingRecipe recipe : recipes) {
                     progressBar.step(recipe.getFullResourceName());
