@@ -4,10 +4,11 @@ package com.blamejared.crafttweaker.impl_native.event.entity.player;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 /**
@@ -30,7 +31,7 @@ public class ExpandPlayerDestroyItemEvent {
 	 */
     @ZenCodeType.Method
     @ZenCodeType.Getter("destroyedItem")
-    public static ItemStack getDestroyedItem(PlayerDestroyItemEvent internal) {
-        return internal.getOriginal();
+    public static IItemStack getDestroyedItem(PlayerDestroyItemEvent internal) {
+        return new MCItemStack(internal.getOriginal());
     }
 }
