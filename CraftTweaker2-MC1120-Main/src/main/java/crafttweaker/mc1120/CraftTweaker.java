@@ -3,6 +3,7 @@ package crafttweaker.mc1120;
 import crafttweaker.*;
 import crafttweaker.annotations.*;
 import crafttweaker.api.network.NetworkSide;
+import crafttweaker.api.recipes.ICraftingRecipe;
 import crafttweaker.mc1120.brewing.MCBrewing;
 import crafttweaker.mc1120.client.MCClient;
 import crafttweaker.mc1120.commands.CTChatCommand;
@@ -154,29 +155,34 @@ public class CraftTweaker {
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
-        // long a = System.currentTimeMillis();
-        try {
-            MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-            if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
-                CraftTweakerAPI.recipes.getAll().forEach(recipe -> {
+        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+        ProgressManager.ProgressBar progressBar;
+        if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
+            List<ICraftingRecipe> recipes = CraftTweakerAPI.recipes.getAll();
+            progressBar = ProgressManager.push("Applying replace all occurences action", recipes.size());
+            try {
+                for (ICraftingRecipe recipe : recipes) {
+                    progressBar.step(recipe.getFullResourceName());
                     MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.setCurrentModifiedRecipe(recipe);
                     MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.apply();
-                });
+                }
+            } catch (Exception e) {
+                CraftTweaker.LOG.catching(e);
+                CraftTweakerAPI.logError("Fail to apply replace all occurences action", e);
             }
-            CraftTweakerAPI.apply(MCRecipeManager.actionRemoveRecipesNoIngredients);
-            MCRecipeManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
-            MCRecipeManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
-            MCFurnaceManager.recipesToRemove.forEach(CraftTweakerAPI::apply);
-            MCFurnaceManager.recipesToAdd.forEach(CraftTweakerAPI::apply);
-            LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
-            MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-            
-            //Cleanup
-            MCRecipeManager.cleanUpRecipeList();
-        } catch(Exception e) {
-            CraftTweaker.LOG.catching(e);
-            CraftTweakerAPI.logError("Error while applying actions", e);
+            ProgressManager.pop(progressBar);
         }
+        applyActions(Collections.singletonList(MCRecipeManager.actionRemoveRecipesNoIngredients), "applying action remove recipes without ingredients", "fail to apply recipes without ingredient");
+        applyActions(MCRecipeManager.recipesToRemove, "Applying remove recipe actions", "Fail to apply remove recipe actions");
+        applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Fail to apply add recipe actions");
+        applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Fail to apply remove furnace recipe actions");
+        applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Fail to apply add furnace recipe actions");
+        applyActions(LATE_ACTIONS, "applying late actions", "fail to apply late actions");
+        LATE_ACTIONS.forEach(CraftTweakerAPI::apply);
+        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+            
+        //Cleanup
+        MCRecipeManager.cleanUpRecipeList();
         // long b = System.currentTimeMillis();
         // CraftTweakerAPI.logInfo("crt took " + (b - a) + " ms");
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
@@ -236,5 +242,21 @@ public class CraftTweaker {
         CrafttweakerImplementationAPI.onServerStop();
         CrafttweakerImplementationAPI.setScriptProvider(scriptsGlobal);
         server = null;
+    }
+
+    private void applyActions(List<? extends IAction> actions, String applyingMessage, String errorMessage) {
+        if (!actions.isEmpty()) {
+            ProgressManager.ProgressBar progressBar = ProgressManager.push(applyingMessage, actions.size());
+            try {
+                actions.forEach(action -> {
+                    progressBar.step(action.describe());
+                    CraftTweakerAPI.apply(action);
+                });
+            } catch (Exception e) {
+                CraftTweaker.LOG.catching(e);
+                CraftTweakerAPI.logError(errorMessage, e);
+            }
+            ProgressManager.pop(progressBar);
+        }
     }
 }

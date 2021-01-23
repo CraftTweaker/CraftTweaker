@@ -4,7 +4,6 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.item.IngredientAny;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.item.MCItemStack;
@@ -28,7 +27,6 @@ import stanhebben.zenscript.annotations.Optional;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStack;
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
@@ -359,6 +357,7 @@ public final class MCRecipeManager implements IRecipeManager {
         private IIngredient[] ingredients1D;
         private IIngredient[][] ingredients2D;
         private boolean recipeModified = false;
+        private int subActionAmount = 0;
 
         public void setCurrentModifiedRecipe(ICraftingRecipe currentModifiedRecipe) {
             if (currentModifiedRecipe == null || currentModifiedRecipe.getOutput() == null)
@@ -372,6 +371,7 @@ public final class MCRecipeManager implements IRecipeManager {
         }
 
         public void addSubAction(SubActionReplaceAllOccurences subAction) {
+            subActionAmount++;
             if (first == null) {
                 first = subAction;
             }
@@ -383,6 +383,14 @@ public final class MCRecipeManager implements IRecipeManager {
 
         public boolean hasSubAction() {
             return first != null;
+        }
+
+        public void clear() {
+            first = last = null;
+        }
+
+        public int getSubActionAmount() {
+            return subActionAmount;
         }
 
         @Override
