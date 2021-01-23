@@ -437,6 +437,12 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Caster(implicit = true)
     ItemStack getInternal();
     
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    default IIngredientWithAmount asIIngredientWithAmount() {
+        return this;
+    }
+    
     @Override
     default IItemStack getIngredient() {
         return this;
