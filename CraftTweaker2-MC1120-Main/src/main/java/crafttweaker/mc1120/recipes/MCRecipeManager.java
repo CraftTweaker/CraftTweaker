@@ -363,7 +363,6 @@ public final class MCRecipeManager implements IRecipeManager {
         private IIngredient[] ingredients1D;
         private IIngredient[][] ingredients2D;
         private boolean recipeModified = false;
-        private int subActionAmount = 0;
 
         public void setCurrentModifiedRecipe(ICraftingRecipe currentModifiedRecipe) {
             if (currentModifiedRecipe == null || currentModifiedRecipe.getOutput() == null)
@@ -377,7 +376,6 @@ public final class MCRecipeManager implements IRecipeManager {
         }
 
         public void addSubAction(SubActionReplaceAllOccurences subAction) {
-            subActionAmount++;
             if (first == null) {
                 first = subAction;
             }
@@ -393,10 +391,6 @@ public final class MCRecipeManager implements IRecipeManager {
 
         public void clear() {
             first = last = null;
-        }
-
-        public int getSubActionAmount() {
-            return subActionAmount;
         }
 
         @Override
