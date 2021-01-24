@@ -285,7 +285,7 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
+    public void replaceAllOccurences(IIngredientPredicate toReplace, IIngredient replaceWith, IIngredient forOutput) {
         ActionReplaceAllOccurences.INSTANCE.addSubAction(
                 new SubActionReplaceAllOccurences(toReplace, replaceWith, forOutput)
         );
@@ -304,11 +304,11 @@ public final class MCRecipeManager implements IRecipeManager {
 
     public static class SubActionReplaceAllOccurences implements IAction {
         private SubActionReplaceAllOccurences next;
-        private final IIngredient toReplace;
+        private final IIngredientPredicate toReplace;
         private final IIngredient replaceWith;
         private final IIngredient forOutput;
 
-        public SubActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
+        public SubActionReplaceAllOccurences(IIngredientPredicate toReplace, IIngredient replaceWith, IIngredient forOutput) {
             this.toReplace = toReplace;
             this.replaceWith = replaceWith;
             this.forOutput = forOutput;
@@ -322,7 +322,10 @@ public final class MCRecipeManager implements IRecipeManager {
                         if (replaceWith == null)
                             return; //No null's in shapeless recipes... We can't do anything, so we just won't modify the recipe.
                         for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
-                            if (toReplace.contains(ActionReplaceAllOccurences.INSTANCE.ingredients1D[i])) {
+                            IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
+                            if (ingredient == null)
+                                continue;
+                            if (toReplace.test(ingredient)) {
                                 ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = replaceWith;
                                 ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                             }
@@ -331,7 +334,10 @@ public final class MCRecipeManager implements IRecipeManager {
                     if (ActionReplaceAllOccurences.INSTANCE.ingredients2D != null) {
                         for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients2D.length; i++) {
                             for (int j = 0; j < ActionReplaceAllOccurences.INSTANCE.ingredients2D[i].length; j++) {
-                                if (toReplace.contains(ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j])) {
+                                IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
+                                if (ingredient == null)
+                                    continue;
+                                if (toReplace.test(ingredient)) {
                                     ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = replaceWith;
                                     ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                                 }

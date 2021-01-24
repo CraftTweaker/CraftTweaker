@@ -159,15 +159,15 @@ public class CraftTweaker {
         if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
             List<ICraftingRecipe> recipes = CraftTweakerAPI.recipes.getAll();
             ProgressManager.ProgressBar progressBar = ProgressManager.push("Applying replace all occurences action", recipes.size());
-            try {
-                for (ICraftingRecipe recipe : recipes) {
+            for (ICraftingRecipe recipe : recipes) {
+                try {
                     progressBar.step(recipe.getFullResourceName());
                     MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.setCurrentModifiedRecipe(recipe);
                     MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.apply();
+                } catch (Exception e) {
+                    CraftTweaker.LOG.catching(e);
+                    CraftTweakerAPI.logError("Fail to apply replace all occurence action at recipe " + recipe.getFullResourceName());
                 }
-            } catch (Exception e) {
-                CraftTweaker.LOG.catching(e);
-                CraftTweakerAPI.logError("Fail to apply replace all occurences action", e);
             }
             ProgressManager.pop(progressBar);
         }
