@@ -176,7 +176,7 @@ public class CraftTweaker {
         applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Fail to apply add recipe actions");
         applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Fail to apply remove furnace recipe actions");
         applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Fail to apply add furnace recipe actions");
-        applyActions(LATE_ACTIONS, "applying late actions", "fail to apply late actions");
+        applyActions(LATE_ACTIONS, "Applying late actions", "Fail to apply late actions");
         MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
         MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.clear();
             
