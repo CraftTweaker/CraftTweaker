@@ -326,9 +326,9 @@ public final class MCRecipeManager implements IRecipeManager {
                             IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
                             if (ingredient == null)
                                 continue;
-                            Pair<IIngredient, Boolean> changeResult = changeIngredient(ingredient);
-                            if (changeResult.getRight()) {
-                                ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult.getLeft();
+                            IIngredient changeResult = changeIngredient(ingredient);
+                            if (changeResult != ingredient) {
+                                ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
                                 ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                             }
                         }
@@ -339,9 +339,9 @@ public final class MCRecipeManager implements IRecipeManager {
                                 IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
                                 if (ingredient == null)
                                     continue;
-                                Pair<IIngredient, Boolean> changeResult = changeIngredient(ingredient);
-                                if (changeResult.getRight()) {
-                                    ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult.getLeft();
+                                IIngredient changeResult = changeIngredient(ingredient);
+                                if (changeResult != ingredient) {
+                                    ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult;
                                     ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                                 }
                             }
@@ -356,23 +356,23 @@ public final class MCRecipeManager implements IRecipeManager {
             return null;
         }
 
-        private Pair<IIngredient, Boolean> changeIngredient(IIngredient input) {
+        private IIngredient changeIngredient(IIngredient input) {
             List<IItemStack> inputItems = input.getItems();
             if (inputItems.size() == 1) { // to avoid SingletonList#removeIf throwing UnsupportedOperationException
                 if (toReplace.matches(inputItems.get(0))) {
-                    return Pair.of(replaceWith, true);
+                    return replaceWith;
                 }
             } else if (inputItems.size() > 1) {
                 if (inputItems.removeIf(toReplace::matches)) {
                     if (inputItems.isEmpty()) {
-                        return Pair.of(replaceWith, true);
+                        return replaceWith;
                     } else {
                         IIngredient temp = new IngredientOr(inputItems.toArray(new IIngredient[0]));
-                        return Pair.of(temp.or(replaceWith), true);
+                        return replaceWith == null ? temp : temp.or(replaceWith);
                     }
                 }
             }
-            return Pair.of(input, false);
+            return input;
         }
     }
 
