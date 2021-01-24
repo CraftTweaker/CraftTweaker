@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.IngredientOr;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.item.MCItemStack;
@@ -285,7 +286,7 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     @Override
-    public void replaceAllOccurences(IIngredientPredicate toReplace, IIngredient replaceWith, IIngredient forOutput) {
+    public void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
         ActionReplaceAllOccurences.INSTANCE.addSubAction(
                 new SubActionReplaceAllOccurences(toReplace, replaceWith, forOutput)
         );
@@ -304,11 +305,11 @@ public final class MCRecipeManager implements IRecipeManager {
 
     public static class SubActionReplaceAllOccurences implements IAction {
         private SubActionReplaceAllOccurences next;
-        private final IIngredientPredicate toReplace;
+        private final IIngredient toReplace;
         private final IIngredient replaceWith;
         private final IIngredient forOutput;
 
-        public SubActionReplaceAllOccurences(IIngredientPredicate toReplace, IIngredient replaceWith, IIngredient forOutput) {
+        public SubActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
             this.toReplace = toReplace;
             this.replaceWith = replaceWith;
             this.forOutput = forOutput;
@@ -325,8 +326,9 @@ public final class MCRecipeManager implements IRecipeManager {
                             IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
                             if (ingredient == null)
                                 continue;
-                            if (toReplace.test(ingredient)) {
-                                ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = replaceWith;
+                            Pair<IIngredient, Boolean> changeResult = changeIngredient(ingredient);
+                            if (changeResult.getRight()) {
+                                ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult.getLeft();
                                 ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                             }
                         }
@@ -337,8 +339,9 @@ public final class MCRecipeManager implements IRecipeManager {
                                 IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
                                 if (ingredient == null)
                                     continue;
-                                if (toReplace.test(ingredient)) {
-                                    ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = replaceWith;
+                                Pair<IIngredient, Boolean> changeResult = changeIngredient(ingredient);
+                                if (changeResult.getRight()) {
+                                    ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult.getLeft();
                                     ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                                 }
                             }
@@ -351,6 +354,25 @@ public final class MCRecipeManager implements IRecipeManager {
         @Override
         public String describe() {
             return null;
+        }
+
+        private Pair<IIngredient, Boolean> changeIngredient(IIngredient input) {
+            List<IItemStack> inputItems = input.getItems();
+            if (inputItems.size() == 1) { // to avoid SingletonList#removeIf throwing UnsupportedOperationException
+                if (toReplace.matches(inputItems.get(0))) {
+                    return Pair.of(replaceWith, true);
+                }
+            } else if (inputItems.size() > 1) {
+                if (inputItems.removeIf(toReplace::matches)) {
+                    if (inputItems.isEmpty()) {
+                        return Pair.of(replaceWith, true);
+                    } else {
+                        IIngredient temp = new IngredientOr(inputItems.toArray(new IIngredient[0]));
+                        return Pair.of(temp.or(replaceWith), true);
+                    }
+                }
+            }
+            return Pair.of(input, false);
         }
     }
 
