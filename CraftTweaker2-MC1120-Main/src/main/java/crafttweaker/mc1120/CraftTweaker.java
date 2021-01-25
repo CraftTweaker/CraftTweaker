@@ -156,7 +156,6 @@ public class CraftTweaker {
     public void onPostInit(FMLPostInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
         MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-        // long a = System.currentTimeMillis();
         if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
             List<ICraftingRecipe> recipes = CraftTweakerAPI.recipes.getAll();
             ProgressManager.ProgressBar progressBar = ProgressManager.push("Applying replace all occurences action", recipes.size());
@@ -183,8 +182,6 @@ public class CraftTweaker {
             
         //Cleanup
         MCRecipeManager.cleanUpRecipeList();
-        // long b = System.currentTimeMillis();
-        // CraftTweakerAPI.logInfo("crt took " + (b - a) + " ms");
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
     }
     
