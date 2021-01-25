@@ -23,11 +23,14 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tags.BlockTags;
@@ -95,6 +98,17 @@ public class CTCommands {
                 
             }
             
+            if(stack.getItem() instanceof BucketItem) {
+                BucketItem item = (BucketItem) stack.getItem();
+                if(item.getFluid() != Fluids.EMPTY) {
+                    BlockState blockState = item.getFluid().getDefaultState().getBlockState();
+                    
+                    string = ExpandBlockState.getCommandString(blockState);
+                    copy = copy(new FormattedTextComponent("Fluid BlockState: %s", color(string, TextFormatting.GREEN)), string);
+                    send(copy, player);
+                }
+            }
+            
             Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
             
             if(tags.size() > 0) {
@@ -106,10 +120,10 @@ public class CTCommands {
             if(stack.getItem() instanceof BlockItem) {
                 BlockItem item = (BlockItem) stack.getItem();
                 tags = BlockTags.getCollection().getOwningTags(item.getBlock());
-    
+                
                 if(tags.size() > 0) {
                     send(copy(new FormattedTextComponent(color("Block Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
-        
+                    
                     tags.stream().map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerBlock.INSTANCE).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
                 }
             }
