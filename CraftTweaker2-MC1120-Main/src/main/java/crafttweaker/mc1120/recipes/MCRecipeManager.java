@@ -356,7 +356,8 @@ public final class MCRecipeManager implements IRecipeManager {
 
         @Override
         public String describe() {
-            return null;
+            String replaceWithName = replaceWith == null ? MCItemStack.EMPTY.toString() : replaceWith.toString();
+            return "Removing all occurences of ingredient: " + toReplace + " and replacing them with " + replaceWithName;
         }
 
         private IIngredient changeIngredient(IIngredient input) {
@@ -442,6 +443,15 @@ public final class MCRecipeManager implements IRecipeManager {
             this.ingredients1D = null;
             this.ingredients2D = null;
             this.recipeModified = false;
+        }
+
+        public void describeSubActions() {
+            SubActionReplaceAllOccurences current = first;
+
+            while (current != null) {
+                CraftTweakerAPI.logInfo(current.describe());
+                current = current.next;
+            }
         }
 
         @Override
