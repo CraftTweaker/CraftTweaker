@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.Optional;
 
@@ -320,15 +321,17 @@ public final class MCRecipeManager implements IRecipeManager {
             if (ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe != null) {
                 if (forOutput == null || forOutput.contains(ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe.getOutput())) {
                     if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
-                        if (replaceWith == null)
-                            return; //No null's in shapeless recipes... We can't do anything, so we just won't modify the recipe.
                         for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
                             IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
                             if (ingredient == null)
                                 continue;
                             IIngredient changeResult = changeIngredient(ingredient);
                             if (changeResult != ingredient) {
-                                ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
+                                if (changeResult == null) {
+                                    ActionReplaceAllOccurences.INSTANCE.ingredients1D = ArrayUtils.remove(ActionReplaceAllOccurences.INSTANCE.ingredients1D, i);
+                                } else {
+                                    ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
+                                }
                                 ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
                             }
                         }
