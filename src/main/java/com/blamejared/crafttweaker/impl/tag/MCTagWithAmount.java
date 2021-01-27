@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/tags/MCTag")
+@Document("vanilla/api/tags/MCTagWithAmount")
 @ZenCodeType.Name("crafttweaker.api.tag.MCTagWithAmount")
 public class MCTagWithAmount<T> implements CommandStringDisplayable {
     
