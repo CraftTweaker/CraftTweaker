@@ -19,8 +19,8 @@ import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/loot/MCLootContext")
-@NativeTypeRegistration(value = LootContext.class, zenCodeName = "crafttweaker.api.loot.MCLootContext")
+@Document("vanilla/api/loot/LootContext")
+@NativeTypeRegistration(value = LootContext.class, zenCodeName = "crafttweaker.api.loot.LootContext")
 public class ExpandLootContext {
 
     @ZenCodeType.Getter("thisEntity")

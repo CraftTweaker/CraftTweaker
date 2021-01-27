@@ -233,6 +233,7 @@ public class CraftTweaker {
         event.addResource(new ResourceLocation(MODID, "crafttweaker_hello_world"));
         event.addResource(new ResourceLocation(MODID, "crafttweaker_crafting_recipes"));
         event.addResource(new ResourceLocation(MODID, "crafttweaker_tags"));
+        event.addResource(new ResourceLocation(MODID, "crafttweaker_loot_modifiers"));
     }
     
     @SubscribeEvent
