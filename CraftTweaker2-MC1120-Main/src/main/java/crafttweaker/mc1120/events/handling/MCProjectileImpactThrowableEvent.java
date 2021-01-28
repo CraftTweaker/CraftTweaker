@@ -2,6 +2,7 @@ package crafttweaker.mc1120.events.handling;
 
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.entity.IEntityThrowable;
 import crafttweaker.api.event.ProjectileImpactThrowableEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -15,6 +16,11 @@ public class MCProjectileImpactThrowableEvent extends MCProjectileImpactEvent im
         super(event);
         this.event = event;
         this.throwable = event.getThrowable();
+    }
+
+    @Override
+    public IEntityThrowable getThrowableNew() {
+        return CraftTweakerMC.getIEntityThrowable(throwable);
     }
 
     @Override
