@@ -22,7 +22,9 @@ public abstract class DocumentationPage {
     public void write(PrintWriter writer) {
         writeTitle(writer);
         writeDescription(writer);
-        writeOwnerModId(writer);
+        if(!pageInfo.declaringModId.equals("crafttweaker")) {
+            writeOwnerModId(writer);
+        }
         beforeWritingMembers(writer);
         writeMembers(writer);
     }
