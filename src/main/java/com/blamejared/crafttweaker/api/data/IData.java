@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.data.IntData;
+import com.blamejared.crafttweaker.impl.data.ListData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.INBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -29,6 +31,7 @@ public interface IData {
      */
     @ZenCodeType.Method
     default byte getId() {
+        
         return getInternal().getId();
     }
     
@@ -64,6 +67,7 @@ public interface IData {
      */
     @ZenCodeType.Method
     default String getString() {
+        
         return getInternal().getString();
     }
     
@@ -78,6 +82,7 @@ public interface IData {
      */
     @ZenCodeType.Method
     default boolean contains(IData data) {
+        
         return getInternal().equals(data.getInternal());
     }
     
@@ -88,6 +93,7 @@ public interface IData {
      */
     @ZenCodeType.Method
     default Map<String, IData> asMap() {
+        
         return null;
     }
     
@@ -98,6 +104,7 @@ public interface IData {
      */
     @ZenCodeType.Method
     default List<IData> asList() {
+        
         return null;
     }
     
@@ -108,6 +115,30 @@ public interface IData {
      */
     @ZenCodeType.Method
     String asString();
-
+    
     String toJsonString();
+    
+    @ZenCodeType.Caster
+    @ZenCodeType.Method
+    default INumberData asNumber() {
+        
+        if(this instanceof INumberData) {
+            return (INumberData) this;
+        }
+        
+        return new IntData(0);
+    }
+    
+    @ZenCodeType.Caster
+    @ZenCodeType.Method
+    default ICollectionData asCollection() {
+        
+        if(this instanceof ICollectionData) {
+            return (ICollectionData) this;
+        }
+        
+        return new ListData();
+    }
+    
+    
 }

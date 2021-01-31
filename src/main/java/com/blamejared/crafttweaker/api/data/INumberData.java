@@ -19,6 +19,8 @@ public interface INumberData extends IData {
      *
      * @return the long value of this {@link IData}
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster
     default long getLong() {
         return getInternal().getLong();
     }
@@ -28,6 +30,8 @@ public interface INumberData extends IData {
      *
      * @return the int value of this {@link IData}
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster
     default int getInt() {
         return getInternal().getInt();
     }
@@ -37,6 +41,8 @@ public interface INumberData extends IData {
      *
      * @return the short value of this {@link IData}
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster
     default short getShort() {
         return getInternal().getShort();
     }
@@ -46,6 +52,8 @@ public interface INumberData extends IData {
      *
      * @return the byte value of this {@link IData}
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster
     default byte getByte() {
         return getInternal().getByte();
     }
@@ -55,6 +63,8 @@ public interface INumberData extends IData {
      *
      * @return the double value of this {@link IData}
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster
     default double getDouble() {
         return getInternal().getDouble();
     }
@@ -64,6 +74,8 @@ public interface INumberData extends IData {
      *
      * @return the float value of this {@link IData}
      */
+    @ZenCodeType.Method
+    @ZenCodeType.Caster
     default float getFloat() {
         return getInternal().getFloat();
     }
