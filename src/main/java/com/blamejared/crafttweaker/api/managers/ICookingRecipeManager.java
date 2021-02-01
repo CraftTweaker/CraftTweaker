@@ -30,7 +30,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @param cookTime how long it takes to cook
      *
      * @docParam name "wool2diamond"
-     * @docParam output <item:diamond>
+     * @docParam output <item:minecraft:diamond>
      * @docParam input <tag:minecraft:wool>
      * @docParam xp 1.0
      * @docParam cookTime 0
