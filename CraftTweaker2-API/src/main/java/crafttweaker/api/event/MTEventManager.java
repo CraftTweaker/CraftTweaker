@@ -128,6 +128,7 @@ public class MTEventManager implements IEventManager {
         elLivingKnockBack.clear();
         elMinecartCollision.clear();
         elMinecartInteract.clear();
+        elMinecartUpdate.clear();
         elPlayerCloseContainer.clear();
         elPlayerItemPickup.clear();
         elPlayerVisibility.clear();
@@ -158,6 +159,9 @@ public class MTEventManager implements IEventManager {
         elPlayerCloneEvent.clear();
         elBlockNeighborNotify.clear();
         elPortalSpawn.clear();
+        elNoteBlock.clear();
+        elNoteBlockChange.clear();
+        elNoteBlockPlay.clear();
     }
 
     // ##########################
@@ -1456,6 +1460,82 @@ public class MTEventManager implements IEventManager {
 
     public void publishMinecartInteract(MinecartInteractEvent event) {
         elMinecartInteract.publish(event);
+    }
+
+    // ###############################
+    // ###   MinecartUpdateEvent   ###
+    // ###############################
+
+    private final EventList<MinecartUpdateEvent> elMinecartUpdate = new EventList<>();
+
+    @Override
+    public IEventHandle onMinecartUpdate(IEventHandler<MinecartUpdateEvent> ev) {
+        return elMinecartUpdate.add(ev);
+    }
+
+    public boolean hasMinecartUpdate() {
+        return elMinecartUpdate.hasHandlers();
+    }
+
+    public void publishMinecartUpdate(MinecartUpdateEvent event) {
+        elMinecartUpdate.publish(event);
+    }
+
+    // ###############################
+    // ###     NoteBlockEvent      ###
+    // ###############################
+
+    private final EventList<INoteBlockEvent> elNoteBlock = new EventList<>();
+
+    @Override
+    public IEventHandle onNoteBlock(IEventHandler<INoteBlockEvent> ev) {
+        return elNoteBlock.add(ev);
+    }
+
+    public boolean hasNoteBlock() {
+        return elNoteBlock.hasHandlers();
+    }
+
+    public void publishNoteBlock(INoteBlockEvent event) {
+        elNoteBlock.publish(event);
+    }
+
+    // ###############################
+    // ###  NoteBlockChangeEvent   ###
+    // ###############################
+
+    private final EventList<NoteBlockChangeEvent> elNoteBlockChange = new EventList<>();
+
+    @Override
+    public IEventHandle onNoteBlockChange(IEventHandler<NoteBlockChangeEvent> ev) {
+        return elNoteBlockChange.add(ev);
+    }
+
+    public boolean hasNoteBlockChange() {
+        return elNoteBlockChange.hasHandlers();
+    }
+
+    public void publishNoteBlockChange(NoteBlockChangeEvent event) {
+        elNoteBlockChange.publish(event);
+    }
+
+    // ###############################
+    // ###   NoteBlockPlayEvent    ###
+    // ###############################
+
+    private final EventList<NoteBlockPlayEvent> elNoteBlockPlay = new EventList<>();
+
+    @Override
+    public IEventHandle onNoteBlockPlay(IEventHandler<NoteBlockPlayEvent> ev) {
+        return elNoteBlockPlay.add(ev);
+    }
+
+    public boolean hasNoteBlockPlay() {
+        return elNoteBlockPlay.hasHandlers();
+    }
+
+    public void publishNoteBlockPlay(NoteBlockPlayEvent event) {
+        elNoteBlockPlay.publish(event);
     }
 
     // ###################################
