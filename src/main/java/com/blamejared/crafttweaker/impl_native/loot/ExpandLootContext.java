@@ -101,7 +101,6 @@ public class ExpandLootContext {
 
     @ZenCodeType.Getter("lootTableId")
     public static ResourceLocation getLootTableId(final LootContext $this) {
-        // TODO("Pending Forge PR")
-        return null;
+        return $this.getQueriedLootTableId();
     }
 }
