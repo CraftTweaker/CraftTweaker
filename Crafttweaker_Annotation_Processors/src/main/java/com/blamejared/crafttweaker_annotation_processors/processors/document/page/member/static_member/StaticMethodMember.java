@@ -52,6 +52,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         writer.println("```zenscript");
         writeExampleBlockContent(writer, ownerType);
         writer.println("```");
+        writer.println();
     }
     
     protected void writeExampleBlockContent(PrintWriter writer, AbstractTypeInfo ownerType) {

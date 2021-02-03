@@ -123,6 +123,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
         for(DocumentedGenericParameter genericParameter : genericParameters) {
             genericParameter.writeParameterInfoExcludeOptionality(writer);
         }
+        writer.println();
     }
     
     private void writeParameterDescriptionTableWithOptionals(PrintWriter writer) {
@@ -135,6 +136,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
         for(DocumentedGenericParameter parameter : genericParameters) {
             parameter.writeParameterInfoIncludeOptionality(writer);
         }
+        writer.println();
     }
     
     private boolean hasOptionalTypes() {

@@ -53,6 +53,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         writeSignatureExample(writer, ownerType);
         header.writeVirtualExamples(writer, getComment().getExamples(), name);
         writer.println("```");
+        writer.println();
     }
     
     private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType) {

@@ -43,6 +43,7 @@ public class ConstructorMember extends AbstractVirtualMember implements Comparab
         writeSignature(writer);
         header.writeConstructorExamples(writer, getConstructedType());
         writer.println("```");
+        writer.println();
     }
     
     private void writeSignature(PrintWriter writer) {

@@ -52,6 +52,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
         writer.println("```zenscript");
         writeScriptBlockInner(writer);
         writer.println("```");
+        writer.println();
     }
     
     private void writeScriptBlockInner(PrintWriter writer) {
