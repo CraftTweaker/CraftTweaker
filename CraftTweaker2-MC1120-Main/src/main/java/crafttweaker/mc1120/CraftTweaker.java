@@ -167,7 +167,7 @@ public class CraftTweaker {
                     MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.apply();
                 } catch (Exception e) {
                     CraftTweaker.LOG.catching(e);
-                    CraftTweakerAPI.logError("Fail to apply replace all occurence action at recipe " + recipe.getFullResourceName());
+                    CraftTweakerAPI.logError("Fail to apply replace all occurence action at recipe " + recipe.getFullResourceName(), e);
                 }
             }
             ProgressManager.pop(progressBar);
