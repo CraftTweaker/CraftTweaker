@@ -268,6 +268,7 @@ curseforge {
         releaseType = 'release'
         changelog = file("changelog.md")
         changelogType = 'markdown'
+        addGameVersion '1.16.4'
 
         mainArtifact(jar) {
             relations {
