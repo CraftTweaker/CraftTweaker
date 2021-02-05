@@ -190,8 +190,9 @@ public final class MCRecipeManager implements IRecipeManager {
     private boolean checkShapelessNulls(IItemStack output, IIngredient[] ingredients) {
         boolean valid = output != null;
         for(IIngredient ing : ingredients) {
-            if(ing == null) {
+            if (ing == null) {
                 valid = false;
+                break;
             }
         }
         if(!valid) {
