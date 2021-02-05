@@ -1,9 +1,5 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
-import javax.annotation.Nullable;
-
-import org.openzen.zencode.java.ZenCodeType;
-
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
@@ -11,7 +7,6 @@ import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,6 +16,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
+import org.openzen.zencode.java.ZenCodeType;
+
+import javax.annotation.Nullable;
 
 /**
  * Worlds represent a dimension within the game. They are used to interact with 
@@ -160,7 +158,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("dimension")
     public static String getDimension(World internal) {
-        return internal.getDimensionKey().getRegistryName().toString();
+        return internal.getDimensionKey().getLocation().toString();
     }
     
     /**
