@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.event.BlockPlaceEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -27,6 +28,11 @@ public class MCBlockPlaceEvent extends MCBlockEvent implements BlockPlaceEvent {
     @Override
     public IBlockState getPlacedAgainst() {
         return CraftTweakerMC.getBlockState(event.getPlacedAgainst());
+    }
+
+    @Override
+    public IBlock getBlock() {
+        return getBlockState().getBlock();
     }
 
     @Override
