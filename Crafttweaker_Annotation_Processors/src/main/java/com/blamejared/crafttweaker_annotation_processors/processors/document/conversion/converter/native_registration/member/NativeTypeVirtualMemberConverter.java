@@ -22,6 +22,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import javax.annotation.Nonnull;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +33,8 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
     private final TypeConverter typeConverter;
     private final ClassTypeConverter classTypeConverter;
     
-    public NativeTypeVirtualMemberConverter(DependencyContainer dependencyContainer, TypeConverter typeConverter, ClassTypeConverter classTypeConverter) {
-        super(dependencyContainer);
+    public NativeTypeVirtualMemberConverter(DependencyContainer dependencyContainer, TypeConverter typeConverter, ClassTypeConverter classTypeConverter, Elements elements) {
+        super(dependencyContainer, elements);
         this.typeConverter = typeConverter;
         this.classTypeConverter = classTypeConverter;
     }

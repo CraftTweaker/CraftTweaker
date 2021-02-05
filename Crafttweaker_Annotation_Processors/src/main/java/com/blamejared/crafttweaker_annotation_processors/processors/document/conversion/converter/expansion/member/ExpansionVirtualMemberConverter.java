@@ -8,10 +8,12 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.util.Elements;
 
 public class ExpansionVirtualMemberConverter extends MemberConverter<DocumentedVirtualMembers> {
     
-    public ExpansionVirtualMemberConverter(DependencyContainer dependencyContainer) {
+    public ExpansionVirtualMemberConverter(DependencyContainer dependencyContainer, Elements elements) {
+        super(elements);
         //TODO: Add converters
         addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionMethodConverter.class));
         addElementConverter(ElementKind.METHOD, dependencyContainer.getInstanceOfClass(ExpansionCasterConverter.class));

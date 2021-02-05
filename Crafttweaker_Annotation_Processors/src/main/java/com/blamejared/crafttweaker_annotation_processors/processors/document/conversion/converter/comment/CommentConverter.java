@@ -32,13 +32,13 @@ public class CommentConverter {
     }
     
     public DocumentationComment convertForConstructor(ExecutableElement constructor, DocumentationPageInfo pageInfo) {
-        final DocumentationComment comment = convertElement(constructor);
+        final DocumentationComment comment = convertElement(constructor, pageInfo.getClassComment());
         fillExampleForThisParameterFromPageInfo(comment, pageInfo);
         return comment;
     }
     
     public DocumentationComment convertForMethod(ExecutableElement method, DocumentationPageInfo pageInfo) {
-        final DocumentationComment comment = convertElement(method);
+        final DocumentationComment comment = convertElement(method, pageInfo.getClassComment());
         return fillExampleForThisParameterFromPageInfo(comment, pageInfo);
     }
     
@@ -59,7 +59,13 @@ public class CommentConverter {
     }
     
     private DocumentationComment convertElement(Element element) {
-        final DocumentationComment comment = getCommentForElement(element);
+        return convertElement(element, DocumentationComment.empty());
+    }
+    
+    private DocumentationComment convertElement(Element element, DocumentationComment parent) {
+        DocumentationComment comment = getCommentForElement(element);
+        comment = mergeComments(comment, parent);
+        
         final DocumentationComment enclosingElementComment = getCommentFromEnclosingElement(element);
         return mergeComments(comment, enclosingElementComment);
     }
