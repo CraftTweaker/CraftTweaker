@@ -39,6 +39,6 @@ public final class AlternativeLootConditionTypeBuilder implements ILootCondition
         if (this.subConditions.size() == 1) {
             CraftTweakerAPI.logWarning("An 'Alternative' loot condition has only one condition: this is equivalent to the condition itself");
         }
-        return context -> this.subConditions.stream().anyMatch(it -> it.test(context));
+        return context -> this.subConditions.isEmpty() || this.subConditions.stream().anyMatch(it -> it.test(context));
     }
 }
