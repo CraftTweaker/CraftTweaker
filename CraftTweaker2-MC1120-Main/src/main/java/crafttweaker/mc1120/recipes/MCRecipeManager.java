@@ -353,7 +353,7 @@ public final class MCRecipeManager implements IRecipeManager {
             return input;
         }
 
-        private void applyShapedPattern() {
+        private void applyShapelessPattern() {
             if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
                 for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
                     IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
@@ -372,7 +372,7 @@ public final class MCRecipeManager implements IRecipeManager {
             }
         }
 
-        private void applyShapelessPattern() {
+        private void applyShapedPattern() {
             if (ActionReplaceAllOccurences.INSTANCE.ingredients2D != null) {
                 for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients2D.length; i++) {
                     for (int j = 0; j < ActionReplaceAllOccurences.INSTANCE.ingredients2D[i].length; j++) {
