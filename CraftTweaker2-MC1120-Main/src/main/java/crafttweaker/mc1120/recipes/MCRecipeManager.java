@@ -319,39 +319,12 @@ public final class MCRecipeManager implements IRecipeManager {
 
         @Override
         public void apply() {
-            if (ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe != null) {
-                if (forOutput == null || forOutput.contains(ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe.getOutput())) {
-                    if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
-                        for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
-                            IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
-                            if (ingredient == null)
-                                continue;
-                            IIngredient changeResult = changeIngredient(ingredient);
-                            if (changeResult != ingredient) {
-                                if (changeResult == null) {
-                                    ActionReplaceAllOccurences.INSTANCE.ingredients1D = ArrayUtils.remove(ActionReplaceAllOccurences.INSTANCE.ingredients1D, i);
-                                } else {
-                                    ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
-                                }
-                                ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
-                            }
-                        }
-                    }
-                    if (ActionReplaceAllOccurences.INSTANCE.ingredients2D != null) {
-                        for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients2D.length; i++) {
-                            for (int j = 0; j < ActionReplaceAllOccurences.INSTANCE.ingredients2D[i].length; j++) {
-                                IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
-                                if (ingredient == null)
-                                    continue;
-                                IIngredient changeResult = changeIngredient(ingredient);
-                                if (changeResult != ingredient) {
-                                    ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult;
-                                    ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
-                                }
-                            }
-                        }
-                    }
-                }
+            if (ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe == null) {
+                return;
+            }
+            if (forOutput == null || forOutput.contains(ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe.getOutput())) {
+                applyShapedPattern();
+                applyShapelessPattern();
             }
         }
 
@@ -378,6 +351,42 @@ public final class MCRecipeManager implements IRecipeManager {
                 }
             }
             return input;
+        }
+
+        private void applyShapedPattern() {
+            if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
+                for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
+                    IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
+                    if (ingredient == null)
+                        continue;
+                    IIngredient changeResult = changeIngredient(ingredient);
+                    if (changeResult != ingredient) {
+                        if (changeResult == null) {
+                            ActionReplaceAllOccurences.INSTANCE.ingredients1D = ArrayUtils.remove(ActionReplaceAllOccurences.INSTANCE.ingredients1D, i);
+                        } else {
+                            ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
+                        }
+                        ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
+                    }
+                }
+            }
+        }
+
+        private void applyShapelessPattern() {
+            if (ActionReplaceAllOccurences.INSTANCE.ingredients2D != null) {
+                for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients2D.length; i++) {
+                    for (int j = 0; j < ActionReplaceAllOccurences.INSTANCE.ingredients2D[i].length; j++) {
+                        IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
+                        if (ingredient == null)
+                            continue;
+                        IIngredient changeResult = changeIngredient(ingredient);
+                        if (changeResult != ingredient) {
+                            ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult;
+                            ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
+                        }
+                    }
+                }
+            }
         }
     }
 
