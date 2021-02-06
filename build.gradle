@@ -154,6 +154,8 @@ dependencies {
 
     testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
     testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.4.2"
+
+    testCompile group: "org.assertj", name: "assertj-core", version: "3.19.0"
 }
 
 test {
