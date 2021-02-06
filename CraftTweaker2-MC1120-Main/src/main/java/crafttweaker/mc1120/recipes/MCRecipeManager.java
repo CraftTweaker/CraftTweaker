@@ -304,171 +304,6 @@ public final class MCRecipeManager implements IRecipeManager {
             removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
         }
     }
-
-    public static class SubActionReplaceAllOccurences implements IAction {
-        private SubActionReplaceAllOccurences next;
-        private final IIngredient toReplace;
-        private final IIngredient replaceWith;
-        private final IIngredient forOutput;
-
-        public SubActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
-            this.toReplace = toReplace;
-            this.replaceWith = replaceWith;
-            this.forOutput = forOutput;
-        }
-
-        @Override
-        public void apply() {
-            if (ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe == null) {
-                return;
-            }
-            if (forOutput == null || forOutput.contains(ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe.getOutput())) {
-                applyShapedPattern();
-                applyShapelessPattern();
-            }
-        }
-
-        @Override
-        public String describe() {
-            String replaceWithName = replaceWith == null ? MCItemStack.EMPTY.toString() : replaceWith.toString();
-            return "Removing all occurences of ingredient: " + toReplace + " and replacing them with " + replaceWithName;
-        }
-
-        private IIngredient changeIngredient(IIngredient input) {
-            List<IItemStack> inputItems = input.getItems();
-            if (inputItems.size() == 1) { // to avoid SingletonList#removeIf throwing UnsupportedOperationException
-                if (toReplace.matches(inputItems.get(0))) {
-                    return replaceWith;
-                }
-            } else if (inputItems.size() > 1) {
-                if (inputItems.removeIf(toReplace::matches)) {
-                    if (inputItems.isEmpty()) {
-                        return replaceWith;
-                    } else {
-                        IIngredient temp = new IngredientOr(inputItems.toArray(new IIngredient[0]));
-                        return replaceWith == null ? temp : temp.or(replaceWith);
-                    }
-                }
-            }
-            return input;
-        }
-
-        private void applyShapelessPattern() {
-            if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
-                for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
-                    IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
-                    if (ingredient == null)
-                        continue;
-                    IIngredient changeResult = changeIngredient(ingredient);
-                    if (changeResult != ingredient) {
-                        if (changeResult == null) {
-                            ActionReplaceAllOccurences.INSTANCE.ingredients1D = ArrayUtils.remove(ActionReplaceAllOccurences.INSTANCE.ingredients1D, i);
-                        } else {
-                            ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
-                        }
-                        ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
-                    }
-                }
-            }
-        }
-
-        private void applyShapedPattern() {
-            if (ActionReplaceAllOccurences.INSTANCE.ingredients2D != null) {
-                for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients2D.length; i++) {
-                    for (int j = 0; j < ActionReplaceAllOccurences.INSTANCE.ingredients2D[i].length; j++) {
-                        IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
-                        if (ingredient == null)
-                            continue;
-                        IIngredient changeResult = changeIngredient(ingredient);
-                        if (changeResult != ingredient) {
-                            ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult;
-                            ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public enum ActionReplaceAllOccurences implements IAction {
-        INSTANCE;
-
-        private SubActionReplaceAllOccurences first;
-        private SubActionReplaceAllOccurences last;
-        private ICraftingRecipe currentModifiedRecipe;
-        private IIngredient[] ingredients1D;
-        private IIngredient[][] ingredients2D;
-        private boolean recipeModified = false;
-
-        public void setCurrentModifiedRecipe(ICraftingRecipe currentModifiedRecipe) {
-            if (currentModifiedRecipe == null || currentModifiedRecipe.getOutput() == null)
-                return;
-            this.currentModifiedRecipe = currentModifiedRecipe;
-            if (currentModifiedRecipe.isShaped()) {
-                this.ingredients2D = currentModifiedRecipe.getIngredients2D();
-            } else {
-                this.ingredients1D = currentModifiedRecipe.getIngredients1D();
-            }
-        }
-
-        public void addSubAction(SubActionReplaceAllOccurences subAction) {
-            if (first == null) {
-                first = subAction;
-            }
-            if (last != null) {
-                last.next = subAction;
-            }
-            last = subAction;
-        }
-
-        public boolean hasSubAction() {
-            return first != null;
-        }
-
-        public void clear() {
-            first = last = null;
-        }
-
-        @Override
-        public void apply() {
-            SubActionReplaceAllOccurences current = first;
-
-            while (current != null) {
-                current.apply();
-                current = current.next;
-            }
-
-            if (this.recipeModified) {
-                CraftTweakerAPI.recipes.removeByRecipeName(this.currentModifiedRecipe.getFullResourceName(), null);
-                String name = this.currentModifiedRecipe.getResourceDomain() + "_" + this.currentModifiedRecipe.getName() + "_modified";
-                IItemStack out = this.currentModifiedRecipe.getOutput();
-                if (this.currentModifiedRecipe.isShaped()) {
-                    CraftTweakerAPI.recipes.addShaped(name, out, ingredients2D, null, null);
-                } else {
-                    CraftTweakerAPI.recipes.addShapeless(name, out, ingredients1D, null, null);
-                }
-            }
-
-            this.currentModifiedRecipe = null;
-            this.ingredients1D = null;
-            this.ingredients2D = null;
-            this.recipeModified = false;
-        }
-
-        public void describeSubActions() {
-            SubActionReplaceAllOccurences current = first;
-
-            while (current != null) {
-                CraftTweakerAPI.logInfo(current.describe());
-                current = current.next;
-            }
-        }
-
-        @Override
-        public String describe() {
-            return null;
-        }
-    }
     
     public static class ActionRemoveShapedRecipes extends ActionBaseRemoveRecipes {
         
@@ -913,6 +748,171 @@ public final class MCRecipeManager implements IRecipeManager {
         public ActionAddShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Optional IRecipeFunction function, @Optional IRecipeAction action, boolean hidden) {
             super(new MCRecipeShapeless(ingredients, output, function, action, hidden), output, false);
             setName(name);
+        }
+    }
+
+    public static class SubActionReplaceAllOccurences implements IAction {
+        private SubActionReplaceAllOccurences next;
+        private final IIngredient toReplace;
+        private final IIngredient replaceWith;
+        private final IIngredient forOutput;
+
+        public SubActionReplaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, IIngredient forOutput) {
+            this.toReplace = toReplace;
+            this.replaceWith = replaceWith;
+            this.forOutput = forOutput;
+        }
+
+        @Override
+        public void apply() {
+            if (ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe == null) {
+                return;
+            }
+            if (forOutput == null || forOutput.contains(ActionReplaceAllOccurences.INSTANCE.currentModifiedRecipe.getOutput())) {
+                applyShapedPattern();
+                applyShapelessPattern();
+            }
+        }
+
+        @Override
+        public String describe() {
+            String replaceWithName = replaceWith == null ? MCItemStack.EMPTY.toString() : replaceWith.toString();
+            return "Removing all occurences of ingredient: " + toReplace + " and replacing them with " + replaceWithName;
+        }
+
+        private IIngredient changeIngredient(IIngredient input) {
+            List<IItemStack> inputItems = input.getItems();
+            if (inputItems.size() == 1) { // to avoid SingletonList#removeIf throwing UnsupportedOperationException
+                if (toReplace.matches(inputItems.get(0))) {
+                    return replaceWith;
+                }
+            } else if (inputItems.size() > 1) {
+                if (inputItems.removeIf(toReplace::matches)) {
+                    if (inputItems.isEmpty()) {
+                        return replaceWith;
+                    } else {
+                        IIngredient temp = new IngredientOr(inputItems.toArray(new IIngredient[0]));
+                        return replaceWith == null ? temp : temp.or(replaceWith);
+                    }
+                }
+            }
+            return input;
+        }
+
+        private void applyShapelessPattern() {
+            if (ActionReplaceAllOccurences.INSTANCE.ingredients1D != null) {
+                for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients1D.length; i++) {
+                    IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients1D[i];
+                    if (ingredient == null)
+                        continue;
+                    IIngredient changeResult = changeIngredient(ingredient);
+                    if (changeResult != ingredient) {
+                        if (changeResult == null) {
+                            ActionReplaceAllOccurences.INSTANCE.ingredients1D = ArrayUtils.remove(ActionReplaceAllOccurences.INSTANCE.ingredients1D, i);
+                        } else {
+                            ActionReplaceAllOccurences.INSTANCE.ingredients1D[i] = changeResult;
+                        }
+                        ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
+                    }
+                }
+            }
+        }
+
+        private void applyShapedPattern() {
+            if (ActionReplaceAllOccurences.INSTANCE.ingredients2D != null) {
+                for (int i = 0; i < ActionReplaceAllOccurences.INSTANCE.ingredients2D.length; i++) {
+                    for (int j = 0; j < ActionReplaceAllOccurences.INSTANCE.ingredients2D[i].length; j++) {
+                        IIngredient ingredient = ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j];
+                        if (ingredient == null)
+                            continue;
+                        IIngredient changeResult = changeIngredient(ingredient);
+                        if (changeResult != ingredient) {
+                            ActionReplaceAllOccurences.INSTANCE.ingredients2D[i][j] = changeResult;
+                            ActionReplaceAllOccurences.INSTANCE.recipeModified = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public enum ActionReplaceAllOccurences implements IAction {
+        INSTANCE;
+
+        private SubActionReplaceAllOccurences first;
+        private SubActionReplaceAllOccurences last;
+        private ICraftingRecipe currentModifiedRecipe;
+        private IIngredient[] ingredients1D;
+        private IIngredient[][] ingredients2D;
+        private boolean recipeModified = false;
+
+        public void setCurrentModifiedRecipe(ICraftingRecipe currentModifiedRecipe) {
+            if (currentModifiedRecipe == null || currentModifiedRecipe.getOutput() == null)
+                return;
+            this.currentModifiedRecipe = currentModifiedRecipe;
+            if (currentModifiedRecipe.isShaped()) {
+                this.ingredients2D = currentModifiedRecipe.getIngredients2D();
+            } else {
+                this.ingredients1D = currentModifiedRecipe.getIngredients1D();
+            }
+        }
+
+        public void addSubAction(SubActionReplaceAllOccurences subAction) {
+            if (first == null) {
+                first = subAction;
+            }
+            if (last != null) {
+                last.next = subAction;
+            }
+            last = subAction;
+        }
+
+        public boolean hasSubAction() {
+            return first != null;
+        }
+
+        public void clear() {
+            first = last = null;
+        }
+
+        @Override
+        public void apply() {
+            SubActionReplaceAllOccurences current = first;
+
+            while (current != null) {
+                current.apply();
+                current = current.next;
+            }
+
+            if (this.recipeModified) {
+                CraftTweakerAPI.recipes.removeByRecipeName(this.currentModifiedRecipe.getFullResourceName(), null);
+                String name = this.currentModifiedRecipe.getResourceDomain() + "_" + this.currentModifiedRecipe.getName() + "_modified";
+                IItemStack out = this.currentModifiedRecipe.getOutput();
+                if (this.currentModifiedRecipe.isShaped()) {
+                    CraftTweakerAPI.recipes.addShaped(name, out, ingredients2D, null, null);
+                } else {
+                    CraftTweakerAPI.recipes.addShapeless(name, out, ingredients1D, null, null);
+                }
+            }
+
+            this.currentModifiedRecipe = null;
+            this.ingredients1D = null;
+            this.ingredients2D = null;
+            this.recipeModified = false;
+        }
+
+        public void describeSubActions() {
+            SubActionReplaceAllOccurences current = first;
+
+            while (current != null) {
+                CraftTweakerAPI.logInfo(current.describe());
+                current = current.next;
+            }
+        }
+
+        @Override
+        public String describe() {
+            return null;
         }
     }
     
