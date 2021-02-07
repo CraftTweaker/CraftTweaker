@@ -21,51 +21,71 @@ public class IDataRewrites {
     
     
     public static final List<GenericName> IDATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("IData"));
+    public static final List<GenericName> COLLECTION_DATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("ICollectionData"));
     public static final List<GenericName> LIST_DATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("ListData"));
     public static final List<GenericName> MAP_DATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("MapData"));
     
     
     public static IPartialExpression rewriteArray(ParsedExpressionArray parsedExpressionArray, ExpressionScope expressionScope) {
+        
         final List<TypeID> hints = expressionScope.hints;
         if(hints.size() != 1) {
             return null;
         }
-    
+        
         TypeID typeID = hints.get(0);
-        if (!(typeID instanceof DefinitionTypeID && (((DefinitionTypeID) typeID).definition.name.equals("IData") || ((DefinitionTypeID) typeID).definition.name.equals("ListData")))) {
+        if(!(typeID instanceof DefinitionTypeID)) {
             return null;
         }
     
+        DefinitionTypeID definitionTypeID = (DefinitionTypeID) typeID;
+        final String name = definitionTypeID.definition.name;
+        final boolean isListData = name.equals("ListData");
+        if(!(isListData || name.equals("IData") || name.equals("ICollectionData"))) {
+            return null;
+        }
+        
         final CodePosition position = parsedExpressionArray.position;
-        final DefinitionTypeID listType = (DefinitionTypeID) expressionScope.getType(position, LIST_DATA_NAME);
         final DefinitionTypeID iDataType = (DefinitionTypeID) expressionScope.getType(position, IDATA_NAME);
-    
+        final DefinitionTypeID listType = (DefinitionTypeID) expressionScope.getType(position, LIST_DATA_NAME);
+        final DefinitionTypeID collectionType = (DefinitionTypeID) expressionScope.getType(position, COLLECTION_DATA_NAME);
+        
         final List<ParsedExpression> contents = parsedExpressionArray.contents;
         final Expression[] cContent = new Expression[contents.size()];
         for(int i = 0; i < contents.size(); i++) {
             ParsedExpression content = contents.get(i);
             try {
-                cContent[i] = content.compile(expressionScope.withHint(iDataType)).eval().castExplicit(position, expressionScope, iDataType, false);
+                cContent[i] = content.compile(expressionScope.withHint(iDataType))
+                        .eval()
+                        .castExplicit(position, expressionScope, iDataType, false);
             } catch(CompileException e) {
                 return null;
             }
         }
-    
+        
         try {
             final ArrayExpression arrayExpression = new ArrayExpression(position, cContent, expressionScope.getTypeRegistry()
                     .getArray(iDataType, 1));
-        
+            
             final CallArguments arguments = new CallArguments(arrayExpression);
-            final FunctionalMemberRef constructor = expressionScope.getTypeMembers(listType)
-                    .getOrCreateGroup(OperatorType.CONSTRUCTOR)
-                    .selectMethod(position, expressionScope, arguments, true, true);
-            return new NewExpression(position, listType, constructor, arguments);
+            
+            if(isListData) {
+                final FunctionalMemberRef constructor = expressionScope.getTypeMembers(listType)
+                        .getOrCreateGroup(OperatorType.CONSTRUCTOR)
+                        .selectMethod(position, expressionScope, arguments, true, true);
+                return new NewExpression(position, listType, constructor, arguments);
+            } else {
+                return expressionScope.getTypeMembers(collectionType)
+                        .getGroup("getFromMembers")
+                        .callStatic(position, collectionType, expressionScope, arguments);
+            }
         } catch(CompileException e) {
             return null;
         }
     }
     
     public static IPartialExpression rewriteMap(ParsedExpressionMap parsedExpressionMap, ExpressionScope expressionScope) {
+        
         final List<TypeID> hints = expressionScope.hints;
         if(hints.size() != 1) {
             return null;
@@ -86,13 +106,17 @@ public class IDataRewrites {
         final Expression[] cValues = new Expression[parsedExpressionMap.values.size()];
         
         for(int i = 0; i < parsedExpressionMap.keys.size(); i++) {
-            if(parsedExpressionMap.keys.get(i) == null)
+            if(parsedExpressionMap.keys.get(i) == null) {
                 return null;
+            }
             
             try {
                 cKeys[i] = parsedExpressionMap.keys.get(i)
                         .compileKey(expressionScope.withHint(BasicTypeID.STRING));
-                cValues[i] = parsedExpressionMap.values.get(i).compile(expressionScope.withHint(iDataType)).eval().castExplicit(position, expressionScope, iDataType, false);
+                cValues[i] = parsedExpressionMap.values.get(i)
+                        .compile(expressionScope.withHint(iDataType))
+                        .eval()
+                        .castExplicit(position, expressionScope, iDataType, false);
             } catch(CompileException e) {
                 return null;
             }
@@ -113,4 +137,5 @@ public class IDataRewrites {
         }
         
     }
+    
 }
