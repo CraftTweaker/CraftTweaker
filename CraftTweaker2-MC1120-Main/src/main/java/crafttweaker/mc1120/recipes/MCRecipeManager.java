@@ -849,6 +849,9 @@ public final class MCRecipeManager implements IRecipeManager {
         public void setCurrentModifiedRecipe(ICraftingRecipe currentModifiedRecipe) {
             if (currentModifiedRecipe == null || currentModifiedRecipe.getOutput() == null)
                 return;
+            if (actionRemoveRecipesNoIngredients.matches(currentModifiedRecipe.getOutput())) {
+                return; // if there is a `recipes.remove` wants to remove origin recipe, then there is no need to replace the recipe
+            }
             this.currentModifiedRecipe = currentModifiedRecipe;
             if (currentModifiedRecipe.isShaped()) {
                 this.ingredients2D = currentModifiedRecipe.getIngredients2D();
