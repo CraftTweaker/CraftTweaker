@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.event.BlockHarvestDropsEvent;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -32,6 +33,11 @@ public class MCBlockHarvestDropsEvent extends MCBlockEvent implements BlockHarve
     @Override
     public int getFortuneLevel() {
         return event.getFortuneLevel();
+    }
+
+    @Override
+    public IBlock getBlock() {
+        return getBlockState().getBlock();
     }
 
     @Override

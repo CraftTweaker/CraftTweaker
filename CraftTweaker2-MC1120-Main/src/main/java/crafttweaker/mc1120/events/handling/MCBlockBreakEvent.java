@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.event.BlockBreakEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
@@ -24,6 +25,11 @@ public class MCBlockBreakEvent extends MCBlockEvent implements BlockBreakEvent {
     @Override
     public IPlayer getPlayer() {
         return CraftTweakerMC.getIPlayer(event.getPlayer());
+    }
+
+    @Override
+    public IBlock getBlock() {
+        return getBlockState().getBlock();
     }
 
     @Override
