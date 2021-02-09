@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandBlockBreakEvent {
     
     /**
-     * @return player who broke the block. If no player is available, use a fake player
+     * Gets player who broke the block. If no player is available, use a fake player
      */
     @ZenCodeType.Getter("player")
     @ZenCodeType.Method
