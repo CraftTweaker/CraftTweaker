@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.blamejared.crafttweaker.impl_native.util.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -335,7 +337,7 @@ public class BracketHandlers {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("RecipeType BEP <recipetype:%s> does not seem to be lower-cased!", tokens);
         if(tokens.equalsIgnoreCase("crafttweaker:scripts")) {
-            // This is bound to cause issues, like: <recipetype:crafttweaker:scripts.removeAll(); Best to just fix it now
+            // This is bound to cause issues, like: <recipetype:crafttweaker:scripts>.removeAll(); Best to just fix it now
             throw new IllegalArgumentException("Nice try, but there's no reason you need to access the <recipetype:crafttweaker:scripts> recipe manager!");
         }
         final ResourceLocation key = new ResourceLocation(tokens);
@@ -405,6 +407,19 @@ public class BracketHandlers {
         }
         
         return ForgeRegistries.PROFESSIONS.getValue(resourceLocation);
+    }
+    
+    /**
+     * Gets damage source based on type.
+     * If the damage source is not pre-registered, it will create a new one with the given name
+     * @param tokens the damage sources' type
+     * @return The found pre-registered damage source or a new one
+     * @docParam tokens "magic"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("damageSource")
+    public static DamageSource getDamageSource(String tokens) {
+        return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.getOrDefault(tokens, new DamageSource(tokens));
     }
     
 }

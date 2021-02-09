@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
+import com.blamejared.crafttweaker.impl_native.util.ExpandDamageSource;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.Direction;
@@ -124,4 +125,11 @@ public class BracketDumpers {
                 .collect(Collectors.toList());
     }
     
+    @BracketDumper("damageSource")
+    public static Collection<String> getDamageSourceDump() {
+        return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.keySet()
+                .stream()
+                .map(name -> "<damageSource:" + name + ">")
+                .collect(Collectors.toList());
+    }
 }
