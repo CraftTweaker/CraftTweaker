@@ -2,13 +2,16 @@ package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Arrays;
 import java.util.Set;
 
 @ZenRegister
@@ -279,6 +282,12 @@ public class ExpandEntity {
         
         return internal.getName().getString();
     }
+    
+    @ZenCodeType.Getter("facingDirections")
+    public static MCDirection[] getFacingDirections(Entity internal) {
+        return Arrays.stream(Direction.getFacingDirections(internal)).map(MCDirection::get).toArray(MCDirection[]::new);
+    }
+    
     
     //TODO: Add the other methods
     // Tip: Use IDE's "delegate" method and go from there

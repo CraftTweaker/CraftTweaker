@@ -52,12 +52,6 @@ public enum MCDirection {
         return DIRECTION_MAP.get(internal);
     }
     
-    // TODO add this when we have an Entity wrapper
-    
-    //    public static Direction[] getFacingDirections(Entity entityIn) {
-    //        return Direction.getFacingDirections(entityIn);
-    //    }
-    
     /**
      * Get the Index of this direction (0-5). The order is D-U-N-S-W-E
      *

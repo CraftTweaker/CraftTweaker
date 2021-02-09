@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.CombatTracker;
+import net.minecraft.util.DamageSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
@@ -250,5 +251,10 @@ public class ExpandLivingEntity {
     @ZenCodeType.Method
     public static boolean isWaterSensitive(LivingEntity internal) {
         return internal.isWaterSensitive();
+    }
+    
+    @ZenCodeType.Method
+    public static void attackEntityFrom(LivingEntity internal, DamageSource damageSource, float amount) {
+        internal.attackEntityFrom(damageSource, amount);
     }
 }

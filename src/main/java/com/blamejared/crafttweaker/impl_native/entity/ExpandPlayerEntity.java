@@ -2,15 +2,13 @@ package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.impl.util.text.*;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.UUID;
 
 @ZenRegister
 @Document("vanilla/api/entity/MCPlayerEntity")
