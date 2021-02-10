@@ -1,16 +1,19 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.CombatTracker;
 import net.minecraft.util.DamageSource;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -256,5 +259,24 @@ public class ExpandLivingEntity {
     @ZenCodeType.Method
     public static void attackEntityFrom(LivingEntity internal, DamageSource damageSource, float amount) {
         internal.attackEntityFrom(damageSource, amount);
+    }
+    
+    /**
+     * Gets the item stack of the entity in given slot.
+     * @param mutable if true, the method will return a {@link MCItemStackMutable}, instead of a copy one. Use it with caution.
+     * @return The item stack of the entity in given slot.
+     */
+    @ZenCodeType.Method
+    public static IItemStack getItemStackFromSlot(LivingEntity internal, EquipmentSlotType slot, @ZenCodeType.Optional boolean mutable) {
+        if (mutable) {
+            return new MCItemStackMutable(internal.getItemStackFromSlot(slot));
+        } else {
+            return new MCItemStack(internal.getItemStackFromSlot(slot));
+        }
+    }
+    
+    @ZenCodeType.Method
+    public static void setItemStackToSlot(LivingEntity internal, EquipmentSlotType slot, IItemStack itemStack) {
+        internal.setItemStackToSlot(slot, itemStack.getInternal().copy());
     }
 }

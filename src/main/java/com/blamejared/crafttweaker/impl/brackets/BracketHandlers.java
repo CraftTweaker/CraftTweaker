@@ -20,6 +20,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
@@ -179,6 +180,21 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
         return axis;
+    }
+    
+    /**
+     * Gets the equipment slot type based on name. Throws an error if it can't find the equipment slot type.
+     * @param tokens The equipment slot type's name
+     * @return The found equipment slot type
+     * @docParam tokens "mainhand"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("equipmentSlotType")
+    public static EquipmentSlotType getEquipmentSlotType(String tokens) {
+        if (!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
+            CraftTweakerAPI.logWarning("EquipmentSlotType BEP <equipmentSlotType:%s> doen not seem to be lower-cased!", tokens);
+        }
+        return EquipmentSlotType.fromString(tokens);
     }
     
     /**
@@ -421,5 +437,4 @@ public class BracketHandlers {
     public static DamageSource getDamageSource(String tokens) {
         return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.getOrDefault(tokens, new DamageSource(tokens));
     }
-    
 }

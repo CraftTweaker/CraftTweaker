@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -15,8 +16,8 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = LivingEquipmentChangeEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingEquipmentChangeEvent")
 public class ExpandLivingEquipmentChangeEvent {
     @ZenCodeType.Getter("slot")
-    public static String getSlot(LivingEquipmentChangeEvent internal) {
-        return internal.getSlot().getName();
+    public static EquipmentSlotType getSlot(LivingEquipmentChangeEvent internal) {
+        return internal.getSlot();
     }
     
     @ZenCodeType.Getter("from")
