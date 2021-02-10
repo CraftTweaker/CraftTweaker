@@ -408,10 +408,21 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static List<Entity> getEntitiesInArea(World internal, BlockPos pos1, @ZenCodeType.Optional BlockPos pos2) {
-        if (pos2 == null) {
+    
+        if(pos2 == null) {
             return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1));
         } else {
             return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1, pos2));
         }
     }
+    
+    /**
+     * add an entity to the world, return if the entity is added successfully.
+     */
+    @ZenCodeType.Method
+    public static boolean addEntity(World internal, Entity entity) {
+        
+        return internal.addEntity(entity);
+    }
+    
 }
