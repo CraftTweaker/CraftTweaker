@@ -7,9 +7,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
-/**
- * @author youyihj
- */
 @ZenRegister
 @Document("vanilla/api/event/tick/MCWorldTickEvent")
 @NativeTypeRegistration(value = TickEvent.WorldTickEvent.class, zenCodeName = "crafttweaker.api.event.tick.MCWorldTickEvent")

@@ -9,7 +9,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("crafttweaker.api.event.entity.living.MCLivingEntityUseItemEvent")
+@Document("vanilla/api/event/entity/living/MCLivingEntityUseItemEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingEntityUseItemEvent")
 public class ExpandLivingEntityUseItemEvent {
     @ZenCodeType.Getter("item")
