@@ -11,9 +11,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/event/tick/MCWorldTickEvent")
 @NativeTypeRegistration(value = TickEvent.WorldTickEvent.class, zenCodeName = "crafttweaker.api.event.tick.MCWorldTickEvent")
 public class ExpandWorldTickEvent {
+    
     @ZenCodeType.Method
     @ZenCodeType.Getter("world")
     public static World getWorld(TickEvent.WorldTickEvent internal) {
+        
         return internal.world;
     }
+    
 }

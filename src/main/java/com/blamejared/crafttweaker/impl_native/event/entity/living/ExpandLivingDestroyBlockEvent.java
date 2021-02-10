@@ -14,13 +14,17 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = LivingDestroyBlockEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDestroyBlockEvent")
 public class ExpandLivingDestroyBlockEvent {
+    
     @ZenCodeType.Getter("state")
     public static BlockState getState(LivingDestroyBlockEvent internal) {
+        
         return internal.getState();
     }
     
     @ZenCodeType.Getter("pos")
     public static BlockPos getPos(LivingDestroyBlockEvent internal) {
+        
         return internal.getPos();
     }
+    
 }

@@ -12,18 +12,22 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/event/entity/living/MCLivingEntityUseItemEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingEntityUseItemEvent")
 public class ExpandLivingEntityUseItemEvent {
+    
     @ZenCodeType.Getter("item")
     public static IItemStack getItem(LivingEntityUseItemEvent internal) {
+        
         return new MCItemStack(internal.getItem());
     }
     
     @ZenCodeType.Getter("duration")
     public static int getDuration(LivingEntityUseItemEvent internal) {
+        
         return internal.getDuration();
     }
     
     @ZenCodeType.Setter("duration")
     public static void setDuration(LivingEntityUseItemEvent internal, int duration) {
+        
         internal.setDuration(duration);
     }
     

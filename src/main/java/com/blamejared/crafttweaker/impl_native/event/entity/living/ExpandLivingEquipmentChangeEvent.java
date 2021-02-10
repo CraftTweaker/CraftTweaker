@@ -15,18 +15,23 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = LivingEquipmentChangeEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingEquipmentChangeEvent")
 public class ExpandLivingEquipmentChangeEvent {
+    
     @ZenCodeType.Getter("slot")
     public static EquipmentSlotType getSlot(LivingEquipmentChangeEvent internal) {
+        
         return internal.getSlot();
     }
     
     @ZenCodeType.Getter("from")
     public static IItemStack getFrom(LivingEquipmentChangeEvent internal) {
+        
         return new MCItemStack(internal.getFrom());
     }
     
     @ZenCodeType.Getter("to")
     public static IItemStack getTo(LivingEquipmentChangeEvent internal) {
+        
         return new MCItemStack(internal.getTo());
     }
+    
 }

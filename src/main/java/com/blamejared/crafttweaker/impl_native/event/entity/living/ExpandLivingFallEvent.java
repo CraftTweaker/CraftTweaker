@@ -12,23 +12,29 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = LivingFallEvent.class, zenCodeName = "crafttweaker.api.event.living.MCLivingFallEvent")
 public class ExpandLivingFallEvent {
+    
     @ZenCodeType.Getter("distance")
     public static float getDistance(LivingFallEvent internal) {
+        
         return internal.getDistance();
     }
     
     @ZenCodeType.Getter("damageMultiplier")
     public static float getDamageMultiplier(LivingFallEvent internal) {
+        
         return internal.getDamageMultiplier();
     }
     
     @ZenCodeType.Setter("distance")
     public static void setDistance(LivingFallEvent internal, int value) {
+        
         internal.setDistance(value);
     }
     
     @ZenCodeType.Setter("damageMultiplier")
     public static void setDamageMultiplier(LivingFallEvent internal, int value) {
+        
         internal.setDamageMultiplier(value);
     }
+    
 }

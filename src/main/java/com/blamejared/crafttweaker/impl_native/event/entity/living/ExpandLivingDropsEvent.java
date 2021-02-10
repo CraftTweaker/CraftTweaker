@@ -19,23 +19,29 @@ import java.util.stream.Collectors;
 @EventCancelable(canceledDescription = "the entity does not drop anything")
 @NativeTypeRegistration(value = LivingDropsEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingDropsEvent")
 public class ExpandLivingDropsEvent {
+    
     @ZenCodeType.Getter("source")
     public static DamageSource getSource(LivingDropsEvent internal) {
+        
         return internal.getSource();
     }
     
     @ZenCodeType.Getter("drops")
     public static Collection<IItemStack> getDrops(LivingDropsEvent internal) {
+        
         return internal.getDrops().stream().map(ItemEntity::getItem).map(MCItemStack::new).collect(Collectors.toList());
     }
     
     @ZenCodeType.Getter("lootingLevel")
     public static int getLootingLevel(LivingDropsEvent internal) {
+        
         return internal.getLootingLevel();
     }
     
     @ZenCodeType.Getter("recentlyHit")
     public static boolean isRecentlyHit(LivingDropsEvent internal) {
+        
         return internal.isRecentlyHit();
     }
+    
 }

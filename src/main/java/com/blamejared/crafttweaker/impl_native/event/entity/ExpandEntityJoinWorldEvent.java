@@ -13,8 +13,11 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = EntityJoinWorldEvent.class, zenCodeName = "crafttweaker.api.event.entity.MCEntityJoinWorldEvent")
 public class ExpandEntityJoinWorldEvent {
+    
     @ZenCodeType.Getter("world")
     public static World getWorld(EntityJoinWorldEvent internal) {
+        
         return internal.getWorld();
     }
+    
 }

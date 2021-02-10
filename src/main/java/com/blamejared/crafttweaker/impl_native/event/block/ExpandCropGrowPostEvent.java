@@ -14,9 +14,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/event/block/CropGrowPostEvent")
 @NativeTypeRegistration(value = BlockEvent.CropGrowEvent.Post.class, zenCodeName = "crafttweaker.api.event.block.CropGrowPostEvent")
 public class ExpandCropGrowPostEvent {
+    
     @ZenCodeType.Getter("originState")
     @ZenCodeType.Method
     public static BlockState getOriginState(BlockEvent.CropGrowEvent.Post internal) {
+        
         return internal.getOriginalState();
     }
+    
 }

@@ -20,18 +20,22 @@ public class ExpandBlockBreakEvent {
     @ZenCodeType.Getter("player")
     @ZenCodeType.Method
     public static PlayerEntity getPlayer(BlockEvent.BreakEvent internal) {
+        
         return internal.getPlayer();
     }
     
     @ZenCodeType.Getter("expToDrop")
     @ZenCodeType.Method
     public static int getExpToDrop(BlockEvent.BreakEvent internal) {
+        
         return internal.getExpToDrop();
     }
     
     @ZenCodeType.Setter("expToDrop")
     @ZenCodeType.Method
     public static void setExpToDrop(BlockEvent.BreakEvent internal, int amount) {
+        
         internal.setExpToDrop(amount);
     }
+    
 }

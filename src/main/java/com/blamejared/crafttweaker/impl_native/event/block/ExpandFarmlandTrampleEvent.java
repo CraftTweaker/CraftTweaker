@@ -13,15 +13,19 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = BlockEvent.FarmlandTrampleEvent.class, zenCodeName = "crafttweaker.api.event.block.MCFarmlandTrampleEvent")
 public class ExpandFarmlandTrampleEvent {
+    
     @ZenCodeType.Getter("entity")
     @ZenCodeType.Method
     public static Entity getEntity(BlockEvent.FarmlandTrampleEvent internal) {
+        
         return internal.getEntity();
     }
     
     @ZenCodeType.Getter("fallDistance")
     @ZenCodeType.Method
     public static float getFallDistance(BlockEvent.FarmlandTrampleEvent internal) {
+        
         return internal.getFallDistance();
     }
+    
 }

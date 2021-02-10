@@ -16,13 +16,17 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable(canceledDescription = "the entity does not take attack damage.")
 @NativeTypeRegistration(value = LivingAttackEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingAttackEvent")
 public class ExpandLivingAttackEvent {
+    
     @ZenCodeType.Getter("source")
     public static DamageSource getSource(LivingAttackEvent internal) {
+        
         return internal.getSource();
     }
     
     @ZenCodeType.Getter("amount")
     public static float getAmount(LivingAttackEvent internal) {
+        
         return internal.getAmount();
     }
+    
 }

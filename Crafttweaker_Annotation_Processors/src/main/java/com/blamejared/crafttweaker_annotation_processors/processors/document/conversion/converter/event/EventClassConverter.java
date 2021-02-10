@@ -23,17 +23,21 @@ import javax.lang.model.util.Types;
 public class EventClassConverter extends NativeRegistrationConverter {
     
     public EventClassConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Types typeUtils, ClassTypeConverter classTypeConverter) {
+        
         super(knownModList, commentConverter, staticMemberConverter, virtualMemberConverter, superTypeConverter, implementationConverter, genericParameterConverter, nativeConversionRegistry, typeUtils, classTypeConverter);
     }
     
     @Override
     public boolean canConvert(TypeElement typeElement) {
+        
         return super.canConvert(typeElement) && typeElement.getSimpleName().toString().endsWith("Event");
     }
     
     @Override
     public DocumentationPage convert(TypeElement typeElement, DocumentationPageInfo pageInfo) {
-        return new EventPage((TypePage) super.convert(typeElement, pageInfo), typeElement.getAnnotation(EventCancelable.class), typeElement.getAnnotation(EventHasResult.class));
+        
+        return new EventPage((TypePage) super.convert(typeElement, pageInfo), typeElement.getAnnotation(EventCancelable.class), typeElement
+                .getAnnotation(EventHasResult.class));
     }
     
 }

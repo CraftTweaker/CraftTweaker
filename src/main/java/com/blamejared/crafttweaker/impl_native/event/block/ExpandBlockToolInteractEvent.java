@@ -21,21 +21,25 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable(canceledDescription = "this will prevent the tool from changing the block's state.")
 @NativeTypeRegistration(value = BlockEvent.BlockToolInteractEvent.class, zenCodeName = "crafttweaker.api.event.block.MCBlockToolInteractEvent")
 public class ExpandBlockToolInteractEvent {
+    
     @ZenCodeType.Getter("player")
     @ZenCodeType.Method
     public static PlayerEntity getPlayer(BlockEvent.BlockToolInteractEvent internal) {
+        
         return internal.getPlayer();
     }
     
     @ZenCodeType.Getter("heldItemStack")
     @ZenCodeType.Method
     public static IItemStack getHeldItemStack(BlockEvent.BlockToolInteractEvent internal) {
+        
         return new MCItemStack(internal.getHeldItemStack());
     }
     
     @ZenCodeType.Getter("toolType")
     @ZenCodeType.Method
     public static String getToolType(BlockEvent.BlockToolInteractEvent internal) {
+        
         return internal.getToolType().getName();
     }
     
@@ -48,6 +52,7 @@ public class ExpandBlockToolInteractEvent {
     @ZenCodeType.Nullable
     @ZenCodeType.Method
     public static BlockState getFinalState(BlockEvent.BlockToolInteractEvent internal) {
+        
         return internal.getFinalState();
     }
     
@@ -59,6 +64,8 @@ public class ExpandBlockToolInteractEvent {
     @ZenCodeType.Setter("finalState")
     @ZenCodeType.Method
     public static void setFinalState(BlockEvent.BlockToolInteractEvent internal, BlockState state) {
+        
         internal.setFinalState(state);
     }
+    
 }

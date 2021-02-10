@@ -13,18 +13,23 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = LivingDamageEvent.class, zenCodeName = "crafttweaker.api.event.living.MCLivingDamageEvent")
 public class ExpandLivingDamageEvent {
+    
     @ZenCodeType.Getter("source")
     public static DamageSource getSource(LivingDamageEvent internal) {
+        
         return internal.getSource();
     }
     
     @ZenCodeType.Getter("amount")
     public static float getAmount(LivingDamageEvent internal) {
+        
         return internal.getAmount();
     }
     
     @ZenCodeType.Setter("amount")
     public static void setAmount(LivingDamageEvent internal, float amount) {
+        
         internal.setAmount(amount);
     }
+    
 }

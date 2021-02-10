@@ -13,23 +13,29 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = LivingExperienceDropEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingExperienceDropEvent")
 public class ExpandLivingExperienceDropEvent {
+    
     @ZenCodeType.Getter("attackingPlayer")
     public static PlayerEntity getAttackingPlayer(LivingExperienceDropEvent internal) {
+        
         return internal.getAttackingPlayer();
     }
     
     @ZenCodeType.Getter("originalExperiencePoints")
     public static int getOriginalExperiencePoints(LivingExperienceDropEvent internal) {
+        
         return internal.getOriginalExperience();
     }
     
     @ZenCodeType.Getter("droppedExperience")
     public static int getDroppedExperience(LivingExperienceDropEvent internal) {
+        
         return internal.getDroppedExperience();
     }
     
     @ZenCodeType.Setter("droppedExperience")
     public static void getDroppedExperience(LivingExperienceDropEvent internal, int value) {
+        
         internal.setDroppedExperience(value);
     }
+    
 }

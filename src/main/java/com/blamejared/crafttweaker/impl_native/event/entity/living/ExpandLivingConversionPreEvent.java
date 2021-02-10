@@ -17,8 +17,10 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable(canceledDescription = "the replacement will not occur")
 @NativeTypeRegistration(value = LivingConversionEvent.Pre.class, zenCodeName = "crafttweaker.api.event.living.MCLivingConversionPreEvent")
 public class ExpandLivingConversionPreEvent {
+    
     @ZenCodeType.Getter("outcome")
     public static MCEntityType getOutcome(LivingConversionEvent.Pre internal) {
+        
         return new MCEntityType(internal.getOutcome());
     }
     
@@ -31,6 +33,8 @@ public class ExpandLivingConversionPreEvent {
      */
     @ZenCodeType.Method
     public static void setConversionTimer(LivingConversionEvent.Pre internal, int ticks) {
+        
         internal.setConversionTimer(ticks);
     }
+    
 }

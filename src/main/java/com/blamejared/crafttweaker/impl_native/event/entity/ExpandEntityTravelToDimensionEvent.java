@@ -18,8 +18,11 @@ import org.openzen.zencode.java.ZenCodeType;
 @EventCancelable
 @NativeTypeRegistration(value = EntityTravelToDimensionEvent.class, zenCodeName = "crafttweaker.api.event.entity.MCEntityTravelToDimensionEvent")
 public class ExpandEntityTravelToDimensionEvent {
+    
     @ZenCodeType.Getter("dimension")
     public static ResourceLocation getDimension(EntityTravelToDimensionEvent internal) {
+        
         return internal.getDimension().getLocation();
     }
+    
 }

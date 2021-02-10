@@ -28,6 +28,7 @@ public class ExpandBlockNeighborNotifyEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("forceRedstoneUpdate")
     public static boolean getForceRedstoneUpdate(BlockEvent.NeighborNotifyEvent internal) {
+        
         return internal.getForceRedstoneUpdate();
     }
     
@@ -37,6 +38,8 @@ public class ExpandBlockNeighborNotifyEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("notifiedSides")
     public static List<MCDirection> getNotifiedSides(BlockEvent.NeighborNotifyEvent internal) {
+        
         return internal.getNotifiedSides().stream().map(MCDirection::get).collect(Collectors.toList());
     }
+    
 }
