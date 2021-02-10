@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.event.block;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -9,9 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
-/**
- * @author youyihj
- */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockEvent")
 @NativeTypeRegistration(value = BlockEvent.class, zenCodeName = "crafttweaker.api.event.block.MCBlockEvent")

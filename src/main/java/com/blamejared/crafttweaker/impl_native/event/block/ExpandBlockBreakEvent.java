@@ -2,16 +2,15 @@ package com.blamejared.crafttweaker.impl_native.event.block;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
-/**
- * @author youyihj
- */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockBreakEvent")
+@EventCancelable(canceledDescription = "prevent the block from being broken.")
 @NativeTypeRegistration(value = BlockEvent.BreakEvent.class, zenCodeName = "crafttweaker.api.event.block.MCBlockBreakEvent")
 public class ExpandBlockBreakEvent {
     

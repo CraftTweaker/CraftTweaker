@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -17,6 +18,7 @@ import net.minecraftforge.event.entity.living.LivingHealEvent;
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingHealEvent")
+@EventCancelable(canceledDescription = "the entity is not healed")
 @NativeTypeRegistration(value = LivingHealEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingHealEvent")
 public class ExpandLivingHealEvent {
     

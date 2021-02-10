@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.player.xp;
 
 
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -19,6 +20,7 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent.LevelChange;
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/xp/MCLevelChangeEvent")
+@EventCancelable
 @NativeTypeRegistration(value = LevelChange.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.MCLevelChangeEvent")
 public class ExpandLevelChangedEvent {
     

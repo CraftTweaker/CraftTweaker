@@ -9,7 +9,7 @@ import net.minecraft.util.DamageSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * @author youyihj
+ * The class has some static methods to create some specific damage sources.
  */
 @ZenRegister
 @Document("vanilla/api/util/DamageSourceCreators")

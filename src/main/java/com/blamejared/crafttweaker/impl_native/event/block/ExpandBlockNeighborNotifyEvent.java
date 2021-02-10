@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.event.block;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -14,10 +15,10 @@ import java.util.stream.Collectors;
  * Fired when a physics update occurs on a block. This event acts as
  * a way for mods to detect physics updates, in the same way a BUD switch
  * does. This event is only called on the server.
- * @author youyihj
  */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockNeighborNotifyEvent")
+@EventCancelable
 @NativeTypeRegistration(value = BlockEvent.NeighborNotifyEvent.class, zenCodeName = "crafttweaker.api.event.block.MCBlockNeighborNotifyEvent")
 public class ExpandBlockNeighborNotifyEvent {
     

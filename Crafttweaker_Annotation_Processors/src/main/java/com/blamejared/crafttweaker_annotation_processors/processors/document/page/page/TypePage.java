@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public final class TypePage extends DocumentationPage {
     
-    private final TypePageInfo pageInfo;
+    final TypePageInfo pageInfo;
     
     @Nullable
     private final AbstractTypeInfo superType;

@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.event.entity.player;
 
 import java.util.List;
 
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -20,6 +21,7 @@ import net.minecraftforge.event.entity.player.ItemFishedEvent;
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/MCItemFishedEvent")
+@EventCancelable
 @NativeTypeRegistration(value = ItemFishedEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.MCItemFishedEvent")
 public class ExpandItemFishedEvent {
     

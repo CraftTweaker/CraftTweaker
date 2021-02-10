@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.event.block;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -13,6 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockPlaceEvent")
+@EventCancelable(canceledDescription = "the block will not be placed")
 @NativeTypeRegistration(value = BlockEvent.EntityPlaceEvent.class, zenCodeName = "crafttweaker.api.event.block.MCBlockPlaceEvent")
 public class ExpandBlockPlaceEvent {
     @ZenCodeType.Getter("entity")
