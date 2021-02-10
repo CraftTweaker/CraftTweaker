@@ -338,7 +338,7 @@ public class BracketHandlers {
     
     /**
      * Gets the recipeManager based on registry name. Throws an error if it can't find the recipeManager.
-     * Throws an expcetion if the given recipeType is not found.
+     * Throws an exception if the given recipeType is not found.
      * <p>
      * This will always return IRecipeManager.<br>
      * There is also a BEP for that but that works differently so it can't be automatically added to the docs here.

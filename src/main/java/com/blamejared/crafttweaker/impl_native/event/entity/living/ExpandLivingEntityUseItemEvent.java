@@ -30,6 +30,4 @@ public class ExpandLivingEntityUseItemEvent {
         
         internal.setDuration(duration);
     }
-    
-    // TODO: specific events: Start Tick Stop Finish
 }
