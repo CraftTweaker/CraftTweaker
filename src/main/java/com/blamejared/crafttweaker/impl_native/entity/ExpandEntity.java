@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -279,13 +281,26 @@ public class ExpandEntity {
     @ZenCodeType.Method
     @ZenCodeType.Getter("name")
     public static String getName(Entity internal) {
-        
+    
         return internal.getName().getString();
     }
     
     @ZenCodeType.Getter("facingDirections")
     public static MCDirection[] getFacingDirections(Entity internal) {
+        
         return Arrays.stream(Direction.getFacingDirections(internal)).map(MCDirection::get).toArray(MCDirection[]::new);
+    }
+    
+    @ZenCodeType.Method
+    public static MapData getData(Entity internal) {
+        
+        return new MapData(internal.serializeNBT());
+    }
+    
+    @ZenCodeType.Method
+    public static void updateData(Entity internal, MapData data) {
+    
+        internal.deserializeNBT(internal.serializeNBT().merge(data.getInternal()));
     }
     
     

@@ -21,6 +21,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Worlds represent a dimension within the game. They are used to interact with 
@@ -413,6 +414,42 @@ public class ExpandWorld {
             return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1));
         } else {
             return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1, pos2));
+        }
+    }
+    
+    /**
+     * Gets all entities in given area, excluding the one passed into it.
+     *
+     * @param predicate the entity filter
+     *
+     * @docParam excludingEntity entity
+     * @docParam x1 1.0
+     * @docParam y1 1.0
+     * @docParam z1 1.0
+     * @docParam x2 11.4
+     * @docParam y2 11.4
+     * @docParam z2 11.4
+     * @docParam predicate (entityIn) => entityIn.isInWater()
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntitiesInAreaExcluding(World internal, @ZenCodeType.Nullable Entity excludingEntity, double x1, double y1, double z1, double x2, double y2, double z2, Predicate<Entity> predicate) {
+        
+        return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(x1, y1, z1, x2, y2, z2), predicate);
+    }
+    
+    /**
+     * @docParam excludingEntity entity
+     * @docParam predicate (entityIn) => entityInWater()
+     * @docParam pos1 new BlockPos(0, 1, 2)
+     * @docParam pos2 new BlockPos(3, 4, 5)
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntitiesInAreaExcluding(World internal, @ZenCodeType.Nullable Entity excludingEntity, Predicate<Entity> predicate, BlockPos pos1, @ZenCodeType.Optional BlockPos pos2) {
+        
+        if(pos2 == null) {
+            return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(pos1), predicate);
+        } else {
+            return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(pos1, pos2), predicate);
         }
     }
     
