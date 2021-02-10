@@ -16,10 +16,11 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
     }
 }
 
-
+apply plugin: "org.ec4j.editorconfig"
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
@@ -350,4 +351,15 @@ task genGitChangelog() {
         file.append("\n" + stdout.toString())
         System.out.println("Changelog generated!")
     }
+}
+
+editorconfig {
+
+    // All files are included by default. Paths or patterns must be relative to the the project root directory.
+    includes = ['src/**', 'Crafttweaker_Annotation_Processors/**', 'Crafttweaker_Annotations/**', 'build.gradle', 'common.gradle', 'gradle.properties', 'settings.gradle']
+
+    // Exlude some files in addition to the default excludes
+    // Paths or patterns must be relative to the the project root directory.
+    excludes = ['derby.log', 'LICENSE']
+
 }
