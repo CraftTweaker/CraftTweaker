@@ -439,7 +439,7 @@ public class ExpandWorld {
     
     /**
      * @docParam excludingEntity entity
-     * @docParam predicate (entityIn) => entityInWater()
+     * @docParam predicate (entityIn) => entityIn.isInWater()
      * @docParam pos1 new BlockPos(0, 1, 2)
      * @docParam pos2 new BlockPos(3, 4, 5)
      */
