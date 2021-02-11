@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.item;
 
-import com.blamejared.crafttweaker.CraftTweakerHacks;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
@@ -12,6 +11,7 @@ import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.common.crafting.NBTIngredient;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
@@ -138,7 +138,7 @@ public class MCItemStack implements IItemStack {
         if(!getInternal().hasTag()) {
             return Ingredient.fromStacks(getInternal());
         }
-        return CraftTweakerHacks.createNBTIngredient(getInternal());
+        return new NBTIngredient(getInternal()) {};
     }
     
     @Override
