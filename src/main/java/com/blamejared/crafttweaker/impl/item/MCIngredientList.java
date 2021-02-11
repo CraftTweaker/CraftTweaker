@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.CraftTweakerHacks;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.item.IngredientList;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
@@ -39,7 +40,7 @@ public class MCIngredientList implements IIngredient {
     @Override
     public Ingredient asVanillaIngredient() {
     
-        return CraftTweakerHacks.createCompoundIngredient(Arrays.stream(ingredients)
+        return new IngredientList(Arrays.stream(ingredients)
                 .map(IIngredient::asVanillaIngredient)
                 .collect(Collectors.toList()));
     }

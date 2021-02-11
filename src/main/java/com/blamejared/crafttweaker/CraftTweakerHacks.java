@@ -17,13 +17,11 @@ import java.util.logging.Logger;
 public class CraftTweakerHacks {
     
     private static final Constructor<NBTIngredient> NBT_INGREDIENT_CONSTRUCTOR;
-    private static final Constructor<CompoundIngredient> COMPOUND_INGREDIENT_CONSTRUCTOR;
     
     private static final Logger LOGGER = Logger.getLogger(CraftTweakerHacks.class.getName());
     
     static {
         NBT_INGREDIENT_CONSTRUCTOR = getConstructor(NBTIngredient.class, ItemStack.class);
-        COMPOUND_INGREDIENT_CONSTRUCTOR = getConstructor(CompoundIngredient.class, List.class);
     }
     
     public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
@@ -42,16 +40,6 @@ public class CraftTweakerHacks {
         
         try {
             return NBT_INGREDIENT_CONSTRUCTOR.newInstance(stack);
-        } catch(InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            LOGGER.log(Level.SEVERE, null, e);
-        }
-        return null;
-    }
-    
-    public static CompoundIngredient createCompoundIngredient(List<Ingredient> ingredients) {
-        
-        try {
-            return COMPOUND_INGREDIENT_CONSTRUCTOR.newInstance(ingredients);
         } catch(InstantiationException | IllegalAccessException | InvocationTargetException e) {
             LOGGER.log(Level.SEVERE, null, e);
         }

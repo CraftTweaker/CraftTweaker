@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.item.IngredientList;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.zencode.brackets.CTRegisterBEPEvent;
@@ -41,6 +42,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -114,16 +116,18 @@ public class CraftTweaker {
         SHAPELESS_SERIALIZER = new SerializerShapeless().setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
         SHAPED_SERIALIZER = new SerializerShaped().setRegistryName(new ResourceLocation("crafttweaker:shaped"));
         SCRIPT_SERIALIZER = new SerializerScript().setRegistryName(new ResourceLocation("crafttweaker:scripts"));
-        
-        
+    
+    
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPELESS_SERIALIZER);
         ForgeRegistries.RECIPE_SERIALIZERS.register(SHAPED_SERIALIZER);
         ForgeRegistries.RECIPE_SERIALIZERS.register(SCRIPT_SERIALIZER);
-        
+    
         RECIPE_TYPE_SCRIPTS = IRecipeType.register(MODID + ":scripts");
-        
+    
+        CraftingHelper.register(new ResourceLocation(MODID, "list"), IngredientList.Serializer.INSTANCE);
+    
         CraftTweakerRegistries.init();
-        
+    
         new Thread(() -> {
             try {
                 URL url = new URL("https://blamejared.com/patrons.txt");
