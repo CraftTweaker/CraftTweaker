@@ -14,7 +14,6 @@ import com.blamejared.crafttweaker.impl.commands.custom.CustomCommands;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExampleCollectionEvent;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
-import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.logger.PlayerLogger;
 import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
@@ -42,8 +41,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -92,7 +89,6 @@ public class CraftTweaker {
     public static IRecipeSerializer SHAPED_SERIALIZER;
     @SuppressWarnings("rawtypes")
     public static IRecipeSerializer SCRIPT_SERIALIZER;
-    public static IIngredientSerializer<?> INGREDIENT_NBT_SERIALIZER;
     public static IRecipeType<ScriptRecipe> RECIPE_TYPE_SCRIPTS;
     public static boolean serverOverride = true;
     private static Set<String> PATRON_LIST = new HashSet<>();
@@ -126,8 +122,6 @@ public class CraftTweaker {
         
         RECIPE_TYPE_SCRIPTS = IRecipeType.register(MODID + ":scripts");
         
-        INGREDIENT_NBT_SERIALIZER = new IngredientNBT.Serializer();
-        CraftingHelper.register(new ResourceLocation(MODID, "nbt"), INGREDIENT_NBT_SERIALIZER);
         CraftTweakerRegistries.init();
         
         new Thread(() -> {
