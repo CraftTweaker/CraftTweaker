@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -13,6 +15,9 @@ import java.util.List;
 public abstract class MemberConverter<T> {
     
     private final EnumMap<ElementKind, List<AbstractEnclosedElementConverter<T>>> elementConverters = new EnumMap<>(ElementKind.class);
+    private final Elements elementUtils;
+    
+    protected MemberConverter(Elements elementUtils) {this.elementUtils = elementUtils;}
     
     protected abstract boolean isCandidate(Element enclosedElement);
     
@@ -20,7 +25,12 @@ public abstract class MemberConverter<T> {
     
     public T convertFor(TypeElement typeElement, DocumentationPageInfo pageInfo) {
         final T result = createResultObject(pageInfo);
-        for(Element enclosedElement : typeElement.getEnclosedElements()) {
+    
+        final List<Element> enclosedElements = new ArrayList<>(this.elementUtils.getAllMembers(typeElement));
+        enclosedElements.removeAll(ElementFilter.typesIn(enclosedElements));
+        enclosedElements.removeAll(ElementFilter.packagesIn(enclosedElements));
+    
+        for(Element enclosedElement : enclosedElements) {
             convertMemberFor(enclosedElement, result, pageInfo);
         }
         
@@ -28,6 +38,7 @@ public abstract class MemberConverter<T> {
     }
     
     private void convertMemberFor(Element enclosedElement, T result, DocumentationPageInfo pageInfo) {
+        
         if(!isCandidate(enclosedElement)) {
             return;
         }
@@ -42,11 +53,13 @@ public abstract class MemberConverter<T> {
     }
     
     private List<AbstractEnclosedElementConverter<T>> getConvertersFor(ElementKind kind) {
+        
         return elementConverters.getOrDefault(kind, Collections.emptyList());
     }
     
     protected void addElementConverter(ElementKind kind, AbstractEnclosedElementConverter<T> expansionMethodConverter) {
-        elementConverters.computeIfAbsent(kind, ignored -> new ArrayList<>())
-                .add(expansionMethodConverter);
+        
+        elementConverters.computeIfAbsent(kind, ignored -> new ArrayList<>()).add(expansionMethodConverter);
     }
+    
 }

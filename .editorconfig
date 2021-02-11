@@ -4,7 +4,7 @@ end_of_line = lf
 indent_size = 4
 indent_style = space
 insert_final_newline = false
-max_line_length = 80
+max_line_length = 120
 tab_width = 4
 ij_continuation_indent_size = 8
 ij_formatter_off_tag = @formatter:off
@@ -15,7 +15,6 @@ ij_visual_guides = none
 ij_wrap_on_typing = false
 
 [*.java]
-max_line_length = 120
 ij_visual_guides = 120
 ij_java_align_consecutive_assignments = false
 ij_java_align_consecutive_variable_declarations = false
@@ -267,7 +266,7 @@ ij_java_wrap_long_lines = false
 
 [*.nbtt]
 ij_continuation_indent_size = 4
-ij_visual_guides = 80
+ij_visual_guides = 120
 ij_nbtt_keep_indents_on_empty_lines = false
 ij_nbtt_space_after_colon = true
 ij_nbtt_space_after_comma = true
@@ -912,7 +911,7 @@ ij_kotlin_wrap_first_method_in_call_chain = false
 
 [{*.graphqlconfig,*.har,*.jsb2,*.jsb3,*.json,*.mcmeta,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config,mcmod.info,pack.mcmeta}]
 indent_size = 2
-ij_visual_guides = 80
+ij_visual_guides = 120
 ij_json_keep_blank_lines_in_code = 0
 ij_json_keep_indents_on_empty_lines = false
 ij_json_keep_line_breaks = true
@@ -960,7 +959,7 @@ ij_jsp_keep_indents_on_empty_lines = false
 ij_jspx_keep_indents_on_empty_lines = false
 
 [{*.markdown,*.md}]
-ij_visual_guides = 80
+ij_visual_guides = 120
 ij_markdown_force_one_space_after_blockquote_symbol = true
 ij_markdown_force_one_space_after_header_symbol = true
 ij_markdown_force_one_space_after_list_bullet = true

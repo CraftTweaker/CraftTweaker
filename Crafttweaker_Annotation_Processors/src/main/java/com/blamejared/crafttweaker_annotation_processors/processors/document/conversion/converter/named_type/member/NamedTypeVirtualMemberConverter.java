@@ -8,10 +8,13 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.util.Elements;
 
 public class NamedTypeVirtualMemberConverter extends MemberConverter<DocumentedTypeVirtualMembers> {
     
-    public NamedTypeVirtualMemberConverter(DependencyContainer dependencyContainer) {
+    public NamedTypeVirtualMemberConverter(DependencyContainer dependencyContainer, Elements elements) {
+    
+        super(elements);
         addConverters(dependencyContainer);
     }
     

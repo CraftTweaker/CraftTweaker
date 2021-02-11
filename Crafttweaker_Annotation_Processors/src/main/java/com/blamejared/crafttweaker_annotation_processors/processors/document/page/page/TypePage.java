@@ -93,6 +93,7 @@ public final class TypePage extends DocumentationPage {
         for(AbstractTypeInfo implementedType : implementedTypes) {
             writer.printf("- %s%n", implementedType.getClickableMarkdown());
         }
+        writer.println();
     }
     
     private String getSimpleName() {
