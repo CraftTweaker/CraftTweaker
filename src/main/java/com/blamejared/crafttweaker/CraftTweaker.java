@@ -104,6 +104,7 @@ public class CraftTweaker {
         CraftTweakerAPI.logInfo("Starting building internal Registries");
         CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
         CraftTweakerRegistry.findClasses();
+        CraftTweakerRegistry.registerLootConditionBuilders();
         CraftTweakerAPI.logInfo("Completed building internal Registries");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

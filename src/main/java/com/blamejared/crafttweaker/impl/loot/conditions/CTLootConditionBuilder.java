@@ -4,10 +4,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
-import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.CraftTweakerLootConditionTypeBuilderRegistrationHandler;
 import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.JsonLootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.AlternativeLootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.VanillaLootConditionTypesBuilderRegistrationHandler;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -39,15 +37,11 @@ public final class CTLootConditionBuilder {
             throw new IllegalStateException("A builder for the given type '" + typeToken.getName() + "' was already registered");
         }
         BUILDERS.put(typeToken, creator);
+        CraftTweakerAPI.logDebug("Successfully registered loot condition type builder for '%s' as '%s'", typeToken, creator);
     }
 
     public static <T extends ILootConditionTypeBuilder> void register(final Class<T> typeToken, final Supplier<T> creator) {
         register(typeToken, ignore -> creator.get());
-    }
-
-    static {
-        VanillaLootConditionTypesBuilderRegistrationHandler.registerVanillaLootConditionTypes();
-        CraftTweakerLootConditionTypeBuilderRegistrationHandler.registerCraftTweakerLootConditionTypes();
     }
 
     // Creation
@@ -106,24 +100,24 @@ public final class CTLootConditionBuilder {
         try {
             builder = this.findFor(type);
         } catch (final NullPointerException | ClassCastException e) {
-            CraftTweakerAPI.logThrowing("Unable to create a loot condition builder for type '{}'", e, type.getName());
+            CraftTweakerAPI.logThrowing("Unable to create a loot condition builder for type '%s'", e, type.getName());
             return null;
         }
 
         try {
             lender.accept(builder);
         } catch (final ClassCastException e) {
-            CraftTweakerAPI.logThrowing("Unable to pass a loot condition builder for type '{}' to lender", e, type.getName());
+            CraftTweakerAPI.logThrowing("Unable to pass a loot condition builder for type '%s' to lender", e, type.getName());
             return null;
         } catch (final Exception e) {
-            CraftTweakerAPI.logThrowing("An error has occurred while populating the builder for type '{}'", e, type.getName());
+            CraftTweakerAPI.logThrowing("An error has occurred while populating the builder for type '%s'", e, type.getName());
             return null;
         }
 
         try {
             return builder.finish();
         } catch (final IllegalStateException e) {
-            CraftTweakerAPI.logThrowing("Unable to add a loot condition of type '{}' to '{}' due to an invalid builder state", e, type.getName(), id);
+            CraftTweakerAPI.logThrowing("Unable to add a loot condition of type '%s' to '%s' due to an invalid builder state", e, type.getName(), id);
         }
         return null;
     }
