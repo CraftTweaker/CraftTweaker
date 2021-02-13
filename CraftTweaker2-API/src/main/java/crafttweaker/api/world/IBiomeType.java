@@ -1,7 +1,11 @@
 package crafttweaker.api.world;
 
+import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.*;
 
+import java.util.List;
+
+@ZenRegister
 @ZenClass("crafttweaker.world.IBiomeType")
 public interface IBiomeType {
 
@@ -9,5 +13,7 @@ public interface IBiomeType {
     
     @ZenGetter("name")
     String getName();
-    
+
+    @ZenGetter("biomes")
+    List<IBiome> getBiomes();
 }
