@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/item/MCItemDefinition")
 @ZenCodeType.Expansion("crafttweaker.api.item.MCItemDefinition")
 @ZenRegister
-public class ModifierItemExpansion {
+public final class ModifierItemExpansion {
     @ZenCodeType.Method
     public static void addToolModifier(final Item $this, final String name, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(

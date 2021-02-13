@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 @Document("vanilla/api/blocks/MCBlock")
 @ZenCodeType.Expansion("crafttweaker.api.blocks.MCBlock")
 @ZenRegister
-public class ModifierBlockExpansion {
+public final class ModifierBlockExpansion {
     @ZenCodeType.Method
     public static void addDrop(final Block $this, final String uniqueId, final IItemStack stack) {
         addLootModifier($this, uniqueId, CommonLootModifiers.add(stack));
@@ -37,12 +37,12 @@ public class ModifierBlockExpansion {
     }
     
     @ZenCodeType.Method
-    public static void addStateDrop(final Block $this, final String uniqueId, final IItemStack stack, final Consumer<StatePropertiesPredicate> statePredicate) {
-        addStateLootModifier($this, uniqueId, CommonLootModifiers.add(stack), statePredicate);
+    public static void addStateDrop(final Block $this, final String uniqueId, final Consumer<StatePropertiesPredicate> statePredicate, final IItemStack stack) {
+        addStateLootModifier($this, uniqueId, statePredicate, CommonLootModifiers.add(stack));
     }
     
     @ZenCodeType.Method
-    public static void addStateLootModifier(final Block $this, final String name, final ILootModifier modifier, final Consumer<StatePropertiesPredicate> statePredicate) {
+    public static void addStateLootModifier(final Block $this, final String name, final Consumer<StatePropertiesPredicate> statePredicate, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create().add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock($this).withStatePropertiesPredicate(statePredicate)),
@@ -62,16 +62,21 @@ public class ModifierBlockExpansion {
     
     @ZenCodeType.Method
     public static void addToolLootModifier(final Block $this, final String name, final IItemStack tool, final ILootModifier modifier) {
+        addToolLootModifier($this, name, tool, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolLootModifier(final Block $this, final String name, final IItemStack tool, final boolean matchDamage, final ILootModifier modifier) {
+        addToolLootModifier($this, name, tool, matchDamage, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolLootModifier(final Block $this, final String name, final IItemStack tool, final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
                         .add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock($this))
-                        .add(MatchToolLootConditionBuilder.class, mt -> mt.withPredicate(item -> {
-                            item.withItem(tool);
-                            if (tool.hasTag()) {
-                                item.withDataPredicate(nbt -> nbt.withData(tool.getTag()));
-                            }
-                        })),
+                        .add(MatchToolLootConditionBuilder.class, mt -> mt.withPredicate(item -> item.matching(tool, matchDamage, false, matchNbt))),
                 modifier
         );
     }

@@ -32,8 +32,8 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
 
     public ItemPredicate() {
         super(net.minecraft.advancements.criterion.ItemPredicate.ANY);
-        this.amount = IntRangePredicate.unlimited();
-        this.damage = IntRangePredicate.unlimited();
+        this.amount = IntRangePredicate.unbounded();
+        this.damage = IntRangePredicate.unbounded();
         this.data = new NBTPredicate();
         this.enchantments = new ArrayList<>();
         this.storedEnchantments = new ArrayList<>();
@@ -41,13 +41,13 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
 
     @ZenCodeType.Method
     public ItemPredicate withMinimumAmount(final int min) {
-        this.amount = IntRangePredicate.lowerBounded(min);
+        this.amount = IntRangePredicate.mergeLowerBound(this.amount, min);
         return this;
     }
 
     @ZenCodeType.Method
     public ItemPredicate withMaximumAmount(final int max) {
-        this.amount = IntRangePredicate.upperBounded(max);
+        this.amount = IntRangePredicate.mergeUpperBound(this.amount, max);
         return this;
     }
 
@@ -64,13 +64,13 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
 
     @ZenCodeType.Method
     public ItemPredicate withMinimumDamage(final int min) {
-        this.damage = IntRangePredicate.lowerBounded(min);
+        this.damage = IntRangePredicate.mergeLowerBound(this.damage, min);
         return this;
     }
 
     @ZenCodeType.Method
     public ItemPredicate withMaximumDamage(final int max) {
-        this.damage = IntRangePredicate.upperBounded(max);
+        this.damage = IntRangePredicate.mergeUpperBound(this.damage, max);
         return this;
     }
 
@@ -148,15 +148,35 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
         });
     }
 
-    // quick CraftTweaker helper
-    // TODO("Booleans to exclude certain things like count or damage")
+    // Quick CraftTweaker helpers
     @ZenCodeType.Method
     public ItemPredicate matching(final IItemStack stack) {
+        return this.matching(stack, false);
+    }
+    
+    @ZenCodeType.Method
+    public ItemPredicate matching(final IItemStack stack, final boolean matchDamage) {
+        return this.matching(stack, matchDamage, false);
+    }
+    
+    @ZenCodeType.Method
+    public ItemPredicate matching(final IItemStack stack, final boolean matchDamage, final boolean matchCount) {
+        return this.matching(stack, matchDamage, matchCount, false);
+    }
+    
+    @ZenCodeType.Method
+    public ItemPredicate matching(final IItemStack stack, final boolean matchDamage, final boolean matchCount, final boolean matchNbt) {
         this.withItem(stack);
-        this.withExactDamage(stack.getDamage());
-        this.withExactAmount(stack.getAmount());
-        final IData tag = stack.getTag();
-        if (tag != null) this.withDataPredicate(predicate -> predicate.withData(tag));
+        if (matchDamage) {
+            this.withExactDamage(stack.getDamage());
+        }
+        if (matchCount) {
+            this.withExactAmount(stack.getAmount());
+        }
+        if (matchNbt) {
+            final IData tag = stack.getTag();
+            if (tag != null) this.withDataPredicate(predicate -> predicate.withData(tag));
+        }
         return this;
     }
 

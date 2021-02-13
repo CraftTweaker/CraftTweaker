@@ -41,7 +41,7 @@ public final class ReferenceLootConditionTypeBuilder implements ILootConditionTy
                     context.removeCondition(vanillaCondition);
                 }
             } else {
-                CraftTweakerAPI.logError("Prevented infinite loop from ensuing with predicate '{}' referenced by a 'Reference' loot condition", this.predicateName);
+                CraftTweakerAPI.logError("Prevented infinite loop from ensuing with predicate '%s' referenced by a 'Reference' loot condition", this.predicateName);
                 return false;
             }
         };

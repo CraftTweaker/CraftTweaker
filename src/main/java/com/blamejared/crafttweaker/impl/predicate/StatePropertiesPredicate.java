@@ -12,90 +12,94 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.predicate.StatePropertiesPredicate")
 @Document("vanilla/api/predicate/StatePropertiesPredicate")
 public final class StatePropertiesPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.StatePropertiesPredicate> {
-    private static class RawMatcher {
-        private final String minOrVal;
-        private final String max;
-        private final boolean range;
-        private final BiPredicate<StateHolder<?, ?>, Property<?>> matcherFunction;
-
-        private RawMatcher(final String min, final String max) {
-            this.minOrVal = min;
-            this.max = max;
-            this.range = true;
-            this.matcherFunction = (holder, property) -> rangedMatcher(holder, property, this.getMin(), this.getMax());
+    private interface PropertyMatcher {
+        BiPredicate<StateHolder<?, ?>, Property<?>> getMatcherFunction();
+        Function<String, net.minecraft.advancements.criterion.StatePropertiesPredicate.Matcher> toVanilla();
+    }
+    
+    private final static class ExactPropertyMatcher implements PropertyMatcher {
+        private final String value;
+        private final BiPredicate<StateHolder<?, ?>, Property<?>> matcher;
+        
+        private ExactPropertyMatcher(final String value) {
+            this.value = value;
+            this.matcher = (holder, property) -> match(holder, property, this.value);
         }
-
-        private RawMatcher(final String val) {
-            this.minOrVal = val;
-            this.max = null;
-            this.range = false;
-            this.matcherFunction = (holder, property) -> exactMatcher(holder, property, this.getVal());
+    
+        @Override
+        public BiPredicate<StateHolder<?, ?>, Property<?>> getMatcherFunction() {
+            return this.matcher;
         }
-
-        private static <T extends Comparable<T>> boolean exactMatcher(final StateHolder<?, ?> holder, final Property<T> property, final String value) {
+    
+        @Override
+        public Function<String, net.minecraft.advancements.criterion.StatePropertiesPredicate.Matcher> toVanilla() {
+            return name -> new net.minecraft.advancements.criterion.StatePropertiesPredicate.ExactMatcher(name, this.value);
+        }
+    
+        private static <T extends Comparable<T>> boolean match(final StateHolder<?, ?> holder, final Property<T> property, final String value) {
             final T propertyValue = holder.get(property);
             final Optional<T> targetValue = property.parseValue(value);
             return targetValue.isPresent() && propertyValue.compareTo(targetValue.get()) == 0;
         }
-
-        private static <T extends Comparable<T>> boolean rangedMatcher(final StateHolder<?, ?> holder, final Property<T> property, final String min, final String max) {
+    }
+    
+    private final static class RangedPropertyMatcher implements PropertyMatcher {
+        private final String min;
+        private final String max;
+        private final BiPredicate<StateHolder<?, ?>, Property<?>> matcher;
+        
+        private RangedPropertyMatcher(final String min, final String max) {
+            this.min = min;
+            this.max = max;
+            this.matcher = (holder, property) -> match(holder, property, this.min, this.max);
+        }
+    
+        @Override
+        public BiPredicate<StateHolder<?, ?>, Property<?>> getMatcherFunction() {
+            return this.matcher;
+        }
+    
+        @Override
+        public Function<String, net.minecraft.advancements.criterion.StatePropertiesPredicate.Matcher> toVanilla() {
+            return name -> new net.minecraft.advancements.criterion.StatePropertiesPredicate.RangedMacher(name, this.min, this.max);
+        }
+    
+        private static <T extends Comparable<T>> boolean match(final StateHolder<?, ?> holder, final Property<T> property, final String min, final String max) {
             final T propertyValue = holder.get(property);
-
+        
             if (min != null) {
                 final Optional<T> parsedMin = property.parseValue(min);
                 if (!parsedMin.isPresent() || propertyValue.compareTo(parsedMin.get()) < 0) {
                     return false;
                 }
             }
-
+        
             if (max != null) {
                 final Optional<T> parsedMax = property.parseValue(max);
                 return parsedMax.isPresent() && propertyValue.compareTo(parsedMax.get()) <= 0;
             }
-
+        
             return true;
-        }
-
-        private boolean isRange() {
-            return this.range;
-        }
-
-        private String getVal() {
-            if (this.isRange()) throw new IllegalStateException("Not an exact raw entry");
-            return this.minOrVal;
-        }
-
-        private String getMin() {
-            if (!this.isRange()) throw new IllegalStateException("Not a ranged raw entry");
-            return this.minOrVal;
-        }
-
-        private String getMax() {
-            if (!this.isRange()) throw new IllegalStateException("Not a ranged raw entry");
-            return this.max;
-        }
-
-        private BiPredicate<StateHolder<?, ?>, Property<?>> getMatcherFunction() {
-            return this.matcherFunction;
         }
     }
 
-    private final Map<String, RawMatcher> rawMatchers;
+    private final Map<String, PropertyMatcher> propertyMatchers;
 
     public StatePropertiesPredicate() {
         super(net.minecraft.advancements.criterion.StatePropertiesPredicate.EMPTY);
-        this.rawMatchers = new LinkedHashMap<>();
+        this.propertyMatchers = new LinkedHashMap<>();
     }
 
     @ZenCodeType.Method
     public StatePropertiesPredicate withExactProperty(final String name, final String value) {
-        this.rawMatchers.put(name, new RawMatcher(value));
+        this.propertyMatchers.put(name, new ExactPropertyMatcher(value));
         return this;
     }
 
@@ -111,7 +115,7 @@ public final class StatePropertiesPredicate extends IVanillaWrappingPredicate.An
 
     @ZenCodeType.Method
     public StatePropertiesPredicate withRangedProperty(final String name, @ZenCodeType.Nullable final String min, @ZenCodeType.Nullable final String max) {
-        this.rawMatchers.put(name, new RawMatcher(min, max));
+        this.propertyMatchers.put(name, new RangedPropertyMatcher(min, max));
         return this;
     }
 
@@ -131,7 +135,7 @@ public final class StatePropertiesPredicate extends IVanillaWrappingPredicate.An
     }
 
     public <S extends StateHolder<?, S>> boolean matchProperties(final StateContainer<?, S> state, final S blockState) {
-        return this.rawMatchers.entrySet().stream().allMatch(entry -> {
+        return this.propertyMatchers.entrySet().stream().allMatch(entry -> {
             final Property<?> targetProperty = state.getProperty(entry.getKey());
             return targetProperty != null && entry.getValue().getMatcherFunction().test(blockState, targetProperty);
         });
@@ -139,22 +143,17 @@ public final class StatePropertiesPredicate extends IVanillaWrappingPredicate.An
 
     @Override
     public boolean isAny() {
-        return this.rawMatchers.isEmpty();
+        return this.propertyMatchers.isEmpty();
     }
 
     @Override
     public net.minecraft.advancements.criterion.StatePropertiesPredicate toVanilla() {
         final List<net.minecraft.advancements.criterion.StatePropertiesPredicate.Matcher> vanillaMatchers =
-                this.rawMatchers.entrySet().stream().map(this::toVanilla).collect(Collectors.toList());
+                this.propertyMatchers.entrySet().stream().map(this::toVanilla).collect(Collectors.toList());
         return new net.minecraft.advancements.criterion.StatePropertiesPredicate(vanillaMatchers);
     }
 
-    private net.minecraft.advancements.criterion.StatePropertiesPredicate.Matcher toVanilla(final Map.Entry<String, RawMatcher> rawEntry) {
-        final RawMatcher matcher = rawEntry.getValue();
-        if (matcher.isRange()) {
-            return new net.minecraft.advancements.criterion.StatePropertiesPredicate.RangedMacher(rawEntry.getKey(), matcher.getMin(), matcher.getMax());
-        } else {
-            return new net.minecraft.advancements.criterion.StatePropertiesPredicate.ExactMatcher(rawEntry.getKey(), matcher.getVal());
-        }
+    private net.minecraft.advancements.criterion.StatePropertiesPredicate.Matcher toVanilla(final Map.Entry<String, PropertyMatcher> rawEntry) {
+        return rawEntry.getValue().toVanilla().apply(rawEntry.getKey());
     }
 }

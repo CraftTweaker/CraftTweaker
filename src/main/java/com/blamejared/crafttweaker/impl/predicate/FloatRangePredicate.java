@@ -11,7 +11,7 @@ import java.util.Objects;
 @ZenCodeType.Name("crafttweaker.api.predicate.FloatRangePredicate")
 @Document("vanilla/api/predicate/FloatRangePredicate")
 public final class FloatRangePredicate extends IVanillaWrappingPredicate.AnyDefaulting<MinMaxBounds.FloatBound> {
-    private static final FloatRangePredicate UNLIMITED = new FloatRangePredicate(-Float.MAX_VALUE, Float.MAX_VALUE);
+    private static final FloatRangePredicate UNBOUNDED = new FloatRangePredicate(-Float.MAX_VALUE, Float.MAX_VALUE);
 
     private final float min;
     private final float max;
@@ -22,8 +22,8 @@ public final class FloatRangePredicate extends IVanillaWrappingPredicate.AnyDefa
         this.max = max;
     }
 
-    public static FloatRangePredicate unlimited() {
-        return UNLIMITED;
+    public static FloatRangePredicate unbounded() {
+        return UNBOUNDED;
     }
 
     public static FloatRangePredicate lowerBounded(final float min) {
@@ -37,6 +37,16 @@ public final class FloatRangePredicate extends IVanillaWrappingPredicate.AnyDefa
     public static FloatRangePredicate bounded(final float min, final float max) {
         if (min < max) throw new IllegalArgumentException("Minimum FloatRange bound must not be less than maximum bound");
         return new FloatRangePredicate(min, max);
+    }
+    
+    public static FloatRangePredicate mergeLowerBound(final FloatRangePredicate previous, final float min) {
+        if (previous == null) return lowerBounded(min);
+        return bounded(min, previous.getMax());
+    }
+    
+    public static FloatRangePredicate mergeUpperBound(final FloatRangePredicate previous, final float max) {
+        if (previous == null) return upperBounded(max);
+        return bounded(previous.getMin(), max);
     }
 
     public float getMin() {
@@ -53,7 +63,7 @@ public final class FloatRangePredicate extends IVanillaWrappingPredicate.AnyDefa
 
     @Override
     public boolean isAny() {
-        return this.equals(UNLIMITED);
+        return this.equals(UNBOUNDED);
     }
 
     @Override

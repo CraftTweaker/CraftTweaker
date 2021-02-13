@@ -11,7 +11,7 @@ import java.util.Objects;
 @ZenCodeType.Name("crafttweaker.api.predicate.IntRangePredicate")
 @Document("vanilla/api/predicate/IntRangePredicate")
 public final class IntRangePredicate extends IVanillaWrappingPredicate.AnyDefaulting<MinMaxBounds.IntBound> {
-    private static final IntRangePredicate UNLIMITED = new IntRangePredicate(Integer.MIN_VALUE, Integer.MAX_VALUE);
+    private static final IntRangePredicate UNBOUNDED = new IntRangePredicate(Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     private final int min;
     private final int max;
@@ -22,8 +22,8 @@ public final class IntRangePredicate extends IVanillaWrappingPredicate.AnyDefaul
         this.max = max;
     }
 
-    public static IntRangePredicate unlimited() {
-        return UNLIMITED;
+    public static IntRangePredicate unbounded() {
+        return UNBOUNDED;
     }
 
     public static IntRangePredicate lowerBounded(final int min) {
@@ -37,6 +37,16 @@ public final class IntRangePredicate extends IVanillaWrappingPredicate.AnyDefaul
     public static IntRangePredicate bounded(final int min, final int max) {
         if (min < max) throw new IllegalArgumentException("Minimum IntRange bound must not be less than maximum bound");
         return new IntRangePredicate(min, max);
+    }
+    
+    public static IntRangePredicate mergeLowerBound(final IntRangePredicate previous, final int min) {
+        if (previous == null) return lowerBounded(min);
+        return bounded(min, previous.getMax());
+    }
+    
+    public static IntRangePredicate mergeUpperBound(final IntRangePredicate previous, final int max) {
+        if (previous == null) return upperBounded(max);
+        return bounded(previous.getMin(), max);
     }
 
     public int getMin() {
@@ -53,7 +63,7 @@ public final class IntRangePredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @Override
     public boolean isAny() {
-        return this == UNLIMITED;
+        return this == UNBOUNDED;
     }
 
     @Override

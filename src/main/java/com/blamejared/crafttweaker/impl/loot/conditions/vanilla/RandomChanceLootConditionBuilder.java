@@ -25,13 +25,13 @@ public final class RandomChanceLootConditionBuilder implements ILootConditionTyp
     public ILootCondition finish() {
         if (this.chance >= 1.0) {
             CraftTweakerAPI.logWarning(
-                    "Chance in a 'RandomChance' condition is a number that is equal to or higher than 1.0 (currently: {}): this condition will always pass!",
+                    "Chance in a 'RandomChance' condition is a number that is equal to or higher than 1.0 (currently: %f): this condition will always match!",
                     this.chance
             );
         }
         if (this.chance <= 0.0) {
             CraftTweakerAPI.logWarning(
-                    "Chance in a 'RandomChance' condition is a number that is equal to or lower than 0.0 (currently: {}): this condition will never pass!",
+                    "Chance in a 'RandomChance' condition is a number that is equal to or lower than 0.0 (currently: %f): this condition will never match!",
                     this.chance
             );
         }

@@ -12,17 +12,28 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/item/IItemStack")
 @ZenCodeType.Expansion("crafttweaker.api.item.IItemStack")
 @ZenRegister
-public class ModifierItemStackExpansion {
+public final class ModifierItemStackExpansion {
     @ZenCodeType.Method
     public static void addToolModifier(final IItemStack $this, final String name, final ILootModifier modifier) {
+        addToolModifier($this, name, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolModifier(final IItemStack $this, final String name, final boolean matchDamage, final ILootModifier modifier) {
+        addToolModifier($this, name, matchDamage, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolModifier(final IItemStack $this, final String name, final boolean matchDamage, final boolean matchCount, final ILootModifier modifier) {
+        addToolModifier($this, name, matchDamage, matchCount, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolModifier(final IItemStack $this, final String name, final boolean matchDamage, final boolean matchCount, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
-                CTLootConditionBuilder.create().add(MatchToolLootConditionBuilder.class, toolCondition -> toolCondition.withPredicate(item -> {
-                    item.withItem($this);
-                    if ($this.hasTag()) {
-                        item.withDataPredicate(nbt -> nbt.withData($this.getTag()));
-                    }
-                })),
+                CTLootConditionBuilder.create().add(MatchToolLootConditionBuilder.class, toolCondition ->
+                        toolCondition.withPredicate(item -> item.matching($this, matchDamage, matchCount, matchNbt))),
                 modifier);
     }
 }

@@ -43,7 +43,7 @@ public final class EntityPropertiesLootConditionTypeBuilder implements ILootCond
     @Override
     public ILootCondition finish() {
         if (this.targetedEntity == null) {
-            throw new IllegalStateException("Targeted entity not defined for an 'EntityScores' condition");
+            throw new IllegalStateException("Targeted entity not defined for an 'EntityProperties' condition");
         }
         final net.minecraft.advancements.criterion.EntityPredicate vanilla = this.predicate.toVanillaPredicate();
         return context -> {

@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.loot.modifiers;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -35,23 +36,23 @@ public final class CommonLootModifiers {
 
     // Replacement methods
     @ZenCodeType.Method
-    public static ILootModifier replaceWith(final IItemStack target, final IItemStack replacement) {
+    public static ILootModifier replaceWith(final IIngredient target, final IItemStack replacement) {
         return (loot, context) -> replacing(loot.stream(), target, replacement).collect(Collectors.toList());
     }
 
     @ZenCodeType.Method
-    public static ILootModifier replaceAllWith(final Map<IItemStack, IItemStack> replacementMap) {
+    public static ILootModifier replaceAllWith(final Map<IIngredient, IItemStack> replacementMap) {
         return chaining(replacementMap.entrySet().stream().map(it -> replaceWith(it.getKey(), it.getValue())));
     }
 
     // Removal methods
     @ZenCodeType.Method
-    public static ILootModifier remove(final IItemStack target) {
+    public static ILootModifier remove(final IIngredient target) {
         return replaceWith(target, null);
     }
 
     @ZenCodeType.Method
-    public static ILootModifier removeAll(final IItemStack... targets) {
+    public static ILootModifier removeAll(final IIngredient... targets) {
         return chaining(Arrays.stream(targets).map(CommonLootModifiers::remove));
     }
 
@@ -64,7 +65,7 @@ public final class CommonLootModifiers {
         return chain.reduce(IDENTITY.get(), (first, second) -> (loot, context) -> second.applyModifier(first.applyModifier(loot, context), context));
     }
 
-    private static Stream<IItemStack> replacing(final Stream<IItemStack> stream, final IItemStack from, final IItemStack to) {
+    private static Stream<IItemStack> replacing(final Stream<IItemStack> stream, final IIngredient from, final IItemStack to) {
         final Stream<IItemStack> newStream = stream.map(it -> from.matches(it)? to : it);
         return to == null? newStream.filter(Objects::nonNull) : newStream;
     }

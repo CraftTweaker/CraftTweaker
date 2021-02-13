@@ -37,13 +37,13 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
 
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withMinimumScore(final String name, final int min) {
-        this.ranges.put(name, IntRangePredicate.lowerBounded(min));
+        this.ranges.put(name, IntRangePredicate.mergeLowerBound(this.ranges.get(name), min));
         return this;
     }
 
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withMaximumScore(final String name, final int max) {
-        this.ranges.put(name, IntRangePredicate.upperBounded(max));
+        this.ranges.put(name, IntRangePredicate.mergeUpperBound(this.ranges.get(name), max));
         return this;
     }
 
@@ -64,7 +64,7 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
             throw new IllegalStateException("Targeted entity not defined for an 'EntityScores' condition");
         }
         if (this.ranges.isEmpty()) {
-            CraftTweakerAPI.logWarning("An 'EntityScores' condition has an empty set of scores to check: this will always pass!");
+            CraftTweakerAPI.logWarning("An 'EntityScores' condition has an empty set of scores to check: this will always match!");
         }
 
         final List<BiPredicate<Entity, Scoreboard>> matchers = this.ranges

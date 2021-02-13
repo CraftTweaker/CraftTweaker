@@ -12,10 +12,11 @@ import net.minecraftforge.common.loot.LootModifier;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class CTLootModifier extends LootModifier {
+public final class CTLootModifier extends LootModifier {
     private final String name;
     private final Predicate<LootContext> conditions;
     private final ILootModifier function;
@@ -28,7 +29,7 @@ public class CTLootModifier extends LootModifier {
     }
 
     public CTLootModifier(final String name, final ILootCondition[] conditions, final ILootModifier function) {
-        this(name, conditions == null? new ArrayList<>() : Arrays.asList(conditions), function);
+        this(name, conditions == null? Collections.emptyList() : Arrays.asList(conditions), function);
     }
 
     @Override

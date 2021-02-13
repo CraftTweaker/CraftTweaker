@@ -62,7 +62,7 @@ public final class LocationCheckLootConditionTypeBuilder implements ILootConditi
             final Vector3d origin = ExpandLootContext.getOrigin(context);
             final World world = ExpandLootContext.getWorld(context);
             final Vector3d offset = origin == null? null : origin.add(this.offset.getX(), this.offset.getY(), this.offset.getZ());
-            return origin != null && world instanceof ServerWorld && predicate.test((ServerWorld) world, offset.getX(), offset.getY(), offset.getZ());
+            return offset != null && world instanceof ServerWorld && predicate.test((ServerWorld) world, offset.getX(), offset.getY(), offset.getZ());
         };
     }
 }

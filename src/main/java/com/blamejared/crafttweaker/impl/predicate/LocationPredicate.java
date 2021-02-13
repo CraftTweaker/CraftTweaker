@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl.predicate;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.google.gson.JsonObject;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -32,9 +31,9 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     public LocationPredicate() {
         super(net.minecraft.advancements.criterion.LocationPredicate.ANY);
-        this.x = FloatRangePredicate.unlimited();
-        this.y = FloatRangePredicate.unlimited();
-        this.z = FloatRangePredicate.unlimited();
+        this.x = FloatRangePredicate.unbounded();
+        this.y = FloatRangePredicate.unbounded();
+        this.z = FloatRangePredicate.unbounded();
         this.aboveCampfire = TriState.UNSET;
         this.lightLevel = new LightPredicate();
         this.block = new BlockPredicate();
@@ -43,13 +42,13 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public LocationPredicate withMinimumXPosition(final float min) {
-        this.x = FloatRangePredicate.lowerBounded(min);
+        this.x = FloatRangePredicate.mergeLowerBound(this.x, min);
         return this;
     }
 
     @ZenCodeType.Method
     public LocationPredicate withMaximumXPosition(final float max) {
-        this.x = FloatRangePredicate.upperBounded(max);
+        this.x = FloatRangePredicate.mergeUpperBound(this.x, max);
         return this;
     }
 
@@ -66,13 +65,13 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public LocationPredicate withMinimumYPosition(final float min) {
-        this.y = FloatRangePredicate.lowerBounded(min);
+        this.y = FloatRangePredicate.mergeLowerBound(this.y, min);
         return this;
     }
 
     @ZenCodeType.Method
     public LocationPredicate withMaximumYPosition(final float max) {
-        this.y = FloatRangePredicate.upperBounded(max);
+        this.y = FloatRangePredicate.mergeUpperBound(this.y, max);
         return this;
     }
 
@@ -89,13 +88,13 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public LocationPredicate withMinimumZPosition(final float min) {
-        this.z = FloatRangePredicate.lowerBounded(min);
+        this.z = FloatRangePredicate.mergeLowerBound(this.z, min);
         return this;
     }
 
     @ZenCodeType.Method
     public LocationPredicate withMaximumZPosition(final float max) {
-        this.z = FloatRangePredicate.upperBounded(max);
+        this.z = FloatRangePredicate.mergeUpperBound(this.z, max);
         return this;
     }
 
@@ -168,7 +167,7 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
     @Override
     public boolean isAny() {
         return this.x.isAny() && this.y.isAny() && this.z.isAny() && this.dimension == null && this.feature == null
-                && this.biome == null && this.aboveCampfire == TriState.UNSET && this.lightLevel.isAny() && this.block.isAny()
+                && this.biome == null && this.aboveCampfire.isUnset() && this.lightLevel.isAny() && this.block.isAny()
                 && this.fluid.isAny();
     }
 
@@ -178,7 +177,7 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
                 this.x.toVanillaPredicate(),
                 this.y.toVanillaPredicate(),
                 this.z.toVanillaPredicate(),
-                this.toVanilla(this.getRegistryKey(ForgeRegistries.BIOMES), this.biome),
+                this.toVanilla(ForgeRegistries.BIOMES, this.biome),
                 this.feature == null? null : Structure.NAME_STRUCTURE_BIMAP.get(this.feature),
                 this.toVanilla(Registry.WORLD_KEY, this.dimension),
                 this.aboveCampfire.toBoolean(),
@@ -194,8 +193,8 @@ public final class LocationPredicate extends IVanillaWrappingPredicate.AnyDefaul
     }
 
     @SuppressWarnings("SameParameterValue")
-    private <T extends IForgeRegistryEntry<T>> RegistryKey<Registry<T>> getRegistryKey(final IForgeRegistry<T> dumbForge) {
-        if (!(dumbForge instanceof ForgeRegistry)) throw new IllegalStateException("Not a forge registry: " + dumbForge);
-        return ((ForgeRegistry<T>) dumbForge).getRegistryKey();
+    private <T extends IForgeRegistryEntry<T>> RegistryKey<T> toVanilla(final IForgeRegistry<T> dumbForge, final ResourceLocation name) {
+        if (!(dumbForge instanceof ForgeRegistry)) throw new IllegalStateException("Not a forge registry: '" + dumbForge.getRegistryName() + "' (was " + dumbForge + ")");
+        return this.toVanilla(((ForgeRegistry<T>) dumbForge).getRegistryKey(), name);
     }
 }

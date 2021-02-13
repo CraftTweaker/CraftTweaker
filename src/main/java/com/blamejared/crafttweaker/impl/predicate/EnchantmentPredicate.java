@@ -14,7 +14,7 @@ public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDef
 
     public EnchantmentPredicate() {
         super(net.minecraft.advancements.criterion.EnchantmentPredicate.ANY);
-        this.levels = IntRangePredicate.unlimited();
+        this.levels = IntRangePredicate.unbounded();
     }
 
     @ZenCodeType.Method
@@ -25,13 +25,13 @@ public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDef
 
     @ZenCodeType.Method
     public EnchantmentPredicate withMinimumLevel(final int min) {
-        this.levels = IntRangePredicate.lowerBounded(min);
+        this.levels = IntRangePredicate.mergeLowerBound(this.levels, min);
         return this;
     }
 
     @ZenCodeType.Method
     public EnchantmentPredicate withMaximumLevel(final int max) {
-        this.levels = IntRangePredicate.upperBounded(max);
+        this.levels = IntRangePredicate.mergeUpperBound(this.levels, max);
         return this;
     }
 

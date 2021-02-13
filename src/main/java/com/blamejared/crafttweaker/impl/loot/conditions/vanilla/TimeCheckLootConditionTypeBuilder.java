@@ -18,7 +18,7 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
 
     TimeCheckLootConditionTypeBuilder() {
         this.timePeriod = 0;
-        this.value = IntRangePredicate.unlimited();
+        this.value = IntRangePredicate.unbounded();
     }
 
     @ZenCodeType.Method
@@ -29,13 +29,13 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
 
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withMinimumValue(final int min) {
-        this.value = IntRangePredicate.lowerBounded(min);
+        this.value = IntRangePredicate.mergeLowerBound(this.value, min);
         return this;
     }
 
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withMaximumValue(final int max) {
-        this.value = IntRangePredicate.upperBounded(max);
+        this.value = IntRangePredicate.mergeUpperBound(this.value, max);
         return this;
     }
 

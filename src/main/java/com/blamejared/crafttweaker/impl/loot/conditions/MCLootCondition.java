@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.condition.MCLootCondition")
 @Document("vanilla/api/loot/condition/MCLootCondition")
-public class MCLootCondition implements ILootCondition {
+public final class MCLootCondition implements ILootCondition {
     private final net.minecraft.loot.conditions.ILootCondition wrapped;
 
     public MCLootCondition(final net.minecraft.loot.conditions.ILootCondition wrapped) {

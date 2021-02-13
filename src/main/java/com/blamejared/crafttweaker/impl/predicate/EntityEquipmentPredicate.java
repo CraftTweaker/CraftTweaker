@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.predicate.EntityEquipmentPredicate")
 @Document("vanilla/api/predicate/EntityEquipmentPredicate")
-public class EntityEquipmentPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.EntityEquipmentPredicate> {
+public final class EntityEquipmentPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.EntityEquipmentPredicate> {
     private ItemPredicate head;
     private ItemPredicate chest;
     private ItemPredicate legs;

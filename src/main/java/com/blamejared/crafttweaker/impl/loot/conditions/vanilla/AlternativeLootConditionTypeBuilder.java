@@ -34,7 +34,7 @@ public final class AlternativeLootConditionTypeBuilder implements ILootCondition
     @Override
     public ILootCondition finish() {
         if (this.subConditions.isEmpty()) {
-            CraftTweakerAPI.logWarning("An 'Alternative' loot condition has no conditions: this will always pass!");
+            CraftTweakerAPI.logWarning("An 'Alternative' loot condition has no conditions: this will always match!");
         }
         if (this.subConditions.size() == 1) {
             CraftTweakerAPI.logWarning("An 'Alternative' loot condition has only one condition: this is equivalent to the condition itself");

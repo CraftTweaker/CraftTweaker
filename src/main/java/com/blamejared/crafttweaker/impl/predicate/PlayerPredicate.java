@@ -36,18 +36,18 @@ public final class PlayerPredicate extends IVanillaWrappingPredicate.AnyDefaulti
         this.statistics = new LinkedHashMap<>();
         this.recipes = new LinkedHashMap<>();
         this.advancements = new LinkedHashMap<>();
-        this.experienceLevels = IntRangePredicate.unlimited();
+        this.experienceLevels = IntRangePredicate.unbounded();
     }
 
     @ZenCodeType.Method
     public PlayerPredicate withMinimumExperienceLevel(final int min) {
-        this.experienceLevels = IntRangePredicate.lowerBounded(min);
+        this.experienceLevels = IntRangePredicate.mergeLowerBound(this.experienceLevels, min);
         return this;
     }
 
     @ZenCodeType.Method
     public PlayerPredicate withMaximumExperienceLevel(final int max) {
-        this.experienceLevels = IntRangePredicate.upperBounded(max);
+        this.experienceLevels = IntRangePredicate.mergeUpperBound(this.experienceLevels, max);
         return this;
     }
 
@@ -70,13 +70,15 @@ public final class PlayerPredicate extends IVanillaWrappingPredicate.AnyDefaulti
 
     @ZenCodeType.Method
     public PlayerPredicate withMinimumStatistic(final ResourceLocation type, final ResourceLocation name, final int min) {
-        this.statistics.put(Pair.of(type, name), IntRangePredicate.lowerBounded(min));
+        final Pair<ResourceLocation, ResourceLocation> key = Pair.of(type, name);
+        this.statistics.put(key, IntRangePredicate.mergeLowerBound(this.statistics.get(key), min));
         return this;
     }
 
     @ZenCodeType.Method
     public PlayerPredicate withMaximumStatistic(final ResourceLocation type, final ResourceLocation name, final int max) {
-        this.statistics.put(Pair.of(type, name), IntRangePredicate.upperBounded(max));
+        final Pair<ResourceLocation, ResourceLocation> key = Pair.of(type, name);
+        this.statistics.put(key, IntRangePredicate.mergeUpperBound(this.statistics.get(key), max));
         return this;
     }
 

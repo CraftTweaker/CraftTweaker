@@ -57,34 +57,34 @@ public class ExpandVector3d {
 
     @ZenCodeType.Method("times")
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
-    public static Vector3d mul(final Vector3d $this, final Vector3d other) {
+    public static Vector3d times(final Vector3d $this, final Vector3d other) {
         return $this.mul(other);
     }
 
     @ZenCodeType.Method("times")
-    public static Vector3d mul(final Vector3d $this, final double x, final double y, final double z) {
+    public static Vector3d times(final Vector3d $this, final double x, final double y, final double z) {
         return $this.mul(x, y, z);
     }
 
-    @ZenCodeType.Method("add")
+    @ZenCodeType.Method("plus")
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
-    public static Vector3d add(final Vector3d $this, final Vector3d other) {
+    public static Vector3d plus(final Vector3d $this, final Vector3d other) {
         return $this.add(other);
     }
 
-    @ZenCodeType.Method("add")
-    public static Vector3d add(final Vector3d $this, final double x, final double y, final double z) {
+    @ZenCodeType.Method("plus")
+    public static Vector3d plus(final Vector3d $this, final double x, final double y, final double z) {
         return $this.add(x, y, z);
     }
 
-    @ZenCodeType.Method("subtract")
+    @ZenCodeType.Method("minus")
     @ZenCodeType.Operator(ZenCodeType.OperatorType.SUB)
-    public static Vector3d sub(final Vector3d $this, final Vector3d other) {
+    public static Vector3d minus(final Vector3d $this, final Vector3d other) {
         return $this.subtract(other);
     }
 
-    @ZenCodeType.Method("subtract")
-    public static Vector3d sub(final Vector3d $this, final double x, final double y, final double z) {
+    @ZenCodeType.Method("minus")
+    public static Vector3d minus(final Vector3d $this, final double x, final double y, final double z) {
         return $this.subtract(x, y, z);
     }
 

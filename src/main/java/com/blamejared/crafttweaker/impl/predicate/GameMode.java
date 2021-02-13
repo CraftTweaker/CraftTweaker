@@ -9,10 +9,10 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.predicate.GameMode")
 @Document("vanilla/api/predicate/GameMode")
 public enum GameMode {
-    SURVIVAL(GameType.SURVIVAL),
-    CREATIVE(GameType.CREATIVE),
-    ADVENTURE(GameType.ADVENTURE),
-    SPECTATOR(GameType.SPECTATOR);
+    @ZenCodeType.Field SURVIVAL(GameType.SURVIVAL),
+    @ZenCodeType.Field CREATIVE(GameType.CREATIVE),
+    @ZenCodeType.Field ADVENTURE(GameType.ADVENTURE),
+    @ZenCodeType.Field SPECTATOR(GameType.SPECTATOR);
 
     private final GameType vanillaType;
 

@@ -16,21 +16,21 @@ public final class EffectData extends IVanillaWrappingPredicate.AnyDefaulting<Mo
 
     public EffectData() {
         super(MobEffectsPredicate.InstancePredicate::new);
-        this.amplifier = IntRangePredicate.unlimited();
-        this.duration = IntRangePredicate.unlimited();
+        this.amplifier = IntRangePredicate.unbounded();
+        this.duration = IntRangePredicate.unbounded();
         this.ambient = TriState.UNSET;
         this.visible = TriState.UNSET;
     }
 
     @ZenCodeType.Method
     public EffectData withMinimumAmplifier(final int min) {
-        this.amplifier = IntRangePredicate.lowerBounded(min);
+        this.amplifier = IntRangePredicate.mergeLowerBound(this.amplifier, min);
         return this;
     }
 
     @ZenCodeType.Method
     public EffectData withMaximumAmplifier(final int max) {
-        this.amplifier = IntRangePredicate.upperBounded(max);
+        this.amplifier = IntRangePredicate.mergeUpperBound(this.amplifier, max);
         return this;
     }
 
@@ -47,13 +47,13 @@ public final class EffectData extends IVanillaWrappingPredicate.AnyDefaulting<Mo
 
     @ZenCodeType.Method
     public EffectData withMinimumDuration(final int min) {
-        this.duration = IntRangePredicate.lowerBounded(min);
+        this.duration = IntRangePredicate.mergeLowerBound(this.duration, min);
         return this;
     }
 
     @ZenCodeType.Method
     public EffectData withMaximumDuration(final int max) {
-        this.duration = IntRangePredicate.upperBounded(max);
+        this.duration = IntRangePredicate.mergeUpperBound(this.duration, max);
         return this;
     }
 
@@ -94,7 +94,7 @@ public final class EffectData extends IVanillaWrappingPredicate.AnyDefaulting<Mo
 
     @Override
     public boolean isAny() {
-        return this.amplifier.isAny() && this.duration.isAny() && this.ambient == TriState.UNSET && this.visible == TriState.UNSET;
+        return this.amplifier.isAny() && this.duration.isAny() && this.ambient.isUnset() && this.visible.isUnset();
     }
 
     @Override

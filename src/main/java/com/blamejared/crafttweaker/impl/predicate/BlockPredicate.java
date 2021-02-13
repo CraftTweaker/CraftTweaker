@@ -4,11 +4,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.helper.CraftTweakerHelper;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
-import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Consumer;
@@ -72,10 +69,5 @@ public final class BlockPredicate extends IVanillaWrappingPredicate.AnyDefaultin
                 this.states.toVanillaPredicate(),
                 this.data.toVanillaPredicate()
         );
-    }
-
-    public boolean matches(final LootContext context) {
-        final BlockState state = ExpandLootContext.getBlockState(context);
-        return state.getBlock() == this.block && this.states.matchProperties(state.getBlock().getStateContainer(), state);
     }
 }

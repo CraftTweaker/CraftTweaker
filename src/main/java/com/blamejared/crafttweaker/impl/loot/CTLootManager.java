@@ -9,8 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.LootManager")
 @Document("vanilla/api/loot/LootManager")
-@SuppressWarnings("unused")
-public class CTLootManager {
+public final class CTLootManager {
     @ZenCodeGlobals.Global("loot")
     public static final CTLootManager LOOT_MANAGER = new CTLootManager();
 

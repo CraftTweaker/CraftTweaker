@@ -26,8 +26,8 @@ public abstract class ActionLootModifier implements IRuntimeAction {
             logger.throwingErr("Unable to modify loot modifier registry without access to it", new NullPointerException("Illegal loot modifiers registry getter"));
             return false;
         }
-        if (this.getModifiersMap() instanceof ImmutableMap) {
-            logger.throwingErr("Unable to modify loot modifier registry because it's frozen", new IllegalAccessError("Loot modifiers registry is frozen"));
+        if (this.getModifiersMap() instanceof ImmutableMap) { // Just in case the map getter is broken (e.g. if a mod attempts to use this class with the wrong getter)
+            logger.throwingErr("Unable to modify loot modifier registry because it's frozen: you may need to update", new IllegalAccessError("Loot modifiers registry is frozen"));
             return false;
         }
         return true;

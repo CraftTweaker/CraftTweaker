@@ -29,7 +29,7 @@ public final class FishingPredicate extends IVanillaWrappingPredicate.AnyDefault
 
     @Override
     public boolean isAny() {
-        return this.inOpenWater == TriState.UNSET;
+        return this.inOpenWater.isUnset();
     }
 
     @Override

@@ -29,11 +29,25 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
         return this;
     }
 
-    // quick CraftTweaker helper
-    // TODO("Booleans to exclude certain things like count or damage")
+    // Quick CraftTweaker helpers
     @ZenCodeType.Method
     public MatchToolLootConditionBuilder matching(final IItemStack tool) {
-        return this.withPredicate(predicate -> predicate.matching(tool));
+        return this.matching(tool, false);
+    }
+    
+    @ZenCodeType.Method
+    public MatchToolLootConditionBuilder matching(final IItemStack tool, final boolean matchDamage) {
+        return this.matching(tool, matchDamage, false);
+    }
+    
+    @ZenCodeType.Method
+    public MatchToolLootConditionBuilder matching(final IItemStack tool, final boolean matchDamage, final boolean matchCount) {
+        return this.matching(tool, matchDamage, matchCount, false);
+    }
+    
+    @ZenCodeType.Method
+    public MatchToolLootConditionBuilder matching(final IItemStack tool, final boolean matchDamage, final boolean matchCount, final boolean matchNbt) {
+        return this.withPredicate(predicate -> predicate.matching(tool, matchDamage, matchCount, matchNbt));
     }
 
     @Override

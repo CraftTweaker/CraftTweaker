@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.loot.modifiers.LootModifierManager")
 @Document("vanilla/api/loot/modifiers/LootModifierManager")
 @SuppressWarnings("unused")
-public class CTLootModifierManager {
+public final class CTLootModifierManager {
     public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
 
     private static final MethodHandle LMM_GETTER;
@@ -117,7 +117,10 @@ public class CTLootModifierManager {
         try {
             final LootModifierManager lmm = (LootModifierManager) LMM_GETTER.invokeExact();
             Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) LMM_MAP_GETTER.invokeExact(lmm);
-            if (map instanceof ImmutableMap) LMM_MAP_SETTER.invokeExact(lmm, map = new HashMap<>(map)); // Let's "mutabilize" the map
+            if (map instanceof ImmutableMap) {
+                map = new HashMap<>(map);
+                LMM_MAP_SETTER.invokeExact(lmm, map); // Let's "mutabilize" the map
+            }
             return map;
         } catch (final IllegalStateException e) {
             // LMM_GETTER.invokeExact() throws ISE if we're on the client and playing multiplayer

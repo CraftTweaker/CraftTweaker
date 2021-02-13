@@ -48,19 +48,13 @@ public final class WeatherCheckLootConditionTypeBuilder implements ILootConditio
 
     @Override
     public ILootCondition finish() {
-        if (this.raining == TriState.UNSET && this.thundering == TriState.UNSET) {
+        if (this.raining.isUnset() && this.thundering.isUnset()) {
             CraftTweakerAPI.logWarning("'WeatherCheck' loot condition has both raining and thundering unset: this is useless");
         }
         return context -> {
             final World world = ExpandLootContext.getWorld(context);
-            if (this.raining != TriState.UNSET) {
-                final boolean rain = this.raining == TriState.TRUE;
-                if (rain != world.isRaining()) return false;
-            }
-            if (this.thundering != TriState.UNSET) {
-                final boolean storm = this.thundering == TriState.TRUE;
-                return storm == world.isThundering();
-            }
+            if (!this.raining.isUnset() && !this.raining.match(world.isRaining())) return false;
+            if (!this.thundering.isUnset()) return this.thundering.match(world.isThundering());
             return true;
         };
     }

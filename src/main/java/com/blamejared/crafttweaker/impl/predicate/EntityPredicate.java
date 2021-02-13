@@ -150,7 +150,7 @@ public final class EntityPredicate extends IVanillaWrappingPredicate.AnyDefaulti
         return Stream.of(this.entityTypePredicate, this.distancePredicate, this.locationPredicate, this.effectsPredicate, this.nbtPredicate,
                 this.entityFlagsPredicate, this.equipmentPredicate, this.player, this.fishing).allMatch(AnyDefaulting::isAny)
                 && (this.riddenEntity == null || this.riddenEntity.isAny()) && (this.targetedEntity == null || this.targetedEntity.isAny())
-                && team != null && catType != null;
+                && this.team != null && this.catType != null;
     }
 
     public net.minecraft.advancements.criterion.EntityPredicate toVanilla() {

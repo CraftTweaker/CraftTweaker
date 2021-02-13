@@ -87,7 +87,7 @@ public final class EntityFlagsPredicate extends IVanillaWrappingPredicate.AnyDef
 
     @Override
     public boolean isAny() {
-        return Stream.of(this.isBurning, this.isSprinting, this.isSneaking, this.isSwimming, this.isBaby).allMatch(it -> it == TriState.UNSET);
+        return Stream.of(this.isBurning, this.isSprinting, this.isSneaking, this.isSwimming, this.isBaby).allMatch(TriState::isUnset);
     }
 
     @Override

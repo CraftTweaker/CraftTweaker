@@ -12,18 +12,18 @@ public final class LightPredicate extends IVanillaWrappingPredicate.AnyDefaultin
 
     public LightPredicate() {
         super(net.minecraft.advancements.criterion.LightPredicate.ANY);
-        this.range = IntRangePredicate.unlimited();
+        this.range = IntRangePredicate.unbounded();
     }
 
     @ZenCodeType.Method
     public LightPredicate withMinimumLightLevel(final int min) {
-        this.range = IntRangePredicate.lowerBounded(min);
+        this.range = IntRangePredicate.mergeLowerBound(this.range, min);
         return this;
     }
 
     @ZenCodeType.Method
     public LightPredicate withMaximumLightLevel(final int max) {
-        this.range = IntRangePredicate.upperBounded(max);
+        this.range = IntRangePredicate.mergeUpperBound(this.range, max);
         return this;
     }
 

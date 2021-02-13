@@ -48,15 +48,15 @@ public final class AdvancementPredicate implements IVanillaWrappingPredicate<Pla
     }
 
     public boolean isAny() {
-        return this.passed == TriState.UNSET && this.criteria.isEmpty();
+        return this.passed.isUnset() && this.criteria.isEmpty();
     }
 
     @Override
     public net.minecraft.advancements.criterion.PlayerPredicate.IAdvancementPredicate toVanillaPredicate() {
-        if (this.passed != TriState.UNSET && !this.criteria.isEmpty()) {
+        if (!this.passed.isUnset() && !this.criteria.isEmpty()) {
             throw new IllegalStateException("An advancement can be checked only for full completion or criteria, not both");
         }
-        if (this.passed != TriState.UNSET) {
+        if (!this.passed.isUnset()) {
             return new net.minecraft.advancements.criterion.PlayerPredicate.CompletedAdvancementPredicate(this.passed.toBoolean());
         } else {
             return new net.minecraft.advancements.criterion.PlayerPredicate.CriteriaPredicate(this.toVanilla(this.criteria));

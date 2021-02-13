@@ -13,10 +13,10 @@ import java.util.function.Function;
 @ZenCodeType.Name("crafttweaker.api.predicate.TargetedEntity")
 @Document("vanilla/api/predicate/TargetedEntity")
 public enum TargetedEntity {
-    ACTOR(ExpandLootContext::getThisEntity),
-    KILLER(ExpandLootContext::getKillerEntity),
-    DIRECT_KILLER(ExpandLootContext::getDirectKillerEntity),
-    PLAYER_KILLER(ExpandLootContext::getLastDamagePlayer);
+    @ZenCodeType.Field ACTOR(ExpandLootContext::getThisEntity),
+    @ZenCodeType.Field KILLER(ExpandLootContext::getKillerEntity),
+    @ZenCodeType.Field DIRECT_KILLER(ExpandLootContext::getDirectKillerEntity),
+    @ZenCodeType.Field PLAYER_KILLER(ExpandLootContext::getLastDamagePlayer);
 
     private final Function<LootContext, ? extends Entity> lootContextDiscriminator;
 

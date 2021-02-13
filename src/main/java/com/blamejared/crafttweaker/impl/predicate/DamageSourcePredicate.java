@@ -151,7 +151,7 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
     @Override
     public boolean isAny() {
         return Stream.of(this.bypassesArmor, this.bypassesInvulnerability, this.bypassesMagic, this.isExplosion, this.isFire, this.isMagic, this.isProjectile, this.isLightning)
-                .allMatch(it -> it == TriState.UNSET) && this.directEntity.isAny() && this.sourceEntity.isAny();
+                .allMatch(TriState::isUnset) && this.directEntity.isAny() && this.sourceEntity.isAny();
     }
 
     @Override

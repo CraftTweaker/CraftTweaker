@@ -23,7 +23,9 @@ public final class DelegateLootConditionTypeBuilder implements ILootConditionTyp
 
     @ZenCodeType.Method
     public DelegateLootConditionTypeBuilder withDelegate(final CTLootConditionBuilder builder) {
-        return this.withDelegate(builder.single());
+        final ILootCondition delegate = builder.single();
+        if (delegate == null) throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        return this.withDelegate(delegate);
     }
 
     @Override

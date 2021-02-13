@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 @Document("vanilla/api/entities/MCEntityType")
 @ZenCodeType.Expansion("crafttweaker.api.entity.MCEntityType")
 @ZenRegister
-public class ModifierEntityExpansion {
+public final class ModifierEntityExpansion {
     @ZenCodeType.Method
     public static void addDrop(final MCEntityType $this, final String uniqueId, final IItemStack stack) {
         addLootModifier($this, uniqueId, CommonLootModifiers.add(stack));
@@ -68,11 +68,22 @@ public class ModifierEntityExpansion {
     
     @ZenCodeType.Method
     public static void addWeaponOnlyLootModifier(final MCEntityType $this, final String name, final IItemStack weapon, final ILootModifier modifier) {
+        addWeaponOnlyLootModifier($this, name, weapon, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addWeaponOnlyLootModifier(final MCEntityType $this, final String name, final IItemStack weapon, final boolean matchDamage, final ILootModifier modifier) {
+        addWeaponOnlyLootModifier($this, name, weapon, matchDamage, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addWeaponOnlyLootModifier(final MCEntityType $this, final String name, final IItemStack weapon,
+                                                 final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
                         .add(EntityPropertiesLootConditionTypeBuilder.class, makeForType($this))
-                        .add(EntityPropertiesLootConditionTypeBuilder.class, makeForWeapon(weapon)),
+                        .add(EntityPropertiesLootConditionTypeBuilder.class, makeForWeapon(weapon, matchDamage, matchNbt)),
                 modifier
         );
     }
@@ -89,12 +100,23 @@ public class ModifierEntityExpansion {
     
     @ZenCodeType.Method
     public static void addWeaponAndPlayerOnlyLootModifier(final MCEntityType $this, final String name, final IItemStack weapon, final ILootModifier modifier) {
+        addWeaponAndPlayerOnlyLootModifier($this, name, weapon, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addWeaponAndPlayerOnlyLootModifier(final MCEntityType $this, final String name, final IItemStack weapon, final boolean matchDamage, final ILootModifier modifier) {
+        addWeaponAndPlayerOnlyLootModifier($this, name, weapon, matchDamage, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addWeaponAndPlayerOnlyLootModifier(final MCEntityType $this, final String name, final IItemStack weapon,
+                                                          final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
                         .add(KilledByPlayerLootConditionTypeBuilder.class)
                         .add(EntityPropertiesLootConditionTypeBuilder.class, makeForType($this))
-                        .add(EntityPropertiesLootConditionTypeBuilder.class, makeForWeapon(weapon)),
+                        .add(EntityPropertiesLootConditionTypeBuilder.class, makeForWeapon(weapon, matchDamage, matchNbt)),
                 modifier
         );
     }
@@ -104,13 +126,9 @@ public class ModifierEntityExpansion {
                 .withPredicate(entity -> entity.withEntityTypePredicate(entityType -> entityType.withType(type)));
     }
     
-    private static Consumer<EntityPropertiesLootConditionTypeBuilder> makeForWeapon(final IItemStack weapon) {
+    private static Consumer<EntityPropertiesLootConditionTypeBuilder> makeForWeapon(final IItemStack weapon, final boolean matchDamage, final boolean matchNbt) {
         return builder -> builder.withTargetedEntity(TargetedEntity.KILLER)
-                .withPredicate(entity -> entity.withEquipmentPredicate(equipment -> equipment.withItemInHand(item -> {
-                    item.withItem(weapon);
-                    if (weapon.hasTag()) {
-                        item.withDataPredicate(nbt -> nbt.withData(weapon.getTag()));
-                    }
-                })));
+                .withPredicate(entity -> entity.withEquipmentPredicate(equipment ->
+                        equipment.withItemInHand(item -> item.matching(weapon, matchDamage, false, matchNbt))));
     }
 }

@@ -57,7 +57,7 @@ public class ExpandDamageSource {
 	 * @return The amount of exhaustion to add to the player's hunger bar.
 	 */
 	@ZenCodeType.Method
-	@ZenCodeType.Getter("hunger")
+	@ZenCodeType.Getter("hungerDamage")
 	public static float getHungerDamage(DamageSource internal) {
 		return internal.getHungerDamage();
 	}

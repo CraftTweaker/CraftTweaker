@@ -18,22 +18,22 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     public DistancePredicate() {
         super(net.minecraft.advancements.criterion.DistancePredicate.ANY);
-        this.absoluteDistance = FloatRangePredicate.unlimited();
-        this.horizontalDistance = FloatRangePredicate.unlimited();
-        this.xDistance = FloatRangePredicate.unlimited();
-        this.yDistance = FloatRangePredicate.unlimited();
-        this.zDistance = FloatRangePredicate.unlimited();
+        this.absoluteDistance = FloatRangePredicate.unbounded();
+        this.horizontalDistance = FloatRangePredicate.unbounded();
+        this.xDistance = FloatRangePredicate.unbounded();
+        this.yDistance = FloatRangePredicate.unbounded();
+        this.zDistance = FloatRangePredicate.unbounded();
     }
 
     @ZenCodeType.Method
     public DistancePredicate withMinimumAbsoluteDistance(final float min) {
-        this.absoluteDistance = FloatRangePredicate.lowerBounded(min);
+        this.absoluteDistance = FloatRangePredicate.mergeLowerBound(this.absoluteDistance, min);
         return this;
     }
 
     @ZenCodeType.Method
     public DistancePredicate withMaximumAbsoluteDistance(final float max) {
-        this.absoluteDistance = FloatRangePredicate.upperBounded(max);
+        this.absoluteDistance = FloatRangePredicate.mergeUpperBound(this.absoluteDistance, max);
         return this;
     }
 
@@ -45,13 +45,13 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public DistancePredicate withMinimumHorizontalDistance(final float min) {
-        this.horizontalDistance = FloatRangePredicate.lowerBounded(min);
+        this.horizontalDistance = FloatRangePredicate.mergeLowerBound(this.horizontalDistance, min);
         return this;
     }
 
     @ZenCodeType.Method
     public DistancePredicate withMaximumHorizontalDistance(final float max) {
-        this.horizontalDistance = FloatRangePredicate.upperBounded(max);
+        this.horizontalDistance = FloatRangePredicate.mergeUpperBound(this.horizontalDistance, max);
         return this;
     }
 
@@ -63,13 +63,13 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public DistancePredicate withMinimumX(final float min) {
-        this.xDistance = FloatRangePredicate.lowerBounded(min);
+        this.xDistance = FloatRangePredicate.mergeLowerBound(this.xDistance, min);
         return this;
     }
 
     @ZenCodeType.Method
     public DistancePredicate withMaximumX(final float max) {
-        this.xDistance = FloatRangePredicate.upperBounded(max);
+        this.xDistance = FloatRangePredicate.mergeUpperBound(this.xDistance, max);
         return this;
     }
 
@@ -81,13 +81,13 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public DistancePredicate withMinimumY(final float min) {
-        this.yDistance = FloatRangePredicate.lowerBounded(min);
+        this.yDistance = FloatRangePredicate.mergeLowerBound(this.yDistance, min);
         return this;
     }
 
     @ZenCodeType.Method
     public DistancePredicate withMaximumY(final float max) {
-        this.yDistance = FloatRangePredicate.upperBounded(max);
+        this.yDistance = FloatRangePredicate.mergeUpperBound(this.yDistance, max);
         return this;
     }
 
@@ -99,13 +99,13 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
 
     @ZenCodeType.Method
     public DistancePredicate withMinimumZ(final float min) {
-        this.zDistance = FloatRangePredicate.lowerBounded(min);
+        this.zDistance = FloatRangePredicate.mergeLowerBound(this.zDistance, min);
         return this;
     }
 
     @ZenCodeType.Method
     public DistancePredicate withMaximumZ(final float max) {
-        this.zDistance = FloatRangePredicate.upperBounded(max);
+        this.zDistance = FloatRangePredicate.mergeUpperBound(this.zDistance, max);
         return this;
     }
 

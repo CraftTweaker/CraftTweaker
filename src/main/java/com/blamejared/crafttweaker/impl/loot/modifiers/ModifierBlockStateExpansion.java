@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/blocks/MCBlockState")
 @ZenCodeType.Expansion("crafttweaker.api.blocks.MCBlockState")
 @ZenRegister
-public class ModifierBlockStateExpansion {
+public final class ModifierBlockStateExpansion {
     @ZenCodeType.Method
     public static void addBlockDrop(final BlockState $this, final String uniqueId, final IItemStack stack) {
         ModifierBlockExpansion.addDrop($this.getBlock(), uniqueId, stack);
@@ -60,17 +60,23 @@ public class ModifierBlockStateExpansion {
     
     @ZenCodeType.Method
     public static void addToolLootModifier(final BlockState $this, final String name, final IItemStack tool, final ILootModifier modifier) {
+        addToolLootModifier($this, name, tool, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolLootModifier(final BlockState $this, final String name, final IItemStack tool, final boolean matchDamage, final ILootModifier modifier) {
+        addToolLootModifier($this, name, tool, matchDamage, false, modifier);
+    }
+    
+    @ZenCodeType.Method
+    public static void addToolLootModifier(final BlockState $this, final String name, final IItemStack tool, final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
                         .add(BlockStateLootConditionTypeBuilder.class, bs -> bs.withState($this))
-                        .add(MatchToolLootConditionBuilder.class, mt -> mt.withPredicate(item -> {
-                            item.withItem(tool);
-                            if (tool.hasTag()) {
-                                item.withDataPredicate(nbt -> nbt.withData(tool.getTag()));
-                            }
-                        })),
+                        .add(MatchToolLootConditionBuilder.class, mt -> mt.withPredicate(item -> item.matching(tool, matchDamage, false, matchNbt))),
                 modifier
         );
     }
+    
 }

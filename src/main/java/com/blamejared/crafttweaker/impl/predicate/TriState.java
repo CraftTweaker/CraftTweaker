@@ -8,9 +8,9 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.predicate.TriState")
 @Document("vanilla/api/predicate/TriState")
 public enum TriState {
-    TRUE(true),
-    FALSE(false),
-    UNSET(null);
+    @ZenCodeType.Field TRUE(true),
+    @ZenCodeType.Field FALSE(false),
+    @ZenCodeType.Field UNSET(null);
 
     private final Boolean bool;
 
@@ -20,5 +20,17 @@ public enum TriState {
 
     public Boolean toBoolean() {
         return this.bool;
+    }
+    
+    public boolean matchOrUnset(final boolean toMatch) {
+        return this.isUnset() || this.match(toMatch);
+    }
+    
+    public boolean match(final boolean toMatch) {
+        return (toMatch && this == TRUE) || (!toMatch && this == FALSE);
+    }
+    
+    public boolean isUnset() {
+        return this == UNSET;
     }
 }

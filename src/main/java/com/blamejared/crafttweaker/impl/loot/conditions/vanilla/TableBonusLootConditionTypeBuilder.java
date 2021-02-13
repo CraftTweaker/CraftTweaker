@@ -49,20 +49,20 @@ public final class TableBonusLootConditionTypeBuilder implements ILootConditionT
         for (float chance : this.chances) {
             if (chance <= 0.0F && !foundLower) {
                 CraftTweakerAPI.logWarning(
-                        "A chance value in a 'TableBonus' condition is a number that is equal to or lower than 0.0: this will never pass! The full array will be printed later"
+                        "A chance value in a 'TableBonus' condition is a number that is equal to or lower than 0.0: this will never match! The full array will be printed later"
                 );
                 foundLower = true;
             }
             if (chance >= 1.0F && !foundUpper) {
                 CraftTweakerAPI.logWarning(
-                        "A chance value in a 'TableBonus' condition is a number that is equal to or higher than 1.0: this will always pass! The full array will be printed later"
+                        "A chance value in a 'TableBonus' condition is a number that is equal to or higher than 1.0: this will always match! The full array will be printed later"
                 );
                 foundUpper = true;
             }
         }
 
         if (foundLower || foundUpper) {
-            CraftTweakerAPI.logWarning("{}", Arrays.toString(this.chances));
+            CraftTweakerAPI.logWarning(Arrays.toString(this.chances));
         }
 
         return context -> {
