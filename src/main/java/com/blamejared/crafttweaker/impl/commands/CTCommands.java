@@ -272,8 +272,6 @@ public class CTCommands {
             return 0;
         }));
     
-        registerCustomCommand(root);
-    
         registerCommand(new ExamplesCommand());
     
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
