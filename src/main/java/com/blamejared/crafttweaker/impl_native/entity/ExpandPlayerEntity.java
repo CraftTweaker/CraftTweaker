@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -198,13 +199,19 @@ public class ExpandPlayerEntity {
      */
     @ZenCodeType.Method
     public static void updatePersistentData(PlayerEntity internal, MapData data) {
-        
+    
         CompoundNBT persistentData = internal.getPersistentData();
         if(persistentData.contains(PlayerEntity.PERSISTED_NBT_TAG, 10)) {
             persistentData.getCompound(PlayerEntity.PERSISTED_NBT_TAG).merge(data.getInternal());
         } else {
             persistentData.put(PlayerEntity.PERSISTED_NBT_TAG, data.getInternal());
         }
+    }
+    
+    @ZenCodeType.Method
+    public static void give(PlayerEntity internal, IItemStack stack) {
+        
+        ItemHandlerHelper.giveItemToPlayer(internal, stack.getInternal());
     }
     
 }

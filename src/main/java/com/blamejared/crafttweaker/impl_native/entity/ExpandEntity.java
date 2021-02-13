@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
@@ -11,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -292,6 +292,29 @@ public class ExpandEntity {
     }
     
     @ZenCodeType.Method
+    public static void changeDimension(Entity internal, ServerWorld world) {
+        
+        internal.changeDimension(world);
+    }
+    
+    /**
+     * Teleports the entity, forcing the destination to stay loaded for a short time
+     */
+    @ZenCodeType.Method
+    public static void teleportKeepLoaded(Entity internal, double x, double y, double z) {
+        
+        internal.teleportKeepLoaded(x, y, z);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("uuid")
+    public static String getUUID(Entity internal) {
+        
+        return internal.getUniqueID().toString();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter
     public static MapData getData(Entity internal) {
         
         return new MapData(internal.serializeNBT());
