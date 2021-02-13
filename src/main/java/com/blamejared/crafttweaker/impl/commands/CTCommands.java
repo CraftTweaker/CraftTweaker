@@ -4,9 +4,12 @@ import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
+import com.blamejared.crafttweaker.impl.brackets.BracketHandlers;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
@@ -16,12 +19,18 @@ import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.blamejared.crafttweaker.impl_native.entity.ExpandPlayerEntity;
+import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.LiteralMessage;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
@@ -252,43 +261,56 @@ public class CTCommands {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
             return 0;
         }));
-        
+    
         registerCommand(new CommandImpl("issues", "Opens a link to the issue tracker", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://github.com/CraftTweaker/CraftTweaker/issues"));
             return 0;
         }));
-        
+    
         registerCommand(new CommandImpl("patreon", "Opens a link to patreon", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://patreon.com/jaredlll08"));
             return 0;
         }));
-        
+    
+        registerCustomCommand(root);
+    
         registerCommand(new ExamplesCommand());
-        
+    
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
             send(new StringTextComponent("Dump types: "), player);
-            COMMANDS.get("dump").getSubCommands().forEach((s, command) -> send(run(new FormattedTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
+            COMMANDS.get("dump")
+                    .getSubCommands()
+                    .forEach((s, command) -> send(run(new FormattedTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
             return 0;
         }));
-        
-        
+    
+    
         registerDump("recipes", "Outputs the names of all registered recipes", (CommandCallerPlayer) (player, stack) -> {
             for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
                 CraftTweakerAPI.logDump(type.toString());
-                for(ResourceLocation location : player.world.getRecipeManager().recipes.getOrDefault(type, new HashMap<>()).keySet()) {
+                for(ResourceLocation location : player.world.getRecipeManager().recipes.getOrDefault(type, new HashMap<>())
+                        .keySet()) {
                     CraftTweakerAPI.logDump("- " + location.toString());
                 }
             }
             send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
-        
-        
+    
+        registerCustomCommand(Commands.literal("give")
+                .then(Commands.argument("item", new CTItemArgument())
+                        .executes(context -> {
+                            ExpandPlayerEntity.give(context.getSource()
+                                    .asPlayer(), context.getArgument("item", IItemStack.class));
+                            return 0;
+                        })), "give", "give the player the item using CrT's Bracket handler syntax. You can also apply tags by appending a .withTag() call.");
+    
+    
         // Send an event to let others know that we are ready for SubCommands to be registered.
         // SubCommands registered earlier would throw a NPE (because the command itself would not exist yet)
         // SubCommands registered later would not be added to the Command system
         MinecraftForge.EVENT_BUS.post(new CTCommandCollectionEvent());
-        
+    
         // We'll add the dump subcommands after the event to find conflicts.
         final CommandImpl dump = COMMANDS.get("dump");
         for(BracketDumperInfo dumperInfo : CraftTweakerRegistry.getBracketDumpers().values()) {
@@ -387,6 +409,12 @@ public class CTCommands {
         
         root.then(literal);
         rootAlternative.then(literal);
+    }
+    
+    private static void registerCustomCommand(LiteralArgumentBuilder<CommandSource> literal, String name, String description) {
+        
+        registerCustomCommand(literal);
+        COMMANDS.put(name, new CommandImpl(name, description, (context -> 0)));
     }
     
     private static void send(ITextComponent component, CommandSource source) {
@@ -517,11 +545,40 @@ public class CTCommands {
             
             return subCommands;
         }
-        
+    
         @Override
         public int compareTo(CommandImpl o) {
-            
+        
             return getName().compareTo(o.getName());
+        }
+    
+    }
+    
+    private static class CTItemArgument implements ArgumentType<IItemStack> {
+        
+        private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string})");
+        
+        
+        @Override
+        public IItemStack parse(StringReader reader) throws CommandSyntaxException {
+            
+            final String s = reader.getRemaining();
+            reader.setCursor(reader.getTotalLength());
+            if(!s.matches("<item:\\w+:\\w+>(.withTag\\(\\{.*}\\))?")) {
+                throw new SimpleCommandExceptionType(new LiteralMessage("invalid string")).createWithContext(reader);
+            }
+            if(s.contains(".withTag")) {
+                // TODO: NBT parse
+                return MCItemStack.EMPTY.get();
+            } else {
+                return BracketHandlers.getItem(s.substring(6, s.length() - 1));
+            }
+        }
+        
+        @Override
+        public Collection<String> getExamples() {
+            
+            return EXAMPLES;
         }
         
     }
