@@ -26,13 +26,20 @@ public class ExpandPlayerEntity {
     @ZenCodeType.Method
     @ZenCodeType.Getter("fake")
     public static boolean isFake(PlayerEntity internal) {
-    
+        
         return internal instanceof FakePlayer;
     }
     
     @ZenCodeType.Method
-    public static boolean isSecondaryUseActive(PlayerEntity internal) {
+    @ZenCodeType.Getter("name")
+    public static MCTextComponent getName(PlayerEntity internal) {
+        
+        return new MCTextComponent(internal.getName());
+    }
     
+    @ZenCodeType.Method
+    public static boolean isSecondaryUseActive(PlayerEntity internal) {
+        
         return internal.isSecondaryUseActive();
     }
     
@@ -213,5 +220,4 @@ public class ExpandPlayerEntity {
         
         ItemHandlerHelper.giveItemToPlayer(internal, stack.getInternal());
     }
-    
 }
