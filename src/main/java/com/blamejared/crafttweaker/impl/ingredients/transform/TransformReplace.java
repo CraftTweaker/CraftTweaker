@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformerSerializer;
-import com.blamejared.crafttweaker.impl.ingredients.IngredientNBT;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.transformed.IngredientTransformed;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -47,7 +47,8 @@ public class TransformReplace<T extends IIngredient> implements IIngredientTrans
 
         @Override
         public TransformReplace<?> parse(JsonObject json) {
-            final Ingredient.IItemList iItemList = IngredientNBT.deserializeItemList(json.getAsJsonObject("replaceWith"));
+    
+            final Ingredient.IItemList iItemList = Ingredient.deserializeItemList(json.getAsJsonObject("replaceWith"));
             final ItemStack replaceWith = iItemList.getStacks().iterator().next();
             return new TransformReplace<>(new MCItemStack(replaceWith));
         }

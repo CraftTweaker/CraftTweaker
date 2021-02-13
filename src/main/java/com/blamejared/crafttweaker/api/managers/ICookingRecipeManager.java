@@ -48,7 +48,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @param input  IIngredient of the recipe to remove.
      *
      * @docParam output <item:minecraft:diamond>
-     * @docParam input <tag:minecraft:wool>
+     * @docParam input <tag:items:minecraft:wool>
      */
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output, IIngredient input) {

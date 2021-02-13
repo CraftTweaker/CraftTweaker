@@ -34,7 +34,7 @@ public class CTStoneCutterManager implements IRecipeManager {
      *
      * @docParam recipeName "recipe_name"
      * @docParam output <item:minecraft:grass>
-     * @docParam input <tag:minecraft:wool>
+     * @docParam input <tag:items:minecraft:wool>
      */
     @ZenCodeType.Method
     public void addRecipe(String recipeName, IItemStack output, IIngredient input) {
