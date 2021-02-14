@@ -575,7 +575,7 @@ public class CTCommands {
     private static class CTItemArgument implements ArgumentType<IItemStack> {
     
         private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string}})");
-        
+        private static final DynamicCommandExceptionType MALFORMED_DATA = new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message));
         
         @Override
         public IItemStack parse(StringReader reader) throws CommandSyntaxException {
@@ -595,7 +595,7 @@ public class CTCommands {
                     stack.withTag(StringConverter.convert(s));
                 } catch(ParseException e) {
                     reader.setCursor(reader.getCursor() + e.position.getFromLineOffset());
-                    throw new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message)).createWithContext(reader, e);
+                    throw MALFORMED_DATA.createWithContext(reader, e);
                 }
             }
             reader.setCursor(reader.getTotalLength());
