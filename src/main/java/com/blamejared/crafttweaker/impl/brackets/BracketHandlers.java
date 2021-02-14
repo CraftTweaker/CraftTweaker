@@ -30,6 +30,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -421,15 +422,43 @@ public class BracketHandlers {
             CraftTweakerAPI.logError("Could not get profession <profession:%s>", tokens);
             return null;
         }
-        
+    
         return ForgeRegistries.PROFESSIONS.getValue(resourceLocation);
+    }
+    
+    /**
+     * Gets a Biome based on the tokens.
+     * Throws an error if it can't get such a biome
+     *
+     * @param tokens The biome resource loacation
+     *
+     * @return The found biome
+     *
+     * @docParam tokens "minecraft:plain"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("biome")
+    public static Biome getBiome(String tokens) {
+        
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 2) {
+            throw new IllegalArgumentException("Could not get biome with name: <biome:" + tokens + ">! Syntax is <formatting:modid:biomeName>");
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        if(!ForgeRegistries.BIOMES.containsKey(resourceLocation)) {
+            throw new IllegalArgumentException("Could not get biome <biome:" + tokens + ">");
+        }
+        return ForgeRegistries.BIOMES.getValue(resourceLocation);
     }
     
     /**
      * Gets damage source based on type.
      * If the damage source is not pre-registered, it will create a new one with the given name
+     *
      * @param tokens the damage sources' type
+     *
      * @return The found pre-registered damage source or a new one
+     *
      * @docParam tokens "magic"
      */
     @ZenCodeType.Method

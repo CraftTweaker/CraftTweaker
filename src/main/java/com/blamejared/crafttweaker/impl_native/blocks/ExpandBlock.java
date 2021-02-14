@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.List;
+
 @ZenRegister
 @Document("vanilla/api/blocks/MCBlock")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
@@ -34,11 +36,20 @@ public class ExpandBlock {
     
     @ZenCodeType.Caster()
     public static String asString(Block internal) {
+        
         return internal.toString();
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Block internal) {
+        
         return "<block:" + internal.getRegistryName() + ">";
     }
+    
+    @ZenCodeType.Method
+    public static List<BlockState> getValidStates(Block internal) {
+        
+        return internal.getStateContainer().getValidStates();
+    }
+    
 }

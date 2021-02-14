@@ -6,9 +6,10 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
-import com.blamejared.crafttweaker.impl_native.util.ExpandDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
@@ -90,11 +91,27 @@ public class MCGame {
     
     @ZenCodeType.Getter("recipeTypes")
     public Collection<IRecipeManager> getRecipeTypes() {
+        
         return Registry.RECIPE_TYPE.getEntries()
                 .stream()
                 .map(Map.Entry::getValue)
                 .filter((iRecipeType -> !iRecipeType.toString().equals("crafttweaker:scripts")))
                 .map(RecipeManagerWrapper::new)
+                .collect(Collectors.toList());
+    }
+    
+    @ZenCodeType.Getter("blocks")
+    public Collection<Block> getBlocks() {
+        
+        return ForgeRegistries.BLOCKS.getValues();
+    }
+    
+    @ZenCodeType.Getter("blockStates")
+    public Collection<BlockState> getBlockStates() {
+        
+        return ForgeRegistries.BLOCKS.getValues()
+                .stream()
+                .flatMap(block -> block.getStateContainer().getValidStates().stream())
                 .collect(Collectors.toList());
     }
     
@@ -105,6 +122,7 @@ public class MCGame {
      */
     @ZenCodeType.Method
     public String localize(String translationKey) {
+        
         return LanguageMap.getInstance().func_230503_a_(translationKey);
     }
 }

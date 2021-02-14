@@ -17,6 +17,7 @@ public class ExpandResourceLocation {
     public static final String ZC_CLASS_NAME = "crafttweaker.api.util.MCResourceLocation";
     
     @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.COMPARE)
     public static int compareTo(ResourceLocation internal, ResourceLocation other) {
         return internal.compareTo(other);
     }

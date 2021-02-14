@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.world;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -131,11 +132,26 @@ public class ExpandBiome {
     
     @ZenCodeType.Method
     public static boolean doesWaterFreeze(Biome internal, World world, BlockPos pos, boolean mustBeAtEdge) {
+        
         return internal.doesWaterFreeze(world, pos, mustBeAtEdge);
     }
     
     @ZenCodeType.Method
     public static boolean doesSnowFreeze(Biome internal, World world, BlockPos pos) {
+        
         return internal.doesSnowGenerate(world, pos);
     }
+    
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Biome internal) {
+        
+        return internal.getRegistryName();
+    }
+    
+    @ZenCodeType.Getter("commandString")
+    public static String getCommandString(Biome internal) {
+        
+        return "<biome:" + internal.getRegistryName() + ">";
+    }
+    
 }
