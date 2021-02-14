@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
 import com.blamejared.crafttweaker.impl.brackets.BracketHandlers;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
+import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
@@ -17,6 +18,7 @@ import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
 import com.blamejared.crafttweaker.impl_native.entity.ExpandPlayerEntity;
@@ -52,6 +54,8 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.network.PacketDistributor;
 import org.openzen.zenscript.lexer.ParseException;
 
@@ -267,13 +271,32 @@ public class CTCommands {
                     CraftTweakerAPI.logThrowing("Error writing to file '%s'", e, dumpedFileName);
                 }
             });
-            
+    
             send(new StringTextComponent("Files Created"), source.getSource());
-            
+    
             return 0;
         }));
-        
-        
+    
+        registerCommand(new CommandImpl("blockinfo", "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.", (CommandCallerPlayer) (player, stack) -> {
+            if(CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
+                CTEventHandler.BLOCK_INFO_PLAYERS.remove(player);
+                ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block info mode deactivated."));
+            
+                if(CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
+                    MinecraftForge.EVENT_BUS.unregister(CTEventHandler.ListenBlockInfo.INSTANCE);
+                }
+            } else {
+                if(CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
+                    MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, PlayerInteractEvent.RightClickBlock.class, CTEventHandler.ListenBlockInfo.INSTANCE);
+                }
+            
+                CTEventHandler.BLOCK_INFO_PLAYERS.add(player);
+                ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block info mode activated. Right-click a block to see its data."));
+            }
+            return 0;
+        }));
+    
+    
         registerCommand(new CommandImpl("discord", "Opens a link to discord", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
             return 0;
