@@ -20,7 +20,7 @@ public class EventHandlerWrapper<T extends Event> implements Consumer<T> {
         try {
             consumer.accept(t);
         } catch(Throwable throwable) {
-            CraftTweakerAPI.logError(throwable.getMessage(), throwable);
+            CraftTweakerAPI.logThrowing(throwable.getMessage(), throwable);
         }
     }
     
