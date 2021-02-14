@@ -65,7 +65,9 @@ public class StringConverter {
                 base = new StringData(next.getContent());
                 break;
             default:
-                throw new ParseException(CodePosition.META, "Could not completely resolve Data near " + next.toString());
+                throw new ParseException(parser.getPosition()
+                        .withLength(next.getContent()
+                                .length()), "Could not completely resolve Data near " + next.getContent());
         }
         
         if(parser.optional(K_AS) != null) {

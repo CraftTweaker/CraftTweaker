@@ -594,7 +594,8 @@ public class CTCommands {
                 try {
                     stack.withTag(StringConverter.convert(s));
                 } catch(ParseException e) {
-                    throw new DynamicCommandExceptionType(o -> new LiteralMessage(o.toString())).create(e);
+                    reader.setCursor(reader.getCursor() + e.position.getFromLineOffset());
+                    throw new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message)).createWithContext(reader, e);
                 }
             }
             reader.setCursor(reader.getTotalLength());
