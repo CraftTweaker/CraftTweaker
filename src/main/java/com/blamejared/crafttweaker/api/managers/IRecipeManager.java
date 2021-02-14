@@ -64,10 +64,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.toJsonString(), JsonObject.class);
         String recipeTypeKey = getBracketResourceLocation().toString();
         
-        if(recipeObject.has("type")) {
-            if(!recipeObject.get("type").getAsString().equals(recipeTypeKey))
-                throw new IllegalArgumentException("Cannot override recipe type! Given: \"" + recipeObject.get("type").getAsString() + "\", Expected: \"" + recipeTypeKey + "\"");
-        } else {
+        if(!recipeObject.has("type")) {
             recipeObject.addProperty("type", recipeTypeKey);
         }
         IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
