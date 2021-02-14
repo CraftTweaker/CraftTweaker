@@ -42,21 +42,32 @@ public class BoolData implements IData {
     
     @Override
     public IData copyInternal() {
+    
         return new BoolData(internal);
     }
     
     @Override
     public INBT getInternal() {
+        
         return getByteData().getInternal();
     }
     
     @Override
     public String asString() {
-        return Boolean.toString(internal);
+        
+        return internal + " as bool";
+    }
+    
+    @Override
+    public INumberData asNumber() {
+        
+        return new IntData(internal ? 1 : 0);
     }
     
     @Override
     public String toJsonString() {
-        return internal + " as bool";
+        
+        return Boolean.toString(internal);
     }
+    
 }
