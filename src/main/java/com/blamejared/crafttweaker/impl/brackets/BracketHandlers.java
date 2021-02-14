@@ -441,7 +441,7 @@ public class BracketHandlers {
     public static Biome getBiome(String tokens) {
         
         final int length = tokens.split(":").length;
-        if(length == 0 || length > 2) {
+        if(length != 2) {
             throw new IllegalArgumentException("Could not get biome with name: <biome:" + tokens + ">! Syntax is <formatting:modid:biomeName>");
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);

@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
 import com.blamejared.crafttweaker.impl_native.util.ExpandDamageSource;
 import com.blamejared.crafttweaker.impl_native.util.ExpandEquipmentSlotType;
+import com.blamejared.crafttweaker.impl_native.world.ExpandBiome;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -137,8 +138,19 @@ public class BracketDumpers {
     
     @BracketDumper("equipmentSlotType")
     public static Collection<String> getEquipmentSlotTypeDump() {
+        
         return Arrays.stream(EquipmentSlotType.values())
                 .map(ExpandEquipmentSlotType::getCommandString)
                 .collect(Collectors.toList());
     }
+    
+    @BracketDumper("biome")
+    public static Collection<String> getBiomes() {
+        
+        return ForgeRegistries.BIOMES.getValues()
+                .stream()
+                .map(ExpandBiome::getCommandString)
+                .collect(Collectors.toList());
+    }
+    
 }
