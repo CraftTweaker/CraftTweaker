@@ -430,7 +430,7 @@ public class BracketHandlers {
      * Gets a Biome based on the tokens.
      * Throws an error if it can't get such a biome
      *
-     * @param tokens The biome resource loacation
+     * @param tokens The biome resource location
      *
      * @return The found biome
      *
@@ -442,7 +442,7 @@ public class BracketHandlers {
         
         final int length = tokens.split(":").length;
         if(length != 2) {
-            throw new IllegalArgumentException("Could not get biome with name: <biome:" + tokens + ">! Syntax is <formatting:modid:biomeName>");
+            throw new IllegalArgumentException("Could not get biome with name: <biome:" + tokens + ">! Syntax is <biome:modid:biomeName>");
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         if(!ForgeRegistries.BIOMES.containsKey(resourceLocation)) {
