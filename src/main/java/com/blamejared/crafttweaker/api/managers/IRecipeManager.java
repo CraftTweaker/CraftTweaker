@@ -25,7 +25,9 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.HashMap;
@@ -62,15 +64,33 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         MapData mapData = (MapData) data;
         JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.toJsonString(), JsonObject.class);
-        String recipeTypeKey = getBracketResourceLocation().toString();
+        ResourceLocation recipeTypeKey = getBracketResourceLocation();
         
         if(recipeObject.has("type")) {
-            if(!recipeObject.get("type").getAsString().equals(recipeTypeKey))
-                throw new IllegalArgumentException("Cannot override recipe type! Given: \"" + recipeObject.get("type").getAsString() + "\", Expected: \"" + recipeTypeKey + "\"");
+            ResourceLocation recipeSerializerKey;
+            try {
+                recipeSerializerKey = new ResourceLocation(recipeObject.get("type").getAsString());
+            } catch(ClassCastException | IllegalStateException | ResourceLocationException ex) {
+                throw new IllegalArgumentException("Expected \"type\" field to be a valid resource location.", ex);
+            }
+            if(!ForgeRegistries.RECIPE_SERIALIZERS.containsKey(recipeSerializerKey)) {
+                throw new IllegalArgumentException("Recipe Serializer \"" + recipeSerializerKey + "\" does not exist.");
+            }
         } else {
-            recipeObject.addProperty("type", recipeTypeKey);
+            if(ForgeRegistries.RECIPE_SERIALIZERS.containsKey(recipeTypeKey)) {
+                recipeObject.addProperty("type", recipeTypeKey.toString());
+            } else {
+                throw new IllegalArgumentException("Recipe Type \"" + recipeTypeKey + "\" does not have a Recipe Serializer of the same ID."
+                        + " Please specify a serializer manually using the \"type\" field in the JSON object.");
+            }
         }
         IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
+        IRecipeType<?> recipeType = iRecipe.getType();
+        if(recipeType != getRecipeType()) {
+            throw new IllegalArgumentException("Recipe Serializer \"" + iRecipe.getSerializer().getRegistryName()
+                    + "\" resulted in Recipe Type \"" + Registry.RECIPE_TYPE.getKey(recipeType)
+                    + "\" but expected Recipe Type \"" + recipeTypeKey + "\".");
+        }
         CraftTweakerAPI.apply(new ActionAddRecipe(this, iRecipe, ""));
     }
     
