@@ -133,9 +133,7 @@ public class ScriptRun {
         
         //Register crafttweaker module first to assign deps
         final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, CraftTweaker.MODID);
-        for(Class<?> aClass : CraftTweakerRegistry.getZenGlobals()) {
-            crafttweakerModule.addGlobals(aClass);
-        }
+        
         scriptingEngine.registerNativeProvided(crafttweakerModule);
         modules.add(crafttweakerModule);
         
@@ -168,6 +166,9 @@ public class ScriptRun {
         
         for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
             module.addClass(aClass);
+        }
+        for(Class<?> aClass : CraftTweakerRegistry.getGlobalsInPackage(moduleName)) {
+            module.addGlobals(aClass);
         }
         return module;
     }

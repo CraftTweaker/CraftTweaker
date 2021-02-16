@@ -23,6 +23,7 @@ import java.io.*;
 import java.util.*;
 
 @ZenRegister
+@ZenCodeType.Name("crafttweaker.api.CraftTweakerAPI")
 public class CraftTweakerAPI {
     
     public static final File SCRIPT_DIR = new File("scripts");

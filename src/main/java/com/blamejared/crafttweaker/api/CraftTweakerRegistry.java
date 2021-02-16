@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketResolverRegi
 import com.blamejared.crafttweaker.api.zencode.impl.registry.PreprocessorRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
 import com.blamejared.crafttweaker.impl.commands.BracketDumperInfo;
-import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
 import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistryData;
 import com.google.common.collect.BiMap;
@@ -21,7 +20,11 @@ import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -132,12 +135,28 @@ public class CraftTweakerRegistry {
     }
     
     /**
-     * Gets the ZenGlobals list.
+     * Gets the ZenGlobals map.
      *
-     * @return ImmutableList of the ZenGlobals
+     * @return BiMap of the ZenGlobals
      */
-    public static List<Class<?>> getZenGlobals() {
+    public static BiMap<String, Class<?>> getZenGlobals() {
         return ZEN_CLASS_REGISTRY.getZenGlobals();
+    }
+    
+    /**
+     * Gets all classes that have at least one global with a given package root.
+     * <p>
+     * Providing "crafttweaker" as the name can return:
+     * <p>
+     * {@code "crafttweaker.sub.package.Class}
+     * and
+     * {@code "crafttweaker.sub.other.package.Class}
+     *
+     * @param name Name of the Zen Package.
+     * @return list of classes with at least one globa in the Zen Package.
+     */
+    public static List<Class<?>> getGlobalsInPackage(String name) {
+        return ZEN_CLASS_REGISTRY.getGlobalsInPackage(name);
     }
     
     /**
