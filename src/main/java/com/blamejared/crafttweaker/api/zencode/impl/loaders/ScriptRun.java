@@ -163,13 +163,13 @@ public class ScriptRun {
             bep.register(bracketResolver.getName(), bracketResolver);
         }
         module.registerBEP(bep);
-        
-        for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
-            module.addClass(aClass);
-        }
         for(Class<?> aClass : CraftTweakerRegistry.getGlobalsInPackage(moduleName)) {
             module.addGlobals(aClass);
         }
+        for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
+            module.addClass(aClass);
+        }
+        
         return module;
     }
     
