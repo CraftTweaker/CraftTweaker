@@ -86,7 +86,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
         IRecipeType<?> recipeType = iRecipe.getType();
-        if(recipeType != getRecipeType()) {
+        if(!recipeType.toString().equals(getRecipeType().toString())) {
             throw new IllegalArgumentException("Recipe Serializer \"" + iRecipe.getSerializer().getRegistryName()
                     + "\" resulted in Recipe Type \"" + Registry.RECIPE_TYPE.getKey(recipeType)
                     + "\" but expected Recipe Type \"" + recipeTypeKey + "\".");

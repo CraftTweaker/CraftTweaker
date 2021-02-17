@@ -24,7 +24,7 @@ public class MCTextComponent {
         this.internal = internal;
     }
     
-    
+    @ZenCodeType.Method
     public MCStyle getStyle() {
         return new MCStyle(internal.getStyle());
     }
