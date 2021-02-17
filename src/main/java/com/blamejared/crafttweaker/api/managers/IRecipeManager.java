@@ -16,6 +16,7 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByRege
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
@@ -58,6 +59,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void addJSONRecipe(String name, IData data) {
+    
         name = validateRecipeName(name);
         if(!(data instanceof MapData)) {
             throw new IllegalArgumentException("Json recipe's IData should be a MapData!");
@@ -86,7 +88,12 @@ public interface IRecipeManager extends CommandStringDisplayable {
         }
         IRecipe<?> iRecipe = RecipeManager.deserializeRecipe(new ResourceLocation(CraftTweaker.MODID, name), recipeObject);
         IRecipeType<?> recipeType = iRecipe.getType();
-        if(!recipeType.toString().equals(getRecipeType().toString())) {
+        if(recipeType != getRecipeType()) {
+            // to handle some mods that not make their recipe types singleton or not register them.
+            if(recipeType.toString().equals(getRecipeType().toString())) {
+                CraftTweakerAPI.apply(new ActionAddRecipe(new RecipeManagerWrapper(recipeType), iRecipe, ""));
+                return;
+            }
             throw new IllegalArgumentException("Recipe Serializer \"" + iRecipe.getSerializer().getRegistryName()
                     + "\" resulted in Recipe Type \"" + Registry.RECIPE_TYPE.getKey(recipeType)
                     + "\" but expected Recipe Type \"" + recipeTypeKey + "\".");
@@ -96,20 +103,28 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @ZenCodeType.Method
     default WrapperRecipe getRecipeByName(String name) {
+    
         IRecipe<?> recipe = getRecipes().get(new ResourceLocation(name));
         if(recipe == null) {
-            throw new IllegalArgumentException("No recipe found with name: \"" + name + "\" in type: \"" + getRecipeType().toString() + "\"");
+            throw new IllegalArgumentException("No recipe found with name: \"" + name + "\" in type: \"" + getRecipeType()
+                    .toString() + "\"");
         }
         return new WrapperRecipe(recipe);
     }
     
     @ZenCodeType.Method
     default List<WrapperRecipe> getRecipesByOutput(IIngredient output) {
-        return getRecipes().values().stream().filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput()))).map(WrapperRecipe::new).collect(Collectors.toList());
+    
+        return getRecipes().values()
+                .stream()
+                .filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput())))
+                .map(WrapperRecipe::new)
+                .collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
     default List<WrapperRecipe> getAllRecipes() {
+    
         return getRecipes().values().stream().map(WrapperRecipe::new).collect(Collectors.toList());
     }
     
@@ -122,6 +137,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output) {
+    
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(this, output));
     }
     
@@ -134,6 +150,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByName(String name) {
+    
         CraftTweakerAPI.apply(new ActionRemoveRecipeByName(this, new ResourceLocation(name)));
     }
     
@@ -146,6 +163,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByModid(String modid) {
+    
         CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(this, modid));
     }
     
@@ -160,6 +178,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByModid(String modid, RecipeFilter exclude) {
+    
         CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(this, modid, exclude));
     }
     
@@ -172,6 +191,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByRegex(String regex) {
+    
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex));
     }
     
@@ -180,6 +200,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeAll() {
+    
         CraftTweakerAPI.apply(new ActionRemoveAll(this));
     }
     
@@ -196,6 +217,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
+    
         return CTCraftingTableManager.recipeManager.recipes.computeIfAbsent(getRecipeType(), iRecipeType -> new HashMap<>());
     }
     
@@ -205,8 +227,10 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @param name name to check
      */
     default String validateRecipeName(String name) {
+    
         name = fixRecipeName(name);
-        if(!name.chars().allMatch((ch) -> ch == 95 || ch == 45 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57 || ch == 47 || ch == 46)) {
+        if(!name.chars()
+                .allMatch((ch) -> ch == 95 || ch == 45 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57 || ch == 47 || ch == 46)) {
             throw new IllegalArgumentException("Given name does not fit the \"[a-z0-9/._-]\" regex! Name: \"" + name + "\"");
         }
         return name;
@@ -220,6 +244,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return fixed name
      */
     default String fixRecipeName(String name) {
+    
         String fixed = name;
         if(fixed.indexOf(':') >= 0) {
             String temp = fixed.replaceAll(":", ".");
@@ -244,7 +269,14 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * Default just looks up the Recipe Type key from the registry
      */
     default ResourceLocation getBracketResourceLocation() {
+        
         return Registry.RECIPE_TYPE.getKey(getRecipeType());
+    }
+    
+    @Override
+    default String getCommandString() {
+        
+        return "<recipetype:" + getRecipeType().toString() + ">";
     }
     
     @FunctionalInterface
@@ -255,6 +287,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         boolean test(String name);
+        
     }
     
     @FunctionalInterface
@@ -265,6 +298,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack inputs);
+    
     }
     
     @FunctionalInterface
@@ -275,6 +309,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[] inputs);
+    
     }
     
     @FunctionalInterface
@@ -285,11 +320,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
-    }
     
-    @Override
-    default String getCommandString() {
-        return "<recipetype:" + getRecipeType().toString() + ">";
     }
     
 }
