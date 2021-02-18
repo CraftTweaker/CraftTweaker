@@ -4,10 +4,12 @@ package com.blamejared.crafttweaker.api.item;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.JSONConverter;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
 import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
+import com.blamejared.crafttweaker.impl.data.IntData;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
@@ -440,11 +442,22 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     default IIngredientWithAmount asIIngredientWithAmount() {
+        
         return this;
     }
     
     @Override
     default IItemStack getIngredient() {
+        
         return this;
     }
+    
+    @Override
+    default IData asIData() {
+        
+        MapData data = (MapData) JSONConverter.convert(this.getIngredient().asVanillaIngredient().serialize());
+        data.put("count", new IntData(this.getAmount()));
+        return data;
+    }
+    
 }
