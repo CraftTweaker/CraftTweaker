@@ -31,12 +31,4 @@ public interface IIngredientWithAmount extends CommandStringDisplayable {
     @ZenCodeType.Getter("amount")
     int getAmount();
     
-    @ZenCodeType.Caster(implicit = true)
-    default IData asIData() {
-        
-        MapData data = (MapData) JSONConverter.convert(this.getIngredient().asVanillaIngredient().serialize());
-        data.put("count", new IntData(this.getAmount()));
-        return data;
-    }
-    
 }

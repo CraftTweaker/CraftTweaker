@@ -23,11 +23,4 @@ public class ExpandItemTagWithAmount {
         return ExpandIIngredient.mul(iIngredient, _this.getAmount());
     }
     
-    @ZenCodeType.Method
-    @ZenCodeType.Caster(implicit = true)
-    public static IData asIData(MCTagWithAmount<Item> _this) {
-        
-        return ExpandItemTagWithAmount.asIngredient(_this).asIData();
-    }
-    
 }
