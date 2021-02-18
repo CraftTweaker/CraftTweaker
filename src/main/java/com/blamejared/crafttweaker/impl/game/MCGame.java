@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
-import com.blamejared.crafttweaker.impl_native.util.ExpandDirectionAxis;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.EntityClassification;
@@ -100,6 +99,8 @@ public class MCGame {
     
     /**
      * @return a localized String
+     *
+     * @docParam translationKey "gui.up"
      */
     @ZenCodeType.Method
     public String localize(String translationKey) {
