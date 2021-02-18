@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.tag.expansions;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IIngredientWithAmount;
 import com.blamejared.crafttweaker.impl.ingredients.ExpandIIngredient;
@@ -17,7 +18,16 @@ public class ExpandItemTagWithAmount {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredientWithAmount asIngredient(MCTagWithAmount<Item> _this) {
+        
         final IIngredient iIngredient = ExpandItemTag.asIIngredient(_this.getTag());
         return ExpandIIngredient.mul(iIngredient, _this.getAmount());
     }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public static IData asIData(MCTagWithAmount<Item> _this) {
+        
+        return ExpandItemTagWithAmount.asIngredient(_this).asIData();
+    }
+    
 }
