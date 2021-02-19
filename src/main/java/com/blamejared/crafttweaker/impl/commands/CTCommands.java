@@ -50,7 +50,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,7 +67,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -599,38 +610,42 @@ public class CTCommands {
     
         private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string}})");
         private static final DynamicCommandExceptionType MALFORMED_DATA = new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message));
+        private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("invalid string"));
+        private static final Pattern ITEM_PATTERN = Pattern.compile("<item:(\\w+:\\w+)>(.withTag\\((\\{.*})\\))?");
         
         @Override
         public IItemStack parse(StringReader reader) throws CommandSyntaxException {
     
-            String s = reader.getRemaining();
-    
-            if(!s.matches("<item:\\w+:\\w+>(.withTag\\(\\{.*}\\))?")) {
-                throw new SimpleCommandExceptionType(new LiteralMessage("invalid string")).createWithContext(reader);
+            Matcher matcher = ITEM_PATTERN.matcher(reader.getRemaining());
+            if(!matcher.find()) {
+                throw INVALID_STRING.createWithContext(reader);
             }
-            int gtIndex = s.indexOf('>');
-            IItemStack stack = BracketHandlers.getItem(s.substring(6, gtIndex)).mutable();
-            if(s.contains(".withTag")) {
-                reader.setCursor(reader.getCursor() + gtIndex + ">.withTag(".length());
-                s = reader.getRemaining();
-                s = s.substring(0, s.length() - 1);
-                try {
-                    stack.withTag(StringConverter.convert(s));
-                } catch(ParseException e) {
-                    reader.setCursor(reader.getCursor() + e.position.getFromLineOffset());
-                    throw MALFORMED_DATA.createWithContext(reader, e);
-                }
+            String itemLocation = matcher.group(1);
+            try {
+                IItemStack stack = getItem(itemLocation, matcher.group(3));
+                reader.setCursor(reader.getCursor() + matcher.group(0).length());
+                return stack;
+            } catch(ParseException e) {
+                reader.setCursor(reader.getCursor() + itemLocation.length() + ">.withTag(".length() + e.position.getFromLineOffset());
+                throw MALFORMED_DATA.createWithContext(reader, e);
             }
-            reader.setCursor(reader.getTotalLength());
-            return stack;
         }
-        
+    
         @Override
         public Collection<String> getExamples() {
-            
+        
             return EXAMPLES;
         }
+    
+        private static IItemStack getItem(String location, String tag) throws ParseException {
         
+            IItemStack stack = BracketHandlers.getItem(location).mutable();
+            if(tag != null) {
+                stack.withTag(StringConverter.convert(tag));
+            }
+            return stack;
+        }
+    
     }
     
 }
