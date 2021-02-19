@@ -626,7 +626,7 @@ public class CTCommands {
                 reader.setCursor(reader.getCursor() + matcher.group(0).length());
                 return stack;
             } catch(ParseException e) {
-                reader.setCursor(reader.getCursor() + itemLocation.length() + ">.withTag(".length() + e.position.getFromLineOffset());
+                reader.setCursor(reader.getCursor() + itemLocation.length() + "<item:>.withTag(".length() + e.position.getFromLineOffset());
                 throw MALFORMED_DATA.createWithContext(reader, e);
             }
         }
