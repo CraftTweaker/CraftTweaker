@@ -116,9 +116,9 @@ public class MCGame {
     }
     
     /**
-     * return a localized String
+     * @return a localized String
      *
-     * @docParam translationKey "commands.datapack.modify.enable"
+     * @docParam translationKey "gui.up"
      */
     @ZenCodeType.Method
     public String localize(String translationKey) {
