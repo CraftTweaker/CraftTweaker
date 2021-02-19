@@ -13,9 +13,15 @@ import net.minecraftforge.fml.ModList;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,9 +42,9 @@ public class ZenClassRegistry {
     private final Set<Class<?>> blacklistedClasses = new HashSet<>();
     
     /**
-     * All classes that have at least one global field
+     * All classes that have at least one global field, with their @Name as the key
      */
-    private final List<Class<?>> zenGlobals = new ArrayList<>();
+    private final BiMap<String, Class<?>> zenGlobals = HashBiMap.create();
     
     /**
      * All Classes with @Name, key is @Name#value
@@ -84,7 +90,7 @@ public class ZenClassRegistry {
         return allRegisteredClasses;
     }
     
-    public List<Class<?>> getZenGlobals() {
+    public BiMap<String, Class<?>> getZenGlobals() {
         return zenGlobals;
     }
     
@@ -124,7 +130,11 @@ public class ZenClassRegistry {
         }
         
         if(hasGlobals(cls)) {
-            zenGlobals.add(cls);
+            if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
+                addGlobal(cls);
+            }else {
+                CraftTweakerAPI.logWarning("Class: '%s' has a Global value, but is missing the '%s' annotation! Please report this to the mod author!", cls, ZenCodeType.Name.class.getName());
+            }
         }
     }
     
@@ -185,6 +195,11 @@ public class ZenClassRegistry {
         CraftTweakerAPI.logDebug("Registering %s", annotation.value());
     }
     
+    private void addGlobal(Class<?> cls) {
+        final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
+        zenGlobals.put(annotation.value(), cls);
+    }
+    
     private void addExpansion(Class<?> cls, String expandedClassName) {
         if(!expansionsByExpandedName.containsKey(expandedClassName)) {
             expansionsByExpandedName.put(expandedClassName, new ArrayList<>());
@@ -201,6 +216,14 @@ public class ZenClassRegistry {
     
     public List<Class<?>> getClassesInPackage(String name) {
         return zenClasses.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().startsWith(name))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+    }
+    
+    public List<Class<?>> getGlobalsInPackage(String name) {
+        return zenGlobals.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().startsWith(name))
                 .map(Map.Entry::getValue)

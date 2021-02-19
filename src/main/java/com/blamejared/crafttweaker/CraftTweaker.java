@@ -182,7 +182,12 @@ public class CraftTweaker {
         Called on multiplayer login on the server
          */
         
-        ((GroupLogger) CraftTweakerAPI.logger).addLogger(new PlayerLogger(event.getPlayer()));
+        ((GroupLogger) CraftTweakerAPI.logger).addPlayerLogger(event.getPlayer());
+    }
+    
+    @SubscribeEvent
+    public void playerLogout(PlayerEvent.PlayerLoggedOutEvent event){
+        ((GroupLogger) CraftTweakerAPI.logger).removePlayerLogger(event.getPlayer());
     }
     
     @SubscribeEvent

@@ -1,30 +1,57 @@
 package com.blamejared.crafttweaker.impl.logger;
 
 import com.blamejared.crafttweaker.api.logger.*;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.*;
 
 public class GroupLogger implements ILogger {
     
+    private final Map<PlayerEntity, PlayerLogger> playerLogs = new HashMap<>();
     private final List<ILogger> subLoggers = new ArrayList<>();
     //TODO keep a list of all messages that are logged, when a new logger is added, log those messages to that logger, for players logging in etc?
     private final List<LogMessage> previousMessages = new ArrayList<>();
     
+    
+    public void addPlayerLogger(PlayerEntity player) {
+        
+        PlayerLogger logger = playerLogs.compute(player, (playerEntity, playerLogger) -> new PlayerLogger(playerEntity));
+        addLogger(logger);
+    }
+    
+    public void removePlayerLogger(PlayerEntity player) {
+        
+        PlayerLogger remove = playerLogs.remove(player);
+        if(remove != null) {
+            removeLogger(remove);
+        }
+    }
+    
+    
     public void addLogger(ILogger logger) {
+        
         this.subLoggers.add(logger);
         previousMessages.forEach(logMessage -> logger.log(logMessage.level, logMessage.message, logMessage.prefix));
     }
     
+    public void removeLogger(ILogger logger) {
+        
+        this.subLoggers.remove(logger);
+    }
+    
     public List<LogMessage> getPreviousMessages() {
+        
         return previousMessages;
     }
     
     public List<ILogger> getSubLoggers() {
+        
         return subLoggers;
     }
     
     @Override
     public void setLogLevel(LogLevel logLevel) {
+        
         for(ILogger subLogger : subLoggers) {
             subLogger.setLogLevel(logLevel);
         }
@@ -32,11 +59,13 @@ public class GroupLogger implements ILogger {
     
     @Override
     public LogLevel getLogLevel() {
+        
         return subLoggers.stream().map(ILogger::getLogLevel).min(LogLevel::compareTo).orElse(LogLevel.DEBUG);
     }
     
     @Override
     public void log(LogLevel level, String message, boolean prefix) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.log(level, message, prefix);
         }
@@ -45,6 +74,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void log(LogLevel level, String message) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.log(level, message);
         }
@@ -53,6 +83,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void info(String message) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.info(message);
         }
@@ -61,6 +92,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void debug(String message) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.debug(message);
         }
@@ -69,6 +101,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void warning(String message) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.warning(message);
         }
@@ -77,6 +110,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void error(String message) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.error(message);
         }
@@ -85,6 +119,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void throwingWarn(String message, Throwable throwable) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.throwingWarn(message, throwable);
         }
@@ -93,6 +128,7 @@ public class GroupLogger implements ILogger {
     
     @Override
     public void throwingErr(String message, Throwable throwable) {
+        
         for(ILogger logger : getSubLoggers()) {
             logger.throwingErr(message, throwable);
         }
@@ -107,21 +143,27 @@ public class GroupLogger implements ILogger {
         private final boolean prefix;
         
         public LogMessage(LogLevel level, String message, boolean prefix) {
+            
             this.level = level;
             this.message = message;
             this.prefix = prefix;
         }
         
         public String getMessage() {
+            
             return message;
         }
         
         public LogLevel getLevel() {
+            
             return level;
         }
         
         public boolean isPrefix() {
+            
             return prefix;
         }
+        
     }
+    
 }
