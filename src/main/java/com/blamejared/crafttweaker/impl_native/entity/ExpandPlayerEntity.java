@@ -2,8 +2,6 @@ package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
-import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
@@ -137,8 +135,8 @@ public class ExpandPlayerEntity {
      * @param mutable if true, it will return a {@link MCItemStackMutable}, instead of a copy one. Use it with caution.
      */
     @ZenCodeType.Method
-    public static IItemStack getCurrentItem(PlayerEntity internal, @ZenCodeType.Optional boolean mutable) {
-        
+    public static IItemStack getCurrentItem(PlayerEntity internal, boolean mutable) {
+    
         if(mutable) {
             return new MCItemStackMutable(internal.inventory.getCurrentItem());
         } else {
@@ -150,7 +148,7 @@ public class ExpandPlayerEntity {
      * @param mutable if true, it will return a {@link MCItemStackMutable}, instead of a copy one. Use it with caution.
      */
     @ZenCodeType.Method
-    public static IItemStack getInventoryItemStack(PlayerEntity internal, int slotIndex, @ZenCodeType.Optional boolean mutable) {
+    public static IItemStack getInventoryItemStack(PlayerEntity internal, int slotIndex, boolean mutable) {
         
         if(mutable) {
             return new MCItemStackMutable(internal.inventory.getStackInSlot(slotIndex));
