@@ -921,7 +921,7 @@ public final class MCRecipeManager implements IRecipeManager {
         }
 
         public void removeOldRecipes() {
-            CraftTweaker.INSTANCE.applyActions(toRemoveRecipe, "remove old recipes for replace occurrences action", "fail to remove old recipes for replace occurrences action");
+            CraftTweaker.INSTANCE.applyActions(toRemoveRecipe, "Removing old recipes for replace occurrences action", "Failed to remove old recipes for replace occurrences action");
         }
 
         @Override
