@@ -157,8 +157,8 @@ public class CraftTweaker {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
         MCRecipeManager.refreshRecipes();
 
-        applyActions(Collections.singletonList(MCRecipeManager.actionRemoveRecipesNoIngredients), "applying action remove recipes without ingredients", "fail to apply recipes without ingredient");
-        applyActions(MCRecipeManager.recipesToRemove, "Applying remove recipe actions", "Fail to apply remove recipe actions");
+        applyActions(Collections.singletonList(MCRecipeManager.actionRemoveRecipesNoIngredients), "Applying remove recipes without ingredients action", "Failed to apply remove recipes without ingredient action");
+        applyActions(MCRecipeManager.recipesToRemove, "Applying remove recipe actions", "Failed to apply remove recipe actions");
         MCRecipeManager.refreshRecipes();
         if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
             MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.describeSubActions();
@@ -171,17 +171,17 @@ public class CraftTweaker {
                     MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.apply();
                 } catch (Exception e) {
                     CraftTweaker.LOG.catching(e);
-                    CraftTweakerAPI.logError("Fail to apply replace all occurence action at recipe " + recipe.getFullResourceName(), e);
+                    CraftTweakerAPI.logError("Failed to apply replace all occurences action at recipe " + recipe.getFullResourceName(), e);
                 }
             }
             ProgressManager.pop(progressBar);
             MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.removeOldRecipes();
         }
 
-        applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Fail to apply add recipe actions");
-        applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Fail to apply remove furnace recipe actions");
-        applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Fail to apply add furnace recipe actions");
-        applyActions(LATE_ACTIONS, "Applying late actions", "Fail to apply late actions");
+        applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Failed to apply add recipe actions");
+        applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Failed to apply remove furnace recipe actions");
+        applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Failed to apply add furnace recipe actions");
+        applyActions(LATE_ACTIONS, "Applying late actions", "Failed to apply late actions");
         MCRecipeManager.refreshRecipes();
 
 
