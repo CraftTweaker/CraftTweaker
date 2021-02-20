@@ -7,6 +7,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IngredientOr;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.item.MCItemStack;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
@@ -44,9 +45,9 @@ public final class MCRecipeManager implements IRecipeManager {
     public static final ActionRemoveRecipesNoIngredients actionRemoveRecipesNoIngredients = new ActionRemoveRecipesNoIngredients();
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     
-    public static List<MCRecipeBase> transformerRecipes = new ArrayList<>();
-    private static TIntSet usedHashes = new TIntHashSet();
-    private static HashSet<String> usedRecipeNames = new HashSet<>();
+    public static final List<MCRecipeBase> transformerRecipes = new ArrayList<>();
+    private static final TIntSet usedHashes = new TIntHashSet();
+    private static final HashSet<String> usedRecipeNames = new HashSet<>();
     
     public MCRecipeManager() {
     }
@@ -86,6 +87,10 @@ public final class MCRecipeManager implements IRecipeManager {
         if(s.contains(":"))
             CraftTweakerAPI.logWarning("Recipe name [" + s + "] may not contain a ':', replacing with '_'!");
         return s.replace(":", "_");
+    }
+
+    public static void refreshRecipes() {
+        recipes = ForgeRegistries.RECIPES.getEntries();
     }
     
     /**
@@ -845,13 +850,11 @@ public final class MCRecipeManager implements IRecipeManager {
         private IIngredient[] ingredients1D;
         private IIngredient[][] ingredients2D;
         private boolean recipeModified = false;
+        private final List<ActionRemoveRecipeByRecipeName> toRemoveRecipe = new ArrayList<>();
 
         public void setCurrentModifiedRecipe(ICraftingRecipe currentModifiedRecipe) {
             if (currentModifiedRecipe == null || currentModifiedRecipe.getOutput() == null)
                 return;
-            if (actionRemoveRecipesNoIngredients.matches(currentModifiedRecipe.getOutput())) {
-                return; // if there is a `recipes.remove` wants to remove origin recipe, then there is no need to replace the recipe
-            }
             this.currentModifiedRecipe = currentModifiedRecipe;
             if (currentModifiedRecipe.isShaped()) {
                 this.ingredients2D = currentModifiedRecipe.getIngredients2D();
@@ -876,10 +879,14 @@ public final class MCRecipeManager implements IRecipeManager {
 
         public void clear() {
             first = last = null;
+            toRemoveRecipe.clear();
         }
 
         @Override
         public void apply() {
+            if (this.currentModifiedRecipe == null)
+                return;
+
             SubActionReplaceAllOccurences current = first;
 
             while (current != null) {
@@ -888,7 +895,7 @@ public final class MCRecipeManager implements IRecipeManager {
             }
 
             if (this.recipeModified) {
-                CraftTweakerAPI.recipes.removeByRecipeName(this.currentModifiedRecipe.getFullResourceName(), null);
+                toRemoveRecipe.add(new ActionRemoveRecipeByRecipeName(this.currentModifiedRecipe.getFullResourceName(), null));
                 String name = this.currentModifiedRecipe.getResourceDomain() + "_" + this.currentModifiedRecipe.getName() + "_modified";
                 IItemStack out = this.currentModifiedRecipe.getOutput();
                 if (this.currentModifiedRecipe.isShaped()) {
@@ -911,6 +918,10 @@ public final class MCRecipeManager implements IRecipeManager {
                 CraftTweakerAPI.logInfo(current.describe());
                 current = current.next;
             }
+        }
+
+        public void removeOldRecipes() {
+            CraftTweaker.INSTANCE.applyActions(toRemoveRecipe, "remove old recipes for replace occurrences action", "fail to remove old recipes for replace occurrences action");
         }
 
         @Override

@@ -155,7 +155,11 @@ public class CraftTweaker {
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent ev) {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Pre());
-        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
+        MCRecipeManager.refreshRecipes();
+
+        applyActions(Collections.singletonList(MCRecipeManager.actionRemoveRecipesNoIngredients), "applying action remove recipes without ingredients", "fail to apply recipes without ingredient");
+        applyActions(MCRecipeManager.recipesToRemove, "Applying remove recipe actions", "Fail to apply remove recipe actions");
+        MCRecipeManager.refreshRecipes();
         if (MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.hasSubAction()) {
             MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.describeSubActions();
             List<ICraftingRecipe> recipes = CraftTweakerAPI.recipes.getAll();
@@ -171,17 +175,18 @@ public class CraftTweaker {
                 }
             }
             ProgressManager.pop(progressBar);
+            MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.removeOldRecipes();
         }
-        applyActions(Collections.singletonList(MCRecipeManager.actionRemoveRecipesNoIngredients), "applying action remove recipes without ingredients", "fail to apply recipes without ingredient");
-        applyActions(MCRecipeManager.recipesToRemove, "Applying remove recipe actions", "Fail to apply remove recipe actions");
+
         applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Fail to apply add recipe actions");
         applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Fail to apply remove furnace recipe actions");
         applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Fail to apply add furnace recipe actions");
         applyActions(LATE_ACTIONS, "Applying late actions", "Fail to apply late actions");
-        MCRecipeManager.recipes = ForgeRegistries.RECIPES.getEntries();
-        MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.clear();
-            
+        MCRecipeManager.refreshRecipes();
+
+
         //Cleanup
+        MCRecipeManager.ActionReplaceAllOccurences.INSTANCE.clear();
         MCRecipeManager.cleanUpRecipeList();
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
     }
@@ -242,7 +247,7 @@ public class CraftTweaker {
         server = null;
     }
 
-    private void applyActions(List<? extends IAction> actions, String applyingMessage, String errorMessage) {
+    public void applyActions(List<? extends IAction> actions, String applyingMessage, String errorMessage) {
         if (!actions.isEmpty()) {
             ProgressManager.ProgressBar progressBar = ProgressManager.push(applyingMessage, actions.size());
             actions.forEach(action -> {
