@@ -50,8 +50,11 @@ public class MCServer extends AbstractServer {
     @SuppressWarnings("MethodCallSideOnly")
     @Override
     public boolean isOp(IPlayer player) {
+        if(player instanceof RconPlayer){
+            return true;
+        }
         UserListOps ops = CraftTweaker.server.getPlayerList().getOppedPlayers();
-        return !(server != null && server.isDedicatedServer()) || ops.isEmpty() || ops.getGameProfileFromName(player.getName()) != null || player instanceof RconPlayer;
+        return ops.getGameProfileFromName(player.getName()) != null;
     }
     
     @Override
