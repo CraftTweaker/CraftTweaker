@@ -67,7 +67,7 @@ public final class TableBonusLootConditionTypeBuilder implements ILootConditionT
 
         return context -> {
             final ItemStack stack = ExpandLootContext.getTool(context).getInternal();
-            final int chancesIndex = stack == null? 0 : EnchantmentHelper.getEnchantmentLevel(this.enchantment, stack);
+            final int chancesIndex = stack.isEmpty()? 0 : EnchantmentHelper.getEnchantmentLevel(this.enchantment, stack);
             final float chance = this.chances[Math.min(chancesIndex, this.chances.length - 1)];
             return context.getRandom().nextFloat() < chance;
         };

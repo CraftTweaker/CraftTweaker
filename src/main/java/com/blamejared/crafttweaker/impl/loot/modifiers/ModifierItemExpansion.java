@@ -14,10 +14,10 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 public final class ModifierItemExpansion {
     @ZenCodeType.Method
-    public static void addToolModifier(final Item $this, final String name, final ILootModifier modifier) {
+    public static void addToolModifier(final Item internal, final String name, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
-                CTLootConditionBuilder.create().add(MatchToolLootConditionBuilder.class, toolCondition -> toolCondition.withPredicate(item -> item.withItem($this))),
+                CTLootConditionBuilder.create().add(MatchToolLootConditionBuilder.class, toolCondition -> toolCondition.withPredicate(item -> item.withItem(internal))),
                 modifier);
     }
 }

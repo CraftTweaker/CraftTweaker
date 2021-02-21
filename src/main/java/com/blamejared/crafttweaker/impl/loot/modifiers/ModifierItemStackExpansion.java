@@ -14,26 +14,26 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 public final class ModifierItemStackExpansion {
     @ZenCodeType.Method
-    public static void addToolModifier(final IItemStack $this, final String name, final ILootModifier modifier) {
-        addToolModifier($this, name, false, modifier);
+    public static void addToolModifier(final IItemStack internal, final String name, final ILootModifier modifier) {
+        addToolModifier(internal, name, false, modifier);
     }
     
     @ZenCodeType.Method
-    public static void addToolModifier(final IItemStack $this, final String name, final boolean matchDamage, final ILootModifier modifier) {
-        addToolModifier($this, name, matchDamage, false, modifier);
+    public static void addToolModifier(final IItemStack internal, final String name, final boolean matchDamage, final ILootModifier modifier) {
+        addToolModifier(internal, name, matchDamage, false, modifier);
     }
     
     @ZenCodeType.Method
-    public static void addToolModifier(final IItemStack $this, final String name, final boolean matchDamage, final boolean matchCount, final ILootModifier modifier) {
-        addToolModifier($this, name, matchDamage, matchCount, false, modifier);
+    public static void addToolModifier(final IItemStack internal, final String name, final boolean matchDamage, final boolean matchCount, final ILootModifier modifier) {
+        addToolModifier(internal, name, matchDamage, matchCount, false, modifier);
     }
     
     @ZenCodeType.Method
-    public static void addToolModifier(final IItemStack $this, final String name, final boolean matchDamage, final boolean matchCount, final boolean matchNbt, final ILootModifier modifier) {
+    public static void addToolModifier(final IItemStack internal, final String name, final boolean matchDamage, final boolean matchCount, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create().add(MatchToolLootConditionBuilder.class, toolCondition ->
-                        toolCondition.withPredicate(item -> item.matching($this, matchDamage, matchCount, matchNbt))),
+                        toolCondition.withPredicate(item -> item.matching(internal, matchDamage, matchCount, matchNbt))),
                 modifier);
     }
 }

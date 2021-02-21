@@ -19,63 +19,63 @@ import java.util.function.Consumer;
 @ZenRegister
 public final class ModifierBlockExpansion {
     @ZenCodeType.Method
-    public static void addDrop(final Block $this, final String uniqueId, final IItemStack stack) {
-        addLootModifier($this, uniqueId, CommonLootModifiers.add(stack));
+    public static void addDrop(final Block internal, final String uniqueId, final IItemStack stack) {
+        addLootModifier(internal, uniqueId, CommonLootModifiers.add(stack));
     }
     
     @ZenCodeType.Method
-    public static void addDrops(final Block $this, final String uniqueId, final IItemStack... stacks) {
-        addLootModifier($this, uniqueId, CommonLootModifiers.addAll(stacks));
+    public static void addDrops(final Block internal, final String uniqueId, final IItemStack... stacks) {
+        addLootModifier(internal, uniqueId, CommonLootModifiers.addAll(stacks));
     }
     
     @ZenCodeType.Method
-    public static void addLootModifier(final Block $this, final String name, final ILootModifier modifier) {
+    public static void addLootModifier(final Block internal, final String name, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
-                CTLootConditionBuilder.create().add(BlockStatePropertyLootConditionTypeBuilder.class, blockStateProps -> blockStateProps.withBlock($this)),
+                CTLootConditionBuilder.create().add(BlockStatePropertyLootConditionTypeBuilder.class, blockStateProps -> blockStateProps.withBlock(internal)),
                 modifier);
     }
     
     @ZenCodeType.Method
-    public static void addStateDrop(final Block $this, final String uniqueId, final Consumer<StatePropertiesPredicate> statePredicate, final IItemStack stack) {
-        addStateLootModifier($this, uniqueId, statePredicate, CommonLootModifiers.add(stack));
+    public static void addStateDrop(final Block internal, final String uniqueId, final Consumer<StatePropertiesPredicate> statePredicate, final IItemStack stack) {
+        addStateLootModifier(internal, uniqueId, statePredicate, CommonLootModifiers.add(stack));
     }
     
     @ZenCodeType.Method
-    public static void addStateLootModifier(final Block $this, final String name, final Consumer<StatePropertiesPredicate> statePredicate, final ILootModifier modifier) {
+    public static void addStateLootModifier(final Block internal, final String name, final Consumer<StatePropertiesPredicate> statePredicate, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
-                CTLootConditionBuilder.create().add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock($this).withStatePropertiesPredicate(statePredicate)),
+                CTLootConditionBuilder.create().add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock(internal).withStatePropertiesPredicate(statePredicate)),
                 modifier
         );
     }
     
     @ZenCodeType.Method
-    public static void addToolDrop(final Block $this, final String uniqueId, final IItemStack tool, final IItemStack stack) {
-        addToolLootModifier($this, uniqueId, tool, CommonLootModifiers.add(stack));
+    public static void addToolDrop(final Block internal, final String uniqueId, final IItemStack tool, final IItemStack stack) {
+        addToolLootModifier(internal, uniqueId, tool, CommonLootModifiers.add(stack));
     }
     
     @ZenCodeType.Method
-    public static void addToolDrops(final Block $this, final String uniqueId, final IItemStack tool, final IItemStack... stacks) {
-        addToolLootModifier($this, uniqueId, tool, CommonLootModifiers.addAll(stacks));
+    public static void addToolDrops(final Block internal, final String uniqueId, final IItemStack tool, final IItemStack... stacks) {
+        addToolLootModifier(internal, uniqueId, tool, CommonLootModifiers.addAll(stacks));
     }
     
     @ZenCodeType.Method
-    public static void addToolLootModifier(final Block $this, final String name, final IItemStack tool, final ILootModifier modifier) {
-        addToolLootModifier($this, name, tool, false, modifier);
+    public static void addToolLootModifier(final Block internal, final String name, final IItemStack tool, final ILootModifier modifier) {
+        addToolLootModifier(internal, name, tool, false, modifier);
     }
     
     @ZenCodeType.Method
-    public static void addToolLootModifier(final Block $this, final String name, final IItemStack tool, final boolean matchDamage, final ILootModifier modifier) {
-        addToolLootModifier($this, name, tool, matchDamage, false, modifier);
+    public static void addToolLootModifier(final Block internal, final String name, final IItemStack tool, final boolean matchDamage, final ILootModifier modifier) {
+        addToolLootModifier(internal, name, tool, matchDamage, false, modifier);
     }
     
     @ZenCodeType.Method
-    public static void addToolLootModifier(final Block $this, final String name, final IItemStack tool, final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
+    public static void addToolLootModifier(final Block internal, final String name, final IItemStack tool, final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
-                        .add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock($this))
+                        .add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock(internal))
                         .add(MatchToolLootConditionBuilder.class, mt -> mt.withPredicate(item -> item.matching(tool, matchDamage, false, matchNbt))),
                 modifier
         );

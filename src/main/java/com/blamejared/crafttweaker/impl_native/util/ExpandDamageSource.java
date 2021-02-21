@@ -149,8 +149,8 @@ public class ExpandDamageSource {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("difficultyScaled")
-    public static boolean isDifficultyScaled(final DamageSource $this) {
-        return $this.isDifficultyScaled();
+    public static boolean isDifficultyScaled(final DamageSource internal) {
+        return internal.isDifficultyScaled();
     }
 
     /**
@@ -160,8 +160,8 @@ public class ExpandDamageSource {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("creativePlayer")
-    public static boolean isCreativePlayer(final DamageSource $this) {
-        return $this.isCreativePlayer();
+    public static boolean isCreativePlayer(final DamageSource internal) {
+        return internal.isCreativePlayer();
     }
     
     /**
@@ -172,7 +172,7 @@ public class ExpandDamageSource {
     @ZenCodeType.Method
     @ZenCodeType.Getter("location")
     @ZenCodeType.Nullable
-    public static Vector3d getDamageLocation(final DamageSource $this) {
-        return $this.getDamageLocation();
+    public static Vector3d getDamageLocation(final DamageSource internal) {
+        return internal.getDamageLocation();
     }
 }
