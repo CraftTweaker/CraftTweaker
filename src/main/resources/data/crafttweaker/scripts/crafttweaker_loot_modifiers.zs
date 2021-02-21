@@ -63,7 +63,18 @@ loot.modifiers.removeByModId("examplemod");
 
 // Removing by regex works the same way, with 'removeByRegex':
 
-loot.modifiers.removeByRegex("^(glm)[a-z]*$");
+loot.modifiers.removeByRegex("^[a-z]*:(glm)[a-z]*$");
+
+// This would match all loot modifiers added by any mod ID with only letters in
+// its name (the first [a-z]*), and whose name starts with "glm" and is then
+// followed solely by lowercase letters. As an example, the following two
+// names would be removed:
+//  - forge:glmyesthisisaname
+//  - immersiveengineering:glmtest
+// The following wouldn't:
+//  - crafttweaker:my_glm
+//  - mymod:glm_hello123
+//  - more-blocks:glmhello
 
 // Last but not least, removing everything works too, and gives you a clean
 // slate from which you can start building. For that, use 'removeAll':
@@ -88,9 +99,22 @@ val allKnownModifierNames = loot.modifiers.getAllNames();
 // allows you to know how exactly that loot was generated. Was it due to the
 // death of an entity? A block being broken with a wooden axe by your friend?
 // An explosion occurring 3.5 blocks away? Everything that can be known or
-// inferred is provided to your for use.
+// inferred is provided to you for use.
 
-// The simpler way to register a loot modifier is using the
+// There are various ways of adding, or registering, loot modifiers. The easiest
+// way is by combining the modifiers of CommonLootModifiers and the extensions
+// provided on blocks, entities, items, etc. Refer to the docs for a complete
+// list of what is allowed and what isn't. Since this isn't the scope for this
+// quick example, the following is a simple example that makes sand drop ender
+// eyes if broken with a stick:
+
+<block:minecraft:sand>.addToolDrop(
+    "sticky_ender_eyes",
+    <item:minecraft:stick>,
+    <item:minecraft:ender_eye>
+);
+
+// Another simpler way to register a loot modifier is using the
 // 'registerUnconditional' method. The method accepts a name, which must be
 // unique and identify that specific loot modifier, and a function that acts as
 // the loot modifier itself.
