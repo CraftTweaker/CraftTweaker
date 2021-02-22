@@ -12,34 +12,43 @@ public class ActionSetFood implements IUndoableAction {
     private Food newFood;
     private Food oldFood;
     
-    public ActionSetFood(IItemStack stack, MCFood newFood) {
+    public ActionSetFood(IItemStack stack, MCFood newFood, Food oldFood) {
+        
         this.stack = stack;
         this.newFood = newFood.getInternal();
-        this.oldFood = stack.getFood().getInternal();
+        this.oldFood = oldFood;
     }
     
     @Override
     public void apply() {
+        
         this.stack.getInternal().getItem().food = newFood;
     }
     
     @Override
     public String describe() {
-        return String.format("Setting food of: %s to food with stats: hunger: %s, saturation: %s, isMeat: %s, isFastToEat: %s, canEatWhenFull: %s, effects: %s", stack.getCommandString(), newFood.getHealing(), newFood.getSaturation(), newFood.isMeat(), newFood.isFastEating(), newFood.canEatWhenFull(), newFood.getEffects());
+        
+        return String.format("Setting food of: %s to food with stats: hunger: %s, saturation: %s, isMeat: %s, isFastToEat: %s, canEatWhenFull: %s, effects: %s", stack
+                .getCommandString(), newFood.getHealing(), newFood.getSaturation(), newFood.isMeat(), newFood.isFastEating(), newFood
+                .canEatWhenFull(), newFood.getEffects());
     }
     
     @Override
     public void undo() {
+        
         this.stack.getInternal().getItem().food = oldFood;
     }
     
     @Override
     public String describeUndo() {
+        
         return "Undoing setting of food for stack: " + stack.getCommandString();
     }
     
     @Override
     public boolean shouldApplyOn(LogicalSide side) {
-        return true;
+        
+        return shouldApplySingletons();
     }
+    
 }

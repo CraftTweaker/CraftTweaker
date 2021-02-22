@@ -1,8 +1,12 @@
 package com.blamejared.crafttweaker.api.actions;
 
 import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.util.ClientHelper;
+import com.blamejared.crafttweaker.api.util.ServerHelper;
 import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import org.openzen.zencode.shared.CodePosition;
 
@@ -44,6 +48,7 @@ public interface IAction {
      * @return true if the action should run, false otherwise.
      */
     default boolean validate(ILogger logger) {
+        
         return true;
     }
     
@@ -63,6 +68,7 @@ public interface IAction {
      * @return true if this IAction be applied on the given side.
      */
     default boolean shouldApplyOn(LogicalSide side) {
+        
         return CraftTweaker.serverOverride || side.isServer();
     }
     
@@ -77,6 +83,47 @@ public interface IAction {
      */
     @Nonnull
     default CodePosition getDeclaredScriptPosition() {
+        
         return PositionUtil.getZCScriptPositionFromStackTrace();
     }
+    
+    /**
+     * Special helper method to handle actions that are always applied on the server, but are only applied on the client when connected to a server.
+     *
+     * This is mainly used when you have to deal with reloading singleton values, since the old cached value on the client, will be the value set on the server.
+     *
+     * An example of where this is used is in {@link com.blamejared.crafttweaker.impl.actions.items.ActionSetFood},
+     * Since the food value of an Item in single player is shared on the client and the server (threads),
+     * When it gets the old food value (so it can undo the action on /reload) on the client, it gets the value that was set by the server.
+     *
+     * @return true on the server distribution (and threads). true when the client is connected to a server (not in singleplayer). false if the client is in single player.
+     */
+    default boolean shouldApplySingletons() {
+        
+        return DistExecutor.safeRunForDist(() -> ClientHelper::shouldApplyServerActionOnClient, () -> ServerHelper::alwaysTrue);
+    }
+    
+    /**
+     * Ensures that an action is only applied on a certain loader. This should be used in {@link IAction#shouldApplyOn(LogicalSide)}.
+     *
+     * Will return true if the action should run, otherwise will log a warning of where the actions failed (if it can find it in the script, see {@link IAction#getDeclaredScriptPosition()}) and what loader it is meant to be used on, as well as the current loader.
+     *
+     * @param loader the name of the loader this action should run on.
+     *
+     * @return true if it is the correct loader.
+     */
+    default boolean assertLoader(String loader) {
+        
+        String currentLoader = CraftTweakerAPI.getCurrentRun().getLoaderActions().getLoaderName();
+        if(currentLoader.equals(loader)) {
+            
+            return true;
+        }
+        
+        CraftTweakerAPI.logWarning("Action '%s' (%s) can only be invoked on loader '%s'. You tried to run it on loader '%s'.", this
+                .getClass()
+                .getName(), getDeclaredScriptPosition().toString(), loader, currentLoader);
+        return false;
+    }
+    
 }
