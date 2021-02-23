@@ -26,21 +26,25 @@ public class MCFood {
     private final Field effects = Util.make(() -> ObfuscationReflectionHelper.findField(Food.class, "field_221475_f"));
     
     public MCFood(@Nonnull Food internal) {
+        
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
     public MCFood(int healing, float saturation) {
+        
         this(new Food.Builder().hunger(healing).saturation(saturation).build());
     }
     
     @ZenCodeType.Getter("healing")
     public int getHealing() {
+        
         return getInternal().getHealing();
     }
     
     @ZenCodeType.Method
     public MCFood setHealing(int healing) {
+        
         Food food = copyInternal();
         food.value = healing;
         return new MCFood(food);
@@ -48,11 +52,13 @@ public class MCFood {
     
     @ZenCodeType.Getter("saturation")
     public float getSaturation() {
+        
         return getInternal().getSaturation();
     }
     
     @ZenCodeType.Method
     public MCFood setSaturation(float saturation) {
+        
         Food food = copyInternal();
         food.saturation = saturation;
         return new MCFood(food);
@@ -60,11 +66,13 @@ public class MCFood {
     
     @ZenCodeType.Getter("meat")
     public boolean isMeat() {
+        
         return getInternal().isMeat();
     }
     
     @ZenCodeType.Method
     public MCFood setMeat(boolean meat) {
+        
         Food food = copyInternal();
         food.meat = meat;
         return new MCFood(food);
@@ -72,11 +80,13 @@ public class MCFood {
     
     @ZenCodeType.Getter("canEatWhenFull")
     public boolean canEatWhenFull() {
+        
         return getInternal().canEatWhenFull();
     }
     
     @ZenCodeType.Method
     public MCFood setCanEatWhenFull(boolean canEatWhenFull) {
+        
         Food food = copyInternal();
         food.canEatWhenFull = canEatWhenFull;
         return new MCFood(food);
@@ -84,11 +94,13 @@ public class MCFood {
     
     @ZenCodeType.Getter("isFastEating")
     public boolean isFastEating() {
+        
         return getInternal().isFastEating();
     }
     
     @ZenCodeType.Method
     public MCFood setFastEating(boolean fastEating) {
+        
         Food food = copyInternal();
         food.fastToEat = fastEating;
         return new MCFood(food);
@@ -96,30 +108,36 @@ public class MCFood {
     
     @ZenCodeType.Method
     public void clearEffects() {
+        
         getEffects().clear();
     }
     
     @ZenCodeType.Method
     public MCFood addEffect(EffectInstance effect, float probability) {
+        
         Food food = copyInternal();
-        getEffects().add(Pair.of(() -> effect, probability));
-        return new MCFood(food);
+        MCFood newFood = new MCFood(food);
+        newFood.getEffects().add(Pair.of(() -> effect, probability));
+        return newFood;
     }
     
     @ZenCodeType.Method
     public MCFood removeEffect(EffectInstance effect) {
+        
         Food food = copyInternal();
-        getEffects().removeIf(pair -> pair.getFirst().get().equals(effect));
-        return new MCFood(food);
+        MCFood newFood = new MCFood(food);
+        newFood.getEffects().removeIf(pair -> pair.getFirst().get().equals(effect));
+        return newFood;
     }
     
     public Food getInternal() {
+        
         return internal;
     }
     
     private List<Pair<Supplier<EffectInstance>, Float>> getEffects() {
+        
         try {
-            //noinspection unchecked
             return (List<Pair<Supplier<EffectInstance>, Float>>) effects.get(getInternal());
         } catch(IllegalAccessException e) {
             e.printStackTrace();
@@ -128,6 +146,7 @@ public class MCFood {
     }
     
     private Food copyInternal() {
+        
         Food.Builder builder = new Food.Builder();
         if(this.isMeat()) {
             builder.meat();
