@@ -311,7 +311,7 @@ public class BracketHandlers {
         if(split.length != 2)
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Syntax is <potion:modid:potionname>");
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        if(!ForgeRegistries.POTIONS.containsKey(key)) {
+        if(!ForgeRegistries.POTION_TYPES.containsKey(key)) {
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!");
         }
         return ForgeRegistries.POTION_TYPES.getValue(key);
