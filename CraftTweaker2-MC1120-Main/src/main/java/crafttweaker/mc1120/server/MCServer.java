@@ -3,14 +3,11 @@ package crafttweaker.mc1120.server;
 import crafttweaker.api.command.ICommandManager;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.*;
-import crafttweaker.api.server.AbstractServer;
-import crafttweaker.api.server.IServer;
-import crafttweaker.api.world.IBlockPos;
-import crafttweaker.api.world.IWorld;
+import crafttweaker.api.server.*;
+import crafttweaker.api.world.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.command.MCCommandManager;
-import crafttweaker.mc1120.player.CommandBlockPlayer;
-import crafttweaker.mc1120.player.RconPlayer;
+import crafttweaker.mc1120.player.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.rcon.RConConsoleSource;
@@ -50,11 +47,12 @@ public class MCServer extends AbstractServer {
     @SuppressWarnings("MethodCallSideOnly")
     @Override
     public boolean isOp(IPlayer player) {
-        if(player instanceof RconPlayer){
+        if(player instanceof RconPlayer) {
             return true;
         }
         UserListOps ops = CraftTweaker.server.getPlayerList().getOppedPlayers();
-        return ops.getGameProfileFromName(player.getName()) != null;
+    
+        return ops.getPermissionLevel(ops.getGameProfileFromName(player.getName())) >= server.getOpPermissionLevel();
     }
     
     @Override
