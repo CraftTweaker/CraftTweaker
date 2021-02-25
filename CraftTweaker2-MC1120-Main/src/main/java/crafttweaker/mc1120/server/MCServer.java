@@ -44,15 +44,9 @@ public class MCServer extends AbstractServer {
         }
     }
 
-    @SuppressWarnings("MethodCallSideOnly")
     @Override
     public boolean isOp(IPlayer player) {
-        if(player instanceof RconPlayer) {
-            return true;
-        }
-        UserListOps ops = CraftTweaker.server.getPlayerList().getOppedPlayers();
-    
-        return ops.getPermissionLevel(ops.getGameProfileFromName(player.getName())) >= server.getOpPermissionLevel();
+        return CraftTweakerMC.getPlayer(player).canUseCommand(this.server.getOpPermissionLevel(), "");
     }
     
     @Override
