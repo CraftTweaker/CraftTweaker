@@ -156,9 +156,7 @@ public class CrafttweakerImplementationAPI {
         
         @Override
         public void handle(PlayerLoggedInEvent event) {
-            if(CraftTweakerAPI.server != null && CraftTweakerAPI.server.isOp(event.getPlayer())) {
-                logger.addPlayer(event.getPlayer());
-            }
+            logger.addPlayer(event.getPlayer());
         }
     }
     
