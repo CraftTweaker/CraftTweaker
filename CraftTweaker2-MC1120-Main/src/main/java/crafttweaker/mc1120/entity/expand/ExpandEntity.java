@@ -2,9 +2,11 @@ package crafttweaker.mc1120.entity.expand;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
+import crafttweaker.api.game.ITeam;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.util.IAxisAlignedBB;
 import net.minecraft.entity.Entity;
+import net.minecraft.scoreboard.Scoreboard;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -45,6 +47,19 @@ public class ExpandEntity {
     @ZenMethod
     public static void setStepHeight(IEntity internal, float stepHeight) {
         getInternal(internal).stepHeight = stepHeight;
+    }
+    
+    @ZenSetter("team")
+    @ZenMethod
+    public static void setTeam(IEntity internal, ITeam team) {
+        Scoreboard sb = getInternal(internal).world.getScoreboard();
+        sb.removePlayerFromTeams(getUUID(internal));
+        
+        String teamName = CraftTweakerMC.getTeam(team).getName();
+        if (sb.getTeam(teamName) == null)
+            sb.createTeam(teamName);
+        
+        sb.addPlayerToTeam(getUUID(internal), teamName);
     }
 
     @ZenMethod
