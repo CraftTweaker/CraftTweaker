@@ -21,7 +21,7 @@
 
 ## Introduction
 
-CraftTweaker is a Minecraft mod which allows modpacks and servers to customize the game. With CraftTweaker you can change recipes, script events, add new commands and even change item properties! When used with other mods the possibilities become endless. Ranging from custom machine recipes to entirely new blocks and items!
+CraftTweaker is a Minecraft mod which allows modpacks and servers to customize the game. With CraftTweaker you can change recipes, script events, add new commands and even change item properties! When used with other mods the possibilities become endless! Ranging from custom machine recipes to entirely new blocks and items!
 
 ## Feedback
 
