@@ -56,14 +56,14 @@ pipeline {
                     }
                 }
 
-                stage('Deploying to CurseForge (Disabled)') {
+                stage('Deploying to CurseForge') {
                     steps {
                         echo 'Deploying to CurseForge'
                         sh './gradlew curseforge'
                     }
                 }
 
-                stage('Exporting Documentation (Disabled)') {
+                stage('Exporting Documentation') {
                     steps {
                         echo "Cloning Repository at Branch $docsRepositoryBranch"
 
