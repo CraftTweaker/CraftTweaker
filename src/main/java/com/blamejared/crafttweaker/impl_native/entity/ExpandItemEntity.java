@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("crafttweaker.api.entity.MCItemEntity")
+@Document("vanilla/api/entity/MCItemEntity")
 @NativeTypeRegistration(value = ItemEntity.class, zenCodeName = "crafttweaker.api.entity.MCItemEntity", constructors = {
         @NativeConstructor({
                 @NativeConstructor.ConstructorParameter(type = World.class, name = "world"),
