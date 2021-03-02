@@ -81,6 +81,7 @@ public class MCGame {
                 .stream()
                 .map(ItemStack::new)
                 .map(MCItemStack::new)
+                .filter(stack -> !stack.isEmpty())
                 .collect(Collectors.toList());
     }
     
