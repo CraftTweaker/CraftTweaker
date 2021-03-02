@@ -112,6 +112,7 @@ public interface IIngredient extends CommandStringDisplayable {
     /**
      * Use this if you already have the condition from another ingredient
      */
+    @ZenCodeType.Method
     default MCIngredientConditioned<IIngredient> only(IIngredientCondition<IIngredient> condition) {
         return new MCIngredientConditioned<>(this, condition);
     }
