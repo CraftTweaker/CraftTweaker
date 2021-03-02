@@ -22,7 +22,7 @@ public class IngredientAny extends Ingredient {
     }
 
     public static final IngredientAny INSTANCE = new IngredientAny();
-    private static final ItemStack[] ALL_ITEMS = ForgeRegistries.ITEMS.getValues().stream().map(ItemStack::new).toArray(ItemStack[]::new);
+    private static final ItemStack[] ALL_ITEMS = ForgeRegistries.ITEMS.getValues().stream().map(ItemStack::new).filter(stack -> !stack.isEmpty()).toArray(ItemStack[]::new);
 
     @Override
     public ItemStack[] getMatchingStacks() {
