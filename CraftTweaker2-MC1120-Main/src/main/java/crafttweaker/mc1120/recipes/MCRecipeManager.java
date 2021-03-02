@@ -46,6 +46,7 @@ public final class MCRecipeManager implements IRecipeManager {
     public static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     
     public static final List<MCRecipeBase> transformerRecipes = new ArrayList<>();
+    public static final List<MCRecipeBase> actionRecipes = new ArrayList<>();
     private static final TIntSet usedHashes = new TIntHashSet();
     private static final HashSet<String> usedRecipeNames = new HashSet<>();
     
@@ -675,6 +676,8 @@ public final class MCRecipeManager implements IRecipeManager {
             this.isShaped = isShaped;
             if(recipe.hasTransformers())
                 transformerRecipes.add(recipe);
+            if (recipe.hasRecipeAction())
+                actionRecipes.add(recipe);
         }
         
         public IItemStack getOutput() {
