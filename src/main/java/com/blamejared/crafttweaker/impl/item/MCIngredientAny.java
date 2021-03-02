@@ -9,6 +9,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * An IIngredient which matches all items
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IngredientAny")
 @Document("vanilla/api/items/IngredientAny")

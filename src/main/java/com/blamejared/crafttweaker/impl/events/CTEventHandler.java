@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.events;
 
-import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
