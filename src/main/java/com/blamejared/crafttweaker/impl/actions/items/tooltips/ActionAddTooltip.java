@@ -27,7 +27,7 @@ public class ActionAddTooltip implements IRuntimeAction {
     
     @Override
     public String describe() {
-        return "Adding \"" + content + "\" to the tooltip for: " + stack.getCommandString();
+        return "Adding \"" + content.asString() + "\" to the tooltip for: " + stack.getCommandString();
     }
     
     @Override

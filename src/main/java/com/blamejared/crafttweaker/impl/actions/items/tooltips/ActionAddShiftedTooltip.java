@@ -46,7 +46,7 @@ public class ActionAddShiftedTooltip implements IRuntimeAction {
     
     @Override
     public String describe() {
-        return "Adding \"" + content + "\" to the shift tooltip for: " + stack.getCommandString();
+        return "Adding \"" + content.asString() + "\" to the shift tooltip for: " + stack.getCommandString();
     }
     
     @Override
