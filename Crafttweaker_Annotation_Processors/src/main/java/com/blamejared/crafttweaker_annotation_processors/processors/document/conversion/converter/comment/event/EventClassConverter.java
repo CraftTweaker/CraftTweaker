@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.event;
+package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.event;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.NativeConversionRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
