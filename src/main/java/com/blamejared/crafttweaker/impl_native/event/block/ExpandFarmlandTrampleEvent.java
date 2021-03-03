@@ -2,15 +2,16 @@ package com.blamejared.crafttweaker.impl_native.event.block;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docEvent canceled the farmland won't turn to dirt
+ */
 @ZenRegister
 @Document("vanilla/api/event/block/MCFarmlandTrampleEvent")
-@EventCancelable
 @NativeTypeRegistration(value = BlockEvent.FarmlandTrampleEvent.class, zenCodeName = "crafttweaker.api.event.block.MCFarmlandTrampleEvent")
 public class ExpandFarmlandTrampleEvent {
     

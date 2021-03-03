@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -13,10 +12,10 @@ import org.openzen.zencode.java.ZenCodeType;
  * the damage received, cancel the attack, or run additional effects.
  *
  * @docParam this event
+ * @docEvent canceled the entity is not hurt
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingHurtEvent")
-@EventCancelable(canceledDescription = "the entity is not hurt")
 @NativeTypeRegistration(value = LivingHurtEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingHurtEvent")
 public class ExpandLivingHurtEvent {
     

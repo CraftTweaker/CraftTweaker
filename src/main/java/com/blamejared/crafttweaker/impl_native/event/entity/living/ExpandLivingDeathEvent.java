@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -13,10 +12,10 @@ import org.openzen.zencode.java.ZenCodeType;
  * additional logic or prevent the death.
  *
  * @docParam this event
+ * @docEvent canceled the entity does not die.
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingDeathEvent")
-@EventCancelable(canceledDescription = "the entity does not die.")
 @NativeTypeRegistration(value = LivingDeathEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingDeathEvent")
 public class ExpandLivingDeathEvent {
     

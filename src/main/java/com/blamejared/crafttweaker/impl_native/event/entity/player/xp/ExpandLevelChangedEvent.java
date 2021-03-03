@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.player.xp;
 
 
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -17,10 +16,10 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent.LevelChange;
  * allows you to change the amount of levels, or cancel the change entirely.
  * 
  * @docParam this event
+ * @docEvent canceled the xp level will not change
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/xp/MCLevelChangeEvent")
-@EventCancelable
 @NativeTypeRegistration(value = LevelChange.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.MCLevelChangeEvent")
 public class ExpandLevelChangedEvent {
     

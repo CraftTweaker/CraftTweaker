@@ -2,15 +2,16 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docEvent canceled the experience will not drop.
+ */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingExperienceDropEvent")
-@EventCancelable
 @NativeTypeRegistration(value = LivingExperienceDropEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingExperienceDropEvent")
 public class ExpandLivingExperienceDropEvent {
     

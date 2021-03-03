@@ -2,14 +2,15 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docEvent canceled the Entity does not fall.
+ */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingFallEvent")
-@EventCancelable
 @NativeTypeRegistration(value = LivingFallEvent.class, zenCodeName = "crafttweaker.api.event.living.MCLivingFallEvent")
 public class ExpandLivingFallEvent {
     

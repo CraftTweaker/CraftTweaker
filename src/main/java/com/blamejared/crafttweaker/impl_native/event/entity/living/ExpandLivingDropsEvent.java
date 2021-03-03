@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.util.DamageSource;
@@ -14,9 +13,11 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * @docEvent canceled the entity does not drop anything.
+ */
 @ZenRegister
 @Document("vanilla/api/event/living/MCLivingDropsEvent")
-@EventCancelable(canceledDescription = "the entity does not drop anything")
 @NativeTypeRegistration(value = LivingDropsEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingDropsEvent")
 public class ExpandLivingDropsEvent {
     

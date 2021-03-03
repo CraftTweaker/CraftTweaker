@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -11,10 +10,11 @@ import org.openzen.zencode.java.ZenCodeType;
 /**
  * The event is triggered when an entity is trying to replace itself with another entity.
  * This event may trigger every tick even if it was cancelled last tick for entities like Zombies and Hoglins.
+ *
+ * @docEvent canceled the replacement will not occur
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingConversionPreEvent")
-@EventCancelable(canceledDescription = "the replacement will not occur")
 @NativeTypeRegistration(value = LivingConversionEvent.Pre.class, zenCodeName = "crafttweaker.api.event.living.MCLivingConversionPreEvent")
 public class ExpandLivingConversionPreEvent {
     

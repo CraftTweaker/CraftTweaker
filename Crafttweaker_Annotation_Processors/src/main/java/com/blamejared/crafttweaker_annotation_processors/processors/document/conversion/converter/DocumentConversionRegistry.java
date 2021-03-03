@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.DocumentRegistry;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.event.EventClassConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.ExpansionConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.NamedTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.native_registration.NativeRegistrationConverter;

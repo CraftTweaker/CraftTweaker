@@ -4,18 +4,20 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * AnvilUpdateEvent is fired when the inputs (either input stack, or the name) to an anvil are changed.
+ * Listen it to add your custom anvil recipe.
+ *
+ * @docEvent canceled vanilla behavior will not run, and the output will be set to `<item:minecraft:air>`.
+ * @docEvent notCanceled but the output is not empty, it will set the output and not run vanilla behavior.
+ */
 @ZenRegister
 @Document("vanilla/api/event/MCAnvilUpdateEvent")
-@EventCancelable(
-        canceledDescription = "vanilla behavior will not run, and the output will be set to ItemStack.EMPTY.",
-        notCanceledDescription = "but the output is not empty, it will set the output and not run vanilla behavior."
-)
 @NativeTypeRegistration(value = AnvilUpdateEvent.class, zenCodeName = "crafttweaker.api.event.MCAnvilUpdateEvent")
 public class ExpandAnvilUpdateEvent {
     @ZenCodeType.Getter("left")

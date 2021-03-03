@@ -2,17 +2,17 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Event for when an Enderman/Shulker teleports or an ender pearl is used.
+ *
+ * @docEvent canceled the ender teleport won't happen.
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCEnderTeleportEvent")
-@EventCancelable
 @NativeTypeRegistration(value = EnderTeleportEvent.class, zenCodeName = "crafttweaker.api.event.living.MCEnderTeleportEvent")
 public class ExpandEnderTeleportEvent {
     

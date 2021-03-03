@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,11 +13,11 @@ import org.openzen.zencode.java.ZenCodeType;
 /**
  * Fired when when this block is right clicked by a tool to change its state.
  * For example: Used to determine if an axe can strip, a shovel can path, or a hoe can till.
- * This event is Cancelable.
+ *
+ * @docEvent cancelled this will prevent the tool from changing the block's state.
  */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockToolInteractEvent")
-@EventCancelable(canceledDescription = "this will prevent the tool from changing the block's state.")
 @NativeTypeRegistration(value = BlockEvent.BlockToolInteractEvent.class, zenCodeName = "crafttweaker.api.event.block.MCBlockToolInteractEvent")
 public class ExpandBlockToolInteractEvent {
     

@@ -2,14 +2,16 @@ package com.blamejared.crafttweaker.impl_native.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this event
+ * @docEvent canceled the entity is not knocked back.
+ */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingKnockBackEvent")
-@EventCancelable
 @NativeTypeRegistration(value = LivingKnockBackEvent.class, zenCodeName = "crafttweaker.api.event.living.MCLivingKnockBackEvent")
 public class ExpandLivingKnockBackEvent {
     

@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.player.xp;
 
 
-import com.blamejared.crafttweaker_annotations.annotations.EventCancelable;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -17,10 +16,10 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent.XpChange;
  * change the amount, or negate the change entirely.
  * 
  * @docParam this event
+ * @docEvent canceled the xp will not change
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/xp/MCXpChangeEvent")
-@EventCancelable
 @NativeTypeRegistration(value = XpChange.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.MCXpChangeEvent")
 public class ExpandXpChangedEvent {
     
