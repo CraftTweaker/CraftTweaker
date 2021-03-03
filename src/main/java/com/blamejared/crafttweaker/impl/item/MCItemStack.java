@@ -24,7 +24,7 @@ public class MCItemStack implements IItemStack {
     
     public MCItemStack(ItemStack internal) {
     
-        this.internal = internal.copy();
+        this.internal = internal;
     }
     
     @Override
@@ -150,7 +150,7 @@ public class MCItemStack implements IItemStack {
     @Override
     public IItemStack[] getItems() {
     
-        return new IItemStack[] {this};
+        return new IItemStack[] {this.copy()};
     }
     
     @Override
