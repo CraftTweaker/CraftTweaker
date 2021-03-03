@@ -63,11 +63,11 @@ public class EventDataConverter {
             for (String occurrence : parameterInfo.getOccurrences()) {
                 switch (getTypeNameFrom(occurrence)) {
                     case ALLOW:
-                        sb.append("If result is set to `default`, ");
+                        sb.append("If result is set to `allow`, ");
                         sb.append(getTypeTextValueFrom(occurrence));
                         break;
                     case DEFAULT:
-                        sb.append("If result is set to `allow`, ");
+                        sb.append("If result is set to `default`, ");
                         sb.append(getTypeTextValueFrom(occurrence));
                         break;
                     case DENY:
