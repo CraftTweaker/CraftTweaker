@@ -264,18 +264,12 @@ public class ExpandLivingEntity {
     /**
      * Gets the item stack of the entity in given slot.
      *
-     * @param mutable if true, the method will return a {@link MCItemStackMutable}, instead of a copy one. Use it with caution.
-     *
      * @return The item stack of the entity in given slot.
      */
     @ZenCodeType.Method
-    public static IItemStack getItemStackFromSlot(LivingEntity internal, EquipmentSlotType slot, boolean mutable) {
-    
-        if(mutable) {
-            return new MCItemStackMutable(internal.getItemStackFromSlot(slot));
-        } else {
-            return new MCItemStack(internal.getItemStackFromSlot(slot));
-        }
+    public static IItemStack getItemStackFromSlot(LivingEntity internal, EquipmentSlotType slot) {
+
+        return new MCItemStack(internal.getItemStackFromSlot(slot));
     }
     
     /**

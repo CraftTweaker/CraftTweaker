@@ -130,31 +130,17 @@ public class ExpandPlayerEntity {
         
         internal.sendStatusMessage(text.getInternal(), actionBar);
     }
-    
-    /**
-     * @param mutable if true, it will return a {@link MCItemStackMutable}, instead of a copy one. Use it with caution.
-     */
+
     @ZenCodeType.Method
-    public static IItemStack getCurrentItem(PlayerEntity internal, boolean mutable) {
-    
-        if(mutable) {
-            return new MCItemStackMutable(internal.inventory.getCurrentItem());
-        } else {
-            return new MCItemStack(internal.inventory.getCurrentItem());
-        }
+    public static IItemStack getCurrentItem(PlayerEntity internal) {
+
+        return new MCItemStack(internal.inventory.getCurrentItem());
     }
-    
-    /**
-     * @param mutable if true, it will return a {@link MCItemStackMutable}, instead of a copy one. Use it with caution.
-     */
+
     @ZenCodeType.Method
-    public static IItemStack getInventoryItemStack(PlayerEntity internal, int slotIndex, boolean mutable) {
-        
-        if(mutable) {
-            return new MCItemStackMutable(internal.inventory.getStackInSlot(slotIndex));
-        } else {
-            return new MCItemStack(internal.inventory.getStackInSlot(slotIndex));
-        }
+    public static IItemStack getInventoryItemStack(PlayerEntity internal, int slotIndex) {
+
+        return new MCItemStack(internal.inventory.getStackInSlot(slotIndex));
     }
     
     @ZenCodeType.Method
