@@ -17,7 +17,7 @@ public class EventDataConverter {
     private static final String DEFAULT = "default";
     private static final String DENY = "deny";
     private static final String NOT_CANCELED_INFO = "The event is not cancelable.";
-    private static final String NOT_HAS_RESULT_INFO = "The event does not have result.";
+    private static final String NO_RESULT_INFO = "The event does not have result.";
     private static final String CANCELED_INFO = "The class is cancelable.";
     private static final String HAS_RESULT_INFO = "The event has a result.";
 
@@ -30,7 +30,7 @@ public class EventDataConverter {
     public DocumentationComment getDocumentationComment(String docComment, Element element) {
         ParameterInformationList parameterInformationList = reader.readParametersFrom(docComment, element);
         if (!hasEventData(parameterInformationList)) {
-            return new DocumentationComment(NOT_CANCELED_INFO + "\n\n" + NOT_HAS_RESULT_INFO, ExampleData.empty());
+            return new DocumentationComment(NOT_CANCELED_INFO + "\n\n" + NO_RESULT_INFO, ExampleData.empty());
         }
         StringBuilder sb = new StringBuilder();
         ParameterInfo parameterInfo = getEventDataInfo(parameterInformationList);
@@ -55,7 +55,7 @@ public class EventDataConverter {
             }
         }
         if (!hasResultInfo(parameterInfo)) {
-            sb.append(NOT_HAS_RESULT_INFO);
+            sb.append(NO_RESULT_INFO);
             sb.append("\n\n");
         } else {
             sb.append(HAS_RESULT_INFO);

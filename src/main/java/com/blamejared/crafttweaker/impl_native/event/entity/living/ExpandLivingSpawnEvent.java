@@ -18,7 +18,7 @@ public class ExpandLivingSpawnEvent {
         if(internal.getWorld() instanceof World) {
             return (World) internal.getWorld();
         }
-        throw new IllegalStateException("the event is not fired on server or client world!");
+        throw new IllegalArgumentException("IWorld instance was not an instance of World!");
     }
     
     @ZenCodeType.Getter("x")

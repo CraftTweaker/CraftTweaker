@@ -35,7 +35,7 @@ public class ExpandServer {
     public static ServerWorld getWorld(MinecraftServer internal, ResourceLocation location) {
         
         return Objects.requireNonNull(internal.getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, location)),
-                () -> "unknown world location: " + location.toString());
+                () -> "Unknown world location: " + location.toString());
     }
     
     /**

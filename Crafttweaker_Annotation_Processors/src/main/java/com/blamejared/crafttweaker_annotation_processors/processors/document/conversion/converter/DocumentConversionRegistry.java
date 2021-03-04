@@ -22,7 +22,6 @@ public class DocumentConversionRegistry {
         this.documentRegistry = documentRegistry;
         //
         // TODO: Add converters
-        // converters.add(dependencyContainer.getInstanceOfClass(EventClassConverter.class));
         converters.add(dependencyContainer.getInstanceOfClass(NativeRegistrationConverter.class));
         converters.add(dependencyContainer.getInstanceOfClass(ExpansionConverter.class));
         converters.add(dependencyContainer.getInstanceOfClass(NamedTypeConverter.class));

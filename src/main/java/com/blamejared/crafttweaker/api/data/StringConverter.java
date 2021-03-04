@@ -1,16 +1,6 @@
 package com.blamejared.crafttweaker.api.data;
 
-import com.blamejared.crafttweaker.impl.data.BoolData;
-import com.blamejared.crafttweaker.impl.data.ByteData;
-import com.blamejared.crafttweaker.impl.data.DoubleData;
-import com.blamejared.crafttweaker.impl.data.FloatData;
-import com.blamejared.crafttweaker.impl.data.IntData;
-import com.blamejared.crafttweaker.impl.data.ListData;
-import com.blamejared.crafttweaker.impl.data.LongData;
-import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.data.ShortData;
-import com.blamejared.crafttweaker.impl.data.StringData;
-import org.openzen.zencode.shared.CodePosition;
+import com.blamejared.crafttweaker.impl.data.*;
 import org.openzen.zencode.shared.LiteralSourceFile;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSToken;
@@ -67,7 +57,7 @@ public class StringConverter {
             default:
                 throw new ParseException(parser.getPosition()
                         .withLength(next.getContent()
-                                .length()), "Could not completely resolve Data near " + next.getContent());
+                                .length()), "Could not resolve Data near " + next.getContent());
         }
         
         if(parser.optional(K_AS) != null) {
