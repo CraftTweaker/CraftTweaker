@@ -58,6 +58,17 @@ public final class MCTag<T> implements CommandStringDisplayable {
         manager.addElements(this, items);
     }
     
+    /**
+     * Adds the given tag to this tag. Creates the tag if it does not exist.
+     *
+     * @param tag The tag to add.
+     * @docParam tag <tag:items:forge:rods>
+     */
+    @ZenCodeType.Method
+    public void add(MCTag<T> tag) {
+        add(tag.getElements());
+    }
+    
     @SafeVarargs
     @ZenCodeType.Method
     public final void remove(T... items) {
@@ -67,6 +78,11 @@ public final class MCTag<T> implements CommandStringDisplayable {
     @ZenCodeType.Method
     public void remove(List<T> items) {
         manager.removeElements(this, items);
+    }
+    
+    @ZenCodeType.Method
+    public void remove(MCTag<T> tag) {
+        remove(tag.getElements());
     }
     
     @ZenCodeType.Method
