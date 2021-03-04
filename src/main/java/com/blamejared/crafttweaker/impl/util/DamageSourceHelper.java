@@ -12,9 +12,9 @@ import org.openzen.zencode.java.ZenCodeType;
  * The class has some static methods to create some specific damage sources.
  */
 @ZenRegister
-@Document("vanilla/api/util/DamageSourceUtil")
-@ZenCodeType.Name("crafttweaker.api.util.DamageSourceUtil")
-public class DamageSourceUtil {
+@Document("vanilla/api/util/DamageSourceHelper")
+@ZenCodeType.Name("crafttweaker.api.util.DamageSourceHelper")
+public class DamageSourceHelper {
     @ZenCodeType.Method
     public static DamageSource causeBeeStingDamage(LivingEntity bee) {
         return DamageSource.causeBeeStingDamage(bee);
