@@ -132,7 +132,7 @@ public class BracketDumpers {
     public static Collection<String> getDamageSourceDump() {
         return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.keySet()
                 .stream()
-                .map(name -> "<damageSource:" + name + ">")
+                .map(name -> "<damagesource:" + name + ">")
                 .collect(Collectors.toList());
     }
     

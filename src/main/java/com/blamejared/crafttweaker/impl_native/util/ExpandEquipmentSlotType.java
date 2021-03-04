@@ -32,7 +32,7 @@ public class ExpandEquipmentSlotType {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(EquipmentSlotType internal) {
         
-        return "<equipmentSlotType:" + internal.getName() + ">";
+        return "<equipmentslottype:" + internal.getName() + ">";
     }
     
 }

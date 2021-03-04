@@ -190,10 +190,10 @@ public class BracketHandlers {
      * @docParam tokens "mainhand"
      */
     @ZenCodeType.Method
-    @BracketResolver("equipmentSlotType")
+    @BracketResolver("equipmentslottype")
     public static EquipmentSlotType getEquipmentSlotType(String tokens) {
         if (!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.logWarning("EquipmentSlotType BEP <equipmentSlotType:%s> doen not seem to be lower-cased!", tokens);
+            CraftTweakerAPI.logWarning("EquipmentSlotType BEP <equipmentslottype:%s> does not seem to be lower-cased!", tokens);
         }
         return EquipmentSlotType.fromString(tokens);
     }
@@ -462,7 +462,7 @@ public class BracketHandlers {
      * @docParam tokens "magic"
      */
     @ZenCodeType.Method
-    @BracketResolver("damageSource")
+    @BracketResolver("damagesource")
     public static DamageSource getDamageSource(String tokens) {
         return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.getOrDefault(tokens, new DamageSource(tokens));
     }
