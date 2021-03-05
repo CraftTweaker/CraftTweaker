@@ -305,7 +305,7 @@ tasks.getByName("curseforge").doLast {
         embed.addField('Download', "${cursePage}/files/$newFileId", false)
         embed.addField('Change Log', "${getCIChangelog() ?: 'Unavailable'}", false)
 
-        embed.setColor(0xFF8000)
+        embed.setColor(0xF16436)
         message.addEmbed(embed)
         message.setAvatarUrl("https://media.forgecdn.net/avatars/142/108/636546700830987709.png")
         webhook.sendMessage(message)
