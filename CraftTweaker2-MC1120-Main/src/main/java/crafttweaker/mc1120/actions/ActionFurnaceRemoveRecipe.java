@@ -1,11 +1,12 @@
 package crafttweaker.mc1120.actions;
 
-import crafttweaker.*;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStack;
 
@@ -38,6 +39,8 @@ public class ActionFurnaceRemoveRecipe implements IActionFurnaceRemoval {
         }
         for(Map.Entry<ItemStack, ItemStack> entry : smeltingMap.entrySet()) {
             FurnaceRecipes.instance().getSmeltingList().remove(entry.getKey(), entry.getValue());
+            List<ItemStack> collect = FurnaceRecipes.instance().experienceList.keySet().stream().filter(itemStack -> output.matches(getIItemStack(itemStack))).collect(Collectors.toList());
+            collect.forEach(FurnaceRecipes.instance().experienceList::remove);
         }
         CraftTweakerAPI.logInfo(smeltingMap.size() + " recipes removed for: " + output);
     }
