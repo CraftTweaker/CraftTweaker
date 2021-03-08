@@ -4,7 +4,7 @@ buildscript {
             url = 'https://files.minecraftforge.net/maven'
         }
         maven {
-            url = 'https://dist.creeper.host/Sponge/maven'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
         maven {
             url "https://plugins.gradle.org/m2/"
