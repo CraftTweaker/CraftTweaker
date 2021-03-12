@@ -1,12 +1,13 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
+import com.blamejared.crafttweaker.CraftTweakerTest;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.test_api.context.TestContext;
 import com.blamejared.crafttweaker.test_api.helper.recipes.ShapedIngredientSizeInformation;
 import com.blamejared.crafttweaker.test_api.mocks.container.MockCraftingInventory;
 import com.blamejared.crafttweaker.test_api.mocks.items.MockItems;
-import com.blamejared.crafttweaker.test_api.mocks.world.MockWorld;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +17,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CTRecipeShapedTest {
+public class CTRecipeShapedTest extends CraftTweakerTest {
     
     private static final String name = "test_recipe";
-    private static final MockItems mockItems = new MockItems();
+    private final TestContext context = new TestContext();
     
     private IItemStack output;
     private IIngredient[][] ingredients;
@@ -28,6 +29,8 @@ public class CTRecipeShapedTest {
     
     @BeforeEach
     void setUp() {
+        
+        final MockItems mockItems = context.mockItems;
         
         output = mockItems.ironSword;
         ingredients = new IIngredient[][] {
@@ -119,7 +122,9 @@ public class CTRecipeShapedTest {
         
         //Arrange
         final CTRecipeShaped subject = makeRecipe();
-        final World world = MockWorld.getInstance();
+        final World world = context.minecraftContext.getWorld();
+        final MockItems mockItems = context.mockItems;
+        
         final MockCraftingInventory inventory = new MockCraftingInventory();
         inventory.setInputs(new IItemStack[][] {
                 {mockItems.redstone, mockItems.ironNugget, mockItems.redstone},
@@ -141,6 +146,7 @@ public class CTRecipeShapedTest {
         //Arrange
         final CTRecipeShaped subject = makeRecipe();
         final MockCraftingInventory inventory = new MockCraftingInventory();
+        final MockItems mockItems = context.mockItems;
         inventory.setInputs(new IItemStack[][] {
                 {mockItems.bedrock, mockItems.bedrock, mockItems.bedrock},
                 {mockItems.bedrock, mockItems.bedrock, mockItems.bedrock},
@@ -154,4 +160,5 @@ public class CTRecipeShapedTest {
         //Assert
         assertThat(matches).isFalse();
     }
+    
 }
