@@ -10,6 +10,9 @@ def botEmail = 'crafttweakerbot@gmail.com'
 def documentationDir = 'CrafttweakerDocumentation'
 def exportDirInRepo = 'docs_exported/crafttweaker'
 
+
+def branchName = "1.16";
+
 pipeline {
     agent any
 
@@ -43,6 +46,9 @@ pipeline {
         stage('Publish') {
             stages {
                 stage('Updating Version') {
+                    when {
+                        branch '1.16'
+                    }
                     steps {
                         echo 'Updating Version'
                         sh './gradlew updateVersionTracker'
@@ -50,6 +56,9 @@ pipeline {
                 }
 
                 stage('Deploying to Maven') {
+                    when {
+                        branch branchName
+                    }
                     steps {
                         echo 'Deploying to Maven'
                         sh './gradlew publish'
@@ -57,6 +66,9 @@ pipeline {
                 }
 
                 stage('Deploying to CurseForge') {
+                    when {
+                        branch branchName
+                    }
                     steps {
                         echo 'Deploying to CurseForge'
                         sh './gradlew curseforge'
@@ -64,6 +76,9 @@ pipeline {
                 }
 
                 stage('Exporting Documentation') {
+                    when {
+                        branch branchName
+                    }
                     steps {
                         echo "Cloning Repository at Branch $docsRepositoryBranch"
 
