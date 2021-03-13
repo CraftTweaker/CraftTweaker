@@ -50,6 +50,12 @@ pipeline {
                         branch '1.16'
                     }
                     steps {
+                        script {
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[ci deploy]'", returnStatus: true) == 0) {
+                                currentBuild.result = 'NOT_BUILT'
+                                error 'Aborting because commit message contains [skip deploy]'
+                            }
+                        }
                         echo 'Updating Version'
                         sh './gradlew updateVersionTracker'
                     }
@@ -70,6 +76,12 @@ pipeline {
                         branch branchName
                     }
                     steps {
+                        script {
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[ci deploy]'", returnStatus: true) == 0) {
+                                currentBuild.result = 'NOT_BUILT'
+                                error 'Aborting because commit message contains [skip deploy]'
+                            }
+                        }
                         echo 'Deploying to CurseForge'
                         sh './gradlew curseforge'
                     }
