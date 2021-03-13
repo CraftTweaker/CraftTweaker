@@ -51,13 +51,14 @@ pipeline {
                     }
                     steps {
                         script {
-                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[ci deploy]'", returnStatus: true) == 0) {
-                                currentBuild.result = 'NOT_BUILT'
-                                error 'Aborting because commit message contains [skip deploy]'
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[skip deploy]'", returnStatus: true) == 0) {
+                                echo 'Skipping Update Version due to [skip deploy]'
+                            } else {
+                                echo 'Updating Version'
+                                sh './gradlew updateVersionTracker'
                             }
                         }
-                        echo 'Updating Version'
-                        sh './gradlew updateVersionTracker'
+
                     }
                 }
 
@@ -77,13 +78,14 @@ pipeline {
                     }
                     steps {
                         script {
-                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[ci deploy]'", returnStatus: true) == 0) {
-                                currentBuild.result = 'NOT_BUILT'
-                                error 'Aborting because commit message contains [skip deploy]'
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[skip deploy]'", returnStatus: true) == 0) {
+                                echo 'Skipping CurseForge due to [skip deploy]'
+                            } else {
+                                echo 'Deploying to CurseForge'
+                                sh './gradlew curseforge'
                             }
                         }
-                        echo 'Deploying to CurseForge'
-                        sh './gradlew curseforge'
+
                     }
                 }
 
