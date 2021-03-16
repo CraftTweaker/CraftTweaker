@@ -34,11 +34,11 @@ public final class AlternativeLootConditionTypeBuilder implements ILootCondition
     @Override
     public ILootCondition finish() {
         if (this.subConditions.isEmpty()) {
-            CraftTweakerAPI.logWarning("An 'Alternative' loot condition has no conditions: this will always match!");
+            CraftTweakerAPI.logWarning("An 'Alternative' loot condition has no conditions: this will never match!");
         }
         if (this.subConditions.size() == 1) {
             CraftTweakerAPI.logWarning("An 'Alternative' loot condition has only one condition: this is equivalent to the condition itself");
         }
-        return context -> this.subConditions.isEmpty() || this.subConditions.stream().anyMatch(it -> it.test(context));
+        return context -> this.subConditions.stream().anyMatch(it -> it.test(context));
     }
 }
