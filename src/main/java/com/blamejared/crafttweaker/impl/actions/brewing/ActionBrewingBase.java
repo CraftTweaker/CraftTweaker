@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.actions.IUndoableAction;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 import java.lang.reflect.Field;
@@ -21,12 +22,12 @@ public abstract class ActionBrewingBase implements IUndoableAction {
         
         this.recipes = recipes;
         try {
-            Class<?> mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
-            inputField = mixPredicate.getDeclaredField("input");
+            Class mixPredicate = Class.forName("net.minecraft.potion.PotionBrewing$MixPredicate");
+            inputField = ObfuscationReflectionHelper.findField(mixPredicate, "field_185198_a");
             inputField.setAccessible(true);
-            reagentField = mixPredicate.getDeclaredField("reagent");
+            reagentField = ObfuscationReflectionHelper.findField(mixPredicate, "field_185199_b");
             reagentField.setAccessible(true);
-            outputField = mixPredicate.getDeclaredField("output");
+            outputField = ObfuscationReflectionHelper.findField(mixPredicate, "field_185200_c");
             outputField.setAccessible(true);
         } catch(Exception e) {
             e.printStackTrace();
