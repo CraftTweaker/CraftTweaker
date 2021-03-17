@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.MatchToolLootCon
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
-@Document("vanilla/api/item/IItemStack")
+@Document("vanilla/api/loot/modifiers/IItemStackExpansion")
 @ZenCodeType.Expansion("crafttweaker.api.item.IItemStack")
 @ZenRegister
 public final class ModifierItemStackExpansion {

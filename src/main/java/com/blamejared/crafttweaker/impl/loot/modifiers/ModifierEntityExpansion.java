@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Consumer;
 
-@Document("vanilla/api/entities/MCEntityType")
+@Document("vanilla/api/loot/modifiers/EntityTypeExpansion")
 @ZenCodeType.Expansion("crafttweaker.api.entity.MCEntityType")
 @ZenRegister
 public final class ModifierEntityExpansion {

@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Consumer;
 
-@Document("vanilla/api/blocks/MCBlock")
+@Document("vanilla/api/loot/modifiers/BlockExpansion")
 @ZenCodeType.Expansion("crafttweaker.api.blocks.MCBlock")
 @ZenRegister
 public final class ModifierBlockExpansion {

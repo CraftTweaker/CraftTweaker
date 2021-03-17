@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
-@Document("vanilla/api/item/MCItemDefinition")
+@Document("vanilla/api/loot/modifiers/ItemExpansion")
 @ZenCodeType.Expansion("crafttweaker.api.item.MCItemDefinition")
 @ZenRegister
 public final class ModifierItemExpansion {

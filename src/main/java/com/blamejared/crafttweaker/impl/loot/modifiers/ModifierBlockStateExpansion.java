@@ -11,7 +11,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
-@Document("vanilla/api/blocks/MCBlockState")
+@Document("vanilla/api/loot/modifiers/BlockStateExpansion")
 @ZenCodeType.Expansion("crafttweaker.api.blocks.MCBlockState")
 @ZenRegister
 public final class ModifierBlockStateExpansion {
