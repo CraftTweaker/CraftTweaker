@@ -4,7 +4,7 @@ buildscript {
             url = 'https://files.minecraftforge.net/maven'
         }
         maven {
-            url = 'https://dist.creeper.host/Sponge/maven'
+            url = 'https://repo.spongepowered.org/repository/maven-public'
         }
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -17,6 +17,7 @@ buildscript {
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
+        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.1.0'
     }
 }
 
@@ -31,6 +32,10 @@ apply plugin: "com.matthewprenger.cursegradle"
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
 
 import groovy.json.JsonOutput
+import com.diluv.schoomp.Webhook
+import com.diluv.schoomp.message.Message
+import com.diluv.schoomp.message.embed.Embed
+import com.diluv.schoomp.message.embed.Footer
 
 if (project.hasProperty('secretFile')) {
     //noinspection GroovyAssignabilityCheck
@@ -75,7 +80,7 @@ repositories {
         url 'https://dogforce-games.com/maven'
     }
     maven {
-        url = 'https://dist.creeper.host/Sponge/maven'
+        url 'https://repo.spongepowered.org/repository/maven-public'
     }
 }
 
@@ -281,6 +286,37 @@ curseforge {
     }
 }
 
+tasks.getByName("curseforge").doLast {
+
+    try {
+        def name = project.findProperty('name')
+        def mcVersion = "1.16.5"
+        def cursePage = "https://www.curseforge.com/minecraft/mc-mods/crafttweaker"
+        def curseProject = "239197"
+        // Reads the file ID given to us by CurseForge
+        def newFileId = tasks.getByName("curseforge${curseProject}").property('mainArtifact').fileID
+
+        def webhook = new Webhook(findProperty('discordCFWebhook'), "${name} Gradle Upload")
+
+        def message = new Message()
+        message.setUsername(name)
+        message.setContent("${name} ${version} for Minecraft ${mcVersion} has been released! The download will be available soon.")
+
+        def embed = new Embed()
+        embed.addField('Download', "${cursePage}/files/$newFileId", false)
+        embed.addField('Change Log', "${getCIChangelog() ?: 'Unavailable'}", false)
+
+        embed.setColor(0xF16436)
+        message.addEmbed(embed)
+        message.setAvatarUrl("https://media.forgecdn.net/avatars/142/108/636546700830987709.png")
+        webhook.sendMessage(message)
+    }
+
+    catch (IOException e) {
+        println 'Failed to push to the Discord webhook.'
+    }
+}
+
 task updateVersionTracker {
 
     onlyIf {
@@ -353,6 +389,35 @@ task genGitChangelog() {
         System.out.println("Changelog generated!")
     }
 }
+
+def getCIChangelog() {
+    // This method handles getting short changelogs from Jenkins itself instead of long changelogs
+    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
+    try {
+        def stdout = new ByteArrayOutputStream()
+        def gitHash = System.getenv('GIT_COMMIT')
+        def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
+        if(gitHash && gitPrevHash) {
+            exec {
+                commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN ', '' + gitPrevHash + '...' + gitHash
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        }
+        else if (gitHash) {
+            exec {
+                commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN', '-1', '' + gitHash
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        } else {
+            return "";
+        }
+    } catch(ignored) {
+        return "";
+    }
+}
+
 
 editorconfig {
 

@@ -358,6 +358,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Setter("food")
     void setFood(MCFood food);
     
+    @ZenCodeType.Method
+    boolean isFood();
+    
     @ZenCodeType.Getter("burnTime")
     default int getBurnTime() {
         return ForgeHooks.getBurnTime(getInternal());

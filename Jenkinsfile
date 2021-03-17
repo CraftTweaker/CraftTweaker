@@ -10,6 +10,9 @@ def botEmail = 'crafttweakerbot@gmail.com'
 def documentationDir = 'CrafttweakerDocumentation'
 def exportDirInRepo = 'docs_exported/crafttweaker'
 
+
+def branchName = "1.16";
+
 pipeline {
     agent any
 
@@ -43,27 +46,53 @@ pipeline {
         stage('Publish') {
             stages {
                 stage('Updating Version') {
+                    when {
+                        branch '1.16'
+                    }
                     steps {
-                        echo 'Updating Version'
-                        sh './gradlew updateVersionTracker'
+                        script {
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[skip deploy]'", returnStatus: true) == 0) {
+                                echo 'Skipping Update Version due to [skip deploy]'
+                            } else {
+                                echo 'Updating Version'
+                                sh './gradlew updateVersionTracker'
+                            }
+                        }
+
                     }
                 }
 
                 stage('Deploying to Maven') {
+                    when {
+                        branch branchName
+                    }
                     steps {
                         echo 'Deploying to Maven'
                         sh './gradlew publish'
                     }
                 }
 
-                stage('Deploying to CurseForge (Disabled)') {
+                stage('Deploying to CurseForge') {
+                    when {
+                        branch branchName
+                    }
                     steps {
-                        echo 'Deploying to CurseForge'
-                        sh './gradlew curseforge'
+                        script {
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[skip deploy]'", returnStatus: true) == 0) {
+                                echo 'Skipping CurseForge due to [skip deploy]'
+                            } else {
+                                echo 'Deploying to CurseForge'
+                                sh './gradlew curseforge'
+                            }
+                        }
+
                     }
                 }
 
-                stage('Exporting Documentation (Disabled)') {
+                stage('Exporting Documentation') {
+                    when {
+                        branch branchName
+                    }
                     steps {
                         echo "Cloning Repository at Branch $docsRepositoryBranch"
 

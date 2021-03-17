@@ -62,7 +62,13 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public void setFood(MCFood food) {
     
-        CraftTweakerAPI.apply(new ActionSetFood(this, food));
+        CraftTweakerAPI.apply(new ActionSetFood(this, food, this.getInternal().getItem().getFood()));
+    }
+    
+    @Override
+    public boolean isFood() {
+        
+        return getInternal().isFood();
     }
     
     @Override
