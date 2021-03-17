@@ -4,44 +4,25 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
+import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.AndLootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.JsonLootConditionTypeBuilder;
-import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.AlternativeLootConditionTypeBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.OrLootConditionTypeBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.LootConditionBuilder")
 @Document("vanilla/api/loot/conditions/LootConditionBuilder")
 public final class CTLootConditionBuilder {
-    private static final Map<Class<? extends ILootConditionTypeBuilder>, Function<CTLootConditionBuilder, ? extends ILootConditionTypeBuilder>> BUILDERS = new HashMap<>();
-
     private final List<ILootCondition> conditions;
 
     private CTLootConditionBuilder() {
         this.conditions = new ArrayList<>();
-    }
-
-    // Registration
-    public static <T extends ILootConditionTypeBuilder> void register(final Class<T> typeToken, final Function<CTLootConditionBuilder, T> creator) {
-        if (BUILDERS.containsKey(typeToken)) {
-            throw new IllegalStateException("A builder for the given type '" + typeToken.getName() + "' was already registered");
-        }
-        BUILDERS.put(typeToken, creator);
-        CraftTweakerAPI.logDebug("Successfully registered loot condition type builder for '%s' as '%s'", typeToken, creator);
-    }
-
-    public static <T extends ILootConditionTypeBuilder> void register(final Class<T> typeToken, final Supplier<T> creator) {
-        register(typeToken, ignore -> creator.get());
     }
 
     // Creation
@@ -98,7 +79,7 @@ public final class CTLootConditionBuilder {
     public final <T extends ILootConditionTypeBuilder> ILootCondition make(final Class<T> type, final String id, final Consumer<T> lender) {
         final T builder;
         try {
-            builder = this.findFor(type);
+            builder = LootConditionManager.get(this, type);
         } catch (final NullPointerException | ClassCastException e) {
             CraftTweakerAPI.logThrowing("Unable to create a loot condition builder for type '%s'", e, type.getName());
             return null;
@@ -120,12 +101,6 @@ public final class CTLootConditionBuilder {
             CraftTweakerAPI.logThrowing("Unable to add a loot condition of type '%s' to '%s' due to an invalid builder state", e, type.getName(), id);
         }
         return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public final <T extends ILootConditionTypeBuilder> T findFor(final Class<T> type) {
-        final Function<CTLootConditionBuilder, ? extends ILootConditionTypeBuilder> builderCreator = BUILDERS.get(type);
-        return Objects.requireNonNull((T) builderCreator.apply(this));
     }
 
     @ZenCodeType.Method

@@ -16,6 +16,7 @@ import com.blamejared.crafttweaker.impl.commands.script_examples.ExampleCollecti
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import com.blamejared.crafttweaker.impl.loot.conditions.LootConditionManager;
 import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.recipes.SerializerShaped;
@@ -104,7 +105,7 @@ public class CraftTweaker {
         CraftTweakerAPI.logInfo("Starting building internal Registries");
         CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
         CraftTweakerRegistry.findClasses();
-        CraftTweakerRegistry.registerLootConditionBuilders();
+        LootConditionManager.handleBuilderRegistration();
         CraftTweakerAPI.logInfo("Completed building internal Registries");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
