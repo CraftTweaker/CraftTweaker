@@ -41,6 +41,11 @@ public class IngredientAny extends Ingredient {
         return jsonObject;
     }
 
+    @Override
+    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+        return Serializer.INSTANCE;
+    }
+
     public enum Serializer implements IIngredientSerializer<IngredientAny> {
         INSTANCE;
 
