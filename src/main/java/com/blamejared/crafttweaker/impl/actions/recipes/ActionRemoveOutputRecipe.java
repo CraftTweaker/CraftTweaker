@@ -10,6 +10,8 @@ import net.minecraft.util.registry.Registry;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// See AcitonRemoveRecipeByOutput
+@Deprecated
 public class ActionRemoveOutputRecipe extends ActionRecipeBase {
     
     private final IItemStack output;
