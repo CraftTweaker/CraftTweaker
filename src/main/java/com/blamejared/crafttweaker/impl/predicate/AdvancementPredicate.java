@@ -52,14 +52,14 @@ public final class AdvancementPredicate implements IVanillaWrappingPredicate<Pla
     }
 
     @Override
-    public net.minecraft.advancements.criterion.PlayerPredicate.IAdvancementPredicate toVanillaPredicate() {
+    public PlayerPredicate.IAdvancementPredicate toVanillaPredicate() {
         if (!this.passed.isUnset() && !this.criteria.isEmpty()) {
             throw new IllegalStateException("An advancement can be checked only for full completion or criteria, not both");
         }
         if (!this.passed.isUnset()) {
-            return new net.minecraft.advancements.criterion.PlayerPredicate.CompletedAdvancementPredicate(this.passed.toBoolean());
+            return new PlayerPredicate.CompletedAdvancementPredicate(this.passed.toBoolean());
         } else {
-            return new net.minecraft.advancements.criterion.PlayerPredicate.CriteriaPredicate(this.toVanilla(this.criteria));
+            return new PlayerPredicate.CriteriaPredicate(this.toVanilla(this.criteria));
         }
     }
 

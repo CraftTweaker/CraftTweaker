@@ -51,13 +51,13 @@ public final class CTLootConditionBuilder {
     }
 
     @ZenCodeType.Method
-    public static CTLootConditionBuilder createInAnd() {
-        return create();
+    public static CTLootConditionBuilder createInAnd(final Consumer<AndLootConditionTypeBuilder> lender) {
+        return createForSingle(AndLootConditionTypeBuilder.class, lender);
     }
 
     @ZenCodeType.Method
-    public static CTLootConditionBuilder createInOr(final Consumer<AlternativeLootConditionTypeBuilder> lender) {
-        return createForSingle(AlternativeLootConditionTypeBuilder.class, lender);
+    public static CTLootConditionBuilder createInOr(final Consumer<OrLootConditionTypeBuilder> lender) {
+        return createForSingle(OrLootConditionTypeBuilder.class, lender);
     }
 
     @ZenCodeType.Method

@@ -35,8 +35,7 @@ public final class OrLootConditionTypeBuilder implements ILootConditionTypeBuild
     public ILootCondition finish() {
         if (this.subConditions.isEmpty()) {
             CraftTweakerAPI.logWarning("An 'Or' loot condition has no conditions: this will never match!");
-        }
-        if (this.subConditions.size() == 1) {
+        } else if (this.subConditions.size() == 1) {
             CraftTweakerAPI.logWarning("An 'Or' loot condition has only one condition: this is equivalent to the condition itself");
         }
         return context -> this.subConditions.stream().anyMatch(it -> it.test(context));

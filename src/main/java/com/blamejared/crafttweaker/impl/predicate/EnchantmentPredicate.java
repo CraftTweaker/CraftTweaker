@@ -53,6 +53,9 @@ public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDef
 
     @Override
     public net.minecraft.advancements.criterion.EnchantmentPredicate toVanilla() {
+        if (this.enchantment == null) {
+            throw new IllegalStateException("Unable to build an enchantment predicate without an enchantment");
+        }
         return new net.minecraft.advancements.criterion.EnchantmentPredicate(this.enchantment, this.levels.toVanillaPredicate());
     }
 }
