@@ -7,54 +7,42 @@ import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ActionRemoveRecipeByOutputInput extends ActionRecipeBase {
+public class ActionRemoveRecipeByOutputInput extends ActionRemoveRecipe {
     
     private final IItemStack output;
     private final IIngredient input;
     
     public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IItemStack output, IIngredient input) {
-        super(manager);
-        this.output = output;
-        this.input = input;
-    }
-    
-    @Override
-    public void apply() {
-        List<ResourceLocation> toRemove = new ArrayList<>();
-        for(ResourceLocation location : getManager().getRecipes().keySet()) {
-            IRecipe<?> recipe = getManager().getRecipes().get(location);
-            ItemStack recOut = (ItemStack) recipe.getRecipeOutput();
-            if(output.matches(new MCItemStackMutable(recOut))) {
+        
+        super(manager, recipe -> {
+            ItemStack recipeOutput = recipe.getRecipeOutput();
+            if(output.matches(new MCItemStackMutable(recipeOutput))) {
                 for(IItemStack item : input.getItems()) {
                     if(recipe.getIngredients().get(0).test(item.getInternal())) {
-                        toRemove.add(location);
-                        break;
+                        return true;
                     }
                 }
             }
-        }
-        toRemove.forEach(getManager().getRecipes()::remove);
+            return false;
+        }, action -> "Removing \"" + action.getRecipeTypeName() + "\" recipes that output: " + output + "\" from an input of: " + input);
+        this.output = output;
+        this.input = input;
         
     }
     
     @Override
-    public String describe() {
-        return "Removing \"" + Registry.RECIPE_TYPE.getKey(getManager().getRecipeType()) + "\" recipes with output: " + output + "\"";
-    }
-    
-    @Override
     public boolean validate(ILogger logger) {
+        
         if(output == null) {
             logger.throwingWarn("output cannot be null!", new ScriptException("output IItemStack cannot be null!"));
             return false;
         }
+        if(input == null) {
+            logger.throwingWarn("input cannot be null!", new ScriptException("input IIngredient cannot be null!"));
+            return false;
+        }
         return true;
     }
+    
 }
