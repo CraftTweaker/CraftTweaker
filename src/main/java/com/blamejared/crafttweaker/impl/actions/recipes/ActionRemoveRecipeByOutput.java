@@ -13,9 +13,9 @@ public class ActionRemoveRecipeByOutput extends ActionRemoveRecipe {
     public ActionRemoveRecipeByOutput(IRecipeManager manager, IItemStack output) {
         
         super(manager,
-                recipe -> output.matches(new MCItemStackMutable(recipe.getRecipeOutput())),
-                action -> "Removing \"" + action.getRecipeTypeName() + "\" recipes with output: " + output + "\"");
+                recipe -> output.matches(new MCItemStackMutable(recipe.getRecipeOutput())));
         this.output = output;
+        describeDefaultRemoval(output);
     }
     
     @Override

@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.actions.recipes;
 
+import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import net.minecraft.item.crafting.IRecipe;
 
@@ -37,5 +38,10 @@ public class ActionRemoveRecipe extends ActionRecipeBase {
         return describeFunction.apply(this);
     }
     
+    public ActionRemoveRecipe describeDefaultRemoval(CommandStringDisplayable output) {
+        
+        this.describeFunction = action -> "Removing \"" + action.getRecipeTypeName() + "\" recipes with output: " + output + "\"";
+        return this;
+    }
     
 }
