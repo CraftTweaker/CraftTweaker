@@ -152,9 +152,8 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.0.0'
     compile fg.deobf("mezz.jei:jei-1.16.4:7.6.1.65")
 
-    testCompile group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
-    testCompile group: "org.junit.jupiter", name: "junit-platform", version: "5.6.2"
-    testRuntime group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
     testImplementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
 
 

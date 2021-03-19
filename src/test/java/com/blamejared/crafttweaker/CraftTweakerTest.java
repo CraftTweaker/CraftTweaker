@@ -10,7 +10,7 @@ public class CraftTweakerTest {
     
     @BeforeEach
     public void beforeEach() {
-        net.minecraft.server.MinecraftServer.startServer()
+        
         testContext = new TestContext();
     }
     

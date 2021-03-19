@@ -59,4 +59,24 @@ public class BoolData implements IData {
     public String toJsonString() {
         return internal + " as bool";
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        BoolData boolData = (BoolData) o;
+    
+        return internal == boolData.internal;
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return (internal ? 1 : 0);
+    }
+    
 }

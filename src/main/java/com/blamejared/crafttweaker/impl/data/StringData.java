@@ -84,4 +84,24 @@ public class StringData implements IData {
         
         return stringbuilder.append('"').toString();
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        StringData that = (StringData) o;
+    
+        return internal.equals(that.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }
