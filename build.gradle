@@ -4,7 +4,7 @@ buildscript {
             url = 'https://files.minecraftforge.net/maven'
         }
         maven {
-            url = 'https://dist.creeper.host/Sponge/maven'
+            url = 'https://repo.spongepowered.org/repository/maven-public'
         }
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -79,7 +79,7 @@ repositories {
         url 'https://dogforce-games.com/maven'
     }
     maven {
-        url = 'https://dist.creeper.host/Sponge/maven'
+        url 'https://repo.spongepowered.org/repository/maven-public'
     }
 }
 
@@ -294,7 +294,7 @@ tasks.getByName("curseforge").doLast {
 
     try {
         def name = project.findProperty('name')
-        def version = "1.16.5"
+        def mcVersion = "1.16.5"
         def cursePage = "https://www.curseforge.com/minecraft/mc-mods/crafttweaker"
         def curseProject = "239197"
         // Reads the file ID given to us by CurseForge
@@ -304,7 +304,7 @@ tasks.getByName("curseforge").doLast {
 
         def message = new Message()
         message.setUsername(name)
-        message.setContent("${name} ${version} for Minecraft ${version} has been released! The download will be available soon.")
+        message.setContent("${name} ${version} for Minecraft ${mcVersion} has been released! The download will be available soon.")
 
         def embed = new Embed()
         embed.addField('Download', "${cursePage}/files/$newFileId", false)
