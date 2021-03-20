@@ -6,6 +6,11 @@ import com.blamejared.crafttweaker.impl.loot.conditions.ILootConditionTypeBuilde
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * Builder to create a 'True' loot condition.
+ *
+ * A 'True' loot condition is guaranteed to always pass.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.True")
 @Document("vanilla/api/loot/conditions/crafttweaker/True")

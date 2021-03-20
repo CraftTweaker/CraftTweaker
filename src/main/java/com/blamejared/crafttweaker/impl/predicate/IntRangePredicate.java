@@ -7,6 +7,15 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
 
+/**
+ * Represents a predicate for a range of integer values.
+ *
+ * This predicate cannot be built directly and is only used within other predicates for bounding rules and checks. This
+ * predicate matches including bounds, if present. It may also be unbounded on both sides, allowing effectively any
+ * value, or only one side, acting as a lower or upper limit.
+ *
+ * A version of this predicate for decimals is also provided in the form of {@link FloatRangePredicate}.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.predicate.IntRangePredicate")
 @Document("vanilla/api/predicate/IntRangePredicate")

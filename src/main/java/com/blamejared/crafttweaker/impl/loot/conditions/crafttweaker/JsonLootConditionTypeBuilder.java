@@ -14,9 +14,19 @@ import net.minecraft.loot.LootSerializers;
 import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * Builder to create an arbitrary loot condition through a JSON-based structure.
+ *
+ * This builder allows to create arbitrary JSON structures, which can reference other mod-added loot conditions that
+ * do not provide native CraftTweaker support. The given JSON structure needs to be a valid JSON-object representation,
+ * meaning it needs to be an instance of {@link MapData}. The JSON may or may not specify the type. If the type is
+ * specified then it must match the one given in the builder; otherwise the type is automatically added.
+ *
+ * The JSON structure along with the condition type is mandatory.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.Json")
-@Document("vanilla/api/loot/condition/crafttweaker/Json")
+@Document("vanilla/api/loot/conditions/crafttweaker/Json")
 public final class JsonLootConditionTypeBuilder implements ILootConditionTypeBuilder {
     private static final Gson GSON = LootSerializers.func_237387_b_().disableHtmlEscaping().create();
 
@@ -25,16 +35,60 @@ public final class JsonLootConditionTypeBuilder implements ILootConditionTypeBui
 
     JsonLootConditionTypeBuilder() {}
 
+    /**
+     * Creates an {@link ILootCondition} of the given <code>type</code> parsing the given <code>json</code>.
+     *
+     * The JSON must respect the constraints specified in the class documentation. It is suggested to use this method
+     * sparingly, preferring to instead create JSON conditions as needed from within a {@link CTLootConditionBuilder}.
+     *
+     * If no valid condition is found, or the JSON is invalid, an error gets thrown.
+     *
+     * This method is equivalent to <code>makeJson</code> in {@link CTLootConditionBuilder}.
+     *
+     * @param type A {@link ResourceLocation} identifying the type of the loot condition to create.
+     * @param json The JSON data, according to the given constraints.
+     * @return An {@link ILootCondition} instance built according to the given data, if possible.
+     *
+     * @see CTLootConditionBuilder#makeJson(ResourceLocation, IData)
+     */
     @ZenCodeType.Method
     public static ILootCondition create(final ResourceLocation type, final IData json) {
         return CTLootConditionBuilder.makeJson(type, json);
     }
 
+    /**
+     * Creates an {@link ILootCondition} of the given <code>type</code> parsing the given <code>json</code>.
+     *
+     * The name is treated as a {@link ResourceLocation}, lacking the type safety of the bracket handler. For this
+     * reason, it's suggested to prefer the method with a {@link ResourceLocation} as parameter.
+     *
+     * The JSON must respect the constraints specified in the class documentation. It is suggested to use this method
+     * sparingly, preferring to instead create JSON conditions as needed from within a {@link CTLootConditionBuilder}.
+     *
+     * If no valid condition is found, or the JSON is invalid, an error gets thrown.
+     *
+     * This method is equivalent to <code>makeJson</code> in {@link CTLootConditionBuilder}.
+     *
+     * @param type A string in resource location format identifying the type of the loot condition to create.
+     * @param json The JSON data, according to the given constraints.
+     * @return An {@link ILootCondition} instance built according to the given data, if possible.
+     *
+     * @see CTLootConditionBuilder#makeJson(String, IData)
+     */
     @ZenCodeType.Method
     public static ILootCondition create(final String type, final IData json) {
         return CTLootConditionBuilder.makeJson(type, json);
     }
 
+    /**
+     * Sets the type of the condition that will be built along with the JSON representation that will be parsed.
+     *
+     * The JSON must respect the constraints specified in the class documentation.
+     *
+     * @param type A {@link ResourceLocation} identifying the type of the loot condition.
+     * @param json The JSON data, according to the given constraints.
+     * @return This builder for chaining.
+     */
     @ZenCodeType.Method
     public JsonLootConditionTypeBuilder withJson(final ResourceLocation type, final IData json) {
         this.name = type;
@@ -42,6 +96,18 @@ public final class JsonLootConditionTypeBuilder implements ILootConditionTypeBui
         return this;
     }
 
+    /**
+     * Sets the type of the condition that will be built along with the JSON representation that will be parsed.
+     *
+     * The name is treated as a {@link ResourceLocation}, lacking the type safety of the bracket handler. For this
+     * reason, it's suggested to prefer the method with a {@link ResourceLocation} as parameter.
+     *
+     * The JSON must respect the constraints specified in the class documentation.
+     *
+     * @param type A string in resource location format identifying the type of the loot condition.
+     * @param json The JSON data, according to the given constraints.
+     * @return This builder for chaining.
+     */
     @ZenCodeType.Method
     public JsonLootConditionTypeBuilder withJson(final String type, final IData json) {
         return this.withJson(new ResourceLocation(type), json);

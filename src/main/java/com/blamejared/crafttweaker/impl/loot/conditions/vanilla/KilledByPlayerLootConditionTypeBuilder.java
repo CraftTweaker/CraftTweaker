@@ -7,6 +7,12 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.loot.LootParameters;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * Builder to create a 'KilledByPlayer' condition.
+ *
+ * This condition will pass if and only if the target of the loot table has been killed by the player, either directly
+ * or indirectly (such as with arrows).
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.KilledByPlayer")
 @Document("vanilla/api/loot/conditions/vanilla/KilledByPlayer")

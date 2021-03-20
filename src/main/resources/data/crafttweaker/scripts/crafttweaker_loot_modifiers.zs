@@ -21,7 +21,8 @@ import stdlib.List;
 // ---- PRINTING ----
 // First off, CraftTweaker allows you to print the names of all loot modifiers
 // that are currently registered. This is useful to know what mods are adding
-// by default or even simply checking that your changes are being applied.
+// modifiers by default or even just checking if your changes are being
+// applied.
 // To print all loot modifiers you can use the 'getAllNames' method as follows:
 
 for modifierName in loot.modifiers.getAllNames() {
@@ -83,7 +84,7 @@ loot.modifiers.removeAll();
 
 // ---- GETTING ----
 // It is always possible to get a list of all loot modifiers or a specific one
-// for usage in other functions. An example may be of replacing a loot modifier
+// for usage in other functions. An example may be replacing a loot modifier
 // of a mod by adding some more conditions on top of it. To do that, you can
 // use the 'getByName', 'getAllNames', and 'getAll' methods.
 
@@ -143,7 +144,7 @@ loot.modifiers.registerUnconditional(
 // do not match, thus saving processor cycles and overall making the game run
 // better and faster.
 // All conditions are functions that take in a LootContext and decide whether a
-// specific loot modifier can be applied or not. We can either create or own
+// specific loot modifier can be applied or not. We can either create our own
 // completely custom loot conditions, or use the ones that vanilla already
 // provides. It is generally suggested to use vanilla functions since the game
 // already knows about them, so it can do some additional mangling and

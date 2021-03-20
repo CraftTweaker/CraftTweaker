@@ -7,6 +7,12 @@ import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * Builder to create a 'SurvivesExplosion' condition.
+ *
+ * This condition will pass if and only if the target of the loot table survives an explosion with the current radius,
+ * as specified by the {@link net.minecraft.loot.LootContext}.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.SurvivesExplosion")
 @Document("vanilla/api/loot/conditions/vanilla/SurvivesExplosion")

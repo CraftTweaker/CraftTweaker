@@ -6,9 +6,12 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * Represents a vanilla or mod-added loot condition.
+ */
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.condition.MCLootCondition")
-@Document("vanilla/api/loot/condition/MCLootCondition")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.MCLootCondition")
+@Document("vanilla/api/loot/conditions/MCLootCondition")
 public final class MCLootCondition implements ILootCondition {
     private final net.minecraft.loot.conditions.ILootCondition wrapped;
 

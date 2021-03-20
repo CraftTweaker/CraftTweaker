@@ -12,6 +12,9 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 
+/**
+ * Represents a vanilla or mod-added loot modifier.
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.modifiers.MCLootModifier")
 @Document("vanilla/api/loot/modifiers/MCLootModifier")

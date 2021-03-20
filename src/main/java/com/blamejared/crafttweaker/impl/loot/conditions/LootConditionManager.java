@@ -30,7 +30,7 @@ public final class LootConditionManager {
     
     @SuppressWarnings("unchecked")
     public static <T extends ILootConditionTypeBuilder> T get(final CTLootConditionBuilder builder, final Class<T> token) {
-        return Objects.requireNonNull((T) BUILDERS.get(token).apply(builder), () -> "No loot condition builder for type '" + token.getName() + "' was registered!");
+        return (T) Objects.requireNonNull(BUILDERS.get(token), () -> "No loot condition builder for type '" + token.getName() + "' was registered!").apply(builder);
     }
     
     private static <T extends ILootConditionTypeBuilder> Pair<Class<T>, Function<CTLootConditionBuilder, T>> make(final Class<T> clazz) {
@@ -39,7 +39,7 @@ public final class LootConditionManager {
         
         final boolean hasInstance = instanceField != null;
         final boolean hasConstructor = constructors.getFirst() != null || constructors.getSecond() != null;
-        final boolean hasBothConstructors = hasConstructor && (constructors.getFirst() != null && constructors.getSecond() != null);
+        final boolean hasBothConstructors = constructors.getFirst() != null && constructors.getSecond() != null;
         
         if (hasInstance && hasConstructor) {
             CraftTweakerAPI.logWarning("Identified both 'INSTANCE' field and a valid constructor for condition '%s': INSTANCE will take precedence", clazz.getName());
@@ -75,7 +75,7 @@ public final class LootConditionManager {
             if (typedConstructor.getParameterCount() == 0) {
                 noArg = typedConstructor; // There cannot be more than one anyway
             } else if (typedConstructor.getParameterCount() == 1 && typedConstructor.getParameters()[0].getType() == CTLootConditionBuilder.class) {
-                singleArg = typedConstructor;
+                singleArg = typedConstructor; // There cannot be more than one here too
             }
         }
         
