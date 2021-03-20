@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.loot.modifiers;
 
-import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
@@ -8,10 +7,10 @@ import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRegisterLootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRemoveLootModifier;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
+import com.blamejared.crafttweaker.impl.util.NameUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
 import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
@@ -131,44 +130,14 @@ public final class CTLootModifierManager {
     }
 
     private ResourceLocation fromName(final String name) {
-        StringBuilder mistakes = null;
-        String fixedName = name;
-
-        if (fixedName.indexOf(':') >= 0) {
-            mistakes = new StringBuilder("- it cannot contain colons (':')");
-            fixedName = fixedName.replace(':', '.');
-        }
-        if (fixedName.indexOf(' ') >= 0) {
-            final String mistake = "- it cannot contain spaces";
-            if (mistakes == null) mistakes = new StringBuilder(mistake); else mistakes.append('\n').append(mistake);
-            fixedName = fixedName.replace(' ', '.');
-        }
-        if (!fixedName.toLowerCase(Locale.ROOT).equals(fixedName)) {
-            final String mistake = "- it must be all lowercase";
-            if (mistakes == null) mistakes = new StringBuilder(mistake); else mistakes.append('\n').append(mistake);
-            fixedName = fixedName.toLowerCase(Locale.ROOT);
-        }
-
-        RuntimeException thrownException = null;
-        ResourceLocation result = null;
-
-        try {
-            result = new ResourceLocation(CraftTweaker.MODID, fixedName);
-        } catch (final ResourceLocationException | IllegalArgumentException e) {
-            thrownException = e;
-            if (mistakes == null) mistakes = new StringBuilder();
-            mistakes.append("- ").append(e.getMessage());
-        }
-
-        if (mistakes != null) {
-            CraftTweakerAPI.logWarning(
-                    "The given loot modifier name '%s' isn't valid due to the following issues:%n%s%nThe loot modifier name was changed to '%s'",
-                    name, mistakes.toString(), fixedName
-            );
-        }
-
-        if (thrownException != null) throw thrownException;
-
-        return result;
+        return NameUtils.fromFixedName(
+                name,
+                (fixed, mistakes) -> CraftTweakerAPI.logWarning(
+                        "The given loot modifier name '%s' isn't valid due to:\n%s\nThe name was changed to '%s'",
+                        name,
+                        String.join("\n", mistakes),
+                        fixed
+                )
+        );
     }
 }
