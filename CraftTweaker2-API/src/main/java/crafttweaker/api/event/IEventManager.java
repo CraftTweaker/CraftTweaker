@@ -233,6 +233,18 @@ public interface IEventManager {
     IEventHandle onMinecartInteract(IEventHandler<MinecartInteractEvent> ev);
 
     @ZenMethod
+    IEventHandle onMinecartUpdate(IEventHandler<MinecartUpdateEvent> ev);
+
+    @ZenMethod
+    IEventHandle onNoteBlock(IEventHandler<INoteBlockEvent> ev);
+
+    @ZenMethod
+    IEventHandle onNoteBlockChange(IEventHandler<NoteBlockChangeEvent> ev);
+
+    @ZenMethod
+    IEventHandle onNoteBlockPlay(IEventHandler<NoteBlockPlayEvent> ev);
+
+    @ZenMethod
     IEventHandle onPlayerCloseContainer(IEventHandler<PlayerCloseContainerEvent> ev);
 
     @ZenMethod

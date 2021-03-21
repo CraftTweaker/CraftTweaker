@@ -4,8 +4,9 @@ image:
 tasks:
   - before: . /home/gitpod/.sdkman/bin/sdkman-init.sh
   - init: sdk upgrade
-  - command: sdk uninstall java 11.0.6.fx-zulu
-  - command: sdk install java 8.0.265-open
+  - command: sdk uninstall java 11.0.10.fx-zulu
+  - command: sdk install java 11.0.10.hs-adpt
+  - command: sdk install java 8.0.282-open
   - prebuild: ./gradlew build
   
 github:

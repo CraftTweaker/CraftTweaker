@@ -1,6 +1,5 @@
 package crafttweaker.api.event;
 
-
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.block.IBlockState;
