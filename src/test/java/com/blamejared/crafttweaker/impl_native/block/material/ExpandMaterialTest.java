@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.block.material;
 
+import cpw.mods.modlauncher.api.LamdbaExceptionUtils;
 import net.minecraft.block.material.Material;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,13 +20,7 @@ class ExpandMaterialTest {
         
         return Arrays.stream(Material.class.getFields())
                 .filter(field -> Modifier.isStatic(field.getModifiers()) && field.getType().equals(Material.class))
-                .map(field -> {
-                    try {
-                        return Arguments.of(field.getName(), field.get(null));
-                    } catch(IllegalAccessException e) {
-                        throw new RuntimeException("Could not get Material, aborting test!", e);
-                    }
-                });
+                .map(LamdbaExceptionUtils.rethrowFunction(field -> Arguments.of(field.getName(), field.get(null))));
         
     }
     

@@ -75,7 +75,7 @@ public class CTRecipeShapedTest extends CraftTweakerTest {
     }
     
     @ParameterizedTest
-    @MethodSource("com.blamejared.crafttweaker.test_api.helper.recipes.ShapedIngredientSizeInformation#getSizeInformationForDimensionValidation")
+    @MethodSource("com.blamejared.crafttweaker.impl.recipes.ShapedIngredientSizeInformation#getSizeInformationForDimensionValidation")
     public void recipeCalculatesProperDimensions(ShapedIngredientSizeInformation sizeInformation) {
         //Arrange
         this.ingredients = sizeInformation.ingredients;
@@ -91,7 +91,7 @@ public class CTRecipeShapedTest extends CraftTweakerTest {
     }
     
     @ParameterizedTest
-    @MethodSource("com.blamejared.crafttweaker.test_api.helper.recipes.ShapedIngredientSizeInformation#getSizeInformationForDimensionValidation")
+    @MethodSource("com.blamejared.crafttweaker.impl.recipes.ShapedIngredientSizeInformation#getSizeInformationForDimensionValidation")
     public void recipeReturnsTrueIfItCanFit(ShapedIngredientSizeInformation sizeInformation) {
         //Arrange
         this.ingredients = sizeInformation.ingredients;

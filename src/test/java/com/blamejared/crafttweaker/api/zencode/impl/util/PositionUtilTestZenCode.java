@@ -39,7 +39,7 @@ public class PositionUtilTestZenCode extends ZenCodeTest {
     }
     
     @Test
-    public void getPositionReturnsFileNameOfFirstFile() {
+    public void getPositionReturnsFileNameOfTopMostFile() {
         
         //Arrange
         final String fileNameCallee = "positionTestFileCallee.zs";

@@ -60,7 +60,7 @@ class PositionUtilTest {
         assertThat(position).isNotSameAs(CodePosition.UNKNOWN);
         assertThat(position.getFilename())
                 .isEqualTo(firstFileName)
-                .isNotEqualTo(secondElement);
+                .isNotEqualTo(secondFileName);
     }
     
 }
