@@ -140,7 +140,7 @@ mixin {
 }
 
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
-
+def zenCodeTestDeps = [':ScriptingExample']
 
 dependencies {
     compile project(":Crafttweaker_Annotations")
@@ -156,7 +156,7 @@ dependencies {
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
     testImplementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
 
-
+    zenCodeTestDeps.collect { testCompile(project(it).sourceSets.test.output) }
     testCompile group: "org.assertj", name: "assertj-core", version: "3.19.0"
 }
 
