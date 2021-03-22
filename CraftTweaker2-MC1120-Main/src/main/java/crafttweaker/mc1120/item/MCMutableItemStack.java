@@ -14,7 +14,8 @@ import net.minecraft.nbt.NBTTagString;
 public class MCMutableItemStack extends MCItemStack implements IMutableItemStack {
     public MCMutableItemStack(ItemStack itemStack) {
         super(itemStack);
-        tag = tag == null ? null : NBTConverter.from(CraftTweakerMC.getNBTCompound(tag), false);
+        NBTTagCompound nbt = itemStack.getTagCompound();
+        tag = nbt == null ? null : NBTConverter.from(nbt, false);
     }
 
     @Override
