@@ -1,10 +1,10 @@
-package com.blamejared.crafttweaker.test_api.helper.recipes;
+package com.blamejared.crafttweaker.impl.recipes;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.test_api.mocks.items.MockItems;
 
-public class ShapedIngredientSizeInformation {
+final class ShapedIngredientSizeInformation {
     
     public final IIngredient[][] ingredients;
     public final int expectedWidth;

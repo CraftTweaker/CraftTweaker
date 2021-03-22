@@ -4,6 +4,7 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 
+@SuppressWarnings("sunapi")
 public class UnsafeHelper {
     
     private static final Unsafe unsafe;
@@ -24,7 +25,7 @@ public class UnsafeHelper {
             //noinspection unchecked
             return (T) unsafe.allocateInstance(theClass);
         } catch(InstantiationException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not allocateInstance", e);
         }
     }
     

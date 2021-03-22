@@ -154,7 +154,6 @@ dependencies {
 
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
-    testImplementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
 
     zenCodeTestDeps.collect { testCompile(project(it).sourceSets.test.output) }
     testCompile group: "org.assertj", name: "assertj-core", version: "3.19.0"
@@ -356,6 +355,12 @@ compileJava {
     //options.compilerArgs += ["-Xprefer:source", "-verbose"]
     //options.fork = true
     //options.forkOptions.executable = 'javac'
+}
+
+compileTestJava {
+    //Suppresses the warning when using Unsafe in the UnsafeHelper class.
+    options.fork = true // necessary to make -XDenableSunApiLintControl work
+    options.compilerArgs << "-XDenableSunApiLintControl"
 }
 
 idea {

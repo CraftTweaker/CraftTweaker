@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.test_api.context.TestContext;
-import com.blamejared.crafttweaker.test_api.helper.recipes.ShapedIngredientSizeInformation;
 import com.blamejared.crafttweaker.test_api.mocks.container.MockCraftingInventory;
 import com.blamejared.crafttweaker.test_api.mocks.items.MockItems;
 import net.minecraft.util.ResourceLocation;
