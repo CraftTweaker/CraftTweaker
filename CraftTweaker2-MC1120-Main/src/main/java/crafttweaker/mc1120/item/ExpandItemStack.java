@@ -1,18 +1,23 @@
 package crafttweaker.mc1120.item;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.data.DataMap;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntityEquipmentSlot;
 import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.IMutableItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.data.NBTUpdater;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.HashMap;
 
 @ZenExpansion("crafttweaker.item.IItemStack")
 @ZenRegister
@@ -46,11 +51,21 @@ public class ExpandItemStack {
 
     @ZenMethod
     public static IItemStack withCapNBT(IItemStack stack, IData capNBT) {
-        return CraftTweakerMC.getIItemStack(new ItemStack(
-                CraftTweakerMC.getItem(stack.getDefinition()),
-                stack.getAmount(),
-                stack.getMetadata(),
-                (NBTTagCompound) NBTConverter.from(capNBT))
-        ).withTag(stack.getTag(), stack.getMatchTagExact());
+        if (stack instanceof IMutableItemStack) {
+            ItemStack vanillaStack = getInternal(stack);
+            HashMap<String, IData> dataTemp = new HashMap<>();
+            dataTemp.put("ForgeCaps", capNBT);
+            NBTTagCompound nbt = vanillaStack.serializeNBT();
+            NBTUpdater.updateMap(nbt, new DataMap(dataTemp, true));
+            vanillaStack.deserializeNBT(nbt);
+            return stack;
+        } else {
+            return CraftTweakerMC.getIItemStack(new ItemStack(
+                    CraftTweakerMC.getItem(stack.getDefinition()),
+                    stack.getAmount(),
+                    stack.getMetadata(),
+                    (NBTTagCompound) NBTConverter.from(capNBT))
+            ).withTag(stack.getTag(), stack.getMatchTagExact());
+        }
     }
 }

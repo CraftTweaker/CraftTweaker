@@ -441,4 +441,9 @@ throw new IllegalStateException("ItemStackUnknown is only supposed to be used in
     public IEntityItem createEntityItem(IWorld world, IBlockPos pos) {
         throw new IllegalStateException("ItemStackUnknown is only supposed to be used internally!");
     }
+
+    @Override
+    public IMutableItemStack mutable() {
+        throw new IllegalStateException("ItemStackUnknown is only supposed to be used internally!");
+    }
 }

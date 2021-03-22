@@ -451,6 +451,12 @@ public interface IItemStack extends IIngredient {
     
     @ZenMethod
     IEntityItem createEntityItem(IWorld world, IBlockPos pos);
+
+    @ZenMethod
+    default IMutableItemStack mutable() {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " does not override IItemStack#mutable, it is a bug!");
+        return null;
+    }
     
     @ZenGetter("isFood")
     default boolean isFood() {
