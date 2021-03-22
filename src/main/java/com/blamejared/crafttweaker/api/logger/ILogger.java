@@ -113,18 +113,19 @@ public interface ILogger extends ScriptingEngineLogger {
     
     @Override
     default void throwingErr(String message, Throwable throwable) {
-        error(message);
-        final StringPrintStream errorStream = new StringPrintStream();
-        throwable.printStackTrace(errorStream);
-        log(LogLevel.ERROR, errorStream.getValue(), false);
+        throwing(LogLevel.ERROR, message, throwable);
     }
     
     @Override
     default void throwingWarn(String message, Throwable throwable) {
-        warning(message);
+        throwing(LogLevel.WARNING, message, throwable);
+    }
+    
+    default void throwing(LogLevel logLevel, String message, Throwable throwable) {
+        log(logLevel, message);
         final StringPrintStream errorStream = new StringPrintStream();
         throwable.printStackTrace(errorStream);
-        log(LogLevel.WARNING, errorStream.getValue(), false);
+        log(logLevel, errorStream.getValue(), false);
     }
     
     class StringPrintStream extends PrintStream {
