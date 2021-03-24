@@ -360,7 +360,7 @@ public class CTCommands {
                             ExpandPlayerEntity.give(context.getSource()
                                     .asPlayer(), context.getArgument("item", IItemStack.class));
                             return 0;
-                        })), "give", "Gives the player the item using the Bracket handler syntax. You can also apply tags by appending a .withTag() call.");
+                        })), "give", "Gives the player an item using the Bracket handler syntax. You can also apply tags by appending a .withTag() call.");
 
 
         // Send an event to let others know that we are ready for SubCommands to be registered.
