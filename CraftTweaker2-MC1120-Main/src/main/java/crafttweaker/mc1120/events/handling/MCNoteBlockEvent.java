@@ -17,13 +17,23 @@ public class MCNoteBlockEvent extends MCBlockEvent implements INoteBlockEvent {
     }
 
     @Override
-    public void setNote(String note, String octave) {
-        event.setNote(NoteBlockEvent.Note.valueOf(note.toUpperCase()), NoteBlockEvent.Octave.valueOf(octave.toUpperCase()));
+    public void setNote(String note) {
+        event.setNote(NoteBlockEvent.Note.valueOf(octave.toUpperCase()), event.getOctave());
     }
 
     @Override
     public String getOctave() {
         return event.getOctave().toString();
+    }
+
+    @Override
+    public void setOctave(String octave) {
+        event.setNote(event.getNote(), NoteBlockEvent.Octave.valueOf(octave.toUpperCase()));
+    }
+
+    @Override
+    public void setBoth(String note, String octave) {
+        event.setNote(NoteBlockEvent.Note.valueOf(note.toUpperCase()), NoteBlockEvent.Octave.valueOf(octave.toUpperCase()));
     }
 
     @Override
