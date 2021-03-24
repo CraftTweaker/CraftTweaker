@@ -7,7 +7,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * @docEvent canceled the Entity does not fall.
+ * @docEvent canceled the Entity does not fall (no fall damage is inflicted).
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingFallEvent")
