@@ -118,7 +118,7 @@ public interface IIngredient extends CommandStringDisplayable {
     }
 
     /**
-     * Sets the burn time of this item, for use in the furnace and other machines
+     * Sets the burn time of this ingredient, for use in the furnace and other machines
      *
      * @param time the new burn time
      * @docParam time 500
