@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.loot.CTLootManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
 import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
@@ -280,6 +281,13 @@ public class CTCommands {
                 }
             }
             send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        
+        registerDump("loot_modifiers", "Outputs the names of all registered loot modifiers", (CommandCallerPlayer) (player, stack) -> {
+            CTLootManager.LOOT_MANAGER.getModifierManager().getAllNames().forEach(CraftTweakerAPI::logDump);
+            send(new StringTextComponent(color("Loot modifiers list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
         

@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.vector.Vector3d;
 
 @ZenRegister
 @Document("vanilla/api/util/DamageSource")
@@ -18,7 +19,7 @@ public class ExpandDamageSource {
 
 	/**
 	 * Checks if the damage is caused by a projectile.
-	 * 
+	 *
 	 * @return Whether or not the damage is caused by a projectile.
 	 */
 	@ZenCodeType.Method
@@ -29,7 +30,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Checks if the damage is caused by an explosion.
-	 * 
+	 *
 	 * @return Whether or not the damage is caused by an explosion.
 	 */
 	@ZenCodeType.Method
@@ -40,7 +41,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Checks if the damage can be blocked.
-	 * 
+	 *
 	 * @return Whether or not the damage can be blocked.
 	 */
 	@ZenCodeType.Method
@@ -52,7 +53,7 @@ public class ExpandDamageSource {
 	/**
 	 * Gets the amount of exhaustion to add to the player's hunger bar if they
 	 * get hit by this damage.
-	 * 
+	 *
 	 * @return The amount of exhaustion to add to the player's hunger bar.
 	 */
 	@ZenCodeType.Method
@@ -63,7 +64,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Checks if the damage can bypass creative mode.
-	 * 
+	 *
 	 * @return Whether or not the damage can bypass creative mode.
 	 */
 	@ZenCodeType.Method
@@ -74,7 +75,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Checks if the damage is absolute.
-	 * 
+	 *
 	 * @return Whether or not the damage is absolute.
 	 */
 	@ZenCodeType.Method
@@ -85,7 +86,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Checks if the damage is caused by fire or burning.
-	 * 
+	 *
 	 * @return Whether or not the damage is caused by fire or burning.
 	 */
 	@ZenCodeType.Method
@@ -96,7 +97,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Checks if the damage is caused by magic.
-	 * 
+	 *
 	 * @return Whether or not the damage is caused by magic.
 	 */
 	@ZenCodeType.Method
@@ -107,7 +108,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Gets the type of damage.
-	 * 
+	 *
 	 * @return The type of damage.
 	 */
 	@ZenCodeType.Method
@@ -119,7 +120,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Gets the immediate source of the damage, like an arrow.
-	 * 
+	 *
 	 * @return The immediate source of the damage.
 	 */
 	@ZenCodeType.Method
@@ -131,7 +132,7 @@ public class ExpandDamageSource {
 	
 	/**
 	 * Gets the true source of the damage, like the player who shot the arrow.
-	 * 
+	 *
 	 * @return The true source of the damage.
 	 */
 	@ZenCodeType.Method
@@ -140,4 +141,38 @@ public class ExpandDamageSource {
 	public static Entity getTrueSource(DamageSource internal) {
 		return internal.getTrueSource();
 	}
+    
+    /**
+     * Gets whether the damage changes strength based on the current difficulty.
+     *
+     * @return Whether the damage changes strength according to difficulty.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("difficultyScaled")
+    public static boolean isDifficultyScaled(final DamageSource internal) {
+        return internal.isDifficultyScaled();
+    }
+
+    /**
+     * Gets whether the damage was inflicted by a creative player.
+     *
+     * @return Whether the damage was inflicted by a creative player.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("creativePlayer")
+    public static boolean isCreativePlayer(final DamageSource internal) {
+        return internal.isCreativePlayer();
+    }
+    
+    /**
+     * Gets the location where the damage occurred.
+     *
+     * @return The location of the damage.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("location")
+    @ZenCodeType.Nullable
+    public static Vector3d getDamageLocation(final DamageSource internal) {
+        return internal.getDamageLocation();
+    }
 }
