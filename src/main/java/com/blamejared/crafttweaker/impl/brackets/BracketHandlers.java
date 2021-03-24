@@ -455,7 +455,7 @@ public class BracketHandlers {
      * Gets a Biome based on the tokens.
      * Throws an error if it can't get such a biome
      *
-     * @param tokens The biome resource location
+     * @param tokens The biome's resource location
      *
      * @return The found biome
      *
