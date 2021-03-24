@@ -477,7 +477,7 @@ public class BracketHandlers {
     }
 
     /**
-     * Gets damage source based on type.
+     * Gets a damage source based on type.
      * If the damage source is not pre-registered, it will create a new one with the given name
      *
      * @param tokens the damage sources' type
