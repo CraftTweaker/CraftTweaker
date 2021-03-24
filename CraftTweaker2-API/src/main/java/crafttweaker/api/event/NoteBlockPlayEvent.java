@@ -15,6 +15,6 @@ public interface NoteBlockPlayEvent extends INoteBlockEvent, IEventCancelable {
     String getInstrument();
 
     @ZenSetter("instrument")
-    @zenMethod
+    @ZenMethod
     void setInstrument(String instrument);
 }

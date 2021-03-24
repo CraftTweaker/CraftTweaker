@@ -14,6 +14,6 @@ public interface NoteBlockChangeEvent extends INoteBlockEvent, IEventCancelable 
     String getOldNote();
 
     @ZenGetter("oldOctave")
-    @zenMethod
+    @ZenMethod
     String getOldOctave();
 }
