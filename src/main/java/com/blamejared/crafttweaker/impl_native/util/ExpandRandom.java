@@ -44,4 +44,14 @@ public class ExpandRandom {
     public static double nextDouble(Random internal) {
         return internal.nextDouble();
     }
+
+    /**
+     * Returns the next pseudorandom, uniformly distributed float value
+     * between 0.0f and 1.0f from this random number generator's sequence.
+     */
+
+    @ZenCodeType.Method
+    public static float nextFloat(Random internal) {
+        return internal.nextFloat();
+    }
 }
