@@ -3,6 +3,7 @@ package crafttweaker.api.event;
 import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
+import stanhebben.zenscript.annotations.ZenMethod;
 import stanhebben.zenscript.annotations.ZenSetter;
 
 @ZenClass("crafttweaker.event.INoteBlockEvent")
@@ -10,14 +11,25 @@ import stanhebben.zenscript.annotations.ZenSetter;
 public interface INoteBlockEvent extends IBlockEvent {
     
     @ZenGetter("note")
+    @ZenMethod
     String getNote();
 
     @ZenSetter("note")
-    void setNote(String note, String octave);
+    @ZenMethod
+    void setNote(String note);
 
     @ZenGetter("octave")
+    @zenMethod
     String getOctave();
 
+    @ZenSetter("octave")
+    @ZenMethod
+    void setOctave(String octave);
+
+    @ZenMethod
+    void setBoth(String note, String octave);
+
     @ZenGetter("noteId")
+    @ZenMethod
     int getNoteId();
 }
