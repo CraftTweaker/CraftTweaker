@@ -5,9 +5,11 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.IAxisAlignedBB;
+import crafttweaker.api.util.IRandom;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IFacing;
 import crafttweaker.api.world.IWorld;
+import crafttweaker.mc1120.util.MCRandom;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import stanhebben.zenscript.annotations.*;
@@ -67,5 +69,10 @@ public class ExpandWorld {
     @ZenMethod
     public static IEntity findNearestEntityWithinAABB(IWorld world, IAxisAlignedBB aabb, IEntity closestTo) {
         return CraftTweakerMC.getIEntity(CraftTweakerMC.getWorld(world).findNearestEntityWithinAABB(Entity.class, CraftTweakerMC.getAxisAlignedBB(aabb), CraftTweakerMC.getEntity(closestTo)));
+    }
+
+    @ZenGetter("random")
+    public static IRandom getRandom(IWorld world) {
+        return new MCRandom(CraftTweakerMC.getWorld(world).rand);
     }
 }
