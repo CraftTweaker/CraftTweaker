@@ -314,7 +314,7 @@ public class ExpandEntity {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter
+    @ZenCodeType.Getter("data")
     public static MapData getData(Entity internal) {
         
         return new MapData(internal.serializeNBT());
