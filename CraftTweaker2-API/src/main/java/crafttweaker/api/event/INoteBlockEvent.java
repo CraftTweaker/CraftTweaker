@@ -19,7 +19,7 @@ public interface INoteBlockEvent extends IBlockEvent {
     void setNote(String note);
 
     @ZenGetter("octave")
-    @zenMethod
+    @ZenMethod
     String getOctave();
 
     @ZenSetter("octave")
