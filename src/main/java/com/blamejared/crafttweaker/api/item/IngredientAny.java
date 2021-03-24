@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.item;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
@@ -22,7 +23,7 @@ public class IngredientAny extends Ingredient {
     }
 
     public static final IngredientAny INSTANCE = new IngredientAny();
-    private static final ItemStack[] ALL_ITEMS = ForgeRegistries.ITEMS.getValues().stream().map(ItemStack::new).filter(stack -> !stack.isEmpty()).toArray(ItemStack[]::new);
+    private static final ItemStack[] ALL_ITEMS = ForgeRegistries.ITEMS.getValues().stream().map(Item::getDefaultInstance).filter(stack -> !stack.isEmpty()).toArray(ItemStack[]::new);
 
     @Override
     public ItemStack[] getMatchingStacks() {

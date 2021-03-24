@@ -12,7 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.Direction;
@@ -79,7 +79,7 @@ public class MCGame {
     public Collection<IItemStack> getMCItemStacks() {
         return ForgeRegistries.ITEMS.getValues()
                 .stream()
-                .map(ItemStack::new)
+                .map(Item::getDefaultInstance)
                 .map(MCItemStack::new)
                 .filter(stack -> !stack.isEmpty())
                 .collect(Collectors.toList());
