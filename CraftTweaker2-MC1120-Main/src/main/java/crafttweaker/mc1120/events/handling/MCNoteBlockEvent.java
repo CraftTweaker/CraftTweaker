@@ -18,7 +18,7 @@ public class MCNoteBlockEvent extends MCBlockEvent implements INoteBlockEvent {
 
     @Override
     public void setNote(String note) {
-        event.setNote(NoteBlockEvent.Note.valueOf(octave.toUpperCase()), event.getOctave());
+        event.setNote(NoteBlockEvent.Note.valueOf(note.toUpperCase()), event.getOctave());
     }
 
     @Override
