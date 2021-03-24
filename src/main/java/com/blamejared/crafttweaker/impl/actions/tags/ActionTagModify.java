@@ -26,6 +26,7 @@ public abstract class ActionTagModify<T extends ForgeRegistryEntry<?>> extends A
             applyTo(list, set);
             ((Tag<T>) tag).immutableContents = ImmutableList.copyOf(list);
             ((Tag<T>) tag).contents = set;
+            ((Tag<T>) tag).contentsClassType = Tag.getContentsClass(set);
         } else {
             throw new RuntimeException("Only Tag's are supported right now, can't act on: " + tag);
         }

@@ -88,7 +88,6 @@ public class CraftTweakerRegistry {
                 .filter(Objects::nonNull);
     }
     
-    
     //<editor-fold desc="ZenClassRegistry Delegates">
     // ##################################
     // ### ZenClassRegistry Delegates ###

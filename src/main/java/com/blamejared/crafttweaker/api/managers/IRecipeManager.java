@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.managers.CTCraftingTableManager;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
+import com.blamejared.crafttweaker.impl.util.NameUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -205,11 +206,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @param name name to check
      */
     default String validateRecipeName(String name) {
-        name = fixRecipeName(name);
-        if(!name.chars().allMatch((ch) -> ch == 95 || ch == 45 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57 || ch == 47 || ch == 46)) {
-            throw new IllegalArgumentException("Given name does not fit the \"[a-z0-9/._-]\" regex! Name: \"" + name + "\"");
-        }
-        return name;
+        return fixRecipeName(name);
     }
     
     /**
@@ -220,23 +217,15 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return fixed name
      */
     default String fixRecipeName(String name) {
-        String fixed = name;
-        if(fixed.indexOf(':') >= 0) {
-            String temp = fixed.replaceAll(":", ".");
-            CraftTweakerAPI.logWarning("Invalid recipe name \"%s\", recipe names cannot have a \":\"! New recipe name: \"%s\"", fixed, temp);
-            fixed = temp;
-        }
-        if(fixed.indexOf(' ') >= 0) {
-            String temp = fixed.replaceAll(" ", ".");
-            CraftTweakerAPI.logWarning("Invalid recipe name \"%s\", recipe names cannot have a \" \"! New recipe name: \"%s\"", fixed, temp);
-            fixed = temp;
-        }
-        if(!fixed.toLowerCase().equals(fixed)) {
-            String temp = fixed.toLowerCase();
-            CraftTweakerAPI.logWarning("Invalid recipe name \"%s\", recipe names have to be lowercase! New recipe name: \"%s\"", fixed, temp);
-            fixed = temp;
-        }
-        return fixed;
+        return NameUtils.fixing(
+                name,
+                (fixed, mistakes) -> CraftTweakerAPI.logWarning(
+                        "Invalid recipe name '%s', mistakes:\n%s\nNew recipe name: %s",
+                        name,
+                        String.join("\n", mistakes),
+                        fixed
+                )
+        );
     }
     
     /**
