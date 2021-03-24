@@ -72,6 +72,7 @@ public class ExpandWorld {
     }
 
     @ZenGetter("random")
+    @ZenMethod
     public static IRandom getRandom(IWorld world) {
         return new MCRandom(CraftTweakerMC.getWorld(world).rand);
     }
