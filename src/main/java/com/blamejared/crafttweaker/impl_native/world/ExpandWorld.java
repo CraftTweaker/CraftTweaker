@@ -21,6 +21,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 /**
@@ -460,6 +461,11 @@ public class ExpandWorld {
     public static boolean addEntity(World internal, Entity entity) {
         
         return internal.addEntity(entity);
+    }
+
+    @ZenCodeType.Getter("random")
+    public static Random getRandom(World internal) {
+        return internal.rand;
     }
     
 }
