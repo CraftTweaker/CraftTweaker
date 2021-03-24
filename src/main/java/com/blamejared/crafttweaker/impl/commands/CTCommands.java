@@ -289,7 +289,7 @@ public class CTCommands {
             return 0;
         }));
 
-        registerCommand(new CommandImpl("blockinfo", "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.", (CommandCallerPlayer) (player, stack) -> {
+        registerCommand(new CommandImpl("blockInfo", "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.", (CommandCallerPlayer) (player, stack) -> {
             if(CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
                 CTEventHandler.BLOCK_INFO_PLAYERS.remove(player);
                 ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block info mode deactivated."));
