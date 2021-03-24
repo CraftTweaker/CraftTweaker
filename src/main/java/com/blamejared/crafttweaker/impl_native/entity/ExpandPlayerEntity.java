@@ -187,7 +187,7 @@ public class ExpandPlayerEntity {
     }
     
     /**
-     * update persistent data that can not be lost when player dies
+     * Updates the player's persisted data that is saved between deaths.
      */
     @ZenCodeType.Method
     public static void updatePersistentData(PlayerEntity internal, MapData data) {

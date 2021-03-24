@@ -28,7 +28,7 @@ public class ExpandBlockEvent {
         if(internal.getWorld() instanceof World) {
             return (World) internal.getWorld();
         }
-        throw new IllegalStateException("the event is not fired on client world or server world.");
+        throw new IllegalStateException("The event was not fired on a client world or a server world.");
     }
     
     @ZenCodeType.Getter("pos")

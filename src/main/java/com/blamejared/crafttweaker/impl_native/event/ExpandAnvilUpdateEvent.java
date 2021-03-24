@@ -10,8 +10,8 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * AnvilUpdateEvent is fired when the inputs (either input stack, or the name) to an anvil are changed.
- * Listen it to add your custom anvil recipe.
+ * AnvilUpdateEvent is fired when the inputs (either input stack, or the name) of an anvil are changed.
+ * You can listen to this event to add custom anvil recipes.
  *
  * @docEvent canceled vanilla behavior will not run, and the output will be set to `<item:minecraft:air>`.
  * @docEvent notCanceled but the output is not empty, it will set the output and not run vanilla behavior.

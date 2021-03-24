@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Fired when when this block is right clicked by a tool to change its state.
- * For example: Used to determine if an axe can strip, a shovel can path, or a hoe can till.
+ * For example: Used to determine if an axe can strip a log, a shovel can turn grass into a path, or a hoe can till dirt into farmland.
  *
  * @docEvent cancelled this will prevent the tool from changing the block's state.
  */
@@ -44,8 +44,8 @@ public class ExpandBlockToolInteractEvent {
     
     /**
      * Gets the transformed state after tool use.
-     * If setFinalState not called, will return the original state.
-     * This will be bypassed if canceled returning null instead.
+     * If setFinalState is not called, it will return the original state.
+     * This will be bypassed if canceled, returning null instead.
      */
     @ZenCodeType.Getter("finalState")
     @ZenCodeType.Nullable
@@ -58,7 +58,7 @@ public class ExpandBlockToolInteractEvent {
     /**
      * Sets the transformed state after tool use.
      * If not set, will return the original state.
-     * This will be bypassed if canceled returning null instead.
+     * This will be bypassed if canceled, returning null instead.
      */
     @ZenCodeType.Setter("finalState")
     @ZenCodeType.Method

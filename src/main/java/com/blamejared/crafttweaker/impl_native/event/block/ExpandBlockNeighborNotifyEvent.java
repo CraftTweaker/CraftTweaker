@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class ExpandBlockNeighborNotifyEvent {
     
     /**
-     * Gets if redstone update was forced during setBlock call
+     * Gets if a redstone update was forced during setBlock call
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("forceRedstoneUpdate")
