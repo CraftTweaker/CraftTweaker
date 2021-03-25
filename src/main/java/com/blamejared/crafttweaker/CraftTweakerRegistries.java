@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker;
 
+import com.blamejared.crafttweaker.api.item.IngredientAny;
 import com.blamejared.crafttweaker.api.item.conditions.IIngredientConditionSerializer;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformerSerializer;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionAnyDamage;
@@ -49,6 +50,7 @@ public class CraftTweakerRegistries {
         
         CraftingHelper.register(new ResourceLocation(CraftTweaker.MODID, "ingredient_transformed_serializer"), INGREDIENT_TRANSFORMED_SERIALIZER);
         CraftingHelper.register(new ResourceLocation(CraftTweaker.MODID, "ingredient_conditioned_serializer"), INGREDIENT_CONDITIONED_SERIALIZER);
+        CraftingHelper.register(new ResourceLocation(CraftTweaker.MODID, "any"), IngredientAny.Serializer.INSTANCE);
         
         TRANSFORM_REPLACE_SERIALIZER = new TransformReplace.TransformReplaceTransformerSerializer();
         REGISTRY_TRANSFORMER_SERIALIZER.register(RegistryKey.getOrCreateKey(REGISTRY_TRANSFORMER_SERIALIZER.getRegistryKey(), TRANSFORM_REPLACE_SERIALIZER.getType()), TRANSFORM_REPLACE_SERIALIZER, Lifecycle.stable());

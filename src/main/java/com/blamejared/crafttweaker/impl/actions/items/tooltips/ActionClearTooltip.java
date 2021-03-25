@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import net.minecraftforge.fml.LogicalSide;
@@ -9,9 +10,9 @@ import java.util.LinkedList;
 
 public class ActionClearTooltip implements IRuntimeAction {
     
-    private final IItemStack stack;
+    private final IIngredient stack;
     
-    public ActionClearTooltip(IItemStack stack) {
+    public ActionClearTooltip(IIngredient stack) {
         this.stack = stack;
     }
     

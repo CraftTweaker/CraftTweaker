@@ -377,32 +377,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         CraftTweakerAPI.apply(new ActionSetBurnTime(this, time));
     }
     
-    
-    @ZenCodeType.Method
-    default void clearTooltip() {
-        CraftTweakerAPI.apply(new ActionClearTooltip(this));
-    }
-    
-    @ZenCodeType.Method
-    default void addTooltip(MCTextComponent content) {
-        CraftTweakerAPI.apply(new ActionAddTooltip(this, content));
-    }
-    
-    @ZenCodeType.Method
-    default void addShiftTooltip(MCTextComponent content, @ZenCodeType.Optional MCTextComponent showMessage) {
-        CraftTweakerAPI.apply(new ActionAddShiftedTooltip(this, content, showMessage));
-    }
-    
-    @ZenCodeType.Method
-    default void modifyTooltip(ITooltipFunction function) {
-        CraftTweakerAPI.apply(new ActionModifyTooltip(this, function));
-    }
-    
-    @ZenCodeType.Method
-    default void removeTooltip(String regex) {
-        CraftTweakerAPI.apply(new ActionRemoveRegexTooltip(this, Pattern.compile(regex)));
-    }
-    
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MOD)
     default MCWeightedItemStack percent(int percentage) {
         return weight(percentage / 100.0D);

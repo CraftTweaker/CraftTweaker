@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.event.EventDataConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.example.ExampleDataConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
@@ -18,17 +19,23 @@ public class CommentConverter {
     private final ExampleDataConverter exampleDataConverter;
     private final DescriptionConverter descriptionConverter;
     private final ParameterDescriptionConverter parameterDescriptionConverter;
+    private final EventDataConverter eventDataConverter;
     
-    public CommentConverter(ProcessingEnvironment processingEnv, CommentMerger commentMerger, ExampleDataConverter exampleDataConverter, DescriptionConverter descriptionConverter, ParameterDescriptionConverter parameterDescriptionConverter) {
+    public CommentConverter(ProcessingEnvironment processingEnv, CommentMerger commentMerger, ExampleDataConverter exampleDataConverter, DescriptionConverter descriptionConverter, ParameterDescriptionConverter parameterDescriptionConverter, EventDataConverter eventDataConverter) {
         this.processingEnv = processingEnv;
         this.commentMerger = commentMerger;
         this.exampleDataConverter = exampleDataConverter;
         this.descriptionConverter = descriptionConverter;
         this.parameterDescriptionConverter = parameterDescriptionConverter;
+        this.eventDataConverter = eventDataConverter;
     }
     
     public DocumentationComment convertForType(TypeElement typeElement) {
-        return convertElement(typeElement);
+        DocumentationComment documentationComment = convertElement(typeElement);
+        if (typeElement.getSimpleName().toString().endsWith("Event")) {
+            return fastMergeComments(documentationComment, covertEvent(typeElement));
+        }
+        return documentationComment;
     }
     
     public DocumentationComment convertForConstructor(ExecutableElement constructor, DocumentationPageInfo pageInfo) {
@@ -69,6 +76,10 @@ public class CommentConverter {
         final DocumentationComment enclosingElementComment = getCommentFromEnclosingElement(element);
         return mergeComments(comment, enclosingElementComment);
     }
+
+    private DocumentationComment covertEvent(Element element) {
+        return eventDataConverter.getDocumentationComment(processingEnv.getElementUtils().getDocComment(element), element);
+    }
     
     @Nonnull
     private DocumentationComment getCommentForElement(Element element) {
@@ -99,6 +110,14 @@ public class CommentConverter {
     
     private DocumentationComment mergeComments(DocumentationComment comment, DocumentationComment enclosingElementComment) {
         return commentMerger.merge(comment, enclosingElementComment);
+    }
+
+    private DocumentationComment fastMergeComments(DocumentationComment firstWithExamples, DocumentationComment second) {
+        if (!firstWithExamples.hasDescription()) {
+            return new DocumentationComment(second.getDescription(), firstWithExamples.getExamples());
+        } else {
+            return new DocumentationComment(firstWithExamples.getDescription() + "\n\n" + second.getDescription(), firstWithExamples.getExamples());
+        }
     }
     
     private DocumentationComment fillExampleForThisParameterFromPageInfo(DocumentationComment comment, DocumentationPageInfo pageInfo) {

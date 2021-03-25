@@ -1,16 +1,20 @@
 package com.blamejared.crafttweaker.impl_native.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.CombatTracker;
+import net.minecraft.util.DamageSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
@@ -251,4 +255,30 @@ public class ExpandLivingEntity {
     public static boolean isWaterSensitive(LivingEntity internal) {
         return internal.isWaterSensitive();
     }
+    
+    @ZenCodeType.Method
+    public static void attackEntityFrom(LivingEntity internal, DamageSource damageSource, float amount) {
+        internal.attackEntityFrom(damageSource, amount);
+    }
+    
+    /**
+     * Gets the ItemStack in the specific slot.
+     *
+     * @return The ItemStack in the specific slot.
+     */
+    @ZenCodeType.Method
+    public static IItemStack getItemStackFromSlot(LivingEntity internal, EquipmentSlotType slot) {
+
+        return new MCItemStack(internal.getItemStackFromSlot(slot));
+    }
+    
+    /**
+     * Sets a copied given itemStack to the slot
+     */
+    @ZenCodeType.Method
+    public static void setItemStackToSlot(LivingEntity internal, EquipmentSlotType slot, IItemStack itemStack) {
+        
+        internal.setItemStackToSlot(slot, itemStack.getInternal().copy());
+    }
+    
 }

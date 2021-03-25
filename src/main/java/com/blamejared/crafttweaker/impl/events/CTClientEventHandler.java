@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.events;
 
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
@@ -15,14 +16,14 @@ import java.util.stream.Collectors;
 
 public class CTClientEventHandler {
     
-    public static final Map<IItemStack, LinkedList<ITooltipFunction>> TOOLTIPS = new HashMap<>();
+    public static final Map<IIngredient, LinkedList<ITooltipFunction>> TOOLTIPS = new HashMap<>();
     
     @SubscribeEvent
     public void handleTooltips(ItemTooltipEvent e) {
-        for(IItemStack stack : TOOLTIPS.keySet()) {
-            if(stack.matches(new MCItemStackMutable(e.getItemStack()))) {
+        for(IIngredient ingredient : TOOLTIPS.keySet()) {
+            if(ingredient.matches(new MCItemStackMutable(e.getItemStack()))) {
                 List<MCTextComponent> collect = e.getToolTip().stream().map(MCTextComponent::new).collect(Collectors.toList());
-                for(ITooltipFunction function : TOOLTIPS.get(stack)) {
+                for(ITooltipFunction function : TOOLTIPS.get(ingredient)) {
                     function.apply(new MCItemStackMutable(e.getItemStack()), collect, e.getFlags().isAdvanced());
                 }
                 e.getToolTip().clear();

@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.blamejared.crafttweaker.impl_native.util.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,14 +21,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -177,6 +181,21 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Axis does not appear to exist!");
         }
         return axis;
+    }
+
+    /**
+     * Gets the equipment slot type based on name. Throws an error if it can't find the equipment slot type.
+     * @param tokens The equipment slot type's name
+     * @return The found equipment slot type
+     * @docParam tokens "mainhand"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("equipmentslottype")
+    public static EquipmentSlotType getEquipmentSlotType(String tokens) {
+        if (!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
+            CraftTweakerAPI.logWarning("EquipmentSlotType BEP <equipmentslottype:%s> does not seem to be lower-cased!", tokens);
+        }
+        return EquipmentSlotType.fromString(tokens);
     }
 
     /**
@@ -345,7 +364,7 @@ public class BracketHandlers {
 
     /**
      * Gets the recipeManager based on registry name. Throws an error if it can't find the recipeManager.
-     * Throws an expcetion if the given recipeType is not found.
+     * Throws an exception if the given recipeType is not found.
      * <p>
      * This will always return IRecipeManager.<br>
      * There is also a BEP for that but that works differently so it can't be automatically added to the docs here.
@@ -360,7 +379,7 @@ public class BracketHandlers {
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
             CraftTweakerAPI.logWarning("RecipeType BEP <recipetype:%s> does not seem to be lower-cased!", tokens);
         if(tokens.equalsIgnoreCase("crafttweaker:scripts")) {
-            // This is bound to cause issues, like: <recipetype:crafttweaker:scripts.removeAll(); Best to just fix it now
+            // This is bound to cause issues, like: <recipetype:crafttweaker:scripts>.removeAll(); Best to just fix it now
             throw new IllegalArgumentException("Nice try, but there's no reason you need to access the <recipetype:crafttweaker:scripts> recipe manager!");
         }
         final ResourceLocation key = new ResourceLocation(tokens);
@@ -430,5 +449,46 @@ public class BracketHandlers {
         }
 
         return ForgeRegistries.PROFESSIONS.getValue(resourceLocation);
+    }
+
+    /**
+     * Gets a Biome based on the tokens.
+     * Throws an error if it can't get the biome
+     *
+     * @param tokens The biome's resource location
+     *
+     * @return The found biome
+     *
+     * @docParam tokens "minecraft:plain"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("biome")
+    public static Biome getBiome(String tokens) {
+
+        final int length = tokens.split(":").length;
+        if(length != 2) {
+            throw new IllegalArgumentException("Could not get biome with name: <biome:" + tokens + ">! Syntax is <biome:modid:biomeName>");
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        if(!ForgeRegistries.BIOMES.containsKey(resourceLocation)) {
+            throw new IllegalArgumentException("Could not get biome <biome:" + tokens + ">");
+        }
+        return ForgeRegistries.BIOMES.getValue(resourceLocation);
+    }
+
+    /**
+     * Gets a damage source based on type.
+     * If the damage source is not pre-registered, it will create a new one with the given name
+     *
+     * @param tokens the damage sources' type
+     *
+     * @return The found pre-registered damage source or a new one
+     *
+     * @docParam tokens "magic"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("damagesource")
+    public static DamageSource getDamageSource(String tokens) {
+        return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.getOrDefault(tokens, new DamageSource(tokens));
     }
 }

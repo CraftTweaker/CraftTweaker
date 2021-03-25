@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent.XpChange;
  * change the amount, or negate the change entirely.
  * 
  * @docParam this event
+ * @docEvent canceled the xp will not change
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/xp/MCXpChangeEvent")
@@ -37,10 +38,10 @@ public class ExpandXpChangedEvent {
     /**
      * Sets the amount of xp to change the player's xp counter by.
      * 
-     * @param xp The amount of xp that the player's xp counter should be 
+     * @param amount The amount of xp that the player's xp counter should be
      *        changed by.
      *        
-     * @docParam xp 15
+     * @docParam amount 15
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("xp")

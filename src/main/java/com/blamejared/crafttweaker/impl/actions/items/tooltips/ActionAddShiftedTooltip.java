@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
@@ -13,12 +14,12 @@ import java.util.LinkedList;
 
 public class ActionAddShiftedTooltip implements IRuntimeAction {
     
-    private final IItemStack stack;
+    private final IIngredient stack;
     private final MCTextComponent content;
     private final MCTextComponent showMessage;
     
     
-    public ActionAddShiftedTooltip(IItemStack stack, MCTextComponent content, MCTextComponent showMessage) {
+    public ActionAddShiftedTooltip(IIngredient stack, MCTextComponent content, MCTextComponent showMessage) {
         this.stack = stack;
         this.content = content;
         this.showMessage = showMessage;
@@ -45,7 +46,7 @@ public class ActionAddShiftedTooltip implements IRuntimeAction {
     
     @Override
     public String describe() {
-        return "Adding \"" + content + "\" to the shift tooltip for: " + stack.getCommandString();
+        return "Adding \"" + content.asString() + "\" to the shift tooltip for: " + stack.getCommandString();
     }
     
     @Override

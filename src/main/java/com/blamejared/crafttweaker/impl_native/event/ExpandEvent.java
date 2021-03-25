@@ -34,4 +34,36 @@ public class ExpandEvent {
     public static boolean hasResult(Event internal) {
         return internal.hasResult();
     }
+    
+    /**
+     * Cancels the event. Same as `setCanceled(true)`
+     */
+    @ZenCodeType.Method
+    public static void cancel(Event internal) {
+        setCanceled(internal, true);
+    }
+    
+    /**
+     * sets the event's result to `allow`
+     */
+    @ZenCodeType.Method
+    public static void setAllow(Event internal) {
+        internal.setResult(Event.Result.ALLOW);
+    }
+    
+    /**
+     * sets the event's result to `deny`
+     */
+    @ZenCodeType.Method
+    public static void setDeny(Event internal) {
+        internal.setResult(Event.Result.DENY);
+    }
+    
+    /**
+     * sets the event's result to `default`
+     */
+    @ZenCodeType.Method
+    public static void setDefault(Event internal) {
+        internal.setResult(Event.Result.DEFAULT);
+    }
 }

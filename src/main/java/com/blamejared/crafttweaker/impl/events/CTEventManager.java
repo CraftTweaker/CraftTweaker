@@ -43,20 +43,24 @@ public class CTEventManager {
     @ZenCodeType.Method
     public static <T extends Event> void register(Class<T> typeOfT, Consumer<T> consumer) {
         CraftTweakerAPI.apply(new IUndoableAction() {
+            private final EventHandlerWrapper<T> eventHandler = new EventHandlerWrapper<T>(consumer);
+    
             @Override
             public void undo() {
-                MinecraftForge.EVENT_BUS.unregister(consumer);
+        
+                MinecraftForge.EVENT_BUS.unregister(eventHandler);
             }
-            
+    
             @Override
             public String describeUndo() {
+        
                 return "Unregistering event listener for " + typeOfT.getSimpleName() + ".";
             }
             
             @Override
             public void apply() {
                 //Let's go completely safe and use the type
-                MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, typeOfT, consumer);
+                MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, typeOfT, eventHandler);
             }
             
             @Override

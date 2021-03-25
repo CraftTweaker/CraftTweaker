@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
-import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import net.minecraftforge.fml.LogicalSide;
@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 
 public class ActionRemoveRegexTooltip implements IRuntimeAction {
     
-    private final IItemStack stack;
+    private final IIngredient stack;
     private final Pattern regex;
     
-    public ActionRemoveRegexTooltip(IItemStack stack, Pattern regex) {
+    public ActionRemoveRegexTooltip(IIngredient stack, Pattern regex) {
         this.stack = stack;
         this.regex = regex;
     }
