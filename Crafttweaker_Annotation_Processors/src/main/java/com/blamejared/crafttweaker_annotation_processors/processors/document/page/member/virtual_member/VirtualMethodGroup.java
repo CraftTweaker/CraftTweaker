@@ -13,11 +13,13 @@ public class VirtualMethodGroup {
     private final Set<VirtualMethodMember> virtualMethods = new TreeSet<>();
     
     public VirtualMethodGroup(String name, AbstractTypeInfo ownerType) {
+        
         this.name = name;
         this.ownerType = ownerType;
     }
     
     public void addMethod(VirtualMethodMember member) {
+        
         this.virtualMethods.add(member);
     }
     
@@ -30,4 +32,5 @@ public class VirtualMethodGroup {
         }
         
     }
+    
 }

@@ -13,27 +13,23 @@ public class StaticMethodGroup {
     private final Set<StaticMethodMember> staticMethods = new TreeSet<>();
     
     public StaticMethodGroup(String name, AbstractTypeInfo ownerType) {
+        
         this.name = name;
         this.ownerType = ownerType;
     }
     
     public void addMethod(StaticMethodMember member) {
+        
         this.staticMethods.add(member);
     }
     
     public void writeStaticMethods(PrintWriter writer) {
-        writeTitle(writer);
-        writeMethods(writer);
-        writer.printf(":::%n%n");
-    }
-    
-    private void writeMethods(PrintWriter writer) {
+        
         for(StaticMethodMember method : staticMethods) {
+            writer.printf(":::group{name=%s}%n%n", name);
             method.write(writer, ownerType);
+            writer.printf(":::%n%n");
         }
     }
     
-    private void writeTitle(PrintWriter writer) {
-        writer.printf(":::group{name=%s}%n%n", name);
-    }
 }
