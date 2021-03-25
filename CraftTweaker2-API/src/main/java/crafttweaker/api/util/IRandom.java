@@ -12,5 +12,7 @@ public interface IRandom {
 
     double nextDouble();
 
+    float nextFloat();
+
     boolean nextBoolean();
 }

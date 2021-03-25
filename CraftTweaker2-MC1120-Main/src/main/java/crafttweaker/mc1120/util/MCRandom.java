@@ -27,6 +27,11 @@ public class MCRandom implements IRandom {
     }
 
     @Override
+    public float nextFloat() {
+        return random.nextFloat();
+    }
+
+    @Override
     public boolean nextBoolean() {
         return random.nextBoolean();
     }
