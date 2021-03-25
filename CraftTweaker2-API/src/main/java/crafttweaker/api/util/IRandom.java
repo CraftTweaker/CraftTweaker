@@ -21,4 +21,16 @@ public interface IRandom {
 
     @ZenMethod
     boolean nextBoolean();
+
+    @ZenMethod
+    int nextInt(int minimum, int maximum);
+
+    @ZenMethod
+    float nextFloat(float minimum, float maximum);
+
+    @ZenMethod
+    double nextDouble(double minimum, double maximum);
+
+    @ZenMethod
+    String getRandomUUID();
 }
