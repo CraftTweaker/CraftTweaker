@@ -22,10 +22,12 @@ public class VirtualMethodGroup {
     }
     
     public void writeVirtualMethods(PrintWriter writer) {
-        writer.printf(":::group{name=%s}%n%n", name);
+        
         for(VirtualMethodMember method : virtualMethods) {
+            writer.printf(":::group{name=%s}%n%n", name);
             method.write(writer, ownerType);
+            writer.printf(":::%n%n");
         }
-        writer.printf(":::%n%n");
+        
     }
 }
