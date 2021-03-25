@@ -56,7 +56,7 @@ public class ExpandServer {
      *
      * Returns The success value of the command, or 0 if an exception occurred.
      * <p>
-     * Note: Some command's success value is 0
+     * Note: Some commands' success value is 0
      */
     @ZenCodeType.Method
     public static int executeCommand(MinecraftServer internal, String command, PlayerEntity player) {
