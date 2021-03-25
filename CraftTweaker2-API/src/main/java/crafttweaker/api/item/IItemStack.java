@@ -454,7 +454,7 @@ public interface IItemStack extends IIngredient {
 
     @ZenMethod
     default IMutableItemStack mutable() {
-        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " does not override IItemStack#mutable, it is a bug!");
+        CraftTweakerAPI.logError("Default method IItemStack#mutable is not overwritten in " + getClass() + " please report to the author!");
         return null;
     }
     
