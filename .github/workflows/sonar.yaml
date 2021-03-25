@@ -1,4 +1,4 @@
-name: Build
+name: SonarCloud
 on:
   push:
     branches:
@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+      - name: Chmod gradlew
+        run: chmod +xxx ./gradlew
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
