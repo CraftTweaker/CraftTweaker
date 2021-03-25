@@ -451,6 +451,12 @@ public interface IItemStack extends IIngredient {
     
     @ZenMethod
     IEntityItem createEntityItem(IWorld world, IBlockPos pos);
+
+    @ZenMethod
+    default IMutableItemStack mutable() {
+        CraftTweakerAPI.logError("Default method IItemStack#mutable is not overwritten in " + getClass() + " please report to the author!");
+        return null;
+    }
     
     @ZenGetter("isFood")
     default boolean isFood() {
