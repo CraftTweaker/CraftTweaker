@@ -19,11 +19,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
-      - name: Set up JDK 11
-        id: java11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
       - name: Chmod gradlew
         run: chmod +xxx ./gradlew
       - name: Cache Gradle packages
@@ -42,4 +37,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonarqube --info -s -Dsonar.java.jdkHome=${{ steps.java8.outputs.path }}
+          JAVA_HOME: ${{ steps.java8.outputs.path }}
+        run: ./gradlew build sonarqube --info -s
