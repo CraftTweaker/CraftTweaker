@@ -62,6 +62,18 @@ public interface IIngredient extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     boolean matches(IItemStack stack, boolean ignoreDamage);
+
+    /**
+     * Does the ingredient contain the given ingredient?
+     * @param ingredient The ingredient to check
+     *
+     * @docParam ingredient (<item:minecraft:iron_ingot> | <item:minecraft:gold_ingot>)
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
+    default boolean contains(IIngredient ingredient) {
+        return Arrays.stream(ingredient.getItems()).allMatch(this::matches);
+    }
     
     /**
      * Create a Vanilla ingredient matching this one.

@@ -2,11 +2,8 @@ package com.blamejared.crafttweaker.impl.actions.items;
 
 import com.blamejared.crafttweaker.api.actions.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IIngredient;
-import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import net.minecraftforge.fml.LogicalSide;
-
-import java.util.Arrays;
 
 public class ActionSetBurnTime implements IUndoableAction {
     
@@ -20,7 +17,7 @@ public class ActionSetBurnTime implements IUndoableAction {
     
     @Override
     public void apply() {
-        Arrays.stream(ingredient.getItems()).forEach(stack -> CTEventHandler.BURN_TIMES.put(stack, newBurnTime));
+        CTEventHandler.BURN_TIMES.put(ingredient, newBurnTime);
     }
     
     @Override
@@ -30,7 +27,7 @@ public class ActionSetBurnTime implements IUndoableAction {
     
     @Override
     public void undo() {
-        CTEventHandler.BURN_TIMES.entrySet().removeIf(entry -> ingredient.matches(entry.getKey()));
+        CTEventHandler.BURN_TIMES.entrySet().removeIf(entry -> ingredient.contains(entry.getKey()));
     }
     
     @Override
