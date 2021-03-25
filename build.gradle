@@ -33,6 +33,7 @@ apply plugin: "org.sonarqube"
 apply plugin: "jacoco"
 
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
+apply from: "sonarqube.gradle"
 
 import groovy.json.JsonOutput
 import com.diluv.schoomp.Webhook
@@ -173,16 +174,12 @@ test {
 
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
-}
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "CrT1"
-        property "sonar.organization", "kindlich-org-test"
-        property "sonar.host.url", "https://sonarcloud.io"
+    reports {
+        xml.enabled true
+        csv.enabled false
     }
 }
-
 
 processResources {
     dependsOn(":StdLibs:zipItUp")
