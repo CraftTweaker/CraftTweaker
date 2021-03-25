@@ -42,4 +42,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonarqube --info -e -Dsonar.java.jdkHome=${{ steps.java8.outputs.path }}
+        run: ./gradlew build sonarqube --info -s -Dsonar.java.jdkHome=${{ steps.java8.outputs.path }}
