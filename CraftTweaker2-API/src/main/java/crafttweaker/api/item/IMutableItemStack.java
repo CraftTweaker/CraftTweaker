@@ -5,8 +5,8 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- * A mutable item stack. <code>withTag</code>, <code>withAmount</code>, <code>damageItem</code> etc.
- * will modify and return the item stack itself.
+ * A mutable ItemStack. <code>withTag</code>, <code>withAmount</code>, <code>damageItem</code> etc.
+ * will modify and return the ItemStack itself.
  * Use it with caution.
  */
 @ZenClass("crafttweaker.item.IMutableItemStack")
