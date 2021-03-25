@@ -13,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @Document("vanilla/api/event/living/MCLivingDestroyBlockEvent")
-@NativeTypeRegistration(value = LivingDestroyBlockEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDestroyBlockEvent")
+@NativeTypeRegistration(value = LivingDestroyBlockEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingDestroyBlockEvent")
 public class ExpandLivingDestroyBlockEvent {
     
     @ZenCodeType.Getter("state")

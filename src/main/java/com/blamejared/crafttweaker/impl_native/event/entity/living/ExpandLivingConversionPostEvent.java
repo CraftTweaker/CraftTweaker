@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingConversionPostEvent")
-@NativeTypeRegistration(value = LivingConversionEvent.Post.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingConversionPostEvent")
+@NativeTypeRegistration(value = LivingConversionEvent.Post.class, zenCodeName = "crafttweaker.api.event.entity.living.MCLivingConversionPostEvent")
 public class ExpandLivingConversionPostEvent {
     
     @ZenCodeType.Getter("outcome")
