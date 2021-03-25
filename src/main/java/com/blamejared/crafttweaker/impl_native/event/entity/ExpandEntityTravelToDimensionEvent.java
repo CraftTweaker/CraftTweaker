@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * <br>
  * `dimension` getter is the id of the dimension the entity is traveling to.
  *
- * @docEvent canceled the Entity does not travel to the dimension.
+ * @docEvent canceled the Entity will not travel to the dimension.
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/MCEntityTravelToDimensionEvent")

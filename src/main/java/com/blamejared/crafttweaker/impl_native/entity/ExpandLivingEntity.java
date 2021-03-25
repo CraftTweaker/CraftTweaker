@@ -262,9 +262,9 @@ public class ExpandLivingEntity {
     }
     
     /**
-     * Gets the item stack of the entity in given slot.
+     * Gets the ItemStack in the specific slot.
      *
-     * @return The item stack of the entity in given slot.
+     * @return The ItemStack in the specific slot.
      */
     @ZenCodeType.Method
     public static IItemStack getItemStackFromSlot(LivingEntity internal, EquipmentSlotType slot) {

@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraftforge.event.world.BlockEvent;
 
 /**
- * @docEvent default it will pass on to the vanilla growth mechanics
+ * @docEvent default the default vanilla growth mechanics will run.
  * @docEvent allow it will force the plant to advance a growth stage.
  * @docEvent deny it will prevent the plant from advancing a growth stage
  */

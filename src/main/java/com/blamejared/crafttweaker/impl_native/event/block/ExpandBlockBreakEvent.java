@@ -8,7 +8,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * @docEvent canceled prevent the block from being broken.
+ * @docEvent canceled prevents the block from being broken.
  */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockBreakEvent")
@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandBlockBreakEvent {
     
     /**
-     * Gets player who broke the block. If no player is available, use a fake player
+     * Gets the player who broke the block. If no player is available, use a fake player
      */
     @ZenCodeType.Getter("player")
     @ZenCodeType.Method

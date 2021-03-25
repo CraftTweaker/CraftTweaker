@@ -453,9 +453,9 @@ public class BracketHandlers {
 
     /**
      * Gets a Biome based on the tokens.
-     * Throws an error if it can't get such a biome
+     * Throws an error if it can't get the biome
      *
-     * @param tokens The biome resource location
+     * @param tokens The biome's resource location
      *
      * @return The found biome
      *
@@ -477,7 +477,7 @@ public class BracketHandlers {
     }
 
     /**
-     * Gets damage source based on type.
+     * Gets a damage source based on type.
      * If the damage source is not pre-registered, it will create a new one with the given name
      *
      * @param tokens the damage sources' type

@@ -177,7 +177,8 @@ public class ExpandPlayerEntity {
     }
     
     /**
-     * get persistent data that can not be lost when player dies
+     * Gets the persisted NBT tag that is saved between deaths.
+     * Many mods use this to keep track of if they have given the player an item or not.
      */
     @ZenCodeType.Method
     public static MapData getPersistentData(PlayerEntity internal) {
@@ -186,7 +187,7 @@ public class ExpandPlayerEntity {
     }
     
     /**
-     * update persistent data that can not be lost when player dies
+     * Updates the player's persisted data that is saved between deaths.
      */
     @ZenCodeType.Method
     public static void updatePersistentData(PlayerEntity internal, MapData data) {

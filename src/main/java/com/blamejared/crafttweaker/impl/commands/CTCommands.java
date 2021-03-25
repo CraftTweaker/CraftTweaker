@@ -289,7 +289,7 @@ public class CTCommands {
             return 0;
         }));
 
-        registerCommand(new CommandImpl("blockinfo", "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.", (CommandCallerPlayer) (player, stack) -> {
+        registerCommand(new CommandImpl("blockInfo", "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.", (CommandCallerPlayer) (player, stack) -> {
             if(CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
                 CTEventHandler.BLOCK_INFO_PLAYERS.remove(player);
                 ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block info mode deactivated."));
@@ -360,7 +360,7 @@ public class CTCommands {
                             ExpandPlayerEntity.give(context.getSource()
                                     .asPlayer(), context.getArgument("item", IItemStack.class));
                             return 0;
-                        })), "give", "Gives the player the item using the Bracket handler syntax. You can also apply tags by appending a .withTag() call.");
+                        })), "give", "Gives the player an item using the Bracket handler syntax. You can also apply tags by appending a .withTag() call.");
 
 
         // Send an event to let others know that we are ready for SubCommands to be registered.

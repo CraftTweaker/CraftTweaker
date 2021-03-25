@@ -14,7 +14,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
  *
  * Duration on this event is how long the item had left in it's count down before 'finishing'
  *
- * @docEvent canceled will prevent the Item from being notified that it has stopped being used. The only vanilla item this would effect are bows, and it would cause them NOT to fire there arrow.
+ * @docEvent canceled will prevent the Item from being notified that it has stopped being used. The only vanilla item this would effect are bows, and it would cause them NOT to fire their arrow.
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/living/MCLivingEntityUseItemStopEvent")

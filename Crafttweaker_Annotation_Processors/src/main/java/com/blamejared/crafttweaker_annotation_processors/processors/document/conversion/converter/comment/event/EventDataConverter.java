@@ -18,7 +18,7 @@ public class EventDataConverter {
     private static final String DENY = "deny";
     private static final String NOT_CANCELED_INFO = "The event is not cancelable.";
     private static final String NO_RESULT_INFO = "The event does not have a result.";
-    private static final String CANCELED_INFO = "The class is cancelable.";
+    private static final String CANCELED_INFO = "The event is cancelable.";
     private static final String HAS_RESULT_INFO = "The event has a result.";
 
     private final ParameterReader reader;
