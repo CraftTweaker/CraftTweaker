@@ -12,6 +12,6 @@ import net.minecraftforge.event.world.BlockEvent;
  */
 @ZenRegister
 @Document("vanilla/api/event/block/CropGrowPreEvent")
-@NativeTypeRegistration(value = BlockEvent.CropGrowEvent.Pre.class, zenCodeName = "crafttweaker.api.event.block.CropGrowPreEvent")
+@NativeTypeRegistration(value = BlockEvent.CropGrowEvent.Pre.class, zenCodeName = "crafttweaker.api.event.block.MCCropGrowPreEvent")
 public class ExpandCropGrowPreEvent {
 }
