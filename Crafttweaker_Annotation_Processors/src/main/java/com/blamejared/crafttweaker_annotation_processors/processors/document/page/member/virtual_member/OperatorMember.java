@@ -33,12 +33,11 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
         writeTitle(writer);
         writeDescription(writer);
         writeScriptBlock(writer);
-        writer.println();
-        writer.println();
+        writer.printf(":::%n%n");
     }
     
     private void writeTitle(PrintWriter writer) {
-        writer.printf("### %s%n%n", type.name());
+        writer.printf(":::group{name=%s}%n%n", type.name());
     }
     
     private void writeDescription(PrintWriter writer) {

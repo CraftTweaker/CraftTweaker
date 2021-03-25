@@ -24,6 +24,7 @@ public class StaticMethodGroup {
     public void writeStaticMethods(PrintWriter writer) {
         writeTitle(writer);
         writeMethods(writer);
+        writer.printf(":::%n%n");
     }
     
     private void writeMethods(PrintWriter writer) {
@@ -33,6 +34,6 @@ public class StaticMethodGroup {
     }
     
     private void writeTitle(PrintWriter writer) {
-        writer.printf("### %s%n%n", name);
+        writer.printf(":::group{name=%s}%n%n", name);
     }
 }
