@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker.impl.item;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -16,12 +18,24 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
 
+/**
+ * An {@link MCItemStackMutable} object is the same as any other {@link IItemStack}.
+ * The only difference is that changes made to it will not create a new ItemStack, but instead modify the stack given.
+ *
+ * This is useful for example when you are dealing with Event Handlers and need to shrink the stack the
+ * player is using without assigning a new stack.
+ *
+ * @docParam this <item:minecraft:dirt>.mutable()
+ */
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.item.MCItemStackMutable")
+@Document("vanilla/api/items/MCItemStackMutable")
 public class MCItemStackMutable implements IItemStack {
     
     private final ItemStack internal;
     
     public MCItemStackMutable(ItemStack internal) {
-    
+        
         this.internal = internal;
     }
     
@@ -40,14 +54,14 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public IItemStack setAmount(int amount) {
-    
+        
         getInternal().setCount(amount);
         return this;
     }
     
     @Override
     public IItemStack withDamage(int damage) {
-    
+        
         getInternal().setDamage(damage);
         return this;
     }
@@ -60,20 +74,20 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
-    public void setFood(MCFood food) {
-    
-        CraftTweakerAPI.apply(new ActionSetFood(this, food, this.getInternal().getItem().getFood()));
-    }
-    
-    @Override
     public boolean isFood() {
         
         return getInternal().isFood();
     }
     
     @Override
-    public IItemStack withTag(IData tag) {
+    public void setFood(MCFood food) {
+        
+        CraftTweakerAPI.apply(new ActionSetFood(this, food, this.getInternal().getItem().getFood()));
+    }
     
+    @Override
+    public IItemStack withTag(IData tag) {
+        
         if(!(tag instanceof MapData)) {
             tag = new MapData(tag.asMap());
         }
@@ -83,11 +97,11 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public String getCommandString() {
-    
+        
         final StringBuilder sb = new StringBuilder("<item:");
         sb.append(internal.getItem().getRegistryName());
         sb.append(">");
-    
+        
         if(getInternal().getTag() != null) {
             MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
             //Damage is special case, if we have more special cases we can handle them here.
@@ -100,11 +114,11 @@ public class MCItemStackMutable implements IItemStack {
                 sb.append(")");
             }
         }
-    
+        
         if(internal.getDamage() > 0) {
             sb.append(".withDamage(").append(internal.getDamage()).append(")");
         }
-    
+        
         if(getAmount() != 1) {
             sb.append(" * ").append(getAmount());
         }
@@ -113,25 +127,25 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public ItemStack getInternal() {
-    
+        
         return internal;
     }
     
     @Override
     public int getDamage() {
-    
+        
         return internal.getDamage();
     }
     
     @Override
     public IItemStack mutable() {
-    
+        
         return this;
     }
     
     @Override
     public Ingredient asVanillaIngredient() {
-    
+        
         if(getInternal().isEmpty()) {
             return Ingredient.EMPTY;
         }
@@ -143,32 +157,32 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public String toString() {
-    
+        
         return getCommandString();
     }
     
     @Override
     public IItemStack[] getItems() {
-    
+        
         return new IItemStack[] {this};
     }
     
     @Override
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public boolean equals(Object o) {
-    
+        
         if(this == o) {
             return true;
         }
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-    
+        
         //Implemented manually instead of using ItemStack.areItemStacksEqual to ensure it
         // stays the same as hashCode even if MC's impl would change
         final ItemStack thatStack = ((MCItemStackMutable) o).internal;
         final ItemStack thisStack = this.internal;
-    
+        
         if(thisStack.isEmpty()) {
             return thatStack.isEmpty();
         }
@@ -190,7 +204,7 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public int hashCode() {
-    
+        
         return Objects.hash(internal.getCount(), internal.getItem(), internal.getTag());
     }
     

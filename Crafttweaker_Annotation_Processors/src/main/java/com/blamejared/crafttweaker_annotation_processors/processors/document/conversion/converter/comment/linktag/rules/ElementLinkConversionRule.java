@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.linktag.LinkConverter;
 
 import javax.lang.model.element.Element;
+import java.util.Optional;
 
 public class ElementLinkConversionRule implements LinkConversionRule {
     
@@ -19,11 +20,11 @@ public class ElementLinkConversionRule implements LinkConversionRule {
     }
     
     @Override
-    public String convertToClickableMarkdown(String link, Element element) {
+    public Optional<String> tryConvertToClickableMarkdown(String link, Element element) {
         final String prefix = getPrefix(link, element);
         final String suffix = getSuffix(link);
         
-        return merge(prefix, suffix);
+        return Optional.of(merge(prefix, suffix));
     }
     
     private String getPrefix(String link, Element element) {
