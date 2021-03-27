@@ -1,36 +1,41 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.AbstractCraftTweakerProcessor;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.ElementConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.KnownElementList;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.file.DocsJsonWriter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.sun.source.util.Trees;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import com.blamejared.crafttweaker_annotation_processors.processors.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.sun.source.util.*;
+import org.reflections.*;
+import org.reflections.util.*;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.TypeElement;
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.processing.*;
+import javax.lang.model.element.*;
+import java.io.*;
+import java.lang.annotation.*;
+import java.util.*;
 
 public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     
-    private static final File outputDirectory = new File("docsOut");
+    private static final String defaultOutputDirectory = "docsOut";
+    private static final String outputDirectoryOptionName = "crafttweaker.processor.document.output_directory";
+    private File outputDirectory;
     
     private KnownElementList knownElementList;
     private KnownModList knownModList;
     
     @Override
+    public Set<String> getSupportedOptions() {
+        
+        final Set<String> supportedOptions = new HashSet<>(super.getSupportedOptions());
+        supportedOptions.add(outputDirectoryOptionName);
+        return supportedOptions;
+    }
+    
+    @Override
     public Set<String> getSupportedAnnotationTypes() {
+        
         final HashSet<String> result = new HashSet<>(2);
         result.add(Document.class.getCanonicalName());
         result.add("net.minecraftforge.fml.common.Mod");
@@ -45,6 +50,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     
     @Override
     protected void setupDependencyContainer() {
+        
         super.setupDependencyContainer();
         setupTrees(processingEnv);
         setupReflections();
@@ -52,12 +58,17 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     
     @Override
     protected void performInitialization() {
+        
         knownElementList = dependencyContainer.getInstanceOfClass(KnownElementList.class);
         knownModList = dependencyContainer.getInstanceOfClass(KnownModList.class);
+        final String docsOut = processingEnv.getOptions()
+                .getOrDefault(outputDirectoryOptionName, defaultOutputDirectory);
+        outputDirectory = new File(docsOut);
     }
     
     @Override
     protected boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        
         if(roundEnv.processingOver()) {
             handleLastRound();
         } else {
@@ -68,6 +79,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     }
     
     private void setupReflections() {
+        
         final ConfigurationBuilder configuration = new ConfigurationBuilder().addUrls(ClasspathHelper
                 .forJavaClassPath())
                 .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
@@ -79,6 +91,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     }
     
     private void setupTrees(ProcessingEnvironment processingEnv) {
+        
         final String environmentClassName = processingEnv.getClass().getName();
         
         if(!environmentClassName.equals("com.sun.tools.javac.processing.JavacProcessingEnvironment")) {
@@ -91,17 +104,20 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     }
     
     public void handleIntermediateRound(RoundEnvironment roundEnvironment) {
+        
         knownModList.fillModIdInfo(roundEnvironment);
         knownElementList.addAllForIntermediateRound(roundEnvironment);
     }
     
     public void handleLastRound() {
+        
         convertPages();
         writePages();
         writeDocsJsonFile();
     }
     
     private void writeDocsJsonFile() {
+        
         final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
         final DocsJsonWriter docsJsonWriter = new DocsJsonWriter(outputDirectory, documentRegistry);
         try {
@@ -112,11 +128,13 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     }
     
     private void convertPages() {
+        
         final ElementConverter elementConverter = dependencyContainer.getInstanceOfClass(ElementConverter.class);
         elementConverter.handleElements(knownElementList);
     }
     
     private void writePages() {
+        
         final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
         final PageWriter pageWriter = new PageWriter(documentRegistry, new File(outputDirectory, "docs"));
         try {
@@ -125,4 +143,5 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
             exception.printStackTrace();
         }
     }
+    
 }

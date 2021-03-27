@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 
 import javax.lang.model.element.Element;
 import java.util.List;
+import java.util.Optional;
 
 public class ImportedTypeLinkConversionRule implements LinkConversionRule {
     
@@ -19,17 +20,19 @@ public class ImportedTypeLinkConversionRule implements LinkConversionRule {
     
     @Override
     public boolean canConvert(String link) {
-        return isDirectlyReferenced(link);
-    }
-    
-    private boolean isDirectlyReferenced(String link) {
-        return !link.contains(".");
+        return true;
     }
     
     @Override
-    public String convertToClickableMarkdown(String link, Element element) {
-        final String importedTypeQualifiedName = getQualifiedNameFor(link, element);
-        return linkConverter.convertLinkToClickableMarkdown(importedTypeQualifiedName, element);
+    public Optional<String> tryConvertToClickableMarkdown(String link, Element element) {
+        try {
+            final String importedTypeQualifiedName = getQualifiedNameFor(link, element);
+    
+            final String clickableMarkdown = linkConverter.convertLinkToClickableMarkdown(importedTypeQualifiedName, element);
+            return Optional.ofNullable(clickableMarkdown);
+        } catch(Exception ignored) {
+            return Optional.empty();
+        }
     }
     
     private String getQualifiedNameFor(String link, Element element) {
@@ -42,9 +45,12 @@ public class ImportedTypeLinkConversionRule implements LinkConversionRule {
     }
     
     private String qualifyName(String link, List<String> importedTypes) {
+    
+        final String[] split = link.split("\\.", 2);
+    
         for(String importedType : importedTypes) {
-            if(doesImportMatchLink(importedType, link)) {
-                return importedType;
+            if(doesImportMatchLink(importedType, split[0])) {
+                return split.length == 1 ? importedType : (String.format("%s.%s", importedType, split[1]));
             }
         }
         throw new IllegalArgumentException("Could not qualify " + link);

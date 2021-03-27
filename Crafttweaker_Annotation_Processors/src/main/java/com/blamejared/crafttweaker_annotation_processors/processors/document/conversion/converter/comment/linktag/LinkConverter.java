@@ -12,6 +12,7 @@ import javax.lang.model.element.Element;
 import javax.tools.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class LinkConverter implements IHasPostCreationCall {
     private final List<LinkConversionRule> conversionRules = new ArrayList<>();
@@ -25,19 +26,17 @@ public class LinkConverter implements IHasPostCreationCall {
     
     public String convertLinkToClickableMarkdown(String link, Element element) {
         try {
-            final LinkConversionRule rule = findRuleFor(link);
-            return rule.convertToClickableMarkdown(link, element);
+            return conversionRules.stream()
+                    .filter(rule -> rule.canConvert(link))
+                    .map(rule -> rule.tryConvertToClickableMarkdown(link, element))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Cannot convert link: " + link));
         }catch(Exception e) {
             messager.printMessage(Diagnostic.Kind.WARNING, "Could not convert link '" + link + "': " + e.getMessage());
             return link;
         }
-    }
-    
-    private LinkConversionRule findRuleFor(String link) {
-        return conversionRules.stream()
-                .filter(rule -> rule.canConvert(link))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Cannot convert link: " + link));
     }
     
     @Override

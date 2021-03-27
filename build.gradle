@@ -351,6 +351,7 @@ task updateVersionTracker {
 }
 
 compileJava {
+    options.compilerArgs << "-Acrafttweaker.processor.document.output_directory=${file('docsOut')}"
     //options.compilerArgs += ["-Xprefer:source", "-verbose"]
     //options.fork = true
     //options.forkOptions.executable = 'javac'
