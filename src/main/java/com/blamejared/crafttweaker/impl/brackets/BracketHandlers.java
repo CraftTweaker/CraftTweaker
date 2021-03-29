@@ -281,18 +281,15 @@ public class BracketHandlers {
      * @docParam tokens "minecraft:pig"
      */
     @ZenCodeType.Method
-    @ZenCodeType.Nullable
     @BracketResolver("entitytype")
     public static MCEntityType getEntityType(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
-            CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
-            return null;
+            throw new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">");
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         if(!ForgeRegistries.ENTITIES.containsKey(resourceLocation)) {
-            CraftTweakerAPI.logError("Could not get entitytype <entityType:%s>", tokens);
-            return null;
+            throw new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">");
         }
 
         return new MCEntityType(Objects.requireNonNull(ForgeRegistries.ENTITIES.getValue(resourceLocation)));
@@ -434,18 +431,15 @@ public class BracketHandlers {
      * @docParam tokens "minecraft:armorer"
      */
     @ZenCodeType.Method
-    @ZenCodeType.Nullable
     @BracketResolver("profession")
     public static VillagerProfession getProfession(String tokens) {
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
-            CraftTweakerAPI.logError("Could not get profession <profession:%s>", tokens);
-            return null;
+            throw new IllegalArgumentException("Could not get profession <profession:" + tokens + ">");
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         if(!ForgeRegistries.PROFESSIONS.containsKey(resourceLocation)) {
-            CraftTweakerAPI.logError("Could not get profession <profession:%s>", tokens);
-            return null;
+            throw new IllegalArgumentException("Could not get profession <profession:" + tokens + ">");
         }
 
         return ForgeRegistries.PROFESSIONS.getValue(resourceLocation);
