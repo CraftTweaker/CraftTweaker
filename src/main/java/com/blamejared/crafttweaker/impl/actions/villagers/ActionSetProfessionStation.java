@@ -21,7 +21,7 @@ public class ActionSetProfessionStation implements IUndoableAction {
 
     @Override
     public void apply() {
-        profession.pointOfInterest.blockStates = newStations;
+        profession.getPointOfInterest().blockStates = newStations;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ActionSetProfessionStation implements IUndoableAction {
 
     @Override
     public void undo() {
-        profession.pointOfInterest.blockStates = oldStations;
+        profession.getPointOfInterest().blockStates = oldStations;
     }
 
     @Override
