@@ -33,6 +33,6 @@ public class ExpandVillagerProfession {
      */
     @ZenCodeType.Method
     public static void setStations(VillagerProfession internal, BlockState... stations) {
-        CraftTweakerAPI.apply(new ActionSetProfessionStation(internal, internal.pointOfInterest.blockStates, Sets.newHashSet(stations)));
+        CraftTweakerAPI.apply(new ActionSetProfessionStation(internal, internal.getPointOfInterest().blockStates, Sets.newHashSet(stations)));
     }
 }
