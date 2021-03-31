@@ -313,7 +313,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public List<IItemStack> getItems() {
-        return Collections.singletonList(new MCItemStack(stack.copy()));
+        return items;
     }
     
     @Override
