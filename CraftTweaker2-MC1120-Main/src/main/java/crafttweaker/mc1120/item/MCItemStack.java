@@ -59,7 +59,12 @@ public class MCItemStack implements IItemStack {
     public static final IItemStack EMPTY = new MCItemStack();
     
     
-    protected final ItemStack stack;
+    private final ItemStack stack;
+
+    /**
+     * ItemStack that not copied, only used in MCMutableItemStack
+     */
+    protected final ItemStack origin;
     private final List<IItemStack> items;
     protected boolean matchTagExact = true;
     protected IData tag = null;
@@ -67,13 +72,15 @@ public class MCItemStack implements IItemStack {
     
     private MCItemStack() {
         stack = ItemStack.EMPTY;
+        origin = ItemStack.EMPTY;
         items = Collections.singletonList(this);
     }
     
     public MCItemStack(ItemStack itemStack) {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
-        stack = itemStack;
+        stack = itemStack.copy();
+        origin = itemStack;
         items = Collections.singletonList(this);
     }
     
@@ -88,6 +95,7 @@ public class MCItemStack implements IItemStack {
             throw new IllegalArgumentException("stack cannot be null");
         
         stack = itemStack;
+        origin = itemStack;
         items = Collections.singletonList(this);
         this.tag = tag;
     }
@@ -96,6 +104,7 @@ public class MCItemStack implements IItemStack {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
         stack = itemStack;
+        origin = itemStack;
         items = Collections.singletonList(this);
         this.tag = tag;
         this.wildcardSize = wildcardSize;
@@ -111,6 +120,7 @@ public class MCItemStack implements IItemStack {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
         stack = itemStack;
+        origin = itemStack;
         items = Collections.singletonList(this);
     }
     
@@ -439,7 +449,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public Object getInternal() {
-        return stack.copy();
+        return stack;
     }
     
     @Override
@@ -553,7 +563,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IEntityItem createEntityItem(IWorld world, int x, int y, int z) {
-        return CraftTweakerMC.getIEntityItem(new EntityItem(CraftTweakerMC.getWorld(world), x, y, z, stack.copy()));
+        return CraftTweakerMC.getIEntityItem(new EntityItem(CraftTweakerMC.getWorld(world), x, y, z, stack));
     }
     
     @Override
@@ -717,7 +727,7 @@ public class MCItemStack implements IItemStack {
 
     @Override
     public IMutableItemStack mutable() {
-        return new MCMutableItemStack(stack);
+        return new MCMutableItemStack(origin);
     }
 
     // #############################

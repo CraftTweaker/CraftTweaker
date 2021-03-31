@@ -20,32 +20,33 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
 
     @Override
     public void shrink(int quality) {
-        stack.shrink(quality);
+        origin.shrink(quality);
     }
 
     @Override
     public void grow(int quality) {
-        stack.grow(quality);
+        origin.grow(quality);
     }
 
     @Override
     public IItemStack withTag(IData tag, boolean matchTagExact) {
         this.matchTagExact = matchTagExact;
         this.tag = tag;
-        this.stack.setTagCompound(CraftTweakerMC.getNBTCompound(tag));
+        this.origin.setTagCompound(CraftTweakerMC.getNBTCompound(tag));
         return this;
     }
 
     @Override
     public IItemStack updateTag(IData tagUpdate, boolean matchTagExact) {
+        this.matchTagExact = matchTagExact;
         if (tag == null) {
-            if(stack.getTagCompound() == null) {
+            if(origin.getTagCompound() == null) {
                 return withTag(tagUpdate, matchTagExact);
             }
 
-            tag = NBTConverter.from(stack.getTagCompound(), false);
+            tag = NBTConverter.from(origin.getTagCompound(), false);
         }
-        NBTUpdater.updateMap(stack.getTagCompound(), tagUpdate);
+        NBTUpdater.updateMap(origin.getTagCompound(), tagUpdate);
         tag = tag.update(tagUpdate);
         return this;
     }
@@ -54,30 +55,30 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
     public IItemStack withEmptyTag() {
         NBTTagCompound nbt = new NBTTagCompound();
         tag = NBTConverter.from(nbt, false);
-        stack.setTagCompound(nbt);
+        origin.setTagCompound(nbt);
         return this;
     }
 
     @Override
     public IItemStack removeTag(String tag) {
         if(tag == null) {
-            stack.setTagCompound(null);
+            origin.setTagCompound(null);
         } else {
-            stack.getTagCompound().removeTag(tag);
+            origin.getTagCompound().removeTag(tag);
         }
-        this.tag = NBTConverter.from(stack.getTagCompound(), false);
+        this.tag = NBTConverter.from(origin.getTagCompound(), false);
         return this;
     }
 
     @Override
     public IItemStack withAmount(int amount) {
-        stack.setCount(amount);
+        origin.setCount(amount);
         return this;
     }
 
     @Override
     public IItemStack withDamage(int damage) {
-        stack.setItemDamage(damage);
+        origin.setItemDamage(damage);
         return this;
     }
 
@@ -85,10 +86,10 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
     public IItemStack withDisplayName(String name) {
         NBTTagCompound tagComp;
 
-        if(!this.stack.hasTagCompound() || this.stack.getTagCompound() == null) {
+        if(!this.origin.hasTagCompound() || this.origin.getTagCompound() == null) {
             tagComp = new NBTTagCompound();
         } else {
-            tagComp = this.stack.getTagCompound();
+            tagComp = this.origin.getTagCompound();
         }
 
         NBTTagCompound display;
@@ -101,7 +102,7 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
         display.setString("Name", name);
         tagComp.setTag("display", display);
 
-        stack.setTagCompound(tagComp);
+        origin.setTagCompound(tagComp);
         return this;
     }
 
@@ -109,10 +110,10 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
     public IItemStack withLore(String[] lore) {
         NBTTagCompound tagComp;
 
-        if(!this.stack.hasTagCompound() || this.stack.getTagCompound() == null) {
+        if(!this.origin.hasTagCompound() || this.origin.getTagCompound() == null) {
             tagComp = new NBTTagCompound();
         } else {
-            tagComp = this.stack.getTagCompound();
+            tagComp = this.origin.getTagCompound();
         }
 
         NBTTagCompound display;
@@ -136,17 +137,17 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
         display.setTag("Lore", loreList);
         tagComp.setTag("display", display);
 
-        stack.setTagCompound(tagComp);
+        origin.setTagCompound(tagComp);
         return this;
     }
 
     @Override
     public IItemStack copy() {
-        return new MCItemStack(stack.copy());
+        return new MCItemStack(origin.copy());
     }
 
     @Override
     public Object getInternal() {
-        return stack;
+        return origin;
     }
 }
