@@ -9,7 +9,6 @@ import net.minecraft.util.Util;
 import net.minecraftforge.common.util.Lazy;
 import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +39,7 @@ public final class CommonLootModifiers {
      */
     @ZenCodeType.Method
     public static ILootModifier add(final IItemStack stack) {
-        return stack.isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(stack));
+        return stack.isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(stack.copy()));
     }
 
     /**
@@ -51,7 +50,7 @@ public final class CommonLootModifiers {
      */
     @ZenCodeType.Method
     public static ILootModifier addAll(final IItemStack... stacks) {
-        final List<IItemStack> stacksToAdd = Arrays.stream(stacks).filter(it -> !it.isEmpty()).collect(Collectors.toList());
+        final List<IItemStack> stacksToAdd = Arrays.stream(stacks).filter(it -> !it.isEmpty()).map(IItemStack::copy).collect(Collectors.toList());
         return (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.addAll(stacksToAdd));
     }
 
@@ -118,7 +117,7 @@ public final class CommonLootModifiers {
     }
 
     private static Stream<IItemStack> replacing(final Stream<IItemStack> stream, final IIngredient from, final IItemStack to) {
-        final Stream<IItemStack> newStream = stream.map(it -> from.matches(it)? to : it);
+        final Stream<IItemStack> newStream = stream.map(it -> from.matches(it)? to.copy() : it);
         return to == null? newStream.filter(Objects::nonNull) : newStream;
     }
 }
