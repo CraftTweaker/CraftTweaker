@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.api.fluid;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.fluid.Fluid;
@@ -22,6 +24,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("registryName")
     default ResourceLocation getRegistryName() {
+        
         return getFluid().getRegistryName();
     }
     
@@ -29,11 +32,13 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Checks if this IFluidStack, contains the given IFluidStack by checking if the fluids are the same, and if this fluid's amount is bigger than the given fluid's amount
      *
      * @param other other IFluidStack to compare against
+     *
      * @return true if this fluid contains the other fluid
      */
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     default boolean containsOther(IFluidStack other) {
+        
         return this.getInternal().containsFluid(other.getInternal());
     }
     
@@ -44,6 +49,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("empty")
     default boolean isEmpty() {
+        
         return getInternal().isEmpty();
     }
     
@@ -54,6 +60,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("amount")
     default int getAmount() {
+        
         return getInternal().getAmount();
     }
     
@@ -61,7 +68,9 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the fluid amount in MilliBuckets (mB)
      *
      * @param amount The amount to multiply this stack
+     *
      * @return A new stack, or this stack, depending if this stack is mutable
+     *
      * @docParam amount 1000
      */
     @ZenCodeType.Method
@@ -72,7 +81,9 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the fluid amount in MilliBuckets (MB)
      *
      * @param amount The amount to multiply this stack
+     *
      * @return A new stack, or this stack, depending if this stack is mutable
+     *
      * @docParam amount 1000
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
@@ -104,7 +115,37 @@ public interface IFluidStack extends CommandStringDisplayable {
     Fluid getFluid();
     
     /**
+     * Returns the NBT tag attached to this FluidStack.
+     *
+     * @return IData of the FluidStack's NBT Tag, null if it doesn't exist.
+     */
+    @ZenCodeType.Getter("tag")
+    @ZenCodeType.Method
+    IData getTag();
+    
+    /**
+     * Sets the tag for the FluidStack.
+     *
+     * @param tag The tag to set.
+     * @return This FluidStack if it is mutable, a new one with the changed property otherwise
+     * @docParam tag {Display: {lore: ["Hello"]}}
+     */
+    @ZenCodeType.Method
+    IFluidStack withTag(IData tag);
+    
+    /**
+     * Returns true if this FluidStack has a Tag
+     *
+     * @return true if tag is present.
+     */
+    @ZenCodeType.Getter("hasTag")
+    default boolean hasTag() {
+        return getInternal().hasTag();
+    }
+    
+    /**
      * Moddevs, use this to get the Vanilla version.
      */
     FluidStack getInternal();
+    
 }
