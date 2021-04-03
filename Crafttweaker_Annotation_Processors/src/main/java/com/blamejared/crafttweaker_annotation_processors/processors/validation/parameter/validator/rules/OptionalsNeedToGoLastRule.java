@@ -24,6 +24,8 @@ public class OptionalsNeedToGoLastRule implements ParameterValidationRule {
         optionalAnnotations.add(ZenCodeType.OptionalFloat.class);
         optionalAnnotations.add(ZenCodeType.OptionalString.class);
         optionalAnnotations.add(ZenCodeType.OptionalDouble.class);
+        optionalAnnotations.add(ZenCodeType.OptionalBoolean.class);
+        optionalAnnotations.add(ZenCodeType.OptionalChar.class);
     }
     
     public OptionalsNeedToGoLastRule(Messager messager) {

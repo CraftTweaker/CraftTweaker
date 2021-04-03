@@ -38,9 +38,12 @@ public class OptionalTypeValidationRule implements ParameterValidationRule {
         putAnnotation(TypeKind.LONG, ZenCodeType.OptionalLong.class);
         putAnnotation(TypeKind.FLOAT, ZenCodeType.OptionalFloat.class);
         putAnnotation(TypeKind.DOUBLE, ZenCodeType.OptionalDouble.class);
-        
+        putAnnotation(TypeKind.BOOLEAN, ZenCodeType.OptionalBoolean.class);
+        putAnnotation(TypeKind.CHAR, ZenCodeType.OptionalChar.class);
+    
         putAnnotation(Object.class, ZenCodeType.Optional.class);
         putAnnotation(String.class, ZenCodeType.OptionalString.class);
+        
     }
     
     private void putAnnotation(Class<?> cls, Class<? extends Annotation> annotationClass) {

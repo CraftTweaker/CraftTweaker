@@ -46,6 +46,8 @@ public class ParameterValidationProcessor extends AbstractCraftTweakerProcessor 
         result.add(ZenCodeType.OptionalFloat.class);
         result.add(ZenCodeType.OptionalString.class);
         result.add(ZenCodeType.OptionalDouble.class);
+        result.add(ZenCodeType.OptionalBoolean.class);
+        result.add(ZenCodeType.OptionalChar.class);
     }
     
     @Override
