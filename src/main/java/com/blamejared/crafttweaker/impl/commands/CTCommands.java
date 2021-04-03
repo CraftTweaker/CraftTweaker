@@ -39,6 +39,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.data.NBTToSNBTConverter;
+import net.minecraft.data.SNBTToNBTConverter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -46,6 +48,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
@@ -131,8 +134,9 @@ public class CTCommands {
             Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
             
             if(tags.size() > 0) {
+                
                 send(copy(new FormattedTextComponent(color("Item Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
-                        .map(ResourceLocation::toString)
+                        .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
                         .collect(Collectors.joining(", "))), player);
 
                 tags.stream()
@@ -146,7 +150,7 @@ public class CTCommands {
                 
                 if(tags.size() > 0) {
                     send(copy(new FormattedTextComponent(color("Block Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
-                            .map(ResourceLocation::toString)
+                            .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerBlock.INSTANCE).getCommandString())
                             .collect(Collectors.joining(", "))), player);
 
                     tags.stream()
@@ -195,6 +199,61 @@ public class CTCommands {
             }
             return 0;
         }));
+    
+        registerCommand("hand", new CommandImpl("vanilla", "Outputs the name and tags (if any) of the item in your hand in the vanilla format", (CommandCallerPlayer) (player, stack) -> {
+        
+        
+            String string = stack.getItem().getRegistryName().toString();
+            ITextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
+            send(copy, player);
+        
+            if(stack.hasTag()) {
+                copy = copy(new FormattedTextComponent("NBT: %s", color(stack.getTag().getString(), TextFormatting.GREEN)), stack.getTag().getString());
+                send(copy, player);
+            }
+        
+            if(player instanceof ServerPlayerEntity) {
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
+            }
+        
+            if(stack.getItem() instanceof BucketItem) {
+                BucketItem item = (BucketItem) stack.getItem();
+                if(item.getFluid() != Fluids.EMPTY) {
+                    string = item.getFluid().getRegistryName().toString();
+                    copy = copy(new FormattedTextComponent("Fluid: %s", color(string, TextFormatting.GREEN)), string);
+                    send(copy, player);
+                }
+            }
+        
+            Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
+        
+            if(tags.size() > 0) {
+                send(copy(new FormattedTextComponent(color("Item Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                        .map(ResourceLocation::toString)
+                        .collect(Collectors.joining(", "))), player);
+            
+                tags.stream()
+                        .map(ResourceLocation::toString)
+                        .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("- ", TextFormatting.YELLOW), color("#"+ commandString, TextFormatting.AQUA)), "#"+commandString), player));
+            }
+        
+            if(stack.getItem() instanceof BlockItem) {
+                BlockItem item = (BlockItem) stack.getItem();
+                tags = BlockTags.getCollection().getOwningTags(item.getBlock());
+            
+                if(tags.size() > 0) {
+                    send(copy(new FormattedTextComponent(color("Block Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                            .map(resourceLocation -> "#" + resourceLocation.toString())
+                            .collect(Collectors.joining(", "))), player);
+                
+                    tags.stream()
+                            .map(ResourceLocation::toString)
+                            .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
+                }
+            }
+            return 0;
+        }));
+        
         
         registerCommand(new CommandImpl("inventory", "Outputs the names of the item in your inventory", (CommandCallerPlayer) (player, stack) -> {
             StringBuilder builder = new StringBuilder("Inventory items").append("\n");
