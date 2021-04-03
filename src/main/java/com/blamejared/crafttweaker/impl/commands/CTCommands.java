@@ -105,6 +105,11 @@ public class CTCommands {
                     return 0;
                 })));
         
+        registerCommand(new CommandImpl("reload", "Points people to /reload", (CommandCallerPlayer) (player, stack) -> {
+            send(run(new StringTextComponent(color("CraftTweaker reload has been deprecated! Use the vanilla /reload instead!", TextFormatting.AQUA)), "/reload"), player);
+            return 0;
+        }));
+        
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
             String string = new MCItemStackMutable(stack).getCommandString();
