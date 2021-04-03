@@ -7,7 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.*;
 
-public class LintRequestMessage extends SocketMessage implements IRequestMessage<LintResponseMessage> {
+public class LintRequestMessage extends SocketMessage<LintRequestMessage> implements IRequestMessage<LintResponseMessage> {
     public LintRequestMessage() {
         super("LintRequest");
     }

@@ -163,9 +163,7 @@ public class NamesCommand extends CraftTweakerCommand {
      * For easy copy paste of the command
      * /ct names display unloc maxstack maxuse maxdamage rarity repaircost damageable repairable creativetabs enchantability burntime
      */
-    @SuppressWarnings("unused")
     private enum NameCommandParams {
-        
         
         REGISTRY_NAME("23498z9384z9283z49", stack -> {
             StringBuilder sb = new StringBuilder();
@@ -195,7 +193,7 @@ public class NamesCommand extends CraftTweakerCommand {
         
         MAX_ITEM_DAMAGE("maxdamage", stack -> Integer.toString(stack.getMaxDamage())),
     
-        RARITY("rarity", stack -> stack.getRarity().rarityName),
+        RARITY("rarity", stack -> stack.getItem().getForgeRarity(stack).getName()),
         
         REPAIR_COST("repaircost", stack -> Integer.toString(stack.getRepairCost())),
         

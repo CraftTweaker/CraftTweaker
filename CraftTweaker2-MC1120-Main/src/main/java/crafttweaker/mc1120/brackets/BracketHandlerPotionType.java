@@ -26,7 +26,6 @@ public class BracketHandlerPotionType implements IBracketHandler {
         method = CraftTweakerAPI.getJavaMethod(BracketHandlerPotionType.class, "getFromString", String.class);
     }
 
-    @SuppressWarnings("unused")
     public static IPotionType getFromString(String id) {
         IPotionType result = CraftTweakerMC.getIPotionType(PotionType.getPotionTypeForName(id));
         if(result == null)

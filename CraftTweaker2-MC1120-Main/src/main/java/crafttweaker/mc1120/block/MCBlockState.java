@@ -59,6 +59,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
         return result;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public crafttweaker.api.block.IBlockState withProperty(String name, String value) {
         IProperty property = blockState.getBlock().getBlockState().getProperty(name);
@@ -79,7 +80,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     @Override
     public List<String> getPropertyNames() {
         List<String> props = new ArrayList<>();
-        for (IProperty prop : blockState.getPropertyKeys()) {
+        for (IProperty<?> prop : blockState.getPropertyKeys()) {
             props.add(prop.getName());
         }
         return ImmutableList.copyOf(props);
@@ -87,7 +88,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
 
     @Override
     public String getPropertyValue(String name) {
-        IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
+        IProperty<?> prop = blockState.getBlock().getBlockState().getProperty(name);
         if (prop != null) {
             //noinspection unchecked
             return blockState.getValue(prop).toString();
@@ -98,7 +99,7 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
 
     @Override
     public List<String> getAllowedValuesForProperty(String name) {
-        IProperty prop = blockState.getBlock().getBlockState().getProperty(name);
+        IProperty<?> prop = blockState.getBlock().getBlockState().getProperty(name);
         if (prop != null) {
             List<String> values = new ArrayList<>();
             //noinspection unchecked

@@ -12,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.UserListOps;
 import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.text.TextComponentString;
 
@@ -27,6 +26,7 @@ public class MCServer extends AbstractServer {
         this.server = server;
     }
 
+    @SuppressWarnings("unused")
     private static IUser getPlayer(ICommandSender commandSender) {
         if(commandSender instanceof EntityPlayer) {
             return CraftTweakerMC.getIPlayer((EntityPlayer) commandSender);

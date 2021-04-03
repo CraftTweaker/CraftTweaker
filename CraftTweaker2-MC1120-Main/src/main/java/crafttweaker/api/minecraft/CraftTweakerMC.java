@@ -112,7 +112,7 @@ import java.util.*;
  *
  * @author Stan Hebben
  */
-@SuppressWarnings({"unused", "rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class CraftTweakerMC {
     
     public static final IBiome[] biomes;

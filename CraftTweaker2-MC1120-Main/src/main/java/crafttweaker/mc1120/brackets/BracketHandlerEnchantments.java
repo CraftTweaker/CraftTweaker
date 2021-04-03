@@ -30,7 +30,6 @@ public class BracketHandlerEnchantments implements IBracketHandler {
         method = CraftTweakerAPI.getJavaMethod(BracketHandlerEnchantments.class, "getEnchantment", String.class);
     }
     
-    @SuppressWarnings("unused")
     public static IEnchantmentDefinition getEnchantment(String id) {
         IEnchantmentDefinition result = enchantments.get(id);
         if(result == null)

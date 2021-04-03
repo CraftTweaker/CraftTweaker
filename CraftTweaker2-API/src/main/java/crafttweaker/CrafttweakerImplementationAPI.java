@@ -122,6 +122,8 @@ public class CrafttweakerImplementationAPI {
 
     private static class ItemComparator implements Comparator<IItemDefinition>, Serializable {
         
+        private static final long serialVersionUID = 1047125497711966185L;
+
         @Override
         public int compare(IItemDefinition o1, IItemDefinition o2) {
             return o1.getId().compareTo(o2.getId());
@@ -130,6 +132,8 @@ public class CrafttweakerImplementationAPI {
     
     private static class LiquidComparator implements Comparator<ILiquidDefinition>, Serializable {
         
+        private static final long serialVersionUID = 2898678569745013186L;
+
         @Override
         public int compare(ILiquidDefinition o1, ILiquidDefinition o2) {
             return o1.getName().compareTo(o2.getName());
@@ -138,6 +142,8 @@ public class CrafttweakerImplementationAPI {
     
     private static class BlockComparator implements Comparator<IBlockDefinition>, Serializable {
         
+        private static final long serialVersionUID = 3985011053165711684L;
+
         @Override
         public int compare(IBlockDefinition o1, IBlockDefinition o2) {
             return o1.getId().compareTo(o2.getId());
@@ -146,6 +152,8 @@ public class CrafttweakerImplementationAPI {
     
     private static class EntityComparator implements Comparator<IEntityDefinition>, Serializable {
         
+        private static final long serialVersionUID = -7796000270425458072L;
+
         @Override
         public int compare(IEntityDefinition o1, IEntityDefinition o2) {
             return o1.getId().compareTo(o2.getId());

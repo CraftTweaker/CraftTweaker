@@ -1,6 +1,6 @@
 package crafttweaker.socket.messages;
 
-public abstract class SocketMessage<T extends SocketMessage> {
+public abstract class SocketMessage<T extends SocketMessage<T>> {
     
     public String messageType;
     
@@ -9,6 +9,7 @@ public abstract class SocketMessage<T extends SocketMessage> {
     }
     
     // Needed for gson
+    @SuppressWarnings("unused")
     private SocketMessage() {
     }
 }

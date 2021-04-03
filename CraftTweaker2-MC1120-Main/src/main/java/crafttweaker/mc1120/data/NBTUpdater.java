@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author Stan
  */
-public class NBTUpdater extends NBTConverter implements IDataConverter<NBTBase> {
+public class NBTUpdater extends NBTConverter {
     
     private final NBTTagCompound nbt;
     

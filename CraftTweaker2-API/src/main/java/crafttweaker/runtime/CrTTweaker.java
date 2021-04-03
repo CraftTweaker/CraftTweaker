@@ -133,7 +133,7 @@ public class CrTTweaker implements ITweaker {
         
         loader.setLoaderStage(ScriptLoader.LoaderStage.LOADING);
         if(!isLinter)
-            CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoadingStartedEvent(loader, isSyntaxCommand, networkSide));
+            CRT_LOADING_STARTED_EVENT_EVENT_LIST.publish(new CrTLoaderLoadingEvent.Started(loader, networkSide, isSyntaxCommand));
         
         preprocessorManager.clean();
         
@@ -181,7 +181,7 @@ public class CrTTweaker implements ITweaker {
                 String className = extractClassName(filename);
                 
                 if(!isLinter)
-                    CRT_LOADING_SCRIPT_PRE_EVENT_LIST.publish(new CrTLoadingScriptEventPre(filename));
+                    CRT_LOADING_SCRIPT_PRE_EVENT_LIST.publish(new CrTScriptLoadingEvent.Pre(filename));
                 
                 // start reading of the scripts
                 ZenTokener parser = null;
@@ -233,7 +233,7 @@ public class CrTTweaker implements ITweaker {
                 }
                 
                 if(!isLinter)
-                    CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
+                    CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTScriptLoadingEvent.Post(filename));
                 //CraftTweakerAPI.logDefault("Completed file: " + filename +" in: " + (System.currentTimeMillis() - time) + "ms");
             }
             

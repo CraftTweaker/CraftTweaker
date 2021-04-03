@@ -17,7 +17,7 @@ import crafttweaker.mc1120.liquid.MCLiquidDefinition;
 import crafttweaker.mc1120.potions.MCPotion;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class MCGame implements IGame {
     
     public static final MCGame INSTANCE = new MCGame();
-    private static final Map<String, String> TRANSLATIONS = net.minecraft.util.text.translation.I18n.localizedName.languageList;
+    private static final Map<String, String> TRANSLATIONS = LanguageMap.instance.languageList;
     private static final List<IEntityDefinition> ENTITY_DEFINITIONS = new ArrayList<>();
     public static final List<IAction> TRANSLATION_ACTIONS  = new ArrayList<>();
     
@@ -121,12 +121,12 @@ public class MCGame implements IGame {
     
     @Override
     public String localize(String key) {
-        return net.minecraft.util.text.translation.I18n.translateToLocal(key);
+        return LanguageMap.instance.translateKey(key);
     }
     
     @Override
     public String localize(String key, String lang) {
-        return I18n.translateToLocal(key);
+        return localize(key);
     }
     
     public static Map<String, String> getTRANSLATIONS() {

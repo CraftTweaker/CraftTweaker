@@ -305,6 +305,7 @@ public class TargetHtml extends DumpZsTarget {
         
     }
     
+    @SuppressWarnings("unused")
     private String colorClassName(String name) {
         int lastDot = name.lastIndexOf(".");
         if(lastDot > 0) {

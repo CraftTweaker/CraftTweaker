@@ -17,12 +17,12 @@ public class PreprocessorManager {
     private final EventList<CrTScriptLoadEvent> SCRIPT_LOAD_EVENT_EVENT_LIST = new EventList<>();
     
     /** This registry is filled with dummy events that are callable */
-    private HashMap<String, PreprocessorFactory> registeredPreprocessorActions = new HashMap<>();
+    private HashMap<String, PreprocessorFactory<?>> registeredPreprocessorActions = new HashMap<>();
     
     // file > action event
     public HashMap<String, List<IPreprocessor>> preprocessorActionsPerFile = new HashMap<>();
     
-    public void registerPreprocessorAction(String name, PreprocessorFactory preprocessorFactory){
+    public void registerPreprocessorAction(String name, PreprocessorFactory<?> preprocessorFactory){
         registeredPreprocessorActions.put(name, preprocessorFactory);
     }
     
@@ -47,7 +47,7 @@ public class PreprocessorManager {
             s = s.substring(1);
             String[] splits = s.split(" ");
             if (splits.length > 0){
-                PreprocessorFactory preprocessorFactory = registeredPreprocessorActions.get(splits[0]);
+                PreprocessorFactory<?> preprocessorFactory = registeredPreprocessorActions.get(splits[0]);
                 
                 if (preprocessorFactory != null){
     
@@ -149,6 +149,8 @@ public class PreprocessorManager {
     }
     
     public static class ScriptFileComparator implements Comparator<ScriptFile>, Serializable {
+        private static final long serialVersionUID = -4445491840364336642L;
+
         @Override
         public int compare(ScriptFile o1, ScriptFile o2) {
             int compare = Integer.compare(o2.getPriority(), o1.getPriority());

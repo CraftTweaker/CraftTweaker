@@ -7,6 +7,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import net.minecraftforge.event.world.BlockEvent;
 
+@SuppressWarnings("deprecation")
 public class MCBlockPlaceEvent extends MCBlockEvent implements BlockPlaceEvent {
     private BlockEvent.PlaceEvent event;
 

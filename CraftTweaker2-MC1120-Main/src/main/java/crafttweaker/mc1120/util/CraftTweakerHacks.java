@@ -20,6 +20,7 @@ import java.util.logging.*;
  *
  * @author Stan Hebben
  */
+@SuppressWarnings("unchecked")
 public class CraftTweakerHacks {
     
     private static final Field OREDICTIONARY_IDTOSTACK = getField(OreDictionary.class, "idToStack");

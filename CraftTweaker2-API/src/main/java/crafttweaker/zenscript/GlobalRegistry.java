@@ -110,12 +110,12 @@ public class GlobalRegistry {
         return null;
     }
     
-    public static IZenSymbol getStaticFunction(Class cls, String name, Class... arguments) {
+    public static IZenSymbol getStaticFunction(Class<?> cls, String name, Class<?>... arguments) {
         IJavaMethod method = JavaMethod.get(types, cls, name, arguments);
         return new SymbolJavaStaticMethod(method);
     }
     
-    public static IZenSymbol getStaticField(Class cls, String name) {
+    public static IZenSymbol getStaticField(Class<?> cls, String name) {
         try {
             Field field = cls.getDeclaredField(name);
             return new SymbolJavaStaticField(cls, field, types);
