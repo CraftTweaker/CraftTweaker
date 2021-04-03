@@ -44,7 +44,7 @@ public class FileLogger implements ILogger {
                 if(prefix) {
                     message = String.format("[%s][%s][%s][%s] %s", TIME_FORMAT.format(LocalDateTime.now()), ModLoadingContext.get().getActiveContainer().getCurrentState(), EffectiveSide.get(), level, strip(message));
                 }
-                this.output.write(message + "\n");
+                this.output.write(strip(message) + "\n");
                 this.output.flush();
             } catch(IOException e) {
                 e.printStackTrace();
