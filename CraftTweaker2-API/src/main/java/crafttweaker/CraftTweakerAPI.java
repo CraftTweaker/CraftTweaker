@@ -255,6 +255,7 @@ public class CraftTweakerAPI {
      *
      * @param annotatedClass class that is annotated
      */
+    @SuppressWarnings("deprecation")
     public static void registerClass(Class<?> annotatedClass) {
         boolean registered = false;
         for(Annotation annotation : annotatedClass.getAnnotations()) {
@@ -269,10 +270,9 @@ public class CraftTweakerAPI {
             }
             if((annotation instanceof BracketHandler) && IBracketHandler.class.isAssignableFrom(annotatedClass)) {
                 try {
-                    IBracketHandler bracketHandler = (IBracketHandler) annotatedClass.getDeclaredConstructor().newInstance();
+                    IBracketHandler bracketHandler = (IBracketHandler) annotatedClass.newInstance();
                     registerBracketHandler(bracketHandler);
-                } catch(InstantiationException | IllegalAccessException | IllegalArgumentException
-                        | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                } catch(InstantiationException | IllegalAccessException | IllegalArgumentException | SecurityException ex) {
                     Logger.getLogger(CraftTweakerAPI.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 registered = true;
