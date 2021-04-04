@@ -96,4 +96,40 @@ public class ExpandEntityLivingBase {
     public static void removePotionEffect(IEntityLivingBase entityLivingBase, IPotion potion) {
         CraftTweakerMC.getEntityLivingBase(entityLivingBase).removePotionEffect(CraftTweakerMC.getPotion(potion));
     }
+
+    @ZenGetter("moveForward")
+    @ZenMethod
+    public static float getMoveForward(IEntityLivingBase entityLivingBase) {
+        return CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveForward;
+    }
+
+    @ZenSetter("moveForward")
+    @ZenMethod
+    public static void setMoveForward(IEntityLivingBase entityLivingBase, float moveForward) {
+        CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveForward = moveForward;
+    }
+
+    @ZenGetter("moveStrafing")
+    @ZenMethod
+    public static float getMoveStrafing(IEntityLivingBase entityLivingBase) {
+        return CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveStrafing;
+    }
+
+    @ZenSetter("moveStrafing")
+    @ZenMethod
+    public static void setMoveStrafing(IEntityLivingBase entityLivingBase, float moveStrafing) {
+        CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveStrafing = moveStrafing;
+    }
+
+    @ZenGetter("moveVertical")
+    @ZenMethod
+    public static float getMoveVertical(IEntityLivingBase entityLivingBase) {
+        return CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveVertical;
+    }
+
+    @ZenSetter("moveVertical")
+    @ZenMethod
+    public static void setMoveVertical(IEntityLivingBase entityLivingBase, float moveVertical) {
+        CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveVertical = moveVertical;
+    }
 }
