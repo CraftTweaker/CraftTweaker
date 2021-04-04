@@ -9,10 +9,9 @@ import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
-import net.minecraft.item.crafting.Ingredient;
 
 public class DescribeAction implements IAction {
-	private final List<? extends Ingredient> stack;
+	private final List<?> stack;
 	private final String[] description;
 	private final String name;
 	
@@ -32,7 +31,7 @@ public class DescribeAction implements IAction {
 	 * @param name Solely for the User output, should be a representation of stack 
 	 */
 	public DescribeAction(List<? extends IIngredient> stack, String[] description, String name) {
-		this.stack = stack.stream().map(IIngredient::getInternal).map(o -> (Ingredient) o).collect(Collectors.toList());
+		this.stack = stack.stream().map(IIngredient::getInternal).collect(Collectors.toList());
 		this.description = description;
 		this.name = name;
 	}
