@@ -10,7 +10,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 //Make sure JAVA_HOME is set as an environment variable
-ext.javaToolsJar = new File("/home/gitpod/.sdkman/candidates/java/8.0.282-open/lib/tools.jar")
+ext.javaToolsJar = ((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()
 
 // #######################
 // ### 1.12.2 settings ###
