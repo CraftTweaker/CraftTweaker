@@ -62,6 +62,7 @@ import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -70,6 +71,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.openzen.zenscript.lexer.ParseException;
 
 import java.io.File;
@@ -421,7 +423,7 @@ public class CTCommands {
                 CraftTweakerAPI.logDump(type.toString());
                 for(ResourceLocation location : player.world.getRecipeManager().recipes.getOrDefault(type, new HashMap<>())
                         .keySet()) {
-                    CraftTweakerAPI.logDump("- " + location.toString());
+                    CraftTweakerAPI.logDump(location.toString());
                 }
             }
             send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
@@ -432,6 +434,12 @@ public class CTCommands {
         registerDump("loot_modifiers", "Outputs the names of all registered loot modifiers", (CommandCallerPlayer) (player, stack) -> {
             CTLootManager.LOOT_MANAGER.getModifierManager().getAllNames().forEach(CraftTweakerAPI::logDump);
             send(new StringTextComponent(color("Loot modifiers list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerDump("loot_tables", "Outputs the names of all registered loot tables", (CommandCallerPlayer) (player, stack) -> {
+            ServerLifecycleHooks.getCurrentServer().getLootTableManager().getLootTableKeys().stream().map(ResourceLocation::toString).sorted().forEach(CraftTweakerAPI::logDump);
+            send(new StringTextComponent(color("Loot table list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
         
