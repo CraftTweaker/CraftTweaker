@@ -47,6 +47,11 @@ public final class BlockStateLootConditionTypeBuilder implements ILootConditionT
         if (this.state == null) {
             throw new IllegalStateException("A block state for a 'BlockState' condition must be specified");
         }
-        return context -> Objects.requireNonNull(ExpandLootContext.getBlockState(context)).equals(this.state);
+        return context -> {
+            if(ExpandLootContext.getBlockState(context) == null){
+                return false;
+            }
+            return ExpandLootContext.getBlockState(context).equals(this.state);
+        };
     }
 }
