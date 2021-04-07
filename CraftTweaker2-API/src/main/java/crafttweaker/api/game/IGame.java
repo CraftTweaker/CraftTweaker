@@ -2,6 +2,7 @@ package crafttweaker.api.game;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.liquid.*;
@@ -80,6 +81,15 @@ public interface IGame {
     
     @ZenMethod()
     IEntityDefinition getEntity(String entityName);
+    
+    
+    /**
+     * Retrieves the enchantments in this game.
+     *
+     * @return game enchantments
+     */
+    @ZenGetter("enchantments")
+    List<IEnchantmentDefinition> getEnchantments();
     
     /**
      * Sets a localization value.

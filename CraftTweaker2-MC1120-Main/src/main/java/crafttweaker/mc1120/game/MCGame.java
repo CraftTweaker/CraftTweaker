@@ -2,6 +2,7 @@ package crafttweaker.mc1120.game;
 
 import crafttweaker.*;
 import crafttweaker.api.block.IBlockDefinition;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.game.IGame;
 import crafttweaker.api.item.IItemDefinition;
@@ -103,6 +104,12 @@ public class MCGame implements IGame {
             ForgeRegistries.ENTITIES.forEach((entry) -> ENTITY_DEFINITIONS.add(new MCEntityDefinition(entry)));
         }
         return getEntities().stream().filter(ent -> ent.getName().equals(entityName)).findFirst().orElse(null);
+    }
+    
+    
+    @Override
+    public List<IEnchantmentDefinition> getEnchantments() {
+        return new ArrayList<>(BracketHandlerEnchantments.enchantments.values());
     }
     
     @Override
