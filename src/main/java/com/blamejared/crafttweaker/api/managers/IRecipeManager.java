@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveAll;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
@@ -30,6 +31,7 @@ import net.minecraft.util.ResourceLocationException;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.shared.CodePosition;
 
 import java.util.HashMap;
 import java.util.List;
@@ -217,10 +219,12 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return fixed name
      */
     default String fixRecipeName(String name) {
+        CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace();
         return NameUtils.fixing(
                 name,
                 (fixed, mistakes) -> CraftTweakerAPI.logWarning(
-                        "Invalid recipe name '%s', mistakes:\n%s\nNew recipe name: %s",
+                        "%sInvalid recipe name '%s', mistakes:\n%s\nNew recipe name: %s",
+                        position == null ? "" : position+": ",
                         name,
                         String.join("\n", mistakes),
                         fixed
