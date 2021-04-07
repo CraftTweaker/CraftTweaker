@@ -6,6 +6,8 @@ import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.*;
 import crafttweaker.api.liquid.ILiquidDefinition;
+import crafttweaker.api.liquid.ILiquidStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.mods.IMod;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.potions.IPotion;
@@ -36,6 +38,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.input.Keyboard;
 
@@ -365,6 +368,14 @@ public class Commands {
                         
                         ClipboardHelper.copyStringPlayer(player, itemName + withNBT);
                         ClipboardHelper.sendMessageWithCopy(player, "Item \u00A72" + itemName + "\u00A7a" + withNBT, itemName + withNBT);
+                        
+                        // adds liquid the item contains
+
+                        ILiquidStack liquidStack = CraftTweakerMC.getILiquidStack(FluidUtil.getFluidContained(heldItem));
+                        if (liquidStack != null) {
+                            String liquidCommandString = liquidStack.toCommandString();
+                            ClipboardHelper.sendMessageWithCopy(player, "Contains Liquid \u00A72" + liquidCommandString, liquidCommandString);
+                        }
                         
                         // adds the oredict names if it has some
                         
