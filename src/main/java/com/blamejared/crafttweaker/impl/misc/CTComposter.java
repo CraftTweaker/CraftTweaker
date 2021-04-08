@@ -10,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.Composter")
-@Document("crafttweaker/api/misc/Composter")
+@Document("vanilla/api/misc/Composter")
 public class CTComposter {
     
     @ZenCodeGlobals.Global("composter")
