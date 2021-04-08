@@ -44,7 +44,7 @@ public final class FloatRangePredicate extends IVanillaWrappingPredicate.AnyDefa
     }
 
     public static FloatRangePredicate bounded(final float min, final float max) {
-        if (min < max) throw new IllegalArgumentException("Minimum FloatRange bound must not be less than maximum bound");
+        if (min > max) throw new IllegalArgumentException("Minimum FloatRange bound must not be more than maximum bound");
         return new FloatRangePredicate(min, max);
     }
     

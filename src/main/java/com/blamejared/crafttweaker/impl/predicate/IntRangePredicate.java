@@ -44,7 +44,7 @@ public final class IntRangePredicate extends IVanillaWrappingPredicate.AnyDefaul
     }
 
     public static IntRangePredicate bounded(final int min, final int max) {
-        if (min < max) throw new IllegalArgumentException("Minimum IntRange bound must not be less than maximum bound");
+        if (min > max) throw new IllegalArgumentException("Minimum IntRange bound must not be more than maximum bound");
         return new IntRangePredicate(min, max);
     }
     

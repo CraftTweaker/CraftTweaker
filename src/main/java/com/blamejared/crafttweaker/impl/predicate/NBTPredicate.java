@@ -38,7 +38,7 @@ public final class NBTPredicate extends IVanillaWrappingPredicate.AnyDefaulting<
      */
     @ZenCodeType.Method
     public NBTPredicate withData(final IData data) {
-        if (!(data instanceof MapData)) throw new IllegalArgumentException("Data inside an 'NBTPredicate' must be an instance of MapData");
+        if (!(data instanceof MapData)) throw new IllegalArgumentException("Data inside a 'NBTPredicate' must be an instance of MapData");
         this.data = data;
         return this;
     }
