@@ -8,6 +8,9 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this composter
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.Composter")
 @Document("vanilla/api/misc/Composter")
