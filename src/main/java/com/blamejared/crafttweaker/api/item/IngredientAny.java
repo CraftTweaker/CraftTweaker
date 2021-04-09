@@ -41,7 +41,13 @@ public class IngredientAny extends Ingredient {
         jsonObject.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
         return jsonObject;
     }
-
+    
+    @Override
+    public boolean isSimple() {
+        
+        return false;
+    }
+    
     @Override
     public IIngredientSerializer<? extends Ingredient> getSerializer() {
         return Serializer.INSTANCE;

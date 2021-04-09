@@ -30,7 +30,13 @@ public abstract class IngredientVanillaPlus extends Ingredient {
     public IIngredient getCrTIngredient() {
         return crtIngredient;
     }
-
+    
+    @Override
+    public boolean isSimple() {
+        
+        return false;
+    }
+    
     @Override
     public abstract JsonElement serialize();
 

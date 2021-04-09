@@ -20,7 +20,13 @@ public class IngredientTransformed<I extends IIngredient, T extends MCIngredient
     public T getCrTIngredient() {
         return crtIngredient;
     }
-
+    
+    @Override
+    public boolean isSimple() {
+        
+        return false;
+    }
+    
     @Override
     public JsonElement serialize() {
         return getSerializer().toJson(this);

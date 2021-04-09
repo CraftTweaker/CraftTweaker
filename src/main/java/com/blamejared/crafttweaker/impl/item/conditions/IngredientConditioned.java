@@ -30,6 +30,13 @@ public class IngredientConditioned<I extends IIngredient, T extends MCIngredient
         return crtIngredient;
     }
     
+    
+    @Override
+    public boolean isSimple() {
+        
+        return false;
+    }
+    
     @Override
     public JsonElement serialize() {
         return getSerializer().toJson(this);
