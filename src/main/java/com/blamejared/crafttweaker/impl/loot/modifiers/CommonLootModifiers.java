@@ -117,7 +117,9 @@ public final class CommonLootModifiers {
     }
 
     private static Stream<IItemStack> replacing(final Stream<IItemStack> stream, final IIngredient from, final IItemStack to) {
-        final Stream<IItemStack> newStream = stream.map(it -> from.matches(it)? to.copy() : it);
-        return to == null? newStream.filter(Objects::nonNull) : newStream;
+        if(to == null){
+            return stream.filter(it -> !from.matches(it));
+        }
+        return stream.map(it -> from.matches(it)? to.copy() : it);
     }
 }
