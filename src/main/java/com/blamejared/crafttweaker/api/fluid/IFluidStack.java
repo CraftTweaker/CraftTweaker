@@ -101,7 +101,7 @@ public interface IFluidStack extends CommandStringDisplayable {
     IFluidStack immutable();
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("immutable")
+    @ZenCodeType.Getter("isImmutable")
     boolean isImmutable();
     
     /**
