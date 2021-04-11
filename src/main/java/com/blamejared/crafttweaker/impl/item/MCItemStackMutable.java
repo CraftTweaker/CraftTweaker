@@ -150,7 +150,7 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
-    public IItemStack immutable() {
+    public IItemStack asImmutable() {
         
         return new MCItemStack(internal.copy());
     }

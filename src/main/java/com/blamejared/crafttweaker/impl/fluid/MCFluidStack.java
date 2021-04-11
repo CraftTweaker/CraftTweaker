@@ -68,7 +68,7 @@ public class MCFluidStack implements IFluidStack {
     }
     
     @Override
-    public IFluidStack immutable() {
+    public IFluidStack asImmutable() {
         
         return this;
     }

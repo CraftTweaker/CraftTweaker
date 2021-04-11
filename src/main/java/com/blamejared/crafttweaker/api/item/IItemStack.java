@@ -403,7 +403,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     IItemStack mutable();
     
     @ZenCodeType.Method
-    IItemStack immutable();
+    IItemStack asImmutable();
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("isImmutable")

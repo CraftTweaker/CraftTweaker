@@ -142,7 +142,7 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
-    public IItemStack immutable() {
+    public IItemStack asImmutable() {
         
         return this;
     }

@@ -41,7 +41,7 @@ public class MCFluidStackMutable implements IFluidStack {
     }
     
     @Override
-    public IFluidStack immutable() {
+    public IFluidStack asImmutable() {
         
         return new MCFluidStack(stack.copy());
     }
