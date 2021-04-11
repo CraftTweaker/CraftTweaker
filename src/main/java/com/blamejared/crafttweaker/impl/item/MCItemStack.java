@@ -124,6 +124,12 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public ItemStack getImmutableInternal() {
+        
+        return internal;
+    }
+    
+    @Override
     public int getDamage() {
     
         return internal.getDamage();
@@ -133,6 +139,18 @@ public class MCItemStack implements IItemStack {
     public IItemStack mutable() {
     
         return new MCItemStackMutable(internal);
+    }
+    
+    @Override
+    public IItemStack immutable() {
+        
+        return this;
+    }
+    
+    @Override
+    public boolean isImmutable() {
+        
+        return true;
     }
     
     @Override

@@ -402,6 +402,13 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Method
     IItemStack mutable();
     
+    @ZenCodeType.Method
+    IItemStack immutable();
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("immutable")
+    boolean isImmutable();
+    
     @ZenCodeType.Getter("damage")
     int getDamage();
     
@@ -413,6 +420,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     ItemStack getInternal();
+    
+    @ZenCodeType.Method
+    ItemStack getImmutableInternal();
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
