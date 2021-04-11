@@ -41,12 +41,6 @@ public class IngredientList extends CompoundIngredient {
         return Serializer.INSTANCE;
     }
     
-    @Override
-    public boolean isSimple() {
-        
-        return false;
-    }
-    
     public static class Serializer implements IIngredientSerializer<IngredientList> {
         
         public static final Serializer INSTANCE = new Serializer();
