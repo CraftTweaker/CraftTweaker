@@ -41,6 +41,18 @@ public class MCFluidStackMutable implements IFluidStack {
     }
     
     @Override
+    public IFluidStack immutable() {
+        
+        return new MCFluidStack(stack.copy());
+    }
+    
+    @Override
+    public boolean isImmutable() {
+        
+        return false;
+    }
+    
+    @Override
     public Fluid getFluid() {
         
         return stack.getFluid();
@@ -72,6 +84,12 @@ public class MCFluidStackMutable implements IFluidStack {
     public FluidStack getInternal() {
         
         return stack;
+    }
+    
+    @Override
+    public FluidStack getImmutableInternal() {
+        
+        return stack.copy();
     }
     
     @Override

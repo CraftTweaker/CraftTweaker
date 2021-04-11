@@ -97,6 +97,13 @@ public interface IFluidStack extends CommandStringDisplayable {
     @ZenCodeType.Method
     IFluidStack mutable();
     
+    @ZenCodeType.Method
+    IFluidStack immutable();
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("immutable")
+    boolean isImmutable();
+    
     /**
      * Copies the stack. Only needed when mutable stacks are involved.
      *
@@ -147,5 +154,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Moddevs, use this to get the Vanilla version.
      */
     FluidStack getInternal();
+    
+    FluidStack getImmutableInternal();
     
 }
