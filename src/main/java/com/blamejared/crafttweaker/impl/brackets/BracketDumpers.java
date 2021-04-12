@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
+import com.blamejared.crafttweaker.impl_native.tool.ExpandToolType;
 import com.blamejared.crafttweaker.impl_native.util.ExpandDamageSource;
 import com.blamejared.crafttweaker.impl_native.util.ExpandEquipmentSlotType;
 import com.blamejared.crafttweaker.impl_native.world.ExpandBiome;
@@ -18,14 +19,18 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -160,5 +165,31 @@ public class BracketDumpers {
                 .map(ExpandBiome::getCommandString)
                 .collect(Collectors.toList());
     }
-    
+
+    @BracketDumper("tooltype")
+    public static Collection<String> getToolTypeDump() {
+        return getToolTypeValues()
+                .values()
+                .stream()
+                .map(ExpandToolType::getCommandString)
+                .collect(Collectors.toList());
+    }
+
+    private static Map<String, ToolType> toolTypeValues = null;
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, ToolType> getToolTypeValues() {
+        if (toolTypeValues == null) {
+            try {
+                Field field = ToolType.class.getDeclaredField("VALUES");
+                field.setAccessible(true);
+                toolTypeValues = (Map<String, ToolType>) field.get(null);
+            } catch(IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+                toolTypeValues = Collections.emptyMap();
+            }
+        }
+        return toolTypeValues;
+    }
+
 }

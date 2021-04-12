@@ -32,6 +32,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -484,5 +485,21 @@ public class BracketHandlers {
     @BracketResolver("damagesource")
     public static DamageSource getDamageSource(String tokens) {
         return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.getOrDefault(tokens, new DamageSource(tokens));
+    }
+    
+    /**
+     * Gets a tool type by name.
+     * If the tool type doesn't exist yet, this will create a new one with the given name
+     *
+     * @param tokens the tool type's name
+     *
+     * @return The found tool type or a new one
+     *
+     * @docParam tokens "shovel"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("tooltype")
+    public static ToolType getToolType(String tokens) {
+        return ToolType.get(tokens);
     }
 }

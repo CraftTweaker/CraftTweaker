@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.Property;
+import net.minecraftforge.common.ToolType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.*;
@@ -117,6 +118,16 @@ public class ExpandBlockState {
     public static boolean hasProperty(BlockState internal, String name) {
         Property<?> prop = internal.getBlock().getStateContainer().getProperty(name);
         return prop != null;
+    }
+    
+    @ZenCodeType.Getter("harvestTool")
+    public static ToolType getHarvestTool(BlockState internal) {
+        return internal.getHarvestTool();
+    }
+
+    @ZenCodeType.Getter("harvestLevel")
+    public static int getHarvestLevel(BlockState internal) {
+        return internal.getHarvestLevel();
     }
     
     
