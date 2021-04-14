@@ -7,7 +7,6 @@ import crafttweaker.api.world.IBiomeType;
 import crafttweaker.mc1120.world.MCBiomeType;
 import crafttweaker.zenscript.IBracketHandler;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.parser.Token;
@@ -32,13 +31,12 @@ public class BracketHandlerBiomeType implements IBracketHandler {
     
     public static void rebuildBiomeTypeRegistry() {
         biomeTypes.clear();
-        Map<String, BiomeDictionary.Type> byName = ReflectionHelper.getPrivateValue(BiomeDictionary.Type.class, null, "byName");
-        for(String s : byName.keySet()) {
-            biomeTypes.put(s.toLowerCase(), new MCBiomeType(byName.get(s)));
+        Collection<BiomeDictionary.Type> types = BiomeDictionary.Type.getAll();
+        for(BiomeDictionary.Type t : types) {
+            biomeTypes.put(t.getName().toLowerCase(), new MCBiomeType(t));
         }
     }
     
-    @SuppressWarnings("unused")
     public static IBiomeType getBiomeType(String name) {
         return biomeTypes.get(name.toLowerCase());
     }

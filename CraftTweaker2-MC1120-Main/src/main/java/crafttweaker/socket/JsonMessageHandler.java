@@ -42,11 +42,11 @@ public class JsonMessageHandler {
             return "Invalid Type.";
         }
         
-        SocketMessage obj = gson.fromJson(json, type);
+        SocketMessage<?> obj = gson.fromJson(json, type);
         
         
         if(obj instanceof IRequestMessage) {
-            SocketMessage res = ((IRequestMessage) obj).handleReceive(ctx);
+            SocketMessage<?> res = ((IRequestMessage<?>) obj).handleReceive(ctx);
             if(res != null) {
                 String jsonRes = gson.toJson(res, getType(res.messageType));
                 

@@ -40,21 +40,6 @@ public class MCEntityLiving extends MCEntityLivingBase implements IEntityLiving 
     }
     
     @Override
-    public void setMoveForward(float moveForward) {
-        entityLiving.setMoveForward(moveForward);
-    }
-    
-    @Override
-    public void setMoveVertical(float moveVertical) {
-        entityLiving.setMoveVertical(moveVertical);
-    }
-    
-    @Override
-    public void setMoveStrafing(float moveStrafing) {
-        entityLiving.setMoveStrafing(moveStrafing);
-    }
-    
-    @Override
     public boolean canSpawnHere() {
         return entityLiving.getCanSpawnHere();
     }

@@ -3,7 +3,6 @@ package crafttweaker.api.world;
 
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
-import crafttweaker.api.world.*;
 import stanhebben.zenscript.annotations.*;
 
 @ZenClass("crafttweaker.world.IRayTraceResult")

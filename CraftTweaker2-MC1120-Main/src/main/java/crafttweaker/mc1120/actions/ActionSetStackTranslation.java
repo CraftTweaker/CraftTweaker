@@ -12,8 +12,6 @@ import java.nio.charset.Charset;
  */
 public class ActionSetStackTranslation implements IAction {
     
-    private static final LanguageMap INSTANCE = LanguageMap.instance;
-    
     private static final Charset UTF8 = Charset.forName("utf-8");
 
     private final IItemStack stack;

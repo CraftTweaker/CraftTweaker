@@ -80,9 +80,12 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
         }
         ITextComponent text = (ITextComponent) internal;
         if(text.getUnformattedText().length() > 30000) {
-            // TODO: Split them instead, somehow.
-            CraftTweakerAPI.logError("Message too long, suppressing:");
-            CraftTweakerAPI.logError(text.getFormattedText());
+            int msgCount = (int) Math.ceil(text.getUnformattedText().length() / 30000.0);
+            CraftTweakerAPI.logWarning("Message too long, splitting into " + msgCount + " messages");
+            for (int i = 0; i < msgCount; i++) {
+                player.sendMessage(new TextComponentString(text.getUnformattedText().substring(30000 * i, Math.min(30000 * (i+1), text.getUnformattedText().length()))));
+                
+            }
         } else {
             player.sendMessage(text);
         }

@@ -255,7 +255,8 @@ public class CraftTweakerAPI {
      *
      * @param annotatedClass class that is annotated
      */
-    public static void registerClass(Class annotatedClass) {
+    @SuppressWarnings("deprecation") // Java 11+ for RedHat
+    public static void registerClass(Class<?> annotatedClass) {
         boolean registered = false;
         for(Annotation annotation : annotatedClass.getAnnotations()) {
             if(annotation instanceof ZenExpansion) {
@@ -324,7 +325,7 @@ public class CraftTweakerAPI {
      *
      * @return corresponding symbol
      */
-    public static IZenSymbol getJavaStaticMethodSymbol(Class cls, String name, Class... arguments) {
+    public static IZenSymbol getJavaStaticMethodSymbol(Class<?> cls, String name, Class<?>... arguments) {
         IJavaMethod method = JavaMethod.get(GlobalRegistry.getTypes(), cls, name, arguments);
         return new SymbolJavaStaticMethod(method);
     }
@@ -372,7 +373,7 @@ public class CraftTweakerAPI {
      *
      * @return java method
      */
-    public static IJavaMethod getJavaMethod(Class<? extends IBracketHandler> cls, String name, Class... arguments) {
+    public static IJavaMethod getJavaMethod(Class<? extends IBracketHandler> cls, String name, Class<?>... arguments) {
         return JavaMethod.get(GlobalRegistry.getTypes(), cls, name, arguments);
     }
     

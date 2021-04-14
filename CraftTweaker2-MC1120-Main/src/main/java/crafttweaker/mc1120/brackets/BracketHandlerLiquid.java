@@ -28,7 +28,6 @@ public class BracketHandlerLiquid implements IBracketHandler {
         method = JavaMethod.get(GlobalRegistry.getTypes(), BracketHandlerLiquid.class, "getLiquid", String.class);
     }
     
-    @SuppressWarnings("unchecked")
     public static void rebuildLiquidRegistry() {
         fluidNames.clear();
         for(String fluidName : FluidRegistry.getRegisteredFluids().keySet()) {

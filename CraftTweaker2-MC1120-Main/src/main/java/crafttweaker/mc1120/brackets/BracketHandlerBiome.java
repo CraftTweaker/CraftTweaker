@@ -32,7 +32,6 @@ public class BracketHandlerBiome implements IBracketHandler {
         CraftTweakerAPI.game.getBiomes().forEach(iBiome -> biomeNames.put(iBiome.getId().split(":")[1], iBiome));
     }
     
-    @SuppressWarnings("unused")
     public static IBiome getBiome(String name) {
         return biomeNames.get(name);
     }

@@ -4,7 +4,7 @@ import crafttweaker.socket.SingleError;
 
 import java.util.List;
 
-public class LintResponseMessage extends SocketMessage {
+public class LintResponseMessage extends SocketMessage<LintResponseMessage> {
     
     public static final String MESSAGE_TYPE = "LintResponse";
     public List<SingleError> errors;

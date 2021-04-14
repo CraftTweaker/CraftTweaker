@@ -47,7 +47,6 @@ public class BracketHandlerItem implements IBracketHandler {
         return blockNames;
     }
     
-    @SuppressWarnings("unchecked")
     public static void rebuildItemRegistry() {
         itemNames.clear();
         blockNames.clear();

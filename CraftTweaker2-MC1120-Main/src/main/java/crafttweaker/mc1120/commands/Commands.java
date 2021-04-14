@@ -942,6 +942,8 @@ public class Commands {
     
     private static class ItemComparator implements Comparator<Item>, Serializable {
         
+        private static final long serialVersionUID = 5425653624832997108L;
+
         @Override
         public int compare(Item o1, Item o2) {
             return o1.getRegistryName().toString().compareTo(o2.getRegistryName().toString());
@@ -950,6 +952,8 @@ public class Commands {
     
     private static class PotionComparator implements Comparator<IPotion>, Serializable {
         
+        private static final long serialVersionUID = -56375350098392167L;
+
         @Override
         public int compare(IPotion o1, IPotion o2) {
             return o1.name().compareTo(o2.name());

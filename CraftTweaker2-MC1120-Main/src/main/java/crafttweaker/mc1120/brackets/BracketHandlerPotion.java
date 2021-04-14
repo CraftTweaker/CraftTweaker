@@ -7,6 +7,7 @@ import crafttweaker.api.potions.IPotion;
 import crafttweaker.mc1120.potions.MCPotion;
 import crafttweaker.zenscript.*;
 import net.minecraft.potion.*;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.compiler.IEnvironmentGlobal;
 import stanhebben.zenscript.expression.*;
 import stanhebben.zenscript.expression.partial.IPartialExpression;
@@ -35,12 +36,11 @@ public class BracketHandlerPotion implements IBracketHandler {
     public static void rebuildRegistry() {
         potionNames.clear();
     
-        for(Potion potion : Potion.REGISTRY) {
+        for(Potion potion : ForgeRegistries.POTIONS) {
             potionNames.put(potion.getRegistryName().toString(), potion);
         }
     }
     
-    @SuppressWarnings("unused")
     public static IPotion getPotion(String name) {
         Potion pot = potionNames.get(name);
         if(pot == null){

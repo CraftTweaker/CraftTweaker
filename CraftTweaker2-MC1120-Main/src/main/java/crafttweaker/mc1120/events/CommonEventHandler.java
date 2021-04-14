@@ -16,7 +16,6 @@ import crafttweaker.mc1120.furnace.MCFurnaceManager;
 import crafttweaker.mc1120.item.MCItemStack;
 import crafttweaker.mc1120.oredict.MCOreDictEntry;
 import crafttweaker.mc1120.recipes.MCCraftingInventorySquared;
-import crafttweaker.mc1120.recipes.MCRecipeBase;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.runtime.ScriptLoader;
 import net.minecraft.entity.Entity;
@@ -25,7 +24,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -49,8 +47,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class CommonEventHandler {
     
@@ -516,6 +512,7 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishCropGrowPost(new MCCropGrowPostEvent(ev));
     }
 
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasBlockPlace())

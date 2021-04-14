@@ -5,6 +5,9 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.game.ITeam;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.util.IAxisAlignedBB;
+import crafttweaker.api.world.IBlockPos;
+import crafttweaker.api.world.IFacing;
+import crafttweaker.api.world.IVector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.Scoreboard;
 import stanhebben.zenscript.annotations.ZenExpansion;
@@ -66,5 +69,82 @@ public class ExpandEntity {
     public static void removeFromWorld(IEntity internal) {
         Entity entity = getInternal(internal);
         entity.world.removeEntity(entity);
+    }
+
+    @ZenMethod
+    public static void doWaterSplashEffect(IEntity internal) {
+        getInternal(internal).doWaterSplashEffect();
+    }
+
+    @ZenGetter("updateBlocked")
+    @ZenMethod
+    public static boolean getUpdateBlocked(IEntity internal) {
+        return getInternal(internal).updateBlocked;
+    }
+
+    @ZenSetter("updateBlocked")
+    @ZenMethod
+    public static void setUpdateBlocked(IEntity internal, boolean updateBlocked) {
+        getInternal(internal).updateBlocked = updateBlocked;
+    }
+
+    @ZenGetter("inPortal")
+    @ZenMethod
+    public static boolean getInPortal(IEntity internal) {
+        return getInternal(internal).inPortal;
+    }
+
+    @ZenSetter("inPortal")
+    @ZenMethod
+    public static void setInPortal(IEntity internal, boolean inPortal) {
+        getInternal(internal).inPortal = inPortal;
+    }
+
+    @ZenGetter("portalCounter")
+    @ZenMethod
+    public static int getPortalCounter(IEntity internal) {
+        return getInternal(internal).portalCounter;
+    }
+
+    @ZenSetter("portalCounter")
+    @ZenMethod
+    public static void setPortalCounter(IEntity internal, int portalCounter) {
+        getInternal(internal).portalCounter = portalCounter;
+    }
+
+    @ZenGetter("lastPortalVec")
+    @ZenMethod
+    public static IVector3d getLastPortalVec(IEntity internal) {
+        return CraftTweakerMC.getIVector3d(getInternal(internal).lastPortalVec);
+    }
+
+    @ZenSetter("lastPortalVec")
+    @ZenMethod
+    public static void setLastPortalVec(IEntity internal, IVector3d lastPortalVec) {
+        getInternal(internal).lastPortalVec = CraftTweakerMC.getVec3d(lastPortalVec);
+    }
+
+    @ZenGetter("lastPortalPos")
+    @ZenMethod
+    public static IBlockPos getLastPortalPos(IEntity internal) {
+        return CraftTweakerMC.getIBlockPos(getInternal(internal).lastPortalPos);
+    }
+
+    @ZenSetter("lastPortalPos")
+    @ZenMethod
+    public static void setLastPortalPos(IEntity internal, IBlockPos lastPortalPos) {
+        getInternal(internal).lastPortalPos = CraftTweakerMC.getBlockPos(lastPortalPos);
+    }
+
+    @ZenGetter("lastPortalDirection")
+    @ZenMethod
+    public static IFacing getLastPortalDirection(IEntity internal) {
+        return CraftTweakerMC.getIFacing(getInternal(internal).teleportDirection);
+    }
+
+    @ZenSetter("lastPortalDirection")
+    @ZenMethod
+    public static void setLastPortalDirection(IEntity internal, IFacing teleportDirection) {
+        getInternal(internal).teleportDirection = CraftTweakerMC.getFacing(teleportDirection);
     }
 }

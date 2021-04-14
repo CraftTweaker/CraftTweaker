@@ -56,6 +56,7 @@ public interface IEntity extends ICommandSender {
      * @param dimensionID dimension id
      */
     @ZenSetter("dimension")
+    @ZenMethod
     void setDimension(int dimensionID);
     
     /**

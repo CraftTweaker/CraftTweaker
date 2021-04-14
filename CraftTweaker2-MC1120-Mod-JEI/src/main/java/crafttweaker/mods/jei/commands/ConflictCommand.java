@@ -239,6 +239,8 @@ public class ConflictCommand extends CraftTweakerCommand {
      */
     private static class CraftRecipeEntryComparator implements Comparator<CraftingRecipeEntry>, Serializable {
 
+        private static final long serialVersionUID = 9061636968374415469L;
+
         @Override
         public int compare(CraftingRecipeEntry o1, CraftingRecipeEntry o2) {
             return Integer.compare(o1.recipeSize, o2.recipeSize);

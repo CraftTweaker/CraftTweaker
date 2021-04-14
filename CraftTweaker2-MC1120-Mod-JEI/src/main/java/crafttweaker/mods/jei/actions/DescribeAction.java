@@ -11,7 +11,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.mods.jei.JEIAddonPlugin;
 
 public class DescribeAction implements IAction {
-	private final List<Object> stack;
+	private final List<?> stack;
 	private final String[] description;
 	private final String name;
 	
@@ -46,7 +46,7 @@ public class DescribeAction implements IAction {
 			return;
 		}
 			
-		JEIAddonPlugin.modRegistry.addIngredientInfo(stack, stack.get(0).getClass(), description);
+        JEIAddonPlugin.modRegistry.addIngredientInfo(stack, JEIAddonPlugin.itemRegistry.getIngredientType(stack.get(0).getClass()), description);
 	}
 
 	@Override

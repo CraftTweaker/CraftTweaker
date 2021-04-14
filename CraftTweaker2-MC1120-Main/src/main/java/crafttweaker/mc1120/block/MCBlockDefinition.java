@@ -168,6 +168,7 @@ public class MCBlockDefinition implements IBlockDefinition {
         block.setDefaultSlipperiness(defaultSlipperiness);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return new MCBlockState(block.getStateFromMeta(meta));

@@ -32,7 +32,7 @@ public class JEIMod {
                 @Override
                 public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                     CraftTweakerAPI.logCommand("--- JEI Categories ---");
-                    for(IRecipeCategory category : JEIAddonPlugin.recipeRegistry.getRecipeCategories()) {
+                    for(IRecipeCategory<?> category : JEIAddonPlugin.recipeRegistry.getRecipeCategories()) {
                         CraftTweakerAPI.logCommand(category.getUid());
                     }
                     sender.sendMessage(getLinkToCraftTweakerLog("List of categories generated;", sender));

@@ -105,6 +105,7 @@ public class CrTTweaker implements ITweaker {
         loadScript(isSyntaxCommand, loader, null, false);
     }
     
+    @SuppressWarnings("deprecation")
     private boolean loadScript(boolean isSyntaxCommand, ScriptLoader loader, List<SingleError> parseExceptions, boolean isLinter) {
         if (isSyntaxCommand) {
             CraftTweakerAPI.setSuppressErrorFlag(SuppressErrorFlag.FORCED);
@@ -189,8 +190,11 @@ public class CrTTweaker implements ITweaker {
                     preprocessorManager.postLoadEvent(new CrTScriptLoadEvent(scriptFile));
                     
                     // blocks the parsing of the script
-                    if(scriptFile.isParsingBlocked())
+                    if(scriptFile.isParsingBlocked()) {
+                        if (!isLinter)
+                            CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
                         continue;
+                    }
                     
                     parser = new ZenTokener(reader, environmentGlobal.getEnvironment(), filename, scriptFile.areBracketErrorsIgnored());
                     zenParsedFile = new ZenParsedFile(filename, className, parser, environmentGlobal);
@@ -213,21 +217,24 @@ public class CrTTweaker implements ITweaker {
                 
                 try {
                     // Stops if the compile is disabled
-                    if(zenParsedFile == null || scriptFile.isCompileBlocked() || !loadSuccessful)
+                    if(zenParsedFile == null || scriptFile.isCompileBlocked() || !loadSuccessful) {
+                        if (!isLinter)
+                            CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
                         continue;
+                    }
                     compileScripts(className, Collections.singletonList(zenParsedFile), environmentGlobal, scriptFile.isDebugEnabled() || DEBUG);
                     
                     // stops if the execution is disabled
-                    if(scriptFile.isExecutionBlocked() || isSyntaxCommand || isLinter)
+                    if(scriptFile.isExecutionBlocked() || isSyntaxCommand || isLinter) {
+                        if (!isLinter)
+                            CRT_LOADING_SCRIPT_POST_EVENT_LIST.publish(new CrTLoadingScriptEventPost(filename));
                         continue;
-                    
+                    }
                     
                     ZenModule module = new ZenModule(classes, CraftTweakerAPI.class.getClassLoader());
                     Runnable runnable = module.getMain();
                     if(runnable != null)
                         runnable.run();
-                    
-                    
                 } catch(Throwable ex) {
                     CraftTweakerAPI.logError("[" + loaderName + "]: Error executing " + scriptFile + ": " + ex.getMessage(), ex);
                 }

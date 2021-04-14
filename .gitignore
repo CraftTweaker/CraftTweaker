@@ -39,4 +39,5 @@ changelog.md
 secrets.json
 
 /.theia
+/.vscode
 runServer

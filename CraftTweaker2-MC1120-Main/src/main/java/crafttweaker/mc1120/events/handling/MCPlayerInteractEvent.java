@@ -9,7 +9,6 @@ import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IFacing;
 import crafttweaker.api.world.IWorld;
-import crafttweaker.mc1120.world.MCFacing;
 
 /**
  * @author Stan

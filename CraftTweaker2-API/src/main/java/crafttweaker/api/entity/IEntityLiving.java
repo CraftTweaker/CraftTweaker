@@ -23,15 +23,6 @@ public interface IEntityLiving extends IEntityLivingBase {
     @ZenMethod
     void spawnExplosionParticle();
     
-    @ZenSetter("moveForward")
-    void setMoveForward(float moveForward);
-    
-    @ZenSetter("moveVertical")
-    void setMoveVertical(float moveForward);
-    
-    @ZenSetter("moveStrafing")
-    void setMoveStrafing(float moveForward);
-    
     @ZenGetter
     boolean canSpawnHere();
     
