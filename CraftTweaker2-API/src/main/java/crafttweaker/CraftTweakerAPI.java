@@ -272,7 +272,7 @@ public class CraftTweakerAPI {
                 try {
                     IBracketHandler bracketHandler = (IBracketHandler) annotatedClass.newInstance();
                     registerBracketHandler(bracketHandler);
-                } catch(InstantiationException | IllegalAccessException | IllegalArgumentException | SecurityException ex) {
+                } catch(InstantiationException | IllegalAccessException ex) {
                     Logger.getLogger(CraftTweakerAPI.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 registered = true;
