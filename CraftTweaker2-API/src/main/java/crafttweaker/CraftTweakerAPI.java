@@ -255,7 +255,7 @@ public class CraftTweakerAPI {
      *
      * @param annotatedClass class that is annotated
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation") // Java 11+ for RedHat
     public static void registerClass(Class<?> annotatedClass) {
         boolean registered = false;
         for(Annotation annotation : annotatedClass.getAnnotations()) {
