@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.loot.modifiers;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
@@ -141,7 +142,7 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public ILootModifier getByName(final String name) {
-        return new MCLootModifier(this.getLmmMap().get(this.fromName(name)));
+        return new MCLootModifier(this.getLmmMap().get(new ResourceLocation(name)));
     }
 
     /**
@@ -174,7 +175,7 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public void removeByName(final String name) {
-        final ResourceLocation id = name.contains(":")? new ResourceLocation(name) : this.fromName(name);
+        final ResourceLocation id = name.contains(":")? new ResourceLocation(name) : new ResourceLocation(CraftTweaker.MODID, name);
         CraftTweakerAPI.apply(ActionRemoveLootModifier.of(id::equals, "with name '" + id + "'", this::getLmmMap));
     }
 
