@@ -92,7 +92,7 @@ public class MCWeightedItemStack implements CommandStringDisplayable {
     
     @Override
     public String getCommandString() {
-        return String.format("%s.weight(%sD);", itemStack.getCommandString(), weight);
+        return String.format("%s.weight(%sD)", itemStack.getCommandString(), weight);
     }
     
     @Override
