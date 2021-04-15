@@ -231,14 +231,6 @@ public class CraftTweaker {
     }
     
     @SubscribeEvent
-    public void addExampleScriptFiles(ExampleCollectionEvent event) {
-        event.addResource(new ResourceLocation(MODID, "crafttweaker_hello_world"));
-        event.addResource(new ResourceLocation(MODID, "crafttweaker_crafting_recipes"));
-        event.addResource(new ResourceLocation(MODID, "crafttweaker_tags"));
-        event.addResource(new ResourceLocation(MODID, "crafttweaker_loot_modifiers"));
-    }
-    
-    @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         CTCommands.init(event.getDispatcher());
         CustomCommands.init(event.getDispatcher());

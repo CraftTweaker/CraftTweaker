@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.resources.DataPackRegistries;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.IOUtils;
 import org.openzen.zencode.shared.SourceFile;
 
@@ -35,9 +35,12 @@ public class ExamplesCommand extends CTCommands.CommandImpl {
         final DataPackRegistries dataPackRegistries = server.getDataPackRegistries();
         final IResourceManager resourceManager = dataPackRegistries.getResourceManager();
         
-        final ExampleCollectionEvent event = new ExampleCollectionEvent(resourceManager);
-        MinecraftForge.EVENT_BUS.post(event);
-        event.getSourceFiles().forEach(ExamplesCommand::writeScriptFile);
+        //final ExampleCollectionEvent event = new ExampleCollectionEvent(resourceManager);
+        //MinecraftForge.EVENT_BUS.post(event);
+        //Collect all scripts that are in the scripts data pack folder and write them to the example scripts folder
+        for (ResourceLocation file : resourceManager.getAllResourceLocations("scripts", n -> n.endsWith(".zs"))) {
+            writeScriptFile(new ResourceManagerSourceFile(file, resourceManager));
+        }
         
         playerEntity.sendMessage(new StringTextComponent("Wrote examples to the 'examples' folder inside the scripts folder."), CraftTweaker.CRAFTTWEAKER_UUID);
         
