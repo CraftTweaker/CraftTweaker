@@ -7,6 +7,10 @@ import org.openzen.zencode.shared.SourceFile;
 
 import java.util.*;
 
+/**
+ * @deprecated Unneeded as examples will be discovered from the scripts folder in a datapack automatically now.
+ */
+@Deprecated
 public class ExampleCollectionEvent extends Event {
     
     private final SortedSet<SourceFile> sourceFiles = new TreeSet<>(Comparator.comparing(SourceFile::getFilename));
