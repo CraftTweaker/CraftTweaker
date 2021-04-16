@@ -44,11 +44,13 @@ public class CTVillagerTrades {
      * @docParam villagerLevel 1
      * @docParam emeralds 16
      * @docParam forSale <item:minecraft:diamond>
+     * @docParam maxTrades 5
      * @docParam xp 2
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
     public void addTrade(VillagerProfession profession, int villagerLevel, int emeralds, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
+        
         BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, priceMult);
         addTradeInternal(profession, villagerLevel, trade);
     }
@@ -68,11 +70,13 @@ public class CTVillagerTrades {
      * @docParam villagerLevel 1
      * @docParam input1 <item:minecraft:dirt> * 16
      * @docParam forSale <item:minecraft:diamond>
+     * @docParam maxTrades 5
      * @docParam xp 2
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
     public void addTrade(VillagerProfession profession, int villagerLevel, ItemStack input1, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
+        
         BasicTrade trade = new BasicTrade(input1, forSale, maxTrades, xp, priceMult);
         addTradeInternal(profession, villagerLevel, trade);
     }
@@ -92,13 +96,15 @@ public class CTVillagerTrades {
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
      * @docParam input1 <item:minecraft:diamond> * 2
-     * @docParam input1 <item:minecraft:dirt> * 2
+     * @docParam input2 <item:minecraft:dirt> * 2
      * @docParam forSale <item:minecraft:arrow>
+     * @docParam maxTrades 5
      * @docParam xp 2
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
     public void addTrade(VillagerProfession profession, int villagerLevel, ItemStack input1, ItemStack input2, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
+        
         BasicTrade trade = new BasicTrade(input1, input2, forSale, maxTrades, xp, priceMult);
         addTradeInternal(profession, villagerLevel, trade);
     }
@@ -116,6 +122,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeEmeraldForItemsTrade(VillagerProfession profession, int villagerLevel, Item tradeFor) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EmeraldForItemsTrade) {
                 return ((VillagerTrades.EmeraldForItemsTrade) trade).tradeItem == tradeFor;
@@ -137,6 +144,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeItemsForEmeraldsTrade(VillagerProfession profession, int villagerLevel, IItemStack sellingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
                 return sellingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
@@ -160,6 +168,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeItemsForEmeraldsAndItemsTrade(VillagerProfession profession, int villagerLevel, IItemStack sellingItem, IItemStack buyingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsAndItemsTrade) {
                 if(sellingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) trade).sellingItem))) {
@@ -185,6 +194,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeItemWithPotionForEmeraldsAndItemsTrade(VillagerProfession profession, int villagerLevel, IItemStack potionStack, Item sellingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) {
                 if(potionStack.matches(new MCItemStackMutable(((VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) trade).potionStack))) {
@@ -208,6 +218,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeDyedArmorForEmeraldsTrade(VillagerProfession profession, int villagerLevel, Item buyingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.DyedArmorForEmeraldsTrade) {
                 return ((VillagerTrades.DyedArmorForEmeraldsTrade) trade).tradeItem == buyingItem;
@@ -227,6 +238,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeEmeraldForMapTrade(VillagerProfession profession, int villagerLevel) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.EmeraldForMapTrade);
     }
     
@@ -241,6 +253,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeEnchantedBookForEmeraldsTrade(VillagerProfession profession, int villagerLevel) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.EnchantedBookForEmeraldsTrade);
     }
     
@@ -278,6 +291,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeSuspiciousStewForEmeraldTrade(VillagerProfession profession, int villagerLevel) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.SuspiciousStewForEmeraldTrade);
     }
     
@@ -299,6 +313,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void addWanderingTrade(int rarity, int emeralds, ItemStack forSale, int maxTrades, int xp) {
+        
         BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, 1);
         addWanderingTradeInternal(rarity, trade);
     }
@@ -306,14 +321,15 @@ public class CTVillagerTrades {
     /**
      * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emaralds for an Arrow.
      *
-     * @param rarity     The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
-     * @param tradeFor   What Itemstack is being sold (by the Villager).
+     * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param tradeFor What Itemstack is being sold (by the Villager).
      *
      * @docParam rarity 2
      * @docParam tradeFor <item:minecraft:arrow>
      */
     @ZenCodeType.Method
     public void removeWanderingTrade(int rarity, IItemStack tradeFor) {
+        
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
                 return tradeFor.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
@@ -324,18 +340,22 @@ public class CTVillagerTrades {
     
     
     private void addTradeInternal(VillagerProfession profession, int villagerLevel, BasicTrade trade) {
+        
         CraftTweakerAPI.apply(new ActionAddTrade(profession, villagerLevel, trade));
     }
     
     private void addWanderingTradeInternal(int villagerLevel, BasicTrade trade) {
+        
         CraftTweakerAPI.apply(new ActionAddWanderingTrade(villagerLevel, trade));
     }
     
     private void removeTradeInternal(VillagerProfession profession, int villagerLevel, ITradeRemover remover) {
+        
         CraftTweakerAPI.apply(new ActionRemoveTrade(profession, villagerLevel, remover));
     }
     
     private void removeWanderingTradeInternal(int villagerLevel, ITradeRemover remover) {
+        
         CraftTweakerAPI.apply(new ActionRemoveWanderingTrade(villagerLevel, remover));
     }
     
