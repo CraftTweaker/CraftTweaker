@@ -167,10 +167,11 @@ public class MCItemStackMutable implements IItemStack {
         if(getInternal().isEmpty()) {
             return Ingredient.EMPTY;
         }
+        // You shouldn't be able to change a mutable stack after converting it to an ingredient
         if(!getInternal().hasTag()) {
-            return Ingredient.fromStacks(getInternal());
+            return Ingredient.fromStacks(getImmutableInternal());
         }
-        return new NBTIngredient(getInternal()) {};
+        return new NBTIngredient(getImmutableInternal()) {};
     }
     
     @Override

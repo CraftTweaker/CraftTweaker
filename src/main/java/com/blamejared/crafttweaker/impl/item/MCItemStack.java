@@ -126,7 +126,8 @@ public class MCItemStack implements IItemStack {
     @Override
     public ItemStack getImmutableInternal() {
         
-        return internal;
+        // Gotta copy here to ensure that what we have is truly immutable
+        return internal.copy();
     }
     
     @Override
@@ -160,9 +161,9 @@ public class MCItemStack implements IItemStack {
             return Ingredient.EMPTY;
         }
         if(!getInternal().hasTag()) {
-            return Ingredient.fromStacks(getInternal());
+            return Ingredient.fromStacks(getImmutableInternal());
         }
-        return new NBTIngredient(getInternal()) {};
+        return new NBTIngredient(getImmutableInternal()) {};
     }
     
     @Override
