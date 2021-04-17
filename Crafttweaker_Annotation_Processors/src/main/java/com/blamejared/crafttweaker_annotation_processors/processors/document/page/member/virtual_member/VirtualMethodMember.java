@@ -50,15 +50,19 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     
     private void writeCodeBlockWithExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
         writer.println("```zenscript");
-        writeSignatureExample(writer, ownerType);
+        writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
         header.writeVirtualExamples(writer, getComment().getExamples(), name);
         writer.println("```");
         writer.println();
     }
     
-    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType) {
+    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
         final String callee = ownerType.getDisplayName();
-        writer.printf("%s.%s%s%n", callee, name, header.formatForSignatureExample());
+        String template = "%s%s.%s%s%n";
+        if(onlySignature) {
+            template = template + "%n";
+        }
+        writer.printf(template, onlySignature ? "// " : "", callee, name, header.formatForSignatureExample());
     }
     
     private void writeParameterDescriptionTable(PrintWriter writer) {

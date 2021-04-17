@@ -56,14 +56,18 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     }
     
     protected void writeExampleBlockContent(PrintWriter writer, AbstractTypeInfo ownerType) {
-        writeSignatureExample(writer, ownerType);
+        writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
         writeExamples(writer, ownerType);
     }
     
-    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType) {
+    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
         final String ownerName = ownerType.getDisplayName();
         final String signature = header.formatForSignatureExample();
-        writer.printf("%s.%s%s%n", ownerName, name, signature);
+        String template = "%s%s.%s%s%n";
+        if(onlySignature) {
+            template = template + "%n";
+        }
+        writer.printf(template, onlySignature ? "// " : "", ownerName, name, signature);
     }
     
     private void writeExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
