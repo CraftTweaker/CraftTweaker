@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
  */
 @ZenClass("crafttweaker.event.PlayerInteractEntityEvent")
 @ZenRegister
-public interface PlayerInteractEntityEvent extends IEventCancelable, IPlayerEvent {
+public interface PlayerInteractEntityEvent extends IEventCancelable, PlayerInteractEvent {
 
     @ZenGetter("target")
     IEntity getTarget();
