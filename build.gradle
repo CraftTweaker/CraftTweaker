@@ -128,7 +128,7 @@ minecraft {
 modTemplate {
     mcVersion "1.16.5"
     curseHomepage "https://www.curseforge.com/minecraft/mc-mods/crafttweaker"
-    projectName "CraftTweaker"
+    displayName "CraftTweaker"
 
     changelog {
         enabled true
