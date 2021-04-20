@@ -1,26 +1,60 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.actions.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.logger.*;
-import com.blamejared.crafttweaker.api.mods.*;
-import com.blamejared.crafttweaker.api.zencode.expands.*;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
-import com.blamejared.crafttweaker.api.zencode.impl.loaders.*;
+import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.actions.IAction;
+import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.events.recipes.RegisterRecipeWritersEvent;
+import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.logger.LogLevel;
+import com.blamejared.crafttweaker.api.mods.MCMods;
+import com.blamejared.crafttweaker.api.recipes.IRecipeWriter;
+import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
+import com.blamejared.crafttweaker.api.zencode.impl.loaders.ScriptRun;
 import com.blamejared.crafttweaker.impl.game.MCGame;
-import com.blamejared.crafttweaker.impl.logger.*;
-import com.blamejared.crafttweaker.impl.script.*;
-import com.google.common.collect.*;
-import net.minecraft.item.crafting.*;
-import net.minecraft.util.*;
-import net.minecraftforge.fml.common.thread.*;
-import org.openzen.zencode.java.*;
-import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.parser.expression.*;
+import com.blamejared.crafttweaker.impl.logger.FileLogger;
+import com.blamejared.crafttweaker.impl.logger.GroupLogger;
+import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
+import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
+import com.blamejared.crafttweaker.impl.recipes.writers.crafttweaker.CTShapedRecipeWriter;
+import com.blamejared.crafttweaker.impl.recipes.writers.crafttweaker.CTShapelessRecipeWriter;
+import com.blamejared.crafttweaker.impl.recipes.writers.vanilla.CookingRecipeWriter;
+import com.blamejared.crafttweaker.impl.recipes.writers.vanilla.ShapedRecipeWriter;
+import com.blamejared.crafttweaker.impl.recipes.writers.vanilla.ShapelessRecipeWriter;
+import com.blamejared.crafttweaker.impl.recipes.writers.vanilla.SmithingRecipeWriter;
+import com.blamejared.crafttweaker.impl.recipes.writers.vanilla.StoneCutterRecipeWriter;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.item.crafting.BlastingRecipe;
+import net.minecraft.item.crafting.CampfireCookingRecipe;
+import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.item.crafting.SmithingRecipe;
+import net.minecraft.item.crafting.SmokingRecipe;
+import net.minecraft.item.crafting.StonecuttingRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
+import org.openzen.zencode.java.ScriptingEngine;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.shared.SourceFile;
+import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
+import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CraftTweakerAPI")
@@ -33,12 +67,14 @@ public class CraftTweakerAPI {
     
     @ZenCodeGlobals.Global
     public static MCMods loadedMods = new MCMods();
-
+    
     @ZenCodeGlobals.Global
     public static MCGame game = new MCGame();
     
     public static boolean DEBUG_MODE = false;
     public static boolean NO_BRAND = false;
+    
+    private static final Map<Class<? extends IRecipe>, IRecipeWriter> recipeWriters = new HashMap<>();
     
     /**
      * The last ScriptRun that was executed is regarded as "current" run.
@@ -52,6 +88,7 @@ public class CraftTweakerAPI {
     
     
     public static void apply(IAction action) {
+        
         final ScriptRun currentRun = getCurrentRun();
         if(!(action instanceof IRuntimeAction) && !currentRun.isFirstRun()) {
             return;
@@ -62,7 +99,7 @@ public class CraftTweakerAPI {
             if(!action.shouldApplyOn(EffectiveSide.get())) {
                 return;
             }
-    
+            
             if(!action.validate(logger)) {
                 currentLoaderActions.addInvalidAction(action);
                 return;
@@ -81,6 +118,7 @@ public class CraftTweakerAPI {
     
     
     public static List<File> getScriptFiles() {
+        
         List<File> fileList = new ArrayList<>();
         findScriptFiles(CraftTweakerAPI.SCRIPT_DIR, fileList);
         return fileList;
@@ -93,6 +131,7 @@ public class CraftTweakerAPI {
      * @param scriptLoadingOptions The options with which to load
      */
     public static void loadScripts(ScriptLoadingOptions scriptLoadingOptions) {
+        
         NO_BRAND = false;
         final List<File> fileList = getScriptFiles();
         
@@ -117,6 +156,7 @@ public class CraftTweakerAPI {
      * @param scriptLoadingOptions The options with which to load.
      */
     public static void loadScripts(SourceFile[] sourceFiles, ScriptLoadingOptions scriptLoadingOptions) {
+        
         currentRun = new ScriptRun(scriptLoadingOptions, sourceFiles);
         logInfo("Started loading Scripts for Loader '%s'!", scriptLoadingOptions.getLoaderName());
         
@@ -132,14 +172,14 @@ public class CraftTweakerAPI {
     }
     
     /**
-     *
      * Gets the source files that were sent to the client as IRecipes and executes them with the given loadingOptions
      * CrT uses this method during the RecipesUpdatedEvent on the Client to get the serverside scripts.
      *
-     * @param recipeManager The world's RecipeManager.
+     * @param recipeManager        The world's RecipeManager.
      * @param scriptLoadingOptions The loadingOptions, used for the Preprocessors
      */
     public static void loadScriptsFromRecipeManager(RecipeManager recipeManager, ScriptLoadingOptions scriptLoadingOptions) {
+        
         Map<ResourceLocation, IRecipe<?>> map = recipeManager.recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>());
         Collection<IRecipe<?>> recipes = map.values();
         CraftTweakerAPI.NO_BRAND = false;
@@ -164,6 +204,7 @@ public class CraftTweakerAPI {
      * @param files The list where the found files will be stored in.
      */
     public static void findScriptFiles(File path, List<File> files) {
+        
         if(path.isDirectory()) {
             for(File file : path.listFiles()) {
                 if(file.isDirectory()) {
@@ -178,52 +219,63 @@ public class CraftTweakerAPI {
     }
     
     public static void setupLoggers() {
+        
         logger = new GroupLogger();
         ((GroupLogger) logger).addLogger(new FileLogger(new File("logs/crafttweaker.log")));
         //TODO maybe post an event to collect a bunch of loggers? not sure if it will be used much
     }
     
     public static void logDump(String message, Object... formats) {
+        
         logger.log(LogLevel.INFO, String.format(message, formats), false);
     }
     
     public static void logInfo(String message, Object... formats) {
+        
         logger.info(String.format(message, formats));
     }
     
     public static void logDebug(String message, Object... formats) {
+        
         logger.debug(String.format(message, formats));
     }
     
     public static void logWarning(String message, Object... formats) {
+        
         logger.warning(String.format(message, formats));
     }
     
     public static void logError(String message, Object... formats) {
+        
         logger.error(String.format(message, formats));
     }
     
     public static void logThrowing(String message, Throwable e, Object... formats) {
+        
         logger.throwingErr(String.format(message, formats), e);
     }
     
     public static void log(LogLevel level, String filename, int lineNumber, String message, Object... formats) {
+        
         logger.log(level, String.format("[%s:%d%s]", filename, lineNumber, String.format(message, formats)));
     }
     
     
     public static List<IAction> getActionList() {
+        
         final LoaderActions loaderActions = getCurrentRun().getLoaderActions();
         return ImmutableList.copyOf(loaderActions.getActionList());
     }
     
     public static List<IAction> getActionListInvalid() {
+        
         final LoaderActions loaderActions = getCurrentRun().getLoaderActions();
         return ImmutableList.copyOf(loaderActions.getActionListInvalid());
     }
     
     
     public static ScriptRun getCurrentRun() {
+        
         if(currentRun == null) {
             throw new IllegalStateException("Invalid current run!");
         }
@@ -231,6 +283,7 @@ public class CraftTweakerAPI {
     }
     
     public static boolean isServer() {
+        
         return CraftTweaker.serverOverride || EffectiveSide.get().isServer();
     }
     
@@ -240,6 +293,34 @@ public class CraftTweakerAPI {
     }
     
     public static String getDefaultLoaderName() {
+        
         return "crafttweaker";
     }
+    
+    public static void initRecipeWriters() {
+        
+        if(!getRecipeWriters().isEmpty()) {
+            throw new IllegalStateException("Recipe Writers have already been initialized!");
+        }
+        
+        getRecipeWriters().put(BlastingRecipe.class, new CookingRecipeWriter("blastFurnace"));
+        getRecipeWriters().put(CampfireCookingRecipe.class, new CookingRecipeWriter("campfire"));
+        getRecipeWriters().put(ShapedRecipe.class, new ShapedRecipeWriter());
+        getRecipeWriters().put(ShapelessRecipe.class, new ShapelessRecipeWriter());
+        getRecipeWriters().put(FurnaceRecipe.class, new CookingRecipeWriter("furnace"));
+        getRecipeWriters().put(SmithingRecipe.class, new SmithingRecipeWriter());
+        getRecipeWriters().put(SmokingRecipe.class, new CookingRecipeWriter("smoker"));
+        getRecipeWriters().put(StonecuttingRecipe.class, new StoneCutterRecipeWriter());
+    
+        getRecipeWriters().put(CTRecipeShaped.class, new CTShapedRecipeWriter());
+        getRecipeWriters().put(CTRecipeShapeless.class, new CTShapelessRecipeWriter());
+        
+        MinecraftForge.EVENT_BUS.post(new RegisterRecipeWritersEvent());
+    }
+    
+    public static Map<Class<? extends IRecipe>, IRecipeWriter> getRecipeWriters() {
+        
+        return recipeWriters;
+    }
+    
 }

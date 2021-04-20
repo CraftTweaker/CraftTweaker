@@ -6,10 +6,12 @@ import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.data.StringConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
 import com.blamejared.crafttweaker.impl.brackets.BracketHandlers;
+import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStackMutable;
@@ -18,6 +20,7 @@ import com.blamejared.crafttweaker.impl.loot.CTLootManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
 import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
+import com.blamejared.crafttweaker.impl.recipes.writers.DefaultRecipeWriter;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
@@ -80,6 +83,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -111,6 +115,42 @@ public class CTCommands {
         
         registerCommand(new CommandImpl("reload", "Points people to /reload", (CommandCallerPlayer) (player, stack) -> {
             send(run(new StringTextComponent(color("CraftTweaker reload has been deprecated! Use the vanilla /reload instead!", TextFormatting.AQUA)), "/reload"), player);
+            return 0;
+        }));
+        
+        registerCommand(new CommandImpl("recipes", "Outputs information on all recipes.", (CommandCallerPlayer) (player, stack) -> {
+            
+            
+            player.world.getRecipeManager().recipes.forEach((iRecipeType, map) -> {
+                
+                IRecipeManager recipeManager = RecipeTypeBracketHandler.getRecipeManager(iRecipeType.toString());
+                if(recipeManager == null) {
+                    // Scripts for example don't have a recipe manager
+                    return;
+                }
+                
+                StringBuilder builder = new StringBuilder("Recipe type: `").append(recipeManager.getCommandString())
+                        .append("`\n");
+                
+                map.values().stream().sorted((o1, o2) -> {
+                    int typeEqual = Objects.requireNonNull(o1.getSerializer()
+                            .getRegistryName())
+                            .compareTo(Objects.requireNonNull(o2.getSerializer()
+                                    .getRegistryName()));
+                    
+                    if(typeEqual == 0) {
+                        return o1.getId().compareTo(o2.getId());
+                    }
+                    return typeEqual;
+                }).forEach(iRecipe -> {
+                    CraftTweakerAPI.getRecipeWriters()
+                            .getOrDefault(iRecipe.getClass(), DefaultRecipeWriter.INSTANCE)
+                            .write(recipeManager, builder, iRecipe);
+                    builder.append("\n");
+                });
+                CraftTweakerAPI.logDump(builder.toString());
+            });
+            send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         }));
         
