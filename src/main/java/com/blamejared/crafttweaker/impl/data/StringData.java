@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.StringNBT;
 import org.openzen.zencode.java.ZenCodeType;
@@ -61,27 +62,12 @@ public class StringData implements IData {
     
     @Override
     public String asString() {
-        return quoteAndEscape(internal.getString()) + " as string";
+        return StringUtils.quoteAndEscape(internal.getString()) + " as string";
     }
     
     @Override
     public String toJsonString() {
-        return quoteAndEscape(internal.getString());
+        return StringUtils.quoteAndEscape(internal.getString());
     }
     
-    private String quoteAndEscape(String p_193588_0_) {
-        StringBuilder stringbuilder = new StringBuilder("\"");
-        
-        for(int i = 0; i < p_193588_0_.length(); ++i) {
-            char c0 = p_193588_0_.charAt(i);
-            
-            if(c0 == '\\' || c0 == '"') {
-                stringbuilder.append('\\');
-            }
-            
-            stringbuilder.append(c0);
-        }
-        
-        return stringbuilder.append('"').toString();
-    }
 }

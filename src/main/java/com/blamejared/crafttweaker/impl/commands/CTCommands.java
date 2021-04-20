@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.data.StringConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
+import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
 import com.blamejared.crafttweaker.impl.brackets.BracketHandlers;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
@@ -40,8 +41,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.data.NBTToSNBTConverter;
-import net.minecraft.data.SNBTToNBTConverter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -49,7 +48,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
@@ -62,14 +60,11 @@ import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.openzen.zenscript.lexer.ParseException;
@@ -438,7 +433,7 @@ public class CTCommands {
         });
         
         registerDump("loot_tables", "Outputs the names of all registered loot tables", (CommandCallerPlayer) (player, stack) -> {
-            ServerLifecycleHooks.getCurrentServer().getLootTableManager().getLootTableKeys().stream().map(ResourceLocation::toString).sorted().forEach(CraftTweakerAPI::logDump);
+            ServerLifecycleHooks.getCurrentServer()
             send(new StringTextComponent(color("Loot table list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
@@ -597,7 +592,7 @@ public class CTCommands {
         
         Style style = base.getStyle();
         style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
-        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
+        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + StringUtils.quoteAndEscape(toCopy) + ""));
         return base.setStyle(style);
     }
     
@@ -617,23 +612,6 @@ public class CTCommands {
         base.setStyle(style);
         
         return base;
-    }
-    
-    private static String quoteAndEscape(String p_193588_0_) {
-        
-        StringBuilder stringbuilder = new StringBuilder("\"");
-        
-        for(int i = 0; i < p_193588_0_.length(); ++i) {
-            char c0 = p_193588_0_.charAt(i);
-            
-            if(c0 == '\\' || c0 == '"') {
-                stringbuilder.append('\\');
-            }
-            
-            stringbuilder.append(c0);
-        }
-        
-        return stringbuilder.append('"').toString();
     }
     
     public interface CommandCaller {
