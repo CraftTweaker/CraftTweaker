@@ -85,6 +85,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -120,7 +121,7 @@ public class CTCommands {
         
         registerCommand(new CommandImpl("recipes", "Outputs information on all recipes.", (CommandCallerPlayer) (player, stack) -> {
             
-            
+            CraftTweakerAPI.logInfo("Dumping all recipes!");
             player.world.getRecipeManager().recipes.forEach((iRecipeType, map) -> {
                 
                 IRecipeManager recipeManager = RecipeTypeBracketHandler.getRecipeManager(iRecipeType.toString());
@@ -149,6 +150,56 @@ public class CTCommands {
                     builder.append("\n");
                 });
                 CraftTweakerAPI.logDump(builder.toString());
+            });
+            send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        }));
+        
+        registerCommand("recipes", new CommandImpl("hand", "Outputs information on all Recipes for the held item", (CommandCallerPlayer) (player, stack) -> {
+            if(stack.isEmpty()) {
+                // Only done because *a lot* of mods return empty ItemStacks as outputs
+                send(new StringTextComponent(color("Cannot get recipes for an empty ItemStack!", TextFormatting.RED)), player);
+                return 0;
+            }
+            CraftTweakerAPI.logInfo("Dumping all recipes that output %s!", new MCItemStackMutable(stack).getCommandString());
+            IItemStack workingStack = new MCItemStackMutable(stack).setAmount(1);
+            player.world.getRecipeManager().recipes.forEach((iRecipeType, map) -> {
+                
+                AtomicBoolean handled = new AtomicBoolean(false);
+                IRecipeManager recipeManager = RecipeTypeBracketHandler.getRecipeManager(iRecipeType.toString());
+                if(recipeManager == null) {
+                    // Scripts for example don't have a recipe manager
+                    return;
+                }
+                
+                StringBuilder builder = new StringBuilder("Recipe type: `").append(recipeManager.getCommandString())
+                        .append("`\n");
+                
+                
+                map.values()
+                        .stream()
+                        .filter(iRecipe -> workingStack.matches(new MCItemStackMutable(iRecipe.getRecipeOutput())))
+                        .sorted((o1, o2) -> {
+                            int typeEqual = Objects.requireNonNull(o1.getSerializer()
+                                    .getRegistryName())
+                                    .compareTo(Objects.requireNonNull(o2.getSerializer()
+                                            .getRegistryName()));
+                            
+                            if(typeEqual == 0) {
+                                return o1.getId().compareTo(o2.getId());
+                            }
+                            return typeEqual;
+                        })
+                        .forEach(iRecipe -> {
+                            handled.set(true);
+                            CraftTweakerAPI.getRecipeWriters()
+                                    .getOrDefault(iRecipe.getClass(), DefaultRecipeWriter.INSTANCE)
+                                    .write(recipeManager, builder, iRecipe);
+                            builder.append("\n");
+                        });
+                if(handled.get()) {
+                    CraftTweakerAPI.logDump(builder.toString());
+                }
             });
             send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
