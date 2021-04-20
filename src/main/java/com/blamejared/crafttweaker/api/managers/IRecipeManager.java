@@ -124,7 +124,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @docParam output <item:minecraft:glass>
      */
     @ZenCodeType.Method
-    default void removeRecipe(IItemStack output) {
+    default void removeRecipe(IIngredient output) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(this, output));
     }
     

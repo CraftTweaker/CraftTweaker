@@ -1,16 +1,16 @@
 package com.blamejared.crafttweaker.impl.actions.recipes;
 
 import com.blamejared.crafttweaker.api.exceptions.ScriptException;
-import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 
 public class ActionRemoveRecipeByOutput extends ActionRemoveRecipe {
     
-    private final IItemStack output;
+    private final IIngredient output;
     
-    public ActionRemoveRecipeByOutput(IRecipeManager manager, IItemStack output) {
+    public ActionRemoveRecipeByOutput(IRecipeManager manager, IIngredient output) {
         
         super(manager,
                 recipe -> output.matches(new MCItemStackMutable(recipe.getRecipeOutput())));

@@ -10,10 +10,10 @@ import net.minecraft.item.ItemStack;
 
 public class ActionRemoveRecipeByOutputInput extends ActionRemoveRecipe {
     
-    private final IItemStack output;
+    private final IIngredient output;
     private final IIngredient input;
     
-    public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IItemStack output, IIngredient input) {
+    public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IIngredient output, IIngredient input) {
         
         super(manager, recipe -> {
             ItemStack recipeOutput = recipe.getRecipeOutput();
