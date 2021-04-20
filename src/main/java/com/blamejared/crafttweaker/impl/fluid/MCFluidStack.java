@@ -2,16 +2,13 @@ package com.blamejared.crafttweaker.impl.fluid;
 
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker.api.fluid.*;
-import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import net.minecraft.fluid.*;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.*;
-import org.openzen.zencode.java.*;
+import net.minecraft.fluid.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.Objects;
 
 public class MCFluidStack implements IFluidStack {
     
@@ -39,9 +36,11 @@ public class MCFluidStack implements IFluidStack {
                 builder.append(")");
             }
         }
-        
-        if(stack.getAmount() != 1) {
-            builder.append(" * ").append(stack.getAmount());
+    
+        if(!isEmpty()) {
+            if(stack.getAmount() != 1) {
+                builder.append(" * ").append(stack.getAmount());
+            }
         }
         return builder.toString();
     }

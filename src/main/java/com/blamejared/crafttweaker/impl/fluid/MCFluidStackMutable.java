@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.impl.fluid;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
-import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -109,10 +108,11 @@ public class MCFluidStackMutable implements IFluidStack {
                 stringBuilder.append(")");
             }
         }
-        
-        if(stack.getAmount() != 1) {
-            stringBuilder.append(" * ");
-            stringBuilder.append(stack.getAmount());
+    
+        if(!isEmpty()) {
+            if(stack.getAmount() != 1) {
+                stringBuilder.append(" * ").append(stack.getAmount());
+            }
         }
         
         return stringBuilder.toString();

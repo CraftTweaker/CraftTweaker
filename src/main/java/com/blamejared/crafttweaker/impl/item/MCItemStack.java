@@ -111,8 +111,10 @@ public class MCItemStack implements IItemStack {
             sb.append(".withDamage(").append(getInternal().getDamage()).append(")");
         }
     
-        if(getAmount() != 1) {
-            sb.append(" * ").append(getAmount());
+        if(!isEmpty()) {
+            if(getAmount() != 1) {
+                sb.append(" * ").append(getAmount());
+            }
         }
         return sb.toString();
     }

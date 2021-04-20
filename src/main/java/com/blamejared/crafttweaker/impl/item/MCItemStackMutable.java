@@ -118,9 +118,10 @@ public class MCItemStackMutable implements IItemStack {
         if(internal.getDamage() > 0) {
             sb.append(".withDamage(").append(internal.getDamage()).append(")");
         }
-        
-        if(getAmount() != 1) {
-            sb.append(" * ").append(getAmount());
+        if(!isEmpty()) {
+            if(getAmount() != 1) {
+                sb.append(" * ").append(getAmount());
+            }
         }
         return sb.toString();
     }
