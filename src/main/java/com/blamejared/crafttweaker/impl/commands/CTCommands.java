@@ -434,6 +434,12 @@ public class CTCommands {
         
         registerDump("loot_tables", "Outputs the names of all registered loot tables", (CommandCallerPlayer) (player, stack) -> {
             ServerLifecycleHooks.getCurrentServer()
+                    .getLootTableManager()
+                    .getLootTableKeys()
+                    .stream()
+                    .map(ResourceLocation::toString)
+                    .sorted()
+                    .forEach(CraftTweakerAPI::logDump);
             send(new StringTextComponent(color("Loot table list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
