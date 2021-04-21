@@ -121,11 +121,24 @@ public interface IRecipeManager extends CommandStringDisplayable {
      *
      * @param output output of the recipe
      *
-     * @docParam output <item:minecraft:glass>
+     * @docParam output <tag:items:minecraft:wool>
      */
     @ZenCodeType.Method
     default void removeRecipe(IIngredient output) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(this, output));
+    }
+    
+    // This is only here for backwards compat, should be removed next breaking change
+    /**
+     * Removes a recipe based on it's output.
+     *
+     * @param output output of the recipe
+     *
+     * @docParam output <item:minecraft:glass>
+     */
+    @ZenCodeType.Method
+    default void removeRecipe(IItemStack output){
+        removeRecipe((IIngredient) output);
     }
     
     /**
