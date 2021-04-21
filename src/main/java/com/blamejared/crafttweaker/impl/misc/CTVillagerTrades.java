@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.misc;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.villagers.BasicTradeExposer;
 import com.blamejared.crafttweaker.api.villagers.ITradeRemover;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddWanderingTrade;
@@ -110,12 +111,38 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 2 Emaralds for an Arrow.
+     * Removes a `BasicTrade` Villager trade. `BasicTrades` are trades that allow any item, to any other item. It it only really used for mod recipes and it not used for any vanilla villager trade.
+     *
+     * @param profession    What profession this trade should be for.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param forSale       What ItemStack is being sold (by the Villager).
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam tradeFor <item:minecraft:arrow>
+     * @docParam price <item:minecraft:stick>
+     * @docParam price2 <item:minecraft:emerald>
+     */
+    @ZenCodeType.Method
+    public void removeBasicTrade(VillagerProfession profession, int villagerLevel, IItemStack forSale, @ZenCodeType.Optional("<item:minecraft:air>") IItemStack price, @ZenCodeType.Optional("<item:minecraft:air>") IItemStack price2) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> {
+            if(trade instanceof BasicTrade) {
+                boolean saleMatches = new MCItemStackMutable(BasicTradeExposer.getForSale(trade)).matches(forSale);
+                boolean priceMatches = new MCItemStackMutable(BasicTradeExposer.getPrice(trade)).matches(price);
+                boolean price2Matches = new MCItemStackMutable(BasicTradeExposer.getPrice2(trade)).matches(price2);
+                return saleMatches && priceMatches && price2Matches;
+            }
+            return false;
+        });
+    }
+    
+    /**
      * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 2 Emeralds for an Arrow.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param tradeFor      What Itemstack is being sold (by the Villager).
+     * @param tradeFor      What ItemStack is being sold (by the Villager).
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
@@ -127,6 +154,8 @@ public class CTVillagerTrades {
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EmeraldForItemsTrade) {
                 return ((VillagerTrades.EmeraldForItemsTrade) trade).tradeItem == tradeFor;
+            } else if(trade instanceof BasicTrade) {
+                return BasicTradeExposer.getForSale(trade).getItem() == tradeFor;
             }
             return false;
         });
@@ -149,6 +178,8 @@ public class CTVillagerTrades {
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
                 return sellingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
+            } else if(trade instanceof BasicTrade) {
+                return new MCItemStackMutable(BasicTradeExposer.getPrice(trade)).matches(sellingItem);
             }
             return false;
         });
@@ -174,6 +205,10 @@ public class CTVillagerTrades {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsAndItemsTrade) {
                 if(sellingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) trade).sellingItem))) {
                     return buyingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) trade).buyingItem));
+                }
+            } else if(trade instanceof BasicTrade) {
+                if(sellingItem.matches(new MCItemStackMutable(BasicTradeExposer.getPrice(trade)))) {
+                    return buyingItem.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
                 }
             }
             return false;
@@ -207,7 +242,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for Dyed leather armor. An example being, giving a villager a diamond and getting a Blue Dyed Leather clestplate.
+     * Removes a Villager trade for Items for Dyed leather armor. An example being, giving a villager a diamond and getting a Blue Dyed Leather chestplate.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -320,7 +355,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emeralds for an Arrow.
+     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader 2 Emeralds for an Arrow.
      *
      * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
      * @param tradeFor What ItemStack is being sold (by the Villager).
@@ -334,6 +369,8 @@ public class CTVillagerTrades {
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
                 return tradeFor.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
+            } else if(trade instanceof BasicTrade) {
+                return tradeFor.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
             }
             return false;
         });
