@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.item;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.api.ingredients.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
@@ -165,7 +166,7 @@ public class MCItemStack implements IItemStack {
         if(!getInternal().hasTag()) {
             return Ingredient.fromStacks(getImmutableInternal());
         }
-        return new NBTIngredient(getImmutableInternal()) {};
+        return new PartialNBTIngredient(getImmutableInternal());
     }
     
     @Override

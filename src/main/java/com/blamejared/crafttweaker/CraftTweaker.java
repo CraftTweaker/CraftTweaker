@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.ingredients.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IngredientList;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
@@ -43,6 +44,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -91,6 +93,7 @@ public class CraftTweaker {
     public static IRecipeSerializer SHAPED_SERIALIZER;
     @SuppressWarnings("rawtypes")
     public static IRecipeSerializer SCRIPT_SERIALIZER;
+    public static IIngredientSerializer<?> PARTIAL_NBT_INGREDIENT_SERIALIZER;
     public static IRecipeType<ScriptRecipe> RECIPE_TYPE_SCRIPTS;
     public static boolean serverOverride = true;
     private static Set<String> PATRON_LIST = new HashSet<>();
@@ -124,7 +127,9 @@ public class CraftTweaker {
         ForgeRegistries.RECIPE_SERIALIZERS.register(SCRIPT_SERIALIZER);
     
         RECIPE_TYPE_SCRIPTS = IRecipeType.register(MODID + ":scripts");
-    
+        PARTIAL_NBT_INGREDIENT_SERIALIZER = new PartialNBTIngredient.Serializer();
+        CraftingHelper.register(new ResourceLocation(MODID, "partial_nbt"), PARTIAL_NBT_INGREDIENT_SERIALIZER);
+        
         CraftingHelper.register(new ResourceLocation(MODID, "list"), IngredientList.Serializer.INSTANCE);
     
         CraftTweakerRegistries.init();
