@@ -20,7 +20,7 @@ buildscript {
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
-        classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.0.0.10', changing: true
+        classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.0.0.12', changing: true
     }
 }
 apply plugin: 'com.blamejared.modtemplate'
