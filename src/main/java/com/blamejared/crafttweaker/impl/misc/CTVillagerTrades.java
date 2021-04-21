@@ -35,7 +35,7 @@ public class CTVillagerTrades {
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
      * @param emeralds      The amount of Emeralds.
-     * @param forSale       What Itemstack is being sold (by the Villager).
+     * @param forSale       What ItemStack is being sold (by the Villager).
      * @param maxTrades     How many times can this trade be done.
      * @param xp            How much Experience is given by trading.
      * @param priceMult     When this trade is discounted, how much should it be discounted by.
@@ -60,8 +60,8 @@ public class CTVillagerTrades {
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param input1        The Itemstack that is being given to the Villager.
-     * @param forSale       What Itemstack is being sold (by the Villager).
+     * @param input1        The ItemStack that is being given to the Villager.
+     * @param forSale       What ItemStack is being sold (by the Villager).
      * @param maxTrades     How many times can this trade be done.
      * @param xp            How much Experience is given by trading.
      * @param priceMult     When this trade is discounted, how much should it be discounted by.
@@ -86,9 +86,9 @@ public class CTVillagerTrades {
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param input1        The main Itemstack that is being given to the Villager.
-     * @param input2        The secondary Itemstack that is being given to the Villager.
-     * @param forSale       What Itemstack is being sold (by the Villager).
+     * @param input1        The main ItemStack that is being given to the Villager.
+     * @param input2        The secondary ItemStack that is being given to the Villager.
+     * @param forSale       What ItemStack is being sold (by the Villager).
      * @param maxTrades     How many times can this trade be done.
      * @param xp            How much Experience is given by trading.
      * @param priceMult     When this trade is discounted, how much should it be discounted by.
@@ -136,7 +136,7 @@ public class CTVillagerTrades {
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param sellingItem   What Itemstack is being given to the Villager.
+     * @param sellingItem   What ItemStack is being given to the Villager.
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
@@ -158,7 +158,7 @@ public class CTVillagerTrades {
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param sellingItem   What Itemstack is being given to the Villager.
+     * @param sellingItem   What ItemStack is being given to the Villager.
      * @param buyingItem    The item that the Villager is selling.
      *
      * @docParam profession <profession:minecraft:farmer>
@@ -185,7 +185,7 @@ public class CTVillagerTrades {
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
      * @param potionStack   The base ItemStack that a random potion effect will be applied to. E.G. A tipped Arrow with no effect applied.
-     * @param sellingItem   What Itemstack is being given to the Villager.
+     * @param sellingItem   What ItemStack is being given to the Villager.
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
@@ -301,7 +301,7 @@ public class CTVillagerTrades {
      *
      * @param rarity    The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
      * @param emeralds  The amount of Emeralds.
-     * @param forSale   What Itemstack is being sold (by the Wandering Trader).
+     * @param forSale   What ItemStack is being sold (by the Wandering Trader).
      * @param maxTrades How many times can this trade be done.
      * @param xp        How much Experience is given by trading.
      *
@@ -322,7 +322,7 @@ public class CTVillagerTrades {
      * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emaralds for an Arrow.
      *
      * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
-     * @param tradeFor What Itemstack is being sold (by the Villager).
+     * @param tradeFor What ItemStack is being sold (by the Villager).
      *
      * @docParam rarity 2
      * @docParam tradeFor <item:minecraft:arrow>
