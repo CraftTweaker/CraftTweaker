@@ -111,6 +111,7 @@ public class CTVillagerTrades {
     
     /**
      * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 2 Emaralds for an Arrow.
+     * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 2 Emeralds for an Arrow.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -132,7 +133,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for Emeralds. An example being, giving a villager an Arrow and getting 2 Emaralds.
+     * Removes a Villager trade for Items for Emeralds. An example being, giving a villager an Arrow and getting 2 Emeralds.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -319,7 +320,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emaralds for an Arrow.
+     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emeralds for an Arrow.
      *
      * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
      * @param tradeFor What ItemStack is being sold (by the Villager).
