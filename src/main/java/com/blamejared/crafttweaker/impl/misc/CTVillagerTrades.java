@@ -119,7 +119,7 @@ public class CTVillagerTrades {
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
-     * @docParam tradeFor <item:minecraft:arrow>
+     * @docParam forSale <item:minecraft:arrow>
      * @docParam price <item:minecraft:stick>
      * @docParam price2 <item:minecraft:emerald>
      */
