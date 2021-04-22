@@ -20,10 +20,10 @@ public class BasicTradeExposer {
         try {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
             final Class<?> forgeInternalHandlerClass = BasicTrade.class;
-            final Field priceField = forgeInternalHandlerClass.getDeclaredField(s);
-            priceField.setAccessible(true);
+            final Field field = forgeInternalHandlerClass.getDeclaredField(s);
+            field.setAccessible(true);
             
-            return lookup.unreflectGetter(priceField);
+            return lookup.unreflectGetter(field);
         } catch(ReflectiveOperationException e) {
             throw new RuntimeException("Unable to reflect into Basic Trade to get: " + StringUtils.quoteAndEscape(s));
         }
@@ -73,7 +73,7 @@ public class BasicTradeExposer {
         
         if(trade instanceof BasicTrade) {
             try {
-                return handle.invokeExact(trade);
+                return handle.invoke((BasicTrade)trade);
             } catch(Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
