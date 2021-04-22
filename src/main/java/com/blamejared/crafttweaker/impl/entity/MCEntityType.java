@@ -4,9 +4,10 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
-import com.google.common.base.Preconditions;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
@@ -21,71 +22,98 @@ public class MCEntityType implements CommandStringDisplayable {
     private final EntityType<?> internal;
     
     public MCEntityType(@Nonnull EntityType<?> internal) {
+        
         this.internal = Objects.requireNonNull(internal);
+    }
+    
+    /**
+     * Creates a new entity in the world.
+     *
+     * @param world World for the entity to be created in
+     *
+     * @return The newly created Entity
+     */
+    @ZenCodeType.Method
+    public Entity create(World world) {
+        
+        return internal.create(world);
     }
     
     @ZenCodeType.Getter("classification")
     public EntityClassification getClassification() {
+        
         return internal.getClassification();
     }
     
-    
     @ZenCodeType.Getter("serializable")
     public boolean isSerializable() {
+        
         return getInternal().isSerializable();
     }
     
     @ZenCodeType.Getter("summonable")
     public boolean isSummonable() {
+        
         return getInternal().isSummonable();
     }
     
     @ZenCodeType.Getter("immuneToFire")
     public boolean isImmuneToFire() {
+        
         return getInternal().isImmuneToFire();
     }
     
     @ZenCodeType.Getter("translationKey")
     public String getTranslationKey() {
+        
         return getInternal().getTranslationKey();
     }
     
     @ZenCodeType.Getter("name")
     public String getName() {
+        
         return getInternal().getName().getString();
     }
     
     @ZenCodeType.Getter("lootTable")
     public String getLootTable() {
+        
         return getInternal().getLootTable().toString();
     }
     
     @ZenCodeType.Getter("width")
     public float getWidth() {
+        
         return getInternal().getWidth();
     }
     
     @ZenCodeType.Getter("height")
     public float getHeight() {
+        
         return getInternal().getHeight();
     }
     
     @ZenCodeType.Getter("commandString")
     @Override
     public String getCommandString() {
+        
         return "<entityType:" + internal.getRegistryName() + ">";
     }
     
     public EntityType<?> getInternal() {
+        
         return internal;
     }
     
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+    
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         
         MCEntityType that = (MCEntityType) o;
         
@@ -94,6 +122,8 @@ public class MCEntityType implements CommandStringDisplayable {
     
     @Override
     public int hashCode() {
+        
         return internal.hashCode();
     }
+    
 }
