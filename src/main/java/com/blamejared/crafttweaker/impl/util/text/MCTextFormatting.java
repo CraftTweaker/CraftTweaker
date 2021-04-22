@@ -50,7 +50,7 @@ public class MCTextFormatting implements CommandStringDisplayable {
     
     public TextFormatting getInternal() {
         
-        return getInternal();
+        return internal;
     }
     
     @Override
