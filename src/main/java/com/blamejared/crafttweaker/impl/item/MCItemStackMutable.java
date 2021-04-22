@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker.api.ingredients.PartialNBTIngredient;
+import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
@@ -14,7 +14,6 @@ import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.common.crafting.NBTIngredient;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;

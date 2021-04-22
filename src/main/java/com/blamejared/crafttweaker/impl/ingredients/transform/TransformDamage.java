@@ -1,16 +1,12 @@
 package com.blamejared.crafttweaker.impl.ingredients.transform;
 
-import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformerSerializer;
+import com.blamejared.crafttweaker.impl.ingredients.transform.serializer.TransformDamageSerializer;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 
 public class TransformDamage<T extends IIngredient> implements IIngredientTransformer<T> {
     
@@ -51,43 +47,11 @@ public class TransformDamage<T extends IIngredient> implements IIngredientTransf
     @SuppressWarnings("rawtypes")
     public IIngredientTransformerSerializer getSerializer() {
         
-        return CraftTweakerRegistries.TRANSFORM_DAMAGE_SERIALIZER;
+        return TransformDamageSerializer.INSTANCE;
     }
     
-    public static final class TransformDamageSerializer implements IIngredientTransformerSerializer<TransformDamage<?>> {
-        
-        @Override
-        public TransformDamage<?> parse(PacketBuffer buffer) {
-            
-            return new TransformDamage<>(buffer.readVarInt());
-        }
-        
-        @Override
-        public TransformDamage<?> parse(JsonObject json) {
-            
-            return new TransformDamage<>(json.getAsJsonPrimitive("amount").getAsInt());
-        }
-        
-        @Override
-        public void write(PacketBuffer buffer, TransformDamage<?> ingredient) {
-            
-            buffer.writeVarInt(ingredient.amount);
-        }
-        
-        @Override
-        public JsonObject toJson(TransformDamage<?> transformer) {
-            
-            final JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("amount", transformer.amount);
-            return jsonObject;
-        }
-        
-        @Override
-        public ResourceLocation getType() {
-            
-            return new ResourceLocation(CraftTweaker.MODID, "transform_damage");
-        }
-        
-    }
+    
+    
+    
     
 }

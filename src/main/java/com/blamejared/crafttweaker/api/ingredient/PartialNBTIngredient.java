@@ -1,13 +1,13 @@
-package com.blamejared.crafttweaker.api.ingredients;
+package com.blamejared.crafttweaker.api.ingredient;
 
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.api.ingredient.serializer.PartialNBTIngredientSerializer;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.common.crafting.NBTIngredient;
@@ -59,7 +59,12 @@ public class PartialNBTIngredient extends Ingredient {
     @Override
     public IIngredientSerializer<? extends Ingredient> getSerializer() {
         
-        return PartialNBTIngredient.Serializer.INSTANCE;
+        return PartialNBTIngredientSerializer.INSTANCE;
+    }
+    
+    public ItemStack getStack() {
+        
+        return stack;
     }
     
     @Override
@@ -73,30 +78,6 @@ public class PartialNBTIngredient extends Ingredient {
             json.addProperty("nbt", stack.getTag().toString());
         }
         return json;
-    }
-    
-    public static class Serializer implements IIngredientSerializer<PartialNBTIngredient> {
-        
-        public static final PartialNBTIngredient.Serializer INSTANCE = new PartialNBTIngredient.Serializer();
-        
-        @Override
-        public PartialNBTIngredient parse(PacketBuffer buffer) {
-            
-            return new PartialNBTIngredient(buffer.readItemStack());
-        }
-        
-        @Override
-        public PartialNBTIngredient parse(JsonObject json) {
-            
-            return new PartialNBTIngredient(CraftingHelper.getItemStack(json, true));
-        }
-        
-        @Override
-        public void write(PacketBuffer buffer, PartialNBTIngredient ingredient) {
-            
-            buffer.writeItemStack(ingredient.stack);
-        }
-        
     }
     
 }

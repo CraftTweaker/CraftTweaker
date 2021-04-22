@@ -52,7 +52,7 @@ public class ScriptRecipe implements IRecipe<DummyInventory> {
     
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return CraftTweaker.SCRIPT_SERIALIZER;
+        return SerializerScript.INSTANCE;
     }
     
     @Override

@@ -1,14 +1,10 @@
 package com.blamejared.crafttweaker.impl.ingredients.transform;
 
-import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformer;
 import com.blamejared.crafttweaker.api.item.transformed.IIngredientTransformerSerializer;
-import com.google.gson.JsonObject;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import com.blamejared.crafttweaker.impl.ingredients.transform.serializer.TransformCustomSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,44 +53,12 @@ public class TransformCustom<T extends IIngredient> implements IIngredientTransf
     @SuppressWarnings("rawtypes")
     public IIngredientTransformerSerializer getSerializer() {
         
-        return CraftTweakerRegistries.TRANSFORM_CUSTOM_SERIALIZER;
+        return TransformCustomSerializer.INSTANCE;
     }
     
-    public static final class TransformCustomSerializer implements IIngredientTransformerSerializer<TransformCustom<?>> {
+    public String getUid() {
         
-        @Override
-        public TransformCustom<?> parse(PacketBuffer buffer) {
-            
-            return new TransformCustom<>(buffer.readString(), null);
-        }
-        
-        @Override
-        public TransformCustom<?> parse(JsonObject json) {
-            
-            final String uid = json.getAsJsonPrimitive("uid").getAsString();
-            return new TransformCustom<>(uid, null);
-        }
-        
-        @Override
-        public void write(PacketBuffer buffer, TransformCustom<?> ingredient) {
-            
-            buffer.writeString(ingredient.uid);
-        }
-        
-        @Override
-        public JsonObject toJson(TransformCustom<?> transformer) {
-            
-            final JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("uid", transformer.uid);
-            return jsonObject;
-        }
-        
-        @Override
-        public ResourceLocation getType() {
-            
-            return new ResourceLocation(CraftTweaker.MODID, "transform_custom");
-        }
-        
+        return uid;
     }
     
 }

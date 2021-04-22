@@ -13,12 +13,20 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CTRecipeShaped> {
     
+    public static final SerializerShaped INSTANCE = new SerializerShaped();
+    
+    public SerializerShaped() {
+        
+        setRegistryName(new ResourceLocation("crafttweaker:shaped"));
+    }
+    
     public CTRecipeShaped read(ResourceLocation recipeId, JsonObject json) {
         // People shouldn't be making our recipes from json :eyes:
-        return new CTRecipeShaped("", new MCItemStack(ItemStack.EMPTY), new IIngredient[][]{{new MCItemStack(new ItemStack(Items.ACACIA_BOAT))}}, false, null);
+        return new CTRecipeShaped("", new MCItemStack(ItemStack.EMPTY), new IIngredient[][] {{new MCItemStack(new ItemStack(Items.ACACIA_BOAT))}}, false, null);
     }
     
     public CTRecipeShaped read(ResourceLocation recipeId, PacketBuffer buffer) {
+        
         int height = buffer.readVarInt();
         int width = buffer.readVarInt();
         IIngredient[][] inputs = new IIngredient[height][width];
@@ -35,6 +43,7 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     }
     
     public void write(PacketBuffer buffer, CTRecipeShaped recipe) {
+        
         buffer.writeVarInt(recipe.getRecipeHeight());
         buffer.writeVarInt(recipe.getRecipeWidth());
         
@@ -46,4 +55,5 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
         
         buffer.writeItemStack(recipe.getRecipeOutput());
     }
+    
 }
