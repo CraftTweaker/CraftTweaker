@@ -28,7 +28,7 @@ public class DoubleData implements INumberData {
     
     @Override
     public IData copy() {
-        return new DoubleData(internal);
+        return new DoubleData(getInternal());
     }
     
     @Override
@@ -51,6 +51,6 @@ public class DoubleData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getDouble() + " as double";
+        return getInternal().getDouble() + " as double";
     }
 }

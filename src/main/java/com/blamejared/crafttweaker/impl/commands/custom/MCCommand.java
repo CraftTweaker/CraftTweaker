@@ -30,13 +30,13 @@ public class MCCommand {
     
     @ZenCodeType.Method
     public int run(MCCommandContext context) throws Exception {
-        return internal.run(context.getInternal());
+        return getInternal().run(context.getInternal());
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCCommand && internal.equals(((MCCommand) o).internal);
+        return o instanceof MCCommand && getInternal().equals(((MCCommand) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -46,13 +46,13 @@ public class MCCommand {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

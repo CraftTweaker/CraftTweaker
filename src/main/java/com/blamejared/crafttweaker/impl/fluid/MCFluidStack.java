@@ -16,14 +16,14 @@ public class MCFluidStack implements IFluidStack {
     
     public MCFluidStack(FluidStack fluidStack) {
         
-        stack = fluidStack;
+        this.stack = fluidStack;
     }
     
     
     @Override
     public String getCommandString() {
         
-        final Fluid fluid = stack.getFluid();
+        final Fluid fluid = getInternal().getFluid();
         final StringBuilder builder = new StringBuilder().append("<fluid:")
                 .append(fluid.getRegistryName())
                 .append(">");
@@ -38,8 +38,8 @@ public class MCFluidStack implements IFluidStack {
         }
     
         if(!isEmpty()) {
-            if(stack.getAmount() != 1) {
-                builder.append(" * ").append(stack.getAmount());
+            if(getInternal().getAmount() != 1) {
+                builder.append(" * ").append(getInternal().getAmount());
             }
         }
         return builder.toString();
@@ -48,7 +48,7 @@ public class MCFluidStack implements IFluidStack {
     @Override
     public IFluidStack setAmount(int amount) {
         
-        final FluidStack copy = stack.copy();
+        final FluidStack copy = getInternal().copy();
         copy.setAmount(amount);
         return new MCFluidStack(copy);
     }
@@ -63,7 +63,7 @@ public class MCFluidStack implements IFluidStack {
     @Override
     public IFluidStack mutable() {
         
-        return new MCFluidStackMutable(stack);
+        return new MCFluidStackMutable(getInternal());
     }
     
     @Override
@@ -81,13 +81,13 @@ public class MCFluidStack implements IFluidStack {
     @Override
     public IFluidStack copy() {
         //We have to copy, in case someone calls ".copy().mutable"
-        return new MCFluidStack(stack.copy());
+        return new MCFluidStack(getInternal().copy());
     }
     
     @Override
     public Fluid getFluid() {
         
-        return stack.getFluid();
+        return getInternal().getFluid();
     }
     
     
@@ -131,8 +131,8 @@ public class MCFluidStack implements IFluidStack {
             return false;
         }
         
-        final FluidStack thatStack = ((MCFluidStack) o).stack;
-        final FluidStack thisStack = this.stack;
+        final FluidStack thatStack = ((MCFluidStack) o).getInternal();
+        final FluidStack thisStack = getInternal();
         
         if(thisStack.isEmpty()) {
             return thatStack.isEmpty();
@@ -152,7 +152,7 @@ public class MCFluidStack implements IFluidStack {
     @Override
     public int hashCode() {
         
-        return Objects.hash(stack.getAmount(), stack.getFluid(), stack.getTag());
+        return Objects.hash(getInternal().getAmount(), getInternal().getFluid(), getInternal().getTag());
     }
     
 }

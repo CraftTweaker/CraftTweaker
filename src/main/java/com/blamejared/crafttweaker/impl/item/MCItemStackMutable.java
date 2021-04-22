@@ -42,7 +42,7 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public IItemStack copy() {
         
-        return new MCItemStackMutable(internal.copy());
+        return new MCItemStackMutable(getInternal().copy());
     }
     
     @Override
@@ -99,7 +99,7 @@ public class MCItemStackMutable implements IItemStack {
     public String getCommandString() {
         
         final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(internal.getItem().getRegistryName());
+        sb.append(getInternal().getItem().getRegistryName());
         sb.append(">");
         
         if(getInternal().getTag() != null) {
@@ -115,8 +115,8 @@ public class MCItemStackMutable implements IItemStack {
             }
         }
         
-        if(internal.getDamage() > 0) {
-            sb.append(".withDamage(").append(internal.getDamage()).append(")");
+        if(getInternal().getDamage() > 0) {
+            sb.append(".withDamage(").append(getInternal().getDamage()).append(")");
         }
         if(!isEmpty()) {
             if(getAmount() != 1) {
@@ -141,7 +141,7 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public int getDamage() {
         
-        return internal.getDamage();
+        return getInternal().getDamage();
     }
     
     @Override
@@ -153,7 +153,7 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public IItemStack asImmutable() {
         
-        return new MCItemStack(internal.copy());
+        return new MCItemStack(getInternal().copy());
     }
     
     @Override
@@ -200,8 +200,8 @@ public class MCItemStackMutable implements IItemStack {
         
         //Implemented manually instead of using ItemStack.areItemStacksEqual to ensure it
         // stays the same as hashCode even if MC's impl would change
-        final ItemStack thatStack = ((MCItemStackMutable) o).internal;
-        final ItemStack thisStack = this.internal;
+        final ItemStack thatStack = ((MCItemStackMutable) o).getInternal();
+        final ItemStack thisStack = getInternal();
         
         if(thisStack.isEmpty()) {
             return thatStack.isEmpty();
@@ -225,7 +225,7 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public int hashCode() {
         
-        return Objects.hash(internal.getCount(), internal.getItem(), internal.getTag());
+        return Objects.hash(getInternal().getCount(), getInternal().getItem(), getInternal().getTag());
     }
     
 }

@@ -28,13 +28,13 @@ public class MCTextComponent {
     
     public MCStyle getStyle() {
         
-        return new MCStyle(internal.getStyle());
+        return new MCStyle(getInternal().getStyle());
     }
     
     @ZenCodeType.Method
     public MCTextComponent setStyle(MCStyle style) {
         
-        IFormattableTextComponent newInternal = internal.deepCopy();
+        IFormattableTextComponent newInternal = getInternal().deepCopy();
         newInternal.setStyle(newInternal.getStyle().mergeStyle(style.getInternal()));
         return new MCTextComponent(newInternal);
     }
@@ -60,7 +60,7 @@ public class MCTextComponent {
     @ZenCodeType.Method
     public String getUnformattedComponentText() {
         
-        return internal.getUnformattedComponentText();
+        return getInternal().getUnformattedComponentText();
     }
     
     @ZenCodeType.Getter("unformattedComponentText")
@@ -72,7 +72,7 @@ public class MCTextComponent {
     @ZenCodeType.Method
     public String getString() {
         
-        return internal.getString();
+        return getInternal().getString();
     }
     
     @ZenCodeType.Caster
@@ -84,19 +84,19 @@ public class MCTextComponent {
     @ZenCodeType.Method
     public String getStringTruncated(int maxLen) {
         
-        return internal.getStringTruncated(maxLen);
+        return getInternal().getStringTruncated(maxLen);
     }
     
     @ZenCodeType.Getter("siblings")
     public List<MCTextComponent> getSiblings() {
         
-        return internal.getSiblings().stream().map(MCTextComponent::new).collect(Collectors.toList());
+        return getInternal().getSiblings().stream().map(MCTextComponent::new).collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
     public MCTextComponent appendSibling(MCTextComponent component) {
         
-        IFormattableTextComponent newInternal = internal.deepCopy();
+        IFormattableTextComponent newInternal = getInternal().deepCopy();
         newInternal.getSiblings().add(component.getInternal());
         return new MCTextComponent(newInternal);
     }
@@ -104,20 +104,20 @@ public class MCTextComponent {
     @ZenCodeType.Method
     public MCTextComponent copyRaw() {
         
-        return new MCTextComponent(internal.copyRaw());
+        return new MCTextComponent(getInternal().copyRaw());
     }
     
     @ZenCodeType.Method
     public MCTextComponent deepCopy() {
         
-        return new MCTextComponent(internal.deepCopy());
+        return new MCTextComponent(getInternal().deepCopy());
     }
     
     
     @ZenCodeType.Method
     public MCTextComponent appendText(String text) {
         
-        IFormattableTextComponent newInternal = internal.deepCopy();
+        IFormattableTextComponent newInternal = getInternal().deepCopy();
         newInternal.getSiblings().add(new StringTextComponent(text));
         return new MCTextComponent(newInternal);
     }
@@ -125,7 +125,7 @@ public class MCTextComponent {
     @ZenCodeType.Getter("formattedText")
     public String getFormattedText() {
         
-        return internal.getString();
+        return getInternal().getString();
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CAT)

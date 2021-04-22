@@ -23,18 +23,18 @@ public class MCSuggestionContext {
     
     @ZenCodeType.Method
     public MCCommandNode getParent() {
-        return MCCommandNode.convert(internal.parent);
+        return MCCommandNode.convert(getInternal().parent);
     }
     
     @ZenCodeType.Method
     public int getStartPos() {
-        return internal.startPos;
+        return getInternal().startPos;
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCSuggestionContext && internal.equals(((MCSuggestionContext) o).internal);
+        return o instanceof MCSuggestionContext && getInternal().equals(((MCSuggestionContext) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -44,13 +44,13 @@ public class MCSuggestionContext {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

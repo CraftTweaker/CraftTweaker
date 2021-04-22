@@ -23,18 +23,18 @@ public class MCParsedCommandNode {
     
     @ZenCodeType.Method
     public MCCommandNode getNode() {
-        return MCCommandNode.convert(internal.getNode());
+        return MCCommandNode.convert(getInternal().getNode());
     }
     
     @ZenCodeType.Method
     public MCStringRange getRange() {
-        return new MCStringRange(internal.getRange());
+        return new MCStringRange(getInternal().getRange());
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCParsedCommandNode && internal.equals(((MCParsedCommandNode) o).internal);
+        return o instanceof MCParsedCommandNode && getInternal().equals(((MCParsedCommandNode) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -44,13 +44,13 @@ public class MCParsedCommandNode {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

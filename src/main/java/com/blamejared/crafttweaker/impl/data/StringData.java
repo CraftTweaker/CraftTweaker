@@ -28,7 +28,7 @@ public class StringData implements IData {
     
     @Override
     public IData copy() {
-        return new StringData(internal);
+        return new StringData(getInternal());
     }
     
     @Override
@@ -57,17 +57,17 @@ public class StringData implements IData {
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
     public StringData addTogether(StringData data) {
-        return new StringData(internal.getString() + data.internal.getString());
+        return new StringData(internal.getString() + data.getInternal().getString());
     }
     
     @Override
     public String asString() {
-        return StringUtils.quoteAndEscape(internal.getString()) + " as string";
+        return StringUtils.quoteAndEscape(getInternal().getString()) + " as string";
     }
     
     @Override
     public String toJsonString() {
-        return StringUtils.quoteAndEscape(internal.getString());
+        return StringUtils.quoteAndEscape(getInternal().getString());
     }
     
 }

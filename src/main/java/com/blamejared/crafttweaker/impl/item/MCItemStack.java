@@ -135,13 +135,13 @@ public class MCItemStack implements IItemStack {
     @Override
     public int getDamage() {
         
-        return internal.getDamage();
+        return getInternal().getDamage();
     }
     
     @Override
     public IItemStack mutable() {
         
-        return new MCItemStackMutable(internal);
+        return new MCItemStackMutable(getInternal());
     }
     
     @Override
@@ -193,8 +193,8 @@ public class MCItemStack implements IItemStack {
         
         //Implemented manually instead of using ItemStack.areItemStacksEqual to ensure it
         // stays the same as hashCode even if MC's impl would change
-        final ItemStack thatStack = ((MCItemStack) o).internal;
-        final ItemStack thisStack = this.internal;
+        final ItemStack thatStack = ((MCItemStack) o).getInternal();
+        final ItemStack thisStack = getInternal();
         
         if(thisStack.isEmpty()) {
             return thatStack.isEmpty();
@@ -218,7 +218,7 @@ public class MCItemStack implements IItemStack {
     @Override
     public int hashCode() {
         
-        return Objects.hash(internal.getCount(), internal.getItem(), internal.getTag());
+        return Objects.hash(getInternal().getCount(), getInternal().getItem(), getInternal().getTag());
     }
     
 }

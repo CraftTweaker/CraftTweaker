@@ -36,13 +36,13 @@ public class MCEntityType implements CommandStringDisplayable {
     @ZenCodeType.Method
     public Entity create(World world) {
         
-        return internal.create(world);
+        return getInternal().create(world);
     }
     
     @ZenCodeType.Getter("classification")
     public EntityClassification getClassification() {
         
-        return internal.getClassification();
+        return getInternal().getClassification();
     }
     
     @ZenCodeType.Getter("serializable")
@@ -97,7 +97,7 @@ public class MCEntityType implements CommandStringDisplayable {
     @Override
     public String getCommandString() {
         
-        return "<entityType:" + internal.getRegistryName() + ">";
+        return "<entityType:" + getInternal().getRegistryName() + ">";
     }
     
     public EntityType<?> getInternal() {
@@ -117,13 +117,13 @@ public class MCEntityType implements CommandStringDisplayable {
         
         MCEntityType that = (MCEntityType) o;
         
-        return internal.equals(that.internal);
+        return getInternal().equals(that.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
 }

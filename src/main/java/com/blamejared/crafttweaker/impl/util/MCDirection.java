@@ -59,7 +59,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("index")
     public int getIndex() {
-        return internal.getIndex();
+        return getInternal().getIndex();
     }
     
     /**
@@ -69,7 +69,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("horizontalIndex")
     public int getHorizontalIndex() {
-        return internal.getHorizontalIndex();
+        return getInternal().getHorizontalIndex();
     }
     
     /**
@@ -79,7 +79,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("axisOffset")
     public int getAxisOffset() {
-        return internal.getAxisDirection().getOffset();
+        return getInternal().getAxisDirection().getOffset();
     }
     
     /**
@@ -89,7 +89,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("opposite")
     public MCDirection getOpposite() {
-        return DIRECTION_MAP.get(internal.getOpposite());
+        return DIRECTION_MAP.get(getInternal().getOpposite());
     }
     
 
@@ -115,7 +115,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Method
     public MCDirection rotateY() {
-        return DIRECTION_MAP.get(internal.rotateY());
+        return DIRECTION_MAP.get(getInternal().rotateY());
     }
     
     /**
@@ -125,7 +125,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Method
     public MCDirection rotateYCCW() {
-        return DIRECTION_MAP.get(internal.rotateYCCW());
+        return DIRECTION_MAP.get(getInternal().rotateYCCW());
     }
     
     /**
@@ -135,7 +135,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("xOffset")
     public int getXOffset() {
-        return internal.getXOffset();
+        return getInternal().getXOffset();
     }
     
     /**
@@ -145,7 +145,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("yOffset")
     public int getYOffset() {
-        return internal.getYOffset();
+        return getInternal().getYOffset();
     }
     
     /**
@@ -155,7 +155,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("zOffset")
     public int getZOffset() {
-        return internal.getZOffset();
+        return getInternal().getZOffset();
     }
     
     /**
@@ -165,7 +165,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("axis")
     public Direction.Axis getAxis() {
-        return internal.getAxis();
+        return getInternal().getAxis();
     }
     
     /**
@@ -175,7 +175,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("horizontalAngle")
     public float getHorizontalAngle() {
-        return internal.getHorizontalAngle();
+        return getInternal().getHorizontalAngle();
     }
     
     /**
@@ -185,7 +185,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("name")
     public String getName() {
-        return internal.getName2();
+        return getInternal().getName2();
     }
     
     public Direction getInternal() {

@@ -28,7 +28,7 @@ public class IntData implements INumberData {
     
     @Override
     public IData copy() {
-        return new IntData(internal);
+        return new IntData(getInternal());
     }
     
     @Override
@@ -51,6 +51,6 @@ public class IntData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getInt() + " as int";
+        return getInternal().getInt() + " as int";
     }
 }

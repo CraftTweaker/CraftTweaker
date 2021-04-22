@@ -25,13 +25,13 @@ public class MCRootCommandNode extends MCCommandNode {
     
     @ZenCodeType.Method
     public boolean isValidInput(final String input) {
-        return internal.isValidInput(input);
+        return getInternal().isValidInput(input);
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCRootCommandNode && internal.equals(((MCRootCommandNode) o).internal);
+        return o instanceof MCRootCommandNode && getInternal().equals(((MCRootCommandNode) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -41,13 +41,13 @@ public class MCRootCommandNode extends MCCommandNode {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

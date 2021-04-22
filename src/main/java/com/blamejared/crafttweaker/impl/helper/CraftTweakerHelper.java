@@ -41,7 +41,6 @@ public class CraftTweakerHelper {
         return entityTypes.stream().map(MCEntityType::getInternal).collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
     public static <T, U> ITag<U> getITag(final MCTag<T> tag) {
         return (ITag<U>) tag.getInternal();
     }

@@ -28,7 +28,7 @@ public class ByteData implements INumberData {
     
     @Override
     public IData copy() {
-        return new ByteData(internal);
+        return new ByteData(getInternal());
     }
     
     @Override
@@ -51,7 +51,7 @@ public class ByteData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getByte() + " as byte";
+        return getInternal().getByte() + " as byte";
     }
     
 }

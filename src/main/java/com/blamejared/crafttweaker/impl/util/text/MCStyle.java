@@ -30,49 +30,49 @@ public class MCStyle {
     @ZenCodeType.Method
     public boolean getBold() {
         
-        return internal.getBold();
+        return getInternal().getBold();
     }
     
     @ZenCodeType.Method
     public MCStyle setBold(Boolean boldIn) {
         
-        return new MCStyle(internal.setBold(boldIn));
+        return new MCStyle(getInternal().setBold(boldIn));
     }
     
     @ZenCodeType.Method
     public boolean getItalic() {
         
-        return internal.getItalic();
+        return getInternal().getItalic();
     }
     
     @ZenCodeType.Method
     public MCStyle setItalic(Boolean italic) {
         
-        return new MCStyle(internal.setItalic(italic));
+        return new MCStyle(getInternal().setItalic(italic));
     }
     
     @ZenCodeType.Method
     public boolean getStrikethrough() {
         
-        return internal.getStrikethrough();
+        return getInternal().getStrikethrough();
     }
     
     @ZenCodeType.Method
     public MCStyle setStrikethrough(Boolean strikethrough) {
         
-        return new MCStyle(internal.setStrikethrough(strikethrough));
+        return new MCStyle(getInternal().setStrikethrough(strikethrough));
     }
     
     @ZenCodeType.Method
     public boolean getObfuscated() {
         
-        return internal.getObfuscated();
+        return getInternal().getObfuscated();
     }
     
     @ZenCodeType.Method
     public MCStyle setObfuscated(Boolean obfuscated) {
         
-        return new MCStyle(internal.setObfuscated(obfuscated));
+        return new MCStyle(getInternal().setObfuscated(obfuscated));
     }
     
     /**
@@ -81,13 +81,13 @@ public class MCStyle {
     @ZenCodeType.Method
     public boolean isEmpty() {
         
-        return internal.isEmpty();
+        return getInternal().isEmpty();
     }
     
     @ZenCodeType.Method
     public String getInsertion() {
         
-        return internal.getInsertion();
+        return getInternal().getInsertion();
     }
     
     /**
@@ -96,8 +96,8 @@ public class MCStyle {
     @ZenCodeType.Method
     public MCStyle setInsertion(String insertion) {
         
-        Style set = internal.setInsertion(insertion);
-        return set == internal ? this : new MCStyle(set);
+        Style set = getInternal().setInsertion(insertion);
+        return set == getInternal() ? this : new MCStyle(set);
     }
     
     @ZenCodeType.Method
@@ -115,7 +115,7 @@ public class MCStyle {
     @ZenCodeType.Method
     public MCStyle setFormatting(MCTextFormatting formatting) {
         
-        return new MCStyle(internal.setFormatting(formatting.getInternal()));
+        return new MCStyle(getInternal().setFormatting(formatting.getInternal()));
     }
     
     @ZenCodeType.Method
@@ -133,13 +133,13 @@ public class MCStyle {
     @ZenCodeType.Method
     public boolean getUnderlined() {
         
-        return internal.getUnderlined();
+        return getInternal().getUnderlined();
     }
     
     @ZenCodeType.Method
     public MCStyle setUnderlined(Boolean underlined) {
         
-        return new MCStyle(internal.setUnderlined(underlined));
+        return new MCStyle(getInternal().setUnderlined(underlined));
     }
     
     @ZenCodeType.Method
@@ -151,7 +151,7 @@ public class MCStyle {
     @ZenCodeType.Method
     public boolean equals(Object other) {
         
-        return other instanceof MCStyle && internal.equals(other);
+        return other instanceof MCStyle && getInternal().equals(other);
     }
     
     @ZenCodeType.Method
@@ -163,13 +163,13 @@ public class MCStyle {
     @ZenCodeType.Method
     public int hashCode() {
         
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     public String toString() {
         
-        return internal.toString();
+        return getInternal().toString();
     }
     
     public Style getInternal() {

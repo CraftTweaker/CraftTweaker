@@ -33,13 +33,13 @@ public class MCRedirectModifier {
     
     @ZenCodeType.Method
     public Collection<MCCommandSource> apply(final MCCommandContext context) throws Exception {
-        return internal.apply(context.getInternal()).stream().map(MCCommandSource::new).collect(Collectors.toList());
+        return getInternal().apply(context.getInternal()).stream().map(MCCommandSource::new).collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCRedirectModifier && internal.equals(((MCRedirectModifier) o).internal);
+        return o instanceof MCRedirectModifier && getInternal().equals(((MCRedirectModifier) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -49,13 +49,13 @@ public class MCRedirectModifier {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

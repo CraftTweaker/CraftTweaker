@@ -24,31 +24,31 @@ public class MCStringRange {
     
     @ZenCodeType.Method
     public String getFrom(MCImmutableStringReader reader) {
-        return (internal.get((reader).getInternal()));
+        return getInternal().get((reader).getInternal());
     }
     
     
     @ZenCodeType.Method
     public int getStart() {
-        return internal.getStart();
+        return getInternal().getStart();
     }
     
     
     @ZenCodeType.Method
     public boolean equals(Object o) {
-        return o instanceof MCStringRange && internal.equals(((MCStringRange) o).internal);
+        return o instanceof MCStringRange && getInternal().equals(((MCStringRange) o).getInternal());
     }
     
     
     @ZenCodeType.Method
     public int getLength() {
-        return internal.getLength();
+        return getInternal().getLength();
     }
     
     
     @ZenCodeType.Method
     public int getEnd() {
-        return internal.getEnd();
+        return getInternal().getEnd();
     }
     
     
@@ -60,13 +60,13 @@ public class MCStringRange {
     
     @ZenCodeType.Method
     public boolean isEmpty() {
-        return internal.isEmpty();
+        return getInternal().isEmpty();
     }
     
     
     @ZenCodeType.Method
     public String toString() {
-        return (internal.toString());
+        return getInternal().toString();
     }
     
     
@@ -84,13 +84,13 @@ public class MCStringRange {
     
     @ZenCodeType.Method
     public String getFrom(String string) {
-        return (internal.get((string)));
+        return getInternal().get((string));
     }
     
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     

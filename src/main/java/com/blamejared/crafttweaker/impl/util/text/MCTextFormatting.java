@@ -50,7 +50,7 @@ public class MCTextFormatting implements CommandStringDisplayable {
     
     public TextFormatting getInternal() {
         
-        return internal;
+        return getInternal();
     }
     
     @Override
@@ -71,13 +71,13 @@ public class MCTextFormatting implements CommandStringDisplayable {
         
         MCTextFormatting that = (MCTextFormatting) o;
         
-        return internal == that.internal;
+        return getInternal() == that.getInternal();
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
 }

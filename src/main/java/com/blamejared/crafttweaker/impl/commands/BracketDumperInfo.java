@@ -49,7 +49,6 @@ public class BracketDumperInfo implements CTCommands.CommandCallerPlayer {
         return dumpedFileName;
     }
     
-    @SuppressWarnings("unchecked")
     public Stream<String> getDumpedValuesStream() {
         return methodHandles.stream().flatMap(methodHandle -> {
             try {
