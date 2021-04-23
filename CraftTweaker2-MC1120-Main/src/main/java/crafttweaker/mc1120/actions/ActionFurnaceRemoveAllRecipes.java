@@ -13,6 +13,7 @@ public class ActionFurnaceRemoveAllRecipes implements IActionFurnaceRemoval {
     public void apply() {
         int size = FurnaceRecipes.instance().getSmeltingList().size();
         FurnaceRecipes.instance().getSmeltingList().clear();
+        FurnaceRecipes.instance().experienceList.clear();
         CraftTweakerAPI.logInfo(size + " furnace recipes removed for");
     }
     
