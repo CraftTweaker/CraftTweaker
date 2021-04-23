@@ -136,4 +136,13 @@ public interface IPlayer extends IEntityLivingBase, IUser {
         CraftTweakerAPI.logError("Default method IPlayer#dropItem(IItemStack) is not overwritten in " + getClass() + " please report to the author!");
         return null;
     }
+    @ZenGetter("sneaking")
+    @ZenMethod
+    boolean isSneaking();
+
+    @ZenMethod
+    void setCooldown(IItemStack item, float time)
+
+    @ZenMethod
+    void getCooldown(IItemStack item)
 }

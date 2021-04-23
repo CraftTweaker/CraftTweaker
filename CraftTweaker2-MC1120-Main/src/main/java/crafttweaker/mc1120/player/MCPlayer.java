@@ -162,7 +162,18 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
             CraftTweaker.NETWORK.sendTo(new MessageOpenBrowser(url), (EntityPlayerMP) player);
         }
     }
-    
+    @Override 
+    public boolean isSneaking(){
+        return player.isSneaking();
+    }
+    @Override
+    public void setCooldown(IItemStack item, float time){
+        player.getCooldownTracker().setCooldown(CraftTweakerMC.getItemStack(item).getItem(), time);
+    }
+    @Override
+    public float getCooldown(IItemStack item){
+        return ep.getCooldownTracker().getCooldown(CraftTweakerMC.getItemStack(item).getItem(), 0);
+    }
     @Override
     public void copyToClipboard(String value) {
         if(player instanceof EntityPlayerMP) {
