@@ -34,46 +34,36 @@ public class BasicTradeExposer {
     private static final MethodHandle FOR_SALE_GETTER = MAKE_HANDLE.apply("forSale");
     private static final MethodHandle MAX_TRADES_GETTER = MAKE_HANDLE.apply("maxTrades");
     private static final MethodHandle XP_GETTER = MAKE_HANDLE.apply("xp");
-    private static final MethodHandle PRICE_MULt_GETTER = MAKE_HANDLE.apply("priceMult");
-    
+    private static final MethodHandle PRICE_MULT_GETTER = MAKE_HANDLE.apply("priceMult");
     
     public static ItemStack getPrice(VillagerTrades.ITrade trade) {
-        
-        return (ItemStack) invokeExact(PRICE_GETTER, trade);
+        return invoke(trade, it -> (ItemStack) PRICE_GETTER.invokeExact(it));
     }
     
     public static ItemStack getPrice2(VillagerTrades.ITrade trade) {
-        
-        
-        return (ItemStack) invokeExact(PRICE2_GETTER, trade);
+        return invoke(trade, it -> (ItemStack) PRICE2_GETTER.invokeExact(it));
     }
     
     public static ItemStack getForSale(VillagerTrades.ITrade trade) {
-        
-        return (ItemStack) invokeExact(FOR_SALE_GETTER, trade);
+        return invoke(trade, it -> (ItemStack) FOR_SALE_GETTER.invokeExact(it));
     }
     
     public static int getMaxTrades(VillagerTrades.ITrade trade) {
-        
-        return (int) invokeExact(MAX_TRADES_GETTER, trade);
+        return invoke(trade, it -> (int) MAX_TRADES_GETTER.invokeExact(it));
     }
     
     public static int getXP(VillagerTrades.ITrade trade) {
-        
-        return (int) invokeExact(XP_GETTER, trade);
+        return invoke(trade, it -> (int) XP_GETTER.invokeExact(it));
     }
     
     public static float getPriceMult(VillagerTrades.ITrade trade) {
-        
-        return (float) invokeExact(PRICE_MULt_GETTER, trade);
+        return invoke(trade, it -> (float) PRICE_MULT_GETTER.invokeExact(it));
     }
     
-    
-    private static Object invokeExact(MethodHandle handle, VillagerTrades.ITrade trade) {
-        
+    private static <T> T invoke(final VillagerTrades.ITrade trade, final TradeFunction<T> function) {
         if(trade instanceof BasicTrade) {
             try {
-                return handle.invoke((BasicTrade)trade);
+                return function.x((BasicTrade) trade);
             } catch(Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
@@ -81,4 +71,7 @@ public class BasicTradeExposer {
         throw new IllegalArgumentException(trade.getClass() + " is not of type BasicTrade!");
     }
     
+    private interface TradeFunction<T> {
+        T x(final BasicTrade trade) throws Throwable;
+    }
 }
