@@ -47,13 +47,6 @@ public class ExpandItemStack {
     public static int getMaxItemUseDuration(IItemStack stack) {
         return getInternal(stack).getMaxItemUseDuration();
     }
-    
-    // TODO: Allow passing in Random?
-    @ZenMethod
-    public static boolean attemptDamageItem(IItemStack stack, int amount, @Optional IPlayer player) {
-        EntityPlayer mcplayer = CraftTweakerMC.getPlayer(player);
-        return getInternal(stack).attemptDamageItem(amount, mcplayer != null ? mcplayer.world.rand : new Random(), (mcplayer != null && mcplayer instanceof EntityPlayerMP) ? (EntityPlayerMP) mcplayer : null);
-    }
 
     @ZenGetter("capNBT")
     @ZenMethod
