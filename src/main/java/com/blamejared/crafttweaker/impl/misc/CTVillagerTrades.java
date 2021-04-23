@@ -128,9 +128,15 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof BasicTrade) {
-                boolean saleMatches = new MCItemStackMutable(BasicTradeExposer.getForSale(trade)).matches(forSale);
-                boolean priceMatches = new MCItemStackMutable(BasicTradeExposer.getPrice(trade)).matches(price);
-                boolean price2Matches = new MCItemStackMutable(BasicTradeExposer.getPrice2(trade)).matches(price2);
+                boolean saleMatches = forSale.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
+                if(price.isEmpty() && price2.isEmpty()){
+                    return saleMatches;
+                }
+                boolean priceMatches = price.matches(new MCItemStackMutable(BasicTradeExposer.getPrice(trade)));
+                if(!price.isEmpty() && price2.isEmpty()){
+                    return saleMatches && priceMatches;
+                }
+                boolean price2Matches = price2.matches(new MCItemStackMutable(BasicTradeExposer.getPrice2(trade)));
                 return saleMatches && priceMatches && price2Matches;
             }
             return false;
