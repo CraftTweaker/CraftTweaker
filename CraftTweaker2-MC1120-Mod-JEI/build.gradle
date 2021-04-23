@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://maven.minecraftforge.net/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -22,6 +22,13 @@ minecraft {
     mappings = mappings1120
     useDepAts = true
 }
+
+repositories.each {
+    if (it instanceof MavenArtifactRepository && it.url.toString() == "https://files.minecraftforge.net/maven") {
+        it.url = "https://maven.minecraftforge.net/"
+    }
+}
+
 repositories {
     maven {
         url "https://dvs1.progwml6.com/files/maven"
@@ -32,7 +39,7 @@ dependencies {
     compile(project(':ZenScript'))
     compile(project(':CraftTweaker2-API'))
     compile project(':CraftTweaker2-MC1120-Main')
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.271"
+    deobfCompile "mezz.jei:jei_1.12.2:4.16.1.302"
 }
 
 processResources {

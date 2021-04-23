@@ -19,8 +19,9 @@ public class MCTextComponent implements ITextComponent {
 
     @Override
     public ITextComponent append(ITextComponent text) {
-        this.text.appendSibling(CraftTweakerMC.getITextComponent(text));
-        return CraftTweakerMC.getITextComponent(this.text);
+        net.minecraft.util.text.ITextComponent copy = this.text.createCopy();
+        copy.appendSibling(CraftTweakerMC.getITextComponent(text));
+        return CraftTweakerMC.getITextComponent(copy);
     }
 
     @Override

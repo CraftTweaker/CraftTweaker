@@ -3,7 +3,7 @@ import groovy.json.JsonOutput
 buildscript {
     repositories {
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://maven.minecraftforge.net/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -29,6 +29,14 @@ minecraft {
     runDir = "CraftTweaker2-MC1120-Main/eclipse"
     mappings = mappings1120
 }
+
+// change default maven url of FG2 to the new one.
+repositories.each {
+    if (it instanceof MavenArtifactRepository && it.url.toString() == "https://files.minecraftforge.net/maven") {
+        it.url = "https://maven.minecraftforge.net/"
+    }
+}
+
 repositories {
     maven {
         url "https://dvs1.progwml6.com/files/maven"

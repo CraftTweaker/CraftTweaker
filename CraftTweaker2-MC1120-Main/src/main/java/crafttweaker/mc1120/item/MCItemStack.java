@@ -681,8 +681,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public void damageItem(int amount, IEntity entity) {
-        if(entity.getInternal() instanceof EntityLivingBase)
-            stack.damageItem(amount, (EntityLivingBase) entity.getInternal());
+        CraftTweakerAPI.logWarning("Cannot damage IItemStack, make it mutable with `mutable` first!");
     }
     
     @Override

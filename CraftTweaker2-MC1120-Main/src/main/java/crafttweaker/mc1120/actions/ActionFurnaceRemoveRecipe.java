@@ -39,8 +39,7 @@ public class ActionFurnaceRemoveRecipe implements IActionFurnaceRemoval {
         }
         for(Map.Entry<ItemStack, ItemStack> entry : smeltingMap.entrySet()) {
             FurnaceRecipes.instance().getSmeltingList().remove(entry.getKey(), entry.getValue());
-            List<ItemStack> collect = FurnaceRecipes.instance().experienceList.keySet().stream().filter(itemStack -> output.matches(getIItemStack(itemStack))).collect(Collectors.toList());
-            collect.forEach(FurnaceRecipes.instance().experienceList::remove);
+            FurnaceRecipes.instance().experienceList.keySet().removeIf(itemStack -> output.matches(getIItemStack(itemStack)));
         }
         CraftTweakerAPI.logInfo(smeltingMap.size() + " recipes removed for: " + output);
     }

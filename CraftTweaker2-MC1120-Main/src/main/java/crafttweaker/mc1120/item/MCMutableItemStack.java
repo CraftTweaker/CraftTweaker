@@ -1,15 +1,22 @@
 package crafttweaker.mc1120.item;
 
 import crafttweaker.api.data.IData;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IMutableItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.data.NBTUpdater;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+
+import java.util.Random;
 
 public class MCMutableItemStack extends MCItemStack implements IMutableItemStack {
     public MCMutableItemStack(ItemStack itemStack) {
@@ -26,6 +33,12 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
     @Override
     public void grow(int quality) {
         origin.grow(quality);
+    }
+
+    @Override
+    public boolean attemptDamageItem(int amount, IPlayer player) {
+        EntityPlayer mcplayer = CraftTweakerMC.getPlayer(player);
+        return origin.attemptDamageItem(amount, mcplayer != null ? mcplayer.world.rand : new Random(), (mcplayer instanceof EntityPlayerMP) ? (EntityPlayerMP) mcplayer : null);
     }
 
     @Override
@@ -144,6 +157,12 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
     @Override
     public IItemStack copy() {
         return new MCItemStack(origin.copy());
+    }
+
+    @Override
+    public void damageItem(int amount, IEntity entity) {
+        if(entity.getInternal() instanceof EntityLivingBase)
+            origin.damageItem(amount, (EntityLivingBase) entity.getInternal());
     }
 
     @Override
