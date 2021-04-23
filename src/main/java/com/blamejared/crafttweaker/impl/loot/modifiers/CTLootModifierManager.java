@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
 import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
+import com.blamejared.crafttweaker.api.util.MethodHandleHelper;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRegisterLootModifier;
 import com.blamejared.crafttweaker.impl.actions.loot.ActionRemoveLootModifier;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
@@ -18,9 +19,6 @@ import net.minecraftforge.common.loot.LootModifierManager;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,31 +44,11 @@ import java.util.stream.Collectors;
 public final class CTLootModifierManager {
     public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
 
-    private static final MethodHandle LMM_GETTER;
-    private static final MethodHandle LMM_MAP_GETTER;
-    private static final MethodHandle LMM_MAP_SETTER;
+    private static final MethodHandle LMM_GETTER = MethodHandleHelper.link(ForgeInternalHandler.class, "getLootModifierManager");
+    private static final MethodHandle LMM_MAP_GETTER = MethodHandleHelper.linkGetter(LootModifierManager.class, "registeredLootModifiers");
+    private static final MethodHandle LMM_MAP_SETTER = MethodHandleHelper.linkSetter(LootModifierManager.class, "registeredLootModifiers");
 
     private CTLootModifierManager() {}
-
-    static {
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-
-            final Class<?> forgeInternalHandlerClass = ForgeInternalHandler.class;
-            final Method lmmGetterMethod = forgeInternalHandlerClass.getDeclaredMethod("getLootModifierManager");
-            lmmGetterMethod.setAccessible(true);
-
-            final Class<?> lmmClass = LootModifierManager.class;
-            final Field registeredLootModifiersField = lmmClass.getDeclaredField("registeredLootModifiers");
-            registeredLootModifiersField.setAccessible(true);
-
-            LMM_GETTER = lookup.unreflect(lmmGetterMethod);
-            LMM_MAP_GETTER = lookup.unreflectGetter(registeredLootModifiersField);
-            LMM_MAP_SETTER = lookup.unreflectSetter(registeredLootModifiersField);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Unable to reflect into the loot modifier manager", e);
-        }
-    }
 
     /**
      * Registers a new global loot modifier with the given name.
@@ -213,19 +191,26 @@ public final class CTLootModifierManager {
     @SuppressWarnings("unchecked")
     private Map<ResourceLocation, IGlobalLootModifier> getLmmMap() {
         try {
-            final LootModifierManager lmm = (LootModifierManager) LMM_GETTER.invokeExact();
-            Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) LMM_MAP_GETTER.invokeExact(lmm);
+            final LootModifierManager lmm = MethodHandleHelper.invoke(() -> (LootModifierManager) LMM_GETTER.invokeExact());
+            Map<ResourceLocation, IGlobalLootModifier> map = MethodHandleHelper.invoke(() -> (Map<ResourceLocation, IGlobalLootModifier>) LMM_MAP_GETTER.invokeExact(lmm));
             if (map instanceof ImmutableMap) {
                 map = new HashMap<>(map);
-                LMM_MAP_SETTER.invokeExact(lmm, map); // Let's "mutabilize" the map
+                final Map<ResourceLocation, IGlobalLootModifier> finalMap = map;
+                MethodHandleHelper.invokeVoid(() -> this.setLmmMap(lmm, finalMap)); // Let's "mutabilize" the map
             }
             return map;
         } catch (final IllegalStateException e) {
             // LMM_GETTER.invokeExact() throws ISE if we're on the client and playing multiplayer
             return Collections.emptyMap();
-        } catch (final Throwable e) {
-            throw new RuntimeException(e);
         }
+    }
+    
+    // Note for the dev: this is needed because in expression lambdas, the compiler incorrectly infers the method to
+    // be (Lnet/minecraftforge/common/loot/LootModifierManager;Ljava/util/Map;)Ljava/lang/Object; even if the return
+    // type of the lambda is void. The return value is simply popped. The presence of another method works around the
+    // issue.
+    private void setLmmMap(final LootModifierManager lmm, final Map<ResourceLocation, IGlobalLootModifier> map) throws Throwable {
+        LMM_MAP_SETTER.invokeExact(lmm, map);
     }
 
     private ResourceLocation fromName(final String name) {

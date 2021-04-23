@@ -1,40 +1,22 @@
 package com.blamejared.crafttweaker.api.villagers;
 
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.MethodHandleHelper;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BasicTrade;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
-import java.util.function.Function;
 
 /**
  * Class holding helper methods to expose fields in {@link net.minecraftforge.common.BasicTrade}
  */
 public class BasicTradeExposer {
-    
-    private static final Function<String, MethodHandle> MAKE_HANDLE = s -> {
-        
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            final Class<?> forgeInternalHandlerClass = BasicTrade.class;
-            final Field field = forgeInternalHandlerClass.getDeclaredField(s);
-            field.setAccessible(true);
-            
-            return lookup.unreflectGetter(field);
-        } catch(ReflectiveOperationException e) {
-            throw new RuntimeException("Unable to reflect into Basic Trade to get: " + StringUtils.quoteAndEscape(s));
-        }
-    };
-    
-    private static final MethodHandle PRICE_GETTER = MAKE_HANDLE.apply("price");
-    private static final MethodHandle PRICE2_GETTER = MAKE_HANDLE.apply("price2");
-    private static final MethodHandle FOR_SALE_GETTER = MAKE_HANDLE.apply("forSale");
-    private static final MethodHandle MAX_TRADES_GETTER = MAKE_HANDLE.apply("maxTrades");
-    private static final MethodHandle XP_GETTER = MAKE_HANDLE.apply("xp");
-    private static final MethodHandle PRICE_MULT_GETTER = MAKE_HANDLE.apply("priceMult");
+    private static final MethodHandle PRICE_GETTER = MethodHandleHelper.linkGetter(BasicTrade.class, "price");
+    private static final MethodHandle PRICE2_GETTER = MethodHandleHelper.linkGetter(BasicTrade.class, "price2");
+    private static final MethodHandle FOR_SALE_GETTER = MethodHandleHelper.linkGetter(BasicTrade.class, "forSale");
+    private static final MethodHandle MAX_TRADES_GETTER = MethodHandleHelper.linkGetter(BasicTrade.class, "maxTrades");
+    private static final MethodHandle XP_GETTER = MethodHandleHelper.linkGetter(BasicTrade.class, "xp");
+    private static final MethodHandle PRICE_MULT_GETTER = MethodHandleHelper.linkGetter(BasicTrade.class, "priceMult");
     
     public static ItemStack getPrice(VillagerTrades.ITrade trade) {
         return invoke(trade, it -> (ItemStack) PRICE_GETTER.invokeExact(it));
@@ -62,11 +44,7 @@ public class BasicTradeExposer {
     
     private static <T> T invoke(final VillagerTrades.ITrade trade, final TradeFunction<T> function) {
         if(trade instanceof BasicTrade) {
-            try {
-                return function.x((BasicTrade) trade);
-            } catch(Throwable throwable) {
-                throw new RuntimeException(throwable);
-            }
+            return MethodHandleHelper.invoke(() -> function.x((BasicTrade) trade));
         }
         throw new IllegalArgumentException(trade.getClass() + " is not of type BasicTrade!");
     }
