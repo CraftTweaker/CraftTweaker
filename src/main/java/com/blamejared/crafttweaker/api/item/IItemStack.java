@@ -5,13 +5,10 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
-import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
-import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.item.Item;
@@ -19,9 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ToolType;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.regex.Pattern;
 
 /**
  * This represents an item.
@@ -411,6 +407,11 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     @ZenCodeType.Getter("damage")
     int getDamage();
+
+    @ZenCodeType.Getter("toolTypes")
+    default ToolType[] getToolTypes() {
+        return getInternal().getToolTypes().toArray(new ToolType[0]);
+    }
     
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.

@@ -12,6 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Locale;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.BracketValidators")
@@ -169,6 +170,12 @@ public class BracketValidators {
     @BracketValidator("resource")
     public static boolean validateResourceBracket(String tokens) {
         return ResourceLocation.tryCreate(tokens) != null;
+    }
+    
+    @ZenCodeType.Method
+    @BracketValidator("tooltype")
+    public static boolean validateToolTypeBracket(String tokens) {
+        return tokens.chars().allMatch(c -> ('a' <= c && c <= 'z') || c == '_');
     }
 
     public static boolean validateBracket(String bracketName, String tokens, Function<String, ?> bracketMethod, boolean logError) {

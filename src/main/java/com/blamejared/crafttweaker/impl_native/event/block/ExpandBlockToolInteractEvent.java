@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -37,9 +38,9 @@ public class ExpandBlockToolInteractEvent {
     
     @ZenCodeType.Getter("toolType")
     @ZenCodeType.Method
-    public static String getToolType(BlockEvent.BlockToolInteractEvent internal) {
+    public static ToolType getToolType(BlockEvent.BlockToolInteractEvent internal) {
         
-        return internal.getToolType().getName();
+        return internal.getToolType();
     }
     
     /**
