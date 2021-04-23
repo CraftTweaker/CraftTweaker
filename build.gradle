@@ -78,7 +78,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -92,7 +91,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run_server')
-            arg "-mixin.config=crafttweaker.mixins.json"
             arg "nogui"
 
             // Recommended logging data for a userdev environment
@@ -108,7 +106,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -145,10 +142,6 @@ modTemplate {
         curseId "239197"
         avatarUrl "https://media.forgecdn.net/avatars/142/108/636546700830987709.png"
     }
-}
-
-mixin {
-    add sourceSets.main, "crafttweaker.refmap.json"
 }
 
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
@@ -196,8 +189,7 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "CraftTweaker",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "crafttweaker.mixins.json"
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
