@@ -31,7 +31,7 @@ public final class MethodHandleHelper {
     
     private MethodHandleHelper() {}
     
-    public static MethodHandle link(final Class<?> type, final String methodName, final Class<?>... arguments) {
+    public static MethodHandle linkMethod(final Class<?> type, final String methodName, final Class<?>... arguments) {
         try {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
             final Method target = ObfuscationReflectionHelper.findMethod(type, methodName, arguments);
@@ -47,7 +47,7 @@ public final class MethodHandleHelper {
     public static MethodHandle linkGetter(final Class<?> type, final String fieldName) {
         try {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            final Field target = ObfuscationReflectionHelper.findField(cast(type), fieldName);
+            final Field target = ObfuscationReflectionHelper.findField(castToSuperExplicitly(type), fieldName);
         
             return lookup.unreflectGetter(target);
         } catch (final ObfuscationReflectionHelper.UnableToFindFieldException e) {
@@ -60,7 +60,7 @@ public final class MethodHandleHelper {
     public static MethodHandle linkSetter(final Class<?> type, final String fieldName) {
         try {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            final Field target = ObfuscationReflectionHelper.findField(cast(type), fieldName);
+            final Field target = ObfuscationReflectionHelper.findField(castToSuperExplicitly(type), fieldName);
             
             return lookup.unreflectSetter(target);
         } catch (final ObfuscationReflectionHelper.UnableToFindFieldException e) {
@@ -79,7 +79,7 @@ public final class MethodHandleHelper {
             if (throwable instanceof RuntimeException) {
                 throw (RuntimeException) throwable;
             }
-            throw new RuntimeException("Wrapping", throwable);
+            throw new RuntimeException("Invoked method threw an exception", throwable);
         }
     }
     
@@ -92,12 +92,12 @@ public final class MethodHandleHelper {
             if (throwable instanceof RuntimeException) {
                 throw (RuntimeException) throwable;
             }
-            throw new RuntimeException("Wrapping", throwable);
+            throw new RuntimeException("Invoked method threw an exception", throwable);
         }
     }
     
-    @SuppressWarnings("unchecked")
-    private static <T, U> U cast(final T t) {
-        return (U) t;
+    // Don't ask, this makes the compiler shut up
+    private static <T> Class<? super T> castToSuperExplicitly(final Class<T> t) {
+        return t;
     }
 }

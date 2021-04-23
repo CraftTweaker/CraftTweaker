@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 public final class CTLootModifierManager {
     public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
 
-    private static final MethodHandle LMM_GETTER = MethodHandleHelper.link(ForgeInternalHandler.class, "getLootModifierManager");
+    private static final MethodHandle LMM_GETTER = MethodHandleHelper.linkMethod(ForgeInternalHandler.class, "getLootModifierManager");
     private static final MethodHandle LMM_MAP_GETTER = MethodHandleHelper.linkGetter(LootModifierManager.class, "registeredLootModifiers");
     private static final MethodHandle LMM_MAP_SETTER = MethodHandleHelper.linkSetter(LootModifierManager.class, "registeredLootModifiers");
 

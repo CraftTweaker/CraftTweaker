@@ -44,12 +44,12 @@ public class BasicTradeExposer {
     
     private static <T> T invoke(final VillagerTrades.ITrade trade, final TradeFunction<T> function) {
         if(trade instanceof BasicTrade) {
-            return MethodHandleHelper.invoke(() -> function.x((BasicTrade) trade));
+            return MethodHandleHelper.invoke(() -> function.apply((BasicTrade) trade));
         }
         throw new IllegalArgumentException(trade.getClass() + " is not of type BasicTrade!");
     }
     
     private interface TradeFunction<T> {
-        T x(final BasicTrade trade) throws Throwable;
+        T apply(final BasicTrade trade) throws Throwable;
     }
 }
