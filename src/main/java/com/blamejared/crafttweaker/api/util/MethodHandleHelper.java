@@ -44,10 +44,10 @@ public final class MethodHandleHelper {
         }
     }
     
-    public static <T> MethodHandle linkGetter(final Class<? super T> type, final String fieldName) {
+    public static MethodHandle linkGetter(final Class<?> type, final String fieldName) {
         try {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            final Field target = ObfuscationReflectionHelper.findField(type, fieldName);
+            final Field target = ObfuscationReflectionHelper.findField(cast(type), fieldName);
         
             return lookup.unreflectGetter(target);
         } catch (final ObfuscationReflectionHelper.UnableToFindFieldException e) {
@@ -57,10 +57,10 @@ public final class MethodHandleHelper {
         }
     }
     
-    public static <T> MethodHandle linkSetter(final Class<? super T> type, final String fieldName) {
+    public static MethodHandle linkSetter(final Class<?> type, final String fieldName) {
         try {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            final Field target = ObfuscationReflectionHelper.findField(type, fieldName);
+            final Field target = ObfuscationReflectionHelper.findField(cast(type), fieldName);
             
             return lookup.unreflectSetter(target);
         } catch (final ObfuscationReflectionHelper.UnableToFindFieldException e) {
@@ -94,5 +94,10 @@ public final class MethodHandleHelper {
             }
             throw new RuntimeException("Wrapping", throwable);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T, U> U cast(final T t) {
+        return (U) t;
     }
 }
