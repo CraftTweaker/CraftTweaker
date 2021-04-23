@@ -681,7 +681,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public void damageItem(int amount, IEntity entity) {
-        CraftTweakerAPI.logWarning("The damageItem method actually does nothing on the immutable ItemStack, use `mutable` method to make it mutable first!");
+        CraftTweakerAPI.logWarning("Actually, the immutable ItemStack is not damageable. Use `mutable` method to make it mutable first!");
     }
     
     @Override
