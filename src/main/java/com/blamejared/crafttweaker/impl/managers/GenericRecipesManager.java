@@ -5,13 +5,13 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IIngredient;
-import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveAllGenericRecipes;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByModId;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByOutput;
+import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByRegex;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
@@ -24,6 +24,7 @@ import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class GenericRecipesManager {
     
     
     @ZenCodeGlobals.Global("recipes")
-    public static final GenericRecipesManager recipes = new GenericRecipesManager();
+    public static final GenericRecipesManager RECIPES = new GenericRecipesManager();
     
     /**
      * Add a new recipe based on the given recipe in a valid DataPack JSON format.
@@ -61,8 +62,8 @@ public class GenericRecipesManager {
      * type: "minecraft:smoking",
      * ingredient: <item:minecraft:gold_ore>,
      * result: <item:minecraft:cooked_porkchop>,
-     * experience:0.35 as float,
-     * cookingtime:100
+     * experience: 0.35 as float,
+     * cookingtime: 100
      * }
      */
     @ZenCodeType.Method
@@ -74,11 +75,57 @@ public class GenericRecipesManager {
         if(!recipeObject.has("type")) {
             throw new IllegalArgumentException("Serializer type missing!");
         }
+        if(recipeObject.get("type").getAsString().equals("crafttweaker:scripts")){
+            throw new IllegalArgumentException("Cannot add a recipe to the CraftTweaker Scripts recipe type!");
+        }
         
         final ResourceLocation recipeName = new ResourceLocation(CraftTweaker.MODID, name);
         final IRecipe<?> result = RecipeManager.deserializeRecipe(recipeName, recipeObject);
         final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(result.getType());
         CraftTweakerAPI.apply(new ActionAddRecipe(recipeManagerWrapper, result, null));
+    }
+    
+    @ZenCodeType.Method
+    public WrapperRecipe getRecipeByName(String name) {
+        
+        WrapperRecipe recipe = getRecipeMap().get(new ResourceLocation(name));
+        if(recipe == null) {
+            throw new IllegalArgumentException("No recipe found with name: \"" + name + "\"");
+        }
+        return recipe;
+    }
+    
+    @ZenCodeType.Method
+    public List<WrapperRecipe> getRecipesByOutput(IIngredient output) {
+    
+        return getAllRecipes().stream()
+                .filter(iRecipe -> output.matches(iRecipe.getOutput()))
+                .collect(Collectors.toList());
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("allRecipes")
+    public List<WrapperRecipe> getAllRecipes() {
+        
+        return getAllManagers().stream()
+                .map(IRecipeManager::getAllRecipes)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Returns a map of all known recipes.
+     *
+     * @return A Map of recipe name to recipe of all known recipes.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("recipeMap")
+    public Map<ResourceLocation, WrapperRecipe> getRecipeMap() {
+        
+        return getAllManagers().stream()
+                .map(IRecipeManager::getAllRecipes)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap(WrapperRecipe::getId, Function.identity()));
     }
     
     /**
@@ -111,8 +158,8 @@ public class GenericRecipesManager {
      * @docParam modId "crafttweaker"
      */
     @ZenCodeType.Method
-    public void removeByModId(String modId) {
-        removeByModId(modId, null);
+    public void removeByModid(String modId) {
+        removeByModid(modId, null);
     }
     
     /**
@@ -128,8 +175,13 @@ public class GenericRecipesManager {
      * @docParam exclude (recipeName as string) => recipeName == "white_bed"
      */
     @ZenCodeType.Method
-    public void removeByModId(String modId, IRecipeManager.RecipeFilter exclude) {
+    public void removeByModid(String modId, IRecipeManager.RecipeFilter exclude) {
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByModId(modId, exclude));
+    }
+    
+    @ZenCodeType.Method
+    public void removeByRegex(String regex){
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByRegex(regex));
     }
     
     /**
@@ -150,29 +202,4 @@ public class GenericRecipesManager {
         return new ArrayList<>(RecipeTypeBracketHandler.getManagerInstances());
     }
     
-    /**
-     * Returns a list of all known recipes.
-     * The map's value is a list, since it may be possible that two types have a recipe with the same name.
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("allRecipes")
-    public Map<ResourceLocation, List<WrapperRecipe>> getAllRecipes() {
-        return getAllManagers().stream()
-                .flatMap(manager -> manager.getAllRecipes().stream())
-                .collect(toMergedMap());
-    }
-    
-    private Collector<WrapperRecipe, ?, Map<ResourceLocation, List<WrapperRecipe>>> toMergedMap() {
-        final Function<WrapperRecipe, ResourceLocation> keyMapper = WrapperRecipe::getId;
-        final Function<WrapperRecipe, List<WrapperRecipe>> valueMapper = Collections::singletonList;
-        final BinaryOperator<List<WrapperRecipe>> mergerFunction = this::mergeLists;
-        
-        return Collectors.toMap(keyMapper, valueMapper, mergerFunction);
-    }
-    
-    private List<WrapperRecipe> mergeLists(List<WrapperRecipe> left, List<WrapperRecipe> right) {
-        final List<WrapperRecipe> result = new ArrayList<>(left);
-        result.addAll(right);
-        return result;
-    }
 }
