@@ -41,6 +41,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.ArgumentSerializer;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -91,7 +93,12 @@ public class CTCommands {
     public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
     public static LiteralArgumentBuilder<CommandSource> rootAlternative = Commands.literal("crafttweaker");
     
+    
+    public static void initArgumentTypes(){
+        ArgumentTypes.register("crafttweaker:item_argument", CTItemArgument.class, new ArgumentSerializer<>(() -> CTItemArgument.INSTANCE));
+    }
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
+    
         
         registerCustomCommand(Commands.literal("copy")
                 .then(Commands.argument("toCopy", StringArgumentType.string()).executes(context -> {
@@ -445,7 +452,7 @@ public class CTCommands {
         });
         
         registerCustomCommand(Commands.literal("give")
-                .then(Commands.argument("item", new CTItemArgument())
+                .then(Commands.argument("item", CTItemArgument.INSTANCE)
                         .executes(context -> {
                             ExpandPlayerEntity.give(context.getSource()
                                     .asPlayer(), context.getArgument("item", IItemStack.class));
@@ -687,8 +694,8 @@ public class CTCommands {
         
     }
     
-    private static class CTItemArgument implements ArgumentType<IItemStack> {
-        
+    private static enum CTItemArgument implements ArgumentType<IItemStack> {
+        INSTANCE;
         private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string}})");
         private static final DynamicCommandExceptionType MALFORMED_DATA = new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message));
         private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("invalid string"));

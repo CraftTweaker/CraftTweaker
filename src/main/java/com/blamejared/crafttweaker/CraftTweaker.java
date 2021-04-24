@@ -150,6 +150,8 @@ public class CraftTweaker {
         
         final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon").execute();
         CraftTweakerAPI.loadScripts(setupCommon);
+    
+        CTCommands.initArgumentTypes();
         
         LOG.info("{} has loaded successfully!", NAME);
     }
