@@ -22,7 +22,7 @@ public class FileLogger implements ILogger {
         try {
             this.output = new OutputStreamWriter(new FileOutputStream(logFile), StandardCharsets.UTF_8);
         } catch(FileNotFoundException e) {
-            throw new RuntimeException("Cannot create log file.", e);
+            throw new RuntimeException("Cannot create log file at: " + logFile.getAbsolutePath() + " writeable: " + logFile.canWrite() + " parent writeable: " + logFile.getParentFile().canWrite(), e);
         }
     }
 
