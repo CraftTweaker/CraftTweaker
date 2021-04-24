@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveAll;
+import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByModid;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionRemoveRecipeByOutput;
@@ -139,6 +140,18 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output){
         removeRecipe((IIngredient) output);
+    }
+    
+    /**
+     * Removes all recipes who's input contains the given IItemStack.
+     *
+     * @param input The input IItemStack.
+     *
+     * @docParam input <item:minecraft:ironingot>
+     */
+    @ZenCodeType.Method
+    default void removeRecipeByInput(IItemStack input) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipe(this, iRecipe -> iRecipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(input.getInternal()))));
     }
     
     /**
