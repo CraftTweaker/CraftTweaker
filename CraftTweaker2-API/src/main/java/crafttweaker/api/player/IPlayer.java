@@ -136,21 +136,15 @@ public interface IPlayer extends IEntityLivingBase, IUser {
         CraftTweakerAPI.logError("Default method IPlayer#dropItem(IItemStack) is not overwritten in " + getClass() + " please report to the author!");
         return null;
     }
-    @ZenGetter("sneaking")
-    @ZenMethod
-    boolean isSneaking(){
-        CraftTweakerAPI.logError("Default method IPlayer#isSneaking(bool) is not overwritten in " + getClass() + " please report to the author!");
-        return false;
-    }
 
     @ZenMethod
-    void setCooldown(IItemStack item, float time){
+    default void setCooldown(IItemStack item, int time){
         CraftTweakerAPI.logError("Default method IPlayer#setCooldown(void) is not overwritten in " + getClass() + " please report to the author!");
     }
 
     @ZenMethod
-    float getCooldown(IItemStack item){
+    default float getCooldown(IItemStack item){
         CraftTweakerAPI.logError("Default method IPlayer#getCooldown(float) is not overwritten in " + getClass() + " please report to the author!");
-        return 0.0;
+        return 0.0f;
     }
 }
