@@ -1,20 +1,21 @@
-package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
+package com.blamejared.crafttweaker.impl.actions.recipes.generic;
 
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
 
-public class ActionRemoveFromWholeRegistryByOutput extends AbstractActionRemoveFromWholeRegistry {
+public class ActionRemoveGenericRecipeByOutput extends ActionRemoveGenericRecipeBase {
     
-    private final IItemStack output;
+    private final IIngredient output;
     
-    public ActionRemoveFromWholeRegistryByOutput(IItemStack output) {
+    public ActionRemoveGenericRecipeByOutput(IIngredient output) {
         this.output = output;
     }
     
     @Override
     public String describe() {
-        return "Removing all recipes that return " + output.getCommandString();
+        return "Removing all recipes that output " + output.getCommandString();
     }
     
     @Override

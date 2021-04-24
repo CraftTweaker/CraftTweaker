@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
+package com.blamejared.crafttweaker.impl.actions.recipes.generic;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ActionRemoveFromWholeRegistryAllRecipes extends AbstractActionWholeRegistry {
+public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
     
     @Override
     public void apply() {

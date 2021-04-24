@@ -1,14 +1,14 @@
-package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
+package com.blamejared.crafttweaker.impl.actions.recipes.generic;
 
 import net.minecraft.item.crafting.IRecipe;
 
 import java.util.regex.Pattern;
 
-public class ActionRemoveFromWholeRegistryByRegex extends AbstractActionRemoveFromWholeRegistry {
+public class ActionRemoveGenericRecipeByRegex extends ActionRemoveGenericRecipeBase {
     
     private final Pattern pattern;
     
-    public ActionRemoveFromWholeRegistryByRegex(String regex) {
+    public ActionRemoveGenericRecipeByRegex(String regex) {
         pattern = Pattern.compile(regex);
     }
     

@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
+package com.blamejared.crafttweaker.impl.actions.recipes.generic;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class AbstractActionWholeRegistry implements IRuntimeAction {
+public abstract class ActionWholeRegistryBase implements IRuntimeAction {
     
     private RecipeManager getRecipeManager() {
         return CTCraftingTableManager.recipeManager;

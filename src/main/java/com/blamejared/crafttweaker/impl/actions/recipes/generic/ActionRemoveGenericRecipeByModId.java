@@ -1,15 +1,15 @@
-package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
+package com.blamejared.crafttweaker.impl.actions.recipes.generic;
 
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 
-public class ActionRemoveFromWholeRegistryByModId extends AbstractActionRemoveFromWholeRegistry {
+public class ActionRemoveGenericRecipeByModId extends ActionRemoveGenericRecipeBase {
     
     private final String modId;
     private final IRecipeManager.RecipeFilter exclude;
     
-    public ActionRemoveFromWholeRegistryByModId(String modId, IRecipeManager.RecipeFilter exclude) {
+    public ActionRemoveGenericRecipeByModId(String modId, IRecipeManager.RecipeFilter exclude) {
         this.modId = modId;
         this.exclude = exclude;
     }

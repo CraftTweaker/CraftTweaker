@@ -1,20 +1,20 @@
-package com.blamejared.crafttweaker.impl.actions.recipes.whole_registry;
+package com.blamejared.crafttweaker.impl.actions.recipes.generic;
 
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 
-public class ActionRemoveFromWholeRegistryByName extends AbstractActionRemoveFromWholeRegistry {
+public class ActionRemoveGenericRecipeByName extends ActionRemoveGenericRecipeBase {
     
     private final String name;
     
-    public ActionRemoveFromWholeRegistryByName(String name) {
+    public ActionRemoveGenericRecipeByName(String name) {
         this.name = name;
     }
     
     @Override
     public boolean validate(ILogger logger) {
-        if(ResourceLocation.isResouceNameValid(name)) {
+        if(ResourceLocation.tryCreate(name) !=null){
             return true;
         }
         

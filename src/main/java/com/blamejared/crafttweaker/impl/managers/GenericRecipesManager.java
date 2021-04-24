@@ -4,13 +4,14 @@ import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
-import com.blamejared.crafttweaker.impl.actions.recipes.whole_registry.ActionRemoveFromWholeRegistryAllRecipes;
-import com.blamejared.crafttweaker.impl.actions.recipes.whole_registry.ActionRemoveFromWholeRegistryByModId;
-import com.blamejared.crafttweaker.impl.actions.recipes.whole_registry.ActionRemoveFromWholeRegistryByName;
-import com.blamejared.crafttweaker.impl.actions.recipes.whole_registry.ActionRemoveFromWholeRegistryByOutput;
+import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveAllGenericRecipes;
+import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByModId;
+import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByName;
+import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByOutput;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
@@ -87,8 +88,8 @@ public class GenericRecipesManager {
      * @docParam output <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
-    public void removeRecipes(IItemStack output) {
-        CraftTweakerAPI.apply(new ActionRemoveFromWholeRegistryByOutput(output));
+    public void removeRecipe(IIngredient output) {
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByOutput(output));
     }
     
     /**
@@ -99,7 +100,7 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByName(String name) {
-        CraftTweakerAPI.apply(new ActionRemoveFromWholeRegistryByName(name));
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByName(name));
     }
     
     /**
@@ -128,7 +129,7 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByModId(String modId, IRecipeManager.RecipeFilter exclude) {
-        CraftTweakerAPI.apply(new ActionRemoveFromWholeRegistryByModId(modId, exclude));
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByModId(modId, exclude));
     }
     
     /**
@@ -136,7 +137,7 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeAll() {
-        CraftTweakerAPI.apply(new ActionRemoveFromWholeRegistryAllRecipes());
+        CraftTweakerAPI.apply(new ActionRemoveAllGenericRecipes());
     }
     
     /**
