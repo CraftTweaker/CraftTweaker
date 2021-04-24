@@ -167,12 +167,12 @@ public class MCPlayer extends MCEntityLivingBase implements IPlayer {
         return player.isSneaking();
     }
     @Override
-    public void setCooldown(IItemStack item, float time){
+    public void setCooldown(IItemStack item, int time){
         player.getCooldownTracker().setCooldown(CraftTweakerMC.getItemStack(item).getItem(), time);
     }
     @Override
     public float getCooldown(IItemStack item){
-        return ep.getCooldownTracker().getCooldown(CraftTweakerMC.getItemStack(item).getItem(), 0);
+        return player.getCooldownTracker().getCooldown(CraftTweakerMC.getItemStack(item).getItem(), 0);
     }
     @Override
     public void copyToClipboard(String value) {
