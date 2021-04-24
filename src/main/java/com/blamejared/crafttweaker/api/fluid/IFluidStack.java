@@ -157,4 +157,10 @@ public interface IFluidStack extends CommandStringDisplayable {
     
     FluidStack getImmutableInternal();
     
+    
+    @ZenCodeType.Caster(implicit = true)
+    default CrTFluidIngredient asFluidIngredient(){
+        return new CrTFluidIngredient.FluidStackIngredient(this);
+    }
+    
 }
