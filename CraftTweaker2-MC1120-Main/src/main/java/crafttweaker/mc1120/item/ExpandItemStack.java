@@ -8,21 +8,16 @@ import crafttweaker.api.entity.attribute.IEntityAttributeModifier;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IMutableItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.api.player.IPlayer;
 import crafttweaker.mc1120.data.NBTConverter;
 import crafttweaker.mc1120.data.NBTUpdater;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.HashMap;
-import java.util.Random;
 
 @ZenExpansion("crafttweaker.item.IItemStack")
 @ZenRegister
@@ -46,13 +41,6 @@ public class ExpandItemStack {
     @ZenMethod
     public static int getMaxItemUseDuration(IItemStack stack) {
         return getInternal(stack).getMaxItemUseDuration();
-    }
-    
-    // TODO: Allow passing in Random?
-    @ZenMethod
-    public static boolean attemptDamageItem(IItemStack stack, int amount, @Optional IPlayer player) {
-        EntityPlayer mcplayer = CraftTweakerMC.getPlayer(player);
-        return getInternal(stack).attemptDamageItem(amount, mcplayer != null ? mcplayer.world.rand : new Random(), (mcplayer != null && mcplayer instanceof EntityPlayerMP) ? (EntityPlayerMP) mcplayer : null);
     }
 
     @ZenGetter("capNBT")
