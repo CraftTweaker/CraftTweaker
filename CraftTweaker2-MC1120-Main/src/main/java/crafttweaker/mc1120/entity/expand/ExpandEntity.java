@@ -61,7 +61,7 @@ public class ExpandEntity {
         String teamName = CraftTweakerMC.getTeam(team).getName();
         if (sb.getTeam(teamName) == null)
             sb.createTeam(teamName);
-        
+
         sb.addPlayerToTeam(getUUID(internal), teamName);
     }
 
@@ -146,5 +146,11 @@ public class ExpandEntity {
     @ZenMethod
     public static void setLastPortalDirection(IEntity internal, IFacing teleportDirection) {
         getInternal(internal).teleportDirection = CraftTweakerMC.getFacing(teleportDirection);
+    }
+
+    @ZenGetter("horizontalFacing")
+    @ZenMethod
+    public static IFacing getHorizontalFacing(IEntity internal) {
+        return CraftTweakerMC.getIFacing(getInternal(internal).getHorizontalFacing());
     }
 }
