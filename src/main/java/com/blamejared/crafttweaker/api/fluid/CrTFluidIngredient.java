@@ -27,7 +27,7 @@ public abstract class CrTFluidIngredient implements CommandStringDisplayable {
     public abstract <T> T mapTo(
             Function<FluidStack, T> fluidMapper,
             BiFunction<ITag<Fluid>, Integer, T> tagMapper,
-            Function<List<? extends T>, T> compoundMapper
+            Function<List<T>, T> compoundMapper
     );
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
@@ -52,7 +52,7 @@ public abstract class CrTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<ITag<Fluid>, Integer, T> tagMapper, Function<List<? extends T>, T> compoundMapper) {
+        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<ITag<Fluid>, Integer, T> tagMapper, Function<List<T>, T> compoundMapper) {
             
             return fluidMapper.apply(fluidStack.getImmutableInternal());
         }
@@ -75,7 +75,7 @@ public abstract class CrTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<ITag<Fluid>, Integer, T> tagMapper, Function<List<? extends T>, T> compoundMapper) {
+        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<ITag<Fluid>, Integer, T> tagMapper, Function<List<T>, T> compoundMapper) {
             
             return (T) tagMapper.apply(tag.getTag().getInternalRaw(), tag.getAmount());
         }
@@ -98,7 +98,7 @@ public abstract class CrTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<ITag<Fluid>, Integer, T> tagMapper, Function<List<? extends T>, T> compoundMapper) {
+        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<ITag<Fluid>, Integer, T> tagMapper, Function<List<T>, T> compoundMapper) {
             
             List<T> list = Arrays.stream(elements)
                     .map(element -> element.mapTo(fluidMapper, tagMapper, compoundMapper))
