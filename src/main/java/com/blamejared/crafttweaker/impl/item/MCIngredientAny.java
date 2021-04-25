@@ -11,6 +11,8 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * An IIngredient which matches all items
+ *
+ * @docParam this IngredientAny.getInstance()
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.IngredientAny")
