@@ -2,18 +2,18 @@ package com.blamejared.crafttweaker.impl.recipes.writers.vanilla;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipes.IRecipeWriter;
+import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 
-public class CookingRecipeWriter implements IRecipeWriter {
+public class CookingRecipeHandler implements IRecipeHandler {
     
     private final String name;
     
     
-    public CookingRecipeWriter(String name) {
+    public CookingRecipeHandler(String name) {
         
         this.name = name;
     }

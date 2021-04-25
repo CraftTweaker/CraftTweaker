@@ -28,7 +28,6 @@ import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedConstants;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -154,7 +153,7 @@ public class CraftTweaker {
     
         CTCommands.initArgumentTypes();
         
-        CraftTweakerAPI.initRecipeWriters();
+        CraftTweakerAPI.initRecipeHandlers();
         LOG.info("{} has loaded successfully!", NAME);
     }
     

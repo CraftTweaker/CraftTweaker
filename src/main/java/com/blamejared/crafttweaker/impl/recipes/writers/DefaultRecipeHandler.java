@@ -2,15 +2,15 @@ package com.blamejared.crafttweaker.impl.recipes.writers;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipes.IRecipeWriter;
+import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
 
 import java.util.stream.Collectors;
 
-public class DefaultRecipeWriter implements IRecipeWriter {
+public class DefaultRecipeHandler implements IRecipeHandler {
     
-    public static IRecipeWriter INSTANCE = new DefaultRecipeWriter();
+    public static IRecipeHandler INSTANCE = new DefaultRecipeHandler();
     
     @Override
     public void write(IRecipeManager manager, StringBuilder builder, IRecipe<?> recipe) {

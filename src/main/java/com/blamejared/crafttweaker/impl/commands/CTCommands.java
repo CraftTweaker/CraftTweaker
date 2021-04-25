@@ -20,7 +20,6 @@ import com.blamejared.crafttweaker.impl.loot.CTLootManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
 import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
-import com.blamejared.crafttweaker.impl.recipes.writers.DefaultRecipeWriter;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
@@ -144,9 +143,7 @@ public class CTCommands {
                     }
                     return typeEqual;
                 }).forEach(iRecipe -> {
-                    CraftTweakerAPI.getRecipeWriters()
-                            .getOrDefault(iRecipe.getClass(), DefaultRecipeWriter.INSTANCE)
-                            .write(recipeManager, builder, iRecipe);
+                    builder.append(CraftTweakerAPI.dump(recipeManager, iRecipe));
                     builder.append("\n");
                 });
                 CraftTweakerAPI.logDump(builder.toString());
@@ -192,9 +189,7 @@ public class CTCommands {
                         })
                         .forEach(iRecipe -> {
                             handled.set(true);
-                            CraftTweakerAPI.getRecipeWriters()
-                                    .getOrDefault(iRecipe.getClass(), DefaultRecipeWriter.INSTANCE)
-                                    .write(recipeManager, builder, iRecipe);
+                            builder.append(CraftTweakerAPI.dump(recipeManager, iRecipe));
                             builder.append("\n");
                         });
                 if(handled.get()) {

@@ -1,15 +1,15 @@
-package com.blamejared.crafttweaker.impl.recipes.writers.vanilla;
+package com.blamejared.crafttweaker.impl.recipes.writers.crafttweaker;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipes.IRecipeWriter;
+import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
 
 import java.util.stream.Collectors;
 
-public class ShapelessRecipeWriter implements IRecipeWriter {
+public class CTShapelessRecipeHandler implements IRecipeHandler {
     
     @Override
     public void write(IRecipeManager manager, StringBuilder builder, IRecipe<?> recipe) {
