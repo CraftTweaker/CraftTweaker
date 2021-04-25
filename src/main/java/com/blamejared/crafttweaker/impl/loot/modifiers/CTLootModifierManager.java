@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
  * customized code that leverages the dropping context.
  *
  * For more information, refer to {@link ILootModifier}.
+ *
+ * @docParam this loot.modifiers
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.modifiers.LootModifierManager")

@@ -14,6 +14,8 @@ import org.openzen.zencode.java.ZenCodeType;
  *
  * Other mods may also expand the current possibilities, so check their documentation to see what additional entry
  * points are available.
+ *
+ * @docParam this loot
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.LootManager")
