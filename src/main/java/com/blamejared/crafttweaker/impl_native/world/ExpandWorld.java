@@ -453,6 +453,12 @@ public class ExpandWorld {
             return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(pos1, pos2), predicate);
         }
     }
+
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public static TileEntity getTileEntity(World internal, BlockPos pos) {
+        return internal.getTileEntity(pos);
+    }
     
     /**
      * add an entity to the world, return if the entity is added successfully.
