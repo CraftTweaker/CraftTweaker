@@ -11,6 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.IFluidStack")
 @Document("vanilla/api/fluid/IFluidStack")
@@ -159,8 +163,16 @@ public interface IFluidStack extends CommandStringDisplayable {
     
     
     @ZenCodeType.Caster(implicit = true)
-    default CrTFluidIngredient asFluidIngredient(){
-        return new CrTFluidIngredient.FluidStackIngredient(this);
+    default CTFluidIngredient asFluidIngredient(){
+        return new CTFluidIngredient.FluidStackIngredient(this);
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    default CTFluidIngredient asList(CTFluidIngredient other) {
+        List<CTFluidIngredient> elements = new ArrayList<>();
+        elements.add(asFluidIngredient());
+        elements.add(other);
+        return new CTFluidIngredient.CompoundFluidIngredient(elements);
     }
     
 }
