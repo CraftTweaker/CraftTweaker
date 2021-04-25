@@ -52,7 +52,6 @@ public class GenericRecipesManager {
      * Add a new recipe based on the given recipe in a valid DataPack JSON format.
      *
      * Unlike the addJSONRecipe method in {@link IRecipeManager} you **must** set the type of the recipe within the JSON yourself.
-     * This allows you to explicitly specify a serializer if their name does not match the RecipeType name.
      *
      * @param name The recipe's resource path
      * @param data The recipe in JSON format
@@ -150,7 +149,6 @@ public class GenericRecipesManager {
     
     /**
      * Removes all recipes with this name.
-     * It is possible that there exist more than one recipe with the same name, if they exist in different recipe types.
      *
      * @param name The recipe name to remove
      */
