@@ -76,11 +76,11 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         
     }
     
-    public final static class TagWithAmountFluidIngredient extends CTFluidIngredient {
+    public final static class FluidTagWithAmountIngredient extends CTFluidIngredient {
         
         final MCTagWithAmount<Fluid> tag;
         
-        public TagWithAmountFluidIngredient(MCTagWithAmount<Fluid> tag) {
+        public FluidTagWithAmountIngredient(MCTagWithAmount<Fluid> tag) {
             
             this.tag = tag;
         }

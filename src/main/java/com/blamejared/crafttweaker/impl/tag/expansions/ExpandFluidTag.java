@@ -21,7 +21,7 @@ public class ExpandFluidTag {
     @ZenCodeType.Caster(implicit = true)
     public static CTFluidIngredient asIngredient(MCTag<Fluid> _this) {
         
-        return new CTFluidIngredient.TagWithAmountFluidIngredient(new MCTagWithAmount<>(_this, 1));
+        return new CTFluidIngredient.FluidTagWithAmountIngredient(new MCTagWithAmount<>(_this, 1));
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
