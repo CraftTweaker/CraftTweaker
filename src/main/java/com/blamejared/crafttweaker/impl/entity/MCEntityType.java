@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.impl.entity;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
+import com.blamejared.crafttweaker.api.fluid.CTFluidIngredient;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.entity.Entity;
@@ -11,6 +13,8 @@ import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @ZenRegister
@@ -124,6 +128,19 @@ public class MCEntityType implements CommandStringDisplayable {
     public int hashCode() {
         
         return getInternal().hashCode();
+    }
+    
+    @ZenCodeType.Caster(implicit = true)
+    public CTEntityIngredient asEntityIngredient(){
+        return new CTEntityIngredient.EntityTypeIngredient(this);
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    public CTEntityIngredient asList(CTEntityIngredient other) {
+        List<CTEntityIngredient> elements = new ArrayList<>();
+        elements.add(asEntityIngredient());
+        elements.add(other);
+        return new CTEntityIngredient.CompoundEntityIngredient(elements);
     }
     
 }
