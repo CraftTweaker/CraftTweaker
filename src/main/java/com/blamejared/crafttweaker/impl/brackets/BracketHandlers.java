@@ -275,7 +275,7 @@ public class BracketHandlers {
     }
 
     /**
-     * Gets the entityType based on registry name. Logs an error and return `null` if it can't find the entityType.
+     * Gets the entityType based on registry name. Throws an exception if it can't find the entityType.
      *
      * @param tokens The entityType's resource location
      * @return The found entityType
@@ -425,7 +425,7 @@ public class BracketHandlers {
     }
 
     /**
-     * Gets the villager profession based on registry name. Logs an error and return `null` if it can't find the profession.
+     * Gets the villager profession based on registry name. Throws an exception if it can't find the profession.
      *
      * @param tokens The profession's resource location
      * @return The found profession
