@@ -25,7 +25,7 @@ public class IngredientList extends CompoundIngredient {
     public JsonElement serialize() {
         
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
+        jsonObject.addProperty("type", CraftingHelper.getID(IngredientListSerializer.INSTANCE).toString());
         jsonObject.add("ingredients", super.serialize());
         return jsonObject;
     }
