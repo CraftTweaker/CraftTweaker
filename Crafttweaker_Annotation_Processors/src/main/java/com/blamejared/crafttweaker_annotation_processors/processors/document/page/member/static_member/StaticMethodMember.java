@@ -81,7 +81,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
     private void writeReturnTypeInfo(PrintWriter writer) {
         if(returnTypeInfoPresent()) {
-            writer.printf("Returns: %s%n", returnTypeInfo);
+            writer.printf("Returns: %s  %n", returnTypeInfo);
         }
     }
     
