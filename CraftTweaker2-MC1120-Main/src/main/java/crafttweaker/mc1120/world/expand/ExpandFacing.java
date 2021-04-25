@@ -1,6 +1,9 @@
 package crafttweaker.mc1120.world.expand;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IFacing;
 import crafttweaker.mc1120.world.MCFacing;
 import net.minecraft.util.EnumFacing;
@@ -50,5 +53,10 @@ public class ExpandFacing {
     @ZenMethodStatic
     public static IFacing fromString(String name) {
         return new MCFacing(EnumFacing.valueOf(name));
+    }
+
+    @ZenMethodStatic
+    public static IFacing getDirectionFromEntityLiving(IBlockPos pos, IEntityLivingBase placer) {
+        return new MCFacing(EnumFacing.getDirectionFromEntityLiving(CraftTweakerMC.getBlockPos(pos), CraftTweakerMC.getEntityLivingBase(placer)));
     }
 }
