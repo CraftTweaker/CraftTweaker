@@ -34,6 +34,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -128,11 +129,10 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeMap")
     default Map<ResourceLocation, WrapperRecipe> getRecipeMap() {
-        
-        return getRecipes().values()
-                .stream()
-                .map(WrapperRecipe::new)
-                .collect(Collectors.toMap(WrapperRecipe::getId, Function.identity()));
+    
+        return getRecipes().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> new WrapperRecipe(entry
+                        .getValue())));
     }
     
     /**

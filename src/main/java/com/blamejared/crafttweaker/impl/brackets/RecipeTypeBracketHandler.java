@@ -12,10 +12,20 @@ import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSTokenParser;
 import org.openzen.zenscript.parser.BracketExpressionParser;
-import org.openzen.zenscript.parser.expression.*;
+import org.openzen.zenscript.parser.expression.ParsedCallArguments;
+import org.openzen.zenscript.parser.expression.ParsedExpression;
+import org.openzen.zenscript.parser.expression.ParsedExpressionCall;
+import org.openzen.zenscript.parser.expression.ParsedExpressionCast;
+import org.openzen.zenscript.parser.expression.ParsedExpressionMember;
+import org.openzen.zenscript.parser.expression.ParsedExpressionString;
+import org.openzen.zenscript.parser.expression.ParsedExpressionVariable;
 import org.openzen.zenscript.parser.type.IParsedType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")

@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 
 /**
  * This recipe manager allows you to perform removal actions over all recipe managers.
- * This is also the only place where you can specify the serializer type of an addJSON call directly.
  * You can access this manager by using the `recipes` global keyword.
  *
  * @docParam this recipes
@@ -57,6 +56,7 @@ public class GenericRecipesManager {
      *
      * @param name The recipe's resource path
      * @param data The recipe in JSON format
+     *
      * @docParam name "recipe_name"
      * @docParam data {
      * type: "minecraft:smoking",
@@ -68,20 +68,25 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void addJSONRecipe(String name, IData data) {
+        
         if(!(data instanceof MapData)) {
             throw new IllegalArgumentException("Json recipe's IData should be a MapData!");
         }
-        final JsonObject recipeObject = IRecipeManager.JSON_RECIPE_GSON.fromJson(data.toJsonString(), JsonObject.class);
+        final JsonObject recipeObject = IRecipeManager.JSON_RECIPE_GSON.fromJson(data
+                .toJsonString(), JsonObject.class);
         if(!recipeObject.has("type")) {
             throw new IllegalArgumentException("Serializer type missing!");
         }
-        if(recipeObject.get("type").getAsString().equals("crafttweaker:scripts")){
+        if(recipeObject.get("type")
+                .getAsString()
+                .equals("crafttweaker:scripts")) {
             throw new IllegalArgumentException("Cannot add a recipe to the CraftTweaker Scripts recipe type!");
         }
         
         final ResourceLocation recipeName = new ResourceLocation(CraftTweaker.MODID, name);
         final IRecipe<?> result = RecipeManager.deserializeRecipe(recipeName, recipeObject);
-        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(result.getType());
+        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(result
+                .getType());
         CraftTweakerAPI.apply(new ActionAddRecipe(recipeManagerWrapper, result, null));
     }
     
@@ -97,7 +102,7 @@ public class GenericRecipesManager {
     
     @ZenCodeType.Method
     public List<WrapperRecipe> getRecipesByOutput(IIngredient output) {
-    
+        
         return getAllRecipes().stream()
                 .filter(iRecipe -> output.matches(iRecipe.getOutput()))
                 .collect(Collectors.toList());
@@ -123,19 +128,23 @@ public class GenericRecipesManager {
     public Map<ResourceLocation, WrapperRecipe> getRecipeMap() {
         
         return getAllManagers().stream()
-                .map(IRecipeManager::getAllRecipes)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(WrapperRecipe::getId, Function.identity()));
+                .map(IRecipeManager::getRecipeMap)
+                .flatMap(recipeMap -> recipeMap
+                        .entrySet()
+                        .stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
     
     /**
      * Removes recipes by output
      *
      * @param output The recipe result
+     *
      * @docParam output <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
     public void removeRecipe(IIngredient output) {
+        
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByOutput(output));
     }
     
@@ -147,6 +156,7 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByName(String name) {
+        
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByName(name));
     }
     
@@ -155,10 +165,12 @@ public class GenericRecipesManager {
      * Chooses the recipes based on their full recipe name, not based on output item!
      *
      * @param modId The mod's modId
+     *
      * @docParam modId "crafttweaker"
      */
     @ZenCodeType.Method
     public void removeByModid(String modId) {
+        
         removeByModid(modId, null);
     }
     
@@ -171,16 +183,26 @@ public class GenericRecipesManager {
      *
      * @param modId   The mod's modid
      * @param exclude Function that returns `true` if the recipe should remain in the registry.
+     *
      * @docParam modId "minecraft"
      * @docParam exclude (recipeName as string) => recipeName == "white_bed"
      */
     @ZenCodeType.Method
     public void removeByModid(String modId, IRecipeManager.RecipeFilter exclude) {
+        
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByModId(modId, exclude));
     }
     
+    /**
+     * Remove recipe based on regex
+     *
+     * @param regex regex to match against
+     *
+     * @docParam regex "\\d_\\d"
+     */
     @ZenCodeType.Method
-    public void removeByRegex(String regex){
+    public void removeByRegex(String regex) {
+        
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByRegex(regex));
     }
     
@@ -189,6 +211,7 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeAll() {
+        
         CraftTweakerAPI.apply(new ActionRemoveAllGenericRecipes());
     }
     
@@ -199,6 +222,7 @@ public class GenericRecipesManager {
     @ZenCodeType.Method
     @ZenCodeType.Getter("allManagers")
     public List<IRecipeManager> getAllManagers() {
+        
         return new ArrayList<>(RecipeTypeBracketHandler.getManagerInstances());
     }
     

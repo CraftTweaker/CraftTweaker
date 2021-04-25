@@ -33,19 +33,10 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
     }
     
     private int applyToRegistry(Map<ResourceLocation, IRecipe<?>> registry) {
-        final Set<Map.Entry<ResourceLocation, IRecipe<?>>> entries = registry.entrySet();
-        final Iterator<Map.Entry<ResourceLocation, IRecipe<?>>> iterator = entries.iterator();
-        
-        int numberOfRecipesRemoved = 0;
-        while(iterator.hasNext()) {
-            final IRecipe<?> recipe = iterator.next().getValue();
-            if(shouldRemove(recipe)) {
-                iterator.remove();
-                numberOfRecipesRemoved++;
-            }
-        }
-        
-        return numberOfRecipesRemoved;
+    
+        final int initialSize = registry.size();
+        registry.values().removeIf(this::shouldRemove);
+        return initialSize - registry.size();
     }
     
     protected abstract boolean shouldRemove(IRecipe<?> recipe);
