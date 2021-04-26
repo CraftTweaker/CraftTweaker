@@ -4,6 +4,8 @@ import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.annotations.Preprocessor;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipes.RecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.brackets.ValidatedEscapableBracketParser;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketResolverRegistry;
@@ -13,6 +15,7 @@ import com.blamejared.crafttweaker.impl.commands.BracketDumperInfo;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
 import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistryData;
 import com.google.common.collect.BiMap;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.objectweb.asm.Type;
@@ -33,6 +36,7 @@ public class CraftTweakerRegistry {
     
     private static final BracketResolverRegistry BRACKET_RESOLVER_REGISTRY = new BracketResolverRegistry();
     private static final PreprocessorRegistry PREPROCESSOR_REGISTRY = new PreprocessorRegistry();
+    private static final RecipeHandlerRegistry RECIPE_HANDLER_REGISTRY = new RecipeHandlerRegistry();
     private static final ZenClassRegistry ZEN_CLASS_REGISTRY = new ZenClassRegistry();
     
     /**
@@ -57,6 +61,9 @@ public class CraftTweakerRegistry {
         
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
+        
+        Stream.concat(getAllClassesWith(IRecipeHandler.For.class), getAllClassesWith(IRecipeHandler.For.Container.class))
+                .forEach(RECIPE_HANDLER_REGISTRY::addClass);
     }
     
     private static Class<?> getClassFromType(Type type) {
@@ -219,12 +226,21 @@ public class CraftTweakerRegistry {
     //</editor-fold>
     
     
-    //<editor-fold desc="BracketResolverRegistry Delegates">
-    // #########################################
-    // ### BracketResolverRegistry Delegates ###
-    // #########################################
+    //<editor-fold desc="Preprocessor Delegates">
+    // ##############################
+    // ### Preprocessor Delegates ###
+    // ##############################
     public static List<IPreprocessor> getPreprocessors() {
         return PREPROCESSOR_REGISTRY.getPreprocessors();
+    }
+    //</editor-fold>
+    
+    //<editor-fold desc="Recipe Handler Delegates">
+    // ################################
+    // ### Recipe Handler Delegates ###
+    // ################################
+    public static <T extends IRecipe<?>> IRecipeHandler<T> getHandlerFor(final T recipe) {
+        return RECIPE_HANDLER_REGISTRY.getHandlerFor(recipe);
     }
     //</editor-fold>
 }

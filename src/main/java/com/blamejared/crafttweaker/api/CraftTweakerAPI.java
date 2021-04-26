@@ -8,7 +8,6 @@ import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.mods.MCMods;
-import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
@@ -16,7 +15,6 @@ import com.blamejared.crafttweaker.api.zencode.impl.loaders.ScriptRun;
 import com.blamejared.crafttweaker.impl.game.MCGame;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
-import com.blamejared.crafttweaker.impl.recipes.writers.DefaultRecipeHandler;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.crafting.IRecipe;
@@ -56,8 +54,6 @@ public class CraftTweakerAPI {
     
     public static boolean DEBUG_MODE = false;
     public static boolean NO_BRAND = false;
-    
-    private static final Map<Class<? extends IRecipe<?>>, IRecipeHandler<?>> RECIPE_HANDLERS = new HashMap<>();
     
     /**
      * The last ScriptRun that was executed is regarded as "current" run.
@@ -280,42 +276,8 @@ public class CraftTweakerAPI {
         return "crafttweaker";
     }
     
-    public static void initRecipeHandlers() {
-        // TODO("Move this to annotation discovery")
-        /*
-        if(!getRecipeHandlers().isEmpty()) {
-            throw new IllegalStateException("Recipe Writers have already been initialized!");
-        }
-        
-        getRecipeHandlers().put(BlastingRecipe.class, new CookingRecipeHandler("blastFurnace"));
-        getRecipeHandlers().put(CampfireCookingRecipe.class, new CookingRecipeHandler("campfire"));
-        getRecipeHandlers().put(ShapedRecipe.class, new ShapedRecipeHandler());
-        getRecipeHandlers().put(ShapelessRecipe.class, new ShapelessRecipeHandler());
-        getRecipeHandlers().put(FurnaceRecipe.class, new CookingRecipeHandler("furnace"));
-        getRecipeHandlers().put(SmithingRecipe.class, new SmithingRecipeHandler());
-        getRecipeHandlers().put(SmokingRecipe.class, new CookingRecipeHandler("smoker"));
-        getRecipeHandlers().put(StonecuttingRecipe.class, new StoneCutterRecipeHandler());
-    
-        getRecipeHandlers().put(CTRecipeShaped.class, new CTShapedRecipeHandler());
-        getRecipeHandlers().put(CTRecipeShapeless.class, new CTShapelessRecipeHandler());
-        
-        MinecraftForge.EVENT_BUS.post(new RegisterRecipeWritersEvent());
-         */
-    }
-    
-    public static Map<Class<? extends IRecipe<?>>, IRecipeHandler<?>> getRecipeHandlers() {
-        
-        return RECIPE_HANDLERS;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T extends IRecipe<?>> IRecipeHandler<T> getHandlerFor(final T recipe) {
-        // TODO("Implement better recipe lookup")
-        return (IRecipeHandler<T>) getRecipeHandlers().getOrDefault(recipe.getClass(), DefaultRecipeHandler.INSTANCE);
-    }
-    
     public static <T extends IRecipe<?>> String dump(final IRecipeManager manager, final T recipe) {
         // TODO("Move out of this class")
-        return getHandlerFor(recipe).dumpToCommandString(manager, recipe);
+        return CraftTweakerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
     }
 }

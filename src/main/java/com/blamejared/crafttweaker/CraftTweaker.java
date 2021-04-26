@@ -152,8 +152,6 @@ public class CraftTweaker {
         CraftTweakerAPI.loadScripts(setupCommon);
     
         CTCommands.initArgumentTypes();
-        
-        CraftTweakerAPI.initRecipeHandlers();
         LOG.info("{} has loaded successfully!", NAME);
     }
     
