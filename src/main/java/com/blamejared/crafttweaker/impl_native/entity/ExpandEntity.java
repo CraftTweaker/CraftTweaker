@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import org.openzen.zencode.java.ZenCodeType;
@@ -43,6 +44,11 @@ public class ExpandEntity {
         internal.setAir(air);
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("position")
+    public static BlockPos getPosition(Entity internal){
+        return internal.getPosition();
+    }
     
     @ZenCodeType.Method
     public static boolean isSpectator(Entity internal) {
