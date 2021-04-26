@@ -62,8 +62,7 @@ public class CraftTweakerRegistry {
         ZEN_CLASS_REGISTRY.getImplementationsOf(TagManager.class)
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
         
-        Stream.concat(getAllClassesWith(IRecipeHandler.For.class), getAllClassesWith(IRecipeHandler.For.Container.class))
-                .forEach(RECIPE_HANDLER_REGISTRY::addClass);
+        getAllClassesWith(IRecipeHandler.For.class).distinct().forEach(RECIPE_HANDLER_REGISTRY::addClass);
     }
     
     private static Class<?> getClassFromType(Type type) {

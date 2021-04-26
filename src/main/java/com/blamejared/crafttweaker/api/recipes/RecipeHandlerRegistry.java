@@ -36,15 +36,16 @@ public final class RecipeHandlerRegistry {
     private final Map<Class<? extends IRecipe<?>>, IRecipeHandler<?>> recipeHandlers = new HashMap<>();
     
     public void addClass(final Class<?> clazz) {
-        if (IRecipeHandler.class.isAssignableFrom(clazz)) {
+        if (!IRecipeHandler.class.isAssignableFrom(clazz)) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " does not implement IRecipeHandler");
         }
         if (clazz.isInterface()) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is an interface and cannot be annotated with @IRecipeHandler.For");
         }
+        //noinspection RedundantCast
         Arrays.stream(clazz.getAnnotationsByType(IRecipeHandler.For.class))
                 .map(IRecipeHandler.For::value)
-                .filter(it -> it != IRecipe.class)
+                .filter(it -> (Class<?>) it != IRecipe.class)
                 .forEach(it -> {
                     if (recipeHandlers.containsKey(it)) {
                         CraftTweakerAPI.logWarning(
@@ -79,7 +80,7 @@ public final class RecipeHandlerRegistry {
                 return Optional.of(attempt);
             }
             
-            classes.offer(target.getSuperclass());
+            if (target.getSuperclass() != null) classes.offer(target.getSuperclass());
             Arrays.stream(target.getInterfaces()).forEach(classes::offer);
         }
         
