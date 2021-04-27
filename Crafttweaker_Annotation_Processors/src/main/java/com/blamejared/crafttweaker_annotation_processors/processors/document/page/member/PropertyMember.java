@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentMerger;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import java.io.PrintWriter;
@@ -10,12 +12,14 @@ public class PropertyMember {
     private final String name;
     private final boolean hasGetter;
     private final boolean hasSetter;
+    private final DocumentationComment comment;
     
-    public PropertyMember(String name, AbstractTypeInfo type, boolean hasGetter, boolean hasSetter) {
+    public PropertyMember(String name, AbstractTypeInfo type, boolean hasGetter, boolean hasSetter, DocumentationComment comment) {
         this.hasGetter = hasGetter;
         this.hasSetter = hasSetter;
         this.type = type;
         this.name = name;
+        this.comment = comment;
     }
     
     public static PropertyMember merge(PropertyMember left, PropertyMember right) {
@@ -26,11 +30,14 @@ public class PropertyMember {
         final boolean hasGetter = left.hasGetter || right.hasGetter;
         final boolean hasSetter = left.hasSetter || right.hasSetter;
         
-        return new PropertyMember(left.name, left.type, hasGetter, hasSetter);
+        CommentMerger commentMerger = new CommentMerger();
+        DocumentationComment merged = commentMerger.merge(left.comment, right.comment);
+        
+        return new PropertyMember(left.name, left.type, hasGetter, hasSetter, merged);
     }
     
     public void writeTableRow(PrintWriter writer) {
-        writer.printf("| %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter);
+        writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter, comment.getDescription());
     }
     
     public String getName() {

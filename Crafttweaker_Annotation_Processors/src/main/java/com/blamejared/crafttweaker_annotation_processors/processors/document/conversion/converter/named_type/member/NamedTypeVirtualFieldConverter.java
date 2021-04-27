@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.DocumentedTypeVirtualMembers;
@@ -14,9 +16,11 @@ import javax.lang.model.element.Modifier;
 public class NamedTypeVirtualFieldConverter extends AbstractEnclosedElementConverter<DocumentedTypeVirtualMembers> {
     
     private final TypeConverter typeConverter;
+    private final CommentConverter commentConverter;
     
-    public NamedTypeVirtualFieldConverter(TypeConverter typeConverter) {
+    public NamedTypeVirtualFieldConverter(TypeConverter typeConverter, CommentConverter commentConverter) {
         this.typeConverter = typeConverter;
+        this.commentConverter = commentConverter;
     }
     
     @Override
@@ -35,8 +39,9 @@ public class NamedTypeVirtualFieldConverter extends AbstractEnclosedElementConve
         final AbstractTypeInfo type = convertType(enclosedElement);
         final boolean hasGetter = convertHasGetter();
         final boolean hasSetter = convertHasSetter(enclosedElement);
+        final DocumentationComment description = commentConverter.convertElement(enclosedElement, DocumentationComment.empty());
         
-        return new PropertyMember(name, type, hasGetter, hasSetter);
+        return new PropertyMember(name, type, hasGetter, hasSetter, description);
     }
     
     private String convertName(Element enclosedElement) {

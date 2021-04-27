@@ -69,7 +69,7 @@ public class CommentConverter {
         return convertElement(element, DocumentationComment.empty());
     }
     
-    private DocumentationComment convertElement(Element element, DocumentationComment parent) {
+    public DocumentationComment convertElement(Element element, DocumentationComment parent) {
         DocumentationComment comment = getCommentForElement(element);
         comment = mergeComments(comment, parent);
         

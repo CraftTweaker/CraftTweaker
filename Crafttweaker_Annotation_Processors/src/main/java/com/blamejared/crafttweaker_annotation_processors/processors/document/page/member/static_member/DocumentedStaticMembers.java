@@ -36,8 +36,8 @@ public class DocumentedStaticMembers {
         }
         
         writer.printf("## Properties%n%n");
-        writer.println("| Name | Type | Has Getter | Has Setter |");
-        writer.println("|------|------|------------|------------|");
+        writer.println("| Name | Type | Has Getter | Has Setter | Description |");
+        writer.println("|------|------|------------|------------|-------------|");
         for(PropertyMember value : properties.values()) {
             value.writeTableRow(writer);
         }
