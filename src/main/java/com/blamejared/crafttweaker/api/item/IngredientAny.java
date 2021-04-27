@@ -30,7 +30,7 @@ public class IngredientAny extends Ingredient {
     
     private IngredientAny() {
         
-        super(Stream.of());
+        super(Stream.empty());
     }
     
     @Override
