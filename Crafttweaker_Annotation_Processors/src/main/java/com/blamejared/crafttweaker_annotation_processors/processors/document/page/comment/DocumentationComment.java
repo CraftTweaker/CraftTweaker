@@ -27,6 +27,10 @@ public class DocumentationComment {
         return getOptionalDescription().orElse("No Description Provided");
     }
     
+    public String getMarkdownDescription(){
+        return getDescription().replaceAll("\n", " <br /> ");
+    }
+    
     public boolean hasDescription() {
         return getOptionalDescription().isPresent();
     }

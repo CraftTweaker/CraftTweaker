@@ -91,7 +91,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
     private void writeDescription(PrintWriter writer) {
         if(methodComment.hasDescription()) {
-            writer.println(methodComment.getDescription());
+            writer.println(methodComment.getMarkdownDescription());
             writer.println();
         }
     }

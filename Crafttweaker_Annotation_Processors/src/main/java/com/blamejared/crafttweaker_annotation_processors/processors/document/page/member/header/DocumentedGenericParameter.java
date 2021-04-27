@@ -55,7 +55,7 @@ public class DocumentedGenericParameter implements Comparable<DocumentedGenericP
     }
     
     public String getDescription() {
-        return comment.getDescription();
+        return comment.getMarkdownDescription();
     }
     
     public String getExample(int exampleIndex) {

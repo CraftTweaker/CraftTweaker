@@ -42,7 +42,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     private void writeDescription(PrintWriter writer) {
         if(getComment().hasDescription()) {
-            writer.println(getComment().getDescription());
+            writer.println(getComment().getMarkdownDescription());
             writer.println();
         }
     }
