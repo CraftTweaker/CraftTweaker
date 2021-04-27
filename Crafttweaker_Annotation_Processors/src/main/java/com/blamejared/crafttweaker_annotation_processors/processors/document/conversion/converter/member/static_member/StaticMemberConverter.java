@@ -39,6 +39,7 @@ public class StaticMemberConverter extends MemberConverter<DocumentedStaticMembe
     
     private void addElementConverters() {
         addElementConverter(ElementKind.FIELD, StaticFieldConverter.class);
+        addElementConverter(ElementKind.ENUM_CONSTANT, StaticFieldConverter.class);
         addElementConverter(ElementKind.METHOD, NamedTypeStaticMethodConverter.class);
     }
     

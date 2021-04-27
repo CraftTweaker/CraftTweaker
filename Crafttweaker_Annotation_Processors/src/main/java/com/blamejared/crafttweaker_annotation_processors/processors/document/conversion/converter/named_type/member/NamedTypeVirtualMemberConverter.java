@@ -43,6 +43,7 @@ public class NamedTypeVirtualMemberConverter extends MemberConverter<DocumentedT
     
     private void addFieldConverters(DependencyContainer dependencyContainer) {
         addElementConverter(ElementKind.FIELD, dependencyContainer.getInstanceOfClass(NamedTypeVirtualFieldConverter.class));
+        addElementConverter(ElementKind.ENUM_CONSTANT, dependencyContainer.getInstanceOfClass(NamedTypeVirtualFieldConverter.class));
     }
     
     private void addConstructorConverters(DependencyContainer dependencyContainer) {
