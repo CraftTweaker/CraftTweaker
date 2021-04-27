@@ -41,6 +41,7 @@ public class DocumentedStaticMembers {
         for(PropertyMember value : properties.values()) {
             value.writeTableRow(writer);
         }
+        writer.println();
     }
     
     public void addProperty(PropertyMember propertyMember) {
