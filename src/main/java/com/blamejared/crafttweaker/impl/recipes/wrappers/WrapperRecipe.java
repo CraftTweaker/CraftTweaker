@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.recipes.Replacer;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -66,5 +67,10 @@ public class WrapperRecipe {
     
     public IRecipe<?> getRecipe() {
         return recipe;
+    }
+    
+    @ZenCodeType.Method
+    public void replace(final IIngredient from, final IIngredient to) {
+        Replacer.forRecipes(this).replace(from, to).execute();
     }
 }
