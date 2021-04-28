@@ -30,6 +30,11 @@ public class ActionRemoveRecipeByOutputInput extends ActionRemoveRecipe {
         this.input = input;
         
     }
+    // Left over so mods don't need to recompile against the new version
+    public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IItemStack output, IIngredient input) {
+        
+        this(manager, (IIngredient) output, input);
+    }
     
     @Override
     public boolean validate(ILogger logger) {

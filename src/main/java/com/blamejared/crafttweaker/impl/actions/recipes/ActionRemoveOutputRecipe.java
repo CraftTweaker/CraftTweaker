@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.recipes;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
@@ -18,6 +19,10 @@ public class ActionRemoveOutputRecipe extends ActionRecipeBase {
     public ActionRemoveOutputRecipe(IRecipeManager manager, IIngredient output) {
         super(manager);
         this.output = output;
+    }
+    // Left over so mods don't need to recompile against the new version
+    public ActionRemoveOutputRecipe(IRecipeManager manager, IItemStack output) {
+        this(manager, (IIngredient) output);
     }
     
     @Override
