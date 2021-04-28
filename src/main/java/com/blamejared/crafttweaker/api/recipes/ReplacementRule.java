@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.recipes;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import net.minecraft.item.crafting.Ingredient;
 
 import java.util.Objects;
 
@@ -20,6 +21,22 @@ public final class ReplacementRule {
     
     public IIngredient getTo() {
         return this.to;
+    }
+    
+    public Ingredient getVanillaFrom() {
+        return this.from.asVanillaIngredient();
+    }
+    
+    public Ingredient getVanillaTo() {
+        return this.to.asVanillaIngredient();
+    }
+    
+    public boolean shouldReplace(final IIngredient ingredient) {
+        return this.from.contains(ingredient);
+    }
+    
+    public boolean shouldReplace(final Ingredient ingredient) {
+        return this.shouldReplace(IIngredient.fromIngredient(ingredient));
     }
     
     public String describe() {

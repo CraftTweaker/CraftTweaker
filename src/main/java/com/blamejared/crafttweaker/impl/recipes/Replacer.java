@@ -65,6 +65,7 @@ public final class Replacer {
     @ZenCodeType.Method
     public Replacer replace(final IIngredient from, final IIngredient to) {
         // TODO("Avoid trivial replacement rules -- check if from == to")
+        if (from.contains(to) && to.contains(from)) return this;
         this.rules.add(new ReplacementRule(from, to));
         return this;
     }
