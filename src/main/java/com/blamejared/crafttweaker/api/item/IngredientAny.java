@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -21,21 +22,21 @@ import java.util.stream.Stream;
 public class IngredientAny extends Ingredient {
     
     public static final IngredientAny INSTANCE = new IngredientAny();
-    private static final ItemStack[] ALL_ITEMS = ForgeRegistries.ITEMS.getValues()
+    private static final Lazy<ItemStack[]> ALL_ITEMS = Lazy.concurrentOf(() -> ForgeRegistries.ITEMS.getValues()
             .stream()
             .map(Item::getDefaultInstance)
             .filter(stack -> !stack.isEmpty())
-            .toArray(ItemStack[]::new);
+            .toArray(ItemStack[]::new));
     
     private IngredientAny() {
         
-        super(Stream.of());
+        super(Stream.empty());
     }
     
     @Override
     public ItemStack[] getMatchingStacks() {
         
-        return ALL_ITEMS;
+        return ALL_ITEMS.get();
     }
     
     @Override

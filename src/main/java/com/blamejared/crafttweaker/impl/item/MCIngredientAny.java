@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.IngredientAny;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.common.util.Lazy;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -19,7 +20,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/items/IngredientAny")
 public class MCIngredientAny implements IIngredient {
     private static final MCIngredientAny INSTANCE = new MCIngredientAny();
-    private static final IItemStack[] ALL_ITEMS = CraftTweakerAPI.game.getMCItemStacks().toArray(new IItemStack[0]);
+    private static final Lazy<IItemStack[]> ALL_ITEMS = Lazy.concurrentOf(() -> CraftTweakerAPI.game.getMCItemStacks().toArray(new IItemStack[0]));
 
     private MCIngredientAny() {}
 
@@ -45,6 +46,6 @@ public class MCIngredientAny implements IIngredient {
 
     @Override
     public IItemStack[] getItems() {
-        return ALL_ITEMS;
+        return ALL_ITEMS.get();
     }
 }
