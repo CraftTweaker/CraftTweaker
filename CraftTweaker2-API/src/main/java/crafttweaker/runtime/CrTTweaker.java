@@ -163,6 +163,9 @@ public class CrTTweaker implements ITweaker {
                 continue;
             }
             
+            // update class name generator
+            environmentGlobal.getClassNameGenerator().setPrefix(scriptFile.loaderNamesToString());
+            
             // check for network side
             if(!scriptFile.shouldBeLoadedOn(networkSide)) {
                 CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are on the wrong side of the Network");

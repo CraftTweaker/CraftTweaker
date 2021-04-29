@@ -178,13 +178,23 @@ public class ScriptFile {
         return "{[" + priority + ":" + loaderNamesToString() + "]: " + getEffectiveName() + (networkSide == null ? "" : "[Side: " + networkSide + "]")+ "}";
     }
     
-    private String loaderNamesToString() {
-        String[] names = getLoaderNames();
-        if (names.length == 1) {
-            return names[0];
+    /**
+     * Compliant with the capitalization used in the name class generator
+     */
+    public String loaderNamesToString() {
+        StringBuilder builder = new StringBuilder();
+        for (String name : getLoaderNames()) {
+            builder.append(capitalize(name));
+        }
+        return builder.toString();
+    }
+    
+    private static String capitalize(String in) {
+        if (in == null || in.length() < 1) {
+            return "";
         }
         else {
-            return Arrays.toString(names);
+            return Character.toUpperCase(in.charAt(0)) + in.substring(1);
         }
     }
     
