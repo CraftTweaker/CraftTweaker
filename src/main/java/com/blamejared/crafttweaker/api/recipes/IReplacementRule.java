@@ -1,11 +1,12 @@
 package com.blamejared.crafttweaker.api.recipes;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-public interface IReplacementRule<T> {
-    IReplacementRule<?> EMPTY = new IReplacementRule<Object>() {
+public interface IReplacementRule {
+    IReplacementRule EMPTY = new IReplacementRule() {
         @Override
-        public Optional<Object> getReplacement(final Object initial) {
+        public <T> Optional<T> getReplacement(final T initial, final Class<? super T> type) {
             return Optional.empty();
         }
     
@@ -13,21 +14,14 @@ public interface IReplacementRule<T> {
         public String describe() {
             return "NO-OP";
         }
-    
-        @Override
-        public Class<Object> getTargetedType() {
-            return Object.class;
-        }
     };
     
-    Optional<T> getReplacement(final T initial);
+    @SuppressWarnings("unchecked")
+    static <T, U> Optional<T> withType(final T ingredient, final Class<? super T> type, final Class<? super U> targetedType, final Function<U, Optional<U>> producer) {
+        return targetedType.isAssignableFrom(type)? (Optional<T>) producer.apply((U) ingredient) : Optional.empty();
+    }
+    
+    <T> Optional<T> getReplacement(final T ingredient, final Class<? super T> type);
     
     String describe();
-    
-    Class<T> getTargetedType();
-    
-    @SuppressWarnings("unchecked")
-    default <U> IReplacementRule<U> cast() {
-        return (IReplacementRule<U>) this;
-    }
 }

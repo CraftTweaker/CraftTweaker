@@ -35,7 +35,7 @@ public final class Replacer {
    
     private final Collection<IRecipeManager> targetedManagers;
     private final Collection<? extends IRecipe<?>> targetedRecipes;
-    private final List<IReplacementRule<?>> rules;
+    private final List<IReplacementRule> rules;
     
     private Replacer(final Collection<? extends IRecipe<?>> recipes, final Collection<IRecipeManager> managers) {
         this.targetedManagers = Collections.unmodifiableCollection(managers);
@@ -73,8 +73,8 @@ public final class Replacer {
         );
     }
     
-    @ZenCodeType.Method
-    public <U> Replacer replace(final IReplacementRule<U> rule) {
+    //@ZenCodeType.Method // TODO("Expose replacement rule?")
+    public Replacer replace(final IReplacementRule rule) {
         if (rule == IReplacementRule.EMPTY) return this;
         this.rules.add(rule);
         return this;
@@ -89,7 +89,7 @@ public final class Replacer {
     public void execute() {
         if (this.rules.isEmpty()) return;
         
-        final List<IReplacementRule<?>> rules = Collections.unmodifiableList(this.rules);
+        final List<IReplacementRule> rules = Collections.unmodifiableList(this.rules);
 
         Stream.concat(this.streamManagers(), this.streamRecipes())
                 .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), rules))
@@ -109,7 +109,7 @@ public final class Replacer {
                 .map(recipe -> Pair.of(RecipeTypeBracketHandler.getCustomManager(Registry.RECIPE_TYPE.getKey(recipe.getType())), recipe));
     }
     
-    private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule<?>> rules) {
+    private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule> rules) {
         try {
             final IRecipeHandler<U> handler = CraftTweakerRegistry.getHandlerFor(recipe);
             final Optional<U> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);

@@ -51,15 +51,15 @@ public final class RecipeHandlerRegistry {
                 .map(IRecipeHandler.For::value)
                 .filter(it -> (Class<?>) it != IRecipe.class)
                 .forEach(it -> {
-                    if (recipeHandlers.containsKey(it)) {
+                    if (this.recipeHandlers.containsKey(it)) {
                         CraftTweakerAPI.logWarning(
                                 "Multiple recipe handlers found for the same recipe class %s: attempted registration of %s, using %s",
                                 it.getName(),
                                 clazz.getName(),
-                                recipeHandlers.get(it).getClass().getName()
+                                this.recipeHandlers.get(it).getClass().getName()
                         );
                     } else {
-                        recipeHandlers.put(it, (IRecipeHandler<?>) InstantiationUtil.getOrCreateInstance(clazz));
+                        this.recipeHandlers.put(it, (IRecipeHandler<?>) InstantiationUtil.getOrCreateInstance(clazz));
                     }
                 });
     }
@@ -79,7 +79,7 @@ public final class RecipeHandlerRegistry {
             // Don't check for IRecipe: we don't allow any handlers with that superclass
             if (target == IRecipe.class) continue;
             
-            final IRecipeHandler<?> attempt = recipeHandlers.get(target);
+            final IRecipeHandler<?> attempt = this.recipeHandlers.get(target);
             if (attempt != null) {
                 return Optional.of(attempt);
             }

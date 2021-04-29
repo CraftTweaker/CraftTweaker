@@ -2,11 +2,13 @@ package com.blamejared.crafttweaker.impl.recipes.replacement;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
+import net.minecraft.item.crafting.Ingredient;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class FullIIngredientReplacementRule implements IReplacementRule<IIngredient> {
+public final class FullIIngredientReplacementRule implements IReplacementRule {
     private final IIngredient from;
     private final IIngredient to;
     
@@ -15,8 +17,8 @@ public final class FullIIngredientReplacementRule implements IReplacementRule<II
         this.to = to;
     }
     
-    public static IReplacementRule<IIngredient> create(final IIngredient from, final IIngredient to) {
-        return areTheSame(from, to)? IReplacementRule.EMPTY.cast() : new FullIIngredientReplacementRule(from, to);
+    public static IReplacementRule create(final IIngredient from, final IIngredient to) {
+        return areTheSame(from, to)? IReplacementRule.EMPTY : new FullIIngredientReplacementRule(from, to);
     }
     
     private static boolean areTheSame(final IIngredient a, final IIngredient b) {
@@ -25,18 +27,28 @@ public final class FullIIngredientReplacementRule implements IReplacementRule<II
     }
     
     @Override
-    public Optional<IIngredient> getReplacement(final IIngredient initial) {
-        return areTheSame(this.from, initial)? Optional.of(this.to) : Optional.empty();
+    public <T> Optional<T> getReplacement(final T ingredient, final Class<? super T> type) {
+        return this.chain(
+                IReplacementRule.withType(ingredient, type, IIngredient.class, this::getIIngredientReplacement),
+                IReplacementRule.withType(ingredient, type, Ingredient.class, this::getIngredientReplacement)
+        );
+    }
+    
+    @SafeVarargs
+    private final <T> Optional<T> chain(final Optional<T>... optionals) {
+        return Arrays.stream(optionals).filter(Optional::isPresent).findFirst().orElse(Optional.empty());
+    }
+    
+    private Optional<IIngredient> getIIngredientReplacement(final IIngredient ingredient) {
+        return areTheSame(this.from, ingredient)? Optional.of(this.to) : Optional.empty();
+    }
+    
+    private Optional<Ingredient> getIngredientReplacement(final Ingredient ingredient) {
+        return this.getIIngredientReplacement(IIngredient.fromIngredient(ingredient)).map(IIngredient::asVanillaIngredient);
     }
     
     @Override
     public String describe() {
         return String.format("%s --> %s", this.from.getCommandString(), this.to.getCommandString());
     }
-    
-    @Override
-    public Class<IIngredient> getTargetedType() {
-        return IIngredient.class;
-    }
-    
 }

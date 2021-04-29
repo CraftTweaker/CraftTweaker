@@ -139,14 +139,19 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
         }
     }
     
-    static <U> Optional<U> attemptReplacing(final U ingredient, final List<IReplacementRule<?>> rules) {
+    @SuppressWarnings("unchecked")
+    static <U> Optional<U> attemptReplacing(final U ingredient, final List<IReplacementRule> rules) {
+        // Guaranteed to be safe since the class of an object O is always going to be O.class, which in turn means
+        // that it is valid according to the lower bounded wildcard
+        return attemptReplacing(ingredient, (Class<? super U>) ingredient.getClass(), rules);
+    }
+    
+    static <U> Optional<U> attemptReplacing(final U ingredient, final Class<? super U> type, final List<IReplacementRule> rules) {
         // TODO("Needs testing")
         return rules.stream()
-                .filter(it -> it.getTargetedType().isAssignableFrom(ingredient.getClass()))
-                .map(IReplacementRule::<U>cast)
                 .reduce(
                         Optional.empty(),
-                        (optional, rule) -> rule.getReplacement(optional.orElse(ingredient)),
+                        (optional, rule) -> rule.getReplacement(optional.orElse(ingredient), type),
                         (oldOptional, newOptional) -> newOptional.isPresent()? newOptional : oldOptional
                 );
     }
@@ -201,7 +206,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * @throws ReplacementNotSupportedException If the current handler does not support replacing for the given recipe
      * class.
      */
-    default Optional<T> replaceIngredients(final IRecipeManager manager, final T recipe, final List<IReplacementRule<?>> rules) throws ReplacementNotSupportedException {
+    default Optional<T> replaceIngredients(final IRecipeManager manager, final T recipe, final List<IReplacementRule> rules) throws ReplacementNotSupportedException {
         throw new ReplacementNotSupportedException("Replacement is not supported for this recipe class");
     }
 }

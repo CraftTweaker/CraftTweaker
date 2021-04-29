@@ -13,9 +13,9 @@ public final class ActionReplaceRecipe extends ActionRecipeBase {
     private final ActionRemoveRecipeByName removeRecipe;
     private final ResourceLocation oldName;
     private final ResourceLocation newName;
-    private final List<IReplacementRule<?>> rules;
+    private final List<IReplacementRule> rules;
     
-    public ActionReplaceRecipe(final IRecipeManager manager, final IRecipe<?> oldRecipe, final IRecipe<?> newRecipe, final List<IReplacementRule<?>> rules) {
+    public ActionReplaceRecipe(final IRecipeManager manager, final IRecipe<?> oldRecipe, final IRecipe<?> newRecipe, final List<IReplacementRule> rules) {
         super(manager);
         this.oldName = oldRecipe.getId();
         this.newName = newRecipe.getId();
