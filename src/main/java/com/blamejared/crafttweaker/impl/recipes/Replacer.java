@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionReplaceRecipe;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.impl.recipes.replacement.FullIIngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.datafixers.util.Pair;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +48,7 @@ public final class Replacer {
         if (recipes.length <= 0) {
             throw new IllegalArgumentException("Unable to create a replacer without any targeted recipes");
         }
-        return new Replacer(Arrays.stream(recipes).map(WrapperRecipe::getRecipe).collect(Collectors.toList()), Collections.emptyList());
+        return new Replacer(Arrays.stream(recipes).map(WrapperRecipe::getRecipe).collect(Collectors.toSet()), Collections.emptyList());
     }
     
     @ZenCodeType.Method
@@ -54,12 +56,21 @@ public final class Replacer {
         if (managers.length <= 0) {
             throw new IllegalArgumentException("Unable to create a replacer without any targeted recipe types");
         }
-        return new Replacer(Collections.emptyList(), Arrays.asList(managers));
+        return new Replacer(Collections.emptyList(), new HashSet<>(Arrays.asList(managers)));
     }
     
     @ZenCodeType.Method
     public static Replacer forAllTypes() {
-        return new Replacer(Collections.emptyList(), RecipeTypeBracketHandler.getManagerInstances());
+        return forAllExcluding();
+    }
+    
+    @ZenCodeType.Method
+    public static Replacer forAllExcluding(final IRecipeManager... managers) {
+        final List<IRecipeManager> managerList = Arrays.asList(managers);
+        return new Replacer(
+                Collections.emptyList(),
+                RecipeTypeBracketHandler.getManagerInstances().stream().filter(manager -> !managerList.contains(manager)).collect(Collectors.toSet())
+        );
     }
     
     @ZenCodeType.Method
@@ -70,11 +81,8 @@ public final class Replacer {
     }
     
     @ZenCodeType.Method
-    public Replacer replace(final IIngredient from, final IIngredient to) {
-        // TODO("Avoid trivial replacement rules -- check if from == to")
-        if (from.contains(to) && to.contains(from)) return this;
-        //this.rules.add(new ReplacementRule(from, to));
-        return this;
+    public Replacer replaceFully(final IIngredient from, final IIngredient to) {
+        return this.replace(FullIIngredientReplacementRule.create(from, to));
     }
     
     @ZenCodeType.Method

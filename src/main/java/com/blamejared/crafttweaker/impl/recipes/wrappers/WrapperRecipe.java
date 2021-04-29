@@ -71,6 +71,7 @@ public class WrapperRecipe {
     
     @ZenCodeType.Method
     public void replace(final IIngredient from, final IIngredient to) {
-        Replacer.forRecipes(this).replace(from, to).execute();
+        // TODO("")
+        Replacer.forRecipes(this).replaceFully(from, to).execute();
     }
 }
