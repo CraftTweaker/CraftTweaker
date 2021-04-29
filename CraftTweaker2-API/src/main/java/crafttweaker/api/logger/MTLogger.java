@@ -78,7 +78,7 @@ public class MTLogger implements ILogger {
             logger.logError(message, exception);
         }
         
-        String message2 = "\u00a7cERROR: " + message;
+        String message2 = "\u00a7cERROR: " + getMessageToSendPlayer(message, exception);
         if(players.isEmpty()) {
             unprocessed.add(new ErrorMessage(message2, false));
         } else {
@@ -113,6 +113,12 @@ public class MTLogger implements ILogger {
     @Override
     public void setLogDisabled(boolean logDisabled) {
         this.isDefaultDisabled = logDisabled;
+    }
+
+    public String getMessageToSendPlayer(String message, Throwable exception) {
+        if (exception == null) return message;
+        if (message == null) return String.valueOf(exception);
+        return message + ", caused by " + exception;
     }
 
     private static class ErrorMessage {
