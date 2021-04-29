@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @IRecipeHandler.For(CTRecipeShapeless.class)
@@ -19,8 +20,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
                 "craftingTable.addShapeless(%s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
                 new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
-                recipe.getIngredients().stream()
-                        .map(IIngredient::fromIngredient)
+                Arrays.stream(recipe.getCtIngredients())
                         .map(IIngredient::getCommandString)
                         .collect(Collectors.joining(", ", "[", "]"))
         );

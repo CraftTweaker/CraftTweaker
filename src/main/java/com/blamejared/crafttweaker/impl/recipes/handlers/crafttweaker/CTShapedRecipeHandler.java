@@ -9,8 +9,8 @@ import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @IRecipeHandler.For(CTRecipeShaped.class)
 public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShaped> {
@@ -23,10 +23,8 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
                 "craftingTable.addShaped(%s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
                 new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
-                IntStream.range(0, recipe.getRecipeHeight())
-                        .mapToObj(y -> IntStream.range(0, recipe.getRecipeWidth())
-                                .mapToObj(x -> ingredients.get(y * recipe.getRecipeWidth() + x))
-                                .map(IIngredient::fromIngredient)
+                Arrays.stream(recipe.getCtIngredients())
+                        .map(row -> Arrays.stream(row)
                                 .map(IIngredient::getCommandString)
                                 .collect(Collectors.joining(", ", "[", "]")))
                         .collect(Collectors.joining(", ", "[", "]"))
