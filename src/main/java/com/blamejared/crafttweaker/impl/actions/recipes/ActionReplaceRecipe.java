@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.recipes;
 
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipes.ReplacementRule;
+import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 
@@ -13,9 +13,9 @@ public final class ActionReplaceRecipe extends ActionRecipeBase {
     private final ActionRemoveRecipeByName removeRecipe;
     private final ResourceLocation oldName;
     private final ResourceLocation newName;
-    private final List<ReplacementRule> rules;
+    private final List<IReplacementRule<?>> rules;
     
-    public ActionReplaceRecipe(final IRecipeManager manager, final IRecipe<?> oldRecipe, final IRecipe<?> newRecipe, final List<ReplacementRule> rules) {
+    public ActionReplaceRecipe(final IRecipeManager manager, final IRecipe<?> oldRecipe, final IRecipe<?> newRecipe, final List<IReplacementRule<?>> rules) {
         super(manager);
         this.oldName = oldRecipe.getId();
         this.newName = newRecipe.getId();
@@ -37,7 +37,7 @@ public final class ActionReplaceRecipe extends ActionRecipeBase {
                 this.getManager().getBracketResourceLocation(),
                 this.oldName,
                 this.oldName.equals(this.newName)? "" : String.format(", renaming it to \"%s\",", this.newName),
-                this.rules.stream().map(ReplacementRule::describe).collect(Collectors.joining(", ", "{", "}"))
+                this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}"))
         );
     }
     
