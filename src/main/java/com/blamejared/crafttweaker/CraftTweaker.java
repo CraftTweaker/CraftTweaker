@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.advancements.CTAdvancementManager;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.zencode.brackets.CTRegisterBEPEvent;
@@ -250,6 +251,9 @@ public class CraftTweaker {
                 recipeManager.recipes = new HashMap<>(recipeManager.recipes);
                 recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
                 CTCraftingTableManager.recipeManager = recipeManager;
+    
+                CTAdvancementManager.manager = event.getDataPackRegistries().getAdvancementManager();
+                
                 CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().execute());
                 List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
                 scriptFiles.stream()

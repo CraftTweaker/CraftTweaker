@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.advancements.CTAdvancementManager;
 import com.blamejared.crafttweaker.api.annotations.BracketResolver;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
@@ -15,6 +16,7 @@ import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
 import com.blamejared.crafttweaker.impl_native.util.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -501,5 +503,32 @@ public class BracketHandlers {
     @BracketResolver("tooltype")
     public static ToolType getToolType(String tokens) {
         return ToolType.get(tokens);
+    }
+    
+    
+    /**
+     * Gets an Advancement based on the tokens.
+     * Throws an error if it can't get the advancement
+     *
+     * @param tokens The advancement's resource location
+     *
+     * @return The found advancement
+     *
+     * @docParam tokens "minecraft:story/mine_stone"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("advancement")
+    public static Advancement getAdvancement(String tokens) {
+    
+        final int length = tokens.split(":").length;
+        if(length != 2) {
+            throw new IllegalArgumentException("Could not get advancement with name: <advancement:" + tokens + ">! Syntax is <advancement:modid:advancementName>");
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        Advancement advancement = CTAdvancementManager.manager.getAdvancement(resourceLocation);
+        if(advancement == null){
+            throw new IllegalArgumentException("Could not get Advancement <advancement: " + advancement + ">");
+        }
+        return advancement;
     }
 }
