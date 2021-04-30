@@ -157,11 +157,14 @@ public class CrTTweaker implements ITweaker {
             final String loaderName = loader.getMainName();
             
             
-            if(!loader.canExecute(scriptFile.getLoaderName())) {
+            if(!loader.canExecute(scriptFile.getLoaderNames())) {
                 if(!isSyntaxCommand)
                     CraftTweakerAPI.logDefault(getTweakerDescriptor(loaderName) + ": Skipping file " + scriptFile + " as we are currently loading with a different loader");
                 continue;
             }
+            
+            // update class name generator
+            environmentGlobal.getClassNameGenerator().setPrefix(scriptFile.loaderNamesToString());
             
             // check for network side
             if(!scriptFile.shouldBeLoadedOn(networkSide)) {

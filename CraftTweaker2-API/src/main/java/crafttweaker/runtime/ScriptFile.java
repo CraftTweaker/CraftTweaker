@@ -16,8 +16,11 @@ public class ScriptFile {
     /** Priority which can be assigned to script, within the same priority the load order is affected by filename*/
     private int priority = 0;
     
-    /** Loader name gets provided so that it can only load specifc scripts, not all of them*/
-    private String loaderName = "crafttweaker";
+    /** In case no loaders are provided, default to crafttweaker loader*/
+    private static final String[] LOADER_NAMES_DEFAULT = {"crafttweaker"};
+    
+    /** Loader names get provided so that it can only load specific scripts, not all of them*/
+    private String[] loaderNames = LOADER_NAMES_DEFAULT;
     
     private boolean isExecutionBlocked = false;
     private boolean isParsingBlocked = false;
@@ -102,15 +105,30 @@ public class ScriptFile {
         this.priority = priority;
     }
     
-    /**
-     * Change the loader name to change whether it should be loaded or not
-     */
-    public String getLoaderName() {
-        return loaderName;
+    public String[] getLoaderNames() {
+        if (loaderNames.length == 0) {
+            return LOADER_NAMES_DEFAULT;
+        }
+        else {
+            return loaderNames;
+        }
     }
     
+    /**
+     * Change the loader names to change whether it should be loaded or not
+     */
+    public void setLoaderNames(String... loaderNames) {
+        this.loaderNames = loaderNames;
+    }
+    
+    @Deprecated
+    public String getLoaderName() {
+        return getLoaderNames()[0];
+    }
+    
+    @Deprecated
     public void setLoaderName(String loaderName) {
-        this.loaderName = loaderName;
+        loaderNames = new String[] {loaderName};
     }
     
     /**
@@ -157,7 +175,27 @@ public class ScriptFile {
     
     @Override
     public String toString() {
-        return "{[" + priority + ":" + loaderName + "]: " + getEffectiveName() + (networkSide == null ? "" : "[Side: " + networkSide + "]")+ "}";
+        return "{[" + priority + ":" + loaderNamesToString() + "]: " + getEffectiveName() + (networkSide == null ? "" : "[Side: " + networkSide + "]")+ "}";
+    }
+    
+    /**
+     * Compliant with the capitalization used in the name class generator
+     */
+    public String loaderNamesToString() {
+        StringBuilder builder = new StringBuilder();
+        for (String name : getLoaderNames()) {
+            builder.append(capitalize(name));
+        }
+        return builder.toString();
+    }
+    
+    private static String capitalize(String in) {
+        if (in == null || in.length() < 1) {
+            return "";
+        }
+        else {
+            return Character.toUpperCase(in.charAt(0)) + in.substring(1);
+        }
     }
     
     /**
