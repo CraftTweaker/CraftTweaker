@@ -179,20 +179,9 @@ public class ScriptFile {
     }
     
     /**
-     * Compliant with the lower-case names in the original toString method
-     */
-    private String loaderNamesToString() {
-        StringBuilder builder = new StringBuilder();
-        for (String name : getLoaderNames()) {
-            builder.append('|').append(name);
-        }
-        return builder.substring(1);
-    }
-    
-    /**
      * Compliant with the capitalization used in the name class generator
      */
-    public String loaderNamesConcatCapitalized() {
+    public String loaderNamesToString() {
         StringBuilder builder = new StringBuilder();
         for (String name : getLoaderNames()) {
             builder.append(capitalize(name));
