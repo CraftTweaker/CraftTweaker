@@ -164,7 +164,7 @@ public class CrTTweaker implements ITweaker {
             }
             
             // update class name generator
-            environmentGlobal.getClassNameGenerator().setPrefix(scriptFile.loaderNamesToString());
+            environmentGlobal.getClassNameGenerator().setPrefix(scriptFile.loaderNamesConcatCapitalized());
             
             // check for network side
             if(!scriptFile.shouldBeLoadedOn(networkSide)) {
