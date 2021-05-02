@@ -7,6 +7,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.block.material.PushReaction;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -64,7 +65,9 @@ public class ExpandMaterial {
      * Indicate if the material is opaque
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("opaque")
     public static boolean isOpaque(Material internal) {
+        
         return internal.isOpaque();
     }
     
@@ -74,6 +77,7 @@ public class ExpandMaterial {
     @ZenCodeType.Method
     @ZenCodeType.Getter("color")
     public static MaterialColor getColor(Material internal) {
+        
         return internal.getColor();
     }
     
@@ -82,7 +86,9 @@ public class ExpandMaterial {
      * Returns true if the block is a considered solid. This is true by default.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("solid")
     public static boolean isSolid(Material internal) {
+        
         return internal.isSolid();
     }
     
@@ -90,7 +96,9 @@ public class ExpandMaterial {
      * Returns if the block can burn or not.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("flammable")
     public static boolean isFlammable(Material internal) {
+        
         return internal.isFlammable();
     }
     
@@ -98,7 +106,9 @@ public class ExpandMaterial {
      * Returns if blocks of these materials are liquids.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("liquid")
     public static boolean isLiquid(Material internal) {
+        
         return internal.isLiquid();
     }
     
@@ -106,7 +116,9 @@ public class ExpandMaterial {
      * Returns whether the material can be replaced by other blocks when placed - eg snow, vines and tall grass.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("replaceable")
     public static boolean isReplaceable(Material internal) {
+        
         return internal.isReplaceable();
     }
     
@@ -114,12 +126,33 @@ public class ExpandMaterial {
      * Returns if this material is considered solid or not
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("blocksMovement")
     public static boolean blocksMovement(Material internal) {
+        
         return internal.blocksMovement();
     }
     
+    /**
+     * Gets this Material's {@link PushReaction}.
+     *
+     * @return The {@link PushReaction} of this Material.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("pushReaction")
+    public static PushReaction getPushReaction(Material internal) {
+        
+        return internal.getPushReaction();
+    }
+    
+    /**
+     * Gets the bracket syntax for this Material
+     *
+     * @return The {@code <blockmaterial>} Bracket Syntax for this material
+     */
+    @ZenCodeType.Method
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Material internal) {
+        
         final BiMap<Material, String> inverse = hardcodedMaterials.inverse();
         final String name = inverse.getOrDefault(internal, "UNKNOWN");
         return "<blockmaterial:" + name + ">";
@@ -127,6 +160,8 @@ public class ExpandMaterial {
     }
     
     public static Material tryGet(String tokens) {
+        
         return hardcodedMaterials.get(tokens.toUpperCase());
     }
+    
 }
