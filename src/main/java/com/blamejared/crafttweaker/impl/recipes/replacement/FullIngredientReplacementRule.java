@@ -8,17 +8,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class FullIIngredientReplacementRule implements IReplacementRule {
+public final class FullIngredientReplacementRule implements IReplacementRule {
     private final IIngredient from;
     private final IIngredient to;
     
-    private FullIIngredientReplacementRule(final IIngredient from, final IIngredient to) {
+    private FullIngredientReplacementRule(final IIngredient from, final IIngredient to) {
         this.from = from;
         this.to = to;
     }
     
     public static IReplacementRule create(final IIngredient from, final IIngredient to) {
-        return areTheSame(from, to)? IReplacementRule.EMPTY : new FullIIngredientReplacementRule(from, to);
+        return areTheSame(from, to)? IReplacementRule.EMPTY : new FullIngredientReplacementRule(from, to);
     }
     
     private static boolean areTheSame(final IIngredient a, final IIngredient b) {
@@ -28,15 +28,10 @@ public final class FullIIngredientReplacementRule implements IReplacementRule {
     
     @Override
     public <T> Optional<T> getReplacement(final T ingredient, final Class<? super T> type) {
-        return this.chain(
+        return IReplacementRule.chain(
                 IReplacementRule.withType(ingredient, type, IIngredient.class, this::getIIngredientReplacement),
                 IReplacementRule.withType(ingredient, type, Ingredient.class, this::getIngredientReplacement)
         );
-    }
-    
-    @SafeVarargs
-    private final <T> Optional<T> chain(final Optional<T>... optionals) {
-        return Arrays.stream(optionals).filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
     
     private Optional<IIngredient> getIIngredientReplacement(final IIngredient ingredient) {
@@ -49,6 +44,6 @@ public final class FullIIngredientReplacementRule implements IReplacementRule {
     
     @Override
     public String describe() {
-        return String.format("%s --> %s", this.from.getCommandString(), this.to.getCommandString());
+        return String.format("Replacing fully %s --> %s", this.from.getCommandString(), this.to.getCommandString());
     }
 }

@@ -4,12 +4,15 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionReplaceRecipe;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
-import com.blamejared.crafttweaker.impl.recipes.replacement.FullIIngredientReplacementRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.FullIngredientReplacementRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.IngredientReplacementRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.StackTargetingReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.datafixers.util.Pair;
@@ -73,16 +76,19 @@ public final class Replacer {
         );
     }
     
-    //@ZenCodeType.Method // TODO("Expose replacement rule?")
-    public Replacer replace(final IReplacementRule rule) {
-        if (rule == IReplacementRule.EMPTY) return this;
-        this.rules.add(rule);
-        return this;
+    @ZenCodeType.Method
+    public Replacer replace(final IItemStack from, final IItemStack to) {
+        return this.addReplacementRule(StackTargetingReplacementRule.create(from, to));
+    }
+    
+    @ZenCodeType.Method
+    public Replacer replace(final IIngredient from, final IItemStack to) {
+        return this.addReplacementRule(IngredientReplacementRule.create(from, to));
     }
     
     @ZenCodeType.Method
     public Replacer replaceFully(final IIngredient from, final IIngredient to) {
-        return this.replace(FullIIngredientReplacementRule.create(from, to));
+        return this.addReplacementRule(FullIngredientReplacementRule.create(from, to));
     }
     
     @ZenCodeType.Method
@@ -96,6 +102,12 @@ public final class Replacer {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(ActionReplaceRecipe::apply);
+    }
+    
+    private Replacer addReplacementRule(final IReplacementRule rule) {
+        if (rule == IReplacementRule.EMPTY) return this;
+        this.rules.add(rule);
+        return this;
     }
     
     private Stream<Pair<IRecipeManager, IRecipe<?>>> streamManagers() {
