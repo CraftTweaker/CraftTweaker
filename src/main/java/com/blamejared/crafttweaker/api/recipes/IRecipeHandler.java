@@ -140,33 +140,6 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
     }
     
     /**
-     * Attempts replacing the ingredient given as an argument according to the specified {@link IReplacementRule}s.
-     *
-     * <p>The rules are applied one after the other in the same order as they are given in the {@code rules} list.</p>
-     *
-     * <p>The result of each rule application is considered as the new ingredient, which will be passed to the upcoming
-     * rule. Effectively, this creates a chain of calls in the form of {@code ...(rule3(rule2(rule1(ingredient))))...}
-     * which ensures that all rules always act on the most up-to-date representation of the current ingredient.</p>
-     *
-     * @param ingredient The ingredient that should undergo replacement.
-     * @param rules A series of {@link IReplacementRule}s in the order they should be applied.
-     * @param <U> The type of the ingredient that should undergo replacement. No restrictions are placed on the type of
-     *            the ingredient.
-     * @return An {@link Optional} holding the replaced ingredient, if any replacements have been carried out. If no
-     * replacement rule affected the current ingredient, the return value should be {@link Optional#empty()}. It is
-     * customary, though not required, that the value wrapped by the optional is a completely different object from
-     * {@code ingredient} (i.e. {@code ingredient != result.get()}).
-     *
-     * @see #attemptReplacing(Object, Class, List)
-     */
-    @SuppressWarnings("unchecked")
-    static <U> Optional<U> attemptReplacing(final U ingredient, final List<IReplacementRule> rules) {
-        // Guaranteed to be safe since the class of an object O is always going to be O.class, which in turn means
-        // that it is valid according to the lower bounded wildcard
-        return attemptReplacing(ingredient, (Class<? super U>) ingredient.getClass(), rules);
-    }
-    
-    /**
      * Attempts replacing the ingredient given as an argument according to the specified {@link IReplacementRule}s and
      * type.
      *
@@ -176,16 +149,9 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * rule. Effectively, this creates a chain of calls in the form of {@code ...(rule3(rule2(rule1(ingredient))))...}
      * which ensures that all rules always act on the most up-to-date representation of the current ingredient.</p>
      *
-     * <p>The value of {@code type} represents the type of the of the ingredient that the {@link IReplacementRule}s
-     * should know about. By default, this type should match the class of {@code ingredient} (i.e
-     * {@code type == ingredient.getClass()}), but a user may want to explicitly specify a super-type to avoid or
-     * promote certain replacement rules from having effect. Nevertheless, this is discouraged as a matter of
-     * compatibility and the {@link #attemptReplacing(Object, List) two parameter version} should be preferred
-     * instead.</p>
-     * 
-     * @apiNote {@link IReplacementRule}s are free to consider the {@code type} given as the actual type of 
-     * {@code ingredient}. For this reason, partial type safety is lost in this method. It is up to the user to ensure
-     * that no invalid casts are performed on the result of this method.
+     * <p>The value of {@code type} represents the class type of the ingredient. Its value should be the most general
+     * class type possible that the recipe can accept (e.g., a recipe that can accept any form of ingredient would
+     * specify either {@code IIngredient} or {@code Ingredient} as the value for {@code type}.</p>
      *
      * @param ingredient The ingredient that should undergo replacement.
      * @param type The actual class type of the ingredient, or one of its superclasses, as determined by the client.
@@ -196,10 +162,8 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * replacement rule affected the current ingredient, the return value should be {@link Optional#empty()}. It is
      * customary, though not required, that the value wrapped by the optional is a completely different object from
      * {@code ingredient} (i.e. {@code ingredient != result.get()}).
-     * 
-     * @see #attemptReplacing(Object, List) 
      */
-    static <U> Optional<U> attemptReplacing(final U ingredient, final Class<? super U> type, final List<IReplacementRule> rules) {
+    static <U> Optional<U> attemptReplacing(final U ingredient, final Class<U> type, final List<IReplacementRule> rules) {
         // TODO("Needs testing")
         return rules.stream()
                 .reduce(

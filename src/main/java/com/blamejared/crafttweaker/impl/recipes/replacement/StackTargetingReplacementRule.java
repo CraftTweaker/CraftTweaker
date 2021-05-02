@@ -23,7 +23,7 @@ public final class StackTargetingReplacementRule implements IReplacementRule {
     }
     
     @Override
-    public <T> Optional<T> getReplacement(final T ingredient, final Class<? super T> type) {
+    public <T> Optional<T> getReplacement(final T ingredient, final Class<T> type) {
         return IReplacementRule.chain(
                 IReplacementRule.withType(ingredient, type, IIngredient.class, this::getIIngredientReplacement),
                 IReplacementRule.withType(ingredient, type, Ingredient.class, this::getIngredientReplacement)

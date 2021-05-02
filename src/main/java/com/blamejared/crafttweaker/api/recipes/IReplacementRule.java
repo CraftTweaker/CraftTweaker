@@ -7,7 +7,7 @@ import java.util.function.Function;
 public interface IReplacementRule {
     IReplacementRule EMPTY = new IReplacementRule() {
         @Override
-        public <T> Optional<T> getReplacement(final T initial, final Class<? super T> type) {
+        public <T> Optional<T> getReplacement(final T initial, final Class<T> type) {
             return Optional.empty();
         }
     
@@ -22,12 +22,12 @@ public interface IReplacementRule {
         return Arrays.stream(optionals).filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
     
-    @SuppressWarnings("unchecked")
-    static <T, U> Optional<T> withType(final T ingredient, final Class<? super T> type, final Class<? super U> targetedType, final Function<U, Optional<U>> producer) {
-        return targetedType.isAssignableFrom(type)? (Optional<T>) producer.apply((U) ingredient) : Optional.empty();
+    static <T, U> Optional<T> withType(final T ingredient, final Class<T> type, final Class<U> targetedType, final Function<U, Optional<U>> producer) {
+        // Those casts are effectively no-ops
+        return targetedType == type? producer.apply(targetedType.cast(ingredient)).map(type::cast) : Optional.empty();
     }
     
-    <T> Optional<T> getReplacement(final T ingredient, final Class<? super T> type);
+    <T> Optional<T> getReplacement(final T ingredient, final Class<T> type);
     
     String describe();
 }

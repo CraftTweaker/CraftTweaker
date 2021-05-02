@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.StonecuttingRecipe;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutti
     
     @Override
     public Optional<StonecuttingRecipe> replaceIngredients(final IRecipeManager manager, final StonecuttingRecipe recipe, final List<IReplacementRule> rules) {
-        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), rules)
+        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, rules)
                 .map(input -> new StonecuttingRecipe(recipe.getId(), recipe.getGroup(), input, recipe.getRecipeOutput()));
     }
     
