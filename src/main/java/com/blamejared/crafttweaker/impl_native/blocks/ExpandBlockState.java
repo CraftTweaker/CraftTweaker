@@ -8,7 +8,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.Property;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -246,6 +251,100 @@ public class ExpandBlockState {
     public static int getHarvestLevel(BlockState internal) {
         
         return internal.getHarvestLevel();
+    }
+    
+    /**
+     * Gets the slipperiness of the BlockState at the given location for the given entity (if one is given)
+     *
+     * @param world  A world object.
+     * @param pos    The position to check at.
+     * @param entity The entity to work with.
+     *
+     * @return The slipperiness of the BlockState at the given BlockPos for the Entity.
+     *
+     * @docParam world world
+     * @docParam pos new Blockpos(0,0,0);
+     * @docParam entity entity
+     */
+    @ZenCodeType.Method
+    public static float getSlipperiness(BlockState internal, World world, BlockPos pos, @ZenCodeType.Optional Entity entity) {
+        
+        return internal.getSlipperiness(world, pos, entity);
+    }
+    
+    /**
+     * Gets the light value of the BlockState at the given position.
+     *
+     * @param world A world Object.
+     * @param pos   The position to check the light value of.
+     *
+     * @return The light value of the BlockState at the position.
+     *
+     * @docParam world world
+     * @docParam pos new BlockPos(1,2,3)
+     */
+    @ZenCodeType.Method
+    public static int getLightValue(BlockState internal, World world, BlockPos pos) {
+        
+        return internal.getLightValue(world, pos);
+    }
+    
+    /**
+     * Checks if a Living Entity can use this block to climb like a ladder.
+     *
+     * @param world  A world object.
+     * @param pos    The position to check at.
+     * @param entity The entity that wants to climb the block.
+     *
+     * @return True if the entity can climb the block. False otherwise.
+     *
+     * @docParam world world
+     * @docParam pos new BlockPos(1,2,3)
+     * @docParam entity entity
+     */
+    @ZenCodeType.Method
+    public static boolean isLadder(BlockState internal, World world, BlockPos pos, LivingEntity entity) {
+        
+        return internal.isLadder(world, pos, entity);
+    }
+    
+    
+    /**
+     * Checks whether the player can harvest the BlockState.
+     *
+     * @param world  A world object.
+     * @param pos    The position to check at.
+     * @param player The player that is trying to harvest the block.
+     *
+     * @return True if the player can harvest the block. False otherwise.
+     *
+     * @docParam world world
+     * @docParam pos new BlockPos(1,2,3)
+     * @docParam player player
+     */
+    @ZenCodeType.Method
+    public static boolean canHarvestBlock(BlockState internal, World world, BlockPos pos, PlayerEntity player) {
+        
+        return internal.canHarvestBlock(world, pos, player);
+    }
+    
+    /**
+     * Determines if the block can be used to sleep.
+     *
+     * @param world   A world object.
+     * @param pos     The position to check at.
+     * @param sleeper The Living Entity that is trying to sleep.
+     *
+     * @return True if the block allows sleeping.
+     *
+     * @docParam world world
+     * @docParam pos new BlockPos(1,2,3)
+     * @docParam sleeper entity
+     */
+    @ZenCodeType.Method
+    public static boolean isBed(BlockState internal, World world, BlockPos pos, @ZenCodeType.Optional LivingEntity sleeper) {
+        
+        return internal.isBed(world, pos, sleeper);
     }
     
     @ZenCodeType.Caster
