@@ -13,15 +13,13 @@ public final class ActionReplaceRecipe extends ActionRecipeBase {
     private final ActionRemoveRecipeByName removeRecipe;
     private final ResourceLocation oldName;
     private final ResourceLocation newName;
-    private final List<IReplacementRule> rules;
     
-    public ActionReplaceRecipe(final IRecipeManager manager, final IRecipe<?> oldRecipe, final IRecipe<?> newRecipe, final List<IReplacementRule> rules) {
+    public ActionReplaceRecipe(final IRecipeManager manager, final IRecipe<?> oldRecipe, final IRecipe<?> newRecipe) {
         super(manager);
         this.oldName = oldRecipe.getId();
         this.newName = newRecipe.getId();
         this.removeRecipe = new ActionRemoveRecipeByName(manager, this.oldName);
         this.addRecipe = new ActionAddRecipe(manager, newRecipe);
-        this.rules = rules;
     }
     
     @Override
@@ -33,11 +31,10 @@ public final class ActionReplaceRecipe extends ActionRecipeBase {
     @Override
     public String describe() {
         return String.format(
-                "Replacing \"%s\" recipe with name \"%s\"%s due to replacement rules %s",
+                "- Replacing \"%s\" recipe with name \"%s\"%s",
                 this.getManager().getBracketResourceLocation(),
                 this.oldName,
-                this.oldName.equals(this.newName)? "" : String.format(", renaming it to \"%s\",", this.newName),
-                this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}"))
+                this.oldName.equals(this.newName)? "" : String.format(", renaming it to \"%s\"", this.newName)
         );
     }
     

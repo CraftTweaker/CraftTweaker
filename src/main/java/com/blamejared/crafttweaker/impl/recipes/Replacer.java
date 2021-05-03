@@ -2,9 +2,11 @@ package com.blamejared.crafttweaker.impl.recipes;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
@@ -18,6 +20,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -28,6 +31,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,7 +39,60 @@ import java.util.stream.Stream;
 @ZenCodeType.Name("crafttweaker.api.recipes.Replacer")
 @Document("vanilla/api/recipes/Replacer")
 public final class Replacer {
-   
+    private static final class ReplacerAction implements IRuntimeAction {
+        private final Collection<IRecipeManager> managers;
+        private final Collection<? extends IRecipe<?>> recipes;
+        private final List<IReplacementRule> rules;
+        private final Function<List<IReplacementRule>, Stream<Optional<ActionReplaceRecipe>>> actionStream;
+        
+        private ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe,
+                               final List<IReplacementRule> rules, final Function<List<IReplacementRule>, Stream<Optional<ActionReplaceRecipe>>> actionStream) {
+            this.managers = managers;
+            this.recipes = recipe;
+            this.rules = rules;
+            this.actionStream = actionStream;
+        }
+        
+        @Override
+        public void apply() {
+            this.actionStream.apply(this.rules)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(CraftTweakerAPI::apply);
+            CraftTweakerAPI.logInfo("Batch replacement completed");
+        }
+        
+        @Override
+        public String describe() {
+            return String.format(
+                    "Batching replacement for %s%s%s according to replacement rules %s",
+                    this.managers.isEmpty()? "" : this.managers.stream()
+                            .map(IRecipeManager::getCommandString)
+                            .collect(Collectors.joining(", ", "managers {", "}")),
+                    !this.managers.isEmpty() && !this.recipes.isEmpty()? " and " : "",
+                    this.recipes.isEmpty()? "" : this.recipes.stream()
+                            .map(IRecipe::getId)
+                            .map(ResourceLocation::toString)
+                            .collect(Collectors.joining(", ", "recipes {", "}")),
+                    this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}"))
+            );
+        }
+        
+        @Override
+        public boolean validate(final ILogger logger) {
+            if (this.recipes.isEmpty() && this.managers.isEmpty()) {
+                logger.error("Invalid replacer action: no targeted recipes nor managers");
+                return false;
+            }
+            if (this.rules.isEmpty()) {
+                logger.error("Invalid replacer action: no rules available");
+                return false;
+            }
+            return true;
+        }
+    
+    }
+    
     private final Collection<IRecipeManager> targetedManagers;
     private final Collection<? extends IRecipe<?>> targetedRecipes;
     private final List<IReplacementRule> rules;
@@ -94,20 +151,18 @@ public final class Replacer {
     @ZenCodeType.Method
     public void execute() {
         if (this.rules.isEmpty()) return;
-        
-        final List<IReplacementRule> rules = Collections.unmodifiableList(this.rules);
-
-        Stream.concat(this.streamManagers(), this.streamRecipes())
-                .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), rules))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(ActionReplaceRecipe::apply);
+        CraftTweakerAPI.apply(new ReplacerAction(this.targetedManagers, this.targetedRecipes, Collections.unmodifiableList(this.rules), this::execute));
     }
     
     private Replacer addReplacementRule(final IReplacementRule rule) {
         if (rule == IReplacementRule.EMPTY) return this;
         this.rules.add(rule);
         return this;
+    }
+    
+    private Stream<Optional<ActionReplaceRecipe>> execute(final List<IReplacementRule> rules) {
+        return Stream.concat(this.streamManagers(), this.streamRecipes())
+                .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), rules));
     }
     
     private Stream<Pair<IRecipeManager, IRecipe<?>>> streamManagers() {
@@ -127,7 +182,7 @@ public final class Replacer {
             final Optional<U> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
             
             if (newRecipeMaybe.isPresent()) {
-                return Optional.of(new ActionReplaceRecipe(manager, recipe, newRecipeMaybe.get(), rules));
+                return Optional.of(new ActionReplaceRecipe(manager, recipe, newRecipeMaybe.get()));
             }
         } catch (final IRecipeHandler.ReplacementNotSupportedException e) {
             // TODO("Warning maybe?")
