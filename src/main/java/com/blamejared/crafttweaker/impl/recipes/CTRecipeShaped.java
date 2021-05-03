@@ -132,7 +132,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
                 stacks[rowIndex][columnIndex] = new MCItemStack(inv.getStackInSlot(slotIndex)).setAmount(1);
             }
         }
-        return function.process(this.output, stacks).getInternal().copy();
+        return function.process(this.output, stacks).getImmutableInternal();
     }
     
     @Override

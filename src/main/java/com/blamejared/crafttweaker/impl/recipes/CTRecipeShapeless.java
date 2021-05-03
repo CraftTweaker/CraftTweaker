@@ -79,7 +79,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         
         forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack.setAmount(1));
         
-        return this.function.process(this.output, stacks).getInternal();
+        return this.function.process(this.output, stacks).getImmutableInternal();
     }
     
     
