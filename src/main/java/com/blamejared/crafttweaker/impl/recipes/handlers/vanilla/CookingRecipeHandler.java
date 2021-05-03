@@ -48,7 +48,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                 LOOKUP.get(recipe.getType()).getFirst(),
                 StringUtils.quoteAndEscape(recipe.getId()),
                 new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
-                IIngredient.fromIngredient(recipe.getIngredients().get(0)),
+                IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString(),
                 recipe.getExperience(),
                 recipe.getCookTime()
         );

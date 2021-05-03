@@ -11,15 +11,15 @@ import java.util.Optional;
 
 public final class StackTargetingReplacementRule implements IReplacementRule {
     private final IItemStack from;
-    private final IItemStack to;
+    private final IIngredient to;
     
-    private StackTargetingReplacementRule(final IItemStack from, final IItemStack to) {
+    private StackTargetingReplacementRule(final IItemStack from, final IIngredient to) {
         this.from = from.copy();
-        this.to = to.copy();
+        this.to = to;
     }
     
-    public static IReplacementRule create(final IItemStack from, final IItemStack to) {
-        return from.matches(to)? IReplacementRule.EMPTY : new StackTargetingReplacementRule(from, to);
+    public static IReplacementRule create(final IItemStack from, final IIngredient to) {
+        return to instanceof IItemStack && from.matches((IItemStack) to)? IReplacementRule.EMPTY : new StackTargetingReplacementRule(from, to);
     }
     
     @Override
@@ -32,9 +32,9 @@ public final class StackTargetingReplacementRule implements IReplacementRule {
     
     private Optional<IIngredient> getIIngredientReplacement(final IIngredient ingredient) {
         final IItemStack[] oldItems = ingredient.getItems();
-        final IItemStack[] newItems = Arrays.stream(oldItems)
+        final IIngredient[] newItems = Arrays.stream(oldItems)
                 .map(this::getStackReplacement)
-                .toArray(IItemStack[]::new);
+                .toArray(IIngredient[]::new);
         
         return Arrays.equals(oldItems, newItems)? Optional.empty() : Optional.of(new MCIngredientList(newItems));
     }
@@ -43,7 +43,7 @@ public final class StackTargetingReplacementRule implements IReplacementRule {
         return this.getIIngredientReplacement(IIngredient.fromIngredient(ingredient)).map(IIngredient::asVanillaIngredient);
     }
     
-    private IItemStack getStackReplacement(final IItemStack original) {
+    private IIngredient getStackReplacement(final IItemStack original) {
         return this.from.matches(original)? this.to : original;
     }
     

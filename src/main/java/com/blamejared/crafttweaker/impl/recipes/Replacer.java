@@ -64,11 +64,11 @@ public final class Replacer {
     
     @ZenCodeType.Method
     public static Replacer forAllTypes() {
-        return forAllExcluding();
+        return forAllTypesExcluding();
     }
     
     @ZenCodeType.Method
-    public static Replacer forAllExcluding(final IRecipeManager... managers) {
+    public static Replacer forAllTypesExcluding(final IRecipeManager... managers) {
         final List<IRecipeManager> managerList = Arrays.asList(managers);
         return new Replacer(
                 Collections.emptyList(),
@@ -77,12 +77,12 @@ public final class Replacer {
     }
     
     @ZenCodeType.Method
-    public Replacer replace(final IItemStack from, final IItemStack to) {
+    public Replacer replace(final IItemStack from, final IIngredient to) {
         return this.addReplacementRule(StackTargetingReplacementRule.create(from, to));
     }
     
     @ZenCodeType.Method
-    public Replacer replace(final IIngredient from, final IItemStack to) {
+    public Replacer replace(final IIngredient from, final IIngredient to) {
         return this.addReplacementRule(IngredientReplacementRule.create(from, to));
     }
     
