@@ -39,8 +39,9 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     
     @Override
     public Optional<ShapedRecipe> replaceIngredients(final IRecipeManager manager, final ShapedRecipe recipe, final List<IReplacementRule> rules) {
-        return ReplacementHandlerHelper.replaceIngredients(
+        return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
+                Ingredient.class,
                 rules,
                 newIngredients -> new ShapedRecipe(recipe.getId(), recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), newIngredients, recipe.getRecipeOutput())
         );

@@ -37,8 +37,9 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
     
     @Override
     public Optional<CTRecipeShaped> replaceIngredients(final IRecipeManager manager, final CTRecipeShaped recipe, final List<IReplacementRule> rules) {
-        return ReplacementHandlerHelper.replaceIIngredients(
+        return ReplacementHandlerHelper.replaceIngredientArray(
                 this.flatten(recipe.getCtIngredients(), recipe.getRecipeWidth(), recipe.getRecipeHeight()),
+                IIngredient.class,
                 rules,
                 newIngredients -> new CTRecipeShaped(
                         recipe.getId().getPath(),

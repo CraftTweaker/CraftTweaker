@@ -1,13 +1,14 @@
 package com.blamejared.crafttweaker.api.recipes;
 
-import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Util;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -22,7 +23,7 @@ public final class ReplacementHandlerHelper {
             this.delegate.defaultReturnValue(null);
         }
         
-        T get(final int index, final NonNullList<T> original) {
+        T get(final int index, final List<T> original) {
             final T replaced = this.delegate.get(index);
             return replaced == null? original.get(index) : replaced;
         }
@@ -52,16 +53,21 @@ public final class ReplacementHandlerHelper {
     
     private ReplacementHandlerHelper() {}
     
-    public static <T extends IRecipe<?>> Optional<T> replaceIngredients(final NonNullList<Ingredient> originalIngredients, final List<IReplacementRule> rules,
-                                                                        final Function<NonNullList<Ingredient>, T> factory) {
-        final ReplacementMap<Ingredient> replacements = IntStream.range(0, originalIngredients.size())
-                .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients.get(i), Ingredient.class, rules)))
+    public static <T extends IRecipe<?>, U> Optional<T> replaceNonNullIngredientList(final NonNullList<U> originalIngredients, final Class<U> ingredientClass,
+                                                                                     final List<IReplacementRule> rules, final Function<NonNullList<U>, T> factory) {
+        return replaceIngredientList(originalIngredients, ingredientClass, rules, list -> factory.apply(Util.make(NonNullList.create(), it -> it.addAll(list))));
+    }
+    
+    public static <T extends IRecipe<?>, U> Optional<T> replaceIngredientList(final List<U> originalIngredients, final Class<U> ingredientClass,
+                                                                              final List<IReplacementRule> rules, final Function<List<U>, T> factory) {
+        final ReplacementMap<U> replacements = IntStream.range(0, originalIngredients.size())
+                .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients.get(i), ingredientClass, rules)))
                 .filter(it -> it.getSecond().isPresent())
                 .collect(ReplacementMap::new, ReplacementMap::put, ReplacementMap::merge);
     
         if (replacements.isEmpty()) return Optional.empty();
     
-        final NonNullList<Ingredient> newIngredients = NonNullList.withSize(originalIngredients.size(), Ingredient.EMPTY);
+        final List<U> newIngredients = Arrays.asList(arrayOf(ingredientClass, originalIngredients.size()));
     
         for (int i = 0, size = originalIngredients.size(); i < size; ++i) {
             newIngredients.set(i, replacements.get(i, originalIngredients));
@@ -70,21 +76,26 @@ public final class ReplacementHandlerHelper {
         return Optional.of(factory.apply(newIngredients));
     }
     
-    public static <T extends IRecipe<?>> Optional<T> replaceIIngredients(final IIngredient[] originalIngredients, final List<IReplacementRule> rules,
-                                                                         final Function<IIngredient[], T> factory) {
-        final ReplacementMap<IIngredient> replacements = IntStream.range(0, originalIngredients.length)
-                .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients[i], IIngredient.class, rules)))
+    public static <T extends IRecipe<?>, U> Optional<T> replaceIngredientArray(final U[] originalIngredients, final Class<U> ingredientClass,
+                                                                               final List<IReplacementRule> rules, final Function<U[], T> factory) {
+        final ReplacementMap<U> replacements = IntStream.range(0, originalIngredients.length)
+                .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients[i], ingredientClass, rules)))
                 .filter(it -> it.getSecond().isPresent())
                 .collect(ReplacementMap::new, ReplacementMap::put, ReplacementMap::merge);
         
         if (replacements.isEmpty()) return Optional.empty();
         
-        final IIngredient[] newIngredients = new IIngredient[originalIngredients.length];
+        final U[] newIngredients = arrayOf(ingredientClass, originalIngredients.length);
         
         for (int i = 0, size = originalIngredients.length; i < size; ++i) {
             newIngredients[i] = replacements.get(i, originalIngredients);
         }
         
         return Optional.of(factory.apply(newIngredients));
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T> T[] arrayOf(final Class<T> componentType, final int length) {
+        return (T[]) Array.newInstance(componentType, length);
     }
 }
