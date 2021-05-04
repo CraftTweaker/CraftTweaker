@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 
 /**
  * Represents a handler for a specific type of recipe indicated by the generic parameter.
@@ -164,12 +165,12 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * {@code ingredient} (i.e. {@code ingredient != result.get()}).
      */
     static <U> Optional<U> attemptReplacing(final U ingredient, final Class<U> type, final List<IReplacementRule> rules) {
-        // TODO("Needs testing")
+        final BinaryOperator<Optional<U>> combiner = (oldOpt, newOpt) -> newOpt.isPresent()? newOpt : oldOpt;
         return rules.stream()
                 .reduce(
                         Optional.empty(),
-                        (optional, rule) -> rule.getReplacement(optional.orElse(ingredient), type),
-                        (oldOptional, newOptional) -> newOptional.isPresent()? newOptional : oldOptional
+                        (optional, rule) -> combiner.apply(optional, rule.getReplacement(optional.orElse(ingredient), type)),
+                        combiner
                 );
     }
     

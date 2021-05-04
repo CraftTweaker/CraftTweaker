@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class ActionReplaceRecipe extends ActionRecipeBase {
+public class ActionReplaceRecipe extends ActionRecipeBase {
     private final ActionAddRecipe addRecipe;
     private final ActionRemoveRecipeByName removeRecipe;
     private final ResourceLocation oldName;
