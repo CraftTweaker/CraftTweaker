@@ -144,7 +144,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 2 Emeralds for an Arrow.
+     * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 20 Wheat and getting an Emerald from the villager.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -168,7 +168,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for Emeralds. An example being, giving a villager an Arrow and getting 2 Emeralds.
+     * Removes a Villager trade for Items for Emeralds. An example being, giving a villager an Emerald and getting 4 Pumpkin Pies from the villager.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -192,7 +192,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Emeralds and Items for Items. An example being, giving a villager an Emerald and Gravel and getting 16 Flint.
+     * Removes a Villager trade for Emeralds and Items for Items. An example being, giving a villager 6 uncooked Cod and an Emerald and getting back 6 Cooked Cod.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -222,7 +222,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for an Item with a PotionEffect. An example being, giving a villager an Arrow and getting a Tipped Arrow with night vision.
+     * Removes a Villager trade for Items for an Item with a PotionEffect. An example being, giving a villager an Arrow and an Emerald and getting a Tipped Arrow with night vision.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -248,7 +248,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for Dyed leather armor. An example being, giving a villager a diamond and getting a Blue Dyed Leather chestplate.
+     * Removes a Villager trade for Items for Dyed leather armor. An example being, giving a villager Leather Leggings and 3 Emeralds and getting a Blue Dyed Leather Leggings.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -270,7 +270,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for a Map. An example being, giving a villager Emeralds and getting a Map to a structure.
+     * Removes a Villager trade for a Map. An example being, giving a villager 13 Emeralds and getting a Map to a structure.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -300,7 +300,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for an Enchanted Item. An example being, giving a villager Emeralds and getting an Enchanted Pickaxe.
+     * Removes a Villager trade for an Enchanted Item. An example being, giving a villager 3 Emeralds and getting an Enchanted Pickaxe.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -323,7 +323,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Suspicious Stew. An example being, giving a villager Emeralds and getting a bowl of Suspicious Stew back..
+     * Removes a Villager trade for Suspicious Stew. An example being, giving a villager an Emerald and getting a bowl of Suspicious Stew back.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
