@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,19 +42,17 @@ public final class Replacer {
         private final Collection<IRecipeManager> managers;
         private final Collection<? extends IRecipe<?>> recipes;
         private final List<IReplacementRule> rules;
-        private final Function<List<IReplacementRule>, Stream<Optional<ActionReplaceRecipe>>> actionStream;
         
-        private ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe,
-                               final List<IReplacementRule> rules, final Function<List<IReplacementRule>, Stream<Optional<ActionReplaceRecipe>>> actionStream) {
+        private ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe, final List<IReplacementRule> rules) {
             this.managers = managers;
             this.recipes = recipe;
             this.rules = rules;
-            this.actionStream = actionStream;
         }
         
         @Override
         public void apply() {
-            this.actionStream.apply(this.rules)
+            Stream.concat(this.streamManagers(), this.streamRecipes())
+                    .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), this.rules))
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(CraftTweakerAPI::apply);
@@ -91,6 +88,33 @@ public final class Replacer {
             return true;
         }
     
+        private Stream<Pair<IRecipeManager, IRecipe<?>>> streamManagers() {
+            return this.managers.stream()
+                    .map(manager -> Pair.of(manager, manager.getAllRecipes().stream().map(WrapperRecipe::getRecipe)))
+                    .flatMap(pair -> pair.getSecond().map(recipe -> Pair.of(pair.getFirst(), recipe)));
+        }
+    
+        private Stream<Pair<IRecipeManager, IRecipe<?>>> streamRecipes() {
+            return this.recipes.stream()
+                    .map(recipe -> Pair.of(RecipeTypeBracketHandler.getCustomManager(Registry.RECIPE_TYPE.getKey(recipe.getType())), recipe));
+        }
+    
+        private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule> rules) {
+            try {
+                final IRecipeHandler<U> handler = CraftTweakerRegistry.getHandlerFor(recipe);
+                final Optional<U> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
+            
+                if (newRecipeMaybe.isPresent()) {
+                    return Optional.of(new ActionReplaceRecipe(manager, recipe, newRecipeMaybe.get()));
+                }
+            } catch (final IRecipeHandler.ReplacementNotSupportedException e) {
+                // TODO("Warning maybe?")
+                CraftTweakerAPI.logInfo("Unable to replace ingredients in recipe %s: %s", recipe.getId(), e.getMessage());
+            } catch (final Throwable t) {
+                CraftTweakerAPI.logThrowing("An error has occurred while trying to replace ingredients in recipe %s", t, recipe.getId());
+            }
+            return Optional.empty();
+        }
     }
     
     private final Collection<IRecipeManager> targetedManagers;
@@ -134,13 +158,14 @@ public final class Replacer {
     }
     
     @ZenCodeType.Method
-    public Replacer replace(final IItemStack from, final IIngredient to) {
-        return this.addReplacementRule(StackTargetingReplacementRule.create(from, to));
+    public Replacer replace(final IIngredient from, final IIngredient to) {
+        if (from instanceof IItemStack) return this.replaceStack((IItemStack) from, to);
+        return this.addReplacementRule(IngredientReplacementRule.create(from, to));
     }
     
     @ZenCodeType.Method
-    public Replacer replace(final IIngredient from, final IIngredient to) {
-        return this.addReplacementRule(IngredientReplacementRule.create(from, to));
+    public Replacer replaceStack(final IItemStack from, final IIngredient to) {
+        return this.addReplacementRule(StackTargetingReplacementRule.create(from, to));
     }
     
     @ZenCodeType.Method
@@ -151,45 +176,12 @@ public final class Replacer {
     @ZenCodeType.Method
     public void execute() {
         if (this.rules.isEmpty()) return;
-        CraftTweakerAPI.apply(new ReplacerAction(this.targetedManagers, this.targetedRecipes, Collections.unmodifiableList(this.rules), this::execute));
+        CraftTweakerAPI.apply(new ReplacerAction(this.targetedManagers, this.targetedRecipes, Collections.unmodifiableList(this.rules)));
     }
     
     private Replacer addReplacementRule(final IReplacementRule rule) {
         if (rule == IReplacementRule.EMPTY) return this;
         this.rules.add(rule);
         return this;
-    }
-    
-    private Stream<Optional<ActionReplaceRecipe>> execute(final List<IReplacementRule> rules) {
-        return Stream.concat(this.streamManagers(), this.streamRecipes())
-                .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), rules));
-    }
-    
-    private Stream<Pair<IRecipeManager, IRecipe<?>>> streamManagers() {
-        return this.targetedManagers.stream()
-                .map(manager -> Pair.of(manager, manager.getAllRecipes().stream().map(WrapperRecipe::getRecipe)))
-                .flatMap(pair -> pair.getSecond().map(recipe -> Pair.of(pair.getFirst(), recipe)));
-    }
-    
-    private Stream<Pair<IRecipeManager, IRecipe<?>>> streamRecipes() {
-        return this.targetedRecipes.stream()
-                .map(recipe -> Pair.of(RecipeTypeBracketHandler.getCustomManager(Registry.RECIPE_TYPE.getKey(recipe.getType())), recipe));
-    }
-    
-    private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule> rules) {
-        try {
-            final IRecipeHandler<U> handler = CraftTweakerRegistry.getHandlerFor(recipe);
-            final Optional<U> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
-            
-            if (newRecipeMaybe.isPresent()) {
-                return Optional.of(new ActionReplaceRecipe(manager, recipe, newRecipeMaybe.get()));
-            }
-        } catch (final IRecipeHandler.ReplacementNotSupportedException e) {
-            // TODO("Warning maybe?")
-            CraftTweakerAPI.logInfo("Unable to replace ingredients in recipe %s: %s", recipe.getId(), e.getMessage());
-        } catch (final Throwable t) {
-            CraftTweakerAPI.logThrowing("An error has occurred while trying to replace ingredients in recipe %s", t, recipe.getId());
-        }
-        return Optional.empty();
     }
 }
