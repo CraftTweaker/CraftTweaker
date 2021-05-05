@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 //TODO breaking: move this to the `.block.` package
 
 /**
- * @docParam this <blockstat:minecraft:grass>
+ * @docParam this <blockstate:minecraft:grass>
  */
 @ZenRegister
 @Document("vanilla/api/blocks/MCBlockState")
