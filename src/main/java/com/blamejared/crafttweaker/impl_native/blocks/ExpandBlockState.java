@@ -29,6 +29,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 //TODO breaking: move this to the `.block.` package
+
+/**
+ * @docParam this <blockstat:minecraft:grass>
+ */
 @ZenRegister
 @Document("vanilla/api/blocks/MCBlockState")
 @NativeTypeRegistration(value = BlockState.class, zenCodeName = "crafttweaker.api.blocks.MCBlockState")
