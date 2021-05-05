@@ -9,14 +9,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+//TODO breaking: move this to the `.block.` package
 @ZenRegister
 @Document("vanilla/api/blocks/MCBlock")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
