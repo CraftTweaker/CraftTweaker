@@ -48,6 +48,11 @@ public class MCTextFormatting implements CommandStringDisplayable {
         return getInternal().toString();
     }
     
+    @ZenCodeType.Caster(implicit = true)
+    public MCStyle asStyle(){
+        return new MCStyle().setFormatting(this);
+    }
+    
     public TextFormatting getInternal() {
         
         return internal;
