@@ -120,7 +120,7 @@ val allKnownModifierNames = loot.modifiers.getAllNames();
 // unique and identify that specific loot modifier, and a function that acts as
 // the loot modifier itself.
 
-loot.modifiers.registerUnconditional("add_diamonds", (drops, ctx) => {
+loot.modifiers.registerUnconditional("add_diamonds_1", (drops, ctx) => {
     // This loot modifier effectively adds 2 diamonds to every drop of every
     // possible thing, be it an entity dying, a block being broken...
     drops.add(<item:minecraft:diamond> * 2);
@@ -132,7 +132,7 @@ loot.modifiers.registerUnconditional("add_diamonds", (drops, ctx) => {
 // provided functionality:
 
 loot.modifiers.registerUnconditional(
-    "add_diamonds",
+    "add_diamonds_2",
     CommonLootModifiers.add(<item:minecraft:diamond> * 2)
 );
 
