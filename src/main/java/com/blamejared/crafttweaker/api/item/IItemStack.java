@@ -6,13 +6,19 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetImmuneToFire;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetMaxStackSize;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetRarity;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
@@ -46,6 +52,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("registryName")
     default ResourceLocation getRegistryName() {
+        
         return getInternal().getItem().getRegistryName();
     }
     
@@ -56,6 +63,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("owner")
     default String getOwner() {
+        
         final ResourceLocation registryName = getInternal().getItem().getRegistryName();
         return registryName == null ? "error" : registryName.getNamespace();
     }
@@ -67,17 +75,60 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("empty")
     default boolean isEmpty() {
+        
         return getInternal().isEmpty();
     }
     
     /**
      * Returns the max stack size of the Item in the ItemStack
      *
-     * @return max stack size
+     * @return Max stack size of the Item.
      */
+    @ZenCodeType.Method
     @ZenCodeType.Getter("maxStackSize")
     default int getMaxStackSize() {
+        
         return getInternal().getItem().getItemStackLimit(getInternal());
+    }
+    
+    /**
+     * Sets the max stacksize of the Item.
+     *
+     * @param newMaxStackSize The new max stack size of the Item.
+     *
+     * @docParam newMaxStackSize 16
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("maxStackSize")
+    default void setMaxStackSize(int newMaxStackSize) {
+        
+        CraftTweakerAPI.apply(new ActionSetMaxStackSize(this, newMaxStackSize, this.getInternal().getItem().maxStackSize));
+    }
+    
+    /**
+     * Returns the rarity of the Item in the ItemStack
+     *
+     * @return Rarity of the Item.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("rarity")
+    default Rarity getRarity() {
+        
+        return getInternal().getRarity();
+    }
+    
+    /**
+     * Sets the rarity of the Item.
+     *
+     * @param newRarity The new rarity of the Item.
+     *
+     * @docParam newRarity Rarity.UNCOMMON
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("rarity")
+    default void setRarity(Rarity newRarity) {
+        
+        CraftTweakerAPI.apply(new ActionSetRarity(this, newRarity, this.getInternal().getRarity()));
     }
     
     
@@ -88,6 +139,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("displayName")
     default String getDisplayName() {
+        
         return getInternal().getDisplayName().getString();
     }
     
@@ -95,6 +147,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * Sets the display name of the ItemStack
      *
      * @param name New name of the stack.
+     *
      * @docParam name "totally not dirt"
      */
     @ZenCodeType.Method
@@ -105,6 +158,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Method
     default void clearCustomName() {
+        
         getInternal().clearCustomName();
     }
     
@@ -115,6 +169,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("hasDisplayName")
     default boolean hasDisplayName() {
+        
         return getInternal().hasDisplayName();
     }
     
@@ -125,6 +180,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("hasEffect")
     default boolean hasEffect() {
+        
         return getInternal().hasEffect();
     }
     
@@ -135,6 +191,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("isEnchantable")
     default boolean isEnchantable() {
+        
         return getInternal().isEnchantable();
     }
     
@@ -145,6 +202,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("isEnchanted")
     default boolean isEnchanted() {
+        
         return getInternal().isEnchanted();
     }
     
@@ -155,6 +213,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("getRepairCost")
     default int getRepairCost() {
+        
         return getInternal().getRepairCost();
     }
     
@@ -165,6 +224,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("amount")
     default int getAmount() {
+        
         return getInternal().getCount();
     }
     
@@ -172,6 +232,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * Sets the amount of the ItemStack
      *
      * @param amount new amount
+     *
      * @docParam amount 3
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
@@ -185,6 +246,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("stackable")
     default boolean isStackable() {
+        
         return getInternal().isStackable();
     }
     
@@ -192,6 +254,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * Sets the damage of the ItemStack
      *
      * @param damage the new damage value
+     *
      * @docParam damage 10
      */
     @ZenCodeType.Method
@@ -205,6 +268,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("damageable")
     default boolean isDamageable() {
+        
         return getInternal().isDamageable();
     }
     
@@ -216,6 +280,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("damaged")
     default boolean isDamaged() {
+        
         return getInternal().isDamaged();
     }
     
@@ -227,6 +292,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("maxDamage")
     default int getMaxDamage() {
+        
         return getInternal().getMaxDamage();
     }
     
@@ -237,6 +303,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("translationKey")
     default String getTranslationKey() {
+        
         return getInternal().getTranslationKey();
     }
     
@@ -244,7 +311,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * Sets the tag for the ItemStack.
      *
      * @param tag The tag to set.
+     *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
+     *
      * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
@@ -258,6 +327,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("hasTag")
     default boolean hasTag() {
+        
         return getInternal().hasTag();
     }
     
@@ -268,6 +338,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("tag")
     default IData getTag() {
+        
         return NBTConverter.convert(getInternal().getTag());
     }
     
@@ -278,6 +349,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("getOrCreate")
     default IData getOrCreateTag() {
+        
         if(getInternal().getTag() == null) {
             getInternal().setTag(new CompoundNBT());
         }
@@ -286,6 +358,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     @Override
     default boolean matches(IItemStack stack, boolean ignoreDamage) {
+        
         ItemStack stack1 = getInternal();
         ItemStack stack2 = stack.getInternal();
         
@@ -335,6 +408,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("useDuration")
     default int getUseDuration() {
+        
         return getInternal().getUseDuration();
     }
     
@@ -345,6 +419,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Getter("isCrossbow")
     default boolean isCrossbowStack() {
+        
         return getInternal().isCrossbowStack();
     }
     
@@ -370,6 +445,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     @ZenCodeType.Getter("burnTime")
     default int getBurnTime() {
+        
         return ForgeHooks.getBurnTime(getInternal());
     }
     
@@ -377,25 +453,59 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * Sets the burn time of this item, for use in the furnace and other machines
      *
      * @param time the new burn time
+     *
      * @docParam time 500
      */
     @ZenCodeType.Setter("burnTime")
     default void setBurnTime(int time) {
+        
         CraftTweakerAPI.apply(new ActionSetBurnTime(this, time));
+    }
+    
+    /**
+     * Sets if this IItemStack is immune to fire / lava.
+     *
+     * If true, the item will not burn when thrown into fire or lava.
+     *
+     * @param immuneToFire Should the item be immune to fire.
+     *
+     * @docParam immuneToFire true
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("immuneToFire")
+    default void setImmuneToFire(boolean immuneToFire) {
+        
+        CraftTweakerAPI.apply(new ActionSetImmuneToFire(this, immuneToFire, this.getInternal().getItem().burnable));
+    }
+    
+    
+    /**
+     * Checks if this IItemStack burns when thrown into fire / lava or damaged by fire.
+     *
+     * @return True if this IItemStack is immune to fire. False otherwise.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("immuneToFire")
+    default boolean isImmuneToFire() {
+        
+        return getInternal().getItem().isImmuneToFire();
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MOD)
     default MCWeightedItemStack percent(int percentage) {
+        
         return weight(percentage / 100.0D);
     }
     
     @ZenCodeType.Method
     default MCWeightedItemStack weight(double weight) {
+        
         return new MCWeightedItemStack(this, weight);
     }
     
     @ZenCodeType.Caster(implicit = true)
     default MCWeightedItemStack asWeightedItemStack() {
+        
         return weight(1.0D);
     }
     
@@ -403,6 +513,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Getter("definition")
     @ZenCodeType.Caster(implicit = true)
     default Item getDefinition() {
+        
         return getInternal().getItem();
     }
     
@@ -418,9 +529,10 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     @ZenCodeType.Getter("damage")
     int getDamage();
-
+    
     @ZenCodeType.Getter("toolTypes")
     default ToolType[] getToolTypes() {
+        
         return getInternal().getToolTypes().toArray(new ToolType[0]);
     }
     
@@ -439,11 +551,14 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     default IIngredientWithAmount asIIngredientWithAmount() {
+        
         return this;
     }
     
     @Override
     default IItemStack getIngredient() {
+        
         return this;
     }
+    
 }
