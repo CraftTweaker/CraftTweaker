@@ -349,13 +349,24 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     }
     
     @ZenCodeType.Getter("food")
-    @ZenCodeType.Nullable MCFood getFood();
+    @ZenCodeType.Nullable
+    default MCFood getFood() {
+        
+        final Food food = getInternal().getItem().getFood();
+        return food == null ? null : new MCFood(food);
+    }
     
     @ZenCodeType.Setter("food")
-    void setFood(MCFood food);
+    default void setFood(MCFood food) {
+        
+        CraftTweakerAPI.apply(new ActionSetFood(this, food, this.getInternal().getItem().getFood()));
+    }
     
     @ZenCodeType.Method
-    boolean isFood();
+    default boolean isFood() {
+        
+        return getInternal().isFood();
+    }
     
     @ZenCodeType.Getter("burnTime")
     default int getBurnTime() {

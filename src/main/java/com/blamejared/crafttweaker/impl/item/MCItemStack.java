@@ -1,14 +1,10 @@
 package com.blamejared.crafttweaker.impl.item;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.data.MapData;
-import com.blamejared.crafttweaker.impl.food.MCFood;
-import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
@@ -68,24 +64,6 @@ public class MCItemStack implements IItemStack {
         return new MCItemStack(copy);
     }
     
-    @Override
-    public MCFood getFood() {
-        
-        final Food food = getInternal().getItem().getFood();
-        return food == null ? null : new MCFood(food);
-    }
-    
-    @Override
-    public void setFood(MCFood food) {
-        
-        CraftTweakerAPI.apply(new ActionSetFood(this, food, this.getInternal().getItem().getFood()));
-    }
-    
-    @Override
-    public boolean isFood() {
-        
-        return getInternal().isFood();
-    }
     
     @Override
     public String getCommandString() {
