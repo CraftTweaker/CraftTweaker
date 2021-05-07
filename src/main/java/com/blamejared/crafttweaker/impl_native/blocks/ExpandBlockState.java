@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @docParam this <blockstate:minecraft:grass>
  */
 @ZenRegister
-@Document("vanilla/api/blocks/MCBlockState")
+@Document("vanilla/api/block/MCBlockState")
 @NativeTypeRegistration(value = BlockState.class, zenCodeName = "crafttweaker.api.blocks.MCBlockState")
 public class ExpandBlockState {
     

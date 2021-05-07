@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 //TODO breaking: move this to the `.block.` package
 @ZenRegister
-@Document("vanilla/api/blocks/MCBlock")
+@Document("vanilla/api/block/MCBlock")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
 public class ExpandBlock {
     
