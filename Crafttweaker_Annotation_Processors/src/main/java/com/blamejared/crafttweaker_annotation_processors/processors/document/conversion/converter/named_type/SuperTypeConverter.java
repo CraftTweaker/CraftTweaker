@@ -36,4 +36,8 @@ public class SuperTypeConverter {
     private boolean superTypeIsObject(TypeMirror superclass) {
         return superclass.toString().equals("java.lang.Object");
     }
+
+    public TypeConverter getTypeConverter() {
+        return typeConverter;
+    }
 }
