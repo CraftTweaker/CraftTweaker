@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member.DocumentedStaticMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member.StaticMethodMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
@@ -45,16 +46,17 @@ public class NamedTypeStaticMethodConverter extends AbstractEnclosedElementConve
     
     @Override
     public boolean canConvert(Element enclosedElement) {
-        return isInNamedType(enclosedElement) && hasMethodAnnotation(enclosedElement);
+        return isClassMethod(enclosedElement) || isExpansionMethod(enclosedElement);
     }
-    
-    private boolean isInNamedType(Element enclosedElement) {
-        final Element enclosingElement = enclosedElement.getEnclosingElement();
-        return isAnnotationPresentOn(ZenCodeType.Name.class, enclosingElement);
+
+    private boolean isClassMethod(Element enclosedElement) {
+        final Element classElement = enclosedElement.getEnclosingElement();
+        return isAnnotationPresentOn(ZenCodeType.Name.class, classElement) && isAnnotationPresentOn(ZenCodeType.Method.class, enclosedElement);
     }
-    
-    private boolean hasMethodAnnotation(Element enclosedElement) {
-        return isAnnotationPresentOn(ZenCodeType.Method.class, enclosedElement);
+
+    private boolean isExpansionMethod(Element enclosedElement) {
+        final Element classElement = enclosedElement.getEnclosingElement();
+        return isAnnotationPresentOn(NativeTypeRegistration.class, classElement) && isAnnotationPresentOn(ZenCodeType.StaticExpansionMethod.class, enclosedElement);
     }
     
     @Override
@@ -116,15 +118,27 @@ public class NamedTypeStaticMethodConverter extends AbstractEnclosedElementConve
     }
     
     private boolean hasCustomName(ExecutableElement method) {
-        return !getMethodAnnotation(method).value().isEmpty();
+        return !getCustomName(method).isEmpty();
     }
     
     private String getCustomName(ExecutableElement method) {
-        return getMethodAnnotation(method).value();
+        ZenCodeType.Method methodAnnotation = getMethodAnnotation(method);
+        if (methodAnnotation != null) {
+            return methodAnnotation.value();
+        }
+        ZenCodeType.StaticExpansionMethod staticExpansionMethodAnnotation = getStaticExpansionMethodAnnotation(method);
+        if (staticExpansionMethodAnnotation != null) {
+            return staticExpansionMethodAnnotation.value();
+        }
+        return "";
     }
     
     private ZenCodeType.Method getMethodAnnotation(ExecutableElement method) {
         return method.getAnnotation(ZenCodeType.Method.class);
+    }
+
+    private ZenCodeType.StaticExpansionMethod getStaticExpansionMethodAnnotation(ExecutableElement method) {
+        return method.getAnnotation(ZenCodeType.StaticExpansionMethod.class);
     }
     
     private MemberHeader getHeader(ExecutableElement enclosedElement) {
