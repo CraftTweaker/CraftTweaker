@@ -23,7 +23,7 @@ public class DocumentedStaticMembers {
             return;
         }
         
-        writer.printf("## Methods%n%n");
+        writer.printf("## Static Methods%n%n");
         
         for(StaticMethodGroup value : methodGroups.values()) {
             value.writeStaticMethods(writer);
@@ -35,7 +35,7 @@ public class DocumentedStaticMembers {
             return;
         }
         
-        writer.printf("## Properties%n%n");
+        writer.printf("## Static Properties%n%n");
         writer.println("| Name | Type | Has Getter | Has Setter | Description |");
         writer.println("|------|------|------------|------------|-------------|");
         for(PropertyMember value : properties.values()) {
