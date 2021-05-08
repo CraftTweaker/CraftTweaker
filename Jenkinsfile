@@ -44,7 +44,7 @@ pipeline {
         }
 
         stage('Publish') {
-            parallel {
+            stages {
                 stage('Updating Version') {
                     when {
                         branch '1.16'
