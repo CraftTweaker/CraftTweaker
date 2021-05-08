@@ -19,20 +19,26 @@ import java.util.*;
 public class MapData implements IData {
     
     private final CompoundNBT internal;
+    private final Set<String> boolDataKeys;
     
     public MapData(CompoundNBT internal) {
-        this.internal = internal;
+        this(internal, new HashSet<>());
     }
     
     @ZenCodeType.Constructor
     public MapData() {
-        this.internal = new CompoundNBT();
+        this(new CompoundNBT());
     }
     
     @ZenCodeType.Constructor
     public MapData(Map<String, IData> map) {
-        this.internal = new CompoundNBT();
+        this();
         putAll(map);
+    }
+
+    public MapData(CompoundNBT internal, Set<String> boolDataKeys) {
+        this.internal = internal;
+        this.boolDataKeys = boolDataKeys;
     }
     
     /**
@@ -45,7 +51,12 @@ public class MapData implements IData {
      */
     @ZenCodeType.Method
     public void putAll(Map<String, IData> map) {
-        map.forEach((s, iData) -> getInternal().put(s, iData.getInternal()));
+        map.forEach((s, iData) -> {
+            getInternal().put(s, iData.getInternal());
+            if (iData instanceof BoolData) {
+                boolDataKeys.add(s);
+            }
+        });
     }
     
     /**
@@ -80,7 +91,11 @@ public class MapData implements IData {
      */
     @ZenCodeType.Method
     public IData put(String key, IData value) {
-        return NBTConverter.convert(getInternal().put(key, value.getInternal()));
+        MapData mapData = (MapData) NBTConverter.convert(getInternal().put(key, value.getInternal()));
+        if (value instanceof BoolData && mapData != null) {
+            mapData.boolDataKeys.add(key);
+        }
+        return mapData;
     }
     
     /**
@@ -93,6 +108,9 @@ public class MapData implements IData {
      */
     @ZenCodeType.Method
     public IData getAt(String key) {
+        if (boolDataKeys.contains(key)) {
+            return new BoolData(getInternal().getByte(key) == 1);
+        }
         return NBTConverter.convert(getInternal().get(key));
     }
     
@@ -118,6 +136,7 @@ public class MapData implements IData {
      */
     @ZenCodeType.Method
     public void remove(String key) {
+        boolDataKeys.remove(key);
         getInternal().remove(key);
     }
     
@@ -138,17 +157,19 @@ public class MapData implements IData {
      */
     @ZenCodeType.Method
     public MapData merge(MapData other) {
-        return new MapData(getInternal().merge(other.getInternal()));
+        Set<String> newBoolDataKeys = new HashSet<>(boolDataKeys);
+        newBoolDataKeys.addAll(other.boolDataKeys);
+        return new MapData(getInternal().merge(other.getInternal()), newBoolDataKeys);
     }
     
     @Override
     public IData copy() {
-        return new MapData(getInternal());
+        return new MapData(getInternal(), new HashSet<>(boolDataKeys));
     }
     
     @Override
     public IData copyInternal() {
-        return new MapData(getInternal().copy());
+        return new MapData(getInternal().copy(), new HashSet<>(boolDataKeys));
     }
     
     @Override
