@@ -39,4 +39,10 @@ public class ExpandString {
     public static MCTextComponent asTextComponent(String value) {
         return new MCTextComponent(new StringTextComponent(value));
     }
+
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MOD)
+    public static String format(String value, Object... args) {
+        return String.format(value, args);
+    }
 }
