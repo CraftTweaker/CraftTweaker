@@ -1,12 +1,16 @@
 package com.blamejared.crafttweaker.impl_native.blocks;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.actions.blocks.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
+import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import org.openzen.zencode.java.ZenCodeType;
@@ -15,6 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 //TODO breaking: move this to the `.block.` package
+
+/**
+ * @docParam this <block:minecraft:grass_block>
+ */
 @ZenRegister
 @Document("vanilla/api/block/MCBlock")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
@@ -161,6 +169,21 @@ public class ExpandBlock {
     }
     
     /**
+     * Sets the slipperiness of this Block.
+     *
+     * @param slipperiness The new slipperiness of this Block.
+     *
+     * @docParam slipperiness 2
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("slipperiness")
+    public static void setSlipperiness(Block internal, float slipperiness) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Slipperiness",
+                slipperiness, internal.slipperiness, value -> internal.slipperiness = value));
+    }
+    
+    /**
      * Gets the speed factor of this Block.
      *
      * @return The speed factor of this Block.
@@ -173,6 +196,21 @@ public class ExpandBlock {
     }
     
     /**
+     * Sets the speed factor of this Block.
+     *
+     * @param speedFactor The new speed factor of this Block.
+     *
+     * @docParam speedFactor 2
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("speedFactor")
+    public static void setSpeedFactor(Block internal, float speedFactor) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Speed Factor",
+                speedFactor, internal.speedFactor, value -> internal.speedFactor = value));
+    }
+    
+    /**
      * Gets the jump factor of this Block.
      *
      * @return The jump factor of this Block.
@@ -182,6 +220,21 @@ public class ExpandBlock {
     public static float getJumpFactor(Block internal) {
         
         return internal.getJumpFactor();
+    }
+    
+    /**
+     * Sets the jump factor of this Block.
+     *
+     * @param jumpFactor The new jump factor of this Block.
+     *
+     * @docParam jumpFactor 2
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("jumpFactor")
+    public static void setJumpFactor(Block internal, float jumpFactor) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Jump Factor",
+                jumpFactor, internal.jumpFactor, value -> internal.jumpFactor = value));
     }
     
     
@@ -209,6 +262,89 @@ public class ExpandBlock {
     public static boolean isVariableOpacity(Block internal) {
         
         return internal.isVariableOpacity();
+    }
+    
+    
+    /**
+     * Checks if entities can collide with this Block.
+     *
+     * @return True if entities will collide with this Block. False otherwise.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("canCollide")
+    public static boolean canCollide(Block internal) {
+        
+        return internal.canCollide;
+    }
+    
+    /**
+     * Sets whether entities can collide with this Block.
+     *
+     * @param canCollide Can entities collide with this Block.
+     *
+     * @docParam canCollide true
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("canCollide")
+    public static void setCanCollide(Block internal, boolean canCollide) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Can Collide",
+                canCollide, internal.canCollide, value -> internal.canCollide = value));
+    }
+    
+    /**
+     * Gets the blast resistance of this Block.
+     *
+     * @return The blast resistance of this Block.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("blastResistance")
+    public static float getBlastResistance(Block internal) {
+        
+        return internal.blastResistance;
+    }
+    
+    /**
+     * Sets the blast resistance of this Block.
+     *
+     * @param resistance The new blast resistance of this Block.
+     *
+     * @docParam resistance 2
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("canCollide")
+    public static void setCanCollide(Block internal, float resistance) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Blast Resistance",
+                resistance, internal.blastResistance, value -> internal.blastResistance = value));
+    }
+    
+    /**
+     * Gets the material of this Block.
+     *
+     * @return The material of this Block.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("material")
+    public static Material getMaterial(Block internal) {
+        
+        return internal.material;
+    }
+    
+    /**
+     * Sets the material of this Block.
+     *
+     * @param resistance The new material of this Block.
+     *
+     * @docParam material 2
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("material")
+    public static void setMaterial(Block internal, Material material) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal,
+                "Material", material, internal.material,
+                value -> internal.material = material, ExpandMaterial::getCommandString));
     }
     
 }
