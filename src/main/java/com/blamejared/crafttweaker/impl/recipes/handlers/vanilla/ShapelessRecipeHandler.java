@@ -9,9 +9,11 @@ import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @IRecipeHandler.For(ShapelessRecipe.class)
@@ -32,12 +34,12 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
     }
     
     @Override
-    public Optional<ShapelessRecipe> replaceIngredients(final IRecipeManager manager, final ShapelessRecipe recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, ShapelessRecipe>> replaceIngredients(final IRecipeManager manager, final ShapelessRecipe recipe, final List<IReplacementRule> rules) {
         return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
                 Ingredient.class,
                 rules,
-                newIngredients -> new ShapelessRecipe(recipe.getId(), recipe.getGroup(), recipe.getRecipeOutput(), newIngredients)
+                newIngredients -> id -> new ShapelessRecipe(id, recipe.getGroup(), recipe.getRecipeOutput(), newIngredients)
         );
     }
     

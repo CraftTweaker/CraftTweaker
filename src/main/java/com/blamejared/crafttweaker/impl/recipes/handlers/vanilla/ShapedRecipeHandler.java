@@ -10,9 +10,11 @@ import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,12 +40,12 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public Optional<ShapedRecipe> replaceIngredients(final IRecipeManager manager, final ShapedRecipe recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, ShapedRecipe>> replaceIngredients(final IRecipeManager manager, final ShapedRecipe recipe, final List<IReplacementRule> rules) {
         return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
                 Ingredient.class,
                 rules,
-                newIngredients -> new ShapedRecipe(recipe.getId(), recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), newIngredients, recipe.getRecipeOutput())
+                newIngredients -> id -> new ShapedRecipe(id, recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), newIngredients, recipe.getRecipeOutput())
         );
     }
 }

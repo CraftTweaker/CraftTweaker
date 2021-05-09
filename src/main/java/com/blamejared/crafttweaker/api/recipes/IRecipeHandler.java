@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.recipes;
 
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -12,6 +13,7 @@ import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 /**
  * Represents a handler for a specific type of recipe indicated by the generic parameter.
@@ -217,14 +219,18 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * @param rules A series of {@link IReplacementRule}s in the order they should be applied. Implementations are
      *              nevertheless allowed to reorder these rules as they see fit. Refer to the implementation
      *              specifications for more details.
-     * @return An {@link Optional} holding the replaced recipe, if any replacements have been carried out. If no
-     * replacement rule affected the current recipe, the return value should be {@link Optional#empty()}. It is
-     * customary, though not required, that the value wrapped by the optional is a completely different object from
-     * {@code recipe} (i.e. {@code recipe != result.get()}).
+     * @return An {@link Optional} containing a function that creates the replaced recipe, if any replacements have been
+     * carried out. If no replacement rule affected the current recipe, the return value should be
+     * {@link Optional#empty()}. The parameter of the function will be the new ID of the recipe that should be used, as
+     * determined by the method caller: the name may correspond to the old one or be a completely new one,
+     * implementations are not allowed to make any assumptions on the value of this parameter. It is customary, though
+     * not required, that the value returned by the wrapped function is a completely different object from
+     * {@code recipe} (i.e. {@code recipe != result.get().apply(recipe.getId())}).
      * @throws ReplacementNotSupportedException If the current handler does not support replacing for the given recipe
      * class.
      */
-    default Optional<T> replaceIngredients(final IRecipeManager manager, final T recipe, final List<IReplacementRule> rules) throws ReplacementNotSupportedException {
+    default Optional<Function<ResourceLocation, T>> replaceIngredients(final IRecipeManager manager, final T recipe, final List<IReplacementRule> rules)
+            throws ReplacementNotSupportedException {
         throw new ReplacementNotSupportedException("Replacement is not supported for this recipe class");
     }
 }

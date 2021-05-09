@@ -5,9 +5,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,10 @@ import java.util.stream.IntStream;
 
 public final class ReplacementHandlerHelper {
     private static final class ReplacementMap<T> {
+        private interface ReplacementConsumer<T> {
+            void accept(int index, T ingredient);
+        }
+        
         private final Int2ObjectMap<T> delegate;
         
         ReplacementMap() {
@@ -23,14 +28,8 @@ public final class ReplacementHandlerHelper {
             this.delegate.defaultReturnValue(null);
         }
         
-        T get(final int index, final List<T> original) {
-            final T replaced = this.delegate.get(index);
-            return replaced == null? original.get(index) : replaced;
-        }
-    
-        T get(final int index, final T[] original) {
-            final T replaced = this.delegate.get(index);
-            return replaced == null? original[index] : replaced;
+        void fill(final ReplacementConsumer<T> consumer) {
+            this.delegate.int2ObjectEntrySet().forEach(it -> consumer.accept(it.getIntKey(), it.getValue()));
         }
         
         void put(final int index, final T ingredient) {
@@ -53,13 +52,14 @@ public final class ReplacementHandlerHelper {
     
     private ReplacementHandlerHelper() {}
     
-    public static <T extends IRecipe<?>, U> Optional<T> replaceNonNullIngredientList(final NonNullList<U> originalIngredients, final Class<U> ingredientClass,
-                                                                                     final List<IReplacementRule> rules, final Function<NonNullList<U>, T> factory) {
+    public static <T extends IRecipe<?>, U> Optional<Function<ResourceLocation, T>> replaceNonNullIngredientList(final NonNullList<U> originalIngredients, final Class<U> ingredientClass,
+                                                                                                                 final List<IReplacementRule> rules,
+                                                                                                                 final Function<NonNullList<U>, Function<ResourceLocation, T>> factory) {
         return replaceIngredientList(originalIngredients, ingredientClass, rules, list -> factory.apply(Util.make(NonNullList.create(), it -> it.addAll(list))));
     }
     
-    public static <T extends IRecipe<?>, U> Optional<T> replaceIngredientList(final List<U> originalIngredients, final Class<U> ingredientClass,
-                                                                              final List<IReplacementRule> rules, final Function<List<U>, T> factory) {
+    public static <T extends IRecipe<?>, U> Optional<Function<ResourceLocation, T>> replaceIngredientList(final List<U> originalIngredients, final Class<U> ingredientClass,
+                                                                              final List<IReplacementRule> rules, final Function<List<U>, Function<ResourceLocation, T>> factory) {
         final ReplacementMap<U> replacements = IntStream.range(0, originalIngredients.size())
                 .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients.get(i), ingredientClass, rules)))
                 .filter(it -> it.getSecond().isPresent())
@@ -67,17 +67,16 @@ public final class ReplacementHandlerHelper {
     
         if (replacements.isEmpty()) return Optional.empty();
     
-        final List<U> newIngredients = Arrays.asList(arrayOf(ingredientClass, originalIngredients.size()));
+        final List<U> newIngredients = new ArrayList<>(originalIngredients.size());
     
-        for (int i = 0, size = originalIngredients.size(); i < size; ++i) {
-            newIngredients.set(i, replacements.get(i, originalIngredients));
-        }
+        replacements.fill(newIngredients::set);
     
         return Optional.of(factory.apply(newIngredients));
     }
     
-    public static <T extends IRecipe<?>, U> Optional<T> replaceIngredientArray(final U[] originalIngredients, final Class<U> ingredientClass,
-                                                                               final List<IReplacementRule> rules, final Function<U[], T> factory) {
+    public static <T extends IRecipe<?>, U> Optional<Function<ResourceLocation, T>> replaceIngredientArray(final U[] originalIngredients, final Class<U> ingredientClass,
+                                                                                                           final List<IReplacementRule> rules,
+                                                                                                           final Function<U[], Function<ResourceLocation, T>> factory) {
         final ReplacementMap<U> replacements = IntStream.range(0, originalIngredients.length)
                 .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients[i], ingredientClass, rules)))
                 .filter(it -> it.getSecond().isPresent())
@@ -85,17 +84,10 @@ public final class ReplacementHandlerHelper {
         
         if (replacements.isEmpty()) return Optional.empty();
         
-        final U[] newIngredients = arrayOf(ingredientClass, originalIngredients.length);
+        final U[] newIngredients = Arrays.copyOf(originalIngredients, originalIngredients.length);
         
-        for (int i = 0, size = originalIngredients.length; i < size; ++i) {
-            newIngredients[i] = replacements.get(i, originalIngredients);
-        }
+        replacements.fill((i, ing) -> newIngredients[i] = ing);
         
         return Optional.of(factory.apply(newIngredients));
-    }
-    
-    @SuppressWarnings("unchecked")
-    private static <T> T[] arrayOf(final Class<T> componentType, final int length) {
-        return (T[]) Array.newInstance(componentType, length);
     }
 }

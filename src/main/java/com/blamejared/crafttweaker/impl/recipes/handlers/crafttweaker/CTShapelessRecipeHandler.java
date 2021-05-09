@@ -8,10 +8,12 @@ import com.blamejared.crafttweaker.api.recipes.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @IRecipeHandler.For(CTRecipeShapeless.class)
@@ -31,12 +33,12 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
     }
     
     @Override
-    public Optional<CTRecipeShapeless> replaceIngredients(final IRecipeManager manager, final CTRecipeShapeless recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, CTRecipeShapeless>> replaceIngredients(final IRecipeManager manager, final CTRecipeShapeless recipe, final List<IReplacementRule> rules) {
         return ReplacementHandlerHelper.replaceIngredientArray(
                 recipe.getCtIngredients(),
                 IIngredient.class,
                 rules,
-                newIngredients -> new CTRecipeShapeless(recipe.getId().getPath(), recipe.getCtOutput(), newIngredients, recipe.getFunction())
+                newIngredients -> id -> new CTRecipeShapeless(id.getPath(), recipe.getCtOutput(), newIngredients, recipe.getFunction())
         );
     }
     

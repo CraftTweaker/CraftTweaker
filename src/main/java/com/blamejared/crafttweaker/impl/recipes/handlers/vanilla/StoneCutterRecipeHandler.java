@@ -8,9 +8,11 @@ import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.StonecuttingRecipe;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @IRecipeHandler.For(StonecuttingRecipe.class)
 public final class StoneCutterRecipeHandler implements IRecipeHandler<StonecuttingRecipe> {
@@ -27,9 +29,9 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutti
     }
     
     @Override
-    public Optional<StonecuttingRecipe> replaceIngredients(final IRecipeManager manager, final StonecuttingRecipe recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, StonecuttingRecipe>> replaceIngredients(final IRecipeManager manager, final StonecuttingRecipe recipe, final List<IReplacementRule> rules) {
         return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, rules)
-                .map(input -> new StonecuttingRecipe(recipe.getId(), recipe.getGroup(), input, recipe.getRecipeOutput()));
+                .map(input -> id -> new StonecuttingRecipe(id, recipe.getGroup(), input, recipe.getRecipeOutput()));
     }
     
 }

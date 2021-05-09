@@ -19,6 +19,7 @@ import net.minecraft.util.registry.Registry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,11 +27,14 @@ public final class ReplacerAction implements IRuntimeAction {
     private final Collection<IRecipeManager> managers;
     private final Collection<? extends IRecipe<?>> recipes;
     private final List<IReplacementRule> rules;
+    private final Function<ResourceLocation, ResourceLocation> generatorFunction;
     
-    public ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe, final List<IReplacementRule> rules) {
+    public ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe, final List<IReplacementRule> rules,
+                          final Function<ResourceLocation, ResourceLocation> generatorFunction) {
         this.managers = managers;
         this.recipes = recipe;
         this.rules = rules;
+        this.generatorFunction = generatorFunction;
     }
     
     @Override
@@ -86,10 +90,10 @@ public final class ReplacerAction implements IRuntimeAction {
     private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule> rules) {
         try {
             final IRecipeHandler<U> handler = CraftTweakerRegistry.getHandlerFor(recipe);
-            final Optional<U> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
+            final Optional<Function<ResourceLocation, U>> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
             
             if (newRecipeMaybe.isPresent()) {
-                return Optional.of(new ActionReplaceRecipe(manager, recipe, newRecipeMaybe.get()));
+                return Optional.of(new ActionReplaceRecipe(manager, this.generatorFunction, recipe, name -> newRecipeMaybe.get().apply(name)));
             }
         } catch (final IRecipeHandler.ReplacementNotSupportedException e) {
             CraftTweakerAPI.logWarning("Unable to replace ingredients in recipe %s: %s", recipe.getId(), e.getMessage());

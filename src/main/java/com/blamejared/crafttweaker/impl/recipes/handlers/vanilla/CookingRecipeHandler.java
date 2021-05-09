@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @IRecipeHandler.For(BlastingRecipe.class)
 @IRecipeHandler.For(CampfireCookingRecipe.class)
@@ -55,12 +56,12 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public Optional<AbstractCookingRecipe> replaceIngredients(final IRecipeManager manager, final AbstractCookingRecipe recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, AbstractCookingRecipe>> replaceIngredients(final IRecipeManager manager, final AbstractCookingRecipe recipe, final List<IReplacementRule> rules) {
         
         return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, rules)
-                .map(input -> LOOKUP.get(recipe.getType())
+                .map(input -> id -> LOOKUP.get(recipe.getType())
                         .getSecond()
-                        .create(recipe.getId(), recipe.getGroup(), input, recipe.getRecipeOutput(), recipe.getExperience(), recipe.getCookTime()));
+                        .create(id, recipe.getGroup(), input, recipe.getRecipeOutput(), recipe.getExperience(), recipe.getCookTime()));
     }
     
 }

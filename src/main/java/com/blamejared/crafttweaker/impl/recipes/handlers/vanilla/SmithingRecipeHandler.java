@@ -8,9 +8,11 @@ import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.SmithingRecipe;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @IRecipeHandler.For(SmithingRecipe.class)
 public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecipe> {
@@ -28,13 +30,13 @@ public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecip
     }
     
     @Override
-    public Optional<SmithingRecipe> replaceIngredients(final IRecipeManager manager, final SmithingRecipe recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, SmithingRecipe>> replaceIngredients(final IRecipeManager manager, final SmithingRecipe recipe, final List<IReplacementRule> rules) {
         final Optional<Ingredient> base = IRecipeHandler.attemptReplacing(recipe.base, Ingredient.class, rules);
         final Optional<Ingredient> addition = IRecipeHandler.attemptReplacing(recipe.addition, Ingredient.class, rules);
         
         if (!base.isPresent() && !addition.isPresent()) return Optional.empty();
         
-        return Optional.of(new SmithingRecipe(recipe.getId(), base.orElseGet(() -> recipe.base), addition.orElseGet(() -> recipe.addition), recipe.getRecipeOutput()));
+        return Optional.of(id -> new SmithingRecipe(id, base.orElseGet(() -> recipe.base), addition.orElseGet(() -> recipe.addition), recipe.getRecipeOutput()));
     }
     
 }

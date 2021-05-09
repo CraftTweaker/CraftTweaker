@@ -10,10 +10,12 @@ import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @IRecipeHandler.For(CTRecipeShaped.class)
@@ -36,13 +38,13 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
     }
     
     @Override
-    public Optional<CTRecipeShaped> replaceIngredients(final IRecipeManager manager, final CTRecipeShaped recipe, final List<IReplacementRule> rules) {
+    public Optional<Function<ResourceLocation, CTRecipeShaped>> replaceIngredients(final IRecipeManager manager, final CTRecipeShaped recipe, final List<IReplacementRule> rules) {
         return ReplacementHandlerHelper.replaceIngredientArray(
                 this.flatten(recipe.getCtIngredients(), recipe.getRecipeWidth(), recipe.getRecipeHeight()),
                 IIngredient.class,
                 rules,
-                newIngredients -> new CTRecipeShaped(
-                        recipe.getId().getPath(),
+                newIngredients -> id -> new CTRecipeShaped(
+                        id.getPath(),
                         recipe.getCtOutput(),
                         this.inflate(newIngredients, recipe.getRecipeWidth(), recipe.getRecipeHeight()),
                         recipe.isMirrored(),
