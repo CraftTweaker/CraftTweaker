@@ -67,7 +67,7 @@ public final class ReplacementHandlerHelper {
     
         if (replacements.isEmpty()) return Optional.empty();
     
-        final List<U> newIngredients = new ArrayList<>(originalIngredients.size());
+        final List<U> newIngredients = new ArrayList<>(originalIngredients);
     
         replacements.fill(newIngredients::set);
     
