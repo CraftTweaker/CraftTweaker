@@ -3,13 +3,13 @@ package com.blamejared.crafttweaker.impl_native.enchantment;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Map;
@@ -149,9 +149,9 @@ public class ExpandEnchantment {
      * @docParam level 2
      */
     @ZenCodeType.Method
-    public static ITextComponent getDisplayName(Enchantment internal, int level) {
+    public static MCTextComponent getDisplayName(Enchantment internal, int level) {
         
-        return internal.getDisplayName(level);
+        return new MCTextComponent(internal.getDisplayName(level));
     }
     
     /**
