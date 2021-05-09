@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+//TODO breaking - move this to a native
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.MCEntityType")
 @Document("vanilla/api/entities/MCEntityType")
