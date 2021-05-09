@@ -71,7 +71,7 @@ public class CrTJavaNativeExpansionConverter extends JavaNativeExpansionConverte
         }
     }
 
-    private boolean isValidParametersForZCStringType(Parameter[] parameter) {
-        return Arrays.stream(parameter).map(Parameter::getType).allMatch(clazz -> clazz.isPrimitive() || clazz.isAssignableFrom(String.class));
+    private boolean isValidParametersForZCStringType(Parameter[] parameters) {
+        return Arrays.stream(parameters).map(Parameter::getType).allMatch(clazz -> clazz.isPrimitive() || clazz.isAssignableFrom(String.class) || clazz.isArray());
     }
 }
