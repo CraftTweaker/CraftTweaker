@@ -334,7 +334,7 @@ public class ExpandBlock {
     /**
      * Sets the material of this Block.
      *
-     * @param resistance The new material of this Block.
+     * @param material The new material of this Block.
      *
      * @docParam material 2
      */
