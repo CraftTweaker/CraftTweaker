@@ -141,7 +141,7 @@ public class ExpandBlock {
     }
     
     /**
-     * Gets all thr {@link MCTag}s that contain this Block.
+     * Gets all the {@link MCTag}s that contain this Block.
      *
      * @return a List of {@link MCTag}s that contain this Block.
      */
