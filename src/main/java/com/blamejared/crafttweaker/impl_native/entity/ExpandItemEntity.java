@@ -11,6 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this itemEntity
+ */
 @ZenRegister
 @Document("vanilla/api/entity/MCItemEntity")
 @NativeTypeRegistration(value = ItemEntity.class, zenCodeName = "crafttweaker.api.entity.MCItemEntity", constructors = {
@@ -24,12 +27,26 @@ import org.openzen.zencode.java.ZenCodeType;
 })
 public class ExpandItemEntity {
     
+    /**
+     * Gets the IItemStack inside this ItemEntity.
+     *
+     * @return The IItemStack inside this ItemEntity.
+     */
+    @ZenCodeType.Method
     @ZenCodeType.Getter("item")
     public static IItemStack getItem(ItemEntity itemEntity) {
         
         return new MCItemStack(itemEntity.getItem());
     }
     
+    /**
+     * Sets the IItemStack inside this ItemEntity.
+     *
+     * @param stack The new IItemStack.
+     *
+     * @docParam stack <item:minecraft:diamond>
+     */
+    @ZenCodeType.Method
     @ZenCodeType.Setter("item")
     public static void setItem(ItemEntity itemEntity, IItemStack stack) {
         
