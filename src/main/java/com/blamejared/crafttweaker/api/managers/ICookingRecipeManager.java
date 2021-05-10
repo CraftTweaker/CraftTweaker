@@ -33,7 +33,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      * @docParam output <item:minecraft:diamond>
      * @docParam input <tag:items:minecraft:wool>
      * @docParam xp 1.0
-     * @docParam cookTime 0
+     * @docParam cookTime 30
      */
     @ZenCodeType.Method
     default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
