@@ -91,11 +91,10 @@ public class MapData implements IData {
      */
     @ZenCodeType.Method
     public IData put(String key, IData value) {
-        MapData mapData = (MapData) NBTConverter.convert(getInternal().put(key, value.getInternal()));
-        if (value instanceof BoolData && mapData != null) {
-            mapData.boolDataKeys.add(key);
+        if (value instanceof BoolData) {
+            boolDataKeys.add(key);
         }
-        return mapData;
+        return NBTConverter.convert(getInternal().put(key, value.getInternal()));
     }
     
     /**
