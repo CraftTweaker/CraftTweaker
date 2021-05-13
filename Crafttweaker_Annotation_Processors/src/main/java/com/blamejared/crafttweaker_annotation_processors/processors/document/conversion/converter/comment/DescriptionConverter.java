@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.CodeTagReplacer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterRemover;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.linktag.LinkTagReplacer;
 
@@ -10,10 +11,15 @@ import javax.lang.model.element.Element;
 public class DescriptionConverter {
     
     private final LinkTagReplacer linkTagReplacer;
+    private final CodeTagReplacer codeTagReplacer;
+    private final ParagraphMarkdownConverter paragraphMarkdownConverter;
     private final ParameterRemover parameterRemover;
     
-    public DescriptionConverter(LinkTagReplacer linkTagReplacer, ParameterRemover parameterRemover) {
+    public DescriptionConverter(LinkTagReplacer linkTagReplacer, CodeTagReplacer codeTagReplacer,
+                                ParagraphMarkdownConverter paragraphMarkdownConverter, ParameterRemover parameterRemover) {
         this.linkTagReplacer = linkTagReplacer;
+        this.codeTagReplacer = codeTagReplacer;
+        this.paragraphMarkdownConverter = paragraphMarkdownConverter;
         this.parameterRemover = parameterRemover;
     }
     
@@ -29,12 +35,23 @@ public class DescriptionConverter {
     @Nonnull
     private String convertNonNullCommentString(String docComment, Element element) {
         docComment = replaceLinkTagsWithClickableMarkdown(docComment, element);
+        docComment = replaceCodeTagsWithCodeSections(docComment);
+        docComment = convertParagraphsToMarkdownFormatFromHtml(docComment);
+        // TODO: Convert tables
         docComment = removeDocumentationParameters(docComment);
         return docComment.trim();
     }
     
     private String replaceLinkTagsWithClickableMarkdown(String docComment, Element element) {
         return linkTagReplacer.replaceLinkTagsFrom(docComment, element);
+    }
+    
+    private String replaceCodeTagsWithCodeSections(String docComment) {
+        return this.codeTagReplacer.replaceCodeTags(docComment);
+    }
+    
+    private String convertParagraphsToMarkdownFormatFromHtml(String docComment) {
+        return this.paragraphMarkdownConverter.convertParagraphToMarkdown(docComment);
     }
     
     private String removeDocumentationParameters(String docComment) {
