@@ -23,6 +23,12 @@ public interface ICookingRecipeManager extends IRecipeManager {
     /**
      * Adds a recipe based on given params.
      *
+     * Note: A `cookTime` of `0` will cause the recipe to never complete, it will burn and use fuel, but no progress will be made on the recipe, it needs to be at-least `1` or more.
+     *
+     * Saying that, if you would like to make a recipe that will never complete
+     * (for example being able to give the player an infinitely burning furnace for whatever reason), you can
+     * still use a `cookTime` of `0`.
+     *
      * @param name     Name of the new recipe
      * @param output   IItemStack output of the recipe
      * @param input    IIngredient input of the recipe
