@@ -142,7 +142,8 @@ public final class Replacer {
         CraftTweakerAPI.apply(new ReplacerAction(this.targetedManagers, this.targetedRecipes, Collections.unmodifiableList(this.rules), this.buildGeneratorFunction()));
     }
     
-    private Replacer addReplacementRule(final IReplacementRule rule) {
+    // Keep public but not exposed to Zen: this is public API (yeah, I know, bad placement)
+    public Replacer addReplacementRule(final IReplacementRule rule) {
         if (rule == IReplacementRule.EMPTY) return this;
         this.rules.add(rule);
         return this;
