@@ -9,18 +9,38 @@ import net.minecraftforge.eventbus.api.*;
  */
 public class CTCommandCollectionEvent extends Event {
     
+    public void registerCommand(CommandImpl command) {
+        CTCommands.registerCommand(command);
+    }
+    
+    public void registerCommand(String command, CommandImpl subCommand) {
+        CTCommands.registerCommand(command, subCommand);
+    }
+    
+    public void registerCommand(CommandImpl command, CommandImpl subCommand) {
+        CTCommands.registerCommand(command, subCommand);
+    }
+
+    public void registerDump(String name, String desc, CommandCaller caller) {
+        CTCommands.registerDump(name, desc, caller);
+    }
+    
+    @Deprecated
     public void registerCommand(CTCommands.CommandImpl command) {
         CTCommands.registerCommand(command);
     }
     
+    @Deprecated
     public void registerCommand(String command, CTCommands.CommandImpl subCommand) {
         CTCommands.registerCommand(command, subCommand);
     }
     
+    @Deprecated
     public void registerCommand(CTCommands.CommandImpl command, CTCommands.CommandImpl subCommand) {
         CTCommands.registerCommand(command, subCommand);
     }
     
+    @Deprecated
     public void registerDump(String name, String desc, CTCommands.CommandCaller caller) {
         CTCommands.registerDump(name, desc, caller);
     }

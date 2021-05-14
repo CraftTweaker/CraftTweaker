@@ -276,8 +276,4 @@ public class CraftTweakerAPI {
         return "crafttweaker";
     }
     
-    public static <T extends IRecipe<?>> String dump(final IRecipeManager manager, final T recipe) {
-        // TODO("Move out of this class")
-        return CraftTweakerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
-    }
 }
