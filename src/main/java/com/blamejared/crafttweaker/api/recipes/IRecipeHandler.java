@@ -231,6 +231,6 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      */
     default Optional<Function<ResourceLocation, T>> replaceIngredients(final IRecipeManager manager, final T recipe, final List<IReplacementRule> rules)
             throws ReplacementNotSupportedException {
-        throw new ReplacementNotSupportedException("Replacement is not supported for this recipe class");
+        throw new ReplacementNotSupportedException("Replacement is not supported for the recipe class '" + recipe.getClass().getName() + "' with manager " + manager.getCommandString());
     }
 }
