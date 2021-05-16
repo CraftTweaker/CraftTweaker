@@ -45,4 +45,10 @@ public class ExpandString {
     public static String format(String value, Object... args) {
         return String.format(value, args);
     }
+
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MOD)
+    public static String format(String format, String... args) {
+        return String.format(format, (Object[]) args);
+    }
 }
