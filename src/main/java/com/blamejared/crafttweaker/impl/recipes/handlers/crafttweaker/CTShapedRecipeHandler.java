@@ -23,17 +23,17 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
     
     @Override
     public String dumpToCommandString(final IRecipeManager manager, final CTRecipeShaped recipe) {
-    
-        final NonNullList<Ingredient> ingredients = recipe.getIngredients();
+        
         return String.format(
-                "craftingTable.addShaped(%s, %s, %s);",
+                "craftingTable.addShaped(%s, %s, %s%s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
                 new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
                 Arrays.stream(recipe.getCtIngredients())
                         .map(row -> Arrays.stream(row)
                                 .map(IIngredient::getCommandString)
                                 .collect(Collectors.joining(", ", "[", "]")))
-                        .collect(Collectors.joining(", ", "[", "]"))
+                        .collect(Collectors.joining(", ", "[", "]")),
+                recipe.getFunction() == null? "" : ", (usualOut, inputs) => { ... }"
         );
     }
     

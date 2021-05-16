@@ -23,12 +23,13 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
     public String dumpToCommandString(final IRecipeManager manager, final CTRecipeShapeless recipe) {
     
         return String.format(
-                "craftingTable.addShapeless(%s, %s, %s);",
+                "craftingTable.addShapeless(%s, %s, %s%s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
                 new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
                 Arrays.stream(recipe.getCtIngredients())
                         .map(IIngredient::getCommandString)
-                        .collect(Collectors.joining(", ", "[", "]"))
+                        .collect(Collectors.joining(", ", "[", "]")),
+                recipe.getFunction() == null? "" : ", (usualOut, inputs) => { ... }"
         );
     }
     
