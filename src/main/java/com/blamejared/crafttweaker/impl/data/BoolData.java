@@ -57,7 +57,7 @@ public class BoolData implements IData {
     
     @Override
     public String toJsonString() {
-        return internal + " as bool";
+        return Boolean.toString(internal);
     }
     
     @Override
