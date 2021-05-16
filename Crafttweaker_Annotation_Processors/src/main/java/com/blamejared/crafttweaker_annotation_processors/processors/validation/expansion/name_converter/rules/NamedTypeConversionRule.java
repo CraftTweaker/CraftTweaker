@@ -21,8 +21,7 @@ public class NamedTypeConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
-        return knownTypeRegistry.getNamedTypes()
-                .stream()
+        return knownTypeRegistry.getAllNamedTypes()
                 .filter(nameMatches(zenCodeName))
                 .map(Element::asType)
                 .findFirst()

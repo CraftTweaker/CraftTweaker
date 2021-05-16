@@ -1,14 +1,15 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.file.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import com.sun.source.util.*;
-import org.reflections.*;
-import org.reflections.util.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.AbstractCraftTweakerProcessor;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.ElementConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.KnownElementList;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.DocsJsonWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
+import com.sun.source.util.Trees;
+import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
