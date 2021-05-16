@@ -23,8 +23,7 @@ public class NativeTypeConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
-        return knownTypeRegistry.getNativeTypes()
-                .stream()
+        return knownTypeRegistry.getAllNativeTypes()
                 .filter(nameMatches(zenCodeName))
                 .map(this::getExpandedType)
                 .findFirst()

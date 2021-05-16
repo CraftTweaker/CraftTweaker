@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.DocsJsonWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.sun.source.util.Trees;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -32,7 +31,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         final HashSet<String> result = new HashSet<>(2);
-        result.add(Document.class.getCanonicalName());
+        result.add("com.blamejared.crafttweaker_annotations.annotations.Document");
         result.add("net.minecraftforge.fml.common.Mod");
         return result;
     }

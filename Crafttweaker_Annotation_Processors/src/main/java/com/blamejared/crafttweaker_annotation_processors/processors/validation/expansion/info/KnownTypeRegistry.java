@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KnownTypeRegistry implements IHasPostCreationCall {
     
@@ -73,6 +74,24 @@ public class KnownTypeRegistry implements IHasPostCreationCall {
     public Collection<TypeElement> getNativeTypes() {
         update(nativeTypes);
         return nativeTypes;
+    }
+    
+    public Collection<TypeElement> getNativeTypesFromDependencies() {
+        update(nativeTypesFromDependencies);
+        return nativeTypesFromDependencies;
+    }
+    
+    public Collection<TypeElement> getNamedTypesFromDependencies() {
+        update(nativeTypesFromDependencies);
+        return namedTypesFromDependencies;
+    }
+    
+    public Stream<TypeElement> getAllNativeTypes() {
+        return Stream.concat(getNativeTypes().stream(), getNativeTypesFromDependencies().stream());
+    }
+    
+    public Stream<TypeElement> getAllNamedTypes() {
+        return Stream.concat(getNamedTypes().stream(), getNamedTypesFromDependencies().stream());
     }
     
     public Collection<TypeElement> getExpansionTypes() {
