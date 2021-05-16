@@ -37,7 +37,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     public Set<String> getSupportedAnnotationTypes() {
         
         final HashSet<String> result = new HashSet<>(2);
-        result.add(Document.class.getCanonicalName());
+        result.add("com.blamejared.crafttweaker_annotations.annotations.Document");
         result.add("net.minecraftforge.fml.common.Mod");
         return result;
     }
