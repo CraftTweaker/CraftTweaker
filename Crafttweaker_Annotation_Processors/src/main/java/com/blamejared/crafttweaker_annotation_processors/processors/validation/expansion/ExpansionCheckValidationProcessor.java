@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import org.openzen.zencode.java.ZenCodeType;
 import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -37,7 +38,8 @@ public class ExpansionCheckValidationProcessor extends AbstractCraftTweakerProce
                 .forJavaClassPath())
                 .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
                         .getClassLoader())
-                .addUrls(ClasspathHelper.forClassLoader());
+                .addUrls(ClasspathHelper.forClassLoader())
+                .setScanners(new TypeAnnotationsScanner());
         
         final Reflections reflections = new Reflections(configuration);
         dependencyContainer.addInstanceAs(reflections, Reflections.class);

@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.fil
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
 import com.sun.source.util.Trees;
 import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -85,7 +86,8 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
                 .forJavaClassPath())
                 .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
                         .getClassLoader())
-                .addUrls(ClasspathHelper.forClassLoader());
+                .addUrls(ClasspathHelper.forClassLoader())
+                .setScanners(new TypeAnnotationsScanner());
         
         final Reflections reflections = new Reflections(configuration);
         dependencyContainer.addInstanceAs(reflections, Reflections.class);
