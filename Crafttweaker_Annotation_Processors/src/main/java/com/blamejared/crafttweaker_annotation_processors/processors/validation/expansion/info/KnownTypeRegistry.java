@@ -115,7 +115,7 @@ public class KnownTypeRegistry implements IHasPostCreationCall {
     }
     
     private void initTypesFromDependencies(Class<? extends Annotation> annotationClass, Collection<TypeElement> resultCollection) {
-        final List<TypeElement> result = reflections.getTypesAnnotatedWith(annotationClass, false)
+        final List<TypeElement> result = reflections.getTypesAnnotatedWith(annotationClass, true)
                 .stream()
                 .map(Class::getCanonicalName)
                 .map(elementUtils::getTypeElement)

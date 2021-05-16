@@ -86,8 +86,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
                 .forJavaClassPath())
                 .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
                         .getClassLoader())
-                .addUrls(ClasspathHelper.forClassLoader())
-                .setScanners(new TypeAnnotationsScanner());
+                .addUrls(ClasspathHelper.forClassLoader());
         
         final Reflections reflections = new Reflections(configuration);
         dependencyContainer.addInstanceAs(reflections, Reflections.class);

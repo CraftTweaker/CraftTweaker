@@ -67,6 +67,6 @@ public class NamedTypeConversionRule implements ModDependencyConversionRule {
     
     
     private Set<Class<?>> getClasses() {
-        return reflections.getTypesAnnotatedWith(ZenCodeType.Name.class);
+        return reflections.getTypesAnnotatedWith(ZenCodeType.Name.class, true);
     }
 }
