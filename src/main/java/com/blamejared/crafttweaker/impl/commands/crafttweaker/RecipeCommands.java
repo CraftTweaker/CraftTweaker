@@ -55,7 +55,7 @@ public final class RecipeCommands {
     }
     
     private static void dumpRecipe(final IRecipeType<?> type, final Collection<IRecipe<?>> recipes, final Predicate<IRecipe<?>> filter) {
-        final IRecipeManager manager = RecipeTypeBracketHandler.getRecipeManager(type.toString());
+        final IRecipeManager manager = RecipeTypeBracketHandler.getOrDefault(type);
         if (manager == null) {
             // Scripts for example don't have a recipe manager
             return;

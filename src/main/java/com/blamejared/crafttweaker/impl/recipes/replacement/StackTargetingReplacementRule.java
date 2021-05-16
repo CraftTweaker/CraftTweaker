@@ -49,7 +49,7 @@ public final class StackTargetingReplacementRule implements IReplacementRule {
     
     @Override
     public String describe() {
-        return String.format("Replacing stacks: %s --> %s", this.from.getCommandString(), this.to.getCommandString());
+        return String.format("Replacing stacks %s --> %s", this.from.getCommandString(), this.to.getCommandString());
     }
     
 }

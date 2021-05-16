@@ -84,7 +84,7 @@ public final class ReplacerAction implements IRuntimeAction {
     
     private Stream<Pair<IRecipeManager, IRecipe<?>>> streamRecipes() {
         return this.recipes.stream()
-                .map(recipe -> Pair.of(RecipeTypeBracketHandler.getCustomManager(Registry.RECIPE_TYPE.getKey(recipe.getType())), recipe));
+                .map(recipe -> Pair.of(RecipeTypeBracketHandler.getOrDefault(recipe.getType()), recipe));
     }
     
     private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule> rules) {

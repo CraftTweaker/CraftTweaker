@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.impl.brackets.util.ParseUtil;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
@@ -41,16 +43,29 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         }
     }
     
+    @Deprecated
     public static boolean containsCustomManager(ResourceLocation location) {
         return registeredTypes.containsKey(location);
     }
     
+    @Deprecated
     public static IRecipeManager getCustomManager(ResourceLocation location) {
         return registeredTypes.get(location);
     }
     
     public static Collection<IRecipeManager> getManagerInstances() {
         return managerInstances.values();
+    }
+    
+    public static IRecipeManager getOrDefault(final ResourceLocation location) {
+        return registeredTypes.computeIfAbsent(location, it -> {
+            final IRecipeType<?> type = Registry.RECIPE_TYPE.getOrDefault(location);
+            return type == null? null : new RecipeManagerWrapper(type);
+        });
+    }
+    
+    public static IRecipeManager getOrDefault(final IRecipeType<?> type) {
+        return getOrDefault(new ResourceLocation(type.toString()));
     }
     
     @ZenCodeType.Method

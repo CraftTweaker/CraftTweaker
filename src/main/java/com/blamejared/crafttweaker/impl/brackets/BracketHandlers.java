@@ -381,14 +381,11 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Nice try, but there's no reason you need to access the <recipetype:crafttweaker:scripts> recipe manager!");
         }
         final ResourceLocation key = new ResourceLocation(tokens);
-        if(RecipeTypeBracketHandler.containsCustomManager(key)) {
-            return RecipeTypeBracketHandler.getCustomManager(key);
-        }
+        
+        final IRecipeManager result = RecipeTypeBracketHandler.getOrDefault(key);
 
-        IRecipeType<?> value = Registry.RECIPE_TYPE.getOrDefault(key);
-
-        if(value != null) {
-            return new RecipeManagerWrapper(value);
+        if(result != null) {
+            return result;
         } else {
             throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
         }
