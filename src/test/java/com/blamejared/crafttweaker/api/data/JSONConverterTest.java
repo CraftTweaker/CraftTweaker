@@ -19,10 +19,20 @@ class JSONConverterTest {
     
     @Test
     @SuppressWarnings("ConstantConditions")
-    public void nullReturnsNull() {
+    public void nullElementReturnsNull() {
         //Arrange - none
         //Act
-        final IData convert = JSONConverter.convert(null);
+        final IData convert = JSONConverter.convert((JsonElement) null);
+        
+        assertThat(convert).isNull();
+    }
+    
+    @Test
+    @SuppressWarnings("ConstantConditions")
+    public void nullObjectReturnsNull() {
+        //Arrange - none
+        //Act
+        final IData convert = JSONConverter.convert((JsonObject) null);
         
         assertThat(convert).isNull();
     }

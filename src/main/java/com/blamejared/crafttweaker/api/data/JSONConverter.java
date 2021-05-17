@@ -45,6 +45,10 @@ public class JSONConverter {
     }
     
     public static MapData convert(JsonObject jsonObject) {
+        if(jsonObject == null) {
+            return null;
+        }
+        
         final Map<String, IData> dataMap = new HashMap<>();
         for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
             dataMap.put(e.getKey(), JSONConverter.convert(e.getValue()));
