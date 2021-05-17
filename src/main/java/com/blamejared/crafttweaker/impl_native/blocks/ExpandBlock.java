@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -27,6 +28,19 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/block/MCBlock")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
 public class ExpandBlock {
+    
+    
+    /**
+     * Gets the registry name of this block.
+     *
+     * @return A ResourceLocation of the registry name of this block.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Block internal) {
+        
+        return internal.getRegistryName();
+    }
     
     /**
      * Gets the default {@link BlockState} of this Block.
