@@ -29,7 +29,7 @@ public class ShortData implements INumberData {
     
     @Override
     public IData copy() {
-        return new ShortData(internal);
+        return new ShortData(getInternal());
     }
     
     @Override
@@ -52,7 +52,7 @@ public class ShortData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getShort() + " as short";
+        return getInternal().getShort() + " as short";
     }
     
     @Override

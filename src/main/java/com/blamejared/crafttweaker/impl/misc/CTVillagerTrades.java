@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.misc;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.villagers.BasicTradeExposer;
 import com.blamejared.crafttweaker.api.villagers.ITradeRemover;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddWanderingTrade;
@@ -35,7 +36,7 @@ public class CTVillagerTrades {
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
      * @param emeralds      The amount of Emeralds.
-     * @param forSale       What Itemstack is being sold (by the Villager).
+     * @param forSale       What ItemStack is being sold (by the Villager).
      * @param maxTrades     How many times can this trade be done.
      * @param xp            How much Experience is given by trading.
      * @param priceMult     When this trade is discounted, how much should it be discounted by.
@@ -44,11 +45,13 @@ public class CTVillagerTrades {
      * @docParam villagerLevel 1
      * @docParam emeralds 16
      * @docParam forSale <item:minecraft:diamond>
+     * @docParam maxTrades 5
      * @docParam xp 2
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
     public void addTrade(VillagerProfession profession, int villagerLevel, int emeralds, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
+        
         BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, priceMult);
         addTradeInternal(profession, villagerLevel, trade);
     }
@@ -58,8 +61,8 @@ public class CTVillagerTrades {
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param input1        The Itemstack that is being given to the Villager.
-     * @param forSale       What Itemstack is being sold (by the Villager).
+     * @param input1        The ItemStack that is being given to the Villager.
+     * @param forSale       What ItemStack is being sold (by the Villager).
      * @param maxTrades     How many times can this trade be done.
      * @param xp            How much Experience is given by trading.
      * @param priceMult     When this trade is discounted, how much should it be discounted by.
@@ -68,11 +71,13 @@ public class CTVillagerTrades {
      * @docParam villagerLevel 1
      * @docParam input1 <item:minecraft:dirt> * 16
      * @docParam forSale <item:minecraft:diamond>
+     * @docParam maxTrades 5
      * @docParam xp 2
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
     public void addTrade(VillagerProfession profession, int villagerLevel, ItemStack input1, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
+        
         BasicTrade trade = new BasicTrade(input1, forSale, maxTrades, xp, priceMult);
         addTradeInternal(profession, villagerLevel, trade);
     }
@@ -82,9 +87,9 @@ public class CTVillagerTrades {
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param input1        The main Itemstack that is being given to the Villager.
-     * @param input2        The secondary Itemstack that is being given to the Villager.
-     * @param forSale       What Itemstack is being sold (by the Villager).
+     * @param input1        The main ItemStack that is being given to the Villager.
+     * @param input2        The secondary ItemStack that is being given to the Villager.
+     * @param forSale       What ItemStack is being sold (by the Villager).
      * @param maxTrades     How many times can this trade be done.
      * @param xp            How much Experience is given by trading.
      * @param priceMult     When this trade is discounted, how much should it be discounted by.
@@ -92,23 +97,58 @@ public class CTVillagerTrades {
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
      * @docParam input1 <item:minecraft:diamond> * 2
-     * @docParam input1 <item:minecraft:dirt> * 2
+     * @docParam input2 <item:minecraft:dirt> * 2
      * @docParam forSale <item:minecraft:arrow>
+     * @docParam maxTrades 5
      * @docParam xp 2
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
     public void addTrade(VillagerProfession profession, int villagerLevel, ItemStack input1, ItemStack input2, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
+        
         BasicTrade trade = new BasicTrade(input1, input2, forSale, maxTrades, xp, priceMult);
         addTradeInternal(profession, villagerLevel, trade);
     }
     
     /**
-     * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 2 Emaralds for an Arrow.
+     * Removes a `BasicTrade` Villager trade. `BasicTrades` are trades that allow any item, to any other item. It it only really used for mod recipes and it not used for any vanilla villager trade.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param tradeFor      What Itemstack is being sold (by the Villager).
+     * @param forSale       What ItemStack is being sold (by the Villager).
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam forSale <item:minecraft:arrow>
+     * @docParam price <item:minecraft:stick>
+     * @docParam price2 <item:minecraft:emerald>
+     */
+    @ZenCodeType.Method
+    public void removeBasicTrade(VillagerProfession profession, int villagerLevel, IItemStack forSale, @ZenCodeType.Optional("<item:minecraft:air>") IItemStack price, @ZenCodeType.Optional("<item:minecraft:air>") IItemStack price2) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> {
+            if(trade instanceof BasicTrade) {
+                boolean saleMatches = forSale.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
+                if(price.isEmpty() && price2.isEmpty()){
+                    return saleMatches;
+                }
+                boolean priceMatches = price.matches(new MCItemStackMutable(BasicTradeExposer.getPrice(trade)));
+                if(!price.isEmpty() && price2.isEmpty()){
+                    return saleMatches && priceMatches;
+                }
+                boolean price2Matches = price2.matches(new MCItemStackMutable(BasicTradeExposer.getPrice2(trade)));
+                return saleMatches && priceMatches && price2Matches;
+            }
+            return false;
+        });
+    }
+    
+    /**
+     * Removes a Villager trade for Emeralds for Items. An example being, giving a villager 20 Wheat and getting an Emerald from the villager.
+     *
+     * @param profession    What profession this trade should be for.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param tradeFor      What ItemStack is being sold (by the Villager).
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
@@ -116,20 +156,23 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeEmeraldForItemsTrade(VillagerProfession profession, int villagerLevel, Item tradeFor) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EmeraldForItemsTrade) {
                 return ((VillagerTrades.EmeraldForItemsTrade) trade).tradeItem == tradeFor;
+            } else if(trade instanceof BasicTrade) {
+                return BasicTradeExposer.getForSale(trade).getItem() == tradeFor;
             }
             return false;
         });
     }
     
     /**
-     * Removes a Villager trade for Items for Emeralds. An example being, giving a villager an Arrow and getting 2 Emaralds.
+     * Removes a Villager trade for Items for Emeralds. An example being, giving a villager an Emerald and getting 4 Pumpkin Pies from the villager.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param sellingItem   What Itemstack is being given to the Villager.
+     * @param sellingItem   What ItemStack is being given to the Villager.
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
@@ -137,20 +180,23 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeItemsForEmeraldsTrade(VillagerProfession profession, int villagerLevel, IItemStack sellingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
                 return sellingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
+            } else if(trade instanceof BasicTrade) {
+                return new MCItemStackMutable(BasicTradeExposer.getPrice(trade)).matches(sellingItem);
             }
             return false;
         });
     }
     
     /**
-     * Removes a Villager trade for Emeralds and Items for Items. An example being, giving a villager an Emerald and Gravel and getting 16 Flint.
+     * Removes a Villager trade for Emeralds and Items for Items. An example being, giving a villager 6 uncooked Cod and an Emerald and getting back 6 Cooked Cod.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
-     * @param sellingItem   What Itemstack is being given to the Villager.
+     * @param sellingItem   What ItemStack is being given to the Villager.
      * @param buyingItem    The item that the Villager is selling.
      *
      * @docParam profession <profession:minecraft:farmer>
@@ -160,10 +206,15 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeItemsForEmeraldsAndItemsTrade(VillagerProfession profession, int villagerLevel, IItemStack sellingItem, IItemStack buyingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsAndItemsTrade) {
                 if(sellingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) trade).sellingItem))) {
                     return buyingItem.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) trade).buyingItem));
+                }
+            } else if(trade instanceof BasicTrade) {
+                if(sellingItem.matches(new MCItemStackMutable(BasicTradeExposer.getPrice(trade)))) {
+                    return buyingItem.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
                 }
             }
             return false;
@@ -171,12 +222,12 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for an Item with a PotionEffect. An example being, giving a villager an Arrow and getting a Tipped Arrow with night vision.
+     * Removes a Villager trade for Items for an Item with a PotionEffect. An example being, giving a villager an Arrow and an Emerald and getting a Tipped Arrow with night vision.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
      * @param potionStack   The base ItemStack that a random potion effect will be applied to. E.G. A tipped Arrow with no effect applied.
-     * @param sellingItem   What Itemstack is being given to the Villager.
+     * @param sellingItem   What ItemStack is being given to the Villager.
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
@@ -185,6 +236,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeItemWithPotionForEmeraldsAndItemsTrade(VillagerProfession profession, int villagerLevel, IItemStack potionStack, Item sellingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) {
                 if(potionStack.matches(new MCItemStackMutable(((VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) trade).potionStack))) {
@@ -196,7 +248,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Items for Dyed leather armor. An example being, giving a villager a diamond and getting a Blue Dyed Leather clestplate.
+     * Removes a Villager trade for Items for Dyed leather armor. An example being, giving a villager Leather Leggings and 3 Emeralds and getting a Blue Dyed Leather Leggings.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -208,6 +260,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeDyedArmorForEmeraldsTrade(VillagerProfession profession, int villagerLevel, Item buyingItem) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.DyedArmorForEmeraldsTrade) {
                 return ((VillagerTrades.DyedArmorForEmeraldsTrade) trade).tradeItem == buyingItem;
@@ -217,7 +270,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for a Map. An example being, giving a villager Emeralds and getting a Map to a structure.
+     * Removes a Villager trade for a Map. An example being, giving a villager 13 Emeralds and getting a Map to a structure.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -227,6 +280,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeEmeraldForMapTrade(VillagerProfession profession, int villagerLevel) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.EmeraldForMapTrade);
     }
     
@@ -241,11 +295,12 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeEnchantedBookForEmeraldsTrade(VillagerProfession profession, int villagerLevel) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.EnchantedBookForEmeraldsTrade);
     }
     
     /**
-     * Removes a Villager trade for an Enchanted Item. An example being, giving a villager Emeralds and getting an Enchanted Pickaxe.
+     * Removes a Villager trade for an Enchanted Item. An example being, giving a villager 3 Emeralds and getting an Enchanted Pickaxe.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -268,7 +323,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a Villager trade for Suspicious Stew. An example being, giving a villager Emeralds and getting a bowl of Suspicious Stew back..
+     * Removes a Villager trade for Suspicious Stew. An example being, giving a villager an Emerald and getting a bowl of Suspicious Stew back.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -278,6 +333,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeSuspiciousStewForEmeraldTrade(VillagerProfession profession, int villagerLevel) {
+        
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.SuspiciousStewForEmeraldTrade);
     }
     
@@ -287,7 +343,7 @@ public class CTVillagerTrades {
      *
      * @param rarity    The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
      * @param emeralds  The amount of Emeralds.
-     * @param forSale   What Itemstack is being sold (by the Wandering Trader).
+     * @param forSale   What ItemStack is being sold (by the Wandering Trader).
      * @param maxTrades How many times can this trade be done.
      * @param xp        How much Experience is given by trading.
      *
@@ -299,24 +355,28 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void addWanderingTrade(int rarity, int emeralds, ItemStack forSale, int maxTrades, int xp) {
+        
         BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, 1);
         addWanderingTradeInternal(rarity, trade);
     }
     
     /**
-     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader  2 Emaralds for an Arrow.
+     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader 2 Emeralds for an Arrow.
      *
-     * @param rarity     The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
-     * @param tradeFor   What Itemstack is being sold (by the Villager).
+     * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param tradeFor What ItemStack is being sold (by the Villager).
      *
      * @docParam rarity 2
      * @docParam tradeFor <item:minecraft:arrow>
      */
     @ZenCodeType.Method
     public void removeWanderingTrade(int rarity, IItemStack tradeFor) {
+        
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
                 return tradeFor.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
+            } else if(trade instanceof BasicTrade) {
+                return tradeFor.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
             }
             return false;
         });
@@ -324,18 +384,22 @@ public class CTVillagerTrades {
     
     
     private void addTradeInternal(VillagerProfession profession, int villagerLevel, BasicTrade trade) {
+        
         CraftTweakerAPI.apply(new ActionAddTrade(profession, villagerLevel, trade));
     }
     
     private void addWanderingTradeInternal(int villagerLevel, BasicTrade trade) {
+        
         CraftTweakerAPI.apply(new ActionAddWanderingTrade(villagerLevel, trade));
     }
     
     private void removeTradeInternal(VillagerProfession profession, int villagerLevel, ITradeRemover remover) {
+        
         CraftTweakerAPI.apply(new ActionRemoveTrade(profession, villagerLevel, remover));
     }
     
     private void removeWanderingTradeInternal(int villagerLevel, ITradeRemover remover) {
+        
         CraftTweakerAPI.apply(new ActionRemoveWanderingTrade(villagerLevel, remover));
     }
     

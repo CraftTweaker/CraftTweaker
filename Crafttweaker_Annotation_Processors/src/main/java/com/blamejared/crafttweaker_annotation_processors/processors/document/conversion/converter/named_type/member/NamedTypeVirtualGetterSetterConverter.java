@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.DocumentedTypeVirtualMembers;
@@ -15,9 +17,11 @@ import javax.lang.model.type.TypeMirror;
 public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedElementConverter<DocumentedTypeVirtualMembers> {
     
     private final TypeConverter typeConverter;
+    private final CommentConverter commentConverter;
     
-    public NamedTypeVirtualGetterSetterConverter(TypeConverter typeConverter) {
+    public NamedTypeVirtualGetterSetterConverter(TypeConverter typeConverter, CommentConverter commentConverter) {
         this.typeConverter = typeConverter;
+        this.commentConverter = commentConverter;
     }
     
     @Override
@@ -38,8 +42,9 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
         final AbstractTypeInfo typeInfo = convertType(method);
         final boolean hasGetter = convertHasGetter(method);
         final boolean hasSetter = convertHasSetter(method);
+        final DocumentationComment description = commentConverter.convertElement(method, DocumentationComment.empty());
         
-        return new PropertyMember(name, typeInfo, hasGetter, hasSetter);
+        return new PropertyMember(name, typeInfo, hasGetter, hasSetter, description);
     }
     
     private String convertName(ExecutableElement enclosedElement) {

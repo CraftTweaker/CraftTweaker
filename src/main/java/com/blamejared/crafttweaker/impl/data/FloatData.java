@@ -28,7 +28,7 @@ public class FloatData implements INumberData {
     
     @Override
     public IData copy() {
-        return new FloatData(internal);
+        return new FloatData(getInternal());
     }
     
     @Override
@@ -51,7 +51,7 @@ public class FloatData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getFloat() + " as float";
+        return getInternal().getFloat() + " as float";
     }
     
     @Override

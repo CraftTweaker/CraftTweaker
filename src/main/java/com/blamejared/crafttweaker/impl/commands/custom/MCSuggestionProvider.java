@@ -31,13 +31,13 @@ public class MCSuggestionProvider {
     
     @ZenCodeType.Method
     public MCSuggestions getSuggestions(final MCCommandContext context, final MCSuggestionsBuilder builder) throws Exception {
-        return new MCSuggestions(internal.getSuggestions(context.getInternal(), builder.getInternal()));
+        return new MCSuggestions(getInternal().getSuggestions(context.getInternal(), builder.getInternal()));
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCSuggestionProvider && internal.equals(((MCSuggestionProvider) o).internal);
+        return o instanceof MCSuggestionProvider && getInternal().equals(((MCSuggestionProvider) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -47,13 +47,13 @@ public class MCSuggestionProvider {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

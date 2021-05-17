@@ -23,70 +23,70 @@ public class MCSuggestionsBuilder {
     
     @ZenCodeType.Method
     public String getInput() {
-        return internal.getInput();
+        return getInternal().getInput();
     }
     
     @ZenCodeType.Method
     public int getStart() {
-        return internal.getStart();
+        return getInternal().getStart();
     }
     
     @ZenCodeType.Method
     public String getRemaining() {
-        return internal.getRemaining();
+        return getInternal().getRemaining();
     }
     
     @ZenCodeType.Method
     public MCSuggestions build() {
-        return new MCSuggestions(internal.build());
+        return new MCSuggestions(getInternal().build());
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder suggest(final String text) {
-        final SuggestionsBuilder builder = internal.suggest(text);
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().suggest(text);
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder suggest(final String text, final String tooltip) {
-        final SuggestionsBuilder builder = internal.suggest(text, new StringTextComponent(tooltip));
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().suggest(text, new StringTextComponent(tooltip));
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder suggest(final int value) {
-        final SuggestionsBuilder builder = internal.suggest(value);
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().suggest(value);
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder suggest(final int value, final String tooltip) {
-        final SuggestionsBuilder builder = internal.suggest(value, new StringTextComponent(tooltip));
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().suggest(value, new StringTextComponent(tooltip));
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder add(final MCSuggestionsBuilder other) {
-        final SuggestionsBuilder builder = internal.add(other.getInternal());
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().add(other.getInternal());
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder createOffset(final int start) {
-        final SuggestionsBuilder builder = internal.createOffset(start);
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().createOffset(start);
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     public MCSuggestionsBuilder restart() {
-        final SuggestionsBuilder builder = internal.restart();
-        return this.internal == builder ? this : new MCSuggestionsBuilder(builder);
+        final SuggestionsBuilder builder = getInternal().restart();
+        return getInternal() == builder ? this : new MCSuggestionsBuilder(builder);
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCSuggestionsBuilder && internal.equals(((MCSuggestionsBuilder) o).internal);
+        return o instanceof MCSuggestionsBuilder && getInternal().equals(((MCSuggestionsBuilder) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -96,13 +96,13 @@ public class MCSuggestionsBuilder {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

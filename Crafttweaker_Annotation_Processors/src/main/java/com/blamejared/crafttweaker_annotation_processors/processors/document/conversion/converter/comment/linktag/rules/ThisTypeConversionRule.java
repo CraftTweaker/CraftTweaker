@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.linktag.LinkConversionRule;
 
 import javax.lang.model.element.Element;
+import java.util.Optional;
 
 public class ThisTypeConversionRule implements LinkConversionRule {
     
@@ -12,7 +13,7 @@ public class ThisTypeConversionRule implements LinkConversionRule {
     }
     
     @Override
-    public String convertToClickableMarkdown(String link, Element element) {
-        return "[this](.)";
+    public Optional<String> tryConvertToClickableMarkdown(String link, Element element) {
+        return Optional.of("[this](.)");
     }
 }

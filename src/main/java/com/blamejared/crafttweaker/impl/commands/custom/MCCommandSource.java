@@ -31,60 +31,60 @@ public class MCCommandSource {
     
     @ZenCodeType.Method
     public Collection<String> getTeamNames() {
-        return internal.getTeamNames();
+        return getInternal().getTeamNames();
     }
     
     
     @ZenCodeType.Method
     public MCCommandSource withFeedbackDisabled() {
-        return new MCCommandSource(internal.withFeedbackDisabled());
+        return new MCCommandSource(getInternal().withFeedbackDisabled());
     }
     
     
     @ZenCodeType.Method
     public boolean hasPermissionLevel(int p_197034_1_) {
-        return internal.hasPermissionLevel(p_197034_1_);
+        return getInternal().hasPermissionLevel(p_197034_1_);
     }
     
     
     @ZenCodeType.Method
     public Collection<String> getPlayerNames() {
-        return internal.getPlayerNames();
+        return getInternal().getPlayerNames();
     }
     
     
     @ZenCodeType.Method
     public MCCommandSource withPermissionLevel(int p_197033_1_) {
-        return new MCCommandSource(internal.withPermissionLevel(p_197033_1_));
+        return new MCCommandSource(getInternal().withPermissionLevel(p_197033_1_));
     }
     
     
     @ZenCodeType.Method
     public String getName() {
-        return internal.getName();
+        return getInternal().getName();
     }
     
     
     @ZenCodeType.Method
     public Collection<String> getTargetedEntity() {
-        return internal.getTargetedEntity();
+        return getInternal().getTargetedEntity();
     }
     
     @ZenCodeType.Method
     public MCCommandSource withMinPermissionLevel(int p_197026_1_) {
-        return new MCCommandSource(internal.withMinPermissionLevel(p_197026_1_));
+        return new MCCommandSource(getInternal().withMinPermissionLevel(p_197026_1_));
     }
     
     @ZenCodeType.Method
     public boolean isPlayer() {
-        return internal.getEntity() instanceof ServerPlayerEntity;
+        return getInternal().getEntity() instanceof ServerPlayerEntity;
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
     public PlayerEntity getPlayer() {
         try {
-            return internal.asPlayer();
+            return getInternal().asPlayer();
         } catch(CommandSyntaxException e) {
             CraftTweakerAPI.logError("Could not get Player: %s", e);
             return null;
@@ -93,11 +93,11 @@ public class MCCommandSource {
     
     @ZenCodeType.Method
     public void sendErrorMessage(String message) {
-        internal.sendErrorMessage(new StringTextComponent(message));
+        getInternal().sendErrorMessage(new StringTextComponent(message));
     }
     
     @ZenCodeType.Method
     public void sendFeedback(String feedback, boolean allowLogging) {
-        internal.sendFeedback(new StringTextComponent(feedback), allowLogging);
+        getInternal().sendFeedback(new StringTextComponent(feedback), allowLogging);
     }
 }

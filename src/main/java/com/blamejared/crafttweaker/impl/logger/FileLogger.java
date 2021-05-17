@@ -22,7 +22,7 @@ public class FileLogger implements ILogger {
         try {
             this.output = new OutputStreamWriter(new FileOutputStream(logFile), StandardCharsets.UTF_8);
         } catch(FileNotFoundException e) {
-            throw new RuntimeException("Cannot create log file.", e);
+            throw new RuntimeException("Cannot create log file at: " + logFile.getAbsolutePath() + " writeable: " + logFile.canWrite() + " parent writeable: " + logFile.getParentFile().canWrite(), e);
         }
     }
 
@@ -44,7 +44,7 @@ public class FileLogger implements ILogger {
                 if(prefix) {
                     message = String.format("[%s][%s][%s][%s] %s", TIME_FORMAT.format(LocalDateTime.now()), ModLoadingContext.get().getActiveContainer().getCurrentState(), EffectiveSide.get(), level, strip(message));
                 }
-                this.output.write(message + "\n");
+                this.output.write(strip(message) + "\n");
                 this.output.flush();
             } catch(IOException e) {
                 e.printStackTrace();

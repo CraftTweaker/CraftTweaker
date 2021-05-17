@@ -26,71 +26,71 @@ public class MCLiteralArgumentBuilder extends MCArgumentBuilder {
     
     @ZenCodeType.Method
     public String getLiteral() {
-        return internal.getLiteral();
+        return getInternal().getLiteral();
     }
     
     @ZenCodeType.Method
     public MCLiteralCommandNode build() {
-        return new MCLiteralCommandNode(internal.build());
+        return new MCLiteralCommandNode(getInternal().build());
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder then(final MCArgumentBuilder argument) {
-        final LiteralArgumentBuilder<CommandSource> then = internal.then(argument.getInternal());
-        return this.internal == then ? this : new MCLiteralArgumentBuilder(then);
+        final LiteralArgumentBuilder<CommandSource> then = getInternal().then(argument.getInternal());
+        return getInternal() == then ? this : new MCLiteralArgumentBuilder(then);
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder then(final MCCommandNode argument) {
-        final LiteralArgumentBuilder<CommandSource> then = internal.then(argument.getInternal());
-        return this.internal == then ? this : new MCLiteralArgumentBuilder(then);
+        final LiteralArgumentBuilder<CommandSource> then = getInternal().then(argument.getInternal());
+        return getInternal() == then ? this : new MCLiteralArgumentBuilder(then);
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder executes(final MCCommand command) {
-        final LiteralArgumentBuilder<CommandSource> then = internal.executes(command.getInternal());
-        return this.internal == then ? this : new MCLiteralArgumentBuilder(then);
+        final LiteralArgumentBuilder<CommandSource> then = getInternal().executes(command.getInternal());
+        return getInternal() == then ? this : new MCLiteralArgumentBuilder(then);
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder requires(final Predicate<MCCommandSource> requirement) {
-        final LiteralArgumentBuilder<CommandSource> then = internal.requires(commandSource -> requirement.test(new MCCommandSource(commandSource)));
-        return this.internal == then ? this : new MCLiteralArgumentBuilder(then);
+        final LiteralArgumentBuilder<CommandSource> then = getInternal().requires(commandSource -> requirement.test(new MCCommandSource(commandSource)));
+        return getInternal() == then ? this : new MCLiteralArgumentBuilder(then);
     }
     
     @ZenCodeType.Method
     public Predicate<MCCommandSource> getRequirement() {
-        return mcCommandSource -> internal.getRequirement().test(mcCommandSource.getInternal());
+        return mcCommandSource -> getInternal().getRequirement().test(mcCommandSource.getInternal());
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder redirect(final MCCommandNode target) {
-        final LiteralArgumentBuilder<CommandSource> redirect = internal.redirect(target.getInternal());
-        return redirect == this.internal ? this : new MCLiteralArgumentBuilder(redirect);
+        final LiteralArgumentBuilder<CommandSource> redirect = getInternal().redirect(target.getInternal());
+        return redirect == getInternal() ? this : new MCLiteralArgumentBuilder(redirect);
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder redirect(final MCCommandNode target, final MCSingleRedirectModifier modifier) {
-        final LiteralArgumentBuilder<CommandSource> redirect = internal.redirect(target.getInternal(), modifier.getInternal());
-        return redirect == this.internal ? this : new MCLiteralArgumentBuilder(redirect);
+        final LiteralArgumentBuilder<CommandSource> redirect = getInternal().redirect(target.getInternal(), modifier.getInternal());
+        return redirect == getInternal() ? this : new MCLiteralArgumentBuilder(redirect);
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder fork(final MCCommandNode target, final MCRedirectModifier modifier) {
-        final LiteralArgumentBuilder<CommandSource> fork = internal.fork(target.getInternal(), modifier.getInternal());
-        return fork == this.internal ? this : new MCLiteralArgumentBuilder(fork);
+        final LiteralArgumentBuilder<CommandSource> fork = getInternal().fork(target.getInternal(), modifier.getInternal());
+        return fork == getInternal() ? this : new MCLiteralArgumentBuilder(fork);
     }
     
     @ZenCodeType.Method
     public MCLiteralArgumentBuilder forward(final MCCommandNode target, final MCRedirectModifier modifier, final boolean fork) {
-        final LiteralArgumentBuilder<CommandSource> forward = internal.forward(target.getInternal(), modifier.getInternal(), fork);
-        return forward == this.internal ? this : new MCLiteralArgumentBuilder(forward);
+        final LiteralArgumentBuilder<CommandSource> forward = getInternal().forward(target.getInternal(), modifier.getInternal(), fork);
+        return forward == getInternal() ? this : new MCLiteralArgumentBuilder(forward);
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCLiteralArgumentBuilder && internal.equals(((MCLiteralArgumentBuilder) o).internal);
+        return o instanceof MCLiteralArgumentBuilder && getInternal().equals(((MCLiteralArgumentBuilder) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -100,13 +100,13 @@ public class MCLiteralArgumentBuilder extends MCArgumentBuilder {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

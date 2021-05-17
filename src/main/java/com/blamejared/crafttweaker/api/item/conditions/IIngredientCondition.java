@@ -22,7 +22,6 @@ public interface IIngredientCondition<T extends IIngredient> {
     
     boolean ignoresDamage();
     
-    @SuppressWarnings("rawtypes")
     IIngredientConditionSerializer getSerializer();
     
     default void write(PacketBuffer buffer) {

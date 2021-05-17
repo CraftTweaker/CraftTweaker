@@ -36,7 +36,7 @@ public class ListData implements ICollectionData {
     public ListData(List<IData> list) {
         this.internal = new ListNBT();
         if(list != null)
-            list.forEach(iData -> internal.add(iData.getInternal()));
+            list.forEach(iData -> getInternal().add(iData.getInternal()));
     }
     
     @ZenCodeType.Constructor
@@ -54,42 +54,42 @@ public class ListData implements ICollectionData {
     
     @Override
     public IData setAt(int index, IData value) {
-        return NBTConverter.convert(internal.set(index, value.getInternal()));
+        return NBTConverter.convert(getInternal().set(index, value.getInternal()));
     }
     
     @Override
     public void add(int index, IData value) {
-        internal.add(index, value.getInternal());
+        getInternal().add(index, value.getInternal());
     }
     
     @Override
     public void add(IData value) {
-        internal.add(value.getInternal());
+        getInternal().add(value.getInternal());
     }
     
     @Override
     public IData remove(int index) {
-        return NBTConverter.convert(internal.remove(index));
+        return NBTConverter.convert(getInternal().remove(index));
     }
     
     @Override
     public IData getAt(int index) {
-        return NBTConverter.convert(internal.get(index));
+        return NBTConverter.convert(getInternal().get(index));
     }
     
     @Override
     public int size() {
-        return internal.size();
+        return getInternal().size();
     }
     
     @Override
     public void clear() {
-        internal.clear();
+        getInternal().clear();
     }
     
     @Override
     public IData copy() {
-        return new ListData(internal);
+        return new ListData(getInternal());
     }
     
     @Override
@@ -105,7 +105,7 @@ public class ListData implements ICollectionData {
     @Override
     public List<IData> asList() {
         List<IData> data = new ArrayList<>();
-        for(INBT inbt : internal) {
+        for(INBT inbt : getInternal()) {
             data.add(NBTConverter.convert(inbt));
         }
         return data;
@@ -117,7 +117,7 @@ public class ListData implements ICollectionData {
         if(dataValues != null && containsList(dataValues))
             return true;
         
-        for(INBT value : internal) {
+        for(INBT value : getInternal()) {
             if(NBTConverter.convert(value).contains(data))
                 return true;
         }
@@ -128,7 +128,7 @@ public class ListData implements ICollectionData {
     private boolean containsList(List<IData> dataValues) {
         outer:
         for(IData dataValue : dataValues) {
-            for(INBT value : internal) {
+            for(INBT value : getInternal()) {
                 if(NBTConverter.convert(value).contains(dataValue))
                     continue outer;
             }
@@ -144,7 +144,7 @@ public class ListData implements ICollectionData {
         StringBuilder output = new StringBuilder();
         output.append('[');
         boolean first = true;
-        for(INBT inbt : internal) {
+        for(INBT inbt : getInternal()) {
             if(first) {
                 first = false;
             } else {

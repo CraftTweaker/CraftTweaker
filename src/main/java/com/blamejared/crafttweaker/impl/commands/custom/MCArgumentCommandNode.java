@@ -25,19 +25,19 @@ public class MCArgumentCommandNode extends MCCommandNode {
     
     @ZenCodeType.Method
     public MCSuggestionProvider getCustomSuggestions() {
-        return new MCSuggestionProvider(internal.getCustomSuggestions());
+        return new MCSuggestionProvider(getInternal().getCustomSuggestions());
     }
     
     @ZenCodeType.Method
     @Override
     public MCRequiredArgumentBuilder createBuilder() {
-        return new MCRequiredArgumentBuilder(internal.createBuilder());
+        return new MCRequiredArgumentBuilder(getInternal().createBuilder());
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCArgumentCommandNode && internal.equals(((MCArgumentCommandNode) o).internal);
+        return o instanceof MCArgumentCommandNode && getInternal().equals(((MCArgumentCommandNode) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -47,13 +47,13 @@ public class MCArgumentCommandNode extends MCCommandNode {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

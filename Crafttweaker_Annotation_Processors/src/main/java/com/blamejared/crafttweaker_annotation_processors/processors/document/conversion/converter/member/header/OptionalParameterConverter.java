@@ -23,6 +23,9 @@ public class OptionalParameterConverter {
         addOptionalAnnotation(ZenCodeType.OptionalLong.class, ZenCodeType.OptionalLong::value);
         addOptionalAnnotation(ZenCodeType.OptionalFloat.class, ZenCodeType.OptionalFloat::value);
         addOptionalAnnotation(ZenCodeType.OptionalString.class, ZenCodeType.OptionalString::value);
+        addOptionalAnnotation(ZenCodeType.OptionalBoolean.class, ZenCodeType.OptionalBoolean::value);
+        addOptionalAnnotation(ZenCodeType.OptionalChar.class, ZenCodeType.OptionalChar::value);
+    
     }
     
     private <T extends Annotation> void addOptionalAnnotation(Class<T> annotationClass, Function<T, Object> converter) {

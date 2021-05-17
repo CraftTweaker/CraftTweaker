@@ -10,10 +10,10 @@ import net.minecraft.item.ItemStack;
 
 public class ActionRemoveRecipeByOutputInput extends ActionRemoveRecipe {
     
-    private final IItemStack output;
+    private final IIngredient output;
     private final IIngredient input;
     
-    public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IItemStack output, IIngredient input) {
+    public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IIngredient output, IIngredient input) {
         
         super(manager, recipe -> {
             ItemStack recipeOutput = recipe.getRecipeOutput();
@@ -29,6 +29,11 @@ public class ActionRemoveRecipeByOutputInput extends ActionRemoveRecipe {
         this.output = output;
         this.input = input;
         
+    }
+    // Left over so mods don't need to recompile against the new version
+    public ActionRemoveRecipeByOutputInput(IRecipeManager manager, IItemStack output, IIngredient input) {
+        
+        this(manager, (IIngredient) output, input);
     }
     
     @Override

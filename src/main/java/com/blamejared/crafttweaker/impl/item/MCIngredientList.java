@@ -20,6 +20,7 @@ public class MCIngredientList implements IIngredient {
     
     private final IIngredient[] ingredients;
     
+    @ZenCodeType.Constructor
     public MCIngredientList(IIngredient[] ingredients) {
     
         this.ingredients = ingredients;

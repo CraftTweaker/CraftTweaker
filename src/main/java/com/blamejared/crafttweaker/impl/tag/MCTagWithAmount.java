@@ -20,7 +20,7 @@ public class MCTagWithAmount<T> implements CommandStringDisplayable {
     
     @Override
     public String getCommandString() {
-        if(amount == 1) {
+        if(amount <= 1) {
             return tag.getCommandString();
         }
         

@@ -13,16 +13,18 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = Item.class, zenCodeName = "crafttweaker.api.item.MCItemDefinition")
 public class ExpandItem {
     
-    
     @ZenCodeType.Method
     @ZenCodeType.Getter("defaultInstance")
     @ZenCodeType.Caster(implicit = true)
     public static IItemStack getDefaultInstance(Item internal) {
+        
         return new MCItemStack(internal.getDefaultInstance());
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Item internal) {
+        
         return "<item:" + internal.getRegistryName() + ">.definition";
     }
+    
 }

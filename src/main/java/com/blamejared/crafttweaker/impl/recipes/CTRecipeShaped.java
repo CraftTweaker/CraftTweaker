@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
@@ -130,7 +129,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
                 stacks[rowIndex][columnIndex] = new MCItemStack(inv.getStackInSlot(slotIndex)).setAmount(1);
             }
         }
-        return function.process(this.output, stacks).getInternal().copy();
+        return function.process(this.output, stacks).getImmutableInternal();
     }
     
     @Override
@@ -201,7 +200,7 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     
     @Override
     public IRecipeSerializer<CTRecipeShaped> getSerializer() {
-        return CraftTweaker.SHAPED_SERIALIZER;
+        return SerializerShaped.INSTANCE;
     }
     
     @Override

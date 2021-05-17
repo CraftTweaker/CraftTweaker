@@ -31,7 +31,7 @@ public class ConstructorMember extends AbstractVirtualMember implements Comparab
     
     private void writeDescription(PrintWriter writer) {
         final DocumentationComment comment = getComment();
-        writer.println(comment.getDescription());
+        writer.println(comment.getMarkdownDescription());
     }
     
     private AbstractTypeInfo getConstructedType() {

@@ -56,14 +56,18 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     }
     
     protected void writeExampleBlockContent(PrintWriter writer, AbstractTypeInfo ownerType) {
-        writeSignatureExample(writer, ownerType);
+        writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
         writeExamples(writer, ownerType);
     }
     
-    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType) {
+    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
         final String ownerName = ownerType.getDisplayName();
         final String signature = header.formatForSignatureExample();
-        writer.printf("%s.%s%s%n", ownerName, name, signature);
+        String template = "%s%s.%s%s%n";
+        if(onlySignature) {
+            template = template + "%n";
+        }
+        writer.printf(template, onlySignature ? "// " : "", ownerName, name, signature);
     }
     
     private void writeExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
@@ -77,7 +81,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
     private void writeReturnTypeInfo(PrintWriter writer) {
         if(returnTypeInfoPresent()) {
-            writer.printf("Returns: %s%n", returnTypeInfo);
+            writer.printf("Returns: %s  %n", returnTypeInfo);
         }
     }
     
@@ -87,7 +91,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
     private void writeDescription(PrintWriter writer) {
         if(methodComment.hasDescription()) {
-            writer.println(methodComment.getDescription());
+            writer.println(methodComment.getMarkdownDescription());
             writer.println();
         }
     }

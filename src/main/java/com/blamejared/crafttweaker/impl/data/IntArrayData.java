@@ -29,7 +29,7 @@ public class IntArrayData implements ICollectionData {
     
     @Override
     public IData copy() {
-        return new IntArrayData(internal);
+        return new IntArrayData(getInternal());
     }
     
     @Override
@@ -45,7 +45,7 @@ public class IntArrayData implements ICollectionData {
     @Override
     public IntData setAt(int index, IData value) {
         if(value instanceof NumberNBT) {
-            return new IntData(internal.set(index, IntNBT.valueOf(((INumberData) value).getInt())));
+            return new IntData(getInternal().set(index, IntNBT.valueOf(((INumberData) value).getInt())));
         } else {
             return null;
         }
@@ -55,35 +55,35 @@ public class IntArrayData implements ICollectionData {
     @Override
     public void add(int index, IData value) {
         if(value instanceof INumberData) {
-            internal.add(index, IntNBT.valueOf(((INumberData) value).getInt()));
+            getInternal().add(index, IntNBT.valueOf(((INumberData) value).getInt()));
         }
     }
     
     @Override
     public void add(IData value) {
         if(value instanceof INumberData) {
-            internal.add(IntNBT.valueOf(((INumberData) value).getInt()));
+            getInternal().add(IntNBT.valueOf(((INumberData) value).getInt()));
         }
     }
     
     @Override
     public IntData remove(int index) {
-        return new IntData(internal.remove(index));
+        return new IntData(getInternal().remove(index));
     }
     
     @Override
     public IData getAt(int index) {
-        return new IntData(internal.get(index));
+        return new IntData(getInternal().get(index));
     }
     
     @Override
     public int size() {
-        return internal.size();
+        return getInternal().size();
     }
     
     @Override
     public void clear() {
-        internal.clear();
+        getInternal().clear();
     }
     
     @Override
@@ -91,7 +91,7 @@ public class IntArrayData implements ICollectionData {
         StringBuilder result = new StringBuilder();
         result.append('[');
         boolean first = true;
-        for(IntNBT nbt : internal) {
+        for(IntNBT nbt : getInternal()) {
             if(first) {
                 first = false;
             } else {
@@ -105,7 +105,7 @@ public class IntArrayData implements ICollectionData {
     
     @Override
     public List<IData> asList() {
-        final int[] intArray = internal.getIntArray();
+        final int[] intArray = getInternal().getIntArray();
         List<IData> list = new ArrayList<>(intArray.length);
         for(int i : intArray) {
             list.add(new IntData(i));

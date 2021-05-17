@@ -34,6 +34,9 @@ public class IDataRewrites {
         }
         
         TypeID typeID = hints.get(0);
+        if(typeID.isOptional()) {
+            typeID = typeID.withoutOptional();
+        }
         if(!(typeID instanceof DefinitionTypeID)) {
             return null;
         }
@@ -92,6 +95,9 @@ public class IDataRewrites {
         }
         
         TypeID typeID = hints.get(0);
+        if(typeID.isOptional()) {
+            typeID = typeID.withoutOptional();
+        }
         if(!(typeID instanceof DefinitionTypeID) || !((DefinitionTypeID) typeID).definition.name.equals("IData") && ((DefinitionTypeID) typeID).definition.name
                 .equals("MapData")) {
             return null;

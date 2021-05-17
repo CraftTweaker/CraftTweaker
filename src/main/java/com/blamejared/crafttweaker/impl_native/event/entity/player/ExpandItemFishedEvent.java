@@ -1,15 +1,13 @@
 package com.blamejared.crafttweaker.impl_native.event.entity.player;
 
-import java.util.List;
-
-import org.openzen.zencode.java.ZenCodeType;
-
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
+import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.List;
 
 /**
  * This event is fired every time the player fishes up an item. It can be used
@@ -17,6 +15,7 @@ import net.minecraftforge.event.entity.player.ItemFishedEvent;
  * even prevent the fishing by canceling the event.
  * 
  * @docParam this event
+ * @docEvent canceled will cause the player to receive no items at all
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/MCItemFishedEvent")

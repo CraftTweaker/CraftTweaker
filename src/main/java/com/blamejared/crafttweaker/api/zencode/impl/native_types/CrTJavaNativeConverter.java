@@ -21,7 +21,7 @@ class CrTJavaNativeConverter extends JavaNativeConverter {
             
             return super.addClass(cls);
         } catch(Throwable e) {
-            CraftTweakerAPI.logThrowing("Error while registering class, this is most likely a compatibility issue:", e);
+            CraftTweakerAPI.logThrowing("Error while registering class: '%s', this is most likely a compatibility issue:", e, cls.getName());
             return null;
         }
     }

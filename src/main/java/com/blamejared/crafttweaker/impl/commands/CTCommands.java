@@ -4,28 +4,45 @@ import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.data.StringConverter;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
+import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.zencode.impl.loaders.LoaderActions;
+import com.blamejared.crafttweaker.impl.brackets.BracketHandlers;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
+import com.blamejared.crafttweaker.impl.events.CTEventHandler;
+import com.blamejared.crafttweaker.impl.fluid.MCFluidStackMutable;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.loot.CTLootManager;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
 import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlockState;
+import com.blamejared.crafttweaker.impl_native.entity.ExpandPlayerEntity;
+import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.LiteralMessage;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.ArgumentSerializer;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -46,7 +63,13 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.openzen.zenscript.lexer.ParseException;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -58,6 +81,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -68,15 +93,26 @@ public class CTCommands {
     public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
     public static LiteralArgumentBuilder<CommandSource> rootAlternative = Commands.literal("crafttweaker");
     
+    
+    public static void initArgumentTypes(){
+        ArgumentTypes.register("crafttweaker:item_argument", CTItemArgument.class, new ArgumentSerializer<>(() -> CTItemArgument.INSTANCE));
+    }
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
+    
         
-        registerCustomCommand(Commands.literal("copy").then(Commands.argument("toCopy", StringArgumentType.string()).executes(context -> {
-            String toCopy = context.getArgument("toCopy", String.class);
-            ServerPlayerEntity entity = context.getSource().asPlayer();
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
-            send(new StringTextComponent("Copied!"), entity);
+        registerCustomCommand(Commands.literal("copy")
+                .then(Commands.argument("toCopy", StringArgumentType.string()).executes(context -> {
+                    String toCopy = context.getArgument("toCopy", String.class);
+                    ServerPlayerEntity entity = context.getSource().asPlayer();
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new MessageCopy(toCopy));
+                    send(new StringTextComponent("Copied!"), entity);
+                    return 0;
+                })));
+        
+        registerCommand(new CommandImpl("reload", "Points people to /reload", (CommandCallerPlayer) (player, stack) -> {
+            send(run(new StringTextComponent(color("CraftTweaker reload has been deprecated! Use the vanilla /reload instead!", TextFormatting.AQUA)), "/reload"), player);
             return 0;
-        })));
+        }));
         
         registerCommand(new CommandImpl("hand", "Outputs the name and tags (if any) of the item in your hand", (CommandCallerPlayer) (player, stack) -> {
             
@@ -108,13 +144,29 @@ public class CTCommands {
                     send(copy, player);
                 }
             }
+            stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(iFluidHandlerItem -> {
+                for(int i = 0; i < iFluidHandlerItem.getTanks(); i++) {
+                    FluidStack fluidInTank = iFluidHandlerItem.getFluidInTank(i);
+                    if(fluidInTank.isEmpty()) {
+                        continue;
+                    }
+                    String str = new MCFluidStackMutable(fluidInTank).getCommandString();
+                    ITextComponent nCopy = copy(new FormattedTextComponent("Fluid: %s", color(str, TextFormatting.GREEN)), str);
+                    send(nCopy, player);
+                }
+            });
             
             Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
             
             if(tags.size() > 0) {
-                send(copy(new FormattedTextComponent(color("Item Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
                 
-                tags.stream().map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
+                send(copy(new FormattedTextComponent(color("Item Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                        .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
+                        .collect(Collectors.joining(", "))), player);
+                
+                tags.stream()
+                        .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
+                        .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
             }
             
             if(stack.getItem() instanceof BlockItem) {
@@ -122,9 +174,13 @@ public class CTCommands {
                 tags = BlockTags.getCollection().getOwningTags(item.getBlock());
                 
                 if(tags.size() > 0) {
-                    send(copy(new FormattedTextComponent(color("Block Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
+                    send(copy(new FormattedTextComponent(color("Block Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                            .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerBlock.INSTANCE).getCommandString())
+                            .collect(Collectors.joining(", "))), player);
                     
-                    tags.stream().map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerBlock.INSTANCE).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
+                    tags.stream()
+                            .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerBlock.INSTANCE).getCommandString())
+                            .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
                 }
             }
             return 0;
@@ -149,16 +205,81 @@ public class CTCommands {
             }
             
             
-            send(copy(new FormattedTextComponent(color("Tag Entries", TextFormatting.DARK_AQUA)), tags.stream().map(ResourceLocation::toString).collect(Collectors.joining(", "))), player);
+            send(copy(new FormattedTextComponent(color("Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                    .map(ResourceLocation::toString)
+                    .collect(Collectors.joining(", "))), player);
             
-            tags.stream().map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString()).forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
+            tags.stream()
+                    .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
+                    .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
             
             if(player instanceof ServerPlayerEntity) {
                 //noinspection OptionalGetWithoutIsPresent
-                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(tags.stream().map(location -> new MCTag<>(location, TagManagerItem.INSTANCE)).findFirst().get().getCommandString()));
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(tags
+                        .stream()
+                        .map(location -> new MCTag<>(location, TagManagerItem.INSTANCE))
+                        .findFirst()
+                        .get()
+                        .getCommandString()));
             }
             return 0;
         }));
+        
+        registerCommand("hand", new CommandImpl("vanilla", "Outputs the name and tags (if any) of the item in your hand in the vanilla format", (CommandCallerPlayer) (player, stack) -> {
+            
+            
+            String string = stack.getItem().getRegistryName().toString();
+            ITextComponent copy = copy(new FormattedTextComponent("Item: %s", color(string, TextFormatting.GREEN)), string);
+            send(copy, player);
+            
+            if(stack.hasTag()) {
+                copy = copy(new FormattedTextComponent("NBT: %s", color(stack.getTag()
+                        .getString(), TextFormatting.GREEN)), stack.getTag().getString());
+                send(copy, player);
+            }
+            
+            if(player instanceof ServerPlayerEntity) {
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(string));
+            }
+            
+            if(stack.getItem() instanceof BucketItem) {
+                BucketItem item = (BucketItem) stack.getItem();
+                if(item.getFluid() != Fluids.EMPTY) {
+                    string = item.getFluid().getRegistryName().toString();
+                    copy = copy(new FormattedTextComponent("Fluid: %s", color(string, TextFormatting.GREEN)), string);
+                    send(copy, player);
+                }
+            }
+            
+            Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(stack.getItem());
+            
+            if(tags.size() > 0) {
+                send(copy(new FormattedTextComponent(color("Item Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                        .map(ResourceLocation::toString)
+                        .collect(Collectors.joining(", "))), player);
+                
+                tags.stream()
+                        .map(ResourceLocation::toString)
+                        .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("- ", TextFormatting.YELLOW), color("#" + commandString, TextFormatting.AQUA)), "#" + commandString), player));
+            }
+            
+            if(stack.getItem() instanceof BlockItem) {
+                BlockItem item = (BlockItem) stack.getItem();
+                tags = BlockTags.getCollection().getOwningTags(item.getBlock());
+                
+                if(tags.size() > 0) {
+                    send(copy(new FormattedTextComponent(color("Block Tag Entries", TextFormatting.DARK_AQUA)), tags.stream()
+                            .map(resourceLocation -> "#" + resourceLocation.toString())
+                            .collect(Collectors.joining(", "))), player);
+                    
+                    tags.stream()
+                            .map(ResourceLocation::toString)
+                            .forEach(commandString -> send(copy(new FormattedTextComponent("\t%s %s", color("-", TextFormatting.YELLOW), color(commandString, TextFormatting.AQUA)), commandString), player));
+                }
+            }
+            return 0;
+        }));
+        
         
         registerCommand(new CommandImpl("inventory", "Outputs the names of the item in your inventory", (CommandCallerPlayer) (player, stack) -> {
             StringBuilder builder = new StringBuilder("Inventory items").append("\n");
@@ -188,7 +309,9 @@ public class CTCommands {
                     builder.append("- No tags").append("\n");
                     continue;
                 }
-                tags.stream().map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString()).forEach(s -> builder.append("-").append(s).append("\n"));
+                tags.stream()
+                        .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE).getCommandString())
+                        .forEach(s -> builder.append("-").append(s).append("\n"));
             }
             CraftTweakerAPI.logDump(builder.toString());
             send(new StringTextComponent(color("Inventory tag list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
@@ -196,11 +319,15 @@ public class CTCommands {
         }));
         
         registerCommand(new CommandImpl("log", "Opens the log file", (CommandCallerPlayer) (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("logs/crafttweaker.log").toURI().toString()));
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(new File("logs/crafttweaker.log")
+                    .toURI()
+                    .toString()));
             return 0;
         }));
         registerCommand(new CommandImpl("scripts", "Opens the scripts folder", (CommandCallerPlayer) (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(CraftTweakerAPI.SCRIPT_DIR.toURI().toString()));
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(CraftTweakerAPI.SCRIPT_DIR
+                    .toURI()
+                    .toString()));
             return 0;
         }));
         
@@ -247,6 +374,25 @@ public class CTCommands {
             return 0;
         }));
         
+        registerCommand(new CommandImpl("blockInfo", "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.", (CommandCallerPlayer) (player, stack) -> {
+            if(CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
+                CTEventHandler.BLOCK_INFO_PLAYERS.remove(player);
+                ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block info mode deactivated."));
+                
+                if(CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
+                    MinecraftForge.EVENT_BUS.unregister(CTEventHandler.ListenBlockInfo.INSTANCE);
+                }
+            } else {
+                if(CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
+                    MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, PlayerInteractEvent.RightClickBlock.class, CTEventHandler.ListenBlockInfo.INSTANCE);
+                }
+                
+                CTEventHandler.BLOCK_INFO_PLAYERS.add(player);
+                ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block info mode activated. Right-click a block to see its data."));
+            }
+            return 0;
+        }));
+        
         
         registerCommand(new CommandImpl("discord", "Opens a link to discord", (CommandCallerPlayer) (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
@@ -267,7 +413,9 @@ public class CTCommands {
         
         registerCommand(new CommandImpl("dump", "Dumps available sub commands for the dump command", (CommandCallerPlayer) (player, stack) -> {
             send(new StringTextComponent("Dump types: "), player);
-            COMMANDS.get("dump").getSubCommands().forEach((s, command) -> send(run(new FormattedTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
+            COMMANDS.get("dump")
+                    .getSubCommands()
+                    .forEach((s, command) -> send(run(new FormattedTextComponent("- " + color(s, TextFormatting.GREEN)), "/ct dump " + s), player));
             return 0;
         }));
         
@@ -275,13 +423,41 @@ public class CTCommands {
         registerDump("recipes", "Outputs the names of all registered recipes", (CommandCallerPlayer) (player, stack) -> {
             for(IRecipeType<?> type : Registry.RECIPE_TYPE) {
                 CraftTweakerAPI.logDump(type.toString());
-                for(ResourceLocation location : player.world.getRecipeManager().recipes.getOrDefault(type, new HashMap<>()).keySet()) {
-                    CraftTweakerAPI.logDump("- " + location.toString());
+                for(ResourceLocation location : player.world.getRecipeManager().recipes.getOrDefault(type, new HashMap<>())
+                        .keySet()) {
+                    CraftTweakerAPI.logDump(location.toString());
                 }
             }
             send(new StringTextComponent(color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
             return 0;
         });
+        
+        
+        registerDump("loot_modifiers", "Outputs the names of all registered loot modifiers", (CommandCallerPlayer) (player, stack) -> {
+            CTLootManager.LOOT_MANAGER.getModifierManager().getAllNames().forEach(CraftTweakerAPI::logDump);
+            send(new StringTextComponent(color("Loot modifiers list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerDump("loot_tables", "Outputs the names of all registered loot tables", (CommandCallerPlayer) (player, stack) -> {
+            ServerLifecycleHooks.getCurrentServer()
+                    .getLootTableManager()
+                    .getLootTableKeys()
+                    .stream()
+                    .map(ResourceLocation::toString)
+                    .sorted()
+                    .forEach(CraftTweakerAPI::logDump);
+            send(new StringTextComponent(color("Loot table list generated! Check the crafttweaker.log file!", TextFormatting.GREEN)), player);
+            return 0;
+        });
+        
+        registerCustomCommand(Commands.literal("give")
+                .then(Commands.argument("item", CTItemArgument.INSTANCE)
+                        .executes(context -> {
+                            ExpandPlayerEntity.give(context.getSource()
+                                    .asPlayer(), context.getArgument("item", IItemStack.class));
+                            return 0;
+                        })), "give", "Gives the player an item using the Bracket handler syntax. You can also apply tags by appending a .withTag() call.");
         
         
         // Send an event to let others know that we are ready for SubCommands to be registered.
@@ -304,7 +480,10 @@ public class CTCommands {
         }
         
         
-        registerCustomCommand(Commands.literal("help").executes(context -> executeHelp(context, 1)).then(Commands.argument("page", IntegerArgumentType.integer(1, (COMMANDS.size() / commandsPerPage) + 1)).executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
+        registerCustomCommand(Commands.literal("help")
+                .executes(context -> executeHelp(context, 1))
+                .then(Commands.argument("page", IntegerArgumentType.integer(1, (COMMANDS.size() / commandsPerPage) + 1))
+                        .executes(context -> executeHelp(context, context.getArgument("page", int.class)))));
         
         COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));
         COMMANDS.forEach((s, command) -> registerCommandInternal(rootAlternative, command));
@@ -389,6 +568,12 @@ public class CTCommands {
         rootAlternative.then(literal);
     }
     
+    private static void registerCustomCommand(LiteralArgumentBuilder<CommandSource> literal, String name, String description) {
+        
+        registerCustomCommand(literal);
+        COMMANDS.put(name, new CommandImpl(name, description, (context -> 0)));
+    }
+    
     private static void send(ITextComponent component, CommandSource source) {
         
         source.sendFeedback(component, true);
@@ -420,7 +605,7 @@ public class CTCommands {
         
         Style style = base.getStyle();
         style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
-        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + quoteAndEscape(toCopy) + ""));
+        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + StringUtils.quoteAndEscape(toCopy) + ""));
         return base.setStyle(style);
     }
     
@@ -440,23 +625,6 @@ public class CTCommands {
         base.setStyle(style);
         
         return base;
-    }
-    
-    private static String quoteAndEscape(String p_193588_0_) {
-        
-        StringBuilder stringbuilder = new StringBuilder("\"");
-        
-        for(int i = 0; i < p_193588_0_.length(); ++i) {
-            char c0 = p_193588_0_.charAt(i);
-            
-            if(c0 == '\\' || c0 == '"') {
-                stringbuilder.append('\\');
-            }
-            
-            stringbuilder.append(c0);
-        }
-        
-        return stringbuilder.append('"').toString();
     }
     
     public interface CommandCaller {
@@ -522,6 +690,48 @@ public class CTCommands {
         public int compareTo(CommandImpl o) {
             
             return getName().compareTo(o.getName());
+        }
+        
+    }
+    
+    private static enum CTItemArgument implements ArgumentType<IItemStack> {
+        INSTANCE;
+        private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string}})");
+        private static final DynamicCommandExceptionType MALFORMED_DATA = new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message));
+        private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("invalid string"));
+        private static final Pattern ITEM_PATTERN = Pattern.compile("<item:(\\w+:\\w+)>(.withTag\\((\\{.*})\\))?");
+        
+        @Override
+        public IItemStack parse(StringReader reader) throws CommandSyntaxException {
+            
+            Matcher matcher = ITEM_PATTERN.matcher(reader.getRemaining());
+            if(!matcher.find()) {
+                throw INVALID_STRING.createWithContext(reader);
+            }
+            String itemLocation = matcher.group(1);
+            try {
+                IItemStack stack = getItem(itemLocation, matcher.group(3));
+                reader.setCursor(reader.getCursor() + matcher.group(0).length());
+                return stack;
+            } catch(ParseException e) {
+                reader.setCursor(reader.getCursor() + itemLocation.length() + "<item:>.withTag(".length() + e.position.getFromLineOffset());
+                throw MALFORMED_DATA.createWithContext(reader, e);
+            }
+        }
+        
+        @Override
+        public Collection<String> getExamples() {
+            
+            return EXAMPLES;
+        }
+        
+        private static IItemStack getItem(String location, String tag) throws ParseException {
+            
+            IItemStack stack = BracketHandlers.getItem(location).mutable();
+            if(tag != null) {
+                stack.withTag(StringConverter.convert(tag));
+            }
+            return stack;
         }
         
     }

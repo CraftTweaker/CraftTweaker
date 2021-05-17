@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -19,6 +20,9 @@ import net.minecraft.world.server.ServerWorld;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 
 /**
  * Worlds represent a dimension within the game. They are used to interact with 
@@ -379,4 +383,95 @@ public class ExpandWorld {
     public static boolean isLoaded(World internal, BlockPos pos) {
     	return internal.isBlockLoaded(pos);
     }
+    
+    /**
+     * Gets all entities in given area.
+     * @return all entities in given area.
+     *
+     * @docParam x1 1.0
+     * @docParam y1 1.0
+     * @docParam z1 1.0
+     * @docParam x2 11.4
+     * @docParam y2 11.4
+     * @docParam z2 11.4
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntitiesInArea(World internal, double x1, double y1, double z1, double x2, double y2, double z2) {
+        return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(x1, y1, z1, x2, y2, z2));
+    }
+    
+    /**
+     * Gets all entities in given area, but the arguments are block poses.
+     * If `pos2` is omitted, it will use `pos1.add(1, 1, 1)`
+     * @return all entities in given area
+     *
+     * @docParam pos1 new BlockPos(0, 1, 2)
+     * @docParam pos2 new BlockPos(3, 4, 5)
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntitiesInArea(World internal, BlockPos pos1, @ZenCodeType.Optional BlockPos pos2) {
+    
+        if(pos2 == null) {
+            return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1));
+        } else {
+            return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1, pos2));
+        }
+    }
+    
+    /**
+     * Gets all entities in given area, excluding the one passed into it.
+     *
+     * @param predicate the entity filter
+     *
+     * @docParam excludingEntity entity
+     * @docParam x1 1.0
+     * @docParam y1 1.0
+     * @docParam z1 1.0
+     * @docParam x2 11.4
+     * @docParam y2 11.4
+     * @docParam z2 11.4
+     * @docParam predicate (entityIn) => entityIn.isInWater()
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntitiesInAreaExcluding(World internal, @ZenCodeType.Nullable Entity excludingEntity, double x1, double y1, double z1, double x2, double y2, double z2, Predicate<Entity> predicate) {
+        
+        return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(x1, y1, z1, x2, y2, z2), predicate);
+    }
+    
+    /**
+     * @docParam excludingEntity entity
+     * @docParam predicate (entityIn) => entityIn.isInWater()
+     * @docParam pos1 new BlockPos(0, 1, 2)
+     * @docParam pos2 new BlockPos(3, 4, 5)
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntitiesInAreaExcluding(World internal, @ZenCodeType.Nullable Entity excludingEntity, Predicate<Entity> predicate, BlockPos pos1, @ZenCodeType.Optional BlockPos pos2) {
+        
+        if(pos2 == null) {
+            return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(pos1), predicate);
+        } else {
+            return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(pos1, pos2), predicate);
+        }
+    }
+
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public static TileEntity getTileEntity(World internal, BlockPos pos) {
+        return internal.getTileEntity(pos);
+    }
+    
+    /**
+     * add an entity to the world, return if the entity is added successfully.
+     */
+    @ZenCodeType.Method
+    public static boolean addEntity(World internal, Entity entity) {
+        
+        return internal.addEntity(entity);
+    }
+
+    @ZenCodeType.Getter("random")
+    public static Random getRandom(World internal) {
+        return internal.rand;
+    }
+    
 }

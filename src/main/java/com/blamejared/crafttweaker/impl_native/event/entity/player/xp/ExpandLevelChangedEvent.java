@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent.LevelChange;
  * allows you to change the amount of levels, or cancel the change entirely.
  * 
  * @docParam this event
+ * @docEvent canceled the xp level will not change
  */
 @ZenRegister
 @Document("vanilla/api/event/entity/player/xp/MCLevelChangeEvent")

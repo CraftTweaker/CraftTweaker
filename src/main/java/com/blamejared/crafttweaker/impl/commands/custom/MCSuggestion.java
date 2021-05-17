@@ -22,43 +22,43 @@ public class MCSuggestion {
     
     @ZenCodeType.Method
     public MCStringRange getRange() {
-        return new MCStringRange(internal.getRange());
+        return new MCStringRange(getInternal().getRange());
     }
     
     @ZenCodeType.Method
     public String getText() {
-        return internal.getText();
+        return getInternal().getText();
     }
     
     @ZenCodeType.Method
     public String getTooltip() {
-        return internal.getTooltip().getString();
+        return getInternal().getTooltip().getString();
     }
     
     @ZenCodeType.Method
     public String apply(final String input) {
-        return internal.apply(input);
+        return getInternal().apply(input);
     }
     
     @ZenCodeType.Method
     public int compareTo(final MCSuggestion o) {
-        return this.internal.compareTo(o.internal);
+        return getInternal().compareTo(o.getInternal());
     }
     
     @ZenCodeType.Method
     public int compareToIgnoreCase(final MCSuggestion b) {
-        return this.internal.compareToIgnoreCase(b.internal);
+        return getInternal().compareToIgnoreCase(b.getInternal());
     }
     
     @ZenCodeType.Method
     public MCSuggestion expandWith(final String command, final MCStringRange range) {
-        return new MCSuggestion(internal.expand(command, range.getInternal()));
+        return new MCSuggestion(getInternal().expand(command, range.getInternal()));
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCSuggestion && internal.equals(((MCSuggestion) o).internal);
+        return o instanceof MCSuggestion && getInternal().equals(((MCSuggestion) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -68,13 +68,13 @@ public class MCSuggestion {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

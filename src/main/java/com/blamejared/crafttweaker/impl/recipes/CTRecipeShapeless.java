@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
-import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.api.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
@@ -20,7 +19,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
 
 
 @MethodsReturnNonnullByDefault
@@ -79,7 +79,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         
         forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack.setAmount(1));
         
-        return this.function.process(this.output, stacks).getInternal();
+        return this.function.process(this.output, stacks).getImmutableInternal();
     }
     
     
@@ -167,7 +167,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public IRecipeSerializer<CTRecipeShapeless> getSerializer() {
-        return CraftTweaker.SHAPELESS_SERIALIZER;
+        return SerializerShapeless.INSTANCE;
     }
     
     

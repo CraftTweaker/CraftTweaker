@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
+import net.minecraft.server.MinecraftServer;
 import org.openzen.zencode.java.ZenCodeType;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
@@ -82,11 +83,12 @@ public class ExpandServerWorld {
     
     /**
      * Checks if a position is within a village.
-     * 
+     *
      * @param pos The position to look up.
+     *
      * @return Whether or not the position was inside a village.
-     * 
-     * @docParem pos new BlockPos(0, 1, 2)
+     *
+     * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isVillage(ServerWorld internal, BlockPos pos) {
@@ -108,14 +110,22 @@ public class ExpandServerWorld {
     
     /**
      * Checks if a position is within a chunk that is considered a slime chunk.
-     * 
+     *
      * @param pos The position to look up.
      * @return Whether or not the position was inside a slime chunk.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isSlimeChunk(ServerWorld internal, BlockPos pos) {
-    	return SharedSeedRandom.seedSlimeChunk(pos.getX() >> 4, pos.getZ() >> 4, internal.getSeed(), 987234911L).nextInt(10) == 0;
+    
+        return SharedSeedRandom.seedSlimeChunk(pos.getX() >> 4, pos.getZ() >> 4, internal.getSeed(), 987234911L)
+                .nextInt(10) == 0;
+    }
+    
+    @ZenCodeType.Getter("server")
+    public static MinecraftServer getServer(ServerWorld internal) {
+        
+        return internal.getServer();
     }
 }

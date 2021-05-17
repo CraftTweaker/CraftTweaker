@@ -1,7 +1,10 @@
 buildscript {
     repositories {
         maven {
-            url = 'https://files.minecraftforge.net/maven'
+            url = 'https://maven.minecraftforge.net'
+        }
+        maven {
+            url = 'https://maven.blamejared.com'
         }
         maven {
             url = 'https://repo.spongepowered.org/repository/maven-public'
@@ -17,11 +20,10 @@ buildscript {
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
-        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.1.0'
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.1.1"
+        classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
     }
 }
-
+apply plugin: 'com.blamejared.modtemplate'
 apply plugin: "org.ec4j.editorconfig"
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
@@ -29,22 +31,8 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
-apply plugin: "org.sonarqube"
 apply plugin: "jacoco"
 
-apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/22e7d543a18cd30675277fbfa3669e3d9e206010/generic/secrets.gradle'
-apply from: "sonarqube.gradle"
-
-import groovy.json.JsonOutput
-import com.diluv.schoomp.Webhook
-import com.diluv.schoomp.message.Message
-import com.diluv.schoomp.message.embed.Embed
-import com.diluv.schoomp.message.embed.Footer
-
-if (project.hasProperty('secretFile')) {
-    //noinspection GroovyAssignabilityCheck
-    loadSecrets(new File((String) findProperty('secretFile')))
-}
 
 //apply from: rootProject.file('common.gradle')
 
@@ -53,9 +41,6 @@ subprojects {
 }
 
 version = '7.1.0'
-if (System.getenv('BUILD_NUMBER') != null) {
-    version += "." + System.getenv('BUILD_NUMBER')
-}
 
 group = 'com.blamejared.crafttweaker'
 archivesBaseName = 'CraftTweaker-1.16.5'
@@ -69,6 +54,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 
         tasks.withType(Javadoc) {
             options.tags += "docParam"
+            options.tags += "docEvent"
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
@@ -94,7 +80,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -107,8 +92,8 @@ minecraft {
         }
 
         server {
-            workingDirectory project.file('run')
-            arg "-mixin.config=crafttweaker.mixins.json"
+            workingDirectory project.file('run_server')
+            arg "nogui"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -123,7 +108,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            arg "-mixin.config=crafttweaker.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -139,8 +123,27 @@ minecraft {
     }
 }
 
-mixin {
-    add sourceSets.main, "crafttweaker.refmap.json"
+
+modTemplate {
+    mcVersion "1.16.5"
+    curseHomepage "https://www.curseforge.com/minecraft/mc-mods/crafttweaker"
+    displayName "CraftTweaker"
+
+    changelog {
+        enabled true
+        firstCommit "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
+        repo "https://github.com/CraftTweaker/CraftTweaker"
+    }
+    versionTracker {
+        enabled true
+        author "Jared"
+        projectName "crafttweaker"
+    }
+    webhook {
+        enabled true
+        curseId "239197"
+        avatarUrl "https://media.forgecdn.net/avatars/142/108/636546700830987709.png"
+    }
 }
 
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
@@ -153,7 +156,7 @@ dependencies {
 
     zenCodeDeps.collect { compile project(it) }
 
-    minecraft 'net.minecraftforge:forge:1.16.5-36.0.0'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.0.14'
     compile fg.deobf("mezz.jei:jei-1.16.4:7.6.1.65")
 
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
@@ -201,8 +204,7 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "CraftTweaker",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "crafttweaker.mixins.json"
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
@@ -302,70 +304,8 @@ curseforge {
     }
 }
 
-tasks.getByName("curseforge").doLast {
-
-    try {
-        def name = project.findProperty('name')
-        def mcVersion = "1.16.5"
-        def cursePage = "https://www.curseforge.com/minecraft/mc-mods/crafttweaker"
-        def curseProject = "239197"
-        // Reads the file ID given to us by CurseForge
-        def newFileId = tasks.getByName("curseforge${curseProject}").property('mainArtifact').fileID
-
-        def webhook = new Webhook(findProperty('discordCFWebhook'), "${name} Gradle Upload")
-
-        def message = new Message()
-        message.setUsername(name)
-        message.setContent("${name} ${version} for Minecraft ${mcVersion} has been released! The download will be available soon.")
-
-        def embed = new Embed()
-        embed.addField('Download', "${cursePage}/files/$newFileId", false)
-        embed.addField('Change Log', "${getCIChangelog() ?: 'Unavailable'}", false)
-
-        embed.setColor(0xF16436)
-        message.addEmbed(embed)
-        message.setAvatarUrl("https://media.forgecdn.net/avatars/142/108/636546700830987709.png")
-        webhook.sendMessage(message)
-    }
-
-    catch (IOException e) {
-        println 'Failed to push to the Discord webhook.'
-    }
-}
-
-task updateVersionTracker {
-
-    onlyIf {
-
-        project.hasProperty('versionTrackerAPI')
-    }
-
-    doLast {
-        def body = [
-                'author'        : "${project.findProperty('versionTrackerAuthor')}",
-                'projectName'   : "crafttweaker",
-                'gameVersion'   : "1.16.5",
-                'projectVersion': "${version}",
-                'homepage'      : "${project.findProperty('versionTrackerHomepage')}",
-                'uid'           : "${project.findProperty('versionTrackerKey')}"
-        ]
-
-        // Opens a connection to the version tracker API and writes the payload JSON.
-        def req = new URL(project.findProperty('versionTrackerAPI')).openConnection()
-        req.setRequestMethod('POST')
-        req.setRequestProperty('Content-Type', 'application/json; charset=UTF-8')
-        req.setRequestProperty('User-Agent', "CraftTweaker Tracker Gradle")
-        req.setDoOutput(true)
-        req.getOutputStream().write(JsonOutput.toJson(body).getBytes("UTF-8"))
-
-        // We need to attempt a read in order to actually send the message.
-        println "VersionCheck Status code: ${req.getResponseCode()}"
-        println "VersionCheck Response: ${req.getInputStream().getText()}"
-    }
-
-}
-
 compileJava {
+    options.compilerArgs << "-Acrafttweaker.processor.document.output_directory=${file('docsOut')}"
     //options.compilerArgs += ["-Xprefer:source", "-verbose"]
     //options.fork = true
     //options.forkOptions.executable = 'javac'
@@ -382,64 +322,6 @@ idea {
         excludeDirs += [file("run"), file("runServer")]
     }
 }
-
-task genGitChangelog() {
-
-    doLast {
-        def stdout = new ByteArrayOutputStream()
-        // first commit to check from, in our case the first commit of the branch
-        String firstCommit = "04c6fe182f7e88bdf0cbfbe1739d86ff3c0212f5"
-        String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
-        // was having issues with grep and spaces in the regex
-        exec {
-            commandLine 'git', 'log', '-i', '--grep=version\\spush', '--grep=open\\sbeta\\sspecific\\scode', '--pretty=tformat:%H', '--date=local', firstCommit + '..@{0}'
-            standardOutput = stdout
-        }
-        if (stdout.toString().trim().indexOf("\n") >= 0) {
-            firstCommit = stdout.toString().split("\n")[0].trim()
-        }
-        System.out.println("Last version hash: \"" + firstCommit + "\"")
-        stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN - %cd', '--max-parents=1', '--date=local', firstCommit + "..@"
-            standardOutput = stdout
-        }
-        File file = new File("changelog.md")
-
-        file.write("### Current version: " + project.version)
-        file.append("\n" + stdout.toString())
-        System.out.println("Changelog generated!")
-    }
-}
-
-def getCIChangelog() {
-    // This method handles getting short changelogs from Jenkins itself instead of long changelogs
-    String repoLink = "https://github.com/CraftTweaker/CraftTweaker/commit/"
-    try {
-        def stdout = new ByteArrayOutputStream()
-        def gitHash = System.getenv('GIT_COMMIT')
-        def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
-        if(gitHash && gitPrevHash) {
-            exec {
-                commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN ', '' + gitPrevHash + '...' + gitHash
-                standardOutput = stdout
-            }
-            return stdout.toString().trim()
-        }
-        else if (gitHash) {
-            exec {
-                commandLine 'git', 'log', '--pretty=tformat:- [%s](' + repoLink + '%H) - %aN', '-1', '' + gitHash
-                standardOutput = stdout
-            }
-            return stdout.toString().trim()
-        } else {
-            return "";
-        }
-    } catch(ignored) {
-        return "";
-    }
-}
-
 
 editorconfig {
 

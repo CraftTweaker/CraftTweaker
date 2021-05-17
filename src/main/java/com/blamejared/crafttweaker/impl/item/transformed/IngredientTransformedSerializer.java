@@ -14,57 +14,66 @@ import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+//TODO - BREAKING (potentially): Move this to com.blamejared.crafttweaker.api.ingredient.serializers
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class IngredientTransformedSerializer implements IIngredientSerializer<IngredientTransformed<?, ?>> {
-
+public enum IngredientTransformedSerializer implements IIngredientSerializer<IngredientTransformed<?, ?>> {
+    INSTANCE;
+    
     public JsonObject toJson(IngredientTransformed<?, ?> ingredientVanillaPlus) {
+        
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.add("base", ingredientVanillaPlus.getCrTIngredient().getBaseIngredient().asVanillaIngredient().serialize());
+        jsonObject.add("base", ingredientVanillaPlus.getCrTIngredient()
+                .getBaseIngredient()
+                .asVanillaIngredient()
+                .serialize());
         final IIngredientTransformer<?> transformer = ingredientVanillaPlus.getTransformer();
         final JsonObject value = transformer.toJson();
         if(!value.has("type")) {
             value.addProperty("type", transformer.getType().toString());
         }
         jsonObject.add("transformer", value);
-
+        
         return jsonObject;
     }
-
+    
     @Override
     public IngredientTransformed<?, ?> parse(PacketBuffer buffer) {
+        
         final IIngredient base = IIngredient.fromIngredient(Ingredient.read(buffer));
         final ResourceLocation type = buffer.readResourceLocation();
         final IIngredientTransformerSerializer<?> value = CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER.getOrDefault(type);
         if(value == null) {
             throw new IllegalArgumentException("Invalid type: " + type);
         }
-
-        // noinspection rawtypes,unchecked
+        
+        // noinspection rawtypes
         return new IngredientTransformed(new MCIngredientTransformed(base, value.parse(buffer)));
     }
-
+    
     @Override
     public IngredientTransformed<?, ?> parse(JsonObject json) {
+        
         final JsonObject base = json.getAsJsonObject("base");
         final IIngredient baseIngredient = IIngredient.fromIngredient(CraftingHelper.getIngredient(base));
-
+        
         final JsonObject transformer = json.getAsJsonObject("transformer");
         final ResourceLocation type = new ResourceLocation(transformer.get("type").getAsString());
         final IIngredientTransformerSerializer<?> value = CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER.getOrDefault(type);
         if(value == null) {
             throw new IllegalArgumentException("Invalid type: " + type);
         }
-
-        // noinspection rawtypes,unchecked
+        
+        // noinspection rawtypes
         return new IngredientTransformed(new MCIngredientTransformed(baseIngredient, value.parse(transformer)));
     }
-
+    
     @Override
     public void write(PacketBuffer buffer, IngredientTransformed<?, ?> ingredient) {
+        
         final Ingredient baseIngredient = ingredient.getCrTIngredient().getBaseIngredient().asVanillaIngredient();
         baseIngredient.write(buffer);
-
+        
         final IIngredientTransformer<?> transformer = ingredient.getTransformer();
         final IIngredientTransformerSerializer<? extends IIngredientTransformer<?>> serializer = transformer.getSerializer();
         buffer.writeResourceLocation(serializer.getType());

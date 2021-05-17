@@ -26,23 +26,23 @@ public class MCParseResults {
     
     @ZenCodeType.Method
     public MCCommandContextBuilder getContext() {
-        return new MCCommandContextBuilder(internal.getContext());
+        return new MCCommandContextBuilder(getInternal().getContext());
     }
     
     @ZenCodeType.Method
     public MCImmutableStringReader getReader() {
-        return new MCImmutableStringReader(internal.getReader());
+        return new MCImmutableStringReader(getInternal().getReader());
     }
     
     @ZenCodeType.Method
     public Map<MCCommandNode, Exception> getExceptions() {
-        return internal.getExceptions().entrySet().stream().collect(Collectors.toMap(e -> MCCommandNode.convert(e.getKey()), Map.Entry::getValue));
+        return getInternal().getExceptions().entrySet().stream().collect(Collectors.toMap(e -> MCCommandNode.convert(e.getKey()), Map.Entry::getValue));
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCParseResults && internal.equals(((MCParseResults) o).internal);
+        return o instanceof MCParseResults && getInternal().equals(((MCParseResults) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -52,13 +52,13 @@ public class MCParseResults {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

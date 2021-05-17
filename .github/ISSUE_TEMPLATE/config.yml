@@ -1,1 +1,8 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Discord
+    url: https://discord.blamejared.com
+    about: 'If you have a question or need help, ask a question on the Discord.'
+  - name: Documentation Issues
+    url: https://github.com/CraftTweaker/CraftTweaker-Documentation
+    about: 'For documentation issues, suggest changes on our documentation repository.'

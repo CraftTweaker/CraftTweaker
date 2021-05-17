@@ -27,7 +27,7 @@ public class DocumentedParameter implements Comparable<DocumentedParameter> {
     }
     
     public String getDescription() {
-        return comment.getDescription();
+        return comment.getMarkdownDescription();
     }
     
     public boolean isOptional() {

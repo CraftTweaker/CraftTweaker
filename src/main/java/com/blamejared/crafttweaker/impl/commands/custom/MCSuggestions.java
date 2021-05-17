@@ -47,23 +47,23 @@ public class MCSuggestions {
     
     @ZenCodeType.Method
     public MCStringRange getRange() {
-        return new MCStringRange(internal.getRange());
+        return new MCStringRange(getInternal().getRange());
     }
     
     @ZenCodeType.Method
     public List<MCSuggestion> getList() {
-        return internal.getList().stream().map(MCSuggestion::new).collect(Collectors.toList());
+        return getInternal().getList().stream().map(MCSuggestion::new).collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
     public boolean isEmpty() {
-        return internal.isEmpty();
+        return getInternal().isEmpty();
     }
     
     @ZenCodeType.Method
     @Override
     public boolean equals(final Object o) {
-        return o instanceof MCSuggestions && internal.equals(((MCSuggestions) o).internal);
+        return o instanceof MCSuggestions && getInternal().equals(((MCSuggestions) o).getInternal());
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
@@ -73,13 +73,13 @@ public class MCSuggestions {
     
     @ZenCodeType.Method
     public int hashCode() {
-        return internal.hashCode();
+        return getInternal().hashCode();
     }
     
     @ZenCodeType.Method
     @Override
     public String toString() {
-        return internal.toString();
+        return getInternal().toString();
     }
     
     @ZenCodeType.Caster(implicit = true)

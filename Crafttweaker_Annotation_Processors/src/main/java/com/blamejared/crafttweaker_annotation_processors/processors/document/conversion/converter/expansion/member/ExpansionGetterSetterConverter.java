@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.DocumentedVirtualMembers;
@@ -15,9 +17,11 @@ import javax.lang.model.type.TypeMirror;
 public class ExpansionGetterSetterConverter extends AbstractEnclosedElementConverter<DocumentedVirtualMembers> {
     
     private final TypeConverter typeConverter;
+    private final CommentConverter commentConverter;
     
-    public ExpansionGetterSetterConverter(TypeConverter typeConverter) {
+    public ExpansionGetterSetterConverter(TypeConverter typeConverter, CommentConverter commentConverter) {
         this.typeConverter = typeConverter;
+        this.commentConverter = commentConverter;
     }
     
     @Override
@@ -46,8 +50,9 @@ public class ExpansionGetterSetterConverter extends AbstractEnclosedElementConve
         final AbstractTypeInfo type = getTypeInfo(method);
         final boolean hasGetter = isGetter(method);
         final boolean hasSetter = isSetter(method);
+        final DocumentationComment description = commentConverter.convertElement(enclosedElement, DocumentationComment.empty());
         
-        return new PropertyMember(name, type, hasGetter, hasSetter);
+        return new PropertyMember(name, type, hasGetter, hasSetter, description);
     }
     
     private String getName(Element enclosedElement) {

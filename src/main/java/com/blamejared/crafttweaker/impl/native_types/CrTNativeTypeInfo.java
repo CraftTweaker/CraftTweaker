@@ -1,12 +1,6 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
-import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
-import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class CrTNativeTypeInfo {
     
@@ -33,12 +27,12 @@ public class CrTNativeTypeInfo {
         
         CrTNativeTypeInfo that = (CrTNativeTypeInfo) o;
         
-        return craftTweakerName.equals(that.craftTweakerName);
+        return getCraftTweakerName().equals(that.getCraftTweakerName());
     }
     
     @Override
     public int hashCode() {
-        return craftTweakerName.hashCode();
+        return getCraftTweakerName().hashCode();
     }
     
     public Class<?> getVanillaClass() {

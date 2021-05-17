@@ -22,10 +22,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CTRecipeShapeless> {
     
-    //    private final T recipe;
+    public static final SerializerShapeless INSTANCE = new SerializerShapeless();
     
     public SerializerShapeless() {
-        //        this.recipe = recipe;
+        setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
     }
     
     private static NonNullList<Ingredient> readIngredients(JsonArray p_199568_0_) {

@@ -28,7 +28,7 @@ public class LongData implements INumberData {
     
     @Override
     public IData copy() {
-        return new LongData(internal);
+        return new LongData(getInternal());
     }
     
     @Override
@@ -51,7 +51,7 @@ public class LongData implements INumberData {
     
     @Override
     public String asString() {
-        return internal.getLong() + " as long";
+        return getInternal().getLong() + " as long";
     }
     
     @Override

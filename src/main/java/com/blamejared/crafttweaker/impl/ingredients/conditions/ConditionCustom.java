@@ -1,14 +1,10 @@
 package com.blamejared.crafttweaker.impl.ingredients.conditions;
 
-import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.conditions.IIngredientCondition;
 import com.blamejared.crafttweaker.api.item.conditions.IIngredientConditionSerializer;
-import com.google.gson.JsonObject;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.serializer.ConditionCustomSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +18,7 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
     private Predicate<IItemStack> function;
     
     public ConditionCustom(String uid, Predicate<IItemStack> function) {
+        
         this.uid = uid;
         this.function = function;
         
@@ -48,6 +45,7 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
     
     @Override
     public String getCommandString(T ingredient) {
+        
         return String.format("%s.onlyIf('%s')", ingredient.getCommandString(), uid);
     }
     
@@ -57,40 +55,17 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
         return true;
     }
     
+    public String getUid() {
+        
+        return uid;
+    }
+    
     @Override
     @SuppressWarnings("rawtypes")
     public IIngredientConditionSerializer getSerializer() {
-        return CraftTweakerRegistries.CONDITION_CUSTOM_SERIALIZER;
+        
+        return ConditionCustomSerializer.INSTANCE;
     }
     
-    public static final class ConditionCustomSerializer implements IIngredientConditionSerializer<ConditionCustom<?>> {
-        
-        @Override
-        public ConditionCustom<?> parse(PacketBuffer buffer) {
-            return new ConditionCustom<>(buffer.readString(), null);
-        }
-        
-        @Override
-        public ConditionCustom<?> parse(JsonObject json) {
-            final String uid = json.getAsJsonPrimitive("uid").getAsString();
-            return new ConditionCustom<>(uid, null);
-        }
-        
-        @Override
-        public void write(PacketBuffer buffer, ConditionCustom<?> ingredient) {
-            buffer.writeString(ingredient.uid);
-        }
-        
-        @Override
-        public JsonObject toJson(ConditionCustom<?> transformer) {
-            final JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("uid", transformer.uid);
-            return jsonObject;
-        }
-        
-        @Override
-        public ResourceLocation getType() {
-            return new ResourceLocation(CraftTweaker.MODID, "condition_custom");
-        }
-    }
+    
 }
