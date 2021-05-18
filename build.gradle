@@ -29,7 +29,6 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
-apply plugin: "jacoco"
 
 
 //apply from: rootProject.file('common.gradle')
@@ -167,17 +166,6 @@ test {
     useJUnitPlatform()
     testLogging {
         events "PASSED", "FAILED", "SKIPPED"
-    }
-
-    finalizedBy jacocoTestReport // report is always generated after tests run
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-
-    reports {
-        xml.enabled true
-        csv.enabled false
     }
 }
 
