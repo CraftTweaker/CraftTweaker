@@ -17,7 +17,6 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "gradle.plugin.org.ec4j.gradle:editorconfig-gradle-plugin:0.0.3"
         classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
@@ -26,7 +25,6 @@ buildscript {
 apply plugin: 'com.blamejared.modtemplate'
 apply plugin: "org.ec4j.editorconfig"
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
@@ -152,7 +150,6 @@ def zenCodeTestDeps = [':ScriptingExample']
 dependencies {
     compile project(":Crafttweaker_Annotations")
     annotationProcessor project(":Crafttweaker_Annotation_Processors")
-    annotationProcessor 'org.spongepowered:mixin:0.8.1-SNAPSHOT:processor'
 
     zenCodeDeps.collect { compile project(it) }
 
