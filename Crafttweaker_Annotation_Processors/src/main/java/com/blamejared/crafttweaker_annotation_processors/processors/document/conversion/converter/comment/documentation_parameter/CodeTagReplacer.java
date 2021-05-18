@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CodeTagReplacer {
-    private static final Pattern CODE_TAG_PATTERN = Pattern.compile("\\{@code ([^}]+)}");
+    private static final Pattern CODE_TAG_PATTERN = Pattern.compile("\\{@code[ \t\n\r]+([^}]+)}");
     
     public String replaceCodeTags(final String docComment) {
         final Matcher matcher = CODE_TAG_PATTERN.matcher(docComment);
