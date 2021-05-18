@@ -1,6 +1,9 @@
 package com.blamejared.crafttweaker.api.logger;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
+import com.blamejared.crafttweaker.api.zencode.impl.SourceFilePreprocessed;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.PriorityPreprocessor;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.logger.*;
@@ -147,7 +150,17 @@ public interface ILogger extends ScriptingEngineLogger {
     
     @Override
     default void logSourceFile(SourceFile file) {
-        info("Loading file: " + file.getFilename());
+        if(file instanceof SourceFilePreprocessed) {
+            final SourceFilePreprocessed sourceFilePreprocessed = (SourceFilePreprocessed) file;
+            final int priority = Integer.parseInt(sourceFilePreprocessed.getMatches()
+                    .get(PriorityPreprocessor.INSTANCE)
+                    .get(0)
+                    .getContent());
+            
+            info(String.format("Loading file: '%s' with priority: %s", file.getFilename(), priority));
+        } else {
+            info("Loading file: " + file.getFilename());
+        }
     }
     
     @Override
