@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipes.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
@@ -18,6 +19,7 @@ import com.blamejared.crafttweaker.impl.util.NameUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -74,12 +77,13 @@ public final class Replacer {
     private static final Supplier<BiFunction<ResourceLocation, String, String>> DEFAULT_CUSTOM_FUNCTION = Lazy.concurrentOf(
             () -> (id, original) -> original
     );
+    private static final Map<IRecipeManager, Collection<ResourceLocation>> DEFAULT_EXCLUSIONS = new HashMap<>();
     
     private final Collection<IRecipeManager> targetedManagers;
     private final Collection<? extends IRecipe<?>> targetedRecipes;
     private final List<IReplacementRule> rules;
     private final Map<ResourceLocation, String> userRenames;
-    private final Set<ResourceLocation> exclusionList;
+    private final Set<ResourceLocation> userExclusionList;
     
     private BiFunction<ResourceLocation, String, String> userRenamingFunction;
     
@@ -88,7 +92,7 @@ public final class Replacer {
         this.targetedRecipes = Collections.unmodifiableCollection(recipes);
         this.rules = new ArrayList<>();
         this.userRenames = new TreeMap<>();
-        this.exclusionList = new HashSet<>();
+        this.userExclusionList = new HashSet<>();
         this.userRenamingFunction = null;
     }
     
@@ -171,7 +175,7 @@ public final class Replacer {
      */
     @ZenCodeType.Method
     public Replacer excluding(final ResourceLocation... recipes) {
-        this.exclusionList.addAll(Arrays.asList(recipes));
+        this.userExclusionList.addAll(Arrays.asList(recipes));
         return this;
     }
     
@@ -314,7 +318,8 @@ public final class Replacer {
                         this.targetedManagers,
                         this.targetedRecipes,
                         Collections.unmodifiableList(this.rules),
-                        Collections.unmodifiableCollection(this.exclusionList),
+                        this.targetedManagers.stream().flatMap(manager -> DEFAULT_EXCLUSIONS.computeIfAbsent(manager, this::gatherDefaultExclusions).stream()).collect(Collectors.toList()),
+                        Collections.unmodifiableCollection(this.userExclusionList),
                         this.buildGeneratorFunction()
                 )
         );
@@ -340,6 +345,12 @@ public final class Replacer {
                         fixed
                 )
         );
+    }
+    
+    private Collection<ResourceLocation> gatherDefaultExclusions(final IRecipeManager manager) {
+        final GatherReplacementExclusionEvent event = new GatherReplacementExclusionEvent(manager);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.getExcludedRecipes();
     }
     
     private Function<ResourceLocation, ResourceLocation> buildGeneratorFunction() {

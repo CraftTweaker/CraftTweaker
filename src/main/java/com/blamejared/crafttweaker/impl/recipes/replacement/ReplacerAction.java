@@ -14,8 +14,10 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -26,22 +28,26 @@ public final class ReplacerAction implements IRuntimeAction {
     private final Collection<IRecipeManager> managers;
     private final Collection<? extends IRecipe<?>> recipes;
     private final List<IReplacementRule> rules;
-    private final Collection<ResourceLocation> exclusions;
+    private final Collection<ResourceLocation> defaultExclusions;
+    private final Collection<ResourceLocation> userExclusions;
     private final Function<ResourceLocation, ResourceLocation> generatorFunction;
     
     public ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe, final List<IReplacementRule> rules,
-                          final Collection<ResourceLocation> exclusions, final Function<ResourceLocation, ResourceLocation> generatorFunction) {
+                          final Collection<ResourceLocation> defaultExclusions, final Collection<ResourceLocation> userExclusions,
+                          final Function<ResourceLocation, ResourceLocation> generatorFunction) {
         this.managers = managers;
         this.recipes = recipe;
         this.rules = rules;
-        this.exclusions = exclusions;
+        this.defaultExclusions = defaultExclusions;
+        this.userExclusions = userExclusions;
         this.generatorFunction = generatorFunction;
     }
     
     @Override
     public void apply() {
+        final Collection<ResourceLocation> exclusions = Util.make(new HashSet<>(this.defaultExclusions), it -> it.addAll(this.userExclusions));
         Stream.concat(this.streamManagers(), this.streamRecipes())
-                .filter(pair -> !this.exclusions.contains(pair.getSecond().getId()))
+                .filter(pair -> !exclusions.contains(pair.getSecond().getId()))
                 .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), this.rules))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -62,9 +68,7 @@ public final class ReplacerAction implements IRuntimeAction {
                         .map(ResourceLocation::toString)
                         .collect(Collectors.joining(", ", "recipes {", "}")),
                 this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}")),
-                this.exclusions.isEmpty()? "" : this.exclusions.stream()
-                        .map(ResourceLocation::toString)
-                        .collect(Collectors.joining("\", \"", " excluding {\"", "\"}"))
+                this.joinBothLists(this.userExclusions, this.defaultExclusions)
         );
     }
     
@@ -79,6 +83,20 @@ public final class ReplacerAction implements IRuntimeAction {
             return false;
         }
         return true;
+    }
+    
+    private String joinBothLists(final Collection<ResourceLocation> userExclusions, final Collection<ResourceLocation> defaultExclusions) {
+        if (userExclusions.isEmpty() && defaultExclusions.isEmpty()) return "";
+        
+        final List<String> userExcludedNames = userExclusions.stream().map(ResourceLocation::toString).collect(Collectors.toList());
+        final List<String> defaultExcludedNames = defaultExclusions.stream().map(ResourceLocation::toString).collect(Collectors.toList());
+        
+        return String.format(
+                " excluding {%s%s%s}",
+                userExcludedNames.isEmpty()? "" : userExcludedNames.stream().collect(Collectors.joining("\", \"", "\"", "\"")),
+                userExcludedNames.isEmpty() || defaultExcludedNames.isEmpty()? "" : ", ",
+                defaultExcludedNames.isEmpty()? "" : defaultExcludedNames.stream().collect(Collectors.joining("\" (automatic), \"", "\"", "\" (automatic)"))
+        );
     }
     
     private Stream<Pair<IRecipeManager, IRecipe<?>>> streamManagers() {
