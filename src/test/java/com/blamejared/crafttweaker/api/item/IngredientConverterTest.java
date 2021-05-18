@@ -8,17 +8,14 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.*;
+
 class IngredientConverterTest extends CraftTweakerTest {
     
     private static void assertIsEmptyStack(IIngredient result) {
         
-        Assertions.assertTrue(result instanceof IItemStack);
-        Assertions.assertSame(ItemStack.EMPTY, ((IItemStack) result).getInternal());
-    }
-    
-    private static <T> void assertInstanceOf(T object, Class<? extends T> cls) {
-        
-        Assertions.assertTrue(cls.isInstance(object), "Expected " + object + " to be instanceof " + cls.getCanonicalName());
+        assertThat(result).isInstanceOfSatisfying(IItemStack.class,
+                stack -> assertThat(stack.getInternal()).isSameAs(ItemStack.EMPTY));
     }
     
     @Test
@@ -43,7 +40,7 @@ class IngredientConverterTest extends CraftTweakerTest {
         final IIngredient result = IngredientConverter.fromIngredient(ingredient);
         
         //Assert
-        Assertions.assertEquals(expectedStack, result);
+        assertThat(expectedStack).isEqualTo(result);
     }
     
     @Test
@@ -64,8 +61,8 @@ class IngredientConverterTest extends CraftTweakerTest {
         final IIngredient result = IngredientConverter.fromIngredient(ingredient);
         
         //Assert
-        assertInstanceOf(result, MCIngredientList.class);
-        Assertions.assertArrayEquals(expectedIngredients, ((MCIngredientList) result).getIngredients());
+        assertThat(result).isInstanceOfSatisfying(MCIngredientList.class,
+                list -> assertThat(list.getIngredients()).contains(expectedIngredients));
     }
     
     //TODO, how to test tags here?
