@@ -14,7 +14,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,19 +26,22 @@ public final class ReplacerAction implements IRuntimeAction {
     private final Collection<IRecipeManager> managers;
     private final Collection<? extends IRecipe<?>> recipes;
     private final List<IReplacementRule> rules;
+    private final Collection<ResourceLocation> exclusions;
     private final Function<ResourceLocation, ResourceLocation> generatorFunction;
     
     public ReplacerAction(final Collection<IRecipeManager> managers, final Collection<? extends IRecipe<?>> recipe, final List<IReplacementRule> rules,
-                          final Function<ResourceLocation, ResourceLocation> generatorFunction) {
+                          final Collection<ResourceLocation> exclusions, final Function<ResourceLocation, ResourceLocation> generatorFunction) {
         this.managers = managers;
         this.recipes = recipe;
         this.rules = rules;
+        this.exclusions = exclusions;
         this.generatorFunction = generatorFunction;
     }
     
     @Override
     public void apply() {
         Stream.concat(this.streamManagers(), this.streamRecipes())
+                .filter(pair -> !this.exclusions.contains(pair.getSecond().getId()))
                 .map(pair -> this.execute(pair.getFirst(), pair.getSecond(), this.rules))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -50,7 +52,7 @@ public final class ReplacerAction implements IRuntimeAction {
     @Override
     public String describe() {
         return String.format(
-                "Batching replacement for %s%s%s according to replacement rules %s",
+                "Batching replacement for %s%s%s according to replacement rules %s%s",
                 this.managers.isEmpty()? "" : this.managers.stream()
                         .map(IRecipeManager::getCommandString)
                         .collect(Collectors.joining(", ", "managers {", "}")),
@@ -59,7 +61,10 @@ public final class ReplacerAction implements IRuntimeAction {
                         .map(IRecipe::getId)
                         .map(ResourceLocation::toString)
                         .collect(Collectors.joining(", ", "recipes {", "}")),
-                this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}"))
+                this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}")),
+                this.exclusions.isEmpty()? "" : this.exclusions.stream()
+                        .map(ResourceLocation::toString)
+                        .collect(Collectors.joining("\", \"", " excluding {\"", "\"}"))
         );
     }
     

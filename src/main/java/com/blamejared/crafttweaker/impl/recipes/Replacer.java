@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -78,6 +79,7 @@ public final class Replacer {
     private final Collection<? extends IRecipe<?>> targetedRecipes;
     private final List<IReplacementRule> rules;
     private final Map<ResourceLocation, String> userRenames;
+    private final Set<ResourceLocation> exclusionList;
     
     private BiFunction<ResourceLocation, String, String> userRenamingFunction;
     
@@ -86,6 +88,7 @@ public final class Replacer {
         this.targetedRecipes = Collections.unmodifiableCollection(recipes);
         this.rules = new ArrayList<>();
         this.userRenames = new TreeMap<>();
+        this.exclusionList = new HashSet<>();
         this.userRenamingFunction = null;
     }
     
@@ -156,6 +159,20 @@ public final class Replacer {
                 Collections.emptyList(),
                 RecipeTypeBracketHandler.getManagerInstances().stream().filter(manager -> !managerList.contains(manager)).collect(Collectors.toSet())
         );
+    }
+    
+    /**
+     * Excludes a set of recipes, identified by their name, from undergoing replacement.
+     *
+     * @param recipes The list of recipes that should be excluded.
+     * @return This replacer for chaining.
+     *
+     * @docParam recipes <resource:minecraft:comparator>
+     */
+    @ZenCodeType.Method
+    public Replacer excluding(final ResourceLocation... recipes) {
+        this.exclusionList.addAll(Arrays.asList(recipes));
+        return this;
     }
     
     /**
@@ -292,7 +309,15 @@ public final class Replacer {
     @ZenCodeType.Method
     public void execute() {
         if (this.rules.isEmpty()) return;
-        CraftTweakerAPI.apply(new ReplacerAction(this.targetedManagers, this.targetedRecipes, Collections.unmodifiableList(this.rules), this.buildGeneratorFunction()));
+        CraftTweakerAPI.apply(
+                new ReplacerAction(
+                        this.targetedManagers,
+                        this.targetedRecipes,
+                        Collections.unmodifiableList(this.rules),
+                        Collections.unmodifiableCollection(this.exclusionList),
+                        this.buildGeneratorFunction()
+                )
+        );
     }
     
     // Keep public but not exposed to Zen: this is public API (yeah, I know, bad placement)
