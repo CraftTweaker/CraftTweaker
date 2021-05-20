@@ -285,6 +285,8 @@ public class ExpandLivingEntity {
      * Gets the ItemStack in the specific hand.
      *
      * @return The ItemStack in the specific hand.
+     *
+     * @docParam hand MCHand.MAIN_HAND
      */
     @ZenCodeType.Method
     public static IItemStack getHeldItem(LivingEntity internal, Hand hand) {
@@ -294,6 +296,9 @@ public class ExpandLivingEntity {
 
     /**
      * Sets a copied given itemStack to the hand
+     *
+     * @docParam hand MCHand.MAIN_HAND
+     * @docParam itemStack <item:minecraft:diamond>
      */
     @ZenCodeType.Method
     public static void setHeldItem(LivingEntity internal, Hand hand, IItemStack itemStack) {
