@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
@@ -15,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
@@ -279,6 +279,31 @@ public class ExpandLivingEntity {
     public static void setItemStackToSlot(LivingEntity internal, EquipmentSlotType slot, IItemStack itemStack) {
         
         internal.setItemStackToSlot(slot, itemStack.getInternal().copy());
+    }
+
+    /**
+     * Gets the ItemStack in the specific hand.
+     *
+     * @return The ItemStack in the specific hand.
+     *
+     * @docParam hand MCHand.MAIN_HAND
+     */
+    @ZenCodeType.Method
+    public static IItemStack getHeldItem(LivingEntity internal, Hand hand) {
+
+        return new MCItemStack(internal.getHeldItem(hand));
+    }
+
+    /**
+     * Sets a copied given itemStack to the hand
+     *
+     * @docParam hand MCHand.MAIN_HAND
+     * @docParam itemStack <item:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    public static void setHeldItem(LivingEntity internal, Hand hand, IItemStack itemStack) {
+
+        internal.setHeldItem(hand, itemStack.getInternal().copy());
     }
     
 }
