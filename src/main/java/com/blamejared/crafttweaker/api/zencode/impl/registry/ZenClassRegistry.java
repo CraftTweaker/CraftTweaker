@@ -199,7 +199,7 @@ public class ZenClassRegistry {
         }
         
         zenClasses.put(name, cls);
-        CraftTweakerAPI.logDebug("Registering %s", name);
+        CraftTweakerAPI.logDebug("Registering '%s'", name);
     }
     
     private void addGlobal(Class<?> cls) {
