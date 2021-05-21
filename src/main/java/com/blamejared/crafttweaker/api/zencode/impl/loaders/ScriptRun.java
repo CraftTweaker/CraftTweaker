@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import net.minecraftforge.common.MinecraftForge;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
+import org.openzen.zencode.java.module.converters.JavaNativeConverterBuilder;
 import org.openzen.zencode.shared.CompileException;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.codemodel.FunctionParameter;
@@ -130,9 +131,10 @@ public class ScriptRun {
     
     private void registerModules() throws CompileException {
         final List<JavaNativeModule> modules = new LinkedList<>();
-        
+        final CrTJavaNativeConverterBuilder nativeConverterBuilder = new CrTJavaNativeConverterBuilder();
+    
         //Register crafttweaker module first to assign deps
-        final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, CraftTweaker.MODID);
+        final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, CraftTweaker.MODID, nativeConverterBuilder);
         
         scriptingEngine.registerNativeProvided(crafttweakerModule);
         modules.add(crafttweakerModule);
@@ -140,23 +142,26 @@ public class ScriptRun {
         final HashSet<String> rootPackages = new HashSet<>(CraftTweakerRegistry.getRootPackages());
         rootPackages.remove(CraftTweaker.MODID);
         for(String rootPackage : rootPackages) {
-            final JavaNativeModule module = createModule(bep, rootPackage, rootPackage, crafttweakerModule);
+            final JavaNativeModule module = createModule(bep, rootPackage, rootPackage, nativeConverterBuilder, crafttweakerModule);
             scriptingEngine.registerNativeProvided(module);
             modules.add(module);
         }
         
         
-        final JavaNativeModule expModule = createModule(bep, "expansions", "", modules.toArray(new JavaNativeModule[0]));
+        final JavaNativeModule expModule = createModule(bep, "expansions", "", nativeConverterBuilder, modules.toArray(new JavaNativeModule[0]));
         for(List<Class<?>> expansionList : CraftTweakerRegistry.getExpansions().values()) {
             for(Class<?> expansionClass : expansionList) {
                 expModule.addClass(expansionClass);
             }
         }
+    
         scriptingEngine.registerNativeProvided(expModule);
+        
+        nativeConverterBuilder.headerConverter.reinitializeAllLazyValues();
     }
     
-    private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeModule... dependencies) {
-        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, new CrTJavaNativeConverterBuilder());
+    private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeConverterBuilder nativeConverterBuilder, JavaNativeModule... dependencies) {
+        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, nativeConverterBuilder);
         
         
         for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(moduleName, scriptingEngine, module)) {

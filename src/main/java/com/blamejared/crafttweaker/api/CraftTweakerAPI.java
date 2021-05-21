@@ -70,7 +70,7 @@ public class CraftTweakerAPI {
             
             final String describe = action.describe();
             if(describe != null && !describe.isEmpty()) {
-                logInfo(describe);
+                logger.info(describe);
             }
             action.apply();
             currentLoaderActions.addValidAction(action);

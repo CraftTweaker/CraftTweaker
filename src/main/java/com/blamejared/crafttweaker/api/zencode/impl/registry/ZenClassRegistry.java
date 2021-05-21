@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.registry;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
@@ -191,8 +192,14 @@ public class ZenClassRegistry {
     
     private void addZenClass(Class<?> cls) {
         final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
-        zenClasses.put(annotation.value(), cls);
-        CraftTweakerAPI.logDebug("Registering %s", annotation.value());
+        final String name = annotation.value();
+        if(zenClasses.containsKey(name)) {
+            final Class<?> otherCls = zenClasses.get(name);
+            CraftTweakerAPI.logError("Duplicate ZenCode Name '%s' in classes '%s' and '%s'", name, otherCls, cls);
+        }
+        
+        zenClasses.put(name, cls);
+        CraftTweakerAPI.logDebug("Registering '%s'", name);
     }
     
     private void addGlobal(Class<?> cls) {

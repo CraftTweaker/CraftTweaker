@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 public class ClientHelper {
     
     /**
-     * Helper method for DistExecturo.
+     * Helper method for DistExecutor.
      *
      * See {@link IAction#shouldApplySingletons()}
      *
