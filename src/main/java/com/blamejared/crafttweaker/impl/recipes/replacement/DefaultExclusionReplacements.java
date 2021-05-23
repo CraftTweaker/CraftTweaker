@@ -15,11 +15,19 @@ public final class DefaultExclusionReplacements {
     public static void onGatherReplacementExclusionEvent(final GatherReplacementExclusionEvent event) {
     
         final IRecipeManager manager = event.getTargetedManager();
+        
         if (manager.getRecipeType() == IRecipeType.CRAFTING) {
             manager.getAllRecipes()
                     .stream()
                     .map(WrapperRecipe::getRecipe)
                     .filter(it -> it instanceof SpecialRecipe)
+                    .forEach(event::addExclusion);
+        }
+        
+        if (manager.getRecipeType() == CraftTweaker.RECIPE_TYPE_SCRIPTS) {
+            manager.getAllRecipes()
+                    .stream()
+                    .map(WrapperRecipe::getRecipe)
                     .forEach(event::addExclusion);
         }
     }

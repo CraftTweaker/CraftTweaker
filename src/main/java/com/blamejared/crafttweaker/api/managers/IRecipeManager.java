@@ -265,7 +265,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
                 name,
                 (fixed, mistakes) -> CraftTweakerAPI.logWarning(
                         "%sInvalid recipe name '%s', mistakes:\n%s\nNew recipe name: %s",
-                        position == null ? "" : position + ": ",
+                        position == CodePosition.UNKNOWN ? "" : position + ": ",
                         name,
                         String.join("\n", mistakes),
                         fixed

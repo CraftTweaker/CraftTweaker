@@ -48,7 +48,7 @@ public final class HelpCommand {
         
         //Actually show the commands
         for(int i = startCommandIndex; i < endCommandIndex; i++) {
-            final com.blamejared.crafttweaker.impl.commands.CommandImpl command = commands.get(keys.get(i));
+            final CommandImpl command = commands.get(keys.get(i));
             
             final FormattedTextComponent message = new FormattedTextComponent("/ct %s", command.getName());
             source.sendFeedback(CommandUtilities.run(message, message.getUnformattedComponentText()), true);

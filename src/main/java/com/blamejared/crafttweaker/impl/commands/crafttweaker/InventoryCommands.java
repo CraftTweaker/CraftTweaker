@@ -7,8 +7,7 @@ import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -36,12 +35,12 @@ public final class InventoryCommands {
             return 0;
         }));
     
-        CTCommands.registerCommand("inventory", CTCommands.playerCommand("tags", "Outputs the tags of the item in your inventory", (player, stack) -> {
+        CTCommands.registerCommand("inventory", CTCommands.playerCommand("tags", "Outputs the tags of the items in your inventory", (player, stack) -> {
             player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(inventory -> {
                 final String inventoryContents = IntStream.range(0, inventory.getSlots())
                         .mapToObj(inventory::getStackInSlot)
                         .filter(it -> !it.isEmpty())
-                        .map(it -> Pair.of(new MCItemStackMutable(it).getCommandString(), ItemTags.getCollection().getOwningTags(it.getItem())))
+                        .map(it -> Pair.of(new MCItemStackMutable(it).getCommandString(), TagManagerItem.INSTANCE.getAllTagsFor(it.getItem())))
                         .map(it -> it.getFirst() + '\n' + stringify(it.getSecond()))
                         .collect(Collectors.joining("\n", "Inventory item tags\n", ""));
         
@@ -53,11 +52,11 @@ public final class InventoryCommands {
         }));
     }
     
-    private static String stringify(final Collection<ResourceLocation> tags) {
+    private static String stringify(final Collection<MCTag<Item>> tags) {
         if (tags.isEmpty()) return "- No tags";
         
         return tags.stream()
-                .map(id -> new MCTag<>(id, TagManagerItem.INSTANCE).getCommandString())
+                .map(MCTag::getCommandString)
                 .map(it -> String.format("- %s", it))
                 .collect(Collectors.joining("\n"));
     }

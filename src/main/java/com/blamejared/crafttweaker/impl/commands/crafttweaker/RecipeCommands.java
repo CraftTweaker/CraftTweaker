@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class RecipeCommands {
     private RecipeCommands() {}
@@ -44,9 +45,9 @@ public final class RecipeCommands {
             return 0;
         }
         
-        CraftTweakerAPI.logInfo("Dumping all recipes that output %s!", new MCItemStackMutable(stack).getCommandString());
+        final IItemStack workingStack = new MCItemStackMutable(stack.copy()).setAmount(1);
         
-        final IItemStack workingStack = new MCItemStackMutable(stack).setAmount(1);
+        CraftTweakerAPI.logInfo("Dumping all recipes that output %s!", workingStack.getCommandString());
         
         player.world.getRecipeManager().recipes.forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> workingStack.matches(new MCItemStackMutable(it.getRecipeOutput()))));
     
@@ -61,22 +62,13 @@ public final class RecipeCommands {
             return;
         }
         
-        final StringBuilder builder = new StringBuilder("Recipe type: '");
-        builder.append(manager.getCommandString());
-        builder.append("'\n");
-    
-        final long count = recipes.stream()
+        final String dumpResult = recipes.stream()
                 .filter(filter)
                 .sorted(Comparator.comparing(RecipeCommands::serializer).thenComparing(IRecipe::getId))
                 .map(it -> dump(manager, it))
-                .peek(it -> builder.append(it).append('\n'))
-                .count();
+                .collect(Collectors.joining("\n  "));
         
-        if (count > 0) {
-            CraftTweakerAPI.logDump(builder.toString());
-        } else {
-            CraftTweakerAPI.logDump("No recipe found");
-        }
+        CraftTweakerAPI.logDump("Recipe type: '%s'\n  %s\n", manager.getCommandString(), dumpResult.isEmpty()? "No recipe found" : dumpResult);
     }
     
     private static ResourceLocation serializer(final IRecipe<?> recipe) {
