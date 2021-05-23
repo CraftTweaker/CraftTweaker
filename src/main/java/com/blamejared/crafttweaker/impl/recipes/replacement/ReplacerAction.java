@@ -58,17 +58,10 @@ public final class ReplacerAction implements IRuntimeAction {
     @Override
     public String describe() {
         return String.format(
-                "Batching replacement for %s%s%s according to replacement rules %s%s",
-                this.managers.isEmpty()? "" : this.managers.stream()
-                        .map(IRecipeManager::getCommandString)
-                        .collect(Collectors.joining(", ", "managers {", "}")),
-                !this.managers.isEmpty() && !this.recipes.isEmpty()? " and " : "",
-                this.recipes.isEmpty()? "" : this.recipes.stream()
-                        .map(IRecipe::getId)
-                        .map(ResourceLocation::toString)
-                        .collect(Collectors.joining(", ", "recipes {", "}")),
-                this.rules.stream().map(IReplacementRule::describe).collect(Collectors.joining(", ", "{", "}")),
-                this.joinBothLists(this.userExclusions, this.defaultExclusions)
+                "Batching replacement for %s according to replacement rules %s%s",
+                this.stringifyTargets(),
+                this.stringifyReplacementRules(),
+                this.stringifyExclusionsIfPresent()
         );
     }
     
@@ -85,18 +78,70 @@ public final class ReplacerAction implements IRuntimeAction {
         return true;
     }
     
-    private String joinBothLists(final Collection<ResourceLocation> userExclusions, final Collection<ResourceLocation> defaultExclusions) {
-        if (userExclusions.isEmpty() && defaultExclusions.isEmpty()) return "";
+    private String stringifyTargets() {
+        return this.stringifyTargetedManagersIfPresent()
+                + (this.areWeTargetingBothManagersAndRecipes()? " and " : "")
+                + this.stringifyTargetedRecipesIfPresent();
+    }
+    
+    private boolean areWeTargetingBothManagersAndRecipes() {
+        return !this.managers.isEmpty() && !this.recipes.isEmpty();
+    }
+    
+    private String stringifyTargetedManagersIfPresent() {
+        if (this.managers.isEmpty()) {
+            return "";
+        }
         
-        final List<String> userExcludedNames = userExclusions.stream().map(ResourceLocation::toString).collect(Collectors.toList());
-        final List<String> defaultExcludedNames = defaultExclusions.stream().map(ResourceLocation::toString).collect(Collectors.toList());
+        return this.managers.stream()
+                .map(IRecipeManager::getCommandString)
+                .collect(Collectors.joining(", ", "managers {", "}"));
+    }
+    
+    private String stringifyTargetedRecipesIfPresent() {
+        if (this.recipes.isEmpty()) {
+            return "";
+        }
         
-        return String.format(
-                " excluding {%s%s%s}",
-                userExcludedNames.isEmpty()? "" : userExcludedNames.stream().collect(Collectors.joining("\", \"", "\"", "\"")),
-                userExcludedNames.isEmpty() || defaultExcludedNames.isEmpty()? "" : ", ",
-                defaultExcludedNames.isEmpty()? "" : defaultExcludedNames.stream().collect(Collectors.joining("\" (automatic), \"", "\"", "\" (automatic)"))
-        );
+        return this.recipes.stream()
+                .map(IRecipe::getId)
+                .map(ResourceLocation::toString)
+                .collect(Collectors.joining(", ", "recipes {", "}"));
+    }
+    
+    private String stringifyReplacementRules() {
+        return this.rules.stream()
+                .map(IReplacementRule::describe)
+                .collect(Collectors.joining(", ", "{", "}"));
+    }
+    
+    private String stringifyExclusionsIfPresent() {
+        if (this.userExclusions.isEmpty() && this.defaultExclusions.isEmpty()) return "";
+        
+        return " excluding {"
+                + this.stringifyUserExclusionsIfPresent()
+                + (this.doBothUserAndDefaultExclusionsExist()? ", " : "")
+                + this.stringifyDefaultExclusionsIfPresent();
+    }
+    
+    private boolean doBothUserAndDefaultExclusionsExist() {
+        return !this.userExclusions.isEmpty() && !this.defaultExclusions.isEmpty();
+    }
+    
+    private String stringifyUserExclusionsIfPresent() {
+        if (this.userExclusions.isEmpty()) return "";
+        
+        return this.userExclusions.stream()
+                .map(ResourceLocation::toString)
+                .collect(Collectors.joining("\", \"", "\"", "\""));
+    }
+    
+    private String stringifyDefaultExclusionsIfPresent() {
+        if (this.defaultExclusions.isEmpty()) return "";
+        
+        return this.defaultExclusions.stream()
+                .map(ResourceLocation::toString)
+                .collect(Collectors.joining("\" (automatic), \"", "\"", "\" (automatic)"));
     }
     
     private Stream<Pair<IRecipeManager, IRecipe<?>>> streamManagers() {
