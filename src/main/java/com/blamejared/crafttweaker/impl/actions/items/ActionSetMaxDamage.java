@@ -32,7 +32,7 @@ public class ActionSetMaxDamage implements IUndoableAction {
     @Override
     public void undo() {
         
-        this.stack.getInternal().getItem().maxStackSize = oldValue;
+        this.stack.getInternal().getItem().maxDamage = oldValue;
     }
     
     @Override
