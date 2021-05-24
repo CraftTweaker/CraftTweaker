@@ -20,6 +20,9 @@ import java.util.Set;
  * <p>Mods should add recipes to this event <strong>if and only if</strong> replacement is actually impossible, and not
  * based on whether replacement is supported on their end or not. As an example, {@code minecraft:armor_dye} is a recipe
  * that is hardcoded and thus cannot have its ingredients replaced: this is a good candidate to exclude.</p>
+ *
+ * @implNote By default, CraftTweaker automatically excludes all {@linkplain IRecipe#isDynamic() special} recipes across
+ * all <strong>vanilla</strong> recipe types. You don't need to add these to the exclusion list yourself.
  */
 public final class GatherReplacementExclusionEvent extends Event {
     private final IRecipeManager targetedManager;

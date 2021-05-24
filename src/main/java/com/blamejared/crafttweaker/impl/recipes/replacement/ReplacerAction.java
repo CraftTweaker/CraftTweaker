@@ -121,7 +121,8 @@ public final class ReplacerAction implements IRuntimeAction {
         return " excluding {"
                 + this.stringifyUserExclusionsIfPresent()
                 + (this.doBothUserAndDefaultExclusionsExist()? ", " : "")
-                + this.stringifyDefaultExclusionsIfPresent();
+                + this.stringifyDefaultExclusionsIfPresent()
+                + '}';
     }
     
     private boolean doBothUserAndDefaultExclusionsExist() {
