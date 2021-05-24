@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetFood;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetImmuneToFire;
+import com.blamejared.crafttweaker.impl.actions.items.ActionSetMaxDamage;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetMaxStackSize;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetRarity;
 import com.blamejared.crafttweaker.impl.data.MapData;
@@ -102,7 +103,8 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Setter("maxStackSize")
     default void setMaxStackSize(int newMaxStackSize) {
         
-        CraftTweakerAPI.apply(new ActionSetMaxStackSize(this, newMaxStackSize, this.getInternal().getItem().maxStackSize));
+        CraftTweakerAPI.apply(new ActionSetMaxStackSize(this, newMaxStackSize, this.getInternal()
+                .getItem().maxStackSize));
     }
     
     /**
@@ -294,6 +296,21 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     default int getMaxDamage() {
         
         return getInternal().getMaxDamage();
+    }
+    
+    /**
+     * Sets the max damage of the ItemStack.
+     *
+     * Setting the damage to `0` will make the item unbreakable.
+     *
+     * @param maxDamage The new max damage of the ItemStack
+     *
+     * @docParam maxDamage 5
+     */
+    @ZenCodeType.Setter("maxDamage")
+    default void setMaxDamage(int maxDamage) {
+        
+        CraftTweakerAPI.apply(new ActionSetMaxDamage(this, maxDamage, this.getInternal().getMaxDamage()));
     }
     
     /**

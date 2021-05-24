@@ -4,13 +4,13 @@ import com.blamejared.crafttweaker.api.actions.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import net.minecraftforge.fml.LogicalSide;
 
-public class ActionSetMaxStackSize implements IUndoableAction {
+public class ActionSetMaxDamage implements IUndoableAction {
     
     private final IItemStack stack;
     private final int newValue;
     private final int oldValue;
     
-    public ActionSetMaxStackSize(IItemStack stack, int newValue, int oldValue) {
+    public ActionSetMaxDamage(IItemStack stack, int newValue, int oldValue) {
         
         this.stack = stack;
         this.newValue = newValue;
@@ -20,13 +20,13 @@ public class ActionSetMaxStackSize implements IUndoableAction {
     @Override
     public void apply() {
         
-        this.stack.getInternal().getItem().maxStackSize = newValue;
+        this.stack.getInternal().getItem().maxDamage = newValue;
     }
     
     @Override
     public String describe() {
         
-        return String.format("Set the max stack size of %s to %s.", stack.getCommandString(), newValue);
+        return String.format("Set the max damage of %s to %s.", stack.getCommandString(), newValue);
     }
     
     @Override
@@ -38,7 +38,7 @@ public class ActionSetMaxStackSize implements IUndoableAction {
     @Override
     public String describeUndo() {
         
-        return String.format("Reset the max stack size of %s to %s.", stack.getCommandString(), oldValue);
+        return String.format("Reset the max damage of %s to %s.", stack.getCommandString(), oldValue);
     }
     
     @Override
