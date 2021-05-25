@@ -1,28 +1,28 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
-import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
-import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
-import org.openzen.zencode.java.ZenCodeType;
-import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
+import com.blamejared.crafttweaker.api.*;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.*;
+import com.blamejared.crafttweaker.impl.native_types.*;
+import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.module.*;
 import org.openzen.zencode.java.module.converters.*;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 
 class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
     private final ZenClassRegistry zenClassRegistry;
     
     public CrTJavaNativeClassConverter(JavaNativePackageInfo packageInfo, JavaNativeTypeConversionContext typeConversionContext, JavaNativeTypeConverter typeConverter, JavaNativeHeaderConverter headerConverter, JavaNativeMemberConverter memberConverter, ZenClassRegistry zenClassRegistry) {
+        
         super(typeConverter, memberConverter, packageInfo, typeConversionContext, headerConverter);
         this.zenClassRegistry = zenClassRegistry;
     }
     
     @Override
     public String getNameForScripts(Class<?> cls) {
+        
         if(getNativeTypeRegistry().hasInfoFor(cls)) {
             return getNativeTypeRegistry().getCrTNameFor(cls);
         }
@@ -35,11 +35,13 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     }
     
     private NativeTypeRegistry getNativeTypeRegistry() {
+        
         return zenClassRegistry.getNativeTypeRegistry();
     }
     
     @Override
     public boolean shouldLoadClass(Class<?> cls) {
+        
         if(zenClassRegistry.isBlacklisted(cls)) {
             CraftTweakerAPI.logInfo("Not loading class because of blacklist: " + cls.getCanonicalName());
             return false;
@@ -49,39 +51,19 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
     @Override
     protected ZenCodeType.Constructor getConstructorAnnotation(Constructor<?> constructor) {
-        final Class<?> declaringClass = constructor.getDeclaringClass();
-        if(getNativeTypeRegistry().hasInfoFor(declaringClass)) {
-            final ZenCodeType.Constructor result = getNativeConstructorAnnotation(constructor);
-            if(result != null) {
-                return result;
-            }
-        }
         
-        return super.getConstructorAnnotation(constructor);
+        return getNativeTypeRegistry().getMethodInfoFor(constructor)
+                .flatMap(it -> it.getAnnotation(ZenCodeType.Constructor.class))
+                .orElseGet(() -> super.getConstructorAnnotation(constructor));
     }
     
-    private ZenCodeType.Constructor getNativeConstructorAnnotation(Constructor<?> constructor) {
-        if(isConstructorRegisteredFor(constructor)) {
-            return createConstructorAnnotation();
-        }
-        return null;
-    }
     
-    private boolean isConstructorRegisteredFor(Constructor<?> constructor) {
-        final Class<?>[] parameterTypes = constructor.getParameterTypes();
-        final CrTNativeTypeInfo typeInfoFor = getNativeTypeRegistry().getTypeInfoFor(constructor.getDeclaringClass());
-        return typeInfoFor.getConstructors()
-                .stream()
-                .anyMatch(arguments -> Arrays.equals(arguments, parameterTypes));
-    }
-    
-    private ZenCodeType.Constructor createConstructorAnnotation() {
-        return new ZenCodeType.Constructor() {
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return ZenCodeType.Constructor.class;
-            }
-        };
+    @Override
+    protected <T extends Annotation> T getAnnotation(Method method, Class<T> cls) {
+        
+        return getNativeTypeRegistry().getMethodInfoFor(method)
+                .flatMap(it -> it.getAnnotation(cls))
+                .orElseGet(() -> super.getAnnotation(method, cls));
     }
     
     

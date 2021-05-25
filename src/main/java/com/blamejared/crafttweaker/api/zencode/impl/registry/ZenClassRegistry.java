@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
 import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import com.blamejared.crafttweaker_annotations.annotations.NativeMethod;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import com.google.common.collect.BiMap;
@@ -180,7 +181,7 @@ public class ZenClassRegistry {
     private void addNativeAnnotation(Class<?> cls) {
         final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
         final String zenCodeName = annotation.zenCodeName();
-        nativeTypeRegistry.addNativeType(annotation);
+        nativeTypeRegistry.addNativeType(annotation, cls.getAnnotationsByType(NativeMethod.class));
         addExpansion(cls, zenCodeName);
     }
     
