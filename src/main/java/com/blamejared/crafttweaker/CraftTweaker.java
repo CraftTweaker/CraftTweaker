@@ -152,7 +152,6 @@ public class CraftTweaker {
         CraftTweakerAPI.loadScripts(setupCommon);
     
         CTCommands.initArgumentTypes();
-        
         LOG.info("{} has loaded successfully!", NAME);
     }
     

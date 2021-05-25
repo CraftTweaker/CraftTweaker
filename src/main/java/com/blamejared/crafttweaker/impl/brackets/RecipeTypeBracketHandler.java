@@ -1,10 +1,14 @@
 package com.blamejared.crafttweaker.impl.brackets;
 
+import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.impl.brackets.util.ParseUtil;
+import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import org.openzen.zencode.java.ZenCodeType;
@@ -26,10 +30,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")
 public class RecipeTypeBracketHandler implements BracketExpressionParser {
+    
+    private static final Set<ResourceLocation> FILTERED_MANAGERS = ImmutableSet.of(
+            new ResourceLocation(CraftTweaker.MODID, "scripts")
+    );
     
     private static final Map<ResourceLocation, IRecipeManager> registeredTypes = new HashMap<>();
     private static final Map<Class<? extends IRecipeManager>, IRecipeManager> managerInstances = new HashMap<>();
@@ -41,16 +50,31 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         }
     }
     
+    @Deprecated
     public static boolean containsCustomManager(ResourceLocation location) {
         return registeredTypes.containsKey(location);
     }
     
+    @Deprecated
     public static IRecipeManager getCustomManager(ResourceLocation location) {
         return registeredTypes.get(location);
     }
     
     public static Collection<IRecipeManager> getManagerInstances() {
         return managerInstances.values();
+    }
+    
+    public static IRecipeManager getOrDefault(final ResourceLocation location) {
+        if (FILTERED_MANAGERS.contains(location)) return null;
+        
+        return registeredTypes.computeIfAbsent(location, it -> {
+            final IRecipeType<?> type = Registry.RECIPE_TYPE.getOrDefault(location);
+            return type == null? null : new RecipeManagerWrapper(type);
+        });
+    }
+    
+    public static IRecipeManager getOrDefault(final IRecipeType<?> type) {
+        return getOrDefault(new ResourceLocation(type.toString()));
     }
     
     @ZenCodeType.Method

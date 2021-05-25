@@ -19,11 +19,12 @@ public class ParameterReader {
     
     private static final Pattern parameterPattern = Pattern.compile("@(\\w+)\\s+([^@]+)");
     
-    
     private final LinkTagReplacer linkTagReplacer;
+    private final CodeTagReplacer codeTagReplacer;
     
-    public ParameterReader(LinkTagReplacer linkTagReplacer) {
+    public ParameterReader(LinkTagReplacer linkTagReplacer, CodeTagReplacer codeTagReplacer) {
         this.linkTagReplacer = linkTagReplacer;
+        this.codeTagReplacer = codeTagReplacer;
     }
     
     public ParameterInformationList readParametersFrom(String from, Element element) {
@@ -53,7 +54,7 @@ public class ParameterReader {
     
     
     private String prepareDocComment(String from, Element element) {
-        return linkTagReplacer.replaceLinkTagsFrom(from, element);
+        return this.codeTagReplacer.replaceCodeTags(linkTagReplacer.replaceLinkTagsFrom(from, element));
     }
     
     private Map<String, ParameterInfo> readParameterInformationFromMatcher(Matcher matcher) {

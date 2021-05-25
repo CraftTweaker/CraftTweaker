@@ -3,6 +3,8 @@ package com.blamejared.crafttweaker.impl.commands.script_examples;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
+import com.blamejared.crafttweaker.impl.commands.CommandCallerPlayer;
+import com.blamejared.crafttweaker.impl.commands.CommandImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,14 +21,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 
-public class ExamplesCommand extends CTCommands.CommandImpl {
+public class ExamplesCommand extends CommandImpl {
     
+    @Deprecated
     public static final String name = "examples";
+    @Deprecated
     public static final String description = "Creates example scripts based on the mods installed, and opens the example folder";
     
-    
     public ExamplesCommand() {
-        super(name, description, (CTCommands.CommandCallerPlayer) ExamplesCommand::execute);
+        super(name, description, (CommandCallerPlayer) ExamplesCommand::execute);
+    }
+    
+    public static void register() {
+    
+        CTCommands.registerCommand(new ExamplesCommand());
     }
     
     private static int execute(PlayerEntity playerEntity, ItemStack stack) {
@@ -50,6 +58,7 @@ public class ExamplesCommand extends CTCommands.CommandImpl {
         return 0;
     }
     
+    @Deprecated
     public static void writeScriptFile(SourceFile sourceFile) {
         final File file = new File(getExamplesDir(), sourceFile.getFilename());
         if(file.exists()) {

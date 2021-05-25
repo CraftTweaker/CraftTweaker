@@ -176,6 +176,14 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         return IRecipeType.CRAFTING;
     }
     
+    public IIngredient[] getCtIngredients() {
+        return this.ingredients;
+    }
+    
+    public IItemStack getCtOutput() {
+        return this.output;
+    }
+    
     private interface ForAllUniqueAction {
         
         void accept(int ingredientIndex, int matchingSlot, IItemStack stack);

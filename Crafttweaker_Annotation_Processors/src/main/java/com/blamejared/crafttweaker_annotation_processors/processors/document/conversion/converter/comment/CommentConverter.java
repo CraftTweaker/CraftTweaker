@@ -85,6 +85,8 @@ public class CommentConverter {
     private DocumentationComment getCommentForElement(Element element) {
         final String docComment = processingEnv.getElementUtils().getDocComment(element);
         final String description = extractDescriptionFrom(docComment, element);
+        // TODO: Handle @apiNote
+        // TODO: Handle @since
         final ExampleData exampleData = extractExampleDataFrom(docComment, element);
         
         return new DocumentationComment(description, exampleData);

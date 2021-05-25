@@ -216,6 +216,18 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         return height;
     }
     
+    public IIngredient[][] getCtIngredients() {
+        return this.ingredients;
+    }
+    
+    public IItemStack getCtOutput() {
+        return this.output;
+    }
+    
+    @Nullable
+    public IRecipeManager.RecipeFunctionMatrix getFunction() {
+        return this.function;
+    }
     
     public boolean isMirrored() {
         return mirrored;
