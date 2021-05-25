@@ -320,7 +320,7 @@ public final class Replacer {
                         this.targetedManagers,
                         this.targetedRecipes,
                         Collections.unmodifiableList(this.rules),
-                        this.targetedManagers.stream().flatMap(manager -> DEFAULT_EXCLUSIONS.computeIfAbsent(manager, this::gatherDefaultExclusions).stream()).collect(Collectors.toList()),
+                        this.targetedManagers.stream().flatMap(manager -> DEFAULT_EXCLUSIONS.computeIfAbsent(manager, this::gatherDefaultExclusions).stream()).collect(Collectors.toSet()),
                         Collections.unmodifiableCollection(this.userExclusionList),
                         this.buildGeneratorFunction()
                 )
