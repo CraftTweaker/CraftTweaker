@@ -7,20 +7,24 @@ import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.CommandImpl;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
 import com.blamejared.crafttweaker.impl.loot.CTLootManager;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static com.blamejared.crafttweaker.impl.commands.CommandUtilities.color;
 
@@ -91,6 +95,26 @@ public final class DumpCommands {
                     .sorted()
                     .forEach(CraftTweakerAPI::logDump);
             CommandUtilities.send(CommandUtilities.color("Loot table list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
+            return 0;
+        });
+        
+        CTCommands.registerPlayerDump("fake_players", "Outputs the data for all currently available fake players", (player, stack) -> {
+            try {
+                final Field map = FakePlayerFactory.class.getDeclaredField("fakePlayers");
+                map.setAccessible(true);
+                final Field mc = FakePlayerFactory.class.getDeclaredField("MINECRAFT");
+                mc.setAccessible(true);
+                
+                //noinspection unchecked
+                Stream.concat(((Map<GameProfile, ?>) map.get(null)).keySet().stream(), Stream.of((GameProfile) mc.get(null)))
+                        .map(it -> it.getName() + " -> "  + it.getId())
+                        .forEach(CraftTweakerAPI::logDump);
+                
+                CommandUtilities.send(CommandUtilities.color("Fake player data list generated! Check the crafttweaker.log.file!", TextFormatting.GREEN), player);
+            } catch (final ReflectiveOperationException e) {
+                CommandUtilities.send(CommandUtilities.color("An error occurred while generating the data list", TextFormatting.RED), player);
+                CraftTweakerAPI.logThrowing("Error while generating fake player list", e);
+            }
             return 0;
         });
     }
