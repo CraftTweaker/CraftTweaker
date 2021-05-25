@@ -48,10 +48,11 @@ public final class BlockStateLootConditionTypeBuilder implements ILootConditionT
             throw new IllegalStateException("A block state for a 'BlockState' condition must be specified");
         }
         return context -> {
-            if(ExpandLootContext.getBlockState(context) == null){
+            final BlockState state = ExpandLootContext.getBlockState(context);
+            if (state == null){
                 return false;
             }
-            return ExpandLootContext.getBlockState(context).equals(this.state);
+            return state.equals(this.state);
         };
     }
 }
