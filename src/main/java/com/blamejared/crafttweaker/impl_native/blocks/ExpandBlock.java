@@ -326,8 +326,8 @@ public class ExpandBlock {
      * @docParam resistance 2
      */
     @ZenCodeType.Method
-    @ZenCodeType.Setter("canCollide")
-    public static void setCanCollide(Block internal, float resistance) {
+    @ZenCodeType.Setter("blastResistance")
+    public static void setBlastResistance(Block internal, float resistance) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Blast Resistance",
                 resistance, internal.blastResistance, value -> internal.blastResistance = value));
