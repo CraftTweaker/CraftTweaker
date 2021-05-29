@@ -10,10 +10,13 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.recipes.CTRecipeShapeless;
 import com.blamejared.crafttweaker.impl.recipes.Replacer;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
@@ -78,6 +81,16 @@ public class WrapperRecipe implements CommandStringDisplayable {
     
     public IRecipe<?> getRecipe() {
         return recipe;
+    }
+
+    @ZenCodeType.Getter("isShapedCraftingRecipe")
+    public boolean isShapedCraftingRecipe() {
+        return this.recipe instanceof IShapedRecipe;
+    }
+
+    @ZenCodeType.Getter("isShapelessCraftingRecipe")
+    public boolean isShapelessCraftingRecipe() {
+        return this.recipe instanceof ShapelessRecipe || this.recipe instanceof CTRecipeShapeless;
     }
     
     @Override
