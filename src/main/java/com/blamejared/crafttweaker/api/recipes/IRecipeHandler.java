@@ -154,11 +154,15 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      *
      * <p>The value of {@code type} represents the class type of the ingredient. Its value should be the most general
      * class type possible that the recipe can accept (e.g., a recipe that can accept any form of ingredient would
-     * specify either {@code IIngredient} or {@code Ingredient} as the value for {@code type}.</p>
+     * specify either {@code IIngredient} or {@code Ingredient} as the value for {@code type}).</p>
      *
      * @param ingredient The ingredient that should undergo replacement.
      * @param type The actual class type of the ingredient, or one of its superclasses, as determined by the client.
+     * @param recipe The recipe whose ingredients are currently undergoing replacement; or {@code null} if no valid
+     *               recipe can be provided.
      * @param rules A series of {@link IReplacementRule}s in the order they should be applied.
+     * @param <S> The type of the recipe whose ingredients are currently undergoing replacement. The given type must be
+     *            a subtype of {@link IRecipe}. If no valid type exists, then {@link IRecipe} is assumed.
      * @param <U> The type of the ingredient that should undergo replacement. No restrictions are placed on the type of
      *            the ingredient.
      * @return An {@link Optional} holding the replaced ingredient, if any replacements have been carried out. If no
@@ -166,12 +170,12 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * customary, though not required, that the value wrapped by the optional is a completely different object from
      * {@code ingredient} (i.e. {@code ingredient != result.get()}).
      */
-    static <U> Optional<U> attemptReplacing(final U ingredient, final Class<U> type, final List<IReplacementRule> rules) {
+    static <S extends IRecipe<?>, U> Optional<U> attemptReplacing(final U ingredient, final Class<U> type, final S recipe, final List<IReplacementRule> rules) {
         final BinaryOperator<Optional<U>> combiner = (oldOpt, newOpt) -> newOpt.isPresent()? newOpt : oldOpt;
         return rules.stream()
                 .reduce(
                         Optional.empty(),
-                        (optional, rule) -> combiner.apply(optional, rule.getReplacement(optional.orElse(ingredient), type)),
+                        (optional, rule) -> combiner.apply(optional, rule.getReplacement(optional.orElse(ingredient), type, recipe)),
                         combiner
                 );
     }

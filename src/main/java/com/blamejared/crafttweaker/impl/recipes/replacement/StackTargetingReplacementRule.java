@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.impl.item.MCIngredientList;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 
 import java.util.Arrays;
@@ -23,14 +24,14 @@ public final class StackTargetingReplacementRule implements IReplacementRule {
     }
     
     @Override
-    public <T> Optional<T> getReplacement(final T ingredient, final Class<T> type) {
+    public <T, U extends IRecipe<?>> Optional<T> getReplacement(final T ingredient, final Class<T> type, final U recipe) {
         return IReplacementRule.chain(
-                IReplacementRule.withType(ingredient, type, IIngredient.class, this::getIIngredientReplacement),
-                IReplacementRule.withType(ingredient, type, Ingredient.class, this::getIngredientReplacement)
+                IReplacementRule.withType(ingredient, type, recipe, IIngredient.class, this::getIIngredientReplacement),
+                IReplacementRule.withType(ingredient, type, recipe, Ingredient.class, this::getIngredientReplacement)
         );
     }
     
-    private Optional<IIngredient> getIIngredientReplacement(final IIngredient ingredient) {
+    private <U extends IRecipe<?>> Optional<IIngredient> getIIngredientReplacement(final IIngredient ingredient, final U recipe) {
         final IItemStack[] oldItems = ingredient.getItems();
         final IIngredient[] newItems = Arrays.stream(oldItems)
                 .map(this::getStackReplacement)
@@ -39,8 +40,8 @@ public final class StackTargetingReplacementRule implements IReplacementRule {
         return Arrays.equals(oldItems, newItems)? Optional.empty() : Optional.of(new MCIngredientList(newItems));
     }
     
-    private Optional<Ingredient> getIngredientReplacement(final Ingredient ingredient) {
-        return this.getIIngredientReplacement(IIngredient.fromIngredient(ingredient)).map(IIngredient::asVanillaIngredient);
+    private <U extends IRecipe<?>> Optional<Ingredient> getIngredientReplacement(final Ingredient ingredient, final U recipe) {
+        return this.getIIngredientReplacement(IIngredient.fromIngredient(ingredient), recipe).map(IIngredient::asVanillaIngredient);
     }
     
     private IIngredient getStackReplacement(final IItemStack original) {

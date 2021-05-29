@@ -58,7 +58,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     @Override
     public Optional<Function<ResourceLocation, AbstractCookingRecipe>> replaceIngredients(final IRecipeManager manager, final AbstractCookingRecipe recipe, final List<IReplacementRule> rules) {
         
-        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, rules)
+        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, recipe, rules)
                 .map(input -> id -> LOOKUP.get(recipe.getType())
                         .getSecond()
                         .create(id, recipe.getGroup(), input, recipe.getRecipeOutput(), recipe.getExperience(), recipe.getCookTime()));

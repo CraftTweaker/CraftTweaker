@@ -38,6 +38,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
         return ReplacementHandlerHelper.replaceIngredientArray(
                 recipe.getCtIngredients(),
                 IIngredient.class,
+                recipe,
                 rules,
                 newIngredients -> id -> new CTRecipeShapeless(id.getPath(), recipe.getCtOutput(), newIngredients, recipe.getFunction())
         );

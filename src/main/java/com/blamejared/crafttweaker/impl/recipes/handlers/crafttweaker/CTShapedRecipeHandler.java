@@ -8,8 +8,6 @@ import com.blamejared.crafttweaker.api.recipes.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
@@ -42,6 +40,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
         return ReplacementHandlerHelper.replaceIngredientArray(
                 this.flatten(recipe.getCtIngredients(), recipe.getRecipeWidth(), recipe.getRecipeHeight()),
                 IIngredient.class,
+                recipe,
                 rules,
                 newIngredients -> id -> new CTRecipeShaped(
                         id.getPath(),

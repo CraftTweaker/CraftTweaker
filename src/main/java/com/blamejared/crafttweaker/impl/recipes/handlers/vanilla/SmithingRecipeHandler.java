@@ -31,8 +31,8 @@ public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecip
     
     @Override
     public Optional<Function<ResourceLocation, SmithingRecipe>> replaceIngredients(final IRecipeManager manager, final SmithingRecipe recipe, final List<IReplacementRule> rules) {
-        final Optional<Ingredient> base = IRecipeHandler.attemptReplacing(recipe.base, Ingredient.class, rules);
-        final Optional<Ingredient> addition = IRecipeHandler.attemptReplacing(recipe.addition, Ingredient.class, rules);
+        final Optional<Ingredient> base = IRecipeHandler.attemptReplacing(recipe.base, Ingredient.class, recipe, rules);
+        final Optional<Ingredient> addition = IRecipeHandler.attemptReplacing(recipe.addition, Ingredient.class, recipe, rules);
         
         if (!base.isPresent() && !addition.isPresent()) return Optional.empty();
         

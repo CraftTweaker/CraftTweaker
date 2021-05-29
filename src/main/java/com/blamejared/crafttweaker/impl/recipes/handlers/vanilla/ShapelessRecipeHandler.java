@@ -38,6 +38,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
                 Ingredient.class,
+                recipe,
                 rules,
                 newIngredients -> id -> new ShapelessRecipe(id, recipe.getGroup(), recipe.getRecipeOutput(), newIngredients)
         );

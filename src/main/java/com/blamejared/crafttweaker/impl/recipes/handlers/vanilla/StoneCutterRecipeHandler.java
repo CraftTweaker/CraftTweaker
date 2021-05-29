@@ -30,7 +30,7 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutti
     
     @Override
     public Optional<Function<ResourceLocation, StonecuttingRecipe>> replaceIngredients(final IRecipeManager manager, final StonecuttingRecipe recipe, final List<IReplacementRule> rules) {
-        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, rules)
+        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, recipe, rules)
                 .map(input -> id -> new StonecuttingRecipe(id, recipe.getGroup(), input, recipe.getRecipeOutput()));
     }
     

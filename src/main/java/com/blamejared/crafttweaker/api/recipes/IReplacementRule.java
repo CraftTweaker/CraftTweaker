@@ -1,8 +1,10 @@
 package com.blamejared.crafttweaker.api.recipes;
 
+import net.minecraft.item.crafting.IRecipe;
+
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * Represents a rule used for replacement of various ingredients inside a recipe.
@@ -16,12 +18,13 @@ public interface IReplacementRule {
     /**
      * Represents a rule that does nothing.
      *
-     * <p>This replacement rule simply returns {@link Optional#empty()} in {@link #getReplacement(Object, Class)} for
-     * any possible set of parameters, representing effectively a no-op replacement rule.</p>
+     * <p>This replacement rule simply returns {@link Optional#empty()} in
+     * {@link #getReplacement(Object, Class, IRecipe)} for any possible set of parameters, representing effectively a
+     * no-op replacement rule.</p>
      */
     IReplacementRule EMPTY = new IReplacementRule() {
         @Override
-        public <T> Optional<T> getReplacement(final T initial, final Class<T> type) {
+        public <T, U extends IRecipe<?>> Optional<T> getReplacement(T ingredient, Class<T> type, U recipe) {
             return Optional.empty();
         }
     
@@ -38,7 +41,7 @@ public interface IReplacementRule {
      * @param <T> The type parameter of the various optionals.
      * @return The first non-empty optional, if present, or {@link Optional#empty()} otherwise.
      *
-     * @see #withType(Object, Class, Class, Function)
+     * @see #withType(Object, Class, IRecipe, Class, BiFunction)
      */
     @SafeVarargs
     static <T> Optional<T> chain(final Optional<T>... optionals) {
@@ -56,27 +59,33 @@ public interface IReplacementRule {
      * operate on the ingredient, and {@link Optional#empty()} is returned.</p>
      *
      * @param ingredient The ingredient that should be replaced; its value <strong>should</strong> match the input of
-     *                   {@link #getReplacement(Object, Class)}.
+     *                   {@link #getReplacement(Object, Class, IRecipe)}.
      * @param type The type of the {@code ingredient} that should be replaced; its value <strong>should</strong> match
-     *             the input of {@link #getReplacement(Object, Class)}.
+     *             the input of {@link #getReplacement(Object, Class, IRecipe)}.
+     * @param recipe The recipe that is currently being acted upon, or {@code null} if this information cannot be
+     *               provided; its value <strong>should</strong> match the input of
+     *               {@link #getReplacement(Object, Class, IRecipe)}.
      * @param targetedType The type the ingredient should have for it to be operated upon by the {@code producer}. This
      *                     value will be compared to {@code type} with a direct equality check (i.e.
      *                     {@code type == targetedType}).
-     * @param producer A {@link Function} that takes an ingredient of type {@code targetedType} as an input and replaces
-     *                 it, returning either an {@link Optional} with the ingredient, or {@link Optional#empty()} if the
-     *                 ingredient cannot be replaced.
+     * @param producer A {@link BiFunction} that takes an ingredient of type {@code targetedType} and the targeted
+     *                 recipe as an input and replaces the ingredient, returning either an {@link Optional} with the
+     *                 ingredient, or {@link Optional#empty()} if the ingredient cannot be replaced.
      * @param <T> The type of the ingredient that is passed to the function; its value <strong>should</strong> match the
-     *            one of {@link #getReplacement(Object, Class)}.
+     *            one of {@link #getReplacement(Object, Class, IRecipe)}.
      * @param <U> The type of the ingredient that the {@code producer} recognizes.
+     * @param <S> The type of the recipe that is currently being replaced; its value <strong>should</strong> match the
+     *            one of {@link #getReplacement(Object, Class, IRecipe)}.
      * @return An {@link Optional} containing the replaced ingredient, if {@code type} matches {@code targetedType} and
      * {@code producer} determines that a replacement of the ingredient is needed; {@link Optional#empty()} in all other
      * cases.
      *
      * @see #chain(Optional[])
      */
-    static <T, U> Optional<T> withType(final T ingredient, final Class<T> type, final Class<U> targetedType, final Function<U, Optional<U>> producer) {
+    static <T, U, S extends IRecipe<?>> Optional<T> withType(final T ingredient, final Class<T> type, final S recipe,
+                                                             final Class<U> targetedType, final BiFunction<U, S, Optional<U>> producer) {
         // Those casts are effectively no-ops
-        return targetedType == type? producer.apply(targetedType.cast(ingredient)).map(type::cast) : Optional.empty();
+        return targetedType == type? producer.apply(targetedType.cast(ingredient), recipe).map(type::cast) : Optional.empty();
     }
     
     /**
@@ -91,11 +100,13 @@ public interface IReplacementRule {
      *             ingredient's class, although it's guaranteed to be one of its superclasses (in other words, it is
      *             guaranteed that {@code type.isAssignableFrom(ingredient.getClass())}, but the equality check
      *             {@code type == ingredient.getClass()} is not guaranteed).
+     * @param recipe The recipe that is currently being subjected to replacement, if any; {@code null} otherwise.
      * @param <T> The type of the ingredient that should be replaced.
+     * @param <U> The type of the recipe that is currently being replaced.
      * @return An {@link Optional} containing the replaced ingredient, if this rule knows how to operate on the
      * ingredient's type and deems that the ingredient should be replaced; {@link Optional#empty()} otherwise.
      */
-    <T> Optional<T> getReplacement(final T ingredient, final Class<T> type);
+    <T, U extends IRecipe<?>> Optional<T> getReplacement(final T ingredient, final Class<T> type, final U recipe);
     
     /**
      * Describes in a short and simple sentence the behavior of this rule.

@@ -44,6 +44,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
                 Ingredient.class,
+                recipe,
                 rules,
                 newIngredients -> id -> new ShapedRecipe(id, recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), newIngredients, recipe.getRecipeOutput())
         );
