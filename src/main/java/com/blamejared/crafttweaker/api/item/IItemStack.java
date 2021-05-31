@@ -16,6 +16,9 @@ import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +28,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ToolType;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This represents an item.
@@ -261,6 +269,75 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Method
     IItemStack withDamage(int damage);
+    
+    /**
+     * Adds an AttributeModifier to this IItemStack using a specific UUID.
+     *
+     * The UUID can be used to override an existing attribute on an ItemStack with this new modifier.
+     * You can use `/ct hand attributes` to get the UUID of the attributes on an ItemStack.
+     *
+     * Attributes added with this method will only appear on this specific IItemStack.
+     *
+     * @param uuid      The unique identifier of the modifier to replace.
+     * @param attribute The Attribute of the modifier.
+     * @param name      The name of the modifier.
+     * @param value     The value of the modifier.
+     * @param operation The operation of the modifier.
+     * @param slotTypes What slots the modifier is valid for.
+     *
+     * @docParam attribute <attribute:minecraft:generic.attack_damage>
+     * @docParam uuid "8c1b5535-9f79-448b-87ae-52d81480aaa3"
+     * @docParam name "Extra Power"
+     * @docParam value 10
+     * @docParam operation AttributeOperation.ADDITION
+     * @docParam slotTypes [<equipmentslottype:chest>]
+     */
+    @ZenCodeType.Method
+    IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes);
+    
+    /**
+     * Adds an AttributeModifier to this IItemStack.
+     *
+     * The UUID can be used to override an existing attribute on an ItemStack with this new modifier.
+     * You can use `/ct hand attributes` to get the UUID of the attributes on an ItemStack.
+     *
+     * Attributes added with this method will only appear on this specific IItemStack.
+     *
+     * @param attribute The Attribute of the modifier.
+     * @param name      The name of the modifier.
+     * @param value     The value of the modifier.
+     * @param operation The operation of the modifier.
+     * @param slotTypes What slots the modifier is valid for.
+     *
+     * @docParam attribute <attribute:minecraft:generic.attack_damage>
+     * @docParam name "Extra Power"
+     * @docParam value 10
+     * @docParam operation AttributeOperation.ADDITION
+     * @docParam slotTypes [<equipmentslottype:chest>]
+     */
+    @ZenCodeType.Method
+    IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes);
+    
+    /**
+     * Gets the Attributes and the AttributeModifiers on this IItemStack for the given EquipmentSlotType
+     *
+     * @param slotType The slot to get the Attributes for.
+     *
+     * @return A Map of Attribute to a List of AttributeModifier for the given EquipmentSlotType.
+     *
+     * @docParam slotType <equipmentslottype:chest>
+     */
+    @ZenCodeType.Method
+    default Map<Attribute, List<AttributeModifier>> getAttributes(EquipmentSlotType slotType) {
+        
+        // I don't think we expose Collection, so just convert it to a list.
+        return getInternal().getAttributeModifiers(slotType)
+                .asMap()
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, attributeAttributeModifierEntry -> new ArrayList<>(attributeAttributeModifierEntry
+                        .getValue())));
+    }
     
     /**
      * Returns if the ItemStack is damageable

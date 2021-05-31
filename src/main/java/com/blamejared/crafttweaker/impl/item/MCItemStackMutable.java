@@ -7,12 +7,16 @@ import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * An {@link MCItemStackMutable} object is the same as any other {@link IItemStack}.
@@ -59,6 +63,24 @@ public class MCItemStackMutable implements IItemStack {
     public IItemStack withDamage(int damage) {
         
         getInternal().setDamage(damage);
+        return this;
+    }
+    
+    @Override
+    public IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
+        
+        for(EquipmentSlotType slotType : slotTypes) {
+            getInternal().addAttributeModifier(attribute, new AttributeModifier(UUID.fromString(uuid), name, value, operation), slotType);
+        }
+        return this;
+    }
+    
+    @Override
+    public IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
+        
+        for(EquipmentSlotType slotType : slotTypes) {
+            getInternal().addAttributeModifier(attribute, new AttributeModifier(name, value, operation), slotType);
+        }
         return this;
     }
     

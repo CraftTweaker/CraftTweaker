@@ -5,12 +5,16 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class MCItemStack implements IItemStack {
@@ -50,6 +54,26 @@ public class MCItemStack implements IItemStack {
         
         final ItemStack copy = getInternal().copy();
         copy.setDamage(damage);
+        return new MCItemStack(copy);
+    }
+    
+    @Override
+    public IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
+        
+        final ItemStack copy = getInternal().copy();
+        for(EquipmentSlotType slotType : slotTypes) {
+            copy.addAttributeModifier(attribute, new AttributeModifier(UUID.fromString(uuid), name, value, operation), slotType);
+        }
+        return new MCItemStack(copy);
+    }
+    
+    @Override
+    public IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
+        
+        final ItemStack copy = getInternal().copy();
+        for(EquipmentSlotType slotType : slotTypes) {
+            copy.addAttributeModifier(attribute, new AttributeModifier(name, value, operation), slotType);
+        }
         return new MCItemStack(copy);
     }
     

@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.impl_native.world.ExpandWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,6 +24,17 @@ public class CTEventHandler {
     
     public static final Map<IIngredient, Integer> BURN_TIMES = new HashMap<>();
     public static final Set<PlayerEntity> BLOCK_INFO_PLAYERS = new HashSet<>();
+    public static final Map<IIngredient, Consumer<ItemAttributeModifierEvent>> ATTRIBUTE_MODIFIERS = new HashMap<>();
+    
+    @SubscribeEvent
+    public void attribute(ItemAttributeModifierEvent e) {
+        
+        ATTRIBUTE_MODIFIERS.keySet()
+                .stream()
+                .filter(ingredient -> ingredient.matches(new MCItemStackMutable(e.getItemStack())))
+                .map(ATTRIBUTE_MODIFIERS::get)
+                .forEach(consumer -> consumer.accept(e));
+    }
     
     @SubscribeEvent
     public void burnTimeTweaker(FurnaceFuelBurnTimeEvent e) {

@@ -20,6 +20,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -52,7 +53,24 @@ import java.util.Objects;
 @ZenCodeType.Name("crafttweaker.api.BracketHandlers")
 @Document("vanilla/api/BracketHandlers")
 public class BracketHandlers {
-
+    
+    @ZenCodeType.Method
+    @BracketResolver("attribute")
+    public static Attribute getAttribute(String tokens) {
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens))
+            CraftTweakerAPI.logWarning("Attribute BEP <attribute:%s> does not seem to be lower-cased!", tokens);
+        
+        final String[] split = tokens.split(":");
+        if(split.length != 2)
+            throw new IllegalArgumentException("Could not get attribute with name: <attribute:" + tokens + ">! Syntax is <attribute:modid:name>");
+        ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        if(!ForgeRegistries.ATTRIBUTES.containsKey(key)) {
+            throw new IllegalArgumentException("Could not get attribute with name: <attribute:" + tokens + ">! Attribute does not appear to exist!");
+        }
+        
+        return ForgeRegistries.ATTRIBUTES.getValue(key);
+    }
+    
     /**
      * Gets the give {@link Block}. Throws an Exception if not found
      *
