@@ -36,7 +36,7 @@ public class ExpandItemAttributeModifierEvent {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("modifiers")
-    Map<Attribute, List<AttributeModifier>> getModifiers(ItemAttributeModifierEvent internal) {
+    public static Map<Attribute, List<AttributeModifier>> getModifiers(ItemAttributeModifierEvent internal) {
         
         // I don't think we expose Collection, so just convert it to a list.
         return internal.getModifiers()
@@ -54,7 +54,7 @@ public class ExpandItemAttributeModifierEvent {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("originalModifiers")
-    Map<Attribute, List<AttributeModifier>> getOriginalModifiers(ItemAttributeModifierEvent internal) {
+    public static Map<Attribute, List<AttributeModifier>> getOriginalModifiers(ItemAttributeModifierEvent internal) {
         
         // I don't think we expose Collection, so just convert it to a list.
         return internal.getOriginalModifiers()
