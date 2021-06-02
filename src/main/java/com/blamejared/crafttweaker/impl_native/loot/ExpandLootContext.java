@@ -15,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -174,8 +174,7 @@ public class ExpandLootContext {
      * @return The world.
      */
     @ZenCodeType.Getter("world")
-    @ZenCodeType.Nullable
-    public static World getWorld(final LootContext internal) {
+    public static ServerWorld getWorld(final LootContext internal) {
         return internal.getWorld();
     }
 
