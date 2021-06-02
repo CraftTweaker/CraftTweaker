@@ -18,7 +18,7 @@ public class DocumentedOptionalParameter extends DocumentedParameter {
     
     @Override
     public void writeParameterInfoIncludeOptionality(PrintWriter writer) {
-        writer.printf("| %s | %s | %s | %s | %s |", name, type.getClickableMarkdown(), getDescription(), true, getDefaultValue());
+        writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), getDescription(), true, getDefaultValue());
     }
     
     public String getDefaultValue() {
