@@ -4,18 +4,18 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
+import com.blamejared.crafttweaker.api.util.IntegerRange;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.loot.LootContext;
 import net.minecraft.util.Util;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Lazy;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 public final class CommonLootModifiers {
     private static final Lazy<ILootModifier> IDENTITY = Lazy.concurrentOf(() -> (loot, context) -> loot);
     private static final Lazy<ILootModifier> LOOT_CLEARING_MODIFIER = Lazy.concurrentOf(() -> (loot, context) -> new ArrayList<>());
+    private static final Lazy<Random> RANDOM = Lazy.concurrentOf(Random::new);
 
     // Addition methods
     /**
@@ -42,7 +43,41 @@ public final class CommonLootModifiers {
      */
     @ZenCodeType.Method
     public static ILootModifier add(final IItemStack stack) {
-        return stack.isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(stack.copy()));
+        return stack.isEmpty() ? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(stack.copy()));
+    }
+
+    /**
+     * Adds the given {@link IItemStack} with random amount to the drops
+     * @param stack The stack to add
+     * @param amountRange The range of the stack amount
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier add(final IItemStack stack, IntegerRange amountRange) {
+        if (stack.isEmpty()) return IDENTITY.get();
+        if (amountRange.getMin() < 0) throw new IllegalArgumentException("Minimum must be more than 0");
+        return ((loot, currentContext) -> {
+            int amount = amountRange.getRandomValue(getRandom(currentContext.getWorld()));
+            if (amount == 0) return loot;
+            return Util.make(new ArrayList<>(loot), it -> it.add(stack.copy().setAmount(amount)));
+        });
+    }
+
+    /**
+     * Adds the given {@link MCWeightedItemStack} to the drops
+     * @param stack The weighted stack to add
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier add(final MCWeightedItemStack stack) {
+        if (stack.getItemStack().isEmpty()) return IDENTITY.get();
+        return ((loot, currentContext) -> {
+            if (getRandom(currentContext.getWorld()).nextDouble() < stack.getWeight()) {
+                return Util.make(new ArrayList<>(loot), it -> it.add(stack.getItemStack().copy()));
+            } else {
+                return loot;
+            }
+        });
     }
 
     /**
@@ -55,6 +90,28 @@ public final class CommonLootModifiers {
     public static ILootModifier addAll(final IItemStack... stacks) {
         final List<IItemStack> stacksToAdd = notEmpty(Arrays.stream(stacks)).collect(Collectors.toList());
         return (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.addAll(stacksToAdd.stream().map(IItemStack::copy).collect(Collectors.toList())));
+    }
+
+    /**
+     * Adds all the given {@link MCWeightedItemStack} to the drops.
+     *
+     * @param stacks The stacks to add
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addAll(final MCWeightedItemStack... stacks) {
+        return chaining(Arrays.stream(stacks).map(CommonLootModifiers::add));
+    }
+
+    /**
+     * Adds the given {@link IItemStack} with random amount to the drops
+     * @param stacksMap A map of key-value pairs dictating the stacks with their amount range.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+
+    @ZenCodeType.Method
+    public static ILootModifier addAll(final Map<IItemStack, IntegerRange> stacksMap) {
+        return chaining(stacksMap.entrySet().stream().map(it -> add(it.getKey(), it.getValue())));
     }
 
     // Replacement methods
@@ -196,5 +253,9 @@ public final class CommonLootModifiers {
     
     private static List<IItemStack> replacingExactly(final IItemStack original, final IItemStack from, final IItemStack to) {
         return Arrays.asList(to.copy().setAmount(original.getAmount() / from.getAmount()), original.copy().setAmount(original.getAmount() % from.getAmount()));
+    }
+
+    private static Random getRandom(@Nullable World world) {
+        return world == null ? RANDOM.get() : world.getRandom();
     }
 }
