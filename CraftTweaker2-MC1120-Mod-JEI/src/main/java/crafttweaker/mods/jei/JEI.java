@@ -1,18 +1,23 @@
 package crafttweaker.mods.jei;
 
-import crafttweaker.*;
-import crafttweaker.annotations.*;
-import crafttweaker.api.item.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.IAction;
+import crafttweaker.annotations.ModOnly;
+import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mods.jei.actions.*;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.*;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * MineTweaker JEI support.
@@ -81,27 +86,37 @@ public class JEI {
         
     }
     
-    @ZenMethod
+    @Deprecated
     public static void addDescription(IItemStack stack, String... description) {
-        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack), description, stack.toString()));
+        addDescription(((IIngredient) stack), description);
     }
     
     
-    @ZenMethod
+    @Deprecated
     public static void addDescription(IItemStack[] stack, String... description) {
-        DESCRIPTIONS.add(new DescribeAction(Arrays.asList(stack), description, "IItemStack[]"));
+        addDescription(((IIngredient[]) stack), description);
     }
     
     
-    @ZenMethod
+    @Deprecated
     public static void addDescription(IOreDictEntry dict, String... description) {
-        DESCRIPTIONS.add(new DescribeAction(dict.getItems(), description, dict.toString()));
+        addDescription(((IIngredient) dict), description);
     }
     
     
-    @ZenMethod
+    @Deprecated
     public static void addDescription(ILiquidStack stack, String... description) {
-        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(stack.withAmount(Fluid.BUCKET_VOLUME)), description, stack.toString()));
+        addDescription(((IIngredient) stack), description);
+    }
+
+    @ZenMethod
+    public static void addDescription(IIngredient ingredient, String... description) {
+        DESCRIPTIONS.add(new DescribeAction(Collections.singletonList(ingredient), description, ingredient.toCommandString()));
+    }
+
+    @ZenMethod
+    public static void addDescription(IIngredient[] ingredients, String... description) {
+        DESCRIPTIONS.add(new DescribeAction(Arrays.asList(ingredients), description, Arrays.stream(ingredients).map(IIngredient::toCommandString).collect(Collectors.joining(", ", "[", "]"))));
     }
     
     
