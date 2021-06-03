@@ -148,7 +148,7 @@ public final class CommonLootModifiers {
     public static ILootModifier addItemWithEnchantmentUniformBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range, int bonusMultiplier) {
         if (stack.isEmpty()) return IDENTITY.get();
         return ((loot, currentContext) -> {
-            final IntegerRange newRange = new IntegerRange(range.getMin(), range.getMax() + ExpandLootContext.getTool(currentContext).getEnchantmentLevel(enchantment) * bonusMultiplier);
+            final IntegerRange newRange = IntegerRange.create(range.getMin(), range.getMax() + ExpandLootContext.getTool(currentContext).getEnchantmentLevel(enchantment) * bonusMultiplier);
             return addItem(loot, stack, newRange.getRandomValue(ExpandLootContext.getRandom(currentContext)));
         });
     }

@@ -15,11 +15,26 @@ public class IntegerRange {
     private final int min;
     private final int max;
 
-    @ZenCodeType.Constructor
-    public IntegerRange(int min, int max) {
+    private IntegerRange(int min, int max) {
         if (min > max) throw new IllegalArgumentException("Minimum IntRange bound must not be more than maximum bound");
         this.min = min;
         this.max = max;
+    }
+
+    /**
+     * Creates an IntegerRange.
+     */
+    @ZenCodeType.Method
+    public static IntegerRange create(int min, int max) {
+        return new IntegerRange(min, max);
+    }
+
+    /**
+     * Creates an IntegerRange, with equal minimum and maximum.
+     */
+    @ZenCodeType.Method
+    public static IntegerRange create(int n) {
+        return new IntegerRange(n, n);
     }
 
     @ZenCodeType.Getter("min")
