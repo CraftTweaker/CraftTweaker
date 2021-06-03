@@ -7,14 +7,13 @@ import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.api.util.IntegerRange;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.loot.LootContext;
 import net.minecraft.util.Util;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Lazy;
 import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -32,7 +31,6 @@ import java.util.stream.Stream;
 public final class CommonLootModifiers {
     private static final Lazy<ILootModifier> IDENTITY = Lazy.concurrentOf(() -> (loot, context) -> loot);
     private static final Lazy<ILootModifier> LOOT_CLEARING_MODIFIER = Lazy.concurrentOf(() -> (loot, context) -> new ArrayList<>());
-    private static final Lazy<Random> RANDOM = Lazy.concurrentOf(Random::new);
 
     // Addition methods
     /**
@@ -57,7 +55,7 @@ public final class CommonLootModifiers {
         if (stack.isEmpty()) return IDENTITY.get();
         if (amountRange.getMin() < 0) throw new IllegalArgumentException("Minimum must be more than 0");
         return ((loot, currentContext) -> {
-            int amount = amountRange.getRandomValue(getRandom(currentContext.getWorld()));
+            int amount = amountRange.getRandomValue(ExpandLootContext.getRandom(currentContext));
             if (amount == 0) return loot;
             return Util.make(new ArrayList<>(loot), it -> it.add(stack.copy().setAmount(amount)));
         });
@@ -72,7 +70,7 @@ public final class CommonLootModifiers {
     public static ILootModifier add(final MCWeightedItemStack stack) {
         if (stack.getItemStack().isEmpty()) return IDENTITY.get();
         return ((loot, currentContext) -> {
-            if (getRandom(currentContext.getWorld()).nextDouble() < stack.getWeight()) {
+            if (ExpandLootContext.getRandom(currentContext).nextDouble() < stack.getWeight()) {
                 return Util.make(new ArrayList<>(loot), it -> it.add(stack.getItemStack().copy()));
             } else {
                 return loot;
@@ -253,9 +251,5 @@ public final class CommonLootModifiers {
     
     private static List<IItemStack> replacingExactly(final IItemStack original, final IItemStack from, final IItemStack to) {
         return Arrays.asList(to.copy().setAmount(original.getAmount() / from.getAmount()), original.copy().setAmount(original.getAmount() % from.getAmount()));
-    }
-
-    private static Random getRandom(@Nullable World world) {
-        return world == null ? RANDOM.get() : world.getRandom();
     }
 }

@@ -18,6 +18,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Random;
+
 /**
  * Holds all information that may be obtainable from a loot table roll, allowing for identifying key information.
  *
@@ -198,5 +200,13 @@ public class ExpandLootContext {
     @ZenCodeType.Getter("lootTableId")
     public static ResourceLocation getLootTableId(final LootContext internal) {
         return internal.getQueriedLootTableId();
+    }
+
+    /**
+     * Gets the random generator used in loot table rolling
+     */
+    @ZenCodeType.Getter("random")
+    public static Random getRandom(final LootContext internal) {
+        return internal.getRandom();
     }
 }
