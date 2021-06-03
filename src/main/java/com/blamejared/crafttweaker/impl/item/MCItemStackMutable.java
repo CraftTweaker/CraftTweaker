@@ -93,7 +93,13 @@ public class MCItemStackMutable implements IItemStack {
         getInternal().setTag(((MapData) tag).getInternal());
         return this;
     }
-    
+
+    @Override
+    public IItemStack clearTag() {
+        getInternal().setTag(null);
+        return this;
+    }
+
     @Override
     public String getCommandString() {
         
