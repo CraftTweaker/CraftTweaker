@@ -9,6 +9,8 @@ import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.google.common.collect.Lists;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.loot.LootContext;
@@ -33,6 +35,15 @@ import java.util.stream.Stream;
 public final class CommonLootModifiers {
     private static final Lazy<ILootModifier> IDENTITY = Lazy.concurrentOf(() -> (loot, context) -> loot);
     private static final Lazy<ILootModifier> LOOT_CLEARING_MODIFIER = Lazy.concurrentOf(() -> (loot, context) -> new ArrayList<>());
+    private static final Lazy<ILootModifier> SILK_TOUCH = Lazy.concurrentOf(() -> ((loot, currentContext) -> {
+        if (ExpandLootContext.getTool(currentContext).getEnchantmentLevel(Enchantments.SILK_TOUCH) != 0) {
+            BlockState blockState = ExpandLootContext.getBlockState(currentContext);
+            if (blockState != null) {
+                return Lists.newArrayList(new MCItemStack(blockState.getBlock().asItem().getDefaultInstance()));
+            }
+        }
+        return loot;
+    }));
 
     // Addition methods
     /**
@@ -113,16 +124,26 @@ public final class CommonLootModifiers {
         return chaining(stacksMap.entrySet().stream().map(it -> add(it.getKey(), it.getValue())));
     }
 
+    /**
+     * Adds the give {@link IItemStack} with random amount and enchantment bonus, following binomial distribution.
+     * (n = EnchantmentLevel + extra, p = probability)
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
     @ZenCodeType.Method
     public static ILootModifier addItemWithEnchantmentBinomialBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range, int extra, float probability) {
         if (stack.isEmpty()) return IDENTITY.get();
         return ((loot, currentContext) -> {
             int enchantmentLevel = ExpandLootContext.getTool(currentContext).getEnchantmentLevel(enchantment);
             Random random = currentContext.getRandom();
-            return addItem(loot, stack, binomial(random, range.getRandomValue(random), enchantmentLevel + extra, probability));
+            return addItem(loot, stack, binomial(random, enchantmentLevel + extra, probability) + range.getRandomValue(random));
         });
     }
 
+    /**
+     * Adds the give {@link IItemStack} with random amount and enchantment bonus, following uniform distribution.
+     * It ranges from <code>range.min</code> and <code>range.getMax() + EnchantmentLevel * bonusMultiplier</code>
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
     @ZenCodeType.Method
     public static ILootModifier addItemWithEnchantmentUniformBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range, int bonusMultiplier) {
         if (stack.isEmpty()) return IDENTITY.get();
@@ -132,6 +153,12 @@ public final class CommonLootModifiers {
         });
     }
 
+    /**
+     * Adds the give {@link IItemStack} with random amount and enchantment bonus, following vanilla default ore drops logic.
+     * Vanilla default ore drops logic: <p>
+     * There is a (EnchantmentLevel)/(EnchantmentLevel + 2) chance that to multiply the origin value with (2 to (EnchantmentLevel + 1)) and a 2/(EnchantmentLevel + 2) chance that to keep the origin value.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
     @ZenCodeType.Method
     public static ILootModifier addItemWithEnchantmentOreDropsBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range) {
         if (stack.isEmpty()) return IDENTITY.get();
@@ -152,16 +179,32 @@ public final class CommonLootModifiers {
         });
     }
 
+    /**
+     * Adds the give {@link IItemStack} with random amount and fortune bonus, following binomial distribution.
+     * (n = EnchantmentLevel + extra, p = probability)
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
     @ZenCodeType.Method
     public static ILootModifier addItemWithFortuneBinomialBonusCount(final IItemStack stack, IntegerRange range, int extra, float probability) {
         return addItemWithEnchantmentBinomialBonusCount(stack, Enchantments.FORTUNE, range, extra, probability);
     }
 
+    /**
+     * Adds the give {@link IItemStack} with random amount and fortune bonus, following uniform distribution.
+     * It ranges from <code>range.min</code> and <code>range.getMax() + EnchantmentLevel * bonusMultiplier</code>
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
     @ZenCodeType.Method
     public static ILootModifier addItemWithFortuneUniformBonusCount(final IItemStack stack, IntegerRange range, int bonusMultiplier) {
         return addItemWithEnchantmentUniformBonusCount(stack, Enchantments.FORTUNE, range, bonusMultiplier);
     }
 
+    /**
+     * Adds the give {@link IItemStack} with random amount and fortune bonus, following vanilla default ore drops logic.<p>
+     * Vanilla default ore drops logic: <p>
+     * There is a (EnchantmentLevel)/(EnchantmentLevel + 2) chance that to multiply the origin value with (2 to (EnchantmentLevel + 1)) and a 2/(EnchantmentLevel + 2) chance that to keep the origin value.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
     @ZenCodeType.Method
     public static ILootModifier addItemWithFortuneOreDropsBonusCount(final IItemStack stack, IntegerRange range) {
         return addItemWithEnchantmentOreDropsBonusCount(stack, Enchantments.FORTUNE, range);
@@ -271,6 +314,15 @@ public final class CommonLootModifiers {
         return LOOT_CLEARING_MODIFIER.get();
     }
 
+    /**
+     * Sets drop list to the block itself when silk touch
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier silkTouch() {
+        return SILK_TOUCH.get();
+    }
+
     // Additional utility methods
     /**
      * Chains the given list of {@link ILootModifier}s to be executed one after the other.
@@ -302,14 +354,15 @@ public final class CommonLootModifiers {
         return Util.make(new ArrayList<>(stacks), (it) -> it.add(toAdd.copy().setAmount(amount)));
     }
 
-    private static int binomial(Random random, /* mutable */ int originValue, final int n, final float probability) {
+    private static int binomial(final Random random, final int n, final float probability) {
+        int x = 0;
         for(int i = 0; i < n; ++i) {
             if (random.nextFloat() < probability) {
-                ++originValue;
+                ++x;
             }
         }
 
-        return originValue;
+        return x;
     }
     
     private static Stream<IItemStack> notEmpty(final Stream<IItemStack> stream) {

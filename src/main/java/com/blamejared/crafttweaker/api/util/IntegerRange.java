@@ -7,9 +7,6 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Objects;
 import java.util.Random;
 
-/**
- * @author youyihj
- */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.IntegerRange")
 public class IntegerRange {

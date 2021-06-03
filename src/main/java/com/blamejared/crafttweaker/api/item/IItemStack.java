@@ -637,6 +637,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return EnchantmentHelper.getEnchantments(getInternal());
     }
 
+    /**
+     * Gets the level of given enchantment on the item. Returns 0 if the item doesn't have given enchantment.
+     */
     @ZenCodeType.Method
     default int getEnchantmentLevel(Enchantment enchantment) {
         return EnchantmentHelper.getEnchantmentLevel(enchantment, getInternal());
