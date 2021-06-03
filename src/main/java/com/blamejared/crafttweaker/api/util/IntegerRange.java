@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.util;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.math.MathHelper;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.Random;
 
 @ZenRegister
+@Document("vanilla/api/util/IntegerRange")
 @ZenCodeType.Name("crafttweaker.api.util.IntegerRange")
 public class IntegerRange {
     private final int min;
