@@ -9,6 +9,8 @@ import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.loot.LootContext;
 import net.minecraft.util.Util;
 import net.minecraftforge.common.util.Lazy;
@@ -41,7 +43,7 @@ public final class CommonLootModifiers {
      */
     @ZenCodeType.Method
     public static ILootModifier add(final IItemStack stack) {
-        return stack.isEmpty() ? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(stack.copy()));
+        return stack.isEmpty() ? IDENTITY.get() : (loot, context) -> addItem(loot, stack);
     }
 
     /**
@@ -55,9 +57,8 @@ public final class CommonLootModifiers {
         if (stack.isEmpty()) return IDENTITY.get();
         if (amountRange.getMin() < 0) throw new IllegalArgumentException("Minimum must be more than 0");
         return ((loot, currentContext) -> {
-            int amount = amountRange.getRandomValue(ExpandLootContext.getRandom(currentContext));
-            if (amount == 0) return loot;
-            return Util.make(new ArrayList<>(loot), it -> it.add(stack.copy().setAmount(amount)));
+            final int amount = amountRange.getRandomValue(ExpandLootContext.getRandom(currentContext));
+            return addItem(loot, stack, amount);
         });
     }
 
@@ -71,7 +72,7 @@ public final class CommonLootModifiers {
         if (stack.getItemStack().isEmpty()) return IDENTITY.get();
         return ((loot, currentContext) -> {
             if (ExpandLootContext.getRandom(currentContext).nextDouble() < stack.getWeight()) {
-                return Util.make(new ArrayList<>(loot), it -> it.add(stack.getItemStack().copy()));
+                return addItem(loot, stack.getItemStack());
             } else {
                 return loot;
             }
@@ -110,6 +111,60 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addAll(final Map<IItemStack, IntegerRange> stacksMap) {
         return chaining(stacksMap.entrySet().stream().map(it -> add(it.getKey(), it.getValue())));
+    }
+
+    @ZenCodeType.Method
+    public static ILootModifier addItemWithEnchantmentBinomialBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range, int extra, float probability) {
+        if (stack.isEmpty()) return IDENTITY.get();
+        return ((loot, currentContext) -> {
+            int enchantmentLevel = ExpandLootContext.getTool(currentContext).getEnchantmentLevel(enchantment);
+            Random random = currentContext.getRandom();
+            return addItem(loot, stack, binomial(random, range.getRandomValue(random), enchantmentLevel + extra, probability));
+        });
+    }
+
+    @ZenCodeType.Method
+    public static ILootModifier addItemWithEnchantmentUniformBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range, int bonusMultiplier) {
+        if (stack.isEmpty()) return IDENTITY.get();
+        return ((loot, currentContext) -> {
+            final IntegerRange newRange = new IntegerRange(range.getMin(), range.getMax() + ExpandLootContext.getTool(currentContext).getEnchantmentLevel(enchantment) * bonusMultiplier);
+            return addItem(loot, stack, newRange.getRandomValue(ExpandLootContext.getRandom(currentContext)));
+        });
+    }
+
+    @ZenCodeType.Method
+    public static ILootModifier addItemWithEnchantmentOreDropsBonusCount(final IItemStack stack, Enchantment enchantment, IntegerRange range) {
+        if (stack.isEmpty()) return IDENTITY.get();
+        return ((loot, currentContext) -> {
+            final Random random = currentContext.getRandom();
+            final int originValue = range.getRandomValue(random);
+            final int level = ExpandLootContext.getTool(currentContext).getEnchantmentLevel(enchantment);
+            if (level > 0) {
+                int i = random.nextInt(level + 2) - 1;
+                if (i < 0) {
+                    i = 0;
+                }
+
+                return addItem(loot, stack, originValue * (i + 1));
+            } else {
+                return addItem(loot, stack, originValue);
+            }
+        });
+    }
+
+    @ZenCodeType.Method
+    public static ILootModifier addItemWithFortuneBinomialBonusCount(final IItemStack stack, IntegerRange range, int extra, float probability) {
+        return addItemWithEnchantmentBinomialBonusCount(stack, Enchantments.FORTUNE, range, extra, probability);
+    }
+
+    @ZenCodeType.Method
+    public static ILootModifier addItemWithFortuneUniformBonusCount(final IItemStack stack, IntegerRange range, int bonusMultiplier) {
+        return addItemWithEnchantmentUniformBonusCount(stack, Enchantments.FORTUNE, range, bonusMultiplier);
+    }
+
+    @ZenCodeType.Method
+    public static ILootModifier addItemWithFortuneOreDropsBonusCount(final IItemStack stack, IntegerRange range) {
+        return addItemWithEnchantmentOreDropsBonusCount(stack, Enchantments.FORTUNE, range);
     }
 
     // Replacement methods
@@ -235,6 +290,26 @@ public final class CommonLootModifiers {
     
     private static ILootModifier chaining(final Stream<ILootModifier> chain) {
         return chain.reduce(IDENTITY.get(), (first, second) -> (loot, context) -> second.applyModifier(first.applyModifier(loot, context), context));
+    }
+
+    private static List<IItemStack> addItem(final List<IItemStack> stacks, IItemStack toAdd) {
+        if (toAdd.isEmpty()) return stacks;
+        return Util.make(new ArrayList<>(stacks), (it) -> it.add(toAdd.copy()));
+    }
+
+    private static List<IItemStack> addItem(final List<IItemStack> stacks, IItemStack toAdd, int amount) {
+        if (amount <= 0) return stacks;
+        return Util.make(new ArrayList<>(stacks), (it) -> it.add(toAdd.copy().setAmount(amount)));
+    }
+
+    private static int binomial(Random random, /* mutable */ int originValue, final int n, final float probability) {
+        for(int i = 0; i < n; ++i) {
+            if (random.nextFloat() < probability) {
+                ++originValue;
+            }
+        }
+
+        return originValue;
     }
     
     private static Stream<IItemStack> notEmpty(final Stream<IItemStack> stream) {

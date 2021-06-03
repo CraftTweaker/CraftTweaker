@@ -33,7 +33,7 @@ public class IntegerRange {
         return max;
     }
 
-    @ZenCodeType.Getter("randomValue")
+    @ZenCodeType.Method
     public int getRandomValue(Random random) {
         return MathHelper.nextInt(random, min, max);
     }
