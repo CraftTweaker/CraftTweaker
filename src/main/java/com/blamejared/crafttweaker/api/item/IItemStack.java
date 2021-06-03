@@ -414,6 +414,13 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Method
     IItemStack withTag(IData tag);
+
+    /**
+     * Removes tag from the ItemStack
+     * @return This itemStack if it is mutable, a new one with the changed property otherwise
+     */
+    @ZenCodeType.Method
+    IItemStack clearTag();
     
     
     /**
