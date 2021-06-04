@@ -168,7 +168,7 @@ public class ExpandLootContext {
     }
 
     /**
-     * Gets the world where the interaction happened, if it exists or can be obtained; null otherwise.
+     * Gets the world where the interaction happened.
      *
      * @param internal The context.
      * @return The world.
