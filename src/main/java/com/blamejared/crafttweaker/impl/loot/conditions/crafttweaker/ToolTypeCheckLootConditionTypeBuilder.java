@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * <p>The condition passes only if the tool obtained from the {@link net.minecraft.loot.LootContext} has
  * the given tooltype.</p>
  *
- * <p>A 'ToolType' loot condition requires a block tag to be built.</p>
+ * <p>A 'ToolTypeCheck' loot condition requires a tool type to be built.</p>
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.ToolTypeCheck")
@@ -31,7 +31,7 @@ public class ToolTypeCheckLootConditionTypeBuilder implements ILootConditionType
      *
      * <p>This parameter is <strong>required</strong>.</p>
      *
-     * @param toolType The tag to check.
+     * @param toolType The tool type to check.
      * @return This builder for chaining.
      */
 
@@ -44,7 +44,7 @@ public class ToolTypeCheckLootConditionTypeBuilder implements ILootConditionType
     @Override
     public ILootCondition finish() {
         if (this.toolType == null) {
-            throw new IllegalStateException("A tag for a 'ToolType' condition must be specified");
+            throw new IllegalStateException("A tool type for a 'ToolTypeCheck' condition must be specified");
         }
         return context -> {
             final IItemStack tool = ExpandLootContext.getTool(context);
