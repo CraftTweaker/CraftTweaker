@@ -172,7 +172,7 @@ public class CommonEventHandler {
                         return;
                     if (drop.getChance() > 0 && drop.getChance() < 1 && rand.nextFloat() > drop.getChance())
                         return;
-                    int count = (drop.getMin() == 0 && drop.getMax() == 0) ? 1 : drop.getRange().getRandom(rand);
+                    int count = (drop.getMin() == 0 && drop.getMax() == 0) ? drop.getItemStack().getAmount() : drop.getRange().getRandom(rand);
                     if (count != 0) {
                         ev.getDrops().add(new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, CraftTweakerMC.getItemStack(drop.getItemStack().withAmount(count))));
                     }
