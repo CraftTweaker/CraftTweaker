@@ -36,10 +36,14 @@ import net.minecraftforge.event.entity.*;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.minecart.*;
+import net.minecraftforge.event.entity.minecart.MinecartCollisionEvent;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
+import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.minecraftforge.event.world.*;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -168,14 +172,9 @@ public class CommonEventHandler {
                         return;
                     if (drop.getChance() > 0 && drop.getChance() < 1 && rand.nextFloat() > drop.getChance())
                         return;
-                    EntityItem item;
-                    if (drop.getMin() == 0 && drop.getMax() == 0) {
-                        item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) drop.getItemStack().getInternal()).copy());
-                    } else {
-                        item = new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, ((ItemStack) drop.getItemStack().withAmount(drop.getRange().getRandom(rand)).getInternal()).copy());
-                    }
-                    if (item.getItem().getCount() != 0) {
-                        ev.getDrops().add(item);
+                    int count = (drop.getMin() == 0 && drop.getMax() == 0) ? drop.getItemStack().getAmount() : drop.getRange().getRandom(rand);
+                    if (count != 0) {
+                        ev.getDrops().add(new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, CraftTweakerMC.getItemStack(drop.getItemStack().withAmount(count))));
                     }
                 });
             }
