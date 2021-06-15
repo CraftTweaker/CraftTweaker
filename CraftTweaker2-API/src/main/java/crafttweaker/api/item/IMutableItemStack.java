@@ -12,6 +12,8 @@ import java.util.Random;
  * A mutable ItemStack. <code>withTag</code>, <code>withAmount</code>, <code>damageItem</code> etc.
  * will modify and return the ItemStack itself.
  * Use it with caution.
+ *
+ * @author youyihj
  */
 @ZenClass("crafttweaker.item.IMutableItemStack")
 @ZenRegister
@@ -26,6 +28,7 @@ public interface IMutableItemStack extends IItemStack {
     // TODO: Allow passing in Random?
     @ZenMethod
     boolean attemptDamageItem(int amount, @Optional IPlayer player);
+
     /**
      * Returns a new immutable stack with the same properties.
      */

@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.item;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
@@ -18,6 +19,9 @@ import net.minecraft.nbt.NBTTagString;
 
 import java.util.Random;
 
+/**
+ * @author youyihj
+ */
 public class MCMutableItemStack extends MCItemStack implements IMutableItemStack {
     public MCMutableItemStack(ItemStack itemStack) {
         super(itemStack);
@@ -161,8 +165,12 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
 
     @Override
     public void damageItem(int amount, IEntity entity) {
-        if(entity.getInternal() instanceof EntityLivingBase)
-            origin.damageItem(amount, (EntityLivingBase) entity.getInternal());
+        if (amount > 0) {
+            if (entity.getInternal() instanceof EntityLivingBase)
+                origin.damageItem(amount, (EntityLivingBase) entity.getInternal());
+        } else {
+            CraftTweakerAPI.logWarning("Cannot repair IMutableItemStack via this method, please use `withDamage` to change the damage property directly.");
+        }
     }
 
     @Override
