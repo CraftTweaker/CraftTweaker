@@ -215,7 +215,6 @@ public class CraftTweaker {
     
     @EventHandler
     public void onInit(FMLInitializationEvent ev) {
-        MCBrewing.fixBrewingRecipes();
         PROXY.registerReloadListener();
     }
     

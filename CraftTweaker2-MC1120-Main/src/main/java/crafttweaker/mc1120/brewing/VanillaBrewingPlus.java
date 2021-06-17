@@ -1,17 +1,19 @@
 package crafttweaker.mc1120.brewing;
 
-import java.util.List;
+import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
 
-public class VanillaBrewingPlus extends VanillaBrewingRecipe {
-	
-	private final List<Tuple<IItemStack, IItemStack>> removedRecipes;
+import java.util.List;
 
-	public VanillaBrewingPlus(List<Tuple<IItemStack, IItemStack>> removedRecipes) {
+public final class VanillaBrewingPlus extends VanillaBrewingRecipe {
+	
+	private final List<Tuple<IIngredient, IIngredient>> removedRecipes;
+
+	public VanillaBrewingPlus(List<Tuple<IIngredient, IIngredient>> removedRecipes) {
 		this.removedRecipes = removedRecipes;
 	}
 	
@@ -31,7 +33,7 @@ public class VanillaBrewingPlus extends VanillaBrewingRecipe {
 		return super.getOutput(input, ingredient);
 	}
 	
-	public List<Tuple<IItemStack, IItemStack>> getRemovedRecipes() {
+	public List<Tuple<IIngredient, IIngredient>> getRemovedRecipes() {
 		return removedRecipes;
 	}
 }
