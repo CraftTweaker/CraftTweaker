@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MCBrewing implements IBrewingManager{
     private static final List<Tuple<IIngredient, IIngredient>> toRemoveVanillaRecipes = new ArrayList<>();
-    private final List<IBrewingRecipe> allBrewingRecipes = CraftTweakerHacks.getPrivateStaticObject(BrewingRecipeRegistry.class, "recipes");
+    private static final List<IBrewingRecipe> allBrewingRecipes = CraftTweakerHacks.getPrivateStaticObject(BrewingRecipeRegistry.class, "recipes");
 
     public MCBrewing() {
     }
