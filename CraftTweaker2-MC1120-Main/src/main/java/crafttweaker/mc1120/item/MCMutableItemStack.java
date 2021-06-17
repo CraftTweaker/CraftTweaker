@@ -18,6 +18,9 @@ import net.minecraft.nbt.NBTTagString;
 
 import java.util.Random;
 
+/**
+ * @author youyihj
+ */
 public class MCMutableItemStack extends MCItemStack implements IMutableItemStack {
     public MCMutableItemStack(ItemStack itemStack) {
         super(itemStack);
