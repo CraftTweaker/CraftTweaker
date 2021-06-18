@@ -1,6 +1,5 @@
 package crafttweaker.mc1120.brewing;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IngredientAny;
@@ -23,12 +22,12 @@ public class MCBrewing implements IBrewingManager{
 
     @Override
     public void addBrew(IIngredient input, IIngredient ingredient, IItemStack output, boolean hidden) {
-        CraftTweakerAPI.apply(new ActionAddBrewingRecipe(input, new IIngredient[] {ingredient}, output, hidden));
+        CraftTweaker.LATE_ACTIONS.add(new ActionAddBrewingRecipe(input, new IIngredient[] {ingredient}, output, hidden));
     }
 
     @Override
     public void addBrew(IIngredient input, IIngredient[] ingredients, IItemStack output, boolean hidden) {
-        CraftTweakerAPI.apply(new ActionAddBrewingRecipe(input, ingredients, output, hidden));
+        CraftTweaker.LATE_ACTIONS.add(new ActionAddBrewingRecipe(input, ingredients, output, hidden));
     }
 
     @Override
