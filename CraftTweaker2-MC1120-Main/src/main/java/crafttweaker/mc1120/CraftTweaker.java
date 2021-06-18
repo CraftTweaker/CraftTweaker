@@ -1,7 +1,10 @@
 package crafttweaker.mc1120;
 
-import crafttweaker.*;
-import crafttweaker.annotations.*;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.CrafttweakerImplementationAPI;
+import crafttweaker.IAction;
+import crafttweaker.annotations.ModOnly;
+import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.api.recipes.ICraftingRecipe;
 import crafttweaker.mc1120.brewing.MCBrewing;
@@ -14,32 +17,39 @@ import crafttweaker.mc1120.game.MCGame;
 import crafttweaker.mc1120.item.MCItemUtils;
 import crafttweaker.mc1120.logger.MCLogger;
 import crafttweaker.mc1120.mods.MCLoadedMods;
-import crafttweaker.mc1120.network.*;
+import crafttweaker.mc1120.network.MessageCopyClipboard;
+import crafttweaker.mc1120.network.MessageOpenBrowser;
 import crafttweaker.mc1120.oredict.MCOreDict;
-import crafttweaker.mc1120.preprocessors.*;
+import crafttweaker.mc1120.preprocessors.ModLoadedPreprocessor;
+import crafttweaker.mc1120.preprocessors.ZsLintPreprocessor;
 import crafttweaker.mc1120.proxies.CommonProxy;
 import crafttweaker.mc1120.recipes.MCRecipeManager;
 import crafttweaker.mc1120.server.MCServer;
 import crafttweaker.mc1120.util.CraftTweakerPlatformUtils;
 import crafttweaker.mc1120.vanilla.MCVanilla;
 import crafttweaker.runtime.IScriptProvider;
-import crafttweaker.runtime.providers.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.recipebook.RecipeList;
-import net.minecraft.client.util.*;
-import net.minecraft.item.ItemStack;
+import crafttweaker.runtime.providers.ScriptProviderCascade;
+import crafttweaker.runtime.providers.ScriptProviderDirectory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ProgressManager;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.*;
-import org.apache.logging.log4j.*;
+import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -119,7 +129,7 @@ public class CraftTweaker {
             try {
                 Class<?> claz = Class.forName(clazz.getClassName(), false, CraftTweaker.class.getClassLoader());
                 if(claz.isAnnotationPresent(ModOnly.class)) {
-                    if(Loader.isModLoaded(((ModOnly) claz.getAnnotation(ModOnly.class)).value())) {
+                    if(Loader.isModLoaded(claz.getAnnotation(ModOnly.class).value())) {
                         CraftTweakerAPI.registerClass(claz);
                     }
                 } else {
@@ -180,7 +190,6 @@ public class CraftTweaker {
         applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Failed to apply add recipe actions");
         applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Failed to apply remove furnace recipe actions");
         applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Failed to apply add furnace recipe actions");
-        applyActions(LATE_ACTIONS, "Applying late actions", "Failed to apply late actions");
         MCRecipeManager.refreshRecipes();
 
 
@@ -190,27 +199,13 @@ public class CraftTweaker {
         MinecraftForge.EVENT_BUS.post(new ActionApplyEvent.Post());
     }
     
-    private static boolean alreadyChangedThePlayer = false;
-    
+    public static boolean alreadyChangedThePlayer = false;
+
     @EventHandler
-    @SideOnly(Side.CLIENT)
     public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
-        
-        final Minecraft minecraft = Minecraft.getMinecraft();
-        if(!alreadyChangedThePlayer) {
-            alreadyChangedThePlayer = true;
-            RecipeBookClient.rebuildTable();
-            if(CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION) {
-                try {
-                    minecraft.populateSearchTreeManager();
-                    ((SearchTree<ItemStack>) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
-                    ((SearchTree<RecipeList>) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
-                } catch (Exception ex) {
-                    CraftTweakerAPI.logError("Error repopulating the SearchTree Managers. If this problem occurs more often you can disable it with '#disable_search_tree' in any CrT script.", ex);
-                }
-            }
-            CraftTweakerAPI.logInfo("Fixed the RecipeBook");
-        }
+        applyActions(LATE_ACTIONS, "Applying late actions", "Failed to apply late actions");
+
+        PROXY.fixRecipeBook();
     }
     
     @EventHandler

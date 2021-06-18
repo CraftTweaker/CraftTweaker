@@ -10,5 +10,7 @@ public class CommonProxy {
     }
     
     public void registerReloadListener(){}
+
+    public void fixRecipeBook() {}
     
 }
