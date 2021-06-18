@@ -447,6 +447,9 @@ public interface IItemStack extends IIngredient {
     boolean hasContainerItem();
     
     @ZenMethod
+    IEntityItem createEntityItem(IWorld world, int x, int y, int z);
+    
+    @ZenMethod
     IEntityItem createEntityItem(IWorld world, float x, float y, float z);
     
     @ZenMethod
