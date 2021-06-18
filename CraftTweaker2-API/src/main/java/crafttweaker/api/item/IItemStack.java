@@ -450,6 +450,11 @@ public interface IItemStack extends IIngredient {
     IEntityItem createEntityItem(IWorld world, int x, int y, int z);
     
     @ZenMethod
+    default IEntityItem createEntityItem(IWorld world, float x, float y, float z) {
+        return createEntityItem(world, (int) x, (int) y, (int) z);
+    }
+    
+    @ZenMethod
     IEntityItem createEntityItem(IWorld world, IBlockPos pos);
 
     @ZenMethod
