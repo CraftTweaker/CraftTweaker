@@ -204,6 +204,7 @@ public class CraftTweaker {
     @EventHandler
     public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
         applyActions(LATE_ACTIONS, "Applying late actions", "Failed to apply late actions");
+        LATE_ACTIONS.clear();
 
         PROXY.fixRecipeBook();
     }
