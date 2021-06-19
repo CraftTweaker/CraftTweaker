@@ -6,12 +6,12 @@ import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.Random;
-
 /**
  * A mutable ItemStack. <code>withTag</code>, <code>withAmount</code>, <code>damageItem</code> etc.
  * will modify and return the ItemStack itself.
  * Use it with caution.
+ *
+ * @author youyihj
  */
 @ZenClass("crafttweaker.item.IMutableItemStack")
 @ZenRegister

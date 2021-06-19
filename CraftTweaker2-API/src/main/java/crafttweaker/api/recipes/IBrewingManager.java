@@ -15,4 +15,7 @@ public interface IBrewingManager {
 	
 	@ZenMethod
 	void removeRecipe(IItemStack input, IItemStack ingredient);
+
+	@ZenMethod
+	void removeRecipe(IItemStack ingredient);
 }

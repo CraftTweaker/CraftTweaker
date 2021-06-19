@@ -1,10 +1,16 @@
 package crafttweaker.mc1120.proxies;
 
 import crafttweaker.*;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.events.ClientEventHandler;
 import crafttweaker.mc1120.game.MCGame;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.recipebook.RecipeList;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.util.RecipeBookClient;
+import net.minecraft.client.util.SearchTree;
+import net.minecraft.client.util.SearchTreeManager;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.resource.*;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -27,5 +33,24 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         });
+    }
+
+    @Override
+    public void fixRecipeBook() {
+        final Minecraft minecraft = Minecraft.getMinecraft();
+        if(!CraftTweaker.alreadyChangedThePlayer) {
+            CraftTweaker.alreadyChangedThePlayer = true;
+            RecipeBookClient.rebuildTable();
+            if(CraftTweakerAPI.ENABLE_SEARCH_TREE_RECALCULATION) {
+                try {
+                    minecraft.populateSearchTreeManager();
+                    ((SearchTree<ItemStack>) minecraft.getSearchTreeManager().get(SearchTreeManager.ITEMS)).recalculate();
+                    ((SearchTree<RecipeList>) minecraft.getSearchTreeManager().get(SearchTreeManager.RECIPES)).recalculate();
+                } catch (Exception ex) {
+                    CraftTweakerAPI.logError("Error repopulating the SearchTree Managers. If this problem occurs more often you can disable it with '#disable_search_tree' in any CrT script.", ex);
+                }
+            }
+            CraftTweakerAPI.logInfo("Fixed the RecipeBook");
+        }
     }
 }
