@@ -1,12 +1,11 @@
 package crafttweaker.mc1120.brewing;
 
 import crafttweaker.CraftTweakerAPI;
-import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
-public class ActionAddBrewingRecipe implements IAction {
+public class ActionAddBrewingRecipe implements IBrewingAction {
     private final MultiBrewingRecipe recipe;
     private final String outName;
     private final boolean valid;

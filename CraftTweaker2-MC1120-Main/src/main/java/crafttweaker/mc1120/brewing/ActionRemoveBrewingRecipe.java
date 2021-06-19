@@ -1,6 +1,5 @@
 package crafttweaker.mc1120.brewing;
 
-import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
@@ -11,7 +10,7 @@ import java.util.List;
 /**
  * @author youyihj
  */
-public class ActionRemoveBrewingRecipe implements IAction {
+public class ActionRemoveBrewingRecipe implements IBrewingAction {
     private final IIngredient input;
     private final IIngredient ingredient;
     private final List<IBrewingRecipe> allBrewingRecipes;

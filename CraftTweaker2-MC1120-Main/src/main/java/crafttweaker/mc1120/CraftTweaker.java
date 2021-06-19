@@ -190,7 +190,9 @@ public class CraftTweaker {
         applyActions(MCRecipeManager.recipesToAdd, "Applying add recipe actions", "Failed to apply add recipe actions");
         applyActions(MCFurnaceManager.recipesToRemove, "Applying remove furnace recipe actions", "Failed to apply remove furnace recipe actions");
         applyActions(MCFurnaceManager.recipesToAdd, "Applying add furnace recipe actions", "Failed to apply add furnace recipe actions");
+        applyActions(LATE_ACTIONS, "Applying late actions", "Failed to apply late actions");
         MCRecipeManager.refreshRecipes();
+        LATE_ACTIONS.clear();
 
 
         //Cleanup
@@ -203,8 +205,8 @@ public class CraftTweaker {
 
     @EventHandler
     public void onFMLLoadComplete(FMLLoadCompleteEvent event) {
-        applyActions(LATE_ACTIONS, "Applying late actions", "Failed to apply late actions");
-        LATE_ACTIONS.clear();
+        applyActions(MCBrewing.brewingActions, "Applying brewing recipe actions", "Failed to apply brewing recipe actions");
+        MCBrewing.brewingActions.clear();
 
         PROXY.fixRecipeBook();
     }
