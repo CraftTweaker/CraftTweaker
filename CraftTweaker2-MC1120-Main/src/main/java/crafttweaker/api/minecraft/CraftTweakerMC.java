@@ -140,11 +140,11 @@ public class CraftTweakerMC {
     }
     
     /**
-     * Returns the Minecraft item for this CraftTweaker item.
+     * Returns a copy of the Minecraft item for this CraftTweaker item.
      *
      * @param item crafttweaker item stack
      *
-     * @return minecraft item stack
+     * @return copy of minecraft item stack
      */
     public static ItemStack getItemStack(IItemStack item) {
         if(item == null)
@@ -156,6 +156,25 @@ public class CraftTweakerMC {
             throw new IllegalArgumentException("Not a valid item stack: " + item);
         }
         return ((ItemStack) internal).copy();
+    }
+    
+    /**
+     * Returns the original Minecraft item for this CraftTweaker mutable item.
+     *
+     * @param item crafttweaker mutable item stack
+     *
+     * @return original minecraft item stack
+     */
+    public static ItemStack getItemStack(IMutableItemStack item) {
+        if(item == null)
+            return ItemStack.EMPTY;
+        
+        Object internal = item.getInternal();
+        if(!(internal instanceof ItemStack)) {
+            CraftTweakerAPI.logError("Not a valid item stack: " + item);
+            throw new IllegalArgumentException("Not a valid item stack: " + item);
+        }
+        return (ItemStack) internal;
     }
     
     /**
