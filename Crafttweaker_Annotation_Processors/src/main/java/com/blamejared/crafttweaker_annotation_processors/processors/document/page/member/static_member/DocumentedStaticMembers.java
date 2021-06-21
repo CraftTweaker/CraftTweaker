@@ -35,6 +35,7 @@ public class DocumentedStaticMembers {
             return;
         }
         
+        // TODO("Support deprecation and since properly, along with better documentation format")
         writer.printf("## Static Properties%n%n");
         writer.println("| Name | Type | Has Getter | Has Setter | Description |");
         writer.println("|------|------|------------|------------|-------------|");

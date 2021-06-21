@@ -48,6 +48,7 @@ public class DocumentedVirtualMembers {
             return;
         }
         
+        // TODO("Support deprecation and since properly, along with better documentation format")
         writer.printf("## Casters%n%n");
         writer.println("| Result type | Is Implicit |");
         writer.println("|-------------|-------------|");
@@ -86,6 +87,7 @@ public class DocumentedVirtualMembers {
             return;
         }
         
+        // TODO("Support deprecation and since properly, along with better documentation format")
         writer.printf("## Properties%n%n");
         writer.println("| Name | Type | Has Getter | Has Setter | Description |");
         writer.println("|------|------|------------|------------|-------------|");

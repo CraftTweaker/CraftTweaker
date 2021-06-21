@@ -20,6 +20,7 @@ public class ConstructorMember extends AbstractVirtualMember implements Comparab
     }
     
     public void write(PrintWriter writer) {
+        writeDeprecation(writer);
         writeDescription(writer);
         writeCodeBlock(writer);
         writeParameterDescriptionTable(writer);
@@ -50,5 +51,12 @@ public class ConstructorMember extends AbstractVirtualMember implements Comparab
         final String ownerName = getConstructedType().getDisplayName();
         final String signature = header.formatForSignatureExample();
         writer.printf("new %s%s%n", ownerName, signature);
+    }
+    
+    private void writeDeprecation(final PrintWriter writer) {
+        if (!this.getComment().isDeprecated()) return;
+        writer.printf(":::warnBox%n%n");
+        writer.write(this.getComment().getDeprecationMessage());
+        writer.printf("%n:::%n%n");
     }
 }

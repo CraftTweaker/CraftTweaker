@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.pa
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import java.io.PrintWriter;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,7 +27,7 @@ public class StaticMethodGroup {
     public void writeStaticMethods(PrintWriter writer) {
         
         for(StaticMethodMember method : staticMethods) {
-            writer.printf(":::group{name=%s}%n%n", name);
+            writer.printf(":::group{name=%s%s}%n%n", name, method.getSince().map(it -> ",since=" + it).orElse(""));
             method.write(writer, ownerType);
             writer.printf(":::%n%n");
         }

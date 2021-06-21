@@ -31,13 +31,14 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     public void write(PrintWriter writer) {
         writeTitle(writer);
+        writeDeprecation(writer);
         writeDescription(writer);
         writeScriptBlock(writer);
         writer.printf(":::%n%n");
     }
     
     private void writeTitle(PrintWriter writer) {
-        writer.printf(":::group{name=%s}%n%n", type.name());
+        writer.printf(":::group{name=%s%s}%n%n", type.name(), this.getComment().getOptionalSince().map(it -> ",since=" + it).orElse(""));
     }
     
     private void writeDescription(PrintWriter writer) {
@@ -46,6 +47,14 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
             writer.println();
         }
     }
+    
+    private void writeDeprecation(final PrintWriter writer) {
+        if (!this.getComment().isDeprecated()) return;
+        writer.printf(":::warnBox%n%n");
+        writer.write(this.getComment().getDeprecationMessage());
+        writer.printf("%n:::%n%n");
+    }
+    
     
     private void writeScriptBlock(PrintWriter writer) {
         writer.println("```zenscript");

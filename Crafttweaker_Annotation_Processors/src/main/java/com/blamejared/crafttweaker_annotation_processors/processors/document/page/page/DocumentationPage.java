@@ -20,7 +20,9 @@ public abstract class DocumentationPage {
     }
     
     public void write(PrintWriter writer) {
+        writeSince(writer);
         writeTitle(writer);
+        writeDeprecation(writer);
         writeDescription(writer);
         if(!pageInfo.declaringModId.equals("crafttweaker")) {
             writeOwnerModId(writer);
@@ -29,7 +31,21 @@ public abstract class DocumentationPage {
         writeMembers(writer);
     }
     
+    protected void writeSince(final PrintWriter writer) {
+        if (!this.pageInfo.getClassComment().getOptionalSince().isPresent()) return;
+        
+        writer.printf("::since{version=%s}%n", this.pageInfo.getClassComment().getSinceVersion());
+    }
+    
     protected abstract void writeTitle(PrintWriter writer);
+    
+    protected void writeDeprecation(final PrintWriter writer) {
+        if (!this.pageInfo.getClassComment().isDeprecated()) return;
+        
+        writer.printf(":::warnBox%n%n");
+        writer.write(this.pageInfo.getClassComment().getDeprecationMessage());
+        writer.printf("%n:::%n%n");
+    }
     
     protected void writeDescription(PrintWriter writer) {
         final Optional<String> description = pageInfo.getClassComment().getOptionalDescription();

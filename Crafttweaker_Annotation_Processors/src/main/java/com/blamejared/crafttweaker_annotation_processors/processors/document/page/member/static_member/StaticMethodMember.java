@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
+import java.util.Optional;
 
 public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
@@ -34,6 +35,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     }
     
     public void write(PrintWriter writer, AbstractTypeInfo ownerType) {
+        writeDeprecation(writer);
         writeComment(writer);
         writeReturnType(writer);
         writeCodeBlockWithExamples(writer, ownerType);
@@ -74,6 +76,13 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         header.writeStaticExamples(writer, ownerType, name);
     }
     
+    private void writeDeprecation(final PrintWriter writer) {
+        if (!this.methodComment.isDeprecated()) return;
+        writer.printf(":::warnBox%n%n");
+        writer.write(this.methodComment.getDeprecationMessage());
+        writer.printf("%n:::%n%n");
+    }
+    
     private void writeComment(PrintWriter writer) {
         writeDescription(writer);
         writeReturnTypeInfo(writer);
@@ -98,5 +107,9 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
     public String getName() {
         return name;
+    }
+    
+    public Optional<String> getSince() {
+        return this.methodComment.getOptionalSince();
     }
 }

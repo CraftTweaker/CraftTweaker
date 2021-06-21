@@ -29,6 +29,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     }
     
     public void write(PrintWriter writer, AbstractTypeInfo ownerType) {
+        writeDeprecation(writer);
         writeComment(writer);
         writeReturnType(writer);
         writeCodeBlockWithExamples(writer, ownerType);
@@ -56,6 +57,13 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         writer.println();
     }
     
+    private void writeDeprecation(final PrintWriter writer) {
+        if (!this.getComment().isDeprecated()) return;
+        writer.printf(":::warnBox%n%n");
+        writer.write(this.getComment().getDeprecationMessage());
+        writer.printf("%n:::%n%n");
+    }
+    
     private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
         final String callee = ownerType.getDisplayName();
         String template = "%s%s.%s%s%n";
@@ -71,5 +79,9 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     
     public String getName() {
         return name;
+    }
+    
+    public Optional<String> getSince() {
+        return this.getComment().getOptionalSince();
     }
 }

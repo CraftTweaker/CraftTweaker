@@ -26,7 +26,7 @@ public class VirtualMethodGroup {
     public void writeVirtualMethods(PrintWriter writer) {
         
         for(VirtualMethodMember method : virtualMethods) {
-            writer.printf(":::group{name=%s}%n%n", name);
+            writer.printf(":::group{name=%s%s}%n%n", name, method.getSince().map(it -> ",since=" + it).orElse(""));
             method.write(writer, ownerType);
             writer.printf(":::%n%n");
         }
