@@ -29,7 +29,10 @@ public final class ModifierBlockExpansion {
      * @param internal The block to add the item to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use {@link #addLootModifier(Block, String, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addDrop(final Block internal, final String uniqueId, final IItemStack stack) {
         addLootModifier(internal, uniqueId, CommonLootModifiers.add(stack));
@@ -41,7 +44,10 @@ public final class ModifierBlockExpansion {
      * @param internal The block to add the items to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use {@link #addLootModifier(Block, String, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addDrops(final Block internal, final String uniqueId, final IItemStack... stacks) {
         addLootModifier(internal, uniqueId, CommonLootModifiers.addAll(stacks));
@@ -70,7 +76,11 @@ public final class ModifierBlockExpansion {
      * @param uniqueId A unique identifier for this loot modifier.
      * @param statePredicate A consumer to configure the {@link StatePropertiesPredicate} to identify the target state.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addStateLootModifier(Block, String, Consumer, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addStateDrop(final Block internal, final String uniqueId, final Consumer<StatePropertiesPredicate> statePredicate, final IItemStack stack) {
         addStateLootModifier(internal, uniqueId, statePredicate, CommonLootModifiers.add(stack));
@@ -103,7 +113,11 @@ public final class ModifierBlockExpansion {
      * @param uniqueId A unique identifier for this loot modifier.
      * @param tool The tool the block was broken with.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addToolLootModifier(Block, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addToolDrop(final Block internal, final String uniqueId, final IItemStack tool, final IItemStack stack) {
         addToolLootModifier(internal, uniqueId, tool, CommonLootModifiers.add(stack));
@@ -118,7 +132,11 @@ public final class ModifierBlockExpansion {
      * @param uniqueId A unique identifier for this loot modifier.
      * @param tool The tool the block was broken with.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addToolLootModifier(Block, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addToolDrops(final Block internal, final String uniqueId, final IItemStack tool, final IItemStack... stacks) {
         addToolLootModifier(internal, uniqueId, tool, CommonLootModifiers.addAll(stacks));

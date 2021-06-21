@@ -27,7 +27,11 @@ public final class ModifierEntityExpansion {
      * @param internal The entity to add drops to.
      * @param uniqueId A unique id for the loot modifier.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use {@link #addLootModifier(MCEntityType, String, ILootModifier)}
+     * instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addDrop(final MCEntityType internal, final String uniqueId, final IItemStack stack) {
         addLootModifier(internal, uniqueId, CommonLootModifiers.add(stack));
@@ -39,7 +43,11 @@ public final class ModifierEntityExpansion {
      * @param internal The entity to add drops to.
      * @param uniqueId A unique id for the loot modifier.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use {@link #addLootModifier(MCEntityType, String, ILootModifier)}
+     * instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addDrops(final MCEntityType internal, final String uniqueId, final IItemStack... stacks) {
         addLootModifier(internal, uniqueId, CommonLootModifiers.addAll(stacks));
@@ -67,7 +75,11 @@ public final class ModifierEntityExpansion {
      * @param internal The entity to add drops to.
      * @param uniqueId A unique id for the loot modifier.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addPlayerOnlyLootModifier(MCEntityType, String, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addPlayerOnlyDrop(final MCEntityType internal, final String uniqueId, final IItemStack stack) {
         addPlayerOnlyLootModifier(internal, uniqueId, CommonLootModifiers.add(stack));
@@ -79,7 +91,11 @@ public final class ModifierEntityExpansion {
      * @param internal The entity to add drops to.
      * @param uniqueId A unique id for the loot modifier.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addPlayerOnlyLootModifier(MCEntityType, String, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addPlayerOnlyDrops(final MCEntityType internal, final String uniqueId, final IItemStack... stacks) {
         addPlayerOnlyLootModifier(internal, uniqueId, CommonLootModifiers.addAll(stacks));
@@ -110,7 +126,11 @@ public final class ModifierEntityExpansion {
      * @param uniqueId A unique id for the loot modifier.
      * @param weapon The weapon that needs to be used to kill the entity.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addWeaponOnlyLootModifier(MCEntityType, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addWeaponOnlyDrop(final MCEntityType internal, final String uniqueId, final IItemStack weapon, final IItemStack stack) {
         addWeaponOnlyLootModifier(internal, uniqueId, weapon, CommonLootModifiers.add(stack));
@@ -126,7 +146,11 @@ public final class ModifierEntityExpansion {
      * @param uniqueId A unique id for the loot modifier.
      * @param weapon The weapon that needs to be used to kill the entity.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addWeaponOnlyLootModifier(MCEntityType, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addWeaponOnlyDrops(final MCEntityType internal, final String uniqueId, final IItemStack weapon, final IItemStack... stacks) {
         addWeaponOnlyLootModifier(internal, uniqueId, weapon, CommonLootModifiers.addAll(stacks));
@@ -200,7 +224,11 @@ public final class ModifierEntityExpansion {
      * @param uniqueId A unique id for the loot modifier.
      * @param weapon The weapon that needs to be used to kill the entity.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addWeaponAndPlayerOnlyLootModifier(MCEntityType, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addWeaponAndPlayerOnlyDrop(final MCEntityType internal, final String uniqueId, final IItemStack weapon, final IItemStack stack) {
         addWeaponAndPlayerOnlyLootModifier(internal, uniqueId, weapon, CommonLootModifiers.add(stack));
@@ -216,7 +244,11 @@ public final class ModifierEntityExpansion {
      * @param uniqueId A unique id for the loot modifier.
      * @param weapon The weapon that needs to be used to kill the entity.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addWeaponAndPlayerOnlyLootModifier(MCEntityType, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addWeaponAndPlayerOnlyDrops(final MCEntityType internal, final String uniqueId, final IItemStack weapon, final IItemStack... stacks) {
         addWeaponAndPlayerOnlyLootModifier(internal, uniqueId, weapon, CommonLootModifiers.addAll(stacks));

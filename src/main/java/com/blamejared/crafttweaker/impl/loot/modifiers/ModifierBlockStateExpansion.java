@@ -26,7 +26,11 @@ public final class ModifierBlockStateExpansion {
      * @param internal The block state to add the drop to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use {@link #addBlockLootModifier(BlockState, String, ILootModifier)}
+     * instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addBlockDrop(final BlockState internal, final String uniqueId, final IItemStack stack) {
         ModifierBlockExpansion.addDrop(internal.getBlock(), uniqueId, stack);
@@ -38,7 +42,11 @@ public final class ModifierBlockStateExpansion {
      * @param internal The block state to add the drops to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use {@link #addBlockLootModifier(BlockState, String, ILootModifier)}
+     * instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addBlockDrops(final BlockState internal, final String uniqueId, final IItemStack stack) {
         ModifierBlockExpansion.addDrops(internal.getBlock(), uniqueId, stack);
@@ -63,7 +71,11 @@ public final class ModifierBlockStateExpansion {
      * @param internal The block state to add the drops to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addTargetedLootModifier(BlockState, String, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addTargetedDrop(final BlockState internal, final String uniqueId, final IItemStack stack) {
         addTargetedLootModifier(internal, uniqueId, CommonLootModifiers.add(stack));
@@ -76,7 +88,11 @@ public final class ModifierBlockStateExpansion {
      * @param internal The block state to add the drops to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addTargetedLootModifier(BlockState, String, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addTargetedDrops(final BlockState internal, final String uniqueId, final IItemStack... stacks) {
         addTargetedLootModifier(internal, uniqueId, CommonLootModifiers.addAll(stacks));
@@ -101,13 +117,17 @@ public final class ModifierBlockStateExpansion {
      * Adds an {@link IItemStack} to the drops of this block, if it gets broken with the given tool and matches the
      * current block state precisely.
      *
-     * Parameters that may be attached the tool such as count, damage, or NBT data are ignored.
+     * <p>Parameters that may be attached the tool such as count, damage, or NBT data are ignored.</p>
      *
      * @param internal The block state to add the loot modifier to.
      * @param uniqueId A unique identifier for this loot modifier.
      * @param tool The tool the block state was broken with.
      * @param stack The stack to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addToolLootModifier(BlockState, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addToolDrop(final BlockState internal, final String uniqueId, final IItemStack tool, final IItemStack stack) {
         addToolLootModifier(internal, uniqueId, tool, CommonLootModifiers.add(stack));
@@ -123,7 +143,11 @@ public final class ModifierBlockStateExpansion {
      * @param uniqueId A unique identifier for this loot modifier.
      * @param tool The tool the block state was broken with.
      * @param stacks The stacks to add to the drops.
+     *
+     * @deprecated Scheduled for removal in 1.17: use
+     * {@link #addToolLootModifier(BlockState, String, IItemStack, ILootModifier)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static void addToolDrops(final BlockState internal, final String uniqueId, final IItemStack tool, final IItemStack... stacks) {
         addToolLootModifier(internal, uniqueId, tool, CommonLootModifiers.addAll(stacks));
