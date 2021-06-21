@@ -5,7 +5,10 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.loot.LootContext;
 import net.minecraft.util.Util;
 import net.minecraftforge.common.util.Lazy;
@@ -16,7 +19,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,6 +61,41 @@ public final class CommonLootModifiers {
     public static ILootModifier addAll(final IItemStack... stacks) {
         final List<IItemStack> stacksToAdd = notEmpty(Arrays.stream(stacks)).collect(Collectors.toList());
         return (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.addAll(stacksToAdd.stream().map(IItemStack::copy).collect(Collectors.toList())));
+    }
+    
+    /**
+     * Adds the given {@link IItemStack} to the drops, modifying its count based on the level of the given
+     * {@link Enchantment} on the tool used, if available.
+     *
+     * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
+     * {@link #add(IItemStack)}.</p>
+     *
+     * @param enchantment The enchantment to check for.
+     * @param stack The stack to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addWithBonus(final Enchantment enchantment, final IItemStack stack) {
+        return stack.isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(oreDropsBonus(stack.copy(), enchantment, context)));
+    }
+    
+    /**
+     * Adds the given {@link IItemStack}s to the drops, modifying their count based on the level of the given
+     * {@link Enchantment} on the tool used, if available.
+     *
+     * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
+     * {@link #addAll(IItemStack...)}.</p>
+     *
+     * <p>The fortune modifier is applied separately for each {@link IItemStack}.</p>
+     *
+     * @param enchantment The enchantment to check for.
+     * @param stacks The stacks to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addAllWithBonus(final Enchantment enchantment, final IItemStack... stacks) {
+        final List<IItemStack> targets = notEmpty(Arrays.stream(stacks)).collect(Collectors.toList());
+        return (loot, context) -> Util.make(new ArrayList<>(loot), l -> l.addAll(targets.stream().map(it -> oreDropsBonus(it.copy(), enchantment, context)).collect(Collectors.toList())));
     }
 
     // Replacement methods
@@ -196,5 +237,25 @@ public final class CommonLootModifiers {
     
     private static List<IItemStack> replacingExactly(final IItemStack original, final IItemStack from, final IItemStack to) {
         return Arrays.asList(to.copy().setAmount(original.getAmount() / from.getAmount()), original.copy().setAmount(original.getAmount() % from.getAmount()));
+    }
+
+    private static IItemStack oreDropsBonus(final IItemStack original, final Enchantment enchantment, final LootContext context) {
+        return ifTool(original, context, tool -> withLevel(tool, enchantment, level -> level <= 0? original : original.setAmount(oreDropsFormula(level, context.getRandom()))));
+    }
+    
+    private static IItemStack ifTool(final IItemStack original, final LootContext context, final Function<IItemStack, IItemStack> toolConsumer) {
+        return ifTool(original, ExpandLootContext.getTool(context), toolConsumer);
+    }
+    
+    private static IItemStack ifTool(final IItemStack original, final IItemStack tool, final Function<IItemStack, IItemStack> toolConsumer) {
+        return tool != null && tool.getInternal() != null && !tool.isEmpty()? toolConsumer.apply(tool) : original;
+    }
+    
+    private static IItemStack withLevel(final IItemStack tool, final Enchantment enchantment, final IntFunction<IItemStack> levelUser) {
+        return levelUser.apply(EnchantmentHelper.getEnchantmentLevel(enchantment, tool.getInternal()));
+    }
+    
+    private static int oreDropsFormula(final int level, final Random random) {
+        return Math.max(0, random.nextInt(level + 2) - 1) + 1;
     }
 }
