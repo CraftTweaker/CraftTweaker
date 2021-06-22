@@ -78,7 +78,7 @@ public final class Replacer {
     private static final Supplier<BiFunction<ResourceLocation, String, String>> DEFAULT_CUSTOM_FUNCTION = Lazy.concurrentOf(
             () -> (id, original) -> original
     );
-    private static final Lazy<Map<IRecipeManager, Collection<ResourceLocation>>> DEFAULT_EXCLUSIONS = Lazy.concurrentOf(
+    private static final Supplier<Map<IRecipeManager, Collection<ResourceLocation>>> DEFAULT_EXCLUSIONS = Lazy.concurrentOf(
             () -> GenericRecipesManager.RECIPES.getAllManagers().stream().map(Replacer::gatherDefaultExclusions).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond))
     );
     

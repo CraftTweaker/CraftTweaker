@@ -11,10 +11,12 @@ import javax.annotation.Nullable;
 public class VirtualMethodMember extends AbstractVirtualMember implements Comparable<VirtualMethodMember> {
     
     private final String name;
+    private final String returnTypeInfo;
     
-    public VirtualMethodMember(MemberHeader header, @Nullable DocumentationComment description, String name) {
+    public VirtualMethodMember(MemberHeader header, @Nullable DocumentationComment description, String name, @Nullable final String returnTypeInfo) {
         super(header, description);
         this.name = name;
+        this.returnTypeInfo = returnTypeInfo;
     }
     
     @Override
@@ -36,10 +38,25 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
     }
     
     private void writeComment(PageOutputWriter writer) {
+        this.writeDescription(writer);
+        this.writeReturnTypeInfo(writer);
+    }
+    
+    private void writeDescription(final PageOutputWriter writer) {
         this.getComment().getOptionalDescription().ifPresent(it -> {
             writer.println(it);
             writer.println();
         });
+    }
+    
+    private void writeReturnTypeInfo(final PageOutputWriter writer) {
+        if(this.returnTypeInfoPresent()) {
+            writer.printf("Returns: %s  %n", this.returnTypeInfo);
+        }
+    }
+    
+    private boolean returnTypeInfoPresent() {
+        return this.returnTypeInfo != null;
     }
     
     private void writeReturnType(PageOutputWriter writer) {
