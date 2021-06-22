@@ -24,6 +24,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -36,6 +37,20 @@ import java.util.stream.Stream;
 @ZenCodeType.Name("crafttweaker.api.loot.modifiers.CommonLootModifiers")
 @Document("vanilla/api/loot/modifiers/CommonLootModifiers")
 public final class CommonLootModifiers {
+    private interface DropsFormula {
+        DropsFormula ORE_DROPS = (amount, level, random) -> level <= 0? amount : amount * Math.max(0, random.nextInt(level + 2) - 1) + 1;
+        
+        static DropsFormula binomial(final int extra, final float p) {
+            return (amount, level, random) -> amount + IntStream.range(0, level + extra).filter(ignore -> random.nextFloat() < p).map(it -> 1).sum();
+        }
+        
+        static DropsFormula uniform(final int multiplier) {
+            return (amount, level, random) -> amount + random.nextInt(multiplier * level + 1);
+        }
+        
+        int apply(final int amount, final int level, final Random random);
+    }
+    
     private static final Lazy<ILootModifier> IDENTITY = Lazy.concurrentOf(() -> (loot, context) -> loot);
     private static final Lazy<ILootModifier> LOOT_CLEARING_MODIFIER = Lazy.concurrentOf(() -> (loot, context) -> new ArrayList<>());
 
@@ -70,13 +85,62 @@ public final class CommonLootModifiers {
      * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
      * {@link #add(IItemStack)}.</p>
      *
+     * <p>The formula used is based on the {@code ore_drops} formula used by vanilla, which multiplies the stack's
+     * original count by a random number between 1 and the tool's enchantment level + 1. This is the formula used by
+     * all vanilla ores to determine their drop count.</p>
+     *
      * @param enchantment The enchantment to check for.
      * @param stack The stack to add.
      * @return An {@link ILootModifier} that carries out the operation.
      */
     @ZenCodeType.Method
-    public static ILootModifier addWithBonus(final Enchantment enchantment, final IItemStack stack) {
-        return stack.isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(oreDropsBonus(stack.copy(), enchantment, context)));
+    public static ILootModifier addWithOreDropsBonus(final Enchantment enchantment, final IItemStack stack) {
+        return withBonus(stack, enchantment, DropsFormula.ORE_DROPS);
+    }
+    
+    /**
+     * Adds the given {@link IItemStack} to the drops, modifying its count based on the level of the given
+     * {@link Enchantment} on the tool used, if available.
+     *
+     * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
+     * {@link #add(IItemStack)}.</p>
+     *
+     * <p>The formula used is based on the {@code binomial_with_bonus_count} formula used by vanilla. In this case, the
+     * value of {@code extra} is added to the current tool's enchantment level; that determines the amount of times the
+     * randomness will roll. Every roll that is higher than {@code p} will add one element to the stack. This is the
+     * formula used by potatoes and carrots to determine their drop count.</p>
+     *
+     * @param enchantment The enchantment to check for.
+     * @param extra An extra value that will be added to the tool's enchantment level.
+     * @param p The probability of the binomial distribution, between 0.0 and 1.0 (both exclusive).
+     * @param stack The stack to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addWithBinomialBonus(final Enchantment enchantment, final int extra, final float p, final IItemStack stack) {
+        return withBonus(stack, enchantment, DropsFormula.binomial(extra, p));
+    }
+    
+    /**
+     * Adds the given {@link IItemStack} to the drops, modifying its count based on the level of the given
+     * {@link Enchantment} on the tool used, if available.
+     *
+     * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
+     * {@link #add(IItemStack)}.</p>
+     *
+     * <p>The formula used is based on the {@code uniform_bonus_count} formula used by vanilla. In this case, the
+     * enchantment level is multiplied by {@code multiplier} and a random number is extracted between 0 and the result.
+     * This number is then added to the original's stack count. This is the formula used by redstone ore and glowstone
+     * to determine their drop count.</p>
+     *
+     * @param enchantment The enchantment to check for.
+     * @param multiplier A multiplier that will be used in conjunction with the enchantment's level.
+     * @param stack The stack to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addWithUniformBonus(final Enchantment enchantment, final int multiplier, final IItemStack stack) {
+        return withBonus(stack, enchantment, DropsFormula.uniform(multiplier));
     }
     
     /**
@@ -88,14 +152,66 @@ public final class CommonLootModifiers {
      *
      * <p>The fortune modifier is applied separately for each {@link IItemStack}.</p>
      *
+     * <p>The formula used is based on the {@code ore_drops} formula used by vanilla, which multiplies the stack's
+     * original count by a random number between 1 and the tool's enchantment level + 1. This is the formula used by
+     * all vanilla ores to determine their drop count.</p>
+     *
      * @param enchantment The enchantment to check for.
      * @param stacks The stacks to add.
      * @return An {@link ILootModifier} that carries out the operation.
      */
     @ZenCodeType.Method
-    public static ILootModifier addAllWithBonus(final Enchantment enchantment, final IItemStack... stacks) {
-        final List<IItemStack> targets = notEmpty(Arrays.stream(stacks)).collect(Collectors.toList());
-        return (loot, context) -> Util.make(new ArrayList<>(loot), l -> l.addAll(targets.stream().map(it -> oreDropsBonus(it.copy(), enchantment, context)).collect(Collectors.toList())));
+    public static ILootModifier addAllWithOreDropsBonus(final Enchantment enchantment, final IItemStack... stacks) {
+        return chaining(notEmpty(Arrays.stream(stacks)).map(it -> addWithOreDropsBonus(enchantment, it)));
+    }
+    
+    /**
+     * Adds the given {@link IItemStack}s to the drops, modifying their count based on the level of the given
+     * {@link Enchantment} on the tool used, if available.
+     *
+     * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
+     * {@link #addAll(IItemStack...)}.</p>
+     *
+     * <p>The fortune modifier is applied separately for each {@link IItemStack}.</p>
+     *
+     * <p>The formula used is based on the {@code binomial_with_bonus_count} formula used by vanilla. In this case, the
+     * value of {@code extra} is added to the current tool's enchantment level; that determines the amount of times the
+     * randomness will roll. Every roll that is higher than {@code p} will add one element to the stack. This is the
+     * formula used by potatoes and carrots to determine their drop count.</p>
+     *
+     * @param enchantment The enchantment to check for.
+     * @param extra An extra value that will be added to the tool's enchantment level.
+     * @param p The probability of the binomial distribution, between 0.0 and 1.0 (both exclusive).
+     * @param stacks The stacks to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addAllWithBinomialBonus(final Enchantment enchantment, final int extra, final float p, final IItemStack... stacks) {
+        return chaining(notEmpty(Arrays.stream(stacks)).map(it -> addWithBinomialBonus(enchantment, extra, p, it)));
+    }
+    
+    /**
+     * Adds the given {@link IItemStack}s to the drops, modifying their count based on the level of the given
+     * {@link Enchantment} on the tool used, if available.
+     *
+     * <p>In case no tool is used to obtain the stack, then this loot modifier behaves exactly like
+     * {@link #addAll(IItemStack...)}.</p>
+     *
+     * <p>The fortune modifier is applied separately for each {@link IItemStack}.</p>
+     *
+     * <p>The formula used is based on the {@code uniform_bonus_count} formula used by vanilla. In this case, the
+     * enchantment level is multiplied by {@code multiplier} and a random number is extracted between 0 and the result.
+     * This number is then added to the original's stack count. This is the formula used by redstone ore and glowstone
+     * to determine their drop count.</p>
+     *
+     * @param enchantment The enchantment to check for.
+     * @param multiplier A multiplier that will be used in conjunction with the enchantment's level.
+     * @param stacks The stacks to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addAllWithUniformBonus(final Enchantment enchantment, final int multiplier, final IItemStack... stacks) {
+        return chaining(notEmpty(Arrays.stream(stacks)).map(it -> addWithUniformBonus(enchantment, multiplier, it)));
     }
 
     // Replacement methods
@@ -239,8 +355,12 @@ public final class CommonLootModifiers {
         return Arrays.asList(to.copy().setAmount(original.getAmount() / from.getAmount()), original.copy().setAmount(original.getAmount() % from.getAmount()));
     }
 
-    private static IItemStack oreDropsBonus(final IItemStack original, final Enchantment enchantment, final LootContext context) {
-        return ifTool(original, context, tool -> withLevel(tool, enchantment, level -> level <= 0? original : original.setAmount(oreDropsFormula(level, context.getRandom()))));
+    private static ILootModifier withBonus(final IItemStack drop, final Enchantment enchantment, final DropsFormula formula) {
+        return drop.isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(applyWithBonus(drop.copy(), enchantment, context, formula)));
+    }
+
+    private static IItemStack applyWithBonus(final IItemStack original, final Enchantment enchantment, final LootContext context, final DropsFormula formula) {
+        return ifTool(original, context, tool -> withLevel(tool, enchantment, level -> original.setAmount(formula.apply(original.getAmount(), level, context.getRandom()))));
     }
     
     private static IItemStack ifTool(final IItemStack original, final LootContext context, final Function<IItemStack, IItemStack> toolConsumer) {
@@ -253,9 +373,5 @@ public final class CommonLootModifiers {
     
     private static IItemStack withLevel(final IItemStack tool, final Enchantment enchantment, final IntFunction<IItemStack> levelUser) {
         return levelUser.apply(EnchantmentHelper.getEnchantmentLevel(enchantment, tool.getInternal()));
-    }
-    
-    private static int oreDropsFormula(final int level, final Random random) {
-        return Math.max(0, random.nextInt(level + 2) - 1) + 1;
     }
 }
