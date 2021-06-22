@@ -1,13 +1,12 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.PrintWriter;
-import java.util.Optional;
 
 public class StaticMethodMember implements Comparable<StaticMethodMember> {
     
@@ -34,7 +33,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         return this.header.compareTo(other.header);
     }
     
-    public void write(PrintWriter writer, AbstractTypeInfo ownerType) {
+    public void write(PageOutputWriter writer, AbstractTypeInfo ownerType) {
         writeDeprecation(writer);
         writeComment(writer);
         writeReturnType(writer);
@@ -42,27 +41,25 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         writeParameterDescriptionTable(writer);
     }
     
-    private void writeParameterDescriptionTable(PrintWriter writer) {
+    private void writeParameterDescriptionTable(PageOutputWriter writer) {
         header.writeParameterDescriptionTable(writer);
     }
     
-    private void writeReturnType(PrintWriter writer) {
+    private void writeReturnType(PageOutputWriter writer) {
         writer.printf("Return Type: %s%n%n", header.returnType.getClickableMarkdown());
     }
     
-    private void writeCodeBlockWithExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
-        writer.println("```zenscript");
-        writeExampleBlockContent(writer, ownerType);
-        writer.println("```");
+    private void writeCodeBlockWithExamples(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        writer.zenBlock(() -> writeExampleBlockContent(writer, ownerType));
         writer.println();
     }
     
-    protected void writeExampleBlockContent(PrintWriter writer, AbstractTypeInfo ownerType) {
+    protected void writeExampleBlockContent(PageOutputWriter writer, AbstractTypeInfo ownerType) {
         writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
         writeExamples(writer, ownerType);
     }
     
-    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
+    private void writeSignatureExample(PageOutputWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
         final String ownerName = ownerType.getDisplayName();
         final String signature = header.formatForSignatureExample();
         String template = "%s%s.%s%s%n";
@@ -72,23 +69,20 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         writer.printf(template, onlySignature ? "// " : "", ownerName, name, signature);
     }
     
-    private void writeExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
+    private void writeExamples(PageOutputWriter writer, AbstractTypeInfo ownerType) {
         header.writeStaticExamples(writer, ownerType, name);
     }
     
-    private void writeDeprecation(final PrintWriter writer) {
-        if (!this.methodComment.isDeprecated()) return;
-        writer.printf(":::warnBox%n%n");
-        writer.write(this.methodComment.getDeprecationMessage());
-        writer.printf("%n:::%n%n");
+    private void writeDeprecation(final PageOutputWriter writer) {
+        writer.deprecationMessage(this.methodComment.getDeprecationMessage());
     }
     
-    private void writeComment(PrintWriter writer) {
+    private void writeComment(PageOutputWriter writer) {
         writeDescription(writer);
         writeReturnTypeInfo(writer);
     }
     
-    private void writeReturnTypeInfo(PrintWriter writer) {
+    private void writeReturnTypeInfo(PageOutputWriter writer) {
         if(returnTypeInfoPresent()) {
             writer.printf("Returns: %s  %n", returnTypeInfo);
         }
@@ -98,7 +92,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         return returnTypeInfo != null;
     }
     
-    private void writeDescription(PrintWriter writer) {
+    private void writeDescription(PageOutputWriter writer) {
         if(methodComment.hasDescription()) {
             writer.println(methodComment.getMarkdownDescription());
             writer.println();
@@ -109,7 +103,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
         return name;
     }
     
-    public Optional<String> getSince() {
-        return this.methodComment.getOptionalSince();
+    public String getSince() {
+        return this.methodComment.getSinceVersion();
     }
 }

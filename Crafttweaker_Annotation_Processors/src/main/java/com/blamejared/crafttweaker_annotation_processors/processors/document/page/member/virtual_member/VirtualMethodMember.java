@@ -1,13 +1,12 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.PrintWriter;
-import java.util.Optional;
 
 public class VirtualMethodMember extends AbstractVirtualMember implements Comparable<VirtualMethodMember> {
     
@@ -28,7 +27,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         return this.header.compareTo(other.header);
     }
     
-    public void write(PrintWriter writer, AbstractTypeInfo ownerType) {
+    public void write(PageOutputWriter writer, AbstractTypeInfo ownerType) {
         writeDeprecation(writer);
         writeComment(writer);
         writeReturnType(writer);
@@ -36,35 +35,30 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         writeParameterDescriptionTable(writer);
     }
     
-    private void writeComment(PrintWriter writer) {
-        final Optional<String> optionalDescription = getComment().getOptionalDescription();
-        
-        if(optionalDescription.isPresent()) {
-            writer.println(optionalDescription.get());
+    private void writeComment(PageOutputWriter writer) {
+        this.getComment().getOptionalDescription().ifPresent(it -> {
+            writer.println(it);
             writer.println();
-        }
+        });
     }
     
-    private void writeReturnType(PrintWriter writer) {
+    private void writeReturnType(PageOutputWriter writer) {
         writer.printf("Return Type: %s%n%n", header.returnType.getClickableMarkdown());
     }
     
-    private void writeCodeBlockWithExamples(PrintWriter writer, AbstractTypeInfo ownerType) {
-        writer.println("```zenscript");
-        writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
-        header.writeVirtualExamples(writer, getComment().getExamples(), name);
-        writer.println("```");
+    private void writeCodeBlockWithExamples(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        writer.zenBlock(() -> {
+            writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
+            header.writeVirtualExamples(writer, getComment().getExamples(), name);
+        });
         writer.println();
     }
     
-    private void writeDeprecation(final PrintWriter writer) {
-        if (!this.getComment().isDeprecated()) return;
-        writer.printf(":::warnBox%n%n");
-        writer.write(this.getComment().getDeprecationMessage());
-        writer.printf("%n:::%n%n");
+    private void writeDeprecation(final PageOutputWriter writer) {
+        writer.deprecationMessage(this.getComment().getDeprecationMessage());
     }
     
-    private void writeSignatureExample(PrintWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
+    private void writeSignatureExample(PageOutputWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
         final String callee = ownerType.getDisplayName();
         String template = "%s%s.%s%s%n";
         if(onlySignature) {
@@ -73,7 +67,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         writer.printf(template, onlySignature ? "// " : "", callee, name, header.formatForSignatureExample());
     }
     
-    private void writeParameterDescriptionTable(PrintWriter writer) {
+    private void writeParameterDescriptionTable(PageOutputWriter writer) {
         header.writeParameterDescriptionTable(writer);
     }
     
@@ -81,7 +75,7 @@ public class VirtualMethodMember extends AbstractVirtualMember implements Compar
         return name;
     }
     
-    public Optional<String> getSince() {
-        return this.getComment().getOptionalSince();
+    public String getSince() {
+        return this.getComment().getSinceVersion();
     }
 }

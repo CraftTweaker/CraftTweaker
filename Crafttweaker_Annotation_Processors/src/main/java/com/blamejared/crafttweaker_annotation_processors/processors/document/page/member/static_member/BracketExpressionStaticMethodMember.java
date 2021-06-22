@@ -1,12 +1,12 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.PrintWriter;
 
 public class BracketExpressionStaticMethodMember extends StaticMethodMember {
     
@@ -22,12 +22,12 @@ public class BracketExpressionStaticMethodMember extends StaticMethodMember {
     }
     
     @Override
-    protected void writeExampleBlockContent(PrintWriter writer, AbstractTypeInfo ownerType) {
+    protected void writeExampleBlockContent(PageOutputWriter writer, AbstractTypeInfo ownerType) {
         writeBepExamples(writer);
         super.writeExampleBlockContent(writer, ownerType);
     }
     
-    private void writeBepExamples(PrintWriter writer) {
+    private void writeBepExamples(PageOutputWriter writer) {
         final int numberOfUsableExamples = header.getNumberOfUsableExamples();
         if(numberOfUsableExamples < 1) {
             return;
@@ -39,7 +39,7 @@ public class BracketExpressionStaticMethodMember extends StaticMethodMember {
         writer.println();
     }
     
-    private void writeBepExample(PrintWriter writer, int exampleIndex) {
+    private void writeBepExample(PageOutputWriter writer, int exampleIndex) {
         final String example = getExampleArgument(exampleIndex);
         writer.printf("<%s:%s>%n", bepName, example);
     }

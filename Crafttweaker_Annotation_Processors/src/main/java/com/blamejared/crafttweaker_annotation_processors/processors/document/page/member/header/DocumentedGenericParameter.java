@@ -1,11 +1,11 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 import org.jetbrains.annotations.*;
 
 import javax.annotation.Nonnull;
-import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,11 +62,11 @@ public class DocumentedGenericParameter implements Comparable<DocumentedGenericP
         return comment.getExamples().getExampleFor(getExampleName()).getTextValue(exampleIndex);
     }
     
-    public void writeParameterInfoIncludeOptionality(PrintWriter writer) {
+    public void writeParameterInfoIncludeOptionality(PageOutputWriter writer) {
         writer.printf("| %s | %s | %s | N/A | N/A |%n", name, getClickableMarkdownBounds(), getDescription());
     }
     
-    public void writeParameterInfoExcludeOptionality(PrintWriter writer) {
+    public void writeParameterInfoExcludeOptionality(PageOutputWriter writer) {
         writer.printf("| %s | %s | %s |%n", name, getClickableMarkdownBounds(), getDescription());
     }
     

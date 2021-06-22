@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nullable;
-import java.io.PrintWriter;
 
 public class DocumentedOptionalParameter extends DocumentedParameter {
     
@@ -17,7 +17,7 @@ public class DocumentedOptionalParameter extends DocumentedParameter {
     }
     
     @Override
-    public void writeParameterInfoIncludeOptionality(PrintWriter writer) {
+    public void writeParameterInfoIncludeOptionality(PageOutputWriter writer) {
         writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), getDescription(), true, getDefaultValue());
     }
     

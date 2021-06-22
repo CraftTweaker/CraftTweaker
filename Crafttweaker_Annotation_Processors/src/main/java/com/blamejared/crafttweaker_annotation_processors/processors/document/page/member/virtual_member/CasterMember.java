@@ -1,11 +1,11 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.PrintWriter;
 
 public class CasterMember extends AbstractVirtualMember implements Comparable<CasterMember> {
     
@@ -21,7 +21,7 @@ public class CasterMember extends AbstractVirtualMember implements Comparable<Ca
         return this.header.returnType.compareTo(o.header.returnType);
     }
     
-    public void writeTableRow(PrintWriter writer) {
+    public void writeTableRow(PageOutputWriter writer) {
         writer.printf("| %s | %s |%n", header.returnType.getClickableMarkdown(), isImplicit);
     }
 }

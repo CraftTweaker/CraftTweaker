@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nonnull;
-import java.io.PrintWriter;
 
 public class DocumentedParameter implements Comparable<DocumentedParameter> {
     
@@ -34,11 +34,11 @@ public class DocumentedParameter implements Comparable<DocumentedParameter> {
         return false;
     }
     
-    public void writeParameterInfoIncludeOptionality(PrintWriter writer) {
+    public void writeParameterInfoIncludeOptionality(PageOutputWriter writer) {
         writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), getDescription(), false, "");
     }
     
-    public void writeParameterInfoExcludeOptionality(PrintWriter writer) {
+    public void writeParameterInfoExcludeOptionality(PageOutputWriter writer) {
         writer.printf("| %s | %s | %s |%n", name, type.getClickableMarkdown(), getDescription());
     }
     

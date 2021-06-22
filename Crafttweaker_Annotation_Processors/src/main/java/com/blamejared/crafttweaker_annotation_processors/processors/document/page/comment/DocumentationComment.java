@@ -15,7 +15,7 @@ public class DocumentationComment {
     public DocumentationComment(final String description, final String deprecationMessage, final String sinceVersion,
                                 final ExampleData data) {
         this.description = description;
-        this.deprecationMessage = deprecationMessage;
+        this.deprecationMessage = deprecationMessage == null? null : deprecationMessage.replaceAll("(\r)?\n", "");
         this.sinceVersion = sinceVersion;
         this.exampleData = data;
     }

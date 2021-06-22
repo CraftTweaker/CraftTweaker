@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
-import java.io.PrintWriter;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,12 +23,10 @@ public class StaticMethodGroup {
         this.staticMethods.add(member);
     }
     
-    public void writeStaticMethods(PrintWriter writer) {
+    public void writeStaticMethods(PageOutputWriter writer) {
         
         for(StaticMethodMember method : staticMethods) {
-            writer.printf(":::group{name=%s%s}%n%n", name, method.getSince().map(it -> ",since=" + it).orElse(""));
-            method.write(writer, ownerType);
-            writer.printf(":::%n%n");
+            writer.group(name, method.getSince(), () -> method.write(writer, ownerType));
         }
     }
     

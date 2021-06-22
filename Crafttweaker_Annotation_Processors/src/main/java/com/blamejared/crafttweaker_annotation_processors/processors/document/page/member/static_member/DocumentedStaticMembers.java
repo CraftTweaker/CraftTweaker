@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,13 +12,13 @@ public class DocumentedStaticMembers {
     protected final Map<String, PropertyMember> properties = new TreeMap<>();
     protected final Map<String, StaticMethodGroup> methodGroups = new TreeMap<>();
     
-    public void write(PrintWriter writer) {
+    public void write(PageOutputWriter writer) {
         writeStaticMethods(writer);
         writeProperties(writer);
     }
     
     
-    private void writeStaticMethods(PrintWriter writer) {
+    private void writeStaticMethods(PageOutputWriter writer) {
         if(methodGroups.isEmpty()) {
             return;
         }
@@ -30,7 +30,7 @@ public class DocumentedStaticMembers {
         }
     }
     
-    protected void writeProperties(PrintWriter writer) {
+    protected void writeProperties(PageOutputWriter writer) {
         if(properties.isEmpty()) {
             return;
         }

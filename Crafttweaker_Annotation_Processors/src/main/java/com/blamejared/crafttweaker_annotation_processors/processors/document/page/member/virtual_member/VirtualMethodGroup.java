@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import java.io.PrintWriter;
@@ -23,12 +24,10 @@ public class VirtualMethodGroup {
         this.virtualMethods.add(member);
     }
     
-    public void writeVirtualMethods(PrintWriter writer) {
+    public void writeVirtualMethods(PageOutputWriter writer) {
         
         for(VirtualMethodMember method : virtualMethods) {
-            writer.printf(":::group{name=%s%s}%n%n", name, method.getSince().map(it -> ",since=" + it).orElse(""));
-            method.write(writer, ownerType);
-            writer.printf(":::%n%n");
+            writer.group(name, method.getSince(), () -> method.write(writer, ownerType));
         }
         
     }
