@@ -16,10 +16,12 @@ import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingManagersAnd
 import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingRecipesAndDelegatingTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.FullIngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.IngredientReplacementRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.OutputTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.ReplacerAction;
 import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificManagersTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificRecipesTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.StackTargetingReplacementRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.ZenTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import com.blamejared.crafttweaker.impl.util.NameUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -178,6 +181,48 @@ public final class Replacer {
     @ZenCodeType.Method
     public static Replacer forAllTypesExcluding(final IRecipeManager... managers) {
         return forEverything().excluding(managers);
+    }
+    
+    /**
+     * Creates a {@code Replacer} that will perform replacement only on recipes with the given output, optionally
+     * restricted to a set of whitelisted managers.
+     *
+     * <p>The passed in whitelist may also be empty, in which case it'll be treated as meaning every possible recipe
+     * manager. If the whitelist is not empty, on the other hand, only the selected recipe managers will be considered
+     * when replacing ingredients.</p>
+     *
+     * @param output The output that should be matched.
+     * @param whitelist An optional list of managers that should be whitelisted in the replacement.
+     * @return A new {@code Replacer} for recipes with the given output and an optional whitelist.
+     *
+     * @docParam output <tag:items:forge:rods/wooden>
+     * @docParam whitelist stoneCutter
+     */
+    @ZenCodeType.Method
+    public static Replacer forOutput(final IIngredient output, final IRecipeManager... whitelist) {
+        return new Replacer(OutputTargetingRule.of(output, whitelist));
+    }
+    
+    /**
+     * Creates a {@code Replacer} that will perform replacements only on the recipes whitelisted by the given function.
+     *
+     * <p>The first parameter of the predicate is a {@link WrapperRecipe} that indicates the recipe that is currently
+     * being tested, whereas the second is the {@link IRecipeManager} that is responsible for handling that particular
+     * type of recipes. The function should then return a boolean that either whitelists the recipe for replacement
+     * ({@code true}) or blacklists it ({@code false}).</p>
+     *
+     * <p>The given function must be a <strong>pure</strong> function, which means that the output must be the same
+     * given the same set of inputs. In other words, you should not rely on external state for this function, since it
+     * may be called multiple times on the same set of inputs in the same replacer run.</p>
+     *
+     * @param function The custom whitelisting function.
+     * @return A new {@code Replacer} that uses the given function for whitelisting.
+     *
+     * @docParam function myPredicate
+     */
+    @ZenCodeType.Method
+    public static Replacer forCustomRecipeSet(final BiPredicate<WrapperRecipe, IRecipeManager> function) {
+        return new Replacer(ZenTargetingRule.of(function));
     }
     
     private static Pair<IRecipeManager, Collection<ResourceLocation>> gatherDefaultExclusions(final IRecipeManager manager) {
