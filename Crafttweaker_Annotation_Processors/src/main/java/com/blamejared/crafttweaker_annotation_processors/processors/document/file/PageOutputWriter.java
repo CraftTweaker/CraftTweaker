@@ -51,7 +51,7 @@ public class PageOutputWriter implements AutoCloseable, Closeable {
     
     public void deprecationMessage(final String deprecationMessage) {
         if (deprecationMessage == null) return;
-        this.printf("::deprecated{message=%s}%n%n", deprecationMessage.replace("}", "\\}"));
+        this.printf("::deprecated{message=\"%s\"}%n%n", deprecationMessage.replace("}", "\\}"));
     }
     
     public void modSupportBuiltin(final String mod, final String modLink) {
