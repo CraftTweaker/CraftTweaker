@@ -8,16 +8,22 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
+import com.blamejared.crafttweaker.api.recipes.ITargetingRule;
 import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
-import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.impl.managers.GenericRecipesManager;
+import com.blamejared.crafttweaker.impl.recipes.replacement.EverythingTargetingRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingManagersAndDelegatingTargetingRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingRecipesAndDelegatingTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.FullIngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.IngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.ReplacerAction;
+import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificManagersTargetingRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificRecipesTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.StackTargetingReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import com.blamejared.crafttweaker.impl.util.NameUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.item.crafting.IRecipe;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
@@ -25,15 +31,11 @@ import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -65,7 +67,7 @@ import java.util.stream.Collectors;
  * <p>An example usage of a {@code Replacer} could be
  * {@code Replacer.forTypes(crafingTable).replace(<item:minecraft:string>, <item:minecraft:diamond>).execute();}</p>
  *
- * @docParam this Replacer.forAllTypes()
+ * @docParam this Replacer.forEverything()
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.Replacer")
@@ -76,23 +78,27 @@ public final class Replacer {
     private static final Supplier<BiFunction<ResourceLocation, String, String>> DEFAULT_CUSTOM_FUNCTION = Lazy.concurrentOf(
             () -> (id, original) -> original
     );
-    private static final Map<IRecipeManager, Collection<ResourceLocation>> DEFAULT_EXCLUSIONS = new HashMap<>();
+    private static final Lazy<Map<IRecipeManager, Collection<ResourceLocation>>> DEFAULT_EXCLUSIONS = Lazy.concurrentOf(
+            () -> GenericRecipesManager.RECIPES.getAllManagers().stream().map(Replacer::gatherDefaultExclusions).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond))
+    );
     
-    private final Collection<IRecipeManager> targetedManagers;
-    private final Collection<? extends IRecipe<?>> targetedRecipes;
-    private final List<IReplacementRule> rules;
+    private final ITargetingRule targetingRule;
+    private final List<IReplacementRule> replacementRules;
     private final Map<ResourceLocation, String> userRenames;
-    private final Set<ResourceLocation> userExclusionList;
+    private final BiFunction<ResourceLocation, String, String> userRenamingFunction;
+    private final boolean suppressWarnings;
     
-    private BiFunction<ResourceLocation, String, String> userRenamingFunction;
+    private Replacer(final ITargetingRule rule) {
+        this(rule, new ArrayList<>(), new TreeMap<>(), null, false);
+    }
     
-    private Replacer(final Collection<? extends IRecipe<?>> recipes, final Collection<IRecipeManager> managers) {
-        this.targetedManagers = Collections.unmodifiableCollection(managers);
-        this.targetedRecipes = Collections.unmodifiableCollection(recipes);
-        this.rules = new ArrayList<>();
-        this.userRenames = new TreeMap<>();
-        this.userExclusionList = new HashSet<>();
-        this.userRenamingFunction = null;
+    private Replacer(final ITargetingRule targetingRule, final List<IReplacementRule> replacementRules, final Map<ResourceLocation, String> userRenames,
+                     final BiFunction<ResourceLocation, String, String> userRenamingFunction, final boolean suppressWarnings) {
+        this.targetingRule = targetingRule;
+        this.replacementRules = new ArrayList<>(replacementRules);
+        this.userRenames = new TreeMap<>(userRenames);
+        this.userRenamingFunction = userRenamingFunction;
+        this.suppressWarnings = suppressWarnings;
     }
     
     /**
@@ -108,10 +114,7 @@ public final class Replacer {
      */
     @ZenCodeType.Method
     public static Replacer forRecipes(final WrapperRecipe... recipes) {
-        if (recipes.length <= 0) {
-            throw new IllegalArgumentException("Unable to create a replacer without any targeted recipes");
-        }
-        return new Replacer(Arrays.stream(recipes).map(WrapperRecipe::getRecipe).collect(Collectors.toSet()), Collections.emptyList());
+        return new Replacer(SpecificRecipesTargetingRule.of(recipes));
     }
     
     /**
@@ -127,10 +130,23 @@ public final class Replacer {
      */
     @ZenCodeType.Method
     public static Replacer forTypes(final IRecipeManager... managers) {
-        if (managers.length <= 0) {
-            throw new IllegalArgumentException("Unable to create a replacer without any targeted recipe types");
-        }
-        return new Replacer(Collections.emptyList(), new HashSet<>(Arrays.asList(managers)));
+        return new Replacer(SpecificManagersTargetingRule.of(managers));
+    }
+    
+    /**
+     * Creates a {@code Replacer} that will perform replacements globally.
+     *
+     * <p>In other words, the replacer will perform ingredient replacement on <strong>every</strong> recipe manager in
+     * the game, as long as it supports replacement.</p>
+     *
+     * @return A new global {@code Replacer}.
+     *
+     * @deprecated Use {@link #forEverything()} instead.
+     */
+    @Deprecated
+    @ZenCodeType.Method
+    public static Replacer forAllTypes() {
+        return forEverything();
     }
     
     /**
@@ -142,8 +158,8 @@ public final class Replacer {
      * @return A new global {@code Replacer}.
      */
     @ZenCodeType.Method
-    public static Replacer forAllTypes() {
-        return forAllTypesExcluding();
+    public static Replacer forEverything() {
+        return new Replacer(EverythingTargetingRule.of());
     }
     
     /**
@@ -153,29 +169,47 @@ public final class Replacer {
      * @param managers The managers to exclude from the replacer.
      * @return A new {@code Replacer} that targets all managers except the ones specified.
      *
+     * @deprecated Use {@link #forEverything()} to create a replacer then use {@link #excluding(IRecipeManager...)} to
+     * exclude the various unwanted managers.
+     *
      * @docParam managers stoneCutter
      */
+    @Deprecated
     @ZenCodeType.Method
     public static Replacer forAllTypesExcluding(final IRecipeManager... managers) {
-        final List<IRecipeManager> managerList = Arrays.asList(managers);
-        return new Replacer(
-                Collections.emptyList(),
-                RecipeTypeBracketHandler.getManagerInstances().stream().filter(manager -> !managerList.contains(manager)).collect(Collectors.toSet())
-        );
+        return forEverything().excluding(managers);
+    }
+    
+    private static Pair<IRecipeManager, Collection<ResourceLocation>> gatherDefaultExclusions(final IRecipeManager manager) {
+        final GatherReplacementExclusionEvent event = new GatherReplacementExclusionEvent(manager);
+        MinecraftForge.EVENT_BUS.post(event);
+        return Pair.of(manager, event.getExcludedRecipes());
     }
     
     /**
      * Excludes a set of recipes, identified by their name, from undergoing replacement.
      *
      * @param recipes The list of recipes that should be excluded.
-     * @return This replacer for chaining.
+     * @return A Replacer that excludes the given set of recipes.
      *
      * @docParam recipes <resource:minecraft:comparator>
      */
     @ZenCodeType.Method
     public Replacer excluding(final ResourceLocation... recipes) {
-        this.userExclusionList.addAll(Arrays.asList(recipes));
-        return this;
+        return new Replacer(ExcludingRecipesAndDelegatingTargetingRule.of(this.targetingRule, recipes));
+    }
+    
+    /**
+     * Excludes a set of managers from undergoing replacement.
+     *
+     * @param managers The list of managers that should be excluded.
+     * @return A Replacer that excludes the given set of recipe managers.
+     *
+     * @docParam managers stoneCutter
+     */
+    @ZenCodeType.Method
+    public Replacer excluding(final IRecipeManager... managers) {
+        return new Replacer(ExcludingManagersAndDelegatingTargetingRule.of(this.targetingRule, managers));
     }
     
     /**
@@ -194,7 +228,7 @@ public final class Replacer {
      *
      * @param from An {@link IIngredient} that will be used to match stacks that need to be replaced.
      * @param to The replacement {@link IIngredient}.
-     * @return This replacer for chaining.
+     * @return A Replacer that will carry out the specified operation.
      *
      * @docParam from <tag:items:forge:storage_blocks/redstone>
      * @docParam to <item:minecraft:diamond_block>
@@ -221,7 +255,7 @@ public final class Replacer {
      *
      * @param from An {@link IItemStack} that will be used to match stacks that need to be replaced.
      * @param to The replacement {@link IIngredient}.
-     * @return This replacer for chaining.
+     * @return A Replacer that will carry out the specified operation.
      *
      * @docParam from <item:minecraft:coal_block>
      * @docParam to <item:minecraft:diamond_block>
@@ -243,7 +277,7 @@ public final class Replacer {
      *
      * @param from An {@link IIngredient} that will be used to match to specify the ingredient to replace.
      * @param to The replacement {@link IIngredient}.
-     * @return This replacer for chaining.
+     * @return A Replacer that will carry out the specified operation.
      *
      * @docParam from <tag:items:minecraft:anvil>
      * @docParam to <tag:items:minecraft:flowers>
@@ -261,7 +295,7 @@ public final class Replacer {
      *
      * @param oldName The {@link ResourceLocation} of the name of the recipe that should be renamed.
      * @param newName The new name of the recipe.
-     * @return This replacer for chaining.
+     * @return A Replacer that will rename the recipe according to the specified rule.
      *
      * @docParam oldName <resource:minecraft:birch_sign>
      * @docParam newName "damn_hard_birch_sign"
@@ -291,7 +325,7 @@ public final class Replacer {
      * value of the function will then represent the new name of the recipe.</p>
      *
      * @param function The renaming function.
-     * @return This replacer for chaining
+     * @return A Replacer that will use the given function for renaming.
      *
      * @docParam function myFunction
      */
@@ -305,8 +339,21 @@ public final class Replacer {
             );
         }
         
-        this.userRenamingFunction = function;
-        return this;
+        return new Replacer(this.targetingRule, this.replacementRules, this.userRenames, function, this.suppressWarnings);
+    }
+    
+    /**
+     * Suppresses warnings that arise when trying to replace unsupported recipes.
+     *
+     * <p>Additional warnings will not be suppressed. Note that it is suggested to keep this disabled while testing and
+     * enable it only if excluding the problematic recipes via {@link #excluding(ResourceLocation...)} would prove to be
+     * too cumbersome.</p>
+     *
+     * @return A Replacer with replacement warnings suppressed.
+     */
+    @ZenCodeType.Method
+    public Replacer suppressWarnings() {
+        return new Replacer(this.targetingRule, this.replacementRules, this.userRenames, this.userRenamingFunction, true);
     }
     
     /**
@@ -314,15 +361,14 @@ public final class Replacer {
      */
     @ZenCodeType.Method
     public void execute() {
-        if (this.rules.isEmpty()) return;
+        if (this.replacementRules.isEmpty()) return;
         CraftTweakerAPI.apply(
                 new ReplacerAction(
-                        this.targetedManagers,
-                        this.targetedRecipes,
-                        Collections.unmodifiableList(this.rules),
-                        this.targetedManagers.stream().flatMap(manager -> DEFAULT_EXCLUSIONS.computeIfAbsent(manager, this::gatherDefaultExclusions).stream()).collect(Collectors.toSet()),
-                        Collections.unmodifiableCollection(this.userExclusionList),
-                        this.buildGeneratorFunction()
+                        this.targetingRule,
+                        Collections.unmodifiableList(this.replacementRules),
+                        DEFAULT_EXCLUSIONS.get().values().stream().flatMap(Collection::stream).collect(Collectors.toSet()),
+                        this.buildGeneratorFunction(),
+                        this.suppressWarnings
                 )
         );
     }
@@ -330,7 +376,7 @@ public final class Replacer {
     // Keep public but not exposed to Zen: this is public API (yeah, I know, bad placement)
     public Replacer addReplacementRule(final IReplacementRule rule) {
         if (rule == IReplacementRule.EMPTY) return this;
-        this.rules.add(rule);
+        this.replacementRules.add(rule);
         return this;
     }
     
@@ -347,12 +393,6 @@ public final class Replacer {
                         fixed
                 )
         );
-    }
-    
-    private Collection<ResourceLocation> gatherDefaultExclusions(final IRecipeManager manager) {
-        final GatherReplacementExclusionEvent event = new GatherReplacementExclusionEvent(manager);
-        MinecraftForge.EVENT_BUS.post(event);
-        return event.getExcludedRecipes();
     }
     
     private Function<ResourceLocation, ResourceLocation> buildGeneratorFunction() {
