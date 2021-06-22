@@ -60,6 +60,8 @@ public final class CommonLootModifiers {
      *
      * @param stack The stack to add
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam stack <item:minecraft:cobblestone>
      */
     @ZenCodeType.Method
     public static ILootModifier add(final IItemStack stack) {
@@ -71,6 +73,8 @@ public final class CommonLootModifiers {
      *
      * @param stacks The stacks to add
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam stacks <item:minecraft:iron_ingot>, <item:minecraft:iron_nugget> * 5
      */
     @ZenCodeType.Method
     public static ILootModifier addAll(final IItemStack... stacks) {
@@ -92,6 +96,9 @@ public final class CommonLootModifiers {
      * @param enchantment The enchantment to check for.
      * @param stack The stack to add.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
+     * @docParam stack <item:minecraft:coal>
      */
     @ZenCodeType.Method
     public static ILootModifier addWithOreDropsBonus(final Enchantment enchantment, final IItemStack stack) {
@@ -115,6 +122,11 @@ public final class CommonLootModifiers {
      * @param p The probability of the binomial distribution, between 0.0 and 1.0 (both exclusive).
      * @param stack The stack to add.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
+     * @docParam extra 3
+     * @docParam p 0.5714286
+     * @docParam stack <item:minecraft:wheat_seeds>
      */
     @ZenCodeType.Method
     public static ILootModifier addWithBinomialBonus(final Enchantment enchantment, final int extra, final float p, final IItemStack stack) {
@@ -137,6 +149,10 @@ public final class CommonLootModifiers {
      * @param multiplier A multiplier that will be used in conjunction with the enchantment's level.
      * @param stack The stack to add.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
+     * @docParam multiplier 1
+     * @docParam stack <item:minecraft:glowstone_dust>
      */
     @ZenCodeType.Method
     public static ILootModifier addWithUniformBonus(final Enchantment enchantment, final int multiplier, final IItemStack stack) {
@@ -159,6 +175,9 @@ public final class CommonLootModifiers {
      * @param enchantment The enchantment to check for.
      * @param stacks The stacks to add.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
+     * @docParam stacks <item:minecraft:coal>, <item:minecraft:diamond>
      */
     @ZenCodeType.Method
     public static ILootModifier addAllWithOreDropsBonus(final Enchantment enchantment, final IItemStack... stacks) {
@@ -184,6 +203,11 @@ public final class CommonLootModifiers {
      * @param p The probability of the binomial distribution, between 0.0 and 1.0 (both exclusive).
      * @param stacks The stacks to add.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
+     * @docParam extra 3
+     * @docParam p 0.5714286
+     * @docParam stacks <item:minecraft:wheat_seeds>, <item:minecraft:carrot> * 9
      */
     @ZenCodeType.Method
     public static ILootModifier addAllWithBinomialBonus(final Enchantment enchantment, final int extra, final float p, final IItemStack... stacks) {
@@ -208,6 +232,10 @@ public final class CommonLootModifiers {
      * @param multiplier A multiplier that will be used in conjunction with the enchantment's level.
      * @param stacks The stacks to add.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
+     * @docParam multiplier 1
+     * @docParam stacks <item:minecraft:glowstone_dust>, <item:minecraft:prismarine_crystals>
      */
     @ZenCodeType.Method
     public static ILootModifier addAllWithUniformBonus(final Enchantment enchantment, final int multiplier, final IItemStack... stacks) {
@@ -225,6 +253,9 @@ public final class CommonLootModifiers {
      * @param target The target to replace.
      * @param replacement The replacement to use.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam target <tag:items:forge:ingots/iron>
+     * @docParam replacement <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
     public static ILootModifier replaceWith(final IIngredient target, final IItemStack replacement) {
@@ -241,6 +272,8 @@ public final class CommonLootModifiers {
      *
      * @param replacementMap A map of key-value pairs dictating the target to replace along with their replacement.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam replacementMap { <tag:items:forge:gems/emerald> : <item:minecraft:emerald> }
      */
     @ZenCodeType.Method
     public static ILootModifier replaceAllWith(final Map<IIngredient, IItemStack> replacementMap) {
@@ -261,6 +294,9 @@ public final class CommonLootModifiers {
      * @param target The target to replace.
      * @param replacement The replacement to use.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam target <item:minecraft:carrots> * 2
+     * @docParam replacement <item:minecraft:potatoes>
      */
     @ZenCodeType.Method
     public static ILootModifier replaceStackWith(final IItemStack target, final IItemStack replacement) {
@@ -279,6 +315,8 @@ public final class CommonLootModifiers {
      *
      * @param replacementMap A map of key-value pairs dictating the target to replace along with their replacement.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam replacementMap { <item:minecraft:carrots> * 2 : <item:minecraft:potatoes> }
      */
     @ZenCodeType.Method
     public static ILootModifier replaceAllStacksWith(final Map<IItemStack, IItemStack> replacementMap) {
@@ -291,6 +329,8 @@ public final class CommonLootModifiers {
      *
      * @param target The {@link IIngredient} to remove.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam target <tag:items:minecraft:creeper_drop_music_discs>
      */
     @ZenCodeType.Method
     public static ILootModifier remove(final IIngredient target) {
@@ -302,6 +342,8 @@ public final class CommonLootModifiers {
      *
      * @param targets The {@link IIngredient}s to remove.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam targets <item:minecraft:bell>, <tag:items:minecraft:rails>
      */
     @ZenCodeType.Method
     public static ILootModifier removeAll(final IIngredient... targets) {
@@ -324,6 +366,8 @@ public final class CommonLootModifiers {
      *
      * @param modifiers The modifier list.
      * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam modifiers CommonLootModifiers.clearLoot(), CommonLootModifiers.add(<item:minecraft:warped_hyphae>)
      */
     @ZenCodeType.Method
     public static ILootModifier chaining(final ILootModifier... modifiers) {
