@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.recipes.ITargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.wrappers.WrapperRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,7 +13,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class ExcludingRecipesAndDelegatingTargetingRule implements ITargetingRule {
+public final class ExcludingRecipesAndDelegatingTargetingRule implements ITargetingRule {
     private final ITargetingRule delegate;
     private final Collection<ResourceLocation> exclusions;
     
@@ -25,6 +26,10 @@ public class ExcludingRecipesAndDelegatingTargetingRule implements ITargetingRul
         Objects.requireNonNull(delegate);
         if (exclusions.isEmpty()) {
             throw new IllegalArgumentException("Unable to create an exclusion for recipes without any recipe to exclude");
+        }
+        if (delegate instanceof ExcludingRecipesAndDelegatingTargetingRule) {
+            final ExcludingRecipesAndDelegatingTargetingRule delegatingRule = (ExcludingRecipesAndDelegatingTargetingRule) delegate;
+            return of(delegatingRule.delegate, Util.make(new HashSet<>(exclusions), it -> it.addAll(delegatingRule.exclusions)));
         }
         return new ExcludingRecipesAndDelegatingTargetingRule(delegate, exclusions);
     }

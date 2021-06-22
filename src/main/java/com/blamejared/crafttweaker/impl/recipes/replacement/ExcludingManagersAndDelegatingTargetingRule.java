@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.recipes.replacement;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.ITargetingRule;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.Util;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,6 +24,10 @@ public final class ExcludingManagersAndDelegatingTargetingRule implements ITarge
         Objects.requireNonNull(delegate);
         if (exclusions.isEmpty()) {
             throw new IllegalArgumentException("Unable to create an exclusion for managers without any manager to exclude");
+        }
+        if (delegate instanceof ExcludingManagersAndDelegatingTargetingRule) {
+            final ExcludingManagersAndDelegatingTargetingRule delegatingRule = (ExcludingManagersAndDelegatingTargetingRule) delegate;
+            return of(delegatingRule.delegate, Util.make(new HashSet<>(exclusions), it -> it.addAll(delegatingRule.exclusions)));
         }
         return new ExcludingManagersAndDelegatingTargetingRule(delegate, exclusions);
     }
