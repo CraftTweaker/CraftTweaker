@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.enchantment.Enchantment;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
@@ -54,7 +56,7 @@ public final class CommonLootModifiers {
     private static final Lazy<ILootModifier> IDENTITY = Lazy.concurrentOf(() -> (loot, context) -> loot);
     private static final Lazy<ILootModifier> LOOT_CLEARING_MODIFIER = Lazy.concurrentOf(() -> (loot, context) -> new ArrayList<>());
 
-    // Addition methods
+    //region Addition methods
     /**
      * Adds the given {@link IItemStack} to the drops.
      *
@@ -80,6 +82,36 @@ public final class CommonLootModifiers {
     public static ILootModifier addAll(final IItemStack... stacks) {
         final List<IItemStack> stacksToAdd = notEmpty(Arrays.stream(stacks)).collect(Collectors.toList());
         return (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.addAll(stacksToAdd.stream().map(IItemStack::copy).collect(Collectors.toList())));
+    }
+    
+    /**
+     * Adds the given {@link MCWeightedItemStack} to the drops, according to the specified chances.
+     *
+     * <p>The chance will be computed on each modifier roll.</p>
+     *
+     * @param stack The stack to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam stack <item:minecraft:gilded_blackstone> % 50
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addWithChance(final MCWeightedItemStack stack) {
+        return stack.getWeight() <= 0.0 || stack.getItemStack().isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), chance(context.getRandom(), stack));
+    }
+    
+    /**
+     * Adds the given {@link MCWeightedItemStack}s to the drops, according to the specified chances.
+     *
+     * <p>The chance will be computed on each modifier roll, and independently for each of the given stacks.</p>
+     *
+     * @param stacks The stacks to add.
+     * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam stacks <item:minecraft:honey_bottle> % 50, <item:minecraft:dried_kelp> % 13
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addAllWithChance(final MCWeightedItemStack... stacks) {
+        return chaining(Arrays.stream(stacks).map(CommonLootModifiers::addWithChance));
     }
     
     /**
@@ -242,7 +274,28 @@ public final class CommonLootModifiers {
         return chaining(notEmpty(Arrays.stream(stacks)).map(it -> addWithUniformBonus(enchantment, multiplier, it)));
     }
 
-    // Replacement methods
+    /**
+     * Adds the given {@link IItemStack} to the drops, with an amount chosen randomly between the given bounds.
+     *
+     * <p>Any original stack size given to this method is ignored; if an addition behavior is desired (as in random
+     * chance <em>on top</em> of the original stack size), a combining loot modifier should be used instead.</p>
+     *
+     * @param stack The stack to add.
+     * @param min The minimum amount that this stack can be.
+     * @param max The maximum amount that this stack can be.
+     * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam stack <item:minecraft:conduit>
+     * @docParam min 2
+     * @docParam max 9
+     */
+    @ZenCodeType.Method
+    public static ILootModifier addWithRandomAmount(final IItemStack stack, final int min, final int max) {
+        return stack.isEmpty() || max < min? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> it.add(stack.copy().setAmount(boundedRandom(context, min, max))));
+    }
+    //endregion
+
+    //region Replacement methods
     /**
      * Replaces every instance of the targeted {@link IIngredient} with the replacement {@link IItemStack}.
      *
@@ -322,8 +375,9 @@ public final class CommonLootModifiers {
     public static ILootModifier replaceAllStacksWith(final Map<IItemStack, IItemStack> replacementMap) {
         return chaining(replacementMap.entrySet().stream().map(it -> replaceStackWith(it.getKey(), it.getValue())));
     }
+    //endregion
 
-    // Removal methods
+    //region Removal methods
     /**
      * Removes every instance of the targeted {@link IIngredient} from the drops.
      *
@@ -359,8 +413,9 @@ public final class CommonLootModifiers {
     public static ILootModifier clearLoot() {
         return LOOT_CLEARING_MODIFIER.get();
     }
+    //endregion
 
-    // Additional utility methods
+    //region Additional utility methods
     /**
      * Chains the given list of {@link ILootModifier}s to be executed one after the other.
      *
@@ -374,7 +429,21 @@ public final class CommonLootModifiers {
         return chaining(Arrays.stream(modifiers));
     }
     
-    // Private utility stuff
+    /**
+     * Chains the given list of {@link ILootModifier}s together after having cleaned the original loot.
+     *
+     * @param modifiers The modifier list.
+     * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam modifiers CommonLootModifiers.add(<item:minecraft:warped_hyphae>)
+     */
+    @ZenCodeType.Method
+    public static ILootModifier clearing(final ILootModifier... modifiers) {
+        return chaining(Stream.concat(Stream.of(clearLoot()), Arrays.stream(modifiers)));
+    }
+    //endregion
+    
+    //region Private utility stuff
     private static ILootModifier streaming(final BiFunction<Stream<IItemStack>, LootContext, Stream<IItemStack>> consumer) {
         return (loot, context) -> consumer.apply(loot.stream(), context).collect(Collectors.toList());
     }
@@ -418,4 +487,13 @@ public final class CommonLootModifiers {
     private static IItemStack withLevel(final IItemStack tool, final Enchantment enchantment, final IntFunction<IItemStack> levelUser) {
         return levelUser.apply(EnchantmentHelper.getEnchantmentLevel(enchantment, tool.getInternal()));
     }
+    
+    private static Consumer<List<IItemStack>> chance(final Random random, final MCWeightedItemStack stack) {
+        return it -> { if (random.nextDouble() <= stack.getWeight()) it.add(stack.getItemStack().copy()); };
+    }
+    
+    private static int boundedRandom(final LootContext context, final int min, final int max) {
+        return context.getRandom().nextInt(max - min) + min;
+    }
+    //endregion
 }
