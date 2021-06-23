@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
@@ -96,7 +96,7 @@ public final class CommonLootModifiers {
      */
     @ZenCodeType.Method
     public static ILootModifier addWithChance(final MCWeightedItemStack stack) {
-        return stack.getWeight() <= 0.0 || stack.getItemStack().isEmpty()? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), chance(context.getRandom(), stack));
+        return isInvalidChance(stack)? IDENTITY.get() : (loot, context) -> Util.make(new ArrayList<>(loot), it -> chance(context.getRandom(), stack).ifPresent(it::add));
     }
     
     /**
@@ -488,8 +488,12 @@ public final class CommonLootModifiers {
         return levelUser.apply(EnchantmentHelper.getEnchantmentLevel(enchantment, tool.getInternal()));
     }
     
-    private static Consumer<List<IItemStack>> chance(final Random random, final MCWeightedItemStack stack) {
-        return it -> { if (random.nextDouble() <= stack.getWeight()) it.add(stack.getItemStack().copy()); };
+    private static boolean isInvalidChance(final MCWeightedItemStack stack) {
+        return stack.getWeight() <= 0.0 || stack.getItemStack().isEmpty();
+    }
+    
+    private static Optional<IItemStack> chance(final Random random, final MCWeightedItemStack stack) {
+        return Optional.ofNullable(random.nextDouble() <= stack.getWeight() ? stack.getItemStack().copy() : null);
     }
     
     private static int boundedRandom(final LootContext context, final int min, final int max) {
