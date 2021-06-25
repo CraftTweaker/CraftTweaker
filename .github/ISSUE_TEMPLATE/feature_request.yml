@@ -23,9 +23,9 @@ body:
     attributes:
       label: Minecraft version
       description: |
-      What version of Minecraft would you like this on? 
+        What version of Minecraft would you like this on? 
       
-      If your request is not tied to a version or if the version isn't listed, then choose other and specify in the description.
+        If your request is not tied to a version or if the version isn't listed, then choose other and specify in the description.
       options:
         - 1.16
         - 1.12
