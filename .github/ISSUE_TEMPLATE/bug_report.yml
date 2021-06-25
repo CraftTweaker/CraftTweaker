@@ -45,9 +45,9 @@ body:
     attributes:
       label: Minecraft version
       description: |
-      What version of Minecraft are you using?
+        What version of Minecraft are you using?
       
-      If you version isn't listed, then select "other" and list your version in the issue description.
+        If you version isn't listed, then select "other" and list your version in the issue description.
       options:
         - 1.16
         - 1.12
