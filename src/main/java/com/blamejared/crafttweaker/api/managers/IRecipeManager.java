@@ -162,7 +162,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      *
      * @param input The input IItemStack.
      *
-     * @docParam input <item:minecraft:ironingot>
+     * @docParam input <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
     default void removeRecipeByInput(IItemStack input) {
