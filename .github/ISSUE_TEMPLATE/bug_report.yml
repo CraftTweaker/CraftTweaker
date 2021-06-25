@@ -1,0 +1,61 @@
+name: Bug Report
+description: Report a bug or problem with CraftTweaker
+body:
+  - type: markdown
+    attributes:
+      value: |
+        "If this bug occurs in a modpack, please report this to the modpack author."
+        "If you are using an unnofficial version of CraftTweaker please report it to the person who gave you the version."
+        "Please also look at the other issues to make sure that you are not creating a duplicate."
+  - type: textarea
+    attributes:
+      label: Issue description
+      description: A clear description of the issue. Please do not just say "it doesn't work". The more information we have, the easier it is to help.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: This is only if there are any specific steps to reproduce the bug, you do not need to list things such as "write the following code in a script".
+      placeholder: |
+        If there are specific steps that need to be taken to reproduce this issue list them here.
+  - type: input
+    attributes:
+      label: "Script used"
+      description: "Please provide a [gist](https://gist.github.com/) / [pastebin](https://pastebin.com/) / etc link here. (Make sure that it isn't set to expire!)"
+  - type: input
+    attributes:
+      label: "The crafttweaker.log file"
+      description: |
+        "Please provide a [gist](https://gist.github.com/) / [pastebin](https://pastebin.com/) / etc link here. (Make sure that it isn't set to expire!)"
+        "You can use `/ct log` in-game to open the crafttweaker.log file.
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft version
+      description: What version of Minecraft are you using?
+      placeholder: 1.16.5
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Forge version
+      description: What version of Forge are you using?
+      placeholder: 36.1.32
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: CraftTweaker version
+      description: What version of CraftTweaker are you using?
+      placeholder: 7.1.0.315
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Other relevant information
+      description: Any other relevant information that is related to this issue, such as other mods and their versions
+  - type: input
+    attributes:
+      label: "The latest.log file"
+      description: "Please provide a [gist](https://gist.github.com/) / [pastebin](https://pastebin.com/) / etc link here. (Make sure that it isn't set to expire!)"
