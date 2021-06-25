@@ -46,7 +46,7 @@ body:
       label: Minecraft version
       description: What version of Minecraft are you using? If you version isn't listed, then select "other" and list your version in the issue description.
       options:
-        - 1.16.5
+        - 1.16
         - 1.12
         - Other
     validations:
