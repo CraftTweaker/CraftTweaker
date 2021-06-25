@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest an idea or enhancement for Mekanism
+description: Suggest an idea or enhancement for CraftTweaker
 body:
   - type: markdown
     attributes:
