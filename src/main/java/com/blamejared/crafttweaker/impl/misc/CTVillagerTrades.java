@@ -370,7 +370,7 @@ public class CTVillagerTrades {
      * @param xp        How much Experience is given by trading.
      *
      * @docParam rarity 1
-     * @docParam emeralds 16
+     * @docParam price <item:minecraft:dirt>
      * @docParam forSale <item:minecraft:diamond>
      * @docParam maxTrades 16
      * @docParam xp 2
