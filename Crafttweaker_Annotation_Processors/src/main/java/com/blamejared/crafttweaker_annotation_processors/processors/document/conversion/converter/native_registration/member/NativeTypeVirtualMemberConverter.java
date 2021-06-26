@@ -69,8 +69,14 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
     
     private DocumentationComment getDescription(NativeConstructor constructor) {
         final String description = constructor.description();
+        final String deprecation = this.nullIfEmpty(constructor.deprecationMessage());
+        final String since = this.nullIfEmpty(constructor.getSinceVersion());
         final ExampleData exampleData = ExampleData.empty();
-        return new DocumentationComment(description, exampleData);
+        return new DocumentationComment(description, deprecation, since, exampleData);
+    }
+    
+    private String nullIfEmpty(final String string) {
+        return string.isEmpty()? null : string;
     }
     
     private MemberHeader getHeader(NativeConstructor.ConstructorParameter[] parameters, TypePageInfo pageInfo) {
@@ -107,7 +113,7 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
         final String description = constructorParameter.description();
         final ExampleData exampleData = extractExampleDataForParameter(constructorParameter);
         
-        return new DocumentationComment(description, exampleData);
+        return new DocumentationComment(description, null, null, exampleData);
     }
     
     private ExampleData extractExampleDataForParameter(NativeConstructor.ConstructorParameter constructorParameter) {

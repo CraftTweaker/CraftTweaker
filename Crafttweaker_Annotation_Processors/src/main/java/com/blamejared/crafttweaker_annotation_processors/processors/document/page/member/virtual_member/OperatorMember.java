@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.DocumentedParameter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
@@ -7,7 +8,6 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,37 +29,37 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
         return this.type.name().compareToIgnoreCase(other.type.name());
     }
     
-    public void write(PrintWriter writer) {
-        writeTitle(writer);
-        writeDescription(writer);
-        writeScriptBlock(writer);
-        writer.printf(":::%n%n");
+    public void write(PageOutputWriter writer) {
+        writer.group(this.type.name(), this.getComment().getSinceVersion(), () -> {
+            writeDeprecation(writer);
+            writeDescription(writer);
+            writeScriptBlock(writer);
+        });
     }
     
-    private void writeTitle(PrintWriter writer) {
-        writer.printf(":::group{name=%s}%n%n", type.name());
-    }
-    
-    private void writeDescription(PrintWriter writer) {
+    private void writeDescription(PageOutputWriter writer) {
         if(getComment().hasDescription()) {
             writer.println(getComment().getMarkdownDescription());
             writer.println();
         }
     }
     
-    private void writeScriptBlock(PrintWriter writer) {
-        writer.println("```zenscript");
-        writeScriptBlockInner(writer);
-        writer.println("```");
+    private void writeDeprecation(final PageOutputWriter writer) {
+        writer.deprecationMessage(this.getComment().getDeprecationMessage());
+    }
+    
+    
+    private void writeScriptBlock(PageOutputWriter writer) {
+        writer.zenBlock(() -> this.writeScriptBlockInner(writer));
         writer.println();
     }
     
-    private void writeScriptBlockInner(PrintWriter writer) {
+    private void writeScriptBlockInner(PageOutputWriter writer) {
         writeHeader(writer);
         writeExamples(writer);
     }
     
-    private void writeExamples(PrintWriter writer) {
+    private void writeExamples(PageOutputWriter writer) {
         final int numberOfUsableExamples = header.getNumberOfUsableExamples();
         if(numberOfUsableExamples < 1) {
             return;
@@ -70,7 +70,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
         }
     }
     
-    private void writeExample(PrintWriter writer, int exampleIndex) {
+    private void writeExample(PageOutputWriter writer, int exampleIndex) {
         final List<String> exampleArguments = getExampleArguments(exampleIndex);
         
         exampleArguments.add(0, getExampleCallee());
@@ -88,7 +88,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
         return new ArrayList<>(Arrays.asList(split));
     }
     
-    private void writeHeader(PrintWriter writer) {
+    private void writeHeader(PageOutputWriter writer) {
         final String operatorFormat = OperatorFormatProvider.getOperatorFormat(type);
         final Object[] parameters = getParameters();
         

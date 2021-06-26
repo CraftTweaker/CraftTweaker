@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ReturnTypeInfoReader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.HeaderConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
@@ -26,12 +27,15 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     private final TypeConverter typeConverter;
     private final HeaderConverter headerConverter;
     private final CommentConverter commentConverter;
+    private final ReturnTypeInfoReader returnTypeInfoReader;
     private final Types typeUtils;
     
-    public NamedTypeVirtualMethodConverter(TypeConverter typeConverter, HeaderConverter headerConverter, CommentConverter commentConverter, Types typeUtils) {
+    public NamedTypeVirtualMethodConverter(TypeConverter typeConverter, HeaderConverter headerConverter, CommentConverter commentConverter,
+                                           ReturnTypeInfoReader returnTypeInfoReader, Types typeUtils) {
         this.typeConverter = typeConverter;
         this.headerConverter = headerConverter;
         this.commentConverter = commentConverter;
+        this.returnTypeInfoReader = returnTypeInfoReader;
         this.typeUtils = typeUtils;
     }
     
@@ -52,12 +56,17 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
         final String name = convertName(enclosedElement);
         final MemberHeader header = convertHeader(enclosedElement);
         final DocumentationComment comment = convertComment(enclosedElement, pageInfo);
+        final String returnTypeInfo = getReturnTypeInfo(enclosedElement);
         
-        return new VirtualMethodMember(header, comment, name);
+        return new VirtualMethodMember(header, comment, name, returnTypeInfo);
     }
     
     private DocumentationComment convertComment(ExecutableElement enclosedElement, DocumentationPageInfo pageInfo) {
         return commentConverter.convertForMethod(enclosedElement, pageInfo);
+    }
+    
+    private String getReturnTypeInfo(final ExecutableElement executableElement) {
+        return this.returnTypeInfoReader.readForMethod(executableElement).orElse(null);
     }
     
     private MemberHeader convertHeader(ExecutableElement enclosedElement) {

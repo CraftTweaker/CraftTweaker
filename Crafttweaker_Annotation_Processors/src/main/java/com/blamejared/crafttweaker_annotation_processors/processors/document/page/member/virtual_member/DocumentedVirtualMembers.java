@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -36,18 +36,19 @@ public class DocumentedVirtualMembers {
         properties.merge(propertyMember.getName(), propertyMember, PropertyMember::merge);
     }
     
-    public void write(PrintWriter writer) {
+    public void write(PageOutputWriter writer) {
         writeCasters(writer);
         writeMethods(writer);
         writeOperators(writer);
         writeProperties(writer);
     }
     
-    protected void writeCasters(PrintWriter writer) {
+    protected void writeCasters(PageOutputWriter writer) {
         if(casters.isEmpty()) {
             return;
         }
         
+        // TODO("Support deprecation and since properly, along with better documentation format")
         writer.printf("## Casters%n%n");
         writer.println("| Result type | Is Implicit |");
         writer.println("|-------------|-------------|");
@@ -57,7 +58,7 @@ public class DocumentedVirtualMembers {
         writer.println();
     }
     
-    protected void writeMethods(PrintWriter writer) {
+    protected void writeMethods(PageOutputWriter writer) {
         if(methodGroups.isEmpty()) {
             return;
         }
@@ -69,7 +70,7 @@ public class DocumentedVirtualMembers {
         writer.println();
     }
     
-    protected void writeOperators(PrintWriter writer) {
+    protected void writeOperators(PageOutputWriter writer) {
         if(operators.isEmpty()) {
             return;
         }
@@ -81,11 +82,12 @@ public class DocumentedVirtualMembers {
         writer.println();
     }
     
-    protected void writeProperties(PrintWriter writer) {
+    protected void writeProperties(PageOutputWriter writer) {
         if(properties.isEmpty()) {
             return;
         }
         
+        // TODO("Support deprecation and since properly, along with better documentation format")
         writer.printf("## Properties%n%n");
         writer.println("| Name | Type | Has Getter | Has Setter | Description |");
         writer.println("|------|------|------------|------------|-------------|");

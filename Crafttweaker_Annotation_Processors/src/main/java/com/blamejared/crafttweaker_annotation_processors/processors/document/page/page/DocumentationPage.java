@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.page;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member.DocumentedStaticMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.DocumentedVirtualMembers;
 
-import java.io.PrintWriter;
 import java.util.Optional;
 
 public abstract class DocumentationPage {
@@ -19,8 +19,10 @@ public abstract class DocumentationPage {
         this.staticMembers = staticMembers;
     }
     
-    public void write(PrintWriter writer) {
+    public void write(PageOutputWriter writer) {
+        writeSince(writer);
         writeTitle(writer);
+        writeDeprecation(writer);
         writeDescription(writer);
         if(!pageInfo.declaringModId.equals("crafttweaker")) {
             writeOwnerModId(writer);
@@ -29,9 +31,17 @@ public abstract class DocumentationPage {
         writeMembers(writer);
     }
     
-    protected abstract void writeTitle(PrintWriter writer);
+    protected void writeSince(final PageOutputWriter writer) {
+        writer.pageSince(this.pageInfo.getClassComment().getSinceVersion());
+    }
     
-    protected void writeDescription(PrintWriter writer) {
+    protected abstract void writeTitle(PageOutputWriter writer);
+    
+    protected void writeDeprecation(final PageOutputWriter writer) {
+        writer.deprecationMessage(this.pageInfo.getClassComment().getDeprecationMessage());
+    }
+    
+    protected void writeDescription(PageOutputWriter writer) {
         final Optional<String> description = pageInfo.getClassComment().getOptionalDescription();
         
         if(description.isPresent()) {
@@ -40,12 +50,12 @@ public abstract class DocumentationPage {
         }
     }
     
-    protected abstract void writeOwnerModId(PrintWriter writer);
+    protected abstract void writeOwnerModId(PageOutputWriter writer);
     
-    protected void beforeWritingMembers(PrintWriter writer) {
+    protected void beforeWritingMembers(PageOutputWriter writer) {
     }
     
-    protected void writeMembers(PrintWriter writer) {
+    protected void writeMembers(PageOutputWriter writer) {
         staticMembers.write(writer);
         virtualMembers.write(writer);
     }

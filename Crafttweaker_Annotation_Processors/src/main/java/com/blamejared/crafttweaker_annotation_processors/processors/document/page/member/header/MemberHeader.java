@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.*;
 
 import javax.annotation.*;
-import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -45,21 +45,21 @@ public class MemberHeader implements Comparable<MemberHeader> {
         return stringJoiner.toString();
     }
     
-    public void writeStaticExamples(PrintWriter writer, AbstractTypeInfo ownerType, String name) {
+    public void writeStaticExamples(PageOutputWriter writer, AbstractTypeInfo ownerType, String name) {
         final String callee = ownerType.getDisplayName();
         writeCallTo(writer, String.format("%s.%s", callee, name));
     }
     
-    public void writeVirtualExamples(PrintWriter writer, ExampleData aThis, String name) {
+    public void writeVirtualExamples(PageOutputWriter writer, ExampleData aThis, String name) {
         final String example = aThis.getExampleFor("this").getAnyTextValue();
         writeCallTo(writer, String.format("%s.%s", example, name));
     }
     
-    public void writeConstructorExamples(PrintWriter writer, AbstractTypeInfo constructedType) {
+    public void writeConstructorExamples(PageOutputWriter writer, AbstractTypeInfo constructedType) {
         writeCallTo(writer, String.format("new %s", constructedType.getDisplayName()));
     }
     
-    private void writeCallTo(PrintWriter writer, String callee) {
+    private void writeCallTo(PageOutputWriter writer, String callee) {
         int numberOfUsableExamples = getNumberOfUsableExamples();
         if(numberOfUsableExamples == 0) {
             return;
@@ -69,7 +69,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
         }
     }
     
-    private void writeExample(PrintWriter writer, String callee, int i) {
+    private void writeExample(PageOutputWriter writer, String callee, int i) {
         final String arguments = getExample(i);
         writer.printf("%s%s;%n", callee, arguments);
     }
@@ -101,7 +101,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
         return IntStream.concat(parameterExampleCount, genericParameterExampleCount).min().orElse(1);
     }
     
-    public void writeParameterDescriptionTable(PrintWriter writer) {
+    public void writeParameterDescriptionTable(PageOutputWriter writer) {
         if(parameters.isEmpty() && genericParameters.isEmpty()) {
             return;
         }
@@ -113,7 +113,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
         writer.println();
     }
     
-    private void writeParameterDescriptionTableWithoutOptionals(PrintWriter writer) {
+    private void writeParameterDescriptionTableWithoutOptionals(PageOutputWriter writer) {
         writer.println("| Parameter | Type | Description |");
         writer.println("|-----------|------|-------------|");
         for(DocumentedParameter parameter : parameters) {
@@ -126,7 +126,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
         writer.println();
     }
     
-    private void writeParameterDescriptionTableWithOptionals(PrintWriter writer) {
+    private void writeParameterDescriptionTableWithOptionals(PageOutputWriter writer) {
         writer.println("| Parameter | Type | Description | Optional | DefaultValue |");
         writer.println("|-----------|------|-------------|----------|--------------|");
         for(DocumentedParameter parameter : parameters) {

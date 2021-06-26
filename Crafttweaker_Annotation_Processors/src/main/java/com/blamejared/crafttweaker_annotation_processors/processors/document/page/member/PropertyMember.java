@@ -1,10 +1,9 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentMerger;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
-
-import java.io.PrintWriter;
 
 public class PropertyMember {
     
@@ -36,7 +35,7 @@ public class PropertyMember {
         return new PropertyMember(left.name, left.type, hasGetter, hasSetter, merged);
     }
     
-    public void writeTableRow(PrintWriter writer) {
+    public void writeTableRow(PageOutputWriter writer) {
         writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter, comment.getMarkdownDescription());
     }
     
