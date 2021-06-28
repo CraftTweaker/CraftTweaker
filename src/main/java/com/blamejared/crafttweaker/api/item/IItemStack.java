@@ -16,6 +16,8 @@ import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -635,6 +637,19 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     default ToolType[] getToolTypes() {
         
         return getInternal().getToolTypes().toArray(new ToolType[0]);
+    }
+
+    @ZenCodeType.Getter("enchantments")
+    default Map<Enchantment, Integer> getEnchantments() {
+        return EnchantmentHelper.getEnchantments(getInternal());
+    }
+
+    /**
+     * Gets the level of given enchantment on the item. Returns 0 if the item doesn't have given enchantment.
+     */
+    @ZenCodeType.Method
+    default int getEnchantmentLevel(Enchantment enchantment) {
+        return EnchantmentHelper.getEnchantmentLevel(enchantment, getInternal());
     }
     
     /**
