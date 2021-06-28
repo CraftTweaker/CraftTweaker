@@ -36,7 +36,7 @@ public class PageOutputWriter implements AutoCloseable, Closeable {
     public void group(final String name, final String sinceVersion, final Runnable groupContents) {
         Objects.requireNonNull(name);
         if (sinceVersion != null) {
-            this.printf(":::group{name=%s since=%s}%n%n", name, sinceVersion);
+            this.printf(":::group{name=%s since=\"%s\"}%n%n", name, sinceVersion);
         } else {
             this.printf(":::group{name=%s}%n%n", name);
         }
@@ -51,7 +51,7 @@ public class PageOutputWriter implements AutoCloseable, Closeable {
     
     public void deprecationMessage(final String deprecationMessage) {
         if (deprecationMessage == null) return;
-        this.printf("::deprecated{message=\"%s\"}%n%n", deprecationMessage.replace("}", "\\}"));
+        this.printf("::deprecated[%s]%n%n", deprecationMessage.replace("]", "\\]"));
     }
     
     public void modSupportBuiltin(final String mod, final String modLink) {
