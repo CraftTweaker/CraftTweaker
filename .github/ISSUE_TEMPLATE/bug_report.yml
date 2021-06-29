@@ -33,6 +33,8 @@ body:
     attributes:
       label: "Script used"
       description: "Please provide a [gist](https://gist.github.com/) / [pastebin](https://pastebin.com/) / etc link here. (Make sure that it isn't set to expire!)"
+    validations:
+      required: true
   - type: input
     attributes:
       label: "The crafttweaker.log file"
@@ -40,6 +42,8 @@ body:
         Please provide a [gist](https://gist.github.com/) / [pastebin](https://pastebin.com/) / etc link here. (Make sure that it isn't set to expire!)
         
         You can use `/ct log` in-game to open the crafttweaker.log file.
+    validations:
+      required: true
   - type: dropdown
     id: minecraft-version
     attributes:
@@ -76,3 +80,5 @@ body:
     attributes:
       label: "The latest.log file"
       description: "Please provide a [gist](https://gist.github.com/) / [pastebin](https://pastebin.com/) / etc link here. (Make sure that it isn't set to expire!)"
+    validations:
+      required: true
