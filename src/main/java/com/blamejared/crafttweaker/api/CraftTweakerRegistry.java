@@ -23,12 +23,14 @@ import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,8 +45,13 @@ public class CraftTweakerRegistry {
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
+    
         final CraftTweakerModList craftTweakerModList = new CraftTweakerModList();
-        final List<Class<?>> collect = getAllClassesWith(ZenRegister.class, craftTweakerModList::add)
+        final List<Class<?>> collect = getAllClassesWith(ZenRegister.class, craftTweakerModList::add, annotationData -> ((ArrayList<String>) annotationData
+                .getAnnotationData()
+                .getOrDefault("modDeps", new ArrayList<String>(0)))
+                .stream()
+                .allMatch(ModList.get()::isLoaded))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         craftTweakerModList.printToLog();
@@ -81,6 +88,10 @@ public class CraftTweakerRegistry {
     }
     
     private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer) {
+        return getAllClassesWith(annotationCls, consumer, annotationData -> true);
+    }
+    
+    private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer, Predicate<ModFileScanData.AnnotationData> annotationFilter) {
         final Type annotationType = Type.getType(annotationCls);
         return ModList.get()
                 .getAllScanData()
@@ -88,6 +99,7 @@ public class CraftTweakerRegistry {
                 .flatMap(scanData -> scanData.getAnnotations()
                         .stream()
                         .filter(a -> annotationType.equals(a.getAnnotationType()))
+                        .filter(annotationFilter)
                         .peek(ignored -> consumer.accept(scanData))
                         .map(ModFileScanData.AnnotationData::getClassType))
                 .map(CraftTweakerRegistry::getClassFromType)
