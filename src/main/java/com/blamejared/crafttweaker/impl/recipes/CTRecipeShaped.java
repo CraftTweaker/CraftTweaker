@@ -147,27 +147,54 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        final NonNullList<ItemStack> result = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-        final int rowOffset;
-        final int columnOffset;
         
-        {
-            final IntPair offset = calculateOffset(inv);
-            rowOffset = offset.getX();
-            columnOffset = offset.getY();
-            
-            if(offset == INVALID)
-                return result;
+        IntPair offset = calculateOffset(ingredients, inv);
+        if(offset != INVALID || !mirrored) {
+            return getRemainingItems(inv, offset, this.ingredients);
+        }
+        // X mirror
+        IIngredient[][] ingredients = ArrayUtil.mirror(this.ingredients);
+        offset = calculateOffset(ingredients, inv);
+        if(offset != INVALID) {
+            return getRemainingItems(inv, offset, ingredients);
         }
         
-        for(int rowIndex = 0; rowIndex < this.ingredients.length; rowIndex++) {
-            final IIngredient[] row = this.ingredients[rowIndex];
+        // Y mirror
+        for(int i = 0; i < ingredients.length; i++) {
+            ingredients[i] = ArrayUtil.mirror(this.ingredients[i]);
+        }
+        offset = calculateOffset(ingredients, inv);
+        if(offset != INVALID) {
+            return getRemainingItems(inv, offset, ingredients);
+        }
+        
+        // X+Y mirror
+        ingredients = ArrayUtil.mirror(ingredients);
+        offset = calculateOffset(ingredients, inv);
+        return getRemainingItems(inv, offset, ingredients);
+    }
+    
+    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv, IntPair offsetPair, IIngredient[][] ingredients) {
+        
+        final NonNullList<ItemStack> result = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+    
+        if(offsetPair == INVALID) {
+            return result;
+        }
+        
+        int rowOffset = offsetPair.getX();
+        int columnOffset = offsetPair.getY();
+        
+        for(int rowIndex = 0; rowIndex < ingredients.length; rowIndex++) {
+            final IIngredient[] row = ingredients[rowIndex];
             for(int columnIndex = 0; columnIndex < row.length; columnIndex++) {
                 final IIngredient ingredient = row[columnIndex];
-                if(ingredient == null)
+                if(ingredient == null) {
                     continue;
+                }
                 final int slotIndex = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
-                result.set(slotIndex, ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex))).getInternal());
+                result.set(slotIndex, ingredient.getRemainingItem(new MCItemStack(inv.getStackInSlot(slotIndex)))
+                        .getInternal());
             }
         }
         
