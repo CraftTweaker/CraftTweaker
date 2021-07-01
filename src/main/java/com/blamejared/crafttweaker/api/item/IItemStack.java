@@ -611,6 +611,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().getItem();
     }
     
+    // TODO - BREAKING - change this to `asMutable`.
     @ZenCodeType.Method
     IItemStack mutable();
     
