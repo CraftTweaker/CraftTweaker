@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  * limited to dedicated servers, they exist in single player worlds as part of
  * the integrated server.
  *
- * @docParam this world as MCServerWorld
+ * @docParam this (world as MCServerWorld)
  */
 @ZenRegister
 @Document("vanilla/api/world/MCServerWorld")
@@ -140,7 +140,7 @@ public class ExpandServerWorld {
      *
      * @return A List of Entities that match.
      *
-     * @docParam predicate (entity as MCEntity) => entity.isImmuneToFire();
+     * @docParam predicate (entity as MCEntity) => entity.isImmuneToFire()
      * @docParam type <entitytype:minecraft:sheep>
      */
     @ZenCodeType.Method
