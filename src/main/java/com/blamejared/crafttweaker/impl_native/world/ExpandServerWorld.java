@@ -1,21 +1,24 @@
 package com.blamejared.crafttweaker.impl_native.world;
 
-import net.minecraft.server.MinecraftServer;
-import org.openzen.zencode.java.ZenCodeType;
-
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-
+import net.minecraft.entity.Entity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
+import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Represents the logical (server) implementation of the world. These are not
  * limited to dedicated servers, they exist in single player worlds as part of
  * the integrated server.
- * 
+ *
  * @docParam this world as MCServerWorld
  */
 @ZenRegister
@@ -25,9 +28,9 @@ public class ExpandServerWorld {
 	
 	/**
 	 * Sets the time of the Minecraft day.
-	 * 
+	 *
 	 * @param time The new time of day. Should be between 0 and 24000.
-	 * 
+	 *
 	 * @docParam time 6000
 	 */
     @ZenCodeType.Setter("timeOfDay")
@@ -73,7 +76,7 @@ public class ExpandServerWorld {
     
     /**
      * Gets the random seed of the world.
-     * 
+     *
      * @return The random seed of the world.
      */
     @ZenCodeType.Getter("seed")
@@ -97,10 +100,10 @@ public class ExpandServerWorld {
     
     /**
      * Checks if a position is within an active raid.
-     * 
+     *
      * @param pos The position to look up.
      * @return Whether or not the position was inside an active raid.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -127,5 +130,22 @@ public class ExpandServerWorld {
     public static MinecraftServer getServer(ServerWorld internal) {
         
         return internal.getServer();
+    }
+    
+    
+    /**
+     * Gets entities in the world that match the given Predicate and the given MCEntityType (if provided).
+     *
+     * @param predicate The predicate to check against.
+     *
+     * @return A List of Entities that match.
+     *
+     * @docParam predicate (entity as MCEntity) => entity.isImmuneToFire();
+     * @docParam type <entitytype:minecraft:sheep>
+     */
+    @ZenCodeType.Method
+    public static List<Entity> getEntities(ServerWorld internal, Predicate<Entity> predicate, @ZenCodeType.Optional MCEntityType type) {
+        
+        return internal.getEntities(type == null ? null : type.getInternal(), predicate);
     }
 }
