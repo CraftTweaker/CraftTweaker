@@ -23,7 +23,7 @@ public class ExpandPlayerEntity {
     
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter
+    @ZenCodeType.Getter("inventory")
     public static PlayerInventory getInventory(PlayerEntity internal) {
         
         return internal.inventory;
