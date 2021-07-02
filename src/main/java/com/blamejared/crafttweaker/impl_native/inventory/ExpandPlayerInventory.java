@@ -124,4 +124,31 @@ public class ExpandPlayerInventory {
         return internal.hasItemStack(stack.getInternal());
     }
     
+    
+    /**
+     * Gets the IItemStack that is being held by the mouse in a Gui/Container.
+     *
+     * @return The held IItemStack
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("itemStack")
+    public static IItemStack getIItemStack(PlayerInventory internal) {
+        
+        return new MCItemStack(internal.getItemStack());
+    }
+    
+    /**
+     * Sets the IItemStack that is being held by the mouse in a Gui/Container.
+     *
+     * @param stack The stack to hold.
+     *
+     * @docParam stack <item:minecraft:dirt>
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("itemStack")
+    public static void setIItemStack(PlayerInventory internal, IItemStack stack) {
+        
+        internal.setItemStack(stack.getInternal());
+    }
+    
 }
