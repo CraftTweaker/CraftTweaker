@@ -33,12 +33,20 @@ public class StaticFieldConverter extends AbstractEnclosedElementConverter<Docum
     @Override
     public void convertAndAddTo(Element enclosedField, DocumentedStaticMembers result, DocumentationPageInfo pageInfo) {
         final boolean isFinal = enclosedField.getModifiers().contains(Modifier.FINAL);
-        final String name = enclosedField.getSimpleName().toString();
+        final String name = convertName(enclosedField);
         final TypeMirror typeMirror = enclosedField.asType();
         final AbstractTypeInfo fieldType = typeConverter.convertType(typeMirror);
         final DocumentationComment description = commentConverter.convertElement(enclosedField, DocumentationComment.empty());
         
         final PropertyMember propertyMember = new PropertyMember(name, fieldType, true, !isFinal, description);
         result.addProperty(propertyMember);
+    }
+
+    private String convertName(Element enclosedField) {
+        String name = enclosedField.getAnnotation(ZenCodeType.Field.class).value();
+        if (name.isEmpty()) {
+            name = enclosedField.getSimpleName().toString();
+        }
+        return name;
     }
 }
