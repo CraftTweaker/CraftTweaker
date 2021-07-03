@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.inventory.IInventory;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -17,5 +18,11 @@ public class ExpandItemCraftedEvent {
     @ZenCodeType.Getter("crafting")
     public static IItemStack getCrafting(PlayerEvent.ItemCraftedEvent internal) {
         return new MCItemStack(internal.getCrafting());
+    }
+
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("craftMatrix")
+    public static IInventory getCraftingMatrix(PlayerEvent.ItemCraftedEvent internal) {
+        return internal.getInventory();
     }
 }
