@@ -361,6 +361,28 @@ public class CTVillagerTrades {
     }
     
     /**
+     * Adds a Wandering Trader Trade for emeralds for an Item. An example being, giving a Wandering Trader 2 emeralds for an arrow.
+     *
+     * @param rarity    The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param price  The ItemStack being given to the Wandering Trader.
+     * @param forSale   What ItemStack is being sold (by the Wandering Trader).
+     * @param maxTrades How many times can this trade be done.
+     * @param xp        How much Experience is given by trading.
+     *
+     * @docParam rarity 1
+     * @docParam price <item:minecraft:dirt>
+     * @docParam forSale <item:minecraft:diamond>
+     * @docParam maxTrades 16
+     * @docParam xp 2
+     */
+    @ZenCodeType.Method
+    public void addWanderingTrade(int rarity, IItemStack price, IItemStack forSale, int maxTrades, int xp) {
+        
+        BasicTrade trade = new BasicTrade(price.getInternal(), forSale.getInternal(), maxTrades, xp, 1);
+        addWanderingTradeInternal(rarity, trade);
+    }
+    
+    /**
      * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader 2 Emeralds for an Arrow.
      *
      * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.

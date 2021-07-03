@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.commands.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.CTItemArgument;
@@ -22,8 +21,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.network.PacketDistributor;
 import org.apache.logging.log4j.util.TriConsumer;
 
-import java.io.File;
-
 public final class MiscCommands {
     private MiscCommands() {}
     
@@ -43,7 +40,7 @@ public final class MiscCommands {
         );
     
         registerCustomCommand.accept(
-                Commands.literal("give")
+                Commands.literal("give").requires((source) -> source.hasPermissionLevel(2))
                         .then(Commands.argument("item", CTItemArgument.INSTANCE)
                                 .executes(context -> {
                                     ExpandPlayerEntity.give(context.getSource().asPlayer(), context.getArgument("item", IItemStack.class));

@@ -58,7 +58,7 @@ public class PageWriter {
     }
     
     private void writePageInfoAt(DocumentationPage page, File file) throws IOException {
-        try(final PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+        try(final PageOutputWriter writer = new PageOutputWriter(new PrintWriter(new FileWriter(file)))) {
             page.write(writer);
         }
     }

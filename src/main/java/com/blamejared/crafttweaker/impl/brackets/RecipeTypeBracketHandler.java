@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.common.util.Lazy;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
@@ -36,11 +37,12 @@ import java.util.Set;
 @ZenCodeType.Name("crafttweaker.api.RecipeTypeBracketHandler")
 public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
-    private static final Set<ResourceLocation> FILTERED_MANAGERS = ImmutableSet.of(
-            new ResourceLocation(CraftTweaker.MODID, "scripts")
+    // Using Lazy here allows us to reference scripts in the correct order without f-ing up classloading
+    private static final Set<Lazy<IRecipeType<?>>> FILTERED_TYPES = ImmutableSet.of(
+            Lazy.concurrentOf(() -> CraftTweaker.RECIPE_TYPE_SCRIPTS)
     );
     
-    private static final Map<ResourceLocation, IRecipeManager> registeredTypes = new HashMap<>();
+    private static final Map<IRecipeType<?>, IRecipeManager> registeredTypes = new HashMap<>();
     private static final Map<Class<? extends IRecipeManager>, IRecipeManager> managerInstances = new HashMap<>();
     
     public RecipeTypeBracketHandler(List<Class<? extends IRecipeManager>> recipeManagers) {
@@ -52,12 +54,12 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     @Deprecated
     public static boolean containsCustomManager(ResourceLocation location) {
-        return registeredTypes.containsKey(location);
+        return registeredTypes.containsKey(lookup(location));
     }
     
     @Deprecated
     public static IRecipeManager getCustomManager(ResourceLocation location) {
-        return registeredTypes.get(location);
+        return registeredTypes.get(lookup(location));
     }
     
     public static Collection<IRecipeManager> getManagerInstances() {
@@ -65,22 +67,19 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     }
     
     public static IRecipeManager getOrDefault(final ResourceLocation location) {
-        if (FILTERED_MANAGERS.contains(location)) return null;
-        
-        return registeredTypes.computeIfAbsent(location, it -> {
-            final IRecipeType<?> type = Registry.RECIPE_TYPE.getOrDefault(location);
-            return type == null? null : new RecipeManagerWrapper(type);
-        });
+        return getOrDefault(lookup(location));
     }
     
     public static IRecipeManager getOrDefault(final IRecipeType<?> type) {
-        return getOrDefault(new ResourceLocation(type.toString()));
+        if (FILTERED_TYPES.stream().anyMatch(it -> type == it.get())) return null;
+        
+        return registeredTypes.computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
     }
     
     @ZenCodeType.Method
     public static <T extends IRecipeManager> T getRecipeManager(String location) {
         //noinspection unchecked
-        return (T) registeredTypes.get(new ResourceLocation(location));
+        return (T) registeredTypes.get(lookup(new ResourceLocation(location)));
     }
     
     private void registerRecipeManager(Class<? extends IRecipeManager> managerClass) {
@@ -110,7 +109,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return;
         }
         
-        registeredTypes.put(bracketResourceLocation, manager);
+        registeredTypes.put(lookup(bracketResourceLocation), manager);
     }
     
     @Override
@@ -121,8 +120,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");
         }
         
-        if(registeredTypes.containsKey(resourceLocation)) {
-            return getCall(name, registeredTypes.get(resourceLocation), position);
+        if(registeredTypes.containsKey(lookup(resourceLocation))) {
+            return getCall(name, registeredTypes.get(lookup(resourceLocation)), position);
         }
         
         if(Registry.RECIPE_TYPE.keySet().contains(resourceLocation)) {
@@ -160,5 +159,9 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
                 .singletonList(new ParsedExpressionString(position, location, false)));
         final ParsedExpressionCall parsedExpressionCall = new ParsedExpressionCall(position, getRecipeManager, arguments);
         return new ParsedExpressionCast(position, parsedExpressionCall, parsedType, false);
+    }
+    
+    private static IRecipeType<?> lookup(final ResourceLocation location) {
+        return Registry.RECIPE_TYPE.getOrDefault(location);
     }
 }

@@ -11,12 +11,23 @@ public class CommentMerger {
     
     public DocumentationComment merge(DocumentationComment childComment, DocumentationComment parentComment) {
         final String description = mergeDescription(childComment);
+        final String deprecation = mergeDeprecation(childComment, parentComment);
+        final String sinceVersion = mergeSince(childComment, parentComment);
         final ExampleData exampleData = mergeCommentExamples(childComment, parentComment);
-        return new DocumentationComment(description, exampleData);
+        return new DocumentationComment(description, deprecation, sinceVersion, exampleData);
     }
     
     private String mergeDescription(DocumentationComment childComment) {
         return childComment.getOptionalDescription().orElse(null);
+    }
+    
+    private String mergeDeprecation(final DocumentationComment child, final DocumentationComment parent) {
+        // TODO("Does it make sense to mark the child as deprecated if the parent is?")
+        return child.getOptionalDeprecationMessage().orElseGet(parent::getDeprecationMessage);
+    }
+    
+    private String mergeSince(final DocumentationComment child, final DocumentationComment parent) {
+        return child.getOptionalSince().orElseGet(parent::getSinceVersion);
     }
     
     private ExampleData mergeCommentExamples(DocumentationComment childComment, DocumentationComment parentComment) {

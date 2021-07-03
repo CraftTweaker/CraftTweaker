@@ -38,7 +38,7 @@ public class ParameterDescriptionConverter {
     
     private DocumentationComment getCommentForName(Element element, ParameterInfo param) {
         final String description = getDescriptionForParameterInfo(element, param);
-        return new DocumentationComment(description, ExampleData.empty());
+        return new DocumentationComment(description, null, null, ExampleData.empty());
     }
     
     @Nullable

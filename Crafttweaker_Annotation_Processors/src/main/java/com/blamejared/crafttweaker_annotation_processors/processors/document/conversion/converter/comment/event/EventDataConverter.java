@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.event;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.DeprecationFinder;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.SinceInformationIdentifier;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterInformationList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterReader;
@@ -22,15 +24,25 @@ public class EventDataConverter {
     private static final String HAS_RESULT_INFO = "The event has a result.";
 
     private final ParameterReader reader;
+    private final DeprecationFinder deprecationFinder;
+    private final SinceInformationIdentifier sinceInformationIdentifier;
 
-    public EventDataConverter(ParameterReader reader) {
+    public EventDataConverter(final ParameterReader reader, final DeprecationFinder deprecationFinder,
+                              final SinceInformationIdentifier sinceInformationIdentifier) {
         this.reader = reader;
+        this.deprecationFinder = deprecationFinder;
+        this.sinceInformationIdentifier = sinceInformationIdentifier;
     }
 
     public DocumentationComment getDocumentationComment(String docComment, Element element) {
         ParameterInformationList parameterInformationList = reader.readParametersFrom(docComment, element);
         if (!hasEventData(parameterInformationList)) {
-            return new DocumentationComment(NOT_CANCELED_INFO + "\n\n" + NO_RESULT_INFO, ExampleData.empty());
+            return new DocumentationComment(
+                    NOT_CANCELED_INFO + "\n\n" + NO_RESULT_INFO,
+                    null,
+                    null,
+                    ExampleData.empty()
+            );
         }
         StringBuilder sb = new StringBuilder();
         ParameterInfo parameterInfo = getEventDataInfo(parameterInformationList);
@@ -78,7 +90,12 @@ public class EventDataConverter {
                 sb.append("\n\n");
             }
         }
-        return new DocumentationComment(sb.toString(), ExampleData.empty());
+        return new DocumentationComment(
+                sb.toString(),
+                this.deprecationFinder.findInCommentString(docComment, element),
+                this.sinceInformationIdentifier.findInCommentString(docComment, element),
+                ExampleData.empty()
+        );
     }
 
     private boolean hasEventData(ParameterInformationList parameterInformationList) {

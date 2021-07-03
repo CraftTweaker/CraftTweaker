@@ -110,4 +110,14 @@ public class WrapperRecipe implements CommandStringDisplayable {
         
         return handler.dumpToCommandString(this.getManager(), recipe);
     }
+    
+    @Override
+    public String toString() {
+        
+        final StringBuilder sb = new StringBuilder("WrapperRecipe{");
+        sb.append("recipe=").append(recipe.getId());
+        sb.append('}');
+        return sb.toString();
+    }
+    
 }

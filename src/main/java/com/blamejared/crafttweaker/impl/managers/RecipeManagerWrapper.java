@@ -11,6 +11,10 @@ public class RecipeManagerWrapper implements IRecipeManager {
         this.recipeType = recipeType;
     }
     
+    public static RecipeManagerWrapper makeOrNull(final IRecipeType<?> recipeType) {
+        return recipeType == null? null : new RecipeManagerWrapper(recipeType);
+    }
+    
     @Override
     public IRecipeType<?> getRecipeType() {
         return recipeType;

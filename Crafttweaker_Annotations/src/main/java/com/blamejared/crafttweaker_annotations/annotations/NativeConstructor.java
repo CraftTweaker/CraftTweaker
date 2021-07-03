@@ -10,6 +10,10 @@ public @interface NativeConstructor {
     
     String description() default "";
     
+    String deprecationMessage() default "";
+    
+    String getSinceVersion() default "";
+    
     @interface ConstructorParameter {
         
         Class<?> type();

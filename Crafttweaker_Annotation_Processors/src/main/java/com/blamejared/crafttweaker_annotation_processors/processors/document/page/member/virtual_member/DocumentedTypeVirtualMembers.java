@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
-import java.io.PrintWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -16,12 +17,12 @@ public class DocumentedTypeVirtualMembers extends DocumentedVirtualMembers {
     }
     
     @Override
-    public void write(PrintWriter writer) {
+    public void write(PageOutputWriter writer) {
         writeConstructors(writer);
         super.write(writer);
     }
     
-    private void writeConstructors(PrintWriter writer) {
+    private void writeConstructors(PageOutputWriter writer) {
         if(constructors.isEmpty()) {
             return;
         }

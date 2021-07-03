@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ReturnTypeInfoReader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.AbstractEnclosedElementConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.HeaderConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
@@ -23,11 +24,13 @@ public class ExpansionMethodConverter extends AbstractEnclosedElementConverter<D
     private final CommentConverter commentConverter;
     private final HeaderConverter headerConverter;
     private final TypeConverter typeConverter;
+    private final ReturnTypeInfoReader infoReader;
     
-    public ExpansionMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter) {
+    public ExpansionMethodConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter, ReturnTypeInfoReader infoReader) {
         this.commentConverter = commentConverter;
         this.headerConverter = headerConverter;
         this.typeConverter = typeConverter;
+        this.infoReader = infoReader;
     }
     
     @Override
@@ -52,8 +55,9 @@ public class ExpansionMethodConverter extends AbstractEnclosedElementConverter<D
         final String name = method.getSimpleName().toString();
         final DocumentationComment description = commentConverter.convertForMethod(method, pageInfo);
         final MemberHeader header = convertHeader(method);
+        final String returnTypeInfo = this.infoReader.readForMethod(method).orElse(null);
         
-        return new VirtualMethodMember(header, description, name);
+        return new VirtualMethodMember(header, description, name, returnTypeInfo);
     }
     
     private MemberHeader convertHeader(ExecutableElement method) {

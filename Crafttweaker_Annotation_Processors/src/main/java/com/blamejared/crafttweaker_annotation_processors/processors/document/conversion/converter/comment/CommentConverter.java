@@ -18,16 +18,24 @@ public class CommentConverter {
     private final CommentMerger commentMerger;
     private final ExampleDataConverter exampleDataConverter;
     private final DescriptionConverter descriptionConverter;
+    private final DeprecationFinder deprecationFinder;
+    private final SinceInformationIdentifier sinceIdentifier;
     private final ParameterDescriptionConverter parameterDescriptionConverter;
     private final EventDataConverter eventDataConverter;
     
-    public CommentConverter(ProcessingEnvironment processingEnv, CommentMerger commentMerger, ExampleDataConverter exampleDataConverter, DescriptionConverter descriptionConverter, ParameterDescriptionConverter parameterDescriptionConverter, EventDataConverter eventDataConverter) {
+    public CommentConverter(final ProcessingEnvironment processingEnv, final CommentMerger commentMerger,
+                            final ExampleDataConverter exampleDataConverter, final DescriptionConverter descriptionConverter,
+                            final ParameterDescriptionConverter parameterDescriptionConverter,
+                            final EventDataConverter eventDataConverter, final DeprecationFinder deprecationFinder,
+                            final SinceInformationIdentifier sinceIdentifier) {
         this.processingEnv = processingEnv;
         this.commentMerger = commentMerger;
         this.exampleDataConverter = exampleDataConverter;
         this.descriptionConverter = descriptionConverter;
         this.parameterDescriptionConverter = parameterDescriptionConverter;
         this.eventDataConverter = eventDataConverter;
+        this.deprecationFinder = deprecationFinder;
+        this.sinceIdentifier = sinceIdentifier;
     }
     
     public DocumentationComment convertForType(TypeElement typeElement) {
@@ -86,15 +94,26 @@ public class CommentConverter {
         final String docComment = processingEnv.getElementUtils().getDocComment(element);
         final String description = extractDescriptionFrom(docComment, element);
         // TODO: Handle @apiNote
-        // TODO: Handle @since
+        final String deprecation = extractDeprecationFrom(docComment, element);
+        final String sinceVersion = extractSinceFrom(docComment, element);
         final ExampleData exampleData = extractExampleDataFrom(docComment, element);
         
-        return new DocumentationComment(description, exampleData);
+        return new DocumentationComment(description, deprecation, sinceVersion, exampleData);
     }
     
     @Nullable
     private String extractDescriptionFrom(@Nullable String docComment, Element element) {
         return descriptionConverter.convertFromCommentString(docComment, element);
+    }
+    
+    @Nullable
+    private String extractDeprecationFrom(@Nullable final String docComment, final Element element) {
+        return this.deprecationFinder.findInCommentString(docComment, element);
+    }
+    
+    @Nullable
+    private String extractSinceFrom(@Nullable final String docComment, final Element element) {
+        return this.sinceIdentifier.findInCommentString(docComment, element);
     }
     
     private ExampleData extractExampleDataFrom(String docComment, Element element) {
@@ -115,11 +134,16 @@ public class CommentConverter {
     }
 
     private DocumentationComment fastMergeComments(DocumentationComment firstWithExamples, DocumentationComment second) {
-        if (!firstWithExamples.hasDescription()) {
-            return new DocumentationComment(second.getDescription(), firstWithExamples.getExamples());
-        } else {
-            return new DocumentationComment(firstWithExamples.getDescription() + "\n\n" + second.getDescription(), firstWithExamples.getExamples());
-        }
+        return fastMergeWithDescription(
+                firstWithExamples,
+                second,
+                firstWithExamples.getOptionalDescription().map(it -> it + "\n\n").orElse("") + second.getDescription()
+        );
+    }
+    
+    @SuppressWarnings("unused") // second may be used later
+    private DocumentationComment fastMergeWithDescription(final DocumentationComment first, final DocumentationComment second, final String description) {
+        return new DocumentationComment(description, first.getDeprecationMessage(), first.getSinceVersion(), first.getExamples());
     }
     
     private DocumentationComment fillExampleForThisParameterFromPageInfo(DocumentationComment comment, DocumentationPageInfo pageInfo) {
