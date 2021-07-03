@@ -21,7 +21,7 @@ public class ExpandItemCraftedEvent {
     }
 
     @ZenCodeType.Method
-    @ZenCodeType.Getter("craftMatrix")
+    @ZenCodeType.Getter("craftingMatrix")
     public static IInventory getCraftingMatrix(PlayerEvent.ItemCraftedEvent internal) {
         return internal.getInventory();
     }
