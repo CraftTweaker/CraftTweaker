@@ -95,8 +95,15 @@ public class MCItemStackMutable implements IItemStack {
     }
 
     @Override
-    public IItemStack clearTag() {
-        getInternal().setTag(null);
+    public IItemStack removeTag(@ZenCodeType.Nullable String tag) {
+        ItemStack itemStack = getInternal();
+        if (tag == null) {
+            itemStack.setTag(null);
+        } else {
+            if (itemStack.hasTag()) {
+                itemStack.getTag().remove(tag);
+            }
+        }
         return this;
     }
 
