@@ -3,9 +3,9 @@ package com.blamejared.crafttweaker.impl.game;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
+import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
-import com.blamejared.crafttweaker.impl.managers.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
@@ -25,6 +25,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -96,8 +97,8 @@ public class MCGame {
         return Registry.RECIPE_TYPE.getEntries()
                 .stream()
                 .map(Map.Entry::getValue)
-                .filter((iRecipeType -> !iRecipeType.toString().equals("crafttweaker:scripts")))
-                .map(RecipeManagerWrapper::new)
+                .map(RecipeTypeBracketHandler::getOrDefault)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
     

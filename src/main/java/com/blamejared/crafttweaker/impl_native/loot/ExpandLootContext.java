@@ -15,8 +15,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.Random;
 
 /**
  * Holds all information that may be obtainable from a loot table roll, allowing for identifying key information.
@@ -168,14 +170,13 @@ public class ExpandLootContext {
     }
 
     /**
-     * Gets the world where the interaction happened, if it exists or can be obtained; null otherwise.
+     * Gets the world where the interaction happened.
      *
      * @param internal The context.
      * @return The world.
      */
     @ZenCodeType.Getter("world")
-    @ZenCodeType.Nullable
-    public static World getWorld(final LootContext internal) {
+    public static ServerWorld getWorld(final LootContext internal) {
         return internal.getWorld();
     }
 
@@ -199,5 +200,13 @@ public class ExpandLootContext {
     @ZenCodeType.Getter("lootTableId")
     public static ResourceLocation getLootTableId(final LootContext internal) {
         return internal.getQueriedLootTableId();
+    }
+
+    /**
+     * Gets the random generator used in loot table rolling
+     */
+    @ZenCodeType.Getter("random")
+    public static Random getRandom(final LootContext internal) {
+        return internal.getRandom();
     }
 }

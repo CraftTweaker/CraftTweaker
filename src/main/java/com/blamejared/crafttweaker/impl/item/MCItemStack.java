@@ -87,8 +87,14 @@ public class MCItemStack implements IItemStack {
         copy.setTag(((MapData) tag).getInternal());
         return new MCItemStack(copy);
     }
-    
-    
+
+    @Override
+    public IItemStack withoutTag() {
+        final ItemStack copy = getImmutableInternal();
+        copy.setTag(null);
+        return new MCItemStack(copy);
+    }
+
     @Override
     public String getCommandString() {
         
