@@ -646,7 +646,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     }
 
     /**
-     * Gets the level of given enchantment on the item. Returns 0 if the item doesn't have given enchantment.
+     * Gets the level of the given enchantment on the item. Returns 0 if the item doesn't have the given enchantment.
      */
     @ZenCodeType.Method
     default int getEnchantmentLevel(Enchantment enchantment) {
