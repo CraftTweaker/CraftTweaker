@@ -416,7 +416,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     IItemStack withTag(IData tag);
 
     /**
-     * Set this ItemStack without a tag
+     * Sets this ItemStack without a tag
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
      */
     @ZenCodeType.Method
