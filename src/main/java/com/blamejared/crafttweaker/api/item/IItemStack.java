@@ -420,8 +420,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @param tag The tag to remove. If the parameter is null, it will remove all tags.
      *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
-     *
-     * @docParam tag "Display"
      */
     @ZenCodeType.Method
     IItemStack removeTag(@ZenCodeType.Nullable String tag);

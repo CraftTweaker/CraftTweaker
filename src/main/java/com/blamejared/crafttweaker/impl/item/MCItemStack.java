@@ -89,16 +89,10 @@ public class MCItemStack implements IItemStack {
     }
 
     @Override
-    public IItemStack removeTag(@ZenCodeType.Nullable String tag) {
-        ItemStack itemStack = getImmutableInternal();
-        if (tag == null) {
-            itemStack.setTag(null);
-        } else {
-            if (itemStack.hasTag()) {
-                itemStack.getTag().remove(tag);
-            }
-        }
-        return new MCItemStack(itemStack);
+    public IItemStack withoutTag() {
+        final ItemStack copy = getImmutableInternal();
+        copy.setTag(null);
+        return new MCItemStack(copy);
     }
 
     @Override
