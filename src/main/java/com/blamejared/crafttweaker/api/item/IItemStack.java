@@ -416,13 +416,11 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     IItemStack withTag(IData tag);
 
     /**
-     * Removes the given tag for the ItemStack
-     * @param tag The tag to remove. If the parameter is null, it will remove all tags.
-     *
+     * Set this ItemStack without a tag
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
      */
     @ZenCodeType.Method
-    IItemStack removeTag(@ZenCodeType.Nullable String tag);
+    IItemStack withoutTag();
     
     
     /**

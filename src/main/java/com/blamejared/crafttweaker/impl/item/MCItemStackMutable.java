@@ -95,7 +95,7 @@ public class MCItemStackMutable implements IItemStack {
     }
 
     @Override
-    public IItemStack clearTag() {
+    public IItemStack withoutTag() {
         getInternal().setTag(null);
         return this;
     }
