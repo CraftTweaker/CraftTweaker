@@ -160,18 +160,21 @@ public class ExpandPlayerInventory {
      *
      * @param ingredient The ingredient to match against.
      *
+     * @return True if anything was removed. False otherwise.
      * @docParam ingredient <item:minecraft:diamond>
      */
     @ZenCodeType.Method
-    public static void remove(PlayerInventory internal, IIngredient ingredient) {
-        
+    public static boolean remove(PlayerInventory internal, IIngredient ingredient) {
+        boolean hit = false;
         for(NonNullList<ItemStack> nonnulllist : internal.allInventories) {
             for(int i = 0; i < nonnulllist.size(); ++i) {
                 if(ingredient.matches(new MCItemStackMutable(nonnulllist.get(i)))) {
                     nonnulllist.set(i, ItemStack.EMPTY);
+                    hit = true;
                 }
             }
         }
+        return hit;
     }
     
 }
