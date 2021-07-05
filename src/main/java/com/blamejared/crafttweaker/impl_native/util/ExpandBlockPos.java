@@ -8,6 +8,9 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.util.math.BlockPos;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Represents a position of a block in the world
  *
@@ -342,5 +345,30 @@ public class ExpandBlockPos {
     @ZenCodeType.Method
     public static int manhattanDistance(BlockPos internal, BlockPos other) {
         return internal.manhattanDistance(other);
+    }
+    
+    /**
+     * Gets all the BlockPos inside the given positions.
+     *
+     * For example, doing
+     *
+     * {@code getAllInBox(new BlockPos(0,0,0), new BlockPos(2,2,0}
+     *
+     * Would return a list of the following positions:
+     *
+     * {@code [{0,0,0}, {1,0,0}, {1,1,0}, {0,1,0}]}
+     *
+     * @param first  The first position.
+     * @param second The second position.
+     *
+     * @return A list of all the BlockPos within the given position.
+     *
+     * @docParam first new BlockPos(0, 0, 0)
+     * @docParam second new BlockPos(5, 5, 5);
+     */
+    @ZenCodeType.StaticExpansionMethod
+    public static List<BlockPos> getAllInBox(BlockPos first, BlockPos second) {
+        
+        return BlockPos.getAllInBox(first, second).collect(Collectors.toList());
     }
 }
