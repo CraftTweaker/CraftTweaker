@@ -1,11 +1,15 @@
 package com.blamejared.crafttweaker.impl_native.inventory;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -88,9 +92,9 @@ public class ExpandPlayerInventory {
     }
     
     /**
-     * Removes all instances of the given stack from the inventory.
+     * Removes the first instance of the given stack from the inventory.
      *
-     * @param stack The stack to delete.
+     * @param stack The stack to remove.
      *
      * @docParam stack <item:minecraft:diamond>
      */
@@ -149,6 +153,25 @@ public class ExpandPlayerInventory {
     public static void setIItemStack(PlayerInventory internal, IItemStack stack) {
         
         internal.setItemStack(stack.getInternal());
+    }
+    
+    /**
+     * Removes all stacks that match the ingredient.
+     *
+     * @param ingredient The ingredient to match against.
+     *
+     * @docParam ingredient <item:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    public static void remove(PlayerInventory internal, IIngredient ingredient) {
+        
+        for(NonNullList<ItemStack> nonnulllist : internal.allInventories) {
+            for(int i = 0; i < nonnulllist.size(); ++i) {
+                if(ingredient.matches(new MCItemStackMutable(nonnulllist.get(i)))) {
+                    nonnulllist.set(i, ItemStack.EMPTY);
+                }
+            }
+        }
     }
     
 }
