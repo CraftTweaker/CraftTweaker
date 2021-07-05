@@ -356,7 +356,7 @@ public class ExpandBlockPos {
      *
      * Would return a list of the following positions:
      *
-     * {@code [{0,0,0}, {1,0,0}, {1,1,0}, {0,1,0}]}
+     * {@code [(0,0,0), (1,0,0), (1,1,0), (0,1,0)]}
      *
      * @param first  The first position.
      * @param second The second position.
