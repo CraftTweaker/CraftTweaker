@@ -364,7 +364,7 @@ public class ExpandBlockPos {
      * @return A list of all the BlockPos within the given position.
      *
      * @docParam first new BlockPos(0, 0, 0)
-     * @docParam second new BlockPos(5, 5, 5);
+     * @docParam second new BlockPos(5, 5, 5)
      */
     @ZenCodeType.StaticExpansionMethod
     public static List<BlockPos> getAllInBox(BlockPos first, BlockPos second) {
