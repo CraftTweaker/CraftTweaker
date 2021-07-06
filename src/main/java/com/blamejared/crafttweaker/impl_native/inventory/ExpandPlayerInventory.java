@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Collection;
+
 @ZenRegister
 @Document("vanilla/api/inventory/PlayerInventory")
 @NativeTypeRegistration(value = PlayerInventory.class, zenCodeName = "crafttweaker.api.inventory.PlayerInventory")
@@ -114,18 +116,21 @@ public class ExpandPlayerInventory {
     }
     
     /**
-     * Checks if the given IItemStack is in the inventory.
+     * Checks if any of the ItemStacks in the inventory match the given ingredient.
      *
-     * @param stack The stack to look for.
+     * @param ingredient The ingredient to check against..
      *
-     * @return True if the stack is found. False otherwise.
+     * @return True if any of the stacks match. False otherwise.
      *
      * @docParam stack <item:minecraft:diamond>
      */
     @ZenCodeType.Method
-    public static boolean hasIItemStack(PlayerInventory internal, IItemStack stack) {
+    public static boolean hasIItemStack(PlayerInventory internal, IIngredient ingredient) {
         
-        return internal.hasItemStack(stack.getInternal());
+        return internal.allInventories.stream()
+                .flatMap(Collection::stream)
+                .map(MCItemStackMutable::new)
+                .anyMatch(ingredient::matches);
     }
     
     
@@ -161,10 +166,12 @@ public class ExpandPlayerInventory {
      * @param ingredient The ingredient to match against.
      *
      * @return True if anything was removed. False otherwise.
+     *
      * @docParam ingredient <item:minecraft:diamond>
      */
     @ZenCodeType.Method
     public static boolean remove(PlayerInventory internal, IIngredient ingredient) {
+        
         boolean hit = false;
         for(NonNullList<ItemStack> nonnulllist : internal.allInventories) {
             for(int i = 0; i < nonnulllist.size(); ++i) {
