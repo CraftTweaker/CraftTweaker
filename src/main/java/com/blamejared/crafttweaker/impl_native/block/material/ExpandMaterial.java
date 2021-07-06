@@ -8,6 +8,7 @@ import com.google.common.collect.HashBiMap;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.util.Util;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -15,51 +16,52 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = Material.class, zenCodeName = "crafttweaker.api.block.material.MCMaterial")
 public class ExpandMaterial {
     
-    private static final BiMap<String, Material> hardcodedMaterials = HashBiMap.create();
-    static {
-        hardcodedMaterials.put("AIR", Material.AIR);
-        hardcodedMaterials.put("STRUCTURE_VOID", Material.STRUCTURE_VOID);
-        hardcodedMaterials.put("PORTAL", Material.PORTAL);
-        hardcodedMaterials.put("CARPET", Material.CARPET);
-        hardcodedMaterials.put("PLANTS", Material.PLANTS);
-        hardcodedMaterials.put("OCEAN_PLANT", Material.OCEAN_PLANT);
-        hardcodedMaterials.put("TALL_PLANTS", Material.TALL_PLANTS);
-        hardcodedMaterials.put("SEA_GRASS", Material.SEA_GRASS);
-        hardcodedMaterials.put("WATER", Material.WATER);
-        hardcodedMaterials.put("BUBBLE_COLUMN", Material.BUBBLE_COLUMN);
-        hardcodedMaterials.put("LAVA", Material.LAVA);
-        hardcodedMaterials.put("SNOW", Material.SNOW);
-        hardcodedMaterials.put("FIRE", Material.FIRE);
-        hardcodedMaterials.put("MISCELLANEOUS", Material.MISCELLANEOUS);
-        hardcodedMaterials.put("WEB", Material.WEB);
-        hardcodedMaterials.put("REDSTONE_LIGHT", Material.REDSTONE_LIGHT);
-        hardcodedMaterials.put("CLAY", Material.CLAY);
-        hardcodedMaterials.put("EARTH", Material.EARTH);
-        hardcodedMaterials.put("ORGANIC", Material.ORGANIC);
-        hardcodedMaterials.put("PACKED_ICE", Material.PACKED_ICE);
-        hardcodedMaterials.put("SAND", Material.SAND);
-        hardcodedMaterials.put("SPONGE", Material.SPONGE);
-        hardcodedMaterials.put("SHULKER", Material.SHULKER);
-        hardcodedMaterials.put("WOOD", Material.WOOD);
-        hardcodedMaterials.put("BAMBOO_SAPLING", Material.BAMBOO_SAPLING);
-        hardcodedMaterials.put("BAMBOO", Material.BAMBOO);
-        hardcodedMaterials.put("WOOL", Material.WOOL);
-        hardcodedMaterials.put("TNT", Material.TNT);
-        hardcodedMaterials.put("LEAVES", Material.LEAVES);
-        hardcodedMaterials.put("GLASS", Material.GLASS);
-        hardcodedMaterials.put("ICE", Material.ICE);
-        hardcodedMaterials.put("CACTUS", Material.CACTUS);
-        hardcodedMaterials.put("ROCK", Material.ROCK);
-        hardcodedMaterials.put("IRON", Material.IRON);
-        hardcodedMaterials.put("SNOW_BLOCK", Material.SNOW_BLOCK);
-        hardcodedMaterials.put("ANVIL", Material.ANVIL);
-        hardcodedMaterials.put("BARRIER", Material.BARRIER);
-        hardcodedMaterials.put("PISTON", Material.PISTON);
-        hardcodedMaterials.put("CORAL", Material.CORAL);
-        hardcodedMaterials.put("GOURD", Material.GOURD);
-        hardcodedMaterials.put("DRAGON_EGG", Material.DRAGON_EGG);
-        hardcodedMaterials.put("CAKE", Material.CAKE);
-    }
+    private static final BiMap<String, Material> hardcodedMaterials = Util.make(HashBiMap.create(), map -> {
+        map.put("AIR", Material.AIR);
+        map.put("STRUCTURE_VOID", Material.STRUCTURE_VOID);
+        map.put("PORTAL", Material.PORTAL);
+        map.put("CARPET", Material.CARPET);
+        map.put("PLANTS", Material.PLANTS);
+        map.put("OCEAN_PLANT", Material.OCEAN_PLANT);
+        map.put("TALL_PLANTS", Material.TALL_PLANTS);
+        map.put("NETHER_PLANTS", Material.NETHER_PLANTS);
+        map.put("SEA_GRASS", Material.SEA_GRASS);
+        map.put("WATER", Material.WATER);
+        map.put("BUBBLE_COLUMN", Material.BUBBLE_COLUMN);
+        map.put("LAVA", Material.LAVA);
+        map.put("SNOW", Material.SNOW);
+        map.put("FIRE", Material.FIRE);
+        map.put("MISCELLANEOUS", Material.MISCELLANEOUS);
+        map.put("WEB", Material.WEB);
+        map.put("REDSTONE_LIGHT", Material.REDSTONE_LIGHT);
+        map.put("CLAY", Material.CLAY);
+        map.put("EARTH", Material.EARTH);
+        map.put("ORGANIC", Material.ORGANIC);
+        map.put("PACKED_ICE", Material.PACKED_ICE);
+        map.put("SAND", Material.SAND);
+        map.put("SPONGE", Material.SPONGE);
+        map.put("SHULKER", Material.SHULKER);
+        map.put("WOOD", Material.WOOD);
+        map.put("NETHER_WOOD", Material.NETHER_WOOD);
+        map.put("BAMBOO_SAPLING", Material.BAMBOO_SAPLING);
+        map.put("BAMBOO", Material.BAMBOO);
+        map.put("WOOL", Material.WOOL);
+        map.put("TNT", Material.TNT);
+        map.put("LEAVES", Material.LEAVES);
+        map.put("GLASS", Material.GLASS);
+        map.put("ICE", Material.ICE);
+        map.put("CACTUS", Material.CACTUS);
+        map.put("ROCK", Material.ROCK);
+        map.put("IRON", Material.IRON);
+        map.put("SNOW_BLOCK", Material.SNOW_BLOCK);
+        map.put("ANVIL", Material.ANVIL);
+        map.put("BARRIER", Material.BARRIER);
+        map.put("PISTON", Material.PISTON);
+        map.put("CORAL", Material.CORAL);
+        map.put("GOURD", Material.GOURD);
+        map.put("DRAGON_EGG", Material.DRAGON_EGG);
+        map.put("CAKE", Material.CAKE);
+    });
     
     /**
      * Indicate if the material is opaque
