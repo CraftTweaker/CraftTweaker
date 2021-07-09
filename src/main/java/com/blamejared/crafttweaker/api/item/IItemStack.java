@@ -437,12 +437,12 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     /**
      * Returns the NBT tag attached to this ItemStack.
      *
-     * @return IData of the ItemStack NBT Tag, null if it doesn't exist.
+     * @return MapData of the ItemStack NBT Tag, null if it doesn't exist.
      */
     @ZenCodeType.Getter("tag")
-    default IData getTag() {
+    default MapData getTag() {
         
-        return NBTConverter.convert(getInternal().getTag());
+        return new MapData(getInternal().getTag());
     }
     
     /**
@@ -451,12 +451,12 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @return IData of the ItemStack NBT Tag, empty tag if it doesn't exist.
      */
     @ZenCodeType.Getter("getOrCreate")
-    default IData getOrCreateTag() {
+    default MapData getOrCreateTag() {
         
         if(getInternal().getTag() == null) {
             getInternal().setTag(new CompoundNBT());
         }
-        return NBTConverter.convert(getInternal().getTag());
+        return new MapData(getInternal().getTag());
     }
     
     @Override
@@ -647,6 +647,8 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
 
     /**
      * Gets the level of the given enchantment on the item. Returns 0 if the item doesn't have the given enchantment.
+     *
+     * @docParam enchantment <enchantment:minecraft:fortune>
      */
     @ZenCodeType.Method
     default int getEnchantmentLevel(Enchantment enchantment) {
