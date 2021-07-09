@@ -26,6 +26,8 @@ public class MCTextComponent {
     }
     
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("style")
     public MCStyle getStyle() {
         
         return new MCStyle(getInternal().getStyle());
