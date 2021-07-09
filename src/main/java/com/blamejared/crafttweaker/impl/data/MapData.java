@@ -152,7 +152,7 @@ public class MapData implements IData {
      * @param other The other map.
      *
      * @return This map, after the merge
-     * @docParam other {Doodle: "Do}
+     * @docParam other {Doodle: "Do"}
      */
     @ZenCodeType.Method
     public MapData merge(MapData other) {
