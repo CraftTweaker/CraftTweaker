@@ -57,7 +57,14 @@ import java.util.stream.Collectors;
  * Main mod class. Performs some general logic, initialization of the API and
  * FML event handling.
  */
-@Mod(modid = CraftTweaker.MODID, version = "4.1.20", name = CraftTweaker.NAME, acceptedMinecraftVersions = "[1.12]", updateJSON = "https://updates.blamejared.com/get?n=crafttweaker&gv=1.12.2")
+@Mod(
+        modid = CraftTweaker.MODID,
+        version = "4.1.20",
+        name = CraftTweaker.NAME,
+        acceptedMinecraftVersions = "[1.12]",
+        updateJSON = "https://updates.blamejared.com/get?n=crafttweaker&gv=1.12.2",
+        dependencies = "before:jei"
+)
 public class CraftTweaker {
     
     public static final String MODID = "crafttweaker";
