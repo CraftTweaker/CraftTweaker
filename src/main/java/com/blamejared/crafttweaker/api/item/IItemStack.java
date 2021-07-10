@@ -433,8 +433,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Nullable
     default MapData getTagNew() {
 
-        CompoundNBT tag = getInternal().getTag();
-        return tag == null ? null : new MapData(tag);
+        return NBTConverter.convert(getInternal().getTag());
     }
 
     @Deprecated
@@ -458,7 +457,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         if (getInternal().getTag() == null) {
             getInternal().setTag(new CompoundNBT());
         }
-        return new MapData(getInternal().getTag());
+        return NBTConverter.convert(getInternal().getTag());
     }
 
     @Override
