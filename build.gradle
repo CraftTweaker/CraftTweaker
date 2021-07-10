@@ -176,7 +176,7 @@ tasks.getByName("curseforge").doLast {
 
         def message = new Message()
         message.setUsername(name)
-        message.setContent("${name} ${version} for Minecraft ${mcVersion} has been released! The download will be available soon.")
+        message.setContent("${name} ${craftTweakerVersion} for Minecraft ${mcVersion} has been released! The download will be available soon.")
 
         def embed = new Embed()
         embed.addField('Download', "${cursePage}/files/$newFileId", false)
