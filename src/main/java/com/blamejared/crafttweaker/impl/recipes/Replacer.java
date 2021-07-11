@@ -90,6 +90,7 @@ public final class Replacer {
     private final Map<ResourceLocation, String> userRenames;
     private final BiFunction<ResourceLocation, String, String> userRenamingFunction;
     private final boolean suppressWarnings;
+    private final boolean isSimple;
     
     private Replacer(final ITargetingRule rule) {
         this(rule, new ArrayList<>(), new TreeMap<>(), null, false);
@@ -102,6 +103,7 @@ public final class Replacer {
         this.userRenames = new TreeMap<>(userRenames);
         this.userRenamingFunction = userRenamingFunction;
         this.suppressWarnings = suppressWarnings;
+        this.isSimple = targetingRule instanceof SpecificRecipesTargetingRule;
     }
     
     /**
@@ -410,6 +412,7 @@ public final class Replacer {
         CraftTweakerAPI.apply(
                 new ReplacerAction(
                         this.targetingRule,
+                        this.isSimple,
                         Collections.unmodifiableList(this.replacementRules),
                         DEFAULT_EXCLUSIONS.get().values().stream().flatMap(Collection::stream).collect(Collectors.toSet()),
                         this.buildGeneratorFunction(),

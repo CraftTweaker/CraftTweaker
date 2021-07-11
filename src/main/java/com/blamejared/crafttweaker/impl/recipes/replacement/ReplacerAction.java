@@ -23,19 +23,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class ReplacerAction implements IRuntimeAction {
     private final ITargetingRule targetingRule;
+    private final boolean isSimple;
     private final List<IReplacementRule> replacementRules;
     private final Collection<ResourceLocation> defaultExclusions;
     private final Function<ResourceLocation, ResourceLocation> generatorFunction;
     private final boolean suppressWarnings;
     
-    public ReplacerAction(final ITargetingRule targetingRule, final List<IReplacementRule> replacementRules,
+    public ReplacerAction(final ITargetingRule targetingRule, final boolean isSimple, final List<IReplacementRule> replacementRules,
                           final Collection<ResourceLocation> defaultExclusions, final Function<ResourceLocation, ResourceLocation> generatorFunction,
                           final boolean suppressWarnings) {
         this.targetingRule = targetingRule;
+        this.isSimple = isSimple;
         this.replacementRules = replacementRules;
         this.defaultExclusions = filter(targetingRule, defaultExclusions);
         this.generatorFunction = generatorFunction;
@@ -53,7 +56,7 @@ public final class ReplacerAction implements IRuntimeAction {
     
     @Override
     public void apply() {
-        GenericRecipesManager.RECIPES.getAllRecipes()
+        this.specificRecipesOrElse(GenericRecipesManager.RECIPES::getAllRecipes)
                 .stream()
                 .filter(it -> !this.defaultExclusions.contains(it.getId()))
                 .map(it -> Pair.of(it.getRecipe(), it.getManager()))
@@ -68,7 +71,8 @@ public final class ReplacerAction implements IRuntimeAction {
     @Override
     public String describe() {
         return String.format(
-                "Batching replacement for %s according to replacement rules %s%s%s",
+                "Batching%s replacement for %s according to replacement rules %s%s%s",
+                this.stringifySimplicity(),
                 this.stringifyTargets(),
                 this.stringifyReplacementRules(),
                 this.stringifyExclusionsIfPresent(),
@@ -83,6 +87,14 @@ public final class ReplacerAction implements IRuntimeAction {
             return false;
         }
         return true;
+    }
+    
+    private Collection<WrapperRecipe> specificRecipesOrElse(final Supplier<Collection<WrapperRecipe>> ifComplex) {
+        return this.isSimple? ((SpecificRecipesTargetingRule) this.targetingRule).recipes() : ifComplex.get();
+    }
+    
+    private String stringifySimplicity() {
+        return this.isSimple? " simple" : "";
     }
     
     private String stringifyTargets() {
