@@ -369,6 +369,6 @@ public class ExpandBlockPos {
     @ZenCodeType.StaticExpansionMethod
     public static List<BlockPos> getAllInBox(BlockPos first, BlockPos second) {
         
-        return BlockPos.getAllInBox(first, second).collect(Collectors.toList());
+        return BlockPos.getAllInBox(first, second).map(BlockPos::toImmutable).collect(Collectors.toList());
     }
 }
