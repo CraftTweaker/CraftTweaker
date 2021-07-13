@@ -17,8 +17,10 @@ import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingRecipesAndD
 import com.blamejared.crafttweaker.impl.recipes.replacement.FullIngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.IngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.OutputTargetingRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.RegexTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.ReplacerAction;
 import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificManagersTargetingRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificModsTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.SpecificRecipesTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.StackTargetingReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.ZenTargetingRule;
@@ -123,6 +125,22 @@ public final class Replacer {
     }
     
     /**
+     * Creates a {@code Replacer} that targets only the given mods.
+     *
+     * <p>In other words, the replacer will perform ingredient replacement across <strong>all</strong>
+     * {@link IRecipeManager}s, targeting <strong>only</strong> the recipes added by the specified mods.</p>
+     *
+     * @param mods The mods whose recipes should be targeted by the replacer. It must be at least one.
+     * @return A new {@code Replacer} that targets only the specified mods.
+     *
+     * @docParam mods "minecraft"
+     */
+    @ZenCodeType.Method
+    public static Replacer forMods(final String... mods) {
+        return new Replacer(SpecificModsTargetingRule.of(mods));
+    }
+    
+    /**
      * Creates a {@code Replacer} that targets only the specified {@link IRecipeManager}s.
      *
      * <p>In other words, the replacer will perform ingredient replacement <strong>only</strong> on the managers that
@@ -203,6 +221,38 @@ public final class Replacer {
     @ZenCodeType.Method
     public static Replacer forOutput(final IIngredient output, final IRecipeManager... whitelist) {
         return new Replacer(OutputTargetingRule.of(output, whitelist));
+    }
+    
+    /**
+     * Creates a {@code Replacer} that will perform replacement on all {@link IRecipeManager}s that match the given
+     * regular expression.
+     *
+     * <p>The managers will be matched on their bracket identifier, which corresponds to their bracket expression
+     * stripped of {@code <recipetype:} and {@code >}. E.g., a manager obtained in a script via
+     * {@code <recipetype:minecraft:crafting>} will be matched on {@code minecraft:crafting} only.</p>
+     *
+     * @param regex The regular expression that should be used for matching.
+     * @return A new {@code Replacer} for managers that satisfy the given regular expression.
+     *
+     * @docParam regex "^minecraft:[a-z]*ing"
+     */
+    @ZenCodeType.Method
+    public static Replacer forRegexTypes(final String regex) {
+        return new Replacer(RegexTargetingRule.of(regex, false));
+    }
+    
+    /**
+     * Creates a {@code Replacer} that will perform replacement on all recipes whose names match the given regular
+     * expression.
+     *
+     * @param regex The regular expression that should be used for matching.
+     * @return A new {@code Replacer} for recipes that satisfy the given regular expression.
+     *
+     * @docParam regex "\\d_\\d"
+     */
+    @ZenCodeType.Method
+    public static Replacer forRegexRecipes(final String regex) {
+        return new Replacer(RegexTargetingRule.of(regex, true));
     }
     
     /**
