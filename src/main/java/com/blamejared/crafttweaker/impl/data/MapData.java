@@ -90,6 +90,8 @@ public class MapData implements IData {
      * @docParam value "Goodbye"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.INDEXSET)
     public IData put(String key, IData value) {
         if (value instanceof BoolData) {
             boolDataKeys.add(key);
@@ -106,6 +108,8 @@ public class MapData implements IData {
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.INDEXGET)
     public IData getAt(String key) {
         if (boolDataKeys.contains(key)) {
             return new BoolData(getInternal().getByte(key) == 1);
