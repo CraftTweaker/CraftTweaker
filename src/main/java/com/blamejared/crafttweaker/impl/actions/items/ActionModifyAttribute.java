@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.impl.events.CTEventHandler;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.fml.LogicalSide;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class ActionModifyAttribute implements IUndoableAction {
@@ -22,7 +23,7 @@ public class ActionModifyAttribute implements IUndoableAction {
     @Override
     public void apply() {
         
-        CTEventHandler.ATTRIBUTE_MODIFIERS.put(ingredient, consumer);
+        CTEventHandler.ATTRIBUTE_MODIFIERS.computeIfAbsent(ingredient, ingredient1 -> new ArrayList<>()).add(consumer);
     }
     
     @Override
@@ -34,7 +35,12 @@ public class ActionModifyAttribute implements IUndoableAction {
     @Override
     public void undo() {
         
-        CTEventHandler.ATTRIBUTE_MODIFIERS.keySet().removeIf(entry -> ingredient.contains(entry));
+        CTEventHandler.ATTRIBUTE_MODIFIERS.keySet()
+                .stream()
+                .filter(entry -> ingredient.contains(entry)).forEach(key -> {
+            CTEventHandler.ATTRIBUTE_MODIFIERS.get(key).removeIf(value -> consumer.equals(value));
+        });
+        
     }
     
     @Override

@@ -14,8 +14,10 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -24,7 +26,7 @@ public class CTEventHandler {
     
     public static final Map<IIngredient, Integer> BURN_TIMES = new HashMap<>();
     public static final Set<PlayerEntity> BLOCK_INFO_PLAYERS = new HashSet<>();
-    public static final Map<IIngredient, Consumer<ItemAttributeModifierEvent>> ATTRIBUTE_MODIFIERS = new HashMap<>();
+    public static final Map<IIngredient, List<Consumer<ItemAttributeModifierEvent>>> ATTRIBUTE_MODIFIERS = new HashMap<>();
     
     @SubscribeEvent
     public void attribute(ItemAttributeModifierEvent e) {
@@ -33,6 +35,7 @@ public class CTEventHandler {
                 .stream()
                 .filter(ingredient -> ingredient.matches(new MCItemStackMutable(e.getItemStack())))
                 .map(ATTRIBUTE_MODIFIERS::get)
+                .flatMap(Collection::stream)
                 .forEach(consumer -> consumer.accept(e));
     }
     
