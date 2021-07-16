@@ -164,6 +164,12 @@ public interface IIngredient extends CommandStringDisplayable {
     default void modifyTooltip(ITooltipFunction function) {
         CraftTweakerAPI.apply(new ActionModifyTooltip(this, function));
     }
+    
+    @ZenCodeType.Method
+    default void modifyShiftTooltip(ITooltipFunction shiftedFunction, @ZenCodeType.Optional ITooltipFunction unshiftedFunction) {
+        CraftTweakerAPI.apply(new ActionModifyShiftedTooltip(this, shiftedFunction, unshiftedFunction));
+    }
+    
 
     @ZenCodeType.Method
     default void removeTooltip(String regex) {
