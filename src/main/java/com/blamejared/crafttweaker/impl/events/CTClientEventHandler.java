@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.events;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IIngredient;
-import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
@@ -24,7 +24,19 @@ public class CTClientEventHandler {
             if(ingredient.matches(new MCItemStackMutable(e.getItemStack()))) {
                 List<MCTextComponent> collect = e.getToolTip().stream().map(MCTextComponent::new).collect(Collectors.toList());
                 for(ITooltipFunction function : TOOLTIPS.get(ingredient)) {
-                    function.apply(new MCItemStackMutable(e.getItemStack()), collect, e.getFlags().isAdvanced());
+                    try {
+                        function.apply(new MCItemStackMutable(e.getItemStack()), collect, e.getFlags().isAdvanced());
+                    } catch (final Exception exception) {
+                        CraftTweakerAPI.logger.throwingErr(
+                                String.format(
+                                        "Unable to run one of the tooltip functions for %s on %s due to an error (for experts, refer to %s)",
+                                        ingredient.getCommandString(),
+                                        new MCItemStackMutable(e.getItemStack()).getCommandString(),
+                                        function.getClass().getName()
+                                ),
+                                exception
+                        );
+                    }
                 }
                 e.getToolTip().clear();
                 e.getToolTip().addAll(collect.stream().map(MCTextComponent::getInternal).collect(Collectors.toList()));
