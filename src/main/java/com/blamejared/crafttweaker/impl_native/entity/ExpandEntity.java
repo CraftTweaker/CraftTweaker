@@ -23,6 +23,33 @@ import java.util.Set;
 @NativeTypeRegistration(value = Entity.class, zenCodeName = "crafttweaker.api.entity.MCEntity")
 public class ExpandEntity {
     
+    
+    /**
+     * Checks if this Entity is sneaking or not.
+     *
+     * @return True if sneaking. False otherwise.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("sneaking")
+    public static boolean isSneaking(Entity internal) {
+        
+        return internal.isSneaking();
+    }
+    
+    /**
+     * Sets the sneaking value of this Entity.
+     *
+     * @param value The new sneaking value
+     *
+     * @docParam value true
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("sneaking")
+    public static void setSneaking(Entity internal, boolean value) {
+        
+        internal.setSneaking(value);
+    }
+    
     /**
      * Gets the World that this Entity is in.
      *
