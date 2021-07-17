@@ -3,10 +3,10 @@ package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
+import com.blamejared.crafttweaker.api.util.ClientHelper;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.fml.LogicalSide;
 
 import java.util.LinkedList;
@@ -33,9 +33,7 @@ public class ActionModifyShiftedTooltip implements IRuntimeAction {
                     
                     final KeyBinding keyBindSneak = Minecraft.getInstance().gameSettings.keyBindSneak;
                     
-                    if(InputMappings.isKeyDown(Minecraft.getInstance()
-                            .getMainWindow()
-                            .getHandle(), keyBindSneak.getKey().getKeyCode())) {
+                    if(ClientHelper.getIsKeyPressed(keyBindSneak.getKeyBinding())) {
                         shiftedFunction.apply(stack1, tooltip, isAdvanced);
                     } else {
                         if(unshiftedFunction != null) {
